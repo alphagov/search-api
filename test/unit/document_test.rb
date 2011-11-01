@@ -1,3 +1,4 @@
+require "minitest/autorun"
 require "document"
 
 class DocumentTest < MiniTest::Unit::TestCase
