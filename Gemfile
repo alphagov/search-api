@@ -4,6 +4,7 @@ gem "sinatra"
 gem "delsolr", :git => "git://github.com/alphagov/delsolr.git"
 gem "rake"
 gem 'slimmer', '0.8.0'
+gem 'erubis'
 
 group :test do
   gem "simplecov"
@@ -11,6 +12,7 @@ group :test do
   gem "ci_reporter"
   gem "test-unit"
   gem "rack-test"
+  gem "mocha"
 end
 
 group :development do

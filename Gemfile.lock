@@ -11,6 +11,10 @@ GEM
     builder (3.0.0)
     ci_reporter (1.6.5)
       builder (>= 2.1.2)
+    erubis (2.7.0)
+    metaclass (0.0.1)
+    mocha (0.10.0)
+      metaclass (~> 0.0.1)
     multi_json (1.0.3)
     nokogiri (1.5.0)
     rack (1.3.5)
@@ -42,6 +46,8 @@ PLATFORMS
 DEPENDENCIES
   ci_reporter
   delsolr!
+  erubis
+  mocha
   rack-test
   rake
   shotgun
