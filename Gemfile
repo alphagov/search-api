@@ -10,6 +10,7 @@ group :test do
   gem "simplecov-rcov"
   gem "ci_reporter"
   gem "test-unit"
+  gem "rack-test"
 end
 
 group :development do
