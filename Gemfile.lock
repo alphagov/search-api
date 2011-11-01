@@ -1,0 +1,24 @@
+GIT
+  remote: git://github.com/alphagov/delsolr.git
+  revision: a89291920000e76415d05f85df5df59b44814a47
+  specs:
+    delsolr (0.1.5)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    rack (1.3.5)
+    rack-protection (1.1.4)
+      rack
+    sinatra (1.3.1)
+      rack (~> 1.3, >= 1.3.4)
+      rack-protection (~> 1.1, >= 1.1.2)
+      tilt (~> 1.3, >= 1.3.3)
+    tilt (1.3.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  delsolr!
+  sinatra
