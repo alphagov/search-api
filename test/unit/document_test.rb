@@ -1,7 +1,7 @@
-require "minitest/autorun"
+require "test_helper"
 require "document"
 
-class DocumentTest < MiniTest::Unit::TestCase
+class DocumentTest < Test::Unit::TestCase
   def test_should_turn_hash_into_document
     hash = {
       "title" => "TITLE",
