@@ -52,4 +52,45 @@ class DocumentTest < Test::Unit::TestCase
 
     assert_equal [], document.additional_links
   end
+
+  def test_should_export_title_to_delsolr_collaborator
+    document = Document.new
+    document.title = "TITLE"
+    collaborator = mock("DelSolr Document")
+    collaborator.expects(:add_field).with("title", "TITLE")
+    document.solr_export(collaborator)
+  end
+
+  def test_should_export_description_to_delsolr_collaborator
+    document = Document.new
+    document.description = "DESCRIPTION"
+    collaborator = mock("DelSolr Document")
+    collaborator.expects(:add_field).with("description", "DESCRIPTION")
+    document.solr_export(collaborator)
+  end
+
+  def test_should_export_format_to_delsolr_collaborator
+    document = Document.new
+    document.format = "answer"
+    collaborator = mock("DelSolr Document")
+    collaborator.expects(:add_field).with("format", "answer")
+    document.solr_export(collaborator)
+  end
+
+  def test_should_export_link_to_delsolr_collaborator
+    document = Document.new
+    document.link = "/an-example-answer"
+    collaborator = mock("DelSolr Document")
+    collaborator.expects(:add_field).with("link", "/an-example-answer")
+    document.solr_export(collaborator)
+  end
+
+  def test_should_export_indexable_content_to_delsolr_collaborator
+    document = Document.new
+    document.indexable_content = "HERE IS SOME CONTENT"
+    collaborator = mock("DelSolr Document")
+    collaborator.expects(:add_field).
+      with("indexable_content", "HERE IS SOME CONTENT")
+    document.solr_export(collaborator)
+  end
 end
