@@ -2,7 +2,7 @@ require "test_helper"
 require "mocha"
 require "document"
 
-require File.dirname(__FILE__) + "/../../app"
+require "app"
 
 DOCUMENT = Document.from_hash({"title" => "TITLE1", "description" => "DESCRIPTION", "format" => "local_transaction", "link" => "/URL"})
 
