@@ -7,7 +7,7 @@ require 'slimmer'
 require 'erubis'
 
 require 'document'
-
+require 'solr_wrapper'
 
 require_relative 'helpers'
 require_relative 'config'
@@ -51,4 +51,11 @@ get "/search" do
   else
     erb :search
   end
+end
+
+post "/documents" do
+  request.body.rewind
+  hash = JSON.parse(request.body.read)
+  document = Document.from_hash(hash)
+  settings.solr.add document
 end

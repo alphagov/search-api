@@ -3,6 +3,6 @@ development:
   :path: /solr/rummager
   :port: 8983
 test:
-  :server: localhost
+  :server: solr-test-server
   :path: /solr/rummager
-  :port: 8983
+  :port: 9999

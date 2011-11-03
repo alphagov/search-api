@@ -5,6 +5,7 @@ gem "delsolr", :git => "git://github.com/alphagov/delsolr.git"
 gem 'rake', '0.9.2'
 gem 'slimmer', '0.8.0'
 gem 'erubis'
+gem 'json'
 
 group :test do
   gem "simplecov"
