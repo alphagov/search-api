@@ -15,4 +15,8 @@ helpers do
     @results[settings.top_results..(settings.top_results + settings.max_more_results-1)]
   end
 
+  def pluralize(singular, plural)
+    @results.count == 1 ? singular : plural
+  end
+
 end
