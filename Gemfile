@@ -13,6 +13,7 @@ group :test do
   gem "test-unit"
   gem "rack-test"
   gem "mocha"
+  gem "webmock", :require => false
 end
 
 group :development do

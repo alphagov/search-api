@@ -7,6 +7,9 @@ require "rack/test"
 end
 require "mocha"
 
+require "webmock/test_unit"
+WebMock.disable_net_connect!
+
 require "simplecov"
 require "simplecov-rcov"
 SimpleCov.start
