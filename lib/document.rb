@@ -12,9 +12,13 @@ class Link
   def self.from_hash(hash)
     new.tap { |doc|
       @auto_keys.each do |key|
-        doc.set key, hash[key.to_s]
+        doc.set key, lookup(hash, key)
       end
     }
+  end
+
+  def self.lookup(hash, sym, default=nil)
+    hash[sym] || hash[sym.to_s] || default
   end
 
   def get(key)
@@ -35,7 +39,7 @@ class Document < Link
   def self.from_hash(hash)
     super.tap { |doc|
       doc.additional_links =
-        (hash["additional_links"] || []).map { |h| Link.from_hash(h) }
+        lookup(hash, :additional_links, []).map { |h| Link.from_hash(h) }
     }
   end
 

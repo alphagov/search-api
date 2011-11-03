@@ -53,6 +53,24 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal [], document.additional_links
   end
 
+  def test_should_recognise_symbol_keys_in_hash
+    hash = {
+      :title => "TITLE",
+      :description => "DESCRIPTION",
+      :format => "guide",
+      :link => "/an-example-guide",
+      :indexable_content => "HERE IS SOME CONTENT",
+      :additional_links => [
+        {:title => "LINK TITLE 1", :link => "/additional-link-1"},
+      ]
+    }
+
+    document = Document.from_hash(hash)
+
+    assert_equal "TITLE", document.title
+    assert_equal "LINK TITLE 1", document.additional_links.first.title
+  end
+
   def test_should_export_title_to_delsolr_collaborator
     document = Document.new
     document.title = "TITLE"
