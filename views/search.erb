@@ -1,21 +1,21 @@
 <header>
   <h1>Search results</h1>
-  <p>There were <strong><%= capped_search_set_size %></strong> results for <%=h @query %>.</p>
+  <p>There were <strong><%= capped_search_set_size %></strong> <%= pluralize("result", "results") %> for <%=h @query %>.</p>
 </header>
 
 <div class="results top group">
   <header>
-    <h2>Top <%= settings.top_results %> results for <span><%=h @query %></span></h2>
+    <h2>Top results for <span><%=h @query %></span></h2>
   </header>
   <ol>
     <% top_results.each do |result| %>
-      <li class="<%= result[:format] %>">
-        <a href="<%= result[:link] %>" title="View <%= result[:title] %>"><%= result[:title] %></a>
-        <p><%=h result[:description] %></p>
-        <% unless (result[:additional_links].nil? || result[:additional_links].empty?) %>
+      <li class="<%= result.format %>">
+        <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+        <p><%=h result.description %></p>
+        <% unless (result.additional_links.nil? || result.additional_links.empty?) %>
           <ul>
-            <% result[:additional_links].each do |link| %>
-              <li><a href="<%= link[:link] %>"><%=h link[:title] %></a></li>
+            <% result.additional_links.each do |link| %>
+              <li><a href="<%= link.link %>"><%=h link.title %></a></li>
             <% end %>
           </ul>
         <% end %>
@@ -32,10 +32,10 @@
 
     <ol>
       <% more_results.each do |result| %>
-        <li class="<%= result[:format] %>">
-          <a href="<%= result[:link] %>" title="View <%= result[:title] %>"><%= result[:title] %></a>
-          <small><%= result[:link] %></small>
-          <p><%= h result[:description] %></p>
+        <li class="<%= result.format %>">
+          <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+          <small><%= result.link %></small>
+          <p><%= h result.description %></p>
         </li>
       <% end %>
     </ol>
