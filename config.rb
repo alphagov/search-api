@@ -1,3 +1,5 @@
+ENV["RACK_ENV"] ||= "development"
+
 configure :production do
   use Slimmer::App, :asset_host => "http://static.production.alphagov.co.uk"
 end
