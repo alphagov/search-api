@@ -71,6 +71,26 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "LINK TITLE 1", document.additional_links.first.title
   end
 
+  def test_should_expand_additional_links_into_nested_array
+    hash = {
+      :title => "TITLE",
+      :description => "DESCRIPTION",
+      :format => "guide",
+      :link => "/an-example-guide",
+      :indexable_content => "HERE IS SOME CONTENT",
+      :additional_links__title => ["LINK TITLE 1", "LINK TITLE 2"],
+      :additional_links__link => ["/additional-link-1", "/additional-link-2"]
+    }
+
+    document = Document.from_hash(hash)
+
+    assert_equal 2, document.additional_links.length
+    assert_equal "LINK TITLE 1", document.additional_links[0].title
+    assert_equal "/additional-link-1", document.additional_links[0].link
+    assert_equal "LINK TITLE 2", document.additional_links[1].title
+    assert_equal "/additional-link-2", document.additional_links[1].link
+  end
+
   def test_should_export_title_to_delsolr_collaborator
     document = Document.new
     document.title = "TITLE"
@@ -109,6 +129,30 @@ class DocumentTest < Test::Unit::TestCase
     collaborator = mock("DelSolr Document")
     collaborator.expects(:add_field).
       with("indexable_content", "HERE IS SOME CONTENT")
+    document.solr_export(collaborator)
+  end
+
+  def test_should_export_additional_links_as_separate_fields
+    document = Document.new
+    document.additional_links = [
+      Link.new.tap{ |l|
+        l.title = "LINK TITLE 1"
+        l.link  = "/additional-link-1"
+      },
+      Link.new.tap{ |l|
+        l.title = "LINK TITLE 2"
+        l.link  = "/additional-link-2"
+      },
+    ]
+    collaborator = mock("DelSolr Document")
+    collaborator.expects(:add_field).
+      with("additional_links__title", "LINK TITLE 1")
+    collaborator.expects(:add_field).
+      with("additional_links__link", "/additional-link-1")
+    collaborator.expects(:add_field).
+      with("additional_links__title", "LINK TITLE 2")
+    collaborator.expects(:add_field).
+      with("additional_links__link", "/additional-link-2")
     document.solr_export(collaborator)
   end
 end
