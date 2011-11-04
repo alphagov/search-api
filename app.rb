@@ -5,6 +5,7 @@ end
 require 'sinatra'
 require 'slimmer'
 require 'erubis'
+require 'json'
 
 require 'document'
 require 'solr_wrapper'
@@ -28,4 +29,5 @@ post "/documents" do
   hash = JSON.parse(request.body.read)
   document = Document.from_hash(hash)
   settings.solr.add document
+  "OK"
 end
