@@ -11,6 +11,10 @@ class SolrWrapper
     @client.update! document.solr_export, commitWithin: COMMIT_WITHIN
   end
 
+  def commit
+    @client.commit!
+  end
+
   def search(q)
     results = @client.query("standard", query: q, fields: "*") or return []
     results.docs.map{ |h| Document.from_hash(h) }

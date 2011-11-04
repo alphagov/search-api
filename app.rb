@@ -29,5 +29,12 @@ post "/documents" do
   [JSON.parse(request.body.read)].flatten.each do |hash|
     settings.solr.add Document.from_hash(hash)
   end
-  "OK"
+  content_type :json
+  JSON.dump("result" => "OK")
+end
+
+post "/commit" do
+  settings.solr.commit
+  content_type :json
+  JSON.dump("result" => "OK")
 end
