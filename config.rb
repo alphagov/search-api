@@ -14,4 +14,4 @@ set :solr, lambda {
 }.call
 
 set :top_results, 4
-set :max_more_results, 6
+set :max_more_results, 46
