@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "test_helper"
 require "mocha"
 require "document"
@@ -20,7 +21,7 @@ class SearchTest < Test::Unit::TestCase
   def test_search_view_with_no_query
     get "/search"
     assert last_response.ok?
-    assert last_response.body.include?("You haven't specified a search query")
+    assert last_response.body.include?("You haven’t specified a search query")
   end
 
   def test_search_view_with_query
@@ -36,7 +37,7 @@ class SearchTest < Test::Unit::TestCase
     SolrWrapper.any_instance.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert last_response.ok?
-    assert last_response.body.include?("We can&rsquo;t find any results")
+    assert last_response.body.include?("We can’t find any results")
   end
 
   def test_we_count_result
