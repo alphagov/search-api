@@ -75,4 +75,13 @@ class Document < Link
         lookup(hash, :additional_links, []).map { |h| Link.from_hash(h) }
     }
   end
+
+  FORMAT_TRANSLATION = {
+    "planner" => "answer",
+    "smart_answer" => "answer",
+  }
+
+  def presentation_format
+    FORMAT_TRANSLATION.fetch(format, format)
+  end
 end

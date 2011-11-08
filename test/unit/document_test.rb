@@ -91,6 +91,27 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "/additional-link-2", document.additional_links[1].link
   end
 
+  def test_should_use_answer_as_presentation_format_for_planner
+    hash = {:format => "planner"}
+
+    document = Document.from_hash(hash)
+    assert_equal "answer", document.presentation_format
+  end
+
+  def test_should_use_answer_as_presentation_format_for_answer
+    hash = {:format => "smart_answer"}
+
+    document = Document.from_hash(hash)
+    assert_equal "answer", document.presentation_format
+  end
+
+  def test_should_use_guide_as_presentation_format_for_guide
+    hash = {:format => "guide"}
+
+    document = Document.from_hash(hash)
+    assert_equal "guide", document.presentation_format
+  end
+
   def test_should_export_title_to_delsolr_collaborator
     document = Document.new
     document.title = "TITLE"

@@ -9,7 +9,7 @@
   </header>
   <ol>
     <% top_results.each do |result| %>
-      <li class="<%= result.format %>">
+      <li class="<%= result.presentation_format %>">
         <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
         <p><%=h result.description %></p>
         <% unless (result.additional_links.nil? || result.additional_links.empty?) %>
@@ -32,7 +32,7 @@
 
     <ol>
       <% more_results.each do |result| %>
-        <li class="<%= result.format %>">
+        <li class="<%= result.presentation_format %>">
           <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
           <small><%= result.link %></small>
           <p><%= h result.description %></p>
