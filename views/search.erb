@@ -1,19 +1,20 @@
 <header>
   <h1>Search results</h1>
-  <p>There were <strong><%= capped_search_set_size %></strong> <%= pluralize("result", "results") %> for <%=h @query %>.</p>
+  <p>There were <strong><%= capped_search_set_size %></strong> <%= pluralize("result", "results") %> for &ldquo;<%=h @query %>&rdquo;.</p>
 </header>
 
 <div class="results top group">
   <header>
-    <h2>Top results for <span><%=h @query %></span></h2>
+    <h2>Top results</h2>
   </header>
-  <ol>
+  <ol class="group">
     <% top_results.each do |result| %>
       <li class="<%= result.presentation_format %>">
         <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+        <small><%= result.link %></small>
         <p><%=h result.description %></p>
         <% unless (result.additional_links.nil? || result.additional_links.empty?) %>
-          <ul>
+          <ul class="search-parts">
             <% result.additional_links.each do |link| %>
               <li><a href="<%= link.link %>"><%=h link.title %></a></li>
             <% end %>
@@ -25,12 +26,12 @@
 </div>
 
 <% if more_results %>
-  <div class="results group">
+  <div class="results more group">
     <header>
       <h3>More results</h3>
     </header>
 
-    <ol>
+    <ol class="group">
       <% more_results.each do |result| %>
         <li class="<%= result.presentation_format %>">
           <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
