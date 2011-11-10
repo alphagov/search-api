@@ -15,6 +15,7 @@ group :test do
   gem "rack-test"
   gem "mocha"
   gem "webmock", :require => false
+  gem "htmlentities"
 end
 
 group :development do

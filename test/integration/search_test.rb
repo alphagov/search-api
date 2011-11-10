@@ -3,6 +3,7 @@ require "test_helper"
 require "mocha"
 require "document"
 require "app"
+require "htmlentities"
 
 class SearchTest < Test::Unit::TestCase
   DOCUMENT = Document.from_hash(
@@ -18,10 +19,16 @@ class SearchTest < Test::Unit::TestCase
     Sinatra::Application
   end
 
+  def assert_response_text(needle)
+    haystack = HTMLEntities.new.decode(last_response.body.gsub(/<[^>]+>/, " ").gsub(/\s+/, " "))
+    message = "Expected to find #{needle.inspect} in\n#{haystack}"
+    assert haystack.include?(needle), message
+  end
+
   def test_search_view_with_no_query
     get "/search"
     assert last_response.ok?
-    assert last_response.body.include?("You haven’t specified a search query")
+    assert_response_text "You haven’t specified a search query"
   end
 
   def test_search_view_with_query
@@ -30,14 +37,14 @@ class SearchTest < Test::Unit::TestCase
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
-    assert last_response.body.include?("result for bob")
+    assert_response_text "result for “bob”"
   end
 
   def test_search_view_returning_no_results
     SolrWrapper.any_instance.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert last_response.ok?
-    assert last_response.body.include?("We can’t find any results")
+    assert_response_text "We can’t find any results"
   end
 
   def test_we_count_result
@@ -46,7 +53,7 @@ class SearchTest < Test::Unit::TestCase
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
-    assert last_response.body.include?("<strong>1</strong> result ")
+    assert_response_text "1 result "
   end
 
   def test_we_count_results
@@ -55,6 +62,6 @@ class SearchTest < Test::Unit::TestCase
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
-    assert last_response.body.include?("<strong>2</strong> results")
+    assert_response_text "2 results"
   end
 end
