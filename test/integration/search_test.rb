@@ -64,4 +64,17 @@ class SearchTest < Test::Unit::TestCase
     assert last_response.ok?
     assert_response_text "2 results"
   end
+
+  def test_should_return_autocompletion_documents_as_json
+    SolrWrapper.any_instance.stubs(:search).returns([DOCUMENT])
+    get "/autocomplete", :q => 'bob'
+    assert last_response.ok?
+    expected = [{
+      "title" => "TITLE1",
+      "description" => "DESCRIPTION",
+      "format" => "local_transaction",
+      "link" => "/URL"
+    }]
+    assert_equal expected, JSON.parse(last_response.body)
+  end
 end

@@ -176,4 +176,33 @@ class DocumentTest < Test::Unit::TestCase
       with("additional_links__link", "/additional-link-2")
     document.solr_export(collaborator)
   end
+
+  def test_should_round_trip_document_from_hash_and_back_into_hash
+    hash = {
+      "title" => "TITLE",
+      "description" => "DESCRIPTION",
+      "format" => "guide",
+      "link" => "/an-example-guide",
+      "indexable_content" => "HERE IS SOME CONTENT",
+      "additional_links" => [
+        {"title" => "LINK TITLE 1", "link" => "/additional-link-1"},
+        {"title" => "LINK TITLE 2", "link" => "/additional-link-2"},
+      ]
+    }
+
+    document = Document.from_hash(hash)
+    assert_equal hash, document.to_hash
+  end
+
+  def test_should_skip_missing_fields_in_to_hash
+    hash = {
+      "title" => "TITLE",
+      "description" => "DESCRIPTION",
+      "format" => "guide",
+      "link" => "/an-example-guide",
+    }
+
+    document = Document.from_hash(hash)
+    assert_equal hash.keys.sort, document.to_hash.keys.sort
+  end
 end

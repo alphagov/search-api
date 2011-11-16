@@ -47,6 +47,18 @@ class Link
     }
   end
 
+  def to_hash
+    Hash[self.class.auto_keys.map { |key|
+      value = get(key)
+      if value.is_a?(Array)
+        value = value.map { |v| v.to_hash }
+      end
+      [key.to_s, value]
+    }.select{ |key, value|
+      ![nil, []].include?(value)
+    }]
+  end
+
   def self.unflatten(hash)
    {}.tap { |result|
       hash.each do |k, v|

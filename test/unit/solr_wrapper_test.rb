@@ -68,4 +68,11 @@ class SolrWrapperTest < Test::Unit::TestCase
     client.expects(:query).with(anything, has_entry(fields: "*"))
     wrapper.search("foo")
   end
+
+  def test_should_ask_solr_for_partial_autocomplete_field
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:query).with("standard", has_entries(fields: "*", query: "autocomplete:foo*"))
+    wrapper.complete("foo")
+  end
 end

@@ -19,4 +19,8 @@ class SolrWrapper
     results = @client.query("standard", query: q, fields: "*") or return []
     results.docs.map{ |h| Document.from_hash(h) }
   end
+
+  def complete(q)
+    search("autocomplete:#{q}*")
+  end
 end

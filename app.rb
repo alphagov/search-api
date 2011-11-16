@@ -24,6 +24,13 @@ get "/search" do
   end
 end
 
+get "/autocomplete" do
+  query = params['q'] or return '[]'
+  results = settings.solr.complete(query)
+  content_type :json
+  JSON.dump(results.map { |r| r.to_hash })
+end
+
 post "/documents" do
   request.body.rewind
   [JSON.parse(request.body.read)].flatten.each do |hash|
