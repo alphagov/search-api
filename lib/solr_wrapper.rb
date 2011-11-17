@@ -15,12 +15,24 @@ class SolrWrapper
     @client.commit!
   end
 
-  def search(q)
+  def search_without_escaping(q)
     results = @client.query("standard", query: q, fields: "*") or return []
     results.docs.map{ |h| Document.from_hash(h) }
   end
 
+  def search(q)
+    search_without_escaping(escape(q.downcase))
+  end
+
   def complete(q)
-    search("autocomplete:#{q}*")
+    search_without_escaping("autocomplete:#{escape(q.downcase)}*")
+  end
+
+  SOLR_SPECIAL_SEQUENCES = Regexp.new("(" + %w[
+    + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
+  ].map { |s| Regexp.escape(s) }.join("|") + ")")
+
+  def escape(s)
+    s.gsub(SOLR_SPECIAL_SEQUENCES, "\\\\\\1")
   end
 end

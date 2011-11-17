@@ -62,6 +62,20 @@ class SolrWrapperTest < Test::Unit::TestCase
     wrapper.search("foo")
   end
 
+  def test_should_escape_search_term
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:query).with(anything, has_entry(query: "foo\\?"))
+    wrapper.search("foo?")
+  end
+
+  def test_should_downcase_search_term
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:query).with("standard", has_entry(query: "foo"))
+    wrapper.search("FOO")
+  end
+
   def test_should_ask_solr_for_all_fields_in_results
     client = mock("client")
     wrapper = SolrWrapper.new(client)
@@ -74,5 +88,27 @@ class SolrWrapperTest < Test::Unit::TestCase
     wrapper = SolrWrapper.new(client)
     client.expects(:query).with("standard", has_entries(fields: "*", query: "autocomplete:foo*"))
     wrapper.complete("foo")
+  end
+
+  def test_should_escape_autocomplete_term
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:query).with("standard", has_entry(query: "autocomplete:foo\\?*"))
+    wrapper.complete("foo?")
+  end
+
+  def test_should_downcase_autocomplete_term
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:query).with("standard", has_entry(query: "autocomplete:foo*"))
+    wrapper.complete("FOO")
+  end
+
+  def test_should_escape_characters_with_special_meaning_in_solr
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    input = '+ - && || ! ( ) { } [ ] ^ " ~ * ? : \\'
+    expected = '\\+ \\- \\&& \\|| \\! \\( \\) \\{ \\} \\[ \\] \\^ \\" \\~ \\* \\? \\: \\\\'
+    assert_equal expected, wrapper.escape(input)
   end
 end
