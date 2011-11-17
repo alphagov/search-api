@@ -66,7 +66,7 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_should_return_autocompletion_documents_as_json
-    SolrWrapper.any_instance.stubs(:search).returns([DOCUMENT])
+    SolrWrapper.any_instance.stubs(:complete).returns([DOCUMENT])
     get "/autocomplete", :q => 'bob'
     assert last_response.ok?
     expected = [{
