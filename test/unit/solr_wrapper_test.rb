@@ -8,8 +8,8 @@ class SolrWrapperTest < Test::Unit::TestCase
     client = mock("client")
     wrapper = SolrWrapper.new(client)
 
-    client.expects(:update!).with(solr_document, anything)
-    wrapper.add document
+    client.expects(:update!).with([solr_document], anything)
+    wrapper.add [document]
   end
 
   def test_should_tell_solr_to_commit_within_five_minutes
@@ -19,7 +19,7 @@ class SolrWrapperTest < Test::Unit::TestCase
     wrapper = SolrWrapper.new(client)
 
     client.expects(:update!).with(anything, has_entry(commitWithin: 5*60*1000))
-    wrapper.add document
+    wrapper.add [document]
   end
 
   def test_should_return_an_empty_array_if_query_returns_nil

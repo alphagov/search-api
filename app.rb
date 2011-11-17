@@ -33,11 +33,10 @@ end
 
 post "/documents" do
   request.body.rewind
-  [JSON.parse(request.body.read)].flatten.each do |hash|
-    settings.solr.add Document.from_hash(hash)
-  end
-  content_type :json
-  JSON.dump("result" => "OK")
+  documents = [JSON.parse(request.body.read)].flatten.map { |hash|
+    Document.from_hash(hash)
+  }
+  simple_json_result(settings.solr.add(documents))
 end
 
 post "/commit" do

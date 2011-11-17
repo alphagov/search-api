@@ -7,8 +7,8 @@ class SolrWrapper
     @client = client
   end
 
-  def add(document)
-    @client.update! document.solr_export, commitWithin: COMMIT_WITHIN
+  def add(documents)
+    @client.update! documents.map(&:solr_export), commitWithin: COMMIT_WITHIN
   end
 
   def commit
