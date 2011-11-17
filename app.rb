@@ -41,7 +41,9 @@ post "/documents" do
 end
 
 post "/commit" do
-  settings.solr.commit
-  content_type :json
-  JSON.dump("result" => "OK")
+  simple_json_result(settings.solr.commit)
+end
+
+delete "/documents/*" do
+  simple_json_result(settings.solr.delete(params["splat"].first))
 end

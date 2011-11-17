@@ -28,6 +28,10 @@ class SolrWrapper
     search_without_escaping("autocomplete:#{escape(q.downcase)}*")
   end
 
+  def delete(link)
+    @client.delete_by_query("link:#{escape(link)}")
+  end
+
   SOLR_SPECIAL_SEQUENCES = Regexp.new("(" + %w[
     + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
   ].map { |s| Regexp.escape(s) }.join("|") + ")")

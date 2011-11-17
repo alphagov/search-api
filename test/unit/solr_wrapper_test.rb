@@ -111,4 +111,11 @@ class SolrWrapperTest < Test::Unit::TestCase
     expected = '\\+ \\- \\&& \\|| \\! \\( \\) \\{ \\} \\[ \\] \\^ \\" \\~ \\* \\? \\: \\\\'
     assert_equal expected, wrapper.escape(input)
   end
+
+  def test_should_delete_by_escaped_link
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:delete_by_query).with("link:foo\\-bar")
+    wrapper.delete("foo-bar")
+  end
 end

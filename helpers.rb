@@ -19,4 +19,15 @@ helpers do
     @results.count == 1 ? singular : plural
   end
 
+  def simple_json_result(ok)
+    content_type :json
+    if ok
+      result = "OK"
+    else
+      result = "error"
+      status 500
+    end
+    JSON.dump("result" => result)
+  end
+
 end

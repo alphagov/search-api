@@ -7,6 +7,14 @@ class UpdateTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   ENDPOINT = "http://solr-test-server:9999/solr/rummager/update"
+  SUCCESS_RESPONSE = <<-END
+    <response>
+      <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">9</int>
+      </lst>
+    </response>
+  END
 
   def app
     Sinatra::Application
@@ -21,7 +29,8 @@ class UpdateTest < Test::Unit::TestCase
       "indexable_content" => "HERE IS SOME CONTENT"
     )
 
-    stub_request :post, ENDPOINT
+    stub_request(:post, ENDPOINT).
+      to_return(body: SUCCESS_RESPONSE)
 
     post "/documents", json
 
@@ -44,12 +53,24 @@ class UpdateTest < Test::Unit::TestCase
       "indexable_content" => "HERE IS SOME CONTENT"
     }])
 
-    stub_request :post, "http://solr-test-server:9999/solr/rummager/update"
+    stub_request(:post, "http://solr-test-server:9999/solr/rummager/update").
+      to_return(body: SUCCESS_RESPONSE)
 
     post "/documents", json
 
     assert last_response.ok?
     assert_requested :post, ENDPOINT, body: %r{TITLE1}
     assert_requested :post, ENDPOINT, body: %r{TITLE2}
+  end
+
+  def test_should_post_delete_by_query_to_solr
+    stub_request(:post, "http://solr-test-server:9999/solr/rummager/update").
+      to_return(body: SUCCESS_RESPONSE)
+
+    delete "/documents/http%3A%2F%2Fexample.com%2Flink-name"
+
+    assert last_response.ok?
+    assert_requested :post, ENDPOINT,
+      body: Regexp.new(Regexp.escape("link:http\\://example.com/link\\-name"))
   end
 end
