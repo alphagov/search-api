@@ -1,6 +1,9 @@
 ENV["RACK_ENV"] ||= "development"
 
-use Slimmer::App
+configure :production, :development do
+  use Slimmer::App
+end
+
 
 set :solr, lambda {
   config = YAML.load(File.read(File.expand_path("../solr.yml", __FILE__)))
