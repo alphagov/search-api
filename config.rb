@@ -1,12 +1,6 @@
 ENV["RACK_ENV"] ||= "development"
 
-configure :production do
-  use Slimmer::App, :asset_host => "http://static.production.alphagov.co.uk"
-end
-
-configure :development do
-  use Slimmer::App, :template_path => "./public/templates"
-end
+use Slimmer::App
 
 set :solr, lambda {
   config = YAML.load(File.read(File.expand_path("../solr.yml", __FILE__)))
