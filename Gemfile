@@ -1,5 +1,9 @@
 source :rubygems
 
+group :router do
+  gem 'router-client', '1.0.0', :require => 'router/client'
+end
+
 gem "sinatra"
 gem "delsolr", :git => "git://github.com/alphagov/delsolr.git"
 gem 'rake', '0.9.2'
