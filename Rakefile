@@ -35,7 +35,7 @@ namespace :router do
     end
   end
 
-  task :register_routes => [ :router_environment, :environment ] do
+  task :register_routes => [ :router_environment ] do
     begin
       @logger.info "Registering prefix /search"
       @router.routes.create application_id: "search", route_type: :prefix,
