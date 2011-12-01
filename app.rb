@@ -26,7 +26,7 @@ end
 
 get "/autocomplete" do
   query = params['q'] or return '[]'
-  results = settings.solr.complete(query)
+  results = settings.solr.complete(query) rescue []
   content_type :json
   JSON.dump(results.map { |r| r.to_hash })
 end
