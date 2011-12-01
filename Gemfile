@@ -2,7 +2,7 @@ source :rubygems
 source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
 group :router do
-  gem 'router-client', '1.0.0', :require => 'router/client'
+  gem 'router-client', '2.0.3', :require => 'router/client'
 end
 
 gem "sinatra"
