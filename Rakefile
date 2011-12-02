@@ -29,9 +29,11 @@ namespace :router do
   end
 
   task :register_routes => [ :router_environment ] do
-    @logger.info "Registering prefix /search"
+    @logger.info "Registering prefix /search and /autocomplete"
     @router.routes.update application_id: "search", route_type: :prefix,
       incoming_path: "/search"
+    @router.routes.update application_id: "search", route_type: :prefix,
+      incoming_path: "/autocomplete"
   end
 
   desc "Register search application and routes with the router (run this task on server in cluster)"
