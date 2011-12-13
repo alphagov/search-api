@@ -16,7 +16,7 @@ class SolrWrapper
   end
 
   def search_without_escaping(q)
-    results = @client.query("standard", query: q, fields: "*") or return []
+    results = @client.query("standard", query: q, fields: "*", limit: 50) or return []
     results.docs.map{ |h| Document.from_hash(h) }
   end
 

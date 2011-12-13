@@ -10,6 +10,7 @@ class SearchTest < Test::Unit::TestCase
     "title" => "TITLE1",
     "description" => "DESCRIPTION",
     "format" => "local_transaction",
+    "section" => "citizenship",
     "link" => "/URL"
   )
 
@@ -47,6 +48,28 @@ class SearchTest < Test::Unit::TestCase
     assert_response_text "We can’t find any results"
   end
 
+  def test_browsing_a_valid_section
+    SolrWrapper.any_instance.stubs(:search_without_escaping).returns([
+      DOCUMENT
+    ])
+    get "/browse/bob"
+    assert last_response.ok?
+  end
+
+  def test_browsing_an_empty_section
+    SolrWrapper.any_instance.stubs(:search_without_escaping).returns([])
+    get "/browse/bob"
+    assert_equal 404, last_response.status
+  end
+
+  def test_browsing_an_invalid_section
+    SolrWrapper.any_instance.stubs(:search_without_escaping).returns([
+      DOCUMENT
+    ])
+    get "/browse/And%20this"
+    assert_equal 404, last_response.status
+  end
+
   def test_we_count_result
     SolrWrapper.any_instance.stubs(:search).returns([
       DOCUMENT
@@ -73,6 +96,7 @@ class SearchTest < Test::Unit::TestCase
       "title" => "TITLE1",
       "description" => "DESCRIPTION",
       "format" => "local_transaction",
+      "section" => "citizenship",
       "link" => "/URL"
     }]
     assert_equal expected, JSON.parse(last_response.body)

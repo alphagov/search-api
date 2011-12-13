@@ -78,7 +78,7 @@ end
 
 class Document < Link
 
-  auto_keys :title, :link, :description, :format, :indexable_content, :additional_links
+  auto_keys :title, :link, :description, :format, :section, :indexable_content, :additional_links
 
   def self.from_hash(hash)
     hash = unflatten(hash)

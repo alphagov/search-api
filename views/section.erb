@@ -1,0 +1,23 @@
+<header>
+  <h1>Section</h1>
+</header>
+
+<div class="results top group">
+  <ol class="group">
+    <% @results.each do |result| %>
+      <li class="<%= result.presentation_format %>">
+        <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+        <small><%= result.link %></small>
+        <p><%=h result.section %></p>
+        <p><%=h result.description %></p>
+        <% unless (result.additional_links.nil? || result.additional_links.empty?) %>
+          <ul class="search-parts">
+            <% result.additional_links.each do |link| %>
+              <li><a href="<%= link.link %>"><%=h link.title %></a></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </li>
+    <% end %>
+  </ol>
+</div>

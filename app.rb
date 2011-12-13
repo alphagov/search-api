@@ -31,6 +31,14 @@ get "/autocomplete" do
   JSON.dump(results.map { |r| r.to_hash })
 end
 
+get "/browse/:section" do
+  section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
+  halt 404 unless section == params[:section]
+  @results = settings.solr.search_without_escaping({ :section => section })
+  halt 404 if @results.empty?
+  erb(:section)
+end
+
 post "/documents" do
   request.body.rewind
   documents = [JSON.parse(request.body.read)].flatten.map { |hash|
