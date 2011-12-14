@@ -1,13 +1,15 @@
-<header>
-  <h1>Sections</h1>
-</header>
+<section id="content" role="main" class="group ancillary section-page">
+  <header>
+    <h1>Sections</h1>
+  </header>
 
-<div>
-  <ul>
-    <% @results.each do |section| %>
-      <li>
-        <a href="<%= section.path %>"><%=h section.name %></a>
-      </li>
-    <% end %>
-  </ul>
-</div>
+  <div>
+    <ul>
+      <% @results.each do |section| %>
+        <li>
+          <a href="<%= section.path %>"><%=h section.name %></a>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</section>
