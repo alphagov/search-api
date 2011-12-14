@@ -24,7 +24,7 @@ namespace :router do
 
   task :register_application => :router_environment do
     platform = ENV['FACTER_govuk_platform']
-    url = "#{@application_id}.#{platform}.alphagov.co.uk"
+    url = "#{@application_id}.#{platform}.alphagov.co.uk/"
     @logger.info %{Registering application "#{@application_id}"...}
     @router.applications.update application_id: @application_id, backend_url: url
   end
