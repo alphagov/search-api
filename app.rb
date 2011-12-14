@@ -8,6 +8,7 @@ require 'erubis'
 require 'json'
 
 require 'document'
+require 'section'
 require 'solr_wrapper'
 
 require_relative 'helpers'
@@ -41,6 +42,7 @@ get "/browse/:section" do
   halt 404 unless section == params[:section]
   @results = settings.solr.search_without_escaping({ :section => section })
   halt 404 if @results.empty?
+  @section = Section.new(section)
   erb(:section)
 end
 

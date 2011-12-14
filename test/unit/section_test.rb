@@ -13,4 +13,9 @@ class SectionTest < Test::Unit::TestCase
     assert_equal "This and that", section.name
   end
 
+  def test_section_slug_accessible
+    section = Section.new("bob")
+    assert_equal "bob", section.slug
+  end
+
 end

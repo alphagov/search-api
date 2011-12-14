@@ -1,5 +1,7 @@
 class Section
 
+  attr_reader :slug
+
   def initialize(slug)
     @slug = slug
   end

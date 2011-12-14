@@ -19,6 +19,13 @@ helpers do
     @results.count == 1 ? singular : plural
   end
 
+  def include(name)
+    begin
+      File.open("views/_#{name}.html").read
+    rescue Errno::ENOENT
+    end
+  end
+
   def simple_json_result(ok)
     content_type :json
     if ok

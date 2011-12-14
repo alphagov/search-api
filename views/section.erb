@@ -1,6 +1,8 @@
 <header>
-  <h1>Section</h1>
+  <h1>Section <%= @section.name %></h1>
 </header>
+
+<%= include @section.slug %>
 
 <div class="results top group">
   <ol class="group">
