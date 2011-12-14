@@ -10,9 +10,18 @@ require 'json'
 require 'document'
 require 'section'
 require 'solr_wrapper'
+require 'slimmer_headers'
 
 require_relative 'helpers'
 require_relative 'config'
+
+before do
+  headers SlimmerHeaders.headers(
+    section:     "Search",
+    format:      "search",
+    proposition: "citizen"
+  )
+end
 
 get "/search" do
   @query = params['q'] or return erb(:no_search_term)

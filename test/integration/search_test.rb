@@ -118,4 +118,12 @@ class SearchTest < Test::Unit::TestCase
     }]
     assert_equal expected, JSON.parse(last_response.body)
   end
+
+  def test_should_send_analytics_headers
+    SolrWrapper.any_instance.stubs(:search).returns([])
+    get "/search", :q => 'bob'
+    assert_equal "Search",  last_response.headers["X-Slimmer-Section"]
+    assert_equal "search",  last_response.headers["X-Slimmer-Format"]
+    assert_equal "citizen", last_response.headers["X-Slimmer-Proposition"]
+  end
 end
