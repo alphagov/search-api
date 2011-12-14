@@ -1,16 +1,18 @@
-<header>
-  <h1>Driving</h1>
-</header>
+<section id="content" role="main" class="group ancillary section-page">
+  <header>
+    <h1>Driving</h1>
+  </header>
 
-<div class="results top group">
-  <ol class="group">
-    <% @results.each do |result| %>
-      <li class="<%= result.presentation_format %>">
-        <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-        <small><%= result.link %></small>
-        <p><%=h result.section %></p>
-        <p><%=h result.description %></p>
-      </li>
-    <% end %>
-  </ol>
-</div>
+  <div class="results top group">
+    <ol class="group">
+      <% @results.each do |result| %>
+        <li class="<%= result.presentation_format %>">
+          <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+          <small><%= result.link %></small>
+          <p><%=h result.section %></p>
+          <p><%=h result.description %></p>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+</section>
