@@ -1,0 +1,13 @@
+<header>
+  <h1>Sections</h1>
+</header>
+
+<div>
+  <ul>
+    <% @results.each do |section| %>
+      <li>
+        <a href="<%= section.path %>"><%=h section.name %></a>
+      </li>
+    <% end %>
+  </ul>
+</div>

@@ -1,4 +1,5 @@
 require "document"
+require "section"
 
 class SolrWrapper
   COMMIT_WITHIN = 5 * 60 * 1000 # 5m in ms
@@ -22,6 +23,11 @@ class SolrWrapper
 
   def search(q)
     search_without_escaping(escape(q.downcase))
+  end
+
+  def facet(q)
+    results = @client.query('standard', :query => "*:*", :facets => [{:field => q, :sort => q}]) or return []
+    results.facet_field_values(q).delete_if{ |f| f.empty?  }.map{ |s| Section.new(s) }
   end
 
   def complete(q)
