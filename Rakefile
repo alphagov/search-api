@@ -34,6 +34,8 @@ namespace :router do
       incoming_path: "/search"
     @router.routes.update application_id: "search", route_type: :prefix,
       incoming_path: "/autocomplete"
+    @router.routes.update application_id: "search", route_type: :prefix,
+      incoming_path: "/browse"
   end
 
   desc "Register search application and routes with the router (run this task on server in cluster)"
