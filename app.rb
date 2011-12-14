@@ -31,6 +31,11 @@ get "/autocomplete" do
   JSON.dump(results.map { |r| r.to_hash })
 end
 
+get "/browse" do
+  @results = settings.solr.facet('section')
+  erb(:sections)
+end
+
 get "/browse/:section" do
   section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
   halt 404 unless section == params[:section]

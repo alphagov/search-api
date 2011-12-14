@@ -2,6 +2,7 @@
 require "test_helper"
 require "mocha"
 require "document"
+require "section"
 require "app"
 require "htmlentities"
 
@@ -13,6 +14,8 @@ class SearchTest < Test::Unit::TestCase
     "section" => "citizenship",
     "link" => "/URL"
   )
+
+  SECTION = Section.new("bob")
 
   include Rack::Test::Methods
 
@@ -68,6 +71,20 @@ class SearchTest < Test::Unit::TestCase
     ])
     get "/browse/And%20this"
     assert_equal 404, last_response.status
+  end
+
+  def test_browsing_section_list
+    SolrWrapper.any_instance.stubs(:facet).returns([
+      SECTION
+    ])
+    get "/browse"
+    assert last_response.ok?
+  end
+
+  def test_section_list_always_renders
+    SolrWrapper.any_instance.stubs(:facet).returns([])
+    get "/browse"
+    assert last_response.ok?
   end
 
   def test_we_count_result

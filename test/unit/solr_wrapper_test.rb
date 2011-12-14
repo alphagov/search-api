@@ -48,6 +48,16 @@ class SolrWrapperTest < Test::Unit::TestCase
     assert_equal "/URL", docs.first.link
   end
 
+  def test_facet_doesnt_return_blanks
+    client = stub("client")
+    wrapper = SolrWrapper.new(client)
+    result = stub(facet_field_values: ["rod", "", "jane", "freddy", ""])
+    client.stubs(:query).returns(result)
+    facets = wrapper.facet("foo")
+
+    assert_equal 3, facets.length
+  end
+
   def test_should_use_standard_search_handler
     client = mock("client")
     wrapper = SolrWrapper.new(client)
@@ -81,6 +91,20 @@ class SolrWrapperTest < Test::Unit::TestCase
     wrapper = SolrWrapper.new(client)
     client.expects(:query).with(anything, has_entry(fields: "*"))
     wrapper.search("foo")
+  end
+
+  def test_facet_should_ask_for_everything
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:query).with("standard", has_entries(query: "*:*"))
+    wrapper.facet("foo")
+  end
+
+  def test_facet_should_ask_for_and_sort_by_specified_facet
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:query).with("standard", has_entries(facets: [{:field => "foo", :sort => "foo"}]))
+    wrapper.facet("foo")
   end
 
   def test_should_ask_solr_for_partial_autocomplete_field
