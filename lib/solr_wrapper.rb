@@ -17,8 +17,8 @@ class SolrWrapper
   end
 
   def search_without_escaping(q)
-    results = @client.query("dismax", query: q, fields: "*", bq: "format:recommended-link", limit: 50) or return []
-    results.docs.map{ |h| Document.from_hash(h) }
+    results = @client.query("dismax", query: q, fields: "*", bq: "format:#{settings.recommended_format}", limit: 50) or return []
+    results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
   end
 
   def search(q)

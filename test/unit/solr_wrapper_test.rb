@@ -37,7 +37,9 @@ class SolrWrapperTest < Test::Unit::TestCase
       "description" => "DESCRIPTION",
       "format" => "local_transaction",
       "link" => "/URL"
-    }])
+      }],
+      raw_response: true
+    )
     client.stubs(:query).returns(result)
     docs = wrapper.search("foo")
 
@@ -46,6 +48,16 @@ class SolrWrapperTest < Test::Unit::TestCase
     assert_equal "DESCRIPTION", docs.first.description
     assert_equal "local_transaction", docs.first.format
     assert_equal "/URL", docs.first.link
+  end
+
+  def test_should_return_zero_if_no_raw_response_returned
+    client = stub("client")
+    wrapper = SolrWrapper.new(client)
+    result = stub(raw_response: nil)
+    client.stubs(:query).returns(result)
+    docs = wrapper.search("foo")
+
+    assert_equal 0, docs.length
   end
 
   def test_facet_doesnt_return_blanks
