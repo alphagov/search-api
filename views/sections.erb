@@ -1,15 +1,18 @@
 <section id="content" role="main" class="group ancillary section-page">
   <header>
-    <h1>Sections</h1>
+    <h1>Browse GOV.UK</h1>
   </header>
 
   <div class="sections-list">
-    <ul>
+    <dl>
       <% @results.each do |section| %>
-        <li>
+        <dt>
           <a href="<%= section.path %>"><%=h section.name %></a>
-        </li>
+        </dt>
+        <dd>
+          <%= include section.slug %>
+        </dd>
       <% end %>
-    </ul>
+    </dl>
   </div>
 </section>
