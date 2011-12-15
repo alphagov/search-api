@@ -58,10 +58,10 @@ class SolrWrapperTest < Test::Unit::TestCase
     assert_equal 3, facets.length
   end
 
-  def test_should_use_standard_search_handler
+  def test_should_use_dismax_search_handler
     client = mock("client")
     wrapper = SolrWrapper.new(client)
-    client.expects(:query).with("standard", anything)
+    client.expects(:query).with("dismax", anything)
     wrapper.search("foo")
   end
 
@@ -82,7 +82,7 @@ class SolrWrapperTest < Test::Unit::TestCase
   def test_should_downcase_search_term
     client = mock("client")
     wrapper = SolrWrapper.new(client)
-    client.expects(:query).with("standard", has_entry(query: "foo"))
+    client.expects(:query).with("dismax", has_entry(query: "foo"))
     wrapper.search("FOO")
   end
 
@@ -90,6 +90,13 @@ class SolrWrapperTest < Test::Unit::TestCase
     client = mock("client")
     wrapper = SolrWrapper.new(client)
     client.expects(:query).with(anything, has_entry(fields: "*"))
+    wrapper.search("foo")
+  end
+
+  def test_should_prioritise_recommended_links
+    client = mock("client")
+    wrapper = SolrWrapper.new(client)
+    client.expects(:query).with(anything, has_entry(bq: "format:recommended-link"))
     wrapper.search("foo")
   end
 
@@ -110,21 +117,21 @@ class SolrWrapperTest < Test::Unit::TestCase
   def test_should_ask_solr_for_partial_autocomplete_field
     client = mock("client")
     wrapper = SolrWrapper.new(client)
-    client.expects(:query).with("standard", has_entries(fields: "*", query: "autocomplete:foo*"))
+    client.expects(:query).with("dismax", has_entries(fields: "*", query: "autocomplete:foo*"))
     wrapper.complete("foo")
   end
 
   def test_should_escape_autocomplete_term
     client = mock("client")
     wrapper = SolrWrapper.new(client)
-    client.expects(:query).with("standard", has_entry(query: "autocomplete:foo\\?*"))
+    client.expects(:query).with("dismax", has_entry(query: "autocomplete:foo\\?*"))
     wrapper.complete("foo?")
   end
 
   def test_should_downcase_autocomplete_term
     client = mock("client")
     wrapper = SolrWrapper.new(client)
-    client.expects(:query).with("standard", has_entry(query: "autocomplete:foo*"))
+    client.expects(:query).with("dismax", has_entry(query: "autocomplete:foo*"))
     wrapper.complete("FOO")
   end
 
