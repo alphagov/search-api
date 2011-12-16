@@ -12,5 +12,6 @@ set :solr, lambda {
 
 set :top_results, 4
 set :max_more_results, 46
+set :max_recommended_results, 2
 
 set :recommended_format, "recommended-link"

@@ -16,7 +16,7 @@ helpers do
   end
 
   def recommended_results
-    @results.select { |r| r.format == settings.recommended_format }
+    @results.select { |r| r.format == settings.recommended_format }[0, settings.max_recommended_results]
   end
 
   def non_recommended_results
