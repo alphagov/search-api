@@ -25,6 +25,11 @@ class SolrWrapper
     search_without_escaping(escape(q.downcase))
   end
 
+  def section(q)
+    results = @client.query("standard", :query => { :section => q }, :fields => "*", :limit => 100) or return []
+    results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
+  end
+
   def facet(q)
     results = @client.query('standard', :query => "*:*", :facets => [{:field => q, :sort => q}]) or return []
     results.facet_field_values(q).delete_if{ |f| f.empty?  }.map{ |s| Section.new(s) }

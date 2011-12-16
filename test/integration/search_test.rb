@@ -78,7 +78,7 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_browsing_a_valid_section
-    SolrWrapper.any_instance.stubs(:search_without_escaping).returns([
+    SolrWrapper.any_instance.stubs(:section).returns([
       DOCUMENT
     ])
     get "/browse/bob"
