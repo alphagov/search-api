@@ -8,6 +8,19 @@
     <header>
       <h2>Top results</h2>
     </header>
+
+    <% if recommended_results %>
+      <ul class="search-promoted">
+      <% recommended_results.each do |result| %>
+        <li>
+          <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.link %></a></h3>
+          <p><%=h result.description %></p>
+          <p><a href="<% result.link %>" class="button" title="Visit this website (you will leave the gov.uk website)">Visit this website &rarr;</a></p>
+        </li>
+      <% end %>
+      <ul>
+    <% end %>
+
     <ol class="group">
       <% top_results.each do |result| %>
         <li class="<%= result.presentation_format %>">

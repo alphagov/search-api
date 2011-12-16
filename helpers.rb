@@ -7,12 +7,20 @@ helpers do
   end
 
   def top_results
-    results = @results[0..(settings.top_results-1)]
+    results = non_recommended_results[0..(settings.top_results-1)]
     results.empty? ? nil : results
   end
 
   def more_results
-    @results[settings.top_results..(settings.top_results + settings.max_more_results-1)]
+    non_recommended_results[settings.top_results..(settings.top_results + settings.max_more_results-1)]
+  end
+
+  def recommended_results
+    @results.select { |r| r.format == settings.recommended_format }
+  end
+
+  def non_recommended_results
+    @results.select { |r| r.format != settings.recommended_format }
   end
 
   def pluralize(singular, plural)

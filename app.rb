@@ -49,7 +49,7 @@ end
 get "/browse/:section" do
   section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
   halt 404 unless section == params[:section]
-  @results = settings.solr.search_without_escaping({ :section => section })
+  @results = settings.solr.section(section)
   halt 404 if @results.empty?
   @section = Section.new(section)
   erb(:section)
