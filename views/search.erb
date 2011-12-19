@@ -6,15 +6,11 @@
 
   <div class="results top group">
 
-    <% if recommended_results %>
-      <header>
-        <h2>Recommended results</h2>
-      </header>
+    <% unless recommended_results.empty? %>
       <ul class="search-promoted">
       <% recommended_results.each do |result| %>
         <li>
           <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
-          <small><%= result.link %></small>
           <p><%=h result.description %></p>
           <p><a href="<%= result.link %>" class="button" title="Visit this website (you will leave the gov.uk website)">Visit this website &rarr;</a></p>
         </li>
