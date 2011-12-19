@@ -129,21 +129,21 @@ class SolrWrapperTest < Test::Unit::TestCase
   def test_should_ask_solr_for_partial_autocomplete_field
     client = mock("client")
     wrapper = SolrWrapper.new(client)
-    client.expects(:query).with("dismax", has_entries(fields: "*", query: "autocomplete:foo*"))
+    client.expects(:query).with("standard", has_entries(fields: "title,link,format", query: "autocomplete:foo*"))
     wrapper.complete("foo")
   end
 
   def test_should_escape_autocomplete_term
     client = mock("client")
     wrapper = SolrWrapper.new(client)
-    client.expects(:query).with("dismax", has_entry(query: "autocomplete:foo\\?*"))
+    client.expects(:query).with("standard", has_entry(query: "autocomplete:foo\\?*"))
     wrapper.complete("foo?")
   end
 
   def test_should_downcase_autocomplete_term
     client = mock("client")
     wrapper = SolrWrapper.new(client)
-    client.expects(:query).with("dismax", has_entry(query: "autocomplete:foo*"))
+    client.expects(:query).with("standard", has_entry(query: "autocomplete:foo*"))
     wrapper.complete("FOO")
   end
 

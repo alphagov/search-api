@@ -36,7 +36,8 @@ class SolrWrapper
   end
 
   def complete(q)
-    search_without_escaping("autocomplete:#{escape(q.downcase)}*")
+    results = @client.query("standard", query: "autocomplete:#{escape(q.downcase)}*", fields: "title,link,format", limit: 10) or return []
+    results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
   end
 
   def delete(link)
