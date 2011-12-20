@@ -29,11 +29,13 @@ namespace :router do
   end
 
   task :register_routes => [ :router_environment ] do
-    @logger.info "Registering prefix /search, /autocomplete and /browse"
-    @router.routes.update application_id: "search", route_type: :prefix,
+    @logger.info "Registering full routes /search, /autocomplete"
+    @router.routes.update application_id: "search", route_type: :full,
       incoming_path: "/search"
-    @router.routes.update application_id: "search", route_type: :prefix,
+    @router.routes.update application_id: "search", route_type: :full,
       incoming_path: "/autocomplete"
+
+    @logger.info "Registering prefix route /browse"
     @router.routes.update application_id: "search", route_type: :prefix,
       incoming_path: "/browse"
   end
