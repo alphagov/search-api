@@ -1,4 +1,4 @@
-require_relative "routes"
+require_relative "router"
 require_relative "solr"
 
 configure :production, :development do

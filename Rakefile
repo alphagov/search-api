@@ -14,7 +14,7 @@ namespace :router do
   task :router_environment do
     Bundler.require :router, :default
 
-    require_relative "routes"
+    require_relative "router"
 
     require 'logger'
     @logger = Logger.new STDOUT
@@ -25,15 +25,15 @@ namespace :router do
 
   task :register_application => :router_environment do
     platform = ENV['FACTER_govuk_platform']
-    app_id = settings.routes[:app_id]
+    app_id = settings.router[:app_id]
     url = "#{app_id}.#{platform}.alphagov.co.uk/"
     @logger.info "Registering #{app_id} application against #{url}..."
     @router.applications.update application_id: app_id, backend_url: url
   end
 
   task :register_routes => [ :router_environment ] do
-    app_id = settings.routes[:app_id]
-    path_prefix = settings.routes[:path_prefix]
+    app_id = settings.router[:app_id]
+    path_prefix = settings.router[:path_prefix]
     @logger.info "Registering full routes #{path_prefix}/search, #{path_prefix}/autocomplete"
     @router.routes.update application_id: app_id, route_type: :full,
       incoming_path: "#{path_prefix}/search"

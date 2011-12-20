@@ -24,7 +24,7 @@ before do
 end
 
 def prefixed_path(path)
-  path_prefix = settings.routes[:path_prefix]
+  path_prefix = settings.router[:path_prefix]
   "#{path_prefix}#{path}"
 end
 
