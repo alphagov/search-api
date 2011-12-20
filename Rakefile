@@ -41,9 +41,11 @@ namespace :router do
       @router.routes.update application_id: app_id, route_type: :full,
         incoming_path: "#{path_prefix}/autocomplete"
 
-      @logger.info "Registering prefix route #{path_prefix}/browse"
-      @router.routes.update application_id: app_id, route_type: :prefix,
-        incoming_path: "#{path_prefix}/browse"
+      if path_prefix.empty?
+        @logger.info "Registering prefix route #{path_prefix}/browse"
+        @router.routes.update application_id: app_id, route_type: :prefix,
+          incoming_path: "#{path_prefix}/browse"
+      end
     rescue Router::Conflict => conflict_error
       @logger.error "Route already exists: #{conflict_error.existing}"
       raise conflict_error

@@ -23,8 +23,8 @@ before do
   )
 end
 
+path_prefix = settings.router[:path_prefix]
 def prefixed_path(path)
-  path_prefix = settings.router[:path_prefix]
   "#{path_prefix}#{path}"
 end
 
@@ -46,18 +46,20 @@ get prefixed_path("/autocomplete") do
   JSON.dump(results.map { |r| r.to_hash })
 end
 
-get prefixed_path("/browse") do
-  @results = settings.solr.facet('section')
-  erb(:sections)
-end
+if path_prefix.empty?
+  get prefixed_path("/browse") do
+    @results = settings.solr.facet('section')
+    erb(:sections)
+  end
 
-get prefixed_path("/browse/:section") do
-  section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
-  halt 404 unless section == params[:section]
-  @results = settings.solr.section(section)
-  halt 404 if @results.empty?
-  @section = Section.new(section)
-  erb(:section)
+  get prefixed_path("/browse/:section") do
+    section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
+    halt 404 unless section == params[:section]
+    @results = settings.solr.section(section)
+    halt 404 if @results.empty?
+    @section = Section.new(section)
+    erb(:section)
+  end
 end
 
 post prefixed_path("/documents") do
