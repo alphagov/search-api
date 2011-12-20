@@ -47,7 +47,7 @@ namespace :router do
     rescue Router::Conflict => conflict_error
       @logger.error "Route already exists: #{conflict_error.existing}"
       raise conflict_error
-    rescue Router::Remote => remote_error
+    rescue Router::RemoteError => remote_error
       @logger.error "Remote error response: #{remote_error.response}"
       raise remote_error
     end
