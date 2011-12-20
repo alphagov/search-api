@@ -14,6 +14,8 @@ namespace :router do
   task :router_environment do
     Bundler.require :router, :default
 
+    require_relative "routes"
+
     require 'logger'
     @logger = Logger.new STDOUT
     @logger.level = Logger::DEBUG
@@ -23,21 +25,24 @@ namespace :router do
 
   task :register_application => :router_environment do
     platform = ENV['FACTER_govuk_platform']
-    url = "search.#{platform}.alphagov.co.uk/"
-    @logger.info "Registering application..."
-    @router.applications.update application_id: "search", backend_url: url
+    app_id = settings.routes[:app_id]
+    url = "#{app_id}.#{platform}.alphagov.co.uk/"
+    @logger.info "Registering #{app_id} application against #{url}..."
+    @router.applications.update application_id: app_id, backend_url: url
   end
 
   task :register_routes => [ :router_environment ] do
-    @logger.info "Registering full routes /search, /autocomplete"
-    @router.routes.update application_id: "search", route_type: :full,
-      incoming_path: "/search"
-    @router.routes.update application_id: "search", route_type: :full,
-      incoming_path: "/autocomplete"
+    app_id = settings.routes[:app_id]
+    path_prefix = settings.routes[:path_prefix]
+    @logger.info "Registering full routes #{path_prefix}/search, #{path_prefix}/autocomplete"
+    @router.routes.update application_id: app_id, route_type: :full,
+      incoming_path: "#{path_prefix}/search"
+    @router.routes.update application_id: app_id, route_type: :full,
+      incoming_path: "#{path_prefix}/autocomplete"
 
-    @logger.info "Registering prefix route /browse"
-    @router.routes.update application_id: "search", route_type: :prefix,
-      incoming_path: "/browse"
+    @logger.info "Registering prefix route #{path_prefix}/browse"
+    @router.routes.update application_id: app_id, route_type: :prefix,
+      incoming_path: "#{path_prefix}/browse"
   end
 
   desc "Register search application and routes with the router (run this task on server in cluster)"
