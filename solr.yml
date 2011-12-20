@@ -1,8 +1,8 @@
 development:
   :server: localhost
-  :path: /solr/rummager
+  :path: "/solr/rummager"
   :port: 8983
 test:
   :server: solr-test-server
-  :path: /solr/rummager
+  :path: "/solr/rummager"
   :port: 9999
