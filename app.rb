@@ -23,7 +23,12 @@ before do
   )
 end
 
-get "/search" do
+def prefixed_path(path)
+  path_prefix = settings.router[:path_prefix]
+  "#{path_prefix}#{path}"
+end
+
+get prefixed_path("/search") do
   @query = params['q'] or return erb(:no_search_term)
   @results = settings.solr.search(@query)
 
@@ -34,19 +39,19 @@ get "/search" do
   end
 end
 
-get "/autocomplete" do
+get prefixed_path("/autocomplete") do
   query = params['q'] or return '[]'
   results = settings.solr.complete(query) rescue []
   content_type :json
   JSON.dump(results.map { |r| r.to_hash })
 end
 
-get "/browse" do
+get prefixed_path("/browse") do
   @results = settings.solr.facet('section')
   erb(:sections)
 end
 
-get "/browse/:section" do
+get prefixed_path("/browse/:section") do
   section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
   halt 404 unless section == params[:section]
   @results = settings.solr.section(section)
@@ -55,7 +60,7 @@ get "/browse/:section" do
   erb(:section)
 end
 
-post "/documents" do
+post prefixed_path("/documents") do
   request.body.rewind
   documents = [JSON.parse(request.body.read)].flatten.map { |hash|
     Document.from_hash(hash)
@@ -63,10 +68,10 @@ post "/documents" do
   simple_json_result(settings.solr.add(documents))
 end
 
-post "/commit" do
+post prefixed_path("/commit") do
   simple_json_result(settings.solr.commit)
 end
 
-delete "/documents/*" do
+delete prefixed_path("/documents/*") do
   simple_json_result(settings.solr.delete(params["splat"].first))
 end
