@@ -34,15 +34,23 @@ namespace :router do
   task :register_routes => [ :router_environment ] do
     app_id = settings.router[:app_id]
     path_prefix = settings.router[:path_prefix]
-    @logger.info "Registering full routes #{path_prefix}/search, #{path_prefix}/autocomplete"
-    @router.routes.update application_id: app_id, route_type: :full,
-      incoming_path: "#{path_prefix}/search"
-    @router.routes.update application_id: app_id, route_type: :full,
-      incoming_path: "#{path_prefix}/autocomplete"
+    begin
+      @logger.info "Registering full routes #{path_prefix}/search, #{path_prefix}/autocomplete"
+      @router.routes.update application_id: app_id, route_type: :full,
+        incoming_path: "#{path_prefix}/search"
+      @router.routes.update application_id: app_id, route_type: :full,
+        incoming_path: "#{path_prefix}/autocomplete"
 
-    @logger.info "Registering prefix route #{path_prefix}/browse"
-    @router.routes.update application_id: app_id, route_type: :prefix,
-      incoming_path: "#{path_prefix}/browse"
+      @logger.info "Registering prefix route #{path_prefix}/browse"
+      @router.routes.update application_id: app_id, route_type: :prefix,
+        incoming_path: "#{path_prefix}/browse"
+    rescue Router::Conflict => conflict_error
+      @logger.error "Route already exists: #{conflict_error.existing}"
+      raise conflict_error
+    rescue Router::Remote => remote_error
+      @logger.error "Remote error response: #{remote_error.response}"
+      raise remote_error
+    end
   end
 
   desc "Register search application and routes with the router (run this task on server in cluster)"
