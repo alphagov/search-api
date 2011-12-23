@@ -2,7 +2,7 @@ require_relative "router"
 require_relative "solr"
 
 configure :production, :development do
-  use Slimmer::App
+  use Slimmer::App, prefix: settings.router[:path_prefix]
 end
 
 set :top_results, 4
