@@ -18,11 +18,11 @@
     <% end %>
   </div>
 
-  <% if @results.any? %>
+  <% if non_recommended_results.any? %>
     <div class="results more group">
 
       <ol class="group">
-        <% @results.each do |result| %>
+        <% non_recommended_results.each do |result| %>
           <li class="<%= result.presentation_format %>">
             <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
             <% unless result.description.nil? or result.description == '' %>
