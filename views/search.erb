@@ -25,7 +25,11 @@
         <% @results.each do |result| %>
           <li class="<%= result.presentation_format %>">
             <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+            <% if result.description.present?
             <p><%= h result.description %></p>
+            <% else %>
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <% end %>
             <% unless (result.additional_links.nil? || result.additional_links.empty?) %>
             <ul class="search-parts">
               <% result.additional_links.each do |link| %>
