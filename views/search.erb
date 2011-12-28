@@ -4,19 +4,19 @@
     <p><%= capped_search_set_size %> <%= pluralize("result", "results") %> found</p>
   </header>
 
-  <div class="results top group">
-    <% unless recommended_results.empty? %>
-      <h2>Elsewhere on the web</h2>    
-      <ul class="search-promoted">
-        <% recommended_results.each do |result| %>
-          <li>
-            <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
-            <p><%=h result.description %></p>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
-  </div>
+  <% unless recommended_results.empty? %>
+    <div class="results top group">
+        <h2>Elsewhere on the web</h2>
+        <ul class="search-promoted">
+          <% recommended_results.each do |result| %>
+            <li>
+              <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
+              <p><%=h result.description %></p>
+            </li>
+          <% end %>
+        </ul>
+    </div>
+  <% end %>
 
   <% if non_recommended_results.any? %>
     <div class="results more group">
