@@ -1,19 +1,20 @@
 <section id="content" role="main" class="group ancillary search">
   <header>
-    <h1>Search results</h1>
-    <p>There <%= @results.count == 1 ? 'was' : 'were' %> <strong><%= capped_search_set_size %></strong> <%= pluralize("result", "results") %> for &ldquo;<%=h @query %>&rdquo;</p>
+    <h1>Search results for &ldquo;<%=h @query %>&rdquo;</h1>
+    <p><%= capped_search_set_size %> <%= pluralize("result", "results") %> found</p>
   </header>
 
   <div class="results top group">
     <% unless recommended_results.empty? %>
       <ul class="search-promoted">
-      <% recommended_results.each do |result| %>
-        <li>
-          <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
-          <p><%=h result.description %></p>
-          <p><a href="<%= result.link %>" class="button" title="Visit this website (you will leave the gov.uk website)">Visit this website &rarr;</a></p>
-        </li>
-      <% end %>
+        <h2>Elsewhere on the web</h2>
+        <% recommended_results.each do |result| %>
+          <li>
+            <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
+            <p><%=h result.description %></p>
+            <p><a href="<%= result.link %>" class="button" title="Visit this website (you will leave the gov.uk website)">Visit this website &rarr;</a></p>
+          </li>
+        <% end %>
       </ul>
     <% end %>
   </div>
