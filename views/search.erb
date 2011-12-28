@@ -1,7 +1,7 @@
 <section id="content" role="main" class="group ancillary search">
   <header>
     <h1>Search results</h1>
-    <p>There were <strong><%= capped_search_set_size %></strong> <%= pluralize("result", "results") %> for &ldquo;<%=h @query %>&rdquo;.</p>
+    <p>There <%= @results.count == 1 ? 'was' : 'were' %> <strong><%= capped_search_set_size %></strong> <%= pluralize("result", "results") %> for &ldquo;<%=h @query %>&rdquo;</p>
   </header>
 
   <div class="results top group">
