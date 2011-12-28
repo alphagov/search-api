@@ -6,8 +6,8 @@
 
   <div class="results top group">
     <% unless recommended_results.empty? %>
+      <h2>Elsewhere on the web</h2>    
       <ul class="search-promoted">
-        <h2>Elsewhere on the web</h2>
         <% recommended_results.each do |result| %>
           <li>
             <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
