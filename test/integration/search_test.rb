@@ -47,7 +47,7 @@ class SearchTest < Test::Unit::TestCase
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
-    assert_response_text "result for “bob”"
+    assert_response_text "results for “bob”"
   end
 
   def test_results_is_pluralised_if_multiple_results
