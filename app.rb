@@ -19,6 +19,10 @@ def proposition
   (settings.router[:app_id] == "whitehall-search") ? "government" : "citizen"
 end
 
+def solr
+  @solr ||= SolrWrapper.new(DelSolr::Client.new(settings.solr), settings.recommended_format)
+end
+
 before do
   headers SlimmerHeaders.headers(
     section:     "Search",
@@ -34,7 +38,7 @@ end
 
 get prefixed_path("/search") do
   @query = params['q'] or return erb(:no_search_term)
-  @results = settings.solr.search(@query)
+  @results = solr.search(@query)
 
   if request.accept.include?("application/json")
     content_type :json
@@ -54,14 +58,14 @@ end
 
 get prefixed_path("/autocomplete") do
   query = params['q'] or return '[]'
-  results = settings.solr.complete(query) rescue []
+  results = solr.complete(query) rescue []
   content_type :json
   JSON.dump(results.map { |r| r.to_hash })
 end
 
 if settings.router[:path_prefix].empty?
   get prefixed_path("/browse") do
-    @results = settings.solr.facet('section')
+    @results = solr.facet('section')
     @page_section = "Browse"
     @page_section_link = "/browse"
     @page_title = "Browse | GOV.UK"
@@ -71,7 +75,7 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse/:section") do
     section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
     halt 404 unless section == params[:section]
-    @results = settings.solr.section(section)
+    @results = solr.section(section)
     halt 404 if @results.empty?
     @section = Section.new(section)
     @page_section = @section.name
@@ -86,13 +90,13 @@ post prefixed_path("/documents") do
   documents = [JSON.parse(request.body.read)].flatten.map { |hash|
     Document.from_hash(hash)
   }
-  simple_json_result(settings.solr.add(documents))
+  simple_json_result(solr.add(documents))
 end
 
 post prefixed_path("/commit") do
-  simple_json_result(settings.solr.commit)
+  simple_json_result(solr.commit)
 end
 
 delete prefixed_path("/documents/*") do
-  simple_json_result(settings.solr.delete(params["splat"].first))
+  simple_json_result(solr.delete(params["splat"].first))
 end
