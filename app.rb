@@ -33,6 +33,10 @@ get prefixed_path("/search") do
   @query = params['q'] or return erb(:no_search_term)
   @results = settings.solr.search(@query)
 
+  @page_section = "Search"
+  @page_section_link = "/search"
+  @page_title = "#{@query} | Search | GOV.UK"
+
   if @results.any?
     erb(:search)
   else
@@ -50,6 +54,9 @@ end
 if settings.router[:path_prefix].empty?
   get prefixed_path("/browse") do
     @results = settings.solr.facet('section')
+    @page_section = "Browse"
+    @page_section_link = "/browse"
+    @page_title = "Browse | GOV.UK"
     erb(:sections)
   end
 
@@ -59,6 +66,9 @@ if settings.router[:path_prefix].empty?
     @results = settings.solr.section(section)
     halt 404 if @results.empty?
     @section = Section.new(section)
+    @page_section = @section.name
+    @page_section_link = @section.path
+    @page_title = "#{@section.name} | GOV.UK"
     erb(:section)
   end
 end
