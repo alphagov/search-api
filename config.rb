@@ -1,8 +1,9 @@
 require_relative "router"
 require_relative "solr"
+require_relative "slimmer_assets"
 
 configure :production, :development do
-  use Slimmer::App, prefix: settings.router[:path_prefix]
+  use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host
 end
 
 set :top_results, 4

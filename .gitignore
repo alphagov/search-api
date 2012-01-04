@@ -3,3 +3,4 @@ sinatra.log
 /test/reports
 /.bundle
 tmp/*
+.powrc
