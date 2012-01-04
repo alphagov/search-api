@@ -7,8 +7,9 @@ end
 
 set_config :router
 set_config :solr
-set :slimmer_asset_host, ENV["SLIMMER_ASSET_HOST"]
+set_config :slimmer_headers
 
+set :slimmer_asset_host, ENV["SLIMMER_ASSET_HOST"]
 set :top_results, 4
 set :max_more_results, 46
 set :max_recommended_results, 2

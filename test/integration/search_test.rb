@@ -142,9 +142,10 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_should_send_analytics_headers_for_government_proposition
-    app.settings.stubs(:router).returns(
-      app_id: "whitehall-search",
-      path_prefix: "/government"
+    app.settings.stubs(:slimmer_headers).returns(
+      section:     "Search",
+      format:      "search",
+      proposition: "government"
     )
     SolrWrapper.any_instance.stubs(:search).returns([])
     get "/search", :q => 'bob'

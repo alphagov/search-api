@@ -24,11 +24,7 @@ def solr
 end
 
 before do
-  headers SlimmerHeaders.headers(
-    section:     "Search",
-    format:      "search",
-    proposition: proposition
-  )
+  headers SlimmerHeaders.headers(settings.slimmer_headers)
 end
 
 def prefixed_path(path)
