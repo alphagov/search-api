@@ -1,13 +1,12 @@
 require_relative "env"
 
-def set_config(kind)
-  configs = YAML.load(File.read(File.expand_path("../#{kind}.yml", __FILE__)))
-  set kind, configs[ENV["RACK_ENV"]]
+def config_for(kind)
+  YAML.load_file(File.expand_path("../#{kind}.yml", __FILE__))
 end
 
-set_config :router
-set_config :solr
-set_config :slimmer_headers
+set :router, config_for(:router)
+set :solr, config_for(:solr)[ENV["RACK_ENV"]]
+set :slimmer_headers, config_for(:slimmer_headers)
 
 set :slimmer_asset_host, ENV["SLIMMER_ASSET_HOST"]
 set :top_results, 4
