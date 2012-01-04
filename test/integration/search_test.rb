@@ -3,7 +3,6 @@ require "test_helper"
 require "document"
 require "section"
 require "app"
-require "htmlentities"
 
 class SearchTest < Test::Unit::TestCase
   DOCUMENT = Document.from_hash(
@@ -23,15 +22,10 @@ class SearchTest < Test::Unit::TestCase
   SECTION = Section.new("bob")
 
   include Rack::Test::Methods
+  include ResponseAssertions
 
   def app
     Sinatra::Application
-  end
-
-  def assert_response_text(needle)
-    haystack = HTMLEntities.new.decode(last_response.body.gsub(/<[^>]+>/, " ").gsub(/\s+/, " "))
-    message = "Expected to find #{needle.inspect} in\n#{haystack}"
-    assert haystack.include?(needle), message
   end
 
   def test_search_view_with_no_query
