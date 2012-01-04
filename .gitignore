@@ -2,3 +2,4 @@ sinatra.log
 /coverage
 /test/reports
 /.bundle
+tmp/*
