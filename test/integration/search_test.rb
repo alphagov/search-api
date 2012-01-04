@@ -5,19 +5,21 @@ require "section"
 require "app"
 
 class SearchTest < Test::Unit::TestCase
-  DOCUMENT = Document.from_hash(
+  DOCUMENT_ATTRIBUTES = {
     "title" => "TITLE1",
     "description" => "DESCRIPTION",
     "format" => "local_transaction",
     "section" => "citizenship",
     "link" => "/URL"
-  )
-  RECOMMENDED_DOCUMENT = Document.from_hash(
+  }
+  RECOMMENDED_DOCUMENT_ATTRIBUTES = {
     "title" => "TITLE1",
     "description" => "DESCRIPTION",
     "format" => "recommended-link",
     "link" => "/URL"
-  )
+  }
+  DOCUMENT = Document.from_hash(DOCUMENT_ATTRIBUTES)
+  RECOMMENDED_DOCUMENT = Document.from_hash(RECOMMENDED_DOCUMENT_ATTRIBUTES)
 
   SECTION = Section.new("bob")
 
@@ -128,14 +130,7 @@ class SearchTest < Test::Unit::TestCase
     SolrWrapper.any_instance.stubs(:complete).returns([DOCUMENT])
     get "/autocomplete", :q => 'bob'
     assert last_response.ok?
-    expected = [{
-      "title" => "TITLE1",
-      "description" => "DESCRIPTION",
-      "format" => "local_transaction",
-      "section" => "citizenship",
-      "link" => "/URL"
-    }]
-    assert_equal expected, JSON.parse(last_response.body)
+    assert_equal [DOCUMENT_ATTRIBUTES], JSON.parse(last_response.body)
   end
 
   def test_should_send_analytics_headers
@@ -144,5 +139,14 @@ class SearchTest < Test::Unit::TestCase
     assert_equal "Search",  last_response.headers["X-Slimmer-Section"]
     assert_equal "search",  last_response.headers["X-Slimmer-Format"]
     assert_equal "citizen", last_response.headers["X-Slimmer-Proposition"]
+  end
+  
+  def test_should_respond_with_json_when_requested
+    SolrWrapper.any_instance.stubs(:search).returns([
+      DOCUMENT
+    ])
+    get "/search", {:q => "bob"}, "HTTP_ACCEPT" => "application/json"
+    assert_equal [DOCUMENT_ATTRIBUTES], JSON.parse(last_response.body)
+    assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 end

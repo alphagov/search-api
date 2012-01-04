@@ -33,14 +33,19 @@ get prefixed_path("/search") do
   @query = params['q'] or return erb(:no_search_term)
   @results = settings.solr.search(@query)
 
-  @page_section = "Search"
-  @page_section_link = "/search"
-  @page_title = "#{@query} | Search | GOV.UK"
-
-  if @results.any?
-    erb(:search)
+  if request.accept.include?("application/json")
+    content_type :json
+    JSON.dump(@results.map { |r| r.to_hash })
   else
-    erb(:no_search_results)
+    @page_section = "Search"
+    @page_section_link = "/search"
+    @page_title = "#{@query} | Search | GOV.UK"
+
+    if @results.any?
+      erb(:search)
+    else
+      erb(:no_search_results)
+    end
   end
 end
 
