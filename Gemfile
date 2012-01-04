@@ -12,6 +12,8 @@ gem 'slimmer', '~> 1.1.14'
 gem 'erubis'
 gem 'json'
 
+gem 'rack', '1.3.5'
+
 group :test do
   gem "simplecov"
   gem "simplecov-rcov"
