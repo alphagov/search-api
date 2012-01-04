@@ -133,14 +133,24 @@ class SearchTest < Test::Unit::TestCase
     assert_equal [DOCUMENT_ATTRIBUTES], JSON.parse(last_response.body)
   end
 
-  def test_should_send_analytics_headers
+  def test_should_send_analytics_headers_for_citizen_proposition
     SolrWrapper.any_instance.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert_equal "Search",  last_response.headers["X-Slimmer-Section"]
     assert_equal "search",  last_response.headers["X-Slimmer-Format"]
     assert_equal "citizen", last_response.headers["X-Slimmer-Proposition"]
   end
-  
+
+  def test_should_send_analytics_headers_for_government_proposition
+    app.settings.stubs(:router).returns(
+      app_id: "whitehall-search",
+      path_prefix: "/government"
+    )
+    SolrWrapper.any_instance.stubs(:search).returns([])
+    get "/search", :q => 'bob'
+    assert_equal "government", last_response.headers["X-Slimmer-Proposition"]
+  end
+
   def test_should_respond_with_json_when_requested
     SolrWrapper.any_instance.stubs(:search).returns([
       DOCUMENT
@@ -149,4 +159,5 @@ class SearchTest < Test::Unit::TestCase
     assert_equal [DOCUMENT_ATTRIBUTES], JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
+
 end

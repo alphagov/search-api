@@ -15,14 +15,17 @@ require 'slimmer_headers'
 require_relative 'helpers'
 require_relative 'config'
 
+def proposition
+  (settings.router[:app_id] == "whitehall-search") ? "government" : "citizen"
+end
+
 before do
   headers SlimmerHeaders.headers(
     section:     "Search",
     format:      "search",
-    proposition: "citizen"
+    proposition: proposition
   )
 end
-
 
 def prefixed_path(path)
   path_prefix = settings.router[:path_prefix]
