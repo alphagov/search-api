@@ -152,6 +152,17 @@ class SearchTest < Test::Unit::TestCase
     assert_equal "government", last_response.headers["X-Slimmer-Proposition"]
   end
 
+  def test_should_set_body_class_based_on_proposition_header
+    app.settings.stubs(:slimmer_headers).returns(
+      section:     "x",
+      format:      "y",
+      proposition: "blah"
+    )
+    SolrWrapper.any_instance.stubs(:search).returns([])
+    get "/search", :q => 'bob'
+    assert_match /<body class="blah"/, last_response.body
+  end
+
   def test_should_respond_with_json_when_requested
     SolrWrapper.any_instance.stubs(:search).returns([
       DOCUMENT

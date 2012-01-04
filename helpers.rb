@@ -2,6 +2,10 @@ helpers do
   include Rack::Utils
   alias_method :h, :escape_html
 
+  def proposition
+    settings.slimmer_headers[:proposition]
+  end
+
   def capped_search_set_size
     [@results.count, (settings.top_results + settings.max_more_results)].min
   end
