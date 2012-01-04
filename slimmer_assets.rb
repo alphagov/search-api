@@ -1,1 +1,0 @@
-set :slimmer_asset_host, ENV["SLIMMER_ASSET_HOST"]

@@ -14,7 +14,7 @@ namespace :router do
   task :router_environment do
     Bundler.require :router, :default
 
-    require_relative "router"
+    require_relative "config"
 
     require 'logger'
     @logger = Logger.new STDOUT
