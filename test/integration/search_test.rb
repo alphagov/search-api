@@ -1,6 +1,5 @@
 # encoding: utf-8
 require "test_helper"
-require "mocha"
 require "document"
 require "section"
 require "app"
