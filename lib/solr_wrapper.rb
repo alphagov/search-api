@@ -4,8 +4,8 @@ require "section"
 class SolrWrapper
   COMMIT_WITHIN = 5 * 60 * 1000 # 5m in ms
 
-  def initialize(client)
-    @client = client
+  def initialize(client, recommended_format)
+    @client, @recommended_format = client, recommended_format
   end
 
   def add(documents)
@@ -17,7 +17,7 @@ class SolrWrapper
   end
 
   def search_without_escaping(q)
-    results = @client.query("standard", query: "(phrase:\"#{q}\" AND format:recommended-link) OR (#{q} AND -format:recommended-link)", fields: "*", bq: "format:#{settings.recommended_format}", limit: 50) or return []
+    results = @client.query("standard", query: "(phrase:\"#{q}\" AND format:recommended-link) OR (#{q} AND -format:recommended-link)", fields: "*", bq: "format:#{@recommended_format}", limit: 50) or return []
     results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
   end
 
