@@ -1,8 +1,3 @@
-development:
-  :section:     "Search"
-  :format:      "search"
-  :proposition: "citizen"
-test:
-  :section:     "Search"
-  :format:      "search"
-  :proposition: "citizen"
+:section:     "Search"
+:format:      "search"
+:proposition: "citizen"

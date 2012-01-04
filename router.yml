@@ -1,6 +1,2 @@
-development:
-  :app_id: "search"
-  :path_prefix: ""
-test:
-  :app_id: "search"
-  :path_prefix: ""
+:app_id: "search"
+:path_prefix: ""
