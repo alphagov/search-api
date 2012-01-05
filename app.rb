@@ -15,10 +15,6 @@ require 'slimmer_headers'
 require_relative 'helpers'
 require_relative 'config'
 
-def proposition
-  (settings.router[:app_id] == "whitehall-search") ? "government" : "citizen"
-end
-
 def solr
   @solr ||= SolrWrapper.new(DelSolr::Client.new(settings.solr), settings.recommended_format)
 end
