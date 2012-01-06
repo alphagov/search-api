@@ -9,7 +9,7 @@ class SearchTest < Test::Unit::TestCase
     "title" => "TITLE1",
     "description" => "DESCRIPTION",
     "format" => "local_transaction",
-    "section" => "citizenship",
+    "section" => "Life in the UK",
     "link" => "/URL"
   }
   RECOMMENDED_DOCUMENT_ATTRIBUTES = {

@@ -7,7 +7,7 @@ class DocumentTest < Test::Unit::TestCase
       "title" => "TITLE",
       "description" => "DESCRIPTION",
       "format" => "answer",
-      "section" => "citizenship",
+      "section" => "Life in the UK",
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT",
     }
@@ -17,7 +17,7 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "TITLE", document.title
     assert_equal "DESCRIPTION", document.description
     assert_equal "answer", document.format
-    assert_equal "citizenship", document.section
+    assert_equal "Life in the UK", document.section
     assert_equal "/an-example-answer", document.link
     assert_equal "HERE IS SOME CONTENT", document.indexable_content
   end
