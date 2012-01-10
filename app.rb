@@ -25,6 +25,7 @@ end
 
 def prefixed_path(path)
   path_prefix = settings.router[:path_prefix]
+  raise "Path prefix must start with /" unless path_prefix.blank? || path_prefix =~ /^\//
   "#{path_prefix}#{path}"
 end
 
