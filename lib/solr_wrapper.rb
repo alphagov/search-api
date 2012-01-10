@@ -28,7 +28,7 @@ class SolrWrapper
 
   def facet(q)
     results = @client.query('standard', :query => "*:*", :facets => [{:field => q, :sort => q}]) or return []
-    results.facet_field_values(q).delete_if{ |f| f.empty?  }.map{ |s| Section.new(s) }
+    results.facet_field_values(q).reject{ |f| f.empty?  }.map{ |s| Section.new(s) }
   end
 
   def complete(q)
