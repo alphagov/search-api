@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/alphagov/delsolr.git
-  revision: f029d6ff72b37a5f6272b7a6d29a39fb1b30af93
+  revision: 50398082c3bbaabb2d5a4bd9660ef629226ab440
   specs:
-    delsolr (0.1.5)
+    delsolr (0.1.7)
       builder (>= 2.0.0)
 
 GEM
