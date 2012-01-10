@@ -16,6 +16,16 @@ class SolrWrapper
     @client.commit!
   end
 
+  def all
+    results = @client.query("dismax", query: '*', fields: "*", bq: "format:#{@recommended_format}", limit: 50) or return []
+    results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
+  rescue => e
+    puts e.class.name
+    puts e.message
+    puts e.backtrace.join("\n")
+    raise
+  end
+
   def search(q)
     results = @client.query("dismax", query: escape(q.downcase), fields: "*", bq: "format:#{@recommended_format}", limit: 50) or return []
     results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []

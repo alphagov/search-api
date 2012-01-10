@@ -30,6 +30,18 @@ class SearchTest < Test::Unit::TestCase
     Sinatra::Application
   end
 
+  def test_common_search_term_list
+    SolrWrapper.any_instance.stubs(:all).returns([
+      DOCUMENT,
+      DOCUMENT
+    ])
+    get "/shortcut"
+    assert last_response.ok?
+
+    results = JSON.parse last_response.body
+    assert_equal 2, results.size
+  end
+
   def test_search_view_with_no_query
     get "/search"
     assert last_response.ok?

@@ -48,6 +48,15 @@ get prefixed_path("/search") do
   end
 end
 
+get prefixed_path("/shortcut") do
+  # Eventually this is likely to be a list of commonly searched for terms
+  # so searching for those is really fast. For the beta, this is just a list
+  # of all terms.
+  results = solr.all rescue []
+  content_type :json
+  JSON.dump(results.map { |r| r.to_hash })
+end
+
 get prefixed_path("/autocomplete") do
   query = params['q'] or return '[]'
   results = solr.complete(query) rescue []
