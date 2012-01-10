@@ -41,9 +41,9 @@ namespace :router do
       @logger.info "Registering full route #{path_prefix}/autocomplete"
       @router.routes.update application_id: app_id, route_type: :full,
         incoming_path: "#{path_prefix}/autocomplete"
-      @logger.info "Registering full route #{path_prefix}/shortcut"
+      @logger.info "Registering full route #{path_prefix}/preload-autocomplete"
       @router.routes.update application_id: app_id, route_type: :full,
-        incoming_path: "#{path_prefix}/shortcut"
+        incoming_path: "#{path_prefix}/preload-autocomplete"
 
       if path_prefix.empty?
         @logger.info "Registering prefix route #{path_prefix}/browse"

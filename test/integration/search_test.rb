@@ -35,7 +35,7 @@ class SearchTest < Test::Unit::TestCase
       DOCUMENT,
       DOCUMENT
     ])
-    get "/shortcut"
+    get "/preload-autocomplete"
     assert last_response.ok?
 
     results = JSON.parse last_response.body
