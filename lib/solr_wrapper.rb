@@ -16,13 +16,9 @@ class SolrWrapper
     @client.commit!
   end
 
-  def search_without_escaping(q)
-    results = @client.query("standard", query: "(phrase:\"#{q}\" AND format:recommended-link) OR (#{q} AND -format:recommended-link)", fields: "*", bq: "format:#{@recommended_format}", limit: 50) or return []
-    results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
-  end
-
   def search(q)
-    search_without_escaping(escape(q.downcase))
+    results = @client.query("dismax", query: escape(q.downcase), fields: "*", bq: "format:#{@recommended_format}", limit: 50) or return []
+    results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
   end
 
   def section(q)

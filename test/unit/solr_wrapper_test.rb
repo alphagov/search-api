@@ -70,31 +70,31 @@ class SolrWrapperTest < Test::Unit::TestCase
     assert_equal 3, facets.length
   end
 
-  def test_should_use_correct_search_handler
+  def test_should_use_dismax_search_handler_for_search
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with("standard", anything)
+    client.expects(:query).with("dismax", anything)
     wrapper.search("foo")
   end
 
   def test_should_ask_solr_for_search_term
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(query: '(phrase:"foo" AND format:recommended-link) OR (foo AND -format:recommended-link)'))
+    client.expects(:query).with(anything, has_entry(query: 'foo'))
     wrapper.search("foo")
   end
 
   def test_should_escape_search_term
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(query: '(phrase:"foo\\?" AND format:recommended-link) OR (foo\\? AND -format:recommended-link)'))
+    client.expects(:query).with(anything, has_entry(query: "foo\\?"))
     wrapper.search("foo?")
   end
 
   def test_should_downcase_search_term
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(query: '(phrase:"foo" AND format:recommended-link) OR (foo AND -format:recommended-link)'))
+    client.expects(:query).with(anything, has_entry(query: 'foo'))
     wrapper.search("FOO")
   end
 

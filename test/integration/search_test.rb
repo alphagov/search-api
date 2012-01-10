@@ -81,13 +81,13 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_browsing_an_empty_section
-    SolrWrapper.any_instance.stubs(:search_without_escaping).returns([])
+    SolrWrapper.any_instance.stubs(:section).returns([])
     get "/browse/bob"
     assert_equal 404, last_response.status
   end
 
   def test_browsing_an_invalid_section
-    SolrWrapper.any_instance.stubs(:search_without_escaping).returns([
+    SolrWrapper.any_instance.stubs(:search).returns([
       DOCUMENT
     ])
     get "/browse/And%20this"
