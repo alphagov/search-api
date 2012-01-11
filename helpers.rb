@@ -55,6 +55,11 @@ module Helpers
     JSON.dump("result" => result)
   end
 
+  def rehighlight(s)
+    s.gsub(%r{&lt;em&gt;}, %{<em class="highlight">}).
+      gsub(%r{&lt;&#x2F;em&gt;}, %{</em>})
+  end
+
 end
 
 class HelperAccessor

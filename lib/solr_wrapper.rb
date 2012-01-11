@@ -22,8 +22,21 @@ class SolrWrapper
   end
 
   def search(q)
-    results = @client.query("dismax", query: escape(q.downcase), fields: "*", bq: "format:#{@recommended_format}", limit: 50) or return []
-    results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
+    results = @client.query("dismax",
+      :query  => escape(q.downcase),
+      :fields => "title,link,description,format,section",
+      :bq     => "format:#{@recommended_format}",
+      :hl     => "true",
+      "hl.fl" => "description,indexable_content",
+      :limit  => 50
+    )
+    return [] unless results && results.raw_response
+
+    results.docs.map{ |h| Document.from_hash(h).tap { |doc|
+      doc.highlight = %w[ description indexable_content ].map { |f|
+        (results.highlights_for(doc.link, f) || []).first
+      }.compact.first
+    }}
   end
 
   def section(q)

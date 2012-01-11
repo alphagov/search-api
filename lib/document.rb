@@ -79,6 +79,7 @@ end
 class Document < Link
 
   auto_keys :title, :link, :description, :format, :section, :indexable_content, :additional_links
+  attr_writer :highlight
 
   def self.from_hash(hash)
     hash = unflatten(hash)
@@ -95,5 +96,9 @@ class Document < Link
 
   def presentation_format
     FORMAT_TRANSLATION.fetch(format, format)
+  end
+
+  def highlight
+    @highlight || description
   end
 end

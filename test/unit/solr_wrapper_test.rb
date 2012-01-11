@@ -38,7 +38,8 @@ class SolrWrapperTest < Test::Unit::TestCase
       "format" => "local_transaction",
       "link" => "/URL"
       }],
-      raw_response: true
+      raw_response: true,
+      highlights_for: nil
     )
     client.stubs(:query).returns(result)
     docs = wrapper.search("foo")
@@ -48,6 +49,70 @@ class SolrWrapperTest < Test::Unit::TestCase
     assert_equal "DESCRIPTION", docs.first.description
     assert_equal "local_transaction", docs.first.format
     assert_equal "/URL", docs.first.link
+  end
+
+  def test_should_ask_for_highlight
+    client = mock("client")
+    wrapper = SolrWrapper.new(client, nil)
+    client.expects(:query).with(anything, has_entry(hl: "true"))
+    wrapper.search("foo")
+  end
+
+  def test_should_use_highlighted_description_first
+    client = stub("client")
+    wrapper = SolrWrapper.new(client, nil)
+    result = stub(
+      docs: [
+        { "title" => "TITLE1", "description" => "DESCRIPTION1",
+          "format" => "local_transaction", "link" => "/URL1" },
+      ],
+      raw_response: true
+    )
+    result.stubs(:highlights_for).with("/URL1", "description").
+      returns(["DESC_HL1"])
+    result.stubs(:highlights_for).with("/URL1", "indexable_content").
+      returns(["IC_HL1"])
+    client.stubs(:query).returns(result)
+    docs = wrapper.search("foo")
+
+    assert_equal "DESC_HL1", docs.first.highlight
+  end
+
+  def test_should_use_highlighted_indexable_content_second
+    client = stub("client")
+    wrapper = SolrWrapper.new(client, nil)
+    result = stub(
+      docs: [
+        { "title" => "TITLE1", "description" => "DESCRIPTION1",
+          "format" => "local_transaction", "link" => "/URL1" },
+      ],
+      raw_response: true
+    )
+    result.stubs(:highlights_for).with("/URL1", "description").
+      returns(nil)
+    result.stubs(:highlights_for).with("/URL1", "indexable_content").
+      returns(["IC_HL1"])
+    client.stubs(:query).returns(result)
+    docs = wrapper.search("foo")
+
+    assert_equal "IC_HL1", docs.first.highlight
+  end
+
+  def test_should_use_description_if_not_highlight_is_available
+    client = stub("client")
+    wrapper = SolrWrapper.new(client, nil)
+    result = stub(
+      docs: [
+        { "title" => "TITLE1", "description" => "DESCRIPTION1",
+          "format" => "local_transaction", "link" => "/URL1" },
+      ],
+      raw_response: true,
+      highlights_for: nil
+    )
+    client.stubs(:query).returns(result)
+    docs = wrapper.search("foo")
+
+    assert_equal "DESCRIPTION1", docs.first.highlight
   end
 
   def test_should_return_zero_if_no_raw_response_returned
@@ -98,10 +163,10 @@ class SolrWrapperTest < Test::Unit::TestCase
     wrapper.search("FOO")
   end
 
-  def test_should_ask_solr_for_all_fields_in_results
+  def test_should_ask_solr_for_relevant_fields_in_results
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(fields: "*"))
+    client.expects(:query).with(anything, has_entry(fields: "title,link,description,format,section"))
     wrapper.search("foo")
   end
 
