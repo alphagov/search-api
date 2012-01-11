@@ -1,4 +1,4 @@
-helpers do
+module Helpers
   include Rack::Utils
   alias_method :h, :escape_html
 
@@ -31,6 +31,12 @@ helpers do
     @results.count == 1 ? singular : plural
   end
 
+  def formatted_format_name(name)
+    alt = settings.format_name_alternatives[name]
+    return alt if alt
+    return "#{name.capitalize}s"
+  end
+
   def include(name)
     begin
       File.open("views/_#{name}.html").read
@@ -49,4 +55,8 @@ helpers do
     JSON.dump("result" => result)
   end
 
+end
+
+class HelperAccessor
+  include Helpers
 end

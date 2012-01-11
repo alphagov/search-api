@@ -15,6 +15,14 @@ set :max_recommended_results, 2
 
 set :recommended_format, "recommended-link"
 
+set :format_order, ['transaction', 'answer', 'programme', 'guide']
+
+set :format_name_alternatives, {
+  "programme" => "Benefits and schemes",
+  "transaction" => "Services",
+  "answer" => "Quick answers",
+}
+
 configure :production, :development do
   use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host
 end

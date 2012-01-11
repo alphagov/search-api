@@ -27,7 +27,7 @@ class SolrWrapper
   end
 
   def section(q)
-    results = @client.query("standard", :query => { :section => q }, :fields => "*", :limit => 100) or return []
+    results = @client.query("standard", :query => { :section => q }, :sort => "sortable_title asc", :fields => "*", :limit => 100) or return []
     results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
   end
 

@@ -4,16 +4,20 @@
   </header>
 
   <div class="browse-sections">
-    <!-- <p>/<%= @section.slug %></p> what is this for? -->
 
-    <div class="results group">
-      <ol class="group">
-        <% @results.each do |result| %>
+    <%= include @section.slug %>
+
+    <% @results.each do |format, results| %>
+      <div class="results group">
+        <h2><%= formatted_format_name(format) %></h2>
+        <ol class="group">
+        <% results.each do |result| %>
           <li class="<%= result.presentation_format %>">
             <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
           </li>
         <% end %>
-      </ol>
-    </div>
+        </ol>
+      </div>
+    <% end %>
   </div>
 </section>

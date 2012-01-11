@@ -9,6 +9,7 @@ require 'json'
 
 require 'document'
 require 'section'
+require 'utils'
 require 'solr_wrapper'
 require 'slimmer_headers'
 
@@ -17,6 +18,10 @@ require_relative 'config'
 
 def solr
   @solr ||= SolrWrapper.new(DelSolr::Client.new(settings.solr), settings.recommended_format)
+end
+
+helpers do
+  include Helpers
 end
 
 before do
@@ -77,8 +82,11 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse/:section") do
     section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
     halt 404 unless section == params[:section]
-    @results = solr.section(section)
-    halt 404 if @results.empty?
+    raw_results = solr.section(section)
+    halt 404 if raw_results.empty?
+
+    @results = sort_documents_by_index(raw_results, settings.format_order)
+
     @section = Section.new(section)
     @page_section = @section.name
     @page_section_link = @section.path
