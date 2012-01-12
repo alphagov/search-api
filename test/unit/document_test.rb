@@ -161,10 +161,12 @@ class DocumentTest < Test::Unit::TestCase
       Link.new.tap{ |l|
         l.title = "LINK TITLE 1"
         l.link  = "/additional-link-1"
+        l.link_order = 1
       },
       Link.new.tap{ |l|
         l.title = "LINK TITLE 2"
         l.link  = "/additional-link-2"
+        l.link_order = 2
       },
     ]
     collaborator = mock("DelSolr Document")
@@ -173,9 +175,13 @@ class DocumentTest < Test::Unit::TestCase
     collaborator.expects(:add_field).
       with("additional_links__link", "/additional-link-1")
     collaborator.expects(:add_field).
+      with("additional_links__link_order", 1)
+    collaborator.expects(:add_field).
       with("additional_links__title", "LINK TITLE 2")
     collaborator.expects(:add_field).
       with("additional_links__link", "/additional-link-2")
+    collaborator.expects(:add_field).
+      with("additional_links__link_order", 2)
     document.solr_export(collaborator)
   end
 
@@ -187,13 +193,47 @@ class DocumentTest < Test::Unit::TestCase
       "link" => "/an-example-guide",
       "indexable_content" => "HERE IS SOME CONTENT",
       "additional_links" => [
-        {"title" => "LINK TITLE 1", "link" => "/additional-link-1"},
-        {"title" => "LINK TITLE 2", "link" => "/additional-link-2"},
+        {"title" => "LINK TITLE 1", "link_order" => 0, "link" => "/additional-link-1"},
+        {"title" => "LINK TITLE 2", "link_order" => 1, "link" => "/additional-link-2"},
       ]
     }
 
     document = Document.from_hash(hash)
     assert_equal hash, document.to_hash
+  end
+
+  def test_additional_links_retain_sort_order
+    hash = {
+      "title" => "TITLE",
+      "description" => "DESCRIPTION",
+      "format" => "guide",
+      "link" => "/an-example-guide",
+      "indexable_content" => "HERE IS SOME CONTENT",
+      "additional_links" => [
+        {"title" => "LINK TITLE 1", "link" => "/additional-link-1", "link_order" => 2 },
+        {"title" => "LINK TITLE 2", "link" => "/additional-link-2", "link_order" => 1 },
+      ]
+    }
+    document = Document.from_hash(hash)
+    assert_equal "LINK TITLE 2", document.additional_links[0].title
+    assert_equal "LINK TITLE 1", document.additional_links[1].title
+  end
+
+  def test_additional_links_retain_sort_order_without_explicit_order
+    hash = {
+      "title" => "TITLE",
+      "description" => "DESCRIPTION",
+      "format" => "guide",
+      "link" => "/an-example-guide",
+      "indexable_content" => "HERE IS SOME CONTENT",
+      "additional_links" => [
+        {"title" => "LINK TITLE 1", "link" => "/additional-link-1"},
+        {"title" => "LINK TITLE 2", "link" => "/additional-link-2"},
+      ]
+    }
+    document = Document.from_hash(hash)
+    assert_equal "LINK TITLE 1", document.additional_links[0].title
+    assert_equal "LINK TITLE 2", document.additional_links[1].title
   end
 
   def test_should_skip_missing_fields_in_to_hash

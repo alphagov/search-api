@@ -10,13 +10,14 @@ class Link
     @auto_keys
   end
 
-  auto_keys :title, :link
+  auto_keys :title, :link, :link_order
 
   def self.from_hash(hash)
     new.tap { |doc|
       auto_keys.each do |key|
         doc.set key, lookup(hash, key)
       end
+      doc.set 'link_order', lookup(hash, 'link_order', 0)
     }
   end
 
@@ -85,7 +86,7 @@ class Document < Link
     hash = unflatten(hash)
     super(hash).tap { |doc|
       doc.additional_links =
-        lookup(hash, :additional_links, []).map { |h| Link.from_hash(h) }
+        lookup(hash, :additional_links, []).map { |h| Link.from_hash(h) }.sort_by { |l| l.link_order }
     }
   end
 
