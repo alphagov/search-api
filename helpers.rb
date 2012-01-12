@@ -1,3 +1,5 @@
+require "solr_wrapper"
+
 module Helpers
   include Rack::Utils
   alias_method :h, :escape_html
@@ -55,9 +57,9 @@ module Helpers
     JSON.dump("result" => result)
   end
 
-  def rehighlight(s)
-    s.gsub(%r{&lt;em&gt;}, %{<em class="highlight">}).
-      gsub(%r{&lt;&#x2F;em&gt;}, %{</em>})
+  def apply_highlight(s)
+    s.gsub(SolrWrapper::HIGHLIGHT_START, %{<strong class="highlight">}).
+      gsub(SolrWrapper::HIGHLIGHT_END, %{</strong>})
   end
 
 end

@@ -54,7 +54,11 @@ class SolrWrapperTest < Test::Unit::TestCase
   def test_should_ask_for_highlight
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(hl: "true"))
+    client.expects(:query).with(anything, has_entries(
+      :hl => "true",
+      "hl.simple.pre"  => "HIGHLIGHT_START",
+      "hl.simple.post" => "HIGHLIGHT_END",
+    ))
     wrapper.search("foo")
   end
 

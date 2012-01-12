@@ -11,7 +11,7 @@
           <% recommended_results.each do |result| %>
             <li>
               <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
-              <p><%= rehighlight(h(result.highlight)) %></p>
+              <p><%= apply_highlight(h(result.highlight)) %></p>
             </li>
           <% end %>
         </ul>
@@ -25,7 +25,7 @@
           <li class="<%= result.presentation_format %>">
             <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
             <% unless result.highlight.to_s == "" %>
-            <p><%= rehighlight(h(result.highlight)) %></p>
+            <p><%= apply_highlight(h(result.highlight)) %></p>
             <% else %>
             <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             <% end %>

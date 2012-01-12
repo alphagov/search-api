@@ -62,6 +62,11 @@ class HelperTest < Test::Unit::TestCase
     docs = sample_document_list
     sorted = sort_documents_by_index(docs, ["one"])
     assert_equal 2, sorted.count
+  end
 
+  def test_should_apply_highlighting_markup
+    input = "foo HIGHLIGHT_STARTbarHIGHLIGHT_END baz"
+    expected = %{foo <strong class="highlight">bar</strong> baz}
+    assert_equal expected, h.apply_highlight(input)
   end
 end

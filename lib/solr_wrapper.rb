@@ -2,6 +2,8 @@ require "document"
 require "section"
 
 class SolrWrapper
+  HIGHLIGHT_START = "HIGHLIGHT_START"
+  HIGHLIGHT_END   = "HIGHLIGHT_END"
   COMMIT_WITHIN = 5 * 60 * 1000 # 5m in ms
 
   def initialize(client, recommended_format)
@@ -28,6 +30,8 @@ class SolrWrapper
       :bq     => "format:#{@recommended_format}",
       :hl     => "true",
       "hl.fl" => "description,indexable_content",
+      "hl.simple.pre"  => HIGHLIGHT_START,
+      "hl.simple.post" => HIGHLIGHT_END,
       :limit  => 50
     )
     return [] unless results && results.raw_response
