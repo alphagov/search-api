@@ -67,6 +67,44 @@ class HelperTest < Test::Unit::TestCase
   def test_should_apply_highlighting_markup
     input = "foo HIGHLIGHT_STARTbarHIGHLIGHT_END baz"
     expected = %{foo <strong class="highlight">bar</strong> baz}
-    assert_equal expected, h.apply_highlight(input)
+    assert_match expected, h.apply_highlight(input)
+  end
+
+  def test_should_prepend_ellipsis_if_phrase_starts_with_lower_case
+    assert_match /\A… foo/, h.apply_highlight("foo")
+  end
+
+  def test_should_not_prepend_ellipsis_if_phrase_starts_with_upper_case
+    assert_no_match /\A…/, h.apply_highlight("Foo")
+  end
+
+  def test_should_prepend_ellipsis_if_phrase_starts_with_highlighted_lower_case
+    assert_match /\A…/, h.apply_highlight("HIGHLIGHT_STARTfooHIGHLIGHT_END")
+  end
+
+  def test_should_not_prepend_ellipsis_if_phrase_starts_with_highlighted_upper_case
+    assert_no_match /\A…/, h.apply_highlight("HIGHLIGHT_STARTFooHIGHLIGHT_END")
+  end
+
+  def test_should_append_ellipsis_if_phrase_ends_with_non_punctuation
+    assert_match /foo …\z/, h.apply_highlight("foo")
+  end
+
+  def test_should_not_append_ellipsis_if_phrase_ends_with_punctuation
+    assert_no_match /…\z/, h.apply_highlight("foo.")
+    assert_no_match /…\z/, h.apply_highlight("foo!")
+    assert_no_match /…\z/, h.apply_highlight("foo?")
+  end
+
+  def test_should_append_ellipsis_if_phrase_ends_with_highlighted_non_punctuation
+    assert_match /…\z/, h.apply_highlight("HIGHLIGHT_STARTfooHIGHLIGHT_END")
+  end
+
+  def test_should_not_append_ellipsis_if_phrase_ends_with_highlighted_punctuation
+    assert_no_match /…\z/, h.apply_highlight("HIGHLIGHT_STARTfoo.HIGHLIGHT_END")
+  end
+
+  def test_should_ignore_space_when_adding_ellipses
+    assert_equal "… foo …", h.apply_highlight(" foo ")
   end
 end

@@ -1,6 +1,10 @@
+# encoding: utf-8
 require "solr_wrapper"
 
 module Helpers
+  HIGHLIGHT_START = SolrWrapper::HIGHLIGHT_START
+  HIGHLIGHT_END   = SolrWrapper::HIGHLIGHT_END
+
   include Rack::Utils
   alias_method :h, :escape_html
 
@@ -58,8 +62,13 @@ module Helpers
   end
 
   def apply_highlight(s)
-    s.gsub(SolrWrapper::HIGHLIGHT_START, %{<strong class="highlight">}).
-      gsub(SolrWrapper::HIGHLIGHT_END, %{</strong>})
+    s = s.strip
+    just_text = s.gsub(/#{HIGHLIGHT_START}|#{HIGHLIGHT_END}/, "")
+    [ just_text.match(/\A[[:upper:]]/) ? "" : "… ",
+      s.gsub(HIGHLIGHT_START, %{<strong class="highlight">}).
+        gsub(HIGHLIGHT_END, %{</strong>}),
+      just_text.match(/[\.\?!]\z/) ? "" : " …"
+    ].join
   end
 
 end
