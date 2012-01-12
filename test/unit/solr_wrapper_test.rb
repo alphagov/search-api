@@ -170,7 +170,7 @@ class SolrWrapperTest < Test::Unit::TestCase
   def test_should_ask_solr_for_relevant_fields_in_results
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(fields: "title,link,description,format,section"))
+    client.expects(:query).with(anything, has_entry(fields: "title,link,description,format,section,additional_links__title,additional_links__link,additional_links__link_order"))
     wrapper.search("foo")
   end
 

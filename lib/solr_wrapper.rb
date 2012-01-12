@@ -26,7 +26,7 @@ class SolrWrapper
   def search(q)
     results = @client.query("dismax",
       :query  => escape(q.downcase),
-      :fields => "title,link,description,format,section",
+      :fields => "title,link,description,format,section,additional_links__title,additional_links__link,additional_links__link_order",
       :bq     => "format:#{@recommended_format}",
       :hl     => "true",
       "hl.fl" => "description,indexable_content",
