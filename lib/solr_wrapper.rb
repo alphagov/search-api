@@ -16,8 +16,8 @@ class SolrWrapper
     @client.commit!
   end
 
-  def all
-    results = @client.query("standard", query: '*:*', fields: "*", bq: "format:#{@recommended_format}", limit: 1000) or return []
+  def autocomplete_cache
+    results = @client.query("standard", query: '*:*', fields: "title,link,format", fq: "-format:#{@recommended_format}", limit: 1000) or return []
     results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
   end
 
@@ -50,7 +50,7 @@ class SolrWrapper
   end
 
   def complete(q)
-    results = @client.query("standard", query: "autocomplete:#{escape(q.downcase)}*", fields: "title,link,format", limit: 10) or return []
+    results = @client.query("standard", query: "autocomplete:#{escape(q.downcase)}*", fq: "-format:#{@recommended_format}", fields: "title,link,format", limit: 10) or return []
     results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
   end
 

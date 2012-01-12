@@ -58,7 +58,7 @@ get prefixed_path("/preload-autocomplete") do
   # Eventually this is likely to be a list of commonly searched for terms
   # so searching for those is really fast. For the beta, this is just a list
   # of all terms.
-  results = solr.all rescue []
+  results = solr.autocomplete_cache rescue []
   content_type :json
   JSON.dump(results.map { |r| r.to_hash })
 end

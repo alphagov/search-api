@@ -30,8 +30,8 @@ class SearchTest < Test::Unit::TestCase
     Sinatra::Application
   end
 
-  def test_common_search_term_list
-    SolrWrapper.any_instance.stubs(:all).returns([
+  def test_autocomplete_cache
+    SolrWrapper.any_instance.stubs(:autocomplete_cache).returns([
       DOCUMENT,
       DOCUMENT
     ])
