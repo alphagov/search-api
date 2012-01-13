@@ -36,7 +36,10 @@ class SolrWrapper
   def search(q)
     map_results(@client.query("dismax",
       :query  => prepare_query(q),
-      :fields => "title,link,description,format,section,additional_links__title,additional_links__link,additional_links__link_order",
+      :fields => %w[
+        title link description format section additional_links__title
+        additional_links__link additional_links__link_order
+        ].join(","),
       :bq     => "format:#{@recommended_format}",
       :hl     => "true",
       "hl.fl" => "description,indexable_content",
@@ -52,7 +55,7 @@ class SolrWrapper
 
   def section(q)
     map_results(@client.query("standard",
-      :query  => { :section => q },
+      :query  => {:section => q},
       :sort   => "sortable_title asc",
       :fields => "*",
       :limit  => 100
