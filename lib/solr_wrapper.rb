@@ -21,7 +21,7 @@ class SolrWrapper
   def autocomplete_cache
     # TODO: Figure out the most popular or most queried for documents and
     # return them here.
-    all_documents limit: 1_000
+    all_documents limit: 500
   end
 
   def all_documents options = {}
