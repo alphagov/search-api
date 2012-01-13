@@ -84,6 +84,7 @@ get prefixed_path("/sitemap.xml") do
       documents.each do |document|
 	xml.url do
 	  url = document.link
+          url = "#{base_url}#{url}" if url =~ /^\//
 	  xml.loc url
 	end
       end
