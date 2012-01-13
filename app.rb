@@ -74,7 +74,6 @@ get prefixed_path("/sitemap.xml") do
   # Site maps can have up to 50,000 links in them.
   # We use one for / so we can have up to 49,999 others.
   documents = solr.all_documents limit: 49_999
-  base_url = "https://#{request.env['HTTP_HOST']}"
   builder do |xml|
     xml.instruct!
     xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do

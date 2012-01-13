@@ -16,6 +16,11 @@ module Helpers
     [@results.count, (settings.top_results + settings.max_more_results)].min
   end
 
+  def base_url
+    return "https://www.gov.uk" if ENV['FACTER_govuk_platform'] == 'production'
+    "https://www.#{ENV['FACTER_govuk_platform']}.alphagov.co.uk"
+  end
+
   def top_results
     results = non_recommended_results[0..(settings.top_results-1)]
     results.empty? ? nil : results
