@@ -70,6 +70,27 @@ get prefixed_path("/autocomplete") do
   JSON.dump(results.map { |r| r.to_hash })
 end
 
+get prefixed_path("/sitemap.xml") do
+  # Site maps can have up to 50,000 links in them.
+  # We use one for / so we can have up to 49,999 others.
+  documents = solr.all_documents limit: 49_999
+  base_url = "https://#{request.env['HTTP_HOST']}"
+  builder do |xml|
+    xml.instruct!
+    xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
+      xml.url do
+	xml.loc "#{base_url}#{prefixed_path("/")}"
+      end
+      documents.each do |document|
+	xml.url do
+	  url = "#{base_url}#{document.link}"
+	  xml.loc url
+	end
+      end
+    end
+  end
+end
+
 if settings.router[:path_prefix].empty?
   get prefixed_path("/browse") do
     @results = solr.facet('section')

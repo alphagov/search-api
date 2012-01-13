@@ -19,8 +19,16 @@ class SolrWrapper
   end
 
   def autocomplete_cache
-    results = @client.query("standard", query: '*:*', fields: "title,link,format", fq: "-format:#{@recommended_format}", limit: 1000) or return []
-    results.raw_response ? results.docs.map{ |h| Document.from_hash(h) } : []
+    # TODO: Figure out the most popular or most queried for documents and
+    # return them here.
+    all_documents limit: 1_000
+  end
+
+  def all_documents options = {}
+    options[:query] = escape(options[:query].downcase) if options[:query]
+    query_opts = { query: '*:*', fields: "title,link,format", fq: "-format:#{@recommended_format}" }.merge options
+    results = @client.query("standard", query_opts) or return []
+    results.raw_response ? results.docs.map { |h| Document.from_hash(h) } : []
   end
 
   def search(q)
