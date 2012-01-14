@@ -6,6 +6,7 @@ require 'sinatra'
 require 'slimmer'
 require 'erubis'
 require 'json'
+require 'csv'
 
 require 'document'
 require 'section'
@@ -121,7 +122,16 @@ post prefixed_path("/documents") do
   documents = [JSON.parse(request.body.read)].flatten.map { |hash|
     Document.from_hash(hash)
   }
-  simple_json_result(solr.add(documents))
+
+  boosts = {}
+  CSV.foreach(settings.boost_csv) { |row|
+    link, phrases = row
+    boosts[link] = phrases
+  }
+
+  better_documents = boost_documents(documents, boosts)
+
+  simple_json_result(solr.add(better_documents))
 end
 
 post prefixed_path("/commit") do

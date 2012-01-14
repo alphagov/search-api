@@ -17,3 +17,12 @@ def sort_documents_by_index(docs, indexes)
     end
   }
 end
+
+def boost_documents(documents, boosts)
+  documents.each do |doc|
+    if boosts.keys.include?(doc.link)
+      boost = boosts[doc.link]
+      doc.boost_phrases = boost
+    end
+  end
+end
