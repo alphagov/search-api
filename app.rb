@@ -36,7 +36,13 @@ def prefixed_path(path)
 end
 
 get prefixed_path("/search") do
-  @query = params['q'] or return erb(:no_search_term)
+  if params['q'].nil? or params['q'].strip == ''
+    @page_section = "Search"
+    @page_section_link = "/search"
+    @page_title = "Search | GOV.UK"
+    return erb(:no_search_term)
+  end
+  @query = params['q']
   @results = solr.search(@query)
 
   if request.accept.include?("application/json")
