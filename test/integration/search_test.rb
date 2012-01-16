@@ -42,12 +42,12 @@ class SearchTest < Test::Unit::TestCase
     assert_equal 2, results.size
   end
 
-  def test_search_view_with_no_query
-    omit("pending test waiting for new copy - original no longer valid")
-    get "/search"
-    assert last_response.ok?
-    assert_response_text "You haven’t specified a search query"
-  end
+  #removing test for now - need to reinstate once new copy is available
+  #def test_search_view_with_no_query
+  #  get "/search"
+  #  assert last_response.ok?
+  #  assert_response_text "You haven’t specified a search query"
+  #end
 
   def test_search_view_with_query
     SolrWrapper.any_instance.stubs(:search).returns([
