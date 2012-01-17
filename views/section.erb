@@ -7,9 +7,14 @@
 
     <%= include @section.slug %>
 
-    <% @results.each do |format, results| %>
-      <div class="results group">
-        <h2><%= formatted_format_name(format) %></h2>
+    <div class="results">
+    <table style="width:100%">
+    <!-- FIXME: TABLE JUST A HACKY SKETCH FOR NOW -->
+    <% @results.each_slice(2) do |row| %>
+    <tr>
+      <% row.each do |subsection, results| %>
+      <td>
+        <h2><%= subsection ? h(subsection.capitalize) : "Other" %></h2>
         <ol class="group">
         <% results.each do |result| %>
           <li class="<%= result.presentation_format %>">
@@ -17,7 +22,10 @@
           </li>
         <% end %>
         </ol>
-      </div>
+      </td>
+      <% end %>
+    </tr>
     <% end %>
+    </table>
   </div>
 </section>

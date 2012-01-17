@@ -110,10 +110,10 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse/:section") do
     section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
     halt 404 unless section == params[:section]
-    raw_results = solr.section(section)
-    halt 404 if raw_results.empty?
+    results = solr.section(section)
+    halt 404 if results.empty?
 
-    @results = sort_documents_by_index(raw_results, settings.format_order)
+    @results = results.group_by { |result| result.subsection }
 
     @section = Section.new(section)
     @page_section = @section.name

@@ -56,7 +56,7 @@ class SolrWrapper
   def section(q)
     map_results(@client.query("standard",
       :query  => {:section => q},
-      :sort   => "sortable_title asc",
+      :sort   => "subsection asc, sortable_title asc",
       :fields => "*",
       :limit  => 100
     ))
