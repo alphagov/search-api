@@ -79,7 +79,8 @@ end
 
 class Document < Link
 
-  auto_keys :title, :link, :description, :format, :section, :indexable_content, :additional_links, :boost_phrases
+  auto_keys :title, :link, :description, :format, :section, :subsection,
+    :indexable_content, :additional_links, :boost_phrases
   attr_writer :highlight
 
   def self.from_hash(hash)

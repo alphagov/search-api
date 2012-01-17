@@ -8,6 +8,7 @@ class DocumentTest < Test::Unit::TestCase
       "description" => "DESCRIPTION",
       "format" => "answer",
       "section" => "Life in the UK",
+      "subsection" => 'Queuing',
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT",
     }
@@ -18,6 +19,7 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "DESCRIPTION", document.description
     assert_equal "answer", document.format
     assert_equal "Life in the UK", document.section
+    assert_equal "Queuing", document.subsection
     assert_equal "/an-example-answer", document.link
     assert_equal "HERE IS SOME CONTENT", document.indexable_content
   end
@@ -114,46 +116,24 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "guide", document.presentation_format
   end
 
-  def test_should_export_title_to_delsolr_collaborator
-    document = Document.new
-    document.title = "TITLE"
-    collaborator = mock("DelSolr Document")
-    collaborator.expects(:add_field).with("title", "TITLE")
-    document.solr_export(collaborator)
+  def self.assert_field_exported_to_delsolr_collaborator(field_name)
+    define_method "test_should_export_#{field_name}_to_delsolr_collaborator" do
+      document = Document.new
+      arbitrary_text = field_name.to_s + "1234"
+      document.send("#{field_name}=", arbitrary_text)
+      collaborator = mock("DelSolr Document")
+      collaborator.expects(:add_field).with(field_name.to_s, arbitrary_text)
+      document.solr_export(collaborator)
+    end
   end
-
-  def test_should_export_description_to_delsolr_collaborator
-    document = Document.new
-    document.description = "DESCRIPTION"
-    collaborator = mock("DelSolr Document")
-    collaborator.expects(:add_field).with("description", "DESCRIPTION")
-    document.solr_export(collaborator)
-  end
-
-  def test_should_export_format_to_delsolr_collaborator
-    document = Document.new
-    document.format = "answer"
-    collaborator = mock("DelSolr Document")
-    collaborator.expects(:add_field).with("format", "answer")
-    document.solr_export(collaborator)
-  end
-
-  def test_should_export_link_to_delsolr_collaborator
-    document = Document.new
-    document.link = "/an-example-answer"
-    collaborator = mock("DelSolr Document")
-    collaborator.expects(:add_field).with("link", "/an-example-answer")
-    document.solr_export(collaborator)
-  end
-
-  def test_should_export_indexable_content_to_delsolr_collaborator
-    document = Document.new
-    document.indexable_content = "HERE IS SOME CONTENT"
-    collaborator = mock("DelSolr Document")
-    collaborator.expects(:add_field).
-      with("indexable_content", "HERE IS SOME CONTENT")
-    document.solr_export(collaborator)
-  end
+    
+  assert_field_exported_to_delsolr_collaborator :title
+  assert_field_exported_to_delsolr_collaborator :description
+  assert_field_exported_to_delsolr_collaborator :section
+  assert_field_exported_to_delsolr_collaborator :subsection
+  assert_field_exported_to_delsolr_collaborator :format
+  assert_field_exported_to_delsolr_collaborator :link
+  assert_field_exported_to_delsolr_collaborator :indexable_content
 
   def test_should_export_additional_links_as_separate_fields
     document = Document.new
