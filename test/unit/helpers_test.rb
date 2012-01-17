@@ -71,6 +71,7 @@ class HelperTest < Test::Unit::TestCase
       "/one" => "extra extra read all about it",
     }
     boosted_documents = boost_documents(sample_document_list, boosts)
+    assert_equal nil, boosted_documents[0].boost_phrases
     assert_equal "extra extra read all about it", boosted_documents[1].boost_phrases
   end
 
