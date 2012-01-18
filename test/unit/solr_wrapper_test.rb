@@ -174,10 +174,10 @@ class SolrWrapperTest < Test::Unit::TestCase
     wrapper.search("foo")
   end
 
-  def test_should_prioritise_recommended_links
+  def test_should_prioritise_recommended_links_and_transactions
     client = mock("client")
     wrapper = SolrWrapper.new(client, "recommended-link")
-    client.expects(:query).with(anything, has_entry(bq: "format:recommended-link"))
+    client.expects(:query).with(anything, has_entry(bq: "format:(transaction OR recommended-link)^3.0"))
     wrapper.search("foo")
   end
 

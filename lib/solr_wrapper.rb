@@ -40,7 +40,7 @@ class SolrWrapper
         title link description format section additional_links__title
         additional_links__link additional_links__link_order
         ].join(","),
-      :bq     => "format:#{@recommended_format}",
+      :bq     => "format:(transaction OR #{@recommended_format})^3.0",
       :hl     => "true",
       "hl.fl" => "description,indexable_content",
       "hl.simple.pre"  => HIGHLIGHT_START,
