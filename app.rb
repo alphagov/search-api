@@ -47,7 +47,7 @@ get prefixed_path("/search") do
 
   if request.accept.include?("application/json")
     content_type :json
-    JSON.dump(@results.map { |r| r.to_hash })
+    JSON.dump(@results.map { |r| r.to_hash.merge(highlight: r.highlight) })
   else
     @page_section = "Search"
     @page_section_link = "/search"

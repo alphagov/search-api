@@ -181,7 +181,7 @@ class SearchTest < Test::Unit::TestCase
       DOCUMENT
     ])
     get "/search", {:q => "bob"}, "HTTP_ACCEPT" => "application/json"
-    assert_equal [DOCUMENT_ATTRIBUTES], JSON.parse(last_response.body)
+    assert_equal [DOCUMENT_ATTRIBUTES.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 
