@@ -125,4 +125,8 @@ class HelperTest < Test::Unit::TestCase
   def test_should_ignore_space_when_adding_ellipses
     assert_equal "… foo …", h.apply_highlight(" foo ")
   end
+
+  def test_should_return_blank_when_highlighting_an_empty_string
+    assert_equal "", h.apply_highlight(" ")
+  end
 end

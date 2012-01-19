@@ -68,6 +68,7 @@ module Helpers
 
   def apply_highlight(s)
     s = s.strip
+    return "" if s.empty?
     just_text = s.gsub(/#{HIGHLIGHT_START}|#{HIGHLIGHT_END}/, "")
     [ just_text.match(/\A[[:upper:]]/) ? "" : "… ",
       s.gsub(HIGHLIGHT_START, %{<strong class="highlight">}).
