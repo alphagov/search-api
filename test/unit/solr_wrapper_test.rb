@@ -146,24 +146,24 @@ class SolrWrapperTest < Test::Unit::TestCase
     wrapper.search("foo")
   end
 
-  def test_should_ask_solr_for_search_term
+  def test_should_ask_solr_for_search_term_with_trailing_wildcard
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(query: 'foo'))
+    client.expects(:query).with(anything, has_entry(query: 'foo*'))
     wrapper.search("foo")
   end
 
   def test_should_escape_search_term
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(query: "foo\\?"))
+    client.expects(:query).with(anything, has_entry(query: "foo\\?*"))
     wrapper.search("foo?")
   end
 
   def test_should_downcase_search_term
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)
-    client.expects(:query).with(anything, has_entry(query: 'foo'))
+    client.expects(:query).with(anything, has_entry(query: 'foo*'))
     wrapper.search("FOO")
   end
 

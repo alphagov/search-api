@@ -35,7 +35,7 @@ class SolrWrapper
 
   def search(q)
     map_results(@client.query("dismax",
-      :query  => prepare_query(q),
+      :query  => "#{prepare_query(q)}*",
       :fields => %w[
         title link description format section additional_links__title
         additional_links__link additional_links__link_order
