@@ -6,7 +6,7 @@ Neighbourhoods
   Report a litter problem	Local services	report-litter
   Report an abandoned vehicle	Local services	report-abandoned-vehicle
   Join a library	Local services	join-library
-  Garden bonfires – the rules	Quick answers	garden-bonfires-rules
+  Garden bonfires - the rules	Quick answers	garden-bonfires-rules
   Find your nearest park	Local services	change-me-for-need-2135
   Book a computer at your library	Local services	book-computer-at-library
   Find a community support group or organisation	Local services	find-a-community-support-group-or-organisation
@@ -32,7 +32,7 @@ Crime
   Staying in touch with someone in prison	Guide	staying-in-touch-with-someone-in-prison
   Legal aid	Benefits and schemes	legal-aid
   Report domestic abuse	Quick answer	report-domestic-abuse
-  Courts – the different types	Guide	courts
+  Courts - the different types	Guide	courts
   Pay a court fine online	Services	pay-a-court-fine-online
   Get support as a victim of crime	Quick answer	get-support-as-a-victim-of-crime
   Being arrested: your rights	Guide	being-arrested-your-rights
@@ -40,7 +40,7 @@ Crime
 Education		
   Apply for Student Finance 2011/12	Guide	apply-for-student-finance-2011-12
   Apply for student finance 2012/13	Benefits & Schemes	apply-for-student-finance-2012-13
-  Student Finance – how much you can get for 2012/13	Quick answer	student-finance-calculator
+  Student Finance - how much you can get for 2012/13	Quick answer	student-finance-calculator
   School term and holiday dates	Local services	school-term-holiday-dates
   The national curriculum	Guide	the-national-curriculum
   Find a nursery school place	Local services	find-nursery-school-place
