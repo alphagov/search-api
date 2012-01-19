@@ -1,0 +1,2 @@
+Section Name
+  Article title	Format	article-slug

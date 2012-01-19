@@ -1,39 +1,11 @@
 # encoding: utf-8
-require "test_helper"
-require "document"
-require "section"
-require "app"
+require_relative "integration_helper"
 
-class SearchTest < Test::Unit::TestCase
-  DOCUMENT_ATTRIBUTES = {
-    "title" => "TITLE1",
-    "description" => "DESCRIPTION",
-    "format" => "local_transaction",
-    "section" => "Life in the UK",
-    "link" => "/URL"
-  }
-  RECOMMENDED_DOCUMENT_ATTRIBUTES = {
-    "title" => "TITLE1",
-    "description" => "DESCRIPTION",
-    "format" => "recommended-link",
-    "link" => "/URL"
-  }
-  DOCUMENT = Document.from_hash(DOCUMENT_ATTRIBUTES)
-  RECOMMENDED_DOCUMENT = Document.from_hash(RECOMMENDED_DOCUMENT_ATTRIBUTES)
-
-  SECTION = Section.new("bob")
-
-  include Rack::Test::Methods
-  include ResponseAssertions
-
-  def app
-    Sinatra::Application
-  end
-
+class SearchTest < IntegrationTest
   def test_autocomplete_cache
-    SolrWrapper.any_instance.stubs(:autocomplete_cache).returns([
-      DOCUMENT,
-      DOCUMENT
+    @solr.stubs(:autocomplete_cache).returns([
+      sample_document,
+      sample_document
     ])
     get "/preload-autocomplete"
     assert last_response.ok?
@@ -50,8 +22,8 @@ class SearchTest < Test::Unit::TestCase
   #end
 
   def test_search_view_with_query
-    SolrWrapper.any_instance.stubs(:search).returns([
-      DOCUMENT
+    @solr.stubs(:search).returns([
+      sample_document
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
@@ -59,9 +31,9 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_results_is_pluralised_if_multiple_results
-    SolrWrapper.any_instance.stubs(:search).returns([
-      DOCUMENT,
-      DOCUMENT
+    @solr.stubs(:search).returns([
+      sample_document,
+      sample_document
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
@@ -69,9 +41,9 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_recommended_links_appear_if_present
-    SolrWrapper.any_instance.stubs(:search).returns([
-      RECOMMENDED_DOCUMENT,
-      DOCUMENT,
+    @solr.stubs(:search).returns([
+      sample_recommended_document,
+      sample_document,
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
@@ -79,51 +51,15 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_search_view_returning_no_results
-    SolrWrapper.any_instance.stubs(:search).returns([])
+    @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert last_response.ok?
     assert_response_text "We can’t find any results"
   end
 
-  def test_browsing_a_valid_section
-    SolrWrapper.any_instance.stubs(:section).returns([
-      DOCUMENT
-    ])
-    get "/browse/bob"
-    assert last_response.ok?
-  end
-
-  def test_browsing_an_empty_section
-    SolrWrapper.any_instance.stubs(:section).returns([])
-    get "/browse/bob"
-    assert_equal 404, last_response.status
-  end
-
-  def test_browsing_an_invalid_section
-    SolrWrapper.any_instance.stubs(:search).returns([
-      DOCUMENT
-    ])
-    get "/browse/And%20this"
-    assert_equal 404, last_response.status
-  end
-
-  def test_browsing_section_list
-    SolrWrapper.any_instance.stubs(:facet).returns([
-      SECTION
-    ])
-    get "/browse"
-    assert last_response.ok?
-  end
-
-  def test_section_list_always_renders
-    SolrWrapper.any_instance.stubs(:facet).returns([])
-    get "/browse"
-    assert last_response.ok?
-  end
-
   def test_we_count_result
-    SolrWrapper.any_instance.stubs(:search).returns([
-      DOCUMENT
+    @solr.stubs(:search).returns([
+      sample_document
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
@@ -131,8 +67,8 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_we_count_results
-    SolrWrapper.any_instance.stubs(:search).returns([
-      DOCUMENT, DOCUMENT
+    @solr.stubs(:search).returns([
+      sample_document, sample_document
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
@@ -140,14 +76,14 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_should_return_autocompletion_documents_as_json
-    SolrWrapper.any_instance.stubs(:complete).returns([DOCUMENT])
+    @solr.stubs(:complete).returns([sample_document])
     get "/autocomplete", :q => 'bob'
     assert last_response.ok?
-    assert_equal [DOCUMENT_ATTRIBUTES], JSON.parse(last_response.body)
+    assert_equal [sample_document_attributes], JSON.parse(last_response.body)
   end
 
   def test_should_send_analytics_headers_for_citizen_proposition
-    SolrWrapper.any_instance.stubs(:search).returns([])
+    @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert_equal "Search",  last_response.headers["X-Slimmer-Section"]
     assert_equal "search",  last_response.headers["X-Slimmer-Format"]
@@ -160,7 +96,7 @@ class SearchTest < Test::Unit::TestCase
       format:      "search",
       proposition: "government"
     )
-    SolrWrapper.any_instance.stubs(:search).returns([])
+    @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert_equal "government", last_response.headers["X-Slimmer-Proposition"]
   end
@@ -171,17 +107,17 @@ class SearchTest < Test::Unit::TestCase
       format:      "y",
       proposition: "blah"
     )
-    SolrWrapper.any_instance.stubs(:search).returns([])
+    @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert_match /<body class="blah"/, last_response.body
   end
 
   def test_should_respond_with_json_when_requested
-    SolrWrapper.any_instance.stubs(:search).returns([
-      DOCUMENT
+    @solr.stubs(:search).returns([
+      sample_document
     ])
     get "/search", {:q => "bob"}, "HTTP_ACCEPT" => "application/json"
-    assert_equal [DOCUMENT_ATTRIBUTES.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
+    assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 

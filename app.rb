@@ -8,6 +8,7 @@ require 'erubis'
 require 'json'
 require 'csv'
 
+require 'popular_items'
 require 'document'
 require 'section'
 require 'utils'
@@ -113,6 +114,10 @@ if settings.router[:path_prefix].empty?
     results = solr.section(section)
     halt 404 if results.empty?
 
+    popular_items = PopularItems.new(settings.popular_items_file)
+    @popular = popular_items.select_from(params[:section], results)
+    
+    File.open('/tmp/results.txt', 'w') {|f| f.write results.inspect}
     @results = results.group_by { |result| result.subsection }
 
     @section = Section.new(section)

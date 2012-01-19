@@ -6,14 +6,27 @@
   <div class="browse-sections">
 
     <%= include @section.slug %>
-
+    
+    <% if @popular && @popular.size > 0 %>
+      <div class="popular results">
+        <h2>Popular Items</h2>
+        
+        <ol class="group">
+        <% @popular.each do |result| %>
+          <li class="<%= result.presentation_format %>">
+            <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+            <% if !result.description.empty? %>
+              <p><%= result.description %></p>
+            <% end %>
+          </li>
+        <% end %>
+        </ol>
+      </div>
+    <% end %>
+    
     <div class="results">
-    <table style="width:100%">
-    <!-- FIXME: TABLE JUST A HACKY SKETCH FOR NOW -->
     <% @results.each_slice(2) do |row| %>
-    <tr>
       <% row.each do |subsection, results| %>
-      <td>
         <h2><%= subsection ? h(subsection.capitalize) : "Other" %></h2>
         <ol class="group">
         <% results.each do |result| %>
@@ -22,10 +35,7 @@
           </li>
         <% end %>
         </ol>
-      </td>
       <% end %>
-    </tr>
     <% end %>
-    </table>
   </div>
 </section>
