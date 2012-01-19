@@ -15,7 +15,7 @@
         <% @popular.each do |result| %>
           <li class="<%= result.presentation_format %>">
             <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-            <% if !result.description.empty? %>
+            <% if result.description && !result.description.empty? %>
               <p><%= result.description %></p>
             <% end %>
           </li>
