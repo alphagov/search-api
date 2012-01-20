@@ -118,7 +118,8 @@ if settings.router[:path_prefix].empty?
     @popular = popular_items.select_from(params[:section], results)
     
     File.open('/tmp/results.txt', 'w') {|f| f.write results.inspect}
-    @results = results.group_by { |result| result.subsection }
+    results[0].subsection = nil
+    @results = results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
 
     @section = Section.new(section)
     @page_section = @section.name

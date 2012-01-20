@@ -25,17 +25,15 @@
     <% end %>
     
     <div class="results">
-    <% @results.each_slice(2) do |row| %>
-      <% row.each do |subsection, results| %>
-        <h2><%= subsection ? h(subsection.capitalize) : "Other" %></h2>
-        <ol class="group">
-        <% results.each do |result| %>
-          <li class="<%= result.presentation_format %>">
-            <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-          </li>
-        <% end %>
-        </ol>
+    <% @results.each do |subsection, results| %>
+      <h2><%= subsection ? h(subsection.capitalize) : "Other" %></h2>
+      <ol class="group">
+      <% results.each do |result| %>
+        <li class="<%= result.presentation_format %>">
+          <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+        </li>
       <% end %>
+      </ol>
     <% end %>
   </div>
 </section>
