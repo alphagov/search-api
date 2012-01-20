@@ -98,7 +98,6 @@ Driving
   Check the MOT status of a vehicle	Services	check-mot-status-vehicle
   Vehicle tax rate tables	Quick answer	vehicle-tax-rate-tables
   Replace a lost, stolen, damaged or destroyed driving licence	Services	apply-online-to-replace-a-driving-licence
-  Change the address on your driving licence	Services	change-address-driving-licence
   Changing the name on your driving licence	Quick answer	change-name-driving-licence
   Apply for your first provisional driving licence	Services	apply-first-provisional-driving-licence
   Change the photo on your driving licence	Services	change-photo-driving-licence
