@@ -1,6 +1,6 @@
 Neighbourhoods		
   Find my nearest UK online centre	Local services	uk-online-centre-internet-access-computer-training
-  Organising a fete or street party	Guide	organising-a-fete-or-street-party
+  Organising a fete or street party	Guide	organise-fete-street-party
   Noise polllution from roads, trains or planes	Guide	noise-pollution-road-train-plane
   Controlling your dog in public	Guide	control-dog-public
   Report a litter problem	Local services	report-litter
