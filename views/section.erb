@@ -26,7 +26,7 @@
     
     <div class="results">
     <% @results.each do |subsection, results| %>
-      <h2><%= subsection ? h(subsection.capitalize) : "Other" %></h2>
+      <h2><%= subsection ? h(subsection.gsub('-', ' ').capitalize) : "Other" %></h2>
       <ol class="group">
       <% results.each do |result| %>
         <li class="<%= result.presentation_format %>">
