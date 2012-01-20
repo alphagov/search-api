@@ -23,21 +23,14 @@ class SearchTest < IntegrationTest
 
   def test_search_view_with_query
     @solr.stubs(:search).returns([
-      sample_document
-    ])
-    get "/search", :q => 'bob'
-    assert last_response.ok?
-    assert_response_text "results for “bob”"
-  end
-
-  def test_results_is_pluralised_if_multiple_results
-    @solr.stubs(:search).returns([
       sample_document,
       sample_document
     ])
     get "/search", :q => 'bob'
     assert last_response.ok?
-    assert_response_text "results for “bob”"
+    response = Nokogiri.parse(last_response.body)
+    assert_equal "Search results for “”", response.css(".site-search h1").inner_text
+    assert_equal "bob", response.css(".site-search h1 input").first['value']
   end
 
   def test_recommended_links_appear_if_present
