@@ -26,6 +26,12 @@ set :format_name_alternatives, {
   "answer" => "Quick answers",
 }
 
-configure :production, :development do
+configure :development do
   use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host
 end
+
+configure :production do
+  use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host, cache_templates: true
+end
+
+
