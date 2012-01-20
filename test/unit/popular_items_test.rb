@@ -11,7 +11,7 @@ class PopularItemsTest < Test::Unit::TestCase
   end
   
   test "items are stored indexed by the section parameter" do
-    assert_equal 1, @popular_items.items['section-name'].count
+    assert_equal 2, @popular_items.items['section-name'].count
   end
 
   test "can check if a slug is popular" do
@@ -29,6 +29,16 @@ class PopularItemsTest < Test::Unit::TestCase
     items = @popular_items.select_from('section-name', solr_results)
     assert_equal 1, items.count
     assert_equal 'Article Title', items.first.title
+  end
+  
+  test "order of popular items is controlled by the file" do
+    solr_results = [
+      Document.from_hash("title" => 'Two', "link" => "/article-slug-two"),
+      Document.from_hash("title" => 'One', "link" => "/article-slug")
+    ]
+    
+    items = @popular_items.select_from('section-name', solr_results)
+    assert_equal %w{One Two}, items.map(&:title)
   end
   
 end

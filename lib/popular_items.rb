@@ -36,8 +36,8 @@ class PopularItems
   end
   
   def select_from(section, solr_results)
-    solr_results.select do |r| 
-      popular?(section, link_to_slug(r.link))
-    end
+    (@items[section] || []).map do |slug|
+      solr_results.find { |result| link_to_slug(result.link) == slug }
+    end.reject(&:nil?)
   end
 end
