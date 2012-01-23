@@ -1,17 +1,23 @@
 <section id="content" role="main" class="group ancillary search">
   <header>
+    <h1>Search results for <em><%= h @query %></em></h1>
+  </header>
+
+  <div class="results top group">
     <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
       <fieldset>
         <legend class="visuallyhidden">Search the beta.gov.uk site</legend>
-        <label for="main_autocomplete2" class="visuallyhidden">Search</label>
-        <h1>Search results for &ldquo;<input type="text" id="main_autocomplete2" name="q" value="<%=h @query %>" placeholder="type your search here">&rdquo;</h1>
-        <input type="submit" value="Search" class="button">
+        <p>
+          <label for="main_autocomplete2" class="visuallyhidden">Search</label>
+          <input type="text" id="main_autocomplete2" name="q" value="<%=h @query %>">
+          <input type="submit" value="Search" class="button">
+        </p>
       </fieldset>
+      <p><%= capped_search_set_size %> <%= pluralize("result", "results") %> found</p>
     </form>
-    
-    <p><%= capped_search_set_size %> <%= pluralize("result", "results") %> found</p>
-  </header>
-
+  
+  </div>
+  
   <% unless recommended_results.empty? %>
     <div class="results top group">
         <h2>Elsewhere on the web</h2>

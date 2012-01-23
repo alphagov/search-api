@@ -1,13 +1,21 @@
 <section id="content" role="main" class="group ancillary search">
   <header>
-    <h1>Search results</h1>
+    <h1>Search results for <em><%= h @query %></em></h1>
   </header>
-
+  
   <div class="results top group">
-    <div class="search-not-found">
-      <h2>Please try again</h2>
-      <p>We can’t find any results for "<strong><%=h @query %></strong>".</p>
-      <p>Return to the search box at the top of the page and try another search.</p>
-    </div>
+    <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
+      <fieldset>
+        <legend class="visuallyhidden">Search the beta.gov.uk site</legend>
+        <p>
+          <label for="main_autocomplete2" class="visuallyhidden">Search</label>
+          <input type="text" id="main_autocomplete2" name="q" value="<%=h @query %>">
+          <input type="submit" value="Search" class="button">
+        </p>
+      </fieldset>
+    
+      <p>We can’t find any results for <em><strong><%=h @query %></strong></em>.</p>
+      <p>Please search again with different words.</p>
+    </form>
   </div>
 </section>
