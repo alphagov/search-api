@@ -5,12 +5,14 @@
 
   <div class="browse-sections">
 
-    <%= include @section.slug %>
-    
+    <div class="summary">
+      <%= include @section.slug %>
+    </div>
+
     <% if @popular && @popular.size > 0 %>
       <div class="popular results">
         <h2>Popular items</h2>
-        
+
         <ol class="group">
         <% @popular.each do |result| %>
           <li class="<%= result.presentation_format %>">
@@ -23,7 +25,7 @@
         </ol>
       </div>
     <% end %>
-    
+
     <div class="results">
     <% @results.each do |subsection, results| %>
       <h2><%= subsection ? h(subsection.gsub('-', ' ').capitalize) : "Other" %></h2>
