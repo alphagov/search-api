@@ -1,9 +1,7 @@
 <section id="content" role="main" class="group ancillary search">
   <header>
     <h1>Search results for <em><%= h @query %></em></h1>
-  </header>
-  
-  <div class="results top group">
+
     <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
       <fieldset>
         <legend class="visuallyhidden">Search the beta.gov.uk site</legend>
@@ -13,9 +11,9 @@
           <input type="submit" value="Search" class="button">
         </p>
       </fieldset>
-    
-      <p>We can’t find any results for <em><strong><%=h @query %></strong></em>.</p>
-      <p>Please search again with different words.</p>
     </form>
-  </div>
+    
+    <p>We can’t find any results for <em><strong><%=h @query %></strong></em>.</p>
+    <p>Please search again with different words.</p>
+  </header>
 </section>

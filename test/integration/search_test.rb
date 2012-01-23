@@ -29,8 +29,8 @@ class SearchTest < IntegrationTest
     get "/search", :q => 'bob'
     assert last_response.ok?
     response = Nokogiri.parse(last_response.body)
-    assert_equal "Search results for “”", response.css(".site-search h1").inner_text
-    assert_equal "bob", response.css(".site-search h1 input").first['value']
+    assert_equal "Search results for bob", response.css("header h1").inner_text
+    assert_equal "bob", response.css("header h1 em").inner_text
   end
 
   def test_recommended_links_appear_if_present

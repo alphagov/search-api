@@ -1,9 +1,7 @@
 <section id="content" role="main" class="group ancillary search">
   <header>
     <h1>Search results for <em><%= h @query %></em></h1>
-  </header>
 
-  <div class="results top group">
     <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
       <fieldset>
         <legend class="visuallyhidden">Search the beta.gov.uk site</legend>
@@ -16,7 +14,7 @@
       <p><%= capped_search_set_size %> <%= pluralize("result", "results") %> found</p>
     </form>
   
-  </div>
+  </header>
   
   <% unless recommended_results.empty? %>
     <div class="results top group">
