@@ -216,6 +216,13 @@ class SolrWrapperTest < Test::Unit::TestCase
     wrapper.complete("FOO")
   end
 
+  def test_should_autocomplete_words_separately
+    client = mock("client")
+    wrapper = SolrWrapper.new(client, nil)
+    client.expects(:query).with("standard", has_entry(query: "autocomplete:foo* autocomplete:bar*"))
+    wrapper.complete("foo bar")
+  end
+
   def test_should_escape_characters_with_special_meaning_in_solr
     client = mock("client")
     wrapper = SolrWrapper.new(client, nil)

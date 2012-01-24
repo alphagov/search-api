@@ -71,8 +71,9 @@ class SolrWrapper
   end
 
   def complete(q)
+    words = q.scan(/\S+/).map { |w| "autocomplete:#{prepare_query(w)}*" }
     map_results(@client.query("standard",
-      :query  => "autocomplete:#{prepare_query(q)}*",
+      :query  => words.join(" "),
       :fq     => "-format:#{@recommended_format}",
       :fields => "title,link,format",
       :limit  => 5
