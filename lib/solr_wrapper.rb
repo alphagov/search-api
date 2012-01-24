@@ -75,7 +75,7 @@ class SolrWrapper
       :query  => "autocomplete:#{prepare_query(q)}*",
       :fq     => "-format:#{@recommended_format}",
       :fields => "title,link,format",
-      :limit  => 8
+      :limit  => 5
     ))
   end
 
