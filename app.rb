@@ -124,7 +124,7 @@ if settings.router[:path_prefix].empty?
     @section = Section.new(section)
     @page_section = @section.name
     @page_section_link = @section.path
-    @page_title = "#{@section.name} | GOV.UK"
+    @page_title = "#{formatted_section_name @section.slug} | GOV.UK"
     erb(:section)
   end
 end

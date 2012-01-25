@@ -10,7 +10,7 @@ module IntegrationFixtures
       "title" => "TITLE1",
       "description" => "DESCRIPTION",
       "format" => "local_transaction",
-      "section" => "Life in the UK",
+      "section" => "life-in-the-uk",
       "link" => "/URL"
     }
   end

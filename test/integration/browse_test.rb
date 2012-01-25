@@ -25,6 +25,20 @@ class BrowseTest < IntegrationTest
     assert_equal 404, last_response.status
   end
 
+  def test_browsing_a_section_shows_formatted_section_name
+    @solr.stubs(:section).returns([sample_document])
+
+    get "/browse/this-and-that"
+    assert_match /This and that/, last_response.body
+  end
+
+  def test_browsing_a_section_shows_custom_formatted_section_name
+    @solr.stubs(:section).returns([sample_document])
+
+    get "/browse/life-in-the-uk"
+    assert_match /Life in the UK/, last_response.body
+  end
+
   def test_browsing_a_section_with_popular_item_shows_popular_item_at_top_of_page
     sample_popular_items = PopularItems.new(File.expand_path('../fixtures/popular_items_sample.txt', File.dirname(__FILE__)))
     PopularItems.stubs(:new).returns(sample_popular_items)

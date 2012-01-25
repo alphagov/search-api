@@ -7,7 +7,7 @@
     <dl>
       <% @results.each do |section| %>
         <dt>
-          <a href="<%= section.path %>"><%=h section.name %></a>
+          <a href="<%= section.path %>"><%=h formatted_section_name section.slug %></a>
         </dt>
         <dd>
           <%= include section.slug %>

@@ -77,6 +77,27 @@ module Helpers
     ].join
   end
 
+  def map_section_name(slug)
+    map = {
+      "life-in-the-uk" => "Life in the UK",
+      "housing-benefits-grants-and-schemes" => "Housing benefits, grants and schemes",
+      "work-related-benefits-and-schemes" => "Work-related benefits and schemes",
+      "buying-selling-a-vehicle" => "Buying/selling a vehicle",
+      "owning-a-car-motorbike" => "Owning a car/motorbike",
+      "council-and-housing-association-homes" => "Council and Housing Association homes",
+      "animals-food-and-plants" => "Animals, food and plants"
+    }
+    return map[slug] ? map[slug] : false  
+  end
+
+  def humanize_section_name(slug)
+    slug.gsub('-', ' ').capitalize
+  end
+
+  def formatted_section_name(slug)
+    map_section_name(slug) ? map_section_name(slug) : humanize_section_name(slug)
+  end
+
 end
 
 class HelperAccessor

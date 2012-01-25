@@ -11,7 +11,7 @@ class Section
   end
 
   def name
-    @slug.gsub('-', ' ').capitalize
+    @slug
   end
 
 end

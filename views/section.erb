@@ -1,6 +1,6 @@
 <section id="content" role="main" class="group ancillary section-page">
   <header>
-    <h1>Browse GOV.UK &mdash; <%= @section.name %></h1>
+    <h1>Browse GOV.UK &mdash; <%= formatted_section_name @section.slug %></h1>
   </header>
 
   <div class="browse-sections">
@@ -28,7 +28,7 @@
 
     <div class="results">
     <% @results.each do |subsection, results| %>
-      <h2><%= subsection ? h(subsection.gsub('-', ' ').capitalize) : "Other" %></h2>
+      <h2><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
       <ol class="group">
       <% results.each do |result| %>
         <li class="<%= result.presentation_format %>">
