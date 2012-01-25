@@ -36,7 +36,7 @@ def prefixed_path(path)
   "#{path_prefix}#{path}"
 end
 
-get prefixed_path("/search") do
+get prefixed_path("/search.?:format?") do
   if params['q'].nil? or params['q'].strip == ''
     @page_section = "Search"
     @page_section_link = "/search"
@@ -46,7 +46,7 @@ get prefixed_path("/search") do
   @query = params['q']
   @results = solr.search(@query)
 
-  if request.accept.include?("application/json")
+  if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
     JSON.dump(@results.map { |r| r.to_hash.merge(highlight: r.highlight) })
   else
@@ -108,19 +108,41 @@ if settings.router[:path_prefix].empty?
     erb(:sections)
   end
 
-  get prefixed_path("/browse/:section") do
+  def assemble_section_details(section_slug)
     section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
     halt 404 unless section == params[:section]
-    results = solr.section(section)
-    halt 404 if results.empty?
+    @ungrouped_results = solr.section(section)
+    halt 404 if @ungrouped_results.empty?
+    @ungrouped_results[0].subsection = nil
+    @section = Section.new(section)
+    @results = @ungrouped_results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
+  end
+
+  def compile_section_json(results)
+    as_hash = {
+      'name' => formatted_section_name(@section.slug),
+      'items' => {}
+    }
+    @results.each do |subsection, items|
+      as_hash[subsection] = items.collect do |i|
+        { 'title' => i.title, 'url' => i.link, 'format' => i.presentation_format}
+      end
+    end
+    as_hash
+  end
+
+  get prefixed_path("/browse/:section.json") do
+    assemble_section_details(params[:section])
+    content_type :json
+    JSON.dump(compile_section_json)
+  end
+
+  get prefixed_path("/browse/:section") do
+    assemble_section_details(params[:section])
 
     popular_items = PopularItems.new(settings.popular_items_file)
-    @popular = popular_items.select_from(params[:section], results)
-    
-    results[0].subsection = nil
-    @results = results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
+    @popular = popular_items.select_from(params[:section], @ungrouped_results)
 
-    @section = Section.new(section)
     @page_section = formatted_section_name @section.slug
     @page_section_link = @section.path
     @page_title = "#{formatted_section_name @section.slug} | GOV.UK"

@@ -114,4 +114,13 @@ class SearchTest < IntegrationTest
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 
+  def test_should_respond_with_json_when_requested_with_url_suffix
+    @solr.stubs(:search).returns([
+      sample_document
+    ])
+    get "/search.json", {:q => "bob"}
+    assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
+    assert_match /application\/json/, last_response.headers["Content-Type"]
+  end
+
 end
