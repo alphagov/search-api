@@ -122,7 +122,7 @@ if settings.router[:path_prefix].empty?
     @results = results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
 
     @section = Section.new(section)
-    @page_section = @section.name
+    @page_section = formatted_section_name @section.slug
     @page_section_link = @section.path
     @page_title = "#{formatted_section_name @section.slug} | GOV.UK"
     erb(:section)
