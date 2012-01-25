@@ -85,7 +85,8 @@ module Helpers
       "buying-selling-a-vehicle" => "Buying/selling a vehicle",
       "owning-a-car-motorbike" => "Owning a car/motorbike",
       "council-and-housing-association-homes" => "Council and Housing Association homes",
-      "animals-food-and-plants" => "Animals, food and plants"
+      "animals-food-and-plants" => "Animals, food and plants",
+      "mot" => "MOT"
     }
     return map[slug] ? map[slug] : false  
   end
