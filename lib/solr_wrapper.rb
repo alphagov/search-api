@@ -58,7 +58,7 @@ class SolrWrapper
       :query  => {:section => q},
       :sort   => "subsection asc, sortable_title asc",
       :fields => "*",
-      :limit  => 100
+      :limit  => 120
     ))
   end
 
