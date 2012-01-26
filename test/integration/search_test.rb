@@ -122,14 +122,4 @@ class SearchTest < IntegrationTest
     assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
-
-  def test_should_provide_list_of_sections_via_json
-    SolrWrapper.any_instance.stubs(:facet).returns([
-      SECTION
-    ])
-    get '/browse.json'
-    assert_match 'application/json', last_response.headers["Content-Type"]
-    assert JSON.parse(last_response.body)
-  end
-
 end

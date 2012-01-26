@@ -50,7 +50,7 @@ class BrowseTest < IntegrationTest
       "link" => "/article-slug"
     )
     @solr.stubs(:section).returns([doc])
-    
+
     get "/browse/section-name"
     response = Nokogiri.parse(last_response.body)
     assert_equal 1, response.css(".popular").size
@@ -69,5 +69,28 @@ class BrowseTest < IntegrationTest
 
     get "/browse"
     assert last_response.ok?
+  end
+
+    def test_should_provide_list_of_sections_via_json
+    @solr.stubs(:facet).returns([sample_section])
+    get '/browse.json'
+    assert last_response.ok?
+    assert_match 'application/json', last_response.headers["Content-Type"]
+    assert JSON.parse(last_response.body)
+  end
+
+  def test_should_provide_section_listing_via_json
+    doc = Document.from_hash(
+      "title" => "The Popular Article",
+      "description" => "DESCRIPTION",
+      "format" => "local_transaction",
+      "section" => "Life in the UK",
+      "link" => "/article-slug"
+    )
+    @solr.stubs(:section).returns([doc])
+    get '/browse/bob.json'
+    assert last_response.ok?
+    assert_match 'application/json', last_response.headers["Content-Type"]
+    assert JSON.parse(last_response.body)
   end
 end

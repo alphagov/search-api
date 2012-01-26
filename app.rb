@@ -116,17 +116,20 @@ if settings.router[:path_prefix].empty?
   def assemble_section_details(section_slug)
     section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
     halt 404 unless section == params[:section]
-    @ungrouped_results = solr.section(section)
-    halt 404 if @ungrouped_results.empty?
-    @ungrouped_results[0].subsection = nil
+    @raw_results = solr.section(section)
+    halt 404 if @raw_results.empty?
+    @raw_results[0].subsection = nil
     @section = Section.new(section)
-    @results = @ungrouped_results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
+    @page_section = formatted_section_name(@section.slug)
+    @page_section_link = @section.path
+    @results = sort_documents_by_index(@raw_results, settings.format_order)
   end
 
   def compile_section_json(results)
     as_hash = {
-      'name' => formatted_section_name(@section.slug),
-      'items' => {}
+      'name' => @page_section,
+      'url' => @page_section_link,
+      'contents' => {}
     }
     @results.each do |subsection, items|
       as_hash[subsection] = items.collect do |i|
@@ -139,19 +142,21 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse/:section.json") do
     assemble_section_details(params[:section])
     content_type :json
-    JSON.dump(compile_section_json)
+    JSON.dump(compile_section_json(@results))
   end
 
   get prefixed_path("/browse/:section") do
     assemble_section_details(params[:section])
 
-    popular_items = PopularItems.new(settings.popular_items_file)
-    @popular = popular_items.select_from(params[:section], @ungrouped_results)
-
-    @page_section = formatted_section_name @section.slug
-    @page_section_link = @section.path
-    @page_title = "#{formatted_section_name @section.slug} | GOV.UK"
-    erb(:section)
+    if request.accept.include?("application/json")
+      content_type :json
+      JSON.dump(compile_json_for_section)
+    else
+      popular_items = PopularItems.new(settings.popular_items_file)
+      @popular = popular_items.select_from(params[:section], @raw_results)
+      @page_title = "#{formatted_section_name @section.slug} | GOV.UK"
+      erb(:section)
+    end
   end
 end
 
