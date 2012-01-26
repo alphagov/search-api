@@ -71,7 +71,7 @@ class BrowseTest < IntegrationTest
     assert last_response.ok?
   end
 
-    def test_should_provide_list_of_sections_via_json
+  def test_should_provide_list_of_sections_via_json
     @solr.stubs(:facet).returns([sample_section])
     get '/browse.json'
     assert last_response.ok?
