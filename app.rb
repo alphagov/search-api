@@ -100,12 +100,17 @@ get prefixed_path("/sitemap.xml") do
 end
 
 if settings.router[:path_prefix].empty?
-  get prefixed_path("/browse") do
+  get prefixed_path("/browse.?:format?") do
     @results = solr.facet('section')
     @page_section = "Browse"
     @page_section_link = "/browse"
     @page_title = "Browse | GOV.UK"
-    erb(:sections)
+    if request.accept.include?("application/json") or params['format'] == 'json'
+      content_type :json
+      JSON.dump(@results.map { |r| { url: "/browse/#{r.slug}" } })
+    else
+      erb(:sections)
+    end
   end
 
   def assemble_section_details(section_slug)
