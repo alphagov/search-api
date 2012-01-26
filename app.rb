@@ -116,13 +116,13 @@ if settings.router[:path_prefix].empty?
   def assemble_section_details(section_slug)
     section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
     halt 404 unless section == params[:section]
-    @raw_results = solr.section(section)
-    halt 404 if @raw_results.empty?
-    @raw_results[0].subsection = nil
+    @ungrouped_results = solr.section(section)
+    halt 404 if @ungrouped_results.empty?
+    @ungrouped_results[0].subsection = nil
     @section = Section.new(section)
     @page_section = formatted_section_name(@section.slug)
     @page_section_link = @section.path
-    @results = sort_documents_by_index(@raw_results, settings.format_order)
+    @results = @ungrouped_results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
   end
 
   def compile_section_json(results)
@@ -153,7 +153,7 @@ if settings.router[:path_prefix].empty?
       JSON.dump(compile_json_for_section)
     else
       popular_items = PopularItems.new(settings.popular_items_file)
-      @popular = popular_items.select_from(params[:section], @raw_results)
+      @popular = popular_items.select_from(params[:section], @ungrouped_results)
       @page_title = "#{formatted_section_name @section.slug} | GOV.UK"
       erb(:section)
     end
