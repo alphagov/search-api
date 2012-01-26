@@ -56,6 +56,20 @@ class BrowseTest < IntegrationTest
     assert_equal 1, response.css(".popular").size
     assert_match /The Popular Article/, response.css(".popular").inner_text
   end
+  
+  def test_browsing_a_section_is_ordered_by_subsection_not_formats
+    doc = Document.from_hash(
+      "title" => "Item 1",
+      "format" => "answer"
+    )
+    @solr.stubs(:section).returns([doc])
+
+    get "/browse/section-name"
+
+    response = Nokogiri.parse(last_response.body)
+    assert_match /Other/, response.css("h2").inner_text
+    assert_not_match /Answer/, response.css("h2").inner_text
+  end
 
   def test_browsing_section_list
     @solr.stubs(:facet).returns([sample_section])
