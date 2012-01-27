@@ -101,6 +101,7 @@ Driving
   Changing the name on your driving licence	Quick answer	change-name-driving-licence
   Apply for your first provisional driving licence	Services	apply-first-provisional-driving-licence
   Change the photo on your driving licence	Services	change-photo-driving-licence
+  Apply for a Blue Badge  Services	apply-blue-badge
 Travel		
   Plan your journey	Services	plan-your-journey
   Find out about local road closures and diversions	Local services	local-road-closures-diversions
