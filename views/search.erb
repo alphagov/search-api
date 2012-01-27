@@ -55,5 +55,5 @@
 </section>
 
 <% content_for :head do %>
-  <link rel="alternate" type="text/javascript" href="<%= @prefix %>/search.json?q=<%=h @query %>">
+  <link rel="alternate" type="application/json" href="<%= @prefix %>/search.json?q=<%=h @query %>">
 <% end %>
