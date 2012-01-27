@@ -148,7 +148,7 @@ if settings.router[:path_prefix].empty?
     }
     description_path = File.expand_path("../views/_#{@section.slug}.html", __FILE__)
 
-    if File.exists(description_path)
+    if File.exists?(description_path)
       as_hash['description'] = File.read(description_path).gsub(/<\/?[^>]*>/, "")
     end
 
