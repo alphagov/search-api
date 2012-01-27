@@ -146,8 +146,14 @@ if settings.router[:path_prefix].empty?
       'url' => @page_section_link,
       'contents' => {}
     }
+    description_path = File.expand_path("../views/_#{@section.slug}.html", __FILE__)
+
+    if File.exists(description_path)
+      as_hash['description'] = File.read(description_path).gsub(/<\/?[^>]*>/, "")
+    end
+
     @results.each do |subsection, items|
-      as_hash[subsection] = items.collect do |i|
+      as_hash['contents'][subsection] = items.collect do |i|
         { 'title' => i.title, 'url' => i.link, 'format' => i.presentation_format}
       end
     end
