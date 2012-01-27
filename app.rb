@@ -14,6 +14,7 @@ require 'section'
 require 'utils'
 require 'solr_wrapper'
 require 'slimmer_headers'
+require 'sinatra/content_for'
 
 require_relative 'helpers'
 require_relative 'config'
