@@ -13,9 +13,8 @@
       </fieldset>
       <p><%= capped_search_set_size %> <%= pluralize("result", "results") %> found</p>
     </form>
-  
   </header>
-  
+
   <% unless recommended_results.empty? %>
     <div class="results top group">
         <h2>Elsewhere on the web</h2>
@@ -54,3 +53,7 @@
     </div>
   <% end %>
 </section>
+
+<% content_for :head do %>
+  <link rel="alternate" type="text/javascript" href="<%= @prefix %>/search.json?q=<%=h @query %>">
+<% end %>
