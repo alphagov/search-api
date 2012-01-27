@@ -38,6 +38,7 @@ end
 
 get prefixed_path("/search.?:format?") do
   if params['q'].nil? or params['q'].strip == ''
+    expires 3600, :public
     @page_section = "Search"
     @page_section_link = "/search"
     @page_title = "Search | GOV.UK"
@@ -45,6 +46,7 @@ get prefixed_path("/search.?:format?") do
   end
   @query = params['q']
 
+  expires 3600, :public if @query.length < 20
   @results = solr.search(@query)
 
   if request.accept.include?("application/json") or params['format'] == 'json'
@@ -67,6 +69,7 @@ get prefixed_path("/preload-autocomplete") do
   # Eventually this is likely to be a list of commonly searched for terms
   # so searching for those is really fast. For the beta, this is just a list
   # of all terms.
+  expires 86400, :public
   content_type :json
   results = solr.autocomplete_cache rescue []
   JSON.dump(results.map { |r| r.to_hash })
@@ -77,14 +80,18 @@ get prefixed_path("/autocomplete") do
   query = params['q']
 
   unless query
+    expires 86400, :public
     return '[]'
   end
+
+  expires 3600, :public if query.length < 5
 
   results = solr.complete(query) rescue []
   JSON.dump(results.map { |r| r.to_hash })
 end
 
 get prefixed_path("/sitemap.xml") do
+  expires 86400, :public
   # Site maps can have up to 50,000 links in them.
   # We use one for / so we can have up to 49,999 others.
   documents = solr.all_documents limit: 49_999
@@ -107,6 +114,7 @@ end
 
 if settings.router[:path_prefix].empty?
   get prefixed_path("/browse.?:format?") do
+    expires 3600, :public
     @results = solr.facet('section')
     @page_section = "Browse"
     @page_section_link = "/browse"
@@ -146,12 +154,14 @@ if settings.router[:path_prefix].empty?
   end
 
   get prefixed_path("/browse/:section.json") do
+    expires 86400, :public
     assemble_section_details(params[:section])
     content_type :json
     JSON.dump(compile_section_json(@results))
   end
 
   get prefixed_path("/browse/:section") do
+    expires 86400, :public
     assemble_section_details(params[:section])
 
     if request.accept.include?("application/json")
