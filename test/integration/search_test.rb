@@ -47,7 +47,7 @@ class SearchTest < IntegrationTest
     @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert last_response.ok?
-    assert_response_text "We can’t find any results"
+    assert_response_text "we can’t find any results"
   end
 
   def test_we_count_result
