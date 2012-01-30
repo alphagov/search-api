@@ -71,6 +71,20 @@ class BrowseTest < IntegrationTest
     assert_not_match /Answer/, response.css("h2").inner_text
   end
 
+  def test_should_put_browse_in_section_nav_for_slimmer
+    @solr.stubs(:facet).returns([])
+    get "/browse"
+
+    assert_equal "Section nav", last_response.headers["X-Slimmer-Section"]
+  end
+
+  def test_should_put_section_in_section_nav_for_slimmer
+    @solr.stubs(:section).returns([])
+    get "/browse/section-name"
+
+    assert_equal "Section nav", last_response.headers["X-Slimmer-Section"]
+  end
+
   def test_browsing_section_list
     @solr.stubs(:facet).returns([sample_section])
 
