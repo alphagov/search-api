@@ -1,43 +1,49 @@
 <section id="content" role="main" class="group ancillary section-page">
-  <header>
-    <h1><%= formatted_section_name @section.slug %></h1>
-  </header>
+  <div class="article-container">
 
-  <div class="browse-sections">
+  	<header class="page-header group">
+  		<hgroup>
+  			<h1><span>Section </span><%= formatted_section_name @section.slug %></h1>
+  		</hgroup>
+  	</header>
 
-    <div class="summary">
-      <%= include @section.slug %>
-    </div>
+    <div class="browse-sections">
 
-    <% if @popular && @popular.size > 0 %>
-      <div class="popular results group">
-        <h2>Popular items</h2>
+      <div class="summary">
+        <%= include @section.slug %>
+      </div>
 
+      <% if @popular && @popular.size > 0 %>
+        <div class="popular results group">
+          <h2>Popular items</h2>
+
+          <ol class="group">
+          <% @popular.each do |result| %>
+            <li class="<%= result.presentation_format %>">
+              <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+              <% if result.description && !result.description.empty? %>
+                <p><%= result.description %></p>
+              <% end %>
+            </li>
+          <% end %>
+          </ol>
+        </div>
+      <% end %>
+
+      <div class="results group">
+      <% @results.each do |subsection, results| %>
+        <h2><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
         <ol class="group">
-        <% @popular.each do |result| %>
+        <% results.each do |result| %>
           <li class="<%= result.presentation_format %>">
             <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-            <% if result.description && !result.description.empty? %>
-              <p><%= result.description %></p>
-            <% end %>
           </li>
         <% end %>
         </ol>
-      </div>
-    <% end %>
-
-    <div class="results group">
-    <% @results.each do |subsection, results| %>
-      <h2><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
-      <ol class="group">
-      <% results.each do |result| %>
-        <li class="<%= result.presentation_format %>">
-          <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-        </li>
       <% end %>
-      </ol>
-    <% end %>
+      </div>
     </div>
+    
   </div>
 </section>
 
