@@ -115,6 +115,7 @@ end
 
 if settings.router[:path_prefix].empty?
   get prefixed_path("/browse.?:format?") do
+    headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
     @results = solr.facet('section')
     @page_section = "Browse"
@@ -169,6 +170,7 @@ if settings.router[:path_prefix].empty?
 
   get prefixed_path("/browse/:section") do
     expires 86400, :public
+    headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     assemble_section_details(params[:section])
 
     if request.accept.include?("application/json")
