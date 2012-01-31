@@ -102,6 +102,7 @@ Driving
   Change the photo on your driving licence	Services	change-photo-driving-licence
   Apply for a Blue Badge  Services	apply-blue-badge
 Travel		
+  Apply, renew or update a UK passport  Services  apply-renew-passport
   Plan your journey	Services	plan-your-journey
   Find out about local road closures and diversions	Local services	local-road-closures-diversions
   Get a passport quickly	Quick answer	passport-quick
@@ -112,7 +113,6 @@ Travel
   State Pension if you retire abroad	Guide	state-pension-if-you-retire-abroad
   Moving or retiring abroad	Guide	moving-abroad
   Bringing food, animals or plants into the UK	Guide	bringing-food-animals-plants-into-uk
-  Your rights if your travel company or airline goes bust	Guide	your-rights-if-your-travel-company-or-airline-goes-bust
 Life in the UK		
   Petition the government	Services	petition-government
   Search local archives	Local services	search-local-archives
