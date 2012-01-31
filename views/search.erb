@@ -1,7 +1,12 @@
 <section id="content" role="main" class="group ancillary search">
-  <header>
-    <h1>Search results for <em><%= h @query %></em></h1>
+  <header class="page-header group">
+      <hgroup>
+        <h1>Search results for <em><%= h @query %></em></h1>
+      </hgroup>
+  </header>
 
+  <div class="search-container group">
+    
     <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
       <fieldset>
         <legend class="visuallyhidden">Search the beta.gov.uk site</legend>
@@ -13,45 +18,45 @@
       </fieldset>
       <p><%= capped_search_set_size %> <%= pluralize("result", "results") %> found</p>
     </form>
-  </header>
 
-  <% unless recommended_results.empty? %>
-    <div class="results top group">
-        <h2>Elsewhere on the web</h2>
-        <ul class="search-promoted">
-          <% recommended_results.each do |result| %>
-            <li>
-              <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
-              <p><%= apply_highlight(h(result.highlight)) %></p>
+    <% unless recommended_results.empty? %>
+      <div class="results top group">
+          <h2>Elsewhere on the web</h2>
+          <ul class="search-promoted">
+            <% recommended_results.each do |result| %>
+              <li>
+                <h3><a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a></h3>
+                <p><%= apply_highlight(h(result.highlight)) %></p>
+              </li>
+            <% end %>
+          </ul>
+      </div>
+    <% end %>
+
+    <% if non_recommended_results.any? %>
+      <div class="results more group">
+        <ol class="group">
+          <% non_recommended_results.each do |result| %>
+            <li class="<%= result.presentation_format %>">
+              <a href="<%= result.link %>" title="View <%= result.title %>"><span><%= result.title %></span></a>
+              <% if result.highlight.to_s != "" %>
+                <p><%= apply_highlight(h(result.highlight)) %></p>
+              <% elsif !result.description.empty? %>
+                <p><%= result.description %></p>
+              <% end %>
+              <% unless (result.additional_links.nil? || result.additional_links.empty?) %>
+              <ul class="search-parts">
+                <% result.additional_links.each do |link| %>
+                  <li><a href="<%= link.link %>"><%=h link.title %></a></li>
+                <% end %>
+              </ul>
+            <% end %>
             </li>
           <% end %>
-        </ul>
-    </div>
-  <% end %>
-
-  <% if non_recommended_results.any? %>
-    <div class="results more group">
-      <ol class="group">
-        <% non_recommended_results.each do |result| %>
-          <li class="<%= result.presentation_format %>">
-            <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-            <% if result.highlight.to_s != "" %>
-              <p><%= apply_highlight(h(result.highlight)) %></p>
-            <% elsif !result.description.empty? %>
-              <p><%= result.description %></p>
-            <% end %>
-            <% unless (result.additional_links.nil? || result.additional_links.empty?) %>
-            <ul class="search-parts">
-              <% result.additional_links.each do |link| %>
-                <li><a href="<%= link.link %>"><%=h link.title %></a></li>
-              <% end %>
-            </ul>
-          <% end %>
-          </li>
-        <% end %>
-      </ol>
-    </div>
-  <% end %>
+        </ol>
+      </div>
+    <% end %>
+  </div>
 </section>
 
 <% content_for :head do %>

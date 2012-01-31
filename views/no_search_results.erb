@@ -1,7 +1,11 @@
 <section id="content" role="main" class="group ancillary search">
-  <header>
-    <h1>Search results for <em><%= h @query %></em></h1>
-
+  <header class="page-header group">
+      <hgroup>
+        <h1>Search results for <em><%= h @query %></em></h1>
+      </hgroup>
+  </header>
+  
+  <div class="search-container">
     <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
       <fieldset>
         <legend class="visuallyhidden">Search the beta.gov.uk site</legend>
@@ -24,7 +28,6 @@
     <p><a href="http://www.direct.gov.uk/en/index.htm">Directgov</a> remains the official site for government services and information.</p>
 
     <p><a href="/feedback">You can leave feedback on this or any other part of the site.</a></p>
-    
-    
-  </header>
+
+  </div>
 </section>
