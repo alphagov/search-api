@@ -92,6 +92,12 @@ class BrowseTest < IntegrationTest
     assert last_response.ok?
   end
 
+  def test_should_redirect_browse_with_trailing_slash
+    get "/browse/"
+    assert_equal 301, last_response.status
+    assert_match %r{/browse$}, last_response.location
+  end
+
   def test_section_list_always_renders
     @solr.stubs(:facet).returns([])
 
