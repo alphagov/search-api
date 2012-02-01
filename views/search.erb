@@ -33,7 +33,7 @@
       </div>
     <% end %>
     
-    <% if @query.gsub('?', '').downcase == 'what is the average airspeed velocity of an unladen swallow' %>
+    <% if /^what is the average air-?speed velocity of an unladen swallow/i.match(query) %>
       <div class="results top group">
           <h2>Elsewhere on the web</h2>
           <ul class="search-promoted">
