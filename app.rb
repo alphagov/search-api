@@ -114,10 +114,6 @@ get prefixed_path("/sitemap.xml") do
 end
 
 if settings.router[:path_prefix].empty?
-  get prefixed_path("/browse/") do
-    redirect prefixed_path("/browse"), 301
-  end
-
   get prefixed_path("/browse.?:format?") do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
