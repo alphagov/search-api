@@ -32,6 +32,18 @@
           </ul>
       </div>
     <% end %>
+    
+    <% if @query == 'what is the average airspeed velocity of an unladen swallow' %>
+      <div class="results top group">
+          <h2>Elsewhere on the web</h2>
+          <ul class="search-promoted">
+            <li>
+              <h3><a href="http://style.org/unladenswallow/" title="View Estimating the Airspeed Velocity of an Unladen Swallow">Estimating the Airspeed Velocity of an Unladen Swallow</a></h3>
+              <p>Hashing out the classic question with Strouhal numbers and simplified flight waveforms.</p>
+            </li>
+          </ul>
+      </div>
+    <% end %>
 
     <% if non_recommended_results.any? %>
       <div class="results more group">
