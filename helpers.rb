@@ -84,7 +84,7 @@ module Helpers
       "work-related-benefits-and-schemes" => "Work-related benefits and schemes",
       "buying-selling-a-vehicle" => "Buying/selling a vehicle",
       "owning-a-car-motorbike" => "Owning a car/motorbike",
-      "council-and-housing-association-homes" => "Council and Housing Association homes",
+      "council-and-housing-association-homes" => "Council and housing association homes",
       "animals-food-and-plants" => "Animals, food and plants",
       "mot" => "MOT"
     }
