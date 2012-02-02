@@ -122,4 +122,10 @@ class SearchTest < IntegrationTest
     assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
+
+  def test_should_ignore_edge_spaces_and_codepoints_below_0x20
+    @solr.expects(:search).never
+    get "/search", q: " \x02 "
+    assert_no_match /we can’t find any results/, last_response.body
+  end
 end

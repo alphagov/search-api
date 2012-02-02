@@ -38,14 +38,15 @@ def prefixed_path(path)
 end
 
 get prefixed_path("/search.?:format?") do
-  if params['q'].nil? or params['q'].strip == ''
+  @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+
+  if @query == ""
     expires 3600, :public
     @page_section = "Search"
     @page_section_link = "/search"
     @page_title = "Search | GOV.UK"
     return erb(:no_search_term)
   end
-  @query = params['q']
 
   expires 3600, :public if @query.length < 20
   @results = solr.search(@query)
