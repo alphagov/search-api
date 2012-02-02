@@ -80,6 +80,7 @@ module Helpers
   def map_section_name(slug)
     map = {
       "life-in-the-uk" => "Life in the UK",
+      "council-tax" => "Council Tax",
       "housing-benefits-grants-and-schemes" => "Housing benefits, grants and schemes",
       "work-related-benefits-and-schemes" => "Work-related benefits and schemes",
       "buying-selling-a-vehicle" => "Buying/selling a vehicle",
