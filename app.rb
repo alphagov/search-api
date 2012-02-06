@@ -146,7 +146,7 @@ if settings.router[:path_prefix].empty?
     as_hash = {
       'name' => @page_section,
       'url' => @page_section_link,
-      'contents' => {}
+      'contents' => []
     }
     description_path = File.expand_path("../views/_#{@section.slug}.html", __FILE__)
 
@@ -155,8 +155,8 @@ if settings.router[:path_prefix].empty?
     end
 
     @results.each do |subsection, items|
-      as_hash['contents'][subsection] = items.collect do |i|
-        { 'title' => i.title, 'url' => i.link, 'format' => i.presentation_format}
+      as_hash['contents'] += items.collect do |i|
+        { 'id' => i.link, 'title' => i.title, 'link' => i.link, 'format' => i.presentation_format, 'subsection' => subsection}
       end
     end
     as_hash
