@@ -75,6 +75,20 @@ class HelperTest < Test::Unit::TestCase
     assert_equal "extra extra read all about it", boosted_documents[1].boost_phrases
   end
 
+  def test_boosting_documents_with_existing_boost
+    documents = [Document.from_hash(
+      "title" => "TITLE",
+      "format" => "one",
+      "link" => "/one",
+      "boost_phrases" => "boost this"
+    )]
+    boosts = {
+      "/one" => "extra extra read all about it",
+    }
+    boosted_documents = boost_documents(documents, boosts)
+    assert_equal "boost this extra extra read all about it", boosted_documents[0].boost_phrases
+  end
+
   def test_boosting_documents_without_boost
     boosts = {
     }
