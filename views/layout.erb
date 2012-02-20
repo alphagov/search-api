@@ -5,7 +5,7 @@
   <title><%=h @page_title %></title>
   <meta content="<%=h @page_section %>" name="x-section-name">
   <meta content="<%=h @page_section_link %>" name="x-section-link">
-  <%= yield_content :head %>
+  <% yield_content :head %>
 </head>
 <body class="<%= proposition %>">
   <div id="wrapper" class="wrapper">

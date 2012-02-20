@@ -13,6 +13,8 @@
         <%= include @section.slug %>
       </div>
 
+      <%= erb :sections_list %>
+
       <% if @popular && @popular.size > 0 %>
         <div class="popular results group">
           <h2>Popular items</h2>
