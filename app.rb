@@ -180,7 +180,7 @@ if settings.router[:path_prefix].empty?
     else
       popular_items = PopularItems.new(settings.popular_items_file)
       @popular = popular_items.select_from(params[:section], @ungrouped_results)
-      @sections = solr.facet('section').reject {|a| a.slug == @section.slug }
+      @sections = (solr.facet('section') || []).reject {|a| a.slug == @section.slug }
       @page_title = "#{formatted_section_name @section.slug} | GOV.UK"
       erb(:section)
     end
