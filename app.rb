@@ -44,7 +44,7 @@ get prefixed_path("/search.?:format?") do
     expires 3600, :public
     @page_section = "Search"
     @page_section_link = "/search"
-    @page_title = "Search | GOV.UK"
+    @page_title = "Search | GOV.UK Beta (Test)"
     return erb(:no_search_term)
   end
 
@@ -57,7 +57,7 @@ get prefixed_path("/search.?:format?") do
   else
     @page_section = "Search"
     @page_section_link = "/search"
-    @page_title = "#{@query} | Search | GOV.UK"
+    @page_title = "#{@query} | Search | GOV.UK Beta (Test)"
 
     if @results.any?
       erb(:search)
@@ -121,7 +121,7 @@ if settings.router[:path_prefix].empty?
     @results = solr.facet('section')
     @page_section = "Browse"
     @page_section_link = "/browse"
-    @page_title = "Browse | GOV.UK"
+    @page_title = "Browse | GOV.UK Beta (Test)"
     if request.accept.include?("application/json") or params['format'] == 'json'
       content_type :json
       JSON.dump(@results.map { |r| { url: "/browse/#{r.slug}" } })
@@ -181,7 +181,7 @@ if settings.router[:path_prefix].empty?
       popular_items = PopularItems.new(settings.popular_items_file)
       @popular = popular_items.select_from(params[:section], @ungrouped_results)
       @sections = (solr.facet('section') || []).reject {|a| a.slug == @section.slug }
-      @page_title = "#{formatted_section_name @section.slug} | GOV.UK"
+      @page_title = "#{formatted_section_name @section.slug} | GOV.UK Beta (Test)"
       erb(:section)
     end
   end
