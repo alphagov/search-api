@@ -211,3 +211,7 @@ end
 delete prefixed_path("/documents/*") do
   simple_json_result(solr.delete(params["splat"].first))
 end
+
+delete prefixed_path("/documents") do
+  simple_json_result(solr.delete(params["link"]))
+end
