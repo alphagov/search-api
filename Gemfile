@@ -15,7 +15,7 @@ gem 'activesupport', '~> 3.1.0'
 gem 'i18n'
 gem 'gds-api-adapters', '~> 0.0.14'
 gem 'rack', '1.3.5'
-gem 'sinatra-content-for'
+gem 'sinatra-content-for', '0.1'
 
 group :test do
   gem "simplecov"
