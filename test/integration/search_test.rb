@@ -99,6 +99,8 @@ class SearchTest < IntegrationTest
     @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert_equal "government", last_response.headers["X-Slimmer-Proposition"]
+    # Make sure the result count works for government too
+    assert_equal "0", last_response.headers["X-Slimmer-Result-Count"]
   end
 
   def test_should_set_body_class_based_on_proposition_header
