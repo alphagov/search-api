@@ -81,6 +81,7 @@ class SearchTest < IntegrationTest
     assert_equal "Search",  last_response.headers["X-Slimmer-Section"]
     assert_equal "search",  last_response.headers["X-Slimmer-Format"]
     assert_equal "citizen", last_response.headers["X-Slimmer-Proposition"]
+    assert_equal "0", last_response.headers["X-Slimmer-Result-Count"]
   end
 
   def test_should_send_analytics_headers_for_government_proposition
