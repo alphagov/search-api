@@ -81,6 +81,13 @@ class SearchTest < IntegrationTest
     assert_equal "Search",  last_response.headers["X-Slimmer-Section"]
     assert_equal "search",  last_response.headers["X-Slimmer-Format"]
     assert_equal "citizen", last_response.headers["X-Slimmer-Proposition"]
+    assert_equal "0", last_response.headers["X-Slimmer-Result-Count"]
+  end
+
+  def test_result_count_header_with_results
+    @solr.stubs(:search).returns(Array.new(15, sample_document))
+    get "/search", :q => 'bob'
+    assert_equal "15", last_response.headers["X-Slimmer-Result-Count"]
   end
 
   def test_should_send_analytics_headers_for_government_proposition
@@ -92,6 +99,8 @@ class SearchTest < IntegrationTest
     @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
     assert_equal "government", last_response.headers["X-Slimmer-Proposition"]
+    # Make sure the result count works for government too
+    assert_equal "0", last_response.headers["X-Slimmer-Result-Count"]
   end
 
   def test_should_set_body_class_based_on_proposition_header
