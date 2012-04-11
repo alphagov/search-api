@@ -94,6 +94,6 @@ DEPENDENCIES
   simplecov-rcov
   sinatra
   sinatra-content-for (= 0.1)
-  slimmer (~> 1.1)
+  slimmer (~> 1.1.38)
   test-unit
   webmock
