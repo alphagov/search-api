@@ -59,6 +59,8 @@ get prefixed_path("/search.?:format?") do
     @page_section_link = "/search"
     @page_title = "#{@query} | Search | GOV.UK Beta (Test)"
 
+    headers SlimmerHeaders.headers(settings.slimmer_headers.merge(result_count: @results.length))
+
     if @results.any?
       erb(:search)
     else
