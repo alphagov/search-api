@@ -8,8 +8,12 @@ Bundler.require(:default, ENV['RACK_ENV'])
 
 require "app"
 
-set :raise_errors, true
+enable :logging, :dump_errors, :raise_errors
+
 log = File.new("sinatra.log", "a")
+if ENV['RACK_ENV'] == "development"
+  log.sync = true
+end
 STDOUT.reopen(log)
 STDERR.reopen(log)
 

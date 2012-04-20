@@ -81,7 +81,9 @@ class SolrWrapper
   end
 
   def delete(link)
-    @client.delete_by_query("link:#{escape(link)}")
+    link = escape(link)
+    log("Delete link: #{link}")
+    @client.delete_by_query("link:#{link}")
   end
 
   SOLR_SPECIAL_SEQUENCES = Regexp.new("(" + %w[
@@ -102,5 +104,10 @@ private
 
   def prepare_query(q, default="*:*")
     q ? escape(q).downcase : default
+  end
+
+  def log(message)
+    Logger.new(STDOUT).info(message)
+    message
   end
 end
