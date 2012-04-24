@@ -19,6 +19,9 @@ else
   enable :logging
 end
 
+# Stop double slashes in URLs (even escaped ones) being flattened to single ones
+set :protection, :except => :path_traversal
+
 enable :dump_errors, :raise_errors
 
 if in_development
