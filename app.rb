@@ -20,7 +20,9 @@ require_relative 'helpers'
 require_relative 'config'
 
 def solr
-  @solr ||= SolrWrapper.new(DelSolr::Client.new(settings.solr), settings.recommended_format)
+  @solr ||= SolrWrapper.new(DelSolr::Client.new(settings.solr),
+                            settings.recommended_format,
+                            logger)
 end
 
 helpers do
