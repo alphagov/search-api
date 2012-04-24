@@ -6,8 +6,8 @@ class SolrWrapper
   HIGHLIGHT_END   = "HIGHLIGHT_END"
   COMMIT_WITHIN = 5 * 60 * 1000 # 5m in ms
 
-  def initialize(client, recommended_format)
-    @client, @recommended_format = client, recommended_format
+  def initialize(client, recommended_format, logger=Rack::NullLogger.instance)
+    @client, @recommended_format, @logger = client, recommended_format, logger
   end
 
   def add(documents)
@@ -107,7 +107,7 @@ private
   end
 
   def log(message)
-    Logger.new(STDOUT).info(message)
+    @logger.info(message)
     message
   end
 end
