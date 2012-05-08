@@ -1,3 +1,4 @@
 :section:     "Search"
 :format:      "search"
 :proposition: "citizen"
+:template:    "wrapper_with_fat_footer"
