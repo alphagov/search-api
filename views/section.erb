@@ -8,9 +8,11 @@
   	</header>
 
     <div class="browse-sections core-content">
-      <div class="important-date highlighted-event">
-        <p><span>Self Assessment tax payment is due</span> 31 January 2013</p>
-      </div>
+      <% if false %>
+        <div class="important-date highlighted-event">
+          <p><span>Self Assessment tax payment is due</span> 31 January 2013</p>
+        </div>
+      <% end %>
       
       <div class="summary">
         <%= include @section.slug %>
@@ -62,14 +64,12 @@
       <div class="prototype-onward">
         <h2>Can’t find what you’re looking for?</h2>
 
-        <p>You’re in the <b><%= formatted_section_name @section.slug %></b> section, if what you’re after is not here, a full list of
-        sections is below. Alternatively you could try searching the site below or try <a href="http://www.google.com">Google</a>.</p>
+        <p>You’re in the <b><%= formatted_section_name @section.slug %></b> section. If you can’t find what you’re looking for, a full list of
+        sections is below, or try searching.</p>
 
-        <form class="site-search">
-          <label>Try searching: 
-            <input type="search" placeholder="VAT rates" />
-            <button type="submit">Search</button>
-          </label>
+        <form class="site-search" action="/search">
+          <input type="search" placeholder="VAT rates" name="q" />
+          <button type="submit">Search</button>
 
           <p class="totry">Try bank holidays, clock change, student finance, car tax</p>
         </form>
