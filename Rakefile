@@ -63,3 +63,15 @@ namespace :router do
   task :register => [ :register_application, :register_routes ]
 end
 
+desc "Dump a JSON representation of popular items"
+namespace :popular_items do
+  task :dump do
+    require 'sinatra'
+    require 'slimmer'
+    require 'json'
+    require_relative "lib/popular_items"
+    require_relative "config"
+    popular_items = PopularItems.new(settings.popular_items_file)
+    puts JSON.dump(popular_items.items)
+  end
+end

@@ -99,6 +99,26 @@ module Helpers
   def formatted_section_name(slug)
     map_section_name(slug) ? map_section_name(slug) : humanize_section_name(slug)
   end
+  
+  def group_by_format(results)
+    results.group_by do |result| 
+      humanize_format_name(result.presentation_format)
+    end.sort_by do |presentation_format_name, results|
+      sort_order = ['Services', 'Guides', 'Quick Answers', 'Benefits & Credits']
+      sort_order.find_index(presentation_format_name) || sort_order.size
+    end
+  end
+  
+  def humanize_format_name(format_name)
+    case format_name
+    when "transaction", "local_transaction", "place" then "Services"
+    when "answer", "calendar", "smart_answer", "custom-application" then "Quick Answers"
+    when "guide" then "Guides"
+    when "programme" then "Benefits & Credits"
+    else
+      format_name.gsub(/[_-]/, ' ').capitalize
+    end
+  end
 
 end
 

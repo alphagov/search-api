@@ -1,5 +1,5 @@
 <section id="content" role="main" class="group ancillary section-page">
-  <div class="article-container">
+  <div class="section-container">
 
   	<header class="page-header group">
   		<hgroup>
@@ -7,45 +7,75 @@
   		</hgroup>
   	</header>
 
-    <div class="browse-sections">
-
-      <%= erb :sections_list %>
+    <div class="browse-sections core-content">
+      <% if false %>
+        <div class="important-date highlighted-event">
+          <p><span>Self Assessment tax payment is due</span> 31 January 2013</p>
+        </div>
+      <% end %>
       
       <div class="summary">
         <%= include @section.slug %>
       </div>
 
-      <% if @popular && @popular.size > 0 %>
-        <div class="popular results group">
-          <h2>Popular items</h2>
-
-          <ol class="group">
-          <% @popular.each do |result| %>
-            <li class="<%= result.presentation_format %>">
-              <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-              <% if result.description && !result.description.empty? %>
-                <p><%= result.description %></p>
-              <% end %>
-            </li>
-          <% end %>
-          </ol>
-        </div>
-      <% end %>
-
       <div class="results group">
-      <% @results.each do |subsection, results| %>
-        <h2><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
-        <ol class="group">
-        <% results.each do |result| %>
-          <li class="<%= result.presentation_format %>">
-            <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-          </li>
+        <% if @popular && @popular.size > 0 %>
+          <h2 class="first open">Popular items</h2>
+
+          <ol class="group popular open-section">
+            <% group_by_format(@popular).each do |presentation_format_name, results| %>
+              <li class="<%= results.first.presentation_format %>">
+                <h4><%= h(presentation_format_name) %></h4>
+                <ol class="content-links">
+                  <% results.each do |result| %>
+                    <li>
+                      <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+                      <% if result.description && !result.description.empty? %>
+                        <p><%= result.description %></p>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ol>
+              </li>
+            <% end %>
+          </ol>
         <% end %>
-        </ol>
-      <% end %>
+        
+        <% @results.each do |subsection, results| %>
+          <h2><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
+          <ol class="group">
+            
+            <% group_by_format(results).each do |presentation_format_name, sub_results| %>
+              <li class="<%= sub_results.first.presentation_format %>">
+                <h4><%= h(presentation_format_name) %></h4>
+                <ol class="content-links">
+                  <% sub_results.each do |result| %>
+                    <li>
+                      <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+                    </li>
+                  <% end %>
+                </ol>
+              </li>
+            <% end %>
+          </ol>
+        <% end %>
       </div>
+
+      <div class="prototype-onward">
+        <h2>Can’t find what you’re looking for?</h2>
+
+        <p>You’re in the <b><%= formatted_section_name @section.slug %></b> section. If you can’t find what you’re looking for, a full list of
+        sections is below, or try searching.</p>
+
+        <form class="site-search" action="/search">
+          <input type="search" placeholder="VAT rates" name="q" />
+          <button type="submit">Search</button>
+
+          <p class="totry">Try bank holidays, clock change, student finance, car tax</p>
+        </form>
+      </div>
+      
     </div>
-    
   </div>
 </section>
 
