@@ -22,7 +22,7 @@
         <% if @popular && @popular.size > 0 %>
           <h2 class="first open">Popular items</h2>
 
-          <ol class="group open-section">
+          <ol class="group popular open-section">
             <% group_by_format(@popular).each do |presentation_format_name, results| %>
               <li class="<%= results.first.presentation_format %>">
                 <h4><%= h(presentation_format_name) %></h4>
