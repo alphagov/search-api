@@ -20,9 +20,9 @@
 
       <div class="results group">
         <% if @popular && @popular.size > 0 %>
-          <h2 class="first open">Popular items</h2>
+          <h2 class="first open" id="popular-items">Popular items</h2>
 
-          <ol class="group popular open-section">
+          <ol class="group popular open-section section-popular-items">
             <% group_by_format(@popular).each do |presentation_format_name, results| %>
               <li class="<%= results.first.presentation_format %>">
                 <h4><%= h(presentation_format_name) %></h4>
@@ -42,8 +42,8 @@
         <% end %>
         
         <% @results.each do |subsection, results| %>
-          <h2><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
-          <ol class="group">
+          <h2 id="<%= subsection ? subsection : "other" %>"><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
+          <ol class="group section-<%= subsection ? subsection : "other" %>">
             
             <% group_by_format(results).each do |presentation_format_name, sub_results| %>
               <li class="<%= sub_results.first.presentation_format %>">
