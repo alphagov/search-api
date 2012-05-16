@@ -26,6 +26,9 @@ set :format_name_alternatives, {
   "answer" => "Quick answers",
 }
 
+# disable X-Frame-Options header
+set :protection, :except => :frame_options
+
 configure :development do
   set :protection, false
   use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host
