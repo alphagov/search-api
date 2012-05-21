@@ -12,12 +12,12 @@ You can install solr using Homebrew on a Mac.
 
 ## Starting Solr
 
-Our solr config lives in alphagov-deployment and is currently configured to expect config files to live in /etc/solr and data to live in /var/solr.  The simplest way to achieve this is to symlink them manually.
+Our solr config lives in the `alphagov/puppet` repository and is currently configured to expect config files to live in `/etc/solr` and data to live in `/var/solr`.  The simplest way to achieve this is to symlink them manually.
 
-    $ export ALPHAGOV_DEPLOY_PATH=/path/to/alphagov-deployment
-    $ sudo ln -s $ALPHAGOV_DEPLOY_PATH/alphagov-puppet/puppet/modules/solr/files/etc/solr /etc/solr
-    $ sudo ln -s $ALPHAGOV_DEPLOY_PATH/alphagov-puppet/puppet/modules/solr/files/var/solr /var/solr
-    $ solr $ALPHAGOV_DEPLOY_PATH/alphagov-puppet/puppet/modules/solr/files
+    $ export ALPHAGOV_PUPPET_PATH=/path/to/puppet
+    $ sudo ln -s $ALPHAGOV_PUPPET_PATH/modules/solr/files/etc/solr /etc/solr
+    $ sudo ln -s $ALPHAGOV_PUPPET_PATH/modules/solr/files/var/solr /var/solr
+    $ solr $ALPHAGOV_PUPPET_PATH/modules/solr/files
 
 ## Manually indexing documents
 
