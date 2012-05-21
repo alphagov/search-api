@@ -87,6 +87,13 @@ class SolrWrapper
     @client.delete_by_query("link:#{link}")
   end
 
+  def delete_all
+    log("Deleting all documents in index!")
+    @client.delete_by_query("link:[* TO *]")
+    @client.commit!
+    @client.optimize!
+  end
+
   SOLR_SPECIAL_SEQUENCES = Regexp.new("(" + %w[
     + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
   ].map { |s| Regexp.escape(s) }.join("|") + ")")

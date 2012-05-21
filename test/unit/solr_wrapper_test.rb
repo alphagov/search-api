@@ -193,4 +193,11 @@ class SolrWrapperTest < Test::Unit::TestCase
     @client.expects(:delete_by_query).with("link:foo\\-bar")
     @wrapper.delete("foo-bar")
   end
+
+  def test_should_delete_all
+    @client.expects(:delete_by_query).with("link:[* TO *]")
+    @client.expects(:commit!)
+    @client.expects(:optimize!)
+    @wrapper.delete_all
+  end
 end

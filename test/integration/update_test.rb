@@ -83,4 +83,15 @@ class UpdateTest < Test::Unit::TestCase
     assert_requested :post, ENDPOINT,
       body: Regexp.new(Regexp.escape("link:http\\://example.com/link\\-name"))
   end
+
+  def test_should_post_delete_all_to_solr
+    stub_request(:post, "http://solr-test-server:9999/solr/rummager/update").
+      to_return(body: SUCCESS_RESPONSE)
+
+    delete "/documents", "delete_all=true"
+
+    assert last_response.ok?
+    assert_requested :post, ENDPOINT,
+      body: Regexp.new(Regexp.escape("link:[* TO *]"))
+  end
 end

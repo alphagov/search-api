@@ -217,5 +217,10 @@ delete prefixed_path("/documents/*") do
 end
 
 delete prefixed_path("/documents") do
-  simple_json_result(solr.delete(params["link"]))
+  if params['delete_all']
+    action = solr.delete_all
+  else
+    action = solr.delete(params["link"])
+  end
+  simple_json_result(action)
 end
