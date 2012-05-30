@@ -1,4 +1,4 @@
-Neighbourhoods		
+Neighbourhoods
   Find my nearest UK online centre	Local services	uk-online-centre-internet-access-computer-training
   Organising a fete or street party	Guide	organise-fete-street-party
   Noise polllution from roads, trains or planes	Guide	noise-pollution-road-train-plane
@@ -11,7 +11,7 @@ Neighbourhoods
   Book a computer at your library	Local services	book-computer-at-library
   Find a community support group or organisation	Local services	find-a-community-support-group-or-organisation
   Check the quality of your drinking water	Quick answers	check-drinking-water-quality
-Housing		
+Housing
   Housing Benefit	Benefits & schemes	housing-benefit
   Council Tax Benefit	Benefits & schemes	council-tax-benefit
   Council housing	Guide	council-housing
@@ -24,7 +24,7 @@ Housing
   Affordable home ownership schemes	Guide	affordable-home-ownership-schemes
   Tenancy deposit protection	Guide	tenancy-deposit-protection
   Find out your rubbish collection day	Local services	rubbish-collection-day
-Crime and Justice		
+Crime and Justice
   Jury service 	Guide	jury-service
   Report a crime or anti-social behaviour	Quick answer	report-crime-anti-social-behaviour
   Prison life	Guide	life-in-prison
@@ -37,7 +37,7 @@ Crime and Justice
   Get support as a victim of crime	Quick answer	get-support-as-a-victim-of-crime
   Being arrested: your rights	Guide	arrested-your-rights
   Going to court as a victim or witness	Guide	going-to-court-victim-witness
-Education		
+Education
   Apply for student finance 2012/13	Benefits & Schemes	apply-for-student-finance-2012-13
   Student Finance - how much you can get for 2012/13	Quick answer	student-finance-calculator
   School term and holiday dates	Local services	school-term-holiday-dates
@@ -49,7 +49,7 @@ Education
   16-19 Bursary Fund	Quick answer	1619-bursary-fund
   Courses and qualifications for 14-19 year olds	Local services	courses-qualifications
   Grants and bursaries for adult learners	Quick answer	grant-bursary-adult-learners
-Work		
+Work
   Finding a job	Guide	find-job
   Apply for Jobseeker's Allowance	Benefits & schemes	jobseekers-allowance
   Calculate your redundancy pay	Local services	calculate-redundancy-pay
@@ -62,7 +62,7 @@ Work
   Get a National Insurance number	Quick answer	national-insurance-number
   Statutory Maternity Pay 	Benefits & schemes	statutory-maternity-pay
   Looking for work if you're disabled	Guide	looking-for-work-if-youre-disabled
-Family		
+Family
   Order a copy of a birth, death or marriage certificate	Services	order-copy-birth-death-marriage-certificate
   Register a birth	Guide	register-birth
   Get a divorce	Guide	divorce
@@ -75,7 +75,7 @@ Family
   Do you qualify for tax credits - quick questionnaire	Quick answer	qualify-tax-credits-quick-questionnaire
   Paternity Leave	Benefits & schemes	paternityleave
   Find before/after school childcare	Services	find-before-after-school-childcare
-Money and tax		
+Money and tax
   Benefits calculator	Services	benefits-calculator
   Income Support	Benefits & schemes	income-support
   National Insurance	Guide	national-insurance
@@ -88,7 +88,7 @@ Money and tax
   Community Care Grants	Benefits & schemes	community-care-grant
   Income Tax rates and allowances	Quick Answer	income-tax-rates
   Pension Credit	Benefits & schemes	pension-credit
-Driving		
+Driving
   Get a tax disc (vehicle licence)	Services	car-tax-disc-vehicle-licence
   Calculate vehicle tax rates	Services	calculate-vehicle-tax-rates
   Book a driving theory test	Services	book-a-driving-theory-test
@@ -101,7 +101,7 @@ Driving
   Apply for your first provisional driving licence	Services	apply-first-provisional-driving-licence
   Change the photo on your driving licence	Services	change-photo-driving-licence
   Apply for a Blue Badge  Services	apply-blue-badge
-Travel		
+Travel
   Apply, renew or update a UK passport  Services  apply-renew-passport
   Plan your journey	Services	plan-your-journey
   Find out about local road closures and diversions	Local services	local-road-closures-diversions
@@ -113,7 +113,7 @@ Travel
   State Pension if you retire abroad	Guide	state-pension-if-you-retire-abroad
   Moving or retiring abroad	Guide	moving-abroad
   Bringing food, animals or plants into the UK	Guide	bringing-food-animals-plants-into-uk
-Life in the UK		
+Life in the UK
   Petition the government	Services	petition-government
   Search local archives	Local services	search-local-archives
   Register to vote	Services	register-to-vote

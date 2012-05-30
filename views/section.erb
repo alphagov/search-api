@@ -9,14 +9,14 @@
 
     <div class="browse-sections core-content group">
       <% # An example highlight, commented out for now as the functionality isn't
-         # implemented 
+         # implemented
        %>
       <% if false %>
         <div class="important-date highlighted-event">
           <p><span>Self Assessment tax payment is due</span> 31 January 2013</p>
         </div>
       <% end %>
-      
+
       <div class="summary">
         <%= include @section.slug %>
       </div>
@@ -43,11 +43,11 @@
             <% end %>
           </ol>
         <% end %>
-        
+
         <% @results.each do |subsection, results| %>
           <h2 id="<%= subsection ? subsection : "other" %>"><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
           <ol class="group section-<%= subsection ? subsection : "other" %>" aria-labelledby="<%= subsection ? subsection : "other" %>">
-            
+
             <% group_by_format(results).each do |presentation_format_name, sub_results| %>
               <li class="<%= sub_results.first.presentation_format %>">
                 <h4><%= h(presentation_format_name) %></h4>
@@ -77,7 +77,7 @@
           <p class="totry">Try bank holidays, clock change, student finance, car tax</p>
         </form>
       </div>
-      
+
     </div>
   </div>
 </section>

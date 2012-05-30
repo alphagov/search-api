@@ -89,7 +89,7 @@ module Helpers
       "animals-food-and-plants" => "Animals, food and plants",
       "mot" => "MOT"
     }
-    return map[slug] ? map[slug] : false  
+    return map[slug] ? map[slug] : false
   end
 
   def humanize_section_name(slug)
@@ -99,16 +99,16 @@ module Helpers
   def formatted_section_name(slug)
     map_section_name(slug) ? map_section_name(slug) : humanize_section_name(slug)
   end
-  
+
   def group_by_format(results)
-    results.group_by do |result| 
+    results.group_by do |result|
       humanize_format_name(result.presentation_format)
     end.sort_by do |presentation_format_name, results|
       sort_order = ['Services', 'Guides', 'Quick Answers', 'Benefits & Credits']
       sort_order.find_index(presentation_format_name) || sort_order.size
     end
   end
-  
+
   def humanize_format_name(format_name)
     case format_name
     when "transaction", "local_transaction", "place" then "Services"
