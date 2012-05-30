@@ -14,11 +14,11 @@ module IntegrationFixtures
       "link" => "/URL"
     }
   end
-  
+
   def sample_document
     Document.from_hash(sample_document_attributes)
   end
-  
+
   def sample_recommended_document_attributes
     {
       "title" => "TITLE1",
@@ -27,11 +27,11 @@ module IntegrationFixtures
       "link" => "/URL"
     }
   end
-  
+
   def sample_recommended_document
     Document.from_hash(sample_recommended_document_attributes)
   end
-  
+
   def sample_section
     Section.new("bob")
   end
@@ -41,7 +41,7 @@ class IntegrationTest < Test::Unit::TestCase
   include Rack::Test::Methods
   include ResponseAssertions
   include IntegrationFixtures
-  
+
   def app
     Sinatra::Application
   end

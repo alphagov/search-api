@@ -2,12 +2,12 @@ require 'active_support/core_ext/string/inflections'
 
 class PopularItems
   attr_accessor :items
-  
+
   def initialize(filename, logger = nil)
     @items = load(filename)
     @logger = logger || NullLogger.instance
   end
-  
+
   def load(filename)
     items = {}
     section = nil
@@ -24,17 +24,17 @@ class PopularItems
     end
     items
   end
-  
+
   def popular?(section, slug)
     @items[section] && @items[section].include?(slug)
   end
-  
+
   def link_to_slug(link)
     if link.match(%r{^/([^/]*)(/|$)})
       $1
     end
   end
-  
+
   def select_from(section, solr_results)
     (@items[section] || []).map do |slug|
       solr_results.find { |result| link_to_slug(result.link) == slug }
