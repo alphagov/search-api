@@ -12,12 +12,6 @@ class PopularItems
     @items[section] && @items[section].include?(slug)
   end
 
-  def link_to_slug(link)
-    if link.match(%r{^/([^/]*)(/|$)})
-      $1
-    end
-  end
-
   def select_from(section, solr_results)
     (@items[section] || []).map do |slug|
       solr_results.find { |result| link_to_slug(result.link) == slug }
@@ -41,5 +35,11 @@ class PopularItems
       end
     end
     items
+  end
+
+  def link_to_slug(link)
+    if link.match(%r{^/([^/]*)(/|$)})
+      $1
+    end
   end
 end
