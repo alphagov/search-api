@@ -126,7 +126,7 @@ class DocumentTest < Test::Unit::TestCase
       document.solr_export(collaborator)
     end
   end
-    
+
   assert_field_exported_to_delsolr_collaborator :title
   assert_field_exported_to_delsolr_collaborator :description
   assert_field_exported_to_delsolr_collaborator :section

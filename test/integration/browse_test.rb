@@ -56,7 +56,7 @@ class BrowseTest < IntegrationTest
     assert_equal 1, response.css(".popular .content-links li").size
     assert_match /The Popular Article/, response.css(".popular .content-links li").inner_text
   end
-  
+
   def test_browsing_a_section_is_ordered_by_subsection_not_formats
     doc = Document.from_hash(
       "title" => "Item 1",
