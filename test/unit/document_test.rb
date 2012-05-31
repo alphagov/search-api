@@ -102,8 +102,15 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "answer", document.presentation_format
   end
 
-  def test_should_use_answer_as_presentation_format_for_answer
+  def test_should_use_answer_as_presentation_format_for_smart_answer
     hash = {:format => "smart_answer"}
+
+    document = Document.from_hash(hash)
+    assert_equal "answer", document.presentation_format
+  end
+
+  def test_should_use_answer_as_presentation_format_for_licence_finder
+    hash = {:format => "licence_finder"}
 
     document = Document.from_hash(hash)
     assert_equal "answer", document.presentation_format

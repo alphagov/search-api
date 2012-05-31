@@ -94,7 +94,8 @@ class Document < Link
   FORMAT_TRANSLATION = {
     "planner" => "answer",
     "smart_answer" => "answer",
-    "calculator" => "answer"
+    "calculator" => "answer",
+    "licence_finder" => "answer",
   }
 
   def presentation_format
