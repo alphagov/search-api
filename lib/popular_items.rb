@@ -6,7 +6,7 @@ class PopularItems
   attr_accessor :items
 
   def initialize(logger = nil)
-    publisher = GdsApi::Panopticon.new(Plek.current_env)
+    publisher = GdsApi::Panopticon.new(Plek.current.environment)
     @items = publisher.curated_lists || [] # TODO: is this the best place?
     @logger = logger || NullLogger.instance
   end
