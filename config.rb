@@ -16,6 +16,7 @@ set :max_recommended_results, 2
 set :recommended_format, "recommended-link"
 
 set :boost_csv, "data/boosted_links.csv"
+set :popular_items_file, "data/popular_items.txt"
 
 set :format_order, ['transaction', 'answer', 'programme', 'guide']
 
