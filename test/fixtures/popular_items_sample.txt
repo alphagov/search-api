@@ -1,3 +1,0 @@
-Section Name
-  Article title	Format	article-slug
-  Article title	Format	article-slug-two
