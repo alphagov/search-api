@@ -8,7 +8,7 @@ end
 gem "sinatra"
 gem "delsolr", :git => "git://github.com/alphagov/delsolr.git"
 gem 'rake', '0.9.2'
-gem 'slimmer', '~> 1.1.38'
+gem 'slimmer', '~> 1.1.39'
 gem 'erubis'
 gem 'json'
 gem 'activesupport', '~> 3.1.0'
