@@ -182,7 +182,7 @@ if settings.router[:path_prefix].empty?
       content_type :json
       JSON.dump(compile_json_for_section)
     else
-      popular_items = PopularItems.new(settings.panopticon_api_credentials)
+      popular_items = PopularItems.new
       @popular = popular_items.select_from(params[:section], @ungrouped_results)
       @sections = (solr.facet('section') || []).reject {|a| a.slug == @section.slug }
       @page_title = "#{formatted_section_name @section.slug} | GOV.UK Beta (Test)"

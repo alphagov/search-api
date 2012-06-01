@@ -8,8 +8,6 @@ set :router, config_for(:router)
 set :solr, config_for(:solr)[ENV["RACK_ENV"]]
 set :slimmer_headers, config_for(:slimmer_headers)
 
-set :panopticon_api_credentials, config_for(:panopticon_api_credentials)[ENV["RACK_ENV"]]
-
 set :slimmer_asset_host, ENV["SLIMMER_ASSET_HOST"]
 set :top_results, 4
 set :max_more_results, 46

@@ -5,8 +5,8 @@ require 'plek'
 class PopularItems
   attr_accessor :items
 
-  def initialize(panopticon_api_credentials, logger = nil)
-    publisher = GdsApi::Panopticon.new(Plek.current_env, panopticon_api_credentials)
+  def initialize(logger = nil)
+    publisher = GdsApi::Panopticon.new(Plek.current_env)
     @items = publisher.curated_lists || [] # TODO: is this the best place?
     @logger = logger || NullLogger.instance
   end

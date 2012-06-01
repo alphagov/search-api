@@ -6,7 +6,7 @@ class PopularItemsTest < Test::Unit::TestCase
     mock_panopticon_api = mock("mock_panopticon_api")
     mock_panopticon_api.expects(:curated_lists).returns("section-name" => ["article-slug", "article-slug-two"])
     GdsApi::Panopticon.expects(:new).returns(mock_panopticon_api)
-    @popular_items = PopularItems.new({})
+    @popular_items = PopularItems.new
   end
 
   test "can select popular items from solr results by slug" do
