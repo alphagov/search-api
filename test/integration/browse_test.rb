@@ -3,6 +3,12 @@ require_relative "integration_helper"
 require "popular_items"
 
 class BrowseTest < IntegrationTest
+  def setup
+    super
+    mock_panopticon_api = mock("mock_panopticon_api")
+    mock_panopticon_api.stubs(:curated_lists).returns({})
+    GdsApi::Panopticon.stubs(:new).returns(mock_panopticon_api)
+  end
 
   def test_browsing_a_valid_section
     @solr.stubs(:section).returns([sample_document])
@@ -40,8 +46,10 @@ class BrowseTest < IntegrationTest
   end
 
   def test_browsing_a_section_with_popular_item_shows_popular_item_at_top_of_page
-    sample_popular_items = PopularItems.new(File.expand_path('../fixtures/popular_items_sample.txt', File.dirname(__FILE__)))
-    PopularItems.stubs(:new).returns(sample_popular_items)
+    mock_panopticon_api = mock("mock_panopticon_api")
+    mock_panopticon_api.stubs(:curated_lists).returns("section-name" => ["article-slug", "article-slug-two"])
+    GdsApi::Panopticon.stubs(:new).returns(mock_panopticon_api)
+
     doc = Document.from_hash(
       "title" => "The Popular Article",
       "description" => "DESCRIPTION",

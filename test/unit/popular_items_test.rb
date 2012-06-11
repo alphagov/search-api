@@ -3,21 +3,10 @@ require_relative "../../lib/popular_items"
 
 class PopularItemsTest < Test::Unit::TestCase
   def setup
-    @popular_items = PopularItems.new(File.expand_path('../fixtures/popular_items_sample.txt', File.dirname(__FILE__)))
-  end
-
-  test "can read popular items from file" do
-    assert_equal 1, @popular_items.items.count
-  end
-
-  test "items are stored indexed by the section parameter" do
-    assert_equal 2, @popular_items.items['section-name'].count
-  end
-
-  test "can check if a slug is popular" do
-    assert @popular_items.popular?('section-name', 'article-slug')
-    assert ! @popular_items.popular?('section-name', 'not-popular')
-    assert ! @popular_items.popular?('other-section', 'article-slug')
+    mock_panopticon_api = mock("mock_panopticon_api")
+    mock_panopticon_api.expects(:curated_lists).returns("section-name" => ["article-slug", "article-slug-two"])
+    GdsApi::Panopticon.expects(:new).returns(mock_panopticon_api)
+    @popular_items = PopularItems.new({})
   end
 
   test "can select popular items from solr results by slug" do
@@ -39,6 +28,5 @@ class PopularItemsTest < Test::Unit::TestCase
 
     items = @popular_items.select_from('section-name', solr_results)
     assert_equal %w{One Two}, items.map(&:title)
-  end
-
+  end  
 end
