@@ -41,6 +41,9 @@ end
 
 get prefixed_path("/search.?:format?") do
   @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+  # @number_of_words = params["words"].blank? ? 5 : params["words"].to_i
+  @number_of_words = 1
+  @use_description = (params["use_description"] == "true") ? true : false
 
   if @query == ""
     expires 3600, :public
@@ -64,7 +67,11 @@ get prefixed_path("/search.?:format?") do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(result_count: @results.length))
 
     if @results.any?
-      erb(:search)
+      if params["variant"]
+        render(:erb, :"search_variant_#{params['variant']}")
+      else
+        erb(:search)
+      end
     else
       erb(:no_search_results)
     end
