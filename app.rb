@@ -41,8 +41,7 @@ end
 
 get prefixed_path("/search.?:format?") do
   @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
-  # @number_of_words = params["words"].blank? ? 5 : params["words"].to_i
-  @number_of_words = 1
+  @number_of_words = params["words"].blank? ? 50 : params["words"].to_i
   @use_description = (params["use_description"] == "true") ? true : false
 
   if @query == ""
@@ -54,7 +53,8 @@ get prefixed_path("/search.?:format?") do
   end
 
   expires 3600, :public if @query.length < 20
-  @results = solr.search(@query)
+  highlight_section_char_limit = @number_of_words * 5
+  @results = solr.search(@query, highlight_section_char_limit)
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
