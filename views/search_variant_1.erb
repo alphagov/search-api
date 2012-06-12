@@ -24,7 +24,9 @@
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
                 <a href="<%= result.link %>" title= "View <%= result.title %>"><%= result.title %></a>
                 <% if @use_description %>
-                  <%= h result.description.split(/\s+/)[0..@number_of_words].join(' ') %>…
+                  <p>
+                    <%= h result.description.split(/\s+/)[0..@number_of_words].join(' ') %><% if result.description.split(/\s+/).size > @number_of_words %>…<% end %>
+                  </p>
                 <% else %>
                   <p><%= apply_highlight(h(result.highlight)) %></p>
                 <% end %>
