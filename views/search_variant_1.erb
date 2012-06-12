@@ -45,7 +45,7 @@
           <h2><span class="visuallyhidden">Filter by </span>Section</h2>
     
           <ul>
-            <% non_recommended_results.group_by(&:section).each do |section, results_in_section| %>
+            <% non_recommended_results.group_by(&:section).sort_by { |section, results_in_section| results_in_section.size }.reverse_each do |section, results_in_section| %>
               <li data-filter="section-<%= section %>"><a href="#"><%= formatted_section_name(section) %> <span><%= results_in_section.size %></span><span class="visuallyhidden"> results</span></a></li>
             <% end %>
           </ul>
@@ -55,7 +55,7 @@
           <h2><span class="visuallyhidden">Filter by</span> Content Type</h2>
     
           <ul>
-            <% non_recommended_results.group_by(&:format).each do |format, results_in_format| %>
+            <% non_recommended_results.group_by(&:format).sort_by { |section, results_in_format| results_in_format.size }.reverse_each do |format, results_in_format| %>
               <li data-filter="type-<%= format %>"><a href="#"><%= formatted_format_name(format) %> <span> <%= results_in_format.size %></span></a></li>
             <% end %>
           </ul>
