@@ -19,6 +19,7 @@ gem 'rack', '1.3.5'
 gem 'plek', '0.1.23'
 gem 'sinatra-content-for', '0.1'
 gem 'aws-ses'
+gem 'rest-client'
 
 group :test do
   gem "simplecov"
