@@ -34,7 +34,9 @@ def secondary_solr
 end
 
 def elasticsearch
-  @elasticsearch ||= ElasticsearchWrapper.new(settings.elasticsearch, logger)
+  @elasticsearch ||= ElasticsearchWrapper.new(settings.elasticsearch,
+                                              settings.recommended_format,
+                                              logger)
 end
 
 helpers do

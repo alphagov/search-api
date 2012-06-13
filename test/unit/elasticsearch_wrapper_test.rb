@@ -8,7 +8,7 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
         "baseurl" => "http://example.com:9200/",
         "indexname" => "test-index"
     }
-    @wrapper = ElasticsearchWrapper.new(@settings, nil)
+    @wrapper = ElasticsearchWrapper.new(@settings, "myformat")
   end
 
   def test_should_bulk_update_documents
@@ -28,5 +28,42 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
         headers: {"Content-Type" => "application/json"}
     )
     @wrapper.add [document]
+    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+  end
+
+  def test_basic_keyword_search
+    stub_request(:get, "http://example.com:9200/test-index/_search").with(
+        body: {
+            from: 0, size: 50,
+            query: {
+                bool: {
+                    must: {
+                        query_string: {
+                            fields: %w(title description indexable_content),
+                            query: "keyword search"
+                        }
+                    },
+                    should: {
+                        query_string: {
+                            default_field: "format",
+                            query: "transaction OR myformat",
+                            boost: 3.0
+                        }
+                    }
+                }
+            },
+            highlight: {
+                pre_tags: %w(HIGHLIGHT_START),
+                post_tags: %w(HIGHLIGHT_END),
+                fields: {
+                    description: {},
+                    indexable_content: {}
+                }
+            }
+        }.to_json,
+        headers: {"Content-Type" => "application/json"}
+    )
+    @wrapper.search "keyword search"
+    assert_requested(:get, "http://example.com:9200/test-index/_search")
   end
 end
