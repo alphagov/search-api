@@ -216,6 +216,14 @@ delete prefixed_path("/documents/*") do
   simple_json_result(solr.delete(params["splat"].first))
 end
 
+post prefixed_path("/documents/*") do
+  document = solr.get(params["splat"].first)
+  halt 404 unless document
+  # 404 on no document
+  # Update the document
+  solr.add([document])
+end
+
 delete prefixed_path("/documents") do
   if params['delete_all']
     action = solr.delete_all
