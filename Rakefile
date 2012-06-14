@@ -60,5 +60,18 @@ namespace :router do
   end
 
   desc "Register search application and routes with the router (run this task on server in cluster)"
-  task :register => [ :register_application, :register_routes ]
+  task :register => :router_environment do
+    case settings.router[:app_id]
+    when 'search'
+      Rake::Task["router:register_application"].invoke
+      Rake::Task["router:register_routes"].invoke
+    when 'whitehall-search'
+      # Whitehall search is proxied via the whitehall application
+      # and is never accessed directly by the public, so it doesn't
+      # need to be routed
+      puts "Not registering whitehall-search with router"
+    else
+      raise "Unexpected app_id '#{settings.router[:app_id]}' in router.yml"
+    end
+  end
 end
