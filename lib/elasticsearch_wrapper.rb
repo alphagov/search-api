@@ -46,7 +46,11 @@ class ElasticsearchWrapper
             }
         }
     }.to_json
-    request(:get, "/_search", payload)
+    result = request(:get, "/_search", payload)
+    result = JSON.parse(result)
+    result['hits']['hits'].map { |hit|
+      Document.from_hash(hit['_source'])
+    }
   end
 
   private
