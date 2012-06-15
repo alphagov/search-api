@@ -62,7 +62,7 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
             }
         }.to_json,
         headers: {"Content-Type" => "application/json"}
-    )
+    ).to_return(:body => '{"hits":{"hits":[]}}')
     @wrapper.search "keyword search"
     assert_requested(:get, "http://example.com:9200/test-index/_search")
   end

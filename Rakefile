@@ -91,4 +91,11 @@ namespace :rummager do
       RestClient.put(url, {key => value}.to_json)
     end
   end
+
+  desc "Create the rummager index"
+  task :create_index do
+    config = YAML.load_file(File.expand_path("../elasticsearch.yml", __FILE__))["development"]
+
+    RestClient.put("#{config['baseurl']}#{config['indexname']}", "")
+  end
 end
