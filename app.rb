@@ -219,8 +219,9 @@ end
 post prefixed_path("/documents/*") do
   document = solr.get(params["splat"].first)
   halt 404 unless document
-  # 404 on no document
-  # Update the document
+  request.POST.each_pair do |key, value|
+    document.set key, value
+  end
   solr.add([document])
 end
 
