@@ -15,11 +15,12 @@ class AmendmentTest < IntegrationTest
     post "/documents/%2Ffoobang", {title: "New exciting title"}
   end
 
-  def test_should_fail_on_invalid_parameter
+  def test_should_fail_on_invalid_field
     @solr.expects(:get).returns(sample_document)
     @solr.expects(:add).never
     post "/documents/%2Ffoobang", {fish: "Trout"}
-    assert_equal 500, last_response.status
+    assert_equal 403, last_response.status
+    assert_equal "Unrecognised field 'fish'", last_response.body
   end
 
   def test_should_fail_to_amend_missing_document

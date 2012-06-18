@@ -220,7 +220,11 @@ post prefixed_path("/documents/*") do
   document = solr.get(params["splat"].first)
   halt 404 unless document
   request.POST.each_pair do |key, value|
-    document.set key, value
+    begin
+      document.set key, value
+    rescue NoMethodError
+      halt 403, "Unrecognised field '#{key}'"
+    end
   end
   solr.add([document])
 end
