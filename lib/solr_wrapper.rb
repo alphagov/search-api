@@ -58,7 +58,7 @@ class SolrWrapper
   def get(link)
     map_results(@client.query("standard",
       :query  => "link:#{escape(link)}",
-      :fields => DOCUMENT_FIELDS.join(","),
+      :fields => "*",
       :limit  => 1
     )).first
   end
