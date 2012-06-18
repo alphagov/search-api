@@ -94,12 +94,4 @@ class UpdateTest < Test::Unit::TestCase
     assert_requested :post, ENDPOINT,
       body: Regexp.new(Regexp.escape("link:[* TO *]"))
   end
-
-  def test_should_amend_existing_document
-    # TODO: stub
-  end
-
-  def test_should_fail_to_amend_missing_document
-    # TODO: stub
-  end
 end
