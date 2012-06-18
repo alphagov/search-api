@@ -217,19 +217,22 @@ delete prefixed_path("/documents/*") do
 end
 
 post prefixed_path("/documents/*") do
+  def text_error(content)
+    halt 403, {"Content-Type" => "text/plain"}, content
+  end
   document = solr.get(params["splat"].first)
   halt 404 unless document
-  halt 403, "Cannot change document links" if request.POST.include? 'link'
+  text_error "Cannot change document links" if request.POST.include? 'link'
 
   # Note: this expects application/x-www-form-urlencoded data, not JSON
   request.POST.each_pair do |key, value|
     begin
       document.set key, value
     rescue NoMethodError
-      halt 403, "Unrecognised field '#{key}'"
+      text_error "Unrecognised field '#{key}'"
     end
   end
-  solr.add([document])
+  simple_json_result(solr.add([document]))
 end
 
 delete prefixed_path("/documents") do
