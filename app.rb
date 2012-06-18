@@ -221,6 +221,7 @@ post prefixed_path("/documents/*") do
   halt 404 unless document
   halt 403, "Cannot change document links" if request.POST.include? 'link'
 
+  # Note: this expects application/x-www-form-urlencoded data, not JSON
   request.POST.each_pair do |key, value|
     begin
       document.set key, value
