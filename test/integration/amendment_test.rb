@@ -23,6 +23,13 @@ class AmendmentTest < IntegrationTest
     assert_equal "Unrecognised field 'fish'", last_response.body
   end
 
+  def test_should_refuse_to_update_link
+    @solr.expects(:get).returns(sample_document)
+    @solr.expects(:add).never
+    post "/documents/%2Ffoobang", {link: "/somewhere-else"}
+    assert_equal 403, last_response.status
+  end
+
   def test_should_fail_to_amend_missing_document
     @solr.expects(:get).returns(nil)
     @solr.expects(:add).never

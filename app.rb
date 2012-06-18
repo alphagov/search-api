@@ -219,6 +219,8 @@ end
 post prefixed_path("/documents/*") do
   document = solr.get(params["splat"].first)
   halt 404 unless document
+  halt 403, "Cannot change document links" if request.POST.include? 'link'
+
   request.POST.each_pair do |key, value|
     begin
       document.set key, value
