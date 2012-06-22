@@ -1,3 +1,4 @@
+.DS_Store
 sinatra.log
 /coverage
 /test/reports
