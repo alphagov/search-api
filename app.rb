@@ -212,6 +212,13 @@ post prefixed_path("/commit") do
   simple_json_result(solr.commit)
 end
 
+get prefixed_path("/documents/*") do
+  document = solr.get(params["splat"].first)
+  halt 404 unless document
+  content_type :json
+  JSON.dump document.to_hash
+end
+
 delete prefixed_path("/documents/*") do
   simple_json_result(solr.delete(params["splat"].first))
 end
