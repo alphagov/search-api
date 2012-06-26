@@ -10,7 +10,7 @@
       <fieldset>
         <legend class="visuallyhidden">Search gov.uk</legend>
         <label for="search-main" ><%= capped_search_set_size %> <%= pluralize("result", "results") %> found for </label>
-        <input type="search" name="q" value="<%= h @query %>" id="search-main" /><button type="submit">Search</button>
+        <input type="search" name="q" value="<%= h @query %>" id="search-main" /> <button type="submit">Search</button>
       </fieldset>
 
       <!-- <div class="number-results"><%= capped_search_set_size %> <%= pluralize("result", "results") %> found for <i><%= h @query %></i></div> -->
@@ -42,15 +42,17 @@
     
       <aside class="filters filters-2">
         <div class="group">
-          <h2><span class="visuallyhidden">Filter by </span>Section</h2>
+          <h2 class="visuallyhidden">Filter by Section</h2>
     
           <ul>
+            <li data-filter="*" class="active"><a href="#">All Results <span><%= capped_search_set_size %></span><span class="visuallyhidden"> results</span></a></li>
             <% non_recommended_results.group_by(&:section).sort_by { |section, results_in_section| results_in_section.size }.reverse_each do |section, results_in_section| %>
               <li data-filter="section-<%= section %>"><a href="#"><%= formatted_section_name(section) %> <span><%= results_in_section.size %></span><span class="visuallyhidden"> results</span></a></li>
             <% end %>
           </ul>
         </div>
     
+      <!--
         <div class="group">
           <h2><span class="visuallyhidden">Filter by</span> Content Type</h2>
     
@@ -60,6 +62,7 @@
             <% end %>
           </ul>
         </div>
+      -->
       </aside>
     </div>
   </div>
