@@ -212,8 +212,42 @@ post prefixed_path("/commit") do
   simple_json_result(solr.commit)
 end
 
+get prefixed_path("/documents/*") do
+  document = solr.get(params["splat"].first)
+  halt 404 unless document
+  content_type :json
+  JSON.dump document.to_hash
+end
+
 delete prefixed_path("/documents/*") do
   simple_json_result(solr.delete(params["splat"].first))
+end
+
+post prefixed_path("/documents/*") do
+  def text_error(content)
+    halt 403, {"Content-Type" => "text/plain"}, content
+  end
+
+  unless request.form_data?
+    halt(
+      415,
+      {"Content-Type" => "text/plain"},
+      "Amendments require application/x-www-form-urlencoded data"
+    )
+  end
+  document = solr.get(params["splat"].first)
+  halt 404 unless document
+  text_error "Cannot change document links" if request.POST.include? 'link'
+
+  # Note: this expects application/x-www-form-urlencoded data, not JSON
+  request.POST.each_pair do |key, value|
+    begin
+      document.set key, value
+    rescue NoMethodError
+      text_error "Unrecognised field '#{key}'"
+    end
+  end
+  simple_json_result(solr.add([document]))
 end
 
 delete prefixed_path("/documents") do

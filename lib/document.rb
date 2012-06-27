@@ -61,6 +61,12 @@ class Link
   end
 
   def self.unflatten(hash)
+  # Convert from a hash of the form:
+  #   {foo__key1: [1, 2, 3], foo__key2: [4, 5, 6]}
+  # to the form:
+  #   {foo: [{key1: 1, key2: 4}, {key1: 2, key2: 5}, {key1: 3, key2: 6}]}
+  #
+  # This is useful for deserialising additional link information
    {}.tap { |result|
       hash.each do |k, v|
         lhs, rhs = k.to_s.split(/__/)

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require_relative "../test_helper"
 require_relative "../../lib/document"
 require_relative "../../lib/section"
