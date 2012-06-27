@@ -22,6 +22,17 @@ class AmendmentTest < IntegrationTest
     assert_equal "Unrecognised field 'fish'", last_response.body
   end
 
+  def test_should_fail_on_json_post
+    @solr.expects(:get).never
+    @solr.expects(:add).never
+    post(
+      "/documents/%2Ffoobang",
+      '{"title": "New title"}',
+      {"CONTENT_TYPE" => "application/json"}
+    )
+    assert_equal 415, last_response.status
+  end
+
   def test_should_refuse_to_update_link
     @solr.expects(:get).returns(sample_document)
     @solr.expects(:add).never

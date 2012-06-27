@@ -227,6 +227,14 @@ post prefixed_path("/documents/*") do
   def text_error(content)
     halt 403, {"Content-Type" => "text/plain"}, content
   end
+
+  unless request.form_data?
+    halt(
+      415,
+      {"Content-Type" => "text/plain"},
+      "Amendments require application/x-www-form-urlencoded data"
+    )
+  end
   document = solr.get(params["splat"].first)
   halt 404 unless document
   text_error "Cannot change document links" if request.POST.include? 'link'
