@@ -143,4 +143,20 @@ class HelperTest < Test::Unit::TestCase
   def test_should_return_blank_when_highlighting_an_empty_string
     assert_equal "", h.apply_highlight(" ")
   end
+
+  def test_should_not_start_with_ellipsis_if_grammar_mark_found
+    input = " - find you emergency accommodation - look at other options including living with a"
+    expected = "… find you emergency accommodation - look at other options including living with a …"
+    assert_equal expected, h.apply_highlight(input)
+  end
+
+  def test_should_not_start_with_a_punctuation_mark
+    assert_equal "- read the …", h.apply_highlight(") - read the ")
+  end
+
+  def test_should_remove_single_character_and_space_unless_allowed
+    assert_equal "… welcome …", h.apply_highlight("'t welcome")
+    assert_equal "… welcome …", h.apply_highlight(".;'t welcome")
+    assert_equal "… a box …", h.apply_highlight("a box")
+  end
 end
