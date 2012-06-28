@@ -47,7 +47,8 @@ class SolrWrapper
       "hl.fl" => "description,indexable_content",
       "hl.simple.pre"  => HIGHLIGHT_START,
       "hl.simple.post" => HIGHLIGHT_END,
-      :limit  => 50
+      :limit  => 50,
+      :mm     => "75%"
     )) { |results, doc|
       doc.highlight = %w[ description indexable_content ].map { |f|
         results.highlights_for(doc.link, f)
