@@ -23,13 +23,7 @@
             <% non_recommended_results.each do |result| %>
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
                 <a href="<%= result.link %>" title= "View <%= result.title %>"><%= result.title %></a>
-                <% if @use_description %>
-                  <p>
-                    <%= h result.description.split(/\s+/)[0..@number_of_words].join(' ') %><% if result.description.split(/\s+/).size > @number_of_words && result.description.split(/\s+/).size != result.description.split(/\s+/)[0..@number_of_words] %>…<% end %>
-                  </p>
-                <% else %>
-                  <p><%= apply_highlight(h(result.highlight)) %></p>
-                <% end %>
+                <p><%= apply_highlight(h(result.highlight)) %></p>
 
                 <ul class="result-meta">
                   <li class="<%= result.presentation_format %>"><%= formatted_format_name(result.presentation_format) %></li><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li>

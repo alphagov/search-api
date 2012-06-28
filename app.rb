@@ -41,8 +41,6 @@ end
 
 get prefixed_path("/search.?:format?") do
   @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
-  @number_of_words = params["words"].blank? ? 50 : params["words"].to_i
-  @use_description = (params["use_description"] == "true") ? true : false
 
   if @query == ""
     expires 3600, :public
@@ -53,8 +51,7 @@ get prefixed_path("/search.?:format?") do
   end
 
   expires 3600, :public if @query.length < 20
-  highlight_section_char_limit = @number_of_words * 5
-  @results = solr.search(@query, highlight_section_char_limit)
+  @results = solr.search(@query)
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
@@ -67,11 +64,7 @@ get prefixed_path("/search.?:format?") do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(result_count: @results.length))
 
     if @results.any?
-      if params["variant"]
-        render(:erb, :"search_variant_#{params['variant']}")
-      else
-        erb(:search)
-      end
+      erb(:search)
     else
       erb(:no_search_results)
     end

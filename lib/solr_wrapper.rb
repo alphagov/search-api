@@ -34,7 +34,7 @@ class SolrWrapper
     map_results(@client.query("standard", query_opts))
   end
 
-  def search(q, highlight_section_limit=100)
+  def search(q)
     map_results(@client.query("dismax",
       :query  => "#{prepare_query(q)}*",
       :fields => %w[
@@ -46,7 +46,6 @@ class SolrWrapper
       "hl.fl" => "description,indexable_content",
       "hl.simple.pre"  => HIGHLIGHT_START,
       "hl.simple.post" => HIGHLIGHT_END,
-      "hl.fragsize" => highlight_section_limit,
       :limit  => 50
     )) { |results, doc|
       doc.highlight = %w[ description indexable_content ].map { |f|
