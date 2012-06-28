@@ -237,4 +237,9 @@ class SolrWrapperTest < Test::Unit::TestCase
     @client.expects(:optimize!)
     @wrapper.delete_all
   end
+
+  def test_should_limit_minimum_field_match_to_75_percent
+    @client.expects(:query).with(anything, has_entry(mm: "75%"))
+    @wrapper.search("foo")
+  end
 end
