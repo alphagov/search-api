@@ -17,7 +17,7 @@
           <ul class="results-list">
             <% non_recommended_results.each do |result| %>
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
-                <a href="<%= result.link %>" title= "View <%= result.title %>"><%= result.title %></a>
+                <p><a href="<%= result.link %>" title= "View <%= result.title %>"><%= result.title %></a></p>
                 <p><%= apply_highlight(h(result.highlight)) %></p>
 
                 <ul class="result-meta">
