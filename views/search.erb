@@ -10,7 +10,7 @@
       <fieldset>
         <legend class="visuallyhidden">Search gov.uk</legend>
         <label for="search-main" ><%= capped_search_set_size %> <%= pluralize("result", "results") %> found for </label>
-        <input type="search" name="q" value="<%= h @query %>" id="search-main" /> <button type="submit">Search</button>
+        <input type="search" name="q" value="<%= h @query %>" id="search-main" /> <input type="submit" value="Search" class="button">
       </fieldset>
 
       <!-- <div class="number-results"><%= capped_search_set_size %> <%= pluralize("result", "results") %> found for <i><%= h @query %></i></div> -->
