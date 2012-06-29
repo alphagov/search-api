@@ -1,17 +1,21 @@
 <section id="content" role="main" class="group ancillary search">
-  <header class="page-header group">
-      <hgroup>
-        <h1>Search</h1>
-      </hgroup>
-  </header>
   <div class="search-container group">
-    <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
+    <form action="<%= @prefix %>/search" method="get" accept-charset="utf-8" class="search-header search-header-2" role="search">
+      <fieldset>
+        <legend class="visuallyhidden">Search gov.uk</legend>
+        <label for="search-main" >something?</label>
+        <input type="search" name="q" value="<%= h @query %>" id="search-main" /> <input type="submit" value="Search" class="button">
+      </fieldset>
+    </form>
+
+
+<!--     <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
       <fieldset>
         <legend class="visuallyhidden">Search the beta.gov.uk site</legend>
         <label for="main_autocomplete2" class="visuallyhidden">Search</label>
         <input type="text" id="main_autocomplete2" name="q" value="">
         <input type="submit" value="Search" class="button">
       </fieldset>
-    </form>
+    </form> -->
   </div>
 </section>
