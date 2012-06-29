@@ -15,7 +15,7 @@
           <ul class="results-list">
             <% non_recommended_results.each do |result| %>
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
-                <p class="search-result-title"><a href="<%= result.link %>" title= "View <%= result.title %>"><%= result.title %></a></p>
+                <p class="search-result-title"><a href="<%= result.link %>" title= "View <%=h result.title %>"><%=h result.title %></a></p>
                 <p>
                   <%= h result.description %>
                 </p>
