@@ -1,84 +1,93 @@
 <section id="content" role="main" class="group ancillary section-page">
-  <div class="section-container">
 
-  	<header class="page-header group">
-  		<hgroup>
-  			<h1><span>Section </span><%= formatted_section_name @section.slug %></h1>
-  		</hgroup>
-  	</header>
+  <header class="page-header group">
+    <hgroup>
+      <h1><%= formatted_section_name @section.slug %></h1>
+    </hgroup>
+  </header>
 
-    <div class="browse-sections core-content group">
-      <% # An example highlight, commented out for now as the functionality isn't
-         # implemented
-       %>
-      <% if false %>
-        <div class="important-date highlighted-event">
-          <p><span>Self Assessment tax payment is due</span> 31 January 2013</p>
+  <div class="browse-container group">
+    <div class="results group">
+      <div class="results-wrapper" id="popular">
+        <div class="summary">
+          <%= include @section.slug %>
         </div>
-      <% end %>
 
-      <div class="summary">
-        <%= include @section.slug %>
-      </div>
-
-      <div class="results group" role="navigation">
-        <% if @popular && @popular.size > 0 %>
-          <h2 class="first open" id="popular-items">Popular items</h2>
-
-          <ol class="group popular open-section section-popular-items" aria-labelledby="popular-items">
-            <% group_by_format(@popular).each do |presentation_format_name, results| %>
-              <li class="<%= results.first.presentation_format %>">
-                <h4><%= h(presentation_format_name) %></h4>
-                <ol class="content-links">
-                  <% results.each do |result| %>
-                    <li>
-                      <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-                      <% if result.description && !result.description.empty? %>
-                        <p><%= result.description %></p>
-                      <% end %>
-                    </li>
-                  <% end %>
-                </ol>
-              </li>
-            <% end %>
-          </ol>
-        <% end %>
-
+        <div id="popular">
+          <% if @popular && @popular.size > 0 %>
+            <ul class="results-list">
+              <% group_by_format(@popular).each do |presentation_format_name, results| %>
+                <% results.each do |result| %>
+                  <li class="type-<%= result.presentation_format %>">
+                    <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+                    <% if result.description && !result.description.empty? %>
+                      <p><%= result.description %></p>
+                    <% end %>
+                    <ul class="result-meta">
+                      <li class="<%= result.presentation_format %>"><%= h presentation_format_name %></li>
+                    </ul>
+                  </li>
+                <% end %>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+      
         <% @results.each do |subsection, results| %>
-          <h2 id="<%= subsection ? subsection : "other" %>"><%= subsection ? h(formatted_section_name subsection) : "Other" %></h2>
-          <ol class="group section-<%= subsection ? subsection : "other" %>" aria-labelledby="<%= subsection ? subsection : "other" %>">
-
-            <% group_by_format(results).each do |presentation_format_name, sub_results| %>
-              <li class="<%= sub_results.first.presentation_format %>">
-                <h4><%= h(presentation_format_name) %></h4>
-                <ol class="content-links">
-                  <% sub_results.each do |result| %>
-                    <li>
-                      <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
-                    </li>
-                  <% end %>
-                </ol>
-              </li>
-            <% end %>
-          </ol>
+          <div class="hide" id="<%= subsection ? subsection : "other" %>">
+            <ul class="results-list">
+              <% group_by_format(results).each do |presentation_format_name, sub_results| %>
+                <% sub_results.each do |result| %>
+                  <li class="type-<%= result.presentation_format %>">
+                    <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+                    <% if result.description && !result.description.empty? %>
+                      <p><%= result.description %></p>
+                    <% end %>
+                    <ul class="result-meta">
+                      <li class="<%= result.presentation_format %>"><%= h presentation_format_name %></li>
+                    </ul>
+                  </li>
+                <% end %>
+              <% end %>
+            </ul>
+          </div>
         <% end %>
-      </div>
-
-      <div class="prototype-onward group">
-        <h2>Can’t find what you’re looking for?</h2>
-
-        <p>You’re in the <b><%= formatted_section_name @section.slug %></b> section. If you can’t find what you’re looking for, a full list of
-        sections is below, or try searching.</p>
-
-        <form class="site-search" action="/search">
-          <input type="search" placeholder="VAT rates" name="q" />
-          <button type="submit">Search</button>
-
-          <p class="totry">Try bank holidays, clock change, student finance, car tax</p>
-        </form>
-      </div>
 
     </div>
+  </div>
+  
+  <aside class="filters filters-2">
+    <div class="group">
+      <h2 class="visuallyhidden">Current Section</h2>
+
+      <ul>
+        <li class="open">
+          <a href="<%= @section.path %>"><%= formatted_section_name @section.slug %></a>
+          <ul>
+            <% @results.each do |subsection, results| %>
+            <li data-filter="section-<%= subsection ? subsection : "other" %>"><a href="<%= @section.path %>#/<%= subsection ? subsection : "other" %>"><%= subsection ? h(formatted_section_name subsection) : "Other" %></a></li>
+            <% end %>
+          </ul>
+        </li>
+      </ul>
+      
+      <h2>Other Sections</h2>
+      
+      <ul>
+        <li><a href="/browse/business">Business</a></li>
+        <li><a href="/browse/driving">Driving</a></li>
+        <li><a href="/browse/education">Education</a></li>
+        <li><a href="/browse/family">Family</a></li>
+        <li><a href="/browse/housing">Housing</a></li>
+        <li><a href="/browse/life-in-the-uk">Life in the UK</a></li>
+        <li><a href="/browse/money-and-tax">Money and tax</a></li>
+        <li><a href="/browse/neighbourhoods">Neighbourhoods</a></li>
+        <li><a href="/browse/travel">Travel</a></li>
+        <li><a href="/browse/work">Work</a></li>
+      </ul>
+    </div>
+    
+  </aside>
   </div>
 </section>
 
