@@ -33,16 +33,6 @@ class SearchTest < IntegrationTest
     assert_equal "bob", response.css("header h1 em").inner_text
   end
 
-  def test_recommended_links_appear_if_present
-    @solr.stubs(:search).returns([
-      sample_recommended_document,
-      sample_document,
-    ])
-    get "/search", :q => 'bob'
-    assert last_response.ok?
-    assert last_response.body.include? "search-promoted"
-  end
-
   def test_search_view_returning_no_results
     @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
