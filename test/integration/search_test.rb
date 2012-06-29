@@ -21,18 +21,6 @@ class SearchTest < IntegrationTest
   #  assert_response_text "You haven’t specified a search query"
   #end
 
-  def test_search_view_with_query
-    @solr.stubs(:search).returns([
-      sample_document,
-      sample_document
-    ])
-    get "/search", :q => 'bob'
-    assert last_response.ok?
-    response = Nokogiri.parse(last_response.body)
-    assert_equal "Search results for bob", response.css("header h1").inner_text
-    assert_equal "bob", response.css("header h1 em").inner_text
-  end
-
   def test_search_view_returning_no_results
     @solr.stubs(:search).returns([])
     get "/search", :q => 'bob'
