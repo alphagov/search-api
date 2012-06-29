@@ -7,8 +7,6 @@
         <label for="search-main" ><%= capped_search_set_size %> <%= pluralize("result", "results") %> found for </label>
         <input type="search" name="q" value="<%= h @query %>" id="search-main" /> <input type="submit" value="Search" class="button">
       </fieldset>
-
-      <!-- <div class="number-results"><%= capped_search_set_size %> <%= pluralize("result", "results") %> found for <i><%= h @query %></i></div> -->
     </form>
 
     <div class="group">
@@ -40,18 +38,6 @@
             <% end %>
           </ul>
         </div>
-    
-      <!--
-        <div class="group">
-          <h2><span class="visuallyhidden">Filter by</span> Content Type</h2>
-    
-          <ul>
-            <% non_recommended_results.group_by(&:format).sort_by { |section, results_in_format| results_in_format.size }.reverse_each do |format, results_in_format| %>
-              <li data-filter="type-<%= format %>"><a href="#"><%= formatted_format_name(format) %> <span> <%= results_in_format.size %></span></a></li>
-            <% end %>
-          </ul>
-        </div>
-      -->
       </aside>
     </div>
   </div>
