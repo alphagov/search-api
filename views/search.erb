@@ -16,7 +16,9 @@
             <% non_recommended_results.each do |result| %>
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
                 <p class="search-result-title"><a href="<%= result.link %>" title= "View <%= result.title %>"><%= result.title %></a></p>
-                <p class="search-result-highlight"><%= apply_highlight(h(result.highlight)) %></p>
+                <p>
+                  <%= h result.description %>
+                </p>
 
                 <ul class="result-meta">
                   <li class="<%= result.presentation_format %>"><%= formatted_format_name(result.presentation_format) %></li><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li>
