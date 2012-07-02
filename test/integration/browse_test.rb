@@ -89,6 +89,26 @@ class BrowseTest < IntegrationTest
     assert_equal ['Bar', 'Zulu'], other_sections
   end
 
+  def test_browsing_section_correctly_escapes_entities_in_results
+    doc = Document.from_hash({
+      "title" => "This & That",
+      "description" => "Description of This & That",
+      "format" => "local_transaction",
+      "section" => "life-in-the-uk",
+      "link" => "/foo?bar=baz&foo=bar"
+    })
+
+    @solr.stubs(:section).returns([doc])
+    PopularItems.any_instance.stubs(:select_from).returns([doc])
+
+    # Slimmer will raise xml parsing errors if there are unescaped entities
+    assert_nothing_raised do
+      get "/browse/section-name"
+    end
+
+    assert last_response.ok?, "Expected response to be success"
+  end
+
   def test_should_put_browse_in_section_nav_for_slimmer
     @solr.stubs(:facet).returns([])
     get "/browse"

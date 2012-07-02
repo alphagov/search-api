@@ -22,7 +22,7 @@
               <% group_by_format(@popular).each do |presentation_format_name, results| %>
                 <% results.each do |result| %>
                   <li class="type-<%= result.presentation_format %>">
-                    <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+                    <a href="<%= h result.link %>" title="View <%= h result.title %>"><%= h result.title %></a>
                     <% if result.description && !result.description.empty? %>
                       <p><%= h result.description %></p>
                     <% end %>
@@ -42,7 +42,7 @@
               <% group_by_format(results).each do |presentation_format_name, sub_results| %>
                 <% sub_results.each do |result| %>
                   <li class="type-<%= result.presentation_format %>">
-                    <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
+                    <a href="<%= h result.link %>" title="View <%= h result.title %>"><%= h result.title %></a>
                     <% if result.description && !result.description.empty? %>
                       <p><%= h result.description %></p>
                     <% end %>
