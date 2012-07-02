@@ -79,6 +79,17 @@ class BrowseTest < IntegrationTest
     assert_not_match /Answer/, response.css("h2").inner_text
   end
 
+  def test_browsing_section_displays_other_sections
+    @solr.stubs(:section).returns([sample_document])
+    @solr.stubs(:facet).with('section').returns([Section.new('bar'), Section.new('section-name'), Section.new('zulu')])
+
+    get "/browse/section-name"
+
+    response = Nokogiri.parse(last_response.body)
+    other_sections = response.xpath("//h2[text() = 'Other Sections']/following-sibling::ul/li/a").map(&:text)
+    assert_equal ['Bar', 'Zulu'], other_sections
+  end
+
   def test_should_put_browse_in_section_nav_for_slimmer
     @solr.stubs(:facet).returns([])
     get "/browse"
