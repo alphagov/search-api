@@ -24,7 +24,7 @@
                   <li class="type-<%= result.presentation_format %>">
                     <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
                     <% if result.description && !result.description.empty? %>
-                      <p><%= result.description %></p>
+                      <p><%= h result.description %></p>
                     <% end %>
                     <ul class="result-meta">
                       <li class="<%= result.presentation_format %>"><%= h presentation_format_name %></li>
@@ -44,7 +44,7 @@
                   <li class="type-<%= result.presentation_format %>">
                     <a href="<%= result.link %>" title="View <%= result.title %>"><%= result.title %></a>
                     <% if result.description && !result.description.empty? %>
-                      <p><%= result.description %></p>
+                      <p><%= h result.description %></p>
                     <% end %>
                     <ul class="result-meta">
                       <li class="<%= result.presentation_format %>"><%= h presentation_format_name %></li>
