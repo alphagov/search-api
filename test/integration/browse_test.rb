@@ -93,14 +93,14 @@ class BrowseTest < IntegrationTest
     @solr.stubs(:facet).returns([])
     get "/browse"
 
-    assert_equal "Section nav", last_response.headers["X-Slimmer-Section"]
+    assert_equal "section nav", last_response.headers["X-Slimmer-Section"]
   end
 
   def test_should_put_section_in_section_nav_for_slimmer
-    @solr.stubs(:section).returns([])
+    @solr.stubs(:section).returns([sample_document])
     get "/browse/section-name"
 
-    assert_equal "Section nav", last_response.headers["X-Slimmer-Section"]
+    assert_equal "section nav", last_response.headers["X-Slimmer-Section"]
   end
 
   def test_browsing_section_list

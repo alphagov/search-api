@@ -41,4 +41,6 @@ configure :production do
   use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host, cache_templates: true
 end
 
-
+configure :test do
+  use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host
+end
