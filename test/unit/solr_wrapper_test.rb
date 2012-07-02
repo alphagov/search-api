@@ -2,6 +2,16 @@ require "test_helper"
 require "solr_wrapper"
 
 class SolrWrapperTest < Test::Unit::TestCase
+
+  def sample_document
+    {
+      "title" => "TITLE1",
+      "description" => "DESCRIPTION",
+      "format" => "local_transaction",
+      "link" => "/URL"
+    }
+  end
+
   def setup
     @client = mock("client")
     @wrapper = SolrWrapper.new(@client, nil)
@@ -27,12 +37,7 @@ class SolrWrapperTest < Test::Unit::TestCase
   end
 
   def test_should_return_an_array_of_documents_for_search_results
-    result = stub(docs: [{
-      "title" => "TITLE1",
-      "description" => "DESCRIPTION",
-      "format" => "local_transaction",
-      "link" => "/URL"
-      }],
+    result = stub(docs: [sample_document],
       raw_response: true,
       highlights_for: nil
     )
@@ -189,6 +194,38 @@ class SolrWrapperTest < Test::Unit::TestCase
     assert_equal expected, @wrapper.escape(input)
   end
 
+  def test_should_get_single_document
+    result = stub(
+      docs: [sample_document],
+      raw_response: true,
+      highlights_for: nil
+    )
+    @client.expects(:query).
+      with("standard", has_entries(query: "link:/foobang", limit: 1)).
+      returns(result)
+
+    assert_equal sample_document["link"], @wrapper.get("/foobang").link
+  end
+
+  def test_get_should_return_no_result
+    @client.expects(:query).
+      with("standard", has_entries(query: "link:/foobang", limit: 1)).
+      returns(stub(docs: [], raw_response: true, highlights_for: nil))
+    assert_nil @wrapper.get("/foobang")
+  end
+
+  def test_get_should_escape_query
+    result = stub(
+      docs: [sample_document],
+      raw_response: true,
+      highlights_for: nil
+    )
+    @client.expects(:query).
+      with("standard", has_entries(query: "link:\\\\foobang\\(", limit: 1)).
+      returns(result)
+    @wrapper.get("\\foobang(")
+  end
+
   def test_should_delete_by_escaped_link
     @client.expects(:delete_by_query).with("link:foo\\-bar")
     @wrapper.delete("foo-bar")
@@ -199,5 +236,10 @@ class SolrWrapperTest < Test::Unit::TestCase
     @client.expects(:commit!)
     @client.expects(:optimize!)
     @wrapper.delete_all
+  end
+
+  def test_should_limit_minimum_field_match_to_75_percent
+    @client.expects(:query).with(anything, has_entry(mm: "75%"))
+    @wrapper.search("foo")
   end
 end

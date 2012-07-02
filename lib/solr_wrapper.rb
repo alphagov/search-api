@@ -6,6 +6,10 @@ class SolrWrapper
   HIGHLIGHT_START = "HIGHLIGHT_START"
   HIGHLIGHT_END   = "HIGHLIGHT_END"
   COMMIT_WITHIN = 5 * 60 * 1000 # 5m in ms
+  DOCUMENT_FIELDS = %w[
+    title link description format section additional_links__title
+    additional_links__link additional_links__link_order
+  ]
 
   def initialize(client, recommended_format, logger=Logger.new('/dev/null'))
     @client, @recommended_format, @logger = client, recommended_format, logger
@@ -37,21 +41,27 @@ class SolrWrapper
   def search(q)
     map_results(@client.query("dismax",
       :query  => "#{prepare_query(q)}*",
-      :fields => %w[
-        title link description format section additional_links__title
-        additional_links__link additional_links__link_order
-        ].join(","),
+      :fields => DOCUMENT_FIELDS.join(","),
       :bq     => "format:(transaction OR #{@recommended_format})^3.0",
       :hl     => "true",
       "hl.fl" => "description,indexable_content",
       "hl.simple.pre"  => HIGHLIGHT_START,
       "hl.simple.post" => HIGHLIGHT_END,
-      :limit  => 50
+      :limit  => 50,
+      :mm     => "75%"
     )) { |results, doc|
       doc.highlight = %w[ description indexable_content ].map { |f|
         results.highlights_for(doc.link, f)
       }.flatten.compact.first
     }
+  end
+
+  def get(link)
+    map_results(@client.query("standard",
+      :query  => "link:#{escape(link)}",
+      :fields => "*",
+      :limit  => 1
+    )).first
   end
 
   def section(q)

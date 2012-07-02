@@ -67,14 +67,25 @@ module Helpers
   end
 
   def apply_highlight(s)
-    s = s.strip
+    s.strip!
     return "" if s.empty?
+
+    # If the first character is punctuation, remove it.
+    s = s.slice(1..-1) while s[0].match(/\A[[:punct:]]/)
+    s.strip!
+
+    # If the first two characters are a single letter and space,
+    # remove it.
+    if s.slice(0..1).match(/[[:alpha:]]\s/) and not %w(a A i I).include?(s[0])
+      s = s.slice(2..-1)
+      s.strip!
+    end
+
     just_text = s.gsub(/#{HIGHLIGHT_START}|#{HIGHLIGHT_END}/, "")
-    [ just_text.match(/\A[[:upper:]]/) ? "" : "… ",
-      s.gsub(HIGHLIGHT_START, %{<strong class="highlight">}).
-        gsub(HIGHLIGHT_END, %{</strong>}),
-      just_text.match(/[\.\?!]\z/) ? "" : " …"
-    ].join
+    [just_text.match(/\A[[:upper:]]/) || just_text.match(/\A[[:punct:]]/) ? "" : "… ",
+     s.gsub(HIGHLIGHT_START, %{<strong class="highlight">}).
+     gsub(HIGHLIGHT_END, %{</strong>}),
+     just_text.match(/[\.\?!]\z/) ? "" : " …"].join
   end
 
   def map_section_name(slug)

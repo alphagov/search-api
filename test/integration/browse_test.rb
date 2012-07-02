@@ -1,4 +1,3 @@
-# encoding: utf-8
 require_relative "integration_helper"
 require "popular_items"
 
