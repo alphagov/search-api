@@ -61,8 +61,8 @@ class BrowseTest < IntegrationTest
 
     get "/browse/section-name"
     response = Nokogiri.parse(last_response.body)
-    assert_equal 1, response.css(".popular .content-links li").size
-    assert_match /The Popular Article/, response.css(".popular .content-links li").inner_text
+    assert_equal 1, response.css("#popular .results-list li a").size
+    assert_match /The Popular Article/, response.css("#popular .results-list li a").inner_text
   end
 
   def test_browsing_a_section_is_ordered_by_subsection_not_formats
