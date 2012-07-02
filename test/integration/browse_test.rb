@@ -60,8 +60,8 @@ class BrowseTest < IntegrationTest
 
     get "/browse/section-name"
     response = Nokogiri.parse(last_response.body)
-    assert_equal 1, response.css(".popular .content-links li").size
-    assert_match /The Popular Article/, response.css(".popular .content-links li").inner_text
+    assert_equal 1, response.css("#popular .results-list li a").size
+    assert_match /The Popular Article/, response.css("#popular .results-list li a").inner_text
   end
 
   def test_browsing_a_section_is_ordered_by_subsection_not_formats
@@ -76,6 +76,17 @@ class BrowseTest < IntegrationTest
     response = Nokogiri.parse(last_response.body)
     assert_match /Other/, response.css("h2").inner_text
     assert_not_match /Answer/, response.css("h2").inner_text
+  end
+
+  def test_browsing_section_displays_other_sections
+    @solr.stubs(:section).returns([sample_document])
+    @solr.stubs(:facet).with('section').returns([Section.new('bar'), Section.new('section-name'), Section.new('zulu')])
+
+    get "/browse/section-name"
+
+    response = Nokogiri.parse(last_response.body)
+    other_sections = response.xpath("//h2[text() = 'Other Sections']/following-sibling::ul/li/a").map(&:text)
+    assert_equal ['Bar', 'Zulu'], other_sections
   end
 
   def test_should_put_browse_in_section_nav_for_slimmer

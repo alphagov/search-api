@@ -1,12 +1,17 @@
-<section id="content" role="main" class="group ancillary search">
-  <header class="page-header group">
-      <hgroup>
-        <h1>Search results for <em><%= h @query %></em></h1>
-      </hgroup>
-  </header>
+<section id="content" role="main" class="group ancillary search no-results">
 
-  <div class="search-container">
-    <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
+  <div class="search-container group">
+
+    <form action="<%= @prefix %>/search" method="get" accept-charset="utf-8" class="search-header search-header-2" role="search">
+      <fieldset>
+        <legend class="visuallyhidden">Search gov.uk</legend>
+        <label for="search-main" >Sorry, we can’t find any results for </label>
+        <input type="search" name="q" value="<%= h @query %>" id="search-main" /> <input type="submit" value="Search" class="button">
+      </fieldset>
+    </form>
+
+
+<!--     <form id="search2" class="site-search" action="<%= @prefix %>/search" method="get" role="search">
       <fieldset>
         <legend class="visuallyhidden">Search the beta.gov.uk site</legend>
         <p>
@@ -15,19 +20,21 @@
           <input type="submit" value="Search" class="button">
         </p>
       </fieldset>
-    </form>
+    </form> -->
 
-    <p>Sorry, we can’t find any results for <em><strong><%=h @query %></strong></em>.</p>
+    <!-- <p>Sorry, we can’t find any results for <em><strong><%=h @query %></strong></em>.</p> -->
 
-    <p>This is a beta test website, so it’s not searching all government information. That might be why we couldn’t find what you were after.</p>
+      <div class="results group">
+        <div class="results-wrapper">
+          <article>
+            <p>This might happen from time to time, since this is an incomplete trial (‘beta’) site. You can help us improve GOV.UK by <a href="/feedback" id="gs-feedback-banner">telling us what you were doing</a>.</p>
 
-    <p>Please try another search in the search box at the top of the page.</p>
+            <p>Please try another search in the search box at the top of the page.</p>
 
-    <p>Also, please remember that this is a trial site and may contain inaccuracies and incomplete information. This may affect the results that you get.</p>
-
-    <p><a href="http://www.direct.gov.uk/en/index.htm">Directgov</a> remains the official site for government services and information.</p>
-
-    <p><a href="/feedback">You can leave feedback on this or any other part of the site.</a></p>
+            <p>Remember, <a href="http://www.direct.gov.uk/en/index.htm">Directgov</a> and <a href="http://businesslink.gov.uk">Businesslink</a> remain the official sites for government services and information.</p>
+          </article>
+        </div>
+      </div>
 
   </div>
 </section>

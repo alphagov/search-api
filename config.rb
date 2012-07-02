@@ -28,6 +28,7 @@ set :format_order, ['transaction', 'answer', 'programme', 'guide']
 set :format_name_alternatives, {
   "programme" => "Benefits and schemes",
   "transaction" => "Services",
+  "local_transaction" => "Services",
   "answer" => "Quick answers",
 }
 
