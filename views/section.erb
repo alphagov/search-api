@@ -37,7 +37,7 @@
         </div>
       
         <% @results.each do |subsection, results| %>
-          <div class="hide" id="<%= subsection ? subsection : "other" %>">
+          <div class="hidden" id="<%= subsection ? subsection : "other" %>">
             <ul class="results-list">
               <% group_by_format(results).each do |presentation_format_name, sub_results| %>
                 <% sub_results.each do |result| %>
@@ -66,7 +66,7 @@
       <ul>
         <li class="open">
           <a href="<%= @section.path %>"><%= formatted_section_name @section.slug %></a>
-          <ul>
+          <ul class="subsections">
             <% @results.each do |subsection, results| %>
             <li data-filter="section-<%= subsection ? subsection : "other" %>"><a href="<%= @section.path %>#/<%= subsection ? subsection : "other" %>"><%= subsection ? h(formatted_section_name subsection) : "Other" %></a></li>
             <% end %>
