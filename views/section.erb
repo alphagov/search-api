@@ -18,7 +18,10 @@
       <% end %>
 
       <div class="summary">
-        <%= include @section.slug %>
+        <%= # This rescue is in place in the event that a section is
+            # added without creating the relevant _section.html
+            # description file.
+            begin; include @section.slug; rescue Exception => e; end %>
       </div>
 
       <div class="results group" role="navigation">
