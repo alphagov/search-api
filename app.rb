@@ -139,7 +139,6 @@ if settings.router[:path_prefix].empty?
     halt 404 unless section == params[:section]
     @ungrouped_results = solr.section(section)
     halt 404 if @ungrouped_results.empty?
-    @ungrouped_results[0].subsection = nil
     @section = Section.new(section)
     @page_section = formatted_section_name(@section.slug)
     @page_section_link = @section.path
