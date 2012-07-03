@@ -115,4 +115,19 @@ class SearchTest < IntegrationTest
     get "/search", q: " \x02 "
     assert_no_match /we can’t find any results/, last_response.body
   end
+
+  def test_should_not_blow_up_with_a_result_wihout_a_section
+    @solr.stubs(:search).returns([
+      Document.from_hash({
+        "title" => "TITLE1",
+        "description" => "DESCRIPTION",
+        "format" => "local_transaction",
+        "link" => "/URL"
+      })
+    ])
+
+    assert_nothing_raised do
+      get "/search", {:q => "bob"}
+    end
+  end
 end

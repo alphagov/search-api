@@ -21,7 +21,7 @@
                 </p>
 
                 <ul class="result-meta">
-                  <li class="<%= result.presentation_format %>"><%= formatted_format_name(result.presentation_format) %></li><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li>
+                  <li class="<%= result.presentation_format %>"><%= formatted_format_name(result.presentation_format) %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
                 </ul>
               </li>
             <% end %>
@@ -35,6 +35,7 @@
           <ul>
             <li data-filter="*" class="active"><a href="#">All Results <span><%= capped_search_set_size %></span><span class="visuallyhidden"> results</span></a></li>
             <% non_recommended_results.group_by(&:section).sort_by { |section, results_in_section| results_in_section.size }.reverse_each do |section, results_in_section| %>
+              <% next unless section %>
               <li data-filter="section-<%= section %>"><a href="#"><%= formatted_section_name(section) %> <span><%= results_in_section.size %></span><span class="visuallyhidden"> results</span></a></li>
             <% end %>
           </ul>
