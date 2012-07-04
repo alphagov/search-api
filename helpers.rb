@@ -115,7 +115,7 @@ module Helpers
     results.group_by do |result|
       humanize_format_name(result.presentation_format)
     end.sort_by do |presentation_format_name, results|
-      sort_order = ['Services', 'Guides', 'Quick Answers', 'Benefits & Credits']
+      sort_order = ['Quick Answers', 'Guides', 'Services', 'Benefits & Credits']
       sort_order.find_index(presentation_format_name) || sort_order.size
     end
   end

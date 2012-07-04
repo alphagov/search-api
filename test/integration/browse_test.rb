@@ -64,6 +64,53 @@ class BrowseTest < IntegrationTest
     assert_match /The Popular Article/, response.css("#popular .results-list li a").inner_text
   end
 
+  def test_ordering_of_popular_items_is_correct
+    mock_panopticon_api = mock("mock_panopticon_api")
+    mock_panopticon_api.stubs(:curated_lists).returns("section-name" => ["article-slug", "article-slug2", "article-slug3", "article-slug4"])
+    GdsApi::Panopticon.stubs(:new).returns(mock_panopticon_api)
+
+    doc1 = Document.from_hash(
+      "title" => "The Popular Service",
+      "description" => "DESCRIPTION",
+      "format" => "local_transaction",
+      "section" => "Life in the UK",
+      "link" => "/article-slug"
+    )
+
+    doc2 = Document.from_hash(
+      "title" => "The Popular Quick Answer",
+      "description" => "DESCRIPTION",
+      "format" => "smart_answer",
+      "section" => "Life in the UK",
+      "link" => "/article-slug2"
+    )
+
+    doc3 = Document.from_hash(
+      "title" => "The Popular Guide",
+      "description" => "DESCRIPTION",
+      "format" => "guide",
+      "section" => "Life in the UK",
+      "link" => "/article-slug3"
+    )
+
+    doc4 = Document.from_hash(
+      "title" => "The Popular Programme",
+      "description" => "DESCRIPTION",
+      "format" => "programme",
+      "section" => "Life in the UK",
+      "link" => "/article-slug4"
+    )
+    @solr.stubs(:section).returns([doc1, doc2, doc3, doc4])
+
+    get "/browse/section-name"
+    response = Nokogiri.parse(last_response.body)
+
+    assert_match /The Popular Quick Answer/, response.css("#popular .results-list li:first-child a").inner_text
+    assert_match /The Popular Guide/, response.css("#popular .results-list li:nth-child(2) a").inner_text
+    assert_match /The Popular Service/, response.css("#popular .results-list li:nth-child(3) a").inner_text
+    assert_match /The Popular Programme/, response.css("#popular .results-list li:last-child a").inner_text
+  end
+
   def test_browsing_a_section_is_ordered_by_subsection_not_formats
     doc = Document.from_hash(
       "title" => "Item 1",
