@@ -16,11 +16,10 @@ class PopularItems
     end.reject(&:nil?)
   end
 
-  private
-
-    def link_to_slug(link)
-      if link.match(%r{^/([^/]*)(/|$)})
-        $1
-      end
+private
+  def link_to_slug(link)
+    if link.match(%r{^/([^/]*)(/|$)})
+      $1
     end
+  end
 end
