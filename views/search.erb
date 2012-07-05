@@ -1,5 +1,5 @@
 <section id="content" role="main" class="group search ancillary">
-  
+
   <div class="search-container group">
     <form action="<%= @prefix %>/search" method="get" accept-charset="utf-8" class="search-header search-header-2" role="search">
       <fieldset>
@@ -28,10 +28,10 @@
           </ul>
         </div>
       </div>
-    
+
       <aside class="filters group">
           <h2 class="visuallyhidden">Filter by Section</h2>
-    
+
           <ul>
             <li data-filter="*" class="active"><a href="#">All Results <span><%= capped_search_set_size %></span><span class="visuallyhidden"> results</span></a></li>
             <% non_recommended_results.group_by(&:section).sort_by { |section, results_in_section| results_in_section.size }.reverse_each do |section, results_in_section| %>
