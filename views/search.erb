@@ -33,7 +33,7 @@
           <h2 class="visuallyhidden">Filter by Section</h2>
 
           <ul>
-            <li data-filter="*" class="active"><a href="#">All Results <span><%= capped_search_set_size %></span><span class="visuallyhidden"> results</span></a></li>
+            <li data-filter="*" class="active"><a href="#">All results <span><%= capped_search_set_size %></span><span class="visuallyhidden"> results</span></a></li>
             <% non_recommended_results.group_by(&:section).sort_by { |section, results_in_section| results_in_section.size }.reverse_each do |section, results_in_section| %>
               <% next unless section %>
               <li data-filter="section-<%= section %>"><a href="#"><%= formatted_section_name(section) %> <span><%= results_in_section.size %></span><span class="visuallyhidden"> results</span></a></li>
