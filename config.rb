@@ -32,6 +32,8 @@ set :format_name_alternatives, {
   "answer" => "Quick answers",
 }
 
+set :protection, :except => [:escaped_params, :frame_options]
+
 configure :development do
   set :protection, false
   use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host
