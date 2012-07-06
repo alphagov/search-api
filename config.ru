@@ -20,7 +20,7 @@ else
 end
 
 # Stop double slashes in URLs (even escaped ones) being flattened to single ones
-set :protection, :except => :path_traversal
+set :protection, :except => [:path_traversal, :escaped_params, :frame_options]
 
 enable :dump_errors, :raise_errors
 
