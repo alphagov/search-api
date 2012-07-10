@@ -1,4 +1,4 @@
-require_relative "integration_helper"
+require "integration_test_helper"
 
 class AmendmentTest < IntegrationTest
 

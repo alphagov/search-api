@@ -1,5 +1,4 @@
 require "test_helper"
-
 require "app"
 
 class UpdateTest < Test::Unit::TestCase

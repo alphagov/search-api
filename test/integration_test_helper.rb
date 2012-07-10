@@ -1,8 +1,6 @@
-require_relative "../test_helper"
+require "test_helper"
 require 'slimmer/test'
-require_relative "../../lib/document"
-require_relative "../../lib/section"
-require_relative "../../app"
+require "app"
 
 require "htmlentities"
 

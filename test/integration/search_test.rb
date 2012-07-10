@@ -1,5 +1,5 @@
 # encoding: utf-8
-require_relative "integration_helper"
+require "integration_test_helper"
 
 class SearchTest < IntegrationTest
   def test_autocomplete_cache
