@@ -7,4 +7,4 @@ for d in images javascripts templates stylesheets; do
   ln -s ../../../Static/workspace/public/$d public/
 done
 
-RACK_ENV=test bundle exec rake ci:setup:testunit test --trace
+USE_SIMPLECOV=true RACK_ENV=test bundle exec rake ci:setup:testunit test --trace

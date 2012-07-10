@@ -11,7 +11,9 @@ require "mocha"
 require "webmock/test_unit"
 WebMock.disable_net_connect!
 
-require "simplecov"
-require "simplecov-rcov"
-SimpleCov.start
-SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+if ENV["USE_SIMPLECOV"]
+  require "simplecov"
+  require "simplecov-rcov"
+  SimpleCov.start
+  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+end
