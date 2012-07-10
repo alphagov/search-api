@@ -1,11 +1,11 @@
 ENV['RACK_ENV'] = 'test'
 
+$LOAD_PATH << File.expand_path('../../', __FILE__)
+$LOAD_PATH << File.expand_path('../../lib', __FILE__)
+
 require "bundler/setup"
 require "test/unit"
 require "rack/test"
-%w[ . lib ].each do |path|
-  $:.unshift path unless $:.include?(path)
-end
 require "mocha"
 
 require "webmock/test_unit"
@@ -16,4 +16,4 @@ require "simplecov-rcov"
 SimpleCov.start
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 
-require_relative "response_assertions"
+require "response_assertions"

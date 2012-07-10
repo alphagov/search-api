@@ -1,5 +1,6 @@
 require "test_helper"
-require_relative "../../lib/popular_items"
+require "document"
+require "popular_items"
 
 class PopularItemsTest < Test::Unit::TestCase
   def setup
