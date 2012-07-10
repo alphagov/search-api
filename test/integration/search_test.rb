@@ -28,6 +28,11 @@ class SearchTest < IntegrationTest
     assert_response_text "we can’t find any results"
   end
 
+  def test_we_pass_the_optional_filter_parameter_to_the_solr_wrapper
+    @solr.expects(:search).with("anything", "my-format").returns([])
+    get "/search", :q => "anything", :format_filter => "my-format"
+  end
+
   def test_we_count_result
     @solr.stubs(:search).returns([
       sample_document

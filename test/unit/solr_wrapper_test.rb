@@ -242,4 +242,19 @@ class SolrWrapperTest < Test::Unit::TestCase
     @client.expects(:query).with(anything, has_entry(mm: "75%"))
     @wrapper.search("foo")
   end
+
+  def test_should_allow_the_query_to_be_filtered_by_the_specified_format
+    @client.expects(:query).with(anything, has_entry(fq: "format:foobar"))
+    @wrapper.search("", "foobar")
+  end
+
+  def test_should_escape_the_filter_option
+    @client.expects(:query).with(anything, has_entry(fq: "format:\\*"))
+    @wrapper.search("", "*")
+  end
+
+  def test_should_not_pass_the_fq_parameter_unless_a_format_is_specified
+    @client.expects(:query).with(anything, Not(has_key(:fq)))
+    @wrapper.search("")
+  end
 end

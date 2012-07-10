@@ -38,8 +38,8 @@ class SolrWrapper
     map_results(@client.query("standard", query_opts))
   end
 
-  def search(q)
-    map_results(@client.query("dismax",
+  def search(q, format = nil)
+    query_opts = {
       :query  => "#{prepare_query(q)}*",
       :fields => DOCUMENT_FIELDS.join(","),
       :bq     => "format:(transaction OR #{@recommended_format})^3.0",
@@ -49,7 +49,9 @@ class SolrWrapper
       "hl.simple.post" => HIGHLIGHT_END,
       :limit  => 50,
       :mm     => "75%"
-    )) { |results, doc|
+    }
+    query_opts[:fq] = "format:#{escape(format)}" if format
+    map_results(@client.query("dismax", query_opts)) { |results, doc|
       doc.highlight = %w[ description indexable_content ].map { |f|
         results.highlights_for(doc.link, f)
       }.flatten.compact.first
