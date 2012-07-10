@@ -4,6 +4,16 @@ require_relative "../../lib/document"
 require_relative "../../lib/section"
 require_relative "../../app"
 
+require "htmlentities"
+
+module ResponseAssertions
+  def assert_response_text(needle)
+    haystack = HTMLEntities.new.decode(last_response.body.gsub(/<[^>]+>/, " ").gsub(/\s+/, " "))
+    message = "Expected to find #{needle.inspect} in\n#{haystack}"
+    assert haystack.include?(needle), message
+  end
+end
+
 module IntegrationFixtures
   def sample_document_attributes
     {

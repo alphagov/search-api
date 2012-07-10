@@ -15,5 +15,3 @@ require "simplecov"
 require "simplecov-rcov"
 SimpleCov.start
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-
-require "response_assertions"
