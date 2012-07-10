@@ -1,5 +1,6 @@
 ENV['RACK_ENV'] = 'test'
 
+require "bundler/setup"
 require "test/unit"
 require "rack/test"
 %w[ . lib ].each do |path|
