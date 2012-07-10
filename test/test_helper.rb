@@ -16,8 +16,3 @@ SimpleCov.start
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 
 require_relative "response_assertions"
-
-require "helpers"
-class TestHelper
-  include Helpers
-end
