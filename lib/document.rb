@@ -102,6 +102,7 @@ class Document < Link
     "smart_answer" => "answer",
     "calculator" => "answer",
     "licence_finder" => "answer",
+    'custom-application' => "answer"
   }
 
   def presentation_format
