@@ -35,7 +35,7 @@
             </ul>
           <% end %>
         </div>
-      
+
         <% @results.each do |subsection, results| %>
           <div class="hidden" id="<%= subsection ? subsection : "other" %>">
             <ul class="results-list">
@@ -58,7 +58,7 @@
 
     </div>
   </div>
-  
+
   <aside class="filters">
     <div class="group">
       <h2 class="visuallyhidden">Current Section</h2>
@@ -73,16 +73,16 @@
           </ul>
         </li>
       </ul>
-      
+
       <h2>Other Sections</h2>
-      
+
       <ul>
         <% @sections.each do |section| %>
           <li><a href="<%= section.path %>"><%= h formatted_section_name(section.name) %></a></li>
         <% end %>
       </ul>
     </div>
-    
+
   </aside>
   </div>
 </section>
