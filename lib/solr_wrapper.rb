@@ -83,14 +83,15 @@ class SolrWrapper
     results.facet_field_values(q).reject(&:empty?).map{ |s| Section.new(s) }
   end
 
-  def complete(q)
+  def complete(q, format = nil)
     words = q.scan(/\S+/).map { |w| "autocomplete:#{prepare_query(w)}*" }
-    map_results(@client.query("standard",
+    params = {
       :query  => words.join(" "),
-      :fq     => "-format:#{@recommended_format}",
       :fields => "title,link,format",
-      :limit  => 5
-    ))
+      :limit  => 5,
+      :fq => format ? "format:#{escape(format)}" : "-format:#{@recommended_format}"
+    }
+    map_results(@client.query("standard", params))
   end
 
   def delete(link)

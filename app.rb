@@ -41,7 +41,6 @@ end
 
 get prefixed_path("/search.?:format?") do
   @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
-  format_filter = params["format_filter"]
 
   if @query == ""
     expires 3600, :public
@@ -52,7 +51,7 @@ get prefixed_path("/search.?:format?") do
   end
 
   expires 3600, :public if @query.length < 20
-  @results = solr.search(@query, format_filter)
+  @results = solr.search(@query, params["format_filter"])
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
@@ -93,7 +92,7 @@ get prefixed_path("/autocomplete") do
 
   expires 3600, :public if query.length < 5
 
-  results = solr.complete(query) rescue []
+  results = solr.complete(query, params["format_filter"]) rescue []
   JSON.dump(results.map { |r| r.to_hash })
 end
 

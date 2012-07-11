@@ -28,7 +28,7 @@ class SearchTest < IntegrationTest
     assert_response_text "we can’t find any results"
   end
 
-  def test_we_pass_the_optional_filter_parameter_to_the_solr_wrapper
+  def test_we_pass_the_optional_filter_parameter_to_searches
     @solr.expects(:search).with("anything", "my-format").returns([])
     get "/search", :q => "anything", :format_filter => "my-format"
   end
@@ -56,6 +56,11 @@ class SearchTest < IntegrationTest
     get "/autocomplete", :q => 'bob'
     assert last_response.ok?
     assert_equal [sample_document_attributes], JSON.parse(last_response.body)
+  end
+
+  def test_we_pass_the_optional_filter_parameter_to_autocomplete
+    @solr.expects(:complete).with("anything", "my-format").returns([])
+    get "/autocomplete", :q => "anything", :format_filter => "my-format"
   end
 
   def test_should_send_analytics_headers_for_citizen_proposition
