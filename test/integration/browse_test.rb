@@ -132,7 +132,7 @@ class BrowseTest < IntegrationTest
     get "/browse/section-name"
 
     response = Nokogiri.parse(last_response.body)
-    other_sections = response.xpath("//h2[text() = 'Other Sections']/following-sibling::ul/li/a").map(&:text)
+    other_sections = response.xpath("//h2[text() = 'Other sections']/following-sibling::ul/li/a").map(&:text)
     assert_equal ['Bar', 'Zulu'], other_sections
   end
 
