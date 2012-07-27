@@ -50,8 +50,16 @@ get prefixed_path("/search.?:format?") do
     return erb(:no_search_term)
   end
 
+  @query = CGI.escapeHTML(@query)
+
+  if params["format_filter"] == "" or params["format_filter"].nil?
+    format_filter = params["format_filter"]
+  else
+    format_filter = CGI.escapeHTML(params["format_filter"])
+  end
+
   expires 3600, :public if @query.length < 20
-  @results = solr.search(@query, params["format_filter"])
+  @results = solr.search(@query, format_filter)
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json

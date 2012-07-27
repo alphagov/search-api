@@ -140,4 +140,12 @@ class SearchTest < IntegrationTest
       get "/search", {q: "bob"}
     end
   end
+
+  def test_should_not_allow_xss_vulnerabilites_as_search_terms
+    @solr.stubs(:search).returns([])
+    get "/search", {q: "1+\"><script+src%3Dhttp%3A%2F%2F88.151.219.231%2F4><%2Fscript>"}
+
+    assert_response_text "Sorry, we can’t find any results for"
+    assert_match "\"1+&amp;quot;&amp;gt;&amp;lt;script+src%3Dhttp%3A%2F%2F88.151.219.231%2F4&amp;gt;&amp;lt;%2Fscript&amp;gt;\"", last_response.body
+  end
 end
