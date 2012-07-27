@@ -23,21 +23,21 @@ class SearchTest < IntegrationTest
 
   def test_search_view_returning_no_results
     @solr.stubs(:search).returns([])
-    get "/search", :q => 'bob'
+    get "/search", {q: "bob"}
     assert last_response.ok?
     assert_response_text "we can’t find any results"
   end
 
   def test_we_pass_the_optional_filter_parameter_to_searches
     @solr.expects(:search).with("anything", "my-format").returns([])
-    get "/search", :q => "anything", :format_filter => "my-format"
+    get "/search", {q: "anything", format_filter: "my-format"}
   end
 
   def test_we_count_result
     @solr.stubs(:search).returns([
       sample_document
     ])
-    get "/search", :q => 'bob'
+    get "/search", {q: "bob"}
     assert last_response.ok?
     assert_response_text "1 result "
   end
@@ -46,26 +46,26 @@ class SearchTest < IntegrationTest
     @solr.stubs(:search).returns([
       sample_document, sample_document
     ])
-    get "/search", :q => 'bob'
+    get "/search", {q: "bob"}
     assert last_response.ok?
     assert_response_text "2 results"
   end
 
   def test_should_return_autocompletion_documents_as_json
     @solr.stubs(:complete).returns([sample_document])
-    get "/autocomplete", :q => 'bob'
+    get "/autocomplete", {q: "bob"}
     assert last_response.ok?
     assert_equal [sample_document_attributes], JSON.parse(last_response.body)
   end
 
   def test_we_pass_the_optional_filter_parameter_to_autocomplete
     @solr.expects(:complete).with("anything", "my-format").returns([])
-    get "/autocomplete", :q => "anything", :format_filter => "my-format"
+    get "/autocomplete", {q: "anything", format_filter: "my-format"}
   end
 
   def test_should_send_analytics_headers_for_citizen_proposition
     @solr.stubs(:search).returns([])
-    get "/search", :q => 'bob'
+    get "/search", {q: "bob"}
     assert_equal "search",  last_response.headers["X-Slimmer-Section"]
     assert_equal "search",  last_response.headers["X-Slimmer-Format"]
     assert_equal "citizen", last_response.headers["X-Slimmer-Proposition"]
@@ -74,7 +74,7 @@ class SearchTest < IntegrationTest
 
   def test_result_count_header_with_results
     @solr.stubs(:search).returns(Array.new(15, sample_document))
-    get "/search", :q => 'bob'
+    get "/search", {q: "bob"}
     assert_equal "15", last_response.headers["X-Slimmer-Result-Count"]
   end
 
@@ -85,7 +85,7 @@ class SearchTest < IntegrationTest
       proposition: "government"
     )
     @solr.stubs(:search).returns([])
-    get "/search", :q => 'bob'
+    get "/search", {q: "bob"}
     assert_equal "government", last_response.headers["X-Slimmer-Proposition"]
     # Make sure the result count works for government too
     assert_equal "0", last_response.headers["X-Slimmer-Result-Count"]
@@ -98,7 +98,7 @@ class SearchTest < IntegrationTest
       proposition: "blah"
     )
     @solr.stubs(:search).returns([])
-    get "/search", :q => 'bob'
+    get "/search", {q: "bob"}
     assert_match /<body class="blah"/, last_response.body
   end
 
@@ -106,7 +106,7 @@ class SearchTest < IntegrationTest
     @solr.stubs(:search).returns([
       sample_document
     ])
-    get "/search", {:q => "bob"}, "HTTP_ACCEPT" => "application/json"
+    get "/search", {q: "bob"}, "HTTP_ACCEPT" => "application/json"
     assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
@@ -115,14 +115,14 @@ class SearchTest < IntegrationTest
     @solr.stubs(:search).returns([
       sample_document
     ])
-    get "/search.json", {:q => "bob"}
+    get "/search.json", {q: "bob"}
     assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 
   def test_should_ignore_edge_spaces_and_codepoints_below_0x20
     @solr.expects(:search).never
-    get "/search", q: " \x02 "
+    get "/search", {q: " \x02 "}
     assert_no_match /we can’t find any results/, last_response.body
   end
 
@@ -137,7 +137,7 @@ class SearchTest < IntegrationTest
     ])
 
     assert_nothing_raised do
-      get "/search", {:q => "bob"}
+      get "/search", {q: "bob"}
     end
   end
 end
