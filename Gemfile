@@ -5,6 +5,7 @@ group :router do
   gem 'router-client', '2.0.3', :require => 'router/client'
 end
 
+gem "unicorn"
 gem "sinatra"
 gem "delsolr", :git => "git://github.com/alphagov/delsolr.git"
 gem 'rake', '0.9.2'
