@@ -99,7 +99,8 @@ class SearchTest < IntegrationTest
     )
     @solr.stubs(:search).returns([])
     get "/search", {q: "bob"}
-    assert_match /<body class="blah"/, last_response.body
+    # the mainstream class is temporarily hardcoded while we switch to using it
+    assert_match /<body class="blah mainstream"/, last_response.body
   end
 
   def test_should_respond_with_json_when_requested

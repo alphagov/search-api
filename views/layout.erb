@@ -7,7 +7,9 @@
   <meta content="<%=h @page_section_link %>" name="x-section-link">
   <% yield_content :head %>
 </head>
-<body class="<%= proposition %>">
+<%# The citizen class (what proposition returns) is going to be deprecated, to be replaced with mainstream. %>
+<%# Added the mainstream class in preparation for the change. %>
+<body class="<%= proposition %> mainstream">
   <div id="wrapper" class="wrapper">
     <%= yield %>
   </div>
