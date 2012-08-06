@@ -149,4 +149,14 @@ class SearchTest < IntegrationTest
     assert_response_text "Sorry, we can’t find any results for"
     assert_match "\"1+&quot;&gt;&lt;script+src%3Dhttp%3A%2F%2F88.151.219.231%2F4&gt;&lt;%2Fscript&gt;\"", last_response.body
   end
+
+  def test_should_not_show_specialist_guidance_filter_when_no_specialist_results_present
+    @mainstream_solr.stubs(:search).returns([sample_document, sample_document])
+    @whitehall_solr.stubs(:search).returns([])
+
+    get "/search", {q: "1.21 gigawatts?!"}
+
+    assert_response_text "2 results"
+    assert_equal false, last_response.body.include?("Specialist guidance")
+  end
 end
