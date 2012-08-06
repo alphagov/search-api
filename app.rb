@@ -57,7 +57,9 @@ get prefixed_path("/search.?:format?") do
   end
 
   expires 3600, :public if @query.length < 20
+
   @results = mainstream_solr.search(@query, params["format_filter"])
+  @whitehall_results = whitehall_solr.search(@query, params["format_filter"])
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json

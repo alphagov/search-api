@@ -34,19 +34,21 @@ class SearchTest < IntegrationTest
   end
 
   def test_we_count_result
-    @mainstream_solr.stubs(:search).returns([
-      sample_document
-    ])
+    @mainstream_solr.stubs(:search).returns([sample_document])
+    @whitehall_solr.stubs(:search).returns([])
+
     get "/search", {q: "bob"}
+
     assert last_response.ok?
     assert_response_text "1 result "
   end
 
   def test_we_count_results
-    @mainstream_solr.stubs(:search).returns([
-      sample_document, sample_document
-    ])
+    @mainstream_solr.stubs(:search).returns([sample_document, sample_document])
+    @whitehall_solr.stubs(:search).returns([])
+
     get "/search", {q: "bob"}
+
     assert last_response.ok?
     assert_response_text "2 results"
   end
@@ -74,7 +76,10 @@ class SearchTest < IntegrationTest
 
   def test_result_count_header_with_results
     @mainstream_solr.stubs(:search).returns(Array.new(15, sample_document))
+    @whitehall_solr.stubs(:search).returns([])
+
     get "/search", {q: "bob"}
+
     assert_equal "15", last_response.headers["X-Slimmer-Result-Count"]
   end
 
@@ -136,6 +141,7 @@ class SearchTest < IntegrationTest
         "link" => "/URL"
       })
     ])
+    @whitehall_solr.stubs(:search).returns([])
 
     assert_nothing_raised do
       get "/search", {q: "bob"}
@@ -156,7 +162,18 @@ class SearchTest < IntegrationTest
 
     get "/search", {q: "1.21 gigawatts?!"}
 
+    assert last_response.ok?
     assert_response_text "2 results"
     assert_equal false, last_response.body.include?("Specialist guidance")
+  end
+
+  def test_should_show_specialist_guidance_filter_when_specialist_results_exist
+    @mainstream_solr.stubs(:search).returns([sample_document])
+    @whitehall_solr.stubs(:search).returns([sample_document])
+
+    get "/search", {q: "Are you telling me that you built a time machine... out of a DeLorean?"}
+
+    assert last_response.ok?
+    assert_equal true, last_response.body.include?("Specialist guidance")
   end
 end
