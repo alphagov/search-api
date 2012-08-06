@@ -41,7 +41,7 @@
               <li data-filter="section-<%= section %>"><a href="#"><%= formatted_section_name(section) %> <span><%= results_in_section.size %></span><span class="visuallyhidden"> results</span></a></li>
             <% end %>
             <% if not @whitehall_results.empty? %>
-              <li data-filter="section-specialist"><a href="#">Specialist guidance<span><%= @whitehall_results.count %></span><span class="visuallyhidden"> results</span></a></li>
+              <li data-filter="section-specialist"><a href="#">Specialist guidance <span><%= @whitehall_results.count %></span><span class="visuallyhidden"> results</span></a></li>
             <% end %>
           </ul>
       </aside>

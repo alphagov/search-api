@@ -186,4 +186,14 @@ class SearchTest < IntegrationTest
     assert last_response.ok?
     assert_response_text "2 results"
   end
+
+  def test_should_show_specialist_results_count_next_to_specialist_filter
+    @mainstream_solr.stubs(:search).returns([sample_document])
+    @whitehall_solr.stubs(:search).returns([sample_document])
+
+    get "/search", {q: "This is heavy."}
+
+    assert last_response.ok?
+    assert_match "Specialist guidance <span>1</span>", last_response.body
+  end
 end
