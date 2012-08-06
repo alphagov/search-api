@@ -176,4 +176,14 @@ class SearchTest < IntegrationTest
     assert last_response.ok?
     assert_equal true, last_response.body.include?("Specialist guidance")
   end
+
+  def test_should_include_specialist_results_when_provided_results_count
+    @mainstream_solr.stubs(:search).returns([sample_document])
+    @whitehall_solr.stubs(:search).returns([sample_document])
+
+    get "/search", {q: "If my calculations are correct, when this baby hits 88 miles per hour... you're gonna see some serious shit."}
+
+    assert last_response.ok?
+    assert_response_text "2 results"
+  end
 end
