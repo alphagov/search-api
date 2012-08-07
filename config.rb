@@ -30,7 +30,8 @@ set :format_name_alternatives, {
   "transaction" => "Services",
   "local_transaction" => "Services",
   "place" => "Services",
-  "answer" => "Quick Answers"
+  "answer" => "Quick Answers",
+  "specialist_guidance" => "Specialist Guidance"
 }
 
 configure :development do
