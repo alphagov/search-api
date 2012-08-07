@@ -112,7 +112,7 @@ class Document < Link
   end
 
   def humanized_format
-    settings.format_name_alternatives[presentation_format] || presentation_format.titleize.pluralize
+    settings.format_name_alternatives[presentation_format] || presentation_format.humanize.pluralize
   end
 
   def highlight

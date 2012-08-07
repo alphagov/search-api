@@ -107,7 +107,7 @@ module Helpers
 
   def group_by_format(results)
     results.group_by(&:humanized_format).sort_by do |presentation_format_name, results|
-      sort_order = ['Quick Answers', 'Guides', 'Services', 'Benefits & Credits']
+      sort_order = ['Quick answers', 'Guides', 'Services', 'Benefits & credits']
       sort_order.find_index(presentation_format_name) || sort_order.size
     end
   end

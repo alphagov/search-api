@@ -143,12 +143,12 @@ class DocumentTest < Test::Unit::TestCase
   end
 
   def test_generates_humanized_format_if_not_present_in_settings
-    hash = {:format => "map"}
+    hash = {:format => "ocean_map"}
 
     settings.stubs(:format_name_alternatives).returns({})
 
     document = Document.from_hash(hash)
-    assert_equal "Maps", document.humanized_format
+    assert_equal "Ocean maps", document.humanized_format
   end
 
   def self.assert_field_exported_to_delsolr_collaborator(field_name)
