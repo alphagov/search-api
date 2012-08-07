@@ -7,7 +7,7 @@ end
 
 set :router, config_for(:router)
 set :solr, config_for(:solr)[ENV["RACK_ENV"]]
-set :whitehall_solr, config_for(:whitehall_solr)[ENV["RACK_ENV"]]
+set :secondary_solr, config_for(:secondary_solr)[ENV["RACK_ENV"]]
 set :slimmer_headers, config_for(:slimmer_headers)
 
 panopticon_api_credentials = config_for(:panopticon_api_credentials)[ENV["RACK_ENV"]]

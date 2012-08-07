@@ -25,8 +25,8 @@ def primary_solr
                                        logger)
 end
 
-def whitehall_solr
-  @whitehall_solr ||= SolrWrapper.new(DelSolr::Client.new(settings.whitehall_solr),
+def secondary_solr
+  @secondary_solr ||= SolrWrapper.new(DelSolr::Client.new(settings.secondary_solr),
                                       settings.recommended_format,
                                       logger)
 end
@@ -59,7 +59,7 @@ get prefixed_path("/search.?:format?") do
   expires 3600, :public if @query.length < 20
 
   @results = primary_solr.search(@query, params["format_filter"])
-  @whitehall_results = whitehall_solr.search(@query, params["format_filter"])
+  @secondary_results = secondary_solr.search(@query, params["format_filter"])
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json

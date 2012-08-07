@@ -35,7 +35,7 @@ class SearchTest < IntegrationTest
 
   def test_we_count_result
     @primary_solr.stubs(:search).returns([sample_document])
-    @whitehall_solr.stubs(:search).returns([])
+    @secondary_solr.stubs(:search).returns([])
 
     get "/search", {q: "bob"}
 
@@ -45,7 +45,7 @@ class SearchTest < IntegrationTest
 
   def test_we_count_results
     @primary_solr.stubs(:search).returns([sample_document, sample_document])
-    @whitehall_solr.stubs(:search).returns([])
+    @secondary_solr.stubs(:search).returns([])
 
     get "/search", {q: "bob"}
 
@@ -76,7 +76,7 @@ class SearchTest < IntegrationTest
 
   def test_result_count_header_with_results
     @primary_solr.stubs(:search).returns(Array.new(15, sample_document))
-    @whitehall_solr.stubs(:search).returns([])
+    @secondary_solr.stubs(:search).returns([])
 
     get "/search", {q: "bob"}
 
@@ -141,7 +141,7 @@ class SearchTest < IntegrationTest
         "link" => "/URL"
       })
     ])
-    @whitehall_solr.stubs(:search).returns([])
+    @secondary_solr.stubs(:search).returns([])
 
     assert_nothing_raised do
       get "/search", {q: "bob"}
@@ -158,7 +158,7 @@ class SearchTest < IntegrationTest
 
   def test_should_not_show_specialist_guidance_filter_when_no_specialist_results_present
     @primary_solr.stubs(:search).returns([sample_document, sample_document])
-    @whitehall_solr.stubs(:search).returns([])
+    @secondary_solr.stubs(:search).returns([])
 
     get "/search", {q: "1.21 gigawatts?!"}
 
@@ -169,7 +169,7 @@ class SearchTest < IntegrationTest
 
   def test_should_show_specialist_guidance_filter_when_specialist_results_exist
     @primary_solr.stubs(:search).returns([sample_document])
-    @whitehall_solr.stubs(:search).returns([sample_document])
+    @secondary_solr.stubs(:search).returns([sample_document])
 
     get "/search", {q: "Are you telling me that you built a time machine... out of a DeLorean?"}
 
@@ -179,7 +179,7 @@ class SearchTest < IntegrationTest
 
   def test_should_include_specialist_results_when_provided_results_count
     @primary_solr.stubs(:search).returns([sample_document])
-    @whitehall_solr.stubs(:search).returns([sample_document])
+    @secondary_solr.stubs(:search).returns([sample_document])
 
     get "/search", {q: "If my calculations are correct, when this baby hits 88 miles per hour... you're gonna see some serious shit."}
 
@@ -189,7 +189,7 @@ class SearchTest < IntegrationTest
 
   def test_should_show_specialist_results_count_next_to_specialist_filter
     @primary_solr.stubs(:search).returns([sample_document])
-    @whitehall_solr.stubs(:search).returns([sample_document])
+    @secondary_solr.stubs(:search).returns([sample_document])
 
     get "/search", {q: "This is heavy."}
 
@@ -207,7 +207,7 @@ class SearchTest < IntegrationTest
     }
 
     @primary_solr.stubs(:search).returns([sample_document])
-    @whitehall_solr.stubs(:search).returns([Document.from_hash(example_specialist_result)])
+    @secondary_solr.stubs(:search).returns([Document.from_hash(example_specialist_result)])
 
     get "/search", {q: "Hey, Doc, we better back up. We don't have enough road to get up to 88.\nRoads? Where we're going, we don't need roads"}
 

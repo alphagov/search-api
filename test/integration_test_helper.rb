@@ -58,12 +58,12 @@ class IntegrationTest < Test::Unit::TestCase
 
   def setup
     @primary_solr = stub_everything("Mainstream Solr wrapper")
-    @whitehall_solr = stub_everything("Whitehall Solr wrapper")
+    @secondary_solr = stub_everything("Whitehall Solr wrapper")
 
     DelSolr::Client.stubs(:new).with(settings.solr).returns(:mainstream_client)
-    DelSolr::Client.stubs(:new).with(settings.whitehall_solr).returns(:whitehall_client)
+    DelSolr::Client.stubs(:new).with(settings.secondary_solr).returns(:whitehall_client)
 
     SolrWrapper.stubs(:new).with(:mainstream_client, anything, anything).returns(@primary_solr)
-    SolrWrapper.stubs(:new).with(:whitehall_client, anything, anything).returns(@whitehall_solr)
+    SolrWrapper.stubs(:new).with(:whitehall_client, anything, anything).returns(@secondary_solr)
   end
 end

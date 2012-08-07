@@ -13,7 +13,7 @@ module Helpers
   end
 
   def capped_search_set_size
-    [@results.count + @whitehall_results.count, (settings.top_results + settings.max_more_results)].min
+    [@results.count + @secondary_results.count, (settings.top_results + settings.max_more_results)].min
   end
 
   def base_url
