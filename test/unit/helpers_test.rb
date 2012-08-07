@@ -11,15 +11,6 @@ class HelperTest < Test::Unit::TestCase
     HelperAccessor.new
   end
 
-  def test_formatting_format_name
-    assert_equal "Tests", h.formatted_format_name("test")
-  end
-
-  def test_formatting_format_name_with_replacement
-    app.settings.stubs(:format_name_alternatives).returns({"clark kent" => "superman"})
-    assert_equal "superman", h.formatted_format_name("clark kent")
-  end
-
   def test_include_throws_no_error_on_non_existent_file
     assert_equal nil, h.include("really_doesnt_exist.html")
   end

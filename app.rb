@@ -55,7 +55,11 @@ get prefixed_path("/search.?:format?") do
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
-    JSON.dump(@results.map { |r| r.to_hash.merge(highlight: r.highlight) })
+    JSON.dump(@results.map { |r| r.to_hash.merge(
+      highlight: r.highlight,
+      presentation_format: r.presentation_format,
+      humanized_format: r.humanized_format
+    ) })
   else
     @page_section = "Search"
     @page_section_link = "/search"
@@ -93,7 +97,10 @@ get prefixed_path("/autocomplete") do
   expires 3600, :public if query.length < 5
 
   results = solr.complete(query, params["format_filter"]) rescue []
-  JSON.dump(results.map { |r| r.to_hash })
+  JSON.dump(results.map { |r| r.to_hash.merge(
+    presentation_format: r.presentation_format,
+    humanized_format: r.humanized_format
+  ) })
 end
 
 get prefixed_path("/sitemap.xml") do

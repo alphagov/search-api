@@ -42,12 +42,6 @@ module Helpers
     @results.count == 1 ? singular : plural
   end
 
-  def formatted_format_name(name)
-    alt = settings.format_name_alternatives[name]
-    return alt if alt
-    return "#{name.capitalize}s"
-  end
-
   def include(name)
     begin
       File.open("views/_#{name}.html").read
@@ -112,25 +106,11 @@ module Helpers
   end
 
   def group_by_format(results)
-    results.group_by do |result|
-      humanize_format_name(result.presentation_format)
-    end.sort_by do |presentation_format_name, results|
+    results.group_by(&:humanized_format).sort_by do |presentation_format_name, results|
       sort_order = ['Quick Answers', 'Guides', 'Services', 'Benefits & Credits']
       sort_order.find_index(presentation_format_name) || sort_order.size
     end
   end
-
-  def humanize_format_name(format_name)
-    case format_name
-    when "transaction", "local_transaction", "place" then "Services"
-    when "answer", "calendar", "smart_answer", "custom-application" then "Quick Answers"
-    when "guide" then "Guides"
-    when "programme" then "Benefits & Credits"
-    else
-      format_name.gsub(/[_-]/, ' ').capitalize
-    end
-  end
-
 end
 
 class HelperAccessor
