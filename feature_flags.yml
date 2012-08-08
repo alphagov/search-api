@@ -1,0 +1,4 @@
+development:
+  use_secondary_solr_index: false
+test:
+  use_secondary_solr_index: false

@@ -1,4 +1,5 @@
 # encoding: utf-8
+require "config"
 require "solr_wrapper"
 
 module Helpers
@@ -13,7 +14,9 @@ module Helpers
   end
 
   def capped_search_set_size
-    [@results.count + @secondary_results.count, (settings.top_results + settings.max_more_results)].min
+    total_count = @results.count
+    total_count += @secondary_results.count if settings.feature_flags[:use_secondary_solr_index]
+    [total_count, (settings.top_results + settings.max_more_results)].min
   end
 
   def base_url

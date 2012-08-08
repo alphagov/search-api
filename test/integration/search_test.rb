@@ -168,6 +168,8 @@ class SearchTest < IntegrationTest
   end
 
   def test_should_show_specialist_guidance_filter_when_specialist_results_exist
+    settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
+
     @primary_solr.stubs(:search).returns([sample_document])
     @secondary_solr.stubs(:search).returns([sample_document])
 
@@ -178,6 +180,8 @@ class SearchTest < IntegrationTest
   end
 
   def test_should_include_specialist_results_when_provided_results_count
+    settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
+
     @primary_solr.stubs(:search).returns([sample_document])
     @secondary_solr.stubs(:search).returns([sample_document])
 
@@ -188,6 +192,8 @@ class SearchTest < IntegrationTest
   end
 
   def test_should_show_specialist_results_count_next_to_specialist_filter
+    settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
+
     @primary_solr.stubs(:search).returns([sample_document])
     @secondary_solr.stubs(:search).returns([sample_document])
 
@@ -198,6 +204,8 @@ class SearchTest < IntegrationTest
   end
 
   def test_should_show_specialist_results_after_the_mainstream_results
+    settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
+
     example_specialist_result = {
       "title" => "Back to the Future",
       "description" => "In 1985, Doc Brown invents time travel; in 1955, Marty McFly accidentally prevents his parents from meeting, putting his own existence at stake.",

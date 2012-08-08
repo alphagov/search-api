@@ -16,8 +16,8 @@ require 'solr_wrapper'
 require 'slimmer_headers'
 require 'sinatra/content_for'
 
-require_relative 'helpers'
 require_relative 'config'
+require_relative 'helpers'
 
 def primary_solr
   @primary_solr ||= SolrWrapper.new(DelSolr::Client.new(settings.solr),
@@ -59,7 +59,12 @@ get prefixed_path("/search.?:format?") do
   expires 3600, :public if @query.length < 20
 
   @results = primary_solr.search(@query, params["format_filter"])
-  @secondary_results = secondary_solr.search(@query, params["format_filter"])
+
+  if settings.feature_flags[:use_secondary_solr_index]
+    @secondary_results = secondary_solr.search(@query, params["format_filter"])
+  else
+    @secondary_results = []
+  end
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
