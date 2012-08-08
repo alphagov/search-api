@@ -61,7 +61,7 @@ get prefixed_path("/search.?:format?") do
   @results = primary_solr.search(@query, params["format_filter"])
 
   if settings.feature_flags[:use_secondary_solr_index]
-    @secondary_results = secondary_solr.search(@query, params["format_filter"])
+    @secondary_results = secondary_solr.search(@query, settings.feature_flags[:secondary_solr_param_filter])
   else
     @secondary_results = []
   end
