@@ -156,7 +156,7 @@ class SearchTest < IntegrationTest
     assert_match "\"1+&quot;&gt;&lt;script+src%3Dhttp%3A%2F%2F88.151.219.231%2F4&gt;&lt;%2Fscript&gt;\"", last_response.body
   end
 
-  def test_should_not_show_specialist_guidance_filter_when_no_specialist_results_present
+  def test_should_not_show_secondary_solr_guidance_filter_when_no_secondary_solr_results_present
     @primary_solr.stubs(:search).returns([sample_document, sample_document])
     @secondary_solr.stubs(:search).returns([])
 
@@ -167,7 +167,7 @@ class SearchTest < IntegrationTest
     assert_equal false, last_response.body.include?("Specialist guidance")
   end
 
-  def test_should_show_specialist_guidance_filter_when_specialist_results_exist
+  def test_should_show_secondary_solr_guidance_filter_when_secondary_solr_results_exist
     settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
 
     @primary_solr.stubs(:search).returns([sample_document])
@@ -179,7 +179,7 @@ class SearchTest < IntegrationTest
     assert_equal true, last_response.body.include?("Specialist guidance")
   end
 
-  def test_should_include_specialist_results_when_provided_results_count
+  def test_should_include_secondary_solr_results_when_provided_results_count
     settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
 
     @primary_solr.stubs(:search).returns([sample_document])
@@ -191,7 +191,7 @@ class SearchTest < IntegrationTest
     assert_response_text "2 results"
   end
 
-  def test_should_show_specialist_results_count_next_to_specialist_filter
+  def test_should_show_secondary_solr_results_count_next_to_secondary_solr_filter
     settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
 
     @primary_solr.stubs(:search).returns([sample_document])
@@ -203,10 +203,10 @@ class SearchTest < IntegrationTest
     assert_match "Specialist guidance <span>1</span>", last_response.body
   end
 
-  def test_should_show_specialist_results_after_the_mainstream_results
+  def test_should_show_secondary_solr_results_after_the_primary_solr_results
     settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
 
-    example_specialist_result = {
+    example_secondary_solr_result = {
       "title" => "Back to the Future",
       "description" => "In 1985, Doc Brown invents time travel; in 1955, Marty McFly accidentally prevents his parents from meeting, putting his own existence at stake.",
       "format" => "local_transaction",
@@ -215,7 +215,7 @@ class SearchTest < IntegrationTest
     }
 
     @primary_solr.stubs(:search).returns([sample_document])
-    @secondary_solr.stubs(:search).returns([Document.from_hash(example_specialist_result)])
+    @secondary_solr.stubs(:search).returns([Document.from_hash(example_secondary_solr_result)])
 
     get "/search", {q: "Hey, Doc, we better back up. We don't have enough road to get up to 88.\nRoads? Where we're going, we don't need roads"}
 
