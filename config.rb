@@ -5,7 +5,8 @@ def config_for(kind)
   YAML.load_file(File.expand_path("../#{kind}.yml", __FILE__))
 end
 
-set :feature_flags, config_for(:feature_flags)[ENV["RACK_ENV"]]
+feature_flags = config_for(:feature_flags)[ENV["RACK_ENV"]]
+set :feature_flags, feature_flags.symbolize_keys!
 
 set :router, config_for(:router)
 set :solr, config_for(:solr)[ENV["RACK_ENV"]]
