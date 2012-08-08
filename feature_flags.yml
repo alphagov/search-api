@@ -1,3 +1,7 @@
+production:
+  use_secondary_solr_index: false
+preview:
+  use_secondary_solr_index: false
 development:
   use_secondary_solr_index: false
 test:
