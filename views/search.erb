@@ -21,7 +21,7 @@
                 </p>
 
                 <ul class="result-meta">
-                  <li class="<%= result.presentation_format %>"><%= result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
+                  <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
                 </ul>
               </li>
             <% end %>
@@ -32,7 +32,7 @@
                 <p><%= h result.description %></p>
 
                 <ul class="result-meta">
-                  <li class="<%= result.presentation_format %>"><%= result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
+                  <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
                 </ul>
               </li>
             <% end %>
