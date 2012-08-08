@@ -10,35 +10,35 @@ class BrowseTest < IntegrationTest
   end
 
   def test_browsing_a_valid_section
-    @solr.stubs(:section).returns([sample_document])
+    @primary_solr.stubs(:section).returns([sample_document])
 
     get "/browse/bob"
     assert last_response.ok?
   end
 
   def test_browsing_an_empty_section
-    @solr.stubs(:section).returns([])
+    @primary_solr.stubs(:section).returns([])
 
     get "/browse/bob"
     assert_equal 404, last_response.status
   end
 
   def test_browsing_an_invalid_section
-    @solr.stubs(:section).returns([sample_document])
+    @primary_solr.stubs(:section).returns([sample_document])
 
     get "/browse/And%20this"
     assert_equal 404, last_response.status
   end
 
   def test_browsing_a_section_shows_formatted_section_name
-    @solr.stubs(:section).returns([sample_document])
+    @primary_solr.stubs(:section).returns([sample_document])
 
     get "/browse/this-and-that"
     assert_match /This and that/, last_response.body
   end
 
   def test_browsing_a_section_shows_custom_formatted_section_name
-    @solr.stubs(:section).returns([sample_document])
+    @primary_solr.stubs(:section).returns([sample_document])
 
     get "/browse/life-in-the-uk"
     assert_match /Life in the UK/, last_response.body
@@ -56,7 +56,7 @@ class BrowseTest < IntegrationTest
       "section" => "Life in the UK",
       "link" => "/article-slug"
     )
-    @solr.stubs(:section).returns([doc])
+    @primary_solr.stubs(:section).returns([doc])
 
     get "/browse/section-name"
     response = Nokogiri.parse(last_response.body)
@@ -100,7 +100,7 @@ class BrowseTest < IntegrationTest
       "section" => "Life in the UK",
       "link" => "/article-slug4"
     )
-    @solr.stubs(:section).returns([doc1, doc2, doc3, doc4])
+    @primary_solr.stubs(:section).returns([doc1, doc2, doc3, doc4])
 
     get "/browse/section-name"
     response = Nokogiri.parse(last_response.body)
@@ -116,7 +116,7 @@ class BrowseTest < IntegrationTest
       "title" => "Item 1",
       "format" => "answer"
     )
-    @solr.stubs(:section).returns([doc])
+    @primary_solr.stubs(:section).returns([doc])
 
     get "/browse/section-name"
 
@@ -126,8 +126,8 @@ class BrowseTest < IntegrationTest
   end
 
   def test_browsing_section_displays_other_sections
-    @solr.stubs(:section).returns([sample_document])
-    @solr.stubs(:facet).with('section').returns([Section.new('bar'), Section.new('section-name'), Section.new('zulu')])
+    @primary_solr.stubs(:section).returns([sample_document])
+    @primary_solr.stubs(:facet).with('section').returns([Section.new('bar'), Section.new('section-name'), Section.new('zulu')])
 
     get "/browse/section-name"
 
@@ -145,7 +145,7 @@ class BrowseTest < IntegrationTest
       "link" => "/foo?bar=baz&foo=bar"
     })
 
-    @solr.stubs(:section).returns([doc])
+    @primary_solr.stubs(:section).returns([doc])
     PopularItems.any_instance.stubs(:select_from).returns([doc])
 
     # Slimmer will raise xml parsing errors if there are unescaped entities
@@ -157,36 +157,38 @@ class BrowseTest < IntegrationTest
   end
 
   def test_should_put_browse_in_section_nav_for_slimmer
-    @solr.stubs(:facet).returns([])
+    @primary_solr.stubs(:facet).returns([])
     get "/browse"
 
     assert_equal "section nav", last_response.headers["X-Slimmer-Section"]
   end
 
   def test_should_put_section_in_section_nav_for_slimmer
-    @solr.stubs(:section).returns([sample_document])
+    @primary_solr.stubs(:section).returns([sample_document])
     get "/browse/section-name"
 
     assert_equal "section nav", last_response.headers["X-Slimmer-Section"]
   end
 
   def test_browsing_section_list
-    @solr.stubs(:facet).returns([sample_section])
+    @primary_solr.stubs(:facet).returns([sample_section])
 
     get "/browse"
     assert last_response.ok?
   end
 
   def test_section_list_always_renders
-    @solr.stubs(:facet).returns([])
+    @primary_solr.stubs(:facet).returns([])
 
     get "/browse"
     assert last_response.ok?
   end
 
   def test_should_provide_list_of_sections_via_json
-    @solr.stubs(:facet).returns([sample_section])
+    @primary_solr.stubs(:facet).returns([sample_section])
+
     get '/browse.json'
+
     assert last_response.ok?
     assert_match 'application/json', last_response.headers["Content-Type"]
     assert JSON.parse(last_response.body)
@@ -200,8 +202,11 @@ class BrowseTest < IntegrationTest
       "section" => "Life in the UK",
       "link" => "/article-slug"
     )
-    @solr.stubs(:section).returns([doc])
+
+    @primary_solr.stubs(:section).returns([doc])
+
     get '/browse/bob.json'
+
     assert last_response.ok?
     assert_match 'application/json', last_response.headers["Content-Type"]
     assert JSON.parse(last_response.body)

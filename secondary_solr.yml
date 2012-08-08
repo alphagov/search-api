@@ -1,0 +1,8 @@
+development:
+  :server: localhost
+  :path: "/solr/whitehall-rummager"
+  :port: 8983
+test:
+  :server: solr-test-server
+  :path: "/solr/whitehall-rummager"
+  :port: 9999

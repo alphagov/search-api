@@ -16,13 +16,19 @@ require 'solr_wrapper'
 require 'slimmer_headers'
 require 'sinatra/content_for'
 
-require_relative 'helpers'
 require_relative 'config'
+require_relative 'helpers'
 
-def solr
-  @solr ||= SolrWrapper.new(DelSolr::Client.new(settings.solr),
-                            settings.recommended_format,
-                            logger)
+def primary_solr
+  @primary_solr ||= SolrWrapper.new(DelSolr::Client.new(settings.solr),
+                                       settings.recommended_format,
+                                       logger)
+end
+
+def secondary_solr
+  @secondary_solr ||= SolrWrapper.new(DelSolr::Client.new(settings.secondary_solr),
+                                      settings.recommended_format,
+                                      logger)
 end
 
 helpers do
@@ -51,7 +57,14 @@ get prefixed_path("/search.?:format?") do
   end
 
   expires 3600, :public if @query.length < 20
-  @results = solr.search(@query, params["format_filter"])
+
+  @results = primary_solr.search(@query, params["format_filter"])
+
+  if settings.feature_flags[:use_secondary_solr_index]
+    @secondary_results = secondary_solr.search(@query, settings.feature_flags[:secondary_solr_param_filter])
+  else
+    @secondary_results = []
+  end
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
@@ -81,7 +94,7 @@ get prefixed_path("/preload-autocomplete") do
   # of all terms.
   expires 86400, :public
   content_type :json
-  results = solr.autocomplete_cache rescue []
+  results = primary_solr.autocomplete_cache rescue []
   JSON.dump(results.map { |r| r.to_hash })
 end
 
@@ -96,7 +109,7 @@ get prefixed_path("/autocomplete") do
 
   expires 3600, :public if query.length < 5
 
-  results = solr.complete(query, params["format_filter"]) rescue []
+  results = primary_solr.complete(query, params["format_filter"]) rescue []
   JSON.dump(results.map { |r| r.to_hash.merge(
     presentation_format: r.presentation_format,
     humanized_format: r.humanized_format
@@ -107,7 +120,7 @@ get prefixed_path("/sitemap.xml") do
   expires 86400, :public
   # Site maps can have up to 50,000 links in them.
   # We use one for / so we can have up to 49,999 others.
-  documents = solr.all_documents limit: 49_999
+  documents = primary_solr.all_documents limit: 49_999
   builder do |xml|
     xml.instruct!
     xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
@@ -129,7 +142,7 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse.?:format?") do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
-    @results = solr.facet('section')
+    @results = primary_solr.facet('section')
     @page_section = "Browse"
     @page_section_link = "/browse"
     @page_title = "Browse | GOV.UK Beta (Test)"
@@ -144,7 +157,7 @@ if settings.router[:path_prefix].empty?
   def assemble_section_details(section_slug)
     section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
     halt 404 unless section == params[:section]
-    @ungrouped_results = solr.section(section)
+    @ungrouped_results = primary_solr.section(section)
     halt 404 if @ungrouped_results.empty?
     @section = Section.new(section)
     @page_section = formatted_section_name(@section.slug)
@@ -190,7 +203,7 @@ if settings.router[:path_prefix].empty?
     else
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
       @popular = popular_items.select_from(params[:section], @ungrouped_results)
-      @sections = (solr.facet('section') || []).reject {|a| a.slug == @section.slug }
+      @sections = (primary_solr.facet('section') || []).reject {|a| a.slug == @section.slug }
       @page_title = "#{formatted_section_name @section.slug} | GOV.UK Beta (Test)"
       erb(:section)
     end
@@ -211,22 +224,22 @@ post prefixed_path("/documents") do
 
   better_documents = boost_documents(documents, boosts)
 
-  simple_json_result(solr.add(better_documents))
+  simple_json_result(primary_solr.add(better_documents))
 end
 
 post prefixed_path("/commit") do
-  simple_json_result(solr.commit)
+  simple_json_result(primary_solr.commit)
 end
 
 get prefixed_path("/documents/*") do
-  document = solr.get(params["splat"].first)
+  document = primary_solr.get(params["splat"].first)
   halt 404 unless document
   content_type :json
   JSON.dump document.to_hash
 end
 
 delete prefixed_path("/documents/*") do
-  simple_json_result(solr.delete(params["splat"].first))
+  simple_json_result(primary_solr.delete(params["splat"].first))
 end
 
 post prefixed_path("/documents/*") do
@@ -241,7 +254,7 @@ post prefixed_path("/documents/*") do
       "Amendments require application/x-www-form-urlencoded data"
     )
   end
-  document = solr.get(params["splat"].first)
+  document = primary_solr.get(params["splat"].first)
   halt 404 unless document
   text_error "Cannot change document links" if request.POST.include? 'link'
 
@@ -253,14 +266,14 @@ post prefixed_path("/documents/*") do
       text_error "Unrecognised field '#{key}'"
     end
   end
-  simple_json_result(solr.add([document]))
+  simple_json_result(primary_solr.add([document]))
 end
 
 delete prefixed_path("/documents") do
   if params['delete_all']
-    action = solr.delete_all
+    action = primary_solr.delete_all
   else
-    action = solr.delete(params["link"])
+    action = primary_solr.delete(params["link"])
   end
   simple_json_result(action)
 end
