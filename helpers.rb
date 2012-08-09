@@ -14,8 +14,7 @@ module Helpers
   end
 
   def capped_search_set_size
-    total_count = @results.count
-    total_count += @secondary_results.count if settings.feature_flags[:use_secondary_solr_index]
+    total_count = @total_results
     [total_count, (settings.top_results + settings.max_more_results)].min
   end
 
