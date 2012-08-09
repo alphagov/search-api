@@ -13,7 +13,7 @@
       <div class="results">
         <div class="results-wrapper">
           <ul class="results-list">
-            <% non_recommended_results.each do |result| %>
+            <% @results.each do |result| %>
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
                 <p class="search-result-title"><a href="<%= result.link %>" title= "View <%=h result.title %>"><%=h result.title %></a></p>
                 <p>
@@ -45,7 +45,7 @@
 
           <ul>
             <li data-filter="*" class="active"><a href="#">All results <span><%= capped_search_set_size %></span><span class="visuallyhidden"> results</span></a></li>
-            <% non_recommended_results.group_by(&:section).sort_by { |section, results_in_section|
+            <% @results.group_by(&:section).sort_by { |section, results_in_section|
                  results_in_section.size
                }.reverse_each do |section, results_in_section| %>
               <% next unless section %>
