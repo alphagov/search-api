@@ -58,13 +58,18 @@ get prefixed_path("/search.?:format?") do
 
   expires 3600, :public if @query.length < 20
 
-  @results = primary_solr.search(@query, params["format_filter"])
+  results = primary_solr.search(@query, params["format_filter"])
 
   if settings.feature_flags[:use_secondary_solr_index]
-    @secondary_results = secondary_solr.search(@query, settings.feature_flags[:secondary_solr_param_filter])
+    secondary_results = secondary_solr.search(@query, settings.feature_flags[:secondary_solr_param_filter])
   else
-    @secondary_results = []
+    secondary_results = []
   end
+
+  @secondary_results = secondary_results.take(5)
+  @more_secondary_results = secondary_results.length > 5
+  @results = results.take(50 - @secondary_results.length)
+  @total_results = @results.length + @secondary_results.length
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
