@@ -225,4 +225,45 @@ class SearchTest < IntegrationTest
     assert_match "<p>In 1985, Doc Brown invents time travel; in 1955, Marty McFly accidentally prevents his parents from meeting, putting his own existence at stake.</p>", last_response.body
     assert_match "<a href=\"/browse/de-lorean\">De lorean</a><", last_response.body
   end
+
+  def test_should_limit_results
+    settings.stubs(:feature_flags).returns({use_secondary_solr_index: true})
+
+    example_secondary_solr_result = {
+      "title" => "Back to the Future",
+      "description" => "In 1985, Doc Brown invents time travel; in 1955, Marty McFly accidentally prevents his parents from meeting, putting his own existence at stake.",
+      "format" => "local_transaction",
+      "section" => "de-lorean",
+      "link" => "/1-21-gigawatts"
+    }
+
+    @primary_solr.stubs(:search).returns(Array.new(75, sample_document))
+    @secondary_solr.stubs(:search).returns([])
+
+    get :search, {q: "Test"}
+
+    assert_response_text "50 results"
+    assert_match "<span>50</span>", last_response.body
+  end
+
+  def test_should_only_show_limited_main_and_limited_secondary_results
+    settings.stubs(:feature_flags).returns({use_secondary_solr_index: true})
+
+    example_secondary_solr_result = {
+      "title" => "Back to the Future",
+      "description" => "In 1985, Doc Brown invents time travel; in 1955, Marty McFly accidentally prevents his parents from meeting, putting his own existence at stake.",
+      "format" => "local_transaction",
+      "section" => "de-lorean",
+      "link" => "/1-21-gigawatts"
+    }
+
+    @primary_solr.stubs(:search).returns(Array.new(52, sample_document))
+    @secondary_solr.stubs(:search).returns(Array.new(7, Document.from_hash(example_secondary_solr_result)))
+
+    get :search, {q: "Test"}
+
+    assert_response_text "50 results"
+    assert_match "<span>45</span>", last_response.body # TODO: how do I test the life in the UK thing?
+    assert_match "Specialist guidance <span>5</span>", last_response.body
+  end
 end
