@@ -1,5 +1,6 @@
 require_relative "env"
 require 'active_support/core_ext/hash/keys'
+require 'exception_mailer'
 
 def config_for(kind)
   YAML.load_file(File.expand_path("../#{kind}.yml", __FILE__))
