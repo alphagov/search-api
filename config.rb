@@ -44,6 +44,12 @@ configure :development do
 end
 
 configure :production do
+  if File.exist?("aws_secrets.yml")
+    disable :show_exceptions
+    use ExceptionMailer, YAML.load_file("aws_secrets.yml"),
+        to: ['govuk-exceptions@digital.cabinet-office.gov.uk', 'govuk@gofreerange.com'],
+        from: '"Winston Smith-Churchill" <winston@alphagov.co.uk>'
+  end
   use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host, cache_templates: true
 end
 

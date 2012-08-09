@@ -18,6 +18,8 @@ gem 'gds-api-adapters', '~> 0.0.48'
 gem 'rack', '1.3.5'
 gem 'plek', '0.1.23'
 gem 'sinatra-content-for', '0.1'
+gem 'aws-ses'
+
 
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'

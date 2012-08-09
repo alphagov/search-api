@@ -15,6 +15,8 @@ require 'utils'
 require 'solr_wrapper'
 require 'slimmer_headers'
 require 'sinatra/content_for'
+require 'exception_mailer'
+
 
 require_relative 'config'
 require_relative 'helpers'
