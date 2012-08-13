@@ -5,6 +5,7 @@ group :router do
   gem 'router-client', '2.0.3', :require => 'router/client'
 end
 
+gem "unicorn"
 gem "sinatra"
 gem "delsolr", :git => "git://github.com/alphagov/delsolr.git"
 gem 'rake', '0.9.2'
@@ -17,6 +18,8 @@ gem 'gds-api-adapters', '~> 0.0.48'
 gem 'rack', '1.3.5'
 gem 'plek', '0.1.23'
 gem 'sinatra-content-for', '0.1'
+gem 'aws-ses'
+
 
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'

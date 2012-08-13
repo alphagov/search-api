@@ -18,6 +18,8 @@ module IntegrationFixtures
       "title" => "TITLE1",
       "description" => "DESCRIPTION",
       "format" => "local_transaction",
+      "humanized_format" => "Services",
+      "presentation_format" => "local_transaction",
       "section" => "life-in-the-uk",
       "link" => "/URL"
     }
@@ -55,7 +57,13 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def setup
-    @solr = stub_everything("Solr wrapper")
-    SolrWrapper.stubs(:new).returns(@solr)
+    @primary_solr = stub_everything("Mainstream Solr wrapper")
+    @secondary_solr = stub_everything("Whitehall Solr wrapper")
+
+    DelSolr::Client.stubs(:new).with(settings.solr).returns(:mainstream_client)
+    DelSolr::Client.stubs(:new).with(settings.secondary_solr).returns(:whitehall_client)
+
+    SolrWrapper.stubs(:new).with(:mainstream_client, anything, anything).returns(@primary_solr)
+    SolrWrapper.stubs(:new).with(:whitehall_client, anything, anything).returns(@secondary_solr)
   end
 end

@@ -5,7 +5,7 @@
       <fieldset>
         <legend class="visuallyhidden">Search gov.uk</legend>
         <label for="search-main" ><%= capped_search_set_size %> <%= pluralize("result", "results") %> found for </label>
-        <input type="search" name="q" value="<%= @query %>" id="search-main" /> <input type="submit" value="Search" class="button">
+        <input type="search" name="q" value="<%= h @query %>" id="search-main" /> <input type="submit" value="Search" class="button">
       </fieldset>
     </form>
 
@@ -13,7 +13,7 @@
       <div class="results">
         <div class="results-wrapper">
           <ul class="results-list">
-            <% non_recommended_results.each do |result| %>
+            <% @results.each do |result| %>
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
                 <p class="search-result-title"><a href="<%= result.link %>" title= "View <%=h result.title %>"><%=h result.title %></a></p>
                 <p>
@@ -21,7 +21,18 @@
                 </p>
 
                 <ul class="result-meta">
-                  <li class="<%= result.presentation_format %>"><%= formatted_format_name(result.presentation_format) %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
+                  <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
+                </ul>
+              </li>
+            <% end %>
+
+            <% @secondary_results.each do |result| %>
+              <li class="section-specialist type-<%= result.presentation_format %>">
+                <p class="search-result-title"><a href="<%= result.link %>" title= "View <%=h result.title %>"><%=h result.title %></a></p>
+                <p><%= h result.description %></p>
+
+                <ul class="result-meta">
+                  <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
                 </ul>
               </li>
             <% end %>
@@ -34,9 +45,14 @@
 
           <ul>
             <li data-filter="*" class="active"><a href="#">All results <span><%= capped_search_set_size %></span><span class="visuallyhidden"> results</span></a></li>
-            <% non_recommended_results.group_by(&:section).sort_by { |section, results_in_section| results_in_section.size }.reverse_each do |section, results_in_section| %>
+            <% @results.group_by(&:section).sort_by { |section, results_in_section|
+                 results_in_section.size
+               }.reverse_each do |section, results_in_section| %>
               <% next unless section %>
               <li data-filter="section-<%= section %>"><a href="#"><%= formatted_section_name(section) %> <span><%= results_in_section.size %></span><span class="visuallyhidden"> results</span></a></li>
+            <% end %>
+            <% if not @secondary_results.empty? %>
+              <li data-filter="section-specialist"><a href="#">Specialist guidance <span><%= @secondary_results.count %></span><span class="visuallyhidden"> results</span></a></li>
             <% end %>
           </ul>
       </aside>

@@ -123,6 +123,34 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "guide", document.presentation_format
   end
 
+  def test_takes_humanized_format_from_settings_if_present
+    hash = {:format => "map"}
+
+    settings.stubs(:format_name_alternatives).returns("map" => "Atlas")
+
+    document = Document.from_hash(hash)
+    assert_equal "Atlas", document.humanized_format
+  end
+
+  def test_uses_presentation_format_to_find_alternative_format_name
+    hash = {:format => "map"}
+
+    settings.stubs(:format_name_alternatives).returns("plan" => "Atlas")
+
+    document = Document.from_hash(hash)
+    document.stubs(:presentation_format).returns("plan")
+    assert_equal "Atlas", document.humanized_format
+  end
+
+  def test_generates_humanized_format_if_not_present_in_settings
+    hash = {:format => "ocean_map"}
+
+    settings.stubs(:format_name_alternatives).returns({})
+
+    document = Document.from_hash(hash)
+    assert_equal "Ocean maps", document.humanized_format
+  end
+
   def self.assert_field_exported_to_delsolr_collaborator(field_name)
     define_method "test_should_export_#{field_name}_to_delsolr_collaborator" do
       document = Document.new
@@ -228,7 +256,7 @@ class DocumentTest < Test::Unit::TestCase
       "title" => "TITLE",
       "description" => "DESCRIPTION",
       "format" => "guide",
-      "link" => "/an-example-guide",
+      "link" => "/an-example-guide"
     }
 
     document = Document.from_hash(hash)

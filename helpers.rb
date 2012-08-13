@@ -1,4 +1,5 @@
 # encoding: utf-8
+require "config"
 require "solr_wrapper"
 
 module Helpers
@@ -13,7 +14,8 @@ module Helpers
   end
 
   def capped_search_set_size
-    [@results.count, (settings.top_results + settings.max_more_results)].min
+    total_count = @total_results
+    [total_count, (settings.top_results + settings.max_more_results)].min
   end
 
   def base_url
@@ -40,12 +42,6 @@ module Helpers
 
   def pluralize(singular, plural)
     @results.count == 1 ? singular : plural
-  end
-
-  def formatted_format_name(name)
-    alt = settings.format_name_alternatives[name]
-    return alt if alt
-    return "#{name.capitalize}s"
   end
 
   def include(name)
@@ -112,25 +108,11 @@ module Helpers
   end
 
   def group_by_format(results)
-    results.group_by do |result|
-      humanize_format_name(result.presentation_format)
-    end.sort_by do |presentation_format_name, results|
-      sort_order = ['Quick Answers', 'Guides', 'Services', 'Benefits & Credits']
+    results.group_by(&:humanized_format).sort_by do |presentation_format_name, results|
+      sort_order = ['Quick answers', 'Guides', 'Services', 'Benefits & credits']
       sort_order.find_index(presentation_format_name) || sort_order.size
     end
   end
-
-  def humanize_format_name(format_name)
-    case format_name
-    when "transaction", "local_transaction", "place" then "Services"
-    when "answer", "calendar", "smart_answer", "custom-application" then "Quick Answers"
-    when "guide" then "Guides"
-    when "programme" then "Benefits & Credits"
-    else
-      format_name.gsub(/[_-]/, ' ').capitalize
-    end
-  end
-
 end
 
 class HelperAccessor

@@ -1,4 +1,5 @@
 require "delsolr"
+require "active_support/inflector"
 
 class Link
   def self.auto_keys(*names)
@@ -97,19 +98,30 @@ class Document < Link
     }
   end
 
-  FORMAT_TRANSLATION = {
+  PRESENTATION_FORMAT_TRANSLATION = {
     "planner" => "answer",
     "smart_answer" => "answer",
     "calculator" => "answer",
     "licence_finder" => "answer",
-    "custom-application" => "answer"
+    "custom_application" => "answer",
+    "calendar" => "answer"
   }
 
   def presentation_format
-    FORMAT_TRANSLATION.fetch(format, format)
+    PRESENTATION_FORMAT_TRANSLATION.fetch(normalized_format, normalized_format)
+  end
+
+  def humanized_format
+    settings.format_name_alternatives[presentation_format] || presentation_format.humanize.pluralize
   end
 
   def highlight
     @highlight || description
+  end
+
+  private
+
+  def normalized_format
+    format ? format.gsub("-", "_") : 'unknown'
   end
 end
