@@ -14,7 +14,6 @@
         <div class="results-wrapper">
           <% if @results.any? %>
             <div class="results-block">
-              <h2>GOV.UK Results</h2>
               <ul class="results-list">
               <% @results.each do |result| %>
                 <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
@@ -32,7 +31,7 @@
 
           <% if @secondary_results.any? %>
             <div class="results-block">
-              <h2>Elsewhere on Specialist guidance</h2>
+              <h2>Specialist guidance</h2>
               <ul class="results-list">
               <% @secondary_results.each do |result| %>
                 <li class="section-specialist type-<%= result.presentation_format %>">
