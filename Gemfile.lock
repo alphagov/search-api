@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/alphagov/delsolr.git
+  remote: https://github.com/alphagov/delsolr.git
   revision: d31ce040d79ec43119c1bd0d856bfbc35f9e32b3
   specs:
     delsolr (0.1.8)
