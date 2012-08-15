@@ -1,23 +1,21 @@
-<section id="content" role="main" class="group ancillary section-page">
-  <div class="article-container">
-    <header class="page-header group">
-  		<hgroup>
-  			<h1>Browse GOV.UK</h1>
-  		</hgroup>
-  	</header>
+<section id="content" role="main" class="group sections-page">
+  <header class="page-header group">
+    <hgroup>
+      <h1>All sections</h1>
+    </hgroup>
+  </header>
 
-    <div class="browse-sections">
-      <dl>
-        <% @results.each do |section| %>
-          <dt>
-            <a href="<%= section.path %>"><%=h formatted_section_name section.slug %></a>
-          </dt>
-          <dd>
-            <%= include section.slug %>
-          </dd>
-        <% end %>
-      </dl>
-    </div>
+  <div class="browse-sections">
+    <dl>
+      <% @results.each do |section| %>
+        <dt>
+          <a href="<%= section.path %>"><%=h formatted_section_name section.slug %></a>
+        </dt>
+        <dd>
+          <%= include section.slug %>
+        </dd>
+      <% end %>
+    </dl>
   </div>
 </section>
 
