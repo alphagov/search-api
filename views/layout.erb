@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <title><%=h @page_title %></title>
-  <meta content="<%=h @page_section %>" name="x-section-name">
-  <meta content="<%=h @page_section_link %>" name="x-section-link">
+  <%- if @page_section and @page_section_link -%>
+    <meta content="<%=h @page_section %>" name="x-section-name">
+    <meta content="<%=h @page_section_link %>" name="x-section-link">
+  <%- end -%>
   <% yield_content :head %>
 </head>
 <%# The citizen class (what proposition returns) is going to be deprecated, to be replaced with mainstream. %>

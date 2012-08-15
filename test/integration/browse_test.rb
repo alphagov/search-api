@@ -177,6 +177,16 @@ class BrowseTest < IntegrationTest
     assert last_response.ok?
   end
 
+  def test_browsing_section_list_should_not_add_item_to_breadcrumb_trail
+    @primary_solr.stubs(:facet).returns([sample_section])
+
+    get "/browse"
+
+    response = Nokogiri.parse(last_response.body)
+    assert response.at_css("meta[name=x-section-link]").nil?
+    assert response.at_css("meta[name=x-section-name]").nil?
+  end
+
   def test_section_list_always_renders
     @primary_solr.stubs(:facet).returns([])
 

@@ -149,8 +149,6 @@ if settings.router[:path_prefix].empty?
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
     @results = primary_solr.facet('section')
-    @page_section = "Browse"
-    @page_section_link = "/browse"
     @page_title = "Browse | GOV.UK Beta (Test)"
     if request.accept.include?("application/json") or params['format'] == 'json'
       content_type :json
