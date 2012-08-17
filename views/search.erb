@@ -19,11 +19,7 @@
               <% else %>
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
               <% end %>
-              <% if result.presentation_format == "recommended_link" %>
-                <p class="search-result-title"><a href="<%= result.link %>" title="View <%=h result.title %>" rel="external"><%=h result.title %></a></p>
-              <% else %>
-                <p class="search-result-title"><a href="<%= result.link %>" title="View <%=h result.title %>"><%=h result.title %></a></p>
-              <% end %>
+                <p class="search-result-title"><a href="<%= result.link %>" title="View <%=h result.title %>"<% if result.presentation_format == "recommended_link" %> rel="external"<% end %>><%=h result.title %></a></p>
                 <p><%= h result.description %></p>
 
                 <ul class="result-meta">
