@@ -24,7 +24,7 @@
 
                 <ul class="result-meta">
                   <% if result.presentation_format == "recommended_link" %>
-                  <li class="guide">External site</li>
+                  <li>External site</li>
                   <% else %>
                   <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li>
                   <% end %>
