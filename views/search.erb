@@ -14,11 +14,13 @@
         <div class="results-wrapper">
           <ul class="results-list">
             <% @results.each do |result| %>
+              <% if result.presentation_format == "recommended_link" %>
+              <li class="section-<%= result.section %> type-guide external">
+              <% else %>
               <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
-                <p class="search-result-title"><a href="<%= result.link %>" title= "View <%=h result.title %>"><%=h result.title %></a></p>
-                <p>
-                  <%= h result.description %>
-                </p>
+              <% end %>
+                <p class="search-result-title"><a href="<%= result.link %>" title="View <%=h result.title %>"<% if result.presentation_format == "recommended_link" %> rel="external"<% end %>><%=h result.title %></a></p>
+                <p><%= h result.description %></p>
 
                 <ul class="result-meta">
                   <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>

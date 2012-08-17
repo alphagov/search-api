@@ -266,4 +266,24 @@ class SearchTest < IntegrationTest
     assert_match "<span>45</span>", last_response.body # TODO: how do I test the life in the UK thing?
     assert_match "Specialist guidance <span>5</span>", last_response.body
   end
+
+  def test_should_show_external_links_with_a_separate_list_class
+    external_document = Document.from_hash({
+      "title" => "A title",
+      "description" => "This is a description",
+      "format" => "recommended-link",
+      "link" => "http://twitter.com",
+      "section" => "driving"
+    })
+
+    @primary_solr.stubs(:search).returns([external_document])
+
+    get :search, {q: "bleh"}
+
+    assert last_response.ok?
+    assert_response_text "1 result"
+    assert_match "Driving <span>1</span>", last_response.body
+    assert_match "<li class=\"section-driving type-guide external\">", last_response.body
+    assert_match "rel=\"external\"", last_response.body
+  end
 end
