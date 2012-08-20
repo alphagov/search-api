@@ -9,7 +9,7 @@ gem "unicorn"
 gem "sinatra"
 gem "delsolr", :git => "https://github.com/alphagov/delsolr.git"
 gem 'rake', '0.9.2'
-gem 'slimmer', '1.2.3'
+gem 'slimmer', '1.2.4'
 gem 'erubis'
 gem 'json'
 gem 'activesupport', '~> 3.1.0'
