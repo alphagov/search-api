@@ -21,17 +21,11 @@
               <% end %>
                 <p class="search-result-title"><a href="<%= result.link %>" title="View <%=h result.title %>"<% if result.presentation_format == "recommended_link" %> rel="external"<% end %>><%=h result.title %></a></p>
                 <p><%= h result.description %></p>
-
+                <% if result.presentation_format == "recommended_link" %>
                 <ul class="result-meta">
-                  <% if result.presentation_format == "recommended_link" %>
                   <li>External site</li>
-                  <% else %>
-                  <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li>
-                  <% end %>
-                  <% if result.section %>
-                  <li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li>
-                  <% end %>
                 </ul>
+                <% end %>
               </li>
             <% end %>
 
