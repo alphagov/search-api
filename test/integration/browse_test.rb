@@ -105,8 +105,8 @@ class BrowseTest < IntegrationTest
     get "/browse/section-name"
     response = Nokogiri.parse(last_response.body)
 
-    assert_match /The Popular Quick Answer/, response.css("#popular .results-list li:first-child a").inner_text
-    assert_match /The Popular Guide/, response.css("#popular .results-list li:nth-child(2) a").inner_text
+    assert_match /The Popular Guide/, response.css("#popular .results-list li:first-child a").inner_text
+    assert_match /The Popular Quick Answer/, response.css("#popular .results-list li:nth-child(2) a").inner_text
     assert_match /The Popular Service/, response.css("#popular .results-list li:nth-child(3) a").inner_text
     assert_match /The Popular Programme/, response.css("#popular .results-list li:last-child a").inner_text
   end
