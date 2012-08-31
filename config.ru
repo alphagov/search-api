@@ -24,15 +24,10 @@ set :protection, :except => [:path_traversal, :escaped_params, :frame_options]
 
 enable :dump_errors, :raise_errors
 
-if in_development
-  Dir.mkdir 'log' unless Dir.exists? 'log'
+unless in_development
+  log = File.new("log/sinatra.log", "a")
+  STDOUT.reopen(log)
+  STDERR.reopen(log)
 end
-
-log = File.new("log/sinatra.log", "a")
-if in_development
-  log.sync = true
-end
-STDOUT.reopen(log)
-STDERR.reopen(log)
 
 run Sinatra::Application
