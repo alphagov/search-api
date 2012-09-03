@@ -20,13 +20,6 @@ gem 'plek', '0.1.23'
 gem 'sinatra-content-for', '0.1'
 gem 'aws-ses'
 
-
-if ENV['GOVSPEAK_DEV']
-  gem 'govspeak', path: '../govspeak'
-else
-  gem 'govspeak', '~> 0.8.15'
-end
-
 group :test do
   gem "simplecov"
   gem "simplecov-rcov"
