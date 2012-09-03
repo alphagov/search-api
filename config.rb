@@ -12,6 +12,8 @@ set :feature_flags, feature_flags.symbolize_keys!
 set :router, config_for(:router)
 set :solr, config_for(:solr)[ENV["RACK_ENV"]]
 set :secondary_solr, config_for(:secondary_solr)[ENV["RACK_ENV"]]
+set :elasticsearch, config_for(:elasticsearch)[ENV["RACK_ENV"]]
+set :search_backend, :elasticsearch
 set :slimmer_headers, config_for(:slimmer_headers)
 
 panopticon_api_credentials = config_for(:panopticon_api_credentials)[ENV["RACK_ENV"]]

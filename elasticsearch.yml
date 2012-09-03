@@ -1,0 +1,6 @@
+development:
+  baseurl: "http://localhost:9200/"
+  indexname: "rummager"
+test:
+  baseurl: "http://localhost:9200/"
+  indexname: "rummager-test"

@@ -13,6 +13,7 @@ require 'document'
 require 'section'
 require 'utils'
 require 'solr_wrapper'
+require 'elasticsearch_wrapper'
 require 'slimmer_headers'
 require 'sinatra/content_for'
 
@@ -30,6 +31,10 @@ def secondary_solr
   @secondary_solr ||= SolrWrapper.new(DelSolr::Client.new(settings.secondary_solr),
                                       settings.recommended_format,
                                       logger)
+end
+
+def elasticsearch
+  @elasticsearch ||= ElasticsearchWrapper.new(settings.elasticsearch, logger)
 end
 
 helpers do

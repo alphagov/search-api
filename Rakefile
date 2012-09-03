@@ -1,4 +1,6 @@
 require "rake/testtask"
+require "rest-client"
+require "json"
 
 Rake::TestTask.new do |t|
   t.libs << "test"
@@ -72,6 +74,21 @@ namespace :router do
       puts "Not registering whitehall-search with router"
     else
       raise "Unexpected app_id '#{settings.router[:app_id]}' in router.yml"
+    end
+  end
+end
+
+namespace :rummager do
+  desc "Put the rummager mapping"
+  task :put_mapping do
+    config = YAML.load_file(File.expand_path("../elasticsearch.yml", __FILE__))["development"]
+    schema = YAML.load_file(File.expand_path("../elasticsearch_schema.yml", __FILE__))
+
+    schema['mapping'].each do |key, value|
+      url = "#{config['baseurl']}#{config['indexname']}/#{key}/_mapping"
+      puts url
+      puts({key => value}.to_json)
+      RestClient.put(url, {key => value}.to_json)
     end
   end
 end

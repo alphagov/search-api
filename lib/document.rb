@@ -49,6 +49,21 @@ class Link
     }
   end
 
+  def elasticsearch_export()
+    Hash.new.tap do |doc|
+      self.class.auto_keys.each do |key|
+        value = get(key)
+        if value.is_a?(Array)
+          value = value.map {|v| v.elasticsearch_export }
+        end
+        unless value.nil? or (value.respond_to?(:empty?) and value.empty?)
+          doc[key] = value
+        end
+      end
+      doc[:_type] = "edition"
+    end
+  end
+
   def to_hash
     Hash[self.class.auto_keys.map { |key|
       value = get(key)
