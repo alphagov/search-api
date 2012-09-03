@@ -284,6 +284,7 @@ class DocumentTest < Test::Unit::TestCase
 
   def test_should_skip_missing_fields_in_elasticsearch
     hash = {
+        "_type" => "edition",
         "title" => "TITLE",
         "description" => "DESCRIPTION",
         "format" => "guide",
