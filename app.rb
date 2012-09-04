@@ -15,6 +15,7 @@ require 'utils'
 require 'solr_wrapper'
 require 'slimmer_headers'
 require 'sinatra/content_for'
+require 'gds_api/content_api'
 
 
 require_relative 'config'
@@ -207,7 +208,13 @@ if settings.router[:path_prefix].empty?
     else
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
       @popular = popular_items.select_from(params[:section], @ungrouped_results)
-      @sections = (primary_solr.facet('section') || []).reject {|a| a.slug == @section.slug }
+      raw_sections = GdsApi::ContentApi.new(Plek.current_env, timeout: 10).sections.to_hash["results"]
+      raw_root_sections = raw_sections.select { |s| s["details"]["parent"].nil? } # TODO maybe replace with API method? e.g. ?root_only=true
+      raw_root_sections = raw_root_sections.sort { |a, b| a["title"] <=> b["title"] }
+      @sections = raw_root_sections.reject do |a| 
+        slug = a["id"].split("/")[-1].gsub(".json", "")
+        slug == @section.slug 
+      end
       @page_title = "#{formatted_section_name @section.slug} | GOV.UK Beta (Test)"
       erb(:section)
     end

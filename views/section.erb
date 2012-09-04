@@ -72,7 +72,7 @@
 
       <ul>
         <% @sections.each do |section| %>
-          <li><a href="<%= section.path %>"><%= h formatted_section_name(section.name) %></a></li>
+          <li><a href="<%= section["web_url"] %>"><%= h section["title"] %></a></li>
         <% end %>
       </ul>
     </div>

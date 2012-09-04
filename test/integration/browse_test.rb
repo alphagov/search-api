@@ -1,12 +1,17 @@
 require "integration_test_helper"
 require "popular_items"
+require 'gds_api/test_helpers/content_api'
 
 class BrowseTest < IntegrationTest
+  include GdsApi::TestHelpers::ContentApi
+
   def setup
     super
     mock_panopticon_api = mock("mock_panopticon_api")
     mock_panopticon_api.stubs(:curated_lists).returns({})
     GdsApi::Panopticon.stubs(:new).returns(mock_panopticon_api)
+
+    content_api_has_root_sections([])
   end
 
   def test_browsing_a_valid_section
@@ -32,7 +37,7 @@ class BrowseTest < IntegrationTest
 
   def test_browsing_a_section_shows_formatted_section_name
     @primary_solr.stubs(:section).returns([sample_document])
-
+    
     get "/browse/this-and-that"
     assert_match /This and that/, last_response.body
   end
@@ -127,8 +132,7 @@ class BrowseTest < IntegrationTest
 
   def test_browsing_section_displays_other_sections
     @primary_solr.stubs(:section).returns([sample_document])
-    @primary_solr.stubs(:facet).with('section').returns([Section.new('bar'), Section.new('section-name'), Section.new('zulu')])
-
+    content_api_has_root_sections(['bar', 'section-name', 'zulu'])
     get "/browse/section-name"
 
     response = Nokogiri.parse(last_response.body)
