@@ -9,11 +9,11 @@
     <dl>
       <% @sections.each do |section| %>
         <dt>
-          <a href="<%= section["web_url"] %>"><%=h section["title"] %></a>
+          <a href="<%= section["content_with_tag"]["web_url"] %>"><%=h section["title"] %></a>
         </dt>
         <dd>
           <p>
-            <%= section["details"]["description "] %>
+            <%= section["details"]["description"] %>
           </p>
         </dd>
       <% end %>
