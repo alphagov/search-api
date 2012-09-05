@@ -149,11 +149,11 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse.?:format?") do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
-    @results = primary_solr.facet('section')
+    @sections = sections
     @page_title = "Browse | GOV.UK Beta (Test)"
     if request.accept.include?("application/json") or params['format'] == 'json'
       content_type :json
-      JSON.dump(@results.map { |r| { url: "/browse/#{r.slug}" } })
+      JSON.dump(@sections.map { |section| { url: section["web_url"] } })
     else
       erb(:sections)
     end
@@ -190,6 +190,12 @@ if settings.router[:path_prefix].empty?
     as_hash
   end
 
+  def sections
+    raw_sections = GdsApi::ContentApi.new(Plek.current_env, timeout: 10).sections.to_hash["results"]
+    raw_root_sections = raw_sections.select { |s| s["parent"].nil? } # TODO maybe replace with API method? e.g. ?root_only=true
+    raw_root_sections.sort { |a, b| a["title"] <=> b["title"] }
+  end
+
   get prefixed_path("/browse/:section.json") do
     expires 86400, :public
     assemble_section_details(params[:section])
@@ -208,10 +214,7 @@ if settings.router[:path_prefix].empty?
     else
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
       @popular = popular_items.select_from(params[:section], @ungrouped_results)
-      raw_sections = GdsApi::ContentApi.new(Plek.current_env, timeout: 10).sections.to_hash["results"]
-      raw_root_sections = raw_sections.select { |s| s["details"]["parent"].nil? } # TODO maybe replace with API method? e.g. ?root_only=true
-      raw_root_sections = raw_root_sections.sort { |a, b| a["title"] <=> b["title"] }
-      @sections = raw_root_sections.reject do |a| 
+      @sections = sections.reject do |a| 
         slug = a["id"].split("/")[-1].gsub(".json", "")
         slug == @section.slug 
       end

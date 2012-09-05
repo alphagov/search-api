@@ -7,12 +7,14 @@
 
   <div class="browse-sections">
     <dl>
-      <% @results.each do |section| %>
+      <% @sections.each do |section| %>
         <dt>
-          <a href="<%= section.path %>"><%=h formatted_section_name section.slug %></a>
+          <a href="<%= section["web_url"] %>"><%=h section["title"] %></a>
         </dt>
         <dd>
-          <%= include section.slug %>
+          <p>
+            <%= section["details"]["description "] %>
+          </p>
         </dd>
       <% end %>
     </dl>

@@ -161,7 +161,6 @@ class BrowseTest < IntegrationTest
   end
 
   def test_should_put_browse_in_section_nav_for_slimmer
-    @primary_solr.stubs(:facet).returns([])
     get "/browse"
 
     assert_equal "section nav", last_response.headers["X-Slimmer-Section"]
@@ -175,14 +174,14 @@ class BrowseTest < IntegrationTest
   end
 
   def test_browsing_section_list
-    @primary_solr.stubs(:facet).returns([sample_section])
+    content_api_has_root_sections(["bob"])
 
     get "/browse"
     assert last_response.ok?
   end
 
   def test_browsing_section_list_should_not_add_item_to_breadcrumb_trail
-    @primary_solr.stubs(:facet).returns([sample_section])
+    content_api_has_root_sections(["bob"])
 
     get "/browse"
 
@@ -192,14 +191,12 @@ class BrowseTest < IntegrationTest
   end
 
   def test_section_list_always_renders
-    @primary_solr.stubs(:facet).returns([])
-
     get "/browse"
     assert last_response.ok?
   end
 
   def test_should_provide_list_of_sections_via_json
-    @primary_solr.stubs(:facet).returns([sample_section])
+    content_api_has_root_sections(["bob"])
 
     get '/browse.json'
 
