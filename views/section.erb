@@ -61,9 +61,10 @@
         <li class="open">
           <a href="<%= @section.path %>"><%= formatted_section_name @section.slug %></a>
           <ul class="subsections">
-            <% @results.each do |subsection, results| %>
-            <li data-filter="section-<%= subsection ? subsection : "other" %>"><a href="<%= @section.path %>#/<%= subsection ? subsection : "other" %>"><%= subsection ? h(formatted_section_name subsection) : "Other" %></a></li>
+            <% @raw_sections.each do |tag| %>
+              <li data-filter="section-<%= tag["title"].downcase.gsub(" ", "-") %>"><a href="<%= @section.path %>#/<%= tag["title"].downcase.gsub(" ", "-") %>"><%= tag['title'] %></a></li>
             <% end %>
+            <li data-filter="section-other %>"><a href="<%= @section.path %>#/other">Other</a></li>
           </ul>
         </li>
       </ul>

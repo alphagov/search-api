@@ -190,10 +190,16 @@ if settings.router[:path_prefix].empty?
     as_hash
   end
 
+  def raw_sections
+    GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
+      .sections.to_hash["results"].sort do |a, b|
+        a["title"] <=> b["title"]
+      end
+  end
+
+  # TODO maybe replace with API method? e.g. ?root_only=true
   def sections
-    raw_sections = GdsApi::ContentApi.new(Plek.current_env, timeout: 10).sections.to_hash["results"]
-    raw_root_sections = raw_sections.select { |s| s["parent"].nil? } # TODO maybe replace with API method? e.g. ?root_only=true
-    raw_root_sections.sort { |a, b| a["title"] <=> b["title"] }
+    raw_sections.select { |s| s["parent"].nil? }
   end
 
   get prefixed_path("/browse/:section.json") do
@@ -214,9 +220,16 @@ if settings.router[:path_prefix].empty?
     else
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
       @popular = popular_items.select_from(params[:section], @ungrouped_results)
-      @sections = sections.reject do |a| 
+      @raw_sections = raw_sections.select do |s|
+        if s["parent"] and s["parent"]["id"]
+          s["parent"]["id"].split("/")[-1].gsub(".json", "") == @section.slug
+        else
+          false
+        end
+      end
+      @sections = sections.reject do |a|
         slug = a["id"].split("/")[-1].gsub(".json", "")
-        slug == @section.slug 
+        slug == @section.slug
       end
       @page_title = "#{formatted_section_name @section.slug} | GOV.UK Beta (Test)"
       erb(:section)
