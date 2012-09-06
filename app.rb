@@ -163,9 +163,9 @@ if settings.router[:path_prefix].empty?
     ensure_slug_is_valid
     @ungrouped_results = primary_solr.section(params[:section])
     halt 404 if @ungrouped_results.empty?
-    @section = Section.new(params[:section])
-    @page_section = formatted_section_name(@section.slug)
-    @page_section_link = @section.path
+    @section = current_section
+    @page_section = @section["title"]
+    @page_section_link = @section["content_with_tag"]["web_url"]
     @results = @ungrouped_results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
   end
 
@@ -182,7 +182,7 @@ if settings.router[:path_prefix].empty?
       'url' => @page_section_link,
       'contents' => []
     }
-    description_path = File.expand_path("../views/_#{@section.slug}.html", __FILE__)
+    description_path = File.expand_path("../views/_#{params[:section]}.html", __FILE__)
 
     if File.exists?(description_path)
       as_hash['description'] = File.read(description_path).gsub(/<\/?[^>]*>/, "")
@@ -208,6 +208,31 @@ if settings.router[:path_prefix].empty?
     raw_sections.select { |s| s["parent"].nil? }
   end
 
+  def sub_sections
+    raw_sections.select do |s|
+      if s["parent"] and s["parent"]["id"]
+        s["parent"]["id"].split("/")[-1].gsub(".json", "") == params[:section]
+      else
+        false
+      end
+    end
+  end
+
+  def current_section
+    found = root_sections.detect do |a|
+      slug = a["id"].split("/")[-1].gsub(".json", "")
+      slug == params[:section]
+    end
+    found
+  end
+
+  def other_root_sections
+    root_sections.reject do |a|
+      slug = a["id"].split("/")[-1].gsub(".json", "")
+      slug == params[:section]
+    end
+  end
+
   get prefixed_path("/browse/:section.json") do
     expires 86400, :public
     assemble_section_details
@@ -226,15 +251,9 @@ if settings.router[:path_prefix].empty?
     else
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
       @popular_artefacts = popular_items.select_from(params[:section], @ungrouped_results)
-      @raw_sections = raw_sections.select do |s|
-        if s["parent"] and s["parent"]["id"]
-          s["parent"]["id"].split("/")[-1].gsub(".json", "") == @section.slug
-        else
-          false
-        end
-      end
+      @sub_sections = sub_sections
       api = GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
-      artefacts_in_section = api.with_tag(@section.slug).to_hash.fetch("results"){[]}
+      artefacts_in_section = api.with_tag(params[:section]).to_hash.fetch("results"){[]}
       @artefacts_by_subsection = {}
       artefacts_in_section.each do |t|
         if t["tags"].first["parent"]
@@ -242,11 +261,8 @@ if settings.router[:path_prefix].empty?
           @artefacts_by_subsection.fetch(slug){@artefacts_by_subsection[slug] = []} << t
         end
       end
-      @other_sections = root_sections.reject do |a|
-        slug = a["id"].split("/")[-1].gsub(".json", "")
-        slug == @section.slug
-      end
-      @page_title = "#{formatted_section_name @section.slug} | GOV.UK Beta (Test)"
+      @other_sections = other_root_sections
+      @page_title = "#{formatted_section_name params[:section]} | GOV.UK Beta (Test)"
       erb(:section)
     end
   end

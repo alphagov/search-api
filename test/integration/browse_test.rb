@@ -22,8 +22,8 @@ class BrowseTest < IntegrationTest
 
   def test_browsing_a_valid_section
     @primary_solr.stubs(:section).returns([sample_document])
+    content_api_has_root_sections(['bob'])
     content_api_has_artefacts("bob")
-    content_api_has_artefacts("this-and-that")
 
     get "/browse/bob"
     assert last_response.ok?
@@ -31,7 +31,7 @@ class BrowseTest < IntegrationTest
 
   def test_browsing_an_empty_section
     @primary_solr.stubs(:section).returns([])
-
+    content_api_has_root_sections(["bob"])
     get "/browse/bob"
     assert_equal 404, last_response.status
   end
@@ -45,6 +45,7 @@ class BrowseTest < IntegrationTest
 
   def test_browsing_a_section_shows_formatted_section_name
     @primary_solr.stubs(:section).returns([sample_document])
+    content_api_has_root_sections(['this-and-that'])
     content_api_has_artefacts("this-and-that")
 
     get "/browse/this-and-that"
@@ -53,6 +54,7 @@ class BrowseTest < IntegrationTest
 
   def test_browsing_a_section_shows_custom_formatted_section_name
     @primary_solr.stubs(:section).returns([sample_document])
+    content_api_has_root_sections(['life-in-the-uk'])
     content_api_has_artefacts("life-in-the-uk")
 
     get "/browse/life-in-the-uk"
@@ -65,6 +67,7 @@ class BrowseTest < IntegrationTest
     GdsApi::Panopticon.stubs(:new).returns(mock_panopticon_api)
     content_api_has_artefacts
 
+    content_api_has_root_sections(['section-name'])
     doc = Document.from_hash(
       "title" => "The Popular Article",
       "description" => "DESCRIPTION",
@@ -118,7 +121,7 @@ class BrowseTest < IntegrationTest
       "link" => "/article-slug4"
     )
     @primary_solr.stubs(:section).returns([doc1, doc2, doc3, doc4])
-
+    content_api_has_root_sections(['section-name'])
     get "/browse/section-name"
     response = Nokogiri.parse(last_response.body)
 
@@ -134,6 +137,7 @@ class BrowseTest < IntegrationTest
       "format" => "answer"
     )
     @primary_solr.stubs(:section).returns([doc])
+    content_api_has_root_sections(['section-name'])
     content_api_has_artefacts
 
     get "/browse/section-name"
@@ -169,6 +173,7 @@ class BrowseTest < IntegrationTest
 
     # Slimmer will raise xml parsing errors if there are unescaped entities
     assert_nothing_raised do
+      content_api_has_root_sections(['section-name'])
       get "/browse/section-name"
     end
 
@@ -183,6 +188,7 @@ class BrowseTest < IntegrationTest
 
   def test_should_put_section_in_section_nav_for_slimmer
     @primary_solr.stubs(:section).returns([sample_document])
+    content_api_has_root_sections(['section-name'])
     content_api_has_artefacts
     get "/browse/section-name"
 
@@ -230,6 +236,7 @@ class BrowseTest < IntegrationTest
       "link" => "/article-slug"
     )
 
+    content_api_has_root_sections(['bob'])
     @primary_solr.stubs(:section).returns([doc])
 
     get '/browse/bob.json'

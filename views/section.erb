@@ -2,7 +2,7 @@
 
   <header class="page-header group">
     <hgroup>
-      <h1><%= formatted_section_name @section.slug %></h1>
+      <h1><%= h @section["title"] %></h1>
     </hgroup>
   </header>
 
@@ -10,10 +10,7 @@
     <div class="results group">
       <div class="results-wrapper">
         <div class="summary">
-          <%# This rescue is in place in the event that a section is
-            # added without creating the relevant _section.html
-            # description file. %>
-          <%= begin; include @section.slug; rescue Exception => e; end %>
+          <%= h @section["details"]["description"] %>
         </div>
 
         <div id="popular">
@@ -58,12 +55,12 @@
 
       <ul>
         <li class="open">
-          <a href="<%= @section.path %>"><%= formatted_section_name @section.slug %></a>
+          <a href="<%= @section["content_with_tag"]["web_url"] %>"><%= formatted_section_name params[:section] %></a>
           <ul class="subsections">
-            <% @raw_sections.each do |tag| %>
-              <li data-filter="section-<%= tag["title"].downcase.gsub(" ", "-") %>"><a href="<%= @section.path %>#/<%= tag["title"].downcase.gsub(" ", "-") %>"><%= tag['title'] %></a></li>
+            <% @sub_sections.each do |tag| %>
+              <li data-filter="section-<%= tag["title"].downcase.gsub(" ", "-") %>"><a href="#/<%= tag["title"].downcase.gsub(" ", "-") %>"><%= tag['title'] %></a></li>
             <% end %>
-            <li data-filter="section-other %>"><a href="<%= @section.path %>#/other">Other</a></li>
+            <li data-filter="section-other %>"><a href="#/other">Other</a></li>
           </ul>
         </li>
       </ul>
@@ -82,5 +79,5 @@
 </section>
 
 <% content_for :head do %>
-  <link rel="alternate" type="application/json" href="/browse/<%= @section.slug %>.json">
+  <link rel="alternate" type="application/json" href="/browse/<%= params[:section] %>.json">
 <% end %>
