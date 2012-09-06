@@ -10,7 +10,6 @@ require 'csv'
 
 require 'popular_items'
 require 'document'
-require 'section'
 require 'utils'
 require 'solr_wrapper'
 require 'slimmer_headers'

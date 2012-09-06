@@ -1,5 +1,4 @@
 require "document"
-require "section"
 require "logger"
 
 class SolrWrapper
