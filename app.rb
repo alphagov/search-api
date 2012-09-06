@@ -228,6 +228,20 @@ if settings.router[:path_prefix].empty?
     end
   end
 
+  def artefacts_by_subsection
+    api = GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
+    artefacts_in_section = api.with_tag(params[:section])
+                              .to_hash.fetch("results"){[]}
+    artefacts_subsection = {}
+    artefacts_in_section.each do |t|
+      if t["tags"].first["parent"]
+        slug = t["tags"].first["title"].downcase.gsub(" ", "-")
+        artefacts_subsection.fetch(slug){artefacts_subsection[slug] = []} << t
+      end
+    end
+    artefacts_subsection
+  end
+
   get prefixed_path("/browse/:section.json") do
     expires 86400, :public
     assemble_section_details
@@ -247,15 +261,7 @@ if settings.router[:path_prefix].empty?
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
       @popular_artefacts = popular_items.select_from(params[:section], @ungrouped_results)
       @sub_sections = sub_sections
-      api = GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
-      artefacts_in_section = api.with_tag(params[:section]).to_hash.fetch("results"){[]}
-      @artefacts_by_subsection = {}
-      artefacts_in_section.each do |t|
-        if t["tags"].first["parent"]
-          slug = t["tags"].first["title"].downcase.gsub(" ", "-")
-          @artefacts_by_subsection.fetch(slug){@artefacts_by_subsection[slug] = []} << t
-        end
-      end
+      @artefacts_by_subsection = artefacts_by_subsection
       @other_sections = other_root_sections
       @page_title = "#{formatted_section_name params[:section]} | GOV.UK Beta (Test)"
       erb(:section)
