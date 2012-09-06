@@ -17,9 +17,9 @@
         </div>
 
         <div id="popular">
-          <% if @popular && @popular.size > 0 %>
+          <% if @popular_artefacts && @popular_artefacts.size > 0 %>
             <ul class="results-list">
-              <% group_by_format(@popular).each do |presentation_format_name, results| %>
+              <% group_by_format(@popular_artefacts).each do |presentation_format_name, results| %>
                 <% results.each do |result| %>
                   <li class="type-<%= result.presentation_format %>">
                     <a href="<%= h result.link %>" title="View <%= h result.title %>"><%= h result.title %></a>
@@ -33,7 +33,7 @@
           <% end %>
         </div>
 
-        <% @results.each do |slug, artefacts| %>
+        <% @artefacts_by_subsection.each do |slug, artefacts| %>
           <div class="hidden" id="<%= slug %>">
             <ul class="results-list">
               <% artefacts.each do |artefact| %>
@@ -71,7 +71,7 @@
       <h2>Other sections</h2>
 
       <ul>
-        <% @sections.each do |section| %>
+        <% @other_sections.each do |section| %>
           <li><a href="<%= section["content_with_tag"]["web_url"] %>"><%= h section["title"] %></a></li>
         <% end %>
       </ul>

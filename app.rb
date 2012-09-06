@@ -219,7 +219,7 @@ if settings.router[:path_prefix].empty?
       JSON.dump(compile_json_for_section)
     else
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
-      @popular = popular_items.select_from(params[:section], @ungrouped_results)
+      @popular_artefacts = popular_items.select_from(params[:section], @ungrouped_results)
       @raw_sections = raw_sections.select do |s|
         if s["parent"] and s["parent"]["id"]
           s["parent"]["id"].split("/")[-1].gsub(".json", "") == @section.slug
@@ -228,15 +228,15 @@ if settings.router[:path_prefix].empty?
         end
       end
       api = GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
-      with_tag = api.with_tag(@section.slug).to_hash.fetch("results"){[]}
-      @results = {}
-      with_tag.each do |t|
+      artefacts_in_section = api.with_tag(@section.slug).to_hash.fetch("results"){[]}
+      @artefacts_by_subsection = {}
+      artefacts_in_section.each do |t|
         if t["tags"].first["parent"]
           slug = t["tags"].first["title"].downcase.gsub(" ", "-")
-          @results.fetch(slug){@results[slug] = []} << t
+          @artefacts_by_subsection.fetch(slug){@artefacts_by_subsection[slug] = []} << t
         end
       end
-      @sections = sections.reject do |a|
+      @other_sections = sections.reject do |a|
         slug = a["id"].split("/")[-1].gsub(".json", "")
         slug == @section.slug
       end
