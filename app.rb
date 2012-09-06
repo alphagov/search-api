@@ -192,10 +192,9 @@ if settings.router[:path_prefix].empty?
   end
 
   def raw_sections
-    GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
-      .sections.to_hash["results"].sort do |a, b|
-        a["title"] <=> b["title"]
-      end
+    api.sections.to_hash["results"].sort do |a, b|
+      a["title"] <=> b["title"]
+    end
   end
 
   # TODO maybe replace with API method? e.g. ?root_only=true
@@ -228,8 +227,11 @@ if settings.router[:path_prefix].empty?
     end
   end
 
+  def api
+    GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
+  end
+
   def artefacts_by_subsection
-    api = GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
     artefacts_in_section = api.with_tag(params[:section])
                               .to_hash.fetch("results"){[]}
     artefacts_in_section.each_with_object({}) do |t, h|
