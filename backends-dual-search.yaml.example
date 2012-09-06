@@ -1,0 +1,15 @@
+# This is an example development config for running dual search (mainstream
+# search with secondary results from whitehall's specialist guidance)
+
+development:
+  primary:
+    type: solr
+    server: localhost
+    path: "/solr/rummager"
+    port: 8983
+  secondary:
+    type: solr
+    server: localhost
+    path: "/solr/whitehall-rummager"
+    port: 8983
+    format_filter: "specialist_guidance"
