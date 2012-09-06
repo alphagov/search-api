@@ -149,7 +149,7 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse.?:format?") do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
-    @sections = sections
+    @sections = root_sections
     @page_title = "Browse | GOV.UK Beta (Test)"
     if request.accept.include?("application/json") or params['format'] == 'json'
       content_type :json
@@ -204,7 +204,7 @@ if settings.router[:path_prefix].empty?
   end
 
   # TODO maybe replace with API method? e.g. ?root_only=true
-  def sections
+  def root_sections
     raw_sections.select { |s| s["parent"].nil? }
   end
 
@@ -242,7 +242,7 @@ if settings.router[:path_prefix].empty?
           @artefacts_by_subsection.fetch(slug){@artefacts_by_subsection[slug] = []} << t
         end
       end
-      @other_sections = sections.reject do |a|
+      @other_sections = root_sections.reject do |a|
         slug = a["id"].split("/")[-1].gsub(".json", "")
         slug == @section.slug
       end
