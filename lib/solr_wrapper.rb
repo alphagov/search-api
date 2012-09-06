@@ -75,14 +75,6 @@ class SolrWrapper
     ))
   end
 
-  def facet(q)
-    results = @client.query("standard",
-      :query  => "*:*",
-      :facets => [{:field => q, :sort => q}]
-    ) or return []
-    results.facet_field_values(q).reject(&:empty?).map{ |s| Section.new(s) }
-  end
-
   def complete(q, format = nil)
     words = q.scan(/\S+/).map { |w| "autocomplete:#{prepare_query(w)}*" }
     params = {

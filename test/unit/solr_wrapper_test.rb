@@ -31,24 +31,6 @@ class SolrWrapperTest < Test::Unit::TestCase
     @wrapper.add [document]
   end
 
-  def test_facet_doesnt_return_blanks
-    result = stub(facet_field_values: ["rod", "", "jane", "freddy", ""])
-    @client.stubs(:query).returns(result)
-    facets = @wrapper.facet("foo")
-
-    assert_equal 3, facets.length
-  end
-
-  def test_facet_should_ask_for_everything
-    @client.expects(:query).with("standard", has_entries(query: "*:*"))
-    @wrapper.facet("foo")
-  end
-
-  def test_facet_should_ask_for_and_sort_by_specified_facet
-    @client.expects(:query).with("standard", has_entries(facets: [{:field => "foo", :sort => "foo"}]))
-    @wrapper.facet("foo")
-  end
-
   def test_should_escape_characters_with_special_meaning_in_solr
     input = '+ - && || ! ( ) { } [ ] ^ " ~ * ? : \\'
     expected = '\\+ \\- \\&& \\|| \\! \\( \\) \\{ \\} \\[ \\] \\^ \\" \\~ \\* \\? \\: \\\\'
