@@ -40,24 +40,24 @@ Our solr config lives in the `alphagov/puppet` repository and is currently confi
 
 ## Using the secondary results feature for Whitehall
 
-First you need to enable it in the `feature_flags.yml` file to search for Whitehall "specialist guidance":
+To incorporate results from a secondary search (practically speaking, this is going to be for specialist guidance from the Whitehall index) you'll need to enable the secondary search in `backends.yml`. For an example of the configuration you'll need, look in `backends-dual-search.yml.example`.
+
+To populate the index itself, you'll need to start up a secondary instance of Rummager, most likely in a separate directory to avoid getting the configurations crossed. The `backend.yml` file should look something like:
 
     development:
-      use_secondary_solr_index: true
-      secondary_solr_param_filter: "specialist_guidance"
-
-Then a secondary Rummager needs to be run with the following configuration in `solr.yml`:
-
-    development:
-      :server: localhost
-      :path: "/solr/whitehall-rummager"
-      :port: 8983
+      primary:
+        type: solr
+        server: localhost
+        path: "/solr/whitehall-rummager"
+        port: 8983
+      secondary:
+        type: none
 
 and the following configuration in `router.yml`:
 
     :path_prefix: "/government"
 
-Then set `RUMMAGER_HOST` to the hostname and port of the new instance when running the Rake task in whitehall:
+Then set `RUMMAGER_HOST` to the hostname and port of the new instance when running the Rake task in `whitehall`:
 
     RUMMAGER_HOST=http://127.0.0.1:PORT bundle exec rake rummager:index
 
