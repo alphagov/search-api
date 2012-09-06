@@ -232,14 +232,12 @@ if settings.router[:path_prefix].empty?
     api = GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
     artefacts_in_section = api.with_tag(params[:section])
                               .to_hash.fetch("results"){[]}
-    artefacts_subsection = {}
-    artefacts_in_section.each do |t|
+    artefacts_in_section.each_with_object({}) do |t, h|
       if t["tags"].first["parent"]
         slug = t["tags"].first["title"].downcase.gsub(" ", "-")
-        artefacts_subsection.fetch(slug){artefacts_subsection[slug] = []} << t
+        h.fetch(slug){h[slug] = []} << t
       end
     end
-    artefacts_subsection
   end
 
   get prefixed_path("/browse/:section.json") do
