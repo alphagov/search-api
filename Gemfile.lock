@@ -18,12 +18,12 @@ GEM
       mail (> 2.2.5)
       mime-types
       xml-simple
-    builder (3.0.0)
+    builder (3.1.0)
     ci_reporter (1.6.9)
       builder (>= 2.1.2)
     crack (0.3.1)
     erubis (2.7.0)
-    gds-api-adapters (1.6.0)
+    gds-api-adapters (1.7.0)
       lrucache (~> 0.1.1)
       null_logger
       plek
@@ -101,7 +101,7 @@ DEPENDENCIES
   ci_reporter
   delsolr!
   erubis
-  gds-api-adapters (= 1.6.0)
+  gds-api-adapters (= 1.7.0)
   htmlentities
   i18n
   json
