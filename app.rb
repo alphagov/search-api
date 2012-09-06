@@ -159,15 +159,21 @@ if settings.router[:path_prefix].empty?
     end
   end
 
-  def assemble_section_details(section_slug)
-    section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
-    halt 404 unless section == params[:section]
-    @ungrouped_results = primary_solr.section(section)
+  def assemble_section_details
+    ensure_slug_is_valid
+    @ungrouped_results = primary_solr.section(params[:section])
     halt 404 if @ungrouped_results.empty?
-    @section = Section.new(section)
+    @section = Section.new(params[:section])
     @page_section = formatted_section_name(@section.slug)
     @page_section_link = @section.path
     @results = @ungrouped_results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
+  end
+
+  # Not really sure what we mean by "valid".
+  # I guess we're doing it to fail fast?
+  def ensure_slug_is_valid
+    section_slug = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
+    halt 404 unless section_slug == params[:section]
   end
 
   def compile_section_json(results)
@@ -204,7 +210,7 @@ if settings.router[:path_prefix].empty?
 
   get prefixed_path("/browse/:section.json") do
     expires 86400, :public
-    assemble_section_details(params[:section])
+    assemble_section_details
     content_type :json
     JSON.dump(compile_section_json(@results))
   end
@@ -212,7 +218,7 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse/:section") do
     expires 86400, :public
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
-    assemble_section_details(params[:section])
+    assemble_section_details
 
     if request.accept.include?("application/json")
       content_type :json
