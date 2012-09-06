@@ -132,14 +132,14 @@ get prefixed_path("/sitemap.xml") do
     xml.instruct!
     xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
       xml.url do
-	xml.loc "#{base_url}#{prefixed_path("/")}"
+        xml.loc "#{base_url}#{prefixed_path("/")}"
       end
       documents.each do |document|
-	xml.url do
-	  url = document.link
-          url = "#{base_url}#{url}" if url =~ /^\//
-	  xml.loc url
-	end
+        xml.url do
+          url = document.link
+            url = "#{base_url}#{url}" if url =~ /^\//
+          xml.loc url
+        end
       end
     end
   end
