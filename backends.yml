@@ -1,0 +1,19 @@
+development:
+  primary:
+    type: solr
+    server: localhost
+    path: "/solr/rummager"
+    port: 8983
+  secondary:
+    type: none
+test:
+  primary:
+    type: solr
+    server: solr-test-server
+    path: "/solr/rummager"
+    port: 9999
+  secondary:
+    type: solr
+    server: solr-test-server
+    path: "/solr/whitehall-rummager"
+    port: 9999
