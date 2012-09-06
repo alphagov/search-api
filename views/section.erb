@@ -2,7 +2,7 @@
 
   <header class="page-header group">
     <hgroup>
-      <h1><%= formatted_section_name @section.slug %></h1>
+      <h1><%= h @section["title"] %></h1>
     </hgroup>
   </header>
 
@@ -10,16 +10,13 @@
     <div class="results group">
       <div class="results-wrapper">
         <div class="summary">
-          <%# This rescue is in place in the event that a section is
-            # added without creating the relevant _section.html
-            # description file. %>
-          <%= begin; include @section.slug; rescue Exception => e; end %>
+          <%= h @section["details"]["description"] %>
         </div>
 
         <div id="popular">
-          <% if @popular && @popular.size > 0 %>
+          <% if @popular_artefacts && @popular_artefacts.size > 0 %>
             <ul class="results-list">
-              <% group_by_format(@popular).each do |presentation_format_name, results| %>
+              <% group_by_format(@popular_artefacts).each do |presentation_format_name, results| %>
                 <% results.each do |result| %>
                   <li class="type-<%= result.presentation_format %>">
                     <a href="<%= h result.link %>" title="View <%= h result.title %>"><%= h result.title %></a>
@@ -33,18 +30,17 @@
           <% end %>
         </div>
 
-        <% @results.each do |subsection, results| %>
-          <div class="hidden" id="<%= subsection ? subsection : "other" %>">
+        <% @artefacts_by_subsection.each do |slug, artefacts| %>
+          <div class="hidden" id="<%= slug %>">
             <ul class="results-list">
-              <% group_by_format(results).each do |presentation_format_name, sub_results| %>
-                <% sub_results.each do |result| %>
-                  <li class="type-<%= result.presentation_format %>">
-                    <a href="<%= h result.link %>" title="View <%= h result.title %>"><%= h result.title %></a>
-                    <% if result.description && !result.description.empty? %>
-                      <p><%= h result.description %></p>
-                    <% end %>
-                  </li>
-                <% end %>
+              <% artefacts.each do |artefact| %>
+                <li>
+                  <a href="<%= h artefact['web_url'] %>"
+                     title="View <%= h artefact['title'] %>">
+                    <%= h artefact['title'] %>
+                  </a>
+                  <p><%= h artefact['details']['overview'] %></p>
+                </li>
               <% end %>
             </ul>
           </div>
@@ -59,11 +55,12 @@
 
       <ul>
         <li class="open">
-          <a href="<%= @section.path %>"><%= formatted_section_name @section.slug %></a>
+          <a href="<%= @section["content_with_tag"]["web_url"] %>"><%= formatted_section_name params[:section] %></a>
           <ul class="subsections">
-            <% @results.each do |subsection, results| %>
-            <li data-filter="section-<%= subsection ? subsection : "other" %>"><a href="<%= @section.path %>#/<%= subsection ? subsection : "other" %>"><%= subsection ? h(formatted_section_name subsection) : "Other" %></a></li>
+            <% @sub_sections.each do |tag| %>
+              <li data-filter="section-<%= tag["title"].downcase.gsub(" ", "-") %>"><a href="#/<%= tag["title"].downcase.gsub(" ", "-") %>"><%= tag['title'] %></a></li>
             <% end %>
+            <li data-filter="section-other %>"><a href="#/other">Other</a></li>
           </ul>
         </li>
       </ul>
@@ -71,8 +68,8 @@
       <h2>Other sections</h2>
 
       <ul>
-        <% @sections.each do |section| %>
-          <li><a href="<%= section.path %>"><%= h formatted_section_name(section.name) %></a></li>
+        <% @other_sections.each do |section| %>
+          <li><a href="<%= section["content_with_tag"]["web_url"] %>"><%= h section["title"] %></a></li>
         <% end %>
       </ul>
     </div>
@@ -82,5 +79,5 @@
 </section>
 
 <% content_for :head do %>
-  <link rel="alternate" type="application/json" href="/browse/<%= @section.slug %>.json">
+  <link rel="alternate" type="application/json" href="/browse/<%= params[:section] %>.json">
 <% end %>
