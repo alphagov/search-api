@@ -3,8 +3,8 @@ require "logger"
 class NullBackend
   # A dummy backend for instances where secondary search is not in use.
 
-  def initialize(logger = Logger.new("/dev/null"))
-    @logger = logger
+  def initialize(logger = nil)
+    @logger = logger || Logger.new("/dev/null")
   end
 
   def all_documents(options = {})

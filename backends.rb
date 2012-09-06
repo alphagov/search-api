@@ -1,7 +1,8 @@
 class Backends
 
   def initialize(settings, logger = nil)
-    @settings, @logger = settings, logger
+    @settings = settings
+    @logger = logger || Logger.new("/dev/null")
   end
 
   def primary_search

@@ -14,8 +14,8 @@ class SolrWrapper
   def initialize(client, recommended_format, logger = nil, default_format = nil)
     @client = client
     @recommended_format = recommended_format
-    @logger = logger || Logger.new('/dev/null')
     @default_format = default_format
+    @logger = logger || Logger.new("/dev/null")
   end
 
   def add(documents)
