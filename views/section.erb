@@ -37,7 +37,7 @@
           <div class="hidden" id="<%= slug %>">
             <ul class="results-list">
               <% artefacts.each do |artefact| %>
-                <li class="type-<%= artefact['format'].downcase %>">
+                <li>
                   <a href="<%= h artefact['web_url'] %>"
                      title="View <%= h artefact['title'] %>">
                     <%= h artefact['title'] %>
