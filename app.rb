@@ -178,14 +178,10 @@ if settings.router[:path_prefix].empty?
   def compile_section_json(results)
     as_hash = {
       'name' => @page_section,
+      'description' => @section["details"]["description"],
       'url' => @page_section_link,
       'contents' => []
     }
-    description_path = File.expand_path("../views/_#{params[:section]}.html", __FILE__)
-
-    if File.exists?(description_path)
-      as_hash['description'] = File.read(description_path).gsub(/<\/?[^>]*>/, "")
-    end
 
     @results.each do |subsection, items|
       as_hash['contents'] += items.collect do |i|
