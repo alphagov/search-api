@@ -227,6 +227,15 @@ if settings.router[:path_prefix].empty?
           false
         end
       end
+      api = GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
+      with_tag = api.with_tag(@section.slug).to_hash.fetch("results"){[]}
+      @results = {}
+      with_tag.each do |t|
+        if t["tags"].first["parent"]
+          slug = t["tags"].first["title"].downcase.gsub(" ", "-")
+          @results.fetch(slug){@results[slug] = []} << t
+        end
+      end
       @sections = sections.reject do |a|
         slug = a["id"].split("/")[-1].gsub(".json", "")
         slug == @section.slug

@@ -33,18 +33,17 @@
           <% end %>
         </div>
 
-        <% @results.each do |subsection, results| %>
-          <div class="hidden" id="<%= subsection ? subsection : "other" %>">
+        <% @results.each do |slug, artefacts| %>
+          <div class="hidden" id="<%= slug %>">
             <ul class="results-list">
-              <% group_by_format(results).each do |presentation_format_name, sub_results| %>
-                <% sub_results.each do |result| %>
-                  <li class="type-<%= result.presentation_format %>">
-                    <a href="<%= h result.link %>" title="View <%= h result.title %>"><%= h result.title %></a>
-                    <% if result.description && !result.description.empty? %>
-                      <p><%= h result.description %></p>
-                    <% end %>
-                  </li>
-                <% end %>
+              <% artefacts.each do |artefact| %>
+                <li class="type-<%= artefact['format'].downcase %>">
+                  <a href="<%= h artefact['web_url'] %>"
+                     title="View <%= h artefact['title'] %>">
+                    <%= h artefact['title'] %>
+                  </a>
+                  <p><%= h artefact['details']['overview'] %></p>
+                </li>
               <% end %>
             </ul>
           </div>

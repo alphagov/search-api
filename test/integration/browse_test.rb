@@ -14,8 +14,16 @@ class BrowseTest < IntegrationTest
     content_api_has_root_sections([])
   end
 
+  def content_api_has_artefacts(section="section-name", body = {})
+    stub_request(:get,
+      "https://contentapi.test.alphagov.co.uk/with_tag.json?tag=#{section}").
+      to_return(:status => 200, :body => body.to_json)
+  end
+
   def test_browsing_a_valid_section
     @primary_solr.stubs(:section).returns([sample_document])
+    content_api_has_artefacts("bob")
+    content_api_has_artefacts("this-and-that")
 
     get "/browse/bob"
     assert last_response.ok?
@@ -37,13 +45,15 @@ class BrowseTest < IntegrationTest
 
   def test_browsing_a_section_shows_formatted_section_name
     @primary_solr.stubs(:section).returns([sample_document])
-    
+    content_api_has_artefacts("this-and-that")
+
     get "/browse/this-and-that"
     assert_match /This and that/, last_response.body
   end
 
   def test_browsing_a_section_shows_custom_formatted_section_name
     @primary_solr.stubs(:section).returns([sample_document])
+    content_api_has_artefacts("life-in-the-uk")
 
     get "/browse/life-in-the-uk"
     assert_match /Life in the UK/, last_response.body
@@ -53,6 +63,7 @@ class BrowseTest < IntegrationTest
     mock_panopticon_api = mock("mock_panopticon_api")
     mock_panopticon_api.stubs(:curated_lists).returns("section-name" => ["article-slug", "article-slug-two"])
     GdsApi::Panopticon.stubs(:new).returns(mock_panopticon_api)
+    content_api_has_artefacts
 
     doc = Document.from_hash(
       "title" => "The Popular Article",
@@ -73,6 +84,7 @@ class BrowseTest < IntegrationTest
     mock_panopticon_api = mock("mock_panopticon_api")
     mock_panopticon_api.stubs(:curated_lists).returns("section-name" => ["article-slug", "article-slug2", "article-slug3", "article-slug4"])
     GdsApi::Panopticon.stubs(:new).returns(mock_panopticon_api)
+    content_api_has_artefacts
 
     doc1 = Document.from_hash(
       "title" => "The Popular Service",
@@ -122,6 +134,7 @@ class BrowseTest < IntegrationTest
       "format" => "answer"
     )
     @primary_solr.stubs(:section).returns([doc])
+    content_api_has_artefacts
 
     get "/browse/section-name"
 
@@ -133,6 +146,7 @@ class BrowseTest < IntegrationTest
   def test_browsing_section_displays_other_sections
     @primary_solr.stubs(:section).returns([sample_document])
     content_api_has_root_sections(['bar', 'section-name', 'zulu'])
+    content_api_has_artefacts
     get "/browse/section-name"
 
     response = Nokogiri.parse(last_response.body)
@@ -150,6 +164,7 @@ class BrowseTest < IntegrationTest
     })
 
     @primary_solr.stubs(:section).returns([doc])
+    content_api_has_artefacts
     PopularItems.any_instance.stubs(:select_from).returns([doc])
 
     # Slimmer will raise xml parsing errors if there are unescaped entities
@@ -168,6 +183,7 @@ class BrowseTest < IntegrationTest
 
   def test_should_put_section_in_section_nav_for_slimmer
     @primary_solr.stubs(:section).returns([sample_document])
+    content_api_has_artefacts
     get "/browse/section-name"
 
     assert_equal "section nav", last_response.headers["X-Slimmer-Section"]
