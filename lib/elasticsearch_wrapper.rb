@@ -4,8 +4,9 @@ require "logger"
 require "rest-client"
 
 class ElasticsearchWrapper
-  def initialize(settings, recommended_format, logger=Logger.new("/dev/null"))
-    @settings, @recommended_format, @logger = settings, recommended_format, logger
+  def initialize(settings, recommended_format, logger = nil)
+    @settings, @recommended_format = settings, recommended_format
+    @logger = logger || Logger.new("/dev/null")
   end
 
   def add(documents)

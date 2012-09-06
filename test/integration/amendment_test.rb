@@ -2,9 +2,14 @@ require "integration_test_helper"
 
 class AmendmentTest < IntegrationTest
 
+  def setup
+    super
+    disable_secondary_search
+  end
+
   def test_should_amend_existing_document
-    @primary_solr.expects(:get).returns(sample_document)
-    @primary_solr.expects(:add).with() do |documents|
+    @primary_search.expects(:get).returns(sample_document)
+    @primary_search.expects(:add).with() do |documents|
       assert_equal 1, documents.length
       assert_equal "New exciting title", documents[0].title
       sample_document_attributes.each_pair do |key, value|
@@ -16,8 +21,8 @@ class AmendmentTest < IntegrationTest
   end
 
   def test_should_fail_on_invalid_field
-    @primary_solr.expects(:get).returns(sample_document)
-    @primary_solr.expects(:add).never
+    @primary_search.expects(:get).returns(sample_document)
+    @primary_search.expects(:add).never
 
     post "/documents/%2Ffoobang", {fish: "Trout"}
 
@@ -26,8 +31,8 @@ class AmendmentTest < IntegrationTest
   end
 
   def test_should_fail_on_json_post
-    @primary_solr.expects(:get).never
-    @primary_solr.expects(:add).never
+    @primary_search.expects(:get).never
+    @primary_search.expects(:add).never
 
     post(
       "/documents/%2Ffoobang",
@@ -39,8 +44,8 @@ class AmendmentTest < IntegrationTest
   end
 
   def test_should_refuse_to_update_link
-    @primary_solr.expects(:get).returns(sample_document)
-    @primary_solr.expects(:add).never
+    @primary_search.expects(:get).returns(sample_document)
+    @primary_search.expects(:add).never
 
     post "/documents/%2Ffoobang", {link: "/somewhere-else"}
 
@@ -48,8 +53,8 @@ class AmendmentTest < IntegrationTest
   end
 
   def test_should_fail_to_amend_missing_document
-    @primary_solr.expects(:get).returns(nil)
-    @primary_solr.expects(:add).never
+    @primary_search.expects(:get).returns(nil)
+    @primary_search.expects(:add).never
 
     post "/documents/%2Ffoobang", {title: "New exciting title"}
 
