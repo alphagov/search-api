@@ -2,8 +2,13 @@ require "integration_test_helper"
 
 class DocumentViewtest < IntegrationTest
 
+  def setup
+    super
+    disable_secondary_search
+  end
+
   def test_should_view_existing_document
-    @primary_solr.expects(:get).returns(sample_document)
+    @primary_search.expects(:get).returns(sample_document)
 
     get "/documents/%2Ffoobang"
 
@@ -13,7 +18,7 @@ class DocumentViewtest < IntegrationTest
   end
 
   def test_should_404_on_missing_document
-    @primary_solr.expects(:get).returns(nil)
+    @primary_search.expects(:get).returns(nil)
 
     get "/documents/%2Ffoobang"
 

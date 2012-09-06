@@ -6,14 +6,17 @@ def config_for(kind)
   YAML.load_file(File.expand_path("../#{kind}.yml", __FILE__))
 end
 
-feature_flags = config_for(:feature_flags)[ENV["RACK_ENV"]]
-set :feature_flags, feature_flags.symbolize_keys!
+def backend_config_for(backend)
+  # Note that we're not recursively symbolising keys, because the config for
+  # each backend is currently flat. We may need to revisit this.
+  config_for(:backends)[ENV["RACK_ENV"]][backend].symbolize_keys
+end
 
 set :router, config_for(:router)
-set :solr, config_for(:solr)[ENV["RACK_ENV"]]
-set :secondary_solr, config_for(:secondary_solr)[ENV["RACK_ENV"]]
-set :elasticsearch, config_for(:elasticsearch)[ENV["RACK_ENV"]]
-set :search_backend, :elasticsearch
+
+set :primary_search, backend_config_for("primary")
+set :secondary_search, backend_config_for("secondary")
+
 set :slimmer_headers, config_for(:slimmer_headers)
 
 panopticon_api_credentials = config_for(:panopticon_api_credentials)[ENV["RACK_ENV"]]

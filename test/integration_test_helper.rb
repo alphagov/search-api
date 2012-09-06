@@ -56,14 +56,15 @@ class IntegrationTest < Test::Unit::TestCase
     Sinatra::Application
   end
 
+  def disable_secondary_search
+    @secondary_search.stubs(:search).returns([])
+  end
+
   def setup
-    @primary_solr = stub_everything("Mainstream Solr wrapper")
-    @secondary_solr = stub_everything("Whitehall Solr wrapper")
+    @primary_search = stub_everything("Mainstream Solr wrapper")
+    Backends.any_instance.stubs(:primary_search).returns(@primary_search)
 
-    DelSolr::Client.stubs(:new).with(settings.solr).returns(:mainstream_client)
-    DelSolr::Client.stubs(:new).with(settings.secondary_solr).returns(:whitehall_client)
-
-    SolrWrapper.stubs(:new).with(:mainstream_client, anything, anything).returns(@primary_solr)
-    SolrWrapper.stubs(:new).with(:whitehall_client, anything, anything).returns(@secondary_solr)
+    @secondary_search = stub_everything("Whitehall Solr wrapper")
+    Backends.any_instance.stubs(:secondary_search).returns(@secondary_search)
   end
 end

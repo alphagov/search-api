@@ -1,9 +1,0 @@
-production:
-  use_secondary_solr_index: false
-  secondary_solr_param_filter: ""
-development:
-  use_secondary_solr_index: false
-  secondary_solr_param_filter: ""
-test:
-  use_secondary_solr_index: false
-  secondary_solr_param_filter: ""
