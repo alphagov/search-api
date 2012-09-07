@@ -9,9 +9,7 @@
   <%- end -%>
   <% yield_content :head %>
 </head>
-<%# The citizen class (what proposition returns) is going to be deprecated, to be replaced with mainstream. %>
-<%# Added the mainstream class in preparation for the change. %>
-<body class="<%= proposition %> mainstream">
+<body class="mainstream">
   <div id="wrapper" class="wrapper">
     <%= yield %>
   </div>
