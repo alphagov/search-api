@@ -231,13 +231,26 @@ if settings.router[:path_prefix].empty?
     GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
   end
 
+  def id_to_slug(id)
+    # For IDs which include escaped slashes
+    CGI.unescape(id).split("/").last.chomp(".json")
+  end
+
   def artefacts_by_subsection
     artefacts_in_section = api.with_tag(params[:section])
                               .to_hash.fetch("results"){[]}
-    artefacts_in_section.each_with_object({}) do |t, h|
-      if t["tags"].first["parent"]
-        slug = t["tags"].first["title"].downcase.gsub(" ", "-")
-        h.fetch(slug){h[slug] = []} << t
+
+    artefacts_in_section.each_with_object({}) do |artefact, h|
+      section_tags = artefact["tags"].select { |tag| tag["details"]["type"] == "section" }
+
+      subsection_tags = section_tags.select do |tag|
+        tag["parent"] &&
+            id_to_slug(tag["parent"]["id"]) == params[:section]
+      end
+
+      subsection_tags.each do |tag|
+        subsection_slug = id_to_slug(tag["id"])
+        h.fetch(subsection_slug){h[subsection_slug] = []} << artefact
       end
     end
   end
