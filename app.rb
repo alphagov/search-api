@@ -252,6 +252,16 @@ if settings.router[:path_prefix].empty?
         subsection_slug = id_to_slug(tag["id"])
         h.fetch(subsection_slug){h[subsection_slug] = []} << artefact
       end
+
+      business_tag = artefact["tags"].find do |tag|
+        id_to_slug(tag["id"]) == params[:section]
+      end
+      business_subtags = artefact["tags"].select do |tag|
+        tag["parent"] and id_to_slug(tag["parent"]["id"]) == params[:section]
+      end
+      if business_tag and business_subtags.empty?
+        h.fetch("other"){h["other"] = []} << artefact
+      end
     end
   end
 
