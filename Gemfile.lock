@@ -23,7 +23,7 @@ GEM
       builder (>= 2.1.2)
     crack (0.3.1)
     erubis (2.7.0)
-    gds-api-adapters (1.7.0)
+    gds-api-adapters (1.7.1)
       lrucache (~> 0.1.1)
       null_logger
       plek
@@ -101,7 +101,7 @@ DEPENDENCIES
   ci_reporter
   delsolr!
   erubis
-  gds-api-adapters (= 1.7.0)
+  gds-api-adapters (= 1.7.1)
   htmlentities
   i18n
   json

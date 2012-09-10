@@ -16,7 +16,7 @@ class BrowseTest < IntegrationTest
 
   def content_api_has_artefacts(section="section-name", body = {})
     stub_request(:get,
-      "https://contentapi.test.alphagov.co.uk/with_tag.json?tag=#{section}").
+      "https://contentapi.test.alphagov.co.uk/with_tag.json?include_children=1&tag=#{section}").
       to_return(:status => 200, :body => body.to_json)
   end
 
