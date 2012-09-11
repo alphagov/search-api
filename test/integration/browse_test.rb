@@ -195,16 +195,6 @@ class BrowseTest < IntegrationTest
     assert_equal "section nav", last_response.headers["X-Slimmer-Section"]
   end
 
-  def test_should_handle_timeouts_in_with_tags
-    @primary_solr.stubs(:section).returns([sample_document])
-    content_api_has_root_sections(['section-name'])
-    stub_request(:get,
-      "https://contentapi.test.alphagov.co.uk/with_tag.json?include_children=1&tag=section-name").to_timeout
-    get "/browse/section-name"
-
-    assert_equal 503, last_response.status
-  end
-
   def test_browsing_section_list
     content_api_has_root_sections(["bob"])
 
