@@ -41,6 +41,10 @@ module IntegrationFixtures
   def sample_recommended_document
     Document.from_hash(sample_recommended_document_attributes)
   end
+
+  def sample_section
+    Section.new("bob")
+  end
 end
 
 class IntegrationTest < Test::Unit::TestCase
