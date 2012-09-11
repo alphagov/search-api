@@ -241,12 +241,11 @@ if settings.router[:path_prefix].empty?
                               .to_hash.fetch("results"){[]}
 
     artefacts_in_section.each_with_object({}) do |artefact, h|
-      section_tags = artefact["tags"].select do |tag|
-        tag["details"]["type"] == "section"
-      end
+      section_tags = artefact["tags"].select { |tag| tag["details"]["type"] == "section" }
 
       subsection_tags = section_tags.select do |tag|
-        tag["parent"] and id_to_slug(tag["parent"]["id"]) == params[:section]
+        tag["parent"] &&
+            id_to_slug(tag["parent"]["id"]) == params[:section]
       end
 
       subsection_tags.each do |tag|
