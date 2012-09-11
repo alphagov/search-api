@@ -285,7 +285,11 @@ if settings.router[:path_prefix].empty?
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
       @popular_artefacts = popular_items.select_from(params[:section], @ungrouped_results)
       @sub_sections = sub_sections
-      @artefacts_by_subsection = artefacts_by_subsection
+      begin
+        @artefacts_by_subsection = artefacts_by_subsection
+      rescue GdsApi::TimedOutException => e
+        halt 503
+      end
       @other_sections = other_root_sections
       @page_title = "#{formatted_section_name params[:section]} | GOV.UK Beta (Test)"
       erb(:section)
