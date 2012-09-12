@@ -2,6 +2,10 @@ require "rake/testtask"
 require "rest-client"
 require "json"
 
+File.join(File.dirname(__FILE__), "lib").tap do |path|
+  $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
+end
+
 Rake::TestTask.new do |t|
   t.libs << "test"
   t.test_files = FileList["test/**/*_test.rb"]
@@ -79,23 +83,56 @@ namespace :router do
 end
 
 namespace :rummager do
-  desc "Put the rummager mapping"
-  task :put_mapping do
-    config = YAML.load_file(File.expand_path("../elasticsearch.yml", __FILE__))["development"]
+
+  task :rummager_environment do
+    Bundler.require :default
+    require_relative "config"
+    require_relative "backends"
+
+    require "logger"
+    @logger = Logger.new STDOUT
+    @logger.level = verbose ? Logger::DEBUG : Logger::INFO
+
+    unless settings.primary_search[:type] == "elasticsearch"
+      raise RuntimeError, "This task only works with elasticsearch backends"
+    end
+
+    @client = ElasticsearchWrapper::Client.new(
+      settings.primary_search,
+      logger = logger
+    )
+    RestClient.log = @logger
+  end
+
+  desc "Create or update the elasticsearch mappings"
+  task :put_mapping => [:rummager_environment, :create_index] do
     schema = YAML.load_file(File.expand_path("../elasticsearch_schema.yml", __FILE__))
 
-    schema['mapping'].each do |key, value|
-      url = "#{config['baseurl']}#{config['indexname']}/#{key}/_mapping"
-      puts url
-      puts({key => value}.to_json)
-      RestClient.put(url, {key => value}.to_json)
+    schema["mapping"].each do |mapping_type, mapping|
+      @logger.info 'Setting mapping for the "#{mapping_type}" type'
+      @logger.debug({mapping_type => mapping}.to_json)
+
+      @client.put(
+        "#{mapping_type}/_mapping",
+        {mapping_type => mapping}.to_json
+      )
     end
   end
 
-  desc "Create the rummager index"
-  task :create_index do
-    config = YAML.load_file(File.expand_path("../elasticsearch.yml", __FILE__))["development"]
-
-    RestClient.put("#{config['baseurl']}#{config['indexname']}", "")
+  desc "Ensure the elasticsearch 'rummager' index exists"
+  task :create_index => :rummager_environment do
+    @logger.info "Creating elasticsearch index"
+    begin
+      @client.put("", nil)
+    rescue RestClient::BadRequest => error
+      # Have to rescue and inspect the BadRequest here, because elasticsearch
+      # doesn't do idempotent PUT requests for index creation
+      error_message = JSON.parse(error.http_body)["error"]
+      if error_message.start_with? "IndexAlreadyExistsException"
+        @logger.info "Index already exists"
+      else
+        raise
+      end
+    end
   end
 end

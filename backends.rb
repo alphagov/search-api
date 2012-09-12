@@ -1,3 +1,7 @@
+require "solr_wrapper"
+require "elasticsearch_wrapper"
+require "null_backend"
+
 class Backends
 
   def initialize(settings, logger = nil)
