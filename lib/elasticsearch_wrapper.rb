@@ -4,16 +4,73 @@ require "logger"
 require "rest-client"
 
 class ElasticsearchWrapper
-  def initialize(settings, recommended_format, logger = nil)
-    @settings, @recommended_format = settings, recommended_format
+
+  class Client
+    def initialize(settings, logger = nil)
+      missing_keys = [:server, :port, :index_name].reject { |k| settings[k] }
+      if missing_keys.any?
+        raise RuntimeError, "Missing keys: #{missing_keys.join(", ")}"
+      end
+      @base_url = URI::HTTP.build(
+        host: settings[:server],
+        port: settings[:port],
+        path: "/#{settings[:index_name]}/"
+      )
+
+      @logger = logger || Logger.new("/dev/null")
+    end
+
+    def request(method, sub_path, payload)
+      if sub_path.start_with? "/"
+        # Sub-paths almost certainly shouldn't start with leading slashes,
+        # since this will make the request relative to the server root
+        @logger.warn 'Request sub-path "#{sub_path}" has a leading slash'
+      end
+
+      RestClient::Request.execute(
+        method: method,
+        url:  url_for(sub_path),
+        payload: payload,
+        headers: {content_type: "application/json"}
+      )
+    end
+
+    # Forward on HTTP request methods, intercepting and resolving URLs
+    [:get, :post, :put, :head, :delete].each do |method_name|
+      define_method method_name do |sub_path, *args|
+        RestClient.send(method_name, url_for(sub_path), *args)
+      end
+    end
+
+  private
+    def url_for(sub_path)
+      if sub_path.start_with? "/"
+        # Sub-paths almost certainly shouldn't start with leading slashes,
+        # since this will make the request relative to the server root
+        @logger.warn 'Request sub-path "#{sub_path}" has a leading slash'
+      end
+
+      # Addition on URLs does relative resolution
+      (@base_url + sub_path).to_s
+    end
+  end
+
+  # TODO: support the format_filter option here
+  def initialize(settings, recommended_format, logger = nil, format_filter = nil)
+    @client = Client.new(settings, logger)
+    @index_name = settings[:index_name]
+    raise ArgumentError, "Missing index_name parameter" unless @index_name
+    @recommended_format = recommended_format
     @logger = logger || Logger.new("/dev/null")
+
+    raise RuntimeError, "Format filters not yet supported" if format_filter
   end
 
   def add(documents)
     documents = documents.map(&:elasticsearch_export).map do |doc|
       index_action(doc).to_json + "\n" + doc.to_json
     end
-    request(:post, "/_bulk", documents.join("\n"))
+    @client.request(:post, "_bulk", documents.join("\n"))
   end
 
   def search(query)
@@ -47,7 +104,7 @@ class ElasticsearchWrapper
             }
         }
     }.to_json
-    result = request(:get, "/_search", payload)
+    result = @client.request(:get, "_search", payload)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|
       Document.from_hash(hit['_source'])
@@ -55,18 +112,7 @@ class ElasticsearchWrapper
   end
 
   private
-  def request(method, sub_path, payload)
-    RestClient::Request.execute(
-        method: method,
-        url: url_for(sub_path),
-        payload: payload,
-        headers: {content_type: "application/json"}
-    )
-  end
-  def url_for(sub_path)
-    "#{@settings['baseurl']}#{@settings['indexname']}#{sub_path}"
-  end
   def index_action(doc)
-    {index: {_index: @settings['indexname'], _type: doc[:_type], _id: doc[:link]}}
+    {index: {_index: @index_name, _type: doc[:_type], _id: doc[:link]}}
   end
 end

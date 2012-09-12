@@ -5,8 +5,9 @@ require "webmock"
 class ElasticsearchWrapperTest < Test::Unit::TestCase
   def setup
     @settings = {
-        "baseurl" => "http://example.com:9200/",
-        "indexname" => "test-index"
+      server: "example.com",
+      port: 9200,
+      index_name: "test-index"
     }
     @wrapper = ElasticsearchWrapper.new(@settings, "myformat")
   end
