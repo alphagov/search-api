@@ -1,4 +1,5 @@
 require "document"
+require "section"
 require "logger"
 
 class SolrWrapper
@@ -72,6 +73,14 @@ class SolrWrapper
       :fields => "*",
       :limit  => 120
     ))
+  end
+
+  def facet(q)
+    results = @client.query("standard",
+      :query  => "*:*",
+      :facets => [{:field => q, :sort => q}]
+    ) or return []
+    results.facet_field_values(q).reject(&:empty?).map{ |s| Section.new(s) }
   end
 
   def complete(q, format = nil)

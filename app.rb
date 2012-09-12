@@ -10,11 +10,11 @@ require 'csv'
 
 require 'popular_items'
 require 'document'
+require 'section'
 require 'utils'
 require 'solr_wrapper'
 require 'slimmer_headers'
 require 'sinatra/content_for'
-require 'gds_api/content_api'
 
 
 require_relative 'config'
@@ -131,14 +131,14 @@ get prefixed_path("/sitemap.xml") do
     xml.instruct!
     xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
       xml.url do
-        xml.loc "#{base_url}#{prefixed_path("/")}"
+	xml.loc "#{base_url}#{prefixed_path("/")}"
       end
       documents.each do |document|
-        xml.url do
-          url = document.link
-            url = "#{base_url}#{url}" if url =~ /^\//
-          xml.loc url
-        end
+	xml.url do
+	  url = document.link
+          url = "#{base_url}#{url}" if url =~ /^\//
+	  xml.loc url
+	end
       end
     end
   end
@@ -148,40 +148,38 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse.?:format?") do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
-    @sections = root_sections
+    @results = primary_solr.facet('section')
     @page_title = "Browse | GOV.UK Beta (Test)"
     if request.accept.include?("application/json") or params['format'] == 'json'
       content_type :json
-      JSON.dump(@sections.map { |section| { url: section["web_url"] } })
+      JSON.dump(@results.map { |r| { url: "/browse/#{r.slug}" } })
     else
       erb(:sections)
     end
   end
 
-  def assemble_section_details
-    ensure_slug_is_valid
-    @ungrouped_results = primary_solr.section(params[:section])
+  def assemble_section_details(section_slug)
+    section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
+    halt 404 unless section == params[:section]
+    @ungrouped_results = primary_solr.section(section)
     halt 404 if @ungrouped_results.empty?
-    @section = current_section
-    @page_section = @section["title"]
-    @page_section_link = @section["content_with_tag"]["web_url"]
+    @section = Section.new(section)
+    @page_section = formatted_section_name(@section.slug)
+    @page_section_link = @section.path
     @results = @ungrouped_results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
-  end
-
-  # Not really sure what we mean by "valid".
-  # I guess we're doing it to fail fast?
-  def ensure_slug_is_valid
-    section_slug = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
-    halt 404 unless section_slug == params[:section]
   end
 
   def compile_section_json(results)
     as_hash = {
       'name' => @page_section,
-      'description' => @section["details"]["description"],
       'url' => @page_section_link,
       'contents' => []
     }
+    description_path = File.expand_path("../views/_#{@section.slug}.html", __FILE__)
+
+    if File.exists?(description_path)
+      as_hash['description'] = File.read(description_path).gsub(/<\/?[^>]*>/, "")
+    end
 
     @results.each do |subsection, items|
       as_hash['contents'] += items.collect do |i|
@@ -191,84 +189,9 @@ if settings.router[:path_prefix].empty?
     as_hash
   end
 
-  def raw_sections
-    api.sections.to_hash["results"].sort do |a, b|
-      a["title"] <=> b["title"]
-    end
-  end
-
-  # TODO maybe replace with API method? e.g. ?root_only=true
-  def root_sections
-    raw_sections.select { |s| s["parent"].nil? }
-  end
-
-  def sub_sections
-    raw_sections.select do |s|
-      if s["parent"] and s["parent"]["id"]
-        s["parent"]["id"].split("/")[-1].gsub(".json", "") == params[:section]
-      else
-        false
-      end
-    end
-  end
-
-  def current_section
-    found = root_sections.detect do |a|
-      slug = a["id"].split("/")[-1].gsub(".json", "")
-      slug == params[:section]
-    end
-    found
-  end
-
-  def other_root_sections
-    root_sections.reject do |a|
-      slug = a["id"].split("/")[-1].gsub(".json", "")
-      slug == params[:section]
-    end
-  end
-
-  def api
-    GdsApi::ContentApi.new(Plek.current_env, timeout: 10)
-  end
-
-  def id_to_slug(id)
-    # For IDs which include escaped slashes
-    CGI.unescape(id).split("/").last.chomp(".json")
-  end
-
-  def artefacts_by_subsection
-    artefacts_in_section = api.with_tag(params[:section])
-                              .to_hash.fetch("results"){[]}
-
-    artefacts_in_section.each_with_object({}) do |artefact, h|
-      section_tags = artefact["tags"].select do |tag|
-        tag["details"]["type"] == "section"
-      end
-
-      subsection_tags = section_tags.select do |tag|
-        tag["parent"] and id_to_slug(tag["parent"]["id"]) == params[:section]
-      end
-
-      subsection_tags.each do |tag|
-        subsection_slug = id_to_slug(tag["id"])
-        h.fetch(subsection_slug){h[subsection_slug] = []} << artefact
-      end
-
-      business_tag = artefact["tags"].find do |tag|
-        id_to_slug(tag["id"]) == params[:section]
-      end
-      business_subtags = artefact["tags"].select do |tag|
-        tag["parent"] and id_to_slug(tag["parent"]["id"]) == params[:section]
-      end
-      if business_tag and business_subtags.empty?
-        h.fetch("other"){h["other"] = []} << artefact
-      end
-    end
-  end
-
   get prefixed_path("/browse/:section.json") do
     expires 86400, :public
-    assemble_section_details
+    assemble_section_details(params[:section])
     content_type :json
     JSON.dump(compile_section_json(@results))
   end
@@ -276,22 +199,16 @@ if settings.router[:path_prefix].empty?
   get prefixed_path("/browse/:section") do
     expires 86400, :public
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
-    assemble_section_details
+    assemble_section_details(params[:section])
 
     if request.accept.include?("application/json")
       content_type :json
       JSON.dump(compile_json_for_section)
     else
       popular_items = PopularItems.new(settings.panopticon_api_credentials)
-      @popular_artefacts = popular_items.select_from(params[:section], @ungrouped_results)
-      @sub_sections = sub_sections
-      begin
-        @artefacts_by_subsection = artefacts_by_subsection
-      rescue GdsApi::TimedOutException => e
-        halt 503
-      end
-      @other_sections = other_root_sections
-      @page_title = "#{formatted_section_name params[:section]} | GOV.UK Beta (Test)"
+      @popular = popular_items.select_from(params[:section], @ungrouped_results)
+      @sections = (primary_solr.facet('section') || []).reject {|a| a.slug == @section.slug }
+      @page_title = "#{formatted_section_name @section.slug} | GOV.UK Beta (Test)"
       erb(:section)
     end
   end
