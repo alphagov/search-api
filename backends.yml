@@ -1,9 +1,9 @@
 development:
   primary:
-    type: solr
+    type: elasticsearch
     server: localhost
-    path: "/solr/rummager"
-    port: 8983
+    port: 9200
+    index_name: "rummager"
   secondary:
     type: none
 test:
