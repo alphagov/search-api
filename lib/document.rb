@@ -49,7 +49,7 @@ class Link
     }
   end
 
-  def elasticsearch_export()
+  def elasticsearch_export
     Hash.new.tap do |doc|
       self.class.auto_keys.each do |key|
         value = get(key)
