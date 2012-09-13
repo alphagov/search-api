@@ -1,8 +1,13 @@
 require "test_helper"
 require "app"
 
-class UpdateTest < Test::Unit::TestCase
+class SolrUpdateTest < IntegrationTest
   include Rack::Test::Methods
+
+  def setup
+    use_solr_for_primary_search
+    disable_secondary_search
+  end
 
   ENDPOINT = "http://solr-test-server:9999/solr/rummager/update"
   SUCCESS_RESPONSE = <<-END

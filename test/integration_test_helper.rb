@@ -60,6 +60,17 @@ class IntegrationTest < Test::Unit::TestCase
     @secondary_search.stubs(:search).returns([])
   end
 
+  def use_solr_for_primary_search
+    settings.stubs(:primary_search).returns(
+      {
+        type: "solr",
+        server: "solr-test-server",
+        port: 9999,
+        path: "/solr/rummager"
+      }
+    )
+  end
+
   def setup
     @primary_search = stub_everything("Mainstream Solr wrapper")
     Backends.any_instance.stubs(:primary_search).returns(@primary_search)

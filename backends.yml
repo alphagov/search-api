@@ -8,12 +8,6 @@ development:
     type: none
 test:
   primary:
-    type: solr
-    server: solr-test-server
-    path: "/solr/rummager"
-    port: 9999
+    type: none
   secondary:
-    type: solr
-    server: solr-test-server
-    path: "/solr/whitehall-rummager"
-    port: 9999
+    type: none
