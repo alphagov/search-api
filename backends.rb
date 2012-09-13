@@ -25,7 +25,7 @@ private
     case backend_settings[:type]
     when "none"
       @logger.info "Using null backend"
-      NullBackend.new(logger)
+      NullBackend.new(@logger)
     when "solr"
       @logger.info "Using Solr backend"
       SolrWrapper.new(
