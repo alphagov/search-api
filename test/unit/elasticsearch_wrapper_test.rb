@@ -22,7 +22,7 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
     document = stub("document", elasticsearch_export: json_document)
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
-{"index":{"_index":"test-index","_type":"edition","_id":"/foo/bar"}}
+{"index":{"_type":"edition","_id":"/foo/bar"}}
 {"_type":"edition","link":"/foo/bar","title":"TITLE ONE"}
     eos
     stub_request(:post, "http://example.com:9200/test-index/_bulk").with(

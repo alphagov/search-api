@@ -126,6 +126,6 @@ class ElasticsearchWrapper
 
   private
   def index_action(doc)
-    {index: {_index: @index_name, _type: doc[:_type], _id: doc[:link]}}
+    {index: {_type: doc[:_type], _id: doc[:link]}}
   end
 end
