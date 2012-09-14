@@ -4,6 +4,7 @@ require "integration_test_helper"
 class SearchTest < IntegrationTest
   def setup
     super
+    stub_primary_and_secondary_searches
     disable_secondary_search
   end
 

@@ -2,6 +2,12 @@
 require "integration_test_helper"
 
 class SecondarySearchTest < IntegrationTest
+
+  def setup
+    super
+    stub_primary_and_secondary_searches
+  end
+
   def test_should_not_show_secondary_solr_guidance_filter_when_no_secondary_solr_results_present
     @primary_search.stubs(:search).returns([sample_document, sample_document])
     @secondary_search.stubs(:search).returns([])

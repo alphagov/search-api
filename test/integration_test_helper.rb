@@ -93,7 +93,7 @@ class IntegrationTest < Test::Unit::TestCase
     RestClient.put "http://localhost:9200/rummager_test", ""
   end
 
-  def setup
+  def stub_primary_and_secondary_searches
     @primary_search = stub_everything("Mainstream Solr wrapper")
     Backends.any_instance.stubs(:primary_search).returns(@primary_search)
 

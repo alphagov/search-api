@@ -4,6 +4,7 @@ class DocumentViewtest < IntegrationTest
 
   def setup
     super
+    stub_primary_and_secondary_searches
     disable_secondary_search
   end
 

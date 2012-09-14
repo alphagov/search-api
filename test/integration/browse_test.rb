@@ -7,6 +7,7 @@ class BrowseTest < IntegrationTest
     mock_panopticon_api = mock("mock_panopticon_api")
     mock_panopticon_api.stubs(:curated_lists).returns({})
     GdsApi::Panopticon.stubs(:new).returns(mock_panopticon_api)
+    stub_primary_and_secondary_searches
     disable_secondary_search
   end
 
