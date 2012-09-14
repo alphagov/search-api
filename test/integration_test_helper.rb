@@ -71,6 +71,24 @@ class IntegrationTest < Test::Unit::TestCase
     )
   end
 
+  def use_elasticsearch_for_primary_search
+    settings.stubs(:primary_search).returns(
+      {
+        type: "elasticsearch",
+        server: "localhost",
+        port: 9200,
+        index_name: "rummager_test"
+      }
+    )
+  end
+
+  # NOTE: This will not create any mappings
+  # TODO: come back and make mappings
+  def clear_elasticsearch_index
+    RestClient.delete "http://localhost:9200/rummager_test"
+    RestClient.put "http://localhost:9200/rummager_test", ""
+  end
+
   def setup
     @primary_search = stub_everything("Mainstream Solr wrapper")
     Backends.any_instance.stubs(:primary_search).returns(@primary_search)
