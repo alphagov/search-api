@@ -85,7 +85,11 @@ class IntegrationTest < Test::Unit::TestCase
   # NOTE: This will not create any mappings
   # TODO: come back and make mappings
   def clear_elasticsearch_index
-    RestClient.delete "http://localhost:9200/rummager_test"
+    begin
+      RestClient.delete "http://localhost:9200/rummager_test"
+    rescue RestClient::Exception => exception
+      raise unless exception.http_code == 404
+    end
     RestClient.put "http://localhost:9200/rummager_test", ""
   end
 
