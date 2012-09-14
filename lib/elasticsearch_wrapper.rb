@@ -82,7 +82,8 @@ class ElasticsearchWrapper
     documents = documents.map(&:elasticsearch_export).map do |doc|
       index_action(doc).to_json + "\n" + doc.to_json
     end
-    @client.request(:post, "_bulk", documents.join("\n"))
+    # Ensure the request payload ends with a newline
+    @client.post("_bulk", documents.join("\n") + "\n", content_type: :json)
   end
 
   def search(query)
