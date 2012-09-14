@@ -84,6 +84,9 @@ end
 
 namespace :rummager do
 
+  # Set up the necessary backend and logging configuration for elasticsearch-
+  # related tasks. This task isn't any use on its own, but is a prerequisite
+  # for other tasks in this namespace.
   task :rummager_environment do
     Bundler.require :default
     require_relative "config"
