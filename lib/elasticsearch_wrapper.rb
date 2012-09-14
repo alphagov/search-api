@@ -25,19 +25,30 @@ class ElasticsearchWrapper
         # Sub-paths almost certainly shouldn't start with leading slashes,
         # since this will make the request relative to the server root
         @logger.warn 'Request sub-path "#{sub_path}" has a leading slash'
+      begin
+        RestClient::Request.execute(
+          method: method,
+          url:  url_for(sub_path),
+          payload: payload,
+          headers: {content_type: "application/json"}
+        )
+      rescue RestClient::InternalServerError => error
+        @logger.error(
+          "Internal server error in elasticsearch. " +
+          "Response: #{error.http_body}"
+        )
+        raise
       end
-
-      RestClient::Request.execute(
-        method: method,
-        url:  url_for(sub_path),
-        payload: payload,
-        headers: {content_type: "application/json"}
-      )
     end
 
     # Forward on HTTP request methods, intercepting and resolving URLs
     [:get, :post, :put, :head, :delete].each do |method_name|
       define_method method_name do |sub_path, *args|
+        full_url = url_for(sub_path)
+        @logger.debug "Sending #{method_name.upcase} request to #{full_url}"
+        args.each_with_index do |argument, index|
+          @logger.debug "Argument #{index + 1}: #{argument.inspect}"
+        end
         RestClient.send(method_name, url_for(sub_path), *args)
       end
     end
@@ -67,6 +78,7 @@ class ElasticsearchWrapper
   end
 
   def add(documents)
+    @logger.info "Adding #{documents.size} document(s) to elasticsearch"
     documents = documents.map(&:elasticsearch_export).map do |doc|
       index_action(doc).to_json + "\n" + doc.to_json
     end
