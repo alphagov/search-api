@@ -6,6 +6,11 @@ require "rest-client"
 class ElasticsearchWrapper
 
   class Client
+
+    # Sub-paths almost certainly shouldn't start with leading slashes,
+    # since this will make the request relative to the server root
+    SAFE_ABSOLUTE_PATHS = ["/_bulk"]
+
     def initialize(settings, logger = nil)
       missing_keys = [:server, :port, :index_name].reject { |k| settings[k] }
       if missing_keys.any?
@@ -21,10 +26,6 @@ class ElasticsearchWrapper
     end
 
     def request(method, sub_path, payload)
-      if sub_path.start_with? "/"
-        # Sub-paths almost certainly shouldn't start with leading slashes,
-        # since this will make the request relative to the server root
-        @logger.warn 'Request sub-path "#{sub_path}" has a leading slash'
       begin
         RestClient::Request.execute(
           method: method,
@@ -55,10 +56,9 @@ class ElasticsearchWrapper
 
   private
     def url_for(sub_path)
-      if sub_path.start_with? "/"
-        # Sub-paths almost certainly shouldn't start with leading slashes,
-        # since this will make the request relative to the server root
-        @logger.warn 'Request sub-path "#{sub_path}" has a leading slash'
+      if sub_path.start_with? "/" and ! SAFE_ABSOLUTE_PATHS.include? sub_path
+        @logger.error "Request sub-path '#{sub_path}' has a leading slash"
+        raise ArgumentError, "Only whitelisted absolute paths are allowed"
       end
 
       # Addition on URLs does relative resolution
