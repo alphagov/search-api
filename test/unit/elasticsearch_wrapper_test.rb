@@ -33,6 +33,50 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
     assert_requested(:post, "http://example.com:9200/test-index/_bulk")
   end
 
+  def test_get_document
+    document_url = "http://example.com:9200/test-index/_all/%2Fan-example-link"
+    document_hash = {
+      "_type" => "edition",
+      "link" => "/an-example-link",
+      "title" => "I am a title"
+    }
+
+    document_response = {
+      "_index" => "test-index",
+      "_type" => "edition",
+      "_id" => "/an-example-link",
+      "_version" => 4,
+      "exists" => true,
+      "_source" =>  document_hash
+    }
+    stub_request(:get, document_url).to_return(body: document_response.to_json)
+
+    document = @wrapper.get("/an-example-link")
+    assert document.is_a? Document
+    assert_equal "/an-example-link", document.link
+    assert_equal document_hash["title"], document.title
+    assert_requested :get, document_url
+  end
+
+  def test_get_document_not_found
+    document_url = "http://example.com:9200/test-index/_all/%2Fa-bad-link"
+
+    not_found_response = {
+      "_index" => "rummager",
+      "_type" => "edition",
+      "_id" => "/a-bad-link",
+      "exists" => false
+    }.to_json
+
+    stub_request(:get, document_url).to_return(
+      status: 404,
+      body: not_found_response
+    )
+
+    assert_nil @wrapper.get("/a-bad-link")
+    assert_requested :get, document_url
+  end
+
   def test_basic_keyword_search
     stub_request(:get, "http://example.com:9200/test-index/_search").with(
         body: {

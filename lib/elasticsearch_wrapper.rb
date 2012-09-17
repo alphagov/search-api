@@ -1,6 +1,7 @@
 require "document"
 require "section"
 require "logger"
+require "cgi"
 require "rest-client"
 
 class ElasticsearchWrapper
@@ -84,6 +85,17 @@ class ElasticsearchWrapper
     end
     # Ensure the request payload ends with a newline
     @client.post("_bulk", documents.join("\n") + "\n", content_type: :json)
+  end
+
+  def get(link)
+    @logger.info "Retrieving document with link '#{link}'"
+    begin
+      response = @client.get("_all/#{CGI.escape(link)}")
+    rescue RestClient::ResourceNotFound
+      return nil
+    end
+
+    Document.from_hash(JSON.parse(response.body)["_source"])
   end
 
   def search(query)
