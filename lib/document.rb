@@ -101,6 +101,12 @@ end
 
 class Document < Link
 
+  # The `additional_links` field was originally used in parted content (guides,
+  # benefits) to display links to the individual parts. We're not displaying
+  # these links any more in the search results, nor are we submitting them to
+  # Rummager. In time, they are likely to disappear entirely, taking large
+  # tracts of code with them.
+
   auto_keys :title, :link, :description, :format, :section, :subsection,
     :indexable_content, :additional_links, :boost_phrases
   attr_writer :highlight
