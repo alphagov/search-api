@@ -41,4 +41,22 @@ class ElasticsearchAmendmentTest < IntegrationTest
     get "/documents/%2Fa-missing-answer"
     assert last_response.not_found?
   end
+
+  def test_should_amend_a_document
+    post "/documents/%2Fan-example-answer", "title=A+new+title"
+
+    get "/documents/%2Fan-example-answer"
+    assert last_response.ok?
+    parsed_response = JSON.parse(last_response.body)
+
+    updates = {"title" => "A new title"}
+    sample_document_attributes.merge(updates).each do |key, value|
+      assert_equal value, parsed_response[key]
+    end
+  end
+
+  def test_should_404_amending_missing_document
+    post "/documents/%2Fa-missing-answer", "title=A+new+title"
+    assert last_response.not_found?
+  end
 end
