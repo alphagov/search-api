@@ -3,17 +3,12 @@ require "app"
 require "rest-client"
 
 class ElasticsearchIndexingTest < IntegrationTest
-  include Rack::Test::Methods
 
   def setup
     use_elasticsearch_for_primary_search
     disable_secondary_search
     WebMock.disable_net_connect!(allow: "localhost:9200")
     clear_elasticsearch_index
-  end
-
-  def app
-    Sinatra::Application
   end
 
   def test_should_send_a_document_to_elasticsearch_when_a_json_document_is_posted
