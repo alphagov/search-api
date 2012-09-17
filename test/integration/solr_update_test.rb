@@ -4,6 +4,11 @@ require "app"
 class SolrUpdateTest < IntegrationTest
   include Rack::Test::Methods
 
+  # Strictly speaking, this isn't an integration test as it doesn't call into
+  # an actual Solr instance, but practically speaking it would probably be too
+  # fragile to base the test suite on having an appropriately-configured Solr
+  # instance hanging around
+
   def setup
     use_solr_for_primary_search
     disable_secondary_search
