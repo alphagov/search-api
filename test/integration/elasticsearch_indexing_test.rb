@@ -23,11 +23,13 @@ class ElasticsearchIndexingTest < IntegrationTest
     post "/documents", JSON.dump(test_data)
     assert last_response.ok?
 
-    es_response = RestClient.get "http://localhost:9200/rummager_test/edition/%2Fan-example-answer"
-    parsed_response = JSON.parse(es_response)
+    get "/documents/%2Fan-example-answer"
+    assert last_response.ok?
+
+    parsed_response = JSON.parse(last_response.body)
 
     test_data.each do |key, value|
-      assert_equal value, parsed_response["_source"][key]
+      assert_equal value, parsed_response[key]
     end
   end
 
