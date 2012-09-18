@@ -55,6 +55,17 @@ class ElasticsearchAmendmentTest < IntegrationTest
     end
   end
 
+  def test_should_fail_to_amend_link
+    post "/documents/%2Fan-example-answer", "link=/wibble"
+    assert_false last_response.ok?
+
+    get "/documents/%2Fan-example-answer"
+    assert last_response.ok?
+
+    get "/documents/%2Fwibble"
+    assert last_response.not_found?
+  end
+
   def test_should_404_amending_missing_document
     post "/documents/%2Fa-missing-answer", "title=A+new+title"
     assert last_response.not_found?
