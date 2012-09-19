@@ -13,9 +13,11 @@ class ElasticsearchAdminWrapper
     # Create the elasticsearch index if it does not exist
     # If the index was created, return true; if it existed, return false
 
+    index_payload = @schema["index"]
+
     @logger.info "Trying to create elasticsearch index"
     begin
-      @client.put("", nil)
+      @client.put("", index_payload.to_json)
       @logger.info "Index created"
       return true
     rescue RestClient::BadRequest => error

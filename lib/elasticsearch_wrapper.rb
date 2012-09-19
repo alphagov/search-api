@@ -98,9 +98,12 @@ class ElasticsearchWrapper
     Document.from_hash(JSON.parse(response.body)["_source"])
   end
 
-  def search(query)
+  def search(query, format_filter = nil)
+
+    raise "Format filter not yet supported" if format_filter
+
     # RestClient does not allow a payload with a GET request
-    # so we have to call directly.u
+    # so we have to call @client.request directly.
     payload = {
         from: 0, size: 50,
         query: {

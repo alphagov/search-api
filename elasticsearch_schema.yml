@@ -1,5 +1,9 @@
-create:
-  none: "foo"
+index:
+  settings:
+    analysis:
+      analyzer:
+        default:
+          type: snowball
 mapping:
   edition:
     _all: { enabled: true }

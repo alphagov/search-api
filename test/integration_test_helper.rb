@@ -90,20 +90,13 @@ class IntegrationTest < Test::Unit::TestCase
     end
   end
 
-  # NOTE: This will not create any mappings
-  # TODO: come back and make mappings
   def reset_elasticsearch_index
-    delete_elasticsearch_index
-    RestClient.put "http://localhost:9200/rummager_test", ""
-
-    schema = YAML.load_file(File.expand_path("../../elasticsearch_schema.yml", __FILE__))
-    schema["mapping"].each do |mapping_type, mapping|
-      RestClient.put(
-        "http://localhost:9200/rummager_test/#{mapping_type}/_mapping",
-        {mapping_type => mapping}.to_json
-      )
-    end
-
+    admin = ElasticsearchAdminWrapper.new(
+      settings.primary_search,
+      settings.elasticsearch_schema
+    )
+    admin.create_index!
+    admin.put_mappings
   end
 
   def stub_primary_and_secondary_searches
