@@ -108,14 +108,6 @@ class ElasticsearchWrapper
         from: 0, size: 50,
         query: {
           query_string: { query: query }
-        },
-        highlight: {
-            pre_tags: %w(HIGHLIGHT_START),
-            post_tags: %w(HIGHLIGHT_END),
-            fields: {
-                description: {},
-                indexable_content: {}
-            }
         }
     }.to_json
     result = @client.request(:get, "_search", payload)

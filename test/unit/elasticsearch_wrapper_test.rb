@@ -83,14 +83,6 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
             from: 0, size: 50,
             query: {
                 query_string: { query: "keyword search" }
-            },
-            highlight: {
-                pre_tags: %w(HIGHLIGHT_START),
-                post_tags: %w(HIGHLIGHT_END),
-                fields: {
-                    description: {},
-                    indexable_content: {}
-                }
             }
         }.to_json,
         headers: {"Content-Type" => "application/json"}
