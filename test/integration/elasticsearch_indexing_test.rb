@@ -8,7 +8,7 @@ class ElasticsearchIndexingTest < IntegrationTest
     use_elasticsearch_for_primary_search
     disable_secondary_search
     WebMock.disable_net_connect!(allow: "localhost:9200")
-    clear_elasticsearch_index
+    reset_elasticsearch_index
   end
 
   def test_should_send_a_document_to_elasticsearch_when_a_json_document_is_posted

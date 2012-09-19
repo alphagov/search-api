@@ -16,6 +16,7 @@ set :router, config_for(:router)
 
 set :primary_search, backend_config_for("primary")
 set :secondary_search, backend_config_for("secondary")
+set :elasticsearch_schema, config_for("elasticsearch_schema")
 
 set :slimmer_headers, config_for(:slimmer_headers)
 

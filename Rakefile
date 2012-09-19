@@ -1,10 +1,11 @@
 require "rake/testtask"
 require "rest-client"
-require "json"
 
 File.join(File.dirname(__FILE__), "lib").tap do |path|
   $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
 end
+
+require "elasticsearch_admin_wrapper"
 
 Rake::TestTask.new do |t|
   t.libs << "test"
@@ -100,42 +101,21 @@ namespace :rummager do
       raise RuntimeError, "This task only works with elasticsearch backends"
     end
 
-    @client = ElasticsearchWrapper::Client.new(
+    @wrapper = ElasticsearchAdminWrapper.new(
       settings.primary_search,
-      logger = logger
+      settings.elasticsearch_schema,
+      @logger
     )
     RestClient.log = @logger
   end
 
   desc "Create or update the elasticsearch mappings"
   task :put_mapping => [:rummager_environment, :create_index] do
-    schema = YAML.load_file(File.expand_path("../elasticsearch_schema.yml", __FILE__))
-
-    schema["mapping"].each do |mapping_type, mapping|
-      @logger.info 'Setting mapping for the "#{mapping_type}" type'
-      @logger.debug({mapping_type => mapping}.to_json)
-
-      @client.put(
-        "#{mapping_type}/_mapping",
-        {mapping_type => mapping}.to_json
-      )
-    end
+    @wrapper.put_mappings
   end
 
   desc "Ensure the elasticsearch 'rummager' index exists"
   task :create_index => :rummager_environment do
-    @logger.info "Creating elasticsearch index"
-    begin
-      @client.put("", nil)
-    rescue RestClient::BadRequest => error
-      # Have to rescue and inspect the BadRequest here, because elasticsearch
-      # doesn't do idempotent PUT requests for index creation
-      error_message = JSON.parse(error.http_body)["error"]
-      if error_message.start_with? "IndexAlreadyExistsException"
-        @logger.info "Index already exists"
-      else
-        raise
-      end
-    end
+    @wrapper.create_index
   end
 end

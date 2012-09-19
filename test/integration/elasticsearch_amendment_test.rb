@@ -8,7 +8,7 @@ class ElasticsearchAmendmentTest < IntegrationTest
     use_elasticsearch_for_primary_search
     disable_secondary_search
     WebMock.disable_net_connect!(allow: "localhost:9200")
-    clear_elasticsearch_index
+    reset_elasticsearch_index
     add_sample_document
   end
 

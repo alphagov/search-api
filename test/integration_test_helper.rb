@@ -82,15 +82,28 @@ class IntegrationTest < Test::Unit::TestCase
     )
   end
 
-  # NOTE: This will not create any mappings
-  # TODO: come back and make mappings
-  def clear_elasticsearch_index
+  def delete_elasticsearch_index
     begin
       RestClient.delete "http://localhost:9200/rummager_test"
     rescue RestClient::Exception => exception
       raise unless exception.http_code == 404
     end
+  end
+
+  # NOTE: This will not create any mappings
+  # TODO: come back and make mappings
+  def reset_elasticsearch_index
+    delete_elasticsearch_index
     RestClient.put "http://localhost:9200/rummager_test", ""
+
+    schema = YAML.load_file(File.expand_path("../../elasticsearch_schema.yml", __FILE__))
+    schema["mapping"].each do |mapping_type, mapping|
+      RestClient.put(
+        "http://localhost:9200/rummager_test/#{mapping_type}/_mapping",
+        {mapping_type => mapping}.to_json
+      )
+    end
+
   end
 
   def stub_primary_and_secondary_searches
