@@ -107,20 +107,7 @@ class ElasticsearchWrapper
     payload = {
         from: 0, size: 50,
         query: {
-          bool: {
-            must: {
-              query_string: {
-                query: query
-              }
-            },
-            should: {
-              query_string: {
-                default_field: "format",
-                query: "transaction OR #@recommended_format",
-                boost: 3.0
-              }
-            }
-          }
+          query_string: { query: query }
         },
         highlight: {
             pre_tags: %w(HIGHLIGHT_START),

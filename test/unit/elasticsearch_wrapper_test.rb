@@ -82,20 +82,7 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
         body: {
             from: 0, size: 50,
             query: {
-                bool: {
-                    must: {
-                        query_string: {
-                            query: "keyword search"
-                        }
-                    },
-                    should: {
-                        query_string: {
-                            default_field: "format",
-                            query: "transaction OR myformat",
-                            boost: 3.0
-                        }
-                    }
-                }
+                query_string: { query: "keyword search" }
             },
             highlight: {
                 pre_tags: %w(HIGHLIGHT_START),
