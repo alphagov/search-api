@@ -126,6 +126,11 @@ class ElasticsearchWrapper
     return true  # For consistency with the Solr API and simple_json_response
   end
 
+  def delete_all
+    @client.request :delete, "_query", {match_all: {}}.to_json
+    @client.post "_refresh", nil
+  end
+
   private
   def index_action(doc)
     {index: {_type: doc[:_type], _id: doc[:link]}}

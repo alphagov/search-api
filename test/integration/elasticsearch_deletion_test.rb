@@ -66,4 +66,19 @@ class ElasticsearchDeletionTest < IntegrationTest
     get "/search.json?q=cheese"
     assert_no_results
   end
+
+  def test_should_delete_all_the_things
+    delete "/documents?delete_all=yes"
+    assert last_response.ok?
+
+    ["/an-example-answer", "/another-example-answer"].each do |link|
+      get "/documents/#{CGI.escape(link)}"
+      assert last_response.not_found?
+    end
+
+    ["badger", "benefits"].each do |query|
+      get "/search.json?q=#{query}"
+      assert_no_results
+    end
+  end
 end
