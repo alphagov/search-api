@@ -110,7 +110,6 @@ class ElasticsearchWrapper
           bool: {
             must: {
               query_string: {
-                fields: %w(title description indexable_content),
                 query: query
               }
             },

@@ -85,7 +85,6 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
                 bool: {
                     must: {
                         query_string: {
-                            fields: %w(title description indexable_content),
                             query: "keyword search"
                         }
                     },

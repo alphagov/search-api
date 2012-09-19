@@ -27,6 +27,7 @@ class ElasticsearchSearchTest < IntegrationTest
         "description" => "Government, government, government. Developers.",
         "format" => "answer",
         "link" => "/another-example-answer",
+        "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
       }
     ]
@@ -70,5 +71,25 @@ class ElasticsearchSearchTest < IntegrationTest
     assert last_response.ok?
     parsed_response = JSON.parse(last_response.body)
     assert_equal ["/an-example-answer"], parsed_response.map { |r| r["link"] }
+  end
+
+  def test_should_not_match_on_slug
+    ["example", "%2Fan-example-answer"].each do |escaped_query|
+      get "/search.json?q=#{escaped_query}"
+      assert last_response.ok?
+      assert_equal [], JSON.parse(last_response.body)
+    end
+  end
+
+  def test_should_not_match_on_format
+    get "/search.json?q=answer"
+    assert last_response.ok?
+    assert_equal [], JSON.parse(last_response.body)
+  end
+
+  def test_should_not_match_on_section
+    get "/search.json?q=crime"
+    assert last_response.ok?
+    assert_equal [], JSON.parse(last_response.body)
   end
 end
