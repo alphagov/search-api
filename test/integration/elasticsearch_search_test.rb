@@ -44,51 +44,52 @@ class ElasticsearchSearchTest < IntegrationTest
     post "/commit", nil
   end
 
+  def assert_result_links(*links)
+    parsed_response = JSON.parse(last_response.body)
+    assert_equal links, parsed_response.map { |r| r["link"] }
+  end
+
   def test_should_search_by_content
     get "/search.json?q=badger"
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
-    assert_equal ["/an-example-answer"], parsed_response.map { |r| r["link"] }
+    assert_result_links "/an-example-answer"
   end
 
   def test_should_match_stems
     get "/search.json?q=badgers"
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
-    assert_equal ["/an-example-answer"], parsed_response.map { |r| r["link"] }
+    assert_result_links "/an-example-answer"
   end
 
   def test_should_search_by_title
     get "/search.json?q=cheese"
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
-    assert_equal ["/an-example-answer"], parsed_response.map { |r| r["link"] }
+    assert_result_links "/an-example-answer"
   end
 
   def test_should_search_by_description
     get "/search.json?q=hummus"
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
-    assert_equal ["/an-example-answer"], parsed_response.map { |r| r["link"] }
+    assert_result_links "/an-example-answer"
   end
 
   def test_should_not_match_on_slug
     ["example", "%2Fan-example-answer"].each do |escaped_query|
       get "/search.json?q=#{escaped_query}"
       assert last_response.ok?
-      assert_equal [], JSON.parse(last_response.body)
+      assert_no_results
     end
   end
 
   def test_should_not_match_on_format
     get "/search.json?q=answer"
     assert last_response.ok?
-    assert_equal [], JSON.parse(last_response.body)
+    assert_no_results
   end
 
   def test_should_not_match_on_section
     get "/search.json?q=crime"
     assert last_response.ok?
-    assert_equal [], JSON.parse(last_response.body)
+    assert_no_results
   end
 end

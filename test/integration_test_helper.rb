@@ -99,6 +99,10 @@ class IntegrationTest < Test::Unit::TestCase
     admin.put_mappings
   end
 
+  def assert_no_results
+    assert_equal [], JSON.parse(last_response.body)
+  end
+
   def stub_primary_and_secondary_searches
     @primary_search = stub_everything("Mainstream Solr wrapper")
     Backends.any_instance.stubs(:primary_search).returns(@primary_search)
