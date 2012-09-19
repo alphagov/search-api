@@ -117,6 +117,15 @@ class ElasticsearchWrapper
     }
   end
 
+  def delete(link)
+    begin
+      # Can't use a simple delete, because we don't know the type
+      @client.delete "_query?q=link:#{CGI.escape(link)}"
+    rescue RestClient::ResourceNotFound
+    end
+    return true  # For consistency with the Solr API and simple_json_response
+  end
+
   private
   def index_action(doc)
     {index: {_type: doc[:_type], _id: doc[:link]}}
