@@ -10,7 +10,7 @@ class ElasticsearchSearchTest < IntegrationTest
     WebMock.disable_net_connect!(allow: "localhost:9200")
     reset_elasticsearch_index
     add_sample_documents
-    refresh_index
+    commit_index
   end
 
   def sample_document_attributes
@@ -40,9 +40,8 @@ class ElasticsearchSearchTest < IntegrationTest
     end
   end
 
-  def refresh_index
-    # TODO: replace this with a Rummager request when we have support
-    RestClient.post "http://localhost:9200/rummager_test/_refresh", ""
+  def commit_index
+    post "/commit", nil
   end
 
   def test_should_search_by_content

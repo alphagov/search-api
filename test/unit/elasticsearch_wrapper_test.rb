@@ -90,4 +90,13 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
     @wrapper.search "keyword search"
     assert_requested(:get, "http://example.com:9200/test-index/_search")
   end
+
+  def test_commit
+    refresh_url = "http://example.com:9200/test-index/_refresh"
+    stub_request(:post, refresh_url).to_return(
+      body: '{"ok":true,"_shards":{"total":1,"successful":1,"failed":0}}'
+    )
+    @wrapper.commit
+    assert_requested :post, refresh_url
+  end
 end

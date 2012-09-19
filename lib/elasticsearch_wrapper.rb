@@ -128,6 +128,10 @@ class ElasticsearchWrapper
 
   def delete_all
     @client.request :delete, "_query", {match_all: {}}.to_json
+    commit
+  end
+
+  def commit
     @client.post "_refresh", nil
   end
 
