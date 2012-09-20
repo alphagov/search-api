@@ -102,18 +102,6 @@ class SearchTest < IntegrationTest
     assert_equal "0", last_response.headers["X-Slimmer-Result-Count"]
   end
 
-  def test_should_set_body_class_based_on_proposition_header
-    app.settings.stubs(:slimmer_headers).returns(
-      section:     "x",
-      format:      "y",
-      proposition: "blah"
-    )
-    @primary_search.stubs(:search).returns([])
-    get "/search", {q: "bob"}
-    # the mainstream class is temporarily hardcoded while we switch to using it
-    assert_match /<body class="blah mainstream"/, last_response.body
-  end
-
   def test_should_respond_with_json_when_requested
     @primary_search.stubs(:search).returns([
       sample_document
