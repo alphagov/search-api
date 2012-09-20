@@ -1,4 +1,11 @@
 require "rake/testtask"
+require "rest-client"
+
+File.join(File.dirname(__FILE__), "lib").tap do |path|
+  $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
+end
+
+require "elasticsearch_admin_wrapper"
 
 Rake::TestTask.new do |t|
   t.libs << "test"
@@ -73,5 +80,42 @@ namespace :router do
     else
       raise "Unexpected app_id '#{settings.router[:app_id]}' in router.yml"
     end
+  end
+end
+
+namespace :rummager do
+
+  # Set up the necessary backend and logging configuration for elasticsearch-
+  # related tasks. This task isn't any use on its own, but is a prerequisite
+  # for other tasks in this namespace.
+  task :rummager_environment do
+    Bundler.require :default
+    require_relative "config"
+    require_relative "backends"
+
+    require "logger"
+    @logger = Logger.new STDOUT
+    @logger.level = verbose ? Logger::DEBUG : Logger::INFO
+
+    unless settings.primary_search[:type] == "elasticsearch"
+      raise RuntimeError, "This task only works with elasticsearch backends"
+    end
+
+    @wrapper = ElasticsearchAdminWrapper.new(
+      settings.primary_search,
+      settings.elasticsearch_schema,
+      @logger
+    )
+    RestClient.log = @logger
+  end
+
+  desc "Create or update the elasticsearch mappings"
+  task :put_mapping => [:rummager_environment, :create_index] do
+    @wrapper.put_mappings
+  end
+
+  desc "Ensure the elasticsearch 'rummager' index exists"
+  task :create_index => :rummager_environment do
+    @wrapper.create_index
   end
 end

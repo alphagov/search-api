@@ -1,0 +1,13 @@
+development:
+  primary:
+    type: elasticsearch
+    server: localhost
+    port: 9200
+    index_name: "rummager"
+  secondary:
+    type: none
+test:
+  primary:
+    type: none
+  secondary:
+    type: none

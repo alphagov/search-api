@@ -14,7 +14,7 @@ in_development = ENV['RACK_ENV'] == 'development'
 in_preview = ENV['FACTER_govuk_platform'] == 'preview'
 
 if in_development or in_preview
-  set :logging, Logger::INFO
+  set :logging, $DEBUG ? Logger::DEBUG : Logger::INFO
 else
   enable :logging
 end
