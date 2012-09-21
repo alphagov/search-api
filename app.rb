@@ -143,6 +143,74 @@ get prefixed_path("/sitemap.xml") do
   end
 end
 
+post prefixed_path("/documents") do
+  request.body.rewind
+  documents = [JSON.parse(request.body.read)].flatten.map { |hash|
+    Document.from_hash(hash)
+  }
+
+  boosts = {}
+  CSV.foreach(settings.boost_csv) { |row|
+    link, phrases = row
+    boosts[link] = phrases
+  }
+
+  better_documents = boost_documents(documents, boosts)
+
+  simple_json_result(primary_search.add(better_documents))
+end
+
+post prefixed_path("/commit") do
+  simple_json_result(primary_search.commit)
+end
+
+get prefixed_path("/documents/*") do
+  document = primary_search.get(params["splat"].first)
+  halt 404 unless document
+  content_type :json
+  JSON.dump document.to_hash
+end
+
+delete prefixed_path("/documents/*") do
+  simple_json_result(primary_search.delete(params["splat"].first))
+end
+
+post prefixed_path("/documents/*") do
+  def text_error(content)
+    halt 403, {"Content-Type" => "text/plain"}, content
+  end
+
+  unless request.form_data?
+    halt(
+      415,
+      {"Content-Type" => "text/plain"},
+      "Amendments require application/x-www-form-urlencoded data"
+    )
+  end
+  document = primary_search.get(params["splat"].first)
+  halt 404 unless document
+  text_error "Cannot change document links" if request.POST.include? 'link'
+
+  # Note: this expects application/x-www-form-urlencoded data, not JSON
+  request.POST.each_pair do |key, value|
+    begin
+      document.set key, value
+    rescue NoMethodError
+      text_error "Unrecognised field '#{key}'"
+    end
+  end
+  simple_json_result(primary_search.add([document]))
+end
+
+delete prefixed_path("/documents") do
+  if params['delete_all']
+    action = primary_search.delete_all
+  else
+    action = primary_search.delete(params["link"])
+  end
+  simple_json_result(action)
+end
+
 if settings.router[:path_prefix].empty?
   get "/browse.?:format?" do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
@@ -211,72 +279,4 @@ if settings.router[:path_prefix].empty?
       erb(:section)
     end
   end
-end
-
-post prefixed_path("/documents") do
-  request.body.rewind
-  documents = [JSON.parse(request.body.read)].flatten.map { |hash|
-    Document.from_hash(hash)
-  }
-
-  boosts = {}
-  CSV.foreach(settings.boost_csv) { |row|
-    link, phrases = row
-    boosts[link] = phrases
-  }
-
-  better_documents = boost_documents(documents, boosts)
-
-  simple_json_result(primary_search.add(better_documents))
-end
-
-post prefixed_path("/commit") do
-  simple_json_result(primary_search.commit)
-end
-
-get prefixed_path("/documents/*") do
-  document = primary_search.get(params["splat"].first)
-  halt 404 unless document
-  content_type :json
-  JSON.dump document.to_hash
-end
-
-delete prefixed_path("/documents/*") do
-  simple_json_result(primary_search.delete(params["splat"].first))
-end
-
-post prefixed_path("/documents/*") do
-  def text_error(content)
-    halt 403, {"Content-Type" => "text/plain"}, content
-  end
-
-  unless request.form_data?
-    halt(
-      415,
-      {"Content-Type" => "text/plain"},
-      "Amendments require application/x-www-form-urlencoded data"
-    )
-  end
-  document = primary_search.get(params["splat"].first)
-  halt 404 unless document
-  text_error "Cannot change document links" if request.POST.include? 'link'
-
-  # Note: this expects application/x-www-form-urlencoded data, not JSON
-  request.POST.each_pair do |key, value|
-    begin
-      document.set key, value
-    rescue NoMethodError
-      text_error "Unrecognised field '#{key}'"
-    end
-  end
-  simple_json_result(primary_search.add([document]))
-end
-
-delete prefixed_path("/documents") do
-  if params['delete_all']
-    action = primary_search.delete_all
-  else
-    action = primary_search.delete(params["link"])
-  end
-  simple_json_result(action)
 end
