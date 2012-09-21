@@ -3,6 +3,7 @@
 end
 
 require 'sinatra'
+require 'sinatra/namespace'
 require 'slimmer'
 require 'erubis'
 require 'json'
@@ -42,13 +43,8 @@ before do
   headers SlimmerHeaders.headers(settings.slimmer_headers)
 end
 
-def prefixed_path(path)
-  path_prefix = settings.router[:path_prefix]
-  raise "Path prefix must start with /" unless path_prefix.blank? || path_prefix =~ /^\//
-  "#{path_prefix}#{path}"
-end
-
-get prefixed_path("/search.?:format?") do
+namespace settings.router[:path_prefix] || "" do
+get "/search.?:format?" do
   @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
 
   if @query == ""
@@ -93,7 +89,7 @@ get prefixed_path("/search.?:format?") do
   end
 end
 
-get prefixed_path("/preload-autocomplete") do
+get "/preload-autocomplete" do
   # Eventually this is likely to be a list of commonly searched for terms
   # so searching for those is really fast. For the beta, this is just a list
   # of all terms.
@@ -103,7 +99,7 @@ get prefixed_path("/preload-autocomplete") do
   JSON.dump(results.map { |r| r.to_hash })
 end
 
-get prefixed_path("/autocomplete") do
+get "/autocomplete" do
   content_type :json
   query = params['q']
 
@@ -121,7 +117,7 @@ get prefixed_path("/autocomplete") do
   ) })
 end
 
-get prefixed_path("/sitemap.xml") do
+get "/sitemap.xml" do
   expires 86400, :public
   # Site maps can have up to 50,000 links in them.
   # We use one for / so we can have up to 49,999 others.
@@ -130,7 +126,7 @@ get prefixed_path("/sitemap.xml") do
     xml.instruct!
     xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
       xml.url do
-	xml.loc "#{base_url}#{prefixed_path("/")}"
+	xml.loc "#{base_url}#{"/"}"
       end
       documents.each do |document|
 	xml.url do
@@ -143,7 +139,7 @@ get prefixed_path("/sitemap.xml") do
   end
 end
 
-post prefixed_path("/documents") do
+post "/documents" do
   request.body.rewind
   documents = [JSON.parse(request.body.read)].flatten.map { |hash|
     Document.from_hash(hash)
@@ -160,22 +156,22 @@ post prefixed_path("/documents") do
   simple_json_result(primary_search.add(better_documents))
 end
 
-post prefixed_path("/commit") do
+post "/commit" do
   simple_json_result(primary_search.commit)
 end
 
-get prefixed_path("/documents/*") do
+get "/documents/*" do
   document = primary_search.get(params["splat"].first)
   halt 404 unless document
   content_type :json
   JSON.dump document.to_hash
 end
 
-delete prefixed_path("/documents/*") do
+delete "/documents/*" do
   simple_json_result(primary_search.delete(params["splat"].first))
 end
 
-post prefixed_path("/documents/*") do
+post "/documents/*" do
   def text_error(content)
     halt 403, {"Content-Type" => "text/plain"}, content
   end
@@ -202,13 +198,14 @@ post prefixed_path("/documents/*") do
   simple_json_result(primary_search.add([document]))
 end
 
-delete prefixed_path("/documents") do
+delete "/documents" do
   if params['delete_all']
     action = primary_search.delete_all
   else
     action = primary_search.delete(params["link"])
   end
   simple_json_result(action)
+end
 end
 
 if settings.router[:path_prefix].empty?

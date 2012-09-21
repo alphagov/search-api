@@ -7,8 +7,9 @@ end
 
 gem "unicorn"
 gem "sinatra"
+gem "sinatra-contrib"
 gem "delsolr", :git => "https://github.com/alphagov/delsolr.git"
-gem 'rake', '0.9.2'
+gem 'rake', '0.9.2', :require => false
 gem 'slimmer', '1.2.4'
 gem 'erubis'
 gem 'json'
