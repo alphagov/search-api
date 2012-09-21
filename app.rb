@@ -18,7 +18,6 @@ require 'null_backend'
 require 'slimmer_headers'
 require 'sinatra/content_for'
 
-
 require_relative 'config'
 require_relative 'helpers'
 require_relative 'backends'
@@ -145,7 +144,7 @@ get prefixed_path("/sitemap.xml") do
 end
 
 if settings.router[:path_prefix].empty?
-  get prefixed_path("/browse.?:format?") do
+  get "/browse.?:format?" do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
     @results = primary_search.facet('section')
@@ -189,14 +188,14 @@ if settings.router[:path_prefix].empty?
     as_hash
   end
 
-  get prefixed_path("/browse/:section.json") do
+  get "/browse/:section.json" do
     expires 86400, :public
     assemble_section_details(params[:section])
     content_type :json
     JSON.dump(compile_section_json(@results))
   end
 
-  get prefixed_path("/browse/:section") do
+  get "/browse/:section" do
     expires 86400, :public
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     assemble_section_details(params[:section])
