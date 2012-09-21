@@ -74,7 +74,7 @@ get prefixed_path("/search.?:format?") do
 
   if request.accept.include?("application/json") or params['format'] == 'json'
     content_type :json
-    JSON.dump(@results.map { |r| r.to_hash.merge(
+    JSON.dump((@results + @secondary_results).map { |r| r.to_hash.merge(
       highlight: r.highlight,
       presentation_format: r.presentation_format,
       humanized_format: r.humanized_format
