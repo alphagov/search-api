@@ -49,6 +49,21 @@ class Link
     }
   end
 
+  def elasticsearch_export
+    Hash.new.tap do |doc|
+      self.class.auto_keys.each do |key|
+        value = get(key)
+        if value.is_a?(Array)
+          value = value.map {|v| v.elasticsearch_export }
+        end
+        unless value.nil? or (value.respond_to?(:empty?) and value.empty?)
+          doc[key] = value
+        end
+      end
+      doc[:_type] = "edition"
+    end
+  end
+
   def to_hash
     Hash[self.class.auto_keys.map { |key|
       value = get(key)
@@ -85,6 +100,12 @@ class Link
 end
 
 class Document < Link
+
+  # The `additional_links` field was originally used in parted content (guides,
+  # benefits) to display links to the individual parts. We're not displaying
+  # these links any more in the search results, nor are we submitting them to
+  # Rummager. In time, they are likely to disappear entirely, taking large
+  # tracts of code with them.
 
   auto_keys :title, :link, :description, :format, :section, :subsection,
     :indexable_content, :additional_links, :boost_phrases

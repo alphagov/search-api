@@ -11,8 +11,11 @@ class SolrWrapper
     additional_links__link additional_links__link_order
   ]
 
-  def initialize(client, recommended_format, logger=Logger.new('/dev/null'))
-    @client, @recommended_format, @logger = client, recommended_format, logger
+  def initialize(client, recommended_format, logger = nil, default_format = nil)
+    @client = client
+    @recommended_format = recommended_format
+    @default_format = default_format
+    @logger = logger || Logger.new("/dev/null")
   end
 
   def add(documents)
@@ -38,7 +41,7 @@ class SolrWrapper
     map_results(@client.query("standard", query_opts))
   end
 
-  def search(q, format = nil)
+  def search(q, format = @default_format)
     query_opts = {
       :query  => "#{prepare_query(q)}*",
       :fields => DOCUMENT_FIELDS.join(","),

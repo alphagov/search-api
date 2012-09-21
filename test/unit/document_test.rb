@@ -281,4 +281,16 @@ class DocumentTest < Test::Unit::TestCase
     document.highlight = "HIGHLIGHT"
     assert_equal "HIGHLIGHT", document.highlight
   end
+
+  def test_should_skip_missing_fields_in_elasticsearch
+    hash = {
+        "_type" => "edition",
+        "title" => "TITLE",
+        "description" => "DESCRIPTION",
+        "format" => "guide",
+        "link" => "/an-example-guide",
+    }
+    document = Document.from_hash(hash)
+    assert_equal hash.keys.sort.map(&:to_sym), document.elasticsearch_export.keys.sort
+  end
 end

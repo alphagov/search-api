@@ -56,14 +56,58 @@ class IntegrationTest < Test::Unit::TestCase
     Sinatra::Application
   end
 
-  def setup
-    @primary_solr = stub_everything("Mainstream Solr wrapper")
-    @secondary_solr = stub_everything("Whitehall Solr wrapper")
+  def disable_secondary_search
+    @secondary_search.stubs(:search).returns([])
+  end
 
-    DelSolr::Client.stubs(:new).with(settings.solr).returns(:mainstream_client)
-    DelSolr::Client.stubs(:new).with(settings.secondary_solr).returns(:whitehall_client)
+  def use_solr_for_primary_search
+    settings.stubs(:primary_search).returns(
+      {
+        type: "solr",
+        server: "solr-test-server",
+        port: 9999,
+        path: "/solr/rummager"
+      }
+    )
+  end
 
-    SolrWrapper.stubs(:new).with(:mainstream_client, anything, anything).returns(@primary_solr)
-    SolrWrapper.stubs(:new).with(:whitehall_client, anything, anything).returns(@secondary_solr)
+  def use_elasticsearch_for_primary_search
+    settings.stubs(:primary_search).returns(
+      {
+        type: "elasticsearch",
+        server: "localhost",
+        port: 9200,
+        index_name: "rummager_test"
+      }
+    )
+  end
+
+  def delete_elasticsearch_index
+    begin
+      RestClient.delete "http://localhost:9200/rummager_test"
+    rescue RestClient::Exception => exception
+      raise unless exception.http_code == 404
+    end
+  end
+
+  def reset_elasticsearch_index
+    admin = ElasticsearchAdminWrapper.new(
+      settings.primary_search,
+      settings.elasticsearch_schema
+    )
+    admin.create_index!
+    admin.put_mappings
+  end
+
+  def assert_no_results
+    assert_equal [], JSON.parse(last_response.body)
+  end
+
+  def stub_primary_and_secondary_searches
+    @primary_search = stub_everything("Mainstream Solr wrapper")
+    Backends.any_instance.stubs(:primary_search).returns(@primary_search)
+
+    @secondary_search = stub_everything("Whitehall Solr wrapper")
+    Backends.any_instance.stubs(:secondary_search).returns(@secondary_search)
   end
 end
