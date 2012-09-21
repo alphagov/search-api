@@ -9,57 +9,35 @@
       </fieldset>
     </form>
 
-    <div class="group">
-      <div class="results">
-        <div class="results-wrapper">
-          <ul class="results-list">
-            <% @results.each do |result| %>
-              <% if result.presentation_format == "recommended_link" %>
-              <li class="section-<%= result.section %> type-guide external">
-              <% else %>
-              <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
-              <% end %>
-                <p class="search-result-title"><a href="<%= result.link %>" title="View <%=h result.title %>"<% if result.presentation_format == "recommended_link" %> rel="external"<% end %>><%=h result.title %></a></p>
-                <p><%= h result.description %></p>
-                <% if result.presentation_format == "recommended_link" %>
-                <ul class="result-meta">
-                  <li>External site</li>
-                </ul>
-                <% end %>
-              </li>
-            <% end %>
-
-            <% @secondary_results.each do |result| %>
-              <li class="section-specialist type-<%= result.presentation_format %>">
-                <p class="search-result-title"><a href="<%= result.link %>" title= "View <%=h result.title %>"><%=h result.title %></a></p>
-                <p><%= h result.description %></p>
-
-                <ul class="result-meta">
-                  <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
-                </ul>
-              </li>
-            <% end %>
+    <ul class="results-list">
+      <% @results.each do |result| %>
+        <% if result.presentation_format == "recommended_link" %>
+        <li class="section-<%= result.section %> type-guide external">
+        <% else %>
+        <li class="section-<%= result.section %> type-<%= result.presentation_format %>">
+        <% end %>
+          <p class="search-result-title"><a href="<%= result.link %>" title="View <%=h result.title %>"<% if result.presentation_format == "recommended_link" %> rel="external"<% end %>><%=h result.title %></a></p>
+          <p><%= h result.description %></p>
+          <% if result.presentation_format == "recommended_link" %>
+          <ul class="result-meta">
+            <li>External site</li>
           </ul>
-        </div>
-      </div>
+          <% end %>
+        </li>
+      <% end %>
 
-      <aside class="filters group">
-          <h2 class="visuallyhidden">Filter by Section</h2>
+      <% @secondary_results.each do |result| %>
+        <li class="section-specialist type-<%= result.presentation_format %>">
+          <p class="search-result-title"><a href="<%= result.link %>" title= "View <%=h result.title %>"><%=h result.title %></a></p>
+          <p><%= h result.description %></p>
 
-          <ul>
-            <li data-filter="*" class="active"><a href="#">All results <span><%= capped_search_set_size %></span><span class="visuallyhidden"> results</span></a></li>
-            <% @results.group_by(&:section).sort_by { |section, results_in_section|
-                 results_in_section.size
-               }.reverse_each do |section, results_in_section| %>
-              <% next unless section %>
-              <li data-filter="section-<%= section %>"><a href="#"><%= formatted_section_name(section) %> <span><%= results_in_section.size %></span><span class="visuallyhidden"> results</span></a></li>
-            <% end %>
-            <% if not @secondary_results.empty? %>
-              <li data-filter="section-specialist"><a href="#">Specialist guidance <span><%= @secondary_results.count %></span><span class="visuallyhidden"> results</span></a></li>
-            <% end %>
+          <ul class="result-meta">
+            <li class="<%= result.presentation_format %>"><%=h result.humanized_format %></li><% if result.section %><li><a href="/browse/<%= result.section %>"><%= formatted_section_name(result.section) %></a></li><% end %>
           </ul>
-      </aside>
-    </div>
+        </li>
+      <% end %>
+    </ul>
+
   </div>
 </section>
 
