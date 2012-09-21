@@ -20,8 +20,6 @@ class SecondarySearchTest < IntegrationTest
   end
 
   def test_should_show_secondary_solr_guidance_filter_when_secondary_solr_results_exist
-    settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
-
     @primary_search.stubs(:search).returns([sample_document])
     @secondary_search.stubs(:search).returns([sample_document])
 
@@ -32,8 +30,6 @@ class SecondarySearchTest < IntegrationTest
   end
 
   def test_should_include_secondary_solr_results_when_provided_results_count
-    settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
-
     @primary_search.stubs(:search).returns([sample_document])
     @secondary_search.stubs(:search).returns([sample_document])
 
@@ -44,8 +40,6 @@ class SecondarySearchTest < IntegrationTest
   end
 
   def test_should_show_secondary_solr_results_count_next_to_secondary_solr_filter
-    settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
-
     @primary_search.stubs(:search).returns([sample_document])
     @secondary_search.stubs(:search).returns([sample_document])
 
@@ -56,8 +50,6 @@ class SecondarySearchTest < IntegrationTest
   end
 
   def test_should_show_secondary_solr_results_after_the_primary_solr_results
-    settings.stubs(:feature_flags).returns({:use_secondary_solr_index => true})
-
     example_secondary_solr_result = {
       "title" => "Back to the Future",
       "description" => "In 1985, Doc Brown invents time travel; in 1955, Marty McFly accidentally prevents his parents from meeting, putting his own existence at stake.",
@@ -79,8 +71,6 @@ class SecondarySearchTest < IntegrationTest
   end
 
   def test_should_limit_results
-    settings.stubs(:feature_flags).returns({use_secondary_solr_index: true})
-
     example_secondary_solr_result = {
       "title" => "Back to the Future",
       "description" => "In 1985, Doc Brown invents time travel; in 1955, Marty McFly accidentally prevents his parents from meeting, putting his own existence at stake.",
@@ -99,8 +89,6 @@ class SecondarySearchTest < IntegrationTest
   end
 
   def test_should_only_show_limited_main_and_limited_secondary_results
-    settings.stubs(:feature_flags).returns({use_secondary_solr_index: true})
-
     example_secondary_solr_result = {
       "title" => "Back to the Future",
       "description" => "In 1985, Doc Brown invents time travel; in 1955, Marty McFly accidentally prevents his parents from meeting, putting his own existence at stake.",
