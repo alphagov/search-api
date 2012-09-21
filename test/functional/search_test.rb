@@ -165,7 +165,6 @@ class SearchTest < IntegrationTest
 
     assert last_response.ok?
     assert_response_text "1 result"
-    assert_match "Driving <span>1</span>", last_response.body
     assert_match "<li class=\"section-driving type-guide external\">", last_response.body
     assert_match "rel=\"external\"", last_response.body
     assert_match "<li>External site</li>", last_response.body
