@@ -14,7 +14,7 @@ class ElasticsearchAdminTest < IntegrationTest
     delete_elasticsearch_index
 
     @wrapper = ElasticsearchAdminWrapper.new(
-      settings.primary_search,
+      settings.backends[:primary],
       settings.elasticsearch_schema
     )
   end

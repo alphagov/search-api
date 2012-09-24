@@ -61,8 +61,8 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def use_solr_for_primary_search
-    settings.stubs(:primary_search).returns(
-      {
+    settings.stubs(:backends).returns(
+      primary: {
         type: "solr",
         server: "solr-test-server",
         port: 9999,
@@ -72,8 +72,8 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def use_elasticsearch_for_primary_search
-    settings.stubs(:primary_search).returns(
-      {
+    settings.stubs(:backends).returns(
+      primary: {
         type: "elasticsearch",
         server: "localhost",
         port: 9200,
@@ -92,7 +92,7 @@ class IntegrationTest < Test::Unit::TestCase
 
   def reset_elasticsearch_index
     admin = ElasticsearchAdminWrapper.new(
-      settings.primary_search,
+      settings.backends[:primary],
       settings.elasticsearch_schema
     )
     admin.create_index!
