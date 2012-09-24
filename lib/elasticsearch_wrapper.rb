@@ -117,6 +117,28 @@ class ElasticsearchWrapper
     }
   end
 
+  def facet(field_name)
+    # Return a list of Section objects for each section with content
+    unless field_name == "section"
+      raise ArgumentError, "Faceting is only available on sections"
+    end
+
+    payload = {
+      query: {match_all: {}},
+      size: 0,  # We only need facet information: no point returning results
+      facets: {
+        section: {
+          terms: {field: "section", size: 100, order: "term"},
+          global: true
+        }
+      }
+    }.to_json
+    result = JSON.parse(@client.request(:get, "_search", payload))
+    result["facets"]["section"]["terms"].map { |term_info|
+      Section.new(term_info["term"])
+    }
+  end
+
   def delete(link)
     begin
       # Can't use a simple delete, because we don't know the type
