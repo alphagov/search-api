@@ -103,6 +103,11 @@ class IntegrationTest < Test::Unit::TestCase
     assert_equal [], JSON.parse(last_response.body)
   end
 
+  def stub_backend
+    @backend_index = stub_everything("Chosen backend")
+    app.any_instance.stubs(:backend).returns(@backend_index)
+  end
+
   def stub_primary_and_secondary_searches
     @primary_search = stub_everything("Mainstream Solr wrapper")
     app.any_instance.stubs(:primary_search).returns(@primary_search)
