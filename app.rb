@@ -28,11 +28,11 @@ def backends
 end
 
 def primary_search
-  backends.primary_search
+  backends[:primary]
 end
 
 def secondary_search
-  backends.secondary_search
+  backends[:secondary]
 end
 
 helpers do

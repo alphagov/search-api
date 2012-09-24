@@ -1,8 +1,12 @@
 require "solr_wrapper"
 require "elasticsearch_wrapper"
 require "null_backend"
+require "active_support/core_ext/module/delegation"
+
 
 class Backends
+  delegate :[], to: :backends
+
   def initialize(settings, logger = nil)
     @settings = settings
     @logger = logger || Logger.new("/dev/null")
@@ -14,14 +18,6 @@ class Backends
       backend_settings = @settings.backends[key] && @settings.backends[key].symbolize_keys
       hash[key] = backend_settings && build_backend(backend_settings)
     end
-  end
-
-  def primary_search
-    backends[:primary]
-  end
-
-  def secondary_search
-    backends[:secondary]
   end
 
 private

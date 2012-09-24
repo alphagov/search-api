@@ -105,9 +105,9 @@ class IntegrationTest < Test::Unit::TestCase
 
   def stub_primary_and_secondary_searches
     @primary_search = stub_everything("Mainstream Solr wrapper")
-    Backends.any_instance.stubs(:primary_search).returns(@primary_search)
+    app.any_instance.stubs(:primary_search).returns(@primary_search)
 
     @secondary_search = stub_everything("Whitehall Solr wrapper")
-    Backends.any_instance.stubs(:secondary_search).returns(@secondary_search)
+    app.any_instance.stubs(:secondary_search).returns(@secondary_search)
   end
 end
