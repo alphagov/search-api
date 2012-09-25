@@ -3,7 +3,6 @@
 end
 
 require 'sinatra'
-require 'sinatra/namespace'
 require 'slimmer'
 require 'erubis'
 require 'json'
