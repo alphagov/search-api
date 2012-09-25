@@ -6,7 +6,7 @@ class ElasticsearchSearchTest < IntegrationTest
 
   def setup
     use_elasticsearch_for_primary_search
-    disable_secondary_search
+    app.any_instance.stubs(:secondary_search).returns(stub(search: []))
     WebMock.disable_net_connect!(allow: "localhost:9200")
     reset_elasticsearch_index
     add_sample_documents
