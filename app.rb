@@ -54,10 +54,7 @@ get prefixed_path("/search.?:format?") do
 
   if @query == ""
     expires 3600, :public
-    @page_section = "Search"
-    @page_section_link = "/search"
-    @page_title = "Search | GOV.UK Beta (Test)"
-    return erb(:no_search_term)
+    halt 404
   end
 
   expires 3600, :public if @query.length < 20
@@ -72,26 +69,12 @@ get prefixed_path("/search.?:format?") do
   @results = results.take(50 - @secondary_results.length)
   @total_results = @results.length + @secondary_results.length
 
-  if request.accept.include?("application/json") or params['format'] == 'json'
-    content_type :json
-    JSON.dump((@results + @secondary_results).map { |r| r.to_hash.merge(
-      highlight: r.highlight,
-      presentation_format: r.presentation_format,
-      humanized_format: r.humanized_format
-    ) })
-  else
-    @page_section = "Search"
-    @page_section_link = "/search"
-    @page_title = "#{@query} | Search | GOV.UK Beta (Test)"
-
-    headers SlimmerHeaders.headers(settings.slimmer_headers.merge(result_count: @results.length))
-
-    if @results.any?
-      erb(:search)
-    else
-      erb(:no_search_results)
-    end
-  end
+  content_type :json
+  JSON.dump((@results + @secondary_results).map { |r| r.to_hash.merge(
+    highlight: r.highlight,
+    presentation_format: r.presentation_format,
+    humanized_format: r.humanized_format
+  ) })
 end
 
 get prefixed_path("/preload-autocomplete") do
