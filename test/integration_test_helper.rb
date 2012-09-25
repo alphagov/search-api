@@ -1,6 +1,7 @@
 require "test_helper"
 require 'slimmer/test'
 require "app"
+require "nokogiri"
 
 require "htmlentities"
 
@@ -9,6 +10,15 @@ module ResponseAssertions
     haystack = HTMLEntities.new.decode(last_response.body.gsub(/<[^>]+>/, " ").gsub(/\s+/, " "))
     message = "Expected to find #{needle.inspect} in\n#{haystack}"
     assert haystack.include?(needle), message
+  end
+
+  def assert_links(link_map)
+    doc = Nokogiri::HTML.parse(last_response.body)
+    link_map.each do |text, href|
+      assert doc.xpath("//a[text()='#{text.gsub("'", "\\'")}']").any? { |link|
+        link["href"] == href
+      }
+    end
   end
 end
 
