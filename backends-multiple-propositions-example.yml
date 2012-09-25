@@ -1,0 +1,31 @@
+# This is an example development config for running different backends for
+# government, specialist and mainstream content.
+#
+# Queries to theses indexes can be made calling GET /<index>/search?q=<query>
+# while documents can be added or removed with requests such as
+# POST /<index>/documents.  i.e. GET /mainstream/search?q=tax will return
+# as json all mainstream results about tax.
+
+# Setting primary and secondary to mainstream and specialist content affects
+# requests that don't target an index, such as GET /search?q=<query>
+
+development:
+  mainstream: &mainstream
+    type: elasticsearch
+    server: localhost
+    port: 9200
+    index_name: "mainstream"
+  specialist: &specialist
+    type: elasticsearch
+    server: localhost
+    port: 9200
+    index_name: "specialist"
+  government:
+    type: elasticsearch
+    server: localhost
+    port: 9200
+    index_name: "government"
+  primary:
+    *mainstream
+  secondary:
+    *specialist
