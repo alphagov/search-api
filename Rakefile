@@ -42,9 +42,6 @@ namespace :router do
     app_id = settings.router[:app_id]
     path_prefix = settings.router[:path_prefix]
     begin
-      @logger.info "Registering full route #{path_prefix}/search"
-      @router.routes.update application_id: app_id, route_type: :full,
-        incoming_path: "#{path_prefix}/search"
       @logger.info "Registering full route #{path_prefix}/autocomplete"
       @router.routes.update application_id: app_id, route_type: :full,
         incoming_path: "#{path_prefix}/autocomplete"
