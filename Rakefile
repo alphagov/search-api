@@ -97,12 +97,21 @@ namespace :rummager do
     @logger = Logger.new STDOUT
     @logger.level = verbose ? Logger::DEBUG : Logger::INFO
 
-    unless settings.primary_search[:type] == "elasticsearch"
+    backend_name = ENV['BACKEND']
+    backend_settings = settings.backends[backend_name.to_sym]
+
+    unless backend_settings
+      raise RuntimeError, "You must provide a valid backend name, i.e. BACKEND=mainstream rake rummager:put_mapping"
+    end
+
+    backend_settings = backend_settings.symbolize_keys
+
+    unless backend_settings[:type] == "elasticsearch"
       raise RuntimeError, "This task only works with elasticsearch backends"
     end
 
     @wrapper = ElasticsearchAdminWrapper.new(
-      settings.primary_search,
+      backend_settings,
       settings.elasticsearch_schema,
       @logger
     )
@@ -114,7 +123,7 @@ namespace :rummager do
     @wrapper.put_mappings
   end
 
-  desc "Ensure the elasticsearch 'rummager' index exists"
+  desc "Ensure the elasticsearch index exists"
   task :create_index => :rummager_environment do
     @wrapper.create_index
   end
