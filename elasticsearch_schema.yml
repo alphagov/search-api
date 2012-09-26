@@ -1,9 +1,33 @@
+synonyms: &synonyms [
+  "taxdisc => tax disc",
+  "road tax, car tax => vehicle tax"
+]
+
+stems: &stems [
+  "probate => probate",
+  "equality => equality",
+  "equalities => equality"
+]
+
 index:
   settings:
     analysis:
       analyzer:
-        default:
-          type: snowball
+        default:  # Indexing analyzer: doesn't use custom synonyms
+          type: custom
+          tokenizer: standard
+          filter: [standard, lowercase, stop, stemmer_override, snowball]
+        query_default:
+          type: custom
+          tokenizer: standard
+          filter: [standard, lowercase, synonym, stop, stemmer_override, snowball]
+      filter:
+        synonym:
+          type: synonym
+          synonyms: *synonyms
+        stemmer_override:
+          type: stemmer_override
+          rules: *stems
 mapping:
   edition:
     _all: { enabled: true }

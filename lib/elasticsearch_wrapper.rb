@@ -112,6 +112,8 @@ class ElasticsearchWrapper
       }
     end
 
+    query_analyzer = "query_default"
+
     # This instance of boost_phrases should probably be a new
     # "alternate keywords" field, for results that don't match
     match_fields = {
@@ -130,7 +132,12 @@ class ElasticsearchWrapper
       match_fields.map do |field_name, _|
         {
           text: {
-            field_name => { query: shingle, type: "phrase", boost: 2 }
+            field_name => {
+              query: shingle,
+              type: "phrase",
+              boost: 2,
+              analyzer: query_analyzer
+            },
           }
         }
       end
@@ -157,6 +164,7 @@ class ElasticsearchWrapper
                       boost == 1 ? name : "#{name}^#{boost}"
                     },
                     query: query,
+                    analyzer: query_analyzer
                   }
                 },
                 should: query_boosts
