@@ -107,6 +107,16 @@ namespace :rummager do
       raise RuntimeError, "This task only works with elasticsearch backends"
     end
 
+    @wrappers = {}
+
+    settings.backends.reject { |k, v| v['type'] == 'none' }.each do |key, value|
+      @wrappers[key] = ElasticsearchAdminWrapper.new(
+        value.symbolize_keys,
+        settings.elasticsearch_schema,
+        @logger
+      )
+    end
+
     @wrapper = ElasticsearchAdminWrapper.new(
       backend_settings,
       settings.elasticsearch_schema,
@@ -123,5 +133,19 @@ namespace :rummager do
   desc "Ensure the elasticsearch index exists"
   task :create_index => :rummager_environment do
     @wrapper.create_index
+  end
+
+  desc "Ensure that all elasticsearch indexes exist"
+  task :create_all_indexes => :rummager_environment do
+    @wrappers.each_value.each do |wrapper|
+      wrapper.create_index
+    end
+  end
+
+  desc "Create or update all elasticsearch mappings"
+  task :put_all_mappings => [:rummager_environment, :create_all_indexes] do
+    @wrappers.each_value.each do |wrapper|
+      wrapper.put_mappings
+    end
   end
 end
