@@ -102,14 +102,18 @@ class ElasticsearchWrapper
 
     raise "Format filter not yet supported" if format_filter
 
-    # RestClient does not allow a payload with a GET request
-    # so we have to call @client.request directly.
     payload = {
         from: 0, size: 50,
         query: {
           query_string: { query: query }
         }
     }.to_json
+
+    # RestClient does not allow a payload with a GET request
+    # so we have to call @client.request directly.
+
+    @logger.debug "Request payload: #{payload}"
+
     result = @client.request(:get, "_search", payload)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|
