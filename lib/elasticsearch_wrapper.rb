@@ -102,10 +102,26 @@ class ElasticsearchWrapper
 
     raise "Format filter not yet supported" if format_filter
 
+    format_boosts = { "smart-answer" => 1.5, "transaction" => 1.5 }
     payload = {
         from: 0, size: 50,
         query: {
-          query_string: { query: query }
+          custom_filters_score: {
+            query: {
+              query_string: {
+                fields: ["title^5", "description^2",
+                         "indexable_content", "boost_phrases"],
+                query: query,
+                use_dis_max: true
+              }
+            },
+            filters: format_boosts.map { |format, boost|
+              {
+                filter: { term: { format: format } },
+                boost: boost
+              }
+            }
+          }
         }
     }.to_json
 
