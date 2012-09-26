@@ -1,22 +1,23 @@
 require "solr_wrapper"
 require "elasticsearch_wrapper"
 require "null_backend"
+require "active_support/core_ext/module/delegation"
+
 
 class Backends
+  delegate :[], to: :backends
 
   def initialize(settings, logger = nil)
     @settings = settings
     @logger = logger || Logger.new("/dev/null")
   end
 
-  def primary_search
-    @logger.info "Instantiating primary search backend" unless @primary_search
-    @primary_search ||= build_backend(@settings.primary_search)
-  end
-
-  def secondary_search
-    @logger.info "Instantiating secondary search backend" unless @secondary_search
-    @secondary_search ||= build_backend(@settings.secondary_search)
+  def backends
+    @backends ||= Hash.new do |hash, key|
+      @logger.info "Instantiating #{key} search backend"
+      backend_settings = @settings.backends[key] && @settings.backends[key].symbolize_keys
+      hash[key] = backend_settings && build_backend(backend_settings)
+    end
   end
 
 private
@@ -43,7 +44,7 @@ private
         backend_settings[:format_filter]
       )
     else
-      raise RuntimeError, "Unknown backend '#{backend_settings[:type]}'"
+      raise RuntimeError, "Unknown backend '#{backend_settings[:type].inspect}'"
     end
   end
 end

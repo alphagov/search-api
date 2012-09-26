@@ -6,16 +6,15 @@ def config_for(kind)
   YAML.load_file(File.expand_path("../#{kind}.yml", __FILE__))
 end
 
-def backend_config_for(backend)
+def backend_config
   # Note that we're not recursively symbolising keys, because the config for
   # each backend is currently flat. We may need to revisit this.
-  config_for(:backends)[ENV["RACK_ENV"]][backend].symbolize_keys
+  config_for(:backends)[ENV["RACK_ENV"]].symbolize_keys
 end
 
 set :router, config_for(:router)
 
-set :primary_search, backend_config_for("primary")
-set :secondary_search, backend_config_for("secondary")
+set :backends, backend_config
 set :elasticsearch_schema, config_for("elasticsearch_schema")
 
 set :slimmer_headers, config_for(:slimmer_headers)

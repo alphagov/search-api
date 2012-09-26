@@ -18,21 +18,25 @@ require 'null_backend'
 require 'slimmer_headers'
 require 'sinatra/content_for'
 
-
 require_relative 'config'
 require_relative 'helpers'
 require_relative 'backends'
 
-def backends
-  @backends ||= Backends.new(settings, logger)
+def available_backends
+  @available_backends ||= Backends.new(settings, logger)
+end
+
+def backend
+  name = params['backend'] || 'primary'
+  available_backends[name.to_sym] || halt(404)
 end
 
 def primary_search
-  backends.primary_search
+  available_backends[:primary]
 end
 
 def secondary_search
-  backends.secondary_search
+  available_backends[:secondary]
 end
 
 helpers do
@@ -43,13 +47,7 @@ before do
   headers SlimmerHeaders.headers(settings.slimmer_headers)
 end
 
-def prefixed_path(path)
-  path_prefix = settings.router[:path_prefix]
-  raise "Path prefix must start with /" unless path_prefix.blank? || path_prefix =~ /^\//
-  "#{path_prefix}#{path}"
-end
-
-get prefixed_path("/search.?:format?") do
+get "/search.?:format?" do
   @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
 
   if @query == ""
@@ -94,17 +92,30 @@ get prefixed_path("/search.?:format?") do
   end
 end
 
-get prefixed_path("/preload-autocomplete") do
+get "/:backend/search.?:format?" do
+  query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+
+  results = backend.search(query, params["format_filter"])
+
+  content_type :json
+  JSON.dump(results.map { |r| r.to_hash.merge(
+    highlight: r.highlight,
+    presentation_format: r.presentation_format,
+    humanized_format: r.humanized_format
+  )})
+end
+
+get "/?:backend?/preload-autocomplete" do
   # Eventually this is likely to be a list of commonly searched for terms
   # so searching for those is really fast. For the beta, this is just a list
   # of all terms.
   expires 86400, :public
   content_type :json
-  results = primary_search.autocomplete_cache rescue []
+  results = backend.autocomplete_cache rescue []
   JSON.dump(results.map { |r| r.to_hash })
 end
 
-get prefixed_path("/autocomplete") do
+get "/?:backend?/autocomplete" do
   content_type :json
   query = params['q']
 
@@ -115,23 +126,23 @@ get prefixed_path("/autocomplete") do
 
   expires 3600, :public if query.length < 5
 
-  results = primary_search.complete(query, params["format_filter"]) rescue []
+  results = backend.complete(query, params["format_filter"]) rescue []
   JSON.dump(results.map { |r| r.to_hash.merge(
     presentation_format: r.presentation_format,
     humanized_format: r.humanized_format
   ) })
 end
 
-get prefixed_path("/sitemap.xml") do
+get "/?:backend?/sitemap.xml" do
   expires 86400, :public
   # Site maps can have up to 50,000 links in them.
   # We use one for / so we can have up to 49,999 others.
-  documents = primary_search.all_documents limit: 49_999
+  documents = backend.all_documents limit: 49_999
   builder do |xml|
     xml.instruct!
     xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
       xml.url do
-	xml.loc "#{base_url}#{prefixed_path("/")}"
+	xml.loc "#{base_url}#{"/"}"
       end
       documents.each do |document|
 	xml.url do
@@ -144,8 +155,76 @@ get prefixed_path("/sitemap.xml") do
   end
 end
 
+post "/?:backend?/documents" do
+  request.body.rewind
+  documents = [JSON.parse(request.body.read)].flatten.map { |hash|
+    Document.from_hash(hash)
+  }
+
+  boosts = {}
+  CSV.foreach(settings.boost_csv) { |row|
+    link, phrases = row
+    boosts[link] = phrases
+  }
+
+  better_documents = boost_documents(documents, boosts)
+
+  simple_json_result(backend.add(better_documents))
+end
+
+post "/?:backend?/commit" do
+  simple_json_result(backend.commit)
+end
+
+get "/?:backend?/documents/*" do
+  document = backend.get(params["splat"].first)
+  halt 404 unless document
+  content_type :json
+  JSON.dump document.to_hash
+end
+
+delete "/?:backend?/documents/*" do
+  simple_json_result(backend.delete(params["splat"].first))
+end
+
+post "/?:backend?/documents/*" do
+  def text_error(content)
+    halt 403, {"Content-Type" => "text/plain"}, content
+  end
+
+  unless request.form_data?
+    halt(
+      415,
+      {"Content-Type" => "text/plain"},
+      "Amendments require application/x-www-form-urlencoded data"
+    )
+  end
+  document = backend.get(params["splat"].first)
+  halt 404 unless document
+  text_error "Cannot change document links" if request.POST.include? 'link'
+
+  # Note: this expects application/x-www-form-urlencoded data, not JSON
+  request.POST.each_pair do |key, value|
+    begin
+      document.set key, value
+    rescue NoMethodError
+      text_error "Unrecognised field '#{key}'"
+    end
+  end
+  simple_json_result(backend.add([document]))
+end
+
+delete "/?:backend?/documents" do
+  if params['delete_all']
+    action = backend.delete_all
+  else
+    action = backend.delete(params["link"])
+  end
+  simple_json_result(action)
+end
+
 if settings.router[:path_prefix].empty?
-  get prefixed_path("/browse.?:format?") do
+  get "/browse.?:format?" do
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     expires 3600, :public
     @results = primary_search.facet('section')
@@ -189,14 +268,14 @@ if settings.router[:path_prefix].empty?
     as_hash
   end
 
-  get prefixed_path("/browse/:section.json") do
+  get "/browse/:section.json" do
     expires 86400, :public
     assemble_section_details(params[:section])
     content_type :json
     JSON.dump(compile_section_json(@results))
   end
 
-  get prefixed_path("/browse/:section") do
+  get "/browse/:section" do
     expires 86400, :public
     headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
     assemble_section_details(params[:section])
@@ -212,72 +291,4 @@ if settings.router[:path_prefix].empty?
       erb(:section)
     end
   end
-end
-
-post prefixed_path("/documents") do
-  request.body.rewind
-  documents = [JSON.parse(request.body.read)].flatten.map { |hash|
-    Document.from_hash(hash)
-  }
-
-  boosts = {}
-  CSV.foreach(settings.boost_csv) { |row|
-    link, phrases = row
-    boosts[link] = phrases
-  }
-
-  better_documents = boost_documents(documents, boosts)
-
-  simple_json_result(primary_search.add(better_documents))
-end
-
-post prefixed_path("/commit") do
-  simple_json_result(primary_search.commit)
-end
-
-get prefixed_path("/documents/*") do
-  document = primary_search.get(params["splat"].first)
-  halt 404 unless document
-  content_type :json
-  JSON.dump document.to_hash
-end
-
-delete prefixed_path("/documents/*") do
-  simple_json_result(primary_search.delete(params["splat"].first))
-end
-
-post prefixed_path("/documents/*") do
-  def text_error(content)
-    halt 403, {"Content-Type" => "text/plain"}, content
-  end
-
-  unless request.form_data?
-    halt(
-      415,
-      {"Content-Type" => "text/plain"},
-      "Amendments require application/x-www-form-urlencoded data"
-    )
-  end
-  document = primary_search.get(params["splat"].first)
-  halt 404 unless document
-  text_error "Cannot change document links" if request.POST.include? 'link'
-
-  # Note: this expects application/x-www-form-urlencoded data, not JSON
-  request.POST.each_pair do |key, value|
-    begin
-      document.set key, value
-    rescue NoMethodError
-      text_error "Unrecognised field '#{key}'"
-    end
-  end
-  simple_json_result(primary_search.add([document]))
-end
-
-delete prefixed_path("/documents") do
-  if params['delete_all']
-    action = primary_search.delete_all
-  else
-    action = primary_search.delete(params["link"])
-  end
-  simple_json_result(action)
 end
