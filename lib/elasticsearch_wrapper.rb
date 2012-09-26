@@ -102,6 +102,12 @@ class ElasticsearchWrapper
 
     raise "Format filter not yet supported" if format_filter
 
+    domain_phrases = ["council tax", "tax credit", "annual leave"]
+
+    matched_phrases = domain_phrases.select { |phrase|
+      /\b#{phrase}\b/i.match query
+    }
+
     format_boosts = { "smart-answer" => 1.5, "transaction" => 1.5 }
     payload = {
         from: 0, size: 50,
@@ -121,6 +127,17 @@ class ElasticsearchWrapper
               {
                 filter: { term: { format: format } },
                 boost: boost
+              }
+            } + matched_phrases.map { |phrase|
+              {
+                filter: {
+                  query: {
+                    text: {
+                      _all: { query: phrase, type: "phrase" }
+                    }
+                  }
+                },
+                boost: 2
               }
             } + [
               {
