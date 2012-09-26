@@ -102,12 +102,6 @@ class ElasticsearchWrapper
 
     raise "Format filter not yet supported" if format_filter
 
-    domain_phrases = ["council tax", "tax credit", "annual leave"]
-
-    matched_phrases = domain_phrases.select { |phrase|
-      /\b#{phrase}\b/i.match query
-    }
-
     # Per-format boosting done as a filter, so the results get cached on the
     # server, as they are the same for each query
     boosted_formats = { "smart-answer" => 1.5, "transaction" => 1.5 }
@@ -118,16 +112,31 @@ class ElasticsearchWrapper
       }
     end
 
+    # This instance of boost_phrases should probably be a new
+    # "alternate keywords" field, for results that don't match
+    match_fields = {
+      "title" => 5,
+      "description" => 2,
+      "indexable_content" => 1,
+      "boost_phrases" => 1
+    }
+
+    # "driving theory test" => ["driving theory", "theory test"]
+    shingles = query.split.each_cons(2).map { |s| s.join(' ') }
 
     # These boosts will be different on each query, so there's no benefit to
     # caching them in a filter
-    query_boosts = matched_phrases.map do |phrase|
-      {
-        text: {
-          _all: { query: phrase, type: "phrase", boost: 2 }
+    shingle_boosts = shingles.map do |shingle|
+      match_fields.map do |field_name, _|
+        {
+          text: {
+            field_name => { query: shingle, type: "phrase", boost: 2 }
+          }
         }
-      }
+      end
     end
+
+    query_boosts = shingle_boosts
     query_boosts << {
       query_string: {
         fields: ["boost_phrases"],
@@ -144,10 +153,9 @@ class ElasticsearchWrapper
               bool: {
                 must: {
                   query_string: {
-                    # This instance of boost_phrases should probably be a new
-                    # "alternate keywords" field, for results that don't match
-                    fields: ["title^5", "description^2",
-                             "indexable_content", "boost_phrases"],
+                    fields: match_fields.map { |name, boost|
+                      boost == 1 ? name : "#{name}^#{boost}"
+                    },
                     query: query,
                   }
                 },
