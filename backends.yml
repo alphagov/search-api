@@ -1,9 +1,16 @@
 development:
-  primary:
+  mainstream: &mainstream
     type: elasticsearch
     server: localhost
     port: 9200
     index_name: "rummager"
+  detailed: &detailed
+    type: elasticsearch
+    server: localhost
+    port: 9200
+    index_name: "detailed"
+  primary:
+    *mainstream
   secondary:
     type: none
 test:
