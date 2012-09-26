@@ -108,50 +108,53 @@ class ElasticsearchWrapper
       /\b#{phrase}\b/i.match query
     }
 
-    format_boosts = { "smart-answer" => 1.5, "transaction" => 1.5 }
+    # Per-format boosting done as a filter, so the results get cached on the
+    # server, as they are the same for each query
+    boosted_formats = { "smart-answer" => 1.5, "transaction" => 1.5 }
+    format_boosts = boosted_formats.map do |format, boost|
+      {
+        filter: { term: { format: format } },
+        boost: boost
+      }
+    end
+
+
+    # These boosts will be different on each query, so there's no benefit to
+    # caching them in a filter
+    query_boosts = matched_phrases.map do |phrase|
+      {
+        text: {
+          _all: { query: phrase, type: "phrase", boost: 2 }
+        }
+      }
+    end
+    query_boosts << {
+      query_string: {
+        fields: ["boost_phrases"],
+        query: query,
+        boost: 10
+      }
+    }
+
     payload = {
         from: 0, size: 50,
         query: {
           custom_filters_score: {
             query: {
-              query_string: {
-                # This instance of boost_phrases should probably be a new
-                # "alternate keywords" field, for results that don't match
-                fields: ["title^5", "description^2",
-                         "indexable_content", "boost_phrases"],
-                query: query,
-                use_dis_max: true
+              bool: {
+                must: {
+                  query_string: {
+                    # This instance of boost_phrases should probably be a new
+                    # "alternate keywords" field, for results that don't match
+                    fields: ["title^5", "description^2",
+                             "indexable_content", "boost_phrases"],
+                    query: query,
+                  }
+                },
+                should: query_boosts
               }
             },
-            filters: format_boosts.map { |format, boost|
-              {
-                filter: { term: { format: format } },
-                boost: boost
-              }
-            } + matched_phrases.map { |phrase|
-              {
-                filter: {
-                  query: {
-                    text: {
-                      _all: { query: phrase, type: "phrase" }
-                    }
-                  }
-                },
-                boost: 2
-              }
-            } + [
-              {
-                filter: {
-                  query: {
-                    query_string: {
-                      fields: ["boost_phrases"],
-                      query: query
-                    }
-                  }
-                },
-                boost: 10
-              }
-            ]
+            filters: format_boosts
           }
         }
     }.to_json
