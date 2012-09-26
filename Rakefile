@@ -94,7 +94,7 @@ namespace :rummager do
     @logger = Logger.new STDOUT
     @logger.level = verbose ? Logger::DEBUG : Logger::INFO
 
-    backend_name = ENV['BACKEND']
+    backend_name = ENV['BACKEND'] || 'primary'
     backend_settings = settings.backends[backend_name.to_sym]
 
     unless backend_settings
