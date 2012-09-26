@@ -109,6 +109,8 @@ class ElasticsearchWrapper
           custom_filters_score: {
             query: {
               query_string: {
+                # This instance of boost_phrases should probably be a new
+                # "alternate keywords" field, for results that don't match
                 fields: ["title^5", "description^2",
                          "indexable_content", "boost_phrases"],
                 query: query,
@@ -120,7 +122,19 @@ class ElasticsearchWrapper
                 filter: { term: { format: format } },
                 boost: boost
               }
-            }
+            } + [
+              {
+                filter: {
+                  query: {
+                    query_string: {
+                      fields: ["boost_phrases"],
+                      query: query
+                    }
+                  }
+                },
+                boost: 10
+              }
+            ]
           }
         }
     }.to_json
