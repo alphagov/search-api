@@ -51,4 +51,16 @@ class ElasticsearchBrowsingTest < IntegrationTest
                  "Work" => "/browse/work"
   end
 
+  def test_should_list_documents_in_section
+    # This is an old and crufty way of hacking around Slimmer, but we're about
+    # to kill off all front-end functionality from Rummager, so there's little
+    # point in doing things nicely
+    stub_request(:get, "https://panopticon.test.alphagov.co.uk/curated_lists.json").
+      to_return(body: "{}")
+
+    get "/browse/work"
+    assert_links "Useful government information" => "/another-example-answer"
+    refute_links "Cheese in my face" => "/an-example-answer"
+  end
+
 end

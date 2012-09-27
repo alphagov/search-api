@@ -139,6 +139,22 @@ class ElasticsearchWrapper
     }
   end
 
+  def section(section_slug)
+    # RestClient does not allow a payload with a GET request
+    # so we have to call @client.request directly.
+    payload = {
+        from: 0, size: 50,
+        query: {
+          term: { section: section_slug }
+        }
+    }.to_json
+    result = @client.request(:get, "_search", payload)
+    result = JSON.parse(result)
+    result['hits']['hits'].map { |hit|
+      Document.from_hash(hit['_source'])
+    }
+  end
+
   def delete(link)
     begin
       # Can't use a simple delete, because we don't know the type

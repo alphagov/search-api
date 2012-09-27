@@ -20,6 +20,16 @@ module ResponseAssertions
       }
     end
   end
+
+  def refute_links(link_map)
+    doc = Nokogiri::HTML.parse(last_response.body)
+    link_map.each do |text, href|
+      assert_false doc.xpath("//a[text()='#{text.gsub("'", "\\'")}']").any? { |link|
+        link["href"] == href
+      }
+    end
+  end
+
 end
 
 module IntegrationFixtures
