@@ -41,11 +41,10 @@ end
 
 def boosts
   # Build a map of links to a string of comma-separated phrases
-  @boosts ||= CSV.read(settings.boost_csv).inject({}) { |previous_boosts, row|
+  @boosts ||= CSV.read(settings.boost_csv).each_with_object({}) do |row, boosts|
     link, phrases = row
-    previous_boosts[link] = phrases
-    previous_boosts
-  }
+    boosts[link] = phrases
+  end
 end
 
 helpers do
