@@ -108,10 +108,11 @@ namespace :rummager do
     end
 
     @wrappers = {}
+    settings.backends.each do |backend, backend_settings|
+      next unless backend_settings['type'] == 'elasticsearch'
 
-    settings.backends.reject { |k, v| v['type'] == 'none' }.each do |key, value|
-      @wrappers[key] = ElasticsearchAdminWrapper.new(
-        value.symbolize_keys,
+      @wrappers[backend] = ElasticsearchAdminWrapper.new(
+        backend_settings.symbolize_keys,
         settings.elasticsearch_schema,
         @logger
       )
