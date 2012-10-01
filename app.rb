@@ -45,6 +45,10 @@ helpers do
   include Helpers
 end
 
+before do
+  content_type :json
+end
+
 get "/search.?:format?" do
   @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
 
@@ -65,7 +69,6 @@ get "/search.?:format?" do
   @results = results.take(50 - @secondary_results.length)
   @total_results = @results.length + @secondary_results.length
 
-  content_type :json
   JSON.dump((@results + @secondary_results).map { |r| r.to_hash.merge(
     highlight: r.highlight,
     presentation_format: r.presentation_format,
@@ -78,7 +81,6 @@ get "/:backend/search.?:format?" do
 
   results = backend.search(query, params["format_filter"])
 
-  content_type :json
   JSON.dump(results.map { |r| r.to_hash.merge(
     highlight: r.highlight,
     presentation_format: r.presentation_format,
@@ -91,13 +93,11 @@ get "/?:backend?/preload-autocomplete" do
   # so searching for those is really fast. For the beta, this is just a list
   # of all terms.
   expires 86400, :public
-  content_type :json
   results = backend.autocomplete_cache rescue []
   JSON.dump(results.map { |r| r.to_hash })
 end
 
 get "/?:backend?/autocomplete" do
-  content_type :json
   query = params['q']
 
   unless query
@@ -154,7 +154,7 @@ end
 get "/?:backend?/documents/*" do
   document = backend.get(params["splat"].first)
   halt 404 unless document
-  content_type :json
+
   JSON.dump document.to_hash
 end
 
