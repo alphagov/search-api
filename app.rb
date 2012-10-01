@@ -230,7 +230,7 @@ if settings.router[:path_prefix].empty?
     @section = Section.new(section)
     @page_section = formatted_section_name(@section.slug)
     @page_section_link = @section.path
-    @results = @ungrouped_results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
+    @results = @ungrouped_results.group_by { |result| result.subsection }
   end
 
   def compile_section_json(results)
