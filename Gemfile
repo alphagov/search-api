@@ -9,15 +9,11 @@ gem "unicorn"
 gem "sinatra"
 gem "delsolr", :git => "https://github.com/alphagov/delsolr.git"
 gem 'rake', '0.9.2', :require => false
-gem 'slimmer', '1.2.5'
-gem 'erubis'
 gem 'json'
 gem 'activesupport', '~> 3.1.0'
 gem 'i18n'
-gem 'gds-api-adapters', '~> 1.9.2'
 gem 'rack', '1.3.5'
 gem 'plek', '0.1.23'
-gem 'sinatra-content-for', '0.1'
 gem 'aws-ses'
 gem 'rest-client', '1.6.7'
 

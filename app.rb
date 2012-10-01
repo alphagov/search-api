@@ -3,20 +3,14 @@
 end
 
 require 'sinatra'
-require 'slimmer'
-require 'erubis'
 require 'json'
 require 'csv'
 
-require 'popular_items'
 require 'document'
-require 'section'
 require 'utils'
 require 'solr_wrapper'
 require 'elasticsearch_wrapper'
 require 'null_backend'
-require 'slimmer_headers'
-require 'sinatra/content_for'
 
 require_relative 'config'
 require_relative 'helpers'
@@ -49,10 +43,6 @@ end
 
 helpers do
   include Helpers
-end
-
-before do
-  headers SlimmerHeaders.headers(settings.slimmer_headers)
 end
 
 get "/search.?:format?" do
