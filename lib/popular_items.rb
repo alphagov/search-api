@@ -6,7 +6,11 @@ class PopularItems
 
   def initialize(panopticon_api_credentials, logger = nil)
     publisher = GdsApi::Panopticon.new(Plek.current_env, panopticon_api_credentials)
-    @items = publisher.curated_lists || [] # TODO: is this the best place?
+    begin
+      @items = publisher.curated_lists || {}
+    rescue NoMethodError  # HACK HACK HACK, but it's being deleted imminently
+      @items = {}
+    end
     @logger = logger || NullLogger.instance
   end
 
