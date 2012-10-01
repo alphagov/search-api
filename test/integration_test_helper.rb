@@ -1,5 +1,4 @@
 require "test_helper"
-require 'slimmer/test'
 require "app"
 require "nokogiri"
 
