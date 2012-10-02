@@ -107,7 +107,7 @@ class Document < Link
   # Rummager. In time, they are likely to disappear entirely, taking large
   # tracts of code with them.
 
-  auto_keys :title, :link, :description, :format, :section, :subsection,
+  auto_keys :title, :link, :description, :format, :section, :subsection, :subsubsection,
     :indexable_content, :additional_links, :boost_phrases
   attr_writer :highlight
 
