@@ -67,6 +67,8 @@ module IntegrationFixtures
   end
 end
 
+require "elasticsearch_admin_wrapper"
+
 class IntegrationTest < Test::Unit::TestCase
   include Rack::Test::Methods
   include ResponseAssertions
