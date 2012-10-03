@@ -17,14 +17,11 @@ set :router, config_for(:router)
 set :backends, backend_config
 set :elasticsearch_schema, config_for("elasticsearch_schema")
 
-set :slimmer_headers, config_for(:slimmer_headers)
-
 panopticon_api_credentials = config_for(:panopticon_api_credentials)[ENV["RACK_ENV"]]
 panopticon_api_credentials.symbolize_keys!
 panopticon_api_credentials.values.each(&:symbolize_keys!)
 set :panopticon_api_credentials, panopticon_api_credentials
 
-set :slimmer_asset_host, ENV["SLIMMER_ASSET_HOST"]
 set :top_results, 4
 set :max_more_results, 46
 set :max_recommended_results, 2
@@ -46,7 +43,6 @@ set :format_name_alternatives, {
 
 configure :development do
   set :protection, false
-  use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host
 end
 
 configure :production do
@@ -56,9 +52,4 @@ configure :production do
         to: ['govuk-exceptions@digital.cabinet-office.gov.uk', 'govuk@gofreerange.com'],
         from: '"Winston Smith-Churchill" <winston@alphagov.co.uk>'
   end
-  use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host, cache_templates: true
-end
-
-configure :test do
-  use Slimmer::App, prefix: settings.router[:path_prefix], asset_host: settings.slimmer_asset_host
 end
