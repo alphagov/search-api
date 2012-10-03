@@ -14,7 +14,7 @@ class ElasticsearchAdminWrapper
     server_status["indices"].keys.include? @client.index_name
   end
 
-  def create_index
+  def ensure_index
     # Create the elasticsearch index if it does not exist
     # If it does exist, close the index and apply the updated analysis settings
 
@@ -34,14 +34,14 @@ class ElasticsearchAdminWrapper
     end
   end
 
-  def create_index!
+  def ensure_index!
     # Delete and recreate the elasticsearch index
     begin
       @client.delete ""
     rescue RestClient::ResourceNotFound
     end
 
-    create_index
+    ensure_index
   end
 
   def put_mappings

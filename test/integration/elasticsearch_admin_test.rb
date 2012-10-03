@@ -46,30 +46,30 @@ class ElasticsearchAdminTest < IntegrationTest
   end
 
   def test_should_create_an_index
-    assert_equal :created, @wrapper.create_index
+    assert_equal :created, @wrapper.ensure_index
     assert_index_exists
   end
 
   def test_should_return_false_if_index_exists
-    assert_equal :created, @wrapper.create_index
-    assert_equal :updated, @wrapper.create_index
+    assert_equal :created, @wrapper.ensure_index
+    assert_equal :updated, @wrapper.ensure_index
     assert_index_exists
   end
 
   def test_should_recreate_index
-    assert_equal :created, @wrapper.create_index
+    assert_equal :created, @wrapper.ensure_index
     assert_index_exists
 
     @wrapper.put_mappings
     assert_type_exists "edition"
 
-    @wrapper.create_index!
+    @wrapper.ensure_index!
     assert_index_exists
     assert_type_does_not_exist "edition"
   end
 
   def test_should_create_mappings
-    assert_equal :created, @wrapper.create_index!
+    assert_equal :created, @wrapper.ensure_index!
     assert_index_exists
 
     assert_type_does_not_exist "edition"

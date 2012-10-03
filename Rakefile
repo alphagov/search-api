@@ -139,14 +139,17 @@ namespace :rummager do
   end
 
   desc "Create or update the elasticsearch mappings"
-  task :put_mapping => [:rummager_environment, :create_index] do
+  task :put_mapping => [:rummager_environment, :ensure_index] do
     @wrapper.put_mappings
   end
 
   desc "Ensure the elasticsearch index exists"
-  task :create_index => :rummager_environment do
-    @wrapper.create_index
+  task :ensure_index => :rummager_environment do
+    @wrapper.ensure_index
   end
+
+  # Alias for the old task name
+  task :create_index => :ensure_index do end
 
   task :which_indexes_exist => :rummager_environment do
     @wrappers.each do |wrapper_name, wrapper|
@@ -159,14 +162,17 @@ namespace :rummager do
   end
 
   desc "Ensure that all elasticsearch indexes exist"
-  task :create_all_indexes => :rummager_environment do
+  task :ensure_all_indexes => :rummager_environment do
     @wrappers.each_value.each do |wrapper|
-      wrapper.create_index
+      wrapper.ensure_index
     end
   end
 
+  # Alias for the old task name
+  task :create_all_indexes => :ensure_all_indexes do end
+
   desc "Create or update all elasticsearch mappings"
-  task :put_all_mappings => [:rummager_environment, :create_all_indexes] do
+  task :put_all_mappings => [:rummager_environment, :ensure_all_indexes] do
     @wrappers.each_value.each do |wrapper|
       wrapper.put_mappings
     end
