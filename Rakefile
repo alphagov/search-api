@@ -15,6 +15,19 @@ end
 
 require "ci/reporter/rake/test_unit" if ENV["RACK_ENV"] == "test"
 
+class PushableLogger
+  # Because RestClient uses the '<<' method, rather than the levelled Logger
+  # methods, we have to put together a class that'll assign them a level
+
+  def initialize(logger, level)
+    @logger, @level = logger, level
+  end
+
+  def <<(message)
+    @logger.add @level, message
+  end
+end
+
 task :default => :test
 
 namespace :router do
@@ -122,7 +135,7 @@ namespace :rummager do
       settings.elasticsearch_schema,
       @logger
     )
-    RestClient.log = @logger
+    RestClient.log = PushableLogger.new(@logger, Logger::DEBUG)
   end
 
   desc "Create or update the elasticsearch mappings"
@@ -133,6 +146,16 @@ namespace :rummager do
   desc "Ensure the elasticsearch index exists"
   task :create_index => :rummager_environment do
     @wrapper.create_index
+  end
+
+  task :which_indexes_exist => :rummager_environment do
+    @wrappers.each do |wrapper_name, wrapper|
+      if wrapper.index_exists?
+        puts "'#{wrapper_name}' index exists"
+      else
+        puts "'#{wrapper_name}' index does not exist"
+      end
+    end
   end
 
   desc "Ensure that all elasticsearch indexes exist"

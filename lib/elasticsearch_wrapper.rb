@@ -8,9 +8,11 @@ class ElasticsearchWrapper
 
   class Client
 
+    attr_reader :index_name  # The admin wrapper needs to get to this
+
     # Sub-paths almost certainly shouldn't start with leading slashes,
     # since this will make the request relative to the server root
-    SAFE_ABSOLUTE_PATHS = ["/_bulk"]
+    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status"]
 
     def initialize(settings, logger = nil)
       missing_keys = [:server, :port, :index_name].reject { |k| settings[k] }
@@ -22,6 +24,7 @@ class ElasticsearchWrapper
         port: settings[:port],
         path: "/#{settings[:index_name]}/"
       )
+      @index_name = settings[:index_name]
 
       @logger = logger || Logger.new("/dev/null")
     end
