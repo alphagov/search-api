@@ -1,35 +1,5 @@
 require "test_helper"
 require "app"
-require "nokogiri"
-
-require "htmlentities"
-
-module ResponseAssertions
-  def assert_response_text(needle)
-    haystack = HTMLEntities.new.decode(last_response.body.gsub(/<[^>]+>/, " ").gsub(/\s+/, " "))
-    message = "Expected to find #{needle.inspect} in\n#{haystack}"
-    assert haystack.include?(needle), message
-  end
-
-  def assert_links(link_map)
-    doc = Nokogiri::HTML.parse(last_response.body)
-    link_map.each do |text, href|
-      assert doc.xpath("//a[text()='#{text.gsub("'", "\\'")}']").any? { |link|
-        link["href"] == href
-      }
-    end
-  end
-
-  def refute_links(link_map)
-    doc = Nokogiri::HTML.parse(last_response.body)
-    link_map.each do |text, href|
-      assert_false doc.xpath("//a[text()='#{text.gsub("'", "\\'")}']").any? { |link|
-        link["href"] == href
-      }
-    end
-  end
-
-end
 
 module IntegrationFixtures
   def sample_document_attributes
@@ -68,7 +38,6 @@ end
 
 class IntegrationTest < Test::Unit::TestCase
   include Rack::Test::Methods
-  include ResponseAssertions
   include IntegrationFixtures
 
   def app

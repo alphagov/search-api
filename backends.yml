@@ -3,7 +3,7 @@ development:
     type: elasticsearch
     server: localhost
     port: 9200
-    index_name: "rummager"
+    index_name: "mainstream"
   detailed: &detailed
     type: elasticsearch
     server: localhost

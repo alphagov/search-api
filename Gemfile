@@ -23,10 +23,8 @@ group :test do
   gem "ci_reporter"
   gem "test-unit"
   gem "rack-test"
-  gem "nokogiri"
   gem "mocha", :require => false
   gem "webmock", :require => false
-  gem "htmlentities"
 end
 
 group :development do
