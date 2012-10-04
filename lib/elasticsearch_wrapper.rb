@@ -98,6 +98,15 @@ class ElasticsearchWrapper
     Document.from_hash(JSON.parse(response.body)["_source"])
   end
 
+  def all_documents(options={})
+    search_body = {query: {match_all: {}}, size: options[:limit]}
+    result = @client.request(:get, "_search", search_body.to_json)
+    result = JSON.parse(result)
+    result['hits']['hits'].map { |hit|
+      Document.from_hash(hit['_source'])
+    }
+  end
+
   def search(query, format_filter = nil)
 
     raise "Format filter not yet supported" if format_filter
