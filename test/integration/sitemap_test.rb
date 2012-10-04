@@ -54,6 +54,7 @@ class SitemapTest < IntegrationTest
 
   def test_should_return_a_sitemap
     get "/sitemap.xml"
+    assert last_response.headers["Content-Type"].include?("application/xml")
     assert last_response.ok?
     assert_result_links "/", "/an-example-answer", "/another-example-answer"
   end

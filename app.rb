@@ -115,6 +115,7 @@ get "/?:backend?/autocomplete" do
 end
 
 get "/?:backend?/sitemap.xml" do
+  content_type :xml
   expires 86400, :public
   # Site maps can have up to 50,000 links in them.
   # We use one for / so we can have up to 49,999 others.
