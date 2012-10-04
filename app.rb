@@ -39,14 +39,6 @@ def secondary_search
   available_backends[:secondary]
 end
 
-def boosts
-  # Build a map of links to a string of comma-separated phrases
-  @boosts ||= CSV.read(settings.boost_csv).each_with_object({}) do |row, boosts|
-    link, phrases = row
-    boosts[link] = phrases
-  end
-end
-
 helpers do
   include Helpers
 end
@@ -152,9 +144,7 @@ post "/?:backend?/documents" do
     Document.from_hash(hash)
   }
 
-  better_documents = boost_documents(documents, boosts)
-
-  simple_json_result(backend.add(better_documents))
+  simple_json_result(backend.add(documents))
 end
 
 post "/?:backend?/commit" do

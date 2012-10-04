@@ -117,13 +117,10 @@ class ElasticsearchWrapper
 
     query_analyzer = "query_default"
 
-    # This instance of boost_phrases should probably be a new
-    # "alternate keywords" field, for results that don't match
     match_fields = {
       "title" => 5,
       "description" => 2,
       "indexable_content" => 1,
-      "boost_phrases" => 1
     }
 
     # "driving theory test" => ["driving theory", "theory test"]
@@ -147,13 +144,6 @@ class ElasticsearchWrapper
     end
 
     query_boosts = shingle_boosts
-    query_boosts << {
-      query_string: {
-        fields: ["boost_phrases"],
-        query: query,
-        boost: 10
-      }
-    }
 
     payload = {
         from: 0, size: 50,

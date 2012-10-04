@@ -57,36 +57,6 @@ class HelperTest < Test::Unit::TestCase
     assert_equal 2, sorted.count
   end
 
-  def test_boosting_documents
-    boosts = {
-      "/one" => "extra extra read all about it",
-    }
-    boosted_documents = boost_documents(sample_document_list, boosts)
-    assert_equal nil, boosted_documents[0].boost_phrases
-    assert_equal "extra extra read all about it", boosted_documents[1].boost_phrases
-  end
-
-  def test_boosting_documents_with_existing_boost
-    documents = [Document.from_hash(
-      "title" => "TITLE",
-      "format" => "one",
-      "link" => "/one",
-      "boost_phrases" => "boost this"
-    )]
-    boosts = {
-      "/one" => "extra extra read all about it",
-    }
-    boosted_documents = boost_documents(documents, boosts)
-    assert_equal "boost this extra extra read all about it", boosted_documents[0].boost_phrases
-  end
-
-  def test_boosting_documents_without_boost
-    boosts = {
-    }
-    boosted_documents = boost_documents(sample_document_list, boosts)
-    assert_equal boosted_documents.count, sample_document_list.count
-  end
-
   def test_should_apply_highlighting_markup
     input = "foo HIGHLIGHT_STARTbarHIGHLIGHT_END baz"
     expected = %{foo <strong class="highlight">bar</strong> baz}

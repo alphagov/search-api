@@ -108,7 +108,7 @@ class Document < Link
   # tracts of code with them.
 
   auto_keys :title, :link, :description, :format, :section, :subsection,
-    :indexable_content, :additional_links, :boost_phrases
+    :indexable_content, :additional_links
   attr_writer :highlight
 
   def self.from_hash(hash)
