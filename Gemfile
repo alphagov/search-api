@@ -25,6 +25,7 @@ group :test do
   gem "rack-test"
   gem "mocha", :require => false
   gem "webmock", :require => false
+  gem "nokogiri", :require => false
 end
 
 group :development do
