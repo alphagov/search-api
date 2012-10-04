@@ -99,7 +99,8 @@ class ElasticsearchWrapper
   end
 
   def all_documents(options={})
-    result = @client.request(:get, "_search?size=#{options[:limit]}&q=*:*", nil)
+    search_body = {query: {match_all: {}}, size: options[:limit]}
+    result = @client.request(:get, "_search", search_body.to_json)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|
       Document.from_hash(hit['_source'])
