@@ -41,8 +41,6 @@ namespace :router do
   task :router_environment do
     Bundler.require :router, :default
 
-    require_relative "config"
-
     require 'logger'
     @logger = Logger.new STDOUT
     @logger.level = Logger::DEBUG
@@ -52,25 +50,25 @@ namespace :router do
 
   task :register_application => :router_environment do
     platform = ENV['FACTER_govuk_platform']
-    app_id = settings.router[:app_id]
+    app_id = "search"
     url = "#{app_id}.#{platform}.alphagov.co.uk/"
     @logger.info "Registering #{app_id} application against #{url}..."
     @router.applications.update application_id: app_id, backend_url: url
   end
 
   task :register_routes => [ :router_environment ] do
-    app_id = settings.router[:app_id]
-    path_prefix = settings.router[:path_prefix]
+    app_id = "search"
+
     begin
-      @logger.info "Registering full route #{path_prefix}/autocomplete"
+      @logger.info "Registering full route /autocomplete"
       @router.routes.update application_id: app_id, route_type: :full,
-        incoming_path: "#{path_prefix}/autocomplete"
-      @logger.info "Registering full route #{path_prefix}/preload-autocomplete"
+        incoming_path: "/autocomplete"
+      @logger.info "Registering full route /preload-autocomplete"
       @router.routes.update application_id: app_id, route_type: :full,
-        incoming_path: "#{path_prefix}/preload-autocomplete"
-      @logger.info "Registering full route #{path_prefix}/sitemap.xml"
+        incoming_path: "/preload-autocomplete"
+      @logger.info "Registering full route /sitemap.xml"
       @router.routes.update application_id: app_id, route_type: :full,
-        incoming_path: "#{path_prefix}/sitemap.xml"
+        incoming_path: "/sitemap.xml"
     rescue Router::Conflict => conflict_error
       @logger.error "Route already exists: #{conflict_error.existing}"
       raise conflict_error
@@ -79,18 +77,8 @@ namespace :router do
 
   desc "Register search application and routes with the router (run this task on server in cluster)"
   task :register => :router_environment do
-    case settings.router[:app_id]
-    when 'search'
-      Rake::Task["router:register_application"].invoke
-      Rake::Task["router:register_routes"].invoke
-    when 'whitehall-search'
-      # Whitehall search is proxied via the whitehall application
-      # and is never accessed directly by the public, so it doesn't
-      # need to be routed
-      puts "Not registering whitehall-search with router"
-    else
-      raise "Unexpected app_id '#{settings.router[:app_id]}' in router.yml"
-    end
+    Rake::Task["router:register_application"].invoke
+    Rake::Task["router:register_routes"].invoke
   end
 end
 

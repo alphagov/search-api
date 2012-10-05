@@ -12,8 +12,6 @@ def backend_config
   config_for(:backends)[ENV["RACK_ENV"]].symbolize_keys
 end
 
-set :router, config_for(:router)
-
 set :backends, backend_config
 set :elasticsearch_schema, config_for("elasticsearch_schema")
 
