@@ -166,7 +166,7 @@ class ElasticsearchWrapper
                     fields: match_fields.map { |name, boost|
                       boost == 1 ? name : "#{name}^#{boost}"
                     },
-                    query: query,
+                    query: escape(query),
                     analyzer: query_analyzer
                   }
                 },
@@ -180,7 +180,6 @@ class ElasticsearchWrapper
 
     # RestClient does not allow a payload with a GET request
     # so we have to call @client.request directly.
-
     @logger.debug "Request payload: #{payload}"
 
     result = @client.request(:get, "_search", payload)
@@ -188,6 +187,19 @@ class ElasticsearchWrapper
     result['hits']['hits'].map { |hit|
       Document.from_hash(hit['_source'])
     }
+  end
+
+  LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
+    + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
+  ].map { |s| Regexp.escape(s) }.join("|") + ")")
+
+  def escape(s)
+    # 6 slashes =>
+    #  ruby reads it as 3 backslashes =>
+    #    the first 2 =>
+    #      go into the regex engine which reads it as a single literal backslash
+    #    the last one combined with the "1" to insert the first match group
+    s.gsub(LUCENE_SPECIAL_CHARACTERS, '\\\\\1')
   end
 
   def facet(field_name)
