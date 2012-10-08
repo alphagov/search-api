@@ -47,7 +47,7 @@ class ElasticsearchAdminWrapper
   def put_mappings
     # Create or update the mappings in the current index
     @schema["mapping"].each do |mapping_type, mapping|
-      @logger.info 'Setting mapping for the "#{mapping_type}" type'
+      @logger.info "Setting mapping for the '#{mapping_type}' type"
       @logger.debug({mapping_type => mapping}.to_json)
 
       begin

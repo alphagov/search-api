@@ -1,16 +1,21 @@
 require "integration_test_helper"
 require "app"
 require "rest-client"
+require "nokogiri"
 
-class ElasticsearchBrowsingTest < IntegrationTest
+class SitemapTest < IntegrationTest
 
   def setup
     use_elasticsearch_for_primary_search
-    disable_secondary_search
+    app.any_instance.stubs(:secondary_search).returns(stub(search: []))
     WebMock.disable_net_connect!(allow: "localhost:9200")
     reset_elasticsearch_index
     add_sample_documents
     commit_index
+  end
+
+  def commit_index
+    post "/commit", nil
   end
 
   def sample_document_attributes
@@ -20,7 +25,6 @@ class ElasticsearchBrowsingTest < IntegrationTest
         "description" => "Hummus weevils",
         "format" => "answer",
         "link" => "/an-example-answer",
-        "section" => "crime-and-justice",
         "indexable_content" => "I like my badger: he is tasty and delicious"
       },
       {
@@ -28,7 +32,7 @@ class ElasticsearchBrowsingTest < IntegrationTest
         "description" => "Government, government, government. Developers.",
         "format" => "answer",
         "link" => "/another-example-answer",
-        "section" => "work",
+        "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
       }
     ]
@@ -41,7 +45,17 @@ class ElasticsearchBrowsingTest < IntegrationTest
     end
   end
 
-  def commit_index
-    post "/commit", nil
+  def assert_result_links(*links)
+    doc = Nokogiri::XML(last_response.body)
+    paths = doc.css('loc').collect(&:text).map { |l| URI.parse(l).path }
+
+    assert_equal links, paths
+  end
+
+  def test_should_return_a_sitemap
+    get "/sitemap.xml"
+    assert last_response.headers["Content-Type"].include?("application/xml")
+    assert last_response.ok?
+    assert_result_links "/", "/an-example-answer", "/another-example-answer"
   end
 end

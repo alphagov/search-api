@@ -3,20 +3,13 @@
 end
 
 require 'sinatra'
-require 'slimmer'
-require 'erubis'
 require 'json'
 require 'csv'
 
-require 'popular_items'
 require 'document'
-require 'section'
-require 'utils'
 require 'solr_wrapper'
 require 'elasticsearch_wrapper'
 require 'null_backend'
-require 'slimmer_headers'
-require 'sinatra/content_for'
 
 require_relative 'config'
 require_relative 'helpers'
@@ -44,7 +37,7 @@ helpers do
 end
 
 before do
-  headers SlimmerHeaders.headers(settings.slimmer_headers)
+  content_type :json
 end
 
 get "/search.?:format?" do
@@ -67,7 +60,6 @@ get "/search.?:format?" do
   @results = results.take(50 - @secondary_results.length)
   @total_results = @results.length + @secondary_results.length
 
-  content_type :json
   JSON.dump((@results + @secondary_results).map { |r| r.to_hash.merge(
     highlight: r.highlight,
     presentation_format: r.presentation_format,
@@ -80,7 +72,6 @@ get "/:backend/search.?:format?" do
 
   results = backend.search(query, params["format_filter"])
 
-  content_type :json
   JSON.dump(results.map { |r| r.to_hash.merge(
     highlight: r.highlight,
     presentation_format: r.presentation_format,
@@ -93,13 +84,11 @@ get "/?:backend?/preload-autocomplete" do
   # so searching for those is really fast. For the beta, this is just a list
   # of all terms.
   expires 86400, :public
-  content_type :json
   results = backend.autocomplete_cache rescue []
   JSON.dump(results.map { |r| r.to_hash })
 end
 
 get "/?:backend?/autocomplete" do
-  content_type :json
   query = params['q']
 
   unless query
@@ -117,6 +106,7 @@ get "/?:backend?/autocomplete" do
 end
 
 get "/?:backend?/sitemap.xml" do
+  content_type :xml
   expires 86400, :public
   # Site maps can have up to 50,000 links in them.
   # We use one for / so we can have up to 49,999 others.
@@ -125,14 +115,14 @@ get "/?:backend?/sitemap.xml" do
     xml.instruct!
     xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
       xml.url do
-	xml.loc "#{base_url}#{"/"}"
+        xml.loc "#{base_url}#{"/"}"
       end
       documents.each do |document|
-	xml.url do
-	  url = document.link
+        xml.url do
+          url = document.link
           url = "#{base_url}#{url}" if url =~ /^\//
-	  xml.loc url
-	end
+          xml.loc url
+        end
       end
     end
   end
@@ -154,7 +144,7 @@ end
 get "/?:backend?/documents/*" do
   document = backend.get(params["splat"].first)
   halt 404 unless document
-  content_type :json
+
   JSON.dump document.to_hash
 end
 
@@ -196,74 +186,4 @@ delete "/?:backend?/documents" do
     action = backend.delete(params["link"])
   end
   simple_json_result(action)
-end
-
-if settings.router[:path_prefix].empty?
-  get "/browse.?:format?" do
-    headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
-    expires 3600, :public
-    @results = primary_search.facet('section')
-    @page_title = "Browse | GOV.UK Beta (Test)"
-    if request.accept.include?("application/json") or params['format'] == 'json'
-      content_type :json
-      JSON.dump(@results.map { |r| { url: "/browse/#{r.slug}" } })
-    else
-      erb(:sections)
-    end
-  end
-
-  def assemble_section_details(section_slug)
-    section = params[:section].gsub(/[^a-z0-9\-_]+/, '-')
-    halt 404 unless section == params[:section]
-    @ungrouped_results = primary_search.section(section)
-    halt 404 if @ungrouped_results.empty?
-    @section = Section.new(section)
-    @page_section = formatted_section_name(@section.slug)
-    @page_section_link = @section.path
-    @results = @ungrouped_results.group_by { |result| result.subsection }.sort {|l,r| l[0].nil? ? 1 : l[0]<=>r[0]}
-  end
-
-  def compile_section_json(results)
-    as_hash = {
-      'name' => @page_section,
-      'url' => @page_section_link,
-      'contents' => []
-    }
-    description_path = File.expand_path("../views/_#{@section.slug}.html", __FILE__)
-
-    if File.exists?(description_path)
-      as_hash['description'] = File.read(description_path).gsub(/<\/?[^>]*>/, "")
-    end
-
-    @results.each do |subsection, items|
-      as_hash['contents'] += items.collect do |i|
-        { 'id' => i.link, 'title' => i.title, 'link' => i.link, 'format' => i.presentation_format, 'subsection' => subsection}
-      end
-    end
-    as_hash
-  end
-
-  get "/browse/:section.json" do
-    expires 86400, :public
-    assemble_section_details(params[:section])
-    content_type :json
-    JSON.dump(compile_section_json(@results))
-  end
-
-  get "/browse/:section" do
-    expires 86400, :public
-    headers SlimmerHeaders.headers(settings.slimmer_headers.merge(section: "Section nav"))
-    assemble_section_details(params[:section])
-
-    if request.accept.include?("application/json")
-      content_type :json
-      JSON.dump(compile_json_for_section)
-    else
-      popular_items = PopularItems.new(settings.panopticon_api_credentials)
-      @popular = popular_items.select_from(params[:section], @ungrouped_results)
-      @sections = (primary_search.facet('section') || []).reject {|a| a.slug == @section.slug }
-      @page_title = "#{formatted_section_name @section.slug} | GOV.UK Beta (Test)"
-      erb(:section)
-    end
-  end
 end
