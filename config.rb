@@ -34,15 +34,6 @@ set :recommended_format, "recommended-link"
 
 set :format_order, ['transaction', 'answer', 'programme', 'guide']
 
-set :format_name_alternatives, {
-  "programme" => "Benefits & credits",
-  "transaction" => "Services",
-  "local_transaction" => "Services",
-  "place" => "Services",
-  "answer" => "Quick answers",
-  "specialist_guidance" => "Specialist guidance"
-}
-
 configure :development do
   set :protection, false
 end

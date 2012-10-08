@@ -125,29 +125,23 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "guide", document.presentation_format
   end
 
-  def test_takes_humanized_format_from_settings_if_present
-    hash = {:format => "map"}
-
-    settings.stubs(:format_name_alternatives).returns("map" => "Atlas")
+  def test_takes_humanized_format_if_present
+    hash = {:format => "place"}
 
     document = Document.from_hash(hash)
-    assert_equal "Atlas", document.humanized_format
+    assert_equal "Services", document.humanized_format
   end
 
   def test_uses_presentation_format_to_find_alternative_format_name
     hash = {:format => "map"}
 
-    settings.stubs(:format_name_alternatives).returns("plan" => "Atlas")
-
     document = Document.from_hash(hash)
-    document.stubs(:presentation_format).returns("plan")
-    assert_equal "Atlas", document.humanized_format
+    document.stubs(:presentation_format).returns("place")
+    assert_equal "Services", document.humanized_format
   end
 
-  def test_generates_humanized_format_if_not_present_in_settings
+  def test_generates_humanized_format_if_not_present
     hash = {:format => "ocean_map"}
-
-    settings.stubs(:format_name_alternatives).returns({})
 
     document = Document.from_hash(hash)
     assert_equal "Ocean maps", document.humanized_format
