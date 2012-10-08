@@ -1,5 +1,6 @@
 require "elasticsearch_wrapper"
 require "logger"
+require "json"
 
 class ElasticsearchAdminWrapper
 

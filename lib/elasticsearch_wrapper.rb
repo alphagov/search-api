@@ -3,6 +3,7 @@ require "section"
 require "logger"
 require "cgi"
 require "rest-client"
+require "json"
 
 class ElasticsearchWrapper
 
