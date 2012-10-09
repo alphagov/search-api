@@ -36,13 +36,19 @@ class ElasticsearchAdminWrapper
   end
 
   def ensure_index!
-    # Delete and recreate the elasticsearch index
-    begin
-      @client.delete ""
-    rescue RestClient::ResourceNotFound
-    end
-
+    delete_index
     ensure_index
+  end
+
+  def delete_index
+    begin
+      @logger.info "Deleting index"
+      @client.delete ""
+      return :deleted
+    rescue RestClient::ResourceNotFound
+      @logger.info "Index didn't exist"
+      return :absent
+    end
   end
 
   def put_mappings

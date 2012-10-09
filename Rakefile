@@ -154,6 +154,11 @@ namespace :rummager do
   # Alias for the old task name
   task :create_index => :ensure_index do end
 
+  desc "Delete the elasticsearch index"
+  task :delete_index => :rummager_environment do
+    @wrapper.delete_index
+  end
+
   task :which_indexes_exist => :rummager_environment do
     @wrappers.each do |wrapper_name, wrapper|
       if wrapper.index_exists?
@@ -173,6 +178,12 @@ namespace :rummager do
 
   # Alias for the old task name
   task :create_all_indexes => :ensure_all_indexes do end
+
+  task :delete_all_indexes => :rummager_environment do
+    @wrappers.each_value do |wrapper|
+      wrapper.delete_index
+    end
+  end
 
   desc "Create or update all elasticsearch mappings"
   task :put_all_mappings => [:rummager_environment, :ensure_all_indexes] do

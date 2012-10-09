@@ -19,11 +19,16 @@ class ElasticsearchAdminTest < IntegrationTest
     )
   end
 
+  def index_status
+    JSON.parse(RestClient.get("http://localhost:9200/_status"))
+  end
+
   def assert_index_exists
-    index_status = JSON.parse(
-      RestClient.get("http://localhost:9200/rummager_test/_status")
-    )
     assert index_status["indices"]["rummager_test"]
+  end
+
+  def assert_index_does_not_exist
+    assert_nil index_status["indices"]["rummager_test"]
   end
 
   def assert_type_exists(type)
@@ -54,6 +59,18 @@ class ElasticsearchAdminTest < IntegrationTest
     assert_equal :created, @wrapper.ensure_index
     assert_equal :updated, @wrapper.ensure_index
     assert_index_exists
+  end
+
+  def test_should_delete_index
+    @wrapper.ensure_index
+    assert_index_exists
+    assert_equal :deleted, @wrapper.delete_index
+    assert_index_does_not_exist
+  end
+
+  def test_should_return_symbol_if_index_does_not_exist
+    assert_equal :absent, @wrapper.delete_index
+    assert_index_does_not_exist
   end
 
   def test_should_recreate_index
