@@ -55,7 +55,7 @@ class ElasticsearchAdminTest < IntegrationTest
     assert_index_exists
   end
 
-  def test_should_return_false_if_index_exists
+  def test_should_return_symbol_if_index_exists
     assert_equal :created, @wrapper.ensure_index
     assert_equal :updated, @wrapper.ensure_index
     assert_index_exists
