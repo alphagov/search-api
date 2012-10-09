@@ -81,6 +81,14 @@ class ElasticsearchSearchTest < IntegrationTest
     end
   end
 
+  def test_should_escape_lucene_characters
+    ["badger)", "badger\\"].each do |problem|
+      get "/search.json?q=#{CGI.escape(problem)}"
+      assert last_response.ok?
+      assert_result_links "/an-example-answer"
+    end
+  end
+
   def test_should_not_match_on_format
     get "/search.json?q=answer"
     assert last_response.ok?

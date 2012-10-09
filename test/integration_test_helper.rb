@@ -85,7 +85,7 @@ class IntegrationTest < Test::Unit::TestCase
       settings.backends[:primary],
       settings.elasticsearch_schema
     )
-    admin.create_index!
+    admin.ensure_index!
     admin.put_mappings
   end
 

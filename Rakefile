@@ -35,6 +35,19 @@ end
 
 require "ci/reporter/rake/test_unit" if ENV["RACK_ENV"] == "test"
 
+class PushableLogger
+  # Because RestClient uses the '<<' method, rather than the levelled Logger
+  # methods, we have to put together a class that'll assign them a level
+
+  def initialize(logger, level)
+    @logger, @level = logger, level
+  end
+
+  def <<(message)
+    @logger.add @level, message
+  end
+end
+
 task :default => :test
 
 namespace :router do
@@ -125,30 +138,51 @@ namespace :rummager do
       settings.elasticsearch_schema,
       @logger
     )
-    RestClient.log = @logger
+    RestClient.log = PushableLogger.new(@logger, Logger::DEBUG)
   end
 
   desc "Create or update the elasticsearch mappings"
-  task :put_mapping => [:rummager_environment, :create_index] do
+  task :put_mapping => [:rummager_environment, :ensure_index] do
     @wrapper.put_mappings
   end
 
   desc "Ensure the elasticsearch index exists"
-  task :create_index => :rummager_environment do
-    @wrapper.create_index
+  task :ensure_index => :rummager_environment do
+    @wrapper.ensure_index
+  end
+
+  # Alias for the old task name
+  task :create_index => :ensure_index do end
+
+  desc "Delete the elasticsearch index"
+  task :delete_index => :rummager_environment do
+    @wrapper.delete_index
+  end
+
+  task :which_indexes_exist => :rummager_environment do
+    @wrappers.each do |wrapper_name, wrapper|
+      if wrapper.index_exists?
+        puts "'#{wrapper_name}' index exists"
+      else
+        puts "'#{wrapper_name}' index does not exist"
+      end
+    end
   end
 
   desc "Ensure that all elasticsearch indexes exist"
-  task :create_all_indexes => :rummager_environment do
-    @wrappers.each_value.each do |wrapper|
-      wrapper.create_index
-    end
+  task :ensure_all_indexes => :rummager_environment do
+    @wrappers.each_value &:ensure_index
+  end
+
+  # Alias for the old task name
+  task :create_all_indexes => :ensure_all_indexes do end
+
+  task :delete_all_indexes => :rummager_environment do
+    @wrappers.each_value &:delete_index
   end
 
   desc "Create or update all elasticsearch mappings"
-  task :put_all_mappings => [:rummager_environment, :create_all_indexes] do
-    @wrappers.each_value.each do |wrapper|
-      wrapper.put_mappings
-    end
+  task :put_all_mappings => [:rummager_environment, :ensure_all_indexes] do
+    @wrappers.each_value &:put_mappings
   end
 end

@@ -79,13 +79,8 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
 
   def test_basic_keyword_search
     stub_request(:get, "http://example.com:9200/test-index/_search").with(
-        body: {
-            from: 0, size: 50,
-            query: {
-                query_string: { query: "keyword search" }
-            }
-        }.to_json,
-        headers: {"Content-Type" => "application/json"}
+      body: %r{"query":"keyword search"},
+      headers: {"Content-Type" => "application/json"}
     ).to_return(:body => '{"hits":{"hits":[]}}')
     @wrapper.search "keyword search"
     assert_requested(:get, "http://example.com:9200/test-index/_search")

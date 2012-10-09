@@ -7,7 +7,6 @@ require 'json'
 require 'csv'
 
 require 'document'
-require 'utils'
 require 'solr_wrapper'
 require 'elasticsearch_wrapper'
 require 'null_backend'
@@ -31,14 +30,6 @@ end
 
 def secondary_search
   available_backends[:secondary]
-end
-
-def boosts
-  # Build a map of links to a string of comma-separated phrases
-  @boosts ||= CSV.read(settings.boost_csv).each_with_object({}) do |row, boosts|
-    link, phrases = row
-    boosts[link] = phrases
-  end
 end
 
 helpers do
@@ -143,9 +134,7 @@ post "/?:backend?/documents" do
     Document.from_hash(hash)
   }
 
-  better_documents = boost_documents(documents, boosts)
-
-  simple_json_result(backend.add(better_documents))
+  simple_json_result(backend.add(documents))
 end
 
 post "/?:backend?/commit" do

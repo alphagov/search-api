@@ -108,7 +108,7 @@ class Document < Link
   # tracts of code with them.
 
   auto_keys :title, :link, :description, :format, :section, :subsection, :subsubsection,
-    :indexable_content, :additional_links, :boost_phrases
+    :indexable_content, :additional_links
   attr_writer :highlight
 
   def self.from_hash(hash)
@@ -128,12 +128,21 @@ class Document < Link
     "calendar" => "answer"
   }
 
+  FORMAT_NAME_ALTERNATIVES = {
+    "programme" => "Benefits & credits",
+    "transaction" => "Services",
+    "local_transaction" => "Services",
+    "place" => "Services",
+    "answer" => "Quick answers",
+    "specialist_guidance" => "Specialist guidance"
+  }
+
   def presentation_format
     PRESENTATION_FORMAT_TRANSLATION.fetch(normalized_format, normalized_format)
   end
 
   def humanized_format
-    settings.format_name_alternatives[presentation_format] || presentation_format.humanize.pluralize
+    FORMAT_NAME_ALTERNATIVES[presentation_format] || presentation_format.humanize.pluralize
   end
 
   def highlight

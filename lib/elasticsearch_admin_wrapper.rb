@@ -1,5 +1,6 @@
 require "elasticsearch_wrapper"
 require "logger"
+require "json"
 
 class ElasticsearchAdminWrapper
 
@@ -9,38 +10,45 @@ class ElasticsearchAdminWrapper
     @logger = logger || Logger.new("/dev/null")
   end
 
-  def create_index
+  def index_exists?
+    server_status = JSON.parse(@client.get("/_status"))
+    server_status["indices"].keys.include? @client.index_name
+  end
+
+  def ensure_index
     # Create the elasticsearch index if it does not exist
-    # If the index was created, return true; if it existed, return false
+    # If it does exist, close the index and apply the updated analysis settings
 
     index_payload = @schema["index"]
 
-    @logger.info "Trying to create elasticsearch index"
-    begin
+    if index_exists?
+      @logger.info "Index already exists: updating settings"
+      @client.post("_close", nil)
+      @client.put("_settings", index_payload["settings"].to_json)
+      @client.post("_open", nil)
+      @logger.info "Settings updated"
+      return :updated
+    else
       @client.put("", index_payload.to_json)
       @logger.info "Index created"
-      return true
-    rescue RestClient::BadRequest => error
-      # Have to rescue and inspect the BadRequest here, because elasticsearch
-      # doesn't do idempotent PUT requests for index creation
-      error_message = JSON.parse(error.http_body)["error"]
-      if error_message.start_with? "IndexAlreadyExistsException"
-        @logger.info "Index already exists"
-        return false
-      else
-        raise
-      end
+      return :created
     end
   end
 
-  def create_index!
-    # Delete and recreate the elasticsearch index
-    begin
-      @client.delete ""
-    rescue RestClient::ResourceNotFound
-    end
+  def ensure_index!
+    delete_index
+    ensure_index
+  end
 
-    create_index
+  def delete_index
+    begin
+      @logger.info "Deleting index"
+      @client.delete ""
+      return :deleted
+    rescue RestClient::ResourceNotFound
+      @logger.info "Index didn't exist"
+      return :absent
+    end
   end
 
   def put_mappings

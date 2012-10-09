@@ -19,11 +19,16 @@ class ElasticsearchAdminTest < IntegrationTest
     )
   end
 
+  def index_status
+    JSON.parse(RestClient.get("http://localhost:9200/_status"))
+  end
+
   def assert_index_exists
-    index_status = JSON.parse(
-      RestClient.get("http://localhost:9200/rummager_test/_status")
-    )
     assert index_status["indices"]["rummager_test"]
+  end
+
+  def assert_index_does_not_exist
+    assert_nil index_status["indices"]["rummager_test"]
   end
 
   def assert_type_exists(type)
@@ -46,30 +51,42 @@ class ElasticsearchAdminTest < IntegrationTest
   end
 
   def test_should_create_an_index
-    assert @wrapper.create_index
+    assert_equal :created, @wrapper.ensure_index
     assert_index_exists
   end
 
-  def test_should_return_false_if_index_exists
-    assert @wrapper.create_index
-    assert_false @wrapper.create_index
+  def test_should_return_symbol_if_index_exists
+    assert_equal :created, @wrapper.ensure_index
+    assert_equal :updated, @wrapper.ensure_index
     assert_index_exists
+  end
+
+  def test_should_delete_index
+    @wrapper.ensure_index
+    assert_index_exists
+    assert_equal :deleted, @wrapper.delete_index
+    assert_index_does_not_exist
+  end
+
+  def test_should_return_symbol_if_index_does_not_exist
+    assert_equal :absent, @wrapper.delete_index
+    assert_index_does_not_exist
   end
 
   def test_should_recreate_index
-    assert @wrapper.create_index
+    assert_equal :created, @wrapper.ensure_index
     assert_index_exists
 
     @wrapper.put_mappings
     assert_type_exists "edition"
 
-    @wrapper.create_index!
+    @wrapper.ensure_index!
     assert_index_exists
     assert_type_does_not_exist "edition"
   end
 
   def test_should_create_mappings
-    assert @wrapper.create_index!
+    assert_equal :created, @wrapper.ensure_index!
     assert_index_exists
 
     assert_type_does_not_exist "edition"
