@@ -3,14 +3,17 @@ require "section"
 require "logger"
 require "cgi"
 require "rest-client"
+require "json"
 
 class ElasticsearchWrapper
 
   class Client
 
+    attr_reader :index_name  # The admin wrapper needs to get to this
+
     # Sub-paths almost certainly shouldn't start with leading slashes,
     # since this will make the request relative to the server root
-    SAFE_ABSOLUTE_PATHS = ["/_bulk"]
+    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status"]
 
     def initialize(settings, logger = nil)
       missing_keys = [:server, :port, :index_name].reject { |k| settings[k] }
@@ -22,6 +25,7 @@ class ElasticsearchWrapper
         port: settings[:port],
         path: "/#{settings[:index_name]}/"
       )
+      @index_name = settings[:index_name]
 
       @logger = logger || Logger.new("/dev/null")
     end
@@ -111,19 +115,91 @@ class ElasticsearchWrapper
 
     raise "Format filter not yet supported" if format_filter
 
-    # RestClient does not allow a payload with a GET request
-    # so we have to call @client.request directly.
+    # Per-format boosting done as a filter, so the results get cached on the
+    # server, as they are the same for each query
+    boosted_formats = { "smart-answer" => 1.5, "transaction" => 1.5 }
+    format_boosts = boosted_formats.map do |format, boost|
+      {
+        filter: { term: { format: format } },
+        boost: boost
+      }
+    end
+
+    query_analyzer = "query_default"
+
+    match_fields = {
+      "title" => 5,
+      "description" => 2,
+      "indexable_content" => 1,
+    }
+
+    # "driving theory test" => ["driving theory", "theory test"]
+    shingles = query.split.each_cons(2).map { |s| s.join(' ') }
+
+    # These boosts will be different on each query, so there's no benefit to
+    # caching them in a filter
+    shingle_boosts = shingles.map do |shingle|
+      match_fields.map do |field_name, _|
+        {
+          text: {
+            field_name => {
+              query: shingle,
+              type: "phrase",
+              boost: 2,
+              analyzer: query_analyzer
+            },
+          }
+        }
+      end
+    end
+
+    query_boosts = shingle_boosts
+
     payload = {
         from: 0, size: 50,
         query: {
-          query_string: { query: query }
+          custom_filters_score: {
+            query: {
+              bool: {
+                must: {
+                  query_string: {
+                    fields: match_fields.map { |name, boost|
+                      boost == 1 ? name : "#{name}^#{boost}"
+                    },
+                    query: escape(query),
+                    analyzer: query_analyzer
+                  }
+                },
+                should: query_boosts
+              }
+            },
+            filters: format_boosts
+          }
         }
     }.to_json
+
+    # RestClient does not allow a payload with a GET request
+    # so we have to call @client.request directly.
+    @logger.debug "Request payload: #{payload}"
+
     result = @client.request(:get, "_search", payload)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|
       Document.from_hash(hit['_source'])
     }
+  end
+
+  LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
+    + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
+  ].map { |s| Regexp.escape(s) }.join("|") + ")")
+
+  def escape(s)
+    # 6 slashes =>
+    #  ruby reads it as 3 backslashes =>
+    #    the first 2 =>
+    #      go into the regex engine which reads it as a single literal backslash
+    #    the last one combined with the "1" to insert the first match group
+    s.gsub(LUCENE_SPECIAL_CHARACTERS, '\\\\\1')
   end
 
   def facet(field_name)
