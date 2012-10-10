@@ -30,14 +30,23 @@ class ElasticsearchWrapper
       @logger = logger || Logger.new("/dev/null")
     end
 
+    def recording_elastic_error(&block)
+      yield
+    rescue Errno::ECONNREFUSED, Timeout::Error, SocketError
+      Rummager.statsd.increment("elasticsearcherror")
+      raise
+    end
+
     def request(method, sub_path, payload)
       begin
-        RestClient::Request.execute(
-          method: method,
-          url:  url_for(sub_path),
-          payload: payload,
-          headers: {content_type: "application/json"}
-        )
+        recording_elastic_error do
+          RestClient::Request.execute(
+            method: method,
+            url:  url_for(sub_path),
+            payload: payload,
+            headers: {content_type: "application/json"}
+          )
+        end
       rescue RestClient::InternalServerError => error
         @logger.error(
           "Internal server error in elasticsearch. " +
@@ -55,7 +64,9 @@ class ElasticsearchWrapper
         args.each_with_index do |argument, index|
           @logger.debug "Argument #{index + 1}: #{argument.inspect}"
         end
-        RestClient.send(method_name, url_for(sub_path), *args)
+        recording_elastic_error do
+          RestClient.send(method_name, url_for(sub_path), *args)
+        end        
       end
     end
 
