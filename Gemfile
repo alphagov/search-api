@@ -16,6 +16,7 @@ gem 'rack', '1.3.5'
 gem 'plek', '0.1.23'
 gem 'aws-ses'
 gem 'rest-client', '1.6.7'
+gem 'statsd-ruby', '1.0.0'
 
 group :test do
   gem "simplecov"
