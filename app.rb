@@ -5,6 +5,7 @@ end
 require 'sinatra'
 require 'json'
 require 'csv'
+require 'statsd'
 
 require 'document'
 require 'solr_wrapper'
@@ -16,6 +17,12 @@ require_relative 'helpers'
 require_relative 'backends'
 
 class Rummager < Sinatra::Application
+  def self.statsd
+    @@statsd ||= Statsd.new("localhost").tap do |c|
+      c.namespace = ENV['GOVUK_STATSD_PREFIX'].to_s
+    end
+  end
+
   def available_backends
     @available_backends ||= Backends.new(settings, logger)
   end
