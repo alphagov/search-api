@@ -34,6 +34,14 @@ class SitemapTest < IntegrationTest
         "link" => "/another-example-answer",
         "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
+      },
+      {
+        "title" => "External government information",
+        "description" => "Government, government, government. Developers.",
+        "format" => "recommended-link",
+        "link" => "/external-example-answer",
+        "section" => "Crime",
+        "indexable_content" => "Tax, benefits, roads and stuff"
       }
     ]
   end
@@ -52,10 +60,24 @@ class SitemapTest < IntegrationTest
     assert_equal links, paths
   end
 
+  def assert_no_link(link)
+    doc = Nokogiri::XML(last_response.body)
+    paths = doc.css('loc').collect(&:text).map { |l| URI.parse(l).path }
+
+    assert ! paths.include?(link), "Found #{link} in sitemap"
+  end
+
   def test_should_return_a_sitemap
     get "/sitemap.xml"
     assert last_response.headers["Content-Type"].include?("application/xml")
     assert last_response.ok?
     assert_result_links "/", "/an-example-answer", "/another-example-answer"
+  end
+
+  def test_should_not_include_recommended_links
+    get "/sitemap.xml"
+    assert last_response.headers["Content-Type"].include?("application/xml")
+    assert last_response.ok?
+    assert_no_link "/external-example-answer"
   end
 end
