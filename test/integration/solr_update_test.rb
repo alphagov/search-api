@@ -25,7 +25,7 @@ class SolrUpdateTest < IntegrationTest
   END
 
   def app
-    Sinatra::Application
+    Rummager
   end
 
   def test_should_send_a_document_to_solr_when_a_json_document_is_posted

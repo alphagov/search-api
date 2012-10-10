@@ -43,7 +43,7 @@ class IntegrationTest < Test::Unit::TestCase
   include IntegrationFixtures
 
   def app
-    Sinatra::Application
+    Rummager
   end
 
   def disable_secondary_search
@@ -51,25 +51,31 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def use_solr_for_primary_search
-    settings.stubs(:backends).returns(
-      primary: {
-        type: "solr",
-        server: "solr-test-server",
-        port: 9999,
-        path: "/solr/rummager"
-      }
-    )
+    # It invokes (according to mocha) "settings" on both Rummager and Sinatra::Application
+    [app, Sinatra::Application].each do |thing|
+      thing.settings.stubs(:backends).returns(
+        primary: {
+          type: "solr",
+          server: "solr-test-server",
+          port: 9999,
+          path: "/solr/rummager"
+        }
+      )
+    end
   end
 
   def use_elasticsearch_for_primary_search
-    settings.stubs(:backends).returns(
-      primary: {
-        type: "elasticsearch",
-        server: "localhost",
-        port: 9200,
-        index_name: "rummager_test"
-      }
-    )
+    # It invokes (according to mocha) "settings" on both Rummager and Sinatra::Application
+    [app, Sinatra::Application].each do |thing|
+      thing.settings.stubs(:backends).returns(
+        primary: {
+          type: "elasticsearch",
+          server: "localhost",
+          port: 9200,
+          index_name: "rummager_test"
+        }
+      )
+    end
   end
 
   def delete_elasticsearch_index

@@ -30,4 +30,4 @@ unless in_development
   STDERR.reopen(log)
 end
 
-run Sinatra::Application
+run Rummager
