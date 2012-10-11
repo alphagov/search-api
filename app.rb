@@ -126,10 +126,12 @@ class Rummager < Sinatra::Application
           xml.loc "#{base_url}#{"/"}"
         end
         documents.each do |document|
-          xml.url do
-            url = document.link
-            url = "#{base_url}#{url}" if url =~ /^\//
-            xml.loc url
+          unless document.format == settings.recommended_format
+            xml.url do
+              url = document.link
+              url = "#{base_url}#{url}" if url =~ /^\//
+              xml.loc url
+            end
           end
         end
       end
