@@ -39,7 +39,7 @@ class SitemapTest < IntegrationTest
         "title" => "External government information",
         "description" => "Government, government, government. Developers.",
         "format" => "recommended-link",
-        "link" => "/external-example-answer",
+        "link" => "http://www.example.com/external-example-answer",
         "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
       }
