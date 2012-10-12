@@ -66,7 +66,7 @@ class ElasticsearchWrapper
         end
         recording_elastic_error do
           RestClient.send(method_name, url_for(sub_path), *args)
-        end        
+        end
       end
     end
 
@@ -254,7 +254,7 @@ class ElasticsearchWrapper
   def delete(link)
     begin
       # Can't use a simple delete, because we don't know the type
-      @client.delete "_query?q=link:#{CGI.escape(link)}"
+      @client.delete "_query", params: {q: "link:#{escape(link)}"}
     rescue RestClient::ResourceNotFound
     end
     return true  # For consistency with the Solr API and simple_json_response
