@@ -66,7 +66,7 @@ class ElasticsearchWrapper
         end
         recording_elastic_error do
           RestClient.send(method_name, url_for(sub_path), *args)
-        end        
+        end
       end
     end
 
