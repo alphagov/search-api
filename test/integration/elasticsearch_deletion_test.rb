@@ -29,6 +29,11 @@ class ElasticsearchDeletionTest < IntegrationTest
         "link" => "/another-example-answer",
         "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
+      },
+      {
+          "title" => "Some other site",
+          "format" => "answer",
+          "link" => "http://example.com/",
       }
     ]
   end
@@ -64,6 +69,17 @@ class ElasticsearchDeletionTest < IntegrationTest
 
     get "/search.json?q=cheese"
     assert_no_results
+  end
+
+  def test_should_delete_an_item_with_a_full_url
+    get "/documents/http:%2F%2Fexample.com%2F"
+    assert last_response.ok?
+
+    delete "/documents/http:%2F%2Fexample.com%2F"
+    assert last_response.ok?
+
+    get "/documents/http:%2F%2Fexample.com%2F"
+    assert last_response.not_found?
   end
 
   def test_should_delete_all_the_things
