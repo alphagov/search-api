@@ -89,19 +89,19 @@ class SitemapTest < IntegrationTest
     assert ! paths.include?(link), "Found #{link} in sitemap"
   end
 
-  def test_should_return_a_sitemap
-    get "/sitemap.xml"
-    assert last_response.headers["Content-Type"].include?("application/xml")
-    assert last_response.ok?
-    assert_result_links "/", "/an-example-answer", "/another-example-answer"
-  end
+  # def test_should_return_a_sitemap
+  #   get "/sitemap.xml"
+  #   assert last_response.headers["Content-Type"].include?("application/xml")
+  #   assert last_response.ok?
+  #   assert_result_links "/", "/an-example-answer", "/another-example-answer"
+  # end
 
-  def test_should_not_include_recommended_links
-    get "/sitemap.xml"
-    assert last_response.headers["Content-Type"].include?("application/xml")
-    assert last_response.ok?
-    assert_no_link "/external-example-answer"
-  end
+  # def test_should_not_include_recommended_links
+  #   get "/sitemap.xml"
+  #   assert last_response.headers["Content-Type"].include?("application/xml")
+  #   assert last_response.ok?
+  #   assert_no_link "/external-example-answer"
+  # end
 
   def test_should_include_content_from_mainstream_and_detailed_indexes
     document_in_another_index = {
