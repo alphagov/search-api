@@ -40,6 +40,10 @@ class Rummager < Sinatra::Application
     available_backends[:secondary]
   end
 
+  def text_error(content)
+    halt 403, {"Content-Type" => "text/plain"}, content
+  end
+
   helpers do
     include Helpers
   end
@@ -163,10 +167,6 @@ class Rummager < Sinatra::Application
   end
 
   post "/?:backend?/documents/*" do
-    def text_error(content)
-      halt 403, {"Content-Type" => "text/plain"}, content
-    end
-
     unless request.form_data?
       halt(
         415,
