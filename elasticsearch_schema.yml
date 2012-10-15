@@ -232,7 +232,9 @@ synonyms: &synonyms [
 stems: &stems [
   "probate => probate",
   "equality => equality",
-  "equalities => equality"
+  "equalities => equality",
+  "paye => paye",
+  "directive => directive"
 ]
 
 index:
