@@ -4,9 +4,11 @@ synonyms: &synonyms [
 ]
 
 stems: &stems [
-  "probate => probate",
+  "directive => directive",
   "equality => equality",
-  "equalities => equality"
+  "equalities => equality",
+  "paye => paye",
+  "probate => probate"
 ]
 
 index:
