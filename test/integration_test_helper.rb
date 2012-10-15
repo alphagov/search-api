@@ -65,30 +65,32 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def use_elasticsearch_for_primary_search
-    # It invokes (according to mocha) "settings" on both Rummager and Sinatra::Application
-    [app, Sinatra::Application].each do |thing|
-      thing.settings.stubs(:backends).returns(
-        primary: {
+    stub_backends_with(primary: {
           type: "elasticsearch",
           server: "localhost",
           port: 9200,
           index_name: "rummager_test"
-        }
-      )
+        })
+  end
+
+  def stub_backends_with(hash)
+    # It invokes (according to mocha) "settings" on both Rummager and Sinatra::Application
+    [app, Sinatra::Application].each do |thing|
+      thing.settings.stubs(:backends).returns(hash)
     end
   end
 
-  def delete_elasticsearch_index
+  def delete_elasticsearch_index(index_name="rummager_test")
     begin
-      RestClient.delete "http://localhost:9200/rummager_test"
+      RestClient.delete "http://localhost:9200/#{index_name}"
     rescue RestClient::Exception => exception
       raise unless exception.http_code == 404
     end
   end
 
-  def reset_elasticsearch_index
+  def reset_elasticsearch_index(index_name=:primary)
     admin = ElasticsearchAdminWrapper.new(
-      settings.backends[:primary],
+      settings.backends[index_name],
       settings.elasticsearch_schema
     )
     admin.ensure_index!
