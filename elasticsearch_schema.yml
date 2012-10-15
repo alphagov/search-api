@@ -230,7 +230,23 @@ synonyms: &synonyms [
   "inf4d => driving licence medical condition",
   "inf5d => driving licence renewal",
   "p38s => student holiday job",
-  "pff2, pn1, pr1 => student finance"
+  "pff2, pn1, pr1 => student finance",
+
+  # Temporary fix for career-specific job searches
+  # TODO: Remove this once we have support for alternative keywords in Panopticon
+  "admin => admin, job search",
+  "catering => catering, job search",
+  "chef => chef, job search",
+  "cleaner => cleaner, job search",
+  "cleaning => cleaning, job search",
+  "labourer => labourer, job search",
+  "plumber => plumber, job search",
+  "receptionist => receptionist, job search",
+  "retail => retail, job search",
+  "sales => sales, job search",
+  "vacancies => vacancies, job search",
+  "waitress => waitress, job search",
+  "warehouse => warehouse, job search"
 ]
 
 stems: &stems [
