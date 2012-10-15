@@ -230,11 +230,11 @@ synonyms: &synonyms [
 ]
 
 stems: &stems [
-  "probate => probate",
-  "equality => equality",
+  "directive => directive",
   "equalities => equality",
+  "equality => equality",
   "paye => paye",
-  "directive => directive"
+  "probate => probate"
 ]
 
 index:
