@@ -40,6 +40,11 @@ class Rummager < Sinatra::Application
     available_backends[:secondary]
   end
 
+  def backends_for_sitemap
+    # Would rather have the names configured...
+    [available_backends[:mainstream], available_backends[:detailed]]
+  end
+
   def text_error(content)
     halt 403, {"Content-Type" => "text/plain"}, content
   end
@@ -117,12 +122,15 @@ class Rummager < Sinatra::Application
     ) })
   end
 
-  get "/?:backend?/sitemap.xml" do
+  get "/sitemap.xml" do
     content_type :xml
     expires 86400, :public
     # Site maps can have up to 50,000 links in them.
     # We use one for / so we can have up to 49,999 others.
-    documents = backend.all_documents limit: 49_999
+    # bes = settings.backends.keys.map { |key| available_backends[key] }
+    documents = backends_for_sitemap.flat_map do |be| 
+      be.all_documents(limit: 49_999)
+    end
     builder do |xml|
       xml.instruct!
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
