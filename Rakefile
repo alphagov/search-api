@@ -1,3 +1,4 @@
+require "rake"
 require "rake/testtask"
 require "rest-client"
 
@@ -202,5 +203,18 @@ namespace :rummager do
     @search_wrapper.formats.each do |facet|
       puts "#{facet["term"]}: #{facet["count"]} documents"
     end
+  end
+
+  desc "Delete all documents with a given format"
+  task :delete_by_format, [:format] => [:rummager_environment] do |t, args|
+    unless args[:format]
+      raise "No format supplied: aborting"
+    end
+
+    puts "Deleting all items with the #{args[:format]} format..."
+    @search_wrapper.delete_by_format args[:format]
+    puts "...done!"
+    puts "You probably want to run the rummager:list_formats task now, to make"
+    puts "sure this worked as you expected."
   end
 end

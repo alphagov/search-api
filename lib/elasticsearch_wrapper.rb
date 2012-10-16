@@ -253,6 +253,10 @@ class ElasticsearchWrapper
     return true  # For consistency with the Solr API and simple_json_response
   end
 
+  def delete_by_format(format)
+    @client.request :delete, "_query", {term: {format: format}}.to_json
+  end
+
   def delete_all
     @client.request :delete, "_query", {match_all: {}}.to_json
     commit
