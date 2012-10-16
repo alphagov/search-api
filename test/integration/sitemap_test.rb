@@ -6,10 +6,32 @@ require "nokogiri"
 class SitemapTest < IntegrationTest
 
   def setup
-    use_elasticsearch_for_primary_search
-    app.any_instance.stubs(:secondary_search).returns(stub(search: []))
+    stub_backends_with(
+      {
+        primary: {
+          type: "elasticsearch",
+          server: "localhost",
+          port: 9200,
+          index_name: "mainstream"
+        },
+        mainstream: {
+          type: "elasticsearch",
+          server: "localhost",
+          port: 9200,
+          index_name: "mainstream"
+        },
+        detailed: {
+          type: "elasticsearch",
+          server: "localhost",
+          port: 9200,
+          index_name: "detailed"
+        }
+      }
+    )
+
     WebMock.disable_net_connect!(allow: "localhost:9200")
-    reset_elasticsearch_index
+    reset_elasticsearch_index(:mainstream)
+    reset_elasticsearch_index(:detailed)
     add_sample_documents
     commit_index
   end
@@ -79,5 +101,24 @@ class SitemapTest < IntegrationTest
     assert last_response.headers["Content-Type"].include?("application/xml")
     assert last_response.ok?
     assert_no_link "/external-example-answer"
+  end
+
+  def test_should_include_content_from_mainstream_and_detailed_indexes
+    document_in_another_index = {
+      "title" => "Fetid Dingo's Kidneys",
+      "description" => "Bugblatter Beast of Traal",
+      "format" => "specialist",
+      "link" => "/a-specialist-guidance",
+      "indexable_content" => "Always bring a towel." 
+    }
+    post "/detailed/documents", JSON.dump(document_in_another_index)
+    assert last_response.ok?
+    post "/detailed/commit", nil
+    assert last_response.ok?
+
+    get "/sitemap.xml"
+    assert last_response.headers["Content-Type"].include?("application/xml")
+    assert last_response.ok?
+    assert_result_links "/", "/an-example-answer", "/another-example-answer", "/a-specialist-guidance"
   end
 end
