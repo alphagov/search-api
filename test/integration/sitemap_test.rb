@@ -12,19 +12,19 @@ class SitemapTest < IntegrationTest
           type: "elasticsearch",
           server: "localhost",
           port: 9200,
-          index_name: "mainstream"
+          index_name: "mainstream_test"
         },
         mainstream: {
           type: "elasticsearch",
           server: "localhost",
           port: 9200,
-          index_name: "mainstream"
+          index_name: "mainstream_test"
         },
         detailed: {
           type: "elasticsearch",
           server: "localhost",
           port: 9200,
-          index_name: "detailed"
+          index_name: "detailed_test"
         }
       }
     )
