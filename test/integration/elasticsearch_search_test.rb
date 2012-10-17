@@ -100,4 +100,14 @@ class ElasticsearchSearchTest < IntegrationTest
     assert last_response.ok?
     assert_no_results
   end
+
+  def test_should_not_fail_on_conjunctions
+    ["cheese AND ", "cheese OR ", " AND cheese", " OR cheese"].each do |term|
+      assert_nothing_raised "Request failed for '#{term}'" do
+        get "/search.json?q=#{CGI.escape term}"
+      end
+      assert last_response.ok?
+      assert_result_links "/an-example-answer"
+    end
+  end
 end
