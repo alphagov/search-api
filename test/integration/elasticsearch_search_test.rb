@@ -29,6 +29,10 @@ class ElasticsearchSearchTest < IntegrationTest
         "link" => "/another-example-answer",
         "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
+      },
+      {
+        "title" => "Pork pies",
+        "link" => "/pork-pies"
       }
     ]
   end
@@ -109,5 +113,13 @@ class ElasticsearchSearchTest < IntegrationTest
       assert last_response.ok?
       assert_result_links "/an-example-answer"
     end
+  end
+
+  def test_should_not_parse_conjunctions_in_words
+    # Testing a SHOUTY QUERY because Lucene only treats capitalised
+    # conjunctions as special operators
+    get "/search.json?q=PORK+PIES"
+    assert last_response.ok?
+    assert_result_links "/pork-pies"
   end
 end
