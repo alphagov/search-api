@@ -204,7 +204,7 @@ class ElasticsearchWrapper
     + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
   ].map { |s| Regexp.escape(s) }.join("|") + ")")
 
-  LUCENE_CONJUNCTIONS = /\b(AND|OR)\b/
+  LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/
 
   def escape(s)
     # 6 slashes =>
@@ -216,7 +216,7 @@ class ElasticsearchWrapper
 
     # Map something like 'fish AND chips' to 'fish "AND" chips', to avoid
     # Lucene trying to parse it as a query conjunction
-    special_chars_escaped.gsub(LUCENE_CONJUNCTIONS, '"\1"')
+    special_chars_escaped.gsub(LUCENE_BOOLEANS, '"\1"')
   end
 
   def facet(field_name)

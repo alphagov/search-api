@@ -115,6 +115,11 @@ class ElasticsearchSearchTest < IntegrationTest
     end
   end
 
+  def test_should_not_fail_on_NOT
+    get "/search.json?q=NOT"
+    assert last_response.ok?
+  end
+
   def test_should_not_parse_conjunctions_in_words
     # Testing a SHOUTY QUERY because Lucene only treats capitalised
     # conjunctions as special operators
