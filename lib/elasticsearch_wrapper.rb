@@ -204,13 +204,19 @@ class ElasticsearchWrapper
     + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
   ].map { |s| Regexp.escape(s) }.join("|") + ")")
 
+  LUCENE_CONJUNCTIONS = /\b(AND|OR)\b/
+
   def escape(s)
     # 6 slashes =>
     #  ruby reads it as 3 backslashes =>
     #    the first 2 =>
     #      go into the regex engine which reads it as a single literal backslash
     #    the last one combined with the "1" to insert the first match group
-    s.gsub(LUCENE_SPECIAL_CHARACTERS, '\\\\\1')
+    special_chars_escaped = s.gsub(LUCENE_SPECIAL_CHARACTERS, '\\\\\1')
+
+    # Map something like 'fish AND chips' to 'fish "AND" chips', to avoid
+    # Lucene trying to parse it as a query conjunction
+    special_chars_escaped.gsub(LUCENE_CONJUNCTIONS, '"\1"')
   end
 
   def facet(field_name)
