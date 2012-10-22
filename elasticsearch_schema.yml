@@ -112,8 +112,8 @@ synonyms: &synonyms [
   "workplacepensions => workplace pensions",
   "yourmotcheck => mot check",
 
-  "fired => fired, dismissed, dismissal"
-  "firing => firing, dismiss, dismissing, dismissal"
+  "fired => fired, dismissed, dismissal",
+  "firing => firing, dismiss, dismissing, dismissal",
   "how much => how much, fees, rates",
   "rapid reclaim => rapid reclaim, jobseekers allowance",
   "social security => social security, benefits",
