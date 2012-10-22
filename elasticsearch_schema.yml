@@ -7,6 +7,7 @@ synonyms: &synonyms [
   "apply, application, claim",
   "appointeeship, appointee",
   "attorney, deputy",
+  "bankrupt, bankruptcy",
   "car tax, vehicle tax, tax disc, vehicle licence",
   "car tax bands, vehicle tax rates",
   "countersignature, countersign",
@@ -21,6 +22,7 @@ synonyms: &synonyms [
   "licence, license",
   "log in, login",
   "motorbike, motorcycle",
+  "pension forecast, pension statement",
   "pothole, pot hole",
   "practical driving test, practical test",
   "practice, practise",
@@ -50,7 +52,9 @@ synonyms: &synonyms [
 
   # Acronyms
 
+  "eis, enterprise investment scheme",
   "lha, local housing allowance",
+  "ukti, uk trade and investment",
 
   # Various bits of unofficial and run-together terminology
 
@@ -108,10 +112,12 @@ synonyms: &synonyms [
   "workplacepensions => workplace pensions",
   "yourmotcheck => mot check",
 
+  "fired => fired, dismissed, dismissal"
+  "firing => firing, dismiss, dismissing, dismissal"
   "how much => how much, fees, rates",
   "rapid reclaim => rapid reclaim, jobseekers allowance",
   "social security => social security, benefits",
-  "ukti => ukti, import, export",
+  "ukti => ukti, uk trade and investment, help for exporters, starting to export, uk welcomes",
   "wales => wales, cymru, cymraeg, gymraeg",
   "welsh => welsh, cymraeg, gymraeg",
 
@@ -233,7 +239,8 @@ synonyms: &synonyms [
 
   # Forms and leaflets
 
-  "br19 => pension forecast",
+  "br1, br 1 => state pension claim",
+  "br19, br 19 => pension forecast",
   "esa50 => employment and support allowance",
   "inf1d => driving licence application",
   "inf2d => driving licence lorry or bus",
@@ -262,10 +269,12 @@ synonyms: &synonyms [
 
 
 stems: &stems [
-  "directive => directive",
+  "directive, directives => directive",
   "equalities => equality",
   "equality => equality",
   "housing => housing",
+  "intern, interns => intern",
+  "internal => internal",
   "international => international",
   "paye => paye",
   "probate => probate",
@@ -303,4 +312,3 @@ mapping:
       subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
       link:        { type: string, index: not_analyzed, include_in_all: false }
       indexable_content: { type: string, index: analyzed }
-
