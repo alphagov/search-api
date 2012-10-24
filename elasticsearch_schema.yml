@@ -269,11 +269,13 @@ synonyms: &synonyms [
 
 
 stems: &stems [
-  "directive, directives => directive",
+  "directive => directive",
+  "directives => directive",
   "equalities => equality",
   "equality => equality",
   "housing => housing",
-  "intern, interns => intern",
+  "intern => intern",
+  "interns => intern",
   "internal => internal",
   "international => international",
   "paye => paye",
