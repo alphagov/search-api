@@ -6,6 +6,7 @@ File.join(File.dirname(__FILE__), "lib").tap do |path|
 end
 
 require "elasticsearch_admin_wrapper"
+require "reindexer"
 
 desc "Run all the tests"
 task "test" => ["test:units", "test:functionals", "test:integration"]
@@ -215,5 +216,10 @@ namespace :rummager do
     puts "...done!"
     puts "You probably want to run the rummager:list_formats task now, to make"
     puts "sure this worked as you expected."
+  end
+
+  desc "Reindex all indexed content"
+  task :reindex => :rummager_environment do
+    Reindexer.new(@search_wrapper, @logger).reindex_all
   end
 end
