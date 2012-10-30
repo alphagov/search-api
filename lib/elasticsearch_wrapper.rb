@@ -37,9 +37,19 @@ class ElasticsearchWrapper
       raise
     end
 
+    def logging_exception_body(&block)
+      yield
+    rescue RestClient::InternalServerError => error
+      @logger.error(
+        "Internal server error in elasticsearch. " +
+        "Response: #{error.http_body}"
+      )
+      raise
+    end
+
     def request(method, sub_path, payload)
-      begin
-        recording_elastic_error do
+      recording_elastic_error do
+        logging_exception_body do
           RestClient::Request.execute(
             method: method,
             url:  url_for(sub_path),
@@ -47,12 +57,6 @@ class ElasticsearchWrapper
             headers: {content_type: "application/json"}
           )
         end
-      rescue RestClient::InternalServerError => error
-        @logger.error(
-          "Internal server error in elasticsearch. " +
-          "Response: #{error.http_body}"
-        )
-        raise
       end
     end
 
@@ -65,7 +69,9 @@ class ElasticsearchWrapper
           @logger.debug "Argument #{index + 1}: #{argument.inspect}"
         end
         recording_elastic_error do
-          RestClient.send(method_name, url_for(sub_path), *args)
+          logging_exception_body do
+            RestClient.send(method_name, url_for(sub_path), *args)
+          end
         end
       end
     end
