@@ -9,7 +9,11 @@ class Reindexer
 
   def reindex_all
     total_indexed = 0
-    all_docs = @backend.all_documents(limit: 500000)
+    # This will load the entire content of the search index into memory at
+    # once, which isn't yet a big deal but may become a problem as the search
+    # index grows. One alternative could be to use elasticsearch scan queries
+    # <http://www.elasticsearch.org/guide/reference/api/search/search-type.html>
+    all_docs = @backend.all_documents
     all_docs.each_slice(BATCH_SIZE) do |documents|
       @backend.add documents
       total_indexed += documents.length

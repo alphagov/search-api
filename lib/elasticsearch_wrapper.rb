@@ -7,6 +7,12 @@ require "json"
 
 class ElasticsearchWrapper
 
+  # We need to provide a limit to queries: if we want everything, just use this
+  # This number is big enough that it vastly exceeds the number of items we're
+  # indexing, but not so big as to trigger strange behaviour (internal errors)
+  # in elasticsearch
+  MASSIVE_NUMBER = 200_000
+
   class Client
 
     attr_reader :index_name  # The admin wrapper needs to get to this
@@ -123,7 +129,8 @@ class ElasticsearchWrapper
   end
 
   def all_documents(options={})
-    search_body = {query: {match_all: {}}, size: options[:limit]}
+    limit = options.fetch(:limit, MASSIVE_NUMBER)
+    search_body = {query: {match_all: {}}, size: limit}
     result = @client.request(:get, "_search", search_body.to_json)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|
