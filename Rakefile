@@ -227,8 +227,18 @@ namespace :rummager do
     puts "sure this worked as you expected."
   end
 
-  desc "Reindex all indexed content"
+  desc "Reindex all content in the index"
   task :reindex => :rummager_environment do
     Reindexer.new(@search_wrapper, @logger).reindex_all
   end
+
+  desc "Reindex all content in all indexes"
+  task :reindex_all => :rummager_environment do
+    @search_wrappers.each do |name, wrapper|
+      puts "Reindexing '#{name}' index..."
+      Reindexer.new(wrapper, @logger).reindex_all
+      puts "...done!"
+    end
+  end
+
 end
