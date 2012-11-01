@@ -126,9 +126,18 @@ namespace :rummager do
     @admin_wrappers = {}
     @search_wrappers = {}
 
-    settings.backends.each do |backend, backend_settings|
-      next unless backend_settings['type'] == 'elasticsearch'
+    elasticsearch_backends = settings.backends.select { |name, settings|
+      settings["type"] == "elasticsearch"
+    }
 
+    real_backends = elasticsearch_backends.reject { |name, settings|
+      # We're not interested in primary and secondary indexes if they're just
+      # aliases to something else
+      [:primary, :secondary].include?(name) &&
+        elasticsearch_backends.values.count(settings) > 1
+    }
+
+    real_backends.each do |backend, backend_settings|
       @admin_wrappers[backend] = ElasticsearchAdminWrapper.new(
         backend_settings.symbolize_keys,
         settings.elasticsearch_schema,
