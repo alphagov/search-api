@@ -7,13 +7,19 @@ require "json"
 
 class ElasticsearchWrapper
 
+  # We need to provide a limit to queries: if we want everything, just use this
+  # This number is big enough that it vastly exceeds the number of items we're
+  # indexing, but not so big as to trigger strange behaviour (internal errors)
+  # in elasticsearch
+  MASSIVE_NUMBER = 200_000
+
   class Client
 
     attr_reader :index_name  # The admin wrapper needs to get to this
 
     # Sub-paths almost certainly shouldn't start with leading slashes,
     # since this will make the request relative to the server root
-    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status"]
+    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_cluster/health"]
 
     def initialize(settings, logger = nil)
       missing_keys = [:server, :port, :index_name].reject { |k| settings[k] }
@@ -37,9 +43,19 @@ class ElasticsearchWrapper
       raise
     end
 
+    def logging_exception_body(&block)
+      yield
+    rescue RestClient::InternalServerError => error
+      @logger.error(
+        "Internal server error in elasticsearch. " +
+        "Response: #{error.http_body}"
+      )
+      raise
+    end
+
     def request(method, sub_path, payload)
-      begin
-        recording_elastic_error do
+      recording_elastic_error do
+        logging_exception_body do
           RestClient::Request.execute(
             method: method,
             url:  url_for(sub_path),
@@ -47,12 +63,6 @@ class ElasticsearchWrapper
             headers: {content_type: "application/json"}
           )
         end
-      rescue RestClient::InternalServerError => error
-        @logger.error(
-          "Internal server error in elasticsearch. " +
-          "Response: #{error.http_body}"
-        )
-        raise
       end
     end
 
@@ -65,16 +75,21 @@ class ElasticsearchWrapper
           @logger.debug "Argument #{index + 1}: #{argument.inspect}"
         end
         recording_elastic_error do
-          RestClient.send(method_name, url_for(sub_path), *args)
+          logging_exception_body do
+            RestClient.send(method_name, url_for(sub_path), *args)
+          end
         end
       end
     end
 
   private
     def url_for(sub_path)
-      if sub_path.start_with? "/" and ! SAFE_ABSOLUTE_PATHS.include? sub_path
-        @logger.error "Request sub-path '#{sub_path}' has a leading slash"
-        raise ArgumentError, "Only whitelisted absolute paths are allowed"
+      if sub_path.start_with? "/"
+        path_without_query = sub_path.split("?")[0]
+        unless SAFE_ABSOLUTE_PATHS.include? path_without_query
+          @logger.error "Request sub-path '#{sub_path}' has a leading slash"
+          raise ArgumentError, "Only whitelisted absolute paths are allowed"
+        end
       end
 
       # Addition on URLs does relative resolution
@@ -114,7 +129,8 @@ class ElasticsearchWrapper
   end
 
   def all_documents(options={})
-    search_body = {query: {match_all: {}}, size: options[:limit]}
+    limit = options.fetch(:limit, MASSIVE_NUMBER)
+    search_body = {query: {match_all: {}}, size: limit}
     result = @client.request(:get, "_search", search_body.to_json)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|

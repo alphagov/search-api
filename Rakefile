@@ -6,6 +6,7 @@ File.join(File.dirname(__FILE__), "lib").tap do |path|
 end
 
 require "elasticsearch_admin_wrapper"
+require "reindexer"
 
 desc "Run all the tests"
 task "test" => ["test:units", "test:functionals", "test:integration"]
@@ -125,9 +126,18 @@ namespace :rummager do
     @admin_wrappers = {}
     @search_wrappers = {}
 
-    settings.backends.each do |backend, backend_settings|
-      next unless backend_settings['type'] == 'elasticsearch'
+    elasticsearch_backends = settings.backends.select { |name, settings|
+      settings["type"] == "elasticsearch"
+    }
 
+    real_backends = elasticsearch_backends.reject { |name, settings|
+      # We're not interested in primary and secondary indexes if they're just
+      # aliases to something else
+      [:primary, :secondary].include?(name) &&
+        elasticsearch_backends.values.count(settings) > 1
+    }
+
+    real_backends.each do |backend, backend_settings|
       @admin_wrappers[backend] = ElasticsearchAdminWrapper.new(
         backend_settings.symbolize_keys,
         settings.elasticsearch_schema,
@@ -216,4 +226,19 @@ namespace :rummager do
     puts "You probably want to run the rummager:list_formats task now, to make"
     puts "sure this worked as you expected."
   end
+
+  desc "Reindex all content in the index"
+  task :reindex => :rummager_environment do
+    Reindexer.new(@search_wrapper, @logger).reindex_all
+  end
+
+  desc "Reindex all content in all indexes"
+  task :reindex_all => :rummager_environment do
+    @search_wrappers.each do |name, wrapper|
+      puts "Reindexing '#{name}' index..."
+      Reindexer.new(wrapper, @logger).reindex_all
+      puts "...done!"
+    end
+  end
+
 end
