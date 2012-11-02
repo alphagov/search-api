@@ -89,12 +89,17 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def reset_elasticsearch_index(index_name=:primary)
-    admin = ElasticsearchAdminWrapper.new(
-      settings.backends[index_name],
-      settings.elasticsearch_schema
-    )
-    admin.ensure_index!
-    admin.put_mappings
+    admin_wrapper(index_name).tap do |admin|
+      admin.ensure_index!
+      admin.put_mappings
+    end
+  end
+
+  def update_elasticsearch_index(index_name=:primary)
+    admin_wrapper(index_name).tap do |admin|
+      admin.ensure_index
+      admin.put_mappings
+    end
   end
 
   def assert_no_results
@@ -112,5 +117,13 @@ class IntegrationTest < Test::Unit::TestCase
 
     @secondary_search = stub_everything("Whitehall Solr wrapper")
     app.any_instance.stubs(:secondary_search).returns(@secondary_search)
+  end
+
+private
+  def admin_wrapper(index_name)
+    ElasticsearchAdminWrapper.new(
+      settings.backends[index_name],
+      settings.elasticsearch_schema
+    )
   end
 end

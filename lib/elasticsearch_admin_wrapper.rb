@@ -26,6 +26,7 @@ class ElasticsearchAdminWrapper
       @client.post("_close", nil)
       @client.put("_settings", index_payload["settings"].to_json)
       @client.post("_open", nil)
+      wait_until_ready
       @logger.info "Settings updated"
       return :updated
     else
@@ -66,6 +67,17 @@ class ElasticsearchAdminWrapper
         @logger.info e.http_body
         raise
       end
+    end
+  end
+
+private
+  def wait_until_ready(timeout=10)
+    health_params = { wait_for_status: "green", timeout: "#{timeout}s" }
+    response = @client.get "/_cluster/health", params: health_params
+    health = JSON.parse(response)
+    if health["timed_out"] || health["status"] != "green"
+      @logger.error "Failed to restore search. Response: #{response}"
+      raise RuntimeError, "Failed to restore search"
     end
   end
 end
