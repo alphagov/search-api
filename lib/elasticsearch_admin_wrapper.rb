@@ -72,7 +72,19 @@ class ElasticsearchAdminWrapper
 
 private
   def wait_until_ready(timeout=10)
-    health_params = { wait_for_status: "green", timeout: "#{timeout}s" }
+    # Wait until the cluster is back up and running: useful when updating and
+    # reopening an index.
+
+    # The timeout of ten seconds is a semi-arbitrary figure, but the cluster
+    # usually reinitialises within a second, so if it gets as far as ten then
+    # something's most likely gone wrong.
+
+    # A note on states: "red" means the cluster isn't back up; "yellow" means
+    # the primary is back, but not all the replicas; "green" means everything is
+    # back up.  So long as the primary is back up, we should be fine. See
+    # <http://www.elasticsearch.org/guide/reference/api/admin-cluster-health.html>
+
+    health_params = { wait_for_status: "yellow", timeout: "#{timeout}s" }
     response = @client.get "/_cluster/health", params: health_params
     health = JSON.parse(response)
     if health["timed_out"] || health["status"] != "green"
