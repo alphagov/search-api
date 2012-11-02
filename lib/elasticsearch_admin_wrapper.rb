@@ -87,7 +87,7 @@ private
     health_params = { wait_for_status: "yellow", timeout: "#{timeout}s" }
     response = @client.get "/_cluster/health", params: health_params
     health = JSON.parse(response)
-    if health["timed_out"] || health["status"] != "green"
+    if health["timed_out"] || ! ["green", "yellow"].include?(health["status"])
       @logger.error "Failed to restore search. Response: #{response}"
       raise RuntimeError, "Failed to restore search"
     end
