@@ -111,6 +111,11 @@ synonyms: &synonyms [
   "winterfuelpayment => winter fuel payment",
   "workplacepensions => workplace pensions",
   "yourmotcheck => mot check",
+  "GreenDeal => green deal",
+  "pot hole => pothole",
+  "gv 262 => gv262",
+  
+  
 
   "fired => fired, dismissed, dismissal",
   "firing => firing, dismiss, dismissing, dismissal",
