@@ -23,9 +23,9 @@ class ElasticsearchAdminWrapper
 
     if index_exists?
       @logger.info "Index already exists: updating settings"
-      @client.post("_close", nil)
-      @client.put("_settings", index_payload["settings"].to_json)
-      @client.post("_open", nil)
+      @logger.debug @client.post("_close", nil)
+      @logger.debug @client.put("_settings", index_payload["settings"].to_json)
+      @logger.debug @client.post("_open", nil)
       wait_until_ready
       @logger.info "Settings updated"
       return :updated
