@@ -42,7 +42,18 @@ class Rummager < Sinatra::Application
 
   def backends_for_sitemap
     # Would rather have the names configured...
-    [available_backends[:mainstream], available_backends[:detailed]]
+    if params[:government]
+      [
+        available_backends[:mainstream], 
+        available_backends[:detailed],
+        available_backends[:government]
+      ]
+    else
+      [
+        available_backends[:mainstream], 
+        available_backends[:detailed]
+      ]
+    end
   end
 
   def text_error(content)
