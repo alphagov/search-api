@@ -36,7 +36,6 @@ The next stage is to register content from all the applications. These are:
   * calendars
   * smartanswers
   * licencefinder
-  * planner
   * publisher
 
 To re-register content for a single application, go to its directory and run:
