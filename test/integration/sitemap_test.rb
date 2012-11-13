@@ -64,6 +64,13 @@ class SitemapTest < IntegrationTest
         "link" => "http://www.example.com/external-example-answer",
         "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
+      },
+      {
+        "title" => "Some content from Inside Gov",
+        "description" => "We list some inside gov results in the mainstream index.",
+        "format" => "inside-government-link",
+        "link" => "https://www.gov.uk/government/some-content",
+        "section" => "Inside Government"
       }
     ]
   end
@@ -101,6 +108,12 @@ class SitemapTest < IntegrationTest
     assert last_response.headers["Content-Type"].include?("application/xml")
     assert last_response.ok?
     assert_no_link "/external-example-answer"
+  end
+
+  def test_should_not_include_inside_government_links
+    get "/sitemap.xml"
+    assert last_response.ok?
+    assert_no_link "/government/some-content"
   end
 
   def test_should_include_content_from_mainstream_and_detailed_indexes

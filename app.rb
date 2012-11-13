@@ -149,7 +149,7 @@ class Rummager < Sinatra::Application
           xml.loc "#{base_url}#{"/"}"
         end
         documents.each do |document|
-          unless document.format == settings.recommended_format
+          unless [settings.inside_government_link, settings.recommended_format].include?(document.format)
             xml.url do
               url = document.link
               url = "#{base_url}#{url}" if url =~ /^\//
