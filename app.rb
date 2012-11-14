@@ -42,7 +42,18 @@ class Rummager < Sinatra::Application
 
   def backends_for_sitemap
     # Would rather have the names configured...
-    [available_backends[:mainstream], available_backends[:detailed]]
+    if params[:government]
+      [
+        available_backends[:mainstream], 
+        available_backends[:detailed],
+        available_backends[:government]
+      ]
+    else
+      [
+        available_backends[:mainstream], 
+        available_backends[:detailed]
+      ]
+    end
   end
 
   def text_error(content)
@@ -138,7 +149,7 @@ class Rummager < Sinatra::Application
           xml.loc "#{base_url}#{"/"}"
         end
         documents.each do |document|
-          unless document.format == settings.recommended_format
+          unless [settings.inside_government_link, settings.recommended_format].include?(document.format)
             xml.url do
               url = document.link
               url = "#{base_url}#{url}" if url =~ /^\//
