@@ -25,6 +25,12 @@ class SitemapTest < IntegrationTest
           server: "localhost",
           port: 9200,
           index_name: "detailed_test"
+        },
+        government: {
+          type: "elasticsearch",
+          server: "localhost",
+          port: 9200,
+          index_name: "government_test"
         }
       }
     )
@@ -32,6 +38,7 @@ class SitemapTest < IntegrationTest
     WebMock.disable_net_connect!(allow: "localhost:9200")
     reset_elasticsearch_index(:mainstream)
     reset_elasticsearch_index(:detailed)
+    reset_elasticsearch_index(:government)
     add_sample_documents
     commit_index
   end
