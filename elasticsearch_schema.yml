@@ -8,6 +8,7 @@ synonyms: &synonyms [
   "appointeeship, appointee",
   "attorney, deputy",
   "bankrupt, bankruptcy",
+  "businesslink, business link",
   "car tax, vehicle tax, tax disc, vehicle licence",
   "car tax bands, vehicle tax rates",
   "countersignature, countersign",
@@ -19,18 +20,18 @@ synonyms: &synonyms [
   "hazardous substances, dangerous substances",
   "holiday pay, holiday entitlement",
   "jobcentre, job centre",
+  "jobmatch, universal jobmatch, employer direct",
   "licence, license",
   "log in, login",
   "motorbike, motorcycle",
   "pension forecast, pension statement",
-  "pothole, pot hole",
   "practical driving test, practical test",
   "practice, practise",
   "reduction, discount",
   "renew, expired, out of date",
   "sickness, sick, illness, ill",
   "social fund, budgeting loans, crisis loans",
-  "sole trader, self-employed, self employment",
+  "self-employed, self employed, self-employment, self employment, sole trader, starting up a business",
   "streetlight, street light",
   "tariff classification, trade tariff",
   "tariff codes, commodity codes",
@@ -38,8 +39,6 @@ synonyms: &synonyms [
   "vat registration, de-registration, deregistration",
   "will, wills",
   "work experience, internship",
-  "self employed, self employment, starting up a business",
-  "job share, job sharing, flexible working",
 
   "one, 1",
   "two, 2",
@@ -72,8 +71,10 @@ synonyms: &synonyms [
   "driverhealth => driving health",
   "drivingtest => driving test",
   "enterprise allowance => new enterprise allowance",
+  "greendeal => green deal",
   "incomesupport => income support",
   "inland revenue => hmrc, hm revenue customs",
+  "jcponline => jobcentre plus",
   "jobseekersallowance => jobseeker's allowance",
   "jsaol, jsaonline => apply for jobseeker's allowance",
   "makeasorn => make a sorn",
@@ -113,21 +114,32 @@ synonyms: &synonyms [
   "winterfuelpayment => winter fuel payment",
   "workplacepensions => workplace pensions",
   "yourmotcheck => mot check",
-  "GreenDeal => green deal",
-  "pot hole => pothole",
-  "gv 262 => gv262",
-  "UKTI => UK Trade and Investment",
   
-  
-
+  "book driving test => book driving test, book your practical driving test",
+  "driving test => driving test, driving or riding test",
   "fired => fired, dismissed, dismissal",
   "firing => firing, dismiss, dismissing, dismissal",
   "how much => how much, fees, rates",
+  "job share, job sharing => job share, job sharing, flexible working",
   "rapid reclaim => rapid reclaim, jobseekers allowance",
   "social security => social security, benefits",
   "ukti => ukti, uk trade and investment, help for exporters, starting to export, uk welcomes",
   "wales => wales, cymru, cymraeg, gymraeg",
   "welsh => welsh, cymraeg, gymraeg",
+  
+  # Forms and leaflets
+
+  "br1, br 1 => state pension claim",
+  "br19, br 19 => pension statement",
+  "esa50 => employment and support allowance",
+  "gv 262 => gv262",
+  "inf1d => driving licence application",
+  "inf2d => driving licence lorry or bus",
+  "inf4d => driving licence medical condition",
+  "inf5d => driving licence renewal",
+  "p38s => student holiday job",
+  "pff, pff2, pn1, pr1 => student finance",
+  "v890 => sorn",
 
   # Common misspellings (in lieu of a "did you mean" filter)
 
@@ -213,6 +225,7 @@ synonyms: &synonyms [
   "offical => official",
   "pasport => passport",
   "passpor => passport",
+  "pot hole => pothole",
   "pra => practical",
   "pract => practical",
   "pratical => practical",
@@ -244,19 +257,6 @@ synonyms: &synonyms [
   "theroy => theory",
   "thoery => theory",
   "wharehouse => warehouse",
-
-  # Forms and leaflets
-
-  "br1, br 1 => state pension claim",
-  "br19, br 19 => pension forecast",
-  "esa50 => employment and support allowance",
-  "inf1d => driving licence application",
-  "inf2d => driving licence lorry or bus",
-  "inf4d => driving licence medical condition",
-  "inf5d => driving licence renewal",
-  "p38s => student holiday job",
-  "pff, pff2, pn1, pr1 => student finance",
-  "v890 => sorn",
 
   # Temporary fix for career-specific job searches
   # TODO: Remove this once we have support for alternative keywords in Panopticon
