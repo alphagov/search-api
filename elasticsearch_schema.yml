@@ -20,7 +20,6 @@ synonyms: &synonyms [
   "hazardous substances, dangerous substances",
   "holiday pay, holiday entitlement",
   "jobcentre, job centre",
-  "jobmatch, universal jobmatch, employer direct",
   "licence, license",
   "log in, login",
   "motorbike, motorcycle",
@@ -29,9 +28,9 @@ synonyms: &synonyms [
   "practice, practise",
   "reduction, discount",
   "renew, expired, out of date",
+  "self-employed, self employed, self-employment, self employment, sole trader, starting up a business",
   "sickness, sick, illness, ill",
   "social fund, budgeting loans, crisis loans",
-  "self-employed, self employed, self-employment, self employment, sole trader, starting up a business",
   "streetlight, street light",
   "tariff classification, trade tariff",
   "tariff codes, commodity codes",
@@ -66,6 +65,7 @@ synonyms: &synonyms [
   "death duty => inheritance tax",
   "digi => digital",
   "digicard => digital tachograph",
+  "direct.gov, direct gov => directgov",
   "dole => jobseeker's allowance",
   "drivercpc => driver cpc",
   "driverhealth => driving health",
@@ -115,13 +115,19 @@ synonyms: &synonyms [
   "workplacepensions => workplace pensions",
   "yourmotcheck => mot check",
   
+  # Additional terms
+  
   "book driving test => book driving test, book your practical driving test",
+  "drivers licence => drivers licence, driving licence",
   "driving test => driving test, driving or riding test",
+  "employer direct => employer direct, universal jobmatch",
   "fired => fired, dismissed, dismissal",
   "firing => firing, dismiss, dismissing, dismissal",
   "how much => how much, fees, rates",
   "job share, job sharing => job share, job sharing, flexible working",
+  "jobs => jobs, find a job",
   "rapid reclaim => rapid reclaim, jobseekers allowance",
+  "sanctions => sanctions, jobseekers allowance sanctions",
   "social security => social security, benefits",
   "ukti => ukti, uk trade and investment, help for exporters, starting to export, uk welcomes",
   "wales => wales, cymru, cymraeg, gymraeg",
@@ -131,6 +137,7 @@ synonyms: &synonyms [
 
   "br1, br 1 => state pension claim",
   "br19, br 19 => pension statement",
+  "d798 => d798, renewal reminder",
   "esa50 => employment and support allowance",
   "gv 262 => gv262",
   "inf1d => driving licence application",
@@ -182,6 +189,7 @@ synonyms: &synonyms [
   "contactor => contractor",
   "crisi => crisis",
   "crissis => crisis",
+  "c v, c.v, c.v. => cv".
   "diability => disability",
   "disabilty => disability",
   "dismisal => dismissal",
@@ -258,25 +266,30 @@ synonyms: &synonyms [
   "thoery => theory",
   "wharehouse => warehouse",
 
+  # Temporary fix for Inside Government in general results
+
+  "government gateway => gateway",
+
   # Temporary fix for career-specific job searches
   # TODO: Remove this once we have support for alternative keywords in Panopticon
-  "admin => admin, job search",
-  "catering => catering, job search",
-  "chef => chef, job search",
-  "cleaner => cleaner, job search",
-  "cleaning => cleaning, job search",
-  "labourer => labourer, job search",
-  "plumber => plumber, job search",
-  "receptionist => receptionist, job search",
-  "retail => retail, job search",
-  "sales => sales, job search",
-  "vacancies => vacancies, job search",
-  "waitress => waitress, job search",
-  "warehouse => warehouse, job search"
+  "admin => admin, find a job",
+  "catering => catering, find a job",
+  "chef => chef, find a job",
+  "cleaner => cleaner, find a job",
+  "cleaning => cleaning, find a job",
+  "labourer => labourer, find a job",
+  "plumber => plumber, find a job",
+  "receptionist => receptionist, find a job",
+  "retail => retail, find a job",
+  "sales => sales, find a job",
+  "vacancies => vacancies, find a job",
+  "waitress => waitress, find a job",
+  "warehouse => warehouse, find a job"
 ]
 
 
 stems: &stems [
+  "community => community",
   "directive => directive",
   "directives => directive",
   "equalities => equality",
