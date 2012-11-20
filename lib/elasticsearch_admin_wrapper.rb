@@ -23,9 +23,19 @@ class ElasticsearchAdminWrapper
 
     if index_exists?
       @logger.info "Index already exists: updating settings"
-      @client.post("_close", nil)
-      @client.put("_settings", index_payload["settings"].to_json)
-      @client.post("_open", nil)
+
+      # For no readily discernible reason, a short delay here prevents the
+      # tests (and potentially Rake tasks) causing some shards to fail when
+      # reopening the index in some configurations (occasionally in Jenkins;
+      # reliably on dev machines configured to use 20 shards per index).
+      # Neither a `flush` nor a `refresh` gets around this problem, otherwise I
+      # would much prefer those. I would love to find a more sensible way to
+      # achieve this.
+      sleep 1
+
+      @logger.debug @client.post("_close", nil)
+      @logger.debug @client.put("_settings", index_payload["settings"].to_json)
+      @logger.debug @client.post("_open", nil)
       wait_until_ready
       @logger.info "Settings updated"
       return :updated
