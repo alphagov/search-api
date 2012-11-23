@@ -54,6 +54,7 @@ synonyms: &synonyms [
 
   "eis, enterprise investment scheme",
   "lha, local housing allowance",
+  "rti, real time information",
   "ukti, uk trade and investment",
 
   # Various bits of unofficial and run-together terminology
@@ -277,9 +278,33 @@ synonyms: &synonyms [
   "wharehouse => warehouse",
 
   # Temporary fix for Inside Government in general results
-
   "government gateway => gateway",
-
+  
+  # Temporary fix for payroll terms
+  "480 => 480, payroll",
+  "ca38 => ca38, payroll",
+  "cwg2 => cwg2, payroll",
+  "dispensation => dispensation, payroll",
+  "mileage => mileage, payroll",
+  "paye => paye, payroll",
+  "psa => psa, payroll",
+  "p11 => p11, payroll",
+  "p11d => p11d, paye, payroll",
+  "p11dx => p11dx, payroll",
+  "p14 => p14, payroll",
+  "p32 => p32, payroll",
+  "p35 => p35, payroll",
+  "p38 => p38, payroll",
+  "p45 => p45, paye, payroll",
+  "p46 => p46, paye, payroll",
+  "p60 => p60, paye, payroll",
+  "salary sacrifice => salary sacrifice, payroll",
+  "smp => smp, payroll",
+  "ssp => ssp, payroll",
+  "ssp1 => ssp1, payroll",
+  "tax calculator => tax calculator, payroll",
+  "tax refund => tax refund, payroll",
+  
   # Temporary fix for career-specific job searches
   # TODO: Remove this once we have support for alternative keywords in Panopticon
   "admin => admin, find a job",
