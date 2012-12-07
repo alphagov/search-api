@@ -14,7 +14,7 @@ class Backends
 
   def backends
     @backends ||= Hash.new do |hash, key|
-      @logger.info "Instantiating #{key} search backend"
+      @logger.debug "Instantiating #{key} search backend"
       backend_settings = @settings.backends[key] && @settings.backends[key].symbolize_keys
       hash[key] = backend_settings && build_backend(backend_settings)
     end
@@ -25,10 +25,10 @@ private
   def build_backend(backend_settings)
     case backend_settings[:type]
     when "none"
-      @logger.info "Using null backend"
+      @logger.debug "Using null backend"
       NullBackend.new(@logger)
     when "solr"
-      @logger.info "Using Solr backend"
+      @logger.debug "Using Solr backend"
       SolrWrapper.new(
         DelSolr::Client.new(backend_settings),
         @settings.recommended_format,
@@ -36,7 +36,7 @@ private
         backend_settings[:format_filter]
       )
     when "elasticsearch"
-      @logger.info "Using elasticsearch backend"
+      @logger.debug "Using elasticsearch backend"
       ElasticsearchWrapper.new(
         backend_settings,
         @settings.recommended_format,
