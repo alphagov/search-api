@@ -183,25 +183,24 @@ class ElasticsearchWrapper
     query_boosts = shingle_boosts
 
     payload = {
-        from: 0, size: 50,
-        query: {
-          custom_filters_score: {
-            query: {
-              bool: {
-                must: {
-                  query_string: {
-                    fields: match_fields.map { |name, boost|
-                      boost == 1 ? name : "#{name}^#{boost}"
-                    },
-                    query: escape(query),
-                    analyzer: query_analyzer
-                  }
-                },
-                should: query_boosts
-              }
-            },
-            filters: format_boosts
-          }
+      from: 0, size: 50,
+      query: {
+        custom_filters_score: {
+          query: {
+            bool: {
+              must: {
+                query_string: {
+                  fields: match_fields.map { |name, boost|
+                    boost == 1 ? name : "#{name}^#{boost}"
+                  },
+                  query: escape(query),
+                  analyzer: query_analyzer
+                }
+              },
+              should: query_boosts
+            }
+          },
+          filters: format_boosts
         }
     }.to_json
 
