@@ -144,7 +144,17 @@ class ElasticsearchWrapper
 
     # Per-format boosting done as a filter, so the results get cached on the
     # server, as they are the same for each query
-    boosted_formats = { "smart-answer" => 1.5, "transaction" => 1.5 }
+
+    boosted_formats = {
+      # Mainstream formats
+      "smart-answer"  => 1.5,
+      "transaction"   => 1.5,
+      # Inside Gov formats
+      "topical_event" => 1.5,
+      "minister"      => 1.5,
+      "organisation"  => 1.5
+    }
+
     format_boosts = boosted_formats.map do |format, boost|
       {
         filter: { term: { format: format } },
