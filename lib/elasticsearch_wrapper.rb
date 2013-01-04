@@ -202,6 +202,7 @@ class ElasticsearchWrapper
           },
           filters: format_boosts
         }
+      }
     }.to_json
 
     # RestClient does not allow a payload with a GET request
