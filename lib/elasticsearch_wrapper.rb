@@ -152,7 +152,8 @@ class ElasticsearchWrapper
       # Inside Gov formats
       "topical_event" => 1.5,
       "minister"      => 1.5,
-      "organisation"  => 1.5
+      "organisation"  => 1.5,
+      "topic"         => 1.5
     }
 
     format_boosts = boosted_formats.map do |format, boost|
