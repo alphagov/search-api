@@ -45,6 +45,21 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "/additional-link-1", document.additional_links.first.link
   end
 
+  def test_should_turn_hash_with_arbitrary_field_into_document
+    hash = {
+      "title" => "TITLE",
+      "description" => "DESCRIPTION",
+      "format" => "guide",
+      "link" => "/an-example-guide",
+      "topics" => [1,2]
+    }
+
+    document = Document.from_hash(hash)
+
+    assert_equal [1,2], document.to_hash["topics"]
+    assert_equal [1,2], document.elasticsearch_export[:topics]
+  end
+
   def test_should_have_no_additional_links_if_none_in_hash
     hash = {
       "title" => "TITLE",

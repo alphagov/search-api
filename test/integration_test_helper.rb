@@ -74,17 +74,9 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def stub_backends_with(hash)
-    # It invokes (according to mocha) "settings" on both Rummager and Sinatra::Application
+    # Stub #settings on both Rummager and Sinatra::Application
     [app, Sinatra::Application].each do |thing|
       thing.settings.stubs(:backends).returns(hash)
-    end
-  end
-
-  def delete_elasticsearch_index(index_name="rummager_test")
-    begin
-      RestClient.delete "http://localhost:9200/#{index_name}"
-    rescue RestClient::Exception => exception
-      raise unless exception.http_code == 404
     end
   end
 
@@ -119,11 +111,28 @@ class IntegrationTest < Test::Unit::TestCase
     app.any_instance.stubs(:secondary_search).returns(@secondary_search)
   end
 
+  def load_yaml_fixture(filename)
+    YAML.load_file(File.expand_path("fixtures/#{filename}", File.dirname(__FILE__)))
+  end
+
+  def wrapper_for(index_name, mappings_fixture_file = "elasticsearch_schema.fixture.yml")
+    ElasticsearchAdminWrapper.new(
+      {
+        type: "elasticsearch",
+        server: "localhost",
+        port: 9200,
+        index_name: index_name
+      },
+      load_yaml_fixture(mappings_fixture_file)
+    )
+  end
+
 private
-  def admin_wrapper(index_name)
+  def admin_wrapper(index_name, mappings_fixture_file = nil)
+    schema = mappings_fixture_file ? load_yaml_fixture(mappings_fixture_file) : settings.elasticsearch_schema
     ElasticsearchAdminWrapper.new(
       settings.backends[index_name],
-      settings.elasticsearch_schema
+      schema
     )
   end
 end

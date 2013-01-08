@@ -2,11 +2,13 @@ require "delsolr"
 require "active_support/inflector"
 
 class Link
+
   def self.auto_keys(*names)
     @auto_keys ||= []
-    if names.any?
-      attr_accessor *names
-      @auto_keys += names
+    names.each do |name|
+      next if @auto_keys.include?(name)
+      attr_accessor name
+      @auto_keys << name
     end
     @auto_keys
   end
@@ -54,7 +56,7 @@ class Link
       self.class.auto_keys.each do |key|
         value = get(key)
         if value.is_a?(Array)
-          value = value.map {|v| v.elasticsearch_export }
+          value = value.map {|v| v.is_a?(Link) ? v.elasticsearch_export : v }
         end
         unless value.nil? or (value.respond_to?(:empty?) and value.empty?)
           doc[key] = value
@@ -68,7 +70,7 @@ class Link
     Hash[self.class.auto_keys.map { |key|
       value = get(key)
       if value.is_a?(Array)
-        value = value.map { |v| v.to_hash }
+        value = value.map { |v| v.is_a?(Link) ? v.to_hash : v }
       end
       [key.to_s, value]
     }.select{ |key, value|
@@ -112,6 +114,7 @@ class Document < Link
   attr_writer :highlight
 
   def self.from_hash(hash)
+    auto_keys(*hash.keys.map(&:to_sym))
     hash = unflatten(hash)
     super(hash).tap { |doc|
       doc.additional_links =
