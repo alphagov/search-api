@@ -1,4 +1,3 @@
-require "solr_wrapper"
 require "elasticsearch_wrapper"
 require "null_backend"
 require "active_support/core_ext/module/delegation"
@@ -27,14 +26,6 @@ private
     when "none"
       @logger.debug "Using null backend"
       NullBackend.new(@logger)
-    when "solr"
-      @logger.debug "Using Solr backend"
-      SolrWrapper.new(
-        DelSolr::Client.new(backend_settings),
-        @settings.recommended_format,
-        @logger,
-        backend_settings[:format_filter]
-      )
     when "elasticsearch"
       @logger.debug "Using elasticsearch backend"
       ElasticsearchWrapper.new(

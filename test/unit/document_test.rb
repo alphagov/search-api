@@ -162,55 +162,6 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal "Ocean maps", document.humanized_format
   end
 
-  def self.assert_field_exported_to_delsolr_collaborator(field_name)
-    define_method "test_should_export_#{field_name}_to_delsolr_collaborator" do
-      document = Document.new
-      arbitrary_text = field_name.to_s + "1234"
-      document.send("#{field_name}=", arbitrary_text)
-      collaborator = mock("DelSolr Document")
-      collaborator.expects(:add_field).with(field_name.to_s, arbitrary_text)
-      document.solr_export(collaborator)
-    end
-  end
-
-  assert_field_exported_to_delsolr_collaborator :title
-  assert_field_exported_to_delsolr_collaborator :description
-  assert_field_exported_to_delsolr_collaborator :section
-  assert_field_exported_to_delsolr_collaborator :subsection
-  assert_field_exported_to_delsolr_collaborator :format
-  assert_field_exported_to_delsolr_collaborator :link
-  assert_field_exported_to_delsolr_collaborator :indexable_content
-
-  def test_should_export_additional_links_as_separate_fields
-    document = Document.new
-    document.additional_links = [
-      Link.new.tap{ |l|
-        l.title = "LINK TITLE 1"
-        l.link  = "/additional-link-1"
-        l.link_order = 1
-      },
-      Link.new.tap{ |l|
-        l.title = "LINK TITLE 2"
-        l.link  = "/additional-link-2"
-        l.link_order = 2
-      },
-    ]
-    collaborator = mock("DelSolr Document")
-    collaborator.expects(:add_field).
-      with("additional_links__title", "LINK TITLE 1")
-    collaborator.expects(:add_field).
-      with("additional_links__link", "/additional-link-1")
-    collaborator.expects(:add_field).
-      with("additional_links__link_order", 1)
-    collaborator.expects(:add_field).
-      with("additional_links__title", "LINK TITLE 2")
-    collaborator.expects(:add_field).
-      with("additional_links__link", "/additional-link-2")
-    collaborator.expects(:add_field).
-      with("additional_links__link_order", 2)
-    document.solr_export(collaborator)
-  end
-
   def test_should_round_trip_document_from_hash_and_back_into_hash
     hash = {
       "title" => "TITLE",

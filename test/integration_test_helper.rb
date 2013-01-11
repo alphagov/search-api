@@ -50,20 +50,6 @@ class IntegrationTest < Test::Unit::TestCase
     @secondary_search.stubs(:search).returns([])
   end
 
-  def use_solr_for_primary_search
-    # It invokes (according to mocha) "settings" on both Rummager and Sinatra::Application
-    [app, Sinatra::Application].each do |thing|
-      thing.settings.stubs(:backends).returns(
-        primary: {
-          type: "solr",
-          server: "solr-test-server",
-          port: 9999,
-          path: "/solr/rummager"
-        }
-      )
-    end
-  end
-
   def use_elasticsearch_for_primary_search
     stub_backends_with(primary: {
           type: "elasticsearch",
@@ -104,10 +90,10 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def stub_primary_and_secondary_searches
-    @primary_search = stub_everything("Mainstream Solr wrapper")
+    @primary_search = stub_everything("Mainstream wrapper")
     app.any_instance.stubs(:primary_search).returns(@primary_search)
 
-    @secondary_search = stub_everything("Whitehall Solr wrapper")
+    @secondary_search = stub_everything("Whitehall wrapper")
     app.any_instance.stubs(:secondary_search).returns(@secondary_search)
   end
 

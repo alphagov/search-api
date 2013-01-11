@@ -1,4 +1,3 @@
-require "delsolr"
 require "active_support/inflector"
 
 class Link
@@ -34,21 +33,6 @@ class Link
 
   def set(key, value)
     __send__ "#{key}=", value
-  end
-
-  def solr_export(solr_document=DelSolr::Document.new, prefix="")
-    solr_document.tap { |doc|
-      self.class.auto_keys.each do |key|
-        value = get(key)
-        if value.is_a?(Array)
-          value.each do |value|
-            value.solr_export solr_document, "#{prefix}#{key}__"
-          end
-        elsif value
-          doc.add_field "#{prefix}#{key}", value
-        end
-      end
-    }
   end
 
   def elasticsearch_export

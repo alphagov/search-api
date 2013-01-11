@@ -7,7 +7,6 @@ end
 
 gem "unicorn"
 gem "sinatra"
-gem "delsolr", :git => "https://github.com/alphagov/delsolr.git"
 gem 'rake', '0.9.2', :require => false
 gem 'json'
 gem 'activesupport', '~> 3.1.0'

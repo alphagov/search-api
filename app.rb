@@ -8,7 +8,6 @@ require 'csv'
 require 'statsd'
 
 require 'document'
-require 'solr_wrapper'
 require 'elasticsearch_wrapper'
 require 'null_backend'
 
@@ -131,7 +130,7 @@ class Rummager < Sinatra::Application
     # Site maps can have up to 50,000 links in them.
     # We use one for / so we can have up to 49,999 others.
     # bes = settings.backends.keys.map { |key| available_backends[key] }
-    documents = backends_for_sitemap.flat_map do |be| 
+    documents = backends_for_sitemap.flat_map do |be|
       be.all_documents(limit: 49_999)
     end
     builder do |xml|
