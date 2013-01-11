@@ -73,6 +73,7 @@ synonyms: &synonyms [
 
   # Various bits of unofficial and run-together terminology
 
+  "bedroom tax => housing benefit",
   "bluebadge => blue badge",
   "buyerbeware => buying a used car",
   "carersallowance => carer's allowance",
@@ -117,6 +118,7 @@ synonyms: &synonyms [
   "sfform => student finance form",
   "sfforms => student finance forms",
   "sickpay => sick pay",
+  "sign on, signing on, sign off, signing off => jobseeker's allowance",
   "socialfund => social fund",
   "spol => state pension online",
   "ss form, ssform => student finance form",
@@ -145,6 +147,7 @@ synonyms: &synonyms [
   "book driving test => book driving test, book your practical driving test",
   "bursaries, bursary => bursaries, bursary, extra, university",
   "child care => child care, childcare",
+  "compassionate => compassionate, dependents",
   "copyright => copyright, intellectual property",
   "drivers licence => drivers licence, driving licence",
   "driving test => driving test, driving or riding test",
@@ -159,16 +162,17 @@ synonyms: &synonyms [
   "job match => job match, jobmatch",
   "job share, job sharing => job share, job sharing, flexible working",
   "maintenance grant => maintenance grant, student finance",
+  "next step, nextstep => next step, careers",
   "opening times => opening times, opening hours",
   "passport, passports => passport, replace your adult passport, child, fees",
-  "permitted work => permitted work, employment and support allowance",
+  "permitted work => employment and support allowance",
   "rapid claim => rapid claim, rapid reclaim, jobseeker's allowance",
   "rapid reclaim => rapid reclaim, jobseeker's allowance",
   "ref number => ref number, reference number",
   "refuse collection => refuse collection, rubbish collection",
   "repossession => repossession, eviction",
   "sanctions => sanctions, jobseeker's allowance sanctions",
-  "self assessment => self assessment, self assessment tax, register for self assessment",
+  "self assessment => self assessment, tax return, deadlines, register for self assessment",
   "self certification, self certificate, self cert => self-certification, sick pay",
   "social security => social security, benefits",
   "tax payer => tax payer, taxpayer",
@@ -180,7 +184,7 @@ synonyms: &synonyms [
   # Forms and leaflets
 
   "br1, br 1 => state pension claim",
-  "br19, br 19 => state pension statement",
+  "br19, br 19 => state pension forecast",
   "d46p => d46p, renew 70",
   "d798 => d798, renewal reminder",
   "esa3, esa50 => employment and support allowance",
@@ -202,6 +206,7 @@ synonyms: &synonyms [
   "vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration",
   "vat 7 => vat7",
   "vc5 => vc5, v5c",
+  "v5 => v5, v5c",
 
   # Common misspellings (in lieu of a "did you mean" filter)
 
