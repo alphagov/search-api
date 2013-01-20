@@ -39,11 +39,6 @@ configure :development do
   set :protection, false
 end
 
-configure :production do
-  if File.exist?("aws_secrets.yml")
-    disable :show_exceptions
-    use ExceptionMailer, YAML.load_file("aws_secrets.yml"),
-        to: ['govuk-exceptions@digital.cabinet-office.gov.uk'],
-        from: '"Winston Smith-Churchill" <winston@alphagov.co.uk>'
-  end
-end
+initializers_path = File.expand_path('config/initializers/*.rb', File.dirname(__FILE__))
+
+Dir[initializers_path].each { |f| require f }
