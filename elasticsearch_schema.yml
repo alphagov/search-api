@@ -78,6 +78,8 @@ synonyms: &synonyms [
   "buyerbeware => buying a used car",
   "carersallowance => carer's allowance",
   "checkdrivercpc => check driver cpc",
+  "coldweather => cold weather",
+  "coldweatherpayment, coldweatherpayments => cold weather payment",
   "crisisloan => crisis loan",
   "death duty => inheritance tax",
   "digi => digital",
@@ -147,7 +149,7 @@ synonyms: &synonyms [
   "book driving test => book driving test, book your practical driving test",
   "bursaries, bursary => bursaries, bursary, extra, university",
   "child care => child care, childcare",
-  "compassionate => compassionate, dependents",
+  "compassionate => compassionate, dependants",
   "copyright => copyright, intellectual property",
   "drivers licence => drivers licence, driving licence",
   "driving test => driving test, driving or riding test",
@@ -157,6 +159,7 @@ synonyms: &synonyms [
   "firing => firing, dismiss, dismissing, dismissal",
   "getaway => getaway, gateway",
   "green deal => green deal, energy saving",
+  "heating => heating, cold weather payment, winter fuel, warm home, energy saving", 
   "how much => how much, fees, rates",
   "ir35 => ir35, employment status",
   "job match => job match, jobmatch",
@@ -172,14 +175,18 @@ synonyms: &synonyms [
   "refuse collection => refuse collection, rubbish collection",
   "repossession => repossession, eviction",
   "sanctions => sanctions, jobseeker's allowance sanctions",
-  "self assessment => self assessment, tax return, deadlines, register for self assessment",
+  "school, schools => school, closures",
+  "self assessment => self assessment, self assessment tax return, register for self assessment",
   "self certification, self certificate, self cert => self-certification, sick pay",
+  "snow, snow code => snow, ice, grit, winter, weather, closures",
   "social security => social security, benefits",
   "tax payer => tax payer, taxpayer",
   "ukti => ukti, uk trade and investment, help for exporters, starting to export, uk welcomes",
   "utr, unique taxpayer reference => utr, unique taxpayer reference, register for self assessment",
   "wales => wales, cymru, cymraeg, gymraeg",
+  "weather, bad weather, winter weather => weather, cold weather, severe weather, winter weather", 
   "welsh => welsh, cymraeg, gymraeg",
+  "winter payment, winter payments => winter fuel payment, cold weather, warm home, energy saving",
   
   # Forms and leaflets
 
@@ -317,6 +324,7 @@ synonyms: &synonyms [
   "referance => reference",
   "roadtax => vehicle tax",
   "saftey => safety",
+  "school closers => school closures",
   "scorn => sorn",
   "seach => search",
   "selfemployment => self-employment",
@@ -338,7 +346,9 @@ synonyms: &synonyms [
   "theroy => theory",
   "thoery => theory",
   "univeral => universal",
+  "wether => whether, weather",
   "wharehouse => warehouse",
+  "wheather => whether, weather",
 
   # Temporary fix for Inside Government in general results
   "government gateway => gateway",
@@ -418,6 +428,7 @@ stems: &stems [
   "publications => publication",
   "saving => saving",
   "savings => savings",
+  "signing => signing",
   "universal => universal"
 ]
 
