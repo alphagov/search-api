@@ -8,6 +8,7 @@ class ExceptionMailer
     @ses = AWS::SES::Base.new(aws_config)
     @to = options[:to]
     @from = options[:from]
+    @subject_prefix = options[:subject] || "[Exception]"
   end
 
   def call(env)
@@ -28,7 +29,7 @@ class ExceptionMailer
     @ses.send_email(
       to: @to,
       source: @from,
-      subject: "[Rummager exception] #{exception.message}",
+      subject: "#{@subject_prefix} #{exception.message}",
       text_body: mail_body(exception, env)
     )
   end
