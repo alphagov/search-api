@@ -98,11 +98,10 @@ class ElasticsearchWrapper
   end
 
   # TODO: support the format_filter option here
-  def initialize(settings, recommended_format, logger = nil, format_filter = nil)
+  def initialize(settings, logger = nil, format_filter = nil)
     @client = Client.new(settings, logger)
     @index_name = settings[:index_name]
     raise ArgumentError, "Missing index_name parameter" unless @index_name
-    @recommended_format = recommended_format
     @logger = logger || Logger.new("/dev/null")
 
     raise RuntimeError, "Format filters not yet supported" if format_filter

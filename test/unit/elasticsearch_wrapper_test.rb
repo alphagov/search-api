@@ -9,7 +9,7 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
       port: 9200,
       index_name: "test-index"
     }
-    @wrapper = ElasticsearchWrapper.new(@settings, "myformat")
+    @wrapper = ElasticsearchWrapper.new(@settings)
   end
 
   def test_should_bulk_update_documents

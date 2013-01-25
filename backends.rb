@@ -30,7 +30,6 @@ private
       @logger.debug "Using elasticsearch backend"
       ElasticsearchWrapper.new(
         backend_settings,
-        @settings.recommended_format,
         @logger,
         backend_settings[:format_filter]
       )
