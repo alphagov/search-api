@@ -1,0 +1,20 @@
+index:
+  settings:
+    analysis:
+      analyzer:
+        default:
+          type: custom
+          tokenizer: standard
+          filter: [standard]
+mappings:
+  default:
+    edition:
+      _all: { enabled: true }
+      properties:
+        title:       { type: string, index: analyzed }
+  government:
+    edition:
+      _all: { enabled: true }
+      properties:
+        title:       { type: string, index: analyzed }
+        topics:      { type: string, index: analyzed }

@@ -3,21 +3,23 @@ require "elasticsearch_wrapper"
 require "webmock"
 
 class ElasticsearchWrapperTest < Test::Unit::TestCase
+  include Fixtures::DefaultMappings
+
   def setup
     @settings = {
       server: "example.com",
       port: 9200,
       index_name: "test-index"
     }
-    @wrapper = ElasticsearchWrapper.new(@settings, "myformat")
+    @wrapper = ElasticsearchWrapper.new(@settings, default_mappings)
   end
 
   def test_should_bulk_update_documents
     # TODO: factor out with FactoryGirl
     json_document = {
-        _type: "edition",
-        link: "/foo/bar",
-        title: "TITLE ONE",
+        "_type" => "edition",
+        "link" => "/foo/bar",
+        "title" => "TITLE ONE",
     }
     document = stub("document", elasticsearch_export: json_document)
     # Note that this comes with a trailing newline, which elasticsearch needs
@@ -53,6 +55,7 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
 
     document = @wrapper.get("/an-example-link")
     assert document.is_a? Document
+    assert_equal "/an-example-link", document.get(:link)
     assert_equal "/an-example-link", document.link
     assert_equal document_hash["title"], document.title
     assert_requested :get, document_url

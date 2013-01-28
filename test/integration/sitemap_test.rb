@@ -129,7 +129,7 @@ class SitemapTest < IntegrationTest
       "description" => "Bugblatter Beast of Traal",
       "format" => "specialist",
       "link" => "/a-specialist-guidance",
-      "indexable_content" => "Always bring a towel." 
+      "indexable_content" => "Always bring a towel."
     }
     post "/detailed/documents", JSON.dump(document_in_another_index)
     assert last_response.ok?

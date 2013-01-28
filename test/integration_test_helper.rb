@@ -2,6 +2,8 @@ require "test_helper"
 require "app"
 
 module IntegrationFixtures
+  include Fixtures::DefaultMappings
+
   def sample_document_attributes
     {
       "title" => "TITLE1",
@@ -15,7 +17,7 @@ module IntegrationFixtures
   end
 
   def sample_document
-    Document.from_hash(sample_document_attributes)
+    Document.from_hash(sample_document_attributes, default_mappings)
   end
 
   def sample_recommended_document_attributes
@@ -28,7 +30,7 @@ module IntegrationFixtures
   end
 
   def sample_recommended_document
-    Document.from_hash(sample_recommended_document_attributes)
+    Document.from_hash(sample_recommended_document_attributes, default_mappings)
   end
 
   def sample_section
@@ -50,20 +52,6 @@ class IntegrationTest < Test::Unit::TestCase
     @secondary_search.stubs(:search).returns([])
   end
 
-  def use_solr_for_primary_search
-    # It invokes (according to mocha) "settings" on both Rummager and Sinatra::Application
-    [app, Sinatra::Application].each do |thing|
-      thing.settings.stubs(:backends).returns(
-        primary: {
-          type: "solr",
-          server: "solr-test-server",
-          port: 9999,
-          path: "/solr/rummager"
-        }
-      )
-    end
-  end
-
   def use_elasticsearch_for_primary_search
     stub_backends_with(primary: {
           type: "elasticsearch",
@@ -74,18 +62,15 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def stub_backends_with(hash)
-    # It invokes (according to mocha) "settings" on both Rummager and Sinatra::Application
-    [app, Sinatra::Application].each do |thing|
-      thing.settings.stubs(:backends).returns(hash)
-    end
+    app.settings.stubs(:backends).returns(hash)
   end
 
-  def delete_elasticsearch_index(index_name="rummager_test")
-    begin
-      RestClient.delete "http://localhost:9200/#{index_name}"
-    rescue RestClient::Exception => exception
-      raise unless exception.http_code == 404
-    end
+  def add_field_to_mappings(fieldname)
+    schema = deep_copy(settings.elasticsearch_schema)
+    properties = schema["mappings"]["default"]["edition"]["properties"]
+    properties.merge!({fieldname.to_s => { "type" => "string", "index" => "not_analyzed" }})
+
+    app.settings.stubs(:elasticsearch_schema).returns(schema)
   end
 
   def reset_elasticsearch_index(index_name=:primary)
@@ -112,18 +97,39 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def stub_primary_and_secondary_searches
-    @primary_search = stub_everything("Mainstream Solr wrapper")
+    @primary_search = stub_everything("Mainstream wrapper")
     app.any_instance.stubs(:primary_search).returns(@primary_search)
 
-    @secondary_search = stub_everything("Whitehall Solr wrapper")
+    @secondary_search = stub_everything("Whitehall wrapper")
     app.any_instance.stubs(:secondary_search).returns(@secondary_search)
   end
 
-private
-  def admin_wrapper(index_name)
+  def load_yaml_fixture(filename)
+    YAML.load_file(File.expand_path("fixtures/#{filename}", File.dirname(__FILE__)))
+  end
+
+  def wrapper_for(index_name, mappings_fixture_file = "elasticsearch_schema.fixture.yml")
     ElasticsearchAdminWrapper.new(
-      settings.backends[index_name],
-      settings.elasticsearch_schema
+      {
+        type: "elasticsearch",
+        server: "localhost",
+        port: 9200,
+        index_name: index_name
+      },
+      load_yaml_fixture(mappings_fixture_file)
+    )
+  end
+
+private
+  def deep_copy(hash)
+    Marshal.load(Marshal.dump(hash))
+  end
+
+  def admin_wrapper(index_name, mappings_fixture_file = nil)
+    schema = mappings_fixture_file ? load_yaml_fixture(mappings_fixture_file) : app.settings.elasticsearch_schema
+    ElasticsearchAdminWrapper.new(
+      app.settings.backends[index_name],
+      schema
     )
   end
 end
