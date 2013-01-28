@@ -137,6 +137,8 @@ namespace :rummager do
         elasticsearch_backends.values.count(settings) > 1
     }
 
+    all_mappings = settings.elasticsearch_schema["mappings"]
+
     real_backends.each do |backend, backend_settings|
       @admin_wrappers[backend] = ElasticsearchAdminWrapper.new(
         backend_settings.symbolize_keys,
@@ -145,6 +147,7 @@ namespace :rummager do
       )
       @search_wrappers[backend] = ElasticsearchWrapper.new(
         backend_settings.symbolize_keys,
+        all_mappings[backend.to_s] || all_mappings["default"],
         @logger
       )
     end
@@ -156,6 +159,7 @@ namespace :rummager do
     )
     @search_wrapper = ElasticsearchWrapper.new(
       backend_settings,
+      all_mappings[backend_name] || all_mappings["default"],
       @logger
     )
 
