@@ -1,46 +1,39 @@
 require "active_support/inflector"
 
-class Link
+class SearchIndexEntry
+  def initialize(field_names, attributes = {})
+    @field_names = field_names
+    @attributes = {}
+    update_attributes!(attributes)
+  end
 
-  def self.auto_keys(*names)
-    @auto_keys ||= []
-    names.each do |name|
-      next if @auto_keys.include?(name)
-      attr_accessor name
-      @auto_keys << name
+  def update_attributes!(attributes)
+    attributes.each do |key, value|
+      self.set(key, value)
     end
-    @auto_keys
   end
 
-  auto_keys :title, :link, :link_order
-
-  def self.from_hash(hash)
-    new.tap { |doc|
-      auto_keys.each do |key|
-        doc.set key, lookup(hash, key)
-      end
-      doc.set 'link_order', lookup(hash, 'link_order', 0)
-    }
-  end
-
-  def self.lookup(hash, sym, default=nil)
-    hash[sym] || hash[sym.to_s] || default
+  def has_field?(field_name)
+    @field_names.include?(field_name.to_sym)
   end
 
   def get(key)
-    __send__ key
+    @attributes[key]
   end
 
   def set(key, value)
-    __send__ "#{key}=", value
+    key = key.to_sym
+    if @field_names.include?(key)
+      @attributes[key] = value
+    end
   end
 
   def elasticsearch_export
     Hash.new.tap do |doc|
-      self.class.auto_keys.each do |key|
+      @field_names.each do |key|
         value = get(key)
         if value.is_a?(Array)
-          value = value.map {|v| v.is_a?(Link) ? v.elasticsearch_export : v }
+          value = value.map {|v| v.is_a?(SearchIndexEntry) ? v.elasticsearch_export : v }
         end
         unless value.nil? or (value.respond_to?(:empty?) and value.empty?)
           doc[key] = value
@@ -51,10 +44,10 @@ class Link
   end
 
   def to_hash
-    Hash[self.class.auto_keys.map { |key|
+    Hash[@field_names.map { |key|
       value = get(key)
       if value.is_a?(Array)
-        value = value.map { |v| v.is_a?(Link) ? v.to_hash : v }
+        value = value.map { |v| v.is_a?(SearchIndexEntry) ? v.to_hash : v }
       end
       [key.to_s, value]
     }.select{ |key, value|
@@ -83,9 +76,62 @@ class Link
       end
     }
   end
+
+  def method_missing(method_name, *args)
+    if valid_assignment_method?(method_name)
+      raise ArgumentError, "wrong number of arguments #{args.count} for 1" unless args.size == 1
+      set(field_name_of_assignment_method(method_name), args[0])
+    elsif has_field?(method_name)
+      get(method_name)
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(method_name, include_private)
+    valid_assignment_method?(method_name) || has_field?(method_name)
+  end
+
+private
+  def is_assignment?(method_name)
+    method_name.to_s[-1] == "="
+  end
+
+  def valid_assignment_method?(method_name)
+    is_assignment?(method_name) && has_field?(field_name_of_assignment_method(method_name))
+  end
+
+  def field_name_of_assignment_method(method_name)
+    method_name.to_s[0...-1].to_sym
+  end
 end
 
-class Document < Link
+class Link < SearchIndexEntry
+
+  def initialize(attributes)
+    super([:title, :link, :link_order], attributes)
+  end
+
+  def update_attributes!(attributes)
+    super
+    self.set(:link_order, attributes[:link_order] || attributes["link_order"] || 0)
+  end
+end
+
+class Document < SearchIndexEntry
+
+  attr_reader :additional_links
+  attr_writer :highlight
+
+  def self.from_hash(hash, mappings)
+    field_names = mappings['edition']['properties'].keys.map(&:to_sym)
+    self.new(field_names, unflatten(hash))
+  end
+
+  def update_attributes!(attributes)
+    super(attributes)
+    assign_additional_links_from(attributes)
+  end
 
   # The `additional_links` field was originally used in parted content (guides,
   # benefits) to display links to the individual parts. We're not displaying
@@ -93,17 +139,17 @@ class Document < Link
   # Rummager. In time, they are likely to disappear entirely, taking large
   # tracts of code with them.
 
-  auto_keys :title, :link, :description, :format, :section, :subsection, :subsubsection,
-    :indexable_content, :additional_links
-  attr_writer :highlight
+  def assign_additional_links_from(attributes)
+    additional_links_attributes = attributes[:additional_links] || attributes["additional_links"] || []
+    @additional_links = additional_links_attributes.map { |h| Link.new(h) }.sort_by { |l| l.link_order }
+  end
 
-  def self.from_hash(hash)
-    auto_keys(*hash.keys.map(&:to_sym))
-    hash = unflatten(hash)
-    super(hash).tap { |doc|
-      doc.additional_links =
-        lookup(hash, :additional_links, []).map { |h| Link.from_hash(h) }.sort_by { |l| l.link_order }
-    }
+  def to_hash
+    if additional_links.any?
+      super.merge("additional_links" => additional_links.map(&:to_hash))
+    else
+      super
+    end
   end
 
   PRESENTATION_FORMAT_TRANSLATION = {
@@ -139,6 +185,6 @@ class Document < Link
   private
 
   def normalized_format
-    format ? format.gsub("-", "_") : 'unknown'
+    self.format ? self.format.gsub("-", "_") : 'unknown'
   end
 end

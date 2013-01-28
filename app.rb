@@ -155,7 +155,7 @@ class Rummager < Sinatra::Application
   post "/?:backend?/documents" do
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
-      Document.from_hash(hash)
+      backend.document_from_hash(hash)
     }
 
     simple_json_result(backend.add(documents))
@@ -190,9 +190,9 @@ class Rummager < Sinatra::Application
 
     # Note: this expects application/x-www-form-urlencoded data, not JSON
     request.POST.each_pair do |key, value|
-      begin
+      if document.has_field?(key)
         document.set key, value
-      rescue NoMethodError
+      else
         text_error "Unrecognised field '#{key}'"
       end
     end

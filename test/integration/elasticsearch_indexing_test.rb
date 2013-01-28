@@ -8,10 +8,11 @@ class ElasticsearchIndexingTest < IntegrationTest
     use_elasticsearch_for_primary_search
     disable_secondary_search
     WebMock.disable_net_connect!(allow: "localhost:9200")
-    reset_elasticsearch_index
   end
 
   def test_should_send_a_document_to_elasticsearch_when_a_json_document_is_posted
+    reset_elasticsearch_index
+
     test_data = {
       "title" => "TITLE",
       "description" => "DESCRIPTION",
@@ -28,9 +29,14 @@ class ElasticsearchIndexingTest < IntegrationTest
     test_data.each do |key, value|
       assert_equal value, parsed_response[key]
     end
+
+    assert_equal test_data.keys.sort, parsed_response.keys.sort
   end
 
   def test_should_be_able_to_index_a_document_with_additional_fields
+    add_field_to_mappings("topics")
+    reset_elasticsearch_index
+
     test_data = {
       "title" => "TITLE",
       "description" => "DESCRIPTION",
@@ -49,5 +55,6 @@ class ElasticsearchIndexingTest < IntegrationTest
       assert_equal value, parsed_response[key]
     end
 
+    assert_equal test_data.keys.sort, parsed_response.keys.sort
   end
 end

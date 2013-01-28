@@ -2,6 +2,8 @@ require "test_helper"
 require "app"
 
 module IntegrationFixtures
+  include Fixtures::DefaultMappings
+
   def sample_document_attributes
     {
       "title" => "TITLE1",
@@ -15,7 +17,7 @@ module IntegrationFixtures
   end
 
   def sample_document
-    Document.from_hash(sample_document_attributes)
+    Document.from_hash(sample_document_attributes, default_mappings)
   end
 
   def sample_recommended_document_attributes
@@ -28,7 +30,7 @@ module IntegrationFixtures
   end
 
   def sample_recommended_document
-    Document.from_hash(sample_recommended_document_attributes)
+    Document.from_hash(sample_recommended_document_attributes, default_mappings)
   end
 
   def sample_section
@@ -63,6 +65,16 @@ class IntegrationTest < Test::Unit::TestCase
     # Stub #settings on both Rummager and Sinatra::Application
     [app, Sinatra::Application].each do |thing|
       thing.settings.stubs(:backends).returns(hash)
+    end
+  end
+
+  def add_field_to_mappings(fieldname)
+    schema = Marshal.load(Marshal.dump(settings.elasticsearch_schema))
+    properties = schema["mappings"]["default"]["edition"]["properties"]
+    properties.merge!({fieldname.to_s => { "type" => "string", "index" => "not_analyzed" }})
+
+    [app, Sinatra::Application].each do |thing|
+      thing.settings.stubs(:elasticsearch_schema).returns(schema)
     end
   end
 

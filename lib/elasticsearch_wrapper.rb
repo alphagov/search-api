@@ -13,6 +13,8 @@ class ElasticsearchWrapper
   # in elasticsearch
   MASSIVE_NUMBER = 200_000
 
+  attr_reader :mappings
+
   class Client
 
     attr_reader :index_name  # The admin wrapper needs to get to this
@@ -98,10 +100,11 @@ class ElasticsearchWrapper
   end
 
   # TODO: support the format_filter option here
-  def initialize(settings, logger = nil, format_filter = nil)
+  def initialize(settings, mappings, logger = nil, format_filter = nil)
     @client = Client.new(settings, logger)
     @index_name = settings[:index_name]
     raise ArgumentError, "Missing index_name parameter" unless @index_name
+    @mappings = mappings
     @logger = logger || Logger.new("/dev/null")
 
     raise RuntimeError, "Format filters not yet supported" if format_filter
@@ -124,7 +127,11 @@ class ElasticsearchWrapper
       return nil
     end
 
-    Document.from_hash(JSON.parse(response.body)["_source"])
+    document_from_hash(JSON.parse(response.body)["_source"])
+  end
+
+  def document_from_hash(hash)
+    Document.from_hash(hash, @mappings)
   end
 
   def all_documents(options={})
@@ -133,7 +140,7 @@ class ElasticsearchWrapper
     result = @client.request(:get, "_search", search_body.to_json)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|
-      Document.from_hash(hit['_source'])
+      document_from_hash(hit['_source'])
     }
   end
 
@@ -222,7 +229,7 @@ class ElasticsearchWrapper
     result = @client.request(:get, "_search", payload)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|
-      Document.from_hash(hit['_source'])
+      document_from_hash(hit['_source'])
     }
   end
 
@@ -268,7 +275,7 @@ class ElasticsearchWrapper
     result = @client.request(:get, "_search", payload)
     result = JSON.parse(result)
     result['hits']['hits'].map { |hit|
-      Document.from_hash(hit['_source'])
+      document_from_hash(hit['_source'])
     }
   end
 

@@ -12,16 +12,16 @@ class Backends
   end
 
   def backends
-    @backends ||= Hash.new do |hash, key|
-      @logger.debug "Instantiating #{key} search backend"
-      backend_settings = @settings.backends[key] && @settings.backends[key].symbolize_keys
-      hash[key] = backend_settings && build_backend(backend_settings)
+    @backends ||= Hash.new do |hash, backend_name|
+      @logger.debug "Instantiating #{backend_name} search backend"
+      backend_settings = @settings.backends[backend_name] && @settings.backends[backend_name].symbolize_keys
+      hash[backend_name] = backend_settings && build_backend(backend_settings, mappings_for(backend_name))
     end
   end
 
 private
 
-  def build_backend(backend_settings)
+  def build_backend(backend_settings, mappings)
     case backend_settings[:type]
     when "none"
       @logger.debug "Using null backend"
@@ -30,11 +30,17 @@ private
       @logger.debug "Using elasticsearch backend"
       ElasticsearchWrapper.new(
         backend_settings,
+        mappings,
         @logger,
         backend_settings[:format_filter]
       )
     else
       raise RuntimeError, "Unknown backend '#{backend_settings[:type].inspect}'"
     end
+  end
+
+  def mappings_for(backend_name)
+    all_mappings = @settings.elasticsearch_schema["mappings"]
+    all_mappings[backend_name] || all_mappings["default"]
   end
 end
