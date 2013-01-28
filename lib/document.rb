@@ -2,7 +2,7 @@ require "active_support/inflector"
 
 class SearchIndexEntry
   def initialize(field_names, attributes = {})
-    @field_names = field_names
+    @field_names = field_names.map(&:to_s)
     @attributes = {}
     update_attributes!(attributes)
   end
@@ -14,17 +14,16 @@ class SearchIndexEntry
   end
 
   def has_field?(field_name)
-    @field_names.include?(field_name.to_sym)
+    @field_names.include?(field_name.to_s)
   end
 
   def get(key)
-    @attributes[key]
+    @attributes[key.to_s]
   end
 
   def set(key, value)
-    key = key.to_sym
-    if @field_names.include?(key)
-      @attributes[key] = value
+    if has_field?(key)
+      @attributes[key.to_s] = value
     end
   end
 
@@ -39,7 +38,7 @@ class SearchIndexEntry
           doc[key] = value
         end
       end
-      doc[:_type] = "edition"
+      doc["_type"] = "edition"
     end
   end
 
@@ -102,7 +101,7 @@ private
   end
 
   def field_name_of_assignment_method(method_name)
-    method_name.to_s[0...-1].to_sym
+    method_name.to_s[0...-1]
   end
 end
 
@@ -124,7 +123,7 @@ class Document < SearchIndexEntry
   attr_writer :highlight
 
   def self.from_hash(hash, mappings)
-    field_names = mappings['edition']['properties'].keys.map(&:to_sym)
+    field_names = mappings['edition']['properties'].keys.map(&:to_s)
     self.new(field_names, unflatten(hash))
   end
 

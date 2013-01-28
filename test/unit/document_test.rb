@@ -66,7 +66,7 @@ class DocumentTest < Test::Unit::TestCase
 
     assert_equal [1,2], document.to_hash["topics"]
     assert_equal [1,2], document.topics
-    assert_equal [1,2], document.elasticsearch_export[:topics]
+    assert_equal [1,2], document.elasticsearch_export["topics"]
   end
 
   def test_should_ignore_fields_not_in_mappings
@@ -278,6 +278,6 @@ class DocumentTest < Test::Unit::TestCase
     }
     document = Document.from_hash(hash, @mappings)
 
-    assert_equal hash.keys.sort.map(&:to_sym), document.elasticsearch_export.keys.sort
+    assert_equal hash.keys.sort, document.elasticsearch_export.keys.sort
   end
 end

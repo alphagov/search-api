@@ -17,9 +17,9 @@ class ElasticsearchWrapperTest < Test::Unit::TestCase
   def test_should_bulk_update_documents
     # TODO: factor out with FactoryGirl
     json_document = {
-        _type: "edition",
-        link: "/foo/bar",
-        title: "TITLE ONE",
+        "_type" => "edition",
+        "link" => "/foo/bar",
+        "title" => "TITLE ONE",
     }
     document = stub("document", elasticsearch_export: json_document)
     # Note that this comes with a trailing newline, which elasticsearch needs

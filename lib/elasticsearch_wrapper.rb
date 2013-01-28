@@ -307,7 +307,7 @@ class ElasticsearchWrapper
 
   private
   def index_action(doc)
-    {index: {_type: doc[:_type], _id: doc[:link]}}
+    {"index" => {"_type" => doc["_type"], "_id" => doc["link"]}}
   end
 
   def _facet(facet_name)
