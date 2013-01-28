@@ -8,7 +8,7 @@ require "test/unit"
 require "rack/test"
 require "mocha"
 require "fixtures/default_mappings"
-require 'pp'
+require "pp"
 
 require "webmock/test_unit"
 WebMock.disable_net_connect!
