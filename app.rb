@@ -8,7 +8,6 @@ require 'csv'
 require 'statsd'
 
 require 'document'
-require 'solr_wrapper'
 require 'elasticsearch_wrapper'
 require 'null_backend'
 
@@ -131,7 +130,7 @@ class Rummager < Sinatra::Application
     # Site maps can have up to 50,000 links in them.
     # We use one for / so we can have up to 49,999 others.
     # bes = settings.backends.keys.map { |key| available_backends[key] }
-    documents = backends_for_sitemap.flat_map do |be| 
+    documents = backends_for_sitemap.flat_map do |be|
       be.all_documents(limit: 49_999)
     end
     builder do |xml|
@@ -156,7 +155,7 @@ class Rummager < Sinatra::Application
   post "/?:backend?/documents" do
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
-      Document.from_hash(hash)
+      backend.document_from_hash(hash)
     }
 
     simple_json_result(backend.add(documents))
@@ -191,9 +190,9 @@ class Rummager < Sinatra::Application
 
     # Note: this expects application/x-www-form-urlencoded data, not JSON
     request.POST.each_pair do |key, value|
-      begin
+      if document.has_field?(key)
         document.set key, value
-      rescue NoMethodError
+      else
         text_error "Unrecognised field '#{key}'"
       end
     end
