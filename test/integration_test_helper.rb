@@ -69,7 +69,7 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def add_field_to_mappings(fieldname)
-    schema = Marshal.load(Marshal.dump(settings.elasticsearch_schema))
+    schema = deep_copy(settings.elasticsearch_schema)
     properties = schema["mappings"]["default"]["edition"]["properties"]
     properties.merge!({fieldname.to_s => { "type" => "string", "index" => "not_analyzed" }})
 
@@ -126,6 +126,10 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
 private
+  def deep_copy(hash)
+    Marshal.load(Marshal.dump(hash))
+  end
+
   def admin_wrapper(index_name, mappings_fixture_file = nil)
     schema = mappings_fixture_file ? load_yaml_fixture(mappings_fixture_file) : settings.elasticsearch_schema
     ElasticsearchAdminWrapper.new(
