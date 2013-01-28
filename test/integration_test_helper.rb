@@ -62,10 +62,7 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def stub_backends_with(hash)
-    # Stub #settings on both Rummager and Sinatra::Application
-    [app, Sinatra::Application].each do |thing|
-      thing.settings.stubs(:backends).returns(hash)
-    end
+    app.settings.stubs(:backends).returns(hash)
   end
 
   def add_field_to_mappings(fieldname)
@@ -73,9 +70,7 @@ class IntegrationTest < Test::Unit::TestCase
     properties = schema["mappings"]["default"]["edition"]["properties"]
     properties.merge!({fieldname.to_s => { "type" => "string", "index" => "not_analyzed" }})
 
-    [app, Sinatra::Application].each do |thing|
-      thing.settings.stubs(:elasticsearch_schema).returns(schema)
-    end
+    app.settings.stubs(:elasticsearch_schema).returns(schema)
   end
 
   def reset_elasticsearch_index(index_name=:primary)
@@ -131,9 +126,9 @@ private
   end
 
   def admin_wrapper(index_name, mappings_fixture_file = nil)
-    schema = mappings_fixture_file ? load_yaml_fixture(mappings_fixture_file) : settings.elasticsearch_schema
+    schema = mappings_fixture_file ? load_yaml_fixture(mappings_fixture_file) : app.settings.elasticsearch_schema
     ElasticsearchAdminWrapper.new(
-      settings.backends[index_name],
+      app.settings.backends[index_name],
       schema
     )
   end
