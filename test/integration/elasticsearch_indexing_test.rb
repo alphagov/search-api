@@ -1,7 +1,7 @@
 require "integration_test_helper"
 require "app"
 require "rest-client"
-require "CGI"
+require "cgi"
 
 class ElasticsearchIndexingTest < IntegrationTest
 
