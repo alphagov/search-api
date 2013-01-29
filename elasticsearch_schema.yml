@@ -470,16 +470,18 @@ mappings:
       properties:
         title:       { type: string, index: analyzed }
         description: { type: string, index: analyzed }
-        format:      { type: string, index: not_analyzed, include_in_all: false }
+        format:      { type: string, index: not_analyzed }
+        display_type: { type: string, index: not_analyzed }
         section:     { type: string, index: not_analyzed, include_in_all: false }
         subsection:  { type: string, index: not_analyzed, include_in_all: false }
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
         link:        { type: string, index: not_analyzed, include_in_all: false }
         indexable_content: { type: string, index: analyzed }
-        id:          { type: string, index: not_analyzed }
-        organisations: { type: string, index: not_analyzed }
-        people: { type: string, index: not_analyzed }
-        speech_type: { type: string, index: not_analyzed }
+        id:          { type: long, index: not_analyzed }
+        organisations: { type: long, index: not_analyzed }
+        people: { type: long, index: not_analyzed }
+        speech_type: { type: long, index: not_analyzed }
+        news_article_type: { type: string, index: not_analyzed }
         topics: { type: string, index: not_analyzed }
-        publication_type_id: { type: string, index: not_analyzed }
-        timestamp_for_sorting: { type: date, index: not_analyzed }
+        publication_type: { type: long, index: not_analyzed }
+        public_timestamp: { type: date, index: not_analyzed }
