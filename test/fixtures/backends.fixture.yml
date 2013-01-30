@@ -1,0 +1,25 @@
+development:
+  mainstream: &mainstream
+    type: elasticsearch
+    server: localhost
+    port: 9200
+    index_name: "mainstream"
+  detailed: &detailed
+    type: elasticsearch
+    server: localhost
+    port: 9200
+    index_name: "detailed"
+  government: &government
+    type: elasticsearch
+    server: localhost
+    port: 9200
+    index_name: "government"
+  primary:
+    *mainstream
+  secondary:
+    type: none
+test:
+  primary:
+    type: none
+  secondary:
+    type: none
