@@ -41,6 +41,6 @@ private
 
   def mappings_for(backend_name)
     all_mappings = @settings.elasticsearch_schema["mappings"]
-    all_mappings[backend_name] || all_mappings["default"]
+    all_mappings[backend_name.to_s] || all_mappings["default"]
   end
 end
