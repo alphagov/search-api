@@ -38,7 +38,7 @@ synonyms: &synonyms [
   "trademark, trade mark",
   "vat registration, de-registration, deregistration",
   "will, wills",
-  "work experience, internship",
+  "work experience, internship, interns",
 
   "one, 1",
   "two, 2",
@@ -54,8 +54,10 @@ synonyms: &synonyms [
   # Acronyms
 
   "crb, criminal records bureau, dbs, disclosure and barring service",
+  "cwp, cold weather payment",
   "dada, dance and drama awards",
   "dda, disability discrimination act",
+  "eco, energy company obligation",
   "eis, enterprise investment scheme",
   "fco, foreign and commonwealth office",
   "jsa, jobseeker’s allowance",
@@ -143,9 +145,9 @@ synonyms: &synonyms [
   "workplacepensions => workplace pensions",
   "yourmotcheck => mot check",
   "xmas => christmas",
-
+  
   # Additional terms
-
+  
   "book driving test => book driving test, book your practical driving test",
   "bursaries, bursary => bursaries, bursary, extra, university",
   "child care => child care, childcare",
@@ -158,8 +160,8 @@ synonyms: &synonyms [
   "fired => fired, dismissed, dismissal",
   "firing => firing, dismiss, dismissing, dismissal",
   "getaway => getaway, gateway",
-  "green deal => green deal, energy saving",
-  "heating => heating, cold weather payment, winter fuel, warm home, energy saving",
+  "green deal => green deal, green deal energy saving, energy grants, heating",
+  "heating => heating, energy grants, energy saving, cold, warm, winter", 
   "how much => how much, fees, rates",
   "ir35 => ir35, employment status",
   "job match => job match, jobmatch",
@@ -181,13 +183,14 @@ synonyms: &synonyms [
   "snow, snow code => snow, ice, grit, winter, weather, closures",
   "social security => social security, benefits",
   "tax payer => tax payer, taxpayer",
+  "trade => trade, trade tariff, ukti",
   "ukti => ukti, uk trade and investment, help for exporters, starting to export, uk welcomes",
   "utr, unique taxpayer reference => utr, unique taxpayer reference, register for self assessment",
   "wales => wales, cymru, cymraeg, gymraeg",
-  "weather, bad weather, winter weather => weather, cold weather, severe weather, winter weather",
+  "weather, bad weather, winter weather => weather, cold weather, severe weather, winter weather, energy grants, heating", 
   "welsh => welsh, cymraeg, gymraeg",
-  "winter payment, winter payments => winter fuel payment, cold weather, warm home, energy saving",
-
+  "winter payment, winter payments => winter fuel payment, cold weather, warm home, energy saving, energy grants, heating",
+  
   # Forms and leaflets
 
   "br1, br 1 => state pension claim",
@@ -340,9 +343,11 @@ synonyms: &synonyms [
   "surport => support",
   "tacograph => tachograph",
   "tarif => tariff",
+  "tarrif => tariff",
   "tarriff => tariff",
   "taxdisc => tax disc",
   "taxdisk => tax disc",
+  "tax disk => tax disc",
   "theroy => theory",
   "thoery => theory",
   "univeral => universal",
@@ -352,7 +357,7 @@ synonyms: &synonyms [
 
   # Temporary fix for Inside Government in general results
   "government gateway => gateway",
-
+  
   # Temporary fix for payroll terms
   "480 => 480, payroll",
   "ca38 => ca38, payroll",
@@ -377,7 +382,7 @@ synonyms: &synonyms [
   "ssp1 => ssp1, payroll",
   "tax calculator => tax calculator, payroll",
   "tax refund => tax refund, payroll",
-
+  
   # Temporary fix for career-specific job searches
   # TODO: Remove this once we have support for alternative keywords in Panopticon
   "admin => admin, find a job",
@@ -451,37 +456,15 @@ index:
         stemmer_override:
           type: stemmer_override
           rules: *stems
-mappings:
-  default:
-    edition:
-      _all: { enabled: true }
-      properties:
-        title:       { type: string, index: analyzed }
-        description: { type: string, index: analyzed }
-        format:      { type: string, index: not_analyzed, include_in_all: false }
-        section:     { type: string, index: not_analyzed, include_in_all: false }
-        subsection:  { type: string, index: not_analyzed, include_in_all: false }
-        subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
-        link:        { type: string, index: not_analyzed, include_in_all: false }
-        indexable_content: { type: string, index: analyzed }
-  government:
-    edition:
-      _all: { enabled: true }
-      properties:
-        title:       { type: string, index: analyzed }
-        description: { type: string, index: analyzed }
-        format:      { type: string, index: not_analyzed }
-        display_type: { type: string, index: not_analyzed }
-        section:     { type: string, index: not_analyzed, include_in_all: false }
-        subsection:  { type: string, index: not_analyzed, include_in_all: false }
-        subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
-        link:        { type: string, index: not_analyzed, include_in_all: false }
-        indexable_content: { type: string, index: analyzed }
-        id:          { type: long, index: not_analyzed }
-        organisations: { type: long, index: not_analyzed }
-        people: { type: long, index: not_analyzed }
-        speech_type: { type: long, index: not_analyzed }
-        news_article_type: { type: string, index: not_analyzed }
-        topics: { type: string, index: not_analyzed }
-        publication_type: { type: long, index: not_analyzed }
-        public_timestamp: { type: date, index: not_analyzed }
+mapping:
+  edition:
+    _all: { enabled: true }
+    properties:
+      title:       { type: string, index: analyzed }
+      description: { type: string, index: analyzed }
+      format:      { type: string, index: not_analyzed, include_in_all: false }
+      section:     { type: string, index: not_analyzed, include_in_all: false }
+      subsection:  { type: string, index: not_analyzed, include_in_all: false }
+      subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
+      link:        { type: string, index: not_analyzed, include_in_all: false }
+      indexable_content: { type: string, index: analyzed }
