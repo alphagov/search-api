@@ -104,10 +104,6 @@ class IntegrationTest < Test::Unit::TestCase
     app.any_instance.stubs(:secondary_search).returns(@secondary_search)
   end
 
-  def load_yaml_fixture(filename)
-    YAML.load_file(File.expand_path("fixtures/#{filename}", File.dirname(__FILE__)))
-  end
-
   def wrapper_for(index_name, mappings_fixture_file = "elasticsearch_schema.fixture.yml")
     ElasticsearchAdminWrapper.new(
       {
