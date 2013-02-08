@@ -140,8 +140,8 @@ class ElasticsearchWrapper
     search_body = {query: {match_all: {}}, size: limit}
     result = @client.request(:get, "_search", search_body.to_json)
     result = MultiJson.decode(result)
-    result['hits']['hits'].map { |hit|
-      document_from_hash(hit['_source'])
+    result["hits"]["hits"].map { |hit|
+      document_from_hash(hit["_source"])
     }
   end
 
@@ -239,8 +239,8 @@ class ElasticsearchWrapper
 
     result = @client.request(:get, "_search", payload)
     result = MultiJson.decode(result)
-    result['hits']['hits'].map { |hit|
-      document_from_hash(hit['_source'])
+    result["hits"]["hits"].map { |hit|
+      document_from_hash(hit["_source"])
     }
   end
 
@@ -285,8 +285,8 @@ class ElasticsearchWrapper
     }.to_json
     result = @client.request(:get, "_search", payload)
     result = MultiJson.decode(result)
-    result['hits']['hits'].map { |hit|
-      document_from_hash(hit['_source'])
+    result["hits"]["hits"].map { |hit|
+      document_from_hash(hit["_source"])
     }
   end
 

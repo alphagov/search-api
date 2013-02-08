@@ -19,7 +19,7 @@ class ExceptionMailer
         send_notification boom, env
         raise
       end
-    send_notification env['mail.exception'], env if env['mail.exception']
+    send_notification env["mail.exception"], env if env["mail.exception"]
     [status, headers, body]
   end
 
@@ -38,7 +38,7 @@ class ExceptionMailer
     parts = []
     env_string = env.to_a.
       sort{|a,b| a.first <=> b.first}.
-      map{ |k,v| "%-25s%p" % [k+':', v] }.
+      map{ |k,v| "%-25s%p" % [k+":", v] }.
       join("\n  ")
 
     parts << <<-EOS
@@ -60,7 +60,7 @@ EOS
 Request Body:
 ===================================================================
 
-#{body.gsub(/^/, '  ')}
+#{body.gsub(/^/, "  ")}
 EOS
     end
 
@@ -78,7 +78,7 @@ EOS
   end
 
   def extract_body(env)
-    if io = env['rack.input']
+    if io = env["rack.input"]
       io.rewind if io.respond_to?(:rewind)
       io.read
     end
