@@ -491,3 +491,4 @@ mappings:
         topics: { type: string, index: not_analyzed }
         publication_type: { type: long, index: not_analyzed }
         public_timestamp: { type: date, index: not_analyzed }
+        search_format_types: { type: string, index: not_analyzed, include_in_all: false }
