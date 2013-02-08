@@ -23,14 +23,14 @@ class ElasticsearchAmendmentTest < IntegrationTest
   end
 
   def add_sample_document
-    post "/documents", JSON.dump(sample_document_attributes)
+    post "/documents", MultiJson.encode(sample_document_attributes)
     assert last_response.ok?
   end
 
   def test_should_get_a_document_through_elasticsearch
     get "/documents/%2Fan-example-answer"
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
+    parsed_response = MultiJson.decode(last_response.body)
 
     sample_document_attributes.each do |key, value|
       assert_equal value, parsed_response[key]
@@ -47,7 +47,7 @@ class ElasticsearchAmendmentTest < IntegrationTest
 
     get "/documents/%2Fan-example-answer"
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
+    parsed_response = MultiJson.decode(last_response.body)
 
     updates = {"title" => "A new title"}
     sample_document_attributes.merge(updates).each do |key, value|

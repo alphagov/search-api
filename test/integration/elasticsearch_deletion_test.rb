@@ -40,7 +40,7 @@ class ElasticsearchDeletionTest < IntegrationTest
 
   def add_sample_documents
     sample_document_attributes.each do |sample_document|
-      post "/documents", JSON.dump(sample_document)
+      post "/documents", MultiJson.encode(sample_document)
       assert last_response.ok?
     end
   end
@@ -50,7 +50,7 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def assert_no_results
-    assert_equal [], JSON.parse(last_response.body)
+    assert_equal [], MultiJson.decode(last_response.body)
   end
 
   def test_should_404_on_deleted_content

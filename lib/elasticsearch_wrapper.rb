@@ -3,6 +3,7 @@ require "section"
 require "logger"
 require "cgi"
 require "rest-client"
+require "multi_json"
 require "json"
 
 class ElasticsearchWrapper
@@ -127,7 +128,7 @@ class ElasticsearchWrapper
       return nil
     end
 
-    document_from_hash(JSON.parse(response.body)["_source"])
+    document_from_hash(MultiJson.decode(response.body)["_source"])
   end
 
   def document_from_hash(hash)
@@ -138,7 +139,7 @@ class ElasticsearchWrapper
     limit = options.fetch(:limit, MASSIVE_NUMBER)
     search_body = {query: {match_all: {}}, size: limit}
     result = @client.request(:get, "_search", search_body.to_json)
-    result = JSON.parse(result)
+    result = MultiJson.decode(result)
     result['hits']['hits'].map { |hit|
       document_from_hash(hit['_source'])
     }
@@ -227,7 +228,7 @@ class ElasticsearchWrapper
     @logger.debug "Request payload: #{payload}"
 
     result = @client.request(:get, "_search", payload)
-    result = JSON.parse(result)
+    result = MultiJson.decode(result)
     result['hits']['hits'].map { |hit|
       document_from_hash(hit['_source'])
     }
@@ -273,7 +274,7 @@ class ElasticsearchWrapper
         }
     }.to_json
     result = @client.request(:get, "_search", payload)
-    result = JSON.parse(result)
+    result = MultiJson.decode(result)
     result['hits']['hits'].map { |hit|
       document_from_hash(hit['_source'])
     }
@@ -324,7 +325,7 @@ class ElasticsearchWrapper
         }
       }
     }.to_json
-    result = JSON.parse(@client.request(:get, "_search", payload))
+    result = MultiJson.decode(@client.request(:get, "_search", payload))
     result["facets"][facet_name]["terms"]
   end
 end
