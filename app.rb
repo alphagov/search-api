@@ -2,23 +2,24 @@
   $:.unshift path unless $:.include?(path)
 end
 
-require 'sinatra'
-require 'json'
-require 'csv'
-require 'statsd'
+require "sinatra"
+require "multi_json"
+require "json"
+require "csv"
+require "statsd"
 
-require 'document'
-require 'elasticsearch_wrapper'
-require 'null_backend'
+require "document"
+require "elasticsearch_wrapper"
+require "null_backend"
 
-require_relative 'config'
-require_relative 'helpers'
-require_relative 'backends'
+require_relative "config"
+require_relative "helpers"
+require_relative "backends"
 
 class Rummager < Sinatra::Application
   def self.statsd
     @@statsd ||= Statsd.new("localhost").tap do |c|
-      c.namespace = ENV['GOVUK_STATSD_PREFIX'].to_s
+      c.namespace = ENV["GOVUK_STATSD_PREFIX"].to_s
     end
   end
 
@@ -27,7 +28,7 @@ class Rummager < Sinatra::Application
   end
 
   def backend
-    name = params['backend'] || 'primary'
+    name = params["backend"] || "primary"
     available_backends[name.to_sym] || halt(404)
   end
 
@@ -79,7 +80,7 @@ class Rummager < Sinatra::Application
     @results = results.take(50 - @secondary_results.length)
     @total_results = @results.length + @secondary_results.length
 
-    JSON.dump((@results + @secondary_results).map { |r| r.to_hash.merge(
+    MultiJson.encode((@results + @secondary_results).map { |r| r.to_hash.merge(
       highlight: r.highlight,
       presentation_format: r.presentation_format,
       humanized_format: r.humanized_format
@@ -91,7 +92,7 @@ class Rummager < Sinatra::Application
 
     results = backend.search(query, params["format_filter"])
 
-    JSON.dump(results.map { |r| r.to_hash.merge(
+    MultiJson.encode(results.map { |r| r.to_hash.merge(
       highlight: r.highlight,
       presentation_format: r.presentation_format,
       humanized_format: r.humanized_format
@@ -104,21 +105,21 @@ class Rummager < Sinatra::Application
     # of all terms.
     expires 86400, :public
     results = backend.autocomplete_cache rescue []
-    JSON.dump(results.map { |r| r.to_hash })
+    MultiJson.encode(results.map { |r| r.to_hash })
   end
 
   get "/?:backend?/autocomplete" do
-    query = params['q']
+    query = params["q"]
 
     unless query
       expires 86400, :public
-      return '[]'
+      return "[]"
     end
 
     expires 3600, :public if query.length < 5
 
     results = backend.complete(query, params["format_filter"]) rescue []
-    JSON.dump(results.map { |r| r.to_hash.merge(
+    MultiJson.encode(results.map { |r| r.to_hash.merge(
       presentation_format: r.presentation_format,
       humanized_format: r.humanized_format
     ) })
@@ -154,7 +155,7 @@ class Rummager < Sinatra::Application
 
   post "/?:backend?/documents" do
     request.body.rewind
-    documents = [JSON.parse(request.body.read)].flatten.map { |hash|
+    documents = [MultiJson.decode(request.body.read)].flatten.map { |hash|
       backend.document_from_hash(hash)
     }
 
@@ -169,7 +170,7 @@ class Rummager < Sinatra::Application
     document = backend.get(params["splat"].first)
     halt 404 unless document
 
-    JSON.dump document.to_hash
+    MultiJson.encode document.to_hash
   end
 
   delete "/?:backend?/documents/*" do
@@ -186,7 +187,7 @@ class Rummager < Sinatra::Application
     end
     document = backend.get(params["splat"].first)
     halt 404 unless document
-    text_error "Cannot change document links" if request.POST.include? 'link'
+    text_error "Cannot change document links" if request.POST.include? "link"
 
     # Note: this expects application/x-www-form-urlencoded data, not JSON
     request.POST.each_pair do |key, value|
@@ -200,7 +201,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/?:backend?/documents" do
-    if params['delete_all']
+    if params["delete_all"]
       action = backend.delete_all
     else
       action = backend.delete(params["link"])

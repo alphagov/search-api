@@ -20,7 +20,7 @@ module Helpers
       result = "error"
       status 500
     end
-    JSON.dump("result" => result)
+    MultiJson.encode("result" => result)
   end
 end
 

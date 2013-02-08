@@ -84,7 +84,7 @@ class SitemapTest < IntegrationTest
 
   def add_sample_documents
     sample_document_attributes.each do |sample_document|
-      post "/documents", JSON.dump(sample_document)
+      post "/documents", MultiJson.encode(sample_document)
       assert last_response.ok?
     end
   end
@@ -131,7 +131,7 @@ class SitemapTest < IntegrationTest
       "link" => "/a-specialist-guidance",
       "indexable_content" => "Always bring a towel."
     }
-    post "/detailed/documents", JSON.dump(document_in_another_index)
+    post "/detailed/documents", MultiJson.encode(document_in_another_index)
     assert last_response.ok?
     post "/detailed/commit", nil
     assert last_response.ok?

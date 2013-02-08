@@ -11,7 +11,7 @@ class ElasticsearchAdminWrapper
   end
 
   def index_exists?
-    server_status = JSON.parse(@client.get("/_status"))
+    server_status = MultiJson.decode(@client.get("/_status"))
     server_status["indices"].keys.include? @client.index_name
   end
 
@@ -98,7 +98,7 @@ private
 
     health_params = { wait_for_status: "yellow", timeout: "#{timeout}s" }
     response = @client.get "/_cluster/health", params: health_params
-    health = JSON.parse(response)
+    health = MultiJson.decode(response)
     if health["timed_out"] || ! ["green", "yellow"].include?(health["status"])
       @logger.error "Failed to restore search. Response: #{response}"
       raise RuntimeError, "Failed to restore search"
