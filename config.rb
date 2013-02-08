@@ -1,6 +1,6 @@
 require_relative "env"
-require 'active_support/core_ext/hash/keys'
-require_relative 'exception_mailer'
+require "active_support/core_ext/hash/keys"
+require_relative "exception_mailer"
 
 def config_for(kind)
   YAML.load_file(File.expand_path("../#{kind}.yml", __FILE__))
@@ -33,12 +33,12 @@ set :max_recommended_results, 2
 set :recommended_format, "recommended-link"
 set :inside_government_link, "inside-government-link"
 
-set :format_order, ['transaction', 'answer', 'programme', 'guide']
+set :format_order, ["transaction", "answer", "programme", "guide"]
 
 configure :development do
   set :protection, false
 end
 
-initializers_path = File.expand_path('config/initializers/*.rb', File.dirname(__FILE__))
+initializers_path = File.expand_path("config/initializers/*.rb", File.dirname(__FILE__))
 
 Dir[initializers_path].each { |f| require f }

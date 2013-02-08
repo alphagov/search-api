@@ -4,8 +4,8 @@ module Helpers
   alias_method :h, :escape_html
 
   def base_url
-    return "https://www.gov.uk" if ENV['FACTER_govuk_platform'] == 'production'
-    "https://www.#{ENV['FACTER_govuk_platform']}.alphagov.co.uk"
+    return "https://www.gov.uk" if ENV["FACTER_govuk_platform"] == "production"
+    "https://www.#{ENV["FACTER_govuk_platform"]}.alphagov.co.uk"
   end
 
   def pluralize(singular, plural)
