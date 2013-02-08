@@ -99,6 +99,14 @@ class Rummager < Sinatra::Application
     )})
   end
 
+  get "/:backend/advanced_search.?:format?" do
+    MultiJson.encode(backend.advanced_search(params).map { |r| r.to_hash.merge(
+      highlight: r.highlight,
+      presentation_format: r.presentation_format,
+      humanized_format: r.humanized_format
+    )})
+  end
+
   get "/?:backend?/preload-autocomplete" do
     # Eventually this is likely to be a list of commonly searched for terms
     # so searching for those is really fast. For the beta, this is just a list

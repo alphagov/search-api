@@ -244,6 +244,79 @@ class ElasticsearchWrapper
     }
   end
 
+
+
+# {"query":{"match_all":{}},"sort":[{"public_timestamp":"desc"}],"filter":{"and":[{"term":{"format":["fatality_notice"]}},{"term":{"topics":[46]}},{"term":{"organisations":[494]}},{"range":}]},"size":20,"from":0}
+  def advanced_search(params)
+    @logger.info "params:#{params.inspect}"
+    raise "WTF WHERE ARE MY PARAMS!?" if params["per_page"].nil? || params["page"].nil?
+
+    order = params.delete("order")
+    format = params.delete("format")
+    backend = params.delete("backend")
+    backend = params.delete("backend")
+    keywords = params.delete("keywords")
+    per_page = params.delete("per_page")
+    page = params.delete("page")
+
+    payload = { "from" => page, "size" => per_page }
+
+    if order
+      payload.merge!({"sort" => [order]})
+    end
+
+    if keywords
+      payload.merge!({"query" => {"bool" =>
+          {"should" => [
+              {"text" => {"title" => {"query" => keywords,"type" => "phrase_prefix","operator" => "and", "analyzer" => "query_default", "boost" => 10, "fuzziness" =>0.5}}},
+              {"query_string" => {"query" => keywords, "default_operator" => "and","analyzer" => "query_default", "fuzziness" => 0.2}}
+            ]
+          }
+        }
+      })
+    else
+      payload.merge!({"query" => {"match_all" => {}}})
+    end
+
+    unknown_keys = params.keys - @mappings["edition"]["properties"].keys
+
+    @logger.info unknown_keys.inspect
+    raise "WAT" unless (unknown_keys).empty?
+
+    date_properties= []
+    @mappings["edition"]["properties"].each do |p,h|
+      date_properties << p if h["type"] == "date"
+    end
+
+    filters = params.map do |k,v|
+      if date_properties.include?(k)
+        if v.has_key?("before") #TODO validation?
+          {"range" => {k => {"to" => v["before"]}}}
+        elsif v.has_key?("after")
+          {"range" => {k => {"from" => v["after"]}}}
+        end
+      else
+        if v.is_a?(Array) && v.size > 1
+          {"terms" => { k => v } }
+        else
+          {"term" => { k => v } }
+        end
+      end
+    end
+
+    payload.merge!({"filter" => {"and" => filters}})
+
+    # RestClient does not allow a payload with a GET request
+    # so we have to call @client.request directly.
+    @logger.info "Request payload: #{payload.to_json}"
+
+    result = @client.request(:get, "_search", payload.to_json)
+    result = MultiJson.decode(result)
+    result["hits"]["hits"].map { |hit|
+      document_from_hash(hit["_source"])
+    }
+  end
+
   LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
     + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
   ].map { |s| Regexp.escape(s) }.join("|") + ")")
