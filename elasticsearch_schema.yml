@@ -476,19 +476,19 @@ mappings:
       properties:
         title:       { type: string, index: analyzed }
         description: { type: string, index: analyzed }
-        format:      { type: string, index: not_analyzed }
-        display_type: { type: string, index: not_analyzed }
+        indexable_content: { type: string, index: analyzed }
+        format:      { type: string, index: not_analyzed, include_in_all: false }
+        display_type: { type: string, index: not_analyzed, include_in_all: false }
         section:     { type: string, index: not_analyzed, include_in_all: false }
         subsection:  { type: string, index: not_analyzed, include_in_all: false }
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
         link:        { type: string, index: not_analyzed, include_in_all: false }
-        indexable_content: { type: string, index: analyzed }
-        id:          { type: long, index: not_analyzed }
-        organisations: { type: long, index: not_analyzed }
-        people: { type: long, index: not_analyzed }
-        speech_type: { type: long, index: not_analyzed }
-        news_article_type: { type: string, index: not_analyzed }
-        topics: { type: string, index: not_analyzed }
-        publication_type: { type: long, index: not_analyzed }
-        public_timestamp: { type: date, index: not_analyzed }
+        id:          { type: long, index: not_analyzed, include_in_all: false }
+        organisations: { type: long, index: not_analyzed, include_in_all: false }
+        people: { type: long, index: not_analyzed, include_in_all: false }
+        speech_type: { type: long, index: not_analyzed, include_in_all: false }
+        news_article_type: { type: string, index: not_analyzed, include_in_all: false }
+        topics: { type: string, index: not_analyzed, include_in_all: false }
+        publication_type: { type: long, index: not_analyzed, include_in_all: false }
+        public_timestamp: { type: date, index: not_analyzed, include_in_all: false }
         search_format_types: { type: string, index: not_analyzed, include_in_all: false }
