@@ -323,9 +323,9 @@ class ElasticsearchWrapper
 
     result = @client.request(:get, "_search", payload.to_json)
     result = MultiJson.decode(result)
-    result["hits"]["hits"].map { |hit|
+    [result["hits"]["total"], result["hits"]["hits"].map { |hit|
       document_from_hash(hit["_source"])
-    }
+    }]
   end
 
   LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
