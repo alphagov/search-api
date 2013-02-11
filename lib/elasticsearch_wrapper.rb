@@ -256,10 +256,10 @@ class ElasticsearchWrapper
     backend = params.delete("backend")
     backend = params.delete("backend")
     keywords = params.delete("keywords")
-    per_page = params.delete("per_page")
-    page = params.delete("page")
+    per_page = params.delete("per_page").to_i
+    page = params.delete("page").to_i
 
-    payload = { "from" => page, "size" => per_page }
+    payload = { "from" => page <= 1 ? 0 : (per_page * (page - 1)), "size" => per_page }
 
     if order
       payload.merge!({"sort" => [order]})
