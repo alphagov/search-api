@@ -234,12 +234,9 @@ class ElasticsearchWrapper
     }
   end
 
-
-
-# {"query":{"match_all":{}},"sort":[{"public_timestamp":"desc"}],"filter":{"and":[{"term":{"format":["fatality_notice"]}},{"term":{"topics":[46]}},{"term":{"organisations":[494]}},{"range":}]},"size":20,"from":0}
   def advanced_search(params)
     @logger.info "params:#{params.inspect}"
-    raise "WTF WHERE ARE MY PARAMS!?" if params["per_page"].nil? || params["page"].nil?
+    raise "Pagination params are required." if params["per_page"].nil? || params["page"].nil?
 
     order     = params.delete("order")
     format    = params.delete("format")
@@ -247,87 +244,168 @@ class ElasticsearchWrapper
     keywords  = params.delete("keywords")
     per_page  = params.delete("per_page").to_i
     page      = params.delete("page").to_i
-    payload   = { "from" => page <= 1 ? 0 : (per_page * (page - 1)), "size" => per_page }
 
-    if order
-      payload.merge!({"sort" => [order]})
-    end
+    query_builder = AdvancedSearchQueryBuilder.new(keywords, params, order, @mappings)
+    raise query_builder.error unless query_builder.valid?
 
-    if keywords
-      payload.merge!({"query" => {"bool" =>
-          {"should" => [
-              {"text" => {"title" => {
-                                      "query" => keywords,
-                                      "type" => "phrase_prefix",
-                                      "operator" => "and",
-                                      "analyzer" => "query_default",
-                                      "boost" => 10,
-                                      "fuzziness" =>0.5
-                                      }
-                          }
-              },
-              {"query_string" => {
-                                  "query" => keywords,
-                                  "default_operator" => "and",
-                                  "analyzer" => "query_default"
-                                  }
-              }
-            ]
-          }
-        }
-      })
-    else
-      payload.merge!({"query" => {"match_all" => {}}})
-    end
+    payload = { "from" => page <= 1 ? 0 : (per_page * (page - 1)), "size" => per_page }
 
-    unknown_keys = params.keys - @mappings["edition"]["properties"].keys
+    payload.merge!(query_builder.query_hash)
 
-    @logger.info unknown_keys.inspect
-    raise "WAT" unless (unknown_keys).empty?
-
-    date_properties= []
-    @mappings["edition"]["properties"].each do |p,h|
-      date_properties << p if h["type"] == "date"
-    end
-
-    bool_properties = []
-    @mappings["edition"]["properties"].each do |p,h|
-      bool_properties << p if h["type"] == "boolean"
-    end
-
-    filters = params.map do |k,v|
-      if date_properties.include?(k)
-        if v.has_key?("before") #TODO validation?
-          {"range" => {k => {"to" => v["before"]}}}
-        elsif v.has_key?("after")
-          {"range" => {k => {"from" => v["after"]}}}
-        end
-      elsif bool_properties.include?(k)
-        if v.to_s =~ /\Atrue|yes|1|t|y\Z/i
-          {"term" => { k => true }}
-        elsif v.to_s =~ /\Afalse|no|0|f|n\Z/i
-          {"term" => { k => false }}
-        end
-      else
-        if v.is_a?(Array) && v.size > 1
-          {"terms" => { k => v } }
-        else
-          {"term" => { k => v.first } }
-        end
-      end
-    end
-
-    payload.merge!({"filter" => {"and" => filters.compact}})
+    @logger.info "Request payload: #{payload.to_json}"
 
     # RestClient does not allow a payload with a GET request
     # so we have to call @client.request directly.
-    @logger.info "Request payload: #{payload.to_json}"
-
     result = @client.request(:get, "_search", payload.to_json)
     result = MultiJson.decode(result)
     [result["hits"]["total"], result["hits"]["hits"].map { |hit|
       document_from_hash(hit["_source"])
     }]
+  end
+
+  class AdvancedSearchQueryBuilder
+    def initialize(keywords, filter_params, sort_order, mappings)
+      @keywords = keywords
+      @filter_params = filter_params
+      @mappings = mappings
+      @sort_order = sort_order
+    end
+
+    def unknown_keys
+      @unknown_keys ||= @filter_params.keys - @mappings["edition"]["properties"].keys
+    end
+
+    def unknown_sort_key
+      if @sort_order
+        @unknown_sort_key ||= @sort_order.keys - @mappings['edition']['properties'].keys
+      else
+        []
+      end
+    end
+
+    def valid?
+      unknown_keys.empty? && unknown_sort_key.empty?
+    end
+
+    def error
+      errors = []
+      errors << "Querying unknown properties #{unknown_keys.inspect}" if unknown_keys.any?
+      errors << "Sorting on unknown property #{unknown_sort_key.inspect}" if unknown_sort_key.any?
+      errors.join('. ')
+    end
+
+    def query_hash
+      keyword_query_hash
+        .merge(filter_query_hash)
+        .merge(order_query_hash)
+    end
+
+    def keyword_query_hash
+      if @keywords
+        {
+          "query" => {
+            "bool" => {
+              "should" => [
+                {"text" =>
+                  {"title" =>
+                    {"query" => @keywords,
+                     "type" => "phrase_prefix",
+                     "operator" => "and",
+                     "analyzer" => "query_default",
+                     "boost" => 10,
+                     "fuzziness" =>0.5}
+                  }
+                },
+                {"query_string" => {
+                  "query" => @keywords,
+                  "default_operator" => "and",
+                  "analyzer" => "query_default"}
+                }
+              ]
+            }
+          }
+        }
+      else
+        {"query" => {"match_all" => {}}}
+      end
+    end
+
+    def filter_query_hash
+      filters = filters_hash
+      if filters.size > 1
+        filters = {"and" => filters}
+      else
+        filters = filters.first
+      end
+      {"filter" => filters || {}}
+    end
+
+    def order_query_hash
+      if @sort_order
+        {"sort" => [@sort_order]}
+      else
+        {}
+      end
+    end
+
+    def filters_hash
+      @filter_params.map do |property, filter_value|
+        if date_properties.include?(property)
+          date_property_filter(property, filter_value)
+        elsif boolean_properties.include?(property)
+          boolean_property_filter(property, filter_value)
+        else
+          standard_property_filter(property, filter_value)
+        end
+      end.compact
+    end
+
+    def date_property_filter(property, filter_value)
+      #TODO validation?
+      return nil unless filter_value.is_a?(Hash)
+      if filter_value.has_key?("before")
+        {"range" => {property => {"to" => filter_value["before"]}}}
+      elsif filter_value.has_key?("after")
+        {"range" => {property => {"from" => filter_value["after"]}}}
+      end
+    end
+
+    def boolean_property_filter(property, filter_value)
+      if filter_value.to_s =~ /\A(true|yes|1|t|y)\Z/i
+        {"term" => { property => true }}
+      elsif filter_value.to_s =~ /\A(false|no|0|f|n)\Z/i
+        {"term" => { property => false }}
+      end
+    end
+
+    def standard_property_filter(property, filter_value)
+      if filter_value.is_a?(Array) && filter_value.size > 1
+        {"terms" => { property => filter_value } }
+      else
+        {"term" => { property => filter_value.is_a?(Array) ? filter_value.first : filter_value } }
+      end
+    end
+
+    def date_properties
+      if @date_properties.nil?
+        @date_properties= []
+        @mappings["edition"]["properties"].each do |p,h|
+          @date_properties << p if h["type"] == "date"
+        end
+      end
+      @date_properties
+    end
+
+    def boolean_properties
+      if @boolean_properties.nil?
+        @boolean_properties = []
+        @mappings["edition"]["properties"].each do |p,h|
+          @boolean_properties << p if h["type"] == "boolean"
+        end
+      end
+      @boolean_properties
+    end
+
   end
 
   LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
