@@ -241,15 +241,13 @@ class ElasticsearchWrapper
     @logger.info "params:#{params.inspect}"
     raise "WTF WHERE ARE MY PARAMS!?" if params["per_page"].nil? || params["page"].nil?
 
-    order = params.delete("order")
-    format = params.delete("format")
-    backend = params.delete("backend")
-    backend = params.delete("backend")
-    keywords = params.delete("keywords")
-    per_page = params.delete("per_page").to_i
-    page = params.delete("page").to_i
-
-    payload = { "from" => page <= 1 ? 0 : (per_page * (page - 1)), "size" => per_page }
+    order     = params.delete("order")
+    format    = params.delete("format")
+    backend   = params.delete("backend")
+    keywords  = params.delete("keywords")
+    per_page  = params.delete("per_page").to_i
+    page      = params.delete("page").to_i
+    payload   = { "from" => page <= 1 ? 0 : (per_page * (page - 1)), "size" => per_page }
 
     if order
       payload.merge!({"sort" => [order]})
@@ -258,8 +256,22 @@ class ElasticsearchWrapper
     if keywords
       payload.merge!({"query" => {"bool" =>
           {"should" => [
-              {"text" => {"title" => {"query" => keywords,"type" => "phrase_prefix","operator" => "and", "analyzer" => "query_default", "boost" => 10, "fuzziness" =>0.5}}},
-              {"query_string" => {"query" => keywords, "default_operator" => "and","analyzer" => "query_default"}}
+              {"text" => {"title" => {
+                                      "query" => keywords,
+                                      "type" => "phrase_prefix",
+                                      "operator" => "and",
+                                      "analyzer" => "query_default",
+                                      "boost" => 10,
+                                      "fuzziness" =>0.5
+                                      }
+                          }
+              },
+              {"query_string" => {
+                                  "query" => keywords,
+                                  "default_operator" => "and",
+                                  "analyzer" => "query_default"
+                                  }
+              }
             ]
           }
         }
