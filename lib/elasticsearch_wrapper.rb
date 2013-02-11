@@ -259,7 +259,7 @@ class ElasticsearchWrapper
       payload.merge!({"query" => {"bool" =>
           {"should" => [
               {"text" => {"title" => {"query" => keywords,"type" => "phrase_prefix","operator" => "and", "analyzer" => "query_default", "boost" => 10, "fuzziness" =>0.5}}},
-              {"query_string" => {"query" => keywords, "default_operator" => "and","analyzer" => "query_default", "fuzziness" => 0.2}}
+              {"query_string" => {"query" => keywords, "default_operator" => "and","analyzer" => "query_default"}}
             ]
           }
         }
@@ -278,6 +278,11 @@ class ElasticsearchWrapper
       date_properties << p if h["type"] == "date"
     end
 
+    bool_properties = []
+    @mappings["edition"]["properties"].each do |p,h|
+      bool_properties << p if h["type"] == "boolean"
+    end
+
     filters = params.map do |k,v|
       if date_properties.include?(k)
         if v.has_key?("before") #TODO validation?
@@ -285,16 +290,22 @@ class ElasticsearchWrapper
         elsif v.has_key?("after")
           {"range" => {k => {"from" => v["after"]}}}
         end
+      elsif bool_properties.include?(k)
+        if v.to_s =~ /\Atrue|yes|1|t|y\Z/i
+          {"term" => { k => true }}
+        elsif v.to_s =~ /\Afalse|no|0|f|n\Z/i
+          {"term" => { k => false }}
+        end
       else
         if v.is_a?(Array) && v.size > 1
           {"terms" => { k => v } }
         else
-          {"term" => { k => v } }
+          {"term" => { k => v.first } }
         end
       end
     end
 
-    payload.merge!({"filter" => {"and" => filters}})
+    payload.merge!({"filter" => {"and" => filters.compact}})
 
     # RestClient does not allow a payload with a GET request
     # so we have to call @client.request directly.
