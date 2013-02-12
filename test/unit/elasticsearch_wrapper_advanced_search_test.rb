@@ -72,9 +72,6 @@ class ElasticsearchWrapperAdvancedSearchTest < Test::Unit::TestCase
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"boolean_property\":true}}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'true'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 't'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'yes'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'y'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '1'))
   end
 
@@ -82,9 +79,6 @@ class ElasticsearchWrapperAdvancedSearchTest < Test::Unit::TestCase
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"boolean_property\":false}}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'false'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'f'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'no'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'n'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '0'))
   end
 
@@ -92,12 +86,12 @@ class ElasticsearchWrapperAdvancedSearchTest < Test::Unit::TestCase
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'falsey'))
+    @wrapper.advanced_search(default_params.merge('boolean_property' => 'truey'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'flob'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'true facts'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'cheese'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '101'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'yar'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'ok'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'nope'))
   end
 

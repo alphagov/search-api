@@ -378,9 +378,9 @@ class ElasticsearchWrapper
     end
 
     def boolean_property_filter(property, filter_value)
-      if filter_value.to_s =~ /\A(true|yes|1|t|y)\Z/i
+      if filter_value.to_s =~ /\A(true|1)\Z/i
         {"term" => { property => true }}
-      elsif filter_value.to_s =~ /\A(false|no|0|f|n)\Z/i
+      elsif filter_value.to_s =~ /\A(false|0)\Z/i
         {"term" => { property => false }}
       end
     end
