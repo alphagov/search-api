@@ -1,7 +1,7 @@
 # encoding: utf-8
 require "integration_test_helper"
 
-class SecondarySearchTest < IntegrationTest
+class AdvancedSearchTest < IntegrationTest
 
   def setup
     super

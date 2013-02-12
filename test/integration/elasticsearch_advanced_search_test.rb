@@ -130,7 +130,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "date_property" => "2012-01-01"
       }
     ]
-    (more_documents).each do |sample_document|
+    more_documents.each do |sample_document|
       post "/documents", MultiJson.encode(sample_document)
       assert last_response.ok?
     end

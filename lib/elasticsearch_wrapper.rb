@@ -258,7 +258,11 @@ class ElasticsearchWrapper
     query_builder = AdvancedSearchQueryBuilder.new(keywords, params, order, @mappings)
     raise query_builder.error unless query_builder.valid?
 
-    payload = { "from" => page <= 1 ? 0 : (per_page * (page - 1)), "size" => per_page }
+    starting_index = page <= 1 ? 0 : (per_page * (page - 1))
+    payload = {
+      "from" => starting_index,
+      "size" => per_page
+    }
 
     payload.merge!(query_builder.query_hash)
 
@@ -323,7 +327,7 @@ class ElasticsearchWrapper
                      "operator" => "and",
                      "analyzer" => "query_default",
                      "boost" => 10,
-                     "fuzziness" =>0.5}
+                     "fuzziness" => 0.5}
                   }
                 },
                 {"query_string" => {
@@ -397,23 +401,11 @@ class ElasticsearchWrapper
     end
 
     def date_properties
-      if @date_properties.nil?
-        @date_properties= []
-        @mappings["edition"]["properties"].each do |p,h|
-          @date_properties << p if h["type"] == "date"
-        end
-      end
-      @date_properties
+      @date_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "date" }.keys
     end
 
     def boolean_properties
-      if @boolean_properties.nil?
-        @boolean_properties = []
-        @mappings["edition"]["properties"].each do |p,h|
-          @boolean_properties << p if h["type"] == "boolean"
-        end
-      end
-      @boolean_properties
+      @boolean_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "boolean" }.keys
     end
 
   end
