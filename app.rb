@@ -100,10 +100,10 @@ class Rummager < Sinatra::Application
   end
 
   get "/:backend/advanced_search.?:format?" do
-    total, results = backend.advanced_search(params)
+    results = backend.advanced_search(params)
     MultiJson.encode({
-      total: total,
-      results: results.map { |r| r.to_hash.merge(
+      total: results[:total],
+      results: results[:results].map { |r| r.to_hash.merge(
         highlight: r.highlight,
         presentation_format: r.presentation_format,
         humanized_format: r.humanized_format

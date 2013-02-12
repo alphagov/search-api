@@ -272,9 +272,12 @@ class ElasticsearchWrapper
     # so we have to call @client.request directly.
     result = @client.request(:get, "_search", payload.to_json)
     result = MultiJson.decode(result)
-    [result["hits"]["total"], result["hits"]["hits"].map { |hit|
-      document_from_hash(hit["_source"])
-    }]
+    {
+      total: result["hits"]["total"],
+      results: result["hits"]["hits"].map { |hit|
+        document_from_hash(hit["_source"])
+      }
+    }
   end
 
   class AdvancedSearchQueryBuilder
