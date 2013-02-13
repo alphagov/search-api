@@ -10,7 +10,6 @@ gem 'sinatra', '1.3.4'
 gem 'rake', '0.9.2', :require => false
 gem 'json', '1.7.7'
 gem 'activesupport', '3.2.12'
-gem 'i18n', '0.6.0'
 gem 'rack', '1.5.2'
 gem 'aws-ses', '0.4.4'
 gem 'rest-client', '1.6.7'
