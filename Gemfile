@@ -9,7 +9,7 @@ gem 'unicorn'
 gem 'sinatra'
 gem 'rake', '0.9.2', :require => false
 gem 'json', '1.7.7'
-gem 'activesupport', '~> 3.1.0'
+gem 'activesupport', '3.2.12'
 gem 'i18n'
 gem 'rack', '1.5.2'
 gem 'aws-ses'
