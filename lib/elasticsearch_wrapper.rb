@@ -156,10 +156,10 @@ class ElasticsearchWrapper
       "smart-answer"  => 1.5,
       "transaction"   => 1.5,
       # Inside Gov formats
-      "topical_event" => 1.5,
-      "minister"      => 1.5,
-      "organisation"  => 1.5,
-      "topic"         => 1.5
+      "topical_event" => 2,
+      "minister"      => 2,
+      "organisation"  => 2,
+      "topic"         => 2
     }
 
     format_boosts = boosted_formats.map do |format, boost|
@@ -168,6 +168,11 @@ class ElasticsearchWrapper
         boost: boost
       }
     end
+
+    time_boost = {
+      filter: { exists: { field: "public_timestamp" } },
+      script: "(0.08 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05))"
+    }
 
     query_analyzer = "query_default"
 
@@ -217,7 +222,7 @@ class ElasticsearchWrapper
               should: query_boosts
             }
           },
-          filters: format_boosts
+          filters: format_boosts + [time_boost]
         }
       }
     }.to_json
