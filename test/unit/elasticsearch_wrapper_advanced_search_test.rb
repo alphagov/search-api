@@ -16,10 +16,8 @@ class ElasticsearchWrapperAdvancedSearchTest < Test::Unit::TestCase
 
   def test_pagingation_params_are_required
     stub_empty_search
-    e = assert_raises(RuntimeError) do
-      @wrapper.advanced_search({})
-    end
-    assert_equal 'Pagination params are required.', e.message
+
+    assert_rejected_search('Pagination params are required.', {})
     assert_nothing_raised(RuntimeError) do
       @wrapper.advanced_search({'page' => '1', 'per_page' => '1'})
     end
@@ -82,42 +80,55 @@ class ElasticsearchWrapperAdvancedSearchTest < Test::Unit::TestCase
     @wrapper.advanced_search(default_params.merge('boolean_property' => '0'))
   end
 
-  def test_filter_params_on_a_boolean_mapping_property_are_ignored_if_they_dont_look_truthy_or_falsey
+  def test_filter_params_on_a_boolean_mapping_property_are_rejected_if_they_dont_look_truthy_or_falsey
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{}")}/)
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'falsey'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'truey'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'flob'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'true facts'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'cheese'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => '101'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'yar'))
-    @wrapper.advanced_search(default_params.merge('boolean_property' => 'nope'))
+    stub_empty_search
+
+    assert_rejected_search('Invalid value "falsey" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'falsey'))
+    assert_rejected_search('Invalid value "truey" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'truey'))
+    assert_rejected_search('Invalid value "true facts" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'true facts'))
+    assert_rejected_search('Invalid value "101" for boolean property "boolean_property"', default_params.merge('boolean_property' => '101'))
+    assert_rejected_search('Invalid value "cheese" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'cheese'))
   end
 
   def test_filter_params_on_a_date_mapping_property_are_turned_into_a_range_filter_with_order_based_on_the_key_in_the_value
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
+
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => {'before' => '2013-02-02'}))
+
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\"}}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => {'after' => '2013-02-02'}))
+
+    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\",\"to\":\"2013-02-03\"}}}")}/)
+    @wrapper.advanced_search(default_params.merge('date_property' => {'after' => '2013-02-02', 'before' => '2013-02-03'}))
   end
 
-  def test_filter_params_on_a_date_mapping_property_without_a_before_or_after_key_in_the_value_are_ignored
+  def test_filter_params_on_a_date_mapping_property_without_a_before_or_after_key_in_the_value_are_rejected
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{}")}/)
-    @wrapper.advanced_search(default_params.merge('date_property' => {'from' => '2013-02-02'}))
-    @wrapper.advanced_search(default_params.merge('date_property' => '2013-02-02'))
-    @wrapper.advanced_search(default_params.merge('date_property' => {'to' => '2013-02-02'}))
-    @wrapper.advanced_search(default_params.merge('date_property' => ['2013-02-02']))
-    @wrapper.advanced_search(default_params.merge('date_property' => {'between' => '2013-02-02'}))
+    stub_empty_search
+
+    assert_rejected_search('Invalid value {} for date property "date_property"', default_params.merge('date_property' => {}))
+    assert_rejected_search('Invalid value {"from"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => {'from' => '2013-02-02'}))
+    assert_rejected_search('Invalid value "2013-02-02" for date property "date_property"', default_params.merge('date_property' => '2013-02-02'))
+    assert_rejected_search('Invalid value {"to"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => {'to' => '2013-02-02'}))
+    assert_rejected_search('Invalid value ["2013-02-02"] for date property "date_property"', default_params.merge('date_property' => ['2013-02-02']))
+    assert_rejected_search('Invalid value {"between"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => {'between' => '2013-02-02'}))
+    assert_rejected_search('Invalid value {"before"=>"2013-02-02", "up-to"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => {'before' => '2013-02-02', 'up-to' => '2013-02-02'}))
+  end
+
+  def test_filter_params_on_a_date_mapping_property_without_a_incorrectly_formatted_date_are_rejected
+    @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
+    stub_empty_search
+
+    assert_rejected_search('Invalid value {"before"=>"2 Feb 2013"} for date property "date_property"', default_params.merge('date_property' => {'before' => '2 Feb 2013'}))
+    assert_rejected_search('Invalid value {"before"=>"2/2/2013"} for date property "date_property"', default_params.merge('date_property' => {'before' => '2/2/2013'}))
+    assert_rejected_search('Invalid value {"before"=>"2013/2/2"} for date property "date_property"', default_params.merge('date_property' => {'before' => '2013/2/2'}))
+    assert_rejected_search('Invalid value {"before"=>"2013-2-2"} for date property "date_property"', default_params.merge('date_property' => {'before' => '2013-2-2'}))
   end
 
   def test_filter_params_that_are_not_index_properties_are_not_allowed
-    e = assert_raises(RuntimeError) do
-      @wrapper.advanced_search(default_params.merge('brian' => 'jones', 'keith' => 'richards'))
-    end
-    assert_equal 'Querying unknown properties ["brian", "keith"]', e.message
+    assert_rejected_search('Querying unknown properties ["brian", "keith"]', default_params.merge('brian' => 'jones', 'keith' => 'richards'))
   end
 
   def test_order_params_are_turned_into_a_sort_query
@@ -126,10 +137,7 @@ class ElasticsearchWrapperAdvancedSearchTest < Test::Unit::TestCase
   end
 
   def test_order_params_on_properties_not_in_the_mappings_are_not_allowed
-    e = assert_raises(RuntimeError) do
-      @wrapper.advanced_search(default_params.merge('order' => {'brian' => 'asc'}))
-    end
-    assert_equal 'Sorting on unknown property ["brian"]', e.message
+    assert_rejected_search('Sorting on unknown property ["brian"]', default_params.merge('order' => {'brian' => 'asc'}))
   end
 
   def test_returns_the_total_and_the_hits
@@ -154,5 +162,12 @@ class ElasticsearchWrapperAdvancedSearchTest < Test::Unit::TestCase
     r = stub_request(:get, "http://example.com:9200/test-index/_search")
     r.with(with_args) unless with_args.empty?
     r.to_return(:status => 200, :body => "{\"hits\": {\"total\": 0, \"hits\": []}}", :headers => {})
+  end
+
+  def assert_rejected_search(expected_error, search_args)
+    e = assert_raises(RuntimeError) do
+      @wrapper.advanced_search(search_args)
+    end
+    assert_equal expected_error, e.message
   end
 end
