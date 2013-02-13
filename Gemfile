@@ -5,14 +5,14 @@ group :router do
   gem 'router-client', '2.0.3', :require => 'router/client'
 end
 
-gem 'unicorn'
-gem 'sinatra'
+gem 'unicorn', '4.3.1'
+gem 'sinatra', '1.3.1'
 gem 'rake', '0.9.2', :require => false
 gem 'json', '1.7.7'
 gem 'activesupport', '3.2.12'
-gem 'i18n'
+gem 'i18n', '0.6.0'
 gem 'rack', '1.5.2'
-gem 'aws-ses'
+gem 'aws-ses', '0.4.4'
 gem 'rest-client', '1.6.7'
 gem 'statsd-ruby', '1.0.0'
 
