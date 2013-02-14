@@ -51,51 +51,6 @@ end
 
 task :default => :test
 
-namespace :router do
-  task :router_environment do
-    Bundler.require :router, :default
-
-    require 'logger'
-    @logger = Logger.new STDOUT
-    @logger.level = Logger::DEBUG
-
-    @router = Router::Client.new :logger => @logger
-  end
-
-  task :register_application => :router_environment do
-    platform = ENV['FACTER_govuk_platform']
-    app_id = "search"
-    url = "#{app_id}.#{platform}.alphagov.co.uk/"
-    @logger.info "Registering #{app_id} application against #{url}..."
-    @router.applications.update application_id: app_id, backend_url: url
-  end
-
-  task :register_routes => [ :router_environment ] do
-    app_id = "search"
-
-    begin
-      @logger.info "Registering full route /autocomplete"
-      @router.routes.update application_id: app_id, route_type: :full,
-        incoming_path: "/autocomplete"
-      @logger.info "Registering full route /preload-autocomplete"
-      @router.routes.update application_id: app_id, route_type: :full,
-        incoming_path: "/preload-autocomplete"
-      @logger.info "Registering full route /sitemap.xml"
-      @router.routes.update application_id: app_id, route_type: :full,
-        incoming_path: "/sitemap.xml"
-    rescue Router::Conflict => conflict_error
-      @logger.error "Route already exists: #{conflict_error.existing}"
-      raise conflict_error
-    end
-  end
-
-  desc "Register search application and routes with the router (run this task on server in cluster)"
-  task :register => :router_environment do
-    Rake::Task["router:register_application"].invoke
-    Rake::Task["router:register_routes"].invoke
-  end
-end
-
 namespace :rummager do
 
   # Set up the necessary backend and logging configuration for elasticsearch-
