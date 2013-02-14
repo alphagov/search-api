@@ -71,8 +71,18 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   end
 
   def assert_result_links(*links)
+    order = true
+    if links[-1].is_a?(Hash)
+      hash = links.pop
+      order = hash[:order]
+    end
     parsed_response = MultiJson.decode(last_response.body)
-    assert_equal links, parsed_response['results'].map { |r| r["link"] }
+    parsed_links = parsed_response['results'].map { |r| r["link"] }
+    if order
+      assert_equal links, parsed_links
+    else
+      assert_equal links.sort, parsed_links.sort
+    end
   end
 
   def assert_result_total(total)
@@ -98,21 +108,21 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     get "/primary/advanced_search.json?per_page=2&page=1&section=Crime"
     assert last_response.ok?
     assert_result_total 2
-    assert_result_links "/another-example-answer", "/yet-another-example-answer"
+    assert_result_links "/another-example-answer", "/yet-another-example-answer", order: false
   end
 
   def test_should_allow_boolean_filtering
     get "/primary/advanced_search.json?per_page=3&page=1&boolean_property=true"
     assert last_response.ok?
     assert_result_total 3
-    assert_result_links "/an-example-answer", "/yet-another-example-answer", "/pork-pies"
+    assert_result_links "/an-example-answer", "/yet-another-example-answer", "/pork-pies", order: false
   end
 
   def test_should_allow_date_filtering
     get "/primary/advanced_search.json?per_page=3&page=1&date_property[before]=2012-01-03"
     assert last_response.ok?
     assert_result_total 3
-    assert_result_links "/an-example-answer", "/another-example-answer", "/pork-pies"
+    assert_result_links "/an-example-answer", "/another-example-answer", "/pork-pies", order: false
   end
 
   def test_should_allow_combining_all_filters
