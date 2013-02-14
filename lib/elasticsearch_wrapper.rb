@@ -3,6 +3,7 @@ require "section"
 require "logger"
 require "cgi"
 require "rest-client"
+require "multi_json"
 require "json"
 
 class ElasticsearchWrapper
@@ -127,7 +128,7 @@ class ElasticsearchWrapper
       return nil
     end
 
-    document_from_hash(JSON.parse(response.body)["_source"])
+    document_from_hash(MultiJson.decode(response.body)["_source"])
   end
 
   def document_from_hash(hash)
@@ -138,9 +139,9 @@ class ElasticsearchWrapper
     limit = options.fetch(:limit, MASSIVE_NUMBER)
     search_body = {query: {match_all: {}}, size: limit}
     result = @client.request(:get, "_search", search_body.to_json)
-    result = JSON.parse(result)
-    result['hits']['hits'].map { |hit|
-      document_from_hash(hit['_source'])
+    result = MultiJson.decode(result)
+    result["hits"]["hits"].map { |hit|
+      document_from_hash(hit["_source"])
     }
   end
 
@@ -227,10 +228,215 @@ class ElasticsearchWrapper
     @logger.debug "Request payload: #{payload}"
 
     result = @client.request(:get, "_search", payload)
-    result = JSON.parse(result)
-    result['hits']['hits'].map { |hit|
-      document_from_hash(hit['_source'])
+    result = MultiJson.decode(result)
+    result["hits"]["hits"].map { |hit|
+      document_from_hash(hit["_source"])
     }
+  end
+
+  def advanced_search(params)
+    @logger.info "params:#{params.inspect}"
+    raise "Pagination params are required." if params["per_page"].nil? || params["page"].nil?
+
+    order     = params.delete("order")
+    format    = params.delete("format")
+    backend   = params.delete("backend")
+    keywords  = params.delete("keywords")
+    per_page  = params.delete("per_page").to_i
+    page      = params.delete("page").to_i
+
+    query_builder = AdvancedSearchQueryBuilder.new(keywords, params, order, @mappings)
+    raise query_builder.error unless query_builder.valid?
+
+    starting_index = page <= 1 ? 0 : (per_page * (page - 1))
+    payload = {
+      "from" => starting_index,
+      "size" => per_page
+    }
+
+    payload.merge!(query_builder.query_hash)
+
+    @logger.info "Request payload: #{payload.to_json}"
+
+    # RestClient does not allow a payload with a GET request
+    # so we have to call @client.request directly.
+    result = @client.request(:get, "_search", payload.to_json)
+    result = MultiJson.decode(result)
+    {
+      total: result["hits"]["total"],
+      results: result["hits"]["hits"].map { |hit|
+        document_from_hash(hit["_source"])
+      }
+    }
+  end
+
+  class AdvancedSearchQueryBuilder
+    def initialize(keywords, filter_params, sort_order, mappings)
+      @keywords = keywords
+      @filter_params = filter_params
+      @mappings = mappings
+      @sort_order = sort_order
+    end
+
+    def unknown_keys
+      @unknown_keys ||= @filter_params.keys - @mappings["edition"]["properties"].keys
+    end
+
+    def unknown_sort_key
+      if @sort_order
+        @unknown_sort_key ||= @sort_order.keys - @mappings['edition']['properties'].keys
+      else
+        []
+      end
+    end
+
+    def invalid_boolean_properties
+      @invalid_boolean_properties ||=
+        @filter_params
+          .select { |property, _| boolean_properties.include?(property) }
+          .select { |_, value| invalid_boolean_property_value?(value) }
+    end
+
+    BOOLEAN_TRUTHY = /\A(true|1)\Z/i
+    BOOLEAN_FALSEY = /\A(false|0)\Z/i
+    def invalid_boolean_property_value?(value)
+      (value.to_s !~ BOOLEAN_TRUTHY ) && (value.to_s !~ BOOLEAN_FALSEY)
+    end
+
+    def invalid_date_properties
+      @invalid_date_properties ||=
+        @filter_params
+          .select { |property, _| date_properties.include?(property) }
+          .select { |_, value| invalid_date_property_value?(value) }
+    end
+
+    def invalid_date_property_value?(value)
+      # invalid if it's not a hash, or is an empty hash, or has keys other
+      # than 'before' or 'after', or the values are not YYYY-MM-DD
+      # formatted.
+      !(value.is_a?(Hash) &&
+        value.keys.any? &&
+        (value.keys - ['before', 'after']).empty? &&
+        (value.values.reject { |date| date.to_s =~ /\A\d{4}-\d{2}-\d{2}\Z/}).empty?)
+    end
+
+    def valid?
+      unknown_keys.empty? &&
+        unknown_sort_key.empty? &&
+        invalid_boolean_properties.empty? &&
+        invalid_date_properties.empty?
+    end
+
+    def error
+      errors = []
+      errors << "Querying unknown properties #{unknown_keys.inspect}" if unknown_keys.any?
+      errors << "Sorting on unknown property #{unknown_sort_key.inspect}" if unknown_sort_key.any?
+      errors << invalid_boolean_properties.map { |p, v| "Invalid value #{v.inspect} for boolean property \"#{p}\""} if invalid_boolean_properties.any?
+      errors << invalid_date_properties.map { |p, v| "Invalid value #{v.inspect} for date property \"#{p}\""} if invalid_date_properties.any?
+      errors.flatten.join('. ')
+    end
+
+    def query_hash
+      keyword_query_hash
+        .merge(filter_query_hash)
+        .merge(order_query_hash)
+    end
+
+    def keyword_query_hash
+      if @keywords
+        {
+          "query" => {
+            "bool" => {
+              "should" => [
+                {"text" =>
+                  {"title" =>
+                    {"query" => @keywords,
+                     "type" => "phrase_prefix",
+                     "operator" => "and",
+                     "analyzer" => "query_default",
+                     "boost" => 10,
+                     "fuzziness" => 0.5}
+                  }
+                },
+                {"query_string" => {
+                  "query" => @keywords,
+                  "default_operator" => "and",
+                  "analyzer" => "query_default"}
+                }
+              ]
+            }
+          }
+        }
+      else
+        {"query" => {"match_all" => {}}}
+      end
+    end
+
+    def filter_query_hash
+      filters = filters_hash
+      if filters.size > 1
+        filters = {"and" => filters}
+      else
+        filters = filters.first
+      end
+      {"filter" => filters || {}}
+    end
+
+    def order_query_hash
+      if @sort_order
+        {"sort" => [@sort_order]}
+      else
+        {}
+      end
+    end
+
+    def filters_hash
+      @filter_params.map do |property, filter_value|
+        if date_properties.include?(property)
+          date_property_filter(property, filter_value)
+        elsif boolean_properties.include?(property)
+          boolean_property_filter(property, filter_value)
+        else
+          standard_property_filter(property, filter_value)
+        end
+      end.compact
+    end
+
+    def date_property_filter(property, filter_value)
+      filter = {"range" => {property => {}}}
+      if filter_value.has_key?("after")
+        filter["range"][property]["from"] = filter_value["after"]
+      end
+      if filter_value.has_key?("before")
+        filter["range"][property]["to"] = filter_value["before"]
+      end
+      filter
+    end
+
+    def boolean_property_filter(property, filter_value)
+      if filter_value.to_s =~ BOOLEAN_TRUTHY
+        {"term" => { property => true }}
+      elsif filter_value.to_s =~ BOOLEAN_FALSEY
+        {"term" => { property => false }}
+      end
+    end
+
+    def standard_property_filter(property, filter_value)
+      if filter_value.is_a?(Array) && filter_value.size > 1
+        {"terms" => { property => filter_value } }
+      else
+        {"term" => { property => filter_value.is_a?(Array) ? filter_value.first : filter_value } }
+      end
+    end
+
+    def date_properties
+      @date_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "date" }.keys
+    end
+
+    def boolean_properties
+      @boolean_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "boolean" }.keys
+    end
+
   end
 
   LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
@@ -273,9 +479,9 @@ class ElasticsearchWrapper
         }
     }.to_json
     result = @client.request(:get, "_search", payload)
-    result = JSON.parse(result)
-    result['hits']['hits'].map { |hit|
-      document_from_hash(hit['_source'])
+    result = MultiJson.decode(result)
+    result["hits"]["hits"].map { |hit|
+      document_from_hash(hit["_source"])
     }
   end
 
@@ -324,7 +530,7 @@ class ElasticsearchWrapper
         }
       }
     }.to_json
-    result = JSON.parse(@client.request(:get, "_search", payload))
+    result = MultiJson.decode(@client.request(:get, "_search", payload))
     result["facets"][facet_name]["terms"]
   end
 end

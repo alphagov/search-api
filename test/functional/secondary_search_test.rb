@@ -19,7 +19,7 @@ class SecondarySearchTest < IntegrationTest
     assert last_response.ok?
     assert_equal(
       [sample_document.link, "/specialist-link"],
-      JSON.parse(last_response.body).map { |r| r["link"] }
+      MultiJson.decode(last_response.body).map { |r| r["link"] }
     )
   end
 end

@@ -43,7 +43,7 @@ class ElasticsearchReindexingTest < IntegrationTest
 
   def add_sample_documents
     sample_document_attributes.each do |sample_document|
-      post "/documents", JSON.dump(sample_document)
+      post "/documents", MultiJson.encode(sample_document)
       assert last_response.ok?
     end
   end
@@ -53,7 +53,7 @@ class ElasticsearchReindexingTest < IntegrationTest
   end
 
   def assert_result_links(*links)
-    parsed_response = JSON.parse(last_response.body)
+    parsed_response = MultiJson.decode(last_response.body)
     assert_equal links, parsed_response.map { |r| r["link"] }
   end
 
@@ -62,7 +62,7 @@ class ElasticsearchReindexingTest < IntegrationTest
     # stemming settings
 
     get "/search?q=directive"
-    assert_equal 2, JSON.parse(last_response.body).length
+    assert_equal 2, MultiJson.decode(last_response.body).length
 
     @stemmer["rules"] = ["directive => directive"]
     update_elasticsearch_index

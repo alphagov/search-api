@@ -123,7 +123,7 @@ class Document < SearchIndexEntry
   attr_writer :highlight
 
   def self.from_hash(hash, mappings)
-    field_names = mappings['edition']['properties'].keys.map(&:to_s)
+    field_names = mappings["edition"]["properties"].keys.map(&:to_s)
     self.new(field_names, unflatten(hash))
   end
 
@@ -184,6 +184,6 @@ class Document < SearchIndexEntry
   private
 
   def normalized_format
-    self.format ? self.format.gsub("-", "_") : 'unknown'
+    self.format ? self.format.gsub("-", "_") : "unknown"
   end
 end

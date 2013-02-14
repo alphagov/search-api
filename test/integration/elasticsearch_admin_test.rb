@@ -78,7 +78,7 @@ class ElasticsearchAdminTest < IntegrationTest
 private
 
   def index_status
-    JSON.parse(RestClient.get("http://localhost:9200/_status"))
+    MultiJson.decode(RestClient.get("http://localhost:9200/_status"))
   end
 
   def delete_elasticsearch_index
@@ -98,7 +98,7 @@ private
   end
 
   def get_mapping(index_name)
-    JSON.parse(RestClient.get "http://localhost:9200/#{index_name}/_mapping")[index_name]
+    MultiJson.decode(RestClient.get "http://localhost:9200/#{index_name}/_mapping")[index_name]
   rescue RestClient::ResourceNotFound
     nil
   end
