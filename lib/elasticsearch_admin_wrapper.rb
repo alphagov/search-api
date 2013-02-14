@@ -11,7 +11,7 @@ class ElasticsearchAdminWrapper
   end
 
   def index_exists?
-    server_status = JSON.parse(@client.get("/_status"))
+    server_status = MultiJson.decode(@client.get("/_status"))
     server_status["indices"].keys.include? @client.index_name
   end
 
@@ -22,7 +22,7 @@ class ElasticsearchAdminWrapper
     index_payload = @schema["index"]
 
     if index_exists?
-      @logger.info "Index already exists: updating settings"
+      @logger.info "Index #{@client.index_name} already exists: updating settings"
 
       # For no readily discernible reason, a short delay here prevents the
       # tests (and potentially Rake tasks) causing some shards to fail when
@@ -41,7 +41,7 @@ class ElasticsearchAdminWrapper
       return :updated
     else
       @client.put("", index_payload.to_json)
-      @logger.info "Index created"
+      @logger.info "Index #{@client.index_name} created"
       return :created
     end
   end
@@ -53,11 +53,11 @@ class ElasticsearchAdminWrapper
 
   def delete_index
     begin
-      @logger.info "Deleting index"
+      @logger.info "Deleting index #{@client.index_name}"
       @client.delete ""
       return :deleted
     rescue RestClient::ResourceNotFound
-      @logger.info "Index didn't exist"
+      @logger.info "Index #{@client.index_name} didn't exist"
       return :absent
     end
   end
@@ -98,7 +98,7 @@ private
 
     health_params = { wait_for_status: "yellow", timeout: "#{timeout}s" }
     response = @client.get "/_cluster/health", params: health_params
-    health = JSON.parse(response)
+    health = MultiJson.decode(response)
     if health["timed_out"] || ! ["green", "yellow"].include?(health["status"])
       @logger.error "Failed to restore search. Response: #{response}"
       raise RuntimeError, "Failed to restore search"

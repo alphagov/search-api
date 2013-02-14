@@ -88,7 +88,7 @@ class IntegrationTest < Test::Unit::TestCase
   end
 
   def assert_no_results
-    assert_equal [], JSON.parse(last_response.body)
+    assert_equal [], MultiJson.decode(last_response.body)
   end
 
   def stub_backend

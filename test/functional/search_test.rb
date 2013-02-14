@@ -17,7 +17,7 @@ class SearchTest < IntegrationTest
     get "/preload-autocomplete"
     assert last_response.ok?
 
-    results = JSON.parse last_response.body
+    results = MultiJson.decode last_response.body
     assert_equal 2, results.size
   end
 
@@ -26,7 +26,7 @@ class SearchTest < IntegrationTest
     @backend_index.stubs(:complete).returns([sample_document])
     get "/autocomplete", {q: "bob"}
     assert last_response.ok?
-    assert_equal [sample_document_attributes], JSON.parse(last_response.body)
+    assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)
   end
 
   def test_we_pass_the_optional_filter_parameter_to_autocomplete
@@ -40,7 +40,7 @@ class SearchTest < IntegrationTest
       sample_document
     ])
     get "/search", {q: "bob"}, "HTTP_ACCEPT" => "application/json"
-    assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
+    assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], MultiJson.decode(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 
@@ -49,7 +49,7 @@ class SearchTest < IntegrationTest
       sample_document
     ])
     get "/search.json", {q: "bob"}
-    assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], JSON.parse(last_response.body)
+    assert_equal [sample_document_attributes.merge("highlight"=>"DESCRIPTION")], MultiJson.decode(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 
