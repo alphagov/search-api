@@ -100,7 +100,7 @@ class Rummager < Sinatra::Application
   end
 
   get "/:backend/advanced_search.?:format?" do
-    results = backend.advanced_search(params)
+    results = backend.advanced_search(request.params)
     MultiJson.encode({
       total: results[:total],
       results: results[:results].map { |r| r.to_hash.merge(
