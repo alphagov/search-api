@@ -172,7 +172,7 @@ class ElasticsearchWrapper
 
     # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
     # y = a / (m * x + b); m=3.16E-11, a=0.08, and b=0.05
-    # Curve for 2 months: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427eejlvmofgm6
+    # Curve for 2 months: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427enuc3gvsq73
     #
     # Behaves as a freshness boost for newer documents with a public_timestamp
     time_boost = {
