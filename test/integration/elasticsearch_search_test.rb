@@ -6,6 +6,7 @@ class ElasticsearchSearchTest < IntegrationTest
 
   def setup
     use_elasticsearch_for_primary_search
+    add_field_to_mappings("public_timestamp", "date")
     app.any_instance.stubs(:secondary_search).returns(stub(search: []))
     WebMock.disable_net_connect!(allow: "localhost:9200")
     reset_elasticsearch_index
@@ -32,30 +33,30 @@ class ElasticsearchSearchTest < IntegrationTest
       },
       {
         "title" => "Temporary closure of British Embassy in Mali",
-        "description" => "Temporary closure of British Embassy in Mali",
+        "description" => "Mali",
         "format" => "news-article",
         "link" => "/mali-3",
         "section" => "",
-        "indexable_content" => "Temporary closure of British Embassy in Mali",
-        "public_timestamp" => Time.now - 10000
+        "indexable_content" => "Mali",
+        "public_timestamp" => "2011-01-02"
       },
       {
         "title" => "Temporary closure of British Embassy in Mali",
-        "description" => "Temporary closure of British Embassy in Mali",
+        "description" => "Mali",
         "format" => "news-article",
         "link" => "/mali-2",
         "section" => "",
-        "indexable_content" => "Temporary closure of British Embassy in Mali",
-        "public_timestamp" => Time.now - 3000
+        "indexable_content" => "Mali",
+        "public_timestamp" => "2012-01-02"
       },
       {
         "title" => "Temporary closure of British Embassy in Mali",
-        "description" => "Temporary closure of British Embassy in Mali",
+        "description" => "Mali",
         "format" => "news-article",
         "link" => "/mali-1",
         "section" => "",
-        "indexable_content" => "Temporary closure of British Embassy in Mali",
-        "public_timestamp" => Time.now
+        "indexable_content" => "Mali",
+        "public_timestamp" => "2013-01-02"
       },
       {
         "title" => "Pork pies",

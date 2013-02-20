@@ -65,10 +65,10 @@ class IntegrationTest < Test::Unit::TestCase
     app.settings.stubs(:backends).returns(hash)
   end
 
-  def add_field_to_mappings(fieldname)
+  def add_field_to_mappings(fieldname, type="string")
     schema = deep_copy(settings.elasticsearch_schema)
     properties = schema["mappings"]["default"]["edition"]["properties"]
-    properties.merge!({fieldname.to_s => { "type" => "string", "index" => "not_analyzed" }})
+    properties.merge!({fieldname.to_s => { "type" => type, "index" => "not_analyzed" }})
 
     app.settings.stubs(:elasticsearch_schema).returns(schema)
   end
