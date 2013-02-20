@@ -46,7 +46,7 @@ class ElasticsearchSearchTest < IntegrationTest
         "link" => "/mali-2",
         "section" => "",
         "indexable_content" => "Temporary closure of British Embassy in Mali",
-        "public_timestamp" => Time.now - 10000
+        "public_timestamp" => Time.now - 50000
       },
       {
         "title" => "Temporary closure of British Embassy in Mali",
