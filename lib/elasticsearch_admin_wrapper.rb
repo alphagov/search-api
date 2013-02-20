@@ -31,7 +31,7 @@ class ElasticsearchAdminWrapper
       # Neither a `flush` nor a `refresh` gets around this problem, otherwise I
       # would much prefer those. I would love to find a more sensible way to
       # achieve this.
-      sleep 1
+      sleep 2
 
       @logger.debug @client.post("_close", nil)
       @logger.debug @client.put("_settings", index_payload["settings"].to_json)
