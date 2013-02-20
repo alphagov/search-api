@@ -172,6 +172,8 @@ class ElasticsearchWrapper
     # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
     # y = a / (m * x + b); m=3.16E-11, a=0.08, and b=0.05
     # Curve for half a year: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427ebb9h87j659
+    #
+    # Behaves as a time decay penalty for older documents with a public_timestamp
     time_boost = {
       filter: { exists: { field: "public_timestamp" } },
       script: "(0.08 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05))"

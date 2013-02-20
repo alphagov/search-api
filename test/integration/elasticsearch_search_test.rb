@@ -31,6 +31,33 @@ class ElasticsearchSearchTest < IntegrationTest
         "indexable_content" => "Tax, benefits, roads and stuff"
       },
       {
+        "title" => "Temporary closure of British Embassy in Mali",
+        "description" => "Temporary closure of British Embassy in Mali",
+        "format" => "news-article",
+        "link" => "/mali-3",
+        "section" => "",
+        "indexable_content" => "Temporary closure of British Embassy in Mali",
+        "public_timestamp" => Time.now
+      },
+      {
+        "title" => "Temporary closure of British Embassy in Mali",
+        "description" => "Temporary closure of British Embassy in Mali",
+        "format" => "news-article",
+        "link" => "/mali-2",
+        "section" => "",
+        "indexable_content" => "Temporary closure of British Embassy in Mali",
+        "public_timestamp" => Time.now - 10000
+      },
+      {
+        "title" => "Temporary closure of British Embassy in Mali",
+        "description" => "Temporary closure of British Embassy in Mali",
+        "format" => "news-article",
+        "link" => "/mali-1",
+        "section" => "",
+        "indexable_content" => "Temporary closure of British Embassy in Mali",
+        "public_timestamp" => Time.now - 1000000
+      },
+      {
         "title" => "Pork pies",
         "link" => "/pork-pies"
       }
@@ -51,6 +78,12 @@ class ElasticsearchSearchTest < IntegrationTest
   def assert_result_links(*links)
     parsed_response = JSON.parse(last_response.body)
     assert_equal links, parsed_response.map { |r| r["link"] }
+  end
+
+  def test_documents_with_public_timestamp_exhibit_a_decay_boost
+    get "/search.json?q=mali"
+    assert last_response.ok?
+    assert_result_links "/mali-3", "/mali-2", "/mali-1"
   end
 
   def test_should_search_by_content
