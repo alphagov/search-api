@@ -37,7 +37,7 @@ class ElasticsearchSearchTest < IntegrationTest
         "link" => "/mali-3",
         "section" => "",
         "indexable_content" => "Temporary closure of British Embassy in Mali",
-        "public_timestamp" => Time.now
+        "public_timestamp" => Time.now - 10000
       },
       {
         "title" => "Temporary closure of British Embassy in Mali",
@@ -46,7 +46,7 @@ class ElasticsearchSearchTest < IntegrationTest
         "link" => "/mali-2",
         "section" => "",
         "indexable_content" => "Temporary closure of British Embassy in Mali",
-        "public_timestamp" => Time.now - 50000
+        "public_timestamp" => Time.now - 3000
       },
       {
         "title" => "Temporary closure of British Embassy in Mali",
@@ -55,7 +55,7 @@ class ElasticsearchSearchTest < IntegrationTest
         "link" => "/mali-1",
         "section" => "",
         "indexable_content" => "Temporary closure of British Embassy in Mali",
-        "public_timestamp" => Time.now - 1000000
+        "public_timestamp" => Time.now
       },
       {
         "title" => "Pork pies",
@@ -83,7 +83,7 @@ class ElasticsearchSearchTest < IntegrationTest
   def test_documents_with_public_timestamp_exhibit_a_decay_boost
     get "/search.json?q=mali"
     assert last_response.ok?
-    assert_result_links "/mali-3", "/mali-2", "/mali-1"
+    assert_result_links "/mali-1", "/mali-2", "/mali-3"
   end
 
   def test_should_search_by_content
