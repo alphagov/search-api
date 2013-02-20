@@ -157,10 +157,10 @@ class ElasticsearchWrapper
       "smart-answer"  => 1.5,
       "transaction"   => 1.5,
       # Inside Gov formats
-      "topical_event" => 2,
-      "minister"      => 2,
-      "organisation"  => 2,
-      "topic"         => 2
+      "topical_event" => 1.5,
+      "minister"      => 1.5,
+      "organisation"  => 1.5,
+      "topic"         => 1.5
     }
 
     format_boosts = boosted_formats.map do |format, boost|
@@ -172,12 +172,12 @@ class ElasticsearchWrapper
 
     # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
     # y = a / (m * x + b); m=3.16E-11, a=0.08, and b=0.05
-    # Curve for half a year: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427ebb9h87j659
+    # Curve for 2 months: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427eejlvmofgm6
     #
-    # Behaves as a time decay penalty for older documents with a public_timestamp
+    # Behaves as a freshness boost for newer documents with a public_timestamp
     time_boost = {
       filter: { exists: { field: "public_timestamp" } },
-      script: "(0.08 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05))"
+      script: "(0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 1"
     }
 
     query_analyzer = "query_default"
