@@ -2,6 +2,8 @@ require "logger"
 
 class NullBackend
   # A dummy backend for instances where secondary search is not in use.
+  # NOTE: since we no longer have a concept of secondary search, this class is
+  # deprecated and will be removed in a future release.
 
   def initialize(logger = nil)
     @logger = logger || Logger.new("/dev/null")
