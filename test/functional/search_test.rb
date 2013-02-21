@@ -25,6 +25,12 @@ class SearchTest < IntegrationTest
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 
+  def test_returns_404_when_requested_with_non_json_url
+    @backend_index.expects(:search).never
+    get "/search.xml", {q: "bob"}
+    assert last_response.not_found?
+  end
+
   def test_should_ignore_edge_spaces_and_codepoints_below_0x20
     @backend_index.expects(:search).never
     get "/search", {q: " \x02 "}

@@ -44,6 +44,13 @@ class Rummager < Sinatra::Application
     halt 403, {"Content-Type" => "text/plain"}, content
   end
 
+  def json_only
+    unless [nil, "json"].include? params[:format]
+      expires 86400, :public
+      halt 404
+    end
+  end
+
   helpers do
     include Helpers
   end
@@ -55,6 +62,8 @@ class Rummager < Sinatra::Application
   # /backend_name/search?q=pie to search a named backend
   # /search?q=pie to search the primary backend
   get "/?:backend?/search.?:format?" do
+    json_only
+
     query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
 
     if query == ""
@@ -74,6 +83,8 @@ class Rummager < Sinatra::Application
   end
 
   get "/:backend/advanced_search.?:format?" do
+    json_only
+
     results = backend.advanced_search(request.params)
     MultiJson.encode({
       total: results[:total],
