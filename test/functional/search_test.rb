@@ -7,30 +7,6 @@ class SearchTest < IntegrationTest
     stub_backend  # Assigns to the @backend_index variable
   end
 
-  def test_autocomplete_cache
-    @backend_index.stubs(:autocomplete_cache).returns([
-      sample_document,
-      sample_document
-    ])
-    get "/preload-autocomplete"
-    assert last_response.ok?
-
-    results = MultiJson.decode last_response.body
-    assert_equal 2, results.size
-  end
-
-  def test_should_return_autocompletion_documents_as_json
-    @backend_index.stubs(:complete).returns([sample_document])
-    get "/autocomplete", {q: "bob"}
-    assert last_response.ok?
-    assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)
-  end
-
-  def test_we_pass_the_optional_filter_parameter_to_autocomplete
-    @backend_index.expects(:complete).with("anything", "my-format").returns([])
-    get "/autocomplete", {q: "anything", format_filter: "my-format"}
-  end
-
   def test_returns_json_for_search_results
     @backend_index.stubs(:search).returns([
       sample_document

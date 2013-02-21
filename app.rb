@@ -85,32 +85,6 @@ class Rummager < Sinatra::Application
     })
   end
 
-  get "/?:backend?/preload-autocomplete" do
-    # Eventually this is likely to be a list of commonly searched for terms
-    # so searching for those is really fast. For the beta, this is just a list
-    # of all terms.
-    expires 86400, :public
-    results = backend.autocomplete_cache rescue []
-    MultiJson.encode(results.map { |r| r.to_hash })
-  end
-
-  get "/?:backend?/autocomplete" do
-    query = params["q"]
-
-    unless query
-      expires 86400, :public
-      return "[]"
-    end
-
-    expires 3600, :public if query.length < 5
-
-    results = backend.complete(query, params["format_filter"]) rescue []
-    MultiJson.encode(results.map { |r| r.to_hash.merge(
-      presentation_format: r.presentation_format,
-      humanized_format: r.humanized_format
-    ) })
-  end
-
   get "/sitemap.xml" do
     content_type :xml
     expires 86400, :public
