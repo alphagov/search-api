@@ -8,7 +8,6 @@ class ElasticsearchReindexingTest < IntegrationTest
 
   def setup
     use_elasticsearch_for_primary_search
-    app.any_instance.stubs(:secondary_search).returns(stub(search: []))
     WebMock.disable_net_connect!(allow: "localhost:9200")
 
     es_settings = settings.elasticsearch_schema["index"]["settings"]

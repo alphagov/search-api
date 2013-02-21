@@ -32,14 +32,6 @@ class Rummager < Sinatra::Application
     available_backends[name.to_sym] || halt(404)
   end
 
-  def primary_search
-    available_backends[:primary]
-  end
-
-  def secondary_search
-    available_backends[:secondary]
-  end
-
   def backends_for_sitemap
     [
       available_backends[:mainstream],
@@ -60,35 +52,17 @@ class Rummager < Sinatra::Application
     content_type :json
   end
 
-  get "/search.?:format?" do
-    @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+  # /backend_name/search?q=pie to search a named backend
+  # /search?q=pie to search the primary backend
+  get "/?:backend?/search.?:format?" do
+    query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
 
-    if @query == ""
+    if query == ""
       expires 3600, :public
       halt 404
     end
 
-    expires 3600, :public if @query.length < 20
-
-    results = primary_search.search(@query, params["format_filter"])
-    secondary_results = secondary_search.search(@query)
-
-    logger.info "Found #{secondary_results.count} secondary results"
-
-    @secondary_results = secondary_results.take(5)
-    @more_secondary_results = secondary_results.length > 5
-    @results = results.take(50 - @secondary_results.length)
-    @total_results = @results.length + @secondary_results.length
-
-    MultiJson.encode((@results + @secondary_results).map { |r| r.to_hash.merge(
-      highlight: r.highlight,
-      presentation_format: r.presentation_format,
-      humanized_format: r.humanized_format
-    ) })
-  end
-
-  get "/:backend/search.?:format?" do
-    query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+    expires 3600, :public if query.length < 20
 
     results = backend.search(query, params["format_filter"])
 
