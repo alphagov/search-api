@@ -42,7 +42,6 @@ class ElasticsearchAdminWrapper
     else
       @client.put("", index_payload.to_json)
       @logger.info "Index #{@client.index_name} created"
-      wait_until_ready
       return :created
     end
   end
@@ -84,7 +83,7 @@ class ElasticsearchAdminWrapper
   end
 
 private
-  def wait_until_ready(timeout=30)
+  def wait_until_ready(timeout=10)
     # Wait until the cluster is back up and running: useful when updating and
     # reopening an index.
 
@@ -97,7 +96,7 @@ private
     # back up.  So long as the primary is back up, we should be fine. See
     # <http://www.elasticsearch.org/guide/reference/api/admin-cluster-health.html>
 
-    health_params = { wait_for_status: "green", timeout: "#{timeout}s" }
+    health_params = { wait_for_status: "yellow", timeout: "#{timeout}s" }
     response = @client.get "/_cluster/health", params: health_params
     health = MultiJson.decode(response)
     if health["timed_out"] || ! ["green", "yellow"].include?(health["status"])
