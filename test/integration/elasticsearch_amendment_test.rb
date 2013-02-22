@@ -56,7 +56,7 @@ class ElasticsearchAmendmentTest < IntegrationTest
 
   def test_should_fail_to_amend_link
     post "/documents/%2Fan-example-answer", "link=/wibble"
-    assert_false last_response.ok?
+    refute last_response.ok?
 
     get "/documents/%2Fan-example-answer"
     assert last_response.ok?
