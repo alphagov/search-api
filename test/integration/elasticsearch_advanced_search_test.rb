@@ -97,6 +97,14 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     assert_result_links "/an-example-answer"
   end
 
+  def test_should_escape_lucene_characters
+    ["badger)", "badger\\"].each do |problem|
+      get "/primary/advanced_search.json?per_page=1&page=1&keywords=#{CGI.escape(problem)}"
+      assert last_response.ok?
+      assert_result_links "/an-example-answer"
+    end
+  end
+
   def test_should_allow_paging_through_keyword_search
     get "/primary/advanced_search.json?per_page=1&page=2&keywords=cheese"
     assert last_response.ok?
