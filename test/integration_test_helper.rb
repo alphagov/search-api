@@ -40,7 +40,7 @@ end
 
 require "elasticsearch_admin_wrapper"
 
-class IntegrationTest < Test::Unit::TestCase
+class IntegrationTest < MiniTest::Unit::TestCase
   include Rack::Test::Methods
   include IntegrationFixtures
 

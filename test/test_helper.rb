@@ -4,13 +4,13 @@ $LOAD_PATH << File.expand_path('../../', __FILE__)
 $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
 require "bundler/setup"
-require "test/unit"
+require "minitest/autorun"
 require "rack/test"
 require "mocha"
 require "fixtures/default_mappings"
 require "pp"
 
-require "webmock/test_unit"
+require "webmock/minitest"
 WebMock.disable_net_connect!
 
 if ENV["USE_SIMPLECOV"]
@@ -26,6 +26,6 @@ module TestHelpers
   end
 end
 
-class Test::Unit::TestCase
+class MiniTest::Unit::TestCase
   include TestHelpers
 end

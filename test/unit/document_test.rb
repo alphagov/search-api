@@ -1,7 +1,7 @@
 require "test_helper"
 require "document"
 
-class DocumentTest < Test::Unit::TestCase
+class DocumentTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def setup
