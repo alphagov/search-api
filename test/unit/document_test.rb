@@ -1,7 +1,7 @@
 require "test_helper"
 require "document"
 
-class DocumentTest < Test::Unit::TestCase
+class DocumentTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def setup
@@ -80,8 +80,8 @@ class DocumentTest < Test::Unit::TestCase
 
     document = Document.from_hash(hash, @mappings)
 
-    assert_not_include document.to_hash.keys, "some_other_field"
-    assert ! document.respond_to?("some_other_field")
+    refute_includes document.to_hash.keys, "some_other_field"
+    refute document.respond_to?("some_other_field")
   end
 
   def test_should_have_no_additional_links_if_none_in_hash

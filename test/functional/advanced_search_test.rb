@@ -8,17 +8,25 @@ class AdvancedSearchTest < IntegrationTest
     stub_backend
   end
 
+  def assert_valid_json(body, message = "Invalid JSON")
+    begin
+      MultiJson.decode(body)
+    rescue MultiJson::LoadError
+      flunk message
+    end
+  end
+
   def test_returns_json_for_advanced_search_results
     @backend_index.stubs(:advanced_search).returns({total: 1, results: [sample_document]})
     get "/meh/advanced_search", {per_page: '1', page: '1', keywords: 'meh'}, "HTTP_ACCEPT" => "application/json"
-    assert_nothing_raised { MultiJson.decode(last_response.body) }
+    assert_valid_json last_response.body
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 
   def test_returns_json_when_requested_with_url_suffix
     @backend_index.stubs(:advanced_search).returns({total: 1, results: [sample_document]})
     get "/meh/advanced_search.json", {per_page: '1', page: '1', keywords: 'meh'}
-    assert_nothing_raised { MultiJson.decode(last_response.body) }
+    assert_valid_json last_response.body
     assert_match /application\/json/, last_response.headers["Content-Type"]
   end
 
@@ -26,6 +34,6 @@ class AdvancedSearchTest < IntegrationTest
     @backend_index.stubs(:advanced_search).returns({total: 1, results: [sample_document]})
     get "/meh/advanced_search.json", {per_page: '1', page: '1', keywords: 'meh'}
     expected_result = {'total' => 1, 'results' => [sample_document_attributes.merge('highlight' => 'DESCRIPTION')]}
-    assert_nothing_raised { MultiJson.decode(last_response.body) }
+    assert_valid_json last_response.body
   end
 end
