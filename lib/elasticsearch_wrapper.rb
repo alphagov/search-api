@@ -360,7 +360,7 @@ class ElasticsearchWrapper
               "should" => [
                 {"text" =>
                   {"title" =>
-                    {"query" => @keywords,
+                    {"query" => escape(@keywords),
                      "type" => "phrase_prefix",
                      "operator" => "and",
                      "analyzer" => "query_default",
@@ -369,7 +369,7 @@ class ElasticsearchWrapper
                   }
                 },
                 {"query_string" => {
-                  "query" => @keywords,
+                  "query" => escape(@keywords),
                   "default_operator" => "and",
                   "analyzer" => "query_default"}
                 }
