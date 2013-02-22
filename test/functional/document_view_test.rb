@@ -5,7 +5,6 @@ class DocumentViewtest < IntegrationTest
   def setup
     super
     stub_backend
-    disable_secondary_search
   end
 
   def test_should_view_existing_document

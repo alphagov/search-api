@@ -24,7 +24,7 @@ private
   def build_backend(backend_settings, mappings)
     case backend_settings[:type]
     when "none"
-      @logger.debug "Using null backend"
+      @logger.info "Using null backend: this is deprecated and will be removed"
       NullBackend.new(@logger)
     when "elasticsearch"
       @logger.debug "Using elasticsearch backend"
