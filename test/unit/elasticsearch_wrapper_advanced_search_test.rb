@@ -18,9 +18,7 @@ class ElasticsearchWrapperAdvancedSearchTest < MiniTest::Unit::TestCase
     stub_empty_search
 
     assert_rejected_search("Pagination params are required.", {})
-    assert_nothing_raised(RuntimeError) do
-      @wrapper.advanced_search({'page' => '1', 'per_page' => '1'})
-    end
+    assert @wrapper.advanced_search({'page' => '1', 'per_page' => '1'})
   end
 
   def test_pagination_params_are_converted_to_from_and_to_correctly
