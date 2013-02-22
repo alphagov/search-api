@@ -5,7 +5,6 @@ class AmendmentTest < IntegrationTest
   def setup
     super
     stub_backend
-    disable_secondary_search
   end
 
   def test_should_amend_existing_document

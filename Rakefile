@@ -86,10 +86,8 @@ namespace :rummager do
     }
 
     real_backends = elasticsearch_backends.reject { |name, settings|
-      # We're not interested in primary and secondary indexes if they're just
-      # aliases to something else
-      [:primary, :secondary].include?(name) &&
-        elasticsearch_backends.values.count(settings) > 1
+      # We're not interested in the primary index if it's just an alias
+      name == :primary && elasticsearch_backends.values.count(settings) > 1
     }
 
     all_mappings = settings.elasticsearch_schema["mappings"]

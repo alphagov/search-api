@@ -48,10 +48,6 @@ class IntegrationTest < Test::Unit::TestCase
     Rummager
   end
 
-  def disable_secondary_search
-    @secondary_search.stubs(:search).returns([])
-  end
-
   def use_elasticsearch_for_primary_search
     stub_backends_with(primary: {
           type: "elasticsearch",
@@ -94,14 +90,6 @@ class IntegrationTest < Test::Unit::TestCase
   def stub_backend
     @backend_index = stub_everything("Chosen backend")
     app.any_instance.stubs(:backend).returns(@backend_index)
-  end
-
-  def stub_primary_and_secondary_searches
-    @primary_search = stub_everything("Mainstream wrapper")
-    app.any_instance.stubs(:primary_search).returns(@primary_search)
-
-    @secondary_search = stub_everything("Whitehall wrapper")
-    app.any_instance.stubs(:secondary_search).returns(@secondary_search)
   end
 
   def wrapper_for(index_name, mappings_fixture_file = "elasticsearch_schema.fixture.yml")

@@ -32,14 +32,6 @@ class Rummager < Sinatra::Application
     available_backends[name.to_sym] || halt(404)
   end
 
-  def primary_search
-    available_backends[:primary]
-  end
-
-  def secondary_search
-    available_backends[:secondary]
-  end
-
   def backends_for_sitemap
     [
       available_backends[:mainstream],
@@ -52,6 +44,13 @@ class Rummager < Sinatra::Application
     halt 403, {"Content-Type" => "text/plain"}, content
   end
 
+  def json_only
+    unless [nil, "json"].include? params[:format]
+      expires 86400, :public
+      halt 404
+    end
+  end
+
   helpers do
     include Helpers
   end
@@ -60,35 +59,19 @@ class Rummager < Sinatra::Application
     content_type :json
   end
 
-  get "/search.?:format?" do
-    @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+  # /backend_name/search?q=pie to search a named backend
+  # /search?q=pie to search the primary backend
+  get "/?:backend?/search.?:format?" do
+    json_only
 
-    if @query == ""
+    query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+
+    if query == ""
       expires 3600, :public
       halt 404
     end
 
-    expires 3600, :public if @query.length < 20
-
-    results = primary_search.search(@query, params["format_filter"])
-    secondary_results = secondary_search.search(@query)
-
-    logger.info "Found #{secondary_results.count} secondary results"
-
-    @secondary_results = secondary_results.take(5)
-    @more_secondary_results = secondary_results.length > 5
-    @results = results.take(50 - @secondary_results.length)
-    @total_results = @results.length + @secondary_results.length
-
-    MultiJson.encode((@results + @secondary_results).map { |r| r.to_hash.merge(
-      highlight: r.highlight,
-      presentation_format: r.presentation_format,
-      humanized_format: r.humanized_format
-    ) })
-  end
-
-  get "/:backend/search.?:format?" do
-    query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+    expires 3600, :public if query.length < 20
 
     results = backend.search(query, params["format_filter"])
 
@@ -100,6 +83,8 @@ class Rummager < Sinatra::Application
   end
 
   get "/:backend/advanced_search.?:format?" do
+    json_only
+
     results = backend.advanced_search(request.params)
     MultiJson.encode({
       total: results[:total],
@@ -109,32 +94,6 @@ class Rummager < Sinatra::Application
         humanized_format: r.humanized_format
       )}
     })
-  end
-
-  get "/?:backend?/preload-autocomplete" do
-    # Eventually this is likely to be a list of commonly searched for terms
-    # so searching for those is really fast. For the beta, this is just a list
-    # of all terms.
-    expires 86400, :public
-    results = backend.autocomplete_cache rescue []
-    MultiJson.encode(results.map { |r| r.to_hash })
-  end
-
-  get "/?:backend?/autocomplete" do
-    query = params["q"]
-
-    unless query
-      expires 86400, :public
-      return "[]"
-    end
-
-    expires 3600, :public if query.length < 5
-
-    results = backend.complete(query, params["format_filter"]) rescue []
-    MultiJson.encode(results.map { |r| r.to_hash.merge(
-      presentation_format: r.presentation_format,
-      humanized_format: r.humanized_format
-    ) })
   end
 
   get "/sitemap.xml" do

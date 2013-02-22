@@ -7,7 +7,6 @@ class ElasticsearchSearchTest < IntegrationTest
   def setup
     use_elasticsearch_for_primary_search
     add_field_to_mappings("public_timestamp", "date")
-    app.any_instance.stubs(:secondary_search).returns(stub(search: []))
     WebMock.disable_net_connect!(allow: "localhost:9200")
     reset_elasticsearch_index
     add_sample_documents
