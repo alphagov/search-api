@@ -34,7 +34,7 @@ namespace "test" do
   end
 end
 
-require "ci/reporter/rake/test_unit" if ENV["RACK_ENV"] == "test"
+require "ci/reporter/rake/minitest" if ENV["RACK_ENV"] == "test"
 
 class PushableLogger
   # Because RestClient uses the '<<' method, rather than the levelled Logger
