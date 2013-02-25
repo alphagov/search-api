@@ -158,7 +158,7 @@ class ElasticsearchWrapper
       "transaction"   => 1.5,
       # Inside Gov formats
       "topical_event" => 1.5,
-      "minister"      => 1.5,
+      "minister"      => 1.7,
       "organisation"  => 1.5,
       "topic"         => 1.5
     }
@@ -171,13 +171,12 @@ class ElasticsearchWrapper
     end
 
     # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
-    # y = a / (m * x + b); m=3.16E-11, a=0.05, and b=0.05
-    # Curve for 2 months: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427enuc3gvsq73
+    # Curve for 2 months: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427e5qr62u0si
     #
-    # Behaves as a freshness boost for newer documents with a public_timestamp
+    # Behaves as a freshness boost for newer documents with a public_timestamp and search_format_types announcement
     time_boost = {
-      filter: { exists: { field: "public_timestamp" } },
-      script: "(0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 1"
+      filter: { term: { search_format_types: "announcement" } },
+      script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
     }
 
     query_analyzer = "query_default"
@@ -236,7 +235,6 @@ class ElasticsearchWrapper
     # RestClient does not allow a payload with a GET request
     # so we have to call @client.request directly.
     @logger.debug "Request payload: #{payload}"
-
     result = @client.request(:get, "_search", payload)
     result = MultiJson.decode(result)
     result["hits"]["hits"].map { |hit|
