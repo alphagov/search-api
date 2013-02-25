@@ -15,7 +15,7 @@ gem "statsd-ruby", "1.0.0"
 group :test do
   gem 'simplecov'
   gem 'simplecov-rcov'
-  gem 'ci_reporter'
+  gem 'ci_reporter', '1.7.1'
   gem 'minitest', '4.6.1'
   gem 'rack-test'
   gem 'mocha', :require => false
