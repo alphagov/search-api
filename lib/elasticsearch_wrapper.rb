@@ -240,7 +240,7 @@ class ElasticsearchWrapper
     result = @client.request(:get, "_search", payload)
     result = MultiJson.decode(result)
     result["hits"]["hits"].map { |hit|
-      document_from_hash(hit["_source"])
+      document_from_hash(hit["_source"].merge("es_score" => hit["_score"]))
     }
   end
 
@@ -275,7 +275,7 @@ class ElasticsearchWrapper
     {
       total: result["hits"]["total"],
       results: result["hits"]["hits"].map { |hit|
-        document_from_hash(hit["_source"])
+        document_from_hash(hit["_source"].merge("_score" => hit["_score"]))
       }
     }
   end
