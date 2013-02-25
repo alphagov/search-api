@@ -34,7 +34,7 @@ class SearchTest < IntegrationTest
   def test_should_ignore_edge_spaces_and_codepoints_below_0x20
     @backend_index.expects(:search).never
     get "/search", {q: " \x02 "}
-    assert_no_match /we can’t find any results/, last_response.body
+    refute_match /we can’t find any results/, last_response.body
   end
 
   def test_returns_404_for_empty_queries

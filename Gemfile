@@ -16,7 +16,7 @@ group :test do
   gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'ci_reporter'
-  gem 'test-unit'
+  gem 'minitest', '4.6.1'
   gem 'rack-test'
   gem 'mocha', :require => false
   gem 'webmock', :require => false

@@ -2,7 +2,7 @@ require "test_helper"
 require "elasticsearch_wrapper"
 require "webmock"
 
-class ElasticsearchWrapperTest < Test::Unit::TestCase
+class ElasticsearchWrapperTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def setup

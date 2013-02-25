@@ -2,7 +2,7 @@ require "test_helper"
 require "backends"
 require "active_support/core_ext/hash/keys"
 
-class BackendsTest < Test::Unit::TestCase
+class BackendsTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def test_should_use_custom_mappings_defined_in_elasticsearch_schema

@@ -1,7 +1,7 @@
 require "test_helper"
 require "section"
 
-class SectionTest < Test::Unit::TestCase
+class SectionTest < MiniTest::Unit::TestCase
 
   def test_section_provides_path
     section = Section.new("bob")
