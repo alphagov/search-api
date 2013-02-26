@@ -1,5 +1,5 @@
 source :rubygems
-source "https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/"
+source "https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/"
 
 gem "unicorn", "4.3.1"
 gem "sinatra", "1.3.4"
