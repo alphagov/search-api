@@ -5,7 +5,7 @@ gem "unicorn", "4.3.1"
 gem "sinatra", "1.3.4"
 gem "rake", "0.9.2", :require => false
 gem "multi_json"
-gem "json", "1.7.7"
+gem 'yajl-ruby'
 gem "activesupport", "3.2.12"
 gem "rack", "1.5.2"
 gem "aws-ses", "0.4.4"
@@ -21,8 +21,4 @@ group :test do
   gem 'mocha', :require => false
   gem 'webmock', :require => false
   gem 'nokogiri', :require => false
-end
-
-group :development do
-  gem 'shotgun'
 end

@@ -3,8 +3,8 @@
 end
 
 require "sinatra"
+require 'yajl/json_gem'
 require "multi_json"
-require "json"
 require "csv"
 require "statsd"
 
