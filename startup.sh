@@ -1,4 +1,4 @@
 #!/bin/bash
 
 bundle install
-unicorn -l 0.0.0.0:3009
+bundle exec shotgun -o '0.0.0.0' -p 3009
