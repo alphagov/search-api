@@ -4,9 +4,7 @@ Rummager is now primarily based on ElasticSearch.
 
 ## Get started
 
-Run the application with `./startup.sh` this uses unicorn so your application
-changes will not be loaded unless you restart. This is because unicorn is more
-reliable than shotgun.
+Run the application with `./startup.sh` this uses shotgun/thin.
 
 Generate your index with:
 
