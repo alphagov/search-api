@@ -6,7 +6,15 @@ class ElasticsearchSearchTest < IntegrationTest
 
   def setup
     use_elasticsearch_for_primary_search
-    add_field_to_mappings("public_timestamp", "date")
+    schema = deep_copy(settings.elasticsearch_schema)
+    properties = schema["mappings"]["default"]["edition"]["properties"]
+    properties.merge!({
+                        "search_format_types" => { "type" => "string", "index" => "not_analyzed" },
+                        "public_timestamp" => { "type" => "date", "index" => "not_analyzed" },
+                      })
+
+    app.settings.stubs(:elasticsearch_schema).returns(schema)
+
     WebMock.disable_net_connect!(allow: "localhost:9200")
     reset_elasticsearch_index
     add_sample_documents
@@ -33,7 +41,8 @@ class ElasticsearchSearchTest < IntegrationTest
       {
         "title" => "Temporary closure of British Embassy in Mali",
         "description" => "Mali",
-        "format" => "news-article",
+        "format" => "edition",
+        "search_format_types" => ["edition", "announcement"],
         "link" => "/mali-3",
         "section" => "",
         "indexable_content" => "Mali",
@@ -42,7 +51,8 @@ class ElasticsearchSearchTest < IntegrationTest
       {
         "title" => "Temporary closure of British Embassy in Mali",
         "description" => "Mali",
-        "format" => "news-article",
+        "format" => "edition",
+        "search_format_types" => ["edition", "announcement"],
         "link" => "/mali-2",
         "section" => "",
         "indexable_content" => "Mali",
@@ -51,7 +61,8 @@ class ElasticsearchSearchTest < IntegrationTest
       {
         "title" => "Temporary closure of British Embassy in Mali",
         "description" => "Mali",
-        "format" => "news-article",
+        "format" => "edition",
+        "search_format_types" => ["edition", "announcement"],
         "link" => "/mali-1",
         "section" => "",
         "indexable_content" => "Mali",
