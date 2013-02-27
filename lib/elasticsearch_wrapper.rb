@@ -159,7 +159,7 @@ class ElasticsearchWrapper
       # Inside Gov formats
       "topical_event" => 1.5,
       "minister"      => 1.7,
-      "organisation"  => 1.5,
+      "organisation"  => 2.5,
       "topic"         => 1.5,
       "document_series" => 1.3,
       "operational_field" => 1.5,
