@@ -4,6 +4,10 @@ Rummager is now primarily based on ElasticSearch.
 
 ## Get started
 
+Run the application with `./startup.sh` this uses unicorn so your application
+changes will not be loaded unless you restart. This is because unicorn is more
+reliable than shotgun.
+
 Generate your index with:
 
     bundle exec rake rummager:put_mapping
