@@ -15,6 +15,9 @@ class IndexGroupTest < MiniTest::Unit::TestCase
         "mappings" => {
           "default" => {
             "edition" => { "_all" => { "enabled" => true } }
+          },
+          "custom" => {
+            "edition" => { "_all" => { "enabled" => false } }
           }
         }
       }
@@ -35,6 +38,24 @@ class IndexGroupTest < MiniTest::Unit::TestCase
         body: '{"ok": true, "acknowledged": true}'
       )
     @server.index_group("mainstream").create_index
+
+    assert_requested(stub)
+  end
+
+  def test_create_index_with_custom_mappings
+    expected_body = MultiJson.encode({
+      "settings" => "awesomeness",
+      "mappings" => {
+        "edition" => { "_all" => { "enabled" => false } }
+      }
+    })
+    stub = stub_request(:put, %r(http://localhost:9200/custom-.*/))
+      .with(body: expected_body)
+      .to_return(
+        status: 200,
+        body: '{"ok": true, "acknowledged": true}'
+      )
+    @server.index_group("custom").create_index
 
     assert_requested(stub)
   end
