@@ -2,6 +2,7 @@ require "time"
 require "securerandom"
 require "rest-client"
 require "cgi"
+require "elasticsearch/index"
 
 module Elasticsearch
 
@@ -14,8 +15,8 @@ module Elasticsearch
   #
   # One of these indexes is aliased to the group name itself.
   class IndexGroup
-    def initialize(search_server, name, index_settings, mappings)
-      @search_server = search_server
+    def initialize(base_uri, name, index_settings, mappings)
+      @base_uri = base_uri
       @name = name
       @index_settings = index_settings
       @mappings = mappings
@@ -24,11 +25,10 @@ module Elasticsearch
     def create_index
       index_name = generate_name
       index_payload = @index_settings.merge("mappings" => @mappings)
-      index_url = (@search_server.base_url + "#{CGI.escape(index_name)}/").to_s
+      index_url = (@base_uri + "#{CGI.escape(index_name)}/").to_s
       RestClient.put(index_url, MultiJson.encode(index_payload), content_type: :json)
 
-      # Return new Index object
-      return true
+      Index.new(@base_uri, index_name, [])
     end
 
   private

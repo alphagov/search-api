@@ -37,8 +37,9 @@ class IndexGroupTest < MiniTest::Unit::TestCase
         status: 200,
         body: '{"ok": true, "acknowledged": true}'
       )
-    @server.index_group("mainstream").create_index
+    index = @server.index_group("mainstream").create_index
 
+    assert index.is_a? Elasticsearch::Index
     assert_requested(stub)
   end
 
@@ -55,8 +56,9 @@ class IndexGroupTest < MiniTest::Unit::TestCase
         status: 200,
         body: '{"ok": true, "acknowledged": true}'
       )
-    @server.index_group("custom").create_index
+    index = @server.index_group("custom").create_index
 
+    assert index.is_a? Elasticsearch::Index
     assert_requested(stub)
   end
 end

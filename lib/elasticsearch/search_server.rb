@@ -4,15 +4,13 @@ module Elasticsearch
   class SearchServer
     DEFAULT_MAPPING_KEY = "default"
 
-    attr_reader :base_url
-
-    def initialize(base_url, schema)
-      @base_url = URI.parse(base_url)
+    def initialize(base_uri, schema)
+      @base_uri = URI.parse(base_uri)
       @schema = schema
     end
 
     def index_group(prefix)
-      IndexGroup.new(self, prefix, index_settings(prefix), mappings(prefix))
+      IndexGroup.new(@base_uri, prefix, index_settings(prefix), mappings(prefix))
     end
 
     def index(prefix)
