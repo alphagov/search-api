@@ -1,11 +1,12 @@
-require "elasticsearch_wrapper"
+require "elasticsearch/index"
 require "logger"
 require "json"
 
 class ElasticsearchAdminWrapper
 
   def initialize(settings, schema, logger = nil)
-    @client = ElasticsearchWrapper::Client.new(settings, logger)
+    base_uri = Elasticsearch::Index.base_uri_for_settings(settings)
+    @client = Elasticsearch::Index::Client.new(base_uri, settings[:index_name], logger)
     @schema = schema
     @logger = logger || Logger.new("/dev/null")
   end

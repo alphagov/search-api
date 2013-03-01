@@ -1,17 +1,13 @@
 require "test_helper"
-require "elasticsearch_wrapper"
+require "elasticsearch/index"
 require "webmock"
 
-class ElasticsearchWrapperAdvancedSearchTest < MiniTest::Unit::TestCase
+class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def setup
-    @settings = {
-      server: "example.com",
-      port: 9200,
-      index_name: "test-index"
-    }
-    @wrapper = ElasticsearchWrapper.new(@settings, default_mappings)
+    base_uri = URI.parse("http://example.com:9200")
+    @wrapper = Elasticsearch::Index.new(base_uri, "test-index", default_mappings)
   end
 
   def test_pagination_params_are_required

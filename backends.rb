@@ -1,4 +1,4 @@
-require "elasticsearch_wrapper"
+require "elasticsearch/index"
 require "null_backend"
 require "active_support/core_ext/module/delegation"
 
@@ -28,8 +28,10 @@ private
       NullBackend.new(@logger)
     when "elasticsearch"
       @logger.debug "Using elasticsearch backend"
-      ElasticsearchWrapper.new(
-        backend_settings,
+      base_uri = Elasticsearch::Index.base_uri_for_settings(backend_settings)
+      Elasticsearch::Index.new(
+        base_uri,
+        backend_settings[:index_name],
         mappings,
         @logger,
         backend_settings[:format_filter]

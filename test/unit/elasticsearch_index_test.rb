@@ -1,17 +1,13 @@
 require "test_helper"
-require "elasticsearch_wrapper"
+require "elasticsearch/index"
 require "webmock"
 
-class ElasticsearchWrapperTest < MiniTest::Unit::TestCase
+class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def setup
-    @settings = {
-      server: "example.com",
-      port: 9200,
-      index_name: "test-index"
-    }
-    @wrapper = ElasticsearchWrapper.new(@settings, default_mappings)
+    base_uri = URI.parse("http://example.com:9200")
+    @wrapper = Elasticsearch::Index.new(base_uri, "test-index", default_mappings)
   end
 
   def test_should_bulk_update_documents

@@ -49,7 +49,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
 
     assert_requested(stub)
     assert index.is_a? Elasticsearch::Index
-    assert_match(/^mainstream-/, index.name)
+    assert_match(/^mainstream-/, index.index_name)
     assert_equal ["title"], index.field_names
   end
 
@@ -68,7 +68,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
 
     assert_requested(stub)
     assert index.is_a? Elasticsearch::Index
-    assert_match(/^custom-/, index.name)
+    assert_match(/^custom-/, index.index_name)
     assert_equal ["title", "description"], index.field_names
   end
 end

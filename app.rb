@@ -9,7 +9,7 @@ require "csv"
 require "statsd"
 
 require "document"
-require "elasticsearch_wrapper"
+require "elasticsearch/index"
 require "null_backend"
 
 require_relative "config"
