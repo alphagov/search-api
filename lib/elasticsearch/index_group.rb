@@ -28,7 +28,7 @@ module Elasticsearch
       index_url = (@base_uri + "#{CGI.escape(index_name)}/").to_s
       RestClient.put(index_url, MultiJson.encode(index_payload), content_type: :json)
 
-      Index.new(@base_uri, index_name, [])
+      Index.new(@base_uri, index_name, @mappings["edition"]["properties"].keys)
     end
 
   private
