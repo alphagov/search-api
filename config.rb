@@ -13,6 +13,7 @@ def backend_config
 end
 
 set :backends, backend_config
+set :elasticsearch, config_for("elasticsearch")
 set :elasticsearch_schema, config_for("elasticsearch_schema")
 
 set :recommended_format, "recommended-link"

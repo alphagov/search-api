@@ -1,12 +1,16 @@
 require "uri"
+require "elasticsearch/index_group"
 
 module Elasticsearch
+  class NoSuchIndex < ArgumentError; end
+
   class SearchServer
     DEFAULT_MAPPING_KEY = "default"
 
-    def initialize(base_uri, schema)
+    def initialize(base_uri, schema, index_names)
       @base_uri = URI.parse(base_uri)
       @schema = schema
+      @index_names = index_names
     end
 
     def index_group(prefix)
@@ -14,7 +18,11 @@ module Elasticsearch
     end
 
     def index(prefix)
-      index_group(prefix).current
+      if @index_names.include?(prefix)
+        index_group(prefix).current
+      else
+        raise NoSuchIndex, prefix
+      end
     end
 
   private

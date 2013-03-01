@@ -1,15 +1,10 @@
 require "integration_test_helper"
 
 class AmendmentTest < IntegrationTest
-
-  def setup
-    super
-    stub_backend
-  end
-
   def test_should_amend_existing_document
-    @backend_index.expects(:get).returns(sample_document)
-    @backend_index.expects(:add).with() do |documents|
+    index = stub_index
+    index.expects(:get).returns(sample_document)
+    index.expects(:add).with() do |documents|
       assert_equal 1, documents.length
       assert_equal "New exciting title", documents[0].title
       sample_document_attributes.each_pair do |key, value|
@@ -21,8 +16,9 @@ class AmendmentTest < IntegrationTest
   end
 
   def test_should_fail_on_invalid_field
-    @backend_index.expects(:get).returns(sample_document)
-    @backend_index.expects(:add).never
+    index = stub_index
+    index.expects(:get).returns(sample_document)
+    index.expects(:add).never
 
     post "/documents/%2Ffoobang", {fish: "Trout"}
 
@@ -31,8 +27,9 @@ class AmendmentTest < IntegrationTest
   end
 
   def test_should_fail_on_json_post
-    @backend_index.expects(:get).never
-    @backend_index.expects(:add).never
+    index = stub_index
+    index.expects(:get).never
+    index.expects(:add).never
 
     post(
       "/documents/%2Ffoobang",
@@ -44,8 +41,9 @@ class AmendmentTest < IntegrationTest
   end
 
   def test_should_refuse_to_update_link
-    @backend_index.expects(:get).returns(sample_document)
-    @backend_index.expects(:add).never
+    index = stub_index
+    index.expects(:get).returns(sample_document)
+    index.expects(:add).never
 
     post "/documents/%2Ffoobang", {link: "/somewhere-else"}
 
@@ -53,12 +51,12 @@ class AmendmentTest < IntegrationTest
   end
 
   def test_should_fail_to_amend_missing_document
-    @backend_index.expects(:get).returns(nil)
-    @backend_index.expects(:add).never
+    index = stub_index
+    index.expects(:get).returns(nil)
+    index.expects(:add).never
 
     post "/documents/%2Ffoobang", {title: "New exciting title"}
 
     assert_equal 404, last_response.status
   end
-
 end

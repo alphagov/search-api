@@ -1,0 +1,3 @@
+base_uri: "http://localhost:9200"
+index_names: ["mainstream", "detailed", "government"]
+default_index: "mainstream"

@@ -31,6 +31,10 @@ module Elasticsearch
       Index.new(@base_uri, index_name, @mappings)
     end
 
+    def current
+      Index.new(@base_uri, @name, @mappings)
+    end
+
   private
     def generate_name
       # elasticsearch requires that all index names be lower case

@@ -92,6 +92,12 @@ class IntegrationTest < MiniTest::Unit::TestCase
     app.any_instance.stubs(:backend).returns(@backend_index)
   end
 
+  def stub_index
+    s = stub("stub index")
+    Rummager.any_instance.stubs(:current_index).returns(s)
+    s
+  end
+
   def wrapper_for(index_name, mappings_fixture_file = "elasticsearch_schema.fixture.yml")
     ElasticsearchAdminWrapper.new(
       {

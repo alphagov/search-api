@@ -10,11 +10,10 @@ require "statsd"
 
 require "document"
 require "elasticsearch/index"
-require "null_backend"
+require "elasticsearch/search_server"
 
 require_relative "config"
 require_relative "helpers"
-require_relative "backends"
 
 class Rummager < Sinatra::Application
   def self.statsd
@@ -23,21 +22,24 @@ class Rummager < Sinatra::Application
     end
   end
 
-  def available_backends
-    @available_backends ||= Backends.new(settings, logger)
+  def search_server
+    base_uri = settings.elasticsearch["base_uri"]
+    schema = settings.elasticsearch_schema
+    index_names = settings.elasticsearch["index_names"]
+    @search_server ||= Elasticsearch::SearchServer.new(base_uri, schema, index_names)
   end
 
-  def backend
-    name = params["backend"] || "primary"
-    available_backends[name.to_sym] || halt(404)
+  def current_index
+    index_name = params["index"] || settings.elasticsearch["default_index"]
+    search_server.index(index_name)
+  rescue Elasticsearch::NoSuchIndex
+    halt(404)
   end
 
-  def backends_for_sitemap
-    [
-      available_backends[:mainstream],
-      available_backends[:detailed],
-      available_backends[:government]
-    ]
+  def indices_for_sitemap
+    ["mainstream", "detailed", "government"].map do |index_name|
+      search_server.index(index_name)
+    end
   end
 
   def text_error(content)
@@ -59,9 +61,9 @@ class Rummager < Sinatra::Application
     content_type :json
   end
 
-  # /backend_name/search?q=pie to search a named backend
-  # /search?q=pie to search the primary backend
-  get "/?:backend?/search.?:format?" do
+  # /index_name/search?q=pie to search a named index
+  # /search?q=pie to search the primary index
+  get "/?:index?/search.?:format?" do
     json_only
 
     query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
@@ -73,7 +75,7 @@ class Rummager < Sinatra::Application
 
     expires 3600, :public if query.length < 20
 
-    results = backend.search(query, params["format_filter"])
+    results = current_index.search(query, params["format_filter"])
 
     MultiJson.encode(results.map { |r| r.to_hash.merge(
       highlight: r.highlight,
@@ -82,10 +84,10 @@ class Rummager < Sinatra::Application
     )})
   end
 
-  get "/:backend/advanced_search.?:format?" do
+  get "/:index/advanced_search.?:format?" do
     json_only
 
-    results = backend.advanced_search(request.params)
+    results = current_index.advanced_search(request.params)
     MultiJson.encode({
       total: results[:total],
       results: results[:results].map { |r| r.to_hash.merge(
@@ -101,9 +103,8 @@ class Rummager < Sinatra::Application
     expires 86400, :public
     # Site maps can have up to 50,000 links in them.
     # We use one for / so we can have up to 49,999 others.
-    # bes = settings.backends.keys.map { |key| available_backends[key] }
-    documents = backends_for_sitemap.flat_map do |be|
-      be.all_documents(limit: 49_999)
+    documents = indices_for_sitemap.flat_map do |index|
+      index.all_documents(limit: 49_999)
     end
     builder do |xml|
       xml.instruct!
@@ -124,31 +125,31 @@ class Rummager < Sinatra::Application
     end
   end
 
-  post "/?:backend?/documents" do
+  post "/?:index?/documents" do
     request.body.rewind
     documents = [MultiJson.decode(request.body.read)].flatten.map { |hash|
-      backend.document_from_hash(hash)
+      current_index.document_from_hash(hash)
     }
 
-    simple_json_result(backend.add(documents))
+    simple_json_result(current_index.add(documents))
   end
 
-  post "/?:backend?/commit" do
-    simple_json_result(backend.commit)
+  post "/?:index?/commit" do
+    simple_json_result(current_index.commit)
   end
 
-  get "/?:backend?/documents/*" do
-    document = backend.get(params["splat"].first)
+  get "/?:index?/documents/*" do
+    document = current_index.get(params["splat"].first)
     halt 404 unless document
 
     MultiJson.encode document.to_hash
   end
 
-  delete "/?:backend?/documents/*" do
-    simple_json_result(backend.delete(params["splat"].first))
+  delete "/?:index?/documents/*" do
+    simple_json_result(current_index.delete(params["splat"].first))
   end
 
-  post "/?:backend?/documents/*" do
+  post "/?:index?/documents/*" do
     unless request.form_data?
       halt(
         415,
@@ -156,7 +157,7 @@ class Rummager < Sinatra::Application
         "Amendments require application/x-www-form-urlencoded data"
       )
     end
-    document = backend.get(params["splat"].first)
+    document = current_index.get(params["splat"].first)
     halt 404 unless document
     text_error "Cannot change document links" if request.POST.include? "link"
 
@@ -168,14 +169,14 @@ class Rummager < Sinatra::Application
         text_error "Unrecognised field '#{key}'"
       end
     end
-    simple_json_result(backend.add([document]))
+    simple_json_result(current_index.add([document]))
   end
 
-  delete "/?:backend?/documents" do
+  delete "/?:index?/documents" do
     if params["delete_all"]
-      action = backend.delete_all
+      action = current_index.delete_all
     else
-      action = backend.delete(params["link"])
+      action = current_index.delete(params["link"])
     end
     simple_json_result(action)
   end
