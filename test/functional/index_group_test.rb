@@ -6,43 +6,38 @@ require "elasticsearch/index_group"
 class IndexGroupTest < MiniTest::Unit::TestCase
 
   def setup
-    @server = Elasticsearch::SearchServer.new(
-      "http://localhost:9200/",
-      {
-        "index" => {
-          "settings" => "awesomeness"
-        },
-        "mappings" => {
-          "default" => {
-            "edition" => {
-              "properties" => {
-                "title" => { "type" => "string" }
-              }
+    @schema = {
+      "index" => {
+        "settings" => "awesomeness"
+      },
+      "mappings" => {
+        "default" => {
+          "edition" => {
+            "properties" => {
+              "title" => { "type" => "string" }
             }
-          },
-          "custom" => {
-            "edition" => {
-              "properties" => {
-                "title" => { "type" => "string" },
-                "description" => { "type" => "string" }
-              }
+          }
+        },
+        "custom" => {
+          "edition" => {
+            "properties" => {
+              "title" => { "type" => "string" },
+              "description" => { "type" => "string" }
             }
           }
         }
       }
+    }
+    @server = Elasticsearch::SearchServer.new(
+      "http://localhost:9200/",
+      @schema
     )
   end
 
   def test_create_index
     expected_body = MultiJson.encode({
-      "settings" => "awesomeness",
-      "mappings" => {
-        "edition" => {
-          "properties" => {
-            "title" => { "type" => "string" }
-          }
-        }
-      }
+      "settings" => @schema["index"]["settings"],
+      "mappings" => @schema["mappings"]["default"]
     })
     stub = stub_request(:put, %r(http://localhost:9200/mainstream-.*/))
       .with(body: expected_body)
@@ -60,15 +55,8 @@ class IndexGroupTest < MiniTest::Unit::TestCase
 
   def test_create_index_with_custom_mappings
     expected_body = MultiJson.encode({
-      "settings" => "awesomeness",
-      "mappings" => {
-        "edition" => {
-          "properties" => {
-            "title" => { "type" => "string" },
-            "description" => { "type" => "string" }
-          }
-        }
-      }
+      "settings" => @schema["index"]["settings"],
+      "mappings" => @schema["mappings"]["custom"]
     })
     stub = stub_request(:put, %r(http://localhost:9200/custom-.*/))
       .with(body: expected_body)
