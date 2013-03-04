@@ -5,6 +5,11 @@ require "elasticsearch/index_group"
 
 class IndexGroupTest < MiniTest::Unit::TestCase
 
+  ELASTICSEARCH_OK = {
+    status: 200,
+    body: MultiJson.encode({"ok" => true, "acknowledged" => true})
+  }
+
   def setup
     @schema = {
       "index" => {
@@ -71,5 +76,101 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     assert index.is_a? Elasticsearch::Index
     assert_match(/^custom-/, index.index_name)
     assert_equal ["title", "description"], index.field_names
+  end
+
+  def test_switch_index_with_no_existing_alias
+    new_index = stub("New index", index_name: "test-new")
+    get_stub = stub_request(:get, "http://localhost:9200/_aliases")
+      .to_return(
+        status: 200,
+        body: MultiJson.encode({
+          "test-new" => { "aliases" => {} }
+        })
+      )
+    expected_body = MultiJson.encode({
+      "actions" => [
+        { "add" => { "index" => "test-new", "alias" => "test" } }
+      ]
+    })
+    post_stub = stub_request(:post, "http://localhost:9200/_aliases")
+      .with(body: expected_body)
+      .to_return(ELASTICSEARCH_OK)
+
+    @server.index_group("test").switch_to(new_index)
+
+    assert_requested(get_stub)
+    assert_requested(post_stub)
+  end
+
+  def test_switch_index_with_existing_alias
+    new_index = stub("New index", index_name: "test-new")
+    get_stub = stub_request(:get, "http://localhost:9200/_aliases")
+      .to_return(
+        status: 200,
+        body: MultiJson.encode({
+          "test-old" => { "aliases" => { "test" => {} } },
+          "test-new" => { "aliases" => {} }
+        })
+      )
+
+    expected_body = MultiJson.encode({
+      "actions" => [
+        { "remove" => { "index" => "test-old", "alias" => "test" } },
+        { "add" => { "index" => "test-new", "alias" => "test" } }
+      ]
+    })
+    post_stub = stub_request(:post, "http://localhost:9200/_aliases")
+      .with(body: expected_body)
+      .to_return(ELASTICSEARCH_OK)
+
+    @server.index_group("test").switch_to(new_index)
+
+    assert_requested(get_stub)
+    assert_requested(post_stub)
+  end
+
+  def test_switch_index_with_multiple_existing_aliases
+    # Not expecting the system to get into this state, but it should cope
+    new_index = stub("New index", index_name: "test-new")
+    get_stub = stub_request(:get, "http://localhost:9200/_aliases")
+      .to_return(
+        status: 200,
+        body: MultiJson.encode({
+          "test-old" => { "aliases" => { "test" => {} } },
+          "test-old2" => { "aliases" => { "test" => {} } },
+          "test-new" => { "aliases" => {} }
+        })
+      )
+
+    expected_body = MultiJson.encode({
+      "actions" => [
+        { "remove" => { "index" => "test-old", "alias" => "test" } },
+        { "remove" => { "index" => "test-old2", "alias" => "test" } },
+        { "add" => { "index" => "test-new", "alias" => "test" } }
+      ]
+    })
+    post_stub = stub_request(:post, "http://localhost:9200/_aliases")
+      .with(body: expected_body)
+      .to_return(ELASTICSEARCH_OK)
+
+    @server.index_group("test").switch_to(new_index)
+
+    assert_requested(get_stub)
+    assert_requested(post_stub)
+  end
+
+  def test_switch_index_with_existing_real_index
+    new_index = stub("New index", index_name: "test-new")
+    get_stub = stub_request(:get, "http://localhost:9200/_aliases")
+      .to_return(
+        status: 200,
+        body: MultiJson.encode({
+          "test" => { "aliases" => {} }
+        })
+      )
+
+    assert_raises RuntimeError do
+      @server.index_group("test").switch_to(new_index)
+    end
   end
 end
