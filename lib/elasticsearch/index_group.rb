@@ -31,8 +31,52 @@ module Elasticsearch
       Index.new(@base_uri, index_name, @mappings)
     end
 
+    def switch_to(index)
+      # Bail if there is an existing index with this name.
+      # elasticsearch won't allow us to add an alias with the same name as an
+      # existing index. If such an index exists, it hasn't yet been migrated to
+      # the new alias-y way of doing things.
+      #
+      # TODO: add a way to migrate to the new alias-y way of doing things
+      indices = MultiJson.decode(RestClient.get((@base_uri + "_aliases").to_s))
+      if indices.include? @name
+        raise RuntimeError, "There is an index called #{@name}"
+      end
+
+      # Response of the form:
+      #   { "index_name" => { "aliases" => { "a1" => {}, "a2" => {} } }
+      aliased_indices = indices.select { |name, details|
+        details["aliases"].include? @name
+      }
+
+      # For any existing indices with this alias, remove the alias
+      # We would normally expect 0 or 1 such index, but several is valid too
+      actions = aliased_indices.keys.map { |index_name|
+        { "remove" => { "index" => index_name, "alias" => @name } }
+      }
+
+      actions << { "add" => { "index" => index.index_name, "alias" => @name } }
+
+      payload = { "actions" => actions }
+
+      RestClient.post(
+        (@base_uri + "/_aliases").to_s,
+        MultiJson.encode(payload),
+        content_type: :json
+      )
+    end
+
     def current
       Index.new(@base_uri, @name, @mappings)
+    end
+
+    def clean
+      indices = MultiJson.decode(RestClient.get((@base_uri + "_aliases").to_s))
+      group_indices = indices.select { |name| name_pattern.match name }
+
+      group_indices.each do |name, details|
+        delete(name) if details["aliases"].empty?
+      end
     end
 
   private
@@ -40,6 +84,26 @@ module Elasticsearch
       # elasticsearch requires that all index names be lower case
       # (Thankfully, lower case ISO8601 timestamps are still valid)
       "#{@name}-#{Time.now.utc.iso8601}-#{SecureRandom.uuid}".downcase
+    end
+
+    def name_pattern
+      %r{
+        \A
+        #{Regexp.escape(@name)}
+        -
+        \d{4}-\d{2}-\d{2}  # Date
+        t
+        \d{2}:\d{2}:\d{2}  # Time
+        z
+        -
+        \h{8}-\h{4}-\h{4}-\h{4}-\h{12}  # UUID
+        \Z
+      }x
+    end
+
+    def delete(index_name)
+      # The extra leading slash is to stop URI.parse getting hung up on colons
+      RestClient.delete (@base_uri + ("/#{index_name}")).to_s
     end
   end
 end
