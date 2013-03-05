@@ -4,17 +4,10 @@ require "cgi"
 
 class ElasticsearchIndexingTest < IntegrationTest
 
-  def stub_elasticsearch_settings
-    app.settings.stubs(:elasticsearch).returns({
-      "base_uri" => "http://localhost:9200",
-      "index_names" => ["rummager_test"],
-      "default_index" => "rummager_test"
-    })
-  end
-
   def setup
     stub_elasticsearch_settings
-    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_aliases|rummager_test.*)})
+    enable_test_index_connections
+    try_remove_test_index
     @sample_document = {
       "title" => "TITLE",
       "description" => "DESCRIPTION",
@@ -22,31 +15,10 @@ class ElasticsearchIndexingTest < IntegrationTest
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT"
     }
-
-    # Just in case an old test index exists
-    begin
-      RestClient.delete "http://localhost:9200/rummager_test"
-    rescue RestClient::ResourceNotFound
-    end
-  end
-
-  def search_server
-    Elasticsearch::SearchServer.new(
-      app.settings.elasticsearch["base_uri"],
-      app.settings.elasticsearch_schema,
-      app.settings.elasticsearch_schema["index_names"]
-    )
   end
 
   def teardown
-    index_group = search_server.index_group("rummager_test")
-    index_group.clean
-  end
-
-  def create_test_index
-    index_group = search_server.index_group("rummager_test")
-    index = index_group.create_index
-    index_group.switch_to(index)
+    clean_index_group
   end
 
   def retrieve_document_from_rummager(link)
