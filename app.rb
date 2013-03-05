@@ -37,7 +37,7 @@ class Rummager < Sinatra::Application
   end
 
   def indices_for_sitemap
-    ["mainstream", "detailed", "government"].map do |index_name|
+    settings.elasticsearch["index_names"].map do |index_name|
       search_server.index(index_name)
     end
   end

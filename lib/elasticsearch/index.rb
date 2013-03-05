@@ -9,6 +9,8 @@ require "json"
 module Elasticsearch
   class Index
 
+    POPULATE_BATCH_SIZE = 50
+
     # We need to provide a limit to queries: if we want everything, just use this
     # This number is big enough that it vastly exceeds the number of items we're
     # indexing, but not so big as to trigger strange behaviour (internal errors)
@@ -123,6 +125,22 @@ module Elasticsearch
       end
       # Ensure the request payload ends with a newline
       @client.post("_bulk", documents.join("\n") + "\n", content_type: :json)
+    end
+
+    def populate_from(source_index)
+      total_indexed = 0
+      # This will load the entire content of the search index into memory at
+      # once, which isn't yet a big deal but may become a problem as the search
+      # index grows. One alternative could be to use elasticsearch scan queries
+      # <http://www.elasticsearch.org/guide/reference/api/search/search-type.html>
+      all_docs = source_index.all_documents
+      all_docs.each_slice(POPULATE_BATCH_SIZE) do |documents|
+        add documents
+        total_indexed += documents.length
+        @logger.info "Populated #{total_indexed} of #{all_docs.size}"
+      end
+
+      commit
     end
 
     def get(link)

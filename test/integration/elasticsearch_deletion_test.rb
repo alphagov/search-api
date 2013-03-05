@@ -5,11 +5,17 @@ require "rest-client"
 class ElasticsearchDeletionTest < IntegrationTest
 
   def setup
-    use_elasticsearch_for_primary_search
-    WebMock.disable_net_connect!(allow: "localhost:9200")
-    reset_elasticsearch_index
+    stub_elasticsearch_settings
+    enable_test_index_connections
+    try_remove_test_index
+    create_test_index
+
     add_sample_documents
     commit_index
+  end
+
+  def teardown
+    clean_index_group
   end
 
   def sample_document_attributes

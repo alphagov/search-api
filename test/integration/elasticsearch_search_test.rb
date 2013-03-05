@@ -5,7 +5,10 @@ require "rest-client"
 class ElasticsearchSearchTest < IntegrationTest
 
   def setup
-    use_elasticsearch_for_primary_search
+    stub_elasticsearch_settings
+    enable_test_index_connections
+    try_remove_test_index
+
     schema = deep_copy(settings.elasticsearch_schema)
     properties = schema["mappings"]["default"]["edition"]["properties"]
     properties.merge!({
@@ -15,10 +18,13 @@ class ElasticsearchSearchTest < IntegrationTest
 
     app.settings.stubs(:elasticsearch_schema).returns(schema)
 
-    WebMock.disable_net_connect!(allow: "localhost:9200")
-    reset_elasticsearch_index
+    create_test_index
     add_sample_documents
     commit_index
+  end
+
+  def teardown
+    clean_index_group
   end
 
   def sample_document_attributes

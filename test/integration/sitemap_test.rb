@@ -6,39 +6,15 @@ require "nokogiri"
 class SitemapTest < IntegrationTest
 
   def setup
-    stub_backends_with(
-      {
-        primary: {
-          type: "elasticsearch",
-          server: "localhost",
-          port: 9200,
-          index_name: "mainstream_test"
-        },
-        mainstream: {
-          type: "elasticsearch",
-          server: "localhost",
-          port: 9200,
-          index_name: "mainstream_test"
-        },
-        detailed: {
-          type: "elasticsearch",
-          server: "localhost",
-          port: 9200,
-          index_name: "detailed_test"
-        },
-        government: {
-          type: "elasticsearch",
-          server: "localhost",
-          port: 9200,
-          index_name: "government_test"
-        }
-      }
-    )
+    @index_names = %w(mainstream_test detailed_test government_test)
+    stub_elasticsearch_settings(@index_names)
+    enable_test_index_connections
 
-    WebMock.disable_net_connect!(allow: "localhost:9200")
-    reset_elasticsearch_index(:mainstream)
-    reset_elasticsearch_index(:detailed)
-    reset_elasticsearch_index(:government)
+    @index_names.each do |i|
+      try_remove_test_index(i)
+      create_test_index(i)
+    end
+
     add_sample_documents
     commit_index
   end
@@ -123,22 +99,29 @@ class SitemapTest < IntegrationTest
     assert_no_link "/government/some-content"
   end
 
-  def test_should_include_content_from_mainstream_and_detailed_indexes
-    document_in_another_index = {
-      "title" => "Fetid Dingo's Kidneys",
-      "description" => "Bugblatter Beast of Traal",
-      "format" => "specialist",
-      "link" => "/a-specialist-guidance",
-      "indexable_content" => "Always bring a towel."
-    }
-    post "/detailed/documents", MultiJson.encode(document_in_another_index)
-    assert last_response.ok?
-    post "/detailed/commit", nil
-    assert last_response.ok?
+  def test_should_include_content_from_all_indices
+
+    result_links = ["/", "/an-example-answer", "/another-example-answer"]
+
+    @index_names[1..-1].each do |index_name|
+      link = "/#{index_name}/a-thing"
+      document = {
+        "title" => "Fetid Dingo's Kidneys",
+        "description" => "Bugblatter Beast of Traal",
+        "format" => "thing",
+        "link" => link,
+        "indexable_content" => "Always bring a towel."
+      }
+      post "/#{index_name}/documents", MultiJson.encode(document)
+      result_links << link
+      assert last_response.ok?
+      post "/#{index_name}/commit", nil
+      assert last_response.ok?
+    end
 
     get "/sitemap.xml"
     assert last_response.headers["Content-Type"].include?("application/xml")
     assert last_response.ok?
-    assert_result_links "/", "/an-example-answer", "/another-example-answer", "/a-specialist-guidance"
+    assert_result_links *result_links
   end
 end
