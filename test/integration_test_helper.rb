@@ -102,19 +102,6 @@ class IntegrationTest < MiniTest::Unit::TestCase
     Rummager
   end
 
-  def use_elasticsearch_for_primary_search
-    stub_backends_with(primary: {
-          type: "elasticsearch",
-          server: "localhost",
-          port: 9200,
-          index_name: "rummager_test"
-        })
-  end
-
-  def stub_backends_with(hash)
-    app.settings.stubs(:backends).returns(hash)
-  end
-
   def add_field_to_mappings(fieldname, type="string")
     schema = deep_copy(settings.elasticsearch_schema)
     properties = schema["mappings"]["default"]["edition"]["properties"]
@@ -125,11 +112,6 @@ class IntegrationTest < MiniTest::Unit::TestCase
 
   def assert_no_results
     assert_equal [], MultiJson.decode(last_response.body)
-  end
-
-  def stub_backend
-    @backend_index = stub_everything("Chosen backend")
-    app.any_instance.stubs(:backend).returns(@backend_index)
   end
 
   def stub_index
