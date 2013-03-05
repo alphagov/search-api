@@ -1,7 +1,4 @@
 require "integration_test_helper"
-require "app"
-require "rest-client"
-require "reindexer"
 require "rack/logger"
 
 class ElasticsearchMigrationTest < IntegrationTest

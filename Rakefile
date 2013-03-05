@@ -5,8 +5,6 @@ File.join(File.dirname(__FILE__), "lib").tap do |path|
   $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
 end
 
-require "reindexer"
-
 desc "Run all the tests"
 task "test" => ["test:units", "test:functionals", "test:integration"]
 
@@ -188,19 +186,4 @@ namespace :rummager do
     puts "You probably want to run the rummager:list_formats task now, to make"
     puts "sure this worked as you expected."
   end
-
-  desc "Reindex all content in the index"
-  task :reindex => :rummager_environment do
-    Reindexer.new(@search_wrapper, @logger).reindex_all
-  end
-
-  desc "Reindex all content in all indexes"
-  task :reindex_all => :rummager_environment do
-    @search_wrappers.each do |name, wrapper|
-      puts "Reindexing '#{name}' index..."
-      Reindexer.new(wrapper, @logger).reindex_all
-      puts "...done!"
-    end
-  end
-
 end
