@@ -5,7 +5,6 @@ File.join(File.dirname(__FILE__), "lib").tap do |path|
   $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
 end
 
-require "elasticsearch_admin_wrapper"
 require "reindexer"
 
 desc "Run all the tests"

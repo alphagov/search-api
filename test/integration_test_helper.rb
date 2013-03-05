@@ -39,8 +39,6 @@ module IntegrationFixtures
   end
 end
 
-require "elasticsearch_admin_wrapper"
-
 class InvalidTestIndex < ArgumentError; end
 
 module ElasticsearchIntegration
@@ -125,20 +123,6 @@ class IntegrationTest < MiniTest::Unit::TestCase
     app.settings.stubs(:elasticsearch_schema).returns(schema)
   end
 
-  def reset_elasticsearch_index(index_name=:primary)
-    admin_wrapper(index_name).tap do |admin|
-      admin.ensure_index!
-      admin.put_mappings
-    end
-  end
-
-  def update_elasticsearch_index(index_name=:primary)
-    admin_wrapper(index_name).tap do |admin|
-      admin.ensure_index
-      admin.put_mappings
-    end
-  end
-
   def assert_no_results
     assert_equal [], MultiJson.decode(last_response.body)
   end
@@ -154,28 +138,8 @@ class IntegrationTest < MiniTest::Unit::TestCase
     s
   end
 
-  def wrapper_for(index_name, mappings_fixture_file = "elasticsearch_schema.fixture.yml")
-    ElasticsearchAdminWrapper.new(
-      {
-        type: "elasticsearch",
-        server: "localhost",
-        port: 9200,
-        index_name: index_name
-      },
-      load_yaml_fixture(mappings_fixture_file)
-    )
-  end
-
 private
   def deep_copy(hash)
     Marshal.load(Marshal.dump(hash))
-  end
-
-  def admin_wrapper(index_name, mappings_fixture_file = nil)
-    schema = mappings_fixture_file ? load_yaml_fixture(mappings_fixture_file) : app.settings.elasticsearch_schema
-    ElasticsearchAdminWrapper.new(
-      app.settings.backends[index_name],
-      schema
-    )
   end
 end
