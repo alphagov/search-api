@@ -15,17 +15,6 @@ end
 set :backends, backend_config
 set :elasticsearch_schema, config_for("elasticsearch_schema")
 
-panopticon_api_credentials = config_for(:panopticon_api_credentials)[ENV["RACK_ENV"]]
-panopticon_api_credentials.symbolize_keys!
-
-panopticon_api_credentials.values.each do |auth_value|
-  # Basic auth is a hash, in which case we symbolize the keys
-  # Bearer tokens are a string, in which case we don't
-  auth_value.symbolize_keys! if auth_value.respond_to? :symbolize_keys!
-end
-
-set :panopticon_api_credentials, panopticon_api_credentials
-
 set :top_results, 4
 set :max_more_results, 46
 set :max_recommended_results, 2
