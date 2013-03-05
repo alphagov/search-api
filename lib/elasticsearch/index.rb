@@ -95,14 +95,6 @@ module Elasticsearch
       end
     end
 
-    # Where settings is a hash like this:
-    #   server: localhost
-    #   port: 9200
-    def self.base_uri_for_settings(settings)
-      settings = settings.symbolize_keys
-      URI::HTTP.build(host: settings[:server], port: settings[:port])
-    end
-
     # TODO: support the format_filter option here
     def initialize(base_uri, index_name, mappings, logger = nil, format_filter = nil)
       @client = Client.new(base_uri, index_name, logger)
