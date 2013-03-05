@@ -118,6 +118,15 @@ module Elasticsearch
       @mappings["edition"]["properties"].keys
     end
 
+    def real_name
+      alias_info = MultiJson.decode(@client.get("_aliases"))
+      # If the index exists, it will return something of the form:
+      # { real_name => { "aliases" => { alias => {} } } }
+      # If not, it'll return:
+      # {}
+      alias_info.keys.first
+    end
+
     def add(documents)
       @logger.info "Adding #{documents.size} document(s) to elasticsearch"
       documents = documents.map(&:elasticsearch_export).map do |doc|
