@@ -174,6 +174,46 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     end
   end
 
+  def test_index_names_with_no_indices
+    stub_request(:get, "http://localhost:9200/_aliases")
+      .to_return(
+        status: 200,
+        body: MultiJson.encode({
+        })
+      )
+
+    assert_equal [], @server.index_group("test").index_names
+  end
+
+  def test_index_names_with_index
+    index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
+    stub_request(:get, "http://localhost:9200/_aliases")
+      .to_return(
+        status: 200,
+        body: MultiJson.encode({
+          index_name => { "aliases" => { "test" => {} } }
+        })
+      )
+
+    assert_equal [index_name], @server.index_group("test").index_names
+  end
+
+  def test_index_names_with_other_groups
+    this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
+    other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
+
+    stub_request(:get, "http://localhost:9200/_aliases")
+      .to_return(
+        status: 200,
+        body: MultiJson.encode({
+          this_name => { "aliases" => {} },
+          other_name => { "aliases" => {} }
+        })
+      )
+
+    assert_equal [this_name], @server.index_group("test").index_names
+  end
+
   def test_clean_with_no_indices
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(

@@ -70,11 +70,12 @@ module Elasticsearch
       Index.new(@base_uri, @name, @mappings)
     end
 
-    def clean
-      indices = MultiJson.decode(RestClient.get((@base_uri + "_aliases").to_s))
-      group_indices = indices.select { |name| name_pattern.match name }
+    def index_names
+      alias_map.keys
+    end
 
-      group_indices.each do |name, details|
+    def clean
+      alias_map.each do |name, details|
         delete(name) if details["aliases"].empty?
       end
     end
@@ -84,6 +85,13 @@ module Elasticsearch
       # elasticsearch requires that all index names be lower case
       # (Thankfully, lower case ISO8601 timestamps are still valid)
       "#{@name}-#{Time.now.utc.iso8601}-#{SecureRandom.uuid}".downcase
+    end
+
+    def alias_map
+      # Return a map of all aliases in this group, of the form:
+      # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
+      indices = MultiJson.decode(RestClient.get((@base_uri + "_aliases").to_s))
+      indices.select { |name| name_pattern.match name }
     end
 
     def name_pattern
