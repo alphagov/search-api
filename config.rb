@@ -15,14 +15,8 @@ end
 set :backends, backend_config
 set :elasticsearch_schema, config_for("elasticsearch_schema")
 
-set :top_results, 4
-set :max_more_results, 46
-set :max_recommended_results, 2
-
 set :recommended_format, "recommended-link"
 set :inside_government_link, "inside-government-link"
-
-set :format_order, ["transaction", "answer", "programme", "guide"]
 
 configure :development do
   set :protection, false
