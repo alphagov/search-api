@@ -8,11 +8,10 @@ class ElasticsearchMigrationTest < IntegrationTest
     enable_test_index_connections
     try_remove_test_index
 
-    new_schema = deep_copy(settings.elasticsearch_schema)
-    @stemmer = new_schema["index"]["settings"]["analysis"]["filter"]["stemmer_override"]
-    @stemmer["rules"] = ["fish => fish"]
-
-    app.stubs(:elasticsearch_schema).returns(new_schema)
+    stub_modified_schema do |schema|
+      @stemmer = schema["index"]["settings"]["analysis"]["filter"]["stemmer_override"]
+      @stemmer["rules"] = ["fish => fish"]
+    end
 
     create_test_index
     add_sample_documents

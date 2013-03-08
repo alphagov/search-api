@@ -11,11 +11,11 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     enable_test_index_connections
     try_remove_test_index
 
-    schema = deep_copy(settings.elasticsearch_schema)
-    properties = schema["mappings"]["default"]["edition"]["properties"]
-    properties.merge!({"boolean_property" => { "type" => "boolean", "index" => "not_analyzed" },
-                       "date_property" => { "type" => "date", "index" => "not_analyzed" }})
-    app.settings.stubs(:elasticsearch_schema).returns(schema)
+    stub_modified_schema do |schema|
+      properties = schema["mappings"]["default"]["edition"]["properties"]
+      properties.merge!({"boolean_property" => { "type" => "boolean", "index" => "not_analyzed" },
+                         "date_property" => { "type" => "date", "index" => "not_analyzed" }})
+    end
 
     create_test_index
     add_sample_documents

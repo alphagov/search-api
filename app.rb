@@ -23,21 +23,18 @@ class Rummager < Sinatra::Application
   end
 
   def search_server
-    base_uri = settings.elasticsearch["base_uri"]
-    schema = settings.elasticsearch_schema
-    index_names = settings.elasticsearch["index_names"]
-    @search_server ||= Elasticsearch::SearchServer.new(base_uri, schema, index_names)
+    settings.search_config.search_server
   end
 
   def current_index
-    index_name = params["index"] || settings.elasticsearch["default_index"]
+    index_name = params["index"] || settings.default_index_name
     search_server.index(index_name)
   rescue Elasticsearch::NoSuchIndex
     halt(404)
   end
 
   def indices_for_sitemap
-    settings.elasticsearch["index_names"].map do |index_name|
+    settings.search_config.index_names.map do |index_name|
       search_server.index(index_name)
     end
   end

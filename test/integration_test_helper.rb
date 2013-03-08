@@ -53,12 +53,22 @@ module ElasticsearchIntegration
     index_names.each do |n| check_index_name(n) end
     check_index_name(default) unless default.nil?
 
-    @default_index = default || index_names.first
-    app.settings.stubs(:elasticsearch).returns({
+    @default_index_name = default || index_names.first
+
+    app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
-      "index_names" => index_names,
-      "default_index" => @default_index
+      "index_names" => index_names
     })
+    app.settings.stubs(:default_index_name).returns(@default_index_name)
+  end
+
+  def stub_modified_schema
+    schema = deep_copy(app.settings.search_config.elasticsearch_schema)
+
+    # Allow the block to modify the schema copy directly
+    yield schema
+
+    app.settings.search_config.stubs(:elasticsearch_schema).returns(schema)
   end
 
   def enable_test_index_connections
@@ -66,27 +76,23 @@ module ElasticsearchIntegration
   end
 
   def search_server
-    Elasticsearch::SearchServer.new(
-      app.settings.elasticsearch["base_uri"],
-      app.settings.elasticsearch_schema,
-      app.settings.elasticsearch_schema["index_names"]
-    )
+    app.settings.search_config.search_server
   end
 
-  def create_test_index(group_name = @default_index)
+  def create_test_index(group_name = @default_index_name)
     index_group = search_server.index_group(group_name)
     index = index_group.create_index
     index_group.switch_to(index)
   end
 
-  def try_remove_test_index(index_name = @default_index)
+  def try_remove_test_index(index_name = @default_index_name)
     check_index_name(index_name)
     RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"
   rescue RestClient::ResourceNotFound
     # Index doesn't exist: that's fine
   end
 
-  def clean_index_group(group_name = @default_index)
+  def clean_index_group(group_name = @default_index_name)
     check_index_name(group_name)
     search_server.index_group(group_name).clean
   end
@@ -103,11 +109,10 @@ class IntegrationTest < MiniTest::Unit::TestCase
   end
 
   def add_field_to_mappings(fieldname, type="string")
-    schema = deep_copy(settings.elasticsearch_schema)
-    properties = schema["mappings"]["default"]["edition"]["properties"]
-    properties.merge!({fieldname.to_s => { "type" => type, "index" => "not_analyzed" }})
-
-    app.settings.stubs(:elasticsearch_schema).returns(schema)
+    stub_modified_schema do |schema|
+      properties = schema["mappings"]["default"]["edition"]["properties"]
+      properties.merge!({fieldname.to_s => { "type" => type, "index" => "not_analyzed" }})
+    end
   end
 
   def assert_no_results
