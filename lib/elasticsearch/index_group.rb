@@ -111,7 +111,7 @@ module Elasticsearch
 
     def delete(index_name)
       # The extra leading slash is to stop URI.parse getting hung up on colons
-      RestClient.delete (@base_uri + ("/#{index_name}")).to_s
+      RestClient.delete (@base_uri + ("/#{CGI.escape(index_name)}")).to_s
     end
   end
 end
