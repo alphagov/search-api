@@ -33,6 +33,29 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_nil @wrapper.real_name
   end
 
+  def test_exists
+    stub_request(:get, "http://example.com:9200/test-index/_aliases")
+      .to_return(
+        body: MultiJson.encode({"real-name" => { "aliases" => { "test-index" => {} } }}),
+        headers: {"Content-Type" => "application/json"}
+      )
+
+    assert @wrapper.exists?
+  end
+
+  def test_exists_when_no_index
+    # elasticsearch is weird: even though /index/_status 404s if the index
+    # doesn't exist, /index/_aliases returns a 200.
+    stub_request(:get, "http://example.com:9200/test-index/_aliases")
+      .to_return(
+        status: 200,
+        body: "{}",
+        headers: {"Content-Type" => "application/json"}
+      )
+
+    refute @wrapper.exists?
+  end
+
   def test_should_bulk_update_documents
     # TODO: factor out with FactoryGirl
     json_document = {

@@ -119,6 +119,10 @@ module Elasticsearch
       alias_info.keys.first
     end
 
+    def exists?
+      ! real_name.nil?
+    end
+
     def add(documents)
       @logger.info "Adding #{documents.size} document(s) to elasticsearch"
       documents = documents.map(&:elasticsearch_export).map do |doc|
