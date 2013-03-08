@@ -1,4 +1,5 @@
 require "yaml"
+require "elasticsearch/search_server"
 
 class SearchConfig
 
