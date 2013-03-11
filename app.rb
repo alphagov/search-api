@@ -72,7 +72,7 @@ class Rummager < Sinatra::Application
 
     expires 3600, :public if query.length < 20
 
-    results = current_index.search(query, params["format_filter"])
+    results = current_index.search(query)
 
     MultiJson.encode(results.map { |r| r.to_hash.merge(
       highlight: r.highlight,

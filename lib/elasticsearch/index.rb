@@ -95,15 +95,12 @@ module Elasticsearch
       end
     end
 
-    # TODO: support the format_filter option here
-    def initialize(base_uri, index_name, mappings, logger = nil, format_filter = nil)
+    def initialize(base_uri, index_name, mappings, logger = nil)
       @client = Client.new(base_uri, index_name, logger)
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
       @logger = logger || Logger.new("/dev/null")
-
-      raise RuntimeError, "Format filters not yet supported" if format_filter
     end
 
     def field_names
@@ -173,10 +170,7 @@ module Elasticsearch
       }
     end
 
-    def search(query, format_filter = nil)
-
-      raise "Format filter not yet supported" if format_filter
-
+    def search(query)
       # Per-format boosting done as a filter, so the results get cached on the
       # server, as they are the same for each query
 
