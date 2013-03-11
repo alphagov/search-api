@@ -57,6 +57,15 @@ module Elasticsearch
       end
     end
 
+    # RestClient doesn't natively support sending payloads with these request
+    # methods, but elasticsearch requires them for certain operations
+    [:get, :delete].each do |method_name|
+      define_method "#{method_name}_with_payload" do |sub_path, payload|
+        request(method_name, sub_path, payload)
+      end
+    end
+
+
   private
     def url_for(sub_path)
       if sub_path.start_with? "/"

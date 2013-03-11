@@ -89,7 +89,7 @@ module Elasticsearch
     def all_documents(options={})
       limit = options.fetch(:limit, MASSIVE_NUMBER)
       search_body = {query: {match_all: {}}, size: limit}
-      result = @client.request(:get, "_search", search_body.to_json)
+      result = @client.get_with_payload("_search", search_body.to_json)
       result = MultiJson.decode(result)
       result["hits"]["hits"].map { |hit|
         document_from_hash(hit["_source"])
@@ -182,10 +182,8 @@ module Elasticsearch
         }
       }.to_json
 
-      # RestClient does not allow a payload with a GET request
-      # so we have to call @client.request directly.
       @logger.debug "Request payload: #{payload}"
-      result = @client.request(:get, "_search", payload)
+      result = @client.get_with_payload("_search", payload)
       result = MultiJson.decode(result)
       result["hits"]["hits"].map { |hit|
         document_from_hash(hit["_source"].merge("es_score" => hit["_score"]))
@@ -216,9 +214,7 @@ module Elasticsearch
 
       @logger.info "Request payload: #{payload.to_json}"
 
-      # RestClient does not allow a payload with a GET request
-      # so we have to call @client.request directly.
-      result = @client.request(:get, "_search", payload.to_json)
+      result = @client.get_with_payload("_search", payload.to_json)
       result = MultiJson.decode(result)
       {
         total: result["hits"]["total"],
@@ -259,15 +255,13 @@ module Elasticsearch
     end
 
     def section(section_slug)
-      # RestClient does not allow a payload with a GET request
-      # so we have to call @client.request directly.
       payload = {
           from: 0, size: 50,
           query: {
             term: { section: section_slug }
           }
       }.to_json
-      result = @client.request(:get, "_search", payload)
+      result = @client.get_with_payload("_search", payload)
       result = MultiJson.decode(result)
       result["hits"]["hits"].map { |hit|
         document_from_hash(hit["_source"])
@@ -288,11 +282,11 @@ module Elasticsearch
     end
 
     def delete_by_format(format)
-      @client.request :delete, "_query", {term: {format: format}}.to_json
+      @client.delete_with_payload("_query", {term: {format: format}}.to_json)
     end
 
     def delete_all
-      @client.request :delete, "_query", {match_all: {}}.to_json
+      @client.delete_with_payload("_query", {match_all: {}}.to_json)
       commit
     end
 
@@ -319,7 +313,7 @@ module Elasticsearch
           }
         }
       }.to_json
-      result = MultiJson.decode(@client.request(:get, "_search", payload))
+      result = MultiJson.decode(@client.get_with_payload("_search", payload))
       result["facets"][facet_name]["terms"]
     end
   end
