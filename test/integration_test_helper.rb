@@ -33,10 +33,6 @@ module IntegrationFixtures
   def sample_recommended_document
     Document.from_hash(sample_recommended_document_attributes, default_mappings)
   end
-
-  def sample_section
-    Section.new("bob")
-  end
 end
 
 class InvalidTestIndex < ArgumentError; end

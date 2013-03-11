@@ -1,5 +1,4 @@
 require "document"
-require "section"
 require "logger"
 require "cgi"
 require "rest-client"
@@ -286,31 +285,6 @@ module Elasticsearch
       # Map something like 'fish AND chips' to 'fish "AND" chips', to avoid
       # Lucene trying to parse it as a query conjunction
       special_chars_escaped.gsub(LUCENE_BOOLEANS, '"\1"')
-    end
-
-    def facet(field_name)
-      # Return a list of Section objects for each section with content
-      unless field_name == "section"
-        raise ArgumentError, "Faceting is only available on sections"
-      end
-
-      _facet(field_name).map { |term_info|
-        Section.new(term_info["term"])
-      }
-    end
-
-    def section(section_slug)
-      payload = {
-          from: 0, size: 50,
-          query: {
-            term: { section: section_slug }
-          }
-      }.to_json
-      result = @client.get_with_payload("_search", payload)
-      result = MultiJson.decode(result)
-      result["hits"]["hits"].map { |hit|
-        document_from_hash(hit["_source"])
-      }
     end
 
     def formats
