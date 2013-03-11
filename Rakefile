@@ -65,17 +65,25 @@ def search_server
   search_config.search_server
 end
 
-def index_name
-  unless ENV["RUMMAGER_INDEX"]
-    raise "You must specify an index name in RUMMAGER_INDEX"
+def index_names
+  case ENV["RUMMAGER_INDEX"]
+  when "all"
+    all_index_names
+  when String
+    [ENV["RUMMAGER_INDEX"]]
+  else
+    raise "You must specify an index name in RUMMAGER_INDEX, or 'all'"
   end
-  ENV["RUMMAGER_INDEX"]
+end
+
+def all_index_names
+  search_config.index_names
 end
 
 namespace :rummager do
 
   task :list_indices do
-    search_config.index_names.each do |name|
+    all_index_names.each do |name|
       index = search_server.index(name)
       puts "#{name}: #{index.real_name || "(no index)"}"
     end
@@ -83,21 +91,23 @@ namespace :rummager do
 
   desc "Migrates an index group to a new index"
   task :migrate_index do
-    index_group = search_server.index_group(index_name)
+    index_names.each do |index_name|
+      index_group = search_server.index_group(index_name)
 
-    logger.info "Creating new index..."
-    new_index = index_group.create_index
-    logger.info "...index '#{new_index.real_name}' created"
+      logger.info "Creating new #{index_name} index..."
+      new_index = index_group.create_index
+      logger.info "...index '#{new_index.real_name}' created"
 
-    if index_group.current.exists?
-      logger.info "Populating new index..."
-      new_index.populate_from index_group.current
-      logger.info "...index populated."
+      if index_group.current.exists?
+        logger.info "Populating new #{index_name} index..."
+        new_index.populate_from index_group.current
+        logger.info "...index populated."
+      end
+
+      logger.info "Switching #{index_name}..."
+      index_group.switch_to new_index
+      logger.info "...switched"
     end
-
-    logger.info "Switching..."
-    index_group.switch_to new_index
-    logger.info "...switched"
   end
 
   desc "Migrates from an index with the actual index name to an alias"
@@ -107,33 +117,37 @@ namespace :rummager do
     #
     # TODO: remove this task once it is no longer needed
 
-    index_group = search_server.index_group(index_name)
+    index_names.each do |index_name|
+      index_group = search_server.index_group(index_name)
 
-    real_index_name = index_group.current.real_name
-    unless real_index_name == index_name
-      # This task only makes sense if we're migrating from an unaliased index
-      raise "Expecting index name #{index_name.inspect}; found #{real_index_name.inspect}"
+      real_index_name = index_group.current.real_name
+      unless real_index_name == index_name
+        # This task only makes sense if we're migrating from an unaliased index
+        raise "Expecting index name #{index_name.inspect}; found #{real_index_name.inspect}"
+      end
+
+      logger.info "Creating new #{index_name} index..."
+      new_index = index_group.create_index
+      logger.info "...index '#{new_index.real_name}' created"
+
+      logger.info "Populating new #{index_name} index..."
+      new_index.populate_from index_group.current
+      logger.info "...index populated."
+
+      logger.info "Deleting #{index_name} index..."
+      index_group.send :delete, CGI.escape(index_name)
+      logger.info "...deleted."
+
+      logger.info "Switching #{index_name}..."
+      index_group.switch_to new_index
+      logger.info "...switched"
     end
-
-    logger.info "Creating new index..."
-    new_index = index_group.create_index
-    logger.info "...index '#{new_index.real_name}' created"
-
-    logger.info "Populating new index..."
-    new_index.populate_from index_group.current
-    logger.info "...index populated."
-
-    logger.info "Deleting '#{index_name}' index..."
-    index_group.send :delete, CGI.escape(index_name)
-    logger.info "...deleted."
-
-    logger.info "Switching..."
-    index_group.switch_to new_index
-    logger.info "...switched"
   end
 
   desc "Cleans out old indices"
   task :clean do
-    search_server.index_group(index_name).clean
+    index_names.each do |index_name|
+      search_server.index_group(index_name).clean
+    end
   end
 end
