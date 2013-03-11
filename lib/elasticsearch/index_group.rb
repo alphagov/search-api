@@ -17,6 +17,7 @@ module Elasticsearch
   class IndexGroup
     def initialize(base_uri, name, index_settings, mappings)
       @base_uri = base_uri
+      @client = Client.new(base_uri)
       @name = name
       @index_settings = index_settings
       @mappings = mappings
@@ -25,8 +26,11 @@ module Elasticsearch
     def create_index
       index_name = generate_name
       index_payload = @index_settings.merge("mappings" => @mappings)
-      index_url = (@base_uri + "#{CGI.escape(index_name)}/").to_s
-      RestClient.put(index_url, MultiJson.encode(index_payload), content_type: :json)
+      @client.put(
+        "#{CGI.escape(index_name)}/",
+        MultiJson.encode(index_payload),
+        content_type: :json
+      )
 
       Index.new(@base_uri, index_name, @mappings)
     end
@@ -38,7 +42,7 @@ module Elasticsearch
       # the new alias-y way of doing things.
       #
       # TODO: add a way to migrate to the new alias-y way of doing things
-      indices = MultiJson.decode(RestClient.get((@base_uri + "_aliases").to_s))
+      indices = MultiJson.decode(@client.get("_aliases"))
       if indices.include? @name
         raise RuntimeError, "There is an index called #{@name}"
       end
@@ -59,8 +63,8 @@ module Elasticsearch
 
       payload = { "actions" => actions }
 
-      RestClient.post(
-        (@base_uri + "/_aliases").to_s,
+      @client.post(
+        "/_aliases",
         MultiJson.encode(payload),
         content_type: :json
       )
@@ -90,7 +94,7 @@ module Elasticsearch
     def alias_map
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
-      indices = MultiJson.decode(RestClient.get((@base_uri + "_aliases").to_s))
+      indices = MultiJson.decode(@client.get("_aliases"))
       indices.select { |name| name_pattern.match name }
     end
 
@@ -110,8 +114,7 @@ module Elasticsearch
     end
 
     def delete(index_name)
-      # The extra leading slash is to stop URI.parse getting hung up on colons
-      RestClient.delete (@base_uri + ("/#{CGI.escape(index_name)}")).to_s
+      @client.delete CGI.escape(index_name)
     end
   end
 end

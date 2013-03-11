@@ -3,10 +3,10 @@ module Elasticsearch
 
     # Sub-paths almost certainly shouldn't start with leading slashes,
     # since this will make the request relative to the server root
-    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_cluster/health"]
+    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_aliases"]
 
-    def initialize(base_uri, index_name, logger = nil)
-      @index_uri = base_uri + "#{CGI.escape(index_name)}/"
+    def initialize(base_uri, logger = nil)
+      @base_uri = base_uri
 
       @logger = logger || Logger.new("/dev/null")
     end
@@ -47,7 +47,7 @@ module Elasticsearch
       end
 
       # Addition on URLs does relative resolution
-      (@index_uri + sub_path).to_s
+      (@base_uri + sub_path).to_s
     end
 
     def recording_elastic_error(&block)

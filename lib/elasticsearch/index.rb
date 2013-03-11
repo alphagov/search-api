@@ -22,7 +22,7 @@ module Elasticsearch
     attr_reader :mappings, :index_name
 
     def initialize(base_uri, index_name, mappings, logger = nil)
-      @client = Client.new(base_uri, index_name, logger)
+      @client = Client.new(base_uri + "#{CGI.escape(index_name)}/", logger)
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
