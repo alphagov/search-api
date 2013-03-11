@@ -11,36 +11,6 @@ module Elasticsearch
       @logger = logger || Logger.new("/dev/null")
     end
 
-    def recording_elastic_error(&block)
-      yield
-    rescue Errno::ECONNREFUSED, Timeout::Error, SocketError
-      Rummager.statsd.increment("elasticsearcherror")
-      raise
-    end
-
-    def logging_exception_body(&block)
-      yield
-    rescue RestClient::InternalServerError => error
-      @logger.error(
-        "Internal server error in elasticsearch. " +
-        "Response: #{error.http_body}"
-      )
-      raise
-    end
-
-    def request(method, sub_path, payload)
-      recording_elastic_error do
-        logging_exception_body do
-          RestClient::Request.execute(
-            method: method,
-            url:  url_for(sub_path),
-            payload: payload,
-            headers: {content_type: "application/json"}
-          )
-        end
-      end
-    end
-
     # Forward on HTTP request methods, intercepting and resolving URLs
     [:get, :post, :put, :head, :delete].each do |method_name|
       define_method method_name do |sub_path, *args|
@@ -78,6 +48,36 @@ module Elasticsearch
 
       # Addition on URLs does relative resolution
       (@index_uri + sub_path).to_s
+    end
+
+    def recording_elastic_error(&block)
+      yield
+    rescue Errno::ECONNREFUSED, Timeout::Error, SocketError
+      Rummager.statsd.increment("elasticsearcherror")
+      raise
+    end
+
+    def logging_exception_body(&block)
+      yield
+    rescue RestClient::InternalServerError => error
+      @logger.error(
+        "Internal server error in elasticsearch. " +
+        "Response: #{error.http_body}"
+      )
+      raise
+    end
+
+    def request(method, sub_path, payload)
+      recording_elastic_error do
+        logging_exception_body do
+          RestClient::Request.execute(
+            method: method,
+            url:  url_for(sub_path),
+            payload: payload,
+            headers: {content_type: "application/json"}
+          )
+        end
+      end
     end
   end
 end
