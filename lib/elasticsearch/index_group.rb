@@ -40,8 +40,6 @@ module Elasticsearch
       # elasticsearch won't allow us to add an alias with the same name as an
       # existing index. If such an index exists, it hasn't yet been migrated to
       # the new alias-y way of doing things.
-      #
-      # TODO: add a way to migrate to the new alias-y way of doing things
       indices = MultiJson.decode(@client.get("_aliases"))
       if indices.include? @name
         raise RuntimeError, "There is an index called #{@name}"
