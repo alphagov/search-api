@@ -287,10 +287,6 @@ module Elasticsearch
       special_chars_escaped.gsub(LUCENE_BOOLEANS, '"\1"')
     end
 
-    def formats
-      _facet "format"
-    end
-
     def delete(link)
       begin
         # Can't use a simple delete, because we don't know the type
@@ -316,24 +312,6 @@ module Elasticsearch
     private
     def index_action(doc)
       {"index" => {"_type" => doc["_type"], "_id" => doc["link"]}}
-    end
-
-    def _facet(facet_name)
-      # Each entry in the array returned is of the format:
-      #
-      #   { "term" => "mushroom", "count" => 57000 }
-      payload = {
-        query: {match_all: {}},
-        size: 0,  # We only need facet information: no point returning results
-        facets: {
-          facet_name => {
-            terms: {field: facet_name, size: 100, order: "term"},
-            global: true
-          }
-        }
-      }.to_json
-      result = MultiJson.decode(@client.get_with_payload("_search", payload))
-      result["facets"][facet_name]["terms"]
     end
   end
 end
