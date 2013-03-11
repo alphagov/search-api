@@ -1,15 +1,12 @@
 module Elasticsearch
   class Client
 
-    attr_reader :index_name  # The admin wrapper needs to get to this
-
     # Sub-paths almost certainly shouldn't start with leading slashes,
     # since this will make the request relative to the server root
     SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_cluster/health"]
 
     def initialize(base_uri, index_name, logger = nil)
       @index_uri = base_uri + "#{CGI.escape(index_name)}/"
-      @index_name = index_name
 
       @logger = logger || Logger.new("/dev/null")
     end
