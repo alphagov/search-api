@@ -82,6 +82,7 @@ end
 
 namespace :rummager do
 
+  desc "Lists current Rummager indices"
   task :list_indices do
     all_index_names.each do |name|
       index = search_server.index(name)
