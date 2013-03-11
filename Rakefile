@@ -57,6 +57,8 @@ def logger
   end
 end
 
+RestClient.log = PushableLogger.new(logger, Logger::DEBUG)
+
 def search_config
   @search_config ||= SearchConfig.new
 end
