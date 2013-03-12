@@ -94,7 +94,14 @@ module ElasticsearchIntegration
 
   def clean_index_group(group_name = @default_index_name)
     check_index_name(group_name)
-    search_server.index_group(group_name).clean
+    index_group = search_server.index_group(group_name)
+    # Delete any indices left over from switching
+    index_group.clean
+    # Clean up the test index too, to avoid the possibility of inter-dependent
+    # tests. It also keeps the index view cleaner.
+    if index_group.current.exists?
+      index_group.send(:delete, index_group.current.real_name)
+    end
   end
 
 end
