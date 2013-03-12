@@ -11,7 +11,27 @@ require "elasticsearch/client"
 module Elasticsearch
   class Index
 
+    # An enumerator with a manually-specified size.
+    # This means we can count the number of documents in an index without
+    # having to load them all.
+    class SizedEnumerator < Enumerator
+      attr_reader :size
+
+      def initialize(size, &block)
+        super(&block)
+        @size = size
+      end
+    end
+
+    # The number of documents to insert at once when populating
     POPULATE_BATCH_SIZE = 50
+
+    # The number of documents to retrieve at once when retrieving all documents
+    SCROLL_BATCH_SIZE = 50
+
+    # How long to hold a scroll cursor open between requests
+    # We should be able to keep this low, since these are only for internal use
+    SCROLL_TIMEOUT_MINUTES = 1
 
     # We need to provide a limit to queries: if we want everything, just use this
     # This number is big enough that it vastly exceeds the number of items we're
@@ -86,14 +106,45 @@ module Elasticsearch
       Document.from_hash(hash, @mappings)
     end
 
-    def all_documents(options={})
-      limit = options.fetch(:limit, MASSIVE_NUMBER)
-      search_body = {query: {match_all: {}}, size: limit}
-      result = @client.get_with_payload("_search", search_body.to_json)
-      result = MultiJson.decode(result)
-      result["hits"]["hits"].map { |hit|
-        document_from_hash(hit["_source"])
-      }
+    def all_documents
+      # Set off a scan query to get back a scroll ID and result count
+      search_body = {query: {match_all: {}}}
+      search_uri = URI::Generic.build(
+        path: "_search",
+        query: URI.encode_www_form(
+          search_type: "scan",
+          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
+          size: SCROLL_BATCH_SIZE
+        )
+      )
+      scroll_response = @client.get_with_payload(search_uri, search_body.to_json)
+      scroll_result = MultiJson.decode(scroll_response)
+      scroll_id = scroll_result["_scroll_id"]
+
+      total_hits = scroll_result["hits"]["total"]
+      # The first indication elasticsearch gives us that we've run off the end
+      # of the results is a 500 error. We'd like to avoid producing those, so
+      # we need to work out the page count here.
+      page_count = (total_hits / SCROLL_BATCH_SIZE.to_f).ceil
+
+      result_page_uri = URI::Generic.build(
+        # Scrolling is accessed from the server root, not an index
+        path: "/_search/scroll",
+        query: URI.encode_www_form(
+          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
+          scroll_id: scroll_id
+        )
+      )
+
+      # Pull out the results as they are needed
+      SizedEnumerator.new(total_hits) do |yielder|
+        page_count.times do
+          page = MultiJson.decode(@client.get(result_page_uri))
+          page["hits"]["hits"].each do |hit|
+            yielder << document_from_hash(hit["_source"])
+          end
+        end
+      end
     end
 
     def search(query)

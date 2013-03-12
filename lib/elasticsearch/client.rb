@@ -3,7 +3,7 @@ module Elasticsearch
 
     # Sub-paths almost certainly shouldn't start with leading slashes,
     # since this will make the request relative to the server root
-    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_aliases"]
+    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_aliases", "/_search/scroll"]
 
     def initialize(base_uri, logger = nil)
       @base_uri = base_uri
@@ -21,7 +21,7 @@ module Elasticsearch
         end
         recording_elastic_error do
           logging_exception_body do
-            RestClient.send(method_name, url_for(sub_path), *args)
+            RestClient.send(method_name, full_url, *args)
           end
         end
       end
@@ -38,6 +38,9 @@ module Elasticsearch
 
   private
     def url_for(sub_path)
+      if sub_path.is_a? URI
+        sub_path = sub_path.to_s
+      end
       if sub_path.start_with? "/"
         path_without_query = sub_path.split("?")[0]
         unless SAFE_ABSOLUTE_PATHS.include? path_without_query
