@@ -19,6 +19,10 @@ class SitemapTest < IntegrationTest
     commit_index
   end
 
+  def teardown
+    @index_names.each do |i| clean_index_group(i) end
+  end
+
   def commit_index
     post "/commit", nil
   end
