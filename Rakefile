@@ -112,19 +112,13 @@ namespace :rummager do
     index_names.each do |index_name|
       index_group = search_server.index_group(index_name)
 
-      logger.info "Creating new #{index_name} index..."
       new_index = index_group.create_index
-      logger.info "...index '#{new_index.real_name}' created"
 
       if index_group.current.exists?
-        logger.info "Populating new #{index_name} index..."
         new_index.populate_from index_group.current
-        logger.info "...index populated."
       end
 
-      logger.info "Switching #{index_name}..."
       index_group.switch_to new_index
-      logger.info "...switched"
     end
   end
 

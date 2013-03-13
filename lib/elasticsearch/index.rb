@@ -60,7 +60,11 @@ module Elasticsearch
     end
 
     def add(documents)
-      logger.info "Adding #{documents.size} document(s) to elasticsearch"
+      if documents.size == 1
+        logger.info "Adding #{documents.size} document to #{index_name}"
+      else
+        logger.info "Adding #{documents.size} documents to #{index_name}"
+      end
       documents = documents.map(&:elasticsearch_export).map do |doc|
         index_action(doc).to_json + "\n" + doc.to_json
       end
@@ -78,7 +82,11 @@ module Elasticsearch
       all_docs.each_slice(POPULATE_BATCH_SIZE) do |documents|
         add documents
         total_indexed += documents.length
-        logger.info "Populated #{total_indexed} of #{all_docs.size}"
+        logger.info do
+          progress = "#{total_indexed}/#{all_docs.size}"
+          source_name = source_index.index_name
+          "Populated #{progress} from #{source_name} into #{index_name}"
+        end
       end
 
       commit
