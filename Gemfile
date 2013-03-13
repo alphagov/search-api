@@ -4,13 +4,14 @@ source "https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/"
 gem "unicorn", "4.3.1"
 gem "sinatra", "1.3.4"
 gem "rake", "0.9.2", :require => false
-gem "multi_json"
+gem "multi_json", "1.3.6"
 gem "yajl-ruby", "1.1.0"
 gem "activesupport", "3.2.12"
 gem "rack", "1.5.2"
 gem "aws-ses", "0.4.4"
 gem "rest-client", "1.6.7"
 gem "statsd-ruby", "1.0.0"
+gem "logging", "1.8.1"
 
 group :test do
   gem 'simplecov'
