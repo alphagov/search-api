@@ -101,7 +101,7 @@ class Rummager < Sinatra::Application
     # Site maps can have up to 50,000 links in them.
     # We use one for / so we can have up to 49,999 others.
     documents = indices_for_sitemap.flat_map do |index|
-      index.all_documents(limit: 49_999)
+      index.all_documents.take(49_999)
     end
     builder do |xml|
       xml.instruct!
