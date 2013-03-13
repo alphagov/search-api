@@ -1,28 +1,25 @@
 require "integration_test_helper"
-require "app"
-require "rest-client"
-require "reindexer"
 require "rack/logger"
 
-class ElasticsearchReindexingTest < IntegrationTest
+class ElasticsearchMigrationTest < IntegrationTest
 
   def setup
-    use_elasticsearch_for_primary_search
-    WebMock.disable_net_connect!(allow: "localhost:9200")
+    stub_elasticsearch_settings
+    enable_test_index_connections
+    try_remove_test_index
 
-    es_settings = settings.elasticsearch_schema["index"]["settings"]
-    @stemmer = es_settings["analysis"]["filter"]["stemmer_override"]
-    # Save for restore on teardown
-    @original_rules = @stemmer["rules"]
-    @stemmer["rules"] = ["fish => fish"]  # elasticsearch needs at least 1 rule
+    stub_modified_schema do |schema|
+      @stemmer = schema["index"]["settings"]["analysis"]["filter"]["stemmer_override"]
+      @stemmer["rules"] = ["fish => fish"]
+    end
 
-    reset_elasticsearch_index
+    create_test_index
     add_sample_documents
     commit_index
   end
 
   def teardown
-    @stemmer["rules"] = @original_rules
+    clean_index_group
   end
 
   def sample_document_attributes
@@ -64,10 +61,12 @@ class ElasticsearchReindexingTest < IntegrationTest
     assert_equal 2, MultiJson.decode(last_response.body).length
 
     @stemmer["rules"] = ["directive => directive"]
-    update_elasticsearch_index
 
-    backends = Backends.new(settings)
-    Reindexer.new(backends[:primary]).reindex_all
+    index_group = search_server.index_group("rummager_test")
+    new_index = index_group.create_index
+    new_index.populate_from index_group.current
+
+    index_group.switch_to new_index
 
     get "/search?q=directive"
     assert_result_links "/important"

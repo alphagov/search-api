@@ -5,20 +5,25 @@ require "rest-client"
 class ElasticsearchSearchTest < IntegrationTest
 
   def setup
-    use_elasticsearch_for_primary_search
-    schema = deep_copy(settings.elasticsearch_schema)
-    properties = schema["mappings"]["default"]["edition"]["properties"]
-    properties.merge!({
-                        "search_format_types" => { "type" => "string", "index" => "not_analyzed" },
-                        "public_timestamp" => { "type" => "date", "index" => "not_analyzed" },
-                      })
+    stub_elasticsearch_settings
+    enable_test_index_connections
+    try_remove_test_index
 
-    app.settings.stubs(:elasticsearch_schema).returns(schema)
+    stub_modified_schema do |schema|
+      properties = schema["mappings"]["default"]["edition"]["properties"]
+      properties.merge!({
+                          "search_format_types" => { "type" => "string", "index" => "not_analyzed" },
+                          "public_timestamp" => { "type" => "date", "index" => "not_analyzed" },
+                        })
+    end
 
-    WebMock.disable_net_connect!(allow: "localhost:9200")
-    reset_elasticsearch_index
+    create_test_index
     add_sample_documents
     commit_index
+  end
+
+  def teardown
+    clean_index_group
   end
 
   def sample_document_attributes
