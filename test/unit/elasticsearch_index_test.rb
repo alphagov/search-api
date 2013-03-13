@@ -139,4 +139,38 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     @wrapper.commit
     assert_requested :post, refresh_url
   end
+
+  def test_all_documents_size
+    # Test that we can count the documents without retrieving them all
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=50"
+    stub_request(:get, search_pattern).with(
+      body: MultiJson.encode({query: {match_all: {}}})
+    ).to_return(
+      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 100}})
+    ).then.to_raise(RuntimeError)
+    assert_equal @wrapper.all_documents.size, 100
+  end
+
+  def test_all_documents
+    search_uri = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=50"
+    scroll_uri = "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=abcdefgh"
+
+    stub_request(:get, search_uri).with(
+      body: MultiJson.encode({query: {match_all: {}}})
+    ).to_return(
+      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 100}})
+    )
+    hits = (1..100).map { |i|
+      { "_source" => { "link" => "/foo-#{i}" } }
+    }
+    stub_request(:get, scroll_uri).to_return(
+      body: MultiJson.encode({hits: {total: 100, hits: hits[0, 50]}})
+    ).then.to_return(
+      body: MultiJson.encode({hits: {total: 100, hits: hits[50, 50]}})
+    ).then.to_raise(RuntimeError)
+    all_documents = @wrapper.all_documents.to_a
+    assert_equal 100, all_documents.size
+    assert_equal "/foo-1", all_documents.first.link
+    assert_equal "/foo-100", all_documents.last.link
+  end
 end

@@ -72,7 +72,7 @@ module ElasticsearchIntegration
   end
 
   def enable_test_index_connections
-    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_aliases|[a-z]+_test.*)})
+    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z]+_test.*)})
   end
 
   def search_server
