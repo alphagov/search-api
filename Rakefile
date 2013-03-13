@@ -84,11 +84,26 @@ end
 
 namespace :rummager do
 
-  desc "Lists current Rummager indices"
-  task :list_indices do
+  desc "Lists current Rummager indices, pass [all] to show inactive indices"
+  task :list_indices, :all do |_, args|
+    show_all = args[:all] || false
     all_index_names.each do |name|
-      index = search_server.index(name)
-      puts "#{name}: #{index.real_name || "(no index)"}"
+      index_group = search_server.index_group(name)
+      active_index_name = index_group.current.real_name
+      if show_all
+        index_names = index_group.index_names
+      else
+        index_names = [active_index_name]
+      end
+      puts "#{name}:"
+      index_names.sort.each do |index_name|
+        if index_name == active_index_name
+          puts "* #{index_name}"
+        else
+          puts "  #{index_name}"
+        end
+      end
+      puts
     end
   end
 
