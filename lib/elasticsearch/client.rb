@@ -1,3 +1,5 @@
+require "logging"
+
 module Elasticsearch
   class Client
 
@@ -5,19 +7,17 @@ module Elasticsearch
     # since this will make the request relative to the server root
     SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_aliases", "/_search/scroll"]
 
-    def initialize(base_uri, logger = nil)
+    def initialize(base_uri)
       @base_uri = base_uri
-
-      @logger = logger || Logger.new("/dev/null")
     end
 
     # Forward on HTTP request methods, intercepting and resolving URLs
     [:get, :post, :put, :head, :delete].each do |method_name|
       define_method method_name do |sub_path, *args|
         full_url = url_for(sub_path)
-        @logger.debug "Sending #{method_name.upcase} request to #{full_url}"
+        logger.debug "Sending #{method_name.upcase} request to #{full_url}"
         args.each_with_index do |argument, index|
-          @logger.debug "Argument #{index + 1}: #{argument.inspect}"
+          logger.debug "Argument #{index + 1}: #{argument.inspect}"
         end
         recording_elastic_error do
           logging_exception_body do
@@ -37,6 +37,10 @@ module Elasticsearch
 
 
   private
+    def logger
+      Logging.logger[self]
+    end
+
     def url_for(sub_path)
       if sub_path.is_a? URI
         sub_path = sub_path.to_s
@@ -44,7 +48,7 @@ module Elasticsearch
       if sub_path.start_with? "/"
         path_without_query = sub_path.split("?")[0]
         unless SAFE_ABSOLUTE_PATHS.include? path_without_query
-          @logger.error "Request sub-path '#{sub_path}' has a leading slash"
+          logger.error "Request sub-path '#{sub_path}' has a leading slash"
           raise ArgumentError, "Only whitelisted absolute paths are allowed"
         end
       end
@@ -63,7 +67,7 @@ module Elasticsearch
     def logging_exception_body(&block)
       yield
     rescue RestClient::InternalServerError => error
-      @logger.error(
+      logger.error(
         "Internal server error in elasticsearch. " +
         "Response: #{error.http_body}"
       )

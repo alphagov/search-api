@@ -1,6 +1,6 @@
 require "rake/testtask"
 require "rest-client"
-require "logger"
+require "logging"
 
 File.join(File.dirname(__FILE__), "lib").tap do |path|
   $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
@@ -45,19 +45,19 @@ class PushableLogger
   end
 
   def <<(message)
-    @logger.add @level, message
+    @logger.send @level, message
   end
 end
 
 task :default => :test
 
-def logger
-  @logger ||= Logger.new(STDOUT).tap do |l|
-    l.level = verbose ? Logger::DEBUG : Logger::INFO
-  end
-end
+logger = Logging.logger.root
+logger.add_appenders Logging.appenders.stdout
+logger.level = verbose ? :debug : :info
 
-RestClient.log = PushableLogger.new(logger, Logger::DEBUG)
+# Log all RestClient output at debug level, so it doesn't show up unless rake
+# is invoked with the `--verbose` flag
+RestClient.log = PushableLogger.new(Logging.logger[RestClient], :debug)
 
 def search_config
   @search_config ||= SearchConfig.new
