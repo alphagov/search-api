@@ -33,12 +33,6 @@ module Elasticsearch
     # We should be able to keep this low, since these are only for internal use
     SCROLL_TIMEOUT_MINUTES = 1
 
-    # We need to provide a limit to queries: if we want everything, just use this
-    # This number is big enough that it vastly exceeds the number of items we're
-    # indexing, but not so big as to trigger strange behaviour (internal errors)
-    # in elasticsearch
-    MASSIVE_NUMBER = 200_000
-
     attr_reader :mappings, :index_name
 
     def initialize(base_uri, index_name, mappings, logger = nil)
