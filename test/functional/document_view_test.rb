@@ -1,14 +1,8 @@
 require "integration_test_helper"
 
 class DocumentViewtest < IntegrationTest
-
-  def setup
-    super
-    stub_backend
-  end
-
   def test_should_view_existing_document
-    @backend_index.expects(:get).returns(sample_document)
+    stub_index.expects(:get).with("/foobang").returns(sample_document)
 
     get "/documents/%2Ffoobang"
 
@@ -18,7 +12,7 @@ class DocumentViewtest < IntegrationTest
   end
 
   def test_should_404_on_missing_document
-    @backend_index.expects(:get).returns(nil)
+    stub_index.expects(:get).with("/foobang").returns(nil)
 
     get "/documents/%2Ffoobang"
 

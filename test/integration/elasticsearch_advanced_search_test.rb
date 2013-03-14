@@ -5,18 +5,25 @@ require "rest-client"
 class ElasticsearchAdvancedSearchTest < IntegrationTest
 
   def setup
-    use_elasticsearch_for_primary_search
+    @index_name = "rummager_test"
 
-    schema = deep_copy(settings.elasticsearch_schema)
-    properties = schema["mappings"]["default"]["edition"]["properties"]
-    properties.merge!({"boolean_property" => { "type" => "boolean", "index" => "not_analyzed" },
-                       "date_property" => { "type" => "date", "index" => "not_analyzed" }})
-    app.settings.stubs(:elasticsearch_schema).returns(schema)
+    stub_elasticsearch_settings([@index_name])
+    enable_test_index_connections
+    try_remove_test_index
 
-    WebMock.disable_net_connect!(allow: "localhost:9200")
-    reset_elasticsearch_index
+    stub_modified_schema do |schema|
+      properties = schema["mappings"]["default"]["edition"]["properties"]
+      properties.merge!({"boolean_property" => { "type" => "boolean", "index" => "not_analyzed" },
+                         "date_property" => { "type" => "date", "index" => "not_analyzed" }})
+    end
+
+    create_test_index
     add_sample_documents
     commit_index
+  end
+
+  def teardown
+    clean_index_group
   end
 
   def sample_document_attributes
@@ -91,7 +98,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   end
 
   def test_should_search_by_keywords
-    get "/primary/advanced_search.json?per_page=1&page=1&keywords=cheese"
+    get "/#{@index_name}/advanced_search.json?per_page=1&page=1&keywords=cheese"
     assert last_response.ok?
     assert_result_total 2
     assert_result_links "/an-example-answer"
@@ -99,35 +106,35 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
 
   def test_should_escape_lucene_characters
     ["badger)", "badger\\"].each do |problem|
-      get "/primary/advanced_search.json?per_page=1&page=1&keywords=#{CGI.escape(problem)}"
+      get "/#{@index_name}/advanced_search.json?per_page=1&page=1&keywords=#{CGI.escape(problem)}"
       assert last_response.ok?
       assert_result_links "/an-example-answer"
     end
   end
 
   def test_should_allow_paging_through_keyword_search
-    get "/primary/advanced_search.json?per_page=1&page=2&keywords=cheese"
+    get "/#{@index_name}/advanced_search.json?per_page=1&page=2&keywords=cheese"
     assert last_response.ok?
     assert_result_total 2
     assert_result_links "/yet-another-example-answer"
   end
 
   def test_should_filter_results_by_a_property
-    get "/primary/advanced_search.json?per_page=2&page=1&section=Crime"
+    get "/#{@index_name}/advanced_search.json?per_page=2&page=1&section=Crime"
     assert last_response.ok?
     assert_result_total 2
     assert_result_links "/another-example-answer", "/yet-another-example-answer", order: false
   end
 
   def test_should_allow_boolean_filtering
-    get "/primary/advanced_search.json?per_page=3&page=1&boolean_property=true"
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&boolean_property=true"
     assert last_response.ok?
     assert_result_total 3
     assert_result_links "/an-example-answer", "/yet-another-example-answer", "/pork-pies", order: false
   end
 
   def test_should_allow_date_filtering
-    get "/primary/advanced_search.json?per_page=3&page=1&date_property[before]=2012-01-03"
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&date_property[before]=2012-01-03"
     assert last_response.ok?
     assert_result_total 3
     assert_result_links "/an-example-answer", "/another-example-answer", "/pork-pies", order: false
@@ -155,14 +162,14 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     commit_index
 
 
-    get "/primary/advanced_search.json?per_page=3&page=1&boolean_property=true&date_property[after]=2012-01-02&keywords=tax&section=Crime"
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&boolean_property=true&date_property[after]=2012-01-02&keywords=tax&section=Crime"
     assert last_response.ok?
     assert_result_total 1
     assert_result_links "/yet-another-example-answer"
   end
 
   def test_should_allow_ordering_by_properties
-    get "/primary/advanced_search.json?per_page=4&page=1&order[date_property]=desc"
+    get "/#{@index_name}/advanced_search.json?per_page=4&page=1&order[date_property]=desc"
     assert last_response.ok?
     assert_result_total 4
     assert_result_links "/yet-another-example-answer", "/another-example-answer", "/pork-pies", "/an-example-answer"

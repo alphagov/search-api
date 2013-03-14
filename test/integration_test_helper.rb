@@ -1,5 +1,6 @@
 require "test_helper"
 require "app"
+require "elasticsearch/search_server"
 
 module IntegrationFixtures
   include Fixtures::DefaultMappings
@@ -38,48 +39,86 @@ module IntegrationFixtures
   end
 end
 
-require "elasticsearch_admin_wrapper"
+class InvalidTestIndex < ArgumentError; end
+
+module ElasticsearchIntegration
+  # Make sure that we're dealing with a test index (of the form <foo>_test)
+  def check_index_name(index_name)
+    unless /^[a-z]+_test($|-)/.match index_name
+      raise InvalidTestIndex, index_name
+    end
+  end
+
+  def stub_elasticsearch_settings(index_names = ["rummager_test"], default = nil)
+    index_names.each do |n| check_index_name(n) end
+    check_index_name(default) unless default.nil?
+
+    @default_index_name = default || index_names.first
+
+    app.settings.search_config.stubs(:elasticsearch).returns({
+      "base_uri" => "http://localhost:9200",
+      "index_names" => index_names
+    })
+    app.settings.stubs(:default_index_name).returns(@default_index_name)
+  end
+
+  def stub_modified_schema
+    schema = deep_copy(app.settings.search_config.elasticsearch_schema)
+
+    # Allow the block to modify the schema copy directly
+    yield schema
+
+    app.settings.search_config.stubs(:elasticsearch_schema).returns(schema)
+  end
+
+  def enable_test_index_connections
+    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z]+_test.*)})
+  end
+
+  def search_server
+    app.settings.search_config.search_server
+  end
+
+  def create_test_index(group_name = @default_index_name)
+    index_group = search_server.index_group(group_name)
+    index = index_group.create_index
+    index_group.switch_to(index)
+  end
+
+  def try_remove_test_index(index_name = @default_index_name)
+    check_index_name(index_name)
+    RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"
+  rescue RestClient::ResourceNotFound
+    # Index doesn't exist: that's fine
+  end
+
+  def clean_index_group(group_name = @default_index_name)
+    check_index_name(group_name)
+    index_group = search_server.index_group(group_name)
+    # Delete any indices left over from switching
+    index_group.clean
+    # Clean up the test index too, to avoid the possibility of inter-dependent
+    # tests. It also keeps the index view cleaner.
+    if index_group.current.exists?
+      index_group.send(:delete, index_group.current.real_name)
+    end
+  end
+
+end
 
 class IntegrationTest < MiniTest::Unit::TestCase
   include Rack::Test::Methods
   include IntegrationFixtures
+  include ElasticsearchIntegration
 
   def app
     Rummager
   end
 
-  def use_elasticsearch_for_primary_search
-    stub_backends_with(primary: {
-          type: "elasticsearch",
-          server: "localhost",
-          port: 9200,
-          index_name: "rummager_test"
-        })
-  end
-
-  def stub_backends_with(hash)
-    app.settings.stubs(:backends).returns(hash)
-  end
-
   def add_field_to_mappings(fieldname, type="string")
-    schema = deep_copy(settings.elasticsearch_schema)
-    properties = schema["mappings"]["default"]["edition"]["properties"]
-    properties.merge!({fieldname.to_s => { "type" => type, "index" => "not_analyzed" }})
-
-    app.settings.stubs(:elasticsearch_schema).returns(schema)
-  end
-
-  def reset_elasticsearch_index(index_name=:primary)
-    admin_wrapper(index_name).tap do |admin|
-      admin.ensure_index!
-      admin.put_mappings
-    end
-  end
-
-  def update_elasticsearch_index(index_name=:primary)
-    admin_wrapper(index_name).tap do |admin|
-      admin.ensure_index
-      admin.put_mappings
+    stub_modified_schema do |schema|
+      properties = schema["mappings"]["default"]["edition"]["properties"]
+      properties.merge!({fieldname.to_s => { "type" => type, "index" => "not_analyzed" }})
     end
   end
 
@@ -87,33 +126,14 @@ class IntegrationTest < MiniTest::Unit::TestCase
     assert_equal [], MultiJson.decode(last_response.body)
   end
 
-  def stub_backend
-    @backend_index = stub_everything("Chosen backend")
-    app.any_instance.stubs(:backend).returns(@backend_index)
-  end
-
-  def wrapper_for(index_name, mappings_fixture_file = "elasticsearch_schema.fixture.yml")
-    ElasticsearchAdminWrapper.new(
-      {
-        type: "elasticsearch",
-        server: "localhost",
-        port: 9200,
-        index_name: index_name
-      },
-      load_yaml_fixture(mappings_fixture_file)
-    )
+  def stub_index
+    s = stub("stub index")
+    Rummager.any_instance.stubs(:current_index).returns(s)
+    s
   end
 
 private
   def deep_copy(hash)
     Marshal.load(Marshal.dump(hash))
-  end
-
-  def admin_wrapper(index_name, mappings_fixture_file = nil)
-    schema = mappings_fixture_file ? load_yaml_fixture(mappings_fixture_file) : app.settings.elasticsearch_schema
-    ElasticsearchAdminWrapper.new(
-      app.settings.backends[index_name],
-      schema
-    )
   end
 end

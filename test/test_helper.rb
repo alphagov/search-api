@@ -6,7 +6,7 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require "bundler/setup"
 require "minitest/autorun"
 require "rack/test"
-require "mocha"
+require "mocha/setup"
 require "fixtures/default_mappings"
 require "pp"
 

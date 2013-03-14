@@ -6,39 +6,38 @@ Rummager is now primarily based on ElasticSearch.
 
 Run the application with `./startup.sh` this uses shotgun/thin.
 
-Generate your index with:
+To create indices, or to update them to the latest index settings, run:
 
-    bundle exec rake rummager:put_mapping
+    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_index
 
-which will generate the index as specified by the `primary` group in `backends.yml`.
+If you have indices from a Rummager instance before aliased indices, run:
 
-To build an alternative index, pass the backend name via an environment variable:
+    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_from_unaliased_index
 
-    BACKEND=secondary bundle exec rake rummager:put_mapping
-
-If you want to set up the mainstream, detailed and Inside Government indexes in
-one go, use the command:
-
-    bundle exec rake rummager:put_all_mappings
+If you don't know which of these you need to run, try running the first one; it
+will fail safely with an error if you have an unmigrated index.
 
 ## Indexing GOV.UK content
 
 Since search indexing happens through Panopticon's single registration API,
 you'll need to have both Panopticon and Rummager running. By default, Panopticon
 will not try to index search content in development mode, so you'll need to pass
-an extra parameter to it.
+an extra environment variable to it.
 
 If you have [Bowler](https://github.com/JordanHatch/bowler) installed, you can
 set these both running with a single command from the `development` repository:
 
     UPDATE_SEARCH=1 bowl panopticon rummager
 
-The next stage is to register content from all the applications. These are:
+The next stage is to register content from the applications you want. For
+example:
 
-  * calendars
-  * smartanswers
-  * licencefinder
-  * publisher
+  * Business Support Finder
+  * Calendars
+  * Licence Finder
+  * Publisher
+  * Smart Answers
+  * Trade Tariff
 
 To re-register content for a single application, go to its directory and run:
 
@@ -49,4 +48,5 @@ in the `development` project and run:
 
     ./rebuild-search-local.sh
 
-This should take about four minutes.
+To rebuild from the Whitehall application, follow the [instructions in the
+app](https://github.com/alphagov/whitehall#getting-search-running-locally).
