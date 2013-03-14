@@ -32,6 +32,8 @@ module Elasticsearch
         content_type: :json
       )
 
+      logger.info "Created index #{index_name}"
+
       Index.new(@base_uri, index_name, @mappings)
     end
 
@@ -56,6 +58,12 @@ module Elasticsearch
       actions = aliased_indices.keys.map { |index_name|
         { "remove" => { "index" => index_name, "alias" => @name } }
       }
+
+      logger.info do
+        old_names = aliased_indices.keys.inspect
+        new_name = index.index_name.inspect
+        "Switching #{@name} alias from #{old_names} to #{new_name}"
+      end
 
       actions << { "add" => { "index" => index.index_name, "alias" => @name } }
 
@@ -83,6 +91,10 @@ module Elasticsearch
     end
 
   private
+    def logger
+      Logging.logger[self]
+    end
+
     def generate_name
       # elasticsearch requires that all index names be lower case
       # (Thankfully, lower case ISO8601 timestamps are still valid)
@@ -112,6 +124,7 @@ module Elasticsearch
     end
 
     def delete(index_name)
+      logger.info "Deleting index #{index_name}"
       @client.delete CGI.escape(index_name)
     end
   end
