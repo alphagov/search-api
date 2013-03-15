@@ -158,6 +158,10 @@ module Elasticsearch
           # elasticsearch gives us an empty array of hits. This means all the
           # shards have run out of results.
           if page["hits"]["hits"].any?
+            logger.debug do
+              hits_on_page = page["hits"]["hits"].size
+              "Retrieved #{hits_on_page} of all documents from #{index_name}"
+            end
             page["hits"]["hits"].each do |hit|
               yielder << document_from_hash(hit["_source"])
             end
