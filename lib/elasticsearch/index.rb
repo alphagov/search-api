@@ -23,10 +23,16 @@ module Elasticsearch
     end
 
     # The number of documents to insert at once when populating
-    POPULATE_BATCH_SIZE = 50
+    def self.populate_batch_size
+      50
+    end
 
     # The number of documents to retrieve at once when retrieving all documents
-    SCROLL_BATCH_SIZE = 50
+    # Gotcha: this is actually the number of documents per shard, so there will
+    # be up to some multiple of this number per page.
+    def self.scroll_batch_size
+      50
+    end
 
     # How long to hold a scroll cursor open between requests
     # We should be able to keep this low, since these are only for internal use
@@ -78,7 +84,7 @@ module Elasticsearch
       # index grows. One alternative could be to use elasticsearch scan queries
       # <http://www.elasticsearch.org/guide/reference/api/search/search-type.html>
       all_docs = source_index.all_documents
-      all_docs.each_slice(POPULATE_BATCH_SIZE) do |documents|
+      all_docs.each_slice(self.class.populate_batch_size) do |documents|
         add documents
         total_indexed += documents.length
         logger.info do
@@ -114,7 +120,7 @@ module Elasticsearch
         query: URI.encode_www_form(
           search_type: "scan",
           scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
-          size: SCROLL_BATCH_SIZE
+          size: self.class.scroll_batch_size
         )
       )
       scroll_response = @client.get_with_payload(search_uri, search_body.to_json)
@@ -122,10 +128,6 @@ module Elasticsearch
       scroll_id = scroll_result["_scroll_id"]
 
       total_hits = scroll_result["hits"]["total"]
-      # The first indication elasticsearch gives us that we've run off the end
-      # of the results is a 500 error. We'd like to avoid producing those, so
-      # we need to work out the page count here.
-      page_count = (total_hits / SCROLL_BATCH_SIZE.to_f).ceil
 
       result_page_uri = URI::Generic.build(
         # Scrolling is accessed from the server root, not an index
@@ -138,10 +140,27 @@ module Elasticsearch
 
       # Pull out the results as they are needed
       SizedEnumerator.new(total_hits) do |yielder|
-        page_count.times do
-          page = MultiJson.decode(@client.get(result_page_uri))
-          page["hits"]["hits"].each do |hit|
-            yielder << document_from_hash(hit["_source"])
+        loop do
+          begin
+            response = @client.get(result_page_uri)
+          rescue RestClient::InternalServerError => e
+            # elasticsearch returns a 500 status code if any of the shards
+            # encountered an error (for example, running off the end of the
+            # scroll), but this doesn't necessarily mean there aren't any more
+            # results.
+            response = e.response
+          end
+
+          page = MultiJson.decode(response)
+          # The way we tell we've got through all the results is when
+          # elasticsearch gives us an empty array of hits. This means all the
+          # shards have run out of results.
+          if page["hits"]["hits"].any?
+            page["hits"]["hits"].each do |hit|
+              yielder << document_from_hash(hit["_source"])
+            end
+          else
+            break
           end
         end
       end

@@ -167,10 +167,47 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       body: MultiJson.encode({hits: {total: 100, hits: hits[0, 50]}})
     ).then.to_return(
       body: MultiJson.encode({hits: {total: 100, hits: hits[50, 50]}})
+    ).then.to_return(
+      status: 500,
+      body: MultiJson.encode({hits: {total: 100, hits: []}})
     ).then.to_raise(RuntimeError)
     all_documents = @wrapper.all_documents.to_a
     assert_equal 100, all_documents.size
     assert_equal "/foo-1", all_documents.first.link
     assert_equal "/foo-100", all_documents.last.link
+  end
+
+  def test_all_documents_with_multiple_shards
+    # Test that the scrolling search works when one of multiple shards runs out
+    # of results
+
+    search_uri = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=2"
+    scroll_uri = "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=abcdefgh"
+
+    Elasticsearch::Index.stubs(:scroll_batch_size).returns(2)
+
+    stub_request(:get, search_uri).with(
+      body: MultiJson.encode({query: {match_all: {}}})
+    ).to_return(
+      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 5}})
+    )
+    hits = (1..5).map { |i|
+      { "_source" => { "link" => "/foo-#{i}" } }
+    }
+    stub_request(:get, scroll_uri).to_return(
+      # The first 4 results: two per shard
+      body: MultiJson.encode({hits: {total: 4, hits: hits[0...4]}})
+    ).then.to_return(
+      # elasticsearch returns a 500 if any of the shards have run out of
+      # results
+      status: 500,
+      # The fifth result
+      body: MultiJson.encode({hits: {total: 100, hits: hits[4..-1]}})
+    ).then.to_return(
+      status: 500,
+      body: MultiJson.encode({hits: {total: 100, hits: []}})
+    ).then.to_raise(RuntimeError)
+
+    assert_equal 5, @wrapper.all_documents.count
   end
 end
