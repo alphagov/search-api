@@ -1,6 +1,6 @@
 require "rake/testtask"
 require "rest-client"
-require "logger"
+require "logging"
 
 File.join(File.dirname(__FILE__), "lib").tap do |path|
   $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
@@ -45,19 +45,19 @@ class PushableLogger
   end
 
   def <<(message)
-    @logger.add @level, message
+    @logger.send @level, message
   end
 end
 
 task :default => :test
 
-def logger
-  @logger ||= Logger.new(STDOUT).tap do |l|
-    l.level = verbose ? Logger::DEBUG : Logger::INFO
-  end
-end
+logger = Logging.logger.root
+logger.add_appenders Logging.appenders.stdout
+logger.level = verbose ? :debug : :info
 
-RestClient.log = PushableLogger.new(logger, Logger::DEBUG)
+# Log all RestClient output at debug level, so it doesn't show up unless rake
+# is invoked with the `--verbose` flag
+RestClient.log = PushableLogger.new(Logging.logger[RestClient], :debug)
 
 def search_config
   @search_config ||= SearchConfig.new
@@ -112,19 +112,13 @@ namespace :rummager do
     index_names.each do |index_name|
       index_group = search_server.index_group(index_name)
 
-      logger.info "Creating new #{index_name} index..."
       new_index = index_group.create_index
-      logger.info "...index '#{new_index.real_name}' created"
 
       if index_group.current.exists?
-        logger.info "Populating new #{index_name} index..."
         new_index.populate_from index_group.current
-        logger.info "...index populated."
       end
 
-      logger.info "Switching #{index_name}..."
       index_group.switch_to new_index
-      logger.info "...switched"
     end
   end
 

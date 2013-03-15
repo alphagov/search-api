@@ -1,5 +1,5 @@
 require "document"
-require "logger"
+require "logging"
 require "cgi"
 require "rest-client"
 require "multi_json"
@@ -34,12 +34,11 @@ module Elasticsearch
 
     attr_reader :mappings, :index_name
 
-    def initialize(base_uri, index_name, mappings, logger = nil)
-      @client = Client.new(base_uri + "#{CGI.escape(index_name)}/", logger)
+    def initialize(base_uri, index_name, mappings)
+      @client = Client.new(base_uri + "#{CGI.escape(index_name)}/")
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
-      @logger = logger || Logger.new("/dev/null")
     end
 
     def field_names
@@ -60,7 +59,11 @@ module Elasticsearch
     end
 
     def add(documents)
-      @logger.info "Adding #{documents.size} document(s) to elasticsearch"
+      if documents.size == 1
+        logger.info "Adding #{documents.size} document to #{index_name}"
+      else
+        logger.info "Adding #{documents.size} documents to #{index_name}"
+      end
       documents = documents.map(&:elasticsearch_export).map do |doc|
         index_action(doc).to_json + "\n" + doc.to_json
       end
@@ -78,14 +81,18 @@ module Elasticsearch
       all_docs.each_slice(POPULATE_BATCH_SIZE) do |documents|
         add documents
         total_indexed += documents.length
-        @logger.info "Populated #{total_indexed} of #{all_docs.size}"
+        logger.info do
+          progress = "#{total_indexed}/#{all_docs.size}"
+          source_name = source_index.index_name
+          "Populated #{progress} from #{source_name} into #{index_name}"
+        end
       end
 
       commit
     end
 
     def get(link)
-      @logger.info "Retrieving document with link '#{link}'"
+      logger.info "Retrieving document with link '#{link}'"
       begin
         response = @client.get("_all/#{CGI.escape(link)}")
       rescue RestClient::ResourceNotFound
@@ -226,7 +233,7 @@ module Elasticsearch
         }
       }.to_json
 
-      @logger.debug "Request payload: #{payload}"
+      logger.debug "Request payload: #{payload}"
       result = @client.get_with_payload("_search", payload)
       result = MultiJson.decode(result)
       result["hits"]["hits"].map { |hit|
@@ -235,7 +242,7 @@ module Elasticsearch
     end
 
     def advanced_search(params)
-      @logger.info "params:#{params.inspect}"
+      logger.info "params:#{params.inspect}"
       raise "Pagination params are required." if params["per_page"].nil? || params["page"].nil?
 
       order     = params.delete("order")
@@ -256,7 +263,7 @@ module Elasticsearch
 
       payload.merge!(query_builder.query_hash)
 
-      @logger.info "Request payload: #{payload.to_json}"
+      logger.info "Request payload: #{payload.to_json}"
 
       result = @client.get_with_payload("_search", payload.to_json)
       result = MultiJson.decode(result)
@@ -310,6 +317,10 @@ module Elasticsearch
     end
 
     private
+    def logger
+      Logging.logger[self]
+    end
+
     def index_action(doc)
       {"index" => {"_type" => doc["_type"], "_id" => doc["link"]}}
     end
