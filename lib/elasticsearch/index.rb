@@ -142,7 +142,9 @@ module Elasticsearch
       SizedEnumerator.new(total_hits) do |yielder|
         loop do
           begin
-            response = @client.get(result_page_uri)
+            response = @client.with_error_log_level(:warn) do
+              @client.get(result_page_uri)
+            end
           rescue RestClient::InternalServerError => e
             # elasticsearch returns a 500 status code if any of the shards
             # encountered an error (for example, running off the end of the

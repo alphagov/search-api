@@ -9,6 +9,7 @@ module Elasticsearch
 
     def initialize(base_uri)
       @base_uri = base_uri
+      @error_log_level = :error
     end
 
     # Forward on HTTP request methods, intercepting and resolving URLs
@@ -35,6 +36,18 @@ module Elasticsearch
       end
     end
 
+    # Execute the given block while recording RestClient errors at a different
+    # log level.
+    #
+    # Sometimes, a 500 error from elasticsearch doesn't mean something has gone
+    # wrong, such as when any of the shards in a scrolling query have run out
+    # of results.
+    def with_error_log_level(level, &block)
+      previous_level, @error_log_level = @error_log_level, level
+      result = yield
+      @error_log_level = previous_level
+      result
+    end
 
   private
     def logger
@@ -67,7 +80,8 @@ module Elasticsearch
     def logging_exception_body(&block)
       yield
     rescue RestClient::InternalServerError => error
-      logger.error(
+      logger.send(
+        @error_log_level,
         "Internal server error in elasticsearch. " +
         "Response: #{error.http_body}"
       )
