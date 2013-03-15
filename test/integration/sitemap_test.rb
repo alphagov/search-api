@@ -70,10 +70,19 @@ class SitemapTest < IntegrationTest
   end
 
   def assert_result_links(*links)
+    order = true
+    if links[-1].is_a?(Hash)
+      hash = links.pop
+      order = hash[:order]
+    end
     doc = Nokogiri::XML(last_response.body)
     paths = doc.css('loc').collect(&:text).map { |l| URI.parse(l).path }
 
-    assert_equal links, paths
+    if order
+      assert_equal links, paths
+    else
+      assert_equal links.sort, paths.sort
+    end
   end
 
   def assert_no_link(link)
@@ -87,7 +96,7 @@ class SitemapTest < IntegrationTest
     get "/sitemap.xml"
     assert last_response.headers["Content-Type"].include?("application/xml")
     assert last_response.ok?
-    assert_result_links "/", "/an-example-answer", "/another-example-answer"
+    assert_result_links "/", "/an-example-answer", "/another-example-answer", order: false
   end
 
   def test_should_not_include_recommended_links
@@ -126,6 +135,6 @@ class SitemapTest < IntegrationTest
     get "/sitemap.xml"
     assert last_response.headers["Content-Type"].include?("application/xml")
     assert last_response.ok?
-    assert_result_links *result_links
+    assert_result_links *result_links, order: false
   end
 end
