@@ -119,36 +119,11 @@ end
 
 class Document < SearchIndexEntry
 
-  attr_reader :additional_links
   attr_writer :highlight
 
   def self.from_hash(hash, mappings)
     field_names = mappings["edition"]["properties"].keys.map(&:to_s)
     self.new(field_names, unflatten(hash))
-  end
-
-  def update_attributes!(attributes)
-    super(attributes)
-    assign_additional_links_from(attributes)
-  end
-
-  # The `additional_links` field was originally used in parted content (guides,
-  # benefits) to display links to the individual parts. We're not displaying
-  # these links any more in the search results, nor are we submitting them to
-  # Rummager. In time, they are likely to disappear entirely, taking large
-  # tracts of code with them.
-
-  def assign_additional_links_from(attributes)
-    additional_links_attributes = attributes[:additional_links] || attributes["additional_links"] || []
-    @additional_links = additional_links_attributes.map { |h| Link.new(h) }.sort_by { |l| l.link_order }
-  end
-
-  def to_hash
-    if additional_links.any?
-      super.merge("additional_links" => additional_links.map(&:to_hash))
-    else
-      super
-    end
   end
 
   PRESENTATION_FORMAT_TRANSLATION = {
