@@ -44,9 +44,9 @@ module Elasticsearch
     # of results.
     def with_error_log_level(level, &block)
       previous_level, @error_log_level = @error_log_level, level
-      result = yield
+      return yield
+    ensure
       @error_log_level = previous_level
-      result
     end
 
   private
