@@ -32,25 +32,6 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "HERE IS SOME CONTENT", document.indexable_content
   end
 
-  def test_should_turn_hash_with_additional_links_into_document
-    hash = {
-      "title" => "TITLE",
-      "description" => "DESCRIPTION",
-      "format" => "guide",
-      "link" => "/an-example-guide",
-      "indexable_content" => "HERE IS SOME CONTENT",
-      "additional_links" => [
-        {"title" => "LINK TITLE 1", "link" => "/additional-link-1"},
-        {"title" => "LINK TITLE 2", "link" => "/additional-link-2"},
-      ]
-    }
-
-    document = Document.from_hash(hash, @mappings)
-
-    assert_equal "LINK TITLE 1", document.additional_links.first.title
-    assert_equal "/additional-link-1", document.additional_links.first.link
-  end
-
   def test_should_turn_hash_with_non_standard_field_into_document
     hash = {
       "title" => "TITLE",
@@ -84,56 +65,18 @@ class DocumentTest < MiniTest::Unit::TestCase
     refute document.respond_to?("some_other_field")
   end
 
-  def test_should_have_no_additional_links_if_none_in_hash
-    hash = {
-      "title" => "TITLE",
-      "description" => "DESCRIPTION",
-      "format" => "answer",
-      "link" => "/an-example-answer",
-      "indexable_content" => "HERE IS SOME CONTENT",
-    }
-
-    document = Document.from_hash(hash, @mappings)
-
-    assert_equal [], document.additional_links
-  end
-
   def test_should_recognise_symbol_keys_in_hash
     hash = {
       :title => "TITLE",
       :description => "DESCRIPTION",
       :format => "guide",
       :link => "/an-example-guide",
-      :indexable_content => "HERE IS SOME CONTENT",
-      :additional_links => [
-        {:title => "LINK TITLE 1", :link => "/additional-link-1"},
-      ]
+      :indexable_content => "HERE IS SOME CONTENT"
     }
 
     document = Document.from_hash(hash, @mappings)
 
     assert_equal "TITLE", document.title
-    assert_equal "LINK TITLE 1", document.additional_links.first.title
-  end
-
-  def test_should_expand_additional_links_into_nested_array
-    hash = {
-      :title => "TITLE",
-      :description => "DESCRIPTION",
-      :format => "guide",
-      :link => "/an-example-guide",
-      :indexable_content => "HERE IS SOME CONTENT",
-      :additional_links__title => ["LINK TITLE 1", "LINK TITLE 2"],
-      :additional_links__link => ["/additional-link-1", "/additional-link-2"]
-    }
-
-    document = Document.from_hash(hash, @mappings)
-
-    assert_equal 2, document.additional_links.length
-    assert_equal "LINK TITLE 1", document.additional_links[0].title
-    assert_equal "/additional-link-1", document.additional_links[0].link
-    assert_equal "LINK TITLE 2", document.additional_links[1].title
-    assert_equal "/additional-link-2", document.additional_links[1].link
   end
 
   def test_should_use_answer_as_presentation_format_for_planner
@@ -192,49 +135,11 @@ class DocumentTest < MiniTest::Unit::TestCase
       "description" => "DESCRIPTION",
       "format" => "guide",
       "link" => "/an-example-guide",
-      "indexable_content" => "HERE IS SOME CONTENT",
-      "additional_links" => [
-        {"title" => "LINK TITLE 1", "link_order" => 0, "link" => "/additional-link-1"},
-        {"title" => "LINK TITLE 2", "link_order" => 1, "link" => "/additional-link-2"},
-      ]
+      "indexable_content" => "HERE IS SOME CONTENT"
     }
 
     document = Document.from_hash(hash, @mappings)
     assert_equal hash, document.to_hash
-  end
-
-  def test_additional_links_retain_sort_order
-    hash = {
-      "title" => "TITLE",
-      "description" => "DESCRIPTION",
-      "format" => "guide",
-      "link" => "/an-example-guide",
-      "indexable_content" => "HERE IS SOME CONTENT",
-      "additional_links" => [
-        {"title" => "LINK TITLE 1", "link" => "/additional-link-1", "link_order" => 2 },
-        {"title" => "LINK TITLE 2", "link" => "/additional-link-2", "link_order" => 1 },
-      ]
-    }
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "LINK TITLE 2", document.additional_links[0].title
-    assert_equal "LINK TITLE 1", document.additional_links[1].title
-  end
-
-  def test_additional_links_retain_sort_order_without_explicit_order
-    hash = {
-      "title" => "TITLE",
-      "description" => "DESCRIPTION",
-      "format" => "guide",
-      "link" => "/an-example-guide",
-      "indexable_content" => "HERE IS SOME CONTENT",
-      "additional_links" => [
-        {"title" => "LINK TITLE 1", "link" => "/additional-link-1"},
-        {"title" => "LINK TITLE 2", "link" => "/additional-link-2"},
-      ]
-    }
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "LINK TITLE 1", document.additional_links[0].title
-    assert_equal "LINK TITLE 2", document.additional_links[1].title
   end
 
   def test_should_skip_missing_fields_in_to_hash
