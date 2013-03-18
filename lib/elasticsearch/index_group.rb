@@ -38,11 +38,14 @@ module Elasticsearch
     end
 
     def switch_to(index)
+      # Loading this manually rather than using `index_map` because we may have
+      # unaliased indices, which won't match the new naming convention.
+      indices = MultiJson.decode(@client.get("_aliases"))
+
       # Bail if there is an existing index with this name.
       # elasticsearch won't allow us to add an alias with the same name as an
       # existing index. If such an index exists, it hasn't yet been migrated to
       # the new alias-y way of doing things.
-      indices = MultiJson.decode(@client.get("_aliases"))
       if indices.include? @name
         raise RuntimeError, "There is an index called #{@name}"
       end
