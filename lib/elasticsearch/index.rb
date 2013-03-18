@@ -79,10 +79,6 @@ module Elasticsearch
 
     def populate_from(source_index)
       total_indexed = 0
-      # This will load the entire content of the search index into memory at
-      # once, which isn't yet a big deal but may become a problem as the search
-      # index grows. One alternative could be to use elasticsearch scan queries
-      # <http://www.elasticsearch.org/guide/reference/api/search/search-type.html>
       all_docs = source_index.all_documents
       all_docs.each_slice(self.class.populate_batch_size) do |documents|
         add documents
