@@ -50,3 +50,22 @@ in the `development` project and run:
 
 To rebuild from the Whitehall application, follow the [instructions in the
 app](https://github.com/alphagov/whitehall#getting-search-running-locally).
+
+## Adding a new index
+
+To add a new index to Rummager, you'll first need to add it to the list of index
+names Rummager knows about in [`elasticsearch.yml`](elasticsearch.yml). For
+instance, you might change it to:
+
+    index_names: ["mainstream", "detailed", "government", "my_new_index"]
+
+To create the index, you'll need to run:
+
+    RUMMAGER_INDEX=my_new_index bundle exec rake rummager:migrate_index
+
+This task will fail if you've already created an index with this name, as
+Rummager can't add an alias that is the name of an existing index. In this case,
+you'll either need to delete your existing index or, if you want to keep its
+contents, run:
+
+    RUMMAGER_INDEX=my_new_index bundle exec rake rummager:migrate_from_unaliased_index
