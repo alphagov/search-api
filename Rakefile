@@ -82,6 +82,12 @@ def all_index_names
   search_config.index_names
 end
 
+def parse_boolean(value)
+  parsed = [true, false].find { |v| v.to_s == value }
+  raise "Invalid Boolean value #{value}" if parsed.nil?
+  parsed
+end
+
 namespace :rummager do
 
   desc "Lists current Rummager indices, pass [all] to show inactive indices"
@@ -108,14 +114,20 @@ namespace :rummager do
   end
 
   desc "Migrates an index group to a new index"
-  task :migrate_index do
+  task :migrate_index, :populate do |_, args|
+    # If the populate flag is "false", don't populate from the previous index.
+    # This is essentially equivalent to deleting and recreating the index,
+    # except that you can restore the index if it all goes horribly wrong.
+
+    populate = args[:populate] ? parse_boolean(args[:populate]) : true
+
     index_names.each do |index_name|
       index_group = search_server.index_group(index_name)
 
       new_index = index_group.create_index
       old_index = index_group.current
 
-      if old_index.exists?
+      if populate && old_index.exists?
         new_index.populate_from old_index
         new_count = new_index.all_documents.size
         old_count = old_index.all_documents.size
@@ -126,6 +138,10 @@ namespace :rummager do
           )
           raise RuntimeError, "Population count mismatch"
         end
+      elsif populate
+        logger.info "No previous index found: not populating the new index"
+      else
+        logger.info "Populate flag set to false: not populating the new index"
       end
 
       index_group.switch_to new_index
