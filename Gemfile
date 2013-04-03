@@ -12,6 +12,7 @@ gem "aws-ses", "0.4.4"
 gem "rest-client", "1.6.7"
 gem "statsd-ruby", "1.0.0"
 gem "logging", "1.8.1"
+gem 'nokogiri'
 
 group :test do
   gem 'simplecov'
@@ -21,7 +22,6 @@ group :test do
   gem 'rack-test'
   gem 'mocha', :require => false
   gem 'webmock', '1.9.3', :require => false
-  gem 'nokogiri', :require => false
 end
 
 group :development do
