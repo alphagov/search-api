@@ -103,23 +103,24 @@ class Rummager < Sinatra::Application
     documents = indices_for_sitemap.flat_map do |index|
       index.all_documents.take(49_999)
     end
-    builder do |xml|
-      xml.instruct!
+
+    builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
-        xml.url do
+        xml.url {
           xml.loc "#{base_url}#{"/"}"
-        end
+        }
         documents.each do |document|
           unless [settings.inside_government_link, settings.recommended_format].include?(document.format)
-            xml.url do
-              url = document.link
-              url = "#{base_url}#{url}" if url =~ /^\//
+            url = document.link
+            url = "#{base_url}#{url}" if url =~ /^\//
+            xml.url {
               xml.loc url
-            end
+            }
           end
         end
       end
     end
+    builder.to_xml
   end
 
   post "/?:index?/documents" do
