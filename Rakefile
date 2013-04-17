@@ -132,6 +132,16 @@ namespace :rummager do
     end
   end
 
+  desc "Switches an index group to a new index WITHOUT transferring the data"
+  task :switch_to_empty_index do
+    # Note that this task will effectively clear out the index, so shouldn't be
+    # run on production without some serious consideration.
+    index_names.each do |index_name|
+      index_group = search_server.index_group(index_name)
+      index_group.switch_to index_group.create_index
+    end
+  end
+
   desc "Migrates from an index with the actual index name to an alias"
   task :migrate_from_unaliased_index do
     # WARNING: this is potentially dangerous, and will leave the search
