@@ -125,31 +125,17 @@ module Elasticsearch
 
       total_hits = scroll_result["hits"]["total"]
 
-      result_page_uri = URI::Generic.build(
-        # Scrolling is accessed from the server root, not an index
-        path: "/_search/scroll",
-        query: URI.encode_www_form(
-          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
-          scroll_id: scroll_id
-        )
-      )
-
       # Pull out the results as they are needed
       SizedEnumerator.new(total_hits) do |yielder|
+        scroll_id = scroll_result["_scroll_id"]
+
         loop do
-          begin
-            response = @client.with_error_log_level(:warn) do
-              @client.get(result_page_uri)
-            end
-          rescue RestClient::InternalServerError => e
-            # elasticsearch returns a 500 status code if any of the shards
-            # encountered an error (for example, running off the end of the
-            # scroll), but this doesn't necessarily mean there aren't any more
-            # results.
-            response = e.response
-          end
+          result_page_uri = scroll_page_uri(scroll_id)
+          response = @client.get(result_page_uri)
 
           page = MultiJson.decode(response)
+          scroll_id = page.fetch("_scroll_id")  # Error if scroll ID absent
+
           # The way we tell we've got through all the results is when
           # elasticsearch gives us an empty array of hits. This means all the
           # shards have run out of results.
@@ -344,6 +330,17 @@ module Elasticsearch
 
     def index_action(doc)
       {"index" => {"_type" => doc["_type"], "_id" => doc["link"]}}
+    end
+
+    def scroll_page_uri(scroll_id)
+      URI::Generic.build(
+        # Scrolling is accessed from the server root, not an index
+        path: "/_search/scroll",
+        query: URI.encode_www_form(
+          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
+          scroll_id: scroll_id
+        )
+      )
     end
   end
 end
