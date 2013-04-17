@@ -333,7 +333,7 @@ module Elasticsearch
     end
 
     def scroll_page_uri(scroll_id)
-      result_page_uri = URI::Generic.build(
+      URI::Generic.build(
         # Scrolling is accessed from the server root, not an index
         path: "/_search/scroll",
         query: URI.encode_www_form(
