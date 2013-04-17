@@ -153,7 +153,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
   def test_all_documents
     search_uri = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=50"
-    scroll_uri = "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=abcdefgh"
 
     stub_request(:get, search_uri).with(
       body: MultiJson.encode({query: {match_all: {}}})
@@ -163,7 +162,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     hits = (1..100).map { |i|
       { "_source" => { "link" => "/foo-#{i}" } }
     }
-    stub_request(:get, scroll_uri).to_return(
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 100, hits[0, 50])
     ).then.to_return(
       body: scroll_response_body("abcdefgh", 100, hits[50, 50])
@@ -178,10 +177,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
   def test_changing_scroll_id
     search_uri = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=2"
-
-    def scroll_uri(scroll_id)
-       "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=#{scroll_id}"
-    end
 
     Elasticsearch::Index.stubs(:scroll_batch_size).returns(2)
 
@@ -209,6 +204,10 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     all_documents = @wrapper.all_documents.to_a
     assert_equal ["/foo-1", "/foo-2", "/foo-3"], all_documents.map(&:link)
+  end
+
+  def scroll_uri(scroll_id)
+     "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=#{scroll_id}"
   end
 
   def scroll_response_body(scroll_id, total_results, results)
