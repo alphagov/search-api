@@ -25,7 +25,7 @@ set :protection, :except => [:path_traversal, :escaped_params, :frame_options]
 enable :dump_errors, :raise_errors
 
 unless in_development
-  log = File.new("log/sinatra.log", "a")
+  log = File.new("log/production.log", "a")
   STDOUT.reopen(log)
   STDERR.reopen(log)
 end
