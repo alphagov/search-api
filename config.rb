@@ -9,6 +9,8 @@ set :default_index_name, "mainstream"
 set :recommended_format, "recommended-link"
 set :inside_government_link, "inside-government-link"
 
+set :static, true
+
 configure :development do
   set :protection, false
 end
