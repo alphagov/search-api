@@ -7,33 +7,49 @@ module Elasticsearch
     # since this will make the request relative to the server root
     SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_aliases", "/_search/scroll"]
 
-    def initialize(base_uri)
+    def initialize(base_uri, args = {})
       @base_uri = base_uri
       @error_log_level = :error
+      @timeout = args[:timeout]
+      @open_timeout = args[:open_timeout]
     end
 
-    # Forward on HTTP request methods, intercepting and resolving URLs
-    [:get, :post, :put, :head, :delete].each do |method_name|
-      define_method method_name do |sub_path, *args|
-        full_url = url_for(sub_path)
-        logger.debug "Sending #{method_name.upcase} request to #{full_url}"
-        args.each_with_index do |argument, index|
-          logger.debug "Argument #{index + 1}: #{argument.inspect}"
-        end
-        recording_elastic_error do
-          logging_exception_body do
-            RestClient.send(method_name, full_url, *args)
-          end
-        end
-      end
+    def get(path, headers = {})
+      request(:get, path, nil, headers)
+    end
+
+    def post(path, payload, headers = {})
+      request(:post, path, payload, headers)
+    end
+
+    def patch(path, payload, headers = {})
+      request(:patch, path, payload, headers)
+    end
+
+    def put(path, payload, headers = {})
+      request(:put, path, payload, headers)
+    end
+
+    def delete(path, headers = {})
+      request(:delete, path, nil, headers)
+    end
+
+    def head(path, headers = {})
+      request(:head, path, nil, headers)
+    end
+
+    def options(path, headers = {})
+      request(:options, path, nil, headers)
     end
 
     # RestClient doesn't natively support sending payloads with these request
     # methods, but elasticsearch requires them for certain operations
-    [:get, :delete].each do |method_name|
-      define_method "#{method_name}_with_payload" do |sub_path, payload|
-        request(method_name, sub_path, payload)
-      end
+    def get_with_payload(path, payload, headers = {})
+      request(:get, path, payload, headers)
+    end
+
+    def delete_with_payload(path, payload, headers={})
+      request(:delete, path, payload, headers)
     end
 
     # Execute the given block while recording RestClient errors at a different
@@ -88,15 +104,22 @@ module Elasticsearch
       raise
     end
 
-    def request(method, sub_path, payload)
+    def request(method, path, payload = nil, headers = {})
+      if headers == {}
+        headers[:content_type] = "application/json"
+      end
+
       recording_elastic_error do
         logging_exception_body do
-          RestClient::Request.execute(
+          args = {
             method: method,
-            url:  url_for(sub_path),
-            payload: payload,
-            headers: {content_type: "application/json"}
-          )
+            url: url_for(path),
+          }
+          args[:payload] = payload if payload
+          args[:headers] = headers if headers
+          args[:timeout] = @timeout if @timeout
+          args[:open_timeout] = @open_timeout if @open_timeout
+          RestClient::Request.execute(args)
         end
       end
     end
