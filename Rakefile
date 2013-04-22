@@ -2,13 +2,15 @@ require "rake/testtask"
 require "rest-client"
 require "logging"
 
-File.join(File.dirname(__FILE__), "lib").tap do |path|
+PROJECT_ROOT = File.dirname(__FILE__)
+
+File.join(PROJECT_ROOT, "lib").tap do |path|
   $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
 end
 
 require "search_config"
 
-Dir[File.dirname(__FILE__) + '/lib/tasks/*.rake'].each { |file| load file }
+Dir[File.join(PROJECT_ROOT, 'lib/tasks/*.rake')].each { |file| load file }
 
 desc "Run all the tests"
 task "test" => ["test:units", "test:functionals", "test:integration"]
