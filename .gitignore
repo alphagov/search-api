@@ -5,3 +5,4 @@ sinatra.log
 /.bundle
 tmp/*
 .powrc
+/public/*.xml
