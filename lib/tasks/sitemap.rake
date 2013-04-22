@@ -53,7 +53,8 @@ namespace :sitemap do
       sitemap_file_count += 1
     end
 
-    File.open(File.join(PROJECT_ROOT, "public", "sitemap_#{sitemap_timestamp}.xml"), "w") do |sitemap_index_file|
+    sitemap_index_path = File.join(PROJECT_ROOT, "public", "sitemap_#{sitemap_timestamp}.xml")
+    File.open(sitemap_index_path, "w") do |sitemap_index_file|
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           sitemap_filenames.each do |sitemap_filename|
@@ -67,5 +68,8 @@ namespace :sitemap do
       sitemap_index_file.write(builder.to_xml)
     end
 
+    sitemap_link_path = File.join(PROJECT_ROOT, "public", "sitemap.xml")
+    `ln -sf #{sitemap_index_path} #{sitemap_link_path}`
+    fail("Symlinking failed") unless $?.success?
   end
 end
