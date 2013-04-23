@@ -6,6 +6,7 @@ require "multi_json"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"
+require "elasticsearch/scroll_enumerator"
 
 module Elasticsearch
   class Index
@@ -33,10 +34,6 @@ module Elasticsearch
     def self.scroll_batch_size
       50
     end
-
-    # How long to hold a scroll cursor open between requests
-    # We should be able to keep this low, since these are only for internal use
-    SCROLL_TIMEOUT_MINUTES = 1
 
     attr_reader :mappings, :index_name
 
@@ -111,46 +108,9 @@ module Elasticsearch
     def all_documents
       # Set off a scan query to get back a scroll ID and result count
       search_body = {query: {match_all: {}}}
-      search_uri = URI::Generic.build(
-        path: "_search",
-        query: URI.encode_www_form(
-          search_type: "scan",
-          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
-          size: self.class.scroll_batch_size
-        )
-      )
-      scroll_response = @client.get_with_payload(search_uri, search_body.to_json)
-      scroll_result = MultiJson.decode(scroll_response)
-      scroll_id = scroll_result["_scroll_id"]
-
-      total_hits = scroll_result["hits"]["total"]
-
-      # Pull out the results as they are needed
-      SizedEnumerator.new(total_hits) do |yielder|
-        scroll_id = scroll_result["_scroll_id"]
-
-        loop do
-          result_page_uri = scroll_page_uri(scroll_id)
-          response = @client.get(result_page_uri)
-
-          page = MultiJson.decode(response)
-          scroll_id = page.fetch("_scroll_id")  # Error if scroll ID absent
-
-          # The way we tell we've got through all the results is when
-          # elasticsearch gives us an empty array of hits. This means all the
-          # shards have run out of results.
-          if page["hits"]["hits"].any?
-            logger.debug do
-              hits_on_page = page["hits"]["hits"].size
-              "Retrieved #{hits_on_page} of all documents from #{index_name}"
-            end
-            page["hits"]["hits"].each do |hit|
-              yielder << document_from_hash(hit["_source"])
-            end
-          else
-            break
-          end
-        end
+      batch_size = self.class.scroll_batch_size
+      ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
+        document_from_hash(hit["_source"])
       end
     end
 
@@ -330,17 +290,6 @@ module Elasticsearch
 
     def index_action(doc)
       {"index" => {"_type" => doc["_type"], "_id" => doc["link"]}}
-    end
-
-    def scroll_page_uri(scroll_id)
-      URI::Generic.build(
-        # Scrolling is accessed from the server root, not an index
-        path: "/_search/scroll",
-        query: URI.encode_www_form(
-          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
-          scroll_id: scroll_id
-        )
-      )
     end
   end
 end
