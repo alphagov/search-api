@@ -114,6 +114,26 @@ module Elasticsearch
       end
     end
 
+    def all_document_links(exclude_formats = [])
+      search_body = {
+        "query" => {
+          "bool" => {
+            "must_not" => {
+              "terms" => {
+                "format" => exclude_formats
+              }
+            }
+          }
+        },
+        "fields" => ["link"]
+      }
+
+      batch_size = self.class.scroll_batch_size
+      ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
+        hit["fields"]["link"]
+      end
+    end
+
     def search(query)
       # Per-format boosting done as a filter, so the results get cached on the
       # server, as they are the same for each query
