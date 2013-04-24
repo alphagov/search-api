@@ -1,13 +1,4 @@
-require "nokogiri"
-
-EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"]
-
-def base_url
-  return "https://www.gov.uk" if ENV["FACTER_govuk_platform"] == "production"
-  "https://www.#{ENV["FACTER_govuk_platform"]}.alphagov.co.uk"
-end
-
-SITEMAP_LIMIT = 50_000
+require "elasticsearch/sitemap"
 
 namespace :sitemap do
   desc "Generate new sitemap files and if all is ok switch symlink"
@@ -22,53 +13,13 @@ namespace :sitemap do
       index.all_documents.to_a
     end
 
-    sitemap_file_count = 1
-    sitemap_timestamp = Time.now.utc.strftime("%FT%H%M%S")
-    sitemap_timestamp_with_timezone = Time.now.utc.strftime("%FT%T%:z")
-    sitemap_filenames = []
+    sitemap_directory = File.join(PROJECT_ROOT, "public")
+    sitemap = Sitemap.new(sitemap_directory)
+    sitemap_index_filename = sitemap.generate(all_documents)
 
-    all_documents.each_slice(SITEMAP_LIMIT) do |chunk|
-      filename = "sitemap_#{sitemap_file_count}_#{sitemap_timestamp}.xml"
-      sitemap_filenames << filename 
-      File.open(File.join(PROJECT_ROOT, "public", filename), "w") do |sitemap_file|
-        builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-          xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
-            xml.url {
-              xml.loc "#{base_url}#{"/"}"
-            }
-            chunk.each do |document|
-              unless EXCLUDED_FORMATS.include?(document.format)
-                url = document.link
-                url = "#{base_url}#{url}" if url =~ /^\//
-                xml.url {
-                  xml.loc url
-                }
-              end
-            end
-          end
-        end
-        sitemap_file.write(builder.to_xml)
-      end
+    sitemap_index_path = File.join(sitemap_directory, sitemap_index_filename)
+    sitemap_link_path = File.join(sitemap_directory, "sitemap.xml")
 
-      sitemap_file_count += 1
-    end
-
-    sitemap_index_path = File.join(PROJECT_ROOT, "public", "sitemap_#{sitemap_timestamp}.xml")
-    File.open(sitemap_index_path, "w") do |sitemap_index_file|
-      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
-          sitemap_filenames.each do |sitemap_filename|
-            xml.sitemap {
-              xml.loc "#{base_url}#{"/"}#{sitemap_filename}"
-              xml.lastmod "#{sitemap_timestamp_with_timezone}"
-            }
-          end
-        end
-      end
-      sitemap_index_file.write(builder.to_xml)
-    end
-
-    sitemap_link_path = File.join(PROJECT_ROOT, "public", "sitemap.xml")
     `ln -sf #{sitemap_index_path} #{sitemap_link_path}`
     fail("Symlinking failed") unless $?.success?
   end
