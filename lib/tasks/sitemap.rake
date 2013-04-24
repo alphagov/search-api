@@ -1,4 +1,5 @@
 require "elasticsearch/sitemap"
+EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"]
 
 namespace :sitemap do
   desc "Generate new sitemap files and if all is ok switch symlink"
@@ -9,8 +10,12 @@ namespace :sitemap do
       search_server.index(index_name)
     end
 
-    all_documents = indices_for_sitemap.flat_map do |index|
-      index.all_documents.to_a
+    all_documents = Enumerator.new do |yielder|
+      indices_for_sitemap.each do |index|
+        index.all_document_links(EXCLUDED_FORMATS).each do |document|
+          yielder << document
+        end
+      end
     end
 
     sitemap_directory = File.join(PROJECT_ROOT, "public")

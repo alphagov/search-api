@@ -1,6 +1,5 @@
 require "nokogiri"
 
-EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"]
 SITEMAP_LIMIT = 50_000
 
 
@@ -88,14 +87,11 @@ class SitemapGenerator
         xml.url {
           xml.loc "#{base_url}#{"/"}"
         }
-        chunk.each do |document|
-          unless EXCLUDED_FORMATS.include?(document.format)
-            url = document.link
-            url = "#{base_url}#{url}" if url =~ /^\//
-            xml.url {
-              xml.loc url
-            }
-          end
+        chunk.each do |url|
+          url = "#{base_url}#{url}" if url.start_with?("/")
+          xml.url {
+            xml.loc url
+          }
         end
       end
     end
