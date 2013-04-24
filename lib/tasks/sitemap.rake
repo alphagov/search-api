@@ -11,6 +11,9 @@ namespace :sitemap do
     end
 
     all_documents = Enumerator.new do |yielder|
+      # Hard-code the site root, as it isn't listed in any search index
+      yielder << "/"
+
       indices_for_sitemap.each do |index|
         index.all_document_links(EXCLUDED_FORMATS).each do |document|
           yielder << document

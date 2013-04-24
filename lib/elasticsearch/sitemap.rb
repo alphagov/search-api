@@ -84,9 +84,6 @@ class SitemapGenerator
   def generate_xml(chunk)
     builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
-        xml.url {
-          xml.loc "#{base_url}#{"/"}"
-        }
         chunk.each do |url|
           url = "#{base_url}#{url}" if url.start_with?("/")
           xml.url {
