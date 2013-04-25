@@ -21,7 +21,7 @@ namespace :sitemap do
       end
     end
 
-    sitemap_directory = File.join(PROJECT_ROOT, "public")
+    sitemap_directory = File.join(PROJECT_ROOT, "public", "system")
     sitemap = Sitemap.new(sitemap_directory)
     sitemap_index_filename = sitemap.generate(all_documents)
 
