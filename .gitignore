@@ -1,5 +1,5 @@
 .DS_Store
-sinatra.log
+production.log
 /coverage
 /test/reports
 /.bundle
