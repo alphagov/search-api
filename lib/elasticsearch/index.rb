@@ -35,10 +35,24 @@ module Elasticsearch
       50
     end
 
+    # How long to hold a scroll cursor open between requests
+    # We should be able to keep this low, since these are only for internal use
+    SCROLL_TIMEOUT_MINUTES = 1
+
+    # How long to wait between reads when streaming data from the elasticsearch server
+    TIMEOUT_SECONDS = 2.0
+
+    # How long to wait for a connection to the elasticsearch server
+    OPEN_TIMEOUT_SECONDS = 2.0
+
     attr_reader :mappings, :index_name
 
     def initialize(base_uri, index_name, mappings)
-      @client = Client.new(base_uri + "#{CGI.escape(index_name)}/")
+      @client = Client.new(
+        base_uri + "#{CGI.escape(index_name)}/",
+        timeout: TIMEOUT_SECONDS,
+        open_timeout: OPEN_TIMEOUT_SECONDS
+      )
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
