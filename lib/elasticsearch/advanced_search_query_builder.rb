@@ -86,24 +86,31 @@ module Elasticsearch
     def keyword_query_hash
       if @keywords
         {
-          "query" => {
-            "bool" => {
-              "should" => [
-                {"text" =>
-                  {"title" =>
-                    {"query" => escape(@keywords),
-                     "type" => "phrase_prefix",
-                     "operator" => "and",
-                     "analyzer" => "query_default",
-                     "boost" => 10,
-                     "fuzziness" => 0.5}
-                  }
-                },
-                {"query_string" => {
-                  "query" => escape(@keywords),
-                  "default_operator" => "and",
-                  "analyzer" => "query_default"}
+          query: {
+            custom_filters_score: {
+              query: {
+                bool: {
+                  should: [
+                    {
+                      query_string: {
+                        query: escape(@keywords),
+                        fields: ["title^3"],
+                        default_operator: "and",
+                        analyzer: "default"
+                      }
+                    },
+                    {
+                      query_string: {
+                        query: escape(@keywords),
+                        analyzer: "query_default"
+                      }
+                    }
+                  ]
                 }
+              },
+              filters: [
+                filter: { term: { search_format_types: "edition" } },
+                script: "((0.15 / ((3.1*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)"
               ]
             }
           }
