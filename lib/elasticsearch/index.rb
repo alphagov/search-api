@@ -40,10 +40,10 @@ module Elasticsearch
     SCROLL_TIMEOUT_MINUTES = 1
 
     # How long to wait between reads when streaming data from the elasticsearch server
-    TIMEOUT_SECONDS = 2.0
+    TIMEOUT_SECONDS = 5.0
 
     # How long to wait for a connection to the elasticsearch server
-    OPEN_TIMEOUT_SECONDS = 2.0
+    OPEN_TIMEOUT_SECONDS = 5.0
 
     attr_reader :mappings, :index_name
 
