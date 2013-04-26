@@ -1,7 +1,8 @@
 .DS_Store
-sinatra.log
+production.log
 /coverage
 /test/reports
 /.bundle
 tmp/*
 .powrc
+/public/system/*.xml

@@ -95,34 +95,6 @@ class Rummager < Sinatra::Application
     })
   end
 
-  get "/sitemap.xml" do
-    content_type :xml
-    expires 86400, :public
-    # Site maps can have up to 50,000 links in them.
-    # We use one for / so we can have up to 49,999 others.
-    documents = indices_for_sitemap.flat_map do |index|
-      index.all_documents.take(49_999)
-    end
-
-    builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-      xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
-        xml.url {
-          xml.loc "#{base_url}#{"/"}"
-        }
-        documents.each do |document|
-          unless [settings.inside_government_link, settings.recommended_format].include?(document.format)
-            url = document.link
-            url = "#{base_url}#{url}" if url =~ /^\//
-            xml.url {
-              xml.loc url
-            }
-          end
-        end
-      end
-    end
-    builder.to_xml
-  end
-
   post "/?:index?/documents" do
     request.body.rewind
     documents = [MultiJson.decode(request.body.read)].flatten.map { |hash|

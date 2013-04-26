@@ -1,0 +1,92 @@
+require "uri"
+
+module Elasticsearch
+  class ScrollEnumerator < Enumerator
+    # How long to hold a scroll cursor open between requests
+    # We should be able to keep this low, since these are only for internal use
+    SCROLL_TIMEOUT_MINUTES = 1
+
+    # The number of documents to retrieve at once.
+    # Gotcha: this is actually the number of documents per shard, so there will
+    # be some multiple of this number per page.
+    DEFAULT_BATCH_SIZE = 50
+
+    attr_reader :size
+
+    def initialize(client, search_body, batch_size = DEFAULT_BATCH_SIZE, &block)
+      raise ArgumentError, "Result processing block is required" unless block
+
+      @client = client
+      scroll_result = initial_scroll_result(batch_size, search_body)
+      @size = scroll_result["hits"]["total"]
+
+      # Pull out the results as they are needed
+      super() do |yielder|
+        # Get the initial scroll ID from the response to the initial request
+        scroll_id = scroll_result["_scroll_id"]
+
+        loop do
+          # Get the next page and extract the next scroll ID from it
+          page = next_page(scroll_id)
+          scroll_id = page.fetch("_scroll_id")  # Error if scroll ID absent
+
+          # The way we tell we've got through all the results is when
+          # elasticsearch gives us an empty array of hits. This means all the
+          # shards have run out of results.
+          if page["hits"]["hits"].any?
+            logger.debug do
+              hits_on_page = page["hits"]["hits"].size
+              "Retrieved #{hits_on_page} of #{size} documents"
+            end
+            page["hits"]["hits"].each do |hit|
+              yielder << block.call(hit)
+            end
+          else
+            break
+          end
+        end
+      end
+    end
+
+  private
+    def search_uri(batch_size)
+      URI::Generic.build(
+        path: "_search",
+        query: URI.encode_www_form(
+          search_type: "scan",
+          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
+          size: batch_size
+        )
+      )
+    end
+
+    def scroll_page_uri(scroll_id)
+      URI::Generic.build(
+        # Scrolling is accessed from the server root, not an index
+        path: "/_search/scroll",
+        query: URI.encode_www_form(
+          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
+          scroll_id: scroll_id
+        )
+      )
+    end
+
+    def next_page(scroll_id)
+      response = @client.get(scroll_page_uri(scroll_id))
+      MultiJson.decode(response)
+    end
+
+    def initial_scroll_result(batch_size, search_body)
+      # Set off a scan query to get back a scroll ID and result count
+      scroll_response = @client.get_with_payload(
+        search_uri(batch_size),
+        search_body.to_json
+      )
+      MultiJson.decode(scroll_response)
+    end
+
+    def logger
+      Logging.logger[self]
+    end
+  end
+end
