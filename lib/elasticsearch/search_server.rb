@@ -25,6 +25,12 @@ module Elasticsearch
       end
     end
 
+    def all_indices
+      @index_names.map do |index_name|
+        index(index_name)
+      end
+    end
+
   private
     def index_settings(prefix)
       @schema["index"]

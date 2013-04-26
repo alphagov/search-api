@@ -2,6 +2,7 @@ require "integration_test_helper"
 require "app"
 require "rest-client"
 require "nokogiri"
+require "elasticsearch/sitemap"
 
 class SitemapTest < IntegrationTest
 
@@ -35,6 +36,27 @@ class SitemapTest < IntegrationTest
         "format" => "answer",
         "link" => "/an-example-answer",
         "indexable_content" => "I like my badger: he is tasty and delicious"
+      },
+      {
+        "title" => "Cheese on Ruby's face",
+        "description" => "Ruby weevils",
+        "format" => "answer",
+        "link" => "/an-example-answer-rubylol",
+        "indexable_content" => "I like my rubby badger: he is tasty and delicious"
+      },
+      {
+        "title" => "Cheese on Python's face",
+        "description" => "Python weevils",
+        "format" => "answer",
+        "link" => "/an-example-answer-pythonwin",
+        "indexable_content" => "I like my badger: he is pythonic and delicious"
+      },
+      {
+        "title" => "Cheese in my ears",
+        "description" => "Wordpress weevils",
+        "format" => "answer",
+        "link" => "/an-example-answer-stuff",
+        "indexable_content" => "I like my wordpress: says Joshua who is win"
       },
       {
         "title" => "Useful government information",
@@ -92,49 +114,24 @@ class SitemapTest < IntegrationTest
     assert ! paths.include?(link), "Found #{link} in sitemap"
   end
 
-  def test_should_return_a_sitemap
-    get "/sitemap.xml"
-    assert last_response.headers["Content-Type"].include?("application/xml")
-    assert last_response.ok?
-    assert_result_links "/", "/an-example-answer", "/another-example-answer", order: false
+  def test_should_generate_multiple_sitemaps
+    SitemapGenerator.stubs(:sitemap_limit).returns(2)
+    generator = SitemapGenerator.new(search_server.all_indices)
+    sitemap_xml = generator.sitemaps
+    assert_equal 3, sitemap_xml.length
   end
 
   def test_should_not_include_recommended_links
-    get "/sitemap.xml"
-    assert last_response.headers["Content-Type"].include?("application/xml")
-    assert last_response.ok?
-    assert_no_link "/external-example-answer"
+    generator = SitemapGenerator.new(search_server.all_indices)
+    sitemap_xml = generator.sitemaps
+    assert_equal 1, sitemap_xml.length
+    refute_includes sitemap_xml[0], "/external-example-answer"
   end
 
   def test_should_not_include_inside_government_links
-    get "/sitemap.xml"
-    assert last_response.ok?
-    assert_no_link "/government/some-content"
-  end
-
-  def test_should_include_content_from_all_indices
-
-    result_links = ["/", "/an-example-answer", "/another-example-answer"]
-
-    @index_names[1..-1].each do |index_name|
-      link = "/#{index_name}/a-thing"
-      document = {
-        "title" => "Fetid Dingo's Kidneys",
-        "description" => "Bugblatter Beast of Traal",
-        "format" => "thing",
-        "link" => link,
-        "indexable_content" => "Always bring a towel."
-      }
-      post "/#{index_name}/documents", MultiJson.encode(document)
-      result_links << link
-      assert last_response.ok?
-      post "/#{index_name}/commit", nil
-      assert last_response.ok?
-    end
-
-    get "/sitemap.xml"
-    assert last_response.headers["Content-Type"].include?("application/xml")
-    assert last_response.ok?
-    assert_result_links *result_links, order: false
+    generator = SitemapGenerator.new(search_server.all_indices)
+    sitemap_xml = generator.sitemaps
+    assert_equal 1, sitemap_xml.length
+    refute_includes sitemap_xml[0],  "/government/some-content"
   end
 end
