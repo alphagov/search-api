@@ -58,7 +58,7 @@ class SitemapWriter
     # write our sitemap files and return an array of filenames
     sitemap_generator.sitemaps.map do |sitemap_xml|
       filename = next_filename
-      File.open(File.join(@directory, filename), "w") do |file| 
+      File.open(File.join(@directory, filename), "w") do |file|
         file.write(sitemap_xml)
       end
       filename
