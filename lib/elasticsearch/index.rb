@@ -209,8 +209,6 @@ module Elasticsearch
         end
       end
 
-      query_boosts = shingle_boosts
-
       payload = {
         from: 0, size: 50,
         query: {
@@ -226,7 +224,7 @@ module Elasticsearch
                     analyzer: query_analyzer
                   }
                 },
-                should: query_boosts
+                should: shingle_boosts
               }
             },
             filters: format_boosts + [time_boost]
