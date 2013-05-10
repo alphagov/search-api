@@ -17,7 +17,7 @@ class Sitemap
   end
 
   def write_index(sitemap_filenames)
-    index_filename = "sitemap_#{@timestamp.strftime('%FT%H%M%S')}.xml"
+    index_filename = "sitemap_#{@timestamp.strftime('%FT%H')}.xml"
     index_full_path = File.join(@directory, index_filename)
     File.open(index_full_path, "w") do |sitemap_index_file|
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
@@ -68,7 +68,7 @@ class SitemapWriter
 private
   def next_filename
     @sitemap_file_count += 1
-    "sitemap_#{@sitemap_file_count}_#{@timestamp.strftime('%FT%H%M%S')}.xml"
+    "sitemap_#{@sitemap_file_count}_#{@timestamp.strftime('%FT%H')}.xml"
   end
 end
 
