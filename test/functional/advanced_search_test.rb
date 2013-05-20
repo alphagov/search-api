@@ -21,7 +21,7 @@ class AdvancedSearchTest < IntegrationTest
     Elasticsearch::Index.any_instance.stubs(:advanced_search)
       .returns({total: 1, results: [sample_document]})
     get "/rummager_test/advanced_search.json", {per_page: '1', page: '1', keywords: 'meh'}
-    expected_result = {'total' => 1, 'results' => [sample_document_attributes.merge('highlight' => 'DESCRIPTION')]}
+    expected_result = {'total' => 1, 'results' => [sample_document_attributes]}
     assert last_response.ok?, "Bad status: #{last_response.status}"
     assert_match /application\/json/, last_response.headers["Content-Type"]
     result = MultiJson.decode(last_response.body)

@@ -154,25 +154,6 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal hash.keys.sort, document.to_hash.keys.sort
   end
 
-  def test_should_use_description_for_highlight_if_no_highlight_is_set
-    hash = {
-      "description" => "DESCRIPTION",
-    }
-
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "DESCRIPTION", document.highlight
-  end
-
-  def test_should_prefer_highlight_if_set
-    hash = {
-      "description" => "DESCRIPTION",
-    }
-
-    document = Document.from_hash(hash, @mappings)
-    document.highlight = "HIGHLIGHT"
-    assert_equal "HIGHLIGHT", document.highlight
-  end
-
   def test_should_skip_missing_fields_in_elasticsearch_export
     hash = {
         "_type" => "edition",
