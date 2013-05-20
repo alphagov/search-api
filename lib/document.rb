@@ -119,8 +119,6 @@ end
 
 class Document < SearchIndexEntry
 
-  attr_writer :highlight
-
   def self.from_hash(hash, mappings)
     field_names = mappings["edition"]["properties"].keys.map(&:to_s)
     self.new(field_names, unflatten(hash))
@@ -150,10 +148,6 @@ class Document < SearchIndexEntry
 
   def humanized_format
     FORMAT_NAME_ALTERNATIVES[presentation_format] || presentation_format.humanize.pluralize
-  end
-
-  def highlight
-    @highlight || description
   end
 
   private

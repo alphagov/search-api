@@ -75,7 +75,6 @@ class Rummager < Sinatra::Application
     results = current_index.search(query)
 
     MultiJson.encode(results.map { |r| r.to_hash.merge(
-      highlight: r.highlight,
       presentation_format: r.presentation_format,
       humanized_format: r.humanized_format
     )})
@@ -88,7 +87,6 @@ class Rummager < Sinatra::Application
     MultiJson.encode({
       total: results[:total],
       results: results[:results].map { |r| r.to_hash.merge(
-        highlight: r.highlight,
         presentation_format: r.presentation_format,
         humanized_format: r.humanized_format
       )}
