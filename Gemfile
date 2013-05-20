@@ -1,4 +1,4 @@
-source :rubygems
+source "https://rubygems.org"
 source "https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/"
 
 gem "unicorn", "4.3.1"
