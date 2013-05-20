@@ -6,6 +6,7 @@ require "multi_json"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"
+require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
 
 module Elasticsearch
@@ -233,11 +234,8 @@ module Elasticsearch
       }.to_json
 
       logger.debug "Request payload: #{payload}"
-      result = @client.get_with_payload("_search", payload)
-      result = MultiJson.decode(result)
-      result["hits"]["hits"].map { |hit|
-        document_from_hash(hit["_source"].merge("es_score" => hit["_score"]))
-      }
+      response = @client.get_with_payload("_search", payload)
+      ResultSet.new(@mappings, MultiJson.decode(response))
     end
 
     def advanced_search(params)
@@ -265,13 +263,7 @@ module Elasticsearch
       logger.info "Request payload: #{payload.to_json}"
 
       result = @client.get_with_payload("_search", payload.to_json)
-      result = MultiJson.decode(result)
-      {
-        total: result["hits"]["total"],
-        results: result["hits"]["hits"].map { |hit|
-          document_from_hash(hit["_source"].merge("es_score" => hit["_score"]))
-        }
-      }
+      ResultSet.new(@mappings, MultiJson.decode(result))
     end
 
     LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
