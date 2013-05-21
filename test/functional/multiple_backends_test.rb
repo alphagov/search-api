@@ -3,7 +3,7 @@ require "integration_test_helper"
 
 class MultipleBackendsTest < IntegrationTest
   def test_passes_search_to_chosen_backend
-    chosen_index = mock("chosen index", search: [])
+    chosen_index = mock("chosen index", search: stub(results: []))
     Elasticsearch::SearchServer.any_instance.expects(:index).with("chosen").returns(chosen_index)
     get "/chosen/search?q=example"
   end

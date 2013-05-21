@@ -102,35 +102,4 @@ class Document < SearchIndexEntry
     self.new(field_names, hash)
   end
 
-  PRESENTATION_FORMAT_TRANSLATION = {
-    "planner" => "answer",
-    "smart_answer" => "answer",
-    "calculator" => "answer",
-    "licence_finder" => "answer",
-    "custom_application" => "answer",
-    "calendar" => "answer"
-  }
-
-  FORMAT_NAME_ALTERNATIVES = {
-    "programme" => "Benefits & credits",
-    "transaction" => "Services",
-    "local_transaction" => "Services",
-    "place" => "Services",
-    "answer" => "Quick answers",
-    "specialist_guidance" => "Specialist guidance"
-  }
-
-  def presentation_format
-    PRESENTATION_FORMAT_TRANSLATION.fetch(normalized_format, normalized_format)
-  end
-
-  def humanized_format
-    FORMAT_NAME_ALTERNATIVES[presentation_format] || presentation_format.humanize.pluralize
-  end
-
-  private
-
-  def normalized_format
-    self.format ? self.format.gsub("-", "_") : "unknown"
-  end
 end

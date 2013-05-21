@@ -79,56 +79,6 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "TITLE", document.title
   end
 
-  def test_should_use_answer_as_presentation_format_for_planner
-    hash = {:format => "planner"}
-
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "answer", document.presentation_format
-  end
-
-  def test_should_use_answer_as_presentation_format_for_smart_answer
-    hash = {:format => "smart_answer"}
-
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "answer", document.presentation_format
-  end
-
-  def test_should_use_answer_as_presentation_format_for_licence_finder
-    hash = {:format => "licence_finder"}
-
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "answer", document.presentation_format
-  end
-
-  def test_should_use_guide_as_presentation_format_for_guide
-    hash = {:format => "guide"}
-
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "guide", document.presentation_format
-  end
-
-  def test_takes_humanized_format_if_present
-    hash = {:format => "place"}
-
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "Services", document.humanized_format
-  end
-
-  def test_uses_presentation_format_to_find_alternative_format_name
-    hash = {:format => "map"}
-
-    document = Document.from_hash(hash, @mappings)
-    document.stubs(:presentation_format).returns("place")
-    assert_equal "Services", document.humanized_format
-  end
-
-  def test_generates_humanized_format_if_not_present
-    hash = {:format => "ocean_map"}
-
-    document = Document.from_hash(hash, @mappings)
-    assert_equal "Ocean maps", document.humanized_format
-  end
-
   def test_should_round_trip_document_from_hash_and_back_into_hash
     hash = {
       "title" => "TITLE",

@@ -130,15 +130,18 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   def test_returns_the_total_and_the_hits
     stub_empty_search()
     expected_result = {total: 0, results: []}
-    assert_equal expected_result, @wrapper.advanced_search(default_params)
+    result_set = @wrapper.advanced_search(default_params)
+    assert_equal 0, result_set.total
+    assert_equal [], result_set.results
   end
 
   def test_returns_the_hits_converted_into_documents
     Document.expects(:from_hash).with({"woo" => "hoo", "es_score" => nil}, default_mappings).returns :woo_hoo
     stub_request(:get, "http://example.com:9200/test-index/_search")
       .to_return(:status => 200, :body => "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"woo\": \"hoo\"}}]}}", :headers => {})
-    expected_result = {total: 10, results: [:woo_hoo]}
-    assert_equal expected_result, @wrapper.advanced_search(default_params)
+    result_set = @wrapper.advanced_search(default_params)
+    assert_equal 10, result_set.total
+    assert_equal [:woo_hoo], result_set.results
   end
 
   def default_params

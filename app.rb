@@ -9,6 +9,7 @@ require "csv"
 require "statsd"
 
 require "document"
+require "result_set_presenter"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
 
@@ -72,25 +73,15 @@ class Rummager < Sinatra::Application
 
     expires 3600, :public if query.length < 20
 
-    results = current_index.search(query)
-
-    MultiJson.encode(results.map { |r| r.to_hash.merge(
-      presentation_format: r.presentation_format,
-      humanized_format: r.humanized_format
-    )})
+    result_set = current_index.search(query)
+    ResultSetPresenter.new(result_set).present
   end
 
   get "/:index/advanced_search.?:format?" do
     json_only
 
-    results = current_index.advanced_search(request.params)
-    MultiJson.encode({
-      total: results[:total],
-      results: results[:results].map { |r| r.to_hash.merge(
-        presentation_format: r.presentation_format,
-        humanized_format: r.humanized_format
-      )}
-    })
+    result_set = current_index.advanced_search(request.params)
+    ResultSetPresenter.new(result_set).present_with_total
   end
 
   post "/?:index?/documents" do
