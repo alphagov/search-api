@@ -54,28 +54,6 @@ class SearchIndexEntry
     }]
   end
 
-  def self.unflatten(hash)
-  # Convert from a hash of the form:
-  #   {foo__key1: [1, 2, 3], foo__key2: [4, 5, 6]}
-  # to the form:
-  #   {foo: [{key1: 1, key2: 4}, {key1: 2, key2: 5}, {key1: 3, key2: 6}]}
-  #
-  # This is useful for deserialising additional link information
-   {}.tap { |result|
-      hash.each do |k, v|
-        lhs, rhs = k.to_s.split(/__/)
-        if rhs
-          result[lhs] ||= v.length.times.map { {} }
-          v.each_with_index do |vv, i|
-            result[lhs][i][rhs] = vv
-          end
-        else
-          result[lhs] = v
-        end
-      end
-    }
-  end
-
   def method_missing(method_name, *args)
     if valid_assignment_method?(method_name)
       raise ArgumentError, "wrong number of arguments #{args.count} for 1" unless args.size == 1
@@ -121,7 +99,7 @@ class Document < SearchIndexEntry
 
   def self.from_hash(hash, mappings)
     field_names = mappings["edition"]["properties"].keys.map(&:to_s)
-    self.new(field_names, unflatten(hash))
+    self.new(field_names, hash)
   end
 
   PRESENTATION_FORMAT_TRANSLATION = {
