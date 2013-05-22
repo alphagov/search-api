@@ -1,3 +1,50 @@
+require "rest-client"
+require "logging"
+
+class PushableLogger
+  # Because RestClient uses the '<<' method, rather than the levelled Logger
+  # methods, we have to put together a class that'll assign them a level
+
+  def initialize(logger, level)
+    @logger, @level = logger, level
+  end
+
+  def <<(message)
+    @logger.send @level, message
+  end
+end
+
+logger = Logging.logger.root
+logger.add_appenders Logging.appenders.stdout
+logger.level = verbose ? :debug : :info
+
+# Log all RestClient output at debug level, so it doesn't show up unless rake
+# is invoked with the `--verbose` flag
+RestClient.log = PushableLogger.new(Logging.logger[RestClient], :debug)
+
+def search_config
+  @search_config ||= SearchConfig.new
+end
+
+def search_server
+  search_config.search_server
+end
+
+def index_names
+  case ENV["RUMMAGER_INDEX"]
+  when "all"
+    all_index_names
+  when String
+    [ENV["RUMMAGER_INDEX"]]
+  else
+    raise "You must specify an index name in RUMMAGER_INDEX, or 'all'"
+  end
+end
+
+def all_index_names
+  search_config.index_names
+end
+
 namespace :rummager do
 
   desc "Lists current Rummager indices, pass [all] to show inactive indices"
