@@ -149,6 +149,14 @@ module Elasticsearch
       end
     end
 
+    def documents_by_format(format)
+      search_body = {query: {term: {format: format}}}
+      batch_size = 500
+      ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
+        document_from_hash(hit["_source"])
+      end
+    end
+
     def search(query)
       # Per-format boosting done as a filter, so the results get cached on the
       # server, as they are the same for each query

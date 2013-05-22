@@ -140,6 +140,27 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested :post, refresh_url
   end
 
+  def test_can_fetch_all_entries_by_format
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=500"
+    stub_request(:get, search_pattern).with(
+      body: MultiJson.encode({query: {term: {format: "organisation"}}})
+    ).to_return(
+      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 10}})
+    )
+
+    hits = (1..10).map { |i|
+      { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
+    }
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
+      body: scroll_response_body("abcdefgh", 10, hits)
+    ).then.to_return(
+      body: scroll_response_body("abcdefgh", 10, [])
+    ).then.to_raise(RuntimeError)
+
+    result = @wrapper.documents_by_format("organisation")
+    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map(&:title)
+  end
+
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
     search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=50"
