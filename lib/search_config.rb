@@ -23,6 +23,10 @@ class SearchConfig
     @elasticsearch ||= config_for("elasticsearch")
   end
 
+  def organisation_registry_index
+    elasticsearch["organisation_registry_index"]
+  end
+
 private
   def config_for(kind)
     YAML.load_file(File.expand_path("../#{kind}.yml", File.dirname(__FILE__)))

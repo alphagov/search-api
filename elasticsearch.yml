@@ -1,2 +1,3 @@
 base_uri: "http://localhost:9200"
 index_names: ["mainstream", "detailed", "government", "service-manual"]
+organisation_registry_index: "government"

@@ -1,7 +1,8 @@
 class ResultSetPresenter
 
-  def initialize(result_set)
+  def initialize(result_set, context = {})
     @result_set = result_set
+    @context = context
   end
 
   def present
@@ -53,9 +54,32 @@ private
   end
 
   def results
-    @result_set.results.map { |r| r.to_hash.merge(
-      presentation_format: presentation_format(r),
-      humanized_format: humanized_format(r)
-    )}
+    @result_set.results.map { |document| build_result(document) }
+  end
+
+  def build_result(document)
+    result = document.to_hash.merge(
+      presentation_format: presentation_format(document),
+      humanized_format: humanized_format(document)
+    )
+    if result['organisations']
+      result['organisations'] = result['organisations'].map do |slug|
+        organisation_by_slug(slug)
+      end
+    end
+    result
+  end
+
+  def organisation_registry
+    @context[:organisation_registry]
+  end
+
+  def organisation_by_slug(slug)
+    organisation = organisation_registry && organisation_registry[slug]
+    if organisation
+      organisation.to_hash.merge(slug: slug)
+    else
+      {slug: slug}
+    end
   end
 end
