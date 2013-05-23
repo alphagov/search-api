@@ -140,6 +140,53 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested :post, refresh_url
   end
 
+  def test_can_fetch_documents_by_format
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=500"
+    stub_request(:get, search_pattern).with(
+      body: MultiJson.encode({query: {term: {format: "organisation"}}})
+    ).to_return(
+      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 10}})
+    )
+
+    hits = (1..10).map { |i|
+      { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
+    }
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
+      body: scroll_response_body("abcdefgh", 10, hits)
+    ).then.to_return(
+      body: scroll_response_body("abcdefgh", 10, [])
+    ).then.to_raise("should never happen")
+
+    result = @wrapper.documents_by_format("organisation")
+    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map(&:title)
+  end
+
+  def test_can_fetch_documents_by_format_with_certain_fields
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=500"
+    query = {
+      query: {term: {format: "organisation"}},
+      fields: ["title", "link"]
+    }
+    stub_request(:get, search_pattern).with(
+      body: MultiJson.encode(query)
+    ).to_return(
+      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 10}})
+    )
+
+    hits = (1..10).map { |i|
+      { "fields" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
+    }
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
+      body: scroll_response_body("abcdefgh", 10, hits)
+    ).then.to_return(
+      body: scroll_response_body("abcdefgh", 10, [])
+    ).then.to_raise("should never happen")
+
+    result = @wrapper.documents_by_format("organisation", fields: %w(title link)).to_a
+    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map(&:title)
+    assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map(&:link)
+  end
+
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
     search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=50"
@@ -147,7 +194,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       body: MultiJson.encode({query: {match_all: {}}})
     ).to_return(
       body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 100}})
-    ).then.to_raise(RuntimeError)
+    ).then.to_raise("should never happen")
     assert_equal @wrapper.all_documents.size, 100
   end
 
@@ -168,7 +215,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       body: scroll_response_body("abcdefgh", 100, hits[50, 50])
     ).then.to_return(
       body: scroll_response_body("abcdefgh", 100, [])
-    ).then.to_raise(RuntimeError)
+    ).then.to_raise("should never happen")
     all_documents = @wrapper.all_documents.to_a
     assert_equal 100, all_documents.size
     assert_equal "/foo-1", all_documents.first.link
@@ -192,15 +239,15 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("ijklmnop", total, hits[0, 2])
-    ).then.to_raise(RuntimeError)
+    ).then.to_raise("should never happen")
 
     stub_request(:get, scroll_uri("ijklmnop")).to_return(
       body: scroll_response_body("qrstuvwx", total, hits[2, 1])
-    ).then.to_raise(RuntimeError)
+    ).then.to_raise("should never happen")
 
     stub_request(:get, scroll_uri("qrstuvwx")).to_return(
       body: scroll_response_body("yz", total, [])
-    ).then.to_raise(RuntimeError)
+    ).then.to_raise("should never happen")
 
     all_documents = @wrapper.all_documents.to_a
     assert_equal ["/foo-1", "/foo-2", "/foo-3"], all_documents.map(&:link)

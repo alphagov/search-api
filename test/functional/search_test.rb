@@ -1,7 +1,18 @@
 # encoding: utf-8
 require "integration_test_helper"
+require "organisation_registry"
 
 class SearchTest < IntegrationTest
+  def mod_organisation
+    Document.new(
+      %w(link title),
+      {
+        link: "/government/organisations/ministry-of-defence",
+        title: "Ministry of Defence (MoD)"
+      }
+    )
+  end
+
   def test_returns_json_for_search_results
     stub_index.expects(:search).returns(stub(results: [sample_document]))
     get "/search", {q: "bob"}, "HTTP_ACCEPT" => "application/json"
@@ -14,6 +25,24 @@ class SearchTest < IntegrationTest
     get "/search.json", {q: "bob"}
     assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)
     assert_match(/application\/json/, last_response.headers["Content-Type"])
+  end
+
+  def test_handles_results_with_organisations
+    mappings = default_mappings
+    mappings["edition"]["properties"]["organisations"] = {"type" => "string"}
+    document = Document.from_hash(
+      sample_document_attributes.merge(organisations: ["ministry-of-defence"]),
+      mappings
+    )
+
+    stub_index.expects(:search).returns(stub(results: [document]))
+    OrganisationRegistry.any_instance.stubs(:[])
+      .with("ministry-of-defence")
+      .returns(mod_organisation)
+    get "/search.json", {q: "bob"}
+    first_result = MultiJson.decode(last_response.body).first
+    assert_equal 1, first_result["organisations"].size
+    assert_equal mod_organisation.title, first_result["organisations"][0]["title"]
   end
 
   def test_returns_404_when_requested_with_non_json_url

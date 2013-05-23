@@ -10,6 +10,7 @@ require "statsd"
 
 require "document"
 require "result_set_presenter"
+require "organisation_registry"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
 
@@ -32,6 +33,11 @@ class Rummager < Sinatra::Application
     search_server.index(index_name)
   rescue Elasticsearch::NoSuchIndex
     halt(404)
+  end
+
+  def organisation_registry
+    index_name = settings.search_config.organisation_registry_index
+    OrganisationRegistry.new(search_server.index(index_name)) if index_name
   end
 
   def indices_for_sitemap
@@ -74,7 +80,7 @@ class Rummager < Sinatra::Application
     expires 3600, :public if query.length < 20
 
     result_set = current_index.search(query)
-    ResultSetPresenter.new(result_set).present
+    ResultSetPresenter.new(result_set, organisation_registry: organisation_registry).present
   end
 
   get "/:index/advanced_search.?:format?" do

@@ -13,8 +13,11 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
 
     stub_modified_schema do |schema|
       properties = schema["mappings"]["default"]["edition"]["properties"]
-      properties.merge!({"boolean_property" => { "type" => "boolean", "index" => "not_analyzed" },
-                         "date_property" => { "type" => "date", "index" => "not_analyzed" }})
+      properties.merge!(
+        "boolean_property" => { "type" => "boolean", "index" => "not_analyzed" },
+        "date_property" => { "type" => "date", "index" => "not_analyzed" },
+        "organisations" => { "type" => "string", "index" => "not_analyzed" }
+      )
     end
 
     create_test_index
@@ -55,7 +58,8 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff, mostly about cheese",
         "boolean_property" => true,
-        "date_property" => "2012-01-04"
+        "date_property" => "2012-01-04",
+        "organisations" => ["ministry-of-cheese"]
       },
       {
         "title" => "Pork pies",
@@ -166,6 +170,18 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     assert last_response.ok?
     assert_result_total 1
     assert_result_links "/yet-another-example-answer"
+  end
+
+  def test_should_not_expand_organisations
+    # The new organisation registry expands organisations from slugs into
+    # hashes; for backwards compatibility, we shouldn't do this until it's
+    # configured (and until clients can handle either format).
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&boolean_property=true&date_property[after]=2012-01-02&keywords=tax&section=Crime"
+
+    assert last_response.ok?
+    assert_result_total 1
+    parsed_response = MultiJson.decode(last_response.body)
+    assert_equal ["ministry-of-cheese"], parsed_response["results"][0]["organisations"]
   end
 
   def test_should_allow_ordering_by_properties
