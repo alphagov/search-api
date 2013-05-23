@@ -1,7 +1,7 @@
 require "time"
 
 class OrganisationRegistry
-  CACHE_LIFETIME = 12 * 3600
+  CACHE_LIFETIME = 12 * 3600  # 12 hours
 
   def initialize(index, clock = DateTime)
     @index = index
