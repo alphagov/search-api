@@ -62,12 +62,16 @@ private
       presentation_format: presentation_format(document),
       humanized_format: humanized_format(document)
     )
-    if result['organisations']
+    if result['organisations'] && should_expand_organisations?
       result['organisations'] = result['organisations'].map do |slug|
         organisation_by_slug(slug)
       end
     end
     result
+  end
+
+  def should_expand_organisations?
+    !! organisation_registry
   end
 
   def organisation_registry

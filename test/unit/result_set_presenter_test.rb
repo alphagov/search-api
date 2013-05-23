@@ -145,7 +145,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal "ministry-of-silly-walks", output[0]["organisations"][0]["slug"]
   end
 
-  def test_organisations_just_have_slug_if_no_registry_available
+  def test_organisations_not_modified_if_no_registry_available
     presenter = ResultSetPresenter.new(
       single_result_with_organisations("ministry-of-silly-walks"),
       organisation_registry: nil
@@ -153,6 +153,6 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
     output = output_for(presenter)
     assert_equal 1, output[0]["organisations"].size
-    assert_equal "ministry-of-silly-walks", output[0]["organisations"][0]["slug"]
+    assert_equal "ministry-of-silly-walks", output[0]["organisations"][0]
   end
 end
