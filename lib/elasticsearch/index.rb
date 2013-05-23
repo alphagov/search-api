@@ -149,11 +149,18 @@ module Elasticsearch
       end
     end
 
-    def documents_by_format(format)
-      search_body = {query: {term: {format: format}}}
+    def documents_by_format(format, options = {})
       batch_size = 500
+      search_body = {query: {term: {format: format}}}
+      if options[:fields]
+        search_body.merge!(fields: options[:fields])
+        result_key = "fields"
+      else
+        result_key = "_source"
+      end
+
       ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
-        document_from_hash(hit["_source"])
+        document_from_hash(hit[result_key])
       end
     end
 
