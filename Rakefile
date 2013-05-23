@@ -55,9 +55,14 @@ end
 
 task :default => :test
 
-logger = Logging.logger.root
-logger.add_appenders Logging.appenders.stdout
-logger.level = verbose ? :debug : :info
+def logger
+  @_logger ||= begin
+    logger = Logging.logger.root
+    logger.add_appenders Logging.appenders.stdout
+    logger.level = verbose ? :debug : :info
+    logger
+  end
+end
 
 # Log all RestClient output at debug level, so it doesn't show up unless rake
 # is invoked with the `--verbose` flag
