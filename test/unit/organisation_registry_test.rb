@@ -19,21 +19,31 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
   end
 
   def test_can_fetch_organisation_by_slug
-    @index.stubs(:documents_by_format).with("organisation").returns([mod_document])
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([mod_document])
     organisation = @organisation_registry["ministry-of-defence"]
     assert_equal "/government/organisations/ministry-of-defence", organisation.link
     assert_equal "Ministry of Defence (MoD)", organisation.title
   end
 
+  def test_only_required_fields_are_requested_from_index
+    @index.expects(:documents_by_format)
+      .with("organisation", fields: %w{link title})
+    organisation = @organisation_registry["ministry-of-defence"]
+  end
+
   def test_returns_nil_if_organisation_not_found
-    @index.stubs(:documents_by_format).with("organisation").returns([mod_document])
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([mod_document])
     organisation = @organisation_registry["ministry-of-silly-walks"]
     assert_nil organisation
   end
 
   def test_organisations_are_cached
     @index.stubs(:documents_by_format)
-      .with("organisation")
+      .with("organisation", anything)
       .returns([mod_document])
       .once
     assert @organisation_registry["ministry-of-defence"]
@@ -44,7 +54,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     document_enumerator = stub("enumerator")
     document_enumerator.expects(:to_a).returns([mod_document]).once
     @index.stubs(:documents_by_format)
-      .with("organisation")
+      .with("organisation", anything)
       .returns(document_enumerator)
       .once
     assert @organisation_registry["ministry-of-defence"]
@@ -56,7 +66,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
     clock = stub("clock", now: initial_time)
     @organisation_registry = OrganisationRegistry.new(@index, clock)
-    @index.expects(:documents_by_format).with("organisation").returns([mod_document]).twice
+    @index.expects(:documents_by_format)
+      .with("organisation", anything)
+      .returns([mod_document]).twice
 
     @organisation_registry["ministry-of-defence"]
     clock.stubs(:now).returns(initial_time + OrganisationRegistry::CACHE_LIFETIME)
@@ -68,7 +80,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
     clock = stub("clock", now: initial_time)
     @organisation_registry = OrganisationRegistry.new(@index, clock)
-    @index.expects(:documents_by_format).with("organisation").returns([mod_document]).once
+    @index.expects(:documents_by_format)
+      .with("organisation", anything)
+      .returns([mod_document]).once
 
     @organisation_registry["ministry-of-defence"]
     clock.stubs(:now).returns(initial_time + OrganisationRegistry::CACHE_LIFETIME - 1)

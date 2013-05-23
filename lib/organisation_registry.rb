@@ -16,10 +16,15 @@ class OrganisationRegistry
 private
   def organisations
     if refresh_needed?
-      @organisations = @index.documents_by_format("organisation").to_a
+      @organisations = fetch
       @cache_updated = @clock.now
     end
     @organisations
+  end
+
+  def fetch
+    fields = %w{link title}
+    @index.documents_by_format("organisation", fields: fields).to_a
   end
 
   def refresh_needed?
