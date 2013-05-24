@@ -6,11 +6,12 @@ class TimedCache
   #   cache = TimedCache.new(30) { "Something" + " really difficult" }
   #   cache.get
 
-  @cached_result = nil
-  @cache_updated = nil
-
   def initialize(lifetime, clock = Time, &block)
-    @clock, @lifetime, @block = clock, lifetime, block
+    @cached_result = nil
+    @cache_updated = nil
+    @lifetime = lifetime
+    @clock = clock
+    @block = block
   end
 
   def get
