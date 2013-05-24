@@ -1,9 +1,21 @@
 # encoding: utf-8
 require "integration_test_helper"
+require 'document_series_registry'
 require "organisation_registry"
 require "topic_registry"
 
 class SearchTest < IntegrationTest
+
+  def bus_timetables_document_series
+    Document.new(
+      %w(link title),
+      {
+        link: "/government/organisations/department-for-transport/series/bus-timetables",
+        title: "Bus Timetables"
+      }
+    )
+  end
+
   def mod_organisation
     Document.new(
       %w(link title),
@@ -36,6 +48,24 @@ class SearchTest < IntegrationTest
     get "/search.json", {q: "bob"}
     assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)
     assert_match(/application\/json/, last_response.headers["Content-Type"])
+  end
+
+  def test_handles_results_with_document_series
+    mappings = default_mappings
+    mappings["edition"]["properties"]["document_series"] = {"type" => "string"}
+    document = Document.from_hash(
+      sample_document_attributes.merge(document_series: ["bus-timetables"]),
+      mappings
+    )
+
+    stub_index.expects(:search).returns(stub(results: [document]))
+    DocumentSeriesRegistry.any_instance.expects(:[])
+      .with("bus-timetables")
+      .returns(bus_timetables_document_series)
+    get "/search.json", {q: "bob"}
+    first_result = MultiJson.decode(last_response.body).first
+    assert_equal 1, first_result["document_series"].size
+    assert_equal bus_timetables_document_series.title, first_result["document_series"][0]["title"]
   end
 
   def test_handles_results_with_organisations
