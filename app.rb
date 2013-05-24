@@ -38,12 +38,12 @@ class Rummager < Sinatra::Application
 
   def organisation_registry
     index_name = settings.search_config.organisation_registry_index
-    OrganisationRegistry.new(search_server.index(index_name)) if index_name
+    @@organisation_registry ||= OrganisationRegistry.new(search_server.index(index_name)) if index_name
   end
 
   def topic_registry
     index_name = settings.search_config.topic_registry_index
-    TopicRegistry.new(search_server.index(index_name)) if index_name
+    @@topic_registry ||= TopicRegistry.new(search_server.index(index_name)) if index_name
   end
 
   def indices_for_sitemap
