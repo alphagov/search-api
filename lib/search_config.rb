@@ -23,6 +23,10 @@ class SearchConfig
     @elasticsearch ||= config_for("elasticsearch")
   end
 
+  def document_series_registry_index
+    elasticsearch["document_series_registry_index"]
+  end
+
   def organisation_registry_index
     elasticsearch["organisation_registry_index"]
   end

@@ -62,6 +62,11 @@ private
       presentation_format: presentation_format(document),
       humanized_format: humanized_format(document)
     )
+    if result['document_series'] && should_expand_document_series?
+      result['document_series'] = result['document_series'].map do |slug|
+        document_series_by_slug(slug)
+      end
+    end
     if result['organisations'] && should_expand_organisations?
       result['organisations'] = result['organisations'].map do |slug|
         organisation_by_slug(slug)
@@ -75,6 +80,10 @@ private
     result
   end
 
+  def should_expand_document_series?
+    !! document_series_registry
+  end
+
   def should_expand_organisations?
     !! organisation_registry
   end
@@ -83,12 +92,25 @@ private
     !! topic_registry
   end
 
+  def document_series_registry
+    @context[:document_series_registry]
+  end
+
   def organisation_registry
     @context[:organisation_registry]
   end
 
   def topic_registry
     @context[:topic_registry]
+  end
+
+  def document_series_by_slug(slug)
+    document_series = document_series_registry && document_series_registry[slug]
+    if document_series
+      document_series.to_hash.merge(slug: slug)
+    else
+      {slug: slug}
+    end
   end
 
   def organisation_by_slug(slug)
