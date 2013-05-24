@@ -10,10 +10,10 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def mod_document
     Document.new(
-      %w(link title),
+      %w(link title acronym),
       {
         link: "/government/organisations/ministry-of-defence",
-        title: "Ministry of Defence (MoD)"
+        title: "Ministry of Defence"
       }
     )
   end
@@ -31,12 +31,13 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
       .returns([mod_document])
     organisation = @organisation_registry["ministry-of-defence"]
     assert_equal "/government/organisations/ministry-of-defence", organisation.link
-    assert_equal "Ministry of Defence (MoD)", organisation.title
+    assert_equal "Ministry of Defence", organisation.title
   end
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("organisation", fields: %w{link title})
+      .with("organisation", fields: %w{link title acronym})
+      .returns([])
     organisation = @organisation_registry["ministry-of-defence"]
   end
 
@@ -48,15 +49,100 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     assert_nil organisation
   end
 
+  def test_extracts_acronym_from_title_if_missing
+    document = Document.new(
+      %w(link title acronym),
+      {
+        link: "/government/organisations/ministry-of-defence",
+        title: "Ministry of Defence (MoD)"
+      }
+    )
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([document])
+    organisation = @organisation_registry["ministry-of-defence"]
+    assert_equal "Ministry of Defence", organisation.title
+    assert_equal "MoD", organisation.acronym
+  end
+
+  def test_leaves_title_unchanged_if_acronym_present
+    document = Document.new(
+      %w(link title acronym),
+      {
+        link: "/government/organisations/ministry-of-defence",
+        title: "Ministry of Defence",
+        acronym: "MoD"
+      }
+    )
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([document])
+    organisation = @organisation_registry["ministry-of-defence"]
+    assert_equal "Ministry of Defence", organisation.title
+    assert_equal "MoD", organisation.acronym
+  end
+
+  def test_leaves_extra_brackets_when_extracting_acronym
+    document = Document.new(
+      %w(link title acronym),
+      {
+        link: "/government/organisations/forest-enterprise-england",
+        title: "Forest Enterprise (England) (FEE)",
+      }
+    )
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([document])
+    organisation = @organisation_registry["forest-enterprise-england"]
+    assert_equal "Forest Enterprise (England)", organisation.title
+    assert_equal "FEE", organisation.acronym
+  end
+
+  def test_leaves_extra_brackets_when_acronym_present
+    document = Document.new(
+      %w(link title acronym),
+      {
+        link: "/government/organisations/forest-enterprise-england",
+        title: "Forest Enterprise (England)",
+        acronym: "FEE"
+      }
+    )
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([document])
+    organisation = @organisation_registry["forest-enterprise-england"]
+    assert_equal "Forest Enterprise (England)", organisation.title
+    assert_equal "FEE", organisation.acronym
+  end
+
   def test_document_enumerator_is_traversed_only_once
     document_enumerator = stub("enumerator")
-    document_enumerator.expects(:to_a).returns([mod_document]).once
+    document_enumerator.expects(:map).returns([mod_document]).once
     @index.stubs(:documents_by_format)
       .with("organisation", anything)
       .returns(document_enumerator)
       .once
     assert @organisation_registry["ministry-of-defence"]
     assert @organisation_registry["ministry-of-defence"]
+  end
+
+  def test_handles_documents_without_acronym_support
+    # Until the acronym field is included in the mappings, organisations won't
+    # know about the field and will raise an error on #acronym calls.
+
+    document = Document.new(
+      %w(link title),
+      {
+        link: "/government/organisations/ministry-of-justice",
+        title: "Ministry of Justice (MoJ)",
+      }
+    )
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([document])
+    organisation = @organisation_registry["ministry-of-justice"]
+    assert_equal "Ministry of Justice (MoJ)", organisation.title
+    assert_raises(NoMethodError) { organisation.acronym }
   end
 
   def test_uses_cache
