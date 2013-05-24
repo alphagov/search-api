@@ -67,6 +67,11 @@ private
         organisation_by_slug(slug)
       end
     end
+    if result['topics'] && should_expand_topics?
+      result['topics'] = result['topics'].map do |slug|
+        topic_by_slug(slug)
+      end
+    end
     result
   end
 
@@ -74,14 +79,31 @@ private
     !! organisation_registry
   end
 
+  def should_expand_topics?
+    !! topic_registry
+  end
+
   def organisation_registry
     @context[:organisation_registry]
+  end
+
+  def topic_registry
+    @context[:topic_registry]
   end
 
   def organisation_by_slug(slug)
     organisation = organisation_registry && organisation_registry[slug]
     if organisation
       organisation.to_hash.merge(slug: slug)
+    else
+      {slug: slug}
+    end
+  end
+
+  def topic_by_slug(slug)
+    topic = topic_registry && topic_registry[slug]
+    if topic
+      topic.to_hash.merge(slug: slug)
     else
       {slug: slug}
     end

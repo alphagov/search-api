@@ -27,6 +27,10 @@ class SearchConfig
     elasticsearch["organisation_registry_index"]
   end
 
+  def topic_registry_index
+    elasticsearch["topic_registry_index"]
+  end
+
 private
   def config_for(kind)
     YAML.load_file(File.expand_path("../#{kind}.yml", File.dirname(__FILE__)))

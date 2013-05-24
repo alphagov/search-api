@@ -5,7 +5,7 @@ require "multi_json"
 
 class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
-  FIELDS = %w(link title description format organisations)
+  FIELDS = %w(link title description format organisations topics)
 
   def result_set
     documents = [
@@ -33,6 +33,17 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
         "organisations" => organisation_slugs
       }
 
+    stub(results: [Document.new(FIELDS, document_hash)])
+  end
+
+  def single_result_with_topics(*topic_slugs)
+    document_hash = {
+      "link" => "/foo",
+      "title" => "Foo",
+      "description" => "Full of foo.",
+      "format" => "edition",
+      "topics" => topic_slugs
+    }
     stub(results: [Document.new(FIELDS, document_hash)])
   end
 
@@ -125,6 +136,30 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal "Ministry of Defence (MoD)", output[0]["organisations"][0]["title"]
     assert_equal "/government/organisations/ministry-of-defence", output[0]["organisations"][0]["link"]
     assert_equal "ministry-of-defence", output[0]["organisations"][0]["slug"]
+  end
+
+  def test_expands_topics
+    housing_document = Document.new(
+      %w(link title),
+      link: "/government/topics/housing",
+      title: "Housing"
+    )
+    topic_registry = stub("topic registry")
+    topic_registry.expects(:[])
+      .with("housing")
+      .returns(housing_document)
+
+    presenter = ResultSetPresenter.new(
+      single_result_with_topics("housing"),
+      topic_registry: topic_registry
+    )
+
+    output = output_for(presenter)
+    assert_equal 1, output[0]["topics"].size
+    assert_instance_of Hash, output[0]["topics"][0]
+    assert_equal "Housing", output[0]["topics"][0]["title"]
+    assert_equal "/government/topics/housing", output[0]["topics"][0]["link"]
+    assert_equal "housing", output[0]["topics"][0]["slug"]
   end
 
   def test_unknown_organisations_just_have_slug
