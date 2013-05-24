@@ -11,6 +11,7 @@ require "statsd"
 require "document"
 require "result_set_presenter"
 require "organisation_registry"
+require "topic_registry"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
 
@@ -38,6 +39,11 @@ class Rummager < Sinatra::Application
   def organisation_registry
     index_name = settings.search_config.organisation_registry_index
     OrganisationRegistry.new(search_server.index(index_name)) if index_name
+  end
+
+  def topic_registry
+    index_name = settings.search_config.topic_registry_index
+    TopicRegistry.new(search_server.index(index_name)) if index_name
   end
 
   def indices_for_sitemap
@@ -80,7 +86,11 @@ class Rummager < Sinatra::Application
     expires 3600, :public if query.length < 20
 
     result_set = current_index.search(query)
-    ResultSetPresenter.new(result_set, organisation_registry: organisation_registry).present
+    presenter_context = {
+      organisation_registry: organisation_registry,
+      topic_registry: topic_registry
+    }
+    ResultSetPresenter.new(result_set, presenter_context).present
   end
 
   get "/:index/advanced_search.?:format?" do

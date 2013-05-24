@@ -18,6 +18,13 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     )
   end
 
+  def test_uses_Time_as_default_clock
+    # This is to make sure the cache expiry is expressed in seconds; DateTime,
+    # for example, treats number addition as a number of days.
+    TimedCache.expects(:new).with(is_a(Fixnum), Time)
+    OrganisationRegistry.new(stub("index"))
+  end
+
   def test_can_fetch_organisation_by_slug
     @index.stubs(:documents_by_format)
       .with("organisation", anything)
@@ -41,15 +48,6 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     assert_nil organisation
   end
 
-  def test_organisations_are_cached
-    @index.stubs(:documents_by_format)
-      .with("organisation", anything)
-      .returns([mod_document])
-      .once
-    assert @organisation_registry["ministry-of-defence"]
-    assert @organisation_registry["ministry-of-defence"]
-  end
-
   def test_document_enumerator_is_traversed_only_once
     document_enumerator = stub("enumerator")
     document_enumerator.expects(:to_a).returns([mod_document]).once
@@ -61,31 +59,10 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     assert @organisation_registry["ministry-of-defence"]
   end
 
-  def test_organisation_cache_expires
-    initial_time = DateTime.now
-
-    clock = stub("clock", now: initial_time)
-    @organisation_registry = OrganisationRegistry.new(@index, clock)
-    @index.expects(:documents_by_format)
-      .with("organisation", anything)
-      .returns([mod_document]).twice
-
-    @organisation_registry["ministry-of-defence"]
-    clock.stubs(:now).returns(initial_time + OrganisationRegistry::CACHE_LIFETIME)
-    @organisation_registry["ministry-of-defence"]
-  end
-
-  def test_organisation_cache_does_not_expire_within_cache_lifetime
-    initial_time = DateTime.now
-
-    clock = stub("clock", now: initial_time)
-    @organisation_registry = OrganisationRegistry.new(@index, clock)
-    @index.expects(:documents_by_format)
-      .with("organisation", anything)
-      .returns([mod_document]).once
-
-    @organisation_registry["ministry-of-defence"]
-    clock.stubs(:now).returns(initial_time + OrganisationRegistry::CACHE_LIFETIME - 1)
-    @organisation_registry["ministry-of-defence"]
+  def test_uses_cache
+    # Make sure we're using TimedCache#get; TimedCache is tested elsewhere, so
+    # we don't need to worry about cache expiry tests here.
+    TimedCache.any_instance.expects(:get).with().returns([mod_document])
+    assert @organisation_registry["ministry-of-defence"]
   end
 end
