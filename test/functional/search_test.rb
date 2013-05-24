@@ -1,6 +1,7 @@
 # encoding: utf-8
 require "integration_test_helper"
 require "organisation_registry"
+require "topic_registry"
 
 class SearchTest < IntegrationTest
   def mod_organisation
@@ -9,6 +10,16 @@ class SearchTest < IntegrationTest
       {
         link: "/government/organisations/ministry-of-defence",
         title: "Ministry of Defence (MoD)"
+      }
+    )
+  end
+
+  def housing_topic
+    Document.new(
+      %w(link title),
+      {
+        link: "/government/topics/housing",
+        title: "Housing"
       }
     )
   end
@@ -36,13 +47,31 @@ class SearchTest < IntegrationTest
     )
 
     stub_index.expects(:search).returns(stub(results: [document]))
-    OrganisationRegistry.any_instance.stubs(:[])
+    OrganisationRegistry.any_instance.expects(:[])
       .with("ministry-of-defence")
       .returns(mod_organisation)
     get "/search.json", {q: "bob"}
     first_result = MultiJson.decode(last_response.body).first
     assert_equal 1, first_result["organisations"].size
     assert_equal mod_organisation.title, first_result["organisations"][0]["title"]
+  end
+
+  def test_handles_results_with_topics
+    mappings = default_mappings
+    mappings["edition"]["properties"]["topics"] = {"type" => "string"}
+    document = Document.from_hash(
+      sample_document_attributes.merge(topics: ["housing"]),
+      mappings
+    )
+
+    stub_index.expects(:search).returns(stub(results: [document]))
+    TopicRegistry.any_instance.expects(:[])
+      .with("housing")
+      .returns(housing_topic)
+    get "/search.json", {q: "bob"}
+    first_result = MultiJson.decode(last_response.body).first
+    assert_equal 1, first_result["topics"].size
+    assert_equal housing_topic.title, first_result["topics"][0]["title"]
   end
 
   def test_returns_404_when_requested_with_non_json_url
