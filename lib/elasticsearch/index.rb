@@ -154,13 +154,17 @@ module Elasticsearch
       search_body = {query: {term: {format: format}}}
       if options[:fields]
         search_body.merge!(fields: options[:fields])
+        field_names = options[:fields]
         result_key = "fields"
       else
+        # Use all field names from the mappings
+        # TODO: remove duplication between this and Document.from_hash
+        field_names = @mappings["edition"]["properties"].keys.map(&:to_s)
         result_key = "_source"
       end
 
       ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
-        document_from_hash(hit[result_key])
+        Document.new(field_names, hit[result_key])
       end
     end
 

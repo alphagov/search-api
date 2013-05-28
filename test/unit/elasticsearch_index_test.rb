@@ -187,6 +187,34 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map(&:link)
   end
 
+  def test_can_fetch_documents_by_format_with_fields_not_in_mappings
+    # Notably, we want to be able to query for organisation acronyms before we
+    # work out how best to add them to the mappings
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=500"
+    query = {
+      query: {term: {format: "organisation"}},
+      fields: ["title", "link", "wumpus"]
+    }
+    stub_request(:get, search_pattern).with(
+      body: MultiJson.encode(query)
+    ).to_return(
+      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 10}})
+    )
+
+    hits = [
+      { "fields" => { "link" => "/org", "title" => "Org", "wumpus" => "totes" } }
+    ]
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
+      body: scroll_response_body("abcdefgh", 1, hits)
+    ).then.to_return(
+      body: scroll_response_body("abcdefgh", 10, [])
+    ).then.to_raise("should never happen")
+
+    result = @wrapper.documents_by_format("organisation", fields: %w(title link wumpus)).to_a
+    first = result[0]
+    assert_equal "totes", first.wumpus
+  end
+
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
     search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=50"
