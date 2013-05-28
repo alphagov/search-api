@@ -5,7 +5,7 @@ require "multi_json"
 
 class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
-  FIELDS = %w(link title description format organisations topics document_series)
+  FIELDS = %w(link title description format organisations topics document_series world_locations)
 
   def result_set
     documents = [
@@ -55,6 +55,17 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       "description" => "Full of foo.",
       "format" => "edition",
       "topics" => topic_slugs
+    }
+    stub(results: [Document.new(FIELDS, document_hash)])
+  end
+
+  def single_result_with_world_locations(*world_location_slugs)
+    document_hash = {
+      "link" => "/foo",
+      "title" => "Foo",
+      "description" => "Full of foo.",
+      "format" => "edition",
+      "world_locations" => world_location_slugs
     }
     stub(results: [Document.new(FIELDS, document_hash)])
   end
@@ -197,6 +208,30 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal "Housing", output[0]["topics"][0]["title"]
     assert_equal "/government/topics/housing", output[0]["topics"][0]["link"]
     assert_equal "housing", output[0]["topics"][0]["slug"]
+  end
+
+  def test_expands_world_locations
+    angola_world_location = Document.new(
+      %w(link title),
+      link: "/government/world/angola",
+      title: "Angola"
+    )
+    world_location_registry = stub("world location registry")
+    world_location_registry.expects(:[])
+      .with("angola")
+      .returns(angola_world_location)
+
+    presenter = ResultSetPresenter.new(
+      single_result_with_world_locations("angola"),
+      world_location_registry: world_location_registry
+    )
+
+    output = output_for(presenter)
+    assert_equal 1, output[0]["world_locations"].size
+    assert_instance_of Hash, output[0]["world_locations"][0]
+    assert_equal "Angola", output[0]["world_locations"][0]["title"]
+    assert_equal "/government/world/angola", output[0]["world_locations"][0]["link"]
+    assert_equal "angola", output[0]["world_locations"][0]["slug"]
   end
 
   def test_unknown_organisations_just_have_slug
