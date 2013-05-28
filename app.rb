@@ -13,6 +13,7 @@ require "result_set_presenter"
 require "document_series_registry"
 require "organisation_registry"
 require "topic_registry"
+require "world_location_registry"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
 
@@ -50,6 +51,11 @@ class Rummager < Sinatra::Application
   def topic_registry
     index_name = settings.search_config.topic_registry_index
     @@topic_registry ||= TopicRegistry.new(search_server.index(index_name)) if index_name
+  end
+
+  def world_location_registry
+    index_name = settings.search_config.world_location_registry_index
+    @@world_location_registry ||= WorldLocationRegistry.new(search_server.index(index_name)) if index_name
   end
 
   def indices_for_sitemap
@@ -95,7 +101,8 @@ class Rummager < Sinatra::Application
     presenter_context = {
       organisation_registry: organisation_registry,
       topic_registry: topic_registry,
-      document_series_registry: document_series_registry
+      document_series_registry: document_series_registry,
+      world_location_registry: world_location_registry
     }
     ResultSetPresenter.new(result_set, presenter_context).present
   end

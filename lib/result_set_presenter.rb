@@ -77,6 +77,11 @@ private
         topic_by_slug(slug)
       end
     end
+    if result['world_locations'] && should_expand_world_locations?
+      result['world_locations'] = result['world_locations'].map do |slug|
+        world_location_by_slug(slug)
+      end
+    end
     result
   end
 
@@ -92,6 +97,10 @@ private
     !! topic_registry
   end
 
+  def should_expand_world_locations?
+    !! world_location_registry
+  end
+
   def document_series_registry
     @context[:document_series_registry]
   end
@@ -102,6 +111,10 @@ private
 
   def topic_registry
     @context[:topic_registry]
+  end
+
+  def world_location_registry
+    @context[:world_location_registry]
   end
 
   def document_series_by_slug(slug)
@@ -126,6 +139,15 @@ private
     topic = topic_registry && topic_registry[slug]
     if topic
       topic.to_hash.merge(slug: slug)
+    else
+      {slug: slug}
+    end
+  end
+
+  def world_location_by_slug(slug)
+    world_location = world_location_registry && world_location_registry[slug]
+    if world_location
+      world_location.to_hash.merge(slug: slug)
     else
       {slug: slug}
     end
