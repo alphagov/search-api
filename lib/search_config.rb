@@ -35,6 +35,10 @@ class SearchConfig
     elasticsearch["topic_registry_index"]
   end
 
+  def world_location_registry_index
+    elasticsearch["world_location_registry_index"]
+  end
+
 private
   def config_for(kind)
     YAML.load_file(File.expand_path("../#{kind}.yml", File.dirname(__FILE__)))
