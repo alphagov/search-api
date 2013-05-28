@@ -10,6 +10,7 @@ require "statsd"
 
 require "document"
 require "result_set_presenter"
+require "document_series_registry"
 require "organisation_registry"
 require "topic_registry"
 require "elasticsearch/index"
@@ -34,6 +35,11 @@ class Rummager < Sinatra::Application
     search_server.index(index_name)
   rescue Elasticsearch::NoSuchIndex
     halt(404)
+  end
+
+  def document_series_registry
+    index_name = settings.search_config.document_series_registry_index
+    @@document_series_registry ||= DocumentSeriesRegistry.new(search_server.index(index_name)) if index_name
   end
 
   def organisation_registry
@@ -88,7 +94,8 @@ class Rummager < Sinatra::Application
     result_set = current_index.search(query)
     presenter_context = {
       organisation_registry: organisation_registry,
-      topic_registry: topic_registry
+      topic_registry: topic_registry,
+      document_series_registry: document_series_registry
     }
     ResultSetPresenter.new(result_set, presenter_context).present
   end

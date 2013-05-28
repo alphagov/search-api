@@ -5,7 +5,7 @@ require "multi_json"
 
 class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
-  FIELDS = %w(link title description format organisations topics)
+  FIELDS = %w(link title description format organisations topics document_series)
 
   def result_set
     documents = [
@@ -22,6 +22,18 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
   def single_result_with_format(format)
     stub(results: [Document.new(FIELDS, :format => format)])
+  end
+
+  def single_result_with_document_series(*document_series_slugs)
+    document_hash = {
+        "link" => "/foo",
+        "title" => "Foo",
+        "description" => "Full of foo.",
+        "format" => "edition",
+        "document_series" => document_series_slugs
+      }
+
+    stub(results: [Document.new(FIELDS, document_hash)])
   end
 
   def single_result_with_organisations(*organisation_slugs)
@@ -112,6 +124,31 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     result_set = single_result_with_format "ocean_map"
     output = output_for(ResultSetPresenter.new(result_set))
     assert_equal "Ocean maps", output[0]["humanized_format"]
+  end
+
+  def test_expands_document_series
+    rail_statistics_document = Document.new(
+      %w(link title),
+      link: "/government/organisations/department-for-transport/series/rail-statistics",
+      title: "Rail statistics"
+    )
+    document_series_registry = stub("document series registry")
+    document_series_registry.expects(:[])
+      .with("rail-statistics")
+      .returns(rail_statistics_document)
+
+    presenter = ResultSetPresenter.new(
+      single_result_with_document_series("rail-statistics"),
+      document_series_registry: document_series_registry
+    )
+
+    output = output_for(presenter)
+    assert_equal 1, output[0]["document_series"].size
+    assert_instance_of Hash, output[0]["document_series"][0]
+    assert_equal "Rail statistics", output[0]["document_series"][0]["title"]
+    assert_equal "/government/organisations/department-for-transport/series/rail-statistics",
+      output[0]["document_series"][0]["link"]
+    assert_equal "rail-statistics", output[0]["document_series"][0]["slug"]
   end
 
   def test_expands_organisations
