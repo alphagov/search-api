@@ -26,9 +26,21 @@ private
     # HACK: this is to get around the smushing together of title and acronym in
     # the current index. Once they are separate, this code can be removed.
 
-    # e.g. "Ministry of Justice (MoJ)"
-
     if organisation.has_field?(:acronym) && organisation.acronym.nil?
+
+      # This regex extracts the last term in brackets as the "acronym" group;
+      # the remainder matches as the title, except the separating space.
+      #
+      # For example, "Ministry of Defence (MOD)" matches with:
+      #
+      #     "title" => "Ministry of Defence"
+      #     "acronym" => "MOD"
+      #
+      # Note that a title with multiple parenthesised suffixes will only match
+      # the last one. For example, "Forest Enterprise (England) (FEE)" becomes:
+      #
+      #     "title" => "Forest Enterprise (England)"
+      #     "acronym" => "FEE"
       merged_pattern = %r{\A(?<title>.+) \((?<acronym>[^)]+)\)\Z}
 
       pattern_match = merged_pattern.match(organisation.title)
