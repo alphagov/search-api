@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+
+require "logging"
+PROJECT_ROOT = File.dirname(__FILE__) + "/../"
+DATA_DIR = PROJECT_ROOT + "data/"
+
+File.join(PROJECT_ROOT, "lib").tap do |path|
+  $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
+end
+
+require "search_config"
+
+require "optparse"
+
+options = {index_name: "government"}
+OptionParser.new do |opts|
+  opts.banner = "Usage: search [options] <search terms>"
+
+  opts.on("-i", "--index INDEX", "Specify index (default: #{options[:index_name]})") do |index|
+    options[:index_name] = index
+  end
+end.parse!
+
+def show_result(i, r)
+  relevancy_bar = '#' * r.es_score.floor
+  puts tabulate([3, 3, 10, 50, 50], [i, r.es_score, relevancy_bar,  r.title, r.link])
+end
+
+def truncate(data, max_length)
+  data = data.to_s
+  if data.size > max_length
+    data[0..(max_length-4)] + "..."
+  else
+    data
+  end
+end
+
+def tabulate(col_sizes, data)
+  col_sizes.map.with_index do |col_size, i|
+    case data[i]
+    when Float
+      sprintf("%#{col_size}s", data[i].to_s[0..col_size-1])
+    else
+      truncated = truncate(data[i].to_s, col_size)
+      sprintf("%-#{col_size}s", truncated)
+    end
+  end.join(" ")
+end
+
+index = SearchConfig.new.search_server.index(options[:index_name])
+query = ARGV.join(" ")
+results = index.search(query)
+
+puts "Index: #{options[:index_name]}"
+puts "Query: #{query}"
+puts "Total results: #{results.total}"
+puts
+
+puts tabulate([3, 3, 10, 50, 50], ["i", "sc", "score", "title", "link"])
+puts tabulate([3, 3, 10, 50, 50], ["===", "===", "=====", "=====", "===="])
+results.results.each.with_index do |r, i|
+  show_result(i + 1, r)
+end
