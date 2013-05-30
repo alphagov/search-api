@@ -91,9 +91,17 @@ class ElasticsearchSearchTest < IntegrationTest
     post "/commit", nil
   end
 
-  def assert_result_links(*links)
+  def assert_result_links(*expected_links)
     parsed_response = MultiJson.decode(last_response.body)
-    assert_equal links, parsed_response.map { |r| r["link"] }
+    case parsed_response
+      when Hash
+        result_links = parsed_response["results"].map { |r| r["link"] }
+      when Array
+        result_links = parsed_response.map { |r| r["link"] }
+      else
+        raise "I don't know how to parse #{parsed_response.class}"
+    end
+    assert_equal expected_links, result_links
   end
 
   def test_documents_with_public_timestamp_exhibit_a_decay_boost
@@ -173,5 +181,14 @@ class ElasticsearchSearchTest < IntegrationTest
     get "/search.json?q=PORK+PIES"
     assert last_response.ok?
     assert_result_links "/pork-pies"
+  end
+
+  def test_can_specify_hash_response_style
+    get "/search.json?q=badger&response_style=hash"
+    assert last_response.ok?
+    parsed_response = MultiJson.decode(last_response.body)
+    assert parsed_response.is_a?(Hash)
+    assert_equal ["total", "results"], parsed_response.keys
+    assert_result_links "/an-example-answer"
   end
 end
