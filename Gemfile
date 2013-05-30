@@ -17,6 +17,7 @@ gem "nokogiri", "1.5.5"
 gem "whenever", require: false
 
 group :test do
+  gem "shoulda-context"
   gem "simplecov"
   gem "simplecov-rcov"
   gem "ci_reporter", "1.7.1"
