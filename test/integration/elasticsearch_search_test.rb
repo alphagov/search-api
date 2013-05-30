@@ -14,6 +14,7 @@ class ElasticsearchSearchTest < IntegrationTest
       properties.merge!({
                           "search_format_types" => { "type" => "string", "index" => "not_analyzed" },
                           "public_timestamp" => { "type" => "date", "index" => "not_analyzed" },
+                          "organisations" => { "type" => "string", "index" => "not_analyzed" },
                         })
     end
 
@@ -76,6 +77,12 @@ class ElasticsearchSearchTest < IntegrationTest
       {
         "title" => "Pork pies",
         "link" => "/pork-pies"
+      },
+      {
+        "title" => "Written by the Home Office",
+        "link" => "/written-by-ho",
+        "indexable_content" => "Written by the Home Office",
+        "organisations" => "home-office"
       }
     ]
   end
@@ -106,6 +113,18 @@ class ElasticsearchSearchTest < IntegrationTest
     get "/search.json?q=badger"
     assert last_response.ok?
     assert_result_links "/an-example-answer"
+  end
+
+  def test_can_scope_by_organisation
+    get "/search.json?q=written&organisation_slug=home-office"
+    assert last_response.ok?
+    assert_result_links "/written-by-ho"
+  end
+
+  def test_no_results_when_scoped_by_organisation
+    get "/search.json?q=written&organisation_slug=ministry-of-justice"
+    assert last_response.ok?
+    assert_result_links # assert no results
   end
 
   def test_should_match_stems
