@@ -85,6 +85,9 @@ class Rummager < Sinatra::Application
 
   # /index_name/search?q=pie to search a named index
   # /search?q=pie to search the primary index
+  #
+  # To scope a search to an organisation:
+  # /search?q=pie&organisation_slug=home-office
   get "/?:index?/search.?:format?" do
     json_only
 
@@ -96,8 +99,8 @@ class Rummager < Sinatra::Application
     end
 
     expires 3600, :public if query.length < 20
-
-    result_set = current_index.search(query)
+    organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
+    result_set = current_index.search(query, organisation)
     presenter_context = {
       organisation_registry: organisation_registry,
       topic_registry: topic_registry,

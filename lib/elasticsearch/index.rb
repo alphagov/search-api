@@ -168,7 +168,7 @@ module Elasticsearch
       end
     end
 
-    def search(query)
+    def search(query, organisation=nil)
       # Per-format boosting done as a filter, so the results get cached on the
       # server, as they are the same for each query
 
@@ -229,21 +229,32 @@ module Elasticsearch
         end
       end
 
+      must_conditions = [
+        {
+          query_string: {
+            fields: match_fields.map { |name, boost|
+              boost == 1 ? name : "#{name}^#{boost}"
+            },
+            query: escape(query),
+            analyzer: query_analyzer
+          }
+        }
+      ]
+      if organisation
+        must_conditions << {
+          term: {
+            "organisations" => organisation
+          }
+        }
+      end
+
       payload = {
         from: 0, size: 50,
         query: {
           custom_filters_score: {
             query: {
               bool: {
-                must: {
-                  query_string: {
-                    fields: match_fields.map { |name, boost|
-                      boost == 1 ? name : "#{name}^#{boost}"
-                    },
-                    query: escape(query),
-                    analyzer: query_analyzer
-                  }
-                },
+                must: must_conditions,
                 should: shingle_boosts
               }
             },
