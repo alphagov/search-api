@@ -6,11 +6,13 @@ require "multi_json"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"
+require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
 
 module Elasticsearch
   class Index
+    include Elasticsearch::Escaping
 
     # An enumerator with a manually-specified size.
     # This means we can count the number of documents in an index without
@@ -294,25 +296,6 @@ module Elasticsearch
 
       result = @client.get_with_payload("_search", payload.to_json)
       ResultSet.new(@mappings, MultiJson.decode(result))
-    end
-
-    LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
-      + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
-    ].map { |s| Regexp.escape(s) }.join("|") + ")")
-
-    LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/
-
-    def escape(s)
-      # 6 slashes =>
-      #  ruby reads it as 3 backslashes =>
-      #    the first 2 =>
-      #      go into the regex engine which reads it as a single literal backslash
-      #    the last one combined with the "1" to insert the first match group
-      special_chars_escaped = s.gsub(LUCENE_SPECIAL_CHARACTERS, '\\\\\1')
-
-      # Map something like 'fish AND chips' to 'fish "AND" chips', to avoid
-      # Lucene trying to parse it as a query conjunction
-      special_chars_escaped.gsub(LUCENE_BOOLEANS, '"\1"')
     end
 
     def delete(link)

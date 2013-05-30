@@ -1,5 +1,9 @@
+require "elasticsearch/escaping"
+
 module Elasticsearch
   class AdvancedSearchQueryBuilder
+    include Elasticsearch::Escaping
+
     def initialize(keywords, filter_params, sort_order, mappings)
       @keywords = keywords
       @filter_params = filter_params
@@ -69,18 +73,6 @@ module Elasticsearch
       keyword_query_hash
         .merge(filter_query_hash)
         .merge(order_query_hash)
-    end
-
-    def escape(s)
-      # 6 slashes =>
-      #  ruby reads it as 3 backslashes =>
-      #    the first 2 =>
-      #      go into the regex engine which reads it as a single literal backslash
-      #    the last one combined with the "1" to insert the first match group
-      special_chars_escaped = s.gsub(Elasticsearch::Index::LUCENE_SPECIAL_CHARACTERS, '\\\\\1')
-
-      #Keeping this for now, but perhaps advanced search can allow booleans at some point?
-      special_chars_escaped.gsub(Elasticsearch::Index::LUCENE_BOOLEANS, '"\1"')
     end
 
     def keyword_query_hash
