@@ -85,6 +85,13 @@ class Rummager < Sinatra::Application
 
   # /index_name/search?q=pie to search a named index
   # /search?q=pie to search the primary index
+  # /search?q=pie&response_style=hash to get the results in a Hash, eg:
+  # {
+  #   "total": 1,
+  #   "results": [
+  #     ...
+  #   ]
+  # }
   get "/?:index?/search.?:format?" do
     json_only
 
@@ -104,7 +111,12 @@ class Rummager < Sinatra::Application
       document_series_registry: document_series_registry,
       world_location_registry: world_location_registry
     }
-    ResultSetPresenter.new(result_set, presenter_context).present
+    presenter = ResultSetPresenter.new(result_set, presenter_context)
+    if params["response_style"] == "hash"
+      presenter.present_with_total
+    else
+      presenter.present
+    end
   end
 
   get "/:index/advanced_search.?:format?" do
