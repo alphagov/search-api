@@ -6,11 +6,14 @@ require "multi_json"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"
+require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
+require "elasticsearch/search_query_builder"
 
 module Elasticsearch
   class Index
+    include Elasticsearch::Escaping
 
     # An enumerator with a manually-specified size.
     # This means we can count the number of documents in an index without
@@ -168,89 +171,9 @@ module Elasticsearch
       end
     end
 
-    def search(query)
-      # Per-format boosting done as a filter, so the results get cached on the
-      # server, as they are the same for each query
-
-      boosted_formats = {
-        # Mainstream formats
-        "smart-answer"  => 1.5,
-        "transaction"   => 1.5,
-        # Inside Gov formats
-        "topical_event" => 1.5,
-        "minister"      => 1.7,
-        "organisation"  => 2.5,
-        "topic"         => 1.5,
-        "document_series" => 1.3,
-        "operational_field" => 1.5,
-      }
-
-      format_boosts = boosted_formats.map do |format, boost|
-        {
-          filter: { term: { format: format } },
-          boost: boost
-        }
-      end
-
-      # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
-      # Curve for 2 months: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427e5qr62u0si
-      #
-      # Behaves as a freshness boost for newer documents with a public_timestamp and search_format_types announcement
-      time_boost = {
-        filter: { term: { search_format_types: "announcement" } },
-        script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
-      }
-
-      query_analyzer = "query_default"
-
-      match_fields = {
-        "title" => 5,
-        "description" => 2,
-        "indexable_content" => 1,
-      }
-
-      # "driving theory test" => ["driving theory", "theory test"]
-      shingles = query.split.each_cons(2).map { |s| s.join(' ') }
-
-      # These boosts will be different on each query, so there's no benefit to
-      # caching them in a filter
-      shingle_boosts = shingles.map do |shingle|
-        match_fields.map do |field_name, _|
-          {
-            text: {
-              field_name => {
-                query: shingle,
-                type: "phrase",
-                boost: 2,
-                analyzer: query_analyzer
-              },
-            }
-          }
-        end
-      end
-
-      payload = {
-        from: 0, size: 50,
-        query: {
-          custom_filters_score: {
-            query: {
-              bool: {
-                must: {
-                  query_string: {
-                    fields: match_fields.map { |name, boost|
-                      boost == 1 ? name : "#{name}^#{boost}"
-                    },
-                    query: escape(query),
-                    analyzer: query_analyzer
-                  }
-                },
-                should: shingle_boosts
-              }
-            },
-            filters: format_boosts + [time_boost]
-          }
-        }
-      }.to_json
+    def search(query, organisation=nil)
+      builder = SearchQueryBuilder.new(query, organisation)
+      payload = builder.query_hash.to_json
 
       logger.debug "Request payload: #{payload}"
       response = @client.get_with_payload("_search", payload)
@@ -283,25 +206,6 @@ module Elasticsearch
 
       result = @client.get_with_payload("_search", payload.to_json)
       ResultSet.new(@mappings, MultiJson.decode(result))
-    end
-
-    LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
-      + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
-    ].map { |s| Regexp.escape(s) }.join("|") + ")")
-
-    LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/
-
-    def escape(s)
-      # 6 slashes =>
-      #  ruby reads it as 3 backslashes =>
-      #    the first 2 =>
-      #      go into the regex engine which reads it as a single literal backslash
-      #    the last one combined with the "1" to insert the first match group
-      special_chars_escaped = s.gsub(LUCENE_SPECIAL_CHARACTERS, '\\\\\1')
-
-      # Map something like 'fish AND chips' to 'fish "AND" chips', to avoid
-      # Lucene trying to parse it as a query conjunction
-      special_chars_escaped.gsub(LUCENE_BOOLEANS, '"\1"')
     end
 
     def delete(link)
