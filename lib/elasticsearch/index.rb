@@ -152,6 +152,9 @@ module Elasticsearch
       end
     end
 
+    # `options` can have the following keys:
+    #   :fields - a list of field names to be included in the document, if not
+    #             specified, the mappings are used.
     def documents_by_format(format, options = {})
       batch_size = 500
       search_body = {query: {term: {format: format}}}
