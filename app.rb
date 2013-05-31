@@ -10,6 +10,7 @@ require "statsd"
 
 require "document"
 require "result_set_presenter"
+require "organisation_set_presenter"
 require "document_series_registry"
 require "organisation_registry"
 require "topic_registry"
@@ -133,6 +134,13 @@ class Rummager < Sinatra::Application
 
     result_set = current_index.advanced_search(request.params)
     ResultSetPresenter.new(result_set).present_with_total
+  end
+
+  get "/organisations.?:format" do
+    json_only
+
+    organisations = organisation_registry.all
+    OrganisationSetPresenter.new(organisations).present_with_total
   end
 
   post "/?:index?/documents" do

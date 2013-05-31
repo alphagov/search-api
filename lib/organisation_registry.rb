@@ -19,6 +19,10 @@ class OrganisationRegistry
     @cache = TimedCache.new(CACHE_LIFETIME, clock) { fetch }
   end
 
+  def all
+    @cache.get
+  end
+
   def [](slug)
     @cache.get.find { |o| o.link == "/government/organisations/#{slug}" }
   end

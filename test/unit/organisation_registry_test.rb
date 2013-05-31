@@ -25,6 +25,13 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     OrganisationRegistry.new(stub("index"))
   end
 
+  def test_can_fetch_all_organisations
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([mod_document])
+    assert_equal ["Ministry of Defence"], @organisation_registry.all.map(&:title)
+  end
+
   def test_can_fetch_organisation_by_slug
     @index.stubs(:documents_by_format)
       .with("organisation", anything)
