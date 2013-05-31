@@ -13,12 +13,7 @@ class OrganisationSetPresenter
 
 private
   def build_result(organisation)
-    match_data = organisation.link.match(%r{^/government/organisations/(?<slug>[^/]+)$})
-    if match_data
-      slug = match_data[:slug]
-      organisation.to_hash.merge(slug: slug)
-    else
-      organisation.to_hash
-    end
+    slug = organisation.link.gsub(%r{^/government/organisations/}, "")
+    organisation.to_hash.merge(slug: slug)
   end
 end

@@ -40,23 +40,4 @@ class OrganisationsTest < IntegrationTest
     assert_equal mod_organisation.organisation_type, parsed_response["results"][0]["organisation_type"]
     assert_equal "ministry-of-defence", parsed_response["results"][0]["slug"]
   end
-
-  def test_handles_unrecognized_links
-    org_with_weird_link = Document.new(
-      %w(link title acronym organisation_type),
-      {
-        link: "/banana/ministry-of-weird",
-        title: "Ministry of Weird",
-        organisation_type: "Ministerial department"
-      }
-    )
-    OrganisationRegistry.any_instance.expects(:all).returns([org_with_weird_link])
-
-    get "/organisations.json"
-
-    parsed_response = MultiJson.decode(last_response.body)
-    assert_equal 1, parsed_response["results"].size
-    assert_equal "Ministry of Weird", parsed_response["results"][0]["title"]
-    assert_equal nil, parsed_response["results"][0]["slug"]
-  end
 end
