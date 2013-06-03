@@ -10,7 +10,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def mod_document
     Document.new(
-      %w(link title acronym),
+      %w(link title acronym organisation_type),
       {
         link: "/government/organisations/ministry-of-defence",
         title: "Ministry of Defence"
@@ -25,6 +25,13 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     OrganisationRegistry.new(stub("index"))
   end
 
+  def test_can_fetch_all_organisations
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([mod_document])
+    assert_equal ["Ministry of Defence"], @organisation_registry.all.map(&:title)
+  end
+
   def test_can_fetch_organisation_by_slug
     @index.stubs(:documents_by_format)
       .with("organisation", anything)
@@ -36,7 +43,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("organisation", fields: %w{link title acronym})
+      .with("organisation", fields: %w{link title acronym organisation_type})
       .returns([])
     organisation = @organisation_registry["ministry-of-defence"]
   end
@@ -47,6 +54,46 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
       .returns([mod_document])
     organisation = @organisation_registry["ministry-of-silly-walks"]
     assert_nil organisation
+  end
+
+  def test_indicates_organisation_type_from_file
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([mod_document])
+    organisation = @organisation_registry["ministry-of-defence"]
+    assert_equal "Ministerial department", organisation.organisation_type
+  end
+
+  def test_indicates_organisation_type_from_index
+    fully_labelled_document = Document.new(
+      %w(link title acronym organisation_type),
+      {
+        link: "/government/organisations/office-of-the-fonz",
+        title: "Office of The Fonz",
+        organisation_type: "Gang"
+      }
+    )
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([fully_labelled_document])
+    organisation = @organisation_registry["office-of-the-fonz"]
+    assert_equal "Gang", organisation.organisation_type
+  end
+
+  def test_organisation_type_from_index_takes_precedence
+    fully_labelled_document = Document.new(
+      %w(link title acronym organisation_type),
+      {
+        link: "/government/organisations/ministry-of-defence",
+        title: "Ministry of Defence",
+        organisation_type: "Stuff and things"
+      }
+    )
+    @index.stubs(:documents_by_format)
+      .with("organisation", anything)
+      .returns([fully_labelled_document])
+    organisation = @organisation_registry["ministry-of-defence"]
+    assert_equal "Stuff and things", organisation.organisation_type
   end
 
   def test_extracts_acronym_from_title_if_missing
