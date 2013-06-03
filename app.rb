@@ -136,7 +136,7 @@ class Rummager < Sinatra::Application
     ResultSetPresenter.new(result_set).present_with_total
   end
 
-  get "/organisations.?:format" do
+  get "/organisations.?:format?" do
     json_only
 
     organisations = organisation_registry.all
