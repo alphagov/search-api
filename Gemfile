@@ -15,6 +15,7 @@ gem "statsd-ruby", "1.0.0"
 gem "logging", "1.8.1"
 gem "nokogiri", "1.5.5"
 gem "whenever", require: false
+gem "slop"
 
 group :test do
   gem "shoulda-context"

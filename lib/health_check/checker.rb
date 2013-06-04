@@ -9,13 +9,14 @@ module HealthCheck
     attr_reader :search_client
 
     def initialize(options = {})
-      @index = options[:index]
       @test_data = options[:test_data]
 
-      @search_client = LocalSearchClient.new(index: @index)
+      @search_client = options[:search_client]
     end
 
     def run!
+      Logging.logger[self].info("Connecting to #{@search_client.to_s}")
+
       checks.each do |check|
         search_results = search_client.search(check.search_term)
         result = check.result(search_results)
