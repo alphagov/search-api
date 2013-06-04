@@ -3,7 +3,7 @@
 PROJECT_ROOT = File.dirname(__FILE__) + "/../"
 DATA_DIR = PROJECT_ROOT + "data/"
 LIBRARY_PATH = PROJECT_ROOT + "lib/"
-$: << LIBRARY_PATH unless $:.include?(LIBRARY_PATH)
+$LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 
 INDICES = %w{mainstream detailed government}
 DEFAULT_HTML_URL = "https://www.gov.uk/search"
