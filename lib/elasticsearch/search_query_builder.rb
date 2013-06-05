@@ -6,9 +6,9 @@ module Elasticsearch
 
     QUERY_ANALYZER = "query_default"
 
-    def initialize(query, organisation=nil)
+    def initialize(query, options={})
       @query = query
-      @organisation = organisation
+      @options = options
     end
 
     def query_hash
@@ -23,10 +23,13 @@ module Elasticsearch
           }
         }
       ]
-      if @organisation
+      if @options[:minimum_should_match]
+        must_conditions[0][:query_string][:minimum_should_match] = @options[:minimum_should_match]
+      end
+      if @options[:organisation]
         must_conditions << {
           term: {
-            organisations: @organisation
+            organisations: @options[:organisation]
           }
         }
       end

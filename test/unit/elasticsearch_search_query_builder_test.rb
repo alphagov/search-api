@@ -71,7 +71,7 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
   end
 
   def test_can_scope_to_an_organisation
-    builder = Elasticsearch::SearchQueryBuilder.new("navajo", "foreign-commonwealth-office")
+    builder = Elasticsearch::SearchQueryBuilder.new("navajo", organisation: "foreign-commonwealth-office")
     term_condition = extract_condition_by_type(builder.query_hash, :term)
     expected = {
       term: { organisations: "foreign-commonwealth-office" }
@@ -84,5 +84,25 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
 
     query_string_condition = extract_condition_by_type(builder.query_hash, :query_string)
     assert_equal "how\\?", query_string_condition[:query_string][:query]
+  end
+
+  def test_minimum_should_match_unset_by_default
+    builder = Elasticsearch::SearchQueryBuilder.new("one two three")
+
+    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:must]
+    refute_includes must_conditions[0][:query_string].keys, :minimum_should_match
+  end
+
+  def test_can_pass_minimum_should_match
+    builder = Elasticsearch::SearchQueryBuilder.new("one two three", minimum_should_match: 2)
+
+    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:must]
+    assert_equal 2, must_conditions[0][:query_string][:minimum_should_match]
+  end
+
+  def test_can_optionally_specify_limit
+    builder = Elasticsearch::SearchQueryBuilder.new("anything", limit: 123)
+
+    assert_equal 123, builder.query_hash[:size]
   end
 end

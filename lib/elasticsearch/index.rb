@@ -174,8 +174,8 @@ module Elasticsearch
       end
     end
 
-    def search(query, organisation=nil)
-      builder = SearchQueryBuilder.new(query, organisation)
+    def search(query, options={})
+      builder = SearchQueryBuilder.new(query, options)
       payload = builder.query_hash.to_json
 
       logger.debug "Request payload: #{payload}"
