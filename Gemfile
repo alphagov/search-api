@@ -13,17 +13,17 @@ gem "aws-ses", "0.4.4"
 gem "rest-client", "1.6.7"
 gem "statsd-ruby", "1.0.0"
 gem "logging", "1.8.1"
-gem 'nokogiri', "1.5.5"
-gem 'whenever', require: false
+gem "nokogiri", "1.5.5"
+gem "whenever", require: false
 
 group :test do
-  gem 'simplecov'
-  gem 'simplecov-rcov'
-  gem 'ci_reporter', '1.7.1'
-  gem 'minitest', '4.6.1'
-  gem 'rack-test'
-  gem 'mocha', :require => false
-  gem 'webmock', '1.9.3', :require => false
+  gem "simplecov"
+  gem "simplecov-rcov"
+  gem "ci_reporter", "1.7.1"
+  gem "minitest", "4.6.1"
+  gem "rack-test"
+  gem "mocha", :require => false
+  gem "webmock", "1.9.3", :require => false
 end
 
 group :development do
