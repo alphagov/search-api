@@ -174,10 +174,12 @@ module Elasticsearch
       end
     end
 
-    def search(query, options={})
-      builder = SearchQueryBuilder.new(query, options)
-      payload = builder.query_hash.to_json
+    def search_query(query, options={})
+      SearchQueryBuilder.new(query, options).query_hash
+    end
 
+    def search(query, options={})
+      payload = search_query(query, options).to_json
       logger.debug "Request payload: #{payload}"
       response = @client.get_with_payload("_search", payload)
       ResultSet.new(@mappings, MultiJson.decode(response))
