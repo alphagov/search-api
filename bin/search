@@ -19,6 +19,10 @@ OptionParser.new do |opts|
   opts.on("-i", "--index INDEX", "Specify index (default: #{options[:index_name]})") do |index|
     options[:index_name] = index
   end
+
+  opts.on("-m", "--minimum-should-match params", "enable minimum_should_match with given params") do |params|
+    options[:minimum_should_match] = params
+  end
 end.parse!
 
 def show_result(i, r)
@@ -49,7 +53,10 @@ end
 
 index = SearchConfig.new.search_server.index(options[:index_name])
 query = ARGV.join(" ")
-results = index.search(query)
+search_options = {
+  minimum_should_match: options[:minimum_should_match]
+}
+results = index.search(query, search_options)
 
 puts "Index: #{options[:index_name]}"
 puts "Query: #{query}"
