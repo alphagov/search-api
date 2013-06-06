@@ -11,6 +11,7 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
     builder = Elasticsearch::SearchQueryBuilder.new("tomahawk")
 
     query_string_condition = extract_condition_by_type(builder.query_hash, :query_string)
+    query_string_condition[:query_string].delete(:minimum_should_match)
     expected = {
       query_string: {
         fields: [
@@ -23,6 +24,13 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
       }
     }
     assert_equal expected, query_string_condition
+  end
+
+  def test_minimum_should_match_has_sensible_default
+    builder = Elasticsearch::SearchQueryBuilder.new("one two three")
+
+    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:must]
+    assert_equal "2<2 3<3 7<50%", must_conditions[0][:query_string][:minimum_should_match]
   end
 
   def test_shingle_boosts
@@ -84,13 +92,6 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
 
     query_string_condition = extract_condition_by_type(builder.query_hash, :query_string)
     assert_equal "how\\?", query_string_condition[:query_string][:query]
-  end
-
-  def test_minimum_should_match_unset_by_default
-    builder = Elasticsearch::SearchQueryBuilder.new("one two three")
-
-    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:must]
-    refute_includes must_conditions[0][:query_string].keys, :minimum_should_match
   end
 
   def test_can_pass_minimum_should_match

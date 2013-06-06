@@ -13,8 +13,38 @@ module Elasticsearch
 
     def default_options
       {
-        limit: 50
+        limit: 50,
+        minimum_should_match: default_minimum_should_match
       }
+    end
+
+    def default_minimum_should_match
+      # The following specification generates the following values for minimum_should_match
+      #
+      # Number of | Minimum
+      # optional  | should
+      # clauses   | match
+      # ----------+---------
+      # 1         | 1
+      # 2         | 2
+      # 3         | 2
+      # 4         | 3
+      # 5         | 3
+      # 6         | 3
+      # 7         | 3
+      # 8+        | 50%
+      #
+      # This table was worked out by using the comparison feature of
+      # bin/search with various example queries of different lengths (3, 4, 5,
+      # 7, 9 words) and inspecting the consequences on search results.
+      #
+      # Reference for the minimum_should_match syntax:
+      # http://lucene.apache.org/solr/api-3_6_2/org/apache/solr/util/doc-files/min-should-match.html
+      #
+      # In summary, a clause of the form "N<M" means when there are MORE than
+      # N clauses then M clauses should match. So, 2<2 means when there are
+      # MORE than 2 clauses then 2 should match.
+      "2<2 3<3 7<50%"
     end
 
     def query_hash
