@@ -6,3 +6,4 @@ production.log
 tmp/*
 .powrc
 /public/system/*.xml
+/data

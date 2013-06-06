@@ -9,6 +9,8 @@ require "rack/test"
 require "mocha/setup"
 require "fixtures/default_mappings"
 require "pp"
+require "shoulda-context"
+require "logging"
 
 require "webmock/minitest"
 WebMock.disable_net_connect!
@@ -28,4 +30,10 @@ end
 
 class MiniTest::Unit::TestCase
   include TestHelpers
+end
+
+class ShouldaUnitTestCase < MiniTest::Unit::TestCase
+  include Shoulda::Context::Assertions
+  include Shoulda::Context::InstanceMethods
+  extend Shoulda::Context::ClassMethods
 end
