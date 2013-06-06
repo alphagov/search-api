@@ -69,3 +69,17 @@ you'll either need to delete your existing index or, if you want to keep its
 contents, run:
 
     RUMMAGER_INDEX=my_new_index bundle exec rake rummager:migrate_from_unaliased_index
+
+## Health check
+
+As we work on rummager we want some objective metrics of the performance of search. That's what the health check is for.
+
+To run it first download the healthcheck data:
+
+$ ./bin/health_check -d
+
+Then run against your chosen indices:
+
+$ ./bin/health_check government mainstream
+
+By default it will run against the local search instance. You can run against a remote search service using the --json or --html options.

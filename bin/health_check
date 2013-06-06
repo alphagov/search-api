@@ -1,0 +1,98 @@
+#!/usr/bin/env ruby
+
+PROJECT_ROOT = File.dirname(__FILE__) + "/../"
+DATA_DIR = PROJECT_ROOT + "data/"
+LIBRARY_PATH = PROJECT_ROOT + "lib/"
+$LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
+
+INDICES = %w{mainstream detailed government}
+DEFAULT_HTML_URL = "https://www.gov.uk/search"
+DEFAULT_JSON_URL = "https://www.gov.uk/api/search.json"
+require "logging"
+require "search_config"
+require "slop"
+require 'health_check/logging_config'
+require 'health_check/checker'
+require 'health_check/local_search_client'
+require 'health_check/html_search_client'
+require 'health_check/json_search_client'
+require 'health_check/downloader'
+
+class HealthCheckCLI
+
+  class Usage < StandardError; end
+
+  attr_reader :opts, :args
+
+  def usage(opts, message = nil)
+    puts "#{message}\n\n" if message
+    puts opts
+  end
+
+  def run!
+    health_checker = self
+    Slop.parse do
+      banner %Q{Usage: #{File.basename(__FILE__)} {#{INDICES.join("|")}}
+
+    Runs a health check on the specified index/indices.
+    }
+      on 'd', 'download', "Download search healthcheck data"
+      on 'h', 'help', "Show help"
+      on 'l', 'local', "Connect to local index directly (default)"
+      on 'a', 'auth=', "Basic auth password (for html/json clients)"
+      on 'H', 'html=', "Connect to a frontend at the the given url (eg. #{DEFAULT_HTML_URL})", default: DEFAULT_HTML_URL
+      on 'j', 'json=', "Connect to a content api at the the given url (eg. #{DEFAULT_JSON_URL})", default: DEFAULT_JSON_URL
+      run(health_checker)
+    end
+  end
+
+  def call(opts, args)
+    @opts = opts
+    @args = args
+    if args.size == 0
+      usage(opts)
+    elsif illegal_indices(args).any?
+      usage(opts, "ERROR: Unrecognised index(es) #{illegal_indices(args).join(", ")}")
+    elsif opts.help?
+      puts "help"
+      usage(opts)
+    elsif opts.download?
+      FileUtils.mkdir_p(DATA_DIR)
+      HealthCheck::Downloader.new(data_dir: DATA_DIR).download(*INDICES)
+    else
+      run_tests(args)
+    end
+  end
+
+  def illegal_indices(indices)
+    indices - INDICES
+  end
+
+private
+  def run_tests(indices)
+    scores = indices.map { |index_name| run_one_test(index_name) }
+    scores.zip(indices).inject(HealthCheck::Calculator.new) do |summary, (result, index_name)|
+      result.summarise("#{index_name.capitalize} score")
+      summary + result
+    end.summarise("Overall score")
+  end
+
+  def run_one_test(index_name)
+    HealthCheck::Checker.new(
+      search_client: search_client_for(index_name),
+      test_data: DATA_DIR + "#{index_name}-weighted-search-terms.csv"
+    ).run!
+  end
+
+  def search_client_for(index_name)
+    if opts.html?
+      HealthCheck::HtmlSearchClient.new(base_url: URI.parse(opts["html"]), authentication: opts[:auth], index: index_name)
+    elsif opts.json?
+      HealthCheck::JsonSearchClient.new(base_url: URI.parse(opts["json"]), authentication: opts[:auth], index: index_name)
+    else
+      HealthCheck::LocalSearchClient.new(index: index_name)
+    end
+  end
+end
+
+HealthCheckCLI.new.run!
