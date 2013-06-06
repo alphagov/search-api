@@ -123,9 +123,10 @@ class Rummager < Sinatra::Application
     }
     presenter = ResultSetPresenter.new(result_set, presenter_context)
     if params["response_style"] == "hash"
-      presenter.present_with_total
-    else
       presenter.present
+    else
+      results_array = MultiJson.decode(presenter.present)["results"]
+      MultiJson.encode(results_array)
     end
   end
 
@@ -133,7 +134,7 @@ class Rummager < Sinatra::Application
     json_only
 
     result_set = current_index.advanced_search(request.params)
-    ResultSetPresenter.new(result_set).present_with_total
+    ResultSetPresenter.new(result_set).present
   end
 
   get "/organisations.?:format?" do

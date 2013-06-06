@@ -6,10 +6,6 @@ class ResultSetPresenter
   end
 
   def present
-    MultiJson.encode(results)
-  end
-
-  def present_with_total
     MultiJson.encode(
       total: @result_set.total,
       results: results
