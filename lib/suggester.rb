@@ -8,7 +8,7 @@ class Suggester
   #  * is replaced by it's most likely correction
   def suggestions(query_string)
     suggested_string = query_string.split("\s").map do |word|
-      suggestion_for_a_word(word)
+      suggestion_for_a_word(word) || word
     end.join(" ")
     [suggested_string]
   end
