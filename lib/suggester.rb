@@ -19,7 +19,13 @@ class Suggester
         suggested_word
       end
     end.join(" ")
-    [suggested_string]
+
+    if suggested_string.downcase == query_string.downcase
+      # don't suggest the input, even if the case has changed
+      []
+    else
+      [suggested_string]
+    end
   end
 
 private
