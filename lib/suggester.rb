@@ -8,7 +8,16 @@ class Suggester
   #  * is replaced by it's most likely correction
   def suggestions(query_string)
     suggested_string = query_string.split("\s").map do |word|
-      suggestion_for_a_word(word) || word
+      suggested_word = suggestion_for_a_word(word)
+      if suggested_word.nil?
+        word
+      # If the word is the same (ignoring differences in letter cases),
+      # retain the user's letter cases.
+      elsif suggested_word.downcase == word.downcase
+        word
+      else
+        suggested_word
+      end
     end.join(" ")
     [suggested_string]
   end

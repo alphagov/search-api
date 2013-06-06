@@ -24,4 +24,16 @@ class SuggesterTest < MiniTest::Unit::TestCase
     suggester = Suggester.new
     assert_equal ["notinthedictionary"], suggester.suggestions("notinthedictionary")
   end
+
+  def test_should_not_change_the_letter_case_of_words
+    # Aspell will sometimes suggest the word given with different letter cases.
+    # Sometimes this is fine (eg "paris" => "Paris").
+    # Sometimes it's unhelpful (eg "in" => "IN").
+    # We want to retain the capitalisation given.
+    suggester = Suggester.new
+    FFI::Aspell::Speller.any_instance.expects(:suggestions).with("in").returns(["IN"])
+    assert_equal ["in"], suggester.suggestions("in")
+    FFI::Aspell::Speller.any_instance.expects(:suggestions).with("MoD").returns(["mod"])
+    assert_equal ["MoD"], suggester.suggestions("MoD")
+  end
 end
