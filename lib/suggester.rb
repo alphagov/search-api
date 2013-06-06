@@ -15,7 +15,7 @@ class Suggester
 
 private
   def suggestion_for_a_word(word)
-    speller.suggestions(word).map(&:downcase).first
+    speller.suggestions(word).first
   end
 
   def speller
