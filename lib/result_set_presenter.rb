@@ -8,7 +8,8 @@ class ResultSetPresenter
   def present
     MultiJson.encode(
       total: @result_set.total,
-      results: results
+      results: results,
+      spelling_suggestions: spelling_suggestions
     )
   end
 
@@ -111,6 +112,10 @@ private
 
   def world_location_registry
     @context[:world_location_registry]
+  end
+
+  def spelling_suggestions
+    @context[:spelling_suggestions]
   end
 
   def document_series_by_slug(slug)

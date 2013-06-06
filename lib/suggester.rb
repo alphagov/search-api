@@ -1,7 +1,12 @@
 require 'ffi/aspell'
 
 class Suggester
-  def suggest(query_string)
+  # Returns an array of suggested corrections for a query_string.
+  #
+  # Currently only returns a single suggestion, where each word:
+  #  * is retained if in the dictionary, otherwise
+  #  * is replaced by it's most likely correction
+  def suggestions(query_string)
     query_string.split("\s").map do |word|
       suggestion_for_a_word(word)
     end.join(" ")
