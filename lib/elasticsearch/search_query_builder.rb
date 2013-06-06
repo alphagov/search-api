@@ -8,7 +8,13 @@ module Elasticsearch
 
     def initialize(query, options={})
       @query = query
-      @options = options
+      @options = default_options.merge(options)
+    end
+
+    def default_options
+      {
+        limit: 50
+      }
     end
 
     def query_hash
@@ -34,7 +40,7 @@ module Elasticsearch
         }
       end
       {
-        from: 0, size: 50,
+        from: 0, size: @options[:limit],
         query: {
           custom_filters_score: {
             query: {
