@@ -5,6 +5,9 @@ env:
   - DB=mysql GOVUK_APP_DOMAIN=test.gov.uk RUBYOPT="-rpsych"
 services:
   - elasticsearch
+before_install:
+- sudo apt-get update -qq
+- sudo apt-get install -qq aspell aspell-en libaspell-dev
 script:
   - bundle exec rake
 bundler_args: --without=development
