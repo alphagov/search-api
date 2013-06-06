@@ -141,7 +141,7 @@ class Rummager < Sinatra::Application
     json_only
 
     organisations = organisation_registry.all
-    OrganisationSetPresenter.new(organisations).present_with_total
+    OrganisationSetPresenter.new(organisations).present
   end
 
   post "/?:index?/documents" do
