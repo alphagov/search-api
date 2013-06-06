@@ -207,7 +207,7 @@ class ElasticsearchSearchTest < IntegrationTest
     assert last_response.ok?
     parsed_response = MultiJson.decode(last_response.body)
     assert parsed_response.is_a?(Hash)
-    assert_equal ["total", "results"], parsed_response.keys
+    assert_equal ["total", "results", "spelling_suggestions"], parsed_response.keys
     assert_result_links "/an-example-answer"
   end
 end

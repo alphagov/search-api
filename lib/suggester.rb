@@ -7,9 +7,10 @@ class Suggester
   #  * is retained if in the dictionary, otherwise
   #  * is replaced by it's most likely correction
   def suggestions(query_string)
-    query_string.split("\s").map do |word|
+    suggested_string = query_string.split("\s").map do |word|
       suggestion_for_a_word(word)
     end.join(" ")
+    [suggested_string]
   end
 
 private

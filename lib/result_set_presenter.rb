@@ -6,11 +6,14 @@ class ResultSetPresenter
   end
 
   def present
-    MultiJson.encode(
+    presentable_hash = {
       total: @result_set.total,
-      results: results,
-      spelling_suggestions: spelling_suggestions
-    )
+      results: results
+    }
+    if spelling_suggestions
+      presentable_hash[:spelling_suggestions] = spelling_suggestions
+    end
+    MultiJson.encode(presentable_hash)
   end
 
   PRESENTATION_FORMAT_TRANSLATION = {

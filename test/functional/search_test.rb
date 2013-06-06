@@ -61,6 +61,12 @@ class SearchTest < IntegrationTest
     assert_match(/application\/json/, last_response.headers["Content-Type"])
   end
 
+  def test_returns_spelling_suggestions_when_hash_requested
+    stub_index.expects(:search).returns(stub(results: [], total: 0))
+    get "/search.json", {q: "speling", response_style: "hash"}
+    assert_equal ["spelling"], MultiJson.decode(last_response.body)["spelling_suggestions"]
+  end
+
   def test_handles_results_with_document_series
     mappings = default_mappings
     mappings["edition"]["properties"]["document_series"] = {"type" => "string"}
