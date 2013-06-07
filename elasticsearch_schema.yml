@@ -558,6 +558,7 @@ mappings:
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
         link:        { type: string, index: not_analyzed, include_in_all: false }
         indexable_content: { type: string, index: analyzed }
+        promoted_for: { type: string, index: analyzed, include_in_all: false }
   government:
     edition:
       _all: { enabled: true }
@@ -580,3 +581,4 @@ mappings:
         search_format_types: { type: string, index: not_analyzed, include_in_all: false }
         relevant_to_local_government: { type: boolean, index: not_analyzed, include_in_all: false }
         world_locations: { type: string, index: not_analyzed, include_in_all: false }
+        promoted_for: { type: string, index: analyzed, include_in_all: false }

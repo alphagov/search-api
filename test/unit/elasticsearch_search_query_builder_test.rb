@@ -3,7 +3,7 @@ require "elasticsearch/search_query_builder"
 
 class SearchQueryBuilderTest < MiniTest::Unit::TestCase
   def extract_condition_by_type(query_hash, condition_type)
-    must_conditions = query_hash[:query][:custom_filters_score][:query][:bool][:must]
+    must_conditions = query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
     must_conditions.find { |condition| condition.keys == [condition_type] }
   end
 
@@ -29,13 +29,13 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
   def test_minimum_should_match_has_sensible_default
     builder = Elasticsearch::SearchQueryBuilder.new("one two three")
 
-    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:must]
+    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
     assert_equal "2<2 3<3 7<50%", must_conditions[0][:query_string][:minimum_should_match]
   end
 
   def test_shingle_boosts
     builder = Elasticsearch::SearchQueryBuilder.new("quick brown fox")
-    shingle_boosts = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should]
+    shingle_boosts = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:should]
     expected = [
       [
         { text: { "title"             => { query: "quick brown", type: "phrase", boost: 2, analyzer: "query_default" }}},
@@ -78,6 +78,20 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
     assert_equal expected, filters.last
   end
 
+  def test_promoted_search
+    builder = Elasticsearch::SearchQueryBuilder.new("jobs in birmingham")
+    promoted_search_clause = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][1]
+    expected = {
+        query_string: {
+          default_field: "promoted_for",
+          query: "jobs in birmingham",
+          boost: 100
+        }
+      }
+
+    assert_equal expected, promoted_search_clause
+  end
+
   def test_can_scope_to_an_organisation
     builder = Elasticsearch::SearchQueryBuilder.new("navajo", organisation: "foreign-commonwealth-office")
     term_condition = extract_condition_by_type(builder.query_hash, :term)
@@ -97,7 +111,7 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
   def test_can_pass_minimum_should_match
     builder = Elasticsearch::SearchQueryBuilder.new("one two three", minimum_should_match: 2)
 
-    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:must]
+    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
     assert_equal 2, must_conditions[0][:query_string][:minimum_should_match]
   end
 

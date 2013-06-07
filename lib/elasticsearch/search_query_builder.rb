@@ -48,35 +48,14 @@ module Elasticsearch
     end
 
     def query_hash
-      must_conditions = [
-        {
-          query_string: {
-            fields: match_fields.map { |name, boost|
-              boost == 1 ? name : "#{name}^#{boost}"
-            },
-            query: escape(@query),
-            analyzer: QUERY_ANALYZER
-          }
-        }
-      ]
-      if @options[:minimum_should_match]
-        must_conditions[0][:query_string][:minimum_should_match] = @options[:minimum_should_match]
-      end
-      if @options[:organisation]
-        must_conditions << {
-          term: {
-            organisations: @options[:organisation]
-          }
-        }
-      end
       {
-        from: 0, size: @options[:limit],
+        from: 0,
+        size: @options[:limit],
         query: {
           custom_filters_score: {
             query: {
               bool: {
-                must: must_conditions,
-                should: shingle_boosts
+                should: [core_query, promoted_items_query].compact
               }
             },
             filters: format_boosts + [time_boost]
@@ -86,6 +65,57 @@ module Elasticsearch
     end
 
   private
+
+    def core_query
+      {
+        bool: {
+          must: must_conditions,
+          should: shingle_boosts
+        }
+      }
+    end
+
+    def promoted_items_query
+      {
+        query_string: {
+          default_field: "promoted_for",
+          query: escape(@query),
+          boost: 100
+        }
+      }
+    end
+
+    def query_string_query
+      query_string_query = {
+        query_string: {
+          fields: match_fields.map { |name, boost|
+            boost == 1 ? name : "#{name}^#{boost}"
+          },
+          query: escape(@query),
+          analyzer: QUERY_ANALYZER
+        }
+      }
+
+      if @options[:minimum_should_match]
+        query_string_query[:query_string][:minimum_should_match] = @options[:minimum_should_match]
+      end
+      query_string_query
+    end
+
+    def organisation_query
+      if @options[:organisation]
+        {
+          term: {
+            organisations: @options[:organisation]
+          }
+        }
+      end
+    end
+
+    def must_conditions
+      [query_string_query, organisation_query].compact
+    end
+
     def match_fields
       {
         "title" => 5,
