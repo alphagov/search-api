@@ -3,6 +3,7 @@ require "securerandom"
 require "rest-client"
 require "cgi"
 require "elasticsearch/index"
+require "promoted_result"
 
 module Elasticsearch
 
@@ -15,12 +16,15 @@ module Elasticsearch
   #
   # One of these indexes is aliased to the group name itself.
   class IndexGroup
-    def initialize(base_uri, name, index_settings, mappings)
+    attr_reader :promoted_results
+
+    def initialize(base_uri, name, index_settings, mappings, promoted_results = [])
       @base_uri = base_uri
       @client = Client.new(base_uri)
       @name = name
       @index_settings = index_settings
       @mappings = mappings
+      @promoted_results = promoted_results
     end
 
     def create_index
@@ -80,7 +84,7 @@ module Elasticsearch
     end
 
     def current
-      Index.new(@base_uri, @name, @mappings)
+      Index.new(@base_uri, @name, @mappings, @promoted_results)
     end
 
     def index_names

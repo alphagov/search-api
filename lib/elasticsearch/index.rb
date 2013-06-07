@@ -49,9 +49,9 @@ module Elasticsearch
     # How long to wait for a connection to the elasticsearch server
     OPEN_TIMEOUT_SECONDS = 5.0
 
-    attr_reader :mappings, :index_name
+    attr_reader :mappings, :index_name, :promoted_results
 
-    def initialize(base_uri, index_name, mappings)
+    def initialize(base_uri, index_name, mappings, promoted_results = [])
       @client = Client.new(
         base_uri + "#{CGI.escape(index_name)}/",
         timeout: TIMEOUT_SECONDS,
@@ -60,6 +60,7 @@ module Elasticsearch
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
+      @promoted_results = promoted_results
     end
 
     def field_names
