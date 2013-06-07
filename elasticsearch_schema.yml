@@ -521,7 +521,9 @@ stems: &stems [
 # boosting. Any matches are boosted by 100x effectively forcing them to the
 # top.
 #
-# NOTE: if you add items to this section, the index will need to be re-built
+# NOTES:
+#  - if you add items to this section, the index will need to be re-built
+#  - the terms are stemmed so there's no need to enter both 'job' and 'jobs'
 promoted_results:
 - terms: job
   link: /jobsearch
