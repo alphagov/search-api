@@ -5,15 +5,6 @@ class ResultPromoter
     @promoted_results = promoted_results
   end
 
-  def promoted_terms_in(query)
-    terms = query.downcase.gsub(/[^a-z]/, " ").split(/ +/).uniq
-    terms.select do |term|
-      @promoted_results.any? do |promoted_result|
-        promoted_result.promoted_for?(term)
-      end
-    end
-  end
-
   def with_promotion(document_hash)
     promoted_terms = @promoted_results.select do |promoted_result|
       document_hash["link"] == promoted_result.link
