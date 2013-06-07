@@ -1,16 +1,12 @@
-class ResultPromoter
-  class PromotedResult < Struct.new(:id, :terms)
-    def promoted_for?(term)
-      terms.include?(term)
-    end
-  end
+require 'promoted_result'
 
+class ResultPromoter
   def initialize
     @promoted_results = []
   end
 
-  def add(id, terms)
-    @promoted_results << PromotedResult.new(id, terms)
+  def add(link, terms)
+    @promoted_results << PromotedResult.new(link, terms)
   end
 
   def promoted_terms_in(query)
