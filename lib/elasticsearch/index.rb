@@ -10,6 +10,7 @@ require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
 require "elasticsearch/search_query_builder"
+require "result_promoter"
 
 module Elasticsearch
   class Index
@@ -86,11 +87,12 @@ module Elasticsearch
       else
         logger.info "Adding #{documents.size} documents to #{index_name}"
       end
-      documents = documents.map(&:elasticsearch_export).map do |doc|
-        index_action(doc).to_json + "\n" + doc.to_json
-      end
+      payload = documents.map do |doc|
+        exported_hash = with_promotion(doc.elasticsearch_export)
+        [index_action(exported_hash).to_json, exported_hash.to_json]
+      end.flatten.join("\n")
       # Ensure the request payload ends with a newline
-      @client.post("_bulk", documents.join("\n") + "\n", content_type: :json)
+      @client.post("_bulk", payload + "\n", content_type: :json)
     end
 
     def populate_from(source_index)
@@ -243,6 +245,14 @@ module Elasticsearch
 
     def index_action(doc)
       {"index" => {"_type" => doc["_type"], "_id" => doc["link"]}}
+    end
+
+    def result_promoter
+      @result_promoter ||= ResultPromoter.new(@promoted_results)
+    end
+
+    def with_promotion(document_hash)
+      result_promoter.with_promotion(document_hash)
     end
   end
 end
