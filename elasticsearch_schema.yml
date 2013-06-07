@@ -512,6 +512,19 @@ stems: &stems [
   "universal => universal"
 ]
 
+# Promoted results
+#
+# When indexing a promoted item, the promoted_for field is set with the given
+# terms. At search time an extra query checks for matches between the users
+# search phrase and the promoted item. The promoted item search does not have
+# a minimum_should_match so even a single word in common will trigger the
+# boosting. Any matches are boosted by 100x effectively forcing them to the
+# top.
+#
+# NOTE: if you add items to this section, the index will need to be re-built
+promoted_results:
+- terms: job
+  link: /jobsearch
 
 index:
   settings:
