@@ -38,7 +38,7 @@ def show_result(i, r)
   puts tabulate([3, 3, 10, 50, 50], [i, r.es_score, relevancy_bar,  r.title, r.link])
 end
 
-def show_result_comparison(i, r1, new_index)
+def show_result_comparison(i, original_result, new_index)
   message = if new_index
     change = i - new_index
     if change == 0
@@ -51,7 +51,7 @@ def show_result_comparison(i, r1, new_index)
   else
     "X"
   end
-  puts tabulate([3, 3, 80, 10], [i, r1.es_score, r1.title, message])
+  puts tabulate([3, 3, 80, 10], [i, original_result.es_score, original_result.title, message])
 end
 
 def truncate(data, max_length)
