@@ -38,7 +38,7 @@ module Elasticsearch
 
       logger.info "Created index #{index_name}"
 
-      Index.new(@base_uri, index_name, @mappings)
+      Index.new(@base_uri, index_name, @mappings, @promoted_results)
     end
 
     def switch_to(index)
