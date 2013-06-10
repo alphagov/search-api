@@ -26,8 +26,15 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
     assert_equal expected, query_string_condition
   end
 
-  def test_minimum_should_match_has_sensible_default
+  def test_minimum_should_match_disabled_by_default
     builder = Elasticsearch::SearchQueryBuilder.new("one two three")
+
+    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
+    refute_includes must_conditions[0][:query_string], :minimum_should_match
+  end
+
+  def test_minimum_should_match_has_sensible_default_if_enabled
+    builder = Elasticsearch::SearchQueryBuilder.new("one two three", minimum_should_match: true)
 
     must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
     assert_equal "2<2 3<3 7<50%", must_conditions[0][:query_string][:minimum_should_match]

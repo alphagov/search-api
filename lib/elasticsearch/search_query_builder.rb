@@ -13,8 +13,7 @@ module Elasticsearch
 
     def default_options
       {
-        limit: 50,
-        minimum_should_match: default_minimum_should_match
+        limit: 50
       }
     end
 
@@ -86,20 +85,26 @@ module Elasticsearch
     end
 
     def query_string_query
-      query_string_query = {
+      {
         query_string: {
           fields: match_fields.map { |name, boost|
             boost == 1 ? name : "#{name}^#{boost}"
           },
           query: escape(@query),
           analyzer: QUERY_ANALYZER
-        }
+        }.merge(minimum_should_match_clause)
       }
+    end
 
-      if @options[:minimum_should_match]
-        query_string_query[:query_string][:minimum_should_match] = @options[:minimum_should_match]
+    def minimum_should_match_clause
+      case @options[:minimum_should_match]
+      when String, Fixnum
+        {minimum_should_match: @options[:minimum_should_match]}
+      when true
+        {minimum_should_match: default_minimum_should_match}
+      else
+        {}
       end
-      query_string_query
     end
 
     def organisation_query
