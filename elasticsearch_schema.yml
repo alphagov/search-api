@@ -512,6 +512,21 @@ stems: &stems [
   "universal => universal"
 ]
 
+# Promoted results
+#
+# When indexing a promoted item, the promoted_for field is set with the given
+# terms. At search time an extra query checks for matches between the users
+# search phrase and the promoted item. The promoted item search does not have
+# a minimum_should_match so even a single word in common will trigger the
+# boosting. Any matches are boosted by 100x effectively forcing them to the
+# top.
+#
+# NOTES:
+#  - if you add items to this section, the index will need to be re-built
+#  - the terms are stemmed so there's no need to enter both 'job' and 'jobs'
+promoted_results:
+- terms: job
+  link: /jobsearch
 
 index:
   settings:
@@ -545,6 +560,7 @@ mappings:
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
         link:        { type: string, index: not_analyzed, include_in_all: false }
         indexable_content: { type: string, index: analyzed }
+        promoted_for: { type: string, index: analyzed, include_in_all: false }
   government:
     edition:
       _all: { enabled: true }
@@ -567,3 +583,4 @@ mappings:
         search_format_types: { type: string, index: not_analyzed, include_in_all: false }
         relevant_to_local_government: { type: boolean, index: not_analyzed, include_in_all: false }
         world_locations: { type: string, index: not_analyzed, include_in_all: false }
+        promoted_for: { type: string, index: analyzed, include_in_all: false }

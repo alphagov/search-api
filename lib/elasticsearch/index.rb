@@ -10,6 +10,7 @@ require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
 require "elasticsearch/search_query_builder"
+require "result_promoter"
 
 module Elasticsearch
   class Index
@@ -49,9 +50,9 @@ module Elasticsearch
     # How long to wait for a connection to the elasticsearch server
     OPEN_TIMEOUT_SECONDS = 5.0
 
-    attr_reader :mappings, :index_name
+    attr_reader :mappings, :index_name, :promoted_results
 
-    def initialize(base_uri, index_name, mappings)
+    def initialize(base_uri, index_name, mappings, promoted_results = [])
       @client = Client.new(
         base_uri + "#{CGI.escape(index_name)}/",
         timeout: TIMEOUT_SECONDS,
@@ -60,6 +61,7 @@ module Elasticsearch
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
+      @promoted_results = promoted_results
     end
 
     def field_names
@@ -85,11 +87,12 @@ module Elasticsearch
       else
         logger.info "Adding #{documents.size} documents to #{index_name}"
       end
-      documents = documents.map(&:elasticsearch_export).map do |doc|
-        index_action(doc).to_json + "\n" + doc.to_json
-      end
+      payload = documents.map do |doc|
+        exported_hash = with_promotion(doc.elasticsearch_export)
+        [index_action(exported_hash).to_json, exported_hash.to_json]
+      end.flatten.join("\n")
       # Ensure the request payload ends with a newline
-      @client.post("_bulk", documents.join("\n") + "\n", content_type: :json)
+      @client.post("_bulk", payload + "\n", content_type: :json)
     end
 
     def populate_from(source_index)
@@ -174,10 +177,12 @@ module Elasticsearch
       end
     end
 
-    def search(query, organisation=nil)
-      builder = SearchQueryBuilder.new(query, organisation)
-      payload = builder.query_hash.to_json
+    def search_query(query, options={})
+      SearchQueryBuilder.new(query, options).query_hash
+    end
 
+    def search(query, options={})
+      payload = MultiJson.dump(search_query(query, options), pretty: true)
       logger.debug "Request payload: #{payload}"
       response = @client.get_with_payload("_search", payload)
       ResultSet.new(@mappings, MultiJson.decode(response))
@@ -240,6 +245,14 @@ module Elasticsearch
 
     def index_action(doc)
       {"index" => {"_type" => doc["_type"], "_id" => doc["link"]}}
+    end
+
+    def result_promoter
+      @result_promoter ||= ResultPromoter.new(@promoted_results)
+    end
+
+    def with_promotion(document_hash)
+      result_promoter.with_promotion(document_hash)
     end
   end
 end
