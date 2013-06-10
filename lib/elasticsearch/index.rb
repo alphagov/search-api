@@ -182,7 +182,7 @@ module Elasticsearch
     end
 
     def search(query, options={})
-      payload = MultiJson.dump(search_query(query, options), pretty: true)
+      payload = MultiJson.dump(search_query(query, options))
       logger.debug "Request payload: #{payload}"
       response = @client.get_with_payload("_search", payload)
       ResultSet.new(@mappings, MultiJson.decode(response))
