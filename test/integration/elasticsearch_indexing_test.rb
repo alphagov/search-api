@@ -61,4 +61,31 @@ class ElasticsearchIndexingTest < IntegrationTest
 
     assert_document_is_in_rummager(test_data)
   end
+
+  def test_indexing_a_promoted_document_sets_the_promoted_for_field
+    stub_modified_schema do |schema|
+      schema["mappings"]["default"]["edition"]["properties"].merge!(
+        "promoted_for" => { "type" => "string", "index" => "analyzed" }
+      )
+
+      schema["promoted_results"] = [{
+        "link" => "/jobsearch",
+        "terms" => "job"
+      }]
+    end
+    create_test_index
+
+    promoted_document = {
+      "title" => "TITLE",
+      "description" => "DESCRIPTION",
+      "format" => "answer",
+      "link" => "/jobsearch",
+      "indexable_content" => "HERE IS SOME CONTENT"
+    }
+
+    post "/documents", MultiJson.encode(promoted_document)
+
+    retrieved_document = retrieve_document_from_rummager(promoted_document['link'])
+    assert_equal "job", retrieved_document["promoted_for"]
+  end
 end
