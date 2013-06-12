@@ -11,7 +11,7 @@ module HealthCheck
       @index          = options[:index] || "mainstream"
     end
 
-    def search(term)
+    def search(term, retries = 2)
       request = Net::HTTP::Get.new((@base_url + "?q=#{CGI.escape(term)}").request_uri)
       request.basic_auth(*@authentication) if @authentication
       response = http_client.request(request)
@@ -19,6 +19,13 @@ module HealthCheck
         when Net::HTTPSuccess # 2xx
           response_page = Nokogiri::HTML.parse(response.body)
           extract_results(response_page)
+        when Net::HTTPBadGateway
+          if retries > 0
+            puts "HTTP 502 response: retrying..."
+            search(term, retries - 1)
+          else
+            raise "Too many failures: #{response}"
+          end
         else
           raise "Unexpected response #{response}"
       end
