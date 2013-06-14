@@ -2,9 +2,23 @@ require "uri"
 require "net/http"
 require "nokogiri"
 require "cgi"
+require "logging"
 
 module HealthCheck
   class HtmlSearchClient
+
+    INDEX_TAB_IDS = {
+      "mainstream" => "services-information-results",
+      "detailed" => "services-information-results",
+      "government" => "department-results"
+    }
+
+    TOP_RESULTS_ID = "top-results"
+
+    def logger
+      Logging.logger[self]
+    end
+
     def initialize(options={})
       @base_url       = options[:base_url] || URI.parse("https://www.gov.uk/search")
       @authentication = options[:authentication] || nil
@@ -21,7 +35,7 @@ module HealthCheck
           extract_results(response_page)
         when Net::HTTPBadGateway
           if retries > 0
-            puts "HTTP 502 response: retrying..."
+            logger.info "HTTP 502 response: retrying..."
             search(term, retries - 1)
           else
             raise "Too many failures: #{response}"
@@ -45,7 +59,17 @@ module HealthCheck
       end
 
       def extract_results(response_page)
-        response_page.css("##{@index}-results > ul > li").map { |result|
+        top_results_selector = "##{TOP_RESULTS_ID} .results-list > li"
+        tab_selector = "##{INDEX_TAB_IDS[@index]} .results-list > li"
+
+        # Count top results as being effectively present in all tabs
+        all_results = [top_results_selector, tab_selector].map { |selector|
+          results = response_page.css(selector)
+          logger.debug "Found #{results.count} results for '#{selector}'"
+          results
+        }.flatten
+
+        all_results.map { |result|
           result.css("a").first.get_attribute("href")
         }
       end
