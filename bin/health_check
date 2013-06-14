@@ -49,16 +49,16 @@ class HealthCheckCLI
   def call(opts, args)
     @opts = opts
     @args = args
-    if args.size == 0
+    if opts.download?
+      FileUtils.mkdir_p(DATA_DIR)
+      HealthCheck::Downloader.new(data_dir: DATA_DIR).download(*INDICES)
+    elsif args.size == 0
       usage(opts)
     elsif illegal_indices(args).any?
       usage(opts, "ERROR: Unrecognised index(es) #{illegal_indices(args).join(", ")}")
     elsif opts.help?
       puts "help"
       usage(opts)
-    elsif opts.download?
-      FileUtils.mkdir_p(DATA_DIR)
-      HealthCheck::Downloader.new(data_dir: DATA_DIR).download(*INDICES)
     else
       run_tests(args)
     end
