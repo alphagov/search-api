@@ -7,7 +7,13 @@ synonyms: &synonyms [
   "apply, claim",
   "appointeeship, appointee",
   "attorney, deputy",
-  "bank holiday, bank holidays, public holiday, public holidays",
+
+  # Temporarily disabling this to solve the problem where Romanian bank holidays
+  # (in Inside Gov) are being weighted more favourably than UK bank holidays.
+  # TODO: revisit this after we fix the relative weightings on indices
+
+  # "bank holiday, bank holidays, public holiday, public holidays",
+
   "bankrupt, bankruptcy",
   "businesslink, business link",
   "car tax, vehicle tax, tax disc, vehicle licence",
