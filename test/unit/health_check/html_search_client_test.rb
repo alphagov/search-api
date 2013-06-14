@@ -21,7 +21,7 @@ module HealthCheck
         <section id="content" role="main" class="group search ancillary">
           <div id="search-results-tabs">
             <div class="search-container group js-tab-content tab-content">
-              <div id="mainstream-results" class="js-tab-pane tab-pane ">
+              <div id="services-information-results" class="js-tab-pane tab-pane ">
                 <ul class="results-list internal-links">
                   <li class="section-driving type-guide">
                     <p class="search-result-title"><a href="/a">A result</a></p>
@@ -33,7 +33,7 @@ module HealthCheck
                   </li>
                 </ul>
               </div>
-              <div id="detailed-results" class="js-tab-pane tab-pane ">
+              <div id="department-results" class="js-tab-pane tab-pane ">
                 <ul class="results-list internal-links">
                   <li class="section-driving type-guide">
                     <p class="search-result-title"><a href="/b">A B result</a></p>
@@ -74,7 +74,7 @@ module HealthCheck
       stub_html("chalk")
       expected = ["/b"]
       base_url = URI.parse("http://www.dev.gov.uk/search")
-      client = HtmlSearchClient.new(base_url: base_url, index: "detailed")
+      client = HtmlSearchClient.new(base_url: base_url, index: "government")
       assert_equal expected, client.search("chalk")
     end
 
