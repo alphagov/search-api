@@ -43,6 +43,7 @@ class HealthCheckCLI
       on 'a', 'auth=', "Basic auth password (for html/json clients)"
       on 'H', 'html=', "Connect to a frontend at the the given url (eg. #{DEFAULT_HTML_URL})", default: DEFAULT_HTML_URL
       on 'j', 'json=', "Connect to a content api at the the given url (eg. #{DEFAULT_JSON_URL})", default: DEFAULT_JSON_URL
+      on 'v', 'verbose', "Show verbose logging output"
       run(health_checker)
     end
   end
@@ -50,6 +51,12 @@ class HealthCheckCLI
   def call(opts, args)
     @opts = opts
     @args = args
+
+    if opts.verbose?
+      Logging.logger.root.level = :debug
+      Logging.logger.root.info "Debug logging enabled"
+    end
+
     if opts.download?
       FileUtils.mkdir_p(DATA_DIR)
       HealthCheck::Downloader.new(data_dir: DATA_DIR).download(*INDICES)
