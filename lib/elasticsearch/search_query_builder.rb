@@ -170,12 +170,12 @@ module Elasticsearch
     def boosted_formats
       {
         # Mainstream formats
-        "smart-answer"      => 2.2,
-        "transaction"       => 2.3,
+        "smart-answer"      => 1.5,
+        "transaction"       => 1.5,
         # Inside Gov formats
         "topical_event"     => 1.5,
         "minister"          => 1.7,
-        "organisation"      => 2.0,
+        "organisation"      => 2.5,
         "topic"             => 1.5,
         "document_series"   => 1.3,
         "operational_field" => 1.5,
