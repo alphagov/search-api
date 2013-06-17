@@ -37,23 +37,19 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
     assert_equal "2<2 3<3 7<50%", must_conditions[0][:match][:_all][:minimum_should_match]
   end
 
-  # TODO: re-write this test for our new way of doing shingles
-  def _test_shingle_boosts
+  def test_shingle_boosts
     builder = Elasticsearch::SearchQueryBuilder.new("quick brown fox")
-    shingle_boosts = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:should]
-    expected = [
-      [
-        { text: { "title"             => { query: "quick brown", type: "phrase", boost: 2, analyzer: "query_default" }}},
-        { text: { "description"       => { query: "quick brown", type: "phrase", boost: 2, analyzer: "query_default" }}},
-        { text: { "indexable_content" => { query: "quick brown", type: "phrase", boost: 2, analyzer: "query_default" }}}
-      ],
-      [
-        { text: { "title"             => { query: "brown fox",   type: "phrase", boost: 2, analyzer: "query_default" }}},
-        { text: { "description"       => { query: "brown fox",   type: "phrase", boost: 2, analyzer: "query_default" }}},
-        { text: { "indexable_content" => { query: "brown fox",   type: "phrase", boost: 2, analyzer: "query_default" }}}
-      ]
-    ]
-    assert_equal expected, shingle_boosts
+    multi_match_condition = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:should][4]
+
+    expected = {
+      multi_match: {
+        query: "quick brown fox",
+        operator: "or",
+        fields: ["title", "description", "indexable_content"],
+        analyzer: "shingled_query_analyzer"
+      }
+    }
+    assert_equal expected, multi_match_condition
   end
 
   def test_format_boosts
