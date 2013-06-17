@@ -21,6 +21,9 @@ module HealthCheck
 
     def initialize(options={})
       @base_url       = options[:base_url] || URI.parse("https://www.gov.uk/search")
+      unless @base_url.path.include? "/search"
+        logger.warn "Base URL #{@base_url} does not look like a search page"
+      end
       @authentication = options[:authentication] || nil
       @index          = options[:index] || "mainstream"
     end
