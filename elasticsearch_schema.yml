@@ -553,15 +553,15 @@ index:
         default:  # Indexing analyzer: doesn't use custom synonyms
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stop, stemmer_english]
+          filter: [standard, lowercase, stop, stemmer_override, stemmer_english]
         query_default:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stop, synonym, stemmer_english]
+          filter: [standard, lowercase, stop, synonym, stemmer_override, stemmer_english]
         shingled_query_analyzer:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stop, stemmer_english, filter_shingle]
+          filter: [standard, lowercase, stop, stemmer_override, stemmer_english, filter_shingle]
       filter:
         synonym:
           type: synonym
