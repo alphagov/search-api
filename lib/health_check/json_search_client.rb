@@ -25,7 +25,7 @@ module HealthCheck
     end
 
     def to_s
-      "JSON endpoint #{@base_url} [index=#{@index} auth=#{@auth.to_s.strip.size>0 ? "yes" : "no"}]"
+      "JSON endpoint #{@base_url} [index=#{@index} auth=#{@authentication ? "yes" : "no"}]"
     end
 
     private

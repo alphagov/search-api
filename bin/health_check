@@ -17,10 +17,12 @@ require 'health_check/local_search_client'
 require 'health_check/html_search_client'
 require 'health_check/json_search_client'
 require 'health_check/downloader'
+require 'health_check/basic_auth_credentials'
 
 class HealthCheckCLI
 
   class Usage < StandardError; end
+
 
   attr_reader :opts, :args
 
@@ -40,7 +42,7 @@ class HealthCheckCLI
       on 'h', 'help', "Show help"
       on 'l', 'local', "Connect to local index directly (default)"
       on 'limit=', "Limit to the first n tests", as: Integer
-      on 'a', 'auth=', "Basic auth password (for html/json clients)"
+      on 'a', 'auth=', "Basic auth credentials (of the form 'user:pass'", as: HealthCheck::BasicAuthCredentials
       on 'H', 'html=', "Connect to a frontend at the the given url (eg. #{DEFAULT_HTML_URL})", default: DEFAULT_HTML_URL
       on 'j', 'json=', "Connect to a content api at the the given url (eg. #{DEFAULT_JSON_URL})", default: DEFAULT_JSON_URL
       on 'v', 'verbose', "Show verbose logging output"
