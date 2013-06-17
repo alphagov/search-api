@@ -558,6 +558,10 @@ index:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, stop, synonym, stemmer_english]
+        shingled_query_analyzer:
+          type: custom
+          tokenizer: standard
+          filter: [standard, lowercase, stop, stemmer_english, filter_shingle]
       filter:
         synonym:
           type: synonym
@@ -568,6 +572,10 @@ index:
         stemmer_english:
           type: stemmer
           name: english
+        filter_shingle:
+          type: shingle
+          max_shingle_size: 2
+          min_shingle_size: 2
 mappings:
   default:
     edition:
