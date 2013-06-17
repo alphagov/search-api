@@ -17,10 +17,12 @@ require 'health_check/local_search_client'
 require 'health_check/html_search_client'
 require 'health_check/json_search_client'
 require 'health_check/downloader'
+require 'health_check/basic_auth_credentials'
 
 class HealthCheckCLI
 
   class Usage < StandardError; end
+
 
   attr_reader :opts, :args
 
@@ -39,9 +41,11 @@ class HealthCheckCLI
       on 'd', 'download', "Download search healthcheck data"
       on 'h', 'help', "Show help"
       on 'l', 'local', "Connect to local index directly (default)"
-      on 'a', 'auth=', "Basic auth password (for html/json clients)"
+      on 'limit=', "Limit to the first n tests", as: Integer
+      on 'a', 'auth=', "Basic auth credentials (of the form 'user:pass'", as: HealthCheck::BasicAuthCredentials
       on 'H', 'html=', "Connect to a frontend at the the given url (eg. #{DEFAULT_HTML_URL})", default: DEFAULT_HTML_URL
       on 'j', 'json=', "Connect to a content api at the the given url (eg. #{DEFAULT_JSON_URL})", default: DEFAULT_JSON_URL
+      on 'v', 'verbose', "Show verbose logging output"
       run(health_checker)
     end
   end
@@ -49,6 +53,12 @@ class HealthCheckCLI
   def call(opts, args)
     @opts = opts
     @args = args
+
+    if opts.verbose?
+      Logging.logger.root.level = :debug
+      Logging.logger.root.info "Debug logging enabled"
+    end
+
     if opts.download?
       FileUtils.mkdir_p(DATA_DIR)
       HealthCheck::Downloader.new(data_dir: DATA_DIR).download(*INDICES)
@@ -78,9 +88,16 @@ private
   end
 
   def run_one_test(index_name)
+    check_file_path = DATA_DIR + "#{index_name}-weighted-search-terms.csv"
+    check_file = open(check_file_path)
+    if opts["limit"]
+      # Take the first n + 1 lines (including header row) from the check file
+      check_file = StringIO.new(check_file.take(opts["limit"] + 1).join)
+    end
+
     HealthCheck::Checker.new(
       search_client: search_client_for(index_name),
-      test_data: DATA_DIR + "#{index_name}-weighted-search-terms.csv"
+      test_data: check_file
     ).run!
   end
 
