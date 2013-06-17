@@ -553,11 +553,11 @@ index:
         default:  # Indexing analyzer: doesn't use custom synonyms
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stop, stemmer_override, snowball]
+          filter: [standard, lowercase, stop, stemmer_english]
         query_default:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, synonym, stop, stemmer_override, snowball]
+          filter: [standard, lowercase, stop, synonym, stemmer_english]
       filter:
         synonym:
           type: synonym
@@ -565,6 +565,9 @@ index:
         stemmer_override:
           type: stemmer_override
           rules: *stems
+        stemmer_english:
+          type: stemmer
+          name: english
 mappings:
   default:
     edition:
