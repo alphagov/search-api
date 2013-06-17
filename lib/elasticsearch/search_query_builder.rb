@@ -69,7 +69,46 @@ module Elasticsearch
       {
         bool: {
           must: must_conditions,
-          should: shingle_boosts
+          should: should_conditions
+        }
+      }
+    end
+
+    def should_conditions
+      exact_field_boosts + [ exact_match_boost, shingle_token_filter_boost ]
+    end
+
+    def exact_field_boosts
+      match_fields.map {|field_name, _|
+        {
+          match_phrase: {
+            field_name => {
+              query: escape(@query),
+              analyzer: QUERY_ANALYZER,
+            }
+          }
+        }
+      }
+    end
+
+    def exact_match_boost
+      {
+        multi_match: {
+          query: escape(@query),
+          operator: "and",
+          fields: match_fields.keys,
+          analyzer: QUERY_ANALYZER
+        }
+      }
+    end
+
+    def shingle_token_filter_boost
+      {
+        multi_match: {
+          query: escape(@query),
+          operator: "or",
+          fields: match_fields.keys,
+          analyzer: "shingled_query_analyzer"
         }
       }
     end
@@ -86,13 +125,12 @@ module Elasticsearch
 
     def query_string_query
       {
-        query_string: {
-          fields: match_fields.map { |name, boost|
-            boost == 1 ? name : "#{name}^#{boost}"
-          },
-          query: escape(@query),
-          analyzer: QUERY_ANALYZER
-        }.merge(minimum_should_match_clause)
+        match: {
+          _all: {
+            query: escape(@query),
+            analyzer: QUERY_ANALYZER,
+          }.merge(minimum_should_match_clause)
+        }
       }
     end
 
@@ -127,28 +165,6 @@ module Elasticsearch
         "description" => 2,
         "indexable_content" => 1,
       }
-    end
-
-    # "driving theory test" => ["driving theory", "theory test"]
-    def shingles
-      @query.split.each_cons(2).map { |s| s.join(' ') }
-    end
-
-    def shingle_boosts
-      shingles.map do |shingle|
-        match_fields.map do |field_name, _|
-          {
-            text: {
-              field_name => {
-                query: shingle,
-                type: "phrase",
-                boost: 2,
-                analyzer: QUERY_ANALYZER
-              },
-            }
-          }
-        end
-      end
     end
 
     def boosted_formats
