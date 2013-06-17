@@ -36,9 +36,9 @@ module HealthCheck
         when Net::HTTPSuccess # 2xx
           response_page = Nokogiri::HTML.parse(response.body)
           extract_results(response_page)
-        when Net::HTTPBadGateway
+        when Net::HTTPServerError  # all 5xx errors
           if retries > 0
-            logger.info "HTTP 502 response: retrying..."
+            logger.info "HTTP #{response.code} response: retrying..."
             search(term, retries - 1)
           else
             raise "Too many failures: #{response}"
