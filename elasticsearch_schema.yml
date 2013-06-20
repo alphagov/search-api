@@ -557,7 +557,7 @@ index:
         query_default:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stop, synonym, stemmer_override, stemmer_english]
+          filter: [standard, lowercase, synonym, stop, stemmer_override, stemmer_english]
         shingled_query_analyzer:
           type: custom
           tokenizer: standard
