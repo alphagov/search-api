@@ -13,7 +13,6 @@ require "result_set_presenter"
 require "organisation_set_presenter"
 require "document_series_registry"
 require "organisation_registry"
-require "suggester"
 require "topic_registry"
 require "world_location_registry"
 require "elasticsearch/index"
@@ -101,9 +100,6 @@ class Rummager < Sinatra::Application
   #     "total": 1,
   #     "results": [
   #       ...
-  #     ],
-  #     "spelling_suggestions": [
-  #       ...
   #     ]
   #   }
   get "/?:index?/search.?:format?" do
@@ -125,15 +121,13 @@ class Rummager < Sinatra::Application
       organisation_registry: organisation_registry,
       topic_registry: topic_registry,
       document_series_registry: document_series_registry,
-      world_location_registry: world_location_registry,
-      spelling_suggestions: Suggester.new.suggestions(params["q"])
+      world_location_registry: world_location_registry
     }
     presenter = ResultSetPresenter.new(result_set, presenter_context)
     if params["response_style"] == "hash"
-      presenter.present
+      presenter.present_with_total
     else
-      results_array = MultiJson.decode(presenter.present)["results"]
-      MultiJson.encode(results_array)
+      presenter.present
     end
   end
 
@@ -141,14 +135,14 @@ class Rummager < Sinatra::Application
     json_only
 
     result_set = current_index.advanced_search(request.params)
-    ResultSetPresenter.new(result_set).present
+    ResultSetPresenter.new(result_set).present_with_total
   end
 
   get "/organisations.?:format?" do
     json_only
 
     organisations = organisation_registry.all
-    OrganisationSetPresenter.new(organisations).present
+    OrganisationSetPresenter.new(organisations).present_with_total
   end
 
   post "/?:index?/documents" do

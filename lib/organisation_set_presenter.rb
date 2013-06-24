@@ -4,7 +4,7 @@ class OrganisationSetPresenter
     @organisations = organisations
   end
 
-  def present
+  def present_with_total
     MultiJson.encode({
       total: @organisations.size,
       results: @organisations.map { |organisation| build_result(organisation) }

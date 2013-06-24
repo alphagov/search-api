@@ -48,23 +48,17 @@ class SearchTest < IntegrationTest
   end
 
   def test_returns_json_for_search_results
-    stub_index.expects(:search).returns(stub(results: [sample_document], total: 1))
+    stub_index.expects(:search).returns(stub(results: [sample_document]))
     get "/search", {q: "bob"}, "HTTP_ACCEPT" => "application/json"
     assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)
     assert_match(/application\/json/, last_response.headers["Content-Type"])
   end
 
   def test_returns_json_when_requested_with_url_suffix
-    stub_index.expects(:search).returns(stub(results: [sample_document], total: 1))
+    stub_index.expects(:search).returns(stub(results: [sample_document]))
     get "/search.json", {q: "bob"}
     assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)
     assert_match(/application\/json/, last_response.headers["Content-Type"])
-  end
-
-  def test_returns_spelling_suggestions_when_hash_requested
-    stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "speling", response_style: "hash"}
-    assert_equal ["spelling"], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
   def test_handles_results_with_document_series
@@ -75,7 +69,7 @@ class SearchTest < IntegrationTest
       mappings
     )
 
-    stub_index.expects(:search).returns(stub(results: [document], total: 1))
+    stub_index.expects(:search).returns(stub(results: [document]))
     DocumentSeriesRegistry.any_instance.expects(:[])
       .with("bus-timetables")
       .returns(bus_timetables_document_series)
@@ -93,7 +87,7 @@ class SearchTest < IntegrationTest
       mappings
     )
 
-    stub_index.expects(:search).returns(stub(results: [document], total: 1))
+    stub_index.expects(:search).returns(stub(results: [document]))
     OrganisationRegistry.any_instance.expects(:[])
       .with("ministry-of-defence")
       .returns(mod_organisation)
@@ -111,7 +105,7 @@ class SearchTest < IntegrationTest
       mappings
     )
 
-    stub_index.expects(:search).returns(stub(results: [document], total: 1))
+    stub_index.expects(:search).returns(stub(results: [document]))
     TopicRegistry.any_instance.expects(:[])
       .with("housing")
       .returns(housing_topic)
@@ -129,7 +123,7 @@ class SearchTest < IntegrationTest
       mappings
     )
 
-    stub_index.expects(:search).returns(stub(results: [document], total: 1))
+    stub_index.expects(:search).returns(stub(results: [document]))
     WorldLocationRegistry.any_instance.expects(:[])
       .with("angola")
       .returns(angola_world_location)

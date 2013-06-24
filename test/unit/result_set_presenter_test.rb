@@ -21,7 +21,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
   end
 
   def single_result_with_format(format)
-    stub(results: [Document.new(FIELDS, :format => format)], total: 1)
+    stub(results: [Document.new(FIELDS, :format => format)])
   end
 
   def single_result_with_document_series(*document_series_slugs)
@@ -33,7 +33,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
         "document_series" => document_series_slugs
       }
 
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(FIELDS, document_hash)])
   end
 
   def single_result_with_organisations(*organisation_slugs)
@@ -45,7 +45,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
         "organisations" => organisation_slugs
       }
 
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(FIELDS, document_hash)])
   end
 
   def single_result_with_topics(*topic_slugs)
@@ -56,7 +56,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       "format" => "edition",
       "topics" => topic_slugs
     }
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(FIELDS, document_hash)])
   end
 
   def single_result_with_world_locations(*world_location_slugs)
@@ -67,7 +67,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       "format" => "edition",
       "world_locations" => world_location_slugs
     }
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(FIELDS, document_hash)])
   end
 
   def output_for(presenter)
@@ -77,64 +77,64 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
   def test_generates_json_from_documents
     presenter = ResultSetPresenter.new(result_set)
     output = output_for(presenter)
-    assert_equal 1, output["results"].length
+    assert_equal 1, output.length
     # Check all the fields from the document are present
-    assert_equal [], %w(link title description format) - output["results"][0].keys
+    assert_equal [], %w(link title description format) - output[0].keys
   end
 
   def test_presented_json_includes_presentation_format
     presenter = ResultSetPresenter.new(result_set)
     output = output_for(presenter)
-    assert_equal "edition", output["results"][0]["presentation_format"]
+    assert_equal "edition", output[0]["presentation_format"]
   end
 
   def test_presented_json_includes_humanized_format
     presenter = ResultSetPresenter.new(result_set)
     output = output_for(presenter)
-    assert_equal "Editions", output["results"][0]["humanized_format"]
+    assert_equal "Editions", output[0]["humanized_format"]
   end
 
   def test_should_use_answer_as_presentation_format_for_planner
     result_set = single_result_with_format "planner"
     output = output_for(ResultSetPresenter.new(result_set))
-    assert_equal "answer", output["results"][0]["presentation_format"]
+    assert_equal "answer", output[0]["presentation_format"]
   end
 
   def test_should_use_answer_as_presentation_format_for_smart_answer
     result_set = single_result_with_format "smart_answer"
     output = output_for(ResultSetPresenter.new(result_set))
-    assert_equal "answer", output["results"][0]["presentation_format"]
+    assert_equal "answer", output[0]["presentation_format"]
   end
 
   def test_should_use_answer_as_presentation_format_for_licence_finder
     result_set = single_result_with_format "licence_finder"
     output = output_for(ResultSetPresenter.new(result_set))
-    assert_equal "answer", output["results"][0]["presentation_format"]
+    assert_equal "answer", output[0]["presentation_format"]
   end
 
   def test_should_use_guide_as_presentation_format_for_guide
     result_set = single_result_with_format "guide"
     output = output_for(ResultSetPresenter.new(result_set))
-    assert_equal "guide", output["results"][0]["presentation_format"]
+    assert_equal "guide", output[0]["presentation_format"]
   end
 
   def test_should_use_humanized_format
     result_set = single_result_with_format "place"
     output = output_for(ResultSetPresenter.new(result_set))
-    assert_equal "Services", output["results"][0]["humanized_format"]
+    assert_equal "Services", output[0]["humanized_format"]
   end
 
   def test_uses_presentation_format_to_find_alternative_format_name
     presenter = ResultSetPresenter.new(single_result_with_format("foo"))
     presenter.stubs(:presentation_format).returns("place")
 
-    assert_equal "Services", output_for(presenter)["results"][0]["humanized_format"]
+    assert_equal "Services", output_for(presenter)[0]["humanized_format"]
   end
 
   def test_generates_humanized_format_if_not_present
     result_set = single_result_with_format "ocean_map"
     output = output_for(ResultSetPresenter.new(result_set))
-    assert_equal "Ocean maps", output["results"][0]["humanized_format"]
+    assert_equal "Ocean maps", output[0]["humanized_format"]
   end
 
   def test_expands_document_series
@@ -154,12 +154,12 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     )
 
     output = output_for(presenter)
-    assert_equal 1, output["results"][0]["document_series"].size
-    assert_instance_of Hash, output["results"][0]["document_series"][0]
-    assert_equal "Rail statistics", output["results"][0]["document_series"][0]["title"]
+    assert_equal 1, output[0]["document_series"].size
+    assert_instance_of Hash, output[0]["document_series"][0]
+    assert_equal "Rail statistics", output[0]["document_series"][0]["title"]
     assert_equal "/government/organisations/department-for-transport/series/rail-statistics",
-      output["results"][0]["document_series"][0]["link"]
-    assert_equal "rail-statistics", output["results"][0]["document_series"][0]["slug"]
+      output[0]["document_series"][0]["link"]
+    assert_equal "rail-statistics", output[0]["document_series"][0]["slug"]
   end
 
   def test_expands_organisations
@@ -179,11 +179,11 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     )
 
     output = output_for(presenter)
-    assert_equal 1, output["results"][0]["organisations"].size
-    assert_instance_of Hash, output["results"][0]["organisations"][0]
-    assert_equal "Ministry of Defence (MoD)", output["results"][0]["organisations"][0]["title"]
-    assert_equal "/government/organisations/ministry-of-defence", output["results"][0]["organisations"][0]["link"]
-    assert_equal "ministry-of-defence", output["results"][0]["organisations"][0]["slug"]
+    assert_equal 1, output[0]["organisations"].size
+    assert_instance_of Hash, output[0]["organisations"][0]
+    assert_equal "Ministry of Defence (MoD)", output[0]["organisations"][0]["title"]
+    assert_equal "/government/organisations/ministry-of-defence", output[0]["organisations"][0]["link"]
+    assert_equal "ministry-of-defence", output[0]["organisations"][0]["slug"]
   end
 
   def test_expands_topics
@@ -203,11 +203,11 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     )
 
     output = output_for(presenter)
-    assert_equal 1, output["results"][0]["topics"].size
-    assert_instance_of Hash, output["results"][0]["topics"][0]
-    assert_equal "Housing", output["results"][0]["topics"][0]["title"]
-    assert_equal "/government/topics/housing", output["results"][0]["topics"][0]["link"]
-    assert_equal "housing", output["results"][0]["topics"][0]["slug"]
+    assert_equal 1, output[0]["topics"].size
+    assert_instance_of Hash, output[0]["topics"][0]
+    assert_equal "Housing", output[0]["topics"][0]["title"]
+    assert_equal "/government/topics/housing", output[0]["topics"][0]["link"]
+    assert_equal "housing", output[0]["topics"][0]["slug"]
   end
 
   def test_expands_world_locations
@@ -227,11 +227,11 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     )
 
     output = output_for(presenter)
-    assert_equal 1, output["results"][0]["world_locations"].size
-    assert_instance_of Hash, output["results"][0]["world_locations"][0]
-    assert_equal "Angola", output["results"][0]["world_locations"][0]["title"]
-    assert_equal "/government/world/angola", output["results"][0]["world_locations"][0]["link"]
-    assert_equal "angola", output["results"][0]["world_locations"][0]["slug"]
+    assert_equal 1, output[0]["world_locations"].size
+    assert_instance_of Hash, output[0]["world_locations"][0]
+    assert_equal "Angola", output[0]["world_locations"][0]["title"]
+    assert_equal "/government/world/angola", output[0]["world_locations"][0]["link"]
+    assert_equal "angola", output[0]["world_locations"][0]["slug"]
   end
 
   def test_unknown_organisations_just_have_slug
@@ -245,11 +245,11 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     )
 
     output = output_for(presenter)
-    assert_equal 1, output["results"][0]["organisations"].size
-    assert_instance_of Hash, output["results"][0]["organisations"][0]
-    refute_includes output["results"][0]["organisations"][0], "title"
-    refute_includes output["results"][0]["organisations"][0], "link"
-    assert_equal "ministry-of-silly-walks", output["results"][0]["organisations"][0]["slug"]
+    assert_equal 1, output[0]["organisations"].size
+    assert_instance_of Hash, output[0]["organisations"][0]
+    refute_includes output[0]["organisations"][0], "title"
+    refute_includes output[0]["organisations"][0], "link"
+    assert_equal "ministry-of-silly-walks", output[0]["organisations"][0]["slug"]
   end
 
   def test_organisations_not_modified_if_no_registry_available
@@ -259,30 +259,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     )
 
     output = output_for(presenter)
-    assert_equal 1, output["results"][0]["organisations"].size
-    assert_equal "ministry-of-silly-walks", output["results"][0]["organisations"][0]
-  end
-
-  def test_includes_spelling_suggestions
-    presenter = ResultSetPresenter.new(
-      result_set,
-      spelling_suggestions: ["spelling can be improved"]
-    )
-
-    output = output_for(presenter)
-    expected = [
-      "spelling can be improved"
-    ]
-    assert_equal expected, output["spelling_suggestions"]
-  end
-
-  def test_excludes_spelling_suggestions_when_not_supplied
-    presenter = ResultSetPresenter.new(
-      result_set,
-      spelling_suggestions: nil # nil, not empty array
-    )
-
-    output = output_for(presenter)
-    assert_equal ["total", "results"], output.keys
+    assert_equal 1, output[0]["organisations"].size
+    assert_equal "ministry-of-silly-walks", output[0]["organisations"][0]
   end
 end
