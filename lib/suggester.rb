@@ -1,6 +1,13 @@
 require 'ffi/aspell'
 
 class Suggester
+  # "options" is a hash with symbol keys:
+  #   :ignore - a list of words that shouldn't generate spelling suggestions.
+  #             Any object that responds to ``include?(string)`` will do, eg Array.
+  def initialize(options={})
+    @ignore_list = options[:ignore] || []
+  end
+
   # Returns an array of suggested corrections for a query_string.
   #
   # Currently only returns a single suggestion, where each word:
@@ -30,7 +37,7 @@ class Suggester
 
 private
   def suggestion_for_a_word(word)
-    speller.suggestions(word).first
+    speller.suggestions(word).first unless @ignore_list.include?(word)
   end
 
   def speller

@@ -53,4 +53,13 @@ class SuggesterTest < MiniTest::Unit::TestCase
     assert_equal ["in spelling"], suggester.suggestions("in speling")
     assert_equal ["MoD spelling"], suggester.suggestions("MoD speling")
   end
+
+  def test_should_not_make_suggestions_for_words_in_ignore_list
+    mock_ignore = mock("ignore") do
+      expects(:include?).with("DFT").returns(true)
+      expects(:include?).with("bagder").returns(false)
+    end
+    suggester = Suggester.new(ignore: mock_ignore)
+    assert_equal ["DFT badger"], suggester.suggestions("DFT bagder")
+  end
 end
