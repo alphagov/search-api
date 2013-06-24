@@ -23,6 +23,21 @@ class SuggesterTest < MiniTest::Unit::TestCase
     assert_equal [], suggester.suggestions("jobs are nice")
   end
 
+  def test_does_not_suggest_removing_multiple_spaces
+    suggester = Suggester.new
+    assert_equal [], suggester.suggestions("jobs  are nice")
+  end
+
+  def test_does_not_suggest_removing_trailing_spaces
+    suggester = Suggester.new
+    assert_equal [], suggester.suggestions("jobs  ")
+  end
+
+  def test_does_not_suggest_removing_leading_spaces
+    suggester = Suggester.new
+    assert_equal [], suggester.suggestions("  jobs")
+  end
+
   def test_should_not_remove_a_word_with_no_suggestions
     # if ffi-aspell has no suggestions, it returns an empty array
     suggester = Suggester.new

@@ -20,7 +20,7 @@ class Suggester
       end
     end.join(" ")
 
-    if suggested_string.downcase == query_string.downcase
+    if suggested_string.downcase == query_string.split("\s").join(" ").downcase
       # don't suggest the input, even if the case has changed
       []
     else
