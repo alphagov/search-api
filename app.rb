@@ -66,6 +66,22 @@ class Rummager < Sinatra::Application
     end
   end
 
+  def ignores_from_file
+    @@_ignores_from_file ||= begin
+      path = File.expand_path("config/suggest/ignore.txt", File.dirname(__FILE__))
+      lines = File.open(path).map(&:chomp)
+      lines.reject { |line| line.start_with?('#') || line.empty? }
+    end
+  end
+
+  def suggester
+    ignore = ignores_from_file
+    if organisation_registry
+      ignore = ignore + organisation_registry.all.map(&:acronym).reject(&:nil?)
+    end
+    Suggester.new(ignore: ignore)
+  end
+
   def text_error(content)
     halt 403, {"Content-Type" => "text/plain"}, content
   end
@@ -126,7 +142,7 @@ class Rummager < Sinatra::Application
       topic_registry: topic_registry,
       document_series_registry: document_series_registry,
       world_location_registry: world_location_registry,
-      spelling_suggestions: Suggester.new.suggestions(params["q"])
+      spelling_suggestions: suggester.suggestions(params["q"])
     }
     presenter = ResultSetPresenter.new(result_set, presenter_context)
     if params["response_style"] == "hash"
