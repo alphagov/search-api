@@ -77,7 +77,7 @@ class Rummager < Sinatra::Application
   def suggester
     ignore = ignores_from_file
     if organisation_registry
-      ignore = ignore + organisation_registry.all.map(&:acronym)
+      ignore = ignore + organisation_registry.all.map(&:acronym).reject(&:nil?)
     end
     Suggester.new(ignore: ignore)
   end

@@ -98,6 +98,22 @@ class SearchTest < IntegrationTest
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
+  def test_handles_organisations_without_acronyms_for_suggestions
+    organisation_without_acronym = Document.new(
+      %w(link title acronym),
+      {
+        link: "/government/organisations/acronymless-department",
+        title: "Acronymless Department"
+      }
+    )
+
+    stub_index.expects(:search).returns(stub(results: [], total: 0))
+    OrganisationRegistry.any_instance.expects(:all)
+      .returns([organisation_without_acronym])
+    get "/search.json", {q: "pies", response_style: "hash"}
+    assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
+  end
+
   def test_does_not_suggest_corrections_for_words_in_ignore_file
     stub_index.expects(:search).returns(stub(results: [], total: 0))
     get "/search.json", {q: "sorn", response_style: "hash"} # sorn would get a suggestion
