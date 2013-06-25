@@ -66,6 +66,14 @@ class Rummager < Sinatra::Application
     end
   end
 
+  def suggester
+    ignore = []
+    if organisation_registry
+      ignore = ignore + organisation_registry.all.map(&:acronym)
+    end
+    Suggester.new(ignore: ignore)
+  end
+
   def text_error(content)
     halt 403, {"Content-Type" => "text/plain"}, content
   end
@@ -126,7 +134,7 @@ class Rummager < Sinatra::Application
       topic_registry: topic_registry,
       document_series_registry: document_series_registry,
       world_location_registry: world_location_registry,
-      spelling_suggestions: Suggester.new.suggestions(params["q"])
+      spelling_suggestions: suggester.suggestions(params["q"])
     }
     presenter = ResultSetPresenter.new(result_set, presenter_context)
     if params["response_style"] == "hash"

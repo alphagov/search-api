@@ -37,6 +37,17 @@ class SearchTest < IntegrationTest
     )
   end
 
+  def dft_organisation
+    Document.new(
+      %w(link title acronym),
+      {
+        link: "/government/organisations/department-for-transport",
+        title: "Department for Transport",
+        acronym: "DFT"
+      }
+    )
+  end
+
   def housing_topic
     Document.new(
       %w(link title),
@@ -45,6 +56,10 @@ class SearchTest < IntegrationTest
         title: "Housing"
       }
     )
+  end
+
+  def setup
+    OrganisationRegistry.any_instance.stubs(:all).returns([])
   end
 
   def test_returns_json_for_search_results
@@ -65,6 +80,14 @@ class SearchTest < IntegrationTest
     stub_index.expects(:search).returns(stub(results: [], total: 0))
     get "/search.json", {q: "speling", response_style: "hash"}
     assert_equal ["spelling"], MultiJson.decode(last_response.body)["spelling_suggestions"]
+  end
+
+  def test_does_not_suggest_corrections_for_organisation_acronyms
+    stub_index.expects(:search).returns(stub(results: [], total: 0))
+    OrganisationRegistry.any_instance.expects(:all)
+      .returns([dft_organisation])
+    get "/search.json", {q: "DFT", response_style: "hash"} # DFT would get a suggestion
+    assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
   def test_handles_results_with_document_series
