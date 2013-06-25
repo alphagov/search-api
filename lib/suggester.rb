@@ -36,6 +36,13 @@ private
   def speller
     # Creating a new speller reads files off disk, so we want to do that as
     # little as possible. Therefore, memoize it as a singleton.
-    @@speller ||= FFI::Aspell::Speller.new('en_GB')
+    #
+    # We need to specify an explicit encoding, as deployed environments will
+    # not necessarily have locale information with with to determine a default
+    # encoding; if this happens, the Aspell library will return an encoding
+    # value of "none", which causes any attempts to convert the encoding for
+    # spelling suggestions to fail. Since all requests get passed through the
+    # Speller, this breaks any requests through Rummager.
+    @@speller ||= FFI::Aspell::Speller.new('en_GB', encoding: 'utf-8')
   end
 end
