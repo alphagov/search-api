@@ -41,8 +41,8 @@ private
     # not necessarily have locale information with which to determine a default
     # encoding; if this happens, the Aspell library will return an encoding
     # value of "none", which causes any attempts to convert the encoding for
-    # spelling suggestions to fail. Since all requests get passed through the
-    # Speller, this breaks any requests through Rummager.
+    # spelling suggestions to fail. Since all search requests get passed
+    # through the Speller, this breaks any requests through Rummager.
     @@speller ||= FFI::Aspell::Speller.new('en_GB', encoding: 'utf-8')
   end
 end
