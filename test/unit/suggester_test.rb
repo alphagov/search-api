@@ -55,11 +55,7 @@ class SuggesterTest < MiniTest::Unit::TestCase
   end
 
   def test_should_not_make_suggestions_for_words_in_ignore_list
-    mock_ignore = mock("ignore") do
-      expects(:include?).with("DFT").returns(true)
-      expects(:include?).with("bagder").returns(false)
-    end
-    suggester = Suggester.new(ignore: mock_ignore)
+    suggester = Suggester.new(ignore: ["DFT"])
     assert_equal ["DFT badger"], suggester.suggestions("DFT bagder")
   end
 end

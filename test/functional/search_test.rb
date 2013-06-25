@@ -90,6 +90,14 @@ class SearchTest < IntegrationTest
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
+  def test_matches_organisation_acronyms_in_any_letter_case
+    stub_index.expects(:search).returns(stub(results: [], total: 0))
+    OrganisationRegistry.any_instance.expects(:all)
+      .returns([dft_organisation])
+    get "/search.json", {q: "dft", response_style: "hash"} # DFT would get a suggestion
+    assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
+  end
+
   def test_handles_results_with_document_series
     mappings = default_mappings
     mappings["edition"]["properties"]["document_series"] = {"type" => "string"}

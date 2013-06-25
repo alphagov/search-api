@@ -3,7 +3,6 @@ require 'ffi/aspell'
 class Suggester
   # "options" is a hash with symbol keys:
   #   :ignore - a list of words that shouldn't generate spelling suggestions.
-  #             Any object that responds to ``include?(string)`` will do, eg Array.
   def initialize(options={})
     @ignore_list = options[:ignore] || []
   end
@@ -29,7 +28,7 @@ class Suggester
 private
   # Return the best suggestion for the word, or nil if no suggestions
   def suggestion_for_a_word(word)
-    if @ignore_list.include?(word)
+    if in_ignore_list?(word)
       nil
     else
       suggested_word = speller.suggestions(word).first
@@ -43,6 +42,11 @@ private
         suggested_word
       end
     end
+  end
+
+  def in_ignore_list?(word)
+    # Check case-insensitively against the ignore list
+    @ignore_list.any? { |member| member.casecmp(word) == 0 }
   end
 
   def speller
