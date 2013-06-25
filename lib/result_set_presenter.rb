@@ -6,14 +6,14 @@ class ResultSetPresenter
   end
 
   def present
-    MultiJson.encode(results)
-  end
-
-  def present_with_total
-    MultiJson.encode(
+    presentable_hash = {
       total: @result_set.total,
       results: results
-    )
+    }
+    if spelling_suggestions
+      presentable_hash[:spelling_suggestions] = spelling_suggestions
+    end
+    MultiJson.encode(presentable_hash)
   end
 
   PRESENTATION_FORMAT_TRANSLATION = {
@@ -115,6 +115,10 @@ private
 
   def world_location_registry
     @context[:world_location_registry]
+  end
+
+  def spelling_suggestions
+    @context[:spelling_suggestions]
   end
 
   def document_series_by_slug(slug)
