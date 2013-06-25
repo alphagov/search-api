@@ -38,7 +38,7 @@ private
     # little as possible. Therefore, memoize it as a singleton.
     #
     # We need to specify an explicit encoding, as deployed environments will
-    # not necessarily have locale information with with to determine a default
+    # not necessarily have locale information with which to determine a default
     # encoding; if this happens, the Aspell library will return an encoding
     # value of "none", which causes any attempts to convert the encoding for
     # spelling suggestions to fail. Since all requests get passed through the
