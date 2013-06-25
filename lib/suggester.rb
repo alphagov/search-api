@@ -1,6 +1,12 @@
 require 'ffi/aspell'
 
 class Suggester
+  # "options" is a hash with symbol keys:
+  #   :ignore - a list of words that shouldn't generate spelling suggestions.
+  def initialize(options={})
+    @ignore_list = options[:ignore] || []
+  end
+
   # Returns an array of suggested corrections for a query_string.
   #
   # Currently only returns a single suggestion, where each word:
@@ -8,16 +14,7 @@ class Suggester
   #  * is replaced by it's most likely correction
   def suggestions(query_string)
     suggested_string = query_string.split("\s").map do |word|
-      suggested_word = suggestion_for_a_word(word)
-      if suggested_word.nil?
-        word
-      # If the word is the same (ignoring differences in letter cases),
-      # retain the user's letter cases.
-      elsif suggested_word.downcase == word.downcase
-        word
-      else
-        suggested_word
-      end
+      suggestion_for_a_word(word) || word
     end.join(" ")
 
     if suggested_string.downcase == query_string.split("\s").join(" ").downcase
@@ -29,8 +26,27 @@ class Suggester
   end
 
 private
+  # Return the best suggestion for the word, or nil if no suggestions
   def suggestion_for_a_word(word)
-    speller.suggestions(word).first
+    if in_ignore_list?(word)
+      nil
+    else
+      suggested_word = speller.suggestions(word).first
+      if suggested_word.nil?
+        nil
+      # If the word is the same (ignoring differences in letter cases),
+      # retain the user's letter cases.
+      elsif suggested_word.downcase == word.downcase
+        nil
+      else
+        suggested_word
+      end
+    end
+  end
+
+  def in_ignore_list?(word)
+    # Check case-insensitively against the ignore list
+    @ignore_list.any? { |member| member.casecmp(word) == 0 }
   end
 
   def speller
