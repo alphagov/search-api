@@ -18,6 +18,7 @@ require "topic_registry"
 require "world_location_registry"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
+require "matcher_set"
 
 require_relative "config"
 require_relative "helpers"
@@ -85,7 +86,8 @@ class Rummager < Sinatra::Application
     if organisation_registry
       ignore = ignore + organisation_registry.all.map(&:acronym).reject(&:nil?)
     end
-    Suggester.new(ignore: ignore, blacklist: blacklist_from_file)
+    Suggester.new(ignore: MatcherSet.new(ignore),
+                  blacklist: MatcherSet.new(blacklist_from_file))
   end
 
   def text_error(content)
