@@ -74,12 +74,20 @@ class Rummager < Sinatra::Application
     end
   end
 
+  def blacklist_from_file
+    @@_blacklist_from_file ||= begin
+      path = File.expand_path("config/suggest/blacklist.txt", File.dirname(__FILE__))
+      lines = File.open(path).map(&:chomp)
+      lines.reject { |line| line.start_with?('#') || line.empty? }
+    end
+  end
+
   def suggester
     ignore = ignores_from_file
     if organisation_registry
       ignore = ignore + organisation_registry.all.map(&:acronym).reject(&:nil?)
     end
-    Suggester.new(ignore: ignore)
+    Suggester.new(ignore: ignore, blacklist: blacklist_from_file)
   end
 
   def text_error(content)
