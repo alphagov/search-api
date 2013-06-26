@@ -22,6 +22,7 @@ group :test do
   gem "shoulda-context"
   gem "simplecov"
   gem "simplecov-rcov"
+  gem 'turn', require: false # Pretty printed test output
   gem "ci_reporter", "1.7.1"
   gem "minitest", "4.6.1"
   gem "rack-test"
