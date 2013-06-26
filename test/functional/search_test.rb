@@ -120,6 +120,12 @@ class SearchTest < IntegrationTest
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
+  def test_does_not_suggest_corrections_in_blacklist_file
+    stub_index.expects(:search).returns(stub(results: [], total: 0))
+    get "/search.json", {q: "penison", response_style: "hash"} # penison would get an inappropriate suggestion
+    assert_equal ["pension"], MultiJson.decode(last_response.body)["spelling_suggestions"]
+  end
+
   def test_handles_results_with_document_series
     mappings = default_mappings
     mappings["edition"]["properties"]["document_series"] = {"type" => "string"}
