@@ -73,4 +73,9 @@ class SuggesterTest < MiniTest::Unit::TestCase
     suggester = Suggester.new(blacklist: ["penis"])
     assert_equal ["pension"], suggester.suggestions("penison") # generates "penis-on"
   end
+
+  def test_blacklist_is_applied_to_whole_words_only
+    suggester = Suggester.new(blacklist: ["ass"])
+    assert_equal ["class"], suggester.suggestions("cluss") # top suggestion is "class"
+  end
 end
