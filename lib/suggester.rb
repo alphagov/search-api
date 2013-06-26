@@ -3,8 +3,10 @@ require 'ffi/aspell'
 class Suggester
   # "options" is a hash with symbol keys:
   #   :ignore - a list of words that shouldn't generate spelling suggestions.
+  #   :blacklist - a list of words that shouldn't be suggested.
   def initialize(options={})
     @ignore_list = options[:ignore] || []
+    @blacklist = options[:blacklist] || []
   end
 
   # Returns an array of suggested corrections for a query_string.
@@ -31,15 +33,18 @@ private
     if in_ignore_list?(word)
       nil
     else
-      suggested_word = speller.suggestions(word).first
-      if suggested_word.nil?
+      acceptable_suggestion = speller.suggestions(word).detect do |suggestion|
+        suggestion_words = suggestion.split(/[\s+|\-]/)
+        suggestion_words.none? { |suggested_word| in_blacklist?(suggested_word) }
+      end
+      if acceptable_suggestion.nil?
         nil
       # If the word is the same (ignoring differences in letter cases),
       # retain the user's letter cases.
-      elsif suggested_word.downcase == word.downcase
+      elsif acceptable_suggestion.downcase == word.downcase
         nil
       else
-        suggested_word
+        acceptable_suggestion
       end
     end
   end
@@ -47,6 +52,11 @@ private
   def in_ignore_list?(word)
     # Check case-insensitively against the ignore list
     @ignore_list.any? { |member| member.casecmp(word) == 0 }
+  end
+
+  def in_blacklist?(word)
+    # Check case-insensitively against the blacklist
+    @blacklist.any? { |member| member.casecmp(word) == 0 }
   end
 
   def speller

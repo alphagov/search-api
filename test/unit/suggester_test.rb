@@ -58,4 +58,24 @@ class SuggesterTest < MiniTest::Unit::TestCase
     suggester = Suggester.new(ignore: ["DFT"])
     assert_equal ["DFT badger"], suggester.suggestions("DFT bagder")
   end
+
+  def test_should_not_suggest_words_in_blacklist
+    suggester = Suggester.new(blacklist: ["fuck", "fucks"])
+    assert_equal ["funk"], suggester.suggestions("fcuk") # funk is the third suggestion
+  end
+
+  def test_should_not_suggest_words_in_blacklist_even_when_split
+    suggester = Suggester.new(blacklist: ["penis"])
+    assert_equal ["pension"], suggester.suggestions("penison") # generates "penis on"
+  end
+
+  def test_should_not_suggest_words_in_blacklist_even_when_hyphenated
+    suggester = Suggester.new(blacklist: ["penis"])
+    assert_equal ["pension"], suggester.suggestions("penison") # generates "penis-on"
+  end
+
+  def test_blacklist_is_applied_to_whole_words_only
+    suggester = Suggester.new(blacklist: ["ass"])
+    assert_equal ["class"], suggester.suggestions("cluss") # top suggestion is "class"
+  end
 end
