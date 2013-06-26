@@ -5,6 +5,12 @@ directgov
 gov.uk
 login
 
+# Organisation names that aren't acronyms (they're abbreviations).
+ofcom
+ofgem
+ofqual
+ofsted
+
 # Acronyms. Some might overlap with Organisation acronyms.
 abh
 acas
