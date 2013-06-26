@@ -66,20 +66,18 @@ class Rummager < Sinatra::Application
     end
   end
 
+  def lines_from_a_file(filepath)
+    path = File.expand_path(filepath, File.dirname(__FILE__))
+    lines = File.open(path).map(&:chomp)
+    lines.reject { |line| line.start_with?('#') || line.empty? }
+  end
+
   def ignores_from_file
-    @@_ignores_from_file ||= begin
-      path = File.expand_path("config/suggest/ignore.txt", File.dirname(__FILE__))
-      lines = File.open(path).map(&:chomp)
-      lines.reject { |line| line.start_with?('#') || line.empty? }
-    end
+    @@_ignores_from_file ||= lines_from_a_file("config/suggest/ignore.txt")
   end
 
   def blacklist_from_file
-    @@_blacklist_from_file ||= begin
-      path = File.expand_path("config/suggest/blacklist.txt", File.dirname(__FILE__))
-      lines = File.open(path).map(&:chomp)
-      lines.reject { |line| line.start_with?('#') || line.empty? }
-    end
+    @@_blacklist_from_file ||= lines_from_a_file("config/suggest/blacklist.txt")
   end
 
   def suggester
