@@ -38,6 +38,17 @@ class SuggesterTest < MiniTest::Unit::TestCase
     assert_equal [], suggester.suggestions("  jobs")
   end
 
+  def test_does_not_suggest_changes_just_to_punctuation
+    suggester = Suggester.new
+    assert_equal [], suggester.suggestions("why?")
+  end
+
+  def test_does_not_suggest_changes_to_punctuation
+    suggester = Suggester.new
+    assert_equal ["bad, spelling"], suggester.suggestions("bad, speling")
+    assert_equal ["self-employed"], suggester.suggestions("smelf-employed")
+  end
+
   def test_should_not_remove_a_word_with_no_suggestions
     # if ffi-aspell has no suggestions, it returns an empty array
     suggester = Suggester.new
