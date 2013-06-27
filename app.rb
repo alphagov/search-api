@@ -86,6 +86,8 @@ class Rummager < Sinatra::Application
     if organisation_registry
       ignore = ignore + organisation_registry.all.map(&:acronym).reject(&:nil?)
     end
+    digit_or_word_containing_a_digit = /\d/
+    ignore = ignore + [digit_or_word_containing_a_digit]
     Suggester.new(ignore: MatcherSet.new(ignore),
                   blacklist: MatcherSet.new(blacklist_from_file))
   end

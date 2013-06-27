@@ -120,6 +120,12 @@ class SearchTest < IntegrationTest
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
+  def test_does_not_suggest_corrections_for_numbers_or_words_containing_numbers
+    stub_index.expects(:search).returns(stub(results: [], total: 0))
+    get "/search.json", {q: "v5c 2013", response_style: "hash"} # sorn would get a suggestion
+    assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
+  end
+
   def test_does_not_suggest_corrections_in_blacklist_file
     stub_index.expects(:search).returns(stub(results: [], total: 0))
     get "/search.json", {q: "penison", response_style: "hash"} # penison would get an inappropriate suggestion
