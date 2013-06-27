@@ -2,8 +2,12 @@ require 'ffi/aspell'
 
 class Suggester
   # "options" is a hash with symbol keys:
-  #   :ignore - a list of words that shouldn't generate spelling suggestions.
+  #   :ignore - Words or patterns that shouldn't generate spelling suggestions.
+  #             Any object that responds to `include?`, eg Array or a MatcherSet.
+  #             If passing an array of strings, it will be case insensitive.
   #   :blacklist - a list of words that shouldn't be suggested.
+  #             Any object that responds to `include?`, eg Array or a MatcherSet.
+  #             If passing an array of strings, it will be case insensitive.
   def initialize(options={})
     @ignore_list = options[:ignore] || []
     @blacklist = options[:blacklist] || []
@@ -30,12 +34,12 @@ class Suggester
 private
   # Return the best suggestion for the word, or nil if no suggestions
   def suggestion_for_a_word(word)
-    if in_ignore_list?(word)
+    if @ignore_list.include?(word)
       nil
     else
       acceptable_suggestion = speller.suggestions(word).detect do |suggestion|
         suggestion_words = suggestion.split(/[\s+|\-]/)
-        suggestion_words.none? { |suggested_word| in_blacklist?(suggested_word) }
+        suggestion_words.none? { |suggested_word| @blacklist.include?(suggested_word) }
       end
       if acceptable_suggestion.nil?
         nil
@@ -47,16 +51,6 @@ private
         acceptable_suggestion
       end
     end
-  end
-
-  def in_ignore_list?(word)
-    # Check case-insensitively against the ignore list
-    @ignore_list.any? { |member| member.casecmp(word) == 0 }
-  end
-
-  def in_blacklist?(word)
-    # Check case-insensitively against the blacklist
-    @blacklist.any? { |member| member.casecmp(word) == 0 }
   end
 
   def speller
