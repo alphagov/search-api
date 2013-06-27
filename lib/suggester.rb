@@ -19,11 +19,16 @@ class Suggester
   #  * is retained if in the dictionary, otherwise
   #  * is replaced by it's most likely correction
   def suggestions(query_string)
-    suggested_string = query_string.split("\s").map do |word|
-      suggestion_for_a_word(word) || word
-    end.join(" ")
+    suggested_string = query_string.split(/\b/).map do |token|
+      # token might be punctuation, whitespace or a word
+      if token.match(/\w/) # \w - Any word character (letter, number, underscore)
+        suggestion_for_a_word(token) || token
+      else
+        token
+      end
+    end.join("")
 
-    if suggested_string.downcase == query_string.split("\s").join(" ").downcase
+    if suggested_string.downcase == query_string.downcase
       # don't suggest the input, even if the case has changed
       []
     else
