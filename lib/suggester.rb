@@ -24,10 +24,6 @@ class Suggester
       end
     end.join("")
 
-    # suggested_string = query_string.split("\s").map do |word|
-    #   suggestion_for_a_word(word) || word
-    # end.join(" ")
-
     if suggested_string.downcase == query_string.downcase
       # don't suggest the input, even if the case has changed
       []
