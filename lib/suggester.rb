@@ -19,8 +19,13 @@ class Suggester
   #  * is retained if in the dictionary, otherwise
   #  * is replaced by it's most likely correction
   def suggestions(query_string)
+    # Split the input on any word boundary (\b).
+    #
+    # eg "are (you), 24?" =>
+    #    ["are", " ", "(", "you", ")", ",", "24", " ", "?"]
+    #
+    # We do this because it allows us to retain the input as much as possible.
     suggested_string = query_string.split(/\b/).map do |token|
-      # token might be punctuation, whitespace or a word
       if token.match(/\w/) # \w - Any word character (letter, number, underscore)
         suggestion_for_a_word(token) || token
       else
