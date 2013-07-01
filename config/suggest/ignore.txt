@@ -11,6 +11,7 @@ caldicott
 canaria
 change4life
 cyber
+cymraeg
 direct.gov
 direct.gov.uk
 directgov
