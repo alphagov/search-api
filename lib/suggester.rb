@@ -26,7 +26,7 @@ class Suggester
     #
     # We do this because it allows us to retain the input as much as possible.
     suggested_string = query_string.split(/\b/).map do |token|
-      if token.match(/\w/) # \w - Any word character (letter, number, underscore)
+      if token.match(/[a-zA-Z]/) # Does the token include an ASCII letter?
         suggestion_for_a_word(token) || token
       else
         token
