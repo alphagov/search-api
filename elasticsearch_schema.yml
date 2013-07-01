@@ -230,12 +230,11 @@ synonyms: &synonyms [
   "ukti => ukti, uk trade and investment, help for exporters, starting to export, uk welcomes",
   "under-occupancy, under occupancy, underoccupancy  => under-occupancy, under occupancy, underoccupancy, bedroom, housing benefit",
   "utr, unique taxpayer reference => utr, unique taxpayer reference, register for self assessment",
-  "wales => wales, cymru, cymraeg, gymraeg",
+  "wales => wales, cymru",
   "weather, bad weather, winter weather => weather, cold weather, severe weather, winter weather, energy grants, heating",
   "welsh => welsh, cymraeg, gymraeg",
   "winter payment, winter payments => winter fuel payment, cold weather, warm home, energy saving, energy grants, heating",
   "work trial => work trial, work experience, recruiters",
-
   # Forms and leaflets
 
   "adif => birth or adoption certificate form, student finance forms",
