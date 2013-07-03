@@ -12,6 +12,7 @@ canaria
 change4life
 cyber
 cymraeg
+cymru
 direct.gov
 direct.gov.uk
 directgov
@@ -22,6 +23,7 @@ google
 gov.uk
 greenbook
 greendeal
+gymraeg
 helpdesk
 hotmail
 jobcentre
