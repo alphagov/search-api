@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+PROJECT_ROOT = File.dirname(__FILE__) + "/../"
+LIBRARY_PATH = PROJECT_ROOT + "lib/"
+$LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
+
+require 'set'
+
+require "elasticsearch/search_server"
+require "search_config"
+
+EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"]
+
+def all_documents(indices)
+  Enumerator.new do |yielder|
+    indices.each do |index|
+      index.all_documents.each do |document|
+        yielder << document
+      end
+    end
+  end
+end
+
+def number_with_delimiter(number)
+  number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+end
+
+def words_without_punctuation(copy)
+  words = copy.split(/\s+/) # this will include lots of things not wordy, and include variations that have eg punctuation
+end
+
+# The indexes which make up GOV.UK. Excludes the Service Manual
+index_names = ["mainstream", "detailed", "government"]
+search_server = SearchConfig.new.search_server
+indices = index_names.map { |name| search_server.index(name) }
+
+document_count = 0
+word_count = 0
+all_words = Set.new
+all_documents(indices).each do |document|
+  next if EXCLUDED_FORMATS.include?(document.format)
+
+  document_count += 1
+  if document.indexable_content
+    words = words_without_punctuation(document.indexable_content)
+    all_words.merge(words.map(&:downcase))
+    word_count += words.size
+  else
+    puts "No indexable_content #{document.link}"
+  end
+end
+
+average_word_count = word_count.to_f / document_count.to_f
+
+puts """
+GOV.UK search index contents
+
+Looked at the following indices:
+#{indices.map(&:index_name).join(" ")}
+
+Total number of documents: #{number_with_delimiter(document_count)}
+
+Total word count: #{number_with_delimiter(word_count)}
+
+Average words per document: #{average_word_count}
+
+Total dictionary size: #{number_with_delimiter(all_words.size)}
+"""
