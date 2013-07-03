@@ -111,6 +111,10 @@ class Rummager < Sinatra::Application
     content_type :json
   end
 
+  error RestClient::RequestTimeout do
+    halt(503, "Elasticsearch timed out")
+  end
+
   # To search a named index:
   #   /index_name/search?q=pie
   #
