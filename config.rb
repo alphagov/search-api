@@ -2,6 +2,7 @@ require_relative "env"
 require "active_support/core_ext/hash/keys"
 require "search_config"
 require_relative "exception_mailer"
+require "config/logging"
 
 set :search_config, SearchConfig.new
 set :default_index_name, "mainstream"
