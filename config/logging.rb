@@ -20,7 +20,7 @@ Logging.logger.root.add_appenders Logging.appenders.stdout
 if (respond_to?(:verbose) && verbose) || $DEBUG
   Logging.logger.root.level = :debug
 else
-  Logging.logger.root.level = :info
+  Logging.logger.root.level = :warn
 end
 
 RestClient.log = PushableLogger.new(Logging.logger[RestClient], :debug)
