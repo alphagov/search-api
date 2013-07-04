@@ -1,6 +1,7 @@
 require "rake/testtask"
 require "rest-client"
 require "logging"
+require_relative "config/logging"
 
 PROJECT_ROOT = File.dirname(__FILE__)
 
@@ -40,33 +41,11 @@ end
 
 require "ci/reporter/rake/minitest" if ENV["RACK_ENV"] == "test"
 
-class PushableLogger
-  # Because RestClient uses the '<<' method, rather than the levelled Logger
-  # methods, we have to put together a class that'll assign them a level
-
-  def initialize(logger, level)
-    @logger, @level = logger, level
-  end
-
-  def <<(message)
-    @logger.send @level, message
-  end
-end
-
 task :default => :test
 
 def logger
-  @_logger ||= begin
-    logger = Logging.logger.root
-    logger.add_appenders Logging.appenders.stdout
-    logger.level = verbose ? :debug : :info
-    logger
-  end
+  Logging.logger.root
 end
-
-# Log all RestClient output at debug level, so it doesn't show up unless rake
-# is invoked with the `--verbose` flag
-RestClient.log = PushableLogger.new(Logging.logger[RestClient], :debug)
 
 def search_config
   @search_config ||= SearchConfig.new
