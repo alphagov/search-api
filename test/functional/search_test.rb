@@ -221,4 +221,10 @@ class SearchTest < IntegrationTest
     get "/search"
     assert last_response.not_found?
   end
+
+  def test_returns_503_when_elasticsearch_timesout
+    stub_index.expects(:search).raises(RestClient::RequestTimeout)
+    get "/search.json", { q: "search term" }
+    assert_equal 503, last_response.status
+  end
 end
