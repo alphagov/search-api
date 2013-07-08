@@ -8,14 +8,17 @@ module Helpers
   end
 
   def simple_json_result(ok)
-    content_type :json
     if ok
-      result = "OK"
+      json_result 200, "OK"
     else
-      result = "error"
-      status 500
+      json_result 500, "error"
     end
-    MultiJson.encode("result" => result)
+  end
+
+  def json_result(status_code, message)
+    content_type :json
+    status status_code
+    MultiJson.encode("result" => message)
   end
 end
 
