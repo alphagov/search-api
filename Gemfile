@@ -17,6 +17,7 @@ gem 'nokogiri', "1.5.5"
 gem 'whenever', require: false
 gem 'ffi-aspell', "0.0.3"
 gem "slop", "3.4.5"
+gem "sidekiq", "2.12.4"
 
 group :test do
   gem "shoulda-context"
