@@ -1,6 +1,13 @@
 app_path = File.dirname(__FILE__)
 $:.unshift(app_path) unless $:.include?(app_path)
 
+# the app needs to be run with unicorn for this to work
+# if you want to see this running in dev use following instead of bowl:
+# bundle exec unicorn -l 3009
+if defined?(Raindrops)
+	use Raindrops::Middleware, :stats => $stats
+end
+
 require "env"
 
 require "bundler"
