@@ -4,6 +4,7 @@ require "search_config"
 module Elasticsearch
   class BulkIndexWorker
     include Sidekiq::Worker
+    sidekiq_options :retry => 5
 
     def logger
       Logging.logger[self]
