@@ -1,9 +1,12 @@
 app_path = File.dirname(__FILE__)
 $:.unshift(app_path) unless $:.include?(app_path)
 
-# the app needs to be run with unicorn for this to work
-# if you want to see this running in dev use following instead of bowl:
-# bundle exec unicorn -l 3009
+# Raindrops is only loaded when running under Unicorn so we need the conditional
+# to prevent an undefined constant error.
+#
+# This middleware adds a /_raindrops path that exposes stats. To see this in
+# development, start the app like this instead of the usual running under thin:
+#    bundle exec unicorn -l 3009
 if defined?(Raindrops)
 	use Raindrops::Middleware, :stats => $stats
 end
