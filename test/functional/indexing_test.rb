@@ -12,6 +12,8 @@ class IndexingTest < IntegrationTest
   end
 
   def test_can_submit_documents
+    # The default is false, but let's be explicit about it
+    app.settings.expects(:enable_queue).returns(false)
     index = stub_index
 
     index.expects(:document_from_hash).with(document_hashes[0]).returns(:foo)
