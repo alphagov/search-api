@@ -2,6 +2,7 @@ source "https://rubygems.org"
 source "https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/"
 
 gem "unicorn", "4.3.1"
+gem "raindrops", "0.11.0"
 gem "sinatra", "1.3.4"
 gem "rake", "0.9.2", :require => false
 gem "json", "1.7.7"
