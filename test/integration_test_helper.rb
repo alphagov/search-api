@@ -57,6 +57,7 @@ module ElasticsearchIntegration
       "index_names" => index_names
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
+    app.settings.stubs(:enable_queue).returns(false)
   end
 
   def stub_modified_schema
