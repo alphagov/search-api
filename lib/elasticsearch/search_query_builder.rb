@@ -162,6 +162,7 @@ module Elasticsearch
     def match_fields
       {
         "title" => 5,
+        "acronym" => 5, # Ensure that organisations rank brilliantly for their acronym
         "description" => 2,
         "indexable_content" => 1,
       }
