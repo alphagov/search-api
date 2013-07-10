@@ -17,6 +17,13 @@ If you have indices from a Rummager instance before aliased indices, run:
 If you don't know which of these you need to run, try running the first one; it
 will fail safely with an error if you have an unmigrated index.
 
+Rummager has an asynchronous mode, disabled in development by default, that
+posts documents to a queue to be indexed later by a worker. To run this in
+development, you need to run both of these commands:
+
+    ENABLE_QUEUE=1 ./startup.sh
+    bundle exec rake jobs:work
+
 ## Indexing GOV.UK content
 
 Since search indexing happens through Panopticon's single registration API,

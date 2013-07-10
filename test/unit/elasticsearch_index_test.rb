@@ -103,6 +103,24 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested :get, document_url
   end
 
+  def test_add_queued_documents
+    json_document = {
+        "_type" => "edition",
+        "link" => "/foo/bar",
+        "title" => "TITLE ONE",
+    }
+    document = stub("document", elasticsearch_export: json_document)
+
+    mock_queue = mock("document queue") do
+      expects(:queue_many).with([json_document])
+    end
+    Elasticsearch::DocumentQueue.expects(:new)
+      .with("test-index")
+      .returns(mock_queue)
+
+    @wrapper.add_queued([document])
+  end
+
   def test_get_document_not_found
     document_url = "http://example.com:9200/test-index/_all/%2Fa-bad-link"
 

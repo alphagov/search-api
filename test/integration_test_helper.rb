@@ -1,6 +1,7 @@
 require "test_helper"
 require "app"
 require "elasticsearch/search_server"
+require "sidekiq/testing/inline"  # Make all queued jobs run immediately
 
 module IntegrationFixtures
   include Fixtures::DefaultMappings
@@ -51,11 +52,12 @@ module ElasticsearchIntegration
 
     @default_index_name = default || index_names.first
 
-    app.settings.search_config.stubs(:elasticsearch).returns({
+    SearchConfig.any_instance.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
       "index_names" => index_names
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
+    app.settings.stubs(:enable_queue).returns(false)
   end
 
   def stub_modified_schema

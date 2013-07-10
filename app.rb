@@ -187,7 +187,12 @@ class Rummager < Sinatra::Application
       current_index.document_from_hash(hash)
     }
 
-    simple_json_result(current_index.add(documents))
+    if settings.enable_queue
+      current_index.add_queued(documents)
+      json_result 202, "Queued"
+    else
+      simple_json_result(current_index.add(documents))
+    end
   end
 
   post "/?:index?/commit" do
