@@ -37,16 +37,16 @@ module HealthCheck
       success = !!(positive_check? ? found_in_limit : ! found_in_limit)
 
       marker = "[#{weight}-POINT]"
+      expectation = positive_check? ? "<= #{minimum_rank}" : "> #{minimum_rank}"
       if found_index
-        expectation = positive_check? ? "<= #{minimum_rank}" : "> #{minimum_rank}"
         message = "#{marker} Found '#{path}' for '#{search_term}' in position #{found_index + 1} (expected #{expectation})"
-        if success
-          logger.pass(message)
-        else
-          logger.fail(message)
-        end
       else
-        logger.fail("#{marker} Didn't find '#{path}' in results for '#{search_term}'")
+        message = "#{marker} Didn't find '#{path}' for '#{search_term}' in any position (expected #{expectation})"
+      end
+      if success
+        logger.pass(message)
+      else
+        logger.fail(message)
       end
 
       score = success ? weight : 0
