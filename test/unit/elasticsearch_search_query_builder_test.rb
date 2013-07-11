@@ -39,17 +39,20 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
 
   def test_shingle_boosts
     builder = Elasticsearch::SearchQueryBuilder.new("quick brown fox")
-    multi_match_condition = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:should][4]
+    shingle_condition = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:should].detect do |condition|
+      condition[:multi_match] &&
+          condition[:multi_match][:analyzer] == "shingled_query_analyzer"
+    end
 
     expected = {
       multi_match: {
         query: "quick brown fox",
         operator: "or",
-        fields: ["title", "description", "indexable_content"],
+        fields: ["title", "acronym", "description", "indexable_content"],
         analyzer: "shingled_query_analyzer"
       }
     }
-    assert_equal expected, multi_match_condition
+    assert_equal expected, shingle_condition
   end
 
   def test_format_boosts
