@@ -52,7 +52,9 @@ module HealthCheck
           check = Check.new("carmen", "should not", "/a", 1, 200)
           search_results = ["https://www.gov.uk/a", "https://www.gov.uk/b"]
 
-          check.stubs(:logger).returns(mock("foo", fail: nil))
+          logger = mock("logger")
+          logger.expects(:fail)
+          check.stubs(:logger).returns(logger)
 
           result = check.result(search_results)
 
@@ -65,7 +67,9 @@ module HealthCheck
           check = Check.new("carmen", "should not", "/a", 1, 200)
           search_results = ["https://www.gov.uk/b", "https://www.gov.uk/a"]
 
-          check.stubs(:logger).returns(mock("foo", pass: nil))
+          logger = mock("logger")
+          logger.expects(:pass)
+          check.stubs(:logger).returns(logger)
 
           result = check.result(search_results)
 
@@ -78,7 +82,9 @@ module HealthCheck
           check = Check.new("carmen", "should not", "/x", 1, 200)
           search_results = ["https://www.gov.uk/a", "https://www.gov.uk/b"]
 
-          check.stubs(:logger).returns(mock("foo", pass: nil))
+          logger = mock("logger")
+          logger.expects(:pass)
+          check.stubs(:logger).returns(logger)
 
           result = check.result(search_results)
 
