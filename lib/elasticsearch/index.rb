@@ -6,6 +6,7 @@ require "multi_json"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"
+require "elasticsearch/document_queue"
 require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
@@ -87,12 +88,22 @@ module Elasticsearch
       else
         logger.info "Adding #{documents.size} documents to #{index_name}"
       end
-      payload = documents.map do |doc|
-        exported_hash = with_promotion(doc.elasticsearch_export)
-        [index_action(exported_hash).to_json, exported_hash.to_json]
-      end.flatten.join("\n")
-      # Ensure the request payload ends with a newline
-      @client.post("_bulk", payload + "\n", content_type: :json)
+
+      document_hashes = documents.map { |d| hash_from_document(d) }
+      bulk_index(document_hashes)
+    end
+
+    # Add documents asynchronously to the index.
+    def add_queued(documents)
+      noun = documents.size > 1 ? "documents" : "document"
+      logger.info "Queueing #{documents.size} #{noun} to add to #{index_name}"
+
+      document_hashes = documents.map { |d| hash_from_document(d) }
+      document_queue.queue_many(document_hashes)
+    end
+
+    def bulk_index(document_hashes)
+      @client.post("_bulk", bulk_payload(document_hashes), content_type: :json)
     end
 
     def populate_from(source_index)
@@ -243,16 +254,48 @@ module Elasticsearch
       Logging.logger[self]
     end
 
-    def index_action(doc)
-      {"index" => {"_type" => doc["_type"], "_id" => doc["link"]}}
+    # Payload to index documents using the `_bulk` endpoint
+    #
+    # The format is as follows:
+    #
+    #   {"index": "mainstream", "type": "edition", "_id": "/bank-holidays"}
+    #   { <document source> }
+    #   {"index": "mainstream", "type": "edition", "_id": "/something-else"}
+    #   { <document source> }
+    #
+    # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
+    def bulk_payload(document_hashes)
+      index_items = document_hashes.map do |doc_hash|
+        [index_action(doc_hash).to_json, doc_hash.to_json]
+      end
+
+      # Make sure the payload ends with a newline character: elasticsearch
+      # requires this.
+      index_items.flatten.join("\n") + "\n"
+    end
+
+    def index_action(doc_hash)
+      {"index" => {"_type" => doc_hash["_type"], "_id" => doc_hash["link"]}}
     end
 
     def result_promoter
       @result_promoter ||= ResultPromoter.new(@promoted_results)
     end
 
+    # Generate a hash from a Document to pass to elasticsearch.
+    #
+    # This allows for result promotion on top of the Document's in-built
+    # `elasticsearch_export` method.
+    def hash_from_document(document)
+      with_promotion(document.elasticsearch_export)
+    end
+
     def with_promotion(document_hash)
       result_promoter.with_promotion(document_hash)
+    end
+
+    def document_queue
+      DocumentQueue.new(index_name)
     end
   end
 end
