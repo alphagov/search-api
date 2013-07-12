@@ -160,6 +160,29 @@ class Rummager < Sinatra::Application
     end
   end
 
+  # Perform an advanced search. Supports filters and pagination.
+  #
+  # Returns the first N results if no keywords or filters supplied
+  #
+  # Required parameters:
+  #   per_page              - eg "40"
+  #   page                  - eg "1"
+  #
+  # Optional parameters:
+  #   order[fieldname]      - eg order[public_timestamp]=desc
+  #   keywords              - eg "tax"
+  #
+  # Arbitrary "filter parameters", anything which is defined in the mappings
+  # for the index is allowed. Examples:
+  #   search_format_types[]        - eg "consultation"
+  #   topics[]                     - eg "climate-change"
+  #   organisations[]              - eg "cabinet-office"
+  #   relevant_to_local_government - eg "1"
+  #
+  # If the field type is defined as "date", this is possible:
+  #   fieldname[before]     - eg public_timestamp[before]="2013-04-30"
+  #   fieldname[after]      - eg public_timestamp[after]="2013-04-30"
+  #
   get "/:index/advanced_search.?:format?" do
     json_only
 
