@@ -1,5 +1,6 @@
 require "sidekiq"
 require "search_config"
+require "failed_job_worker"
 
 module Elasticsearch
   class BulkIndexWorker
@@ -17,6 +18,10 @@ module Elasticsearch
       logger.info "Indexing #{document_hashes.size} queued #{noun} into #{index_name}"
 
       index(index_name).bulk_index(document_hashes)
+    end
+
+    sidekiq_retries_exhausted do |msg|
+      FailedJobWorker.perform_async(msg)
     end
 
   private

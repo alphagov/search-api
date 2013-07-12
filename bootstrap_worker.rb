@@ -8,4 +8,4 @@ library_path = File.join(project_root, "lib")
 end
 
 require "config/initializers/sidekiq"
-require "elasticsearch/bulk_index_worker"
+require "workers"
