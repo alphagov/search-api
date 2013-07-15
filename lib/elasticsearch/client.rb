@@ -86,13 +86,6 @@ module Elasticsearch
       (@base_uri + sub_path).to_s
     end
 
-    def recording_elastic_error(&block)
-      yield
-    rescue Errno::ECONNREFUSED, Timeout::Error, SocketError
-      Rummager.statsd.increment("elasticsearcherror")
-      raise
-    end
-
     def logging_exception_body(&block)
       yield
     rescue RestClient::InternalServerError => error
@@ -109,18 +102,16 @@ module Elasticsearch
         headers[:content_type] = "application/json"
       end
 
-      recording_elastic_error do
-        logging_exception_body do
-          args = {
-            method: method,
-            url: url_for(path),
-          }
-          args[:payload] = payload if payload
-          args[:headers] = headers if headers
-          args[:timeout] = @timeout if @timeout
-          args[:open_timeout] = @open_timeout if @open_timeout
-          RestClient::Request.execute(args)
-        end
+      logging_exception_body do
+        args = {
+          method: method,
+          url: url_for(path),
+        }
+        args[:payload] = payload if payload
+        args[:headers] = headers if headers
+        args[:timeout] = @timeout if @timeout
+        args[:open_timeout] = @open_timeout if @open_timeout
+        RestClient::Request.execute(args)
       end
     end
   end
