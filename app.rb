@@ -6,7 +6,6 @@ require "sinatra"
 require 'yajl/json_gem'
 require "multi_json"
 require "csv"
-require "statsd"
 
 require "document"
 require "result_set_presenter"
@@ -24,12 +23,6 @@ require_relative "config"
 require_relative "helpers"
 
 class Rummager < Sinatra::Application
-  def self.statsd
-    @@statsd ||= Statsd.new("localhost").tap do |c|
-      c.namespace = ENV["GOVUK_STATSD_PREFIX"].to_s
-    end
-  end
-
   def search_server
     settings.search_config.search_server
   end
