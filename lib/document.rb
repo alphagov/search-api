@@ -1,5 +1,3 @@
-require "active_support/inflector"
-
 class SearchIndexEntry
   def initialize(field_names, attributes = {})
     @field_names = field_names.map(&:to_s) + ["es_score"]
