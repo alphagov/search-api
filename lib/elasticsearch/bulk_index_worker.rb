@@ -1,5 +1,5 @@
 require "sidekiq"
-require "search_config"
+require "config"
 require "failed_job_worker"
 
 module Elasticsearch
@@ -26,7 +26,7 @@ module Elasticsearch
 
   private
     def index(index_name)
-      SearchConfig.new.search_server.index(index_name)
+      settings.search_config.search_server.index(index_name)
     end
   end
 end
