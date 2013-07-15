@@ -186,6 +186,8 @@ class Rummager < Sinatra::Application
   get "/:index/advanced_search.?:format?" do
     json_only
 
+    # Using request.params because it is just the params from the request
+    # rather than things added by Sinatra (eg splat, captures, index and format)
     result_set = current_index.advanced_search(request.params)
     ResultSetPresenter.new(result_set).present
   end
