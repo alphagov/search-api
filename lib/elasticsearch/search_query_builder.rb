@@ -59,11 +59,22 @@ module Elasticsearch
             },
             filters: format_boosts + [time_boost]
           }
-        }
+        },
+        sort: sort
       }
     end
 
   private
+
+    def sort
+      if @options[:order]
+        [
+          @options[:order]
+        ]
+      else
+        []
+      end
+    end
 
     def core_query
       {

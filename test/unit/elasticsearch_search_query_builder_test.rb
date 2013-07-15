@@ -105,6 +105,14 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
     assert_equal expected, term_condition
   end
 
+  def test_can_order_by_any_value
+    builder = Elasticsearch::SearchQueryBuilder.new("pie", order: { "public_timestamp" => "desc" })
+    expected = [
+      { "public_timestamp" => "desc" }
+    ]
+    assert_equal expected, builder.query_hash[:sort]
+  end
+
   def test_escapes_the_query_for_lucene
     builder = Elasticsearch::SearchQueryBuilder.new("how?")
 

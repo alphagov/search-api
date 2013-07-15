@@ -117,6 +117,12 @@ class ElasticsearchSearchTest < IntegrationTest
   end
 
   def assert_result_links(*expected_links)
+    order = true
+    if expected_links[-1].is_a?(Hash)
+      hash = expected_links.pop
+      order = hash[:order]
+    end
+
     parsed_response = MultiJson.decode(last_response.body)
     case parsed_response
       when Hash
@@ -126,7 +132,11 @@ class ElasticsearchSearchTest < IntegrationTest
       else
         raise "I don't know how to parse #{parsed_response.class}"
     end
-    assert_equal expected_links, result_links
+    if order
+      assert_equal expected_links, result_links
+    else
+      assert_equal expected_links.sort, result_links.sort
+    end
   end
 
   def test_documents_with_public_timestamp_exhibit_a_decay_boost
@@ -151,6 +161,13 @@ class ElasticsearchSearchTest < IntegrationTest
     get "/search.json?q=written&organisation_slug=ministry-of-justice"
     assert last_response.ok?
     assert_result_links # assert no results
+  end
+
+  def test_can_sort_results_by_date
+    get "/search.json?q=mali&order[public_timestamp]=asc"
+    assert last_response.ok?
+    # Results should come out oldest-first
+    assert_result_links "/mali-3", "/mali-2", "/mali-1", order: true
   end
 
   def test_should_match_stems
