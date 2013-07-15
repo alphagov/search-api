@@ -241,4 +241,14 @@ class Rummager < Sinatra::Application
     end
     simple_json_result(action)
   end
+
+  get "/_status" do
+    status = {}
+    status["queues"] = {}
+
+    Sidekiq::Stats.new.queues.each do |queue_name, queue_size|
+      status["queues"][queue_name] = {"jobs" => queue_size}
+    end
+    MultiJson.encode(status)
+  end
 end
