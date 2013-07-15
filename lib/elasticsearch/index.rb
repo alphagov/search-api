@@ -203,9 +203,8 @@ module Elasticsearch
       logger.info "params:#{params.inspect}"
       raise "Pagination params are required." if params["per_page"].nil? || params["page"].nil?
 
+      # Delete params that we don't want to be passed as filter_params
       order     = params.delete("order")
-      format    = params.delete("format")
-      backend   = params.delete("backend")
       keywords  = params.delete("keywords")
       per_page  = params.delete("per_page").to_i
       page      = params.delete("page").to_i
