@@ -10,8 +10,9 @@ class TopicRegistryTest < MiniTest::Unit::TestCase
 
   def housing_document
     Document.new(
-      %w(link title),
+      %w(slug link title),
       {
+        slug: "housing",
         link: "/government/topics/housing",
         title: "Housing"
       }
@@ -30,13 +31,14 @@ class TopicRegistryTest < MiniTest::Unit::TestCase
       .with("topic", anything)
       .returns([housing_document])
     topic = @topic_registry["housing"]
+    assert_equal "housing", topic.slug
     assert_equal "/government/topics/housing", topic.link
     assert_equal "Housing", topic.title
   end
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("topic", fields: %w{link title})
+      .with("topic", fields: %w{slug link title})
     topic = @topic_registry["housing"]
   end
 
