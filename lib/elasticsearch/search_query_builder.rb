@@ -6,6 +6,8 @@ module Elasticsearch
 
     QUERY_ANALYZER = "query_default"
 
+    # `query`   - a string to search for
+    # `options` - a hash with symbol keys
     def initialize(query, options={})
       @query                = query
       @limit                = options[:limit] || 50
