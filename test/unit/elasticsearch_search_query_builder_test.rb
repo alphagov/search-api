@@ -105,6 +105,27 @@ class SearchQueryBuilderTest < MiniTest::Unit::TestCase
     assert_equal expected, term_condition
   end
 
+  def test_specifies_no_sort_if_none_provided
+    builder = Elasticsearch::SearchQueryBuilder.new("pie")
+    assert_equal [], builder.query_hash[:sort]
+  end
+
+  def test_can_order_by_any_field
+    builder = Elasticsearch::SearchQueryBuilder.new("pie", sort: "public_timestamp", order: "asc")
+    expected = [
+      { "public_timestamp" => { "order" => "asc" } }
+    ]
+    assert_equal expected, builder.query_hash[:sort]
+  end
+
+  def test_defaults_to_desc_for_sort_order
+    builder = Elasticsearch::SearchQueryBuilder.new("pie", sort: "public_timestamp")
+    expected = [
+      { "public_timestamp" => { "order" => "desc" } }
+    ]
+    assert_equal expected, builder.query_hash[:sort]
+  end
+
   def test_escapes_the_query_for_lucene
     builder = Elasticsearch::SearchQueryBuilder.new("how?")
 
