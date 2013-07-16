@@ -104,7 +104,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (= 3.2.12)
   aws-ses (= 0.4.4)
   ci_reporter (= 1.7.1)
   ffi-aspell (= 0.0.3)
