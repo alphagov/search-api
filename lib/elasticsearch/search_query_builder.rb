@@ -13,7 +13,8 @@ module Elasticsearch
 
     def default_options
       {
-        limit: 50
+        limit: 50,
+        order: "desc"
       }
     end
 
@@ -67,9 +68,9 @@ module Elasticsearch
   private
 
     def sort
-      if @options[:order]
+      if @options[:sort]
         [
-          @options[:order]
+          { @options[:sort] => { "order" => @options[:order] } }
         ]
       else
         []

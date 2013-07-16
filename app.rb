@@ -118,7 +118,7 @@ class Rummager < Sinatra::Application
   #   /search?q=pie&organisation_slug=home-office
   #
   # To get the results in date order, rather than relevancy:
-  #   /search?q=pie&order[public_timestamp]=desc
+  #   /search?q=pie&sort=public_timestamp&order=desc
   #
   # To get the results in a Hash:
   #   /search?q=pie&response_style=hash
@@ -146,6 +146,7 @@ class Rummager < Sinatra::Application
     organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
     result_set = current_index.search(query,
       organisation: organisation,
+      sort: params["sort"],
       order: params["order"],
       minimum_should_match: params["minimum_should_match"].to_s.size > 0)
     presenter_context = {

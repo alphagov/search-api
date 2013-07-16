@@ -164,7 +164,7 @@ class ElasticsearchSearchTest < IntegrationTest
   end
 
   def test_can_sort_results_by_date
-    get "/search.json?q=mali&order[public_timestamp]=asc"
+    get "/search.json?q=mali&sort=public_timestamp&order=desc"
     assert last_response.ok?
     # Results should come out oldest-first
     assert_result_links "/mali-3", "/mali-2", "/mali-1", order: true
