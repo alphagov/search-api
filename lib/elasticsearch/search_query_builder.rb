@@ -7,15 +7,12 @@ module Elasticsearch
     QUERY_ANALYZER = "query_default"
 
     def initialize(query, options={})
-      @query = query
-      @options = default_options.merge(options)
-    end
-
-    def default_options
-      {
-        limit: 50,
-        order: "desc" # Only used when a :sort option is given, but :order is not
-      }
+      @query                = query
+      @limit                = options[:limit] || 50
+      @sort                 = options[:sort]
+      @order                = options[:order] || "desc"
+      @organisation         = options[:organisation]
+      @minimum_should_match = options[:minimum_should_match]
     end
 
     def default_minimum_should_match
@@ -50,7 +47,7 @@ module Elasticsearch
     def query_hash
       {
         from: 0,
-        size: @options[:limit],
+        size: @limit,
         query: {
           custom_filters_score: {
             query: {
@@ -68,9 +65,9 @@ module Elasticsearch
   private
 
     def sort
-      if @options[:sort]
+      if @sort
         [
-          { @options[:sort] => { "order" => @options[:order] } }
+          { @sort => { "order" => @order } }
         ]
       else
         []
@@ -147,9 +144,9 @@ module Elasticsearch
     end
 
     def minimum_should_match_clause
-      case @options[:minimum_should_match]
+      case @minimum_should_match
       when String, Fixnum
-        {minimum_should_match: @options[:minimum_should_match]}
+        {minimum_should_match: @minimum_should_match}
       when true
         {minimum_should_match: default_minimum_should_match}
       else
@@ -158,10 +155,10 @@ module Elasticsearch
     end
 
     def organisation_query
-      if @options[:organisation]
+      if @organisation
         {
           term: {
-            organisations: @options[:organisation]
+            organisations: @organisation
           }
         }
       end
