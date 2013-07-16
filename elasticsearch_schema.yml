@@ -189,7 +189,13 @@ synonyms: &synonyms [
   "firing => firing, dismiss, dismissing, dismissal",
   "gateway => gateway, government gateway",
   "government getaway => government gateway",
+
+  # Intended to bring the main PHE and HMT Green Book landing pages into the top 3, above all their chapters
+  #   </government/organisations/public-health-england/series/immunisation-against-infectious-disease-the-green-book>
+  #   </government/publications/the-green-book-appraisal-and-evaluation-in-central-governent>
+  # TODO: review the need for this once we have other ways to manipulate result ordering
   "green book => green book, immunisation against infectious disease, appraisal evaluation central government",
+
   "green deal => green deal, green deal energy saving, energy grants, heating",
   "heating => heating, energy grants, energy saving, cold, warm, winter",
   "holiday payment, holiday payments => holiday payment, holiday payments, paid early",
@@ -204,7 +210,11 @@ synonyms: &synonyms [
   "new enterprise allowance => new enterprise allowance, start work, business idea",
   "next step, nextstep => next step, national careers service",
   "opening times => opening times, opening hours",
+
+  # A tweak to the existing passports synonym, trying to raise certain content with the benefit of the improved phrase matching.
+  # TODO: review the need for this once we have other ways to manipulate result ordering
   "passport, passports => passport, replace your adult passport, child passport, first passport",
+
   "rapid claim => rapid claim, rapid reclaim, jobseeker's allowance",
   "rapid reclaim => rapid reclaim, jobseeker's allowance",
   "redundancy => redundancy, redundant, redundancy pay",
