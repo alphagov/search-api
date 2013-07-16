@@ -13,7 +13,8 @@ module Elasticsearch
 
     def default_options
       {
-        limit: 50
+        limit: 50,
+        order: "desc" # Only used when a :sort option is given, but :order is not
       }
     end
 
@@ -59,11 +60,22 @@ module Elasticsearch
             },
             filters: format_boosts + [time_boost]
           }
-        }
+        },
+        sort: sort
       }
     end
 
   private
+
+    def sort
+      if @options[:sort]
+        [
+          { @options[:sort] => { "order" => @options[:order] } }
+        ]
+      else
+        []
+      end
+    end
 
     def core_query
       {
