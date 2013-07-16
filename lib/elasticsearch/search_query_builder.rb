@@ -14,7 +14,7 @@ module Elasticsearch
     def default_options
       {
         limit: 50,
-        order: "desc"
+        order: "desc" # Only used when a :sort option is given, but :order is not
       }
     end
 
