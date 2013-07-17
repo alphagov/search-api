@@ -21,7 +21,7 @@ module Elasticsearch
     end
 
     sidekiq_retries_exhausted do |msg|
-      logger.warn "Job failed; forwarding to failure queue"
+      logger.warn "Job '#{msg["jid"]}' failed; forwarding to failure queue"
       FailedJobWorker.perform_async(msg)
     end
 
