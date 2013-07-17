@@ -14,6 +14,8 @@ require "elasticsearch/search_query_builder"
 require "result_promoter"
 
 module Elasticsearch
+  class InvalidQuery < ArgumentError; end
+
   class Index
     include Elasticsearch::Escaping
 
@@ -188,12 +190,11 @@ module Elasticsearch
       end
     end
 
-    def search_query(query, options={})
-      SearchQueryBuilder.new(query, @mappings, options).query_hash
-    end
+    def search(keywords, options={})
+      builder = SearchQueryBuilder.new(keywords, @mappings, options)
+      raise InvalidQuery.new(builder.error) unless builder.valid?
 
-    def search(query, options={})
-      payload = MultiJson.dump(search_query(query, options))
+      payload = MultiJson.dump(builder.query_hash)
       logger.debug "Request payload: #{payload}"
       response = @client.get_with_payload("_search", payload)
       ResultSet.new(@mappings, MultiJson.decode(response))
