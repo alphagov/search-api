@@ -7,5 +7,5 @@ library_path = File.join(project_root, "lib")
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
-require "config/initializers/sidekiq"
-require "elasticsearch/bulk_index_worker"
+require "config"
+require "workers"
