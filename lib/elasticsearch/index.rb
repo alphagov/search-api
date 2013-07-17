@@ -189,7 +189,7 @@ module Elasticsearch
     end
 
     def search_query(query, options={})
-      SearchQueryBuilder.new(query, options).query_hash
+      SearchQueryBuilder.new(query, @mappings, options).query_hash
     end
 
     def search(query, options={})
