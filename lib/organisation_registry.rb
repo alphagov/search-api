@@ -24,7 +24,7 @@ class OrganisationRegistry
   end
 
   def [](slug)
-    @cache.get.find { |o| o.slug == "#{slug}" }
+    @cache.get.find { |o| o.slug == slug }
   end
 
 private
