@@ -109,7 +109,7 @@ class Rummager < Sinatra::Application
   end
 
   error Elasticsearch::InvalidQuery do
-    halt(400, env['sinatra.error'].message)
+    halt(422, env['sinatra.error'].message)
   end
 
   # To search a named index:

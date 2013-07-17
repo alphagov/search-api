@@ -71,7 +71,7 @@ class SearchTest < IntegrationTest
 
   def test_returns_semantic_response_for_invalid_query
     get "/search", { q: "bob", sort: "not_in_schema" }
-    assert_equal 400, last_response.status
+    assert_equal 422, last_response.status
     assert_equal "Sorting on unknown property: not_in_schema", last_response.body
   end
 
