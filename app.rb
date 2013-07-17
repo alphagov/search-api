@@ -108,6 +108,10 @@ class Rummager < Sinatra::Application
     halt(503, "Elasticsearch timed out")
   end
 
+  error Elasticsearch::InvalidQuery do
+    halt(400, env['sinatra.error'].message)
+  end
+
   # To search a named index:
   #   /index_name/search?q=pie
   #
