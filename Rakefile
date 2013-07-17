@@ -1,15 +1,15 @@
 require "rake/testtask"
 require "rest-client"
 require "logging"
-require_relative "config/logging"
 
 PROJECT_ROOT = File.dirname(__FILE__)
+LIBRARY_PATH = File.join(PROJECT_ROOT, "lib")
 
-File.join(PROJECT_ROOT, "lib").tap do |path|
+[PROJECT_ROOT, LIBRARY_PATH].each do |path|
   $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
 end
 
-require "search_config"
+require "config"
 
 Dir[File.join(PROJECT_ROOT, 'lib/tasks/*.rake')].each { |file| load file }
 
@@ -48,7 +48,7 @@ def logger
 end
 
 def search_config
-  @search_config ||= SearchConfig.new
+  settings.search_config
 end
 
 def search_server

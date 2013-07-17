@@ -52,7 +52,7 @@ module ElasticsearchIntegration
 
     @default_index_name = default || index_names.first
 
-    SearchConfig.any_instance.stubs(:elasticsearch).returns({
+    app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
       "index_names" => index_names
     })
