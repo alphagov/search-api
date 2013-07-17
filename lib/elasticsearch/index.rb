@@ -202,7 +202,9 @@ module Elasticsearch
 
     def advanced_search(params)
       logger.info "params:#{params.inspect}"
-      raise "Pagination params are required." if params["per_page"].nil? || params["page"].nil?
+      if params["per_page"].nil? || params["page"].nil?
+        raise InvalidQuery.new("Pagination params are required.")
+      end
 
       # Delete params that we don't want to be passed as filter_params
       order     = params.delete("order")
@@ -211,7 +213,7 @@ module Elasticsearch
       page      = params.delete("page").to_i
 
       query_builder = AdvancedSearchQueryBuilder.new(keywords, params, order, @mappings)
-      raise query_builder.error unless query_builder.valid?
+      raise InvalidQuery.new(query_builder.error) unless query_builder.valid?
 
       starting_index = page <= 1 ? 0 : (per_page * (page - 1))
       payload = {
