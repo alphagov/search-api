@@ -8,7 +8,6 @@ gem "rake", "0.9.2", :require => false
 gem "json", "1.7.7"
 gem "multi_json", "1.3.6"
 gem "yajl-ruby", "1.1.0"
-gem "activesupport", "3.2.12"
 gem "rack", "1.5.2"
 gem "aws-ses", "0.4.4"
 gem "rest-client", "1.6.7"
