@@ -1,5 +1,6 @@
 require "sidekiq"
 require "config"
+require "sidekiq_json_encoding_patch"
 require "failed_job_worker"
 
 module Elasticsearch
