@@ -9,7 +9,15 @@ module Elasticsearch
     # `query`    - a string to search for
     # `mappings` - the field definitions for the index this query is going to
     #              used to validate parts of the query before sending to
-    #              Elasticsearch
+    #              Elasticsearch. The format is as follows:
+    #                {
+    #                  "edition" => {
+    #                    "_all" => { "enabled" => true },
+    #                    "properties" => {
+    #                       "fieldname" => { ...field definition... }
+    #                    }
+    #                  }
+    #                }
     # `options`  - a hash with symbol keys
     def initialize(query, mappings, options={})
       @query                = query
