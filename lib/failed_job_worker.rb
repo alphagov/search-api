@@ -1,6 +1,7 @@
 require "stringio"
 require "pp"
 require "sidekiq"
+require "sidekiq_json_encoding_patch"
 
 class FailedJobWorker
   include Sidekiq::Worker
