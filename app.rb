@@ -120,8 +120,7 @@ class Rummager < Sinatra::Application
   # To get the results in date order, rather than relevancy:
   #   /search?q=pie&sort=public_timestamp&order=desc
   #
-  # To get the results in a Hash:
-  #   /search?q=pie&response_style=hash
+  # The response looks like this:
   #
   #   {
   #     "total": 1,
@@ -157,12 +156,7 @@ class Rummager < Sinatra::Application
       spelling_suggestions: suggester.suggestions(params["q"])
     }
     presenter = ResultSetPresenter.new(result_set, presenter_context)
-    if params["response_style"] == "hash"
-      presenter.present
-    else
-      results_array = MultiJson.decode(presenter.present)["results"]
-      MultiJson.encode(results_array)
-    end
+    presenter.present
   end
 
   # Perform an advanced search. Supports filters and pagination.

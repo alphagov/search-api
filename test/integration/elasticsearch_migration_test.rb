@@ -50,7 +50,7 @@ class ElasticsearchMigrationTest < IntegrationTest
 
   def assert_result_links(*links)
     parsed_response = MultiJson.decode(last_response.body)
-    assert_equal links, parsed_response.map { |r| r["link"] }
+    assert_equal links, parsed_response["results"].map { |r| r["link"] }
   end
 
   def test_full_reindex
@@ -58,7 +58,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     # stemming settings
 
     get "/search?q=directive"
-    assert_equal 2, MultiJson.decode(last_response.body).length
+    assert_equal 2, MultiJson.decode(last_response.body)["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
 

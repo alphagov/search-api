@@ -55,7 +55,7 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def assert_no_results
-    assert_equal [], MultiJson.decode(last_response.body)
+    assert_equal [], MultiJson.decode(last_response.body)["results"]
   end
 
   def test_should_404_on_deleted_content
