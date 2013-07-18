@@ -1,3 +1,15 @@
+GIT
+  remote: git@github.com:alphagov/mr-sparkle.git
+  revision: 8dfecf6034dfe6f751f6597b7feeb3d423e8503c
+  ref: 8dfecf6
+  branch: optional_force_polling
+  specs:
+    mr-sparkle (0.1.0)
+      listen (~> 1.0)
+      rb-fsevent (>= 0.9)
+      rb-inotify (>= 0.8)
+      unicorn (>= 4.5)
+
 GEM
   remote: https://rubygems.org/
   remote: https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/
@@ -28,6 +40,10 @@ GEM
     i18n (0.6.0)
     json (1.7.7)
     kgio (2.8.0)
+    listen (1.2.2)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
+      rb-kqueue (>= 0.2)
     little-plugger (1.1.3)
     logging (1.8.1)
       little-plugger (>= 1.1.3)
@@ -51,13 +67,16 @@ GEM
       rack (>= 1.0)
     raindrops (0.11.0)
     rake (0.9.2)
+    rb-fsevent (0.9.3)
+    rb-inotify (0.9.0)
+      ffi (>= 0.5.0)
+    rb-kqueue (0.2.0)
+      ffi (>= 0.5.0)
     redis (3.0.4)
     redis-namespace (1.3.0)
       redis (~> 3.0.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    shotgun (0.9)
-      rack (>= 1.0)
     shoulda-context (1.1.1)
     sidekiq (2.13.0)
       celluloid (>= 0.14.1)
@@ -111,6 +130,7 @@ DEPENDENCIES
   logging (= 1.8.1)
   minitest (= 4.6.1)
   mocha
+  mr-sparkle (= 0.1.0)!
   multi_json (= 1.3.6)
   nokogiri (= 1.5.5)
   rack (= 1.5.2)
@@ -118,7 +138,6 @@ DEPENDENCIES
   raindrops (= 0.11.0)
   rake (= 0.9.2)
   rest-client (= 1.6.7)
-  shotgun
   shoulda-context
   sidekiq (= 2.13.0)
   simplecov

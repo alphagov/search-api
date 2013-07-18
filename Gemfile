@@ -31,7 +31,8 @@ group :test do
 end
 
 group :development do
-  gem "shotgun"
+  # (Intelligent) reloading server in development
+  gem "mr-sparkle", "0.1.0", git: "git@github.com:alphagov/mr-sparkle.git", branch: "optional_force_polling", ref: "8dfecf6"
   # Use thin because WEBrick sometimes segfaults
   gem "thin"
 end
