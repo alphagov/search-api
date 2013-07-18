@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:alphagov/mr-sparkle.git
+  remote: https://github.com/alphagov/mr-sparkle.git
   revision: 8dfecf6034dfe6f751f6597b7feeb3d423e8503c
   ref: 8dfecf6
   branch: optional_force_polling
