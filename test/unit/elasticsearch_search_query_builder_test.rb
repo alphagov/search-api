@@ -33,15 +33,8 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
     assert_equal expected, query_string_condition
   end
 
-  def test_minimum_should_match_disabled_by_default
+  def test_minimum_should_match_has_sensible_default
     builder = Elasticsearch::SearchQueryBuilder.new("one two three", mappings)
-
-    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
-    refute_includes must_conditions[0][:match][:_all], :minimum_should_match
-  end
-
-  def test_minimum_should_match_has_sensible_default_if_enabled
-    builder = Elasticsearch::SearchQueryBuilder.new("one two three", mappings, minimum_should_match: true)
 
     must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
     assert_equal "2<2 3<3 7<50%", must_conditions[0][:match][:_all][:minimum_should_match]
@@ -141,13 +134,6 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
 
     query_string_condition = extract_condition_by_type(builder.query_hash, :match)
     assert_equal "how\\?", query_string_condition[:match][:_all][:query]
-  end
-
-  def test_can_pass_minimum_should_match
-    builder = Elasticsearch::SearchQueryBuilder.new("one two three", mappings, minimum_should_match: 2)
-
-    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
-    assert_equal 2, must_conditions[0][:match][:_all][:minimum_should_match]
   end
 
   def test_can_optionally_specify_limit
