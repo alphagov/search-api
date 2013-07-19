@@ -32,5 +32,5 @@ end
 
 group :development do
   # (Intelligent) reloading server in development
-  gem "mr-sparkle", "0.1.0", git: "https://github.com/alphagov/mr-sparkle.git", branch: "optional_force_polling", ref: "8dfecf6"
+  gem "mr-sparkle", "0.2.0"
 end
