@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 source "https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/"
 
-gem "unicorn", "4.3.1"
+gem "unicorn", "4.6.2"
 gem "raindrops", "0.11.0"
 gem "sinatra", "1.3.4"
 gem "rake", "0.9.2", :require => false
@@ -31,7 +31,6 @@ group :test do
 end
 
 group :development do
-  gem "shotgun"
-  # Use thin because WEBrick sometimes segfaults
-  gem "thin"
+  # (Intelligent) reloading server in development
+  gem "mr-sparkle", "0.2.0"
 end
