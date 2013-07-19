@@ -8,8 +8,14 @@ module Elasticsearch
     include Sidekiq::Worker
     sidekiq_options :retry => 5
 
-    def logger
+    # Logger is defined on the class for use inthe `sidekiq_retries_exhausted`
+    # block, and as an instance method for use the rest of the time
+    def self.logger
       Logging.logger[self]
+    end
+
+    def logger
+      self.class.logger
     end
 
     sidekiq_options :queue => :bulk
