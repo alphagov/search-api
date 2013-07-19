@@ -268,8 +268,14 @@ class Rummager < Sinatra::Application
     status = {}
     status["queues"] = {}
 
+    retries = Sidekiq::RetrySet.new.group_by(&:queue)
+
     Sidekiq::Stats.new.queues.each do |queue_name, queue_size|
-      status["queues"][queue_name] = {"jobs" => queue_size}
+      retry_count = retries.fetch(queue_name, []).size
+      status["queues"][queue_name] = {
+        "jobs" => queue_size,
+        "retries" => retry_count
+      }
     end
     MultiJson.encode(status)
   end
