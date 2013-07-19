@@ -14,4 +14,34 @@ class StatusTest < IntegrationTest
     assert_equal ["bulk"], parsed_response["queues"].keys
     assert_equal 12, parsed_response["queues"]["bulk"]["jobs"]
   end
+
+  def test_shows_per_queue_retry_count
+    # Stubbing out Sidekiq's retries (SortedEntry instances)
+    # https://github.com/mperham/sidekiq/blob/v2.13.0/lib/sidekiq/api.rb#L203-248
+    retries = %w(bulk bulk something-else).map { |q| stub(queue: q) }
+
+    Sidekiq::RetrySet.expects(:new).returns(retries)
+    Sidekiq::Stats.any_instance.expects(:queues).returns(
+      {"bulk" => 12}
+    )
+
+    get "/_status"
+
+    assert last_response.ok?
+    parsed_response = MultiJson.decode(last_response.body)
+    assert_equal 2, parsed_response["queues"]["bulk"]["retries"]
+  end
+
+  def test_shows_zero_retry_count
+    Sidekiq::RetrySet.expects(:new).returns([])
+    Sidekiq::Stats.any_instance.expects(:queues).returns(
+      {"bulk" => 12}
+    )
+
+    get "/_status"
+
+    assert last_response.ok?
+    parsed_response = MultiJson.decode(last_response.body)
+    assert_equal 0, parsed_response["queues"]["bulk"]["retries"]
+  end
 end
