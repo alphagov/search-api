@@ -65,7 +65,7 @@ class SearchTest < IntegrationTest
   def test_returns_json_for_search_results
     stub_index.expects(:search).returns(stub(results: [sample_document], total: 1))
     get "/search", {q: "bob"}, "HTTP_ACCEPT" => "application/json"
-    assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)
+    assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)["results"]
     assert_match(/application\/json/, last_response.headers["Content-Type"])
   end
 
@@ -78,13 +78,13 @@ class SearchTest < IntegrationTest
   def test_returns_json_when_requested_with_url_suffix
     stub_index.expects(:search).returns(stub(results: [sample_document], total: 1))
     get "/search.json", {q: "bob"}
-    assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)
+    assert_equal [sample_document_attributes], MultiJson.decode(last_response.body)["results"]
     assert_match(/application\/json/, last_response.headers["Content-Type"])
   end
 
   def test_returns_spelling_suggestions_when_hash_requested
     stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "speling", response_style: "hash"}
+    get "/search.json", {q: "speling"}
     assert_equal ["spelling"], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
@@ -92,7 +92,7 @@ class SearchTest < IntegrationTest
     stub_index.expects(:search).returns(stub(results: [], total: 0))
     OrganisationRegistry.any_instance.expects(:all)
       .returns([dft_organisation])
-    get "/search.json", {q: "DFT", response_style: "hash"} # DFT would get a suggestion
+    get "/search.json", {q: "DFT"} # DFT would get a suggestion
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
@@ -100,7 +100,7 @@ class SearchTest < IntegrationTest
     stub_index.expects(:search).returns(stub(results: [], total: 0))
     OrganisationRegistry.any_instance.expects(:all)
       .returns([dft_organisation])
-    get "/search.json", {q: "dft", response_style: "hash"} # DFT would get a suggestion
+    get "/search.json", {q: "dft"} # DFT would get a suggestion
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
@@ -116,25 +116,25 @@ class SearchTest < IntegrationTest
     stub_index.expects(:search).returns(stub(results: [], total: 0))
     OrganisationRegistry.any_instance.expects(:all)
       .returns([organisation_without_acronym])
-    get "/search.json", {q: "pies", response_style: "hash"}
+    get "/search.json", {q: "pies"}
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
   def test_does_not_suggest_corrections_for_words_in_ignore_file
     stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "sorn", response_style: "hash"} # sorn would get a suggestion
+    get "/search.json", {q: "sorn"} # sorn would get a suggestion
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
   def test_does_not_suggest_corrections_for_numbers_or_words_containing_numbers
     stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "v5c 2013", response_style: "hash"} # v5c would get a suggestion
+    get "/search.json", {q: "v5c 2013"} # v5c would get a suggestion
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
   def test_does_not_suggest_corrections_in_blacklist_file
     stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "penison", response_style: "hash"} # penison would get an inappropriate suggestion
+    get "/search.json", {q: "penison"} # penison would get an inappropriate suggestion
     assert_equal ["pension"], MultiJson.decode(last_response.body)["spelling_suggestions"]
   end
 
@@ -151,7 +151,7 @@ class SearchTest < IntegrationTest
       .with("bus-timetables")
       .returns(bus_timetables_document_series)
     get "/search.json", {q: "bob"}
-    first_result = MultiJson.decode(last_response.body).first
+    first_result = MultiJson.decode(last_response.body)["results"].first
     assert_equal 1, first_result["document_series"].size
     assert_equal bus_timetables_document_series.title, first_result["document_series"][0]["title"]
   end
@@ -169,7 +169,7 @@ class SearchTest < IntegrationTest
       .with("ministry-of-defence")
       .returns(mod_organisation)
     get "/search.json", {q: "bob"}
-    first_result = MultiJson.decode(last_response.body).first
+    first_result = MultiJson.decode(last_response.body)["results"].first
     assert_equal 1, first_result["organisations"].size
     assert_equal mod_organisation.title, first_result["organisations"][0]["title"]
   end
@@ -187,7 +187,7 @@ class SearchTest < IntegrationTest
       .with("housing")
       .returns(housing_topic)
     get "/search.json", {q: "bob"}
-    first_result = MultiJson.decode(last_response.body).first
+    first_result = MultiJson.decode(last_response.body)["results"].first
     assert_equal 1, first_result["topics"].size
     assert_equal housing_topic.title, first_result["topics"][0]["title"]
   end
@@ -205,7 +205,7 @@ class SearchTest < IntegrationTest
       .with("angola")
       .returns(angola_world_location)
     get "/search.json", {q: "bob"}
-    first_result = MultiJson.decode(last_response.body).first
+    first_result = MultiJson.decode(last_response.body)["results"].first
     assert_equal 1, first_result["world_locations"].size
     assert_equal angola_world_location.title, first_result["world_locations"][0]["title"]
   end

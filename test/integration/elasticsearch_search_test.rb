@@ -237,15 +237,6 @@ class ElasticsearchSearchTest < IntegrationTest
     assert_result_links "/pork-pies"
   end
 
-  def test_can_specify_hash_response_style
-    get "/search.json?q=badger&response_style=hash"
-    assert last_response.ok?
-    parsed_response = MultiJson.decode(last_response.body)
-    assert parsed_response.is_a?(Hash)
-    assert_equal ["total", "results", "spelling_suggestions"], parsed_response.keys
-    assert_result_links "/an-example-answer"
-  end
-
   def test_promoted_items_float_to_top_if_query_contains_a_promoted_keyword
     get "/search.json?q=promoted+jobs+in+birmingham"
     assert last_response.ok?

@@ -121,7 +121,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
   end
 
   def assert_no_results
-    assert_equal [], MultiJson.decode(last_response.body)
+    assert_equal [], MultiJson.decode(last_response.body)["results"]
   end
 
   def stub_index
