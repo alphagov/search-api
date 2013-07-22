@@ -149,8 +149,7 @@ class Rummager < Sinatra::Application
     result_set = current_index.search(query,
       organisation: organisation,
       sort: params["sort"],
-      order: params["order"],
-      minimum_should_match: params["minimum_should_match"].to_s.size > 0)
+      order: params["order"])
     presenter_context = {
       organisation_registry: organisation_registry,
       topic_registry: topic_registry,
