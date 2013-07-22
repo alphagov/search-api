@@ -6,8 +6,22 @@ module Elasticsearch
 
     QUERY_ANALYZER = "query_default"
 
-    def initialize(query, options={})
+    # `query`    - a string to search for
+    # `mappings` - the field definitions for the index this query is going to
+    #              used to validate parts of the query before sending to
+    #              Elasticsearch. The format is as follows:
+    #                {
+    #                  "edition" => {
+    #                    "_all" => { "enabled" => true },
+    #                    "properties" => {
+    #                       "fieldname" => { ...field definition... }
+    #                    }
+    #                  }
+    #                }
+    # `options`  - a hash with symbol keys
+    def initialize(query, mappings, options={})
       @query                = query
+      @mappings             = mappings
       @limit                = options[:limit] || 50
       @sort                 = options[:sort]
       @order                = options[:order] || "desc"
@@ -62,8 +76,22 @@ module Elasticsearch
       }
     end
 
-  private
+    def valid?
+      error.empty?
+    end
 
+    def error
+      errors = []
+      if @sort && ! @mappings["edition"]["properties"].keys.include?(@sort)
+        errors << "Sorting on unknown property: #{@sort}"
+      end
+      if @order && ! ["asc", "desc"].include?(@order)
+        errors << "Unexpected ordering: #{@order}"
+      end
+      errors.flatten.join('. ')
+    end
+
+  private
     def sort
       if @sort
         [

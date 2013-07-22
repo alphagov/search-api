@@ -155,7 +155,7 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def assert_rejected_search(expected_error, search_args)
-    e = assert_raises(RuntimeError) do
+    e = assert_raises(Elasticsearch::InvalidQuery) do
       @wrapper.advanced_search(search_args)
     end
     assert_equal expected_error, e.message

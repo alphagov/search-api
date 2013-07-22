@@ -149,6 +149,12 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested(:get, "http://example.com:9200/test-index/_search")
   end
 
+  def test_raises_error_for_invalid_query
+    assert_raises Elasticsearch::InvalidQuery do
+      @wrapper.search("keyword search", sort: "not_a_field_in_mappings")
+    end
+  end
+
   def test_commit
     refresh_url = "http://example.com:9200/test-index/_refresh"
     stub_request(:post, refresh_url).to_return(

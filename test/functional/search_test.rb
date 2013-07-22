@@ -69,6 +69,12 @@ class SearchTest < IntegrationTest
     assert_match(/application\/json/, last_response.headers["Content-Type"])
   end
 
+  def test_returns_semantic_response_for_invalid_query
+    get "/search", { q: "bob", sort: "not_in_schema" }
+    assert_equal 422, last_response.status
+    assert_equal "Sorting on unknown property: not_in_schema", last_response.body
+  end
+
   def test_returns_json_when_requested_with_url_suffix
     stub_index.expects(:search).returns(stub(results: [sample_document], total: 1))
     get "/search.json", {q: "bob"}
