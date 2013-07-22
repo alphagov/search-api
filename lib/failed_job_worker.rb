@@ -16,7 +16,12 @@ class FailedJobWorker
   def perform(job_info)
     # `job_info` is the same format at Sidekiq's job format, as serialised to
     # JSON and passed into Redis
-    mailer = settings.mailer
+    begin
+      mailer = settings.mailer
+    rescue NoMethodError  # If the initialiser isn't in place
+      mailer = nil
+    end
+
     unless mailer
       logger.warn "No mailer configured for failed job: discarding"
       logger.debug job_info
