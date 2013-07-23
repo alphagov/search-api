@@ -24,12 +24,12 @@ class OrganisationRegistry
   end
 
   def [](slug)
-    @cache.get.find { |o| o.link == "/government/organisations/#{slug}" }
+    @cache.get.find { |o| o.slug == slug }
   end
 
 private
   def fetch
-    fields = %w{link title acronym organisation_type}
+    fields = %w{slug link title acronym organisation_type}
     organisations = @index.documents_by_format("organisation", fields: fields)
     organisations.map do |o|
       fill_organisation_type(fix_acronym(o))

@@ -10,9 +10,10 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def mod_document
     Document.new(
-      %w(link title acronym organisation_type),
+      %w(slug link title acronym organisation_type),
       {
         link: "/government/organisations/ministry-of-defence",
+        slug: "ministry-of-defence",
         title: "Ministry of Defence"
       }
     )
@@ -38,12 +39,13 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
       .returns([mod_document])
     organisation = @organisation_registry["ministry-of-defence"]
     assert_equal "/government/organisations/ministry-of-defence", organisation.link
+    assert_equal "ministry-of-defence", organisation.slug
     assert_equal "Ministry of Defence", organisation.title
   end
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("organisation", fields: %w{link title acronym organisation_type})
+      .with("organisation", fields: %w{slug link title acronym organisation_type})
       .returns([])
     organisation = @organisation_registry["ministry-of-defence"]
   end
@@ -66,8 +68,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_indicates_organisation_type_from_index
     fully_labelled_document = Document.new(
-      %w(link title acronym organisation_type),
+      %w(slug link title acronym organisation_type),
       {
+        slug: "office-of-the-fonz",
         link: "/government/organisations/office-of-the-fonz",
         title: "Office of The Fonz",
         organisation_type: "Gang"
@@ -82,8 +85,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_organisation_type_from_index_takes_precedence
     fully_labelled_document = Document.new(
-      %w(link title acronym organisation_type),
+      %w(slug link title acronym organisation_type),
       {
+        slug: "ministry-of-defence",
         link: "/government/organisations/ministry-of-defence",
         title: "Ministry of Defence",
         organisation_type: "Stuff and things"
@@ -98,8 +102,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_extracts_acronym_from_title_if_missing
     document = Document.new(
-      %w(link title acronym),
+      %w(slug link title acronym),
       {
+        slug: "ministry-of-defence",
         link: "/government/organisations/ministry-of-defence",
         title: "Ministry of Defence (MoD)"
       }
@@ -114,8 +119,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_leaves_title_unchanged_if_acronym_present
     document = Document.new(
-      %w(link title acronym),
+      %w(slug link title acronym),
       {
+        slug: "ministry-of-defence",
         link: "/government/organisations/ministry-of-defence",
         title: "Ministry of Defence",
         acronym: "MoD"
@@ -131,8 +137,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_leaves_extra_brackets_when_extracting_acronym
     document = Document.new(
-      %w(link title acronym),
+      %w(slug link title acronym),
       {
+        slug: "forest-enterprise-england",
         link: "/government/organisations/forest-enterprise-england",
         title: "Forest Enterprise (England) (FEE)",
       }
@@ -147,8 +154,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_leaves_extra_brackets_when_acronym_present
     document = Document.new(
-      %w(link title acronym),
+      %w(slug link title acronym),
       {
+        slug: "forest-enterprise-england",
         link: "/government/organisations/forest-enterprise-england",
         title: "Forest Enterprise (England)",
         acronym: "FEE"
@@ -178,8 +186,9 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     # know about the field and will raise an error on #acronym calls.
 
     document = Document.new(
-      %w(link title),
+      %w(slug link title),
       {
+        slug: "ministry-of-justice",
         link: "/government/organisations/ministry-of-justice",
         title: "Ministry of Justice (MoJ)",
       }
