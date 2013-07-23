@@ -12,8 +12,13 @@ module Elasticsearch
     end
 
     def unknown_keys
-      @unknown_keys ||= @filter_params.keys - (@mappings["edition"]["properties"].keys +
-        @mappings["edition"]["properties"]["attachments"]["properties"].keys.map{|k| "attachments.#{k}"})
+      attachment_keys = if @mappings["edition"]["properties"]["attachments"]
+        @mappings["edition"]["properties"]["attachments"]["properties"].keys.map{|k| "attachments.#{k}"}
+      else
+        []
+      end
+
+      @unknown_keys ||= @filter_params.keys - (@mappings["edition"]["properties"].keys + attachment_keys)
     end
 
     def unknown_sort_key
