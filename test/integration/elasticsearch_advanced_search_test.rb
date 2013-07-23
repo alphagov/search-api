@@ -16,7 +16,13 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
       properties.merge!(
         "boolean_property" => { "type" => "boolean", "index" => "not_analyzed" },
         "date_property" => { "type" => "date", "index" => "not_analyzed" },
-        "organisations" => { "type" => "string", "index" => "not_analyzed" }
+        "organisations" => { "type" => "string", "index" => "not_analyzed" },
+        "attachments" => {
+          "properties" => {
+            "title" => {"type" => "string", "index" => "not_analyzed"},
+            "command_paper_number" => {"type" => "string", "index" => "not_analyzed"},
+          }
+        }
       )
     end
 
@@ -66,6 +72,16 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "link" => "/pork-pies",
         "boolean_property" => true,
         "date_property" => "2012-01-02"
+      },
+      {
+        "title" => "Doc with attachments",
+        "link" => "/doc-with-attachments",
+        "attachments" => [
+          {
+            "title" => "Special thing",
+            "command_paper_number" => "1234"
+          }
+        ]
       }
     ]
   end
@@ -108,6 +124,13 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     assert_result_links "/an-example-answer"
   end
 
+  def test_should_search_by_nested_data
+    get "/#{@index_name}/advanced_search.json?per_page=1&page=1&keywords=#{CGI.escape('Special thing')}"
+    assert last_response.ok?
+    assert_result_total 1
+    assert_result_links "/doc-with-attachments"
+  end
+
   def test_should_escape_lucene_characters
     ["badger)", "badger\\"].each do |problem|
       get "/#{@index_name}/advanced_search.json?per_page=1&page=1&keywords=#{CGI.escape(problem)}"
@@ -128,6 +151,13 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     assert last_response.ok?
     assert_result_total 2
     assert_result_links "/another-example-answer", "/yet-another-example-answer", order: false
+  end
+
+  def test_should_filter_results_by_a_nested_property
+    get "/#{@index_name}/advanced_search.json?per_page=2&page=1&attachments.command_paper_number=1234"
+    assert last_response.ok?
+    assert_result_total 1
+    assert_result_links "/doc-with-attachments"
   end
 
   def test_should_allow_boolean_filtering
@@ -187,7 +217,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   def test_should_allow_ordering_by_properties
     get "/#{@index_name}/advanced_search.json?per_page=4&page=1&order[date_property]=desc"
     assert last_response.ok?
-    assert_result_total 4
+    assert_result_total 5
     assert_result_links "/yet-another-example-answer", "/another-example-answer", "/pork-pies", "/an-example-answer"
   end
 end
