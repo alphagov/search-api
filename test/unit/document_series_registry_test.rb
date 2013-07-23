@@ -10,9 +10,8 @@ class DocumentSeriesRegistryTest < MiniTest::Unit::TestCase
 
   def rail_statistics
     Document.new(
-      %w(slug link title),
+      %w(link title),
       {
-        slug: "rail-statistics",
         link: "/government/organisations/department-for-transport/series/rail-statistics",
         title: "Rail statistics"
       }
@@ -24,14 +23,13 @@ class DocumentSeriesRegistryTest < MiniTest::Unit::TestCase
       .with("document_series", anything)
       .returns([rail_statistics])
     document_series = @document_series_registry["rail-statistics"]
-    assert_equal rail_statistics.slug, document_series.slug
     assert_equal rail_statistics.link, document_series.link
     assert_equal rail_statistics.title, document_series.title
   end
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("document_series", fields: %w{slug link title})
+      .with("document_series", fields: %w{link title})
     document_series = @document_series_registry["rail-statistics"]
   end
 

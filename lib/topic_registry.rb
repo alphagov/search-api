@@ -9,12 +9,12 @@ class TopicRegistry
   end
 
   def [](slug)
-    @cache.get.find { |o| o.slug == slug }
+    @cache.get.find { |o| o.link == "/government/topics/#{slug}" }
   end
 
 private
   def fetch
-    fields = %w(slug link title)
+    fields = %w(link title)
     @index.documents_by_format("topic", fields: fields).to_a
   end
 end

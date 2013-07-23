@@ -9,12 +9,12 @@ class DocumentSeriesRegistry
   end
 
   def [](slug)
-    @cache.get.find { |o| o.slug == slug }
+    @cache.get.find { |o| o.link =~ %r{/series/#{slug}$} }
   end
 
 private
   def fetch
-    fields = %w{slug link title}
+    fields = %w{link title}
     @index.documents_by_format("document_series", fields: fields).to_a
   end
 
