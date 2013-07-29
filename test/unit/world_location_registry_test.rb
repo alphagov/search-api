@@ -10,8 +10,9 @@ class WorldLocationRegistryTest < MiniTest::Unit::TestCase
 
   def angola
     Document.new(
-      %w(link title),
+      %w(slug link title),
       {
+        slug: "angola",
         link: "/government/world/angola",
         title: "Angola"
       }
@@ -23,13 +24,14 @@ class WorldLocationRegistryTest < MiniTest::Unit::TestCase
       .with("world_location", anything)
       .returns([angola])
     world_location = @world_location_registry["angola"]
+    assert_equal angola.slug, world_location.slug
     assert_equal angola.link, world_location.link
     assert_equal angola.title, world_location.title
   end
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("world_location", fields: %w{link title})
+      .with("world_location", fields: %w{slug link title})
     world_location = @world_location_registry["angola"]
   end
 
