@@ -23,7 +23,7 @@ class TopicRegistryTest < MiniTest::Unit::TestCase
     # This is to make sure the cache expiry is expressed in seconds; DateTime,
     # for example, treats number addition as a number of days.
     TimedCache.expects(:new).with(is_a(Fixnum), Time)
-    OrganisationRegistry.new(stub("index"))
+    TopicRegistry.new(stub("index"))
   end
 
   def test_can_fetch_topic_by_slug
