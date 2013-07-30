@@ -29,23 +29,6 @@ class DocumentSeriesRegistryTest < MiniTest::Unit::TestCase
     assert_equal rail_statistics.title, document_series.title
   end
 
-  def test_can_fall_back_on_link_munging
-    # TODO: remove this once slugs are all migrated
-    rail_statistics_without_slug = Document.new(
-      %w(slug link title),
-      {
-        link: "/government/organisations/department-for-transport/series/rail-statistics",
-        title: "Rail statistics"
-      }
-    )
-    @index.stubs(:documents_by_format)
-      .with("document_series", anything)
-      .returns([rail_statistics_without_slug])
-    document_series = @document_series_registry["rail-statistics"]
-    assert_equal rail_statistics.link, document_series.link
-    assert_equal rail_statistics.title, document_series.title
-  end
-
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
       .with("document_series", fields: %w{slug link title})

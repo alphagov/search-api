@@ -9,8 +9,7 @@ class DocumentSeriesRegistry
   end
 
   def [](slug)
-    # TODO: remove the link fallback once slugs are migrated
-    @cache.get.find { |o| o.slug == slug || o.link =~ %r{/series/#{slug}$} }
+    @cache.get.find { |o| o.slug == slug }
   end
 
 private
