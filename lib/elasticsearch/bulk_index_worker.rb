@@ -1,9 +1,14 @@
 require "sidekiq"
-require "config"
 require "sidekiq_json_encoding_patch"
 require "failed_job_worker"
 
 module Elasticsearch
+  # This class requires the `config.rb` file to be loaded, since it requires
+  # access to the `search_config` setting, but including it here can cause a
+  # circular require dependency, from:
+  #
+  #   SearchConfig -> SearchServer -> IndexGroup -> Index -> DocumentQueue ->
+  #   BulkIndexWorker -> SearchConfig
   class BulkIndexWorker
     include Sidekiq::Worker
     sidekiq_options :retry => 5
