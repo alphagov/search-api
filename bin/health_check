@@ -3,7 +3,10 @@
 PROJECT_ROOT = File.dirname(__FILE__) + "/../"
 DATA_DIR = PROJECT_ROOT + "data/"
 LIBRARY_PATH = PROJECT_ROOT + "lib/"
-$LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
+
+[PROJECT_ROOT, LIBRARY_PATH].each do |path|
+  $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
+end
 
 INDICES = %w{mainstream detailed government}
 DEFAULT_HTML_URL = "https://www.gov.uk/search"

@@ -1,5 +1,5 @@
 %w[ lib ].each do |path|
-  $:.unshift path unless $:.include?(path)
+  $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
 require "sinatra"
