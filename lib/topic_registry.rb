@@ -9,8 +9,7 @@ class TopicRegistry
   end
 
   def [](slug)
-    # TODO: remove the link fallback once all slugs are migrated
-    @cache.get.find { |o| o.slug == slug || o.link == "/government/topics/#{slug}" }
+    @cache.get.find { |o| o.slug == slug }
   end
 
 private

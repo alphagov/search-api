@@ -43,23 +43,6 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     assert_equal "Ministry of Defence", organisation.title
   end
 
-  def test_can_fall_back_on_link_munging
-    # TODO: remove this once all the slugs are migrated
-    mod_document_without_slug = Document.new(
-      %w(slug link title acronym organisation_type),
-      {
-        link: "/government/organisations/ministry-of-defence",
-        title: "Ministry of Defence"
-      }
-    )
-    @index.stubs(:documents_by_format)
-      .with("organisation", anything)
-      .returns([mod_document_without_slug])
-    organisation = @organisation_registry["ministry-of-defence"]
-    assert_equal "/government/organisations/ministry-of-defence", organisation.link
-    assert_equal "Ministry of Defence", organisation.title
-  end
-
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
       .with("organisation", fields: %w{slug link title acronym organisation_type})

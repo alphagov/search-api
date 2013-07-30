@@ -9,8 +9,7 @@ class WorldLocationRegistry
   end
 
   def [](slug)
-    # TODO: remove the link fallback once we have slugs everywhere
-    @cache.get.find { |o| o.slug == slug || o.link == "/government/world/#{slug}"}
+    @cache.get.find { |o| o.slug == slug }
   end
 
 private
