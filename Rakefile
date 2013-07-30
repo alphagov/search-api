@@ -6,7 +6,7 @@ PROJECT_ROOT = File.dirname(__FILE__)
 LIBRARY_PATH = File.join(PROJECT_ROOT, "lib")
 
 [PROJECT_ROOT, LIBRARY_PATH].each do |path|
-  $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
+  $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
 require "config"

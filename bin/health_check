@@ -5,7 +5,7 @@ DATA_DIR = PROJECT_ROOT + "data/"
 LIBRARY_PATH = PROJECT_ROOT + "lib/"
 
 [PROJECT_ROOT, LIBRARY_PATH].each do |path|
-  $LOAD_PATH.unshift path unless $LOAD_PATH.include? path
+  $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
 INDICES = %w{mainstream detailed government}
