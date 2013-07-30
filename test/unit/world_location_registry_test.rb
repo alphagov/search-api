@@ -29,6 +29,24 @@ class WorldLocationRegistryTest < MiniTest::Unit::TestCase
     assert_equal angola.title, world_location.title
   end
 
+  def test_can_fall_back_to_link_munging
+    # TODO: remove this functionality once we have everything migrated
+    angola_without_slug = Document.new(
+      # The document is still aware of slugs
+      %w(slug link title),
+      {
+        link: "/government/world/angola",
+        title: "Angola"
+      }
+    )
+    @index.stubs(:documents_by_format)
+      .with("world_location", anything)
+      .returns([angola_without_slug])
+    world_location = @world_location_registry["angola"]
+    assert_equal angola.link, world_location.link
+    assert_equal angola.title, world_location.title
+  end
+
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
       .with("world_location", fields: %w{slug link title})
