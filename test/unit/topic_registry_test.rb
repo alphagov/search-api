@@ -36,23 +36,6 @@ class TopicRegistryTest < MiniTest::Unit::TestCase
     assert_equal "Housing", topic.title
   end
 
-  def test_can_fall_back_on_link_munging
-    # TODO: remove this once all the slugs are migrated
-    housing_document_without_slug = Document.new(
-      %w(slug link title),
-      {
-        link: "/government/topics/housing",
-        title: "Housing"
-      }
-    )
-    @index.stubs(:documents_by_format)
-      .with("topic", anything)
-      .returns([housing_document_without_slug])
-    topic = @topic_registry["housing"]
-    assert_equal "/government/topics/housing", topic.link
-    assert_equal "Housing", topic.title
-  end
-
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
       .with("topic", fields: %w{slug link title})
