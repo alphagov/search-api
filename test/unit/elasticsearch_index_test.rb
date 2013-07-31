@@ -69,12 +69,42 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 {"index":{"_type":"edition","_id":"/foo/bar"}}
 {"_type":"edition","link":"/foo/bar","title":"TITLE ONE"}
     eos
+    response = <<-eos
+{"took":5,"items":[
+  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+]}
+    eos
     stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
         body: payload,
         headers: {"Content-Type" => "application/json"}
-    )
+    ).to_return(body: response)
     @wrapper.add [document]
     assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+  end
+
+  def test_should_raise_error_for_failures_in_bulk_update
+    json_documents = [
+      { "_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE" },
+      { "_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO" }
+    ]
+    documents = json_documents.map do |json_document|
+      stub("document", elasticsearch_export: json_document)
+    end
+    response = <<-eos
+{"took":0,"items":[
+  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } },
+  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/baz", "error":"stuff" } }
+]}
+    eos
+    stub_request(:post, "http://example.com:9200/test-index/_bulk").to_return(body: response)
+
+    begin
+      @wrapper.add(documents)
+      flunk("No exception raised")
+    rescue Elasticsearch::BulkIndexFailure => e
+      assert_equal "Failed inserts: /foo/baz", e.message
+      assert_equal ["/foo/baz"], e.failed_keys
+    end
   end
 
   def test_get_document
