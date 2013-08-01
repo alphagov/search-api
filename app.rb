@@ -111,6 +111,10 @@ class Rummager < Sinatra::Application
     halt(422, env['sinatra.error'].message)
   end
 
+  error Elasticsearch::BulkIndexFailure do
+    halt(500, env['sinatra.error'].message)
+  end
+
   # To search a named index:
   #   /index_name/search?q=pie
   #
