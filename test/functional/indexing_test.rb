@@ -34,4 +34,15 @@ class IndexingTest < IntegrationTest
 
     assert_equal 202, last_response.status
   end
+
+  def test_handles_bulk_index_failure
+    app.settings.expects(:enable_queue).returns(false)
+    index = stub_index
+    index.expects(:document_from_hash).with(document_hashes[0]).returns(:foo)
+    index.expects(:add).raises(Elasticsearch::BulkIndexFailure.new([]))
+
+    post "/documents", MultiJson.encode(document_hashes), :content_type => :json
+
+    assert_equal 500, last_response.status
+  end
 end
