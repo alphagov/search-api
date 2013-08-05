@@ -11,7 +11,7 @@ module Elasticsearch
   #   BulkIndexWorker -> SearchConfig
   class BulkIndexWorker
     include Sidekiq::Worker
-    sidekiq_options :retry => 5
+    sidekiq_options :retry => 5, :queue => :bulk
 
     # Logger is defined on the class for use inthe `sidekiq_retries_exhausted`
     # block, and as an instance method for use the rest of the time
@@ -22,8 +22,6 @@ module Elasticsearch
     def logger
       self.class.logger
     end
-
-    sidekiq_options :queue => :bulk
 
     def perform(index_name, document_hashes)
       noun = document_hashes.size > 1 ? "documents" : "document"
