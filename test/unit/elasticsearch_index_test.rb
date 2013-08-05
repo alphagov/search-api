@@ -144,7 +144,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     mock_queue = mock("document queue") do
       expects(:queue_many).with([json_document])
     end
-    Elasticsearch::DocumentQueue.expects(:new)
+    Elasticsearch::IndexQueue.expects(:new)
       .with("test-index")
       .returns(mock_queue)
 

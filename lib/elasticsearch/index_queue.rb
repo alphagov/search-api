@@ -1,8 +1,8 @@
 require "elasticsearch/bulk_index_worker"
 
 module Elasticsearch
-  # A queue of documents to be added to an index.
-  class DocumentQueue
+  # A queue of operations on an index.
+  class IndexQueue
 
     def initialize(index_name)
       @index_name = index_name

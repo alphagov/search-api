@@ -6,7 +6,7 @@ require "multi_json"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"
-require "elasticsearch/document_queue"
+require "elasticsearch/index_queue"
 require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
@@ -109,7 +109,7 @@ module Elasticsearch
       logger.info "Queueing #{documents.size} #{noun} to add to #{index_name}"
 
       document_hashes = documents.map { |d| hash_from_document(d) }
-      document_queue.queue_many(document_hashes)
+      queue.queue_many(document_hashes)
     end
 
     def bulk_index(document_hashes)
@@ -306,8 +306,8 @@ module Elasticsearch
       result_promoter.with_promotion(document_hash)
     end
 
-    def document_queue
-      DocumentQueue.new(index_name)
+    def queue
+      IndexQueue.new(index_name)
     end
   end
 end
