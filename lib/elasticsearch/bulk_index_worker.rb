@@ -11,7 +11,7 @@ module Elasticsearch
   #   BulkIndexWorker -> SearchConfig
   class BulkIndexWorker
     include Sidekiq::Worker
-    sidekiq_options :retry => 5, :queue => :bulk
+    sidekiq_options :retry => 5, :queue => :bulk, :backtrace => 12
 
     # Logger is defined on the class for use inthe `sidekiq_retries_exhausted`
     # block, and as an instance method for use the rest of the time
