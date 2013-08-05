@@ -204,6 +204,7 @@ class Rummager < Sinatra::Application
     OrganisationSetPresenter.new(organisations).present
   end
 
+  # Insert (or overwrite) a document
   post "/?:index?/documents" do
     request.body.rewind
     documents = [MultiJson.decode(request.body.read)].flatten.map { |hash|
@@ -233,6 +234,7 @@ class Rummager < Sinatra::Application
     simple_json_result(current_index.delete(params["splat"].first))
   end
 
+  # Update an existing document
   post "/?:index?/documents/*" do
     unless request.form_data?
       halt(
