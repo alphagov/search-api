@@ -15,6 +15,14 @@ require "result_promoter"
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
+  class BulkIndexFailure < RuntimeError
+    attr_reader :failed_keys
+
+    def initialize(failed_keys)
+      super "Failed inserts: #{failed_keys.join(', ')}"
+      @failed_keys = failed_keys
+    end
+  end
 
   class Index
     include Elasticsearch::Escaping
@@ -105,7 +113,13 @@ module Elasticsearch
     end
 
     def bulk_index(document_hashes)
-      @client.post("_bulk", bulk_payload(document_hashes), content_type: :json)
+      response = @client.post("_bulk", bulk_payload(document_hashes), content_type: :json)
+      items = MultiJson.decode(response.body)["items"]
+      failed_items = items.select { |item| item["index"].has_key?("error") }
+      if failed_items.any?
+        raise BulkIndexFailure.new(failed_items.map { |item| item["index"]["_id"] })
+      end
+      response
     end
 
     def populate_from(source_index)
