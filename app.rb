@@ -230,7 +230,13 @@ class Rummager < Sinatra::Application
   end
 
   delete "/?:index?/documents/*" do
-    simple_json_result(current_index.delete(params["splat"].first))
+    document_link = params["splat"].first
+    if settings.enable_queue
+      current_index.delete_queued(document_link)
+      json_result 202, "Queued"
+    else
+      simple_json_result(current_index.delete(document_link))
+    end
   end
 
   post "/?:index?/documents/*" do

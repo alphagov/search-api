@@ -252,6 +252,10 @@ module Elasticsearch
       return true  # For consistency with the Solr API and simple_json_response
     end
 
+    def delete_queued(link)
+      queue.queue_delete(link)
+    end
+
     def delete_all
       @client.delete_with_payload("_query", {match_all: {}}.to_json)
       commit

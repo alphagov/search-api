@@ -151,6 +151,17 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     @wrapper.add_queued([document])
   end
 
+  def test_queued_delete
+    mock_queue = mock("document queue") do
+      expects(:queue_delete).with("/foobang")
+    end
+    Elasticsearch::IndexQueue.expects(:new)
+      .with("test-index")
+      .returns(mock_queue)
+
+    @wrapper.delete_queued("/foobang")
+  end
+
   def test_get_document_not_found
     document_url = "http://example.com:9200/test-index/_all/%2Fa-bad-link"
 
