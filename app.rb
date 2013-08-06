@@ -264,6 +264,9 @@ class Rummager < Sinatra::Application
   end
 
   delete "/?:index?/documents" do
+    # DEPRECATED: the preferred way to do this is now through the
+    # `rummager:switch_to_empty_index` Rake command
+
     if params["delete_all"]
       action = current_index.delete_all
     else
