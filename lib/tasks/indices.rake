@@ -29,22 +29,27 @@ namespace :rummager do
       index_group = search_server.index_group(index_name)
 
       new_index = index_group.create_index
-      old_index = index_group.current
+      old_index = index_group.current_real
 
-      if old_index.exists?
-        new_index.populate_from old_index
-        new_count = new_index.all_documents.size
-        old_count = old_index.all_documents.size
-        unless new_count == old_count
-          logger.error(
-            "Population miscount: new index has #{new_count} documents, " +
-            "while old index has #{old_count}."
-          )
-          raise RuntimeError, "Population count mismatch"
+      if old_index
+        old_index.with_lock do
+          new_index.populate_from old_index
+          new_count = new_index.all_documents.size
+          old_count = old_index.all_documents.size
+          unless new_count == old_count
+            logger.error(
+              "Population miscount: new index has #{new_count} documents, " +
+              "while old index has #{old_count}."
+            )
+            raise RuntimeError, "Population count mismatch"
+          end
+          # Switch aliases inside the lock so we avoid a race condition where a
+          # new index exists, but the old index is available for writes
+          index_group.switch_to new_index
         end
+      else
+        index_group.switch_to new_index
       end
-
-      index_group.switch_to new_index
     end
   end
 

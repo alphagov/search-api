@@ -107,6 +107,17 @@ module Elasticsearch
       @client.put("_settings", request_body, content_type: :json)
     end
 
+    def with_lock(&block)
+      logger.info "Locking #{@index_name}"
+      lock
+      begin
+        block.call
+      ensure
+        logger.info "Unlocking #{@index_name}"
+        unlock
+      end
+    end
+
     def add(documents)
       if documents.size == 1
         logger.info "Adding #{documents.size} document to #{index_name}"

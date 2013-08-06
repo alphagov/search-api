@@ -87,6 +87,19 @@ module Elasticsearch
       Index.new(@base_uri, @name, @mappings, @promoted_results)
     end
 
+    # The unaliased version of the current index
+    #
+    # When we're migrating, we need access to this so we can still manipulate
+    # the index even after we have switched the alias
+    def current_real
+      current_index = current
+      if current_index.exists?
+        Index.new(@base_uri, current.real_name, @mappings, @promoted_results)
+      else
+        nil
+      end
+    end
+
     def index_names
       alias_map.keys
     end
