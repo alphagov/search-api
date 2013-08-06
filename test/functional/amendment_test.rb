@@ -33,6 +33,15 @@ class AmendmentTest < IntegrationTest
     assert_equal 415, last_response.status
   end
 
+  def test_should_queue_amendments_when_configured
+    app.stubs(:enable_queue).returns(true)
+    stub_index.expects(:amend_queued).with("/foobang", "title" => "New title")
+
+    post "/documents/%2Ffoobang", {title: "New title"}
+
+    assert_equal 202, last_response.status
+  end
+
   def test_should_refuse_to_update_link
     index = stub_index
     index.expects(:amend)

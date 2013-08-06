@@ -23,4 +23,11 @@ class IndexQueueTest < MiniTest::Unit::TestCase
     queue = Elasticsearch::IndexQueue.new("test-index")
     queue.queue_delete("/foobang")
   end
+
+  def test_can_amend_documents
+    Elasticsearch::AmendWorker.expects(:perform_async)
+      .with("test-index", "/foobang", "title" => "Cheese")
+    queue = Elasticsearch::IndexQueue.new("test-index")
+    queue.queue_amend("/foobang", "title" => "Cheese")
+  end
 end

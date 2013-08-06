@@ -249,13 +249,18 @@ class Rummager < Sinatra::Application
     end
 
     begin
-      current_index.amend(params["splat"].first, request.POST)
+      if settings.enable_queue
+        current_index.amend_queued(params["splat"].first, request.POST)
+        json_result 202, "Queued"
+      else
+        current_index.amend(params["splat"].first, request.POST)
+        json_result 200, "OK"
+      end
     rescue ArgumentError => e
       text_error e.message
     rescue Elasticsearch::DocumentNotFound
       halt 404
     end
-    json_result 200, "OK"
   end
 
   delete "/?:index?/documents" do

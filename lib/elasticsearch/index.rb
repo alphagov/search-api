@@ -143,6 +143,10 @@ module Elasticsearch
       return true
     end
 
+    def amend_queued(link, updates)
+      queue.queue_amend(link, updates)
+    end
+
     def populate_from(source_index)
       total_indexed = 0
       all_docs = source_index.all_documents
