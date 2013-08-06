@@ -2,8 +2,6 @@ require "elasticsearch/base_worker"
 
 module Elasticsearch
   class BulkIndexWorker < BaseWorker
-    sidekiq_options :retry => 5, :queue => :bulk, :backtrace => 12
-
     forward_to_failure_queue
 
     def perform(index_name, document_hashes)

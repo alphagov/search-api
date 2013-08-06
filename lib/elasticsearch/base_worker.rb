@@ -12,6 +12,9 @@ module Elasticsearch
   class BaseWorker
     include Sidekiq::Worker
 
+    # Default options: can be overridden with `sidekiq_options` in subclasses
+    sidekiq_options :retry => 5, :backtrace => 12
+
     def logger
       self.class.logger
     end
