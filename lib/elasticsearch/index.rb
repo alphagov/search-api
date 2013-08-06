@@ -16,6 +16,7 @@ require "result_promoter"
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
   class DocumentNotFound < RuntimeError; end
+  class IndexLocked < RuntimeError; end
 
   class BulkIndexFailure < RuntimeError
     attr_reader :failed_keys
@@ -94,6 +95,18 @@ module Elasticsearch
       ! real_name.nil?
     end
 
+    # Apply a write lock to this index, making it read-only
+    def lock
+      request_body = {"index" => {"blocks" => {"write" => true}}}.to_json
+      @client.put("_settings", request_body, content_type: :json)
+    end
+
+    # Remove any write lock applied to this index
+    def unlock
+      request_body = {"index" => {"blocks" => {"write" => false}}}.to_json
+      @client.put("_settings", request_body, content_type: :json)
+    end
+
     def add(documents)
       if documents.size == 1
         logger.info "Adding #{documents.size} document to #{index_name}"
@@ -119,7 +132,17 @@ module Elasticsearch
       items = MultiJson.decode(response.body)["items"]
       failed_items = items.select { |item| item["index"].has_key?("error") }
       if failed_items.any?
-        raise BulkIndexFailure.new(failed_items.map { |item| item["index"]["_id"] })
+        # Because bulk writes return a 200 status code regardless, we need to
+        # parse through the errors to detect responses that indicate a locked
+        # index
+        blocked_items = failed_items.select { |item|
+          locked_index_error?(item["index"]["error"])
+        }
+        if blocked_items.any?
+          raise IndexLocked
+        else
+          raise BulkIndexFailure.new(failed_items.map { |item| item["index"]["_id"] })
+        end
       end
       response
     end
@@ -273,6 +296,13 @@ module Elasticsearch
         # Can't use a simple delete, because we don't know the type
         @client.delete "_query", params: {q: "link:#{escape(link)}"}
       rescue RestClient::ResourceNotFound
+      rescue RestClient::Forbidden => e
+        response_body = MultiJson.decode(e.http_body)
+        if locked_index_error?(response_body["error"])
+          raise IndexLocked
+        else
+          raise
+        end
       end
       return true  # For consistency with the Solr API and simple_json_response
     end
@@ -290,7 +320,16 @@ module Elasticsearch
       @client.post "_refresh", nil
     end
 
-    private
+  private
+
+    # Parse an elasticsearch error message to determine whether it's caused by
+    # a write-locked index. An example write-lock error message:
+    #
+    #     "ClusterBlockException[blocked by: [FORBIDDEN/8/index write (api)];]"
+    def locked_index_error?(error_message)
+      error_message =~ %r{\[FORBIDDEN/[^/]+/index write}
+    end
+
     def logger
       Logging.logger[self]
     end
