@@ -15,6 +15,8 @@ require "result_promoter"
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
+  class DocumentNotFound < RuntimeError; end
+
   class BulkIndexFailure < RuntimeError
     attr_reader :failed_keys
 
@@ -120,6 +122,25 @@ module Elasticsearch
         raise BulkIndexFailure.new(failed_items.map { |item| item["index"]["_id"] })
       end
       response
+    end
+
+    def amend(link, updates)
+      document = get(link)
+      raise DocumentNotFound.new(link) unless document
+
+      if updates.include? "link"
+        raise ArgumentError.new("Cannot change document links")
+      end
+
+      updates.each do |key, value|
+        if document.has_field?(key)
+          document.set key, value
+        else
+          raise ArgumentError.new("Unrecognised field '#{key}'")
+        end
+      end
+      add [document]
+      return true
     end
 
     def populate_from(source_index)

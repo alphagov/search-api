@@ -162,6 +162,47 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     @wrapper.delete_queued("/foobang")
   end
 
+  def test_amend
+    mock_document = mock("document") do
+      expects(:has_field?).with("title").returns(true)
+      expects(:set).with("title", "New title")
+    end
+    @wrapper.expects(:get).with("/foobang").returns(mock_document)
+    @wrapper.expects(:add).with([mock_document])
+
+    @wrapper.amend("/foobang", "title" => "New title")
+  end
+
+  def test_amend_with_link
+    @wrapper.expects(:get).with("/foobang").returns(mock("document"))
+    @wrapper.expects(:add).never
+
+    assert_raises ArgumentError do
+      @wrapper.amend("/foobang", "link" => "/flibble")
+    end
+  end
+
+  def test_amend_with_bad_field
+    mock_document = mock("document") do
+      expects(:has_field?).with("fish").returns(false)
+    end
+    @wrapper.expects(:get).with("/foobang").returns(mock_document)
+    @wrapper.expects(:add).never
+
+    assert_raises ArgumentError do
+      @wrapper.amend("/foobang", "fish" => "Trout")
+    end
+  end
+
+  def test_amend_missing_document
+    @wrapper.expects(:get).with("/foobang").returns(nil)
+    @wrapper.expects(:add).never
+
+    assert_raises Elasticsearch::DocumentNotFound do
+      @wrapper.amend("/foobang", "title" => "New title")
+    end
+  end
+
   def test_get_document_not_found
     document_url = "http://example.com:9200/test-index/_all/%2Fa-bad-link"
 
