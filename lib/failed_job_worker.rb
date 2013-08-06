@@ -5,13 +5,11 @@ require "sidekiq_json_encoding_patch"
 
 class FailedJobWorker
   include Sidekiq::Worker
-  sidekiq_options :retry => false
+  sidekiq_options :retry => false, :queue => :failed
 
   def logger
     Logging.logger[self]
   end
-
-  sidekiq_options :queue => :failed
 
   def perform(job_info)
     # `job_info` is the same format at Sidekiq's job format, as serialised to

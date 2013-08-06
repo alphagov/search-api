@@ -231,7 +231,13 @@ class Rummager < Sinatra::Application
   end
 
   delete "/?:index?/documents/*" do
-    simple_json_result(current_index.delete(params["splat"].first))
+    document_link = params["splat"].first
+    if settings.enable_queue
+      current_index.delete_queued(document_link)
+      json_result 202, "Queued"
+    else
+      simple_json_result(current_index.delete(document_link))
+    end
   end
 
   # Update an existing document
@@ -243,22 +249,26 @@ class Rummager < Sinatra::Application
         "Amendments require application/x-www-form-urlencoded data"
       )
     end
-    document = current_index.get(params["splat"].first)
-    halt 404 unless document
-    text_error "Cannot change document links" if request.POST.include? "link"
 
-    # Note: this expects application/x-www-form-urlencoded data, not JSON
-    request.POST.each_pair do |key, value|
-      if document.has_field?(key)
-        document.set key, value
+    begin
+      if settings.enable_queue
+        current_index.amend_queued(params["splat"].first, request.POST)
+        json_result 202, "Queued"
       else
-        text_error "Unrecognised field '#{key}'"
+        current_index.amend(params["splat"].first, request.POST)
+        json_result 200, "OK"
       end
+    rescue ArgumentError => e
+      text_error e.message
+    rescue Elasticsearch::DocumentNotFound
+      halt 404
     end
-    simple_json_result(current_index.add([document]))
   end
 
   delete "/?:index?/documents" do
+    # DEPRECATED: the preferred way to do this is now through the
+    # `rummager:switch_to_empty_index` Rake command
+
     if params["delete_all"]
       action = current_index.delete_all
     else
