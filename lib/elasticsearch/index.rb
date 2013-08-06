@@ -6,7 +6,7 @@ require "multi_json"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"
-require "elasticsearch/document_queue"
+require "elasticsearch/index_queue"
 require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
@@ -15,6 +15,8 @@ require "result_promoter"
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
+  class DocumentNotFound < RuntimeError; end
+
   class BulkIndexFailure < RuntimeError
     attr_reader :failed_keys
 
@@ -109,7 +111,7 @@ module Elasticsearch
       logger.info "Queueing #{documents.size} #{noun} to add to #{index_name}"
 
       document_hashes = documents.map { |d| hash_from_document(d) }
-      document_queue.queue_many(document_hashes)
+      queue.queue_many(document_hashes)
     end
 
     def bulk_index(document_hashes)
@@ -120,6 +122,29 @@ module Elasticsearch
         raise BulkIndexFailure.new(failed_items.map { |item| item["index"]["_id"] })
       end
       response
+    end
+
+    def amend(link, updates)
+      document = get(link)
+      raise DocumentNotFound.new(link) unless document
+
+      if updates.include? "link"
+        raise ArgumentError.new("Cannot change document links")
+      end
+
+      updates.each do |key, value|
+        if document.has_field?(key)
+          document.set key, value
+        else
+          raise ArgumentError.new("Unrecognised field '#{key}'")
+        end
+      end
+      add [document]
+      return true
+    end
+
+    def amend_queued(link, updates)
+      queue.queue_amend(link, updates)
     end
 
     def populate_from(source_index)
@@ -252,6 +277,10 @@ module Elasticsearch
       return true  # For consistency with the Solr API and simple_json_response
     end
 
+    def delete_queued(link)
+      queue.queue_delete(link)
+    end
+
     def delete_all
       @client.delete_with_payload("_query", {match_all: {}}.to_json)
       commit
@@ -306,8 +335,8 @@ module Elasticsearch
       result_promoter.with_promotion(document_hash)
     end
 
-    def document_queue
-      DocumentQueue.new(index_name)
+    def queue
+      IndexQueue.new(index_name)
     end
   end
 end
