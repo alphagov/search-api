@@ -46,6 +46,8 @@ namespace :rummager do
           # Switch aliases inside the lock so we avoid a race condition where a
           # new index exists, but the old index is available for writes
           index_group.switch_to new_index
+
+          old_index.close
         end
       else
         index_group.switch_to new_index
