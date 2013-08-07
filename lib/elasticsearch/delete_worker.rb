@@ -4,8 +4,6 @@ module Elasticsearch
   class DeleteWorker < BaseWorker
     forward_to_failure_queue
 
-    LOCK_DELAY = 60  # seconds
-
     def perform(index_name, document_link)
       logger.info "Deleting document '#{document_link}' from '#{index_name}'"
       begin

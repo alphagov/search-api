@@ -4,8 +4,6 @@ module Elasticsearch
   class AmendWorker < BaseWorker
     forward_to_failure_queue
 
-    LOCK_DELAY = 60  # seconds
-
     def perform(index_name, document_link, updates)
       logger.info "Amending document '#{document_link}' in '#{index_name}'"
       logger.info "Amending fields #{updates.keys.join(', ')}"
