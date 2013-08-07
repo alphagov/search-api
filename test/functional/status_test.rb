@@ -44,4 +44,34 @@ class StatusTest < IntegrationTest
     parsed_response = MultiJson.decode(last_response.body)
     assert_equal 0, parsed_response["queues"]["bulk"]["retries"]
   end
+
+  def test_shows_per_queue_scheduled_count
+    # Stubbing out Sidekiq's schedule list (SortedEntry instances)
+    # https://github.com/mperham/sidekiq/blob/v2.13.0/lib/sidekiq/api.rb#L203-248
+    scheduled = %w(bulk bulk something-else).map { |q| stub(queue: q) }
+
+    Sidekiq::ScheduledSet.expects(:new).returns(scheduled)
+    Sidekiq::Stats.any_instance.expects(:queues).returns(
+      {"bulk" => 12}
+    )
+
+    get "/_status"
+
+    assert last_response.ok?
+    parsed_response = MultiJson.decode(last_response.body)
+    assert_equal 2, parsed_response["queues"]["bulk"]["scheduled"]
+  end
+
+  def test_shows_zero_retry_count
+    Sidekiq::ScheduledSet.expects(:new).returns([])
+    Sidekiq::Stats.any_instance.expects(:queues).returns(
+      {"bulk" => 12}
+    )
+
+    get "/_status"
+
+    assert last_response.ok?
+    parsed_response = MultiJson.decode(last_response.body)
+    assert_equal 0, parsed_response["queues"]["bulk"]["scheduled"]
+  end
 end
