@@ -282,12 +282,15 @@ class Rummager < Sinatra::Application
     status["queues"] = {}
 
     retries = Sidekiq::RetrySet.new.group_by(&:queue)
+    scheduled = Sidekiq::ScheduledSet.new.group_by(&:queue)
 
     Sidekiq::Stats.new.queues.each do |queue_name, queue_size|
       retry_count = retries.fetch(queue_name, []).size
+      scheduled_count = scheduled.fetch(queue_name, []).size
       status["queues"][queue_name] = {
         "jobs" => queue_size,
-        "retries" => retry_count
+        "retries" => retry_count,
+        "scheduled" => scheduled_count
       }
     end
     MultiJson.encode(status)

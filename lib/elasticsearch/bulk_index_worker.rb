@@ -8,7 +8,12 @@ module Elasticsearch
       noun = document_hashes.size > 1 ? "documents" : "document"
       logger.info "Indexing #{document_hashes.size} queued #{noun} into #{index_name}"
 
-      index(index_name).bulk_index(document_hashes)
+      begin
+        index(index_name).bulk_index(document_hashes)
+      rescue Elasticsearch::IndexLocked
+        logger.info "Index #{index_name} is locked; rescheduling"
+        self.class.perform_in(LOCK_DELAY, index_name, document_hashes)
+      end
     end
   end
 end

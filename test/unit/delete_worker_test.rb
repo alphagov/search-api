@@ -1,5 +1,6 @@
 require "test_helper"
 require "elasticsearch/delete_worker"
+require "elasticsearch/index"
 require "failed_job_worker"
 
 class DeleteWorkerTest < MiniTest::Unit::TestCase
@@ -9,6 +10,21 @@ class DeleteWorkerTest < MiniTest::Unit::TestCase
     Elasticsearch::SearchServer.any_instance.expects(:index)
       .with("test-index")
       .returns(mock_index)
+
+    worker = Elasticsearch::DeleteWorker.new
+    worker.perform("test-index", "/foobang")
+  end
+
+  def test_retries_when_index_locked
+    lock_delay = Elasticsearch::DeleteWorker::LOCK_DELAY
+    mock_index = mock("index")
+    mock_index.expects(:delete).raises(Elasticsearch::IndexLocked)
+    Elasticsearch::SearchServer.any_instance.expects(:index)
+      .with("test-index")
+      .returns(mock_index)
+
+    Elasticsearch::DeleteWorker.expects(:perform_in)
+      .with(lock_delay, "test-index", "/foobang")
 
     worker = Elasticsearch::DeleteWorker.new
     worker.perform("test-index", "/foobang")

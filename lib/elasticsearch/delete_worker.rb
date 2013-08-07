@@ -6,7 +6,12 @@ module Elasticsearch
 
     def perform(index_name, document_link)
       logger.info "Deleting document '#{document_link}' from '#{index_name}'"
-      index(index_name).delete(document_link)
+      begin
+        index(index_name).delete(document_link)
+      rescue Elasticsearch::IndexLocked
+        logger.info "Index #{index_name} is locked; rescheduling"
+        self.class.perform_in(LOCK_DELAY, index_name, document_link)
+      end
     end
   end
 end
