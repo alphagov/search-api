@@ -16,6 +16,7 @@ require "topic_registry"
 require "world_location_registry"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
+require "redis"
 require "matcher_set"
 
 require_relative "config"
@@ -105,6 +106,10 @@ class Rummager < Sinatra::Application
 
   error RestClient::RequestTimeout do
     halt(503, "Elasticsearch timed out")
+  end
+
+  error Redis::TimeoutError do
+    halt(503, "Redis queue timed out")
   end
 
   error Elasticsearch::InvalidQuery do
