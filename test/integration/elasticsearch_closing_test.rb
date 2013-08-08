@@ -16,7 +16,7 @@ class ElasticsearchClosingTest < IntegrationTest
   # raised, so long as it's a client error (4xx) of some kind
   def restclient_4xx_errors
     RestClient::Exceptions::EXCEPTIONS_MAP.select { |code, exception|
-      (400...500).include? code
+      (400..499).include? code
     }.values
   end
 
