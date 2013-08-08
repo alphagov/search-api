@@ -95,6 +95,10 @@ module Elasticsearch
       ! real_name.nil?
     end
 
+    def close
+      @client.post("_close", nil)
+    end
+
     # Apply a write lock to this index, making it read-only
     def lock
       request_body = {"index" => {"blocks" => {"write" => true}}}.to_json
