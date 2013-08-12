@@ -75,8 +75,6 @@ namespace :rummager do
   task :migrate_from_unaliased_index do
     # WARNING: this is potentially dangerous, and will leave the search
     # unavailable for a very short (sub-second) period of time
-    #
-    # TODO: remove this task once it is no longer needed
 
     index_names.each do |index_name|
       index_group = search_server.index_group(index_name)
