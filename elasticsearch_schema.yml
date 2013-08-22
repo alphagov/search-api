@@ -50,7 +50,7 @@ synonyms: &synonyms [
   "tariff classification, trade tariff",
   "tariff codes, commodity codes",
   "work experience, internship, interns",
-  
+
   # Unofficial or deprecated terms
   "bedroom tax => extra bedroom",
   "death duty => inheritance tax",
@@ -128,10 +128,10 @@ synonyms: &synonyms [
   "winterfuelpayment => winter fuel payment",
   "workplacepensions => workplace pensions",
   "yourmotcheck => mot check",
-  
+
   # File names
   "sanctionsconlist, sanctionsconlist.csv, sanctionsconlist.txt, sanctionslist => financial sanctions consolidated list",
- 
+
   # Acronyms
   "crb, criminal records bureau, dbs, disclosure and barring service",
   "cwp, cold weather payment",
@@ -170,7 +170,7 @@ synonyms: &synonyms [
   "uj, ujm => universal jobmatch",
   "ukti, uk trade and investment",
   "utr, unique taxpayer reference",
-  
+
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
@@ -189,7 +189,7 @@ synonyms: &synonyms [
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
   "winter payment, winter payments => winter fuel payment, cold weather, warm home, energy saving, energy grants, heating",
-  
+
   # Adding terms to raise the best results
   "book driving test => book driving test, book your practical driving test",
   "bursaries, bursary => bursaries, bursary, extra, university",
@@ -271,7 +271,7 @@ synonyms: &synonyms [
   "self cert => self certification",
   "tacho => tachograph",
   "unique tax => unique taxpayer",  # eg unique tax reference, unique tax code
-    
+
   # Correcting mistakes
   # "advise => advise, advice",
   "eh1c => ehic",
@@ -279,7 +279,7 @@ synonyms: &synonyms [
   "rapid claim => rapid claim, rapid reclaim",
   "universal jobsearch => universal jobmatch",
   "vc5 => vc5, v5c",
- 
+
   # Split words that are usually one word
   "direct gov => directgov",
   "heat wave => heatwave",
@@ -290,8 +290,8 @@ synonyms: &synonyms [
   "job seekers => jobseeker's",
   "pot hole => pothole",
   "re claim => reclaim",
-  "tax payer => tax payer, taxpayer", 
-  
+  "tax payer => tax payer, taxpayer",
+
   # Common misspellings
   "addres => address",
   "adress => address",
