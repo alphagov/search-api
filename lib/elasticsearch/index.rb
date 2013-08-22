@@ -64,14 +64,18 @@ module Elasticsearch
     # How long to wait for a connection to the elasticsearch server
     OPEN_TIMEOUT_SECONDS = 5.0
 
+    # Extra-long timeouts for migrations, since we're more worried about these
+    # completing reliably than completing quickly
+    LONG_TIMEOUT_SECONDS = TIMEOUT_SECONDS * 3
+    LONG_OPEN_TIMEOUT_SECONDS = OPEN_TIMEOUT_SECONDS * 3
+
     attr_reader :mappings, :index_name, :promoted_results
 
     def initialize(base_uri, index_name, mappings, promoted_results = [])
-      @client = Client.new(
-        base_uri + "#{CGI.escape(index_name)}/",
-        timeout: TIMEOUT_SECONDS,
-        open_timeout: OPEN_TIMEOUT_SECONDS
-      )
+      # Save this for if and when we want to build custom Clients
+      @index_uri = base_uri + "#{CGI.escape(index_name)}/"
+
+      @client = build_client
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
@@ -122,7 +126,9 @@ module Elasticsearch
       end
     end
 
-    def add(documents)
+    def add(documents, timeout_options = nil)
+      client = timeout_options ? build_client(timeout_options) : @client
+
       if documents.size == 1
         logger.info "Adding #{documents.size} document to #{index_name}"
       else
@@ -130,7 +136,7 @@ module Elasticsearch
       end
 
       document_hashes = documents.map { |d| hash_from_document(d) }
-      bulk_index(document_hashes)
+      bulk_index(document_hashes, client)
     end
 
     # Add documents asynchronously to the index.
@@ -142,8 +148,8 @@ module Elasticsearch
       queue.queue_many(document_hashes)
     end
 
-    def bulk_index(document_hashes)
-      response = @client.post("_bulk", bulk_payload(document_hashes), content_type: :json)
+    def bulk_index(document_hashes, client = @client)
+      response = client.post("_bulk", bulk_payload(document_hashes), content_type: :json)
       items = MultiJson.decode(response.body)["items"]
       failed_items = items.select { |item| item["index"].has_key?("error") }
       if failed_items.any?
@@ -187,9 +193,13 @@ module Elasticsearch
 
     def populate_from(source_index)
       total_indexed = 0
-      all_docs = source_index.all_documents
+      timeout_options = {
+        timeout: LONG_TIMEOUT_SECONDS,
+        open_timeout: LONG_OPEN_TIMEOUT_SECONDS
+      }
+      all_docs = source_index.all_documents(timeout_options)
       all_docs.each_slice(self.class.populate_batch_size) do |documents|
-        add documents
+        add(documents, timeout_options)
         total_indexed += documents.length
         logger.info do
           progress = "#{total_indexed}/#{all_docs.size}"
@@ -216,11 +226,13 @@ module Elasticsearch
       Document.from_hash(hash, @mappings)
     end
 
-    def all_documents
+    def all_documents(timeout_options = nil)
+      client = timeout_options ? build_client(timeout_options) : @client
+
       # Set off a scan query to get back a scroll ID and result count
       search_body = {query: {match_all: {}}}
       batch_size = self.class.scroll_batch_size
-      ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
+      ScrollEnumerator.new(client, search_body, batch_size) do |hit|
         document_from_hash(hit["_source"])
       end
     end
@@ -391,6 +403,14 @@ module Elasticsearch
 
     def queue
       IndexQueue.new(index_name)
+    end
+
+    def build_client(options={})
+      Client.new(
+        @index_uri,
+        timeout: options[:timeout] || TIMEOUT_SECONDS,
+        open_timeout: options[:open_timeout] || OPEN_TIMEOUT_SECONDS
+      )
     end
   end
 end

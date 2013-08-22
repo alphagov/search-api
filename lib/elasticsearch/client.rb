@@ -111,6 +111,7 @@ module Elasticsearch
         args[:headers] = headers if headers
         args[:timeout] = @timeout if @timeout
         args[:open_timeout] = @open_timeout if @open_timeout
+        logger.debug(args.reject { |k| k == :payload })
         RestClient::Request.execute(args)
       end
     end
