@@ -12,10 +12,12 @@ class ResultSet
 
 private
   def document_from_hit(hit)
-    hash = hit["_source"].merge(
+    debug_fields = {
       "es_score" => hit["_score"],
       "explanation" => hit["_explanation"]
-    )
+    }.select { |key, value| value }
+
+    hash = hit["_source"].merge(debug_fields)
     Document.from_hash(hash, @mappings)
   end
 end
