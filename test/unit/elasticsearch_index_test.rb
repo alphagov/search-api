@@ -413,7 +413,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     }
     stub_doc = stub("document")
     old_index = mock("old index") do
-      expects(:index_name).returns("Old index")  # Logging
+      stubs(:index_name).returns("Old index")  # Logging: not critical
       expects(:all_documents).with(timeout_params).returns([stub_doc])
     end
     @wrapper.expects(:add).with([stub_doc], timeout_params)
