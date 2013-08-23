@@ -107,6 +107,16 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     end
   end
 
+  def test_should_allow_custom_timeouts_on_add
+    stub_response = stub("response", body: '{"items": []}')
+    RestClient::Request.expects(:execute)
+      .with(has_entries(
+        timeout: 20,
+        open_timeout: 25
+      )).returns(stub_response)
+    @wrapper.add([], timeout: 20, open_timeout: 25)
+  end
+
   def test_get_document
     document_url = "http://example.com:9200/test-index/_all/%2Fan-example-link"
     document_hash = {
@@ -385,6 +395,31 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     all_documents = @wrapper.all_documents.to_a
     assert_equal ["/foo-1", "/foo-2", "/foo-3"], all_documents.map(&:link)
+  end
+
+  def test_should_allow_custom_timeouts_on_iteration
+    RestClient::Request.expects(:execute)
+      .with(has_entries(
+        timeout: 20,
+        open_timeout: 25
+      )).returns('{"hits": {"total": 0}}')
+    @wrapper.all_documents(timeout: 20, open_timeout: 25)
+  end
+
+  def test_should_specify_longer_timeouts_on_population
+    timeout_params = {
+      timeout: Elasticsearch::Index::LONG_TIMEOUT_SECONDS,
+      open_timeout: Elasticsearch::Index::LONG_OPEN_TIMEOUT_SECONDS
+    }
+    stub_doc = stub("document")
+    old_index = mock("old index") do
+      expects(:index_name).returns("Old index")  # Logging
+      expects(:all_documents).with(timeout_params).returns([stub_doc])
+    end
+    @wrapper.expects(:add).with([stub_doc], timeout_params)
+    @wrapper.expects(:commit).at_most_once  # Not central to this test
+
+    @wrapper.populate_from(old_index)
   end
 
   def scroll_uri(scroll_id)
