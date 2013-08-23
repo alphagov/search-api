@@ -155,10 +155,17 @@ class Rummager < Sinatra::Application
 
     expires 3600, :public if query.length < 20
     organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
-    result_set = current_index.search(query,
+
+    search_options = {
       organisation: organisation,
       sort: params["sort"],
-      order: params["order"])
+      order: params["order"]
+    }
+    if settings.enable_explain && params["explain"]
+      search_options[:explain] = true
+    end
+
+    result_set = current_index.search(query, search_options)
     presenter_context = {
       organisation_registry: organisation_registry,
       topic_registry: topic_registry,

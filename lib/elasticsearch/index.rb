@@ -280,12 +280,18 @@ module Elasticsearch
     end
 
     def search(keywords, options={})
+      if options.delete(:explain)
+        path = "_search?explain=1"
+      else
+        path = "_search"
+      end
+
       builder = SearchQueryBuilder.new(keywords, @mappings, options)
       raise InvalidQuery.new(builder.error) unless builder.valid?
 
       payload = MultiJson.dump(builder.query_hash)
       logger.debug "Request payload: #{payload}"
-      response = @client.get_with_payload("_search", payload)
+      response = @client.get_with_payload(path, payload)
       ResultSet.new(@mappings, MultiJson.decode(response))
     end
 
