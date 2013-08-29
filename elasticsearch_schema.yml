@@ -559,6 +559,8 @@ stems: &stems [
 promoted_results:
 - terms: job
   link: /jobsearch
+- terms: syria
+  link: /government/news/syria-chemical-weapons-attack
 
 index:
   settings:
