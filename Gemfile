@@ -17,6 +17,8 @@ gem 'whenever', require: false
 gem 'ffi-aspell', "0.0.3"
 gem "slop", "3.4.5"
 gem "sidekiq", "2.13.0"
+# pin to version that includes security vulnerability fix
+gem "redis-namespace", "1.3.1"
 
 group :test do
   gem "shoulda-context"
