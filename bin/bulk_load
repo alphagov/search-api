@@ -22,7 +22,7 @@ switched over.
 }
   run do |opts, args|
     raise("Please specify exactly one index") unless args.size == 1
-    BulkLoader.new(args.first).load_from($stdin)
+    BulkLoader.new(SearchConfig.new, args.first, logger: Logger.new(STDERR)).load_from($stdin)
   end
 end
 
