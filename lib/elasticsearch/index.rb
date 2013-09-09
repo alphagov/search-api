@@ -148,8 +148,8 @@ module Elasticsearch
       queue.queue_many(document_hashes)
     end
 
-    def bulk_index(document_hashes, client = @client)
-      response = client.post("_bulk", bulk_payload(document_hashes), content_type: :json)
+    def bulk_index(document_hashes_or_payload, client = @client)
+      response = client.post("_bulk", bulk_payload(document_hashes_or_payload), content_type: :json)
       items = MultiJson.decode(response.body)["items"]
       failed_items = items.select { |item| item["index"].has_key?("error") }
       if failed_items.any?
@@ -365,20 +365,24 @@ module Elasticsearch
     #
     # The format is as follows:
     #
-    #   {"index": "mainstream", "type": "edition", "_id": "/bank-holidays"}
+    #   {"index": {"_type": "edition", "_id": "/bank-holidays"}}
     #   { <document source> }
-    #   {"index": "mainstream", "type": "edition", "_id": "/something-else"}
+    #   {"index": {"_type": "edition", "_id": "/something-else"}}
     #   { <document source> }
     #
     # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
-    def bulk_payload(document_hashes)
-      index_items = document_hashes.map do |doc_hash|
-        [index_action(doc_hash).to_json, doc_hash.to_json]
-      end
+    def bulk_payload(document_hashes_or_payload)
+      if document_hashes_or_payload.is_a?(Array)
+        index_items = document_hashes_or_payload.map do |doc_hash|
+          [index_action(doc_hash).to_json, doc_hash.to_json]
+        end
 
-      # Make sure the payload ends with a newline character: elasticsearch
-      # requires this.
-      index_items.flatten.join("\n") + "\n"
+        # Make sure the payload ends with a newline character: elasticsearch
+        # requires this.
+        index_items.flatten.join("\n") + "\n"
+      else
+        document_hashes_or_payload
+      end
     end
 
     def index_action(doc_hash)
