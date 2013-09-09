@@ -82,6 +82,20 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested(:post, "http://example.com:9200/test-index/_bulk")
   end
 
+  def test_should_bulk_update_documents_with_raw_command_stream
+    # Note that this comes with a trailing newline, which elasticsearch needs
+    payload = <<-eos
+{"index":{"_type":"edition","_id":"/foo/bar"}}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE"}
+    eos
+    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+        body: payload,
+        headers: {"Content-Type" => "application/json"}
+    ).to_return(body: '{"items":[]}')
+    @wrapper.bulk_index payload
+    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+  end
+
   def test_should_raise_error_for_failures_in_bulk_update
     json_documents = [
       { "_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE" },
