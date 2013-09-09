@@ -4,7 +4,7 @@ class BulkLoader
   def initialize(search_config, index_name, options = {})
     @search_config = search_config
     @index_name = index_name
-    @batch_size = options[:batch_size] || 1024
+    @batch_size = options[:batch_size] || 1024 * 1024
     @logger = options[:logger] || Logger.new(nil)
   end
 
@@ -48,12 +48,15 @@ private
     lines.inject(0) {|memo, l| memo + l.size}
   end
 
-  def in_even_sized_batches(iostream, target_chunk_size = 1024*1024, &block)
+  # Breaks the given input stream into batches of line pairs of at least
+  # `batch_size` bytes (including newlines). Always keeps line pairs together.
+  # Yields each batch of lines.
+  def in_even_sized_batches(iostream, batch_size=@batch_size, &block)
     chunk = []
     iostream.each_line.each_slice(2) do |command, document|
       chunk << command
       chunk << document
-      if byte_size(chunk) > target_chunk_size
+      if byte_size(chunk) >= batch_size
         yield chunk
         chunk = []
       end
