@@ -19,10 +19,7 @@ gem "slop", "3.4.5"
 gem "sidekiq", "2.13.0"
 # pin to version that includes security vulnerability fix
 gem "redis-namespace", "1.3.1"
-
-group :preview do
-  gem "newrelic_rpm"
-end
+gem "newrelic_rpm", "3.6.7.152"
 
 group :test do
   gem "shoulda-context"
