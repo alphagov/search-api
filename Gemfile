@@ -20,6 +20,10 @@ gem "sidekiq", "2.13.0"
 # pin to version that includes security vulnerability fix
 gem "redis-namespace", "1.3.1"
 
+group :preview do
+  gem "newrelic_rpm"
+end
+
 group :test do
   gem "shoulda-context"
   gem "simplecov"
