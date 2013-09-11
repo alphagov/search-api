@@ -220,19 +220,3 @@ test:
 production:
   <<: *default_settings
   monitor_mode: false
-
-# Many applications have a staging environment which behaves
-# identically to production. Support for that environment is provided
-# here.  By default, the staging environment has the agent turned on.
-staging:
-  <<: *default_settings
-  monitor_mode: true
-  app_name: staging-rummager
-
-# Many applications have a staging environment which behaves
-# identically to production. Support for that environment is provided
-# here.  By default, the staging environment has the agent turned on.
-preview:
-  <<: *default_settings
-  monitor_mode: true
-  app_name: preview-rummager
