@@ -82,13 +82,13 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
 
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}}")}/)
-    @wrapper.advanced_search(default_params.merge('date_property' => {'before' => '2013-02-02'}))
+    @wrapper.advanced_search(default_params.merge('date_property' => {'to' => '2013-02-02'}))
 
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\"}}}")}/)
-    @wrapper.advanced_search(default_params.merge('date_property' => {'after' => '2013-02-02'}))
+    @wrapper.advanced_search(default_params.merge('date_property' => {'from' => '2013-02-02'}))
 
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\",\"to\":\"2013-02-03\"}}}")}/)
-    @wrapper.advanced_search(default_params.merge('date_property' => {'after' => '2013-02-02', 'before' => '2013-02-03'}))
+    @wrapper.advanced_search(default_params.merge('date_property' => {'from' => '2013-02-02', 'to' => '2013-02-03'}))
   end
 
   def test_filter_params_on_a_date_mapping_property_without_a_before_or_after_key_in_the_value_are_rejected
@@ -96,9 +96,7 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
     stub_empty_search
 
     assert_rejected_search('Invalid value {} for date property "date_property"', default_params.merge('date_property' => {}))
-    assert_rejected_search('Invalid value {"from"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => {'from' => '2013-02-02'}))
     assert_rejected_search('Invalid value "2013-02-02" for date property "date_property"', default_params.merge('date_property' => '2013-02-02'))
-    assert_rejected_search('Invalid value {"to"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => {'to' => '2013-02-02'}))
     assert_rejected_search('Invalid value ["2013-02-02"] for date property "date_property"', default_params.merge('date_property' => ['2013-02-02']))
     assert_rejected_search('Invalid value {"between"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => {'between' => '2013-02-02'}))
     assert_rejected_search('Invalid value {"before"=>"2013-02-02", "up-to"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => {'before' => '2013-02-02', 'up-to' => '2013-02-02'}))

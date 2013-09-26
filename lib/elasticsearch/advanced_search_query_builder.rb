@@ -51,11 +51,11 @@ module Elasticsearch
 
     def invalid_date_property_value?(value)
       # invalid if it's not a hash, or is an empty hash, or has keys other
-      # than 'before' or 'after', or the values are not YYYY-MM-DD
+      # than 'from' or 'to', or the values are not YYYY-MM-DD
       # formatted.
       !(value.is_a?(Hash) &&
         value.keys.any? &&
-        (value.keys - ['before', 'after']).empty? &&
+        (value.keys - ['from', 'to']).empty? &&
         (value.values.reject { |date| date.to_s =~ /\A\d{4}-\d{2}-\d{2}\Z/}).empty?)
     end
 
@@ -150,11 +150,11 @@ module Elasticsearch
 
     def date_property_filter(property, filter_value)
       filter = {"range" => {property => {}}}
-      if filter_value.has_key?("after")
-        filter["range"][property]["from"] = filter_value["after"]
+      if filter_value.has_key?("from")
+        filter["range"][property]["from"] = filter_value["from"]
       end
-      if filter_value.has_key?("before")
-        filter["range"][property]["to"] = filter_value["before"]
+      if filter_value.has_key?("to")
+        filter["range"][property]["to"] = filter_value["to"]
       end
       filter
     end
