@@ -89,6 +89,13 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
 
     stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\",\"to\":\"2013-02-03\"}}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => {'from' => '2013-02-02', 'to' => '2013-02-03'}))
+
+    # Deprecated date range options
+    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}}")}/)
+    @wrapper.advanced_search(default_params.merge('date_property' => {'before' => '2013-02-02'}))
+
+    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\"}}}")}/)
+    @wrapper.advanced_search(default_params.merge('date_property' => {'after' => '2013-02-02'}))
   end
 
   def test_filter_params_on_a_date_mapping_property_without_a_before_or_after_key_in_the_value_are_rejected

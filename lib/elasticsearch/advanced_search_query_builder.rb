@@ -55,7 +55,7 @@ module Elasticsearch
       # formatted.
       !(value.is_a?(Hash) &&
         value.keys.any? &&
-        (value.keys - ['from', 'to']).empty? &&
+        (value.keys - ['from', 'to', 'before', 'after']).empty? &&
         (value.values.reject { |date| date.to_s =~ /\A\d{4}-\d{2}-\d{2}\Z/}).empty?)
     end
 
@@ -155,6 +155,13 @@ module Elasticsearch
       end
       if filter_value.has_key?("to")
         filter["range"][property]["to"] = filter_value["to"]
+      end
+      # Deprecated date range options
+      if filter_value.has_key?("after")
+        filter["range"][property]["from"] = filter_value["after"]
+      end
+      if filter_value.has_key?("before")
+        filter["range"][property]["to"] = filter_value["before"]
       end
       filter
     end
