@@ -190,8 +190,8 @@ class Rummager < Sinatra::Application
   #   relevant_to_local_government - eg "1"
   #
   # If the field type is defined as "date", this is possible:
-  #   fieldname[before]     - eg public_timestamp[before]="2013-04-30"
-  #   fieldname[after]      - eg public_timestamp[after]="2013-04-30"
+  #   fieldname[from]     - eg public_timestamp[from]="2013-04-30"
+  #   fieldname[to]      - eg public_timestamp[to]="2013-04-30"
   #
   get "/:index/advanced_search.?:format?" do
     json_only
