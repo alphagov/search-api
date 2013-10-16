@@ -27,6 +27,10 @@ class SearchConfig
     elasticsearch["document_series_registry_index"]
   end
 
+  def document_collection_registry_index
+    elasticsearch["document_collection_registry_index"]
+  end
+
   def organisation_registry_index
     elasticsearch["organisation_registry_index"]
   end

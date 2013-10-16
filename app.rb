@@ -10,6 +10,7 @@ require "document"
 require "result_set_presenter"
 require "organisation_set_presenter"
 require "document_series_registry"
+require "document_collection_registry"
 require "organisation_registry"
 require "suggester"
 require "topic_registry"
@@ -37,6 +38,11 @@ class Rummager < Sinatra::Application
   def document_series_registry
     index_name = settings.search_config.document_series_registry_index
     @@document_series_registry ||= DocumentSeriesRegistry.new(search_server.index(index_name)) if index_name
+  end
+
+  def document_collection_registry
+    index_name = settings.search_config.document_collection_registry_index
+    @@document_collection_registry ||= DocumentCollectionRegistry.new(search_server.index(index_name)) if index_name
   end
 
   def organisation_registry
@@ -163,6 +169,7 @@ class Rummager < Sinatra::Application
       organisation_registry: organisation_registry,
       topic_registry: topic_registry,
       document_series_registry: document_series_registry,
+      document_collection_registry: document_collection_registry,
       world_location_registry: world_location_registry,
       spelling_suggestions: suggester.suggestions(params["q"])
     }

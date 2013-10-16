@@ -67,6 +67,11 @@ private
         document_series_by_slug(slug)
       end
     end
+    if result['document_collections'] && should_expand_document_collections?
+      result['document_collections'] = result['document_collections'].map do |slug|
+        document_collection_by_slug(slug)
+      end
+    end
     if result['organisations'] && should_expand_organisations?
       result['organisations'] = result['organisations'].map do |slug|
         organisation_by_slug(slug)
@@ -89,6 +94,10 @@ private
     !! document_series_registry
   end
 
+  def should_expand_document_collections?
+    !! document_collection_registry
+  end
+
   def should_expand_organisations?
     !! organisation_registry
   end
@@ -103,6 +112,10 @@ private
 
   def document_series_registry
     @context[:document_series_registry]
+  end
+
+  def document_collection_registry
+    @context[:document_collection_registry]
   end
 
   def organisation_registry
@@ -125,6 +138,15 @@ private
     document_series = document_series_registry && document_series_registry[slug]
     if document_series
       document_series.to_hash.merge(slug: slug)
+    else
+      {slug: slug}
+    end
+  end
+
+  def document_collection_by_slug(slug)
+    document_collection = document_collection_registry && document_collection_registry[slug]
+    if document_collection
+      document_collection.to_hash.merge(slug: slug)
     else
       {slug: slug}
     end

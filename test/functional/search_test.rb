@@ -1,6 +1,7 @@
 # encoding: utf-8
 require "integration_test_helper"
 require 'document_series_registry'
+require 'document_collection_registry'
 require "organisation_registry"
 require "topic_registry"
 require "world_location_registry"
@@ -13,6 +14,16 @@ class SearchTest < IntegrationTest
       {
         link: "/government/organisations/department-for-transport/series/bus-timetables",
         title: "Bus Timetables"
+      }
+    )
+  end
+
+  def learning_to_drive_document_collection
+    Document.new(
+      %w(link title),
+      {
+        link: "/government/collections/learning-to-drive",
+        title: "Learning to Drive"
       }
     )
   end
@@ -154,6 +165,24 @@ class SearchTest < IntegrationTest
     first_result = MultiJson.decode(last_response.body)["results"].first
     assert_equal 1, first_result["document_series"].size
     assert_equal bus_timetables_document_series.title, first_result["document_series"][0]["title"]
+  end
+
+  def test_handles_results_with_document_collections
+    mappings = default_mappings
+    mappings["edition"]["properties"]["document_collections"] = {"type" => "string"}
+    document = Document.from_hash(
+      sample_document_attributes.merge(document_collections: ["learning-to-drive"]),
+      mappings
+    )
+
+    stub_index.expects(:search).returns(stub(results: [document], total: 1))
+    DocumentCollectionRegistry.any_instance.expects(:[])
+      .with("learning-to-drive")
+      .returns(learning_to_drive_document_collection)
+    get "/search.json", {q: "bob"}
+    first_result = MultiJson.decode(last_response.body)["results"].first
+    assert_equal 1, first_result["document_collections"].size
+    assert_equal learning_to_drive_document_collection.title, first_result["document_collections"][0]["title"]
   end
 
   def test_handles_results_with_organisations

@@ -70,6 +70,7 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
       { filter: { term: { format: "organisation" } },      boost: 2.5 },
       { filter: { term: { format: "topic" } },             boost: 1.5 },
       { filter: { term: { format: "document_series" } },   boost: 1.3 },
+      { filter: { term: { format: "document_collection" } }, boost: 1.3 },
       { filter: { term: { format: "operational_field" } }, boost: 1.5 },
     ]
     assert_equal expected, filters[0..-2]
