@@ -3,4 +3,5 @@ index_names: ["mainstream", "detailed", "government", "service-manual"]
 organisation_registry_index: "government"
 topic_registry_index: "government"
 document_series_registry_index: "government"
+document_collection_registry_index: "government"
 world_location_registry_index: "government"

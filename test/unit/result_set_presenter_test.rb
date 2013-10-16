@@ -5,7 +5,7 @@ require "multi_json"
 
 class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
-  FIELDS = %w(link title description format organisations topics document_series world_locations)
+  FIELDS = %w(link title description format organisations topics document_series document_collections world_locations)
 
   def result_set
     documents = [
@@ -31,6 +31,18 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
         "description" => "Full of foo.",
         "format" => "edition",
         "document_series" => document_series_slugs
+      }
+
+    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+  end
+
+  def single_result_with_document_collection(*document_collection_slugs)
+    document_hash = {
+        "link" => "/foo",
+        "title" => "Foo",
+        "description" => "Full of foo.",
+        "format" => "edition",
+        "document_collections" => document_collection_slugs
       }
 
     stub(results: [Document.new(FIELDS, document_hash)], total: 1)
@@ -160,6 +172,31 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal "/government/organisations/department-for-transport/series/rail-statistics",
       output["results"][0]["document_series"][0]["link"]
     assert_equal "rail-statistics", output["results"][0]["document_series"][0]["slug"]
+  end
+
+  def test_expands_document_collection
+    rail_statistics_document = Document.new(
+      %w(link title),
+      link: "/government/collections/rail-statistics",
+      title: "Rail statistics"
+    )
+    document_collection_registry = stub("document collection registry")
+    document_collection_registry.expects(:[])
+      .with("rail-statistics")
+      .returns(rail_statistics_document)
+
+    presenter = ResultSetPresenter.new(
+      single_result_with_document_collection("rail-statistics"),
+      document_collection_registry: document_collection_registry
+    )
+
+    output = output_for(presenter)
+    assert_equal 1, output["results"][0]["document_collections"].size
+    assert_instance_of Hash, output["results"][0]["document_collections"][0]
+    assert_equal "Rail statistics", output["results"][0]["document_collections"][0]["title"]
+    assert_equal "/government/collections/rail-statistics",
+      output["results"][0]["document_collections"][0]["link"]
+    assert_equal "rail-statistics", output["results"][0]["document_collections"][0]["slug"]
   end
 
   def test_expands_organisations

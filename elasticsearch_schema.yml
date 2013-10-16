@@ -622,6 +622,7 @@ mappings:
             hoc_paper_number: {type: string, index: not_analyzed}
         description: { type: string, index: analyzed }
         display_type: { type: string, index: not_analyzed, include_in_all: false }
+        document_collections: { type: string, index: not_analyzed, include_in_all: false }
         document_series: { type: string, index: not_analyzed, include_in_all: false }
         format:      { type: string, index: not_analyzed, include_in_all: false }
         indexable_content: { type: string, index: analyzed }
