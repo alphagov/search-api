@@ -36,12 +36,19 @@ private
     total_lines = 0
     start_time = Time.now
     in_even_sized_batches(iostream) do |lines|
-      index.bulk_index(lines.join(""))
+      index.bulk_index(lines.join(""), timeout_options)
       @logger.info "Sent #{lines.size} lines (#{byte_size(lines)} bytes)"
       total_lines += lines.size
     end
     elapsed_time = Time.now - start_time
     @logger.info "Indexed %s lines in %.2f seconds (%.2f lines/sec)" % [total_lines, elapsed_time, total_lines / elapsed_time]
+  end
+
+  def timeout_options
+    {
+      timeout: 30.0,
+      open_timeout: 20.0
+    }
   end
 
   def byte_size(lines)
