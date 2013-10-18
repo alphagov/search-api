@@ -127,8 +127,6 @@ module Elasticsearch
     end
 
     def add(documents, timeout_options = nil)
-      client = timeout_options ? build_client(timeout_options) : @client
-
       if documents.size == 1
         logger.info "Adding #{documents.size} document to #{index_name}"
       else
@@ -136,7 +134,7 @@ module Elasticsearch
       end
 
       document_hashes = documents.map { |d| hash_from_document(d) }
-      bulk_index(document_hashes, client)
+      bulk_index(document_hashes, timeout_options)
     end
 
     # Add documents asynchronously to the index.
@@ -148,7 +146,8 @@ module Elasticsearch
       queue.queue_many(document_hashes)
     end
 
-    def bulk_index(document_hashes_or_payload, client = @client)
+    def bulk_index(document_hashes_or_payload, timeout_options = nil )
+      client = timeout_options ? build_client(timeout_options) : @client
       response = client.post("_bulk", bulk_payload(document_hashes_or_payload), content_type: :json)
       items = MultiJson.decode(response.body)["items"]
       failed_items = items.select { |item| item["index"].has_key?("error") }
