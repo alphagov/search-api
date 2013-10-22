@@ -227,8 +227,9 @@ synonyms: &synonyms [
   "cis305, cis 305, cis340, cis 340 => construction industry scheme",
   "cwf1 => register for self assessment",
   "d184 => d184, divorce",
+  "d46p => d46p, renew 70", # 'D46P' appears in content but returns no results
   "d786b => d777b, digital tachograph driver card",
-  # "d798 => d798, renewal reminder", # 'D798' appears in content but returns no results
+  "d798 => d798, renewal reminder", # 'D798' appears in content but returns no results
   "eesa => employment and support allowance",
   "esa50 => esa50, esa 50",
   "ex160a => court fees",
