@@ -6,4 +6,5 @@ production.log
 tmp/*
 .powrc
 /public/system/*.xml
+/public/system/sitemaps/*.xml
 /data

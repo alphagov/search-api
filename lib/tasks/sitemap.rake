@@ -8,9 +8,8 @@ namespace :sitemap do
 
     sitemap_directory = File.join(PROJECT_ROOT, "public", "system")
     sitemap = Sitemap.new(sitemap_directory)
-    sitemap_index_filename = sitemap.generate(search_server.all_indices)
+    sitemap_index_path = sitemap.generate(search_server.all_indices)
 
-    sitemap_index_path = File.join(sitemap_directory, sitemap_index_filename)
     sitemap_link_path = File.join(sitemap_directory, "sitemap.xml")
 
     `ln -sf #{sitemap_index_path} #{sitemap_link_path}`
