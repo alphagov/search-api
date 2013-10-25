@@ -7,25 +7,27 @@ EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"]
 class Sitemap
   def initialize(directory, timestamp = Time.now.utc)
     raise 'Sitemap directory is required' unless directory
-    @directory = directory
+    @subdirectory = "sitemaps"
+    @output_path = File.join(directory, @subdirectory)
     @timestamp = timestamp
   end
 
   def generate(all_indices)
-    sitemap_writer = SitemapWriter.new(@directory, @timestamp)
+    FileUtils.mkdir_p(@output_path)
+    sitemap_writer = SitemapWriter.new(@output_path, @timestamp)
     sitemap_filenames = sitemap_writer.write_sitemaps(all_indices)
     return write_index(sitemap_filenames)
   end
 
   def write_index(sitemap_filenames)
     index_filename = "sitemap_#{@timestamp.strftime('%FT%H')}.xml"
-    index_full_path = File.join(@directory, index_filename)
+    index_full_path = File.join(@output_path, index_filename)
     File.open(index_full_path, "w") do |sitemap_index_file|
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           sitemap_filenames.each do |sitemap_filename|
             xml.sitemap {
-              xml.loc "#{base_url}#{"/"}#{sitemap_filename}"
+              xml.loc "#{base_url}/#{@subdirectory}/#{sitemap_filename}"
               # Ideally want to use %:z to indicate timezone, however, due to difference
               # in ruby versions 1.9.3 and 1.9.2, production uses 1.9.2
               # so we need to use Z, instead.
@@ -36,7 +38,7 @@ class Sitemap
       end
       sitemap_index_file.write(builder.to_xml)
     end
-    index_filename
+    index_full_path
   end
 
 private
