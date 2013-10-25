@@ -1,4 +1,5 @@
 require "nokogiri"
+require 'plek'
 
 EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"]
 
@@ -40,8 +41,7 @@ class Sitemap
 
 private
   def base_url
-    return "https://www.gov.uk" if ENV["FACTER_govuk_platform"] == "production"
-    "https://www.#{ENV["FACTER_govuk_platform"]}.alphagov.co.uk"
+    Plek.current.website_root
   end
 end
 
@@ -116,9 +116,8 @@ class SitemapGenerator
     builder.to_xml
   end
 
-	private
-    def base_url
-      return "https://www.gov.uk" if ENV["FACTER_govuk_platform"] == "production"
-      "https://www.#{ENV["FACTER_govuk_platform"]}.alphagov.co.uk"
-    end
+private
+  def base_url
+    Plek.current.website_root
+  end
 end
