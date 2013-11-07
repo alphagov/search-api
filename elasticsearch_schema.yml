@@ -153,6 +153,7 @@ synonyms: &synonyms [
   # "jsa, jobseeker’s allowance",
   "lha, local housing allowance",
   "lpa, lasting power of attorney",
+  "nasm => noise amelioration scheme military",
   "nea, new enterprise allowance",
   "ni => national insurance",
   "nin, nino => national insurance number",
@@ -180,7 +181,9 @@ synonyms: &synonyms [
   "intestacy => intestacy, wills, inherits",
   "intestate => intestate, wills, inherits",
   "ir35 => ir35, employment status",
-  "my account => online account",  # Student finance login
+  "my account => your account, online account",  # Student finance login
+  "not arrived => not arrived, contact dvla",
+  "not received => not received, contact dvla",
   "refuse collection => refuse collection, rubbish collection",
   "self certificate => self certification",
   "sign off, signing off, starting work => sign off, signing off, starting work, from benefits to work, return to work, adviser",
@@ -198,6 +201,7 @@ synonyms: &synonyms [
   "business support => business support, business finance",
   "copyright => copyright, intellectual property",
   "driving test => driving test, practical driving test, driving or riding test",
+  "export licence, export licences => export licence, strategic, require a licence",
   "gateway => gateway, government gateway",
   # Intended to bring the main PHE and HMT Green Book landing pages into the top 3, above all their chapters
   #   </government/organisations/public-health-england/series/immunisation-against-infectious-disease-the-green-book>
@@ -205,6 +209,7 @@ synonyms: &synonyms [
   # TODO: review the need for this once we have other ways to manipulate result ordering
   "green book => green book, appraisal evaluation central government, immunisation against infectious disease",
   "green deal => green deal, green deal energy saving, energy grants, heating",
+  "health check, health checks => nhs health check",
   "holiday payment, holiday payments => holiday payment, holiday payments, paid early",
   "job share, job sharing => job share, job sharing, flexible working",
   "legalisation, legalise => legalisation, legalise, document legalised",
@@ -238,7 +243,7 @@ synonyms: &synonyms [
   "gv 262 => gv262, drivers hours",
   "inf1d => driving licence application",
   "inf2d => driving licence lorry or bus",
-  "inf4d => inf4d, driving licence medical condition",
+  "inf4d => inf4d, medical condition",
   "inf5d => driving licence renewal",
   "inf38 => non gb licence",
   "ins160 => vehicle registration certificate",
@@ -523,6 +528,7 @@ synonyms: &synonyms [
 
 stems: &stems [
   "community => community",
+  "corporate => corporate",  # not corporation
   "directive => directive",
   "directives => directive",
   "equalities => equality",
@@ -539,6 +545,9 @@ stems: &stems [
   "probate => probate",
   "publication => publication",
   "publications => publication",
+  "responsibility => responsib",  # not response, responsive
+  "responsibilities => responsib",
+  "responsible => responsib",
   "saving => saving",
   "savings => savings",
   "signing => signing",
