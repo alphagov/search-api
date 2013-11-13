@@ -639,5 +639,6 @@ mappings:
         title:       { type: string, index: analyzed }
         topics: { type: string, index: not_analyzed, include_in_all: false }
         world_locations: { type: string, index: not_analyzed, include_in_all: false }
+        has_official_document: { type: boolean, index: not_analyzed, include_in_all: false }
         has_command_paper: { type: boolean, index: not_analyzed, include_in_all: false }
         has_act_paper: { type: boolean, index: not_analyzed, include_in_all: false }
