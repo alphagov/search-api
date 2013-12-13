@@ -175,15 +175,6 @@ synonyms: &synonyms [
   "ukti, uk trade and investment",
   "utr, unique taxpayer reference",
   
-  # Acronyms with spaces or punctuation
-  "c v, c.v, c.v. => cv",
-  "d l a, d.l.a, d.l.a. => dla",
-  "e s a, e.s.a, e.s.a. => esa",
-  "j s a, j.s.a, j.s.a. => jsa",
-  "m o t, m.o.t, m.o.t. => mot",
-  "n i, n.i, n.i. => ni",
-  "p i p, p.i.p, p.i.p. => pip",
-
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
