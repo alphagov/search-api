@@ -60,8 +60,10 @@ synonyms: &synonyms [
   "dvlc => dvla",
   "e11, e111, ehi card => ehic",
   "employer direct => employer direct, universal jobmatch",
+  "family tax credit, family tax credits => tax credits",
   "fired => fired, dismissed, dismissal",
   "firing => firing, dismiss, dismissing, dismissal",
+  "heating allowance => winter fuel payment",
   "independent safeguarding authority => disclosure and barring service",
   "inland revenue => hmrc, hm revenue customs",
   "next step, nextstep => next step, national careers service",
@@ -69,6 +71,8 @@ synonyms: &synonyms [
   "road tax => road tax, car tax",
   "unemployment benefit => jobseeker's allowance",
   "unsorn, un sorn, cancel sorn => sorn",
+  "winter fuel allowance, winter allowance => winter fuel payment",
+  "winter payment, winter payments => winter fuel payment",
   "xmas => christmas",
 
   # Run-together terms
@@ -134,7 +138,7 @@ synonyms: &synonyms [
 
   # Acronyms
   "crb, criminal records bureau, dbs, disclosure and barring service",
-  "cwp, cold weather payment",
+  "cwp => cold weather",
   "dada, dance and drama awards",
   "dda, disability discrimination act",
   "dfid, department for international development",
@@ -171,13 +175,13 @@ synonyms: &synonyms [
   "uj, ujm => universal jobmatch",
   "ukti, uk trade and investment",
   "utr, unique taxpayer reference",
-
+  
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
   "curriculum vitae => cv, curriculum vitae",
   # "easter => easter, paid early",  # Seasonal need - also for Christmas and New Year payments
-  "heating => heating, energy grants, energy saving, cold, warm, winter",
+  # "heating => heating, energy grants, energy saving, cold, warm, winter",
   "intestacy => intestacy, wills, inherits",
   "intestate => intestate, wills, inherits",
   "ir35 => ir35, employment status",
@@ -191,7 +195,6 @@ synonyms: &synonyms [
   "social security => social security, benefits",
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
-  "winter payment, winter payments => winter fuel payment, cold weather, warm home, energy saving, energy grants, heating",
 
   # Adding terms to raise the best results
   "book driving test => book driving test, book your practical driving test",
@@ -225,9 +228,9 @@ synonyms: &synonyms [
   "vehicle licence => vehicle licence, tax disc",
   "work trial => work trial, work experience, recruiters",
 
-  # Forms and leaflets not mentioned in content
+  # Forms and leaflets
   "adif => birth or adoption certificate form, student finance forms",
-  "br1, br 1 => br1, state pension claim",
+  "br1, br 1 => br1, state pension claim form, bulgarian romanian",
   "br19, br 19 => br19, state pension statement",
   "cis305, cis 305, cis340, cis 340 => construction industry scheme",
   "cwf1 => register for self assessment",
@@ -266,7 +269,6 @@ synonyms: &synonyms [
   "v888 => v888, vehicle information",
   "v890 => sorn",
   "vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration",
-  "vat 7 => vat7",
 
   # Abbreviations
   "digi => digital",
@@ -280,6 +282,7 @@ synonyms: &synonyms [
 
   # Correcting mistakes
   # "advise => advise, advice",
+  "dlva => dvla",
   "eh1c => ehic",
   "government getaway => government gateway",
   "rapid claim => rapid claim, rapid reclaim",
@@ -287,6 +290,7 @@ synonyms: &synonyms [
   "vc5 => vc5, v5c",
 
   # Split words that are usually one word
+  "child care => childcare",
   "direct gov => directgov",
   "heat wave => heatwave",
   "help line => helpline",
@@ -297,6 +301,9 @@ synonyms: &synonyms [
   "pot hole => pothole",
   "re claim => reclaim",
   "tax payer => tax payer, taxpayer",
+  
+  # Foreign language
+  "visum, viza, vize, visado, visados, visto, vistos, visti => visa",
 
   # Common misspellings
   "addres => address",
@@ -358,7 +365,6 @@ synonyms: &synonyms [
   "cossh => coshh",
   "crisi => crisis",
   "crissis => crisis",
-  "c v => cv",
   "deregistration => de registration",
   "diability => disability",
   "disabilty => disability",
@@ -375,6 +381,7 @@ synonyms: &synonyms [
   "harrasment => harassment",
   "harrassment => harassment",
   "houseing => housing",
+  "imigration => immigration",
   "incapasity => incapacity",
   "inco => income",
   "incom => income",
@@ -398,6 +405,7 @@ synonyms: &synonyms [
   "knifes => knives",
   "licience => licence",
   "liscence => licence",
+  "lisence => licence",
   "lones => loans",
   "maintance => maintenance",
   "maternaty => maternity",
@@ -522,6 +530,9 @@ synonyms: &synonyms [
   # "warehousing => warehousing, jobs",
 
   # Stop word workarounds
+  "booklet an, an booklet => naturalisation booklet",
+  "form an, an form => form an application for naturalisation as a british citizen",
+  "guide an, an guide => naturalisation guide",
   "will, wills"
 ]
 
@@ -538,6 +549,7 @@ stems: &stems [
   "interns => intern",
   "internal => internal",
   "international => international",
+  "naturalization => naturali", # not natural, nature
   "paye => paye",
   "permitted => permitted",
   "practical => practical",
