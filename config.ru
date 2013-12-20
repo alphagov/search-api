@@ -30,6 +30,8 @@ else
   log.sync = true
   STDOUT.reopen(log)
   STDERR.reopen(log)
+
+  use Rack::Logstasher::Logger, Logger.new("log/production.json.log"), :extra_request_headers => {"x-varnish" => "varnish_id"}
 end
 
 # Stop double slashes in URLs (even escaped ones) being flattened to single ones
