@@ -26,17 +26,15 @@ if in_development
   set :logging, $DEBUG ? Logger::DEBUG : Logger::INFO
 else
   enable :logging
+  log = File.new("log/production.log", "a")
+  log.sync = true
+  STDOUT.reopen(log)
+  STDERR.reopen(log)
 end
 
 # Stop double slashes in URLs (even escaped ones) being flattened to single ones
 set :protection, :except => [:path_traversal, :escaped_params, :frame_options]
 
 enable :dump_errors, :raise_errors
-
-unless in_development
-  log = File.new("log/production.log", "a")
-  STDOUT.reopen(log)
-  STDERR.reopen(log)
-end
 
 run Rummager
