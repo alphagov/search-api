@@ -8,3 +8,4 @@ tmp/*
 /public/system/*.xml
 /public/system/sitemaps/*.xml
 /data
+/log
