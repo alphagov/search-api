@@ -22,7 +22,7 @@ gem "redis-namespace", "1.3.1"
 gem "newrelic_rpm", "3.6.7.152"
 gem "plek", "1.5.0"
 gem "gds-api-adapters", "7.18.0"
-gem "rack-logstasher", "0.0.2"
+gem "rack-logstasher", "0.0.3"
 
 group :test do
   gem "shoulda-context"
