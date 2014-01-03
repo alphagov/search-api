@@ -5,7 +5,7 @@ production.log
 /.bundle
 tmp/*
 .powrc
-/public/system/*.xml
-/public/system/sitemaps/*.xml
+/public/sitemap.xml
+/public/sitemaps/
 /data
 /log
