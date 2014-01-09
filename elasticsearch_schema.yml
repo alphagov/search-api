@@ -68,6 +68,7 @@ synonyms: &synonyms [
   "inland revenue => hmrc, hm revenue customs",
   "next step, nextstep => next step, national careers service",
   "old age pension => state pension",
+  "rfl refund => tax disc refund",
   "road tax => road tax, car tax",
   "unemployment benefit => jobseeker's allowance",
   "unsorn, un sorn, cancel sorn => sorn",
@@ -77,6 +78,7 @@ synonyms: &synonyms [
 
   # Run-together terms
   "bluebadge => blue badge",
+  "bonavacantia => bona vacantia",
   "buyerbeware => buying a used car",
   "carersallowance => carer's allowance",
   "checkdrivercpc => check driver cpc",
@@ -88,6 +90,7 @@ synonyms: &synonyms [
   "driverhealth => driving health",
   "drivingtest => driving test",
   "dvlalocal => dvla local",
+  "eguide => e guide",  # DBS e-guide
   "euets => eu ets",
   "firesafetyguides => fire safety guides",
   "governmentgateway => government gateway",
@@ -103,6 +106,7 @@ synonyms: &synonyms [
   "motoringforms => motoring forms",
   "payacourtfine => pay a court fine",
   "paycourtfine => pay a court fine",
+  "penaltynotice => penalty notice",
   "pensioncredit => pension credit",
   "pensionforecast => pension forecast",
   "photorenewal => photo renewal",
@@ -137,7 +141,9 @@ synonyms: &synonyms [
   "sanctionsconlist, sanctionsconlist.csv, sanctionsconlist.txt, sanctionslist => financial sanctions consolidated list",
 
   # Acronyms
+  "aspp, additional paternity pay",
   "crb, criminal records bureau, dbs, disclosure and barring service",
+  "csco, carbon saving community obligation",
   "cwp => cold weather",
   "dada, dance and drama awards",
   "dda, disability discrimination act",
@@ -154,6 +160,7 @@ synonyms: &synonyms [
   "fcoc, future character of conflict",
   "foi, freedom of information",
   "hmcs, hmcts, hm courts tribunals service",
+  "iib => industrial injuries disablement benefit",
   # "jsa, jobseeker’s allowance",
   "lha, local housing allowance",
   "lpa, lasting power of attorney",
@@ -164,6 +171,7 @@ synonyms: &synonyms [
   "ospp, ordinary statutory paternity pay",
   "pcdl, professional and career development loan",
   "pilon, payment in lieu of notice, pay in lieu of notice",
+  "rnps, register of number plate suppliers",
   "rti, real time information",
   "s2p => state second pension",
   "sap, statutory adoption pay",
@@ -179,12 +187,16 @@ synonyms: &synonyms [
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
+  "benefit checker, benefits checker => benefits adviser",
+  "bin collection => bin collection, rubbish collection",
   "curriculum vitae => cv, curriculum vitae",
   # "easter => easter, paid early",  # Seasonal need - also for Christmas and New Year payments
   # "heating => heating, energy grants, energy saving, cold, warm, winter",
+  "hpi check => used car check",
   "intestacy => intestacy, wills, inherits",
   "intestate => intestate, wills, inherits",
   "ir35 => ir35, employment status",
+  "mot checker => mot check",
   "my account => your account, online account",  # Student finance login
   "not arrived => not arrived, contact dvla",
   "not received => not received, contact dvla",
@@ -234,13 +246,13 @@ synonyms: &synonyms [
   "br19, br 19 => br19, state pension statement",
   "cis305, cis 305, cis340, cis 340 => construction industry scheme",
   "cwf1 => register for self assessment",
-  "d184 => d184, divorce",
+  "d184 => divorce",
   "d46p => d46p, renew 70", # 'D46P' appears in content but returns no results
   "d786b => d777b, digital tachograph driver card",
   "d798 => d798, renewal reminder", # 'D798' appears in content but returns no results
   "eesa => employment and support allowance",
   "esa50 => esa50, esa 50",
-  "ex160a => court fees",
+  "ex160, ex160a => court fees",
   "ex321 => make a court claim for money, enforce a judgment",
   "ex50 => court fees",
   "gv 262 => gv262, drivers hours",
@@ -251,6 +263,9 @@ synonyms: &synonyms [
   "inf38 => non gb licence",
   "ins160 => vehicle registration certificate",
   "ipcbr1 => ipcbr1, ipc br1",
+  "jsa1, jsa1 ils, jsa1ils, jsa3, jsa4, jsa5, jsa6, jsa7, jsa9, jsa10, jsa10jp, jsa11, jsa12, jsa13, jsa28, jsa31, jsa40, jsa69, jsa460 => jobseeker's allowance",
+  "jsa esa10jp => jobseeker's allowance, employment support allowance",
+  "jsa2 => jobseeker's allowance, benefit integrity centre",
   "lso1 => ls01",
   "mi12 => mi12, mortgage interest",
   "ni17a => maternity benefits",
@@ -271,13 +286,13 @@ synonyms: &synonyms [
   "vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration",
 
   # Abbreviations
+  "cert => certificate",
   "digi => digital",
   "gov => government",
   "hep b => hepatitis b",
   "reg => registration",
   "ref number => ref number, reference number",
-  "self cert => self certification",
-  "tacho => tachograph",
+  "tacho, tacho graph, taco, taco graph => tachograph",
   "unique tax => unique taxpayer",  # eg unique tax reference, unique tax code
 
   # Correcting mistakes
@@ -285,6 +300,7 @@ synonyms: &synonyms [
   "dlva => dvla",
   "eh1c => ehic",
   "government getaway => government gateway",
+  "ipc bri => ipc br1",
   "rapid claim => rapid claim, rapid reclaim",
   "universal jobsearch => universal jobmatch",
   "vc5 => vc5, v5c",
@@ -315,6 +331,7 @@ synonyms: &synonyms [
   "aplication => application",
   "apostile => apostille",
   "applicaton => application",
+  "appostille => apostille",
   "apprentaship => apprenticeship",
   "apprentaships => apprenticeships",
   "apprentership => apprenticeship",
@@ -328,6 +345,7 @@ synonyms: &synonyms [
   "attendace => attendance",
   "attendence => attendance",
   "attorny => attorney",
+  "attourney => attorney",
   "baliff => bailiff",
   "baliffs => bailiffs",
   "bancruptcy => bankruptcy",
@@ -360,6 +378,7 @@ synonyms: &synonyms [
   "cheif => chief",
   "childrens => children",
   "childs => child",
+  "chrismas => christmas",
   "comunity => community",
   "contactor => contractor",
   "cossh => coshh",
@@ -373,6 +392,7 @@ synonyms: &synonyms [
   "divorse => divorce",
   "drivi => driving",
   "drivin => driving",
+  "emmissions => emissions",
   "fianance => finance",
   "finace => finance",
   "forcast => forecast",
@@ -380,6 +400,7 @@ synonyms: &synonyms [
   "grafitti => graffiti",
   "harrasment => harassment",
   "harrassment => harassment",
+  "hoilday, hoildays => holiday",
   "houseing => housing",
   "imigration => immigration",
   "incapasity => incapacity",
@@ -415,6 +436,8 @@ synonyms: &synonyms [
   "minium => minimum",
   "minumum => minimum",
   "morgage => mortgage",
+  "morrocco => morocco",
+  "morroco => morocco",
   "mortage => mortgage",
   "motobility => motability",
   "motorbility => motability",
@@ -432,6 +455,8 @@ synonyms: &synonyms [
   "pregancy => pregnancy",
   "provisonal => provisional",
   "questionaire => questionnaire",
+  "reclam => reclaim",
+  "reclame => reclaim",
   "redudancy => redundancy",
   "redun => redundancy",
   "redunancy => redundancy",
@@ -440,6 +465,7 @@ synonyms: &synonyms [
   "redundnacy => redundancy",
   "redundency => redundancy",
   "referance => reference",
+  "retension => retention",
   "roadtax => car tax",
   "saftey => safety",
   "school closers => school closures",
@@ -450,7 +476,9 @@ synonyms: &synonyms [
   "selfemployment => self employment",
   "seperation => separation",
   "serach => search",
+  "socail => social",
   "soletrader => sole trader",
+  "sorport => support",
   "statuatory => statutory",
   "streetlight => street light",
   "stu => student",
@@ -538,6 +566,7 @@ synonyms: &synonyms [
 
 
 stems: &stems [
+  "appointeeship => appointee",
   "community => community",
   "corporate => corporate",  # not corporation
   "directive => directive",
@@ -549,7 +578,7 @@ stems: &stems [
   "interns => intern",
   "internal => internal",
   "international => international",
-  "naturalization => naturali", # not natural, nature
+  "naturalization => naturali",  # not natural, nature
   "paye => paye",
   "permitted => permitted",
   "practical => practical",
