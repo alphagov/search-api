@@ -183,7 +183,7 @@ synonyms: &synonyms [
   "uj, ujm => universal jobmatch",
   "ukti, uk trade and investment",
   "utr, unique taxpayer reference",
-  
+
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
@@ -317,7 +317,7 @@ synonyms: &synonyms [
   "pot hole => pothole",
   "re claim => reclaim",
   "tax payer => tax payer, taxpayer",
-  
+
   # Foreign language
   "visum, viza, vize, visado, visados, visto, vistos, visti => visa",
 
@@ -678,6 +678,7 @@ mappings:
         link:        { type: string, index: not_analyzed, include_in_all: false }
         operational_field: { type: string, index: not_analyzed, include_in_all: false }
         organisations: { type: string, index: not_analyzed, include_in_all: false }
+        organisation_state: { type: string, index: not_analyzed, include_in_all: false }
         people: { type: string, index: not_analyzed, include_in_all: false }
         promoted_for: { type: string, index: analyzed, include_in_all: false }
         public_timestamp: { type: date, index: not_analyzed, include_in_all: false }
