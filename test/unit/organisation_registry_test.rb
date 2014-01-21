@@ -10,7 +10,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def mod_document
     Document.new(
-      %w(slug link title acronym organisation_type),
+      %w(slug link title acronym organisation_type organisation_state),
       {
         link: "/government/organisations/ministry-of-defence",
         slug: "ministry-of-defence",
@@ -45,7 +45,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("organisation", fields: %w{slug link title acronym organisation_type})
+      .with("organisation", fields: %w{slug link title acronym organisation_type organisation_state})
       .returns([])
     organisation = @organisation_registry["ministry-of-defence"]
   end

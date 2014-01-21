@@ -29,7 +29,7 @@ class OrganisationRegistry
 
 private
   def fetch
-    fields = %w{slug link title acronym organisation_type}
+    fields = %w{slug link title acronym organisation_type organisation_state}
     organisations = @index.documents_by_format("organisation", fields: fields)
     organisations.map do |o|
       fill_organisation_type(o)
