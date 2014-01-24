@@ -1,0 +1,69 @@
+require "test_helper"
+require "document"
+require "elasticsearch/result_set"
+
+class ResultSetTest < ShouldaUnitTestCase
+
+  FIELDS = %w(link title description format)
+
+  def mappings
+    {
+      "edition" => {
+        "properties" => Hash[FIELDS.map { |f| [f, { "type" => "foo" }] }]
+      }
+    }
+  end
+
+  context "empty result set" do
+    setup do
+      @response = {
+        "hits" => {
+          "total" => 0,
+          "hits" => []
+        }
+      }
+    end
+
+    should "report zero results" do
+      assert_equal 0, ResultSet.new(mappings, @response).total
+    end
+
+    should "have an empty result set" do
+      assert_equal 0, ResultSet.new(mappings, @response).results.size
+    end
+  end
+
+  context "single result" do
+    setup do
+      @response = {
+        "hits" => {
+          "total" => 1,
+          "hits" => [
+            {
+              "_score" => 12,
+              "_source" => { "foo" => "bar" }
+            }
+          ]
+        }
+      }
+    end
+
+    should "report one result" do
+      assert_equal 1, ResultSet.new(mappings, @response).total
+    end
+
+    should "pass the fields to Document.from_hash" do
+      expected_hash = has_entry("foo", "bar")
+      Document.expects(:from_hash).with(expected_hash, mappings).returns(:doc)
+
+      assert_equal [:doc], ResultSet.new(mappings, @response).results
+    end
+
+    should "pass the result score to Document.from_hash" do
+      expected_hash = has_entry("es_score", 12)
+      Document.expects(:from_hash).with(expected_hash, mappings).returns(:doc)
+
+      assert_equal [:doc], ResultSet.new(mappings, @response).results
+    end
+  end
+end
