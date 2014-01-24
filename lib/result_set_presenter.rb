@@ -1,3 +1,5 @@
+require "active_support/inflector"
+
 class ResultSetPresenter
 
   def initialize(result_set, context = {})
