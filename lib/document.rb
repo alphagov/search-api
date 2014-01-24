@@ -1,8 +1,13 @@
-class SearchIndexEntry
+class Document
   def initialize(field_names, attributes = {})
     @field_names = field_names.map(&:to_s) + ["es_score"]
     @attributes = {}
     update_attributes!(attributes)
+  end
+
+  def self.from_hash(hash, mappings)
+    field_names = mappings["edition"]["properties"].keys.map(&:to_s)
+    self.new(field_names, hash)
   end
 
   def update_attributes!(attributes)
@@ -30,7 +35,7 @@ class SearchIndexEntry
       @field_names.each do |key|
         value = get(key)
         if value.is_a?(Array)
-          value = value.map {|v| v.is_a?(SearchIndexEntry) ? v.elasticsearch_export : v }
+          value = value.map {|v| v.is_a?(Document) ? v.elasticsearch_export : v }
         end
         unless value.nil? or (value.respond_to?(:empty?) and value.empty?)
           doc[key] = value
@@ -44,7 +49,7 @@ class SearchIndexEntry
     Hash[@field_names.map { |key|
       value = get(key)
       if value.is_a?(Array)
-        value = value.map { |v| v.is_a?(SearchIndexEntry) ? v.to_hash : v }
+        value = value.map { |v| v.is_a?(Document) ? v.to_hash : v }
       end
       [key.to_s, value]
     }.select{ |key, value|
@@ -79,25 +84,4 @@ private
   def field_name_of_assignment_method(method_name)
     method_name.to_s[0...-1]
   end
-end
-
-class Link < SearchIndexEntry
-
-  def initialize(attributes)
-    super([:title, :link, :link_order], attributes)
-  end
-
-  def update_attributes!(attributes)
-    super
-    self.set(:link_order, attributes[:link_order] || attributes["link_order"] || 0)
-  end
-end
-
-class Document < SearchIndexEntry
-
-  def self.from_hash(hash, mappings)
-    field_names = mappings["edition"]["properties"].keys.map(&:to_s)
-    self.new(field_names, hash)
-  end
-
 end
