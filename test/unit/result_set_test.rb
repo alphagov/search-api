@@ -55,15 +55,14 @@ class ResultSetTest < ShouldaUnitTestCase
 
     should "pass the fields to Document.from_hash" do
       expected_hash = has_entry("foo", "bar")
-      Document.expects(:from_hash).with(expected_hash, mappings).returns(:doc)
+      Document.expects(:from_hash).with(expected_hash, mappings, anything).returns(:doc)
 
       result_set = ResultSet.from_elasticsearch(mappings, @response)
       assert_equal [:doc], result_set.results
     end
 
     should "pass the result score to Document.from_hash" do
-      expected_hash = has_entry("es_score", 12)
-      Document.expects(:from_hash).with(expected_hash, mappings).returns(:doc)
+      Document.expects(:from_hash).with(is_a(Hash), mappings, 12).returns(:doc)
 
       result_set = ResultSet.from_elasticsearch(mappings, @response)
       assert_equal [:doc], result_set.results

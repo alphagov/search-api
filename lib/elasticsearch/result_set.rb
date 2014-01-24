@@ -19,7 +19,6 @@ class ResultSet
 
 private
   def self.document_from_hit(hit, mappings)
-    hash = hit["_source"].merge("es_score" => hit["_score"])
-    Document.from_hash(hash, mappings)
+    Document.from_hash(hit["_source"], mappings, hit["_score"])
   end
 end

@@ -1,13 +1,17 @@
 class Document
-  def initialize(field_names, attributes = {})
-    @field_names = field_names.map(&:to_s) + ["es_score"]
+
+  attr_reader :es_score
+
+  def initialize(field_names, attributes = {}, es_score = nil)
+    @field_names = field_names.map(&:to_s)
     @attributes = {}
+    @es_score = es_score
     update_attributes!(attributes)
   end
 
-  def self.from_hash(hash, mappings)
+  def self.from_hash(hash, mappings, es_score = nil)
     field_names = mappings["edition"]["properties"].keys.map(&:to_s)
-    self.new(field_names, hash)
+    self.new(field_names, hash, es_score)
   end
 
   def update_attributes!(attributes)
@@ -46,7 +50,7 @@ class Document
   end
 
   def to_hash
-    Hash[@field_names.map { |key|
+    field_values = Hash[@field_names.map { |key|
       value = get(key)
       if value.is_a?(Array)
         value = value.map { |v| v.is_a?(Document) ? v.to_hash : v }
@@ -55,6 +59,12 @@ class Document
     }.select{ |key, value|
       ![nil, []].include?(value)
     }]
+
+    if es_score
+      field_values.merge("es_score" => es_score)
+    else
+      field_values
+    end
   end
 
   def method_missing(method_name, *args)

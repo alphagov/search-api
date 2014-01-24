@@ -116,4 +116,25 @@ class DocumentTest < MiniTest::Unit::TestCase
 
     assert_equal hash.keys.sort, document.elasticsearch_export.keys.sort
   end
+
+  def test_should_include_result_score
+    hash = { "link" => "/batman" }
+    field_names = ["link"]
+
+    assert_equal 5.2, Document.new(field_names, hash, 5.2).es_score
+  end
+
+  def test_includes_elasticsearch_score_in_hash
+    hash = { "link" => "/batman" }
+    field_names = ["link"]
+
+    assert_equal 5.2, Document.new(field_names, hash, 5.2).to_hash["es_score"]
+  end
+
+  def test_leaves_out_blank_score
+    hash = { "link" => "/batman" }
+    field_names = ["link"]
+
+    refute_includes Document.new(field_names, hash).to_hash, "es_score"
+  end
 end
