@@ -126,6 +126,17 @@ class Rummager < Sinatra::Application
     halt(500, env['sinatra.error'].message)
   end
 
+  before "/?:index?/search.?:format?" do
+    @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+
+    if @query == ""
+      expires 3600, :public
+      halt 404
+    end
+
+    expires 3600, :public if @query.length < 20
+  end
+
   # To search a named index:
   #   /index_name/search?q=pie
   #
@@ -152,16 +163,8 @@ class Rummager < Sinatra::Application
   get "/?:index?/search.?:format?" do
     json_only
 
-    query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
-
-    if query == ""
-      expires 3600, :public
-      halt 404
-    end
-
-    expires 3600, :public if query.length < 20
     organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
-    result_set = current_index.search(query,
+    result_set = current_index.search(@query,
       organisation: organisation,
       sort: params["sort"],
       order: params["order"])
@@ -171,7 +174,7 @@ class Rummager < Sinatra::Application
       document_series_registry: document_series_registry,
       document_collection_registry: document_collection_registry,
       world_location_registry: world_location_registry,
-      spelling_suggestions: suggester.suggestions(params["q"])
+      spelling_suggestions: suggester.suggestions(@query)
     }
     presenter = ResultSetPresenter.new(result_set, presenter_context)
     MultiJson.encode presenter.present
