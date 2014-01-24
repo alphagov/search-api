@@ -25,11 +25,12 @@ class ResultSetTest < ShouldaUnitTestCase
     end
 
     should "report zero results" do
-      assert_equal 0, ResultSet.new(mappings, @response).total
+      assert_equal 0, ResultSet.from_elasticsearch(mappings, @response).total
     end
 
     should "have an empty result set" do
-      assert_equal 0, ResultSet.new(mappings, @response).results.size
+      result_set = ResultSet.from_elasticsearch(mappings, @response)
+      assert_equal 0, result_set.results.size
     end
   end
 
@@ -49,21 +50,23 @@ class ResultSetTest < ShouldaUnitTestCase
     end
 
     should "report one result" do
-      assert_equal 1, ResultSet.new(mappings, @response).total
+      assert_equal 1, ResultSet.from_elasticsearch(mappings, @response).total
     end
 
     should "pass the fields to Document.from_hash" do
       expected_hash = has_entry("foo", "bar")
       Document.expects(:from_hash).with(expected_hash, mappings).returns(:doc)
 
-      assert_equal [:doc], ResultSet.new(mappings, @response).results
+      result_set = ResultSet.from_elasticsearch(mappings, @response)
+      assert_equal [:doc], result_set.results
     end
 
     should "pass the result score to Document.from_hash" do
       expected_hash = has_entry("es_score", 12)
       Document.expects(:from_hash).with(expected_hash, mappings).returns(:doc)
 
-      assert_equal [:doc], ResultSet.new(mappings, @response).results
+      result_set = ResultSet.from_elasticsearch(mappings, @response)
+      assert_equal [:doc], result_set.results
     end
   end
 end
