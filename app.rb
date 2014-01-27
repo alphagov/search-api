@@ -213,7 +213,7 @@ class Rummager < Sinatra::Application
     json_only
 
     organisations = organisation_registry.all
-    OrganisationSetPresenter.new(organisations).present
+    MultiJson.encode OrganisationSetPresenter.new(organisations).present
   end
 
   # Insert (or overwrite) a document
