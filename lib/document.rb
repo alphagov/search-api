@@ -1,6 +1,6 @@
 class Document
   def initialize(field_names, attributes = {})
-    @field_names = field_names.map(&:to_s) + ["es_score"]
+    @field_names = field_names.map(&:to_s) + ["es_score", "explanation"]
     @attributes = {}
     update_attributes!(attributes)
   end

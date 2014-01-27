@@ -242,4 +242,26 @@ class ElasticsearchSearchTest < IntegrationTest
     assert last_response.ok?
     assert_result_links "/promoted", "/not-promoted"
   end
+
+  def test_can_include_explanations
+    Rummager.settings.expects(:enable_explain).returns(true)
+    get "/search.json?q=cheese&explain=1"
+    assert last_response.ok?
+    parsed_response = MultiJson.decode(last_response.body)
+    assert parsed_response["results"].length > 0, "No results found"
+    parsed_response["results"].each do |result|
+      assert result["explanation"]
+    end
+  end
+
+  def test_cannot_include_explanations_if_disabled
+    Rummager.expects(:enable_explain).returns(false)
+    get "/search.json?q=cheese&explain=1"
+    assert last_response.ok?
+    parsed_response = MultiJson.decode(last_response.body)
+    assert parsed_response["results"].length > 0, "No results found"
+    parsed_response["results"].each do |result|
+      refute result.include?("explanation")
+    end
+  end
 end
