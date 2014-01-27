@@ -174,7 +174,7 @@ class Rummager < Sinatra::Application
       spelling_suggestions: suggester.suggestions(params["q"])
     }
     presenter = ResultSetPresenter.new(result_set, presenter_context)
-    presenter.present
+    MultiJson.encode presenter.present
   end
 
   # Perform an advanced search. Supports filters and pagination.
@@ -206,14 +206,14 @@ class Rummager < Sinatra::Application
     # Using request.params because it is just the params from the request
     # rather than things added by Sinatra (eg splat, captures, index and format)
     result_set = current_index.advanced_search(request.params)
-    ResultSetPresenter.new(result_set).present
+    MultiJson.encode ResultSetPresenter.new(result_set).present
   end
 
   get "/organisations.?:format?" do
     json_only
 
     organisations = organisation_registry.all
-    OrganisationSetPresenter.new(organisations).present
+    MultiJson.encode OrganisationSetPresenter.new(organisations).present
   end
 
   # Insert (or overwrite) a document

@@ -82,13 +82,9 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     stub(results: [Document.new(FIELDS, document_hash)], total: 1)
   end
 
-  def output_for(presenter)
-    MultiJson.decode(presenter.present)
-  end
-
   def test_generates_json_from_documents
     presenter = ResultSetPresenter.new(result_set)
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal 1, output["results"].length
     # Check all the fields from the document are present
     assert_equal [], %w(link title description format) - output["results"][0].keys
@@ -96,43 +92,43 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
   def test_presented_json_includes_presentation_format
     presenter = ResultSetPresenter.new(result_set)
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal "edition", output["results"][0]["presentation_format"]
   end
 
   def test_presented_json_includes_humanized_format
     presenter = ResultSetPresenter.new(result_set)
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal "Editions", output["results"][0]["humanized_format"]
   end
 
   def test_should_use_answer_as_presentation_format_for_planner
     result_set = single_result_with_format "planner"
-    output = output_for(ResultSetPresenter.new(result_set))
+    output = ResultSetPresenter.new(result_set).present
     assert_equal "answer", output["results"][0]["presentation_format"]
   end
 
   def test_should_use_answer_as_presentation_format_for_smart_answer
     result_set = single_result_with_format "smart_answer"
-    output = output_for(ResultSetPresenter.new(result_set))
+    output = ResultSetPresenter.new(result_set).present
     assert_equal "answer", output["results"][0]["presentation_format"]
   end
 
   def test_should_use_answer_as_presentation_format_for_licence_finder
     result_set = single_result_with_format "licence_finder"
-    output = output_for(ResultSetPresenter.new(result_set))
+    output = ResultSetPresenter.new(result_set).present
     assert_equal "answer", output["results"][0]["presentation_format"]
   end
 
   def test_should_use_guide_as_presentation_format_for_guide
     result_set = single_result_with_format "guide"
-    output = output_for(ResultSetPresenter.new(result_set))
+    output = ResultSetPresenter.new(result_set).present
     assert_equal "guide", output["results"][0]["presentation_format"]
   end
 
   def test_should_use_humanized_format
     result_set = single_result_with_format "place"
-    output = output_for(ResultSetPresenter.new(result_set))
+    output = ResultSetPresenter.new(result_set).present
     assert_equal "Services", output["results"][0]["humanized_format"]
   end
 
@@ -140,12 +136,12 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     presenter = ResultSetPresenter.new(single_result_with_format("foo"))
     presenter.stubs(:presentation_format).returns("place")
 
-    assert_equal "Services", output_for(presenter)["results"][0]["humanized_format"]
+    assert_equal "Services", presenter.present["results"][0]["humanized_format"]
   end
 
   def test_generates_humanized_format_if_not_present
     result_set = single_result_with_format "ocean_map"
-    output = output_for(ResultSetPresenter.new(result_set))
+    output = ResultSetPresenter.new(result_set).present
     assert_equal "Ocean maps", output["results"][0]["humanized_format"]
   end
 
@@ -165,7 +161,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       document_series_registry: document_series_registry
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal 1, output["results"][0]["document_series"].size
     assert_instance_of Hash, output["results"][0]["document_series"][0]
     assert_equal "Rail statistics", output["results"][0]["document_series"][0]["title"]
@@ -190,7 +186,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       document_collection_registry: document_collection_registry
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal 1, output["results"][0]["document_collections"].size
     assert_instance_of Hash, output["results"][0]["document_collections"][0]
     assert_equal "Rail statistics", output["results"][0]["document_collections"][0]["title"]
@@ -215,7 +211,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       organisation_registry: organisation_registry
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal 1, output["results"][0]["organisations"].size
     assert_instance_of Hash, output["results"][0]["organisations"][0]
     assert_equal "Ministry of Defence (MoD)", output["results"][0]["organisations"][0]["title"]
@@ -239,7 +235,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       topic_registry: topic_registry
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal 1, output["results"][0]["topics"].size
     assert_instance_of Hash, output["results"][0]["topics"][0]
     assert_equal "Housing", output["results"][0]["topics"][0]["title"]
@@ -263,7 +259,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       world_location_registry: world_location_registry
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal 1, output["results"][0]["world_locations"].size
     assert_instance_of Hash, output["results"][0]["world_locations"][0]
     assert_equal "Angola", output["results"][0]["world_locations"][0]["title"]
@@ -281,7 +277,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       organisation_registry: organisation_registry
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal 1, output["results"][0]["organisations"].size
     assert_instance_of Hash, output["results"][0]["organisations"][0]
     refute_includes output["results"][0]["organisations"][0], "title"
@@ -295,7 +291,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       organisation_registry: nil
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal 1, output["results"][0]["organisations"].size
     assert_equal "ministry-of-silly-walks", output["results"][0]["organisations"][0]
   end
@@ -306,7 +302,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       spelling_suggestions: ["spelling can be improved"]
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     expected = [
       "spelling can be improved"
     ]
@@ -319,7 +315,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       spelling_suggestions: nil # nil, not empty array
     )
 
-    output = output_for(presenter)
+    output = presenter.present
     assert_equal ["total", "results"], output.keys
   end
 end
