@@ -140,4 +140,58 @@ class ResultSetTest < ShouldaUnitTestCase
       assert_equal [:foo, :bar, :baz], top_results.results
     end
   end
+
+  context "subtracting result sets" do
+    setup do
+      @documents = %w(/1 /2 /3 /4 /5).map { |link|
+        stub("Document #{link}", link: link)
+      }
+      @result_set = ResultSet.new(@documents[0,2], 10)
+    end
+
+    context "removing empty set" do
+      setup do
+        @other_result_set = ResultSet.new([], 2)
+        @remainder = @result_set - @other_result_set
+      end
+
+      should "keep the same results" do
+        assert_equal %w(/1 /2), @remainder.results.map(&:link)
+      end
+
+      should "keep the same total" do
+        assert_equal 10, @remainder.total
+      end
+    end
+
+    context "removing non-overlapping set" do
+      setup do
+        @other_result_set = ResultSet.new(@documents[3,2], 2)
+        @remainder = @result_set - @other_result_set
+      end
+
+      should "keep the same results" do
+        assert_equal %w(/1 /2), @remainder.results.map(&:link)
+      end
+
+      should "keep the same total" do
+        assert_equal 10, @remainder.total
+      end
+    end
+
+    context "removing overlapping set" do
+      setup do
+        @other_result_set = ResultSet.new(@documents[1,2], 2)
+        @remainder = @result_set - @other_result_set
+      end
+
+      should "remove the shared results" do
+        assert_equal %w(/1), @remainder.results.map(&:link)
+      end
+
+      should "subtract the shared count from the total" do
+        assert_equal 9, @remainder.total
+      end
+    end
+  end
 end
