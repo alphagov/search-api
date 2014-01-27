@@ -9,13 +9,13 @@ class ResultSetPresenter
 
   def present
     presentable_hash = {
-      total: @result_set.total,
-      results: results
+      "total" => @result_set.total,
+      "results" => results
     }
     if spelling_suggestions
-      presentable_hash[:spelling_suggestions] = spelling_suggestions
+      presentable_hash["spelling_suggestions"] = spelling_suggestions
     end
-    MultiJson.encode(presentable_hash)
+    presentable_hash
   end
 
   PRESENTATION_FORMAT_TRANSLATION = {
@@ -61,8 +61,8 @@ private
 
   def build_result(document)
     result = document.to_hash.merge(
-      presentation_format: presentation_format(document),
-      humanized_format: humanized_format(document)
+      "presentation_format" => presentation_format(document),
+      "humanized_format" => humanized_format(document)
     )
     if result['document_series'] && should_expand_document_series?
       result['document_series'] = result['document_series'].map do |slug|
@@ -139,45 +139,45 @@ private
   def document_series_by_slug(slug)
     document_series = document_series_registry && document_series_registry[slug]
     if document_series
-      document_series.to_hash.merge(slug: slug)
+      document_series.to_hash.merge("slug" => slug)
     else
-      {slug: slug}
+      {"slug" => slug}
     end
   end
 
   def document_collection_by_slug(slug)
     document_collection = document_collection_registry && document_collection_registry[slug]
     if document_collection
-      document_collection.to_hash.merge(slug: slug)
+      document_collection.to_hash.merge("slug" => slug)
     else
-      {slug: slug}
+      {"slug" => slug}
     end
   end
 
   def organisation_by_slug(slug)
     organisation = organisation_registry && organisation_registry[slug]
     if organisation
-      organisation.to_hash.merge(slug: slug)
+      organisation.to_hash.merge("slug" => slug)
     else
-      {slug: slug}
+      {"slug" => slug}
     end
   end
 
   def topic_by_slug(slug)
     topic = topic_registry && topic_registry[slug]
     if topic
-      topic.to_hash.merge(slug: slug)
+      topic.to_hash.merge("slug" => slug)
     else
-      {slug: slug}
+      {"slug" => slug}
     end
   end
 
   def world_location_by_slug(slug)
     world_location = world_location_registry && world_location_registry[slug]
     if world_location
-      world_location.to_hash.merge(slug: slug)
+      world_location.to_hash.merge("slug" => slug)
     else
-      {slug: slug}
+      {"slug" => slug}
     end
   end
 end
