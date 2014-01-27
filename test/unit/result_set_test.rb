@@ -118,4 +118,26 @@ class ResultSetTest < ShouldaUnitTestCase
       assert_equal 7, merged.total
     end
   end
+
+  context "taking results" do
+    setup do
+      results = [:foo, :bar, :baz]
+      @result_set = ResultSet.new(results, 10)
+    end
+
+    should "take the first n results" do
+      top_results = @result_set.take(2)
+      assert_equal [:foo, :bar], top_results.results
+    end
+
+    should "leave the total count unchanged" do
+      top_results = @result_set.take(2)
+      assert_equal 10, top_results.total
+    end
+
+    should "take up to n results" do
+      top_results = @result_set.take(5)
+      assert_equal [:foo, :bar, :baz], top_results.results
+    end
+  end
 end

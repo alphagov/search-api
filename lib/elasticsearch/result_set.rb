@@ -27,6 +27,10 @@ class ResultSet
     ResultSet.new(merged_results, new_total)
   end
 
+  def take(count)
+    ResultSet.new(@results.take(count), @total)
+  end
+
 private
   def self.document_from_hit(hit, mappings)
     Document.from_hash(hit["_source"], mappings, hit["_score"])
