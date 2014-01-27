@@ -92,4 +92,30 @@ class ResultSetTest < ShouldaUnitTestCase
       assert_equal 12, weighted_result_set.total
     end
   end
+
+  context "merged result sets" do
+    setup do
+      docs_1 = [
+        stub(link: "/a", es_score: 4),
+        stub(link: "/b", es_score: 2)
+      ]
+      @result_set = ResultSet.new(docs_1)
+
+      docs_2 = [
+        stub(link: "/c", es_score: 3),
+        stub(link: "/d", es_score: 1)
+      ]
+      @other = ResultSet.new(docs_2, 5)
+    end
+
+    should "merge and sort the results" do
+      merged = @result_set.merge(@other)
+      assert_equal %w(/a /c /b /d), merged.results.map(&:link)
+    end
+
+    should "sum the totals" do
+      merged = @result_set.merge(@other)
+      assert_equal 7, merged.total
+    end
+  end
 end
