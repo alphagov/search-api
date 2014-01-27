@@ -17,6 +17,10 @@ class ResultSet
     ResultSet.new(results, total)
   end
 
+  def weighted(factor)
+    ResultSet.new(@results.map { |r| r.weighted(factor) }, @total)
+  end
+
 private
   def self.document_from_hit(hit, mappings)
     Document.from_hash(hit["_source"], mappings, hit["_score"])

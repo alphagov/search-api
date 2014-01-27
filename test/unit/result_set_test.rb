@@ -68,4 +68,28 @@ class ResultSetTest < ShouldaUnitTestCase
       assert_equal [:doc], result_set.results
     end
   end
+
+  context "weighted results" do
+    setup do
+      weighted_1 = stub(es_score: 0.6)
+      document_1 = mock("Document 1") do
+        expects(:weighted).with(0.5).returns(weighted_1)
+      end
+      weighted_2 = stub(es_score: 0.4)
+      document_2 = mock("Document 2") do
+        expects(:weighted).with(0.5).returns(weighted_2)
+      end
+      @result_set = ResultSet.new([document_1, document_2], 12)
+    end
+
+    should "weight each result" do
+      weighted_result_set = @result_set.weighted(0.5)
+      assert_equal [0.6, 0.4], weighted_result_set.results.map(&:es_score)
+    end
+
+    should "keep the same total" do
+      weighted_result_set = @result_set.weighted(0.5)
+      assert_equal 12, weighted_result_set.total
+    end
+  end
 end
