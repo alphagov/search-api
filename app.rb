@@ -137,6 +137,96 @@ class Rummager < Sinatra::Application
     expires 3600, :public if @query.length < 20
   end
 
+  # A mix of search results tailored for the GOV.UK site search
+  #
+  # The response looks like this:
+  #
+  #   {
+  #     "streams": {
+  #       "top-results": {
+  #         "title": "Top results",
+  #         "total": 3,
+  #         "results": [
+  #           ...
+  #         ]
+  #       },
+  #       "services-information": {
+  #         "title": "Services and information",
+  #         "total": 25,
+  #         "results": [
+  #           ...
+  #         ]
+  #       },
+  #       "departments-policy": {
+  #         "title": "Departments and policy",
+  #         "total": 19,
+  #         "results": [
+  #           ...
+  #         ]
+  #       }
+  #     },
+  #     "spelling_suggestions": [
+  #       ...
+  #     ]
+  #   }
+  get "/govuk/search.?:format?" do
+    json_only
+
+    organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
+
+    mainstream_index = search_server.index("mainstream")
+    detailed_index = search_server.index("detailed")
+    government_index = search_server.index("government")
+
+    mainstream_results = mainstream_index.search(@query)
+    detailed_results = detailed_index.search(@query)
+    government_results = government_index.search(@query,
+      organisation: organisation,
+      sort: params["sort"])
+
+    if organisation || params["sort"]
+      unfiltered_government_results = government_index.search(@query)
+    else
+      unfiltered_government_results = government_results
+    end
+
+    services_information_results = mainstream_results.merge(detailed_results.weighted(0.8))
+
+    top_results = services_information_results.merge(unfiltered_government_results.weighted(0.6)).take(3)
+
+    remaining_si = services_information_results - top_results
+    remaining_dp = government_results - top_results
+
+    dp_context = {
+      organisation_registry: organisation_registry,
+      topic_registry: topic_registry,
+      document_series_registry: document_series_registry,
+      document_collection_registry: document_collection_registry,
+      world_location_registry: world_location_registry
+    }
+
+    presenters = {
+      "top-results" => ResultSetPresenter.new(top_results),
+      "services-information" => ResultSetPresenter.new(remaining_si),
+      "departments-policy" => ResultSetPresenter.new(remaining_dp, dp_context)
+    }
+
+    titles = {
+      "top-results" => "Top results",
+      "services-information" => "Services and information",
+      "departments-policy" => "Departments and policy"
+    }
+
+    output = {"streams" => {}}
+    presenters.each do |key, rs_presenter|
+      output["streams"][key] = rs_presenter.present.merge("title" => titles[key])
+    end
+
+    output["spelling_suggestions"] = suggester.suggestions(@query)
+
+    MultiJson.encode output
+  end
+
   # To search a named index:
   #   /index_name/search?q=pie
   #
