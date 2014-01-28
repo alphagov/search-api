@@ -1,7 +1,6 @@
 require "test_helper"
 require "document"
 require "result_set_presenter"
-require "multi_json"
 
 class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
