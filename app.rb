@@ -8,6 +8,8 @@ require "csv"
 
 require "document"
 require "result_set_presenter"
+require "govuk_searcher"
+require "govuk_search_presenter"
 require "organisation_set_presenter"
 require "document_series_registry"
 require "document_collection_registry"
@@ -178,26 +180,10 @@ class Rummager < Sinatra::Application
     detailed_index = search_server.index("detailed")
     government_index = search_server.index("government")
 
-    mainstream_results = mainstream_index.search(@query)
-    detailed_results = detailed_index.search(@query)
-    government_results = government_index.search(@query,
-      organisation: organisation,
-      sort: params["sort"])
+    searcher = GovukSearcher.new(mainstream_index, detailed_index, government_index)
+    result_streams = searcher.search(@query, organisation, params["sort"])
 
-    if organisation || params["sort"]
-      unfiltered_government_results = government_index.search(@query)
-    else
-      unfiltered_government_results = government_results
-    end
-
-    services_information_results = mainstream_results.merge(detailed_results.weighted(0.8))
-
-    top_results = services_information_results.merge(unfiltered_government_results.weighted(0.6)).take(3)
-
-    remaining_si = services_information_results - top_results
-    remaining_dp = government_results - top_results
-
-    dp_context = {
+    result_context = {
       organisation_registry: organisation_registry,
       topic_registry: topic_registry,
       document_series_registry: document_series_registry,
@@ -205,23 +191,7 @@ class Rummager < Sinatra::Application
       world_location_registry: world_location_registry
     }
 
-    presenters = {
-      "top-results" => ResultSetPresenter.new(top_results),
-      "services-information" => ResultSetPresenter.new(remaining_si),
-      "departments-policy" => ResultSetPresenter.new(remaining_dp, dp_context)
-    }
-
-    titles = {
-      "top-results" => "Top results",
-      "services-information" => "Services and information",
-      "departments-policy" => "Departments and policy"
-    }
-
-    output = {"streams" => {}}
-    presenters.each do |key, rs_presenter|
-      output["streams"][key] = rs_presenter.present.merge("title" => titles[key])
-    end
-
+    output = GovukSearchPresenter.new(result_streams, result_context).present
     output["spelling_suggestions"] = suggester.suggestions(@query)
 
     MultiJson.encode output
