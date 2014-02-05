@@ -68,6 +68,12 @@ class Rummager < Sinatra::Application
     end
   end
 
+  def govuk_indices
+    settings.search_config.govuk_index_names.map do |index_name|
+      search_server.index(index_name)
+    end
+  end
+
   def lines_from_a_file(filepath)
     path = File.expand_path(filepath, File.dirname(__FILE__))
     lines = File.open(path).map(&:chomp)
@@ -176,11 +182,7 @@ class Rummager < Sinatra::Application
 
     organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
 
-    mainstream_index = search_server.index("mainstream")
-    detailed_index = search_server.index("detailed")
-    government_index = search_server.index("government")
-
-    searcher = GovukSearcher.new(mainstream_index, detailed_index, government_index)
+    searcher = GovukSearcher.new(*govuk_indices)
     result_streams = searcher.search(@query, organisation, params["sort"])
 
     result_context = {
