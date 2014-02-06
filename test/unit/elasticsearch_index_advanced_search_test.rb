@@ -141,7 +141,7 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def test_returns_the_hits_converted_into_documents
-    Document.expects(:from_hash).with({"woo" => "hoo", "es_score" => nil}, default_mappings).returns :woo_hoo
+    Document.expects(:from_hash).with({"woo" => "hoo"}, default_mappings, nil).returns :woo_hoo
     stub_request(:get, "http://example.com:9200/test-index/_search")
       .to_return(:status => 200, :body => "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"woo\": \"hoo\"}}]}}", :headers => {})
     result_set = @wrapper.advanced_search(default_params)

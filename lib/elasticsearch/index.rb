@@ -285,7 +285,7 @@ module Elasticsearch
       payload = MultiJson.dump(builder.query_hash)
       logger.debug "Request payload: #{payload}"
       response = @client.get_with_payload("_search", payload)
-      ResultSet.new(@mappings, MultiJson.decode(response))
+      ResultSet.from_elasticsearch(@mappings, MultiJson.decode(response))
     end
 
     def advanced_search(params)
@@ -314,7 +314,7 @@ module Elasticsearch
       logger.info "Request payload: #{payload.to_json}"
 
       result = @client.get_with_payload("_search", payload.to_json)
-      ResultSet.new(@mappings, MultiJson.decode(result))
+      ResultSet.from_elasticsearch(@mappings, MultiJson.decode(result))
     end
 
     def delete(link)
