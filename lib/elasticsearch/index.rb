@@ -96,7 +96,11 @@ module Elasticsearch
     end
 
     def exists?
-      ! real_name.nil?
+      begin
+        ! real_name.nil?
+      rescue RestClient::ResourceNotFound
+        false
+      end
     end
 
     def close
