@@ -87,11 +87,19 @@ module Elasticsearch
     end
 
     def real_name
-      alias_info = MultiJson.decode(@client.get("_aliases"))
       # If the index exists, it will return something of the form:
       # { real_name => { "aliases" => { alias => {} } } }
-      # If not, it'll return:
-      # {}
+      # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
+      begin
+        alias_info = MultiJson.decode(@client.get("_aliases"))
+      rescue RestClient::ResourceNotFound => e
+        response_body = MultiJson.decode(e.http_body)
+        if response_body['error'].start_with?("IndexMissingException") then 
+          return nil
+        end
+        raise
+      end
+
       alias_info.keys.first
     end
 
