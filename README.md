@@ -32,11 +32,12 @@ development, you need to run both of these commands:
 In order to build the search index on a VM, you'll need to ensure that your VM
 has sufficient memory: 4Gb is probably a good amount; with 2Gb, the indexing
 process has a tendency to get killed by the out of memory killer.  Do this by
-editing the Vagrantfile to have:
+adding a `Vagrantfile.localconfig` to the same directory as your Vagrantfile:
 
-    DEFAULT_VM_PARAMS = {
-      :memory => 4096,
-    }
+    $ cat ./Vagrantfile.localconfig
+    config.vm.provider :virtualbox do |vm|
+      vm.customize [ "modifyvm", :id, "--memory", "4096", "--cpus", "2" ]
+    end
 
 It's probably a good idea to give elasticsearch more memory, too, since that
 will make indexing faster, and also avoid risk of elasticsearch running out of
@@ -45,7 +46,7 @@ memory and killing itself.  Do this by editing
 
     env ES_HEAP_SIZE="1024m"
 
-Restart the VM after making these changes.
+Restart the VM (eg, with `vagrant reload`) after making these changes.
 
 Since search indexing happens through Panopticon's single registration API,
 you'll need to have both Panopticon and Rummager running. By default, Panopticon
