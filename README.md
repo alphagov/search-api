@@ -29,6 +29,24 @@ development, you need to run both of these commands:
 
 ## Indexing GOV.UK content
 
+In order to build the search index on a VM, you'll need to ensure that your VM
+has sufficient memory: 4Gb is probably a good amount; with 2Gb, the indexing
+process has a tendency to get killed by the out of memory killer.  Do this by
+editing the Vagrantfile to have:
+
+    DEFAULT_VM_PARAMS = {
+      :memory => 4096,
+    }
+
+It's probably a good idea to give elasticsearch more memory, too, since that
+will make indexing faster, and also avoid risk of elasticsearch running out of
+memory and killing itself.  Do this by editing
+/etc/init/elasticsearch-govuk-development.conf to include the line:
+
+    env ES_HEAP_SIZE="1024m"
+
+Restart the VM after making these changes.
+
 Since search indexing happens through Panopticon's single registration API,
 you'll need to have both Panopticon and Rummager running. By default, Panopticon
 will not try to index search content in development mode, so you'll need to pass
