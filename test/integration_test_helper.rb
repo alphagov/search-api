@@ -11,8 +11,6 @@ module IntegrationFixtures
       "title" => "TITLE1",
       "description" => "DESCRIPTION",
       "format" => "local_transaction",
-      "humanized_format" => "Services",
-      "presentation_format" => "local_transaction",
       "section" => "life-in-the-uk",
       "link" => "/URL"
     }

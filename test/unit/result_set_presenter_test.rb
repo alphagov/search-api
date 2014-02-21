@@ -89,61 +89,6 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal [], %w(link title description format) - output["results"][0].keys
   end
 
-  def test_presented_json_includes_presentation_format
-    presenter = ResultSetPresenter.new(result_set)
-    output = presenter.present
-    assert_equal "edition", output["results"][0]["presentation_format"]
-  end
-
-  def test_presented_json_includes_humanized_format
-    presenter = ResultSetPresenter.new(result_set)
-    output = presenter.present
-    assert_equal "Editions", output["results"][0]["humanized_format"]
-  end
-
-  def test_should_use_answer_as_presentation_format_for_planner
-    result_set = single_result_with_format "planner"
-    output = ResultSetPresenter.new(result_set).present
-    assert_equal "answer", output["results"][0]["presentation_format"]
-  end
-
-  def test_should_use_answer_as_presentation_format_for_smart_answer
-    result_set = single_result_with_format "smart_answer"
-    output = ResultSetPresenter.new(result_set).present
-    assert_equal "answer", output["results"][0]["presentation_format"]
-  end
-
-  def test_should_use_answer_as_presentation_format_for_licence_finder
-    result_set = single_result_with_format "licence_finder"
-    output = ResultSetPresenter.new(result_set).present
-    assert_equal "answer", output["results"][0]["presentation_format"]
-  end
-
-  def test_should_use_guide_as_presentation_format_for_guide
-    result_set = single_result_with_format "guide"
-    output = ResultSetPresenter.new(result_set).present
-    assert_equal "guide", output["results"][0]["presentation_format"]
-  end
-
-  def test_should_use_humanized_format
-    result_set = single_result_with_format "place"
-    output = ResultSetPresenter.new(result_set).present
-    assert_equal "Services", output["results"][0]["humanized_format"]
-  end
-
-  def test_uses_presentation_format_to_find_alternative_format_name
-    presenter = ResultSetPresenter.new(single_result_with_format("foo"))
-    presenter.stubs(:presentation_format).returns("place")
-
-    assert_equal "Services", presenter.present["results"][0]["humanized_format"]
-  end
-
-  def test_generates_humanized_format_if_not_present
-    result_set = single_result_with_format "ocean_map"
-    output = ResultSetPresenter.new(result_set).present
-    assert_equal "Ocean maps", output["results"][0]["humanized_format"]
-  end
-
   def test_expands_document_series
     rail_statistics_document = Document.new(
       %w(link title),

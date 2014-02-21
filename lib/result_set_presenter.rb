@@ -37,33 +37,13 @@ class ResultSetPresenter
   }
 
 private
-  def presentation_format(document)
-    normalized = normalized_format(document)
-    PRESENTATION_FORMAT_TRANSLATION.fetch(normalized, normalized)
-  end
-
-  def humanized_format(document)
-    presentation = presentation_format(document)
-    FORMAT_NAME_ALTERNATIVES[presentation] || presentation.humanize.pluralize
-  end
-
-  def normalized_format(document)
-    if document.format
-      document.format.gsub("-", "_")
-    else
-      "unknown"
-    end
-  end
-
   def results
     @result_set.results.map { |document| build_result(document) }
   end
 
   def build_result(document)
-    result = document.to_hash.merge(
-      "presentation_format" => presentation_format(document),
-      "humanized_format" => humanized_format(document)
-    )
+    result = document.to_hash
+
     if result['document_series'] && should_expand_document_series?
       result['document_series'] = result['document_series'].map do |slug|
         document_series_by_slug(slug)
