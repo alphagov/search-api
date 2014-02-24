@@ -566,24 +566,30 @@ synonyms: &synonyms [
 
 
 stems: &stems [
-  "appointeeship => appointee",
+  "animal => animal",  # not animation
+  "animals => animal",  # not animation
+  "animation => animat",  # not animal
+  "animator => animat",  # not animal
+  "appointeeship => appointe",  # match appointee
   "community => community",
   "corporate => corporate",  # not corporation
   "directive => directive",
   "directives => directive",
   "equalities => equality",
   "equality => equality",
+  "governance => governance",  # not government
   "housing => housing",
   "intern => intern",
   "interns => intern",
   "internal => internal",
   "international => international",
-  "naturalization => naturali",  # not natural, nature
-  "paye => paye",
+  "mariner => mariner",  # not marine
+  "naturalization => naturalis",  # not natural, nature
+  "paye => paye",  # not pay
   "permitted => permitted",
   "practical => practical",
   "practice => practice",
-  "probate => probate",
+  "probate => probate",  # not probation
   "publication => publication",
   "publications => publication",
   "responsibility => responsib",  # not response, responsive
@@ -610,6 +616,8 @@ stems: &stems [
 promoted_results:
 - terms: job
   link: /jobsearch
+- terms: visa
+  link: /check-uk-visa
 
 index:
   settings:
