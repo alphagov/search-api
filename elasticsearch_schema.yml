@@ -616,6 +616,8 @@ stems: &stems [
 promoted_results:
 - terms: job
   link: /jobsearch
+- terms: visa
+  link: /check-uk-visa
 
 index:
   settings:
