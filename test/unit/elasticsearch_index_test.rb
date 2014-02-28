@@ -295,7 +295,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_can_fetch_documents_by_format
-    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=500"
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=500"
     stub_request(:get, search_pattern).with(
       body: MultiJson.encode({query: {term: {format: "organisation"}}})
     ).to_return(
@@ -316,7 +316,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_can_fetch_documents_by_format_with_certain_fields
-    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=500"
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=500"
     query = {
       query: {term: {format: "organisation"}},
       fields: ["title", "link"]
@@ -344,7 +344,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_can_fetch_documents_by_format_with_fields_not_in_mappings
     # Notably, we want to be able to query for organisation acronyms before we
     # work out how best to add them to the mappings
-    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=500"
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=500"
     query = {
       query: {term: {format: "organisation"}},
       fields: ["title", "link", "wumpus"]
@@ -371,7 +371,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
-    search_pattern = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=50"
+    search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=50"
     stub_request(:get, search_pattern).with(
       body: MultiJson.encode({query: {match_all: {}}})
     ).to_return(
@@ -381,7 +381,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_all_documents
-    search_uri = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=50"
+    search_uri = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=50"
 
     stub_request(:get, search_uri).with(
       body: MultiJson.encode({query: {match_all: {}}})
@@ -405,7 +405,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_changing_scroll_id
-    search_uri = "http://example.com:9200/test-index/_search?scroll=1m&search_type=scan&size=2"
+    search_uri = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=2"
 
     Elasticsearch::Index.stubs(:scroll_batch_size).returns(2)
 
@@ -461,7 +461,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def scroll_uri(scroll_id)
-     "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=#{scroll_id}"
+     "http://example.com:9200/_search/scroll?scroll=60m&scroll_id=#{scroll_id}"
   end
 
   def scroll_response_body(scroll_id, total_results, results)
