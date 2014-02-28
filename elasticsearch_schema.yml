@@ -605,6 +605,7 @@ stems: &stems [
   "equality => equality",
   "fiancee => fianc",  # also match fiance
   "fiancé => fianc",  # also match fiance
+  "fiancée => fianc",  # also match fiance
   "governance => governance",  # not government
   "housing => housing",
   "intern => intern",
