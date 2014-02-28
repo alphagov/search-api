@@ -52,6 +52,7 @@ synonyms: &synonyms [
   "work experience, internship, interns",
 
   # Unofficial or deprecated terms
+  "ancestral visa => ancestry visa",
   "bedroom tax => extra bedroom",
   "death duty => inheritance tax",
   "drivers licence => drivers licence, driving licence",
@@ -126,6 +127,10 @@ synonyms: &synonyms [
   "stayinsured => uninsured vehicles",
   "studentfinance => student finance",
   "surestart => sure start",
+  "tier1 => tier 1",
+  "tier2 => tier 2",
+  "tier4 => tier 4",
+  "tier5 => tier 5",
   "universaljobmatch => universal jobmatch",
   "universaljobsearch => universal jobmatch",
   "vehiclereg => vehicle registration",
@@ -154,13 +159,17 @@ synonyms: &synonyms [
   "dla, disability living allowance",
   "eccn, export control classification number",
   "eco, energy company obligation",
+  "ecs, employer checking service",
   "eis, enterprise investment scheme",
   "esa, employment and support allowance",
   "fco, foreign commonwealth office",
   "fcoc, future character of conflict",
   "foi, freedom of information",
+  "flr, further leave to remain",
   "hmcs, hmcts, hm courts tribunals service",
+  "idi, immigration directorate instructions",
   "iib => industrial injuries disablement benefit",
+  "ilr, indefinite leave to remain",
   # "jsa, jobseeker’s allowance",
   "lha, local housing allowance",
   "lpa, lasting power of attorney",
@@ -168,19 +177,26 @@ synonyms: &synonyms [
   "nea, new enterprise allowance",
   "ni => national insurance",
   "nin, nino => national insurance number",
+  "ntl, no time limit",
   "ospp, ordinary statutory paternity pay",
   "pcdl, professional and career development loan",
   "pilon, payment in lieu of notice, pay in lieu of notice",
+  "psw => post study work",
+  "rlmt, resident labour market test",
   "rnps, register of number plate suppliers",
   "rti, real time information",
   "s2p => state second pension",
   "sap, statutory adoption pay",
+  "sar, subject access request",
   "sf => student finance",
   "sfe => student finance england",
   "slc, student loans company",
+  "sms, sponsorship management system",
   "spol => state pension online",
   "spp, statutory paternity pay",
+  "twov => transit without visa",
   "uj, ujm => universal jobmatch",
+  "ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration",
   "ukti, uk trade and investment",
   "utr, unique taxpayer reference",
 
@@ -189,8 +205,10 @@ synonyms: &synonyms [
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
   "benefit checker, benefits checker => benefits adviser",
   "bin collection => bin collection, rubbish collection",
+  "bno => overseas british passport",
   "curriculum vitae => cv, curriculum vitae",
   # "easter => easter, paid early",  # Seasonal need - also for Christmas and New Year payments
+  "fiance => partner, family, visa",
   # "heating => heating, energy grants, energy saving, cold, warm, winter",
   "hpi check => used car check",
   "intestacy => intestacy, wills, inherits",
@@ -205,6 +223,7 @@ synonyms: &synonyms [
   "sign off, signing off, starting work => sign off, signing off, starting work, from benefits to work, return to work, adviser",
   "snow, snow code => snow, ice, grit, winter, weather, closures",
   "social security => social security, benefits",
+  "sponsor login => sponsorship management system",
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
 
@@ -242,7 +261,7 @@ synonyms: &synonyms [
 
   # Forms and leaflets
   "adif => birth or adoption certificate form, student finance forms",
-  "br1, br 1 => br1, state pension claim form, bulgarian romanian",
+  "br1, br 1 => br1, state pension claim form",
   "br19, br 19 => br19, state pension statement",
   "cis305, cis 305, cis340, cis 340 => construction industry scheme",
   "cwf1 => register for self assessment",
@@ -255,6 +274,8 @@ synonyms: &synonyms [
   "ex160, ex160a => court fees",
   "ex321 => make a court claim for money, enforce a judgment",
   "ex50 => court fees",
+  "flrm => flr m",
+  "flro => flr o",
   "gv 262 => gv262, drivers hours",
   "inf1d => driving licence application",
   "inf2d => driving licence lorry or bus",
@@ -277,12 +298,15 @@ synonyms: &synonyms [
   "r27 => after someone dies",
   "sc1 => sc1, incapacity benefit",
   "sc2 => sc2, statutory sick pay",
+  "setm => set m",
+  "seto => set o",
   "v100 => vehicle registration",
   "v149 => v149, vehicle tax rates",
   "v188 => disability exemption",
   "v5 => v5, v5c",
   "v888 => v888, vehicle information",
   "v890 => sorn",
+  "vaf4 => vaf4a",
   "vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration",
 
   # Abbreviations
@@ -303,6 +327,7 @@ synonyms: &synonyms [
   "ipc bri => ipc br1",
   "rapid claim => rapid claim, rapid reclaim",
   "universal jobsearch => universal jobmatch",
+  "set 0 => set o",
   "vc5 => vc5, v5c",
 
   # Split words that are usually one word
@@ -558,6 +583,7 @@ synonyms: &synonyms [
   # "warehousing => warehousing, jobs",
 
   # Stop word workarounds
+  "appendix a => immigration rules appendix a attributes",
   "booklet an, an booklet => naturalisation booklet",
   "form an, an form => form an application for naturalisation as a british citizen",
   "guide an, an guide => naturalisation guide",
@@ -577,6 +603,9 @@ stems: &stems [
   "directives => directive",
   "equalities => equality",
   "equality => equality",
+  "fiancee => fianc",  # also match fiance
+  "fiancé => fianc",  # also match fiance
+  "fiancée => fianc",  # also match fiance
   "governance => governance",  # not government
   "housing => housing",
   "intern => intern",
