@@ -54,10 +54,6 @@ module Elasticsearch
       50
     end
 
-    # How long to hold a scroll cursor open between requests
-    # We should be able to keep this low, since these are only for internal use
-    SCROLL_TIMEOUT_MINUTES = 1
-
     # How long to wait between reads when streaming data from the elasticsearch server
     TIMEOUT_SECONDS = 5.0
 
