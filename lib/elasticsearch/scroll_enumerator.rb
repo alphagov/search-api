@@ -3,8 +3,13 @@ require "uri"
 module Elasticsearch
   class ScrollEnumerator < Enumerator
     # How long to hold a scroll cursor open between requests
-    # We should be able to keep this low, since these are only for internal use
-    SCROLL_TIMEOUT_MINUTES = 1
+    # We want to keep this low (eg, 1 minute), because scroll contexts can be
+    # quite expensive.
+    # However, the scroll timeout in old releases of elasticsearch is based on
+    # the time since the scan operation started, not the time since the last
+    # activity happened in the scan, so until we upgrade to elasticsearch
+    # 0.90.12+, we should set this high.
+    SCROLL_TIMEOUT_MINUTES = 60
 
     # The number of documents to retrieve at once.
     # Gotcha: this is actually the number of documents per shard, so there will
