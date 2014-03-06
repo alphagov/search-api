@@ -62,12 +62,6 @@ class Rummager < Sinatra::Application
     @@world_location_registry ||= WorldLocationRegistry.new(search_server.index(index_name)) if index_name
   end
 
-  def indices_for_sitemap
-    settings.search_config.index_names.map do |index_name|
-      search_server.index(index_name)
-    end
-  end
-
   def govuk_indices
     settings.search_config.govuk_index_names.map do |index_name|
       search_server.index(index_name)
