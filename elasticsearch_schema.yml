@@ -53,7 +53,7 @@ synonyms: &synonyms [
 
   # Unofficial or deprecated terms
   "ancestral visa => ancestry visa",
-  "bedroom tax => extra bedroom",
+  "bedroom tax => spare bedroom, spare room",
   "death duty => inheritance tax",
   "drivers licence => drivers licence, driving licence",
   "dole => jobseeker's allowance",
@@ -100,11 +100,13 @@ synonyms: &synonyms [
   "incomesupport => income support",
   "jcponline => jobcentre plus",
   "jobgrant => job grant",
+  "jobsearch => job search, jobmatch",
   "jobseekersallowance => jobseeker's allowance",
   "journeyplanner => journey planner",
   "jsaol, jsaonline, jsa online => jobseeker's allowance",
   "makeasorn => make a sorn",
   "motoringforms => motoring forms",
+  "number10 => number 10",
   "payacourtfine => pay a court fine",
   "paycourtfine => pay a court fine",
   "penaltynotice => penalty notice",
@@ -152,6 +154,7 @@ synonyms: &synonyms [
   "cwp => cold weather",
   "dada, dance and drama awards",
   "dda, disability discrimination act",
+  "dfe, department for education",
   "dfid, department for international development",
   "dh, department of health",
   "doh => department of health",
@@ -165,11 +168,10 @@ synonyms: &synonyms [
   "fco, foreign commonwealth office",
   "fcoc, future character of conflict",
   "foi, freedom of information",
-  "flr, further leave to remain",
   "hmcs, hmcts, hm courts tribunals service",
   "idi, immigration directorate instructions",
   "iib => industrial injuries disablement benefit",
-  "ilr, indefinite leave to remain",
+  "ilr => indefinite leave, settle, individualised learner record",
   # "jsa, jobseeker’s allowance",
   "lha, local housing allowance",
   "lpa, lasting power of attorney",
@@ -199,6 +201,15 @@ synonyms: &synonyms [
   "ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration",
   "ukti, uk trade and investment",
   "utr, unique taxpayer reference",
+  
+  # Acronyms with spaces or punctuation
+  "c v => cv",
+  "d l a => dla",
+  "e s a => esa",
+  "j s a => jsa",
+  "m o t => mot",
+  "n i => ni",
+  "p i p => pip",
 
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
@@ -207,13 +218,14 @@ synonyms: &synonyms [
   "bin collection => bin collection, rubbish collection",
   "bno => overseas british passport",
   "curriculum vitae => cv, curriculum vitae",
-  # "easter => easter, paid early",  # Seasonal need - also for Christmas and New Year payments
-  "fiance => partner, family, visa",
+  "easter => easter, paid early",  # Seasonal need - also for Christmas and New Year payments
+  "fiance, fiancee, fiancé, fiancée => partner, family, visa",
   # "heating => heating, energy grants, energy saving, cold, warm, winter",
   "hpi check => used car check",
   "intestacy => intestacy, wills, inherits",
   "intestate => intestate, wills, inherits",
   "ir35 => ir35, employment status",
+  "kiev => kiev, kyiv, ukraine",
   "mot checker => mot check",
   "my account => your account, online account",  # Student finance login
   "not arrived => not arrived, contact dvla",
@@ -222,10 +234,13 @@ synonyms: &synonyms [
   "self certificate => self certification",
   "sign off, signing off, starting work => sign off, signing off, starting work, from benefits to work, return to work, adviser",
   "snow, snow code => snow, ice, grit, winter, weather, closures",
+  "soc code, soc codes => soc code, sponsorship, skilled worker",
   "social security => social security, benefits",
   "sponsor login => sponsorship management system",
+  "spouse visa => partner visa, family",
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
+  "visa4uk => visa4uk, uk visa",
 
   # Adding terms to raise the best results
   "book driving test => book driving test, book your practical driving test",
@@ -257,6 +272,7 @@ synonyms: &synonyms [
   # "ukti => ukti, uk trade and investment, help for exporters, starting to export, uk welcomes",
   "utr, unique taxpayer reference => utr, unique taxpayer reference, register for self assessment",
   "vehicle licence => vehicle licence, tax disc",
+  "visa application => visa application, apply uk visa",
   "work trial => work trial, work experience, recruiters",
 
   # Forms and leaflets
@@ -267,7 +283,8 @@ synonyms: &synonyms [
   "cwf1 => register for self assessment",
   "d184 => divorce",
   "d46p => d46p, renew 70", # 'D46P' appears in content but returns no results
-  "d786b => d777b, digital tachograph driver card",
+  "d777, d786b => d777b, digital tachograph driver card",
+  "d796 => d888, driver entitlement",
   "d798 => d798, renewal reminder", # 'D798' appears in content but returns no results
   "eesa => employment and support allowance",
   "esa50 => esa50, esa 50",
@@ -298,8 +315,8 @@ synonyms: &synonyms [
   "r27 => after someone dies",
   "sc1 => sc1, incapacity benefit",
   "sc2 => sc2, statutory sick pay",
-  "setm => set m",
-  "seto => set o",
+  "set m, setm => set m form",
+  "set o, seto => set o form",
   "v100 => vehicle registration",
   "v149 => v149, vehicle tax rates",
   "v188 => disability exemption",
@@ -329,6 +346,7 @@ synonyms: &synonyms [
   "universal jobsearch => universal jobmatch",
   "set 0 => set o",
   "vc5 => vc5, v5c",
+  "v137 => v317",
 
   # Split words that are usually one word
   "child care => childcare",
@@ -444,7 +462,6 @@ synonyms: &synonyms [
   "jobmach => jobmatch",
   "jobseach => job search",
   "jobseakers => jobseekers",
-  "jobsearch => job search",
   "jobserch => job search",
   "jobsmatch => jobmatch",
   "jpbs => jpbs, jobs",
@@ -599,10 +616,12 @@ stems: &stems [
   "appointeeship => appointe",  # match appointee
   "community => community",
   "corporate => corporate",  # not corporation
+  "corporation => corporation",  # not corporal
   "directive => directive",
   "directives => directive",
   "equalities => equality",
   "equality => equality",
+  "fees => fees",  # not FEE
   "fiancee => fianc",  # also match fiance
   "fiancé => fianc",  # also match fiance
   "fiancée => fianc",  # also match fiance
@@ -627,6 +646,7 @@ stems: &stems [
   "saving => saving",
   "savings => savings",
   "signing => signing",
+  "sponsorship => sponsor",
   "universal => universal"
 ]
 
