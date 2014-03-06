@@ -710,6 +710,8 @@ mappings:
         display_type: { type: string, index: not_analyzed, include_in_all: false }
         document_collections: { type: string, index: not_analyzed, include_in_all: false }
         document_series: { type: string, index: not_analyzed, include_in_all: false }
+        expected_release_text: { type: string, index: not_analyzed, include_in_all: false }
+        expected_release_timestamp: { type: date, index: not_analyzed, include_in_all: false }
         format:      { type: string, index: not_analyzed, include_in_all: false }
         indexable_content: { type: string, index: analyzed }
         link:        { type: string, index: not_analyzed, include_in_all: false }
