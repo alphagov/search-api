@@ -667,6 +667,8 @@ promoted_results:
   link: /jobsearch
 - terms: visa
   link: /check-uk-visa
+- terms: budget
+  link: /government/topical-events/budget-2014
 
 index:
   settings:
