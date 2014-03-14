@@ -621,7 +621,6 @@ stems: &stems [
   "directives => directive",
   "equalities => equality",
   "equality => equality",
-  "fees => fees",  # not FEE
   "fiancee => fianc",  # also match fiance
   "fiancé => fianc",  # also match fiance
   "fiancée => fianc",  # also match fiance
@@ -667,6 +666,8 @@ promoted_results:
   link: /jobsearch
 - terms: visa
   link: /check-uk-visa
+- terms: budget
+  link: /government/topical-events/budget-2014
 
 index:
   settings:
