@@ -324,7 +324,12 @@ module Elasticsearch
     def delete(link)
       begin
         # Can't use a simple delete, because we don't know the type
-        @client.delete "_query", params: {q: "link:#{escape(link)}"}
+        payload = {
+          "term" => {
+            "link" => link
+          }
+        }
+        @client.delete_with_payload "_query", payload.to_json
       rescue RestClient::ResourceNotFound
       rescue RestClient::Forbidden => e
         response_body = MultiJson.decode(e.http_body)
