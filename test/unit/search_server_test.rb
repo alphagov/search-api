@@ -18,6 +18,20 @@ class SearchServerTest < MiniTest::Unit::TestCase
     end
   end
 
+  def test_can_get_multi_index
+    search_server = Elasticsearch::SearchServer.new("http://l", EMPTY_SCHEMA, ["a", "b"])
+    index = search_server.index("a,b")
+    assert index.is_a?(Elasticsearch::Index)
+    assert_equal "a,b", index.index_name
+  end
+
+  def test_raises_an_error_for_unknown_index_in_multi_index
+    search_server = Elasticsearch::SearchServer.new("http://l", EMPTY_SCHEMA, ["a", "b"])
+    assert_raises Elasticsearch::NoSuchIndex do
+      search_server.index("a,z")
+    end
+  end
+
   def test_promoted_results_generated_from_schema_settings
     schema = EMPTY_SCHEMA.dup
     schema["promoted_results"] = [{
