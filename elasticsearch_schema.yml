@@ -735,6 +735,13 @@ mappings:
         format:      { type: string, index: not_analyzed, include_in_all: false }
         indexable_content: { type: string, index: analyzed }
         link:        { type: string, index: not_analyzed, include_in_all: false }
+
+        # Note: the "metadata" property is intended for the storage of additional
+        # non-searchable document properties. This allows additional information
+        # to be stored and displayed in search results without having to make
+        # changes to the schema.
+        metadata: { type: object, index: no }
+
         operational_field: { type: string, index: not_analyzed, include_in_all: false }
         organisations: { type: string, index: not_analyzed, include_in_all: false }
         organisation_state: { type: string, index: not_analyzed, include_in_all: false }
