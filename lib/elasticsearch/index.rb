@@ -285,11 +285,7 @@ module Elasticsearch
     def search(keywords, options={})
       builder = SearchQueryBuilder.new(keywords, @mappings, options)
       raise InvalidQuery.new(builder.error) unless builder.valid?
-
-      payload = MultiJson.dump(builder.query_hash)
-      logger.debug "Request payload: #{payload}"
-      response = @client.get_with_payload("_search", payload)
-      ResultSet.from_elasticsearch(@mappings, MultiJson.decode(response))
+      ResultSet.from_elasticsearch(@mappings, raw_search(builder.query_hash))
     end
 
     def advanced_search(params)
@@ -315,10 +311,13 @@ module Elasticsearch
 
       payload.merge!(query_builder.query_hash)
 
-      logger.info "Request payload: #{payload.to_json}"
+      ResultSet.from_elasticsearch(@mappings, raw_search(payload))
+    end
 
-      result = @client.get_with_payload("_search", payload.to_json)
-      ResultSet.from_elasticsearch(@mappings, MultiJson.decode(result))
+    def raw_search(payload)
+      json_payload = payload.to_json
+      logger.debug "Request payload: #{json_payload}"
+      MultiJson.decode(@client.get_with_payload("_search", json_payload))
     end
 
     def delete(link)
