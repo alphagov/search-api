@@ -98,7 +98,7 @@ class Rummager < Sinatra::Application
   end
 
   def json_only
-    unless [nil, "json"].include? params[:format]
+    unless [nil, "json"].include? params[:request_format]
       expires 86400, :public
       halt 404
     end
@@ -128,7 +128,7 @@ class Rummager < Sinatra::Application
     halt(500, env['sinatra.error'].message)
   end
 
-  before "/?:index?/search.?:format?" do
+  before "/?:index?/search.?:request_format?" do
     @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
 
     if @query == ""
@@ -171,7 +171,7 @@ class Rummager < Sinatra::Application
   #       ...
   #     ]
   #   }
-  get "/govuk/search.?:format?" do
+  get "/govuk/search.?:request_format?" do
     json_only
 
     organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
@@ -216,7 +216,7 @@ class Rummager < Sinatra::Application
   #       ...
   #     ]
   #   }
-  get "/?:index?/search.?:format?" do
+  get "/?:index?/search.?:request_format?" do
     json_only
 
     organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
@@ -259,7 +259,7 @@ class Rummager < Sinatra::Application
   #   fieldname[from]     - eg public_timestamp[from]="2013-04-30"
   #   fieldname[to]      - eg public_timestamp[to]="2013-04-30"
   #
-  get "/:index/advanced_search.?:format?" do
+  get "/:index/advanced_search.?:request_format?" do
     json_only
 
     # Using request.params because it is just the params from the request
@@ -268,7 +268,7 @@ class Rummager < Sinatra::Application
     MultiJson.encode ResultSetPresenter.new(result_set).present
   end
 
-  get "/organisations.?:format?" do
+  get "/organisations.?:request_format?" do
     json_only
 
     organisations = organisation_registry.all
