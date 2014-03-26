@@ -10,6 +10,8 @@ require "document"
 require "result_set_presenter"
 require "govuk_searcher"
 require "govuk_search_presenter"
+require "unified_searcher"
+require "unified_search_presenter"
 require "organisation_set_presenter"
 require "document_series_registry"
 require "document_collection_registry"
@@ -66,6 +68,14 @@ class Rummager < Sinatra::Application
     settings.search_config.govuk_index_names.map do |index_name|
       search_server.index(index_name)
     end
+  end
+
+  def unified_index_names
+    settings.search_config.govuk_index_names
+  end
+
+  def unified_index
+    search_server.index(unified_index_names.join(","))
   end
 
   def lines_from_a_file(filepath)
@@ -191,6 +201,79 @@ class Rummager < Sinatra::Application
     output["spelling_suggestions"] = suggester.suggestions(@query)
 
     MultiJson.encode output
+  end
+
+  # Return a unified set of results for the GOV.UK site search.
+  #
+  # Parameters:
+  #   q: User-entered search query
+  #
+  #   start: Position in search result list to start returning results
+  #   (0-based)
+  #
+  #   count: Maximum number of search results to return.
+  #
+  #   order: The sort order.  A fieldname, with an optional preceding
+  #   "-" to sort in descending order.  If not specified, sort order is
+  #   relevance.
+  #
+  #   filter_FIELD[]: (where FIELD is a fieldname); a filter to apply to a
+  #   field.  Multiple values may be given for a single field.  The filters are
+  #   grouped by fieldname; documents will only be returned if they match all
+  #   of the filter groups, and they will be considered to match a filter group
+  #   if any of the individual filters in that group match.
+  #
+  #
+  # For example:
+  #
+  #     /unified_search.json?
+  #      q=foo&
+  #      start=0&
+  #      count=20&
+  #      order=-public_timestamp&
+  #      filter_organisations[]=cabinet-office&
+  #      filter_organisations[]=driver-vehicle-licensing-agency&
+  #      filter_section[]=driving
+  #
+  # Returns something like:
+  #
+  #     {
+  #       "results": [
+  #         {...},
+  #         {...}
+  #       ],
+  #       "total": 19,
+  #       "offset": 0,
+  #       "spelling_suggestions": [
+  #         ...
+  #       ]
+  #     }
+  #
+  get "/unified_search.?:format?" do
+    json_only
+    begin
+      searcher = UnifiedSearcher.new(unified_index)
+
+      start = params["start"]
+      count = params["count"]
+      query = params["q"]
+      order = params["order"]
+      results = searcher.search(start, count, query, order, filters)
+
+      registries = {
+        organisation_registry: organisation_registry,
+        topic_registry: topic_registry,
+        document_series_registry: document_series_registry,
+        document_collection_registry: document_collection_registry,
+        world_location_registry: world_location_registry
+      }
+      presenter = UnifiedSearchPresenter.new(results, registries,
+                                             unified_index_names)
+      MultiJson.encode presenter.present
+    rescue ArgumentError => e
+      status 400
+      MultiJson.encode({ error: e.message })
+    end
   end
 
   # To search a named index:
@@ -365,5 +448,16 @@ class Rummager < Sinatra::Application
       }
     end
     MultiJson.encode(status)
+  end
+
+private
+  def filters
+    filters = {}
+    params.each do |key, value|
+      if key.start_with?("filter_")
+        filters[key[7..-1]] = [*value]
+      end
+    end
+    filters
   end
 end
