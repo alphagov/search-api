@@ -1,3 +1,5 @@
+require "unf"
+
 # Builds a query for a search across all GOV.UK indices
 class UnifiedSearchBuilder
 

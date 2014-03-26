@@ -11,7 +11,6 @@ require "result_set_presenter"
 require "govuk_searcher"
 require "govuk_search_presenter"
 require "unified_searcher"
-require "unified_search_presenter"
 require "organisation_set_presenter"
 require "document_series_registry"
 require "document_collection_registry"
@@ -70,12 +69,8 @@ class Rummager < Sinatra::Application
     end
   end
 
-  def unified_index_names
-    settings.search_config.govuk_index_names
-  end
-
   def unified_index
-    search_server.index(unified_index_names.join(","))
+    search_server.index(settings.search_config.govuk_index_names.join(","))
   end
 
   def lines_from_a_file(filepath)
@@ -249,17 +244,9 @@ class Rummager < Sinatra::Application
   #       ]
   #     }
   #
-  get "/unified_search.?:format?" do
+  get "/unified_search.?:request_format?" do
     json_only
     begin
-      searcher = UnifiedSearcher.new(unified_index)
-
-      start = params["start"]
-      count = params["count"]
-      query = params["q"]
-      order = params["order"]
-      results = searcher.search(start, count, query, order, filters)
-
       registries = {
         organisation_registry: organisation_registry,
         topic_registry: topic_registry,
@@ -267,9 +254,14 @@ class Rummager < Sinatra::Application
         document_collection_registry: document_collection_registry,
         world_location_registry: world_location_registry
       }
-      presenter = UnifiedSearchPresenter.new(results, registries,
-                                             unified_index_names)
-      MultiJson.encode presenter.present
+
+      start = params["start"]
+      count = params["count"]
+      query = params["q"]
+      order = params["order"]
+
+      searcher = UnifiedSearcher.new(unified_index, registries)
+      MultiJson.encode searcher.search(start, count, query, order, filters)
     rescue ArgumentError => e
       status 400
       MultiJson.encode({ error: e.message })
