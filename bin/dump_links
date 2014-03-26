@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
-PROJECT_ROOT = File.dirname(__FILE__) + "/../"
-LIBRARY_PATH = PROJECT_ROOT + "lib/"
+LIBRARY_PATH = File.join(File.dirname(__FILE__), "..", "lib")
 $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 
 require 'set'
