@@ -79,16 +79,19 @@ class UnifiedSearchBuilder
   end
 
   def filters_hash
-    if @filters.nil? or @filters.length == 0
-      return nil
-    end
     filter_groups = @filters.map do |field, filter_values|
       unless ALLOWED_FILTER_FIELDS.include? field
         raise ArgumentError, "Filtering by \"#{field}\" is not allowed"
       end
       terms_filter(field, filter_values)
     end
-    if filter_groups.length == 1
+    sort_fields.each do |field|
+      filter_groups << {"exists" => {"field" => field}}
+    end
+
+    if filter_groups.length == 0
+      nil
+    elsif filter_groups.length == 1
       filter_groups.first
     else
       {"and" => filter_groups}
@@ -99,6 +102,18 @@ class UnifiedSearchBuilder
     {"terms" => { field => filter_values } }
   end
 
+  # Get a list of fields being sorted by
+  def sort_fields
+    if @order.nil?
+      return []
+    end
+    if @order.start_with?('-')
+      return [@order[1..-1]]
+    else
+      return [@order]
+    end
+  end
+ 
   # Get a list describing the sort order (or nil)
   def sort_list
     if @order.nil?
@@ -114,7 +129,7 @@ class UnifiedSearchBuilder
     unless ALLOWED_SORT_FIELDS.include?(field)
       raise ArgumentError, "Sorting by \"#{field}\" is not allowed"
     end
-    return { field => { order: dir } }
+    return [{ field => { order: dir } }]
   end
 
   # Get a list of the fields to request in results from elasticsearch
