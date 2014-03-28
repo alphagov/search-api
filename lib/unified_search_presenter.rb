@@ -1,3 +1,4 @@
+require "elasticsearch/result_set"
 require "result_set_presenter"
 
 # Presents a combined set of results for a GOV.UK site search
@@ -9,10 +10,10 @@ class UnifiedSearchPresenter
   # which gets passed to the ResultSetPresenter class. For example:
   #
   #     { organisation_registry: OrganisationRegistry.new(...) }
-  def initialize(results, registries = {}, index_names)
+  def initialize(results, index_names, registries = {})
     @results = results
-    @registries = registries
     @index_names = index_names
+    @registries = registries
   end
 
   def present

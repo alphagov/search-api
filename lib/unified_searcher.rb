@@ -27,7 +27,10 @@ class UnifiedSearcher
       end,
       total: results["hits"]["total"],
     }
-    UnifiedSearchPresenter.new(results, registries,
-                               @index.index_name.split(",")).present
+    UnifiedSearchPresenter.new(
+      results,
+      @index.index_name.split(","),
+      registries
+    ).present
   end
 end
