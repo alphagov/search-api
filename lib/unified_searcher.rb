@@ -23,7 +23,8 @@ class UnifiedSearcher
       start: start,
       results: results["hits"]["hits"].map do |result|
         doc = result.delete("fields")
-        doc.merge(result)
+        doc[:_metadata] = result
+        doc
       end,
       total: results["hits"]["total"],
     }

@@ -5,26 +5,32 @@ require "document"
 class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   DOCS = [{
-    "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",
-    _type: "edition",
-    _id: "/government/publications/staffordshire-cheese",
-    "_score" => 3.0514863,
+    _metadata: {
+      "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",
+      _type: "edition",
+      _id: "/government/publications/staffordshire-cheese",
+      "_score" => 3.0514863,
+    },
     "description" => "Staffordshire Cheese Product of Designated Origin (PDO) and Staffordshire Organic Cheese.",
     "title" => "Staffordshire Cheese",
     "link" => "/government/publications/staffordshire-cheese",
   }, {
-    "_index" => "mainstream-2014-03-19t14:35:28z-6472f975-dc38-49a5-98eb-c498e619650c",
-    _type: "edition",
-    _id: "/duty-relief-for-imports-and-exports",
-    "_score" => 0.49672604,
+    _metadata: {
+      "_index" => "mainstream-2014-03-19t14:35:28z-6472f975-dc38-49a5-98eb-c498e619650c",
+      _type: "edition",
+      _id: "/duty-relief-for-imports-and-exports",
+      "_score" => 0.49672604,
+    },
     "description" => "Schemes that offer reduced or zero rate duty and VAT for imports and exports",
     "title" => "Duty relief for imports and exports",
     "link" => "/duty-relief-for-imports-and-exports",
   }, {
-    "_index" => "detailed-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
-    _type: "edition",
-    _id: "/dairy-farming-and-schemes",
-    "_score" => 0.34655035,
+    _metadata: {
+      "_index" => "detailed-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
+      _type: "edition",
+      _id: "/dairy-farming-and-schemes",
+      "_score" => 0.34655035,
+    },
     "title" => "Dairy farming and schemes",
     "link" => "/dairy-farming-and-schemes",
     "topics" => ["farming"],
@@ -79,7 +85,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       @output[:results].zip(DOCS).each do |result, doc|
         assert_does_not_contain "_score", result.keys
         assert result[:es_score] != nil
-        assert_equal doc["_score"], result[:es_score]
+        assert_equal doc[:_metadata]["_score"], result[:es_score]
       end
     end
 
@@ -134,7 +140,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       @output[:results].zip(DOCS).each do |result, doc|
         assert_does_not_contain "_score", result.keys
         assert result[:es_score] != nil
-        assert_equal doc["_score"], result[:es_score]
+        assert_equal doc[:_metadata]["_score"], result[:es_score]
       end
     end
 
