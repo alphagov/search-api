@@ -15,6 +15,10 @@ class MultiIndexTest < IntegrationTest
 
     INDEX_NAMES.each do |index_name|
       try_remove_test_index(index_name)
+      if index_name == "government_test"
+        add_field_to_mappings("public_timestamp", "date")
+      end
+      add_field_to_mappings("topics")
       create_test_index(index_name)
       add_sample_documents(index_name, 2)
       commit_index(index_name)
@@ -30,11 +34,18 @@ class MultiIndexTest < IntegrationTest
   def sample_document_attributes(index_name, count)
     short_index_name = index_name.sub("_test", "")
     (1..count).map do |i|
-      {
+      fields = {
         "title" => "Sample #{short_index_name} document #{i}",
         "link" => "/#{short_index_name}-#{i}",
-        "indexable_content" => "Something something important content"
+        "indexable_content" => "Something something important content",
       }
+      if i % 2 == 0
+        fields["topics"] = ["farming"]
+      end
+      if short_index_name == "government"
+        fields["public_timestamp"] = "#{i+2000}-01-01T00:00:00"
+      end
+      fields
     end
   end
 
