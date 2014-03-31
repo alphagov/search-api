@@ -19,11 +19,8 @@ module Elasticsearch
     end
 
     def index(prefix)
-      if @index_names.include?(prefix)
-        index_group(prefix).current
-      else
-        raise NoSuchIndex, prefix
-      end
+      raise NoSuchIndex, prefix unless index_name_valid?(prefix)
+      index_group(prefix).current
     end
 
     def promoted_results
@@ -46,6 +43,12 @@ module Elasticsearch
     def mappings(prefix)
       mappings = @schema["mappings"]
       mappings[prefix] || mappings[DEFAULT_MAPPING_KEY]
+    end
+
+    def index_name_valid?(index_name)
+      index_name.split(",").all? do |name|
+        @index_names.include?(name)
+      end
     end
   end
 end
