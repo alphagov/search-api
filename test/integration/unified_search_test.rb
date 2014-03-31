@@ -35,11 +35,38 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal ["/government-2", "/government-1"], links
   end
 
+  def test_filter_by_section
+    get "/unified_search?filter_section=1"
+    assert last_response.ok?
+    links = parsed_response["results"].map do |result|
+      result["link"]
+    end
+    links.sort!
+    assert_equal links, ["/detailed-1", "/government-1", "/mainstream-1"], links
+  end
+
   def test_only_contains_fields_which_are_present
     get "/unified_search?q=important&order=public_timestamp"
     results = parsed_response["results"] 
     refute_includes results[0].keys, "topics"
     assert_equal ["farming"], results[1]["topics"]
+  end
+
+  def test_validates_integer_params
+    get "/unified_search?start=a"
+    assert_equal last_response.status, 400
+    assert_equal parsed_response, {"error" => "Invalid value \"a\" for parameter \"start\" (expected integer)"}
+  end
+
+  def test_allows_integer_params_leading_zeros
+    get "/unified_search?start=09"
+    assert last_response.ok?
+  end
+
+  def test_validates_unknown_params
+    get "/unified_search?foo&bar=1"
+    assert_equal last_response.status, 400
+    assert_equal parsed_response, {"error" => "Unexpected parameters: foo,bar"}
   end
 
 end
