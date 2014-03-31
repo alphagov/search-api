@@ -1,6 +1,6 @@
 require "integration_test_helper"
 require "rest-client"
-require_relative "multi_index_helper"
+require_relative "multi_index_test"
 
 class CombinedSearchTest < MultiIndexTest
 
