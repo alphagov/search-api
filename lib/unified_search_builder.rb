@@ -28,15 +28,20 @@ class UnifiedSearchBuilder
   ALLOWED_SORT_FIELDS = %w(public_timestamp)
 
   # The fields listed here are the only ones which can be used to filter by.
-  ALLOWED_FILTER_FIELDS = %w(organisations section)
+  ALLOWED_FILTER_FIELDS = %w(organisations section format)
 
-  def initialize(start, count, query, order, filters, fields)
+  # The fields listed here are the only ones which can be used to calculated
+  # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
+  ALLOWED_FACET_FIELDS = %w(organisations section format)
+
+  def initialize(start, count, query, order, filters, fields, facet_fields)
     @start = start
     @count = count
     @query = query
     @order = order
     @filters = filters
     @fields = fields
+    @facet_fields = facet_fields
   end
 
   def payload
@@ -47,6 +52,7 @@ class UnifiedSearchBuilder
       filter: filters_hash,
       fields: fields_list,
       sort: sort_list,
+      facets: facets_hash,
     }.select{ |key, value|
       ![nil, [], {}].include?(value)
     }]
@@ -64,7 +70,7 @@ class UnifiedSearchBuilder
     query
   end
 
-  def query_hash
+  def base_query
     query = query_normalized
     if query.nil?
       return { match_all: {} }
@@ -78,24 +84,54 @@ class UnifiedSearchBuilder
     }
   end
 
-  def filters_hash
-    filter_groups = @filters.map do |field, filter_values|
+  def query_hash
+    filter = sort_filters
+    if filter.nil?
+      base_query
+    else
+      {
+        filtered: {
+          filter: filter,
+          query: base_query,
+        }
+      }
+    end
+  end
+
+  def combine_filters(filters)
+    if filters.length == 0
+      nil
+    elsif filters.length == 1
+      filters.first
+    else
+      {"and" => filters}
+    end
+  end
+
+  def sort_filters
+    # Filters to ensure that fields being sorted by exist.
+    filters = []
+    sort_fields.each do |field|
+      filters << {"exists" => {"field" => field}}
+    end
+    combine_filters(filters)
+  end
+
+  def filters_hash(excluding=[])
+    filter_groups = []
+    @filters.each do |field, filter_values|
       unless ALLOWED_FILTER_FIELDS.include? field
         raise ArgumentError, "Filtering by \"#{field}\" is not allowed"
       end
-      terms_filter(field, filter_values)
+      unless excluding.include? field
+        filter_groups << terms_filter(field, filter_values)
+      end
     end
-    sort_fields.each do |field|
-      filter_groups << {"exists" => {"field" => field}}
-    end
-
-    if filter_groups.length == 0
-      nil
-    elsif filter_groups.length == 1
-      filter_groups.first
-    else
-      {"and" => filter_groups}
-    end
+    # Don't add additional filters to filter_groups without making sure that
+    # the facet_filter values used in facets include the filter too.  It's
+    # usually better to add additional filters to the query, so that they
+    # automatically apply to facet calculation.
+    combine_filters(filter_groups)
   end
 
   def terms_filter(field, filter_values)
@@ -129,7 +165,7 @@ class UnifiedSearchBuilder
     unless ALLOWED_SORT_FIELDS.include?(field)
       raise ArgumentError, "Sorting by \"#{field}\" is not allowed"
     end
-    return [{ field => { order: dir } }]
+    [{ field => { order: dir } }]
   end
 
   # Get a list of the fields to request in results from elasticsearch
@@ -143,4 +179,34 @@ class UnifiedSearchBuilder
     end
     @fields
   end
+
+  def facets_hash
+    if @facet_fields.nil?
+      return nil
+    end
+    result = {}
+    @facet_fields.each do |field_name, count|
+      unless ALLOWED_FACET_FIELDS.include?(field_name)
+        raise ArgumentError, "Facets not allowed on field #{field_name}"
+      end
+      facet_hash = {
+        terms: {
+          field: field_name,
+          order: "count",
+          # We want all the facet values so we can return an accurate count of
+          # the number of options.  With elasticsearch 0.90+ we can get this by
+          # setting size to 0, but at the time of writing we're using 0.20.6,
+          # so just have to set a high value for size.
+          size: 100000,
+        }
+      }
+      facet_filter = filters_hash([field_name])
+      unless facet_filter.nil?
+        facet_hash[:facet_filter] = facet_filter
+      end
+      result[field_name] = facet_hash
+    end
+    result
+  end
+
 end

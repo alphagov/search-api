@@ -13,10 +13,10 @@ class UnifiedSearcher
   end
 
   # Search and combine the indices and return a hash of ResultSet objects
-  def search(start, count, query, order, filters)
+  def search(start, count, query, order, filters, facet_fields)
     start = start || 0
     count = count || 10
-    builder = UnifiedSearchBuilder.new(start, count, query, order, filters, nil)
+    builder = UnifiedSearchBuilder.new(start, count, query, order, filters, nil, facet_fields)
 
     results = index.raw_search(builder.payload)
     results = {
@@ -27,10 +27,12 @@ class UnifiedSearcher
         doc
       end,
       total: results["hits"]["total"],
+      facets: results["facets"],
     }
     UnifiedSearchPresenter.new(
       results,
       @index.index_name.split(","),
+      facet_fields,
       registries
     ).present
   end

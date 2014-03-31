@@ -46,6 +46,13 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }
   }
 
+  TIMESTAMP_EXISTS_WITH_CHEESE_QUERY = {
+    filtered: {
+      filter: {"exists" => {"field" => "public_timestamp"}},
+      query: CHEESE_QUERY,
+    }
+  }
+
   context "unfiltered, unsorted search" do
 
     setup do
@@ -63,7 +70,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         "mainstream,detailed,government"
       )
 
-      @results = @searcher.search(0, 20, "cheese", nil, {})
+      @results = @searcher.search(0, 20, "cheese", nil, {}, nil)
     end
 
     should "include results from all indexes" do
@@ -88,9 +95,8 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
-        query: CHEESE_QUERY,
+        query: TIMESTAMP_EXISTS_WITH_CHEESE_QUERY,
         fields: UnifiedSearchBuilder::ALLOWED_RETURN_FIELDS,
-        filter: {'exists' => {'field' => 'public_timestamp'}},
         sort: [{"public_timestamp" => {order: "asc"}}],
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
@@ -99,7 +105,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         "mainstream,detailed,government"
       )
 
-      @results = @searcher.search(0, 20, "cheese", "public_timestamp", {})
+      @results = @searcher.search(0, 20, "cheese", "public_timestamp", {}, nil)
     end
 
     should "include results from all indexes" do
@@ -135,7 +141,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       )
 
       @results = @searcher.search(0, 20, "cheese", nil,
-        {"organisations" => ["ministry-of-magic"]})
+        {"organisations" => ["ministry-of-magic"]}, nil)
     end
 
     should "include results from all indexes" do
@@ -151,4 +157,74 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       assert_equal(3, @results[:total])
     end
   end
+
+  context "faceted, unsorted search" do
+
+    setup do
+      @combined_index = stub("unified index")
+      @searcher = UnifiedSearcher.new(@combined_index, {})
+      @combined_index.expects(:raw_search).with({
+        from: 0,
+        size: 20,
+        query: CHEESE_QUERY,
+        facets: {
+          "organisations" => {
+            terms: {
+              field: "organisations",
+              order: "count",
+              size: 100000,
+            }}},
+        fields: UnifiedSearchBuilder::ALLOWED_RETURN_FIELDS,
+      }).returns({
+        "hits" => {"hits" => sample_docs, "total" => 3},
+        "facets" => {"organisations" => {
+          "missing" => 7,
+          "terms" => [
+            {"term" => "a", "count" => 2,},
+            {"term" => "b", "count" => 1,},
+          ]
+        }},
+      })
+      @combined_index.expects(:index_name).returns(
+        "mainstream,detailed,government"
+      )
+
+      @results = @searcher.search(0, 20, "cheese", nil,
+        {}, "organisations" => 1)
+    end
+
+    should "include results from all indexes" do
+      assert_equal(
+        ["government", "mainstream", "detailed"].to_set,
+        @results[:results].map do |result|
+          result[:index]
+        end.to_set
+      )
+    end
+
+    should "include total result count" do
+      assert_equal(3, @results[:total])
+    end
+
+    should "include requested number of facet options" do
+      facet = @results[:facets]["organisations"]
+      assert_equal(1, facet[:options].length)
+    end
+
+    should "have correct top facet option" do
+      facet = @results[:facets]["organisations"]
+      assert_equal({value: "a", documents: 2}, facet[:options][0])
+    end
+
+    should "include requested number of facets" do
+      facet = @results[:facets]["organisations"]
+      assert_equal(2, facet[:total_options])
+    end
+
+    should "include number of documents with no value" do
+      facet = @results[:facets]["organisations"]
+      assert_equal(7, facet[:documents_with_no_value])
+    end
+  end
+
 end

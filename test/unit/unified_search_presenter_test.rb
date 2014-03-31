@@ -36,6 +36,18 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     "topics" => ["farming"],
   }]
 
+  def sample_facet_data
+    {
+      "organisations" => {
+        "terms" => [
+          {"term" => "hm-magic", "count" => 7},
+          {"term" => "hmrc", "count" => 5},
+        ],
+        "missing" => 8,
+      }
+    }
+  end
+
   INDEX_NAMES = %w(mainstream government detailed)
 
   context "no results" do
@@ -54,6 +66,10 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have total of 0" do
       assert_equal 0, @output[:total]
+    end
+
+    should "have no facets" do
+      assert_equal({}, @output[:facets])
     end
   end
 
@@ -118,6 +134,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       @output = UnifiedSearchPresenter.new(
         results,
         INDEX_NAMES,
+        {},
         topic_registry: topic_registry
       ).present
     end
@@ -162,4 +179,78 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
   end
 
+  context "results with facets" do
+    setup do
+      results = {
+        results: Marshal.load(Marshal.dump(DOCS)),
+        total: 3,
+        facets: sample_facet_data,
+        start: 0,
+      }
+      @output = UnifiedSearchPresenter.new(
+        results,
+        INDEX_NAMES,
+        {"organisations" => 1},
+      ).present
+    end
+
+    should "have facets" do
+      assert_contains @output.keys, :facets
+    end
+
+    should "have correct number of facets" do
+      assert_equal 1, @output[:facets].length
+    end
+
+    should "have correct number of facet values" do
+      assert_equal 1, @output[:facets]["organisations"][:options].length
+    end
+
+    should "have correct top facet value value" do
+      assert_equal({
+        :value=>"hm-magic",
+        :documents=>7,
+      }, @output[:facets]["organisations"][:options][0])
+    end
+
+    should "have correct number of documents with no value" do
+      assert_equal(8, @output[:facets]["organisations"][:documents_with_no_value])
+    end
+
+    should "have correct total number of options" do
+      assert_equal(2, @output[:facets]["organisations"][:total_options])
+    end
+  end
+
+  context "results with facet counting only" do
+    setup do
+      results = {
+        results: Marshal.load(Marshal.dump(DOCS)),
+        total: 3,
+        facets: sample_facet_data,
+        start: 0,
+      }
+      @output = UnifiedSearchPresenter.new(
+        results,
+        INDEX_NAMES,
+        {"organisations" => 0},
+      ).present
+    end
+
+    should "have correct number of facets" do
+      assert_equal 1, @output[:facets].length
+    end
+
+    should "have no facet values" do
+      assert_equal 0, @output[:facets]["organisations"][:options].length
+    end
+
+    should "have correct number of documents with no value" do
+      assert_equal(8, @output[:facets]["organisations"][:documents_with_no_value])
+    end
+
+    should "have correct total number of options" do
+      assert_equal(2, @output[:facets]["organisations"][:total_options])
+    end
+  end
 end
