@@ -446,8 +446,8 @@ private
   def filters
     filters = {}
     params.each do |key, value|
-      if key.start_with?("filter_")
-        filters[key[7..-1]] = [*value]
+      if m = key.match(/\Afilter_(.*)/)
+        filters[m[1]] = [*value]
       end
     end
     filters
