@@ -19,6 +19,7 @@ class MultiIndexTest < IntegrationTest
         add_field_to_mappings("public_timestamp", "date")
       end
       add_field_to_mappings("topics")
+      add_field_to_mappings("section")
       create_test_index(index_name)
       add_sample_documents(index_name, 2)
       commit_index(index_name)
@@ -42,6 +43,7 @@ class MultiIndexTest < IntegrationTest
       if i % 2 == 0
         fields["topics"] = ["farming"]
       end
+      fields["section"] = ["#{i}"]
       if short_index_name == "government"
         fields["public_timestamp"] = "#{i+2000}-01-01T00:00:00"
       end

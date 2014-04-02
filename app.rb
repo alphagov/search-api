@@ -255,10 +255,18 @@ class Rummager < Sinatra::Application
         world_location_registry: world_location_registry
       }
 
-      start = params["start"]
-      count = params["count"]
-      query = params["q"]
-      order = params["order"]
+      start = pop_integer_param("start")
+      count = pop_integer_param("count")
+      query = request.params.delete("q")
+      order = request.params.delete("order")
+      filters = pop_filters
+
+      unless request.params == {}
+        status 400
+        return MultiJson.encode({
+          error: "Unexpected parameters: #{request.params.keys.join(',')}",
+        })
+      end
 
       searcher = UnifiedSearcher.new(unified_index, registries)
       MultiJson.encode searcher.search(start, count, query, order, filters)
@@ -443,11 +451,24 @@ class Rummager < Sinatra::Application
   end
 
 private
-  def filters
+  def pop_integer_param(param_name)
+    value = request.params.delete(param_name)
+    if value.nil?
+      return nil
+    end
+    begin
+      return Integer(value, 10)
+    rescue ArgumentError
+      raise ArgumentError, "Invalid value \"#{value}\" for parameter \"#{param_name}\" (expected integer)"
+    end
+  end
+
+  def pop_filters
     filters = {}
-    params.each do |key, value|
+    request.params.each do |key, value|
       if m = key.match(/\Afilter_(.*)/)
         filters[m[1]] = [*value]
+        request.params.delete(key)
       end
     end
     filters
