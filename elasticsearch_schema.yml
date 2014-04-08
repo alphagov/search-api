@@ -244,6 +244,7 @@ synonyms: &synonyms [
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
   "visa4uk => visa4uk, uk visa",
+  "what's in your backyard, what's in my backyard, whats in your backyard, whats in my backyard, wiyby => local environmental",
 
   # Adding terms to raise the best results
   "book driving test => book driving test, book your practical driving test",
