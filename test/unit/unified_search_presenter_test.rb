@@ -48,6 +48,25 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     }
   end
 
+  def sample_facet_data_with_topics
+    {
+      "organisations" => {
+        "terms" => [
+          {"term" => "hm-magic", "count" => 7},
+          {"term" => "hmrc", "count" => 5},
+        ],
+        "missing" => 8,
+      },
+      "topics" => {
+        "terms" => [
+          {"term" => "farming", "count" => 4},
+          {"term" => "unknown_topic", "count" => 5},
+        ],
+        "missing" => 3,
+      },
+    }
+  end
+
   INDEX_NAMES = %w(mainstream government detailed)
 
   context "no results" do
@@ -135,7 +154,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         results,
         INDEX_NAMES,
         {},
-        topic_registry: topic_registry
+        {topic_registry: topic_registry},
+        {topics: topic_registry},
       ).present
     end
 
@@ -253,4 +273,74 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       assert_equal(2, @output[:facets]["organisations"][:total_options])
     end
   end
+
+  context "results with facets and an org registry" do
+    setup do
+      results = {
+        results: Marshal.load(Marshal.dump(DOCS)),
+        total: 3,
+        facets: sample_facet_data_with_topics,
+        start: 0,
+      }
+      magic_org_document = Document.new(
+        %w(link title),
+        link: "/government/departments/hm-magic",
+        title: "Ministry of Magic"
+      )
+      org_registry = stub("org registry")
+      org_registry.expects(:[])
+        .with("hm-magic")
+        .returns(magic_org_document)
+
+      @output = UnifiedSearchPresenter.new(
+        results,
+        INDEX_NAMES,
+        {"organisations" => 1, "topics" => 1},
+        {organisation_registry: org_registry},
+        {organisations: org_registry},
+      ).present
+    end
+
+    should "have facets" do
+      assert_contains @output.keys, :facets
+    end
+
+    should "have correct number of facets" do
+      assert_equal 2, @output[:facets].length
+    end
+
+    should "have correct number of facet values" do
+      assert_equal 1, @output[:facets]["organisations"][:options].length
+      assert_equal 1, @output[:facets]["topics"][:options].length
+    end
+
+    should "have org facet value expanded" do
+      assert_equal({
+        :value => {
+          "link" => "/government/departments/hm-magic",
+          "title" => "Ministry of Magic",
+          "slug" => "hm-magic",
+        },
+        :documents=>7,
+      }, @output[:facets]["organisations"][:options][0])
+    end
+
+    should "have topic facet value un-expanded" do
+      assert_equal({
+        :value=>"farming",
+        :documents=>4,
+      }, @output[:facets]["topics"][:options][0])
+    end
+
+    should "have correct number of documents with no value" do
+      assert_equal(8, @output[:facets]["organisations"][:documents_with_no_value])
+      assert_equal(3, @output[:facets]["topics"][:documents_with_no_value])
+    end
+
+    should "have correct total number of options" do
+      assert_equal(2, @output[:facets]["organisations"][:total_options])
+      assert_equal(2, @output[:facets]["topics"][:total_options])
+    end
+  end
+
 end

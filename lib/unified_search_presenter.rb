@@ -1,20 +1,23 @@
 require "elasticsearch/result_set"
+require "field_presenter"
 require "result_set_presenter"
 
 # Presents a combined set of results for a GOV.UK site search
 class UnifiedSearchPresenter
 
-  attr_reader :results, :registries
+  attr_reader :results, :registries, :registry_by_field
 
   # `presenter_context` should be a map from registry names to registries,
   # which gets passed to the ResultSetPresenter class. For example:
   #
   #     { organisation_registry: OrganisationRegistry.new(...) }
-  def initialize(results, index_names, facet_fields = {}, registries = {})
+  def initialize(results, index_names, facet_fields = {}, registries = {},
+                 registry_by_field = {})
     @results = results
     @index_names = index_names
     @facet_fields = facet_fields
     @registries = registries
+    @registry_by_field = registry_by_field
   end
 
   def present
@@ -60,6 +63,7 @@ private
     if results[:facets] == nil
       return {}
     end
+    presenter = FieldPresenter.new(registry_by_field)
     result = {}
     results[:facets].each do |field, facet_info|
       requested_count = @facet_fields[field]
@@ -68,7 +72,7 @@ private
       result[field] = {
         options: display_options.map do |option|
           {
-            value: option["term"],
+            value: presenter.expand(field, option["term"]),
             documents: option["count"],
           }
         end,

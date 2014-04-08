@@ -57,7 +57,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {})
+      @searcher = UnifiedSearcher.new(@combined_index, {}, {})
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -91,7 +91,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {})
+      @searcher = UnifiedSearcher.new(@combined_index, {}, {})
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -126,7 +126,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {})
+      @searcher = UnifiedSearcher.new(@combined_index, {}, {})
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -162,7 +162,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {})
+      @searcher = UnifiedSearcher.new(@combined_index, {}, {})
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,

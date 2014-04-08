@@ -5,11 +5,12 @@ require "unified_search_presenter"
 
 class UnifiedSearcher
 
-  attr_reader :index, :registries
+  attr_reader :index, :registries, :registry_by_field
 
-  def initialize(index, registries)
+  def initialize(index, registries, registry_by_field)
     @index = index
     @registries = registries
+    @registry_by_field = registry_by_field
   end
 
   # Search and combine the indices and return a hash of ResultSet objects
@@ -33,7 +34,8 @@ class UnifiedSearcher
       results,
       @index.index_name.split(","),
       facet_fields,
-      registries
+      registries,
+      registry_by_field,
     ).present
   end
 end

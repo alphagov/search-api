@@ -277,13 +277,21 @@ class Rummager < Sinatra::Application
         document_collection_registry: document_collection_registry,
         world_location_registry: world_location_registry
       }
+      registry_by_field = {
+        organisations: organisation_registry,
+        topics: topic_registry,
+        document_series: document_series_registry,
+        document_collections: document_collection_registry,
+        world_locations: world_location_registry
+      }
 
       start = params["start"]
       count = params["count"]
       query = params["q"]
       order = params["order"]
 
-      searcher = UnifiedSearcher.new(unified_index, registries)
+      searcher = UnifiedSearcher.new(unified_index, registries,
+                                     registry_by_field)
       MultiJson.encode searcher.search(start, count, query, order, filters,
                                        facets)
     rescue ArgumentError => e
