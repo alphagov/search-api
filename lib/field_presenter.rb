@@ -1,5 +1,3 @@
-
-
 class FieldPresenter
   attr_reader :registry_by_field
 
