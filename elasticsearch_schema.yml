@@ -54,6 +54,7 @@ synonyms: &synonyms [
   # Unofficial or deprecated terms
   "ancestral visa => ancestry visa",
   "bedroom tax => spare bedroom, spare room",
+  "carbon reduction commitment => crc energy efficiency scheme, crc scheme",
   "death duty => inheritance tax",
   "drivers licence => drivers licence, driving licence",
   "dole => jobseeker's allowance",
@@ -160,6 +161,7 @@ synonyms: &synonyms [
   "doh => department of health",
   "dhp, discretionary housing payment",
   "dla, disability living allowance",
+  "ea, environment agency",
   "eccn, export control classification number",
   "eco, energy company obligation",
   "ecs, employer checking service",
@@ -220,6 +222,7 @@ synonyms: &synonyms [
   "curriculum vitae => cv, curriculum vitae",
   "easter => easter, paid early",  # Seasonal need - also for Christmas and New Year payments
   "fiance, fiancee, fiancé, fiancée => partner, family, visa",
+  "flood alert, flood alerts => flood alerts, flood warnings",
   # "heating => heating, energy grants, energy saving, cold, warm, winter",
   "hpi check => used car check",
   "intestacy => intestacy, wills, inherits",
@@ -241,6 +244,7 @@ synonyms: &synonyms [
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
   "visa4uk => visa4uk, uk visa",
+  "what's in your backyard, what's in my backyard, whats in your backyard, whats in my backyard, wiyby => local environmental",
 
   # Adding terms to raise the best results
   "book driving test => book driving test, book your practical driving test",
@@ -250,7 +254,10 @@ synonyms: &synonyms [
   "business support => business support, business finance",
   "copyright => copyright, intellectual property",
   "driving test => driving test, practical driving test, driving or riding test",
+  "employment tribunal => employment tribunal, take",
   "export licence, export licences => export licence, strategic, require a licence",
+  "fishing licence, fishing licences => fishing licence, rod licence",
+  "fishing license, fishing licenses => fishing licence, rod licence",
   "gateway => gateway, government gateway",
   # Intended to bring the main PHE and HMT Green Book landing pages into the top 3, above all their chapters
   #   </government/organisations/public-health-england/series/immunisation-against-infectious-disease-the-green-book>
@@ -288,6 +295,8 @@ synonyms: &synonyms [
   "d798 => d798, renewal reminder", # 'D798' appears in content but returns no results
   "eesa => employment and support allowance",
   "esa50 => esa50, esa 50",
+  "et1 => et1, employment tribunal",
+  "et3 => et3, employment tribunal",
   "ex160, ex160a => court fees",
   "ex321 => make a court claim for money, enforce a judgment",
   "ex50 => court fees",
@@ -340,6 +349,7 @@ synonyms: &synonyms [
   # "advise => advise, advice",
   "dlva => dvla",
   "eh1c => ehic",
+  "environmental agency => environment agency",
   "government getaway => government gateway",
   "ipc bri => ipc br1",
   "rapid claim => rapid claim, rapid reclaim",
@@ -351,6 +361,7 @@ synonyms: &synonyms [
   # Split words that are usually one word
   "child care => childcare",
   "direct gov => directgov",
+  "flood line => floodline",
   "heat wave => heatwave",
   "help line => helpline",
   "jelly fish => jellyfish",
@@ -436,6 +447,7 @@ synonyms: &synonyms [
   "drivi => driving",
   "drivin => driving",
   "emmissions => emissions",
+  "enviroment => environment",
   "fianance => finance",
   "finace => finance",
   "forcast => forecast",
@@ -621,6 +633,8 @@ stems: &stems [
   "directives => directive",
   "equalities => equality",
   "equality => equality",
+  "fertiliser => fertiliser",  # not fertilisation
+  "fertilisers => fertiliser",  # not fertilisation
   "fiancee => fianc",  # also match fiance
   "fiancé => fianc",  # also match fiance
   "fiancée => fianc",  # also match fiance
