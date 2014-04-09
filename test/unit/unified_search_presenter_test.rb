@@ -240,6 +240,10 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     should "have correct total number of options" do
       assert_equal(2, @output[:facets]["organisations"][:total_options])
     end
+
+    should "have correct number of missing options" do
+      assert_equal(1, @output[:facets]["organisations"][:missing_options])
+    end
   end
 
   context "results with facet counting only" do
@@ -271,6 +275,10 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have correct total number of options" do
       assert_equal(2, @output[:facets]["organisations"][:total_options])
+    end
+
+    should "have correct number of missing options" do
+      assert_equal(2, @output[:facets]["organisations"][:missing_options])
     end
   end
 
@@ -340,6 +348,11 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     should "have correct total number of options" do
       assert_equal(2, @output[:facets]["organisations"][:total_options])
       assert_equal(2, @output[:facets]["topics"][:total_options])
+    end
+
+    should "have correct number of missing options" do
+      assert_equal(1, @output[:facets]["organisations"][:missing_options])
+      assert_equal(1, @output[:facets]["topics"][:missing_options])
     end
   end
 

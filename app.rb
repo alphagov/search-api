@@ -262,7 +262,8 @@ class Rummager < Sinatra::Application
   #               "documents": 788
   #             }, ...],
   #           "documents_with_no_value": 1610,
-  #           "total_options": 94
+  #           "total_options": 94,
+  #           "missing_options": 84
   #         }
   #       }
   #     }
