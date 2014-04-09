@@ -219,6 +219,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     should "include requested number of facets" do
       facet = @results[:facets]["organisations"]
       assert_equal(2, facet[:total_options])
+      assert_equal(1, facet[:missing_options])
     end
 
     should "include number of documents with no value" do

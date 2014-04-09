@@ -54,6 +54,23 @@ class UnifiedSearchTest < MultiIndexTest
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
+        "missing_options" => 0,
+      }
+    }, facets)
+  end
+
+  def test_facet_counting_missing_options
+    get "/unified_search?q=important&facet_section=1"
+    assert_equal 6, parsed_response["total"]
+    facets = parsed_response["facets"] 
+    assert_equal({
+      "section" => {
+        "options" => [
+          {"value"=>"2", "documents"=>3},
+        ],
+        "documents_with_no_value" => 0,
+        "total_options" => 2,
+        "missing_options" => 1,
       }
     }, facets)
   end

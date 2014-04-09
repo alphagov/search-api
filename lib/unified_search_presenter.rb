@@ -77,7 +77,8 @@ private
           }
         end,
         documents_with_no_value: facet_info["missing"],
-        total_options: options.length
+        total_options: options.length,
+        missing_options: options.length - display_options.length,
       }
     end
     result
