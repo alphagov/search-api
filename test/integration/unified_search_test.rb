@@ -42,4 +42,20 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal ["farming"], results[1]["topics"]
   end
 
+  def test_facet_counting
+    get "/unified_search?q=important&facet_section=2"
+    assert_equal 6, parsed_response["total"]
+    facets = parsed_response["facets"] 
+    assert_equal({
+      "section" => {
+        "options" => [
+          {"value"=>"2", "documents"=>3},
+          {"value"=>"1", "documents"=>3},
+        ],
+        "documents_with_no_value" => 0,
+        "total_options" => 2,
+      }
+    }, facets)
+  end
+
 end

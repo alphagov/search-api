@@ -1,19 +1,23 @@
 require "elasticsearch/result_set"
+require "field_presenter"
 require "result_set_presenter"
 
 # Presents a combined set of results for a GOV.UK site search
 class UnifiedSearchPresenter
 
-  attr_reader :results, :registries
+  attr_reader :results, :registries, :registry_by_field
 
   # `presenter_context` should be a map from registry names to registries,
   # which gets passed to the ResultSetPresenter class. For example:
   #
   #     { organisation_registry: OrganisationRegistry.new(...) }
-  def initialize(results, index_names, registries = {})
+  def initialize(results, index_names, facet_fields = {}, registries = {},
+                 registry_by_field = {})
     @results = results
     @index_names = index_names
+    @facet_fields = facet_fields
     @registries = registries
+    @registry_by_field = registry_by_field
   end
 
   def present
@@ -21,6 +25,7 @@ class UnifiedSearchPresenter
       results: presented_results,
       total: results[:total],
       start: results[:start],
+      facets: presented_facets,
     }
   end
 
@@ -52,5 +57,29 @@ private
       fields[:_id] = metadata["_id"]
 
     end
+  end
+
+  def presented_facets
+    if results[:facets] == nil
+      return {}
+    end
+    presenter = FieldPresenter.new(registry_by_field)
+    result = {}
+    results[:facets].each do |field, facet_info|
+      requested_count = @facet_fields[field]
+      options = facet_info["terms"]
+      display_options = options.slice(0, requested_count)
+      result[field] = {
+        options: display_options.map do |option|
+          {
+            value: presenter.expand(field, option["term"]),
+            documents: option["count"],
+          }
+        end,
+        documents_with_no_value: facet_info["missing"],
+        total_options: options.length
+      }
+    end
+    result
   end
 end

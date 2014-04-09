@@ -218,6 +218,17 @@ class Rummager < Sinatra::Application
   #   of the filter groups, and they will be considered to match a filter group
   #   if any of the individual filters in that group match.
   #
+  #   facet_FIELD: (where FIELD is a fieldname); count up values which are
+  #   present in the field in the documents matched by the search, and return
+  #   information about these.  The value of this parameter is the limit on the
+  #   number of distinct field values which will be returned.
+  #
+  #   When combining facet calculation and filters, the API tries to do the
+  #   "right" thing for most user interfaces.  This means that when calculating
+  #   facet values for field A, if there are filters for field A and B, the
+  #   facet values are calculated as if the filters for field B are applied,
+  #   but not those for field A.
+  #
   #
   # For example:
   #
@@ -229,6 +240,7 @@ class Rummager < Sinatra::Application
   #      filter_organisations[]=cabinet-office&
   #      filter_organisations[]=driver-vehicle-licensing-agency&
   #      filter_section[]=driving
+  #      facet_organisations=10
   #
   # Returns something like:
   #
@@ -241,7 +253,18 @@ class Rummager < Sinatra::Application
   #       "offset": 0,
   #       "spelling_suggestions": [
   #         ...
-  #       ]
+  #       ],
+  #       "facets": {
+  #         "organisations": {
+  #           "options": [
+  #             {
+  #               "value": "department-for-business-innovation-skills",
+  #               "documents": 788
+  #             }, ...],
+  #           "documents_with_no_value": 1610,
+  #           "total_options": 94
+  #         }
+  #       }
   #     }
   #
   get "/unified_search.?:request_format?" do
@@ -254,14 +277,23 @@ class Rummager < Sinatra::Application
         document_collection_registry: document_collection_registry,
         world_location_registry: world_location_registry
       }
+      registry_by_field = {
+        organisations: organisation_registry,
+        topics: topic_registry,
+        document_series: document_series_registry,
+        document_collections: document_collection_registry,
+        world_locations: world_location_registry
+      }
 
       start = params["start"]
       count = params["count"]
       query = params["q"]
       order = params["order"]
 
-      searcher = UnifiedSearcher.new(unified_index, registries)
-      MultiJson.encode searcher.search(start, count, query, order, filters)
+      searcher = UnifiedSearcher.new(unified_index, registries,
+                                     registry_by_field)
+      MultiJson.encode searcher.search(start, count, query, order, filters,
+                                       facets)
     rescue ArgumentError => e
       status 400
       MultiJson.encode({ error: e.message })
@@ -451,5 +483,20 @@ private
       end
     end
     filters
+  end
+
+  def facets
+    facets = {}
+    request.params.each do |key, count|
+      if m = key.match(/\Afacet_(.*)/)
+        begin
+          count = Integer(count, 10)
+        rescue ArgumentError
+          raise ArgumentError, "Invalid value \"#{count}\" for facet parameter \"#{key}\" (expected integer)"
+        end
+        facets[m[1]] = count
+      end
+    end
+    facets
   end
 end
