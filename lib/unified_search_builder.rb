@@ -110,22 +110,19 @@ class UnifiedSearchBuilder
 
   def sort_filters
     # Filters to ensure that fields being sorted by exist.
-    filters = []
-    sort_fields.each do |field|
-      filters << {"exists" => {"field" => field}}
-    end
-    combine_filters(filters)
+    combine_filters(sort_fields.map do |field|
+      {"exists" => {"field" => field}}
+    end)
   end
 
   def filters_hash(excluding=[])
-    filter_groups = []
-    @filters.each do |field, filter_values|
+    filter_groups = @filters.reject do |field, filter_values|
       unless ALLOWED_FILTER_FIELDS.include? field
         raise ArgumentError, "Filtering by \"#{field}\" is not allowed"
       end
-      unless excluding.include? field
-        filter_groups << terms_filter(field, filter_values)
-      end
+      excluding.include? field
+    end.map do |field, filter_values|
+      terms_filter(field, filter_values)
     end
     # Don't add additional filters to filter_groups without making sure that
     # the facet_filter values used in facets include the filter too.  It's
