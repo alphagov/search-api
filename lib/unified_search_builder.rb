@@ -21,7 +21,7 @@ class UnifiedSearchBuilder
     }]
   end
 
-  def query_normalized()
+  def query_normalized
     if @params[:query].nil?
       return nil
     end
