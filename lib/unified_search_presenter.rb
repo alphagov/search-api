@@ -44,11 +44,9 @@ private
       # index, with an "index" field containing the aliased name of the index
       # (eg, "mainstream").
       long_name = metadata["_index"]
-      @index_names.each do |short_name|
-        if long_name.start_with? short_name
-          fields[:index] = short_name
-        end
-      end
+      fields[:index] = @index_names.find { |short_name|
+        long_name.start_with? short_name
+      }
 
       # Put the elasticsearch score in es_score; this is used in templates when
       # debugging is requested, so it's nicer to be explicit about what score
