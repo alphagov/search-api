@@ -7,7 +7,7 @@ class UnifiedSearchPresenter
 
   attr_reader :results, :registries, :registry_by_field
 
-  # `presenter_context` should be a map from registry names to registries,
+  # `registries` should be a map from registry names to registries,
   # which gets passed to the ResultSetPresenter class. For example:
   #
   #     { organisation_registry: OrganisationRegistry.new(...) }
