@@ -83,9 +83,9 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     should "include results from all indexes" do
       assert_equal(
         ["government", "mainstream", "detailed"].to_set,
-        @results[:results].map do |result|
+        @results[:results].map { |result|
           result[:index]
-        end.to_set
+        }.to_set
       )
     end
 
