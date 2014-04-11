@@ -16,20 +16,10 @@ class UnifiedSearcher
   # Search and combine the indices and return a hash of ResultSet objects
   def search(params)
     builder = UnifiedSearchBuilder.new(params)
-
-    results = index.raw_search(builder.payload)
-    results = {
-      start: params[:start],
-      results: results["hits"]["hits"].map do |result|
-        doc = result.delete("fields")
-        doc[:_metadata] = result
-        doc
-      end,
-      total: results["hits"]["total"],
-      facets: results["facets"],
-    }
+    es_response = index.raw_search(builder.payload)
     UnifiedSearchPresenter.new(
-      results,
+      es_response,
+      params[:start],
       @index.index_name.split(","),
       params[:facets],
       registries,

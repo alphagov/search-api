@@ -5,15 +5,20 @@ require "result_set_presenter"
 # Presents a combined set of results for a GOV.UK site search
 class UnifiedSearchPresenter
 
-  attr_reader :results, :registries, :registry_by_field
-
   # `registries` should be a map from registry names to registries,
   # which gets passed to the ResultSetPresenter class. For example:
   #
   #     { organisation_registry: OrganisationRegistry.new(...) }
-  def initialize(results, index_names, facet_fields = {}, registries = {},
+  def initialize(es_response, start, index_names, facet_fields = {}, registries = {},
                  registry_by_field = {})
-    @results = results
+    @start = start
+    @results = es_response["hits"]["hits"].map do |result|
+      doc = result.delete("fields")
+      doc[:_metadata] = result
+      doc
+    end
+    @facets = es_response["facets"]
+    @total = es_response["hits"]["total"]
     @index_names = index_names
     @facet_fields = facet_fields
     @registries = registries
@@ -23,20 +28,22 @@ class UnifiedSearchPresenter
   def present
     {
       results: presented_results,
-      total: results[:total],
-      start: results[:start],
+      total: @total,
+      start: @start,
       facets: presented_facets,
     }
   end
 
 private
 
+  attr_reader :registries, :registry_by_field
+
   def presented_results
     # This uses the "standard" ResultSetPresenter to expand fields like
     # organisations and topics.  It then makes a few further changes to tidy up
     # the output in other ways.
 
-    result_set = ResultSet.new(results[:results], nil)
+    result_set = ResultSet.new(@results, nil)
     ResultSetPresenter.new(result_set, registries).present["results"].each do |fields|
       metadata = fields.delete(:_metadata)
 
@@ -58,12 +65,12 @@ private
   end
 
   def presented_facets
-    if results[:facets] == nil
+    if @facets.nil?
       return {}
     end
     presenter = FieldPresenter.new(registry_by_field)
     result = {}
-    results[:facets].each do |field, facet_info|
+    @facets.each do |field, facet_info|
       requested_count = @facet_fields[field]
       options = facet_info["terms"]
       display_options = options.slice(0, requested_count)

@@ -4,37 +4,48 @@ require "document"
 
 class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
-  DOCS = [{
-    _metadata: {
+  def sample_docs
+    [{
       "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",
       _type: "edition",
       _id: "/government/publications/staffordshire-cheese",
       "_score" => 3.0514863,
-    },
-    "description" => "Staffordshire Cheese Product of Designated Origin (PDO) and Staffordshire Organic Cheese.",
-    "title" => "Staffordshire Cheese",
-    "link" => "/government/publications/staffordshire-cheese",
-  }, {
-    _metadata: {
+      "fields" => {
+        "description" => "Staffordshire Cheese Product of Designated Origin (PDO) and Staffordshire Organic Cheese.",
+        "title" => "Staffordshire Cheese",
+        "link" => "/government/publications/staffordshire-cheese",
+      },
+    }, {
       "_index" => "mainstream-2014-03-19t14:35:28z-6472f975-dc38-49a5-98eb-c498e619650c",
       _type: "edition",
       _id: "/duty-relief-for-imports-and-exports",
       "_score" => 0.49672604,
-    },
-    "description" => "Schemes that offer reduced or zero rate duty and VAT for imports and exports",
-    "title" => "Duty relief for imports and exports",
-    "link" => "/duty-relief-for-imports-and-exports",
-  }, {
-    _metadata: {
+      "fields" => {
+        "description" => "Schemes that offer reduced or zero rate duty and VAT for imports and exports",
+        "title" => "Duty relief for imports and exports",
+        "link" => "/duty-relief-for-imports-and-exports",
+      },
+    }, {
       "_index" => "detailed-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
       _type: "edition",
       _id: "/dairy-farming-and-schemes",
       "_score" => 0.34655035,
-    },
-    "title" => "Dairy farming and schemes",
-    "link" => "/dairy-farming-and-schemes",
-    "topics" => ["farming"],
-  }]
+      "fields" => {
+        "title" => "Dairy farming and schemes",
+        "link" => "/dairy-farming-and-schemes",
+        "topics" => ["farming"],
+      },
+    }]
+  end
+
+  def sample_es_response(extra = {})
+    {
+      "hits" => {
+        "hits" => sample_docs,
+        "total" => 3,
+      }
+    }.merge(extra)
+  end
 
   def sample_facet_data
     {
@@ -72,11 +83,12 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "no results" do
     setup do
       results = {
-        results: [],
-        total: 0,
-        start: 0,
+        "hits" => {
+          "hits" => [],
+          "total" => 0
+        }
       }
-      @output = UnifiedSearchPresenter.new(results, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new(results, 0, INDEX_NAMES).present
     end
 
     should "present empty list of results" do
@@ -94,12 +106,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with no registries" do
     setup do
-      results = {
-        results: Marshal.load(Marshal.dump(DOCS)),
-        total: 3,
-        start: 0,
-      }
-      @output = UnifiedSearchPresenter.new(results, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES).present
     end
 
     should "have correct total" do
@@ -117,15 +124,15 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
 
     should "have the score in es_score" do
-      @output[:results].zip(DOCS).each do |result, doc|
+      @output[:results].zip(sample_docs).each do |result, doc|
         assert_does_not_contain "_score", result.keys
         assert result[:es_score] != nil
-        assert_equal doc[:_metadata]["_score"], result[:es_score]
+        assert_equal doc["_score"], result[:es_score]
       end
     end
 
     should "have only the fields returned from search engine" do
-      @output[:results].zip(DOCS).each do |result, doc|
+      @output[:results].zip(sample_docs).each do |result, doc|
         doc_fields = result.keys - [:_type, :_id]
         returned_fields = result.keys - [:esscore, :_type, :_id]
         assert_equal doc_fields, returned_fields
@@ -135,11 +142,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with a registry" do
     setup do
-      results = {
-        results: Marshal.load(Marshal.dump(DOCS)),
-        total: 3,
-        start: 0,
-      }
       farming_topic_document = Document.new(
         %w(link title),
         link: "/government/topics/farming",
@@ -151,7 +153,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         .returns(farming_topic_document)
 
       @output = UnifiedSearchPresenter.new(
-        results,
+        sample_es_response,
+        0,
         INDEX_NAMES,
         {},
         {topic_registry: topic_registry},
@@ -174,15 +177,15 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
 
     should "have the score in es_score" do
-      @output[:results].zip(DOCS).each do |result, doc|
+      @output[:results].zip(sample_docs).each do |result, doc|
         assert_does_not_contain "_score", result.keys
         assert result[:es_score] != nil
-        assert_equal doc[:_metadata]["_score"], result[:es_score]
+        assert_equal doc["_score"], result[:es_score]
       end
     end
 
     should "have only the fields returned from search engine" do
-      @output[:results].zip(DOCS).each do |result, doc|
+      @output[:results].zip(sample_docs).each do |result, doc|
         doc_fields = result.keys - [:_type, :_id]
         returned_fields = result.keys - [:esscore, :_type, :_id]
         assert_equal doc_fields, returned_fields
@@ -201,14 +204,9 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with facets" do
     setup do
-      results = {
-        results: Marshal.load(Marshal.dump(DOCS)),
-        total: 3,
-        facets: sample_facet_data,
-        start: 0,
-      }
       @output = UnifiedSearchPresenter.new(
-        results,
+        sample_es_response("facets" => sample_facet_data),
+        0,
         INDEX_NAMES,
         {"organisations" => 1},
       ).present
@@ -248,14 +246,9 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with facet counting only" do
     setup do
-      results = {
-        results: Marshal.load(Marshal.dump(DOCS)),
-        total: 3,
-        facets: sample_facet_data,
-        start: 0,
-      }
       @output = UnifiedSearchPresenter.new(
-        results,
+        sample_es_response("facets" => sample_facet_data),
+        0,
         INDEX_NAMES,
         {"organisations" => 0},
       ).present
@@ -284,12 +277,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with facets and an org registry" do
     setup do
-      results = {
-        results: Marshal.load(Marshal.dump(DOCS)),
-        total: 3,
-        facets: sample_facet_data_with_topics,
-        start: 0,
-      }
       magic_org_document = Document.new(
         %w(link title),
         link: "/government/departments/hm-magic",
@@ -301,7 +288,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         .returns(magic_org_document)
 
       @output = UnifiedSearchPresenter.new(
-        results,
+        sample_es_response("facets" => sample_facet_data_with_topics),
+        0,
         INDEX_NAMES,
         {"organisations" => 1, "topics" => 1},
         {organisation_registry: org_registry},
