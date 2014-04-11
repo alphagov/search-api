@@ -6,7 +6,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "unfiltered search" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 20, "cheese ", nil, {}, nil, nil)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: nil,
+      })
     end
 
     should "strip whitespace from the query" do
@@ -46,8 +54,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with one filter" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 10, "cheese ", nil,
-        {"organisations" => ["hm-magic"]}, nil, nil)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: nil,
+        filters: {"organisations" => ["hm-magic"]},
+        fields: nil,
+        facets: nil,
+      })
     end
 
     should "have filter in payload" do
@@ -71,8 +86,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with a filter with multiple options" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 10, "cheese ", nil,
-        {"organisations" => ["hm-magic", "hmrc"]}, nil, nil)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: nil,
+        filters: {"organisations" => ["hm-magic", "hmrc"]},
+        fields: nil,
+        facets: nil,
+      })
     end
 
     should "have filter in payload" do
@@ -97,11 +119,18 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with multiple filters" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 10, "cheese ", nil,
-        {
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: nil,
+        filters: {
           "organisations" => ["hm-magic", "hmrc"],
           "section" => ["levitation"],
-        }, nil, nil)
+        },
+        fields: nil,
+        facets: nil,
+      })
     end
 
     should "have filter in payload" do
@@ -129,8 +158,16 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "building search with unicode" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 20, "cafe\u0300 ", nil, {}, nil,
-        nil)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cafe\u0300 ",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: nil,
+      })
+
     end
 
     should "put the query in normalized form" do
@@ -143,8 +180,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with ascending sort" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 10, "cheese ", "public_timestamp",
-        {}, nil, nil)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: ["public_timestamp", "asc"],
+        filters: {},
+        fields: nil,
+        facets: nil,
+      })
     end
 
     should "have sort in payload" do
@@ -183,8 +227,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with descending sort" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 10, "cheese ", "-public_timestamp",
-        {}, nil, nil)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: ["public_timestamp", "desc"],
+        filters: {},
+        fields: nil,
+        facets: nil,
+      })
     end
 
     should "have sort in payload" do
@@ -220,33 +271,17 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     end
   end
 
-  context "search with invalid parameters" do
-    should "complain about disallowed filters" do
-      assert_raises ArgumentError do
-        UnifiedSearchBuilder.new(0, 10, "cheese", nil,
-          {"spells" => ["levitation"]}, nil, nil).payload
-      end
-    end
-
-    should "complain about disallowed sort fields" do
-      assert_raises ArgumentError do
-        UnifiedSearchBuilder.new(0, 10, "cheese", "spells",
-          {}, nil, nil).payload
-      end
-    end
-
-    should "complain about disallowed return fields" do
-      assert_raises ArgumentError do
-        UnifiedSearchBuilder.new(0, 10, "cheese", nil,
-          {}, ["invalid_field"], nil).payload
-      end
-    end
-  end
-
   context "search with explicit return fields" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 20, "cheese ", nil, {}, ['title'],
-        nil)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: nil,
+        filters: {},
+        return_fields: ['title'],
+        facets: nil,
+      })
     end
 
     should "have correct fields in payload" do
@@ -259,8 +294,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 10, "cheese ", nil, {}, nil,
-        "organisations" => 10)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: {"organisations" => 10},
+      })
     end
 
     should "not have filter in payload" do
@@ -286,9 +328,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet and filter on same field" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 10, "cheese ", nil,
-        {"organisations" => ["hm-magic"]}, nil,
-        "organisations" => 10)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: nil,
+        filters: {"organisations" => ["hm-magic"]},
+        fields: nil,
+        facets: {"organisations" => 10},
+      })
     end
 
     should "have correct filter" do
@@ -314,9 +362,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet and filter on different field" do
     setup do
-      @builder = UnifiedSearchBuilder.new(0, 10, "cheese ", nil,
-        {"section" => ["levitation"]}, nil,
-        "organisations" => 10)
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 10,
+        query: "cheese ",
+        order: nil,
+        filters: {"section" => ["levitation"]},
+        fields: nil,
+        facets: {"organisations" => 10},
+      })
     end
 
     should "have correct filter" do

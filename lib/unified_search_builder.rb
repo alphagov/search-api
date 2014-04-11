@@ -3,67 +3,32 @@ require "unf"
 # Builds a query for a search across all GOV.UK indices
 class UnifiedSearchBuilder
 
-  # The fields listed here are the only ones that can be returned in search
-  # results.  These are listed and validated explicitly, rather than simply
-  # allowing any field in the schema, to keep the set of such fields as minimal
-  # as possible.  This lets us reorganise the way other fields are stored and
-  # indexed without having to check that we don't break the display of search
-  # results.
-  ALLOWED_RETURN_FIELDS = %w(
-    title description link slug
-    
-    public_timestamp
-    organisations topics world_locations document_series
-
-    format display_type
-    section subsection subsubsection
-
-  )
-
-  # The fields listed here are the only ones which the search results can be
-  # ordered by.  These are listed and validated explicitly because
-  # sorting by arbitrary fields can be expensive in terms of memory usage in
-  # elasticsearch, and because elasticsearch gives fairly obscure error
-  # messages if undefined sort fields are used.
-  ALLOWED_SORT_FIELDS = %w(public_timestamp)
-
-  # The fields listed here are the only ones which can be used to filter by.
-  ALLOWED_FILTER_FIELDS = %w(organisations section format)
-
-  # The fields listed here are the only ones which can be used to calculated
-  # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
-  ALLOWED_FACET_FIELDS = %w(organisations section format)
-
-  def initialize(start, count, query, order, filters, fields, facet_fields)
-    @start = start
-    @count = count
-    @query = query
-    @order = order
-    @filters = filters
-    @fields = fields
-    @facet_fields = facet_fields
+  def initialize(params)
+    @params = params
   end
 
   def payload
     Hash[{
-      from: @start,
-      size: @count,
+      from: @params[:start],
+      size: @params[:count],
       query: query_hash,
       filter: filters_hash,
-      fields: fields_list,
+      fields: @params[:return_fields],
       sort: sort_list,
       facets: facets_hash,
-    }.select{ |key, value|
-      ![nil, [], {}].include?(value)
+    }.reject{ |key, value|
+      [nil, [], {}].include?(value)
     }]
   end
 
   def query_normalized()
-    if @query.nil?
+    if @params[:query].nil?
       return nil
     end
+    # Put the query into NFKC-normal form to ensure that accent handling works
+    # correctly in elasticsearch.
     normalizer = UNF::Normalizer.instance
-    query = normalizer.normalize(@query, :nfkc).strip
+    query = normalizer.normalize(@params[:query], :nfkc).strip
     if query.length == 0
       return nil
     end
@@ -118,12 +83,7 @@ class UnifiedSearchBuilder
   end
 
   def filters_hash(excluding=[])
-    disallowed_fields = @filters.keys - ALLOWED_FILTER_FIELDS
-    unless disallowed_fields.empty?
-      raise ArgumentError, "Filtering by \"#{disallowed_fields.join(', ')}\" is not allowed"
-    end
-
-    filter_groups = @filters.reject { |field, filter_values|
+    filter_groups = @params[:filters].reject { |field, filter_values|
       excluding.include? field
     }.map { |field, filter_values|
       terms_filter(field, filter_values)
@@ -142,55 +102,29 @@ class UnifiedSearchBuilder
 
   # Get a list of fields being sorted by
   def sort_fields
-    if @order.nil?
+    order = @params[:order]
+    if order.nil?
       return []
     end
-    if @order.start_with?('-')
-      return [@order[1..-1]]
-    else
-      return [@order]
-    end
-  end
- 
-  # Get a list describing the sort order (or nil)
-  def sort_list
-    if @order.nil?
-      return nil
-    end
-    if @order.start_with?('-')
-      field = @order[1..-1]
-      dir = "desc"
-    else
-      field = @order
-      dir = "asc"
-    end
-    unless ALLOWED_SORT_FIELDS.include?(field)
-      raise ArgumentError, "Sorting by \"#{field}\" is not allowed"
-    end
-    [{ field => { order: dir } }]
+    [order[0]]
   end
 
-  # Get a list of the fields to request in results from elasticsearch
-  def fields_list
-    if @fields.nil?
-      return ALLOWED_RETURN_FIELDS
+  # Get a list describing the sort order (or nil)
+  def sort_list
+    order = @params[:order]
+    if order.nil?
+      return nil
     end
-    disallowed_fields = @fields - ALLOWED_RETURN_FIELDS
-    unless disallowed_fields.empty?
-      raise ArgumentError, "Requested fields not allowed: #{disallowed_fields}"
-    end
-    @fields
+    [{ order[0] => { order: order[1] } }]
   end
 
   def facets_hash
-    if @facet_fields.nil?
+    facets = @params[:facets]
+    if facets.nil?
       return nil
     end
     result = {}
-    @facet_fields.each do |field_name, count|
-      unless ALLOWED_FACET_FIELDS.include?(field_name)
-        raise ArgumentError, "Facets not allowed on field #{field_name}"
-      end
+    facets.each do |field_name, count|
       facet_hash = {
         terms: {
           field: field_name,
