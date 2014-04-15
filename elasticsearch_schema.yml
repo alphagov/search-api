@@ -171,6 +171,8 @@ synonyms: &synonyms [
   "fco, foreign commonwealth office",
   "fcoc, future character of conflict",
   "foi, freedom of information",
+  "gae => government authorised exchange",
+  "gsc => government security classifications",
   "hmcs, hmcts, hm courts tribunals service",
   "idi, immigration directorate instructions",
   "iib => industrial injuries disablement benefit",
@@ -182,7 +184,9 @@ synonyms: &synonyms [
   "nea, new enterprise allowance",
   "ni => national insurance",
   "nin, nino => national insurance number",
+  'nppg => national planning practice guidance",
   "ntl, no time limit",
+  "ogn, operational guidance note",
   "ospp, ordinary statutory paternity pay",
   "pcdl, professional and career development loan",
   "pilon, payment in lieu of notice, pay in lieu of notice",
@@ -249,6 +253,7 @@ synonyms: &synonyms [
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
   "visa4uk => visa4uk, uk visa",
+  "waste carriers licence, waste carriers license => register as a waste carrier, licence",
   "what's in your backyard, what's in my backyard, whats in your backyard, whats in my backyard, what's in your back yard, what's in my back yard, whats in your back yard, whats in my back yard, wiyby => local environmental",
 
   # Adding terms to raise the best results
@@ -289,7 +294,9 @@ synonyms: &synonyms [
   "visa application => visa application, apply uk visa",
   "work trial => work trial, work experience, recruiters",
   
-  # Removing terms to raise the best results
+  # Removing terms to return relevant content
+  "flood areas => flood",
+  "landfill sites => landfill",
   "stop child benefit payments => stop child benefit",
 
   # Forms and leaflets
@@ -303,6 +310,7 @@ synonyms: &synonyms [
   "d777, d786b => d777b, digital tachograph driver card",
   "d796 => d888, driver entitlement",
   "d798 => d798, renewal reminder", # 'D798' appears in content but returns no results
+  "e15 => statutory maternity pay guidance",
   "eesa => employment and support allowance",
   "esa50 => esa50, esa 50",
   "et1 => et1, employment tribunal",
@@ -344,6 +352,9 @@ synonyms: &synonyms [
   "v890 => sorn",
   "vaf4 => vaf4a",
   "vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration",
+  
+  # Job searches
+  "b26 3qz => jobs",  # Birmingham Airport jobs
 
   # Abbreviations
   "cert => certificate",
@@ -357,6 +368,7 @@ synonyms: &synonyms [
 
   # Correcting mistakes
   # "advise => advise, advice",
+  "cy1 => cyi",
   "dlva => dvla",
   "eh1c => ehic",
   "environmental agency => environment agency",
@@ -458,6 +470,7 @@ synonyms: &synonyms [
   "drivi => driving",
   "drivin => driving",
   "emmissions => emissions",
+  "emplyment => employment",
   "enviroment => environment",
   "fianance => finance",
   "finace => finance",
