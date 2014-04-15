@@ -128,6 +128,7 @@ synonyms: &synonyms [
   "statepension => state pension",
   "statepensiononline => state pension",
   "stayinsured => uninsured vehicles",
+  "stopchbpayments => stop child benefit",
   "studentfinance => student finance",
   "surestart => sure start",
   "tier1 => tier 1",
@@ -219,6 +220,7 @@ synonyms: &synonyms [
   "benefit checker, benefits checker => benefits adviser",
   "bin collection => bin collection, rubbish collection",
   "bno => overseas british passport",
+  "cancel child benefit => stop child benefit",
   "curriculum vitae => cv, curriculum vitae",
   "easter => easter, paid early",  # Seasonal need - also for Christmas and New Year payments
   "fiance, fiancee, fiancé, fiancée => partner, family, visa",
@@ -252,6 +254,7 @@ synonyms: &synonyms [
   "business grant, business grants => business grants, business finance",
   "business loan, business loans => business loans, business finance",
   "business support => business support, business finance",
+  "child benefit charge => child benefit tax charge",
   "copyright => copyright, intellectual property",
   "driving test => driving test, practical driving test, driving or riding test",
   "employment tribunal => employment tribunal, take",
@@ -281,6 +284,9 @@ synonyms: &synonyms [
   "vehicle licence => vehicle licence, tax disc",
   "visa application => visa application, apply uk visa",
   "work trial => work trial, work experience, recruiters",
+  
+  # Removing terms to raise the best results
+  "stop child benefit payments => stop child benefit",
 
   # Forms and leaflets
   "adif => birth or adoption certificate form, student finance forms",
