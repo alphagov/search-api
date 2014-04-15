@@ -186,6 +186,7 @@ synonyms: &synonyms [
   "ospp, ordinary statutory paternity pay",
   "pcdl, professional and career development loan",
   "pilon, payment in lieu of notice, pay in lieu of notice",
+  "ppg => pollution prevention guidance",
   "psw => post study work",
   "rlmt, resident labour market test",
   "rnps, register of number plate suppliers",
@@ -216,6 +217,8 @@ synonyms: &synonyms [
 
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
+  "backyard => backyard, local environmental data",
+  "back yard => back yard, backyard, local environmental data",
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
   "benefit checker, benefits checker => benefits adviser",
   "bin collection => bin collection, rubbish collection",
@@ -246,7 +249,7 @@ synonyms: &synonyms [
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
   "visa4uk => visa4uk, uk visa",
-  "what's in your backyard, what's in my backyard, whats in your backyard, whats in my backyard, wiyby => local environmental",
+  "what's in your backyard, what's in my backyard, whats in your backyard, whats in my backyard, what's in your back yard, what's in my back yard, whats in your back yard, whats in my back yard, wiyby => local environmental",
 
   # Adding terms to raise the best results
   "book driving test => book driving test, book your practical driving test",
@@ -275,6 +278,7 @@ synonyms: &synonyms [
   "maintenance grant => maintenance grant, student finance",
   # "new enterprise allowance => new enterprise allowance, start work, business idea",
   "passport, passports => passport, replace your adult passport, child passport, first passport",
+  "pollution prevention, pollution prevention guidelines => pollution prevention guidance",
   "redundancy => redundancy, redundant, redundancy pay",
   "self assessment => self assessment, self assessment tax return, register for self assessment",
   "student finance => student finance, student finance calculator, student loans, student grants, apply or support, log in",
@@ -374,6 +378,7 @@ synonyms: &synonyms [
   "job centre => jobcentre",
   "job match => job match, jobmatch",
   "job seekers => jobseeker's",
+  "knot weed => knotweed",
   "pot hole => pothole",
   "re claim => reclaim",
   "tax payer => tax payer, taxpayer",
@@ -654,6 +659,7 @@ stems: &stems [
   "naturalization => naturalis",  # not natural, nature
   "paye => paye",  # not pay
   "permitted => permitted",
+  "permitting => permitting",  # not permit
   "practical => practical",
   "practice => practice",
   "probate => probate",  # not probation
