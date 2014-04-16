@@ -207,7 +207,7 @@ synonyms: &synonyms [
   "twov => transit without visa",
   "uj, ujm => universal jobmatch",
   "ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration",
-  "ukti, uk trade and investment",
+  "ukti, uk trade and investment, uk trade investment",
   "utr, unique taxpayer reference",
   
   # Acronyms with spaces or punctuation
@@ -288,7 +288,6 @@ synonyms: &synonyms [
   "self assessment => self assessment, self assessment tax return, register for self assessment",
   "student finance => student finance, student finance calculator, student loans, student grants, apply or support, log in",
   "trade => trade, trade tariff, ukti",
-  # "ukti => ukti, uk trade and investment, help for exporters, starting to export, uk welcomes",
   "utr, unique taxpayer reference => utr, unique taxpayer reference, register for self assessment",
   "vehicle licence => vehicle licence, tax disc",
   "visa application => visa application, apply uk visa",
