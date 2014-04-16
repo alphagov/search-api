@@ -128,6 +128,7 @@ synonyms: &synonyms [
   "statepension => state pension",
   "statepensiononline => state pension",
   "stayinsured => uninsured vehicles",
+  "stopchbpayments => stop child benefit",
   "studentfinance => student finance",
   "surestart => sure start",
   "tier1 => tier 1",
@@ -170,6 +171,8 @@ synonyms: &synonyms [
   "fco, foreign commonwealth office",
   "fcoc, future character of conflict",
   "foi, freedom of information",
+  "gae => government authorised exchange",
+  "gsc => government security classifications",
   "hmcs, hmcts, hm courts tribunals service",
   "idi, immigration directorate instructions",
   "iib => industrial injuries disablement benefit",
@@ -181,10 +184,13 @@ synonyms: &synonyms [
   "nea, new enterprise allowance",
   "ni => national insurance",
   "nin, nino => national insurance number",
+  "nppg => national planning practice guidance",
   "ntl, no time limit",
+  "ogn, operational guidance note",
   "ospp, ordinary statutory paternity pay",
   "pcdl, professional and career development loan",
   "pilon, payment in lieu of notice, pay in lieu of notice",
+  "ppg => pollution prevention guidance",
   "psw => post study work",
   "rlmt, resident labour market test",
   "rnps, register of number plate suppliers",
@@ -215,10 +221,13 @@ synonyms: &synonyms [
 
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
+  "backyard => backyard, local environmental data",
+  "back yard => back yard, backyard, local environmental data",
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
   "benefit checker, benefits checker => benefits adviser",
   "bin collection => bin collection, rubbish collection",
   "bno => overseas british passport",
+  "cancel child benefit => stop child benefit",
   "curriculum vitae => cv, curriculum vitae",
   "easter => easter, paid early",  # Seasonal need - also for Christmas and New Year payments
   "fiance, fiancee, fiancé, fiancée => partner, family, visa",
@@ -244,7 +253,8 @@ synonyms: &synonyms [
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
   "visa4uk => visa4uk, uk visa",
-  "what's in your backyard, what's in my backyard, whats in your backyard, whats in my backyard, wiyby => local environmental",
+  "waste carriers licence, waste carriers license => register as a waste carrier, licence",
+  "what's in your backyard, what's in my backyard, whats in your backyard, whats in my backyard, what's in your back yard, what's in my back yard, whats in your back yard, whats in my back yard, wiyby => local environmental",
 
   # Adding terms to raise the best results
   "book driving test => book driving test, book your practical driving test",
@@ -252,6 +262,7 @@ synonyms: &synonyms [
   "business grant, business grants => business grants, business finance",
   "business loan, business loans => business loans, business finance",
   "business support => business support, business finance",
+  "child benefit charge => child benefit tax charge",
   "copyright => copyright, intellectual property",
   "driving test => driving test, practical driving test, driving or riding test",
   "employment tribunal => employment tribunal, take",
@@ -272,6 +283,7 @@ synonyms: &synonyms [
   "maintenance grant => maintenance grant, student finance",
   # "new enterprise allowance => new enterprise allowance, start work, business idea",
   "passport, passports => passport, replace your adult passport, child passport, first passport",
+  "pollution prevention, pollution prevention guidelines => pollution prevention guidance",
   "redundancy => redundancy, redundant, redundancy pay",
   "self assessment => self assessment, self assessment tax return, register for self assessment",
   "student finance => student finance, student finance calculator, student loans, student grants, apply or support, log in",
@@ -281,6 +293,11 @@ synonyms: &synonyms [
   "vehicle licence => vehicle licence, tax disc",
   "visa application => visa application, apply uk visa",
   "work trial => work trial, work experience, recruiters",
+  
+  # Removing terms to return relevant content
+  "flood areas => flood",
+  "landfill sites => landfill",
+  "stop child benefit payments => stop child benefit",
 
   # Forms and leaflets
   "adif => birth or adoption certificate form, student finance forms",
@@ -293,6 +310,7 @@ synonyms: &synonyms [
   "d777, d786b => d777b, digital tachograph driver card",
   "d796 => d888, driver entitlement",
   "d798 => d798, renewal reminder", # 'D798' appears in content but returns no results
+  "e15 => statutory maternity pay guidance",
   "eesa => employment and support allowance",
   "esa50 => esa50, esa 50",
   "et1 => et1, employment tribunal",
@@ -334,12 +352,16 @@ synonyms: &synonyms [
   "v890 => sorn",
   "vaf4 => vaf4a",
   "vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration",
+  
+  # Job searches
+  "b26 3qz => jobs",  # Birmingham Airport jobs
 
   # Abbreviations
   "cert => certificate",
   "digi => digital",
   "gov => government",
-  "hep b => hepatitis b",
+  "hep => hepatitis",
+  "lic => licence",
   "reg => registration",
   "ref number => ref number, reference number",
   "tacho, tacho graph, taco, taco graph => tachograph",
@@ -347,6 +369,7 @@ synonyms: &synonyms [
 
   # Correcting mistakes
   # "advise => advise, advice",
+  "cy1 => cyi",
   "dlva => dvla",
   "eh1c => ehic",
   "environmental agency => environment agency",
@@ -368,6 +391,7 @@ synonyms: &synonyms [
   "job centre => jobcentre",
   "job match => job match, jobmatch",
   "job seekers => jobseeker's",
+  "knot weed => knotweed",
   "pot hole => pothole",
   "re claim => reclaim",
   "tax payer => tax payer, taxpayer",
@@ -447,6 +471,7 @@ synonyms: &synonyms [
   "drivi => driving",
   "drivin => driving",
   "emmissions => emissions",
+  "emplyment => employment",
   "enviroment => environment",
   "fianance => finance",
   "finace => finance",
@@ -648,6 +673,7 @@ stems: &stems [
   "naturalization => naturalis",  # not natural, nature
   "paye => paye",  # not pay
   "permitted => permitted",
+  "permitting => permitting",  # not permit
   "practical => practical",
   "practice => practice",
   "probate => probate",  # not probation
