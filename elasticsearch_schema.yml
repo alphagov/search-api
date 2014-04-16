@@ -635,6 +635,10 @@ synonyms: &synonyms [
   # "waitress => waitress, jobs",
   # "warehouse => warehouse, jobs",
   # "warehousing => warehousing, jobs",
+  
+  # Override other synonyms
+  "horse passport, horse passports => horse passport",
+  "pet passport, pet passports => pet passport",
 
   # Stop word workarounds
   "appendix a => immigration rules appendix a attributes",
