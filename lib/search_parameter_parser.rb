@@ -50,6 +50,9 @@ private
   def process(params)
     @params = params
     @errors = []
+
+    # @used_params is populated as a side effect of the methods used to build
+    # up the hash of parsed params.
     @used_params = []
 
     @parsed_params = {
