@@ -111,14 +111,6 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal(expected_params(query: "search-term"), p.parsed_params)
   end
 
-  should "understand the q parameter" do
-    p = SearchParameterParser.new({"q" => "search-term"})
-
-    assert_equal("", p.error)
-    assert p.valid?
-    assert_equal(expected_params(query: "search-term"), p.parsed_params)
-  end
-
   should "understand filter paramers" do
     p = SearchParameterParser.new({"filter_organisations" => "hm-magic"})
 
