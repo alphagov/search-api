@@ -97,7 +97,7 @@ private
     disallowed_fields = fields - ALLOWED_RETURN_FIELDS
     fields = fields - disallowed_fields
 
-    unless disallowed_fields.empty?
+    if disallowed_fields.any?
       @errors << "Some requested fields are not valid return fields: #{disallowed_fields}"
     end
     fields
