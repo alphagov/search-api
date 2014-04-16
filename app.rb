@@ -22,6 +22,7 @@ require "elasticsearch/index"
 require "elasticsearch/search_server"
 require "redis"
 require "matcher_set"
+require "search_parameter_parser"
 
 require_relative "config"
 require_relative "helpers"
@@ -223,6 +224,10 @@ class Rummager < Sinatra::Application
   #   information about these.  The value of this parameter is the limit on the
   #   number of distinct field values which will be returned.
   #
+  #   fields[]: fields to be returned in the result documents.  By default, all
+  #   allowed fields will be returned, but this can be used to restrict the
+  #   size of the response documents when only some fields are wanted.
+  #
   #   When combining facet calculation and filters, the API tries to do the
   #   "right" thing for most user interfaces.  This means that when calculating
   #   facet values for field A, if there are filters for field A and B, the
@@ -270,35 +275,33 @@ class Rummager < Sinatra::Application
   #
   get "/unified_search.?:request_format?" do
     json_only
-    begin
-      registries = {
-        organisation_registry: organisation_registry,
-        topic_registry: topic_registry,
-        document_series_registry: document_series_registry,
-        document_collection_registry: document_collection_registry,
-        world_location_registry: world_location_registry
-      }
-      registry_by_field = {
-        organisations: organisation_registry,
-        topics: topic_registry,
-        document_series: document_series_registry,
-        document_collections: document_collection_registry,
-        world_locations: world_location_registry
-      }
 
-      start = params["start"]
-      count = params["count"]
-      query = params["q"]
-      order = params["order"]
+    registries = {
+      organisation_registry: organisation_registry,
+      topic_registry: topic_registry,
+      document_series_registry: document_series_registry,
+      document_collection_registry: document_collection_registry,
+      world_location_registry: world_location_registry
+    }
+    registry_by_field = {
+      organisations: organisation_registry,
+      topics: topic_registry,
+      document_series: document_series_registry,
+      document_collections: document_collection_registry,
+      world_locations: world_location_registry
+    }
 
-      searcher = UnifiedSearcher.new(unified_index, registries,
-                                     registry_by_field)
-      MultiJson.encode searcher.search(start, count, query, order, filters,
-                                       facets)
-    rescue ArgumentError => e
+    parser = SearchParameterParser.new(request.params)
+
+    unless parser.valid?
       status 400
-      MultiJson.encode({ error: e.message })
+      return MultiJson.encode({
+        error: parser.error,
+      })
     end
+
+    searcher = UnifiedSearcher.new(unified_index, registries, registry_by_field)
+    MultiJson.encode searcher.search(parser.parsed_params)
   end
 
   # To search a named index:
@@ -475,29 +478,4 @@ class Rummager < Sinatra::Application
     MultiJson.encode(status)
   end
 
-private
-  def filters
-    filters = {}
-    params.each do |key, value|
-      if m = key.match(/\Afilter_(.*)/)
-        filters[m[1]] = [*value]
-      end
-    end
-    filters
-  end
-
-  def facets
-    facets = {}
-    request.params.each do |key, count|
-      if m = key.match(/\Afacet_(.*)/)
-        begin
-          count = Integer(count, 10)
-        rescue ArgumentError
-          raise ArgumentError, "Invalid value \"#{count}\" for facet parameter \"#{key}\" (expected integer)"
-        end
-        facets[m[1]] = count
-      end
-    end
-    facets
-  end
 end

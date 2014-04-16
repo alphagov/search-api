@@ -62,7 +62,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         from: 0,
         size: 20,
         query: CHEESE_QUERY,
-        fields: UnifiedSearchBuilder::ALLOWED_RETURN_FIELDS,
+        fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
@@ -70,7 +70,14 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         "mainstream,detailed,government"
       )
 
-      @results = @searcher.search(0, 20, "cheese", nil, {}, nil)
+      @results = @searcher.search({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: nil,
+        filters: {},
+        return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+      })
     end
 
     should "include results from all indexes" do
@@ -96,7 +103,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         from: 0,
         size: 20,
         query: TIMESTAMP_EXISTS_WITH_CHEESE_QUERY,
-        fields: UnifiedSearchBuilder::ALLOWED_RETURN_FIELDS,
+        fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         sort: [{"public_timestamp" => {order: "asc"}}],
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
@@ -105,7 +112,14 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         "mainstream,detailed,government"
       )
 
-      @results = @searcher.search(0, 20, "cheese", "public_timestamp", {}, nil)
+      @results = @searcher.search({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: ["public_timestamp", "asc"],
+        filters: {},
+        return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+      })
     end
 
     should "include results from all indexes" do
@@ -132,7 +146,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         size: 20,
         query: CHEESE_QUERY,
         filter: {"terms" => {"organisations" => ["ministry-of-magic"]}},
-        fields: UnifiedSearchBuilder::ALLOWED_RETURN_FIELDS,
+        fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
@@ -140,8 +154,14 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         "mainstream,detailed,government"
       )
 
-      @results = @searcher.search(0, 20, "cheese", nil,
-        {"organisations" => ["ministry-of-magic"]}, nil)
+      @results = @searcher.search({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        filters: {"organisations" => ["ministry-of-magic"]},
+        return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+        facets: nil,
+      })
     end
 
     should "include results from all indexes" do
@@ -174,7 +194,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
               order: "count",
               size: 100000,
             }}},
-        fields: UnifiedSearchBuilder::ALLOWED_RETURN_FIELDS,
+        fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3},
         "facets" => {"organisations" => {
@@ -189,8 +209,14 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         "mainstream,detailed,government"
       )
 
-      @results = @searcher.search(0, 20, "cheese", nil,
-        {}, "organisations" => 1)
+      @results = @searcher.search({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        filters: {},
+        return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+        facets: {"organisations" => 1},
+      })
     end
 
     should "include results from all indexes" do
