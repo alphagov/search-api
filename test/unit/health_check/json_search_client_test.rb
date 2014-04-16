@@ -6,76 +6,81 @@ Logging.logger.root.appenders = nil
 module HealthCheck
   class JsonSearchClientTest < ShouldaUnitTestCase
 
-    def api_response_body
+    def combined_search_response_body
       {
-        "_response_info" => {
-          "status" => "ok"
-        },
+        "streams" => {
+          "top-results" => {
+            "results" => [
+              {
+                "link" => "/a"
+              }
+            ]
+          },
+          "services-information" => {
+            "results" => [
+              {
+                "link" => "/b"
+              },
+              {
+                "link" => "/c"
+              }
+            ]
+          },
+          "departments-policy" => {
+            "results" => [
+              {
+                "link" => "/d"
+              }
+            ]
+          }
+        }
+      }
+    end
+
+    def unified_search_response_body
+      {
         "results" => [
           {
-            "web_url" => "https://www.gov.uk/a"
+            "link" => "/a"
           },
           {
-            "web_url" => "https://www.gov.uk/b"
-          },
+            "link" => "/b"
+          }
         ]
       }
     end
 
-    def rummager_response_body
-      [
-        {
-          "link" => "/a"
-        },
-        {
-          "link" => "/b"
-        }
-      ]
-    end
-
-    def stub_api(search_term, index="mainstream")
-      stub_request(:get, "https://www.gov.uk/api/search.json?q=#{CGI.escape(search_term)}&index=#{index}").
+    def stub_combined_search(search_term, index="mainstream")
+      stub_request(:get, "http://www.gov.uk/api/search/govuk/search.json?q=#{CGI.escape(search_term)}").
               with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
-              to_return(status: 200, body: api_response_body.to_json)
+              to_return(status: 200, body: combined_search_response_body.to_json)
     end
 
-    def stub_rummager(search_term, index="mainstream")
-      stub_request(:get, "http://search.dev.gov.uk/search.json?q=#{CGI.escape(search_term)}&index=#{index}").
+    def stub_unified_search(search_term)
+      stub_request(:get, "http://www.gov.uk/api/search.json?q=#{CGI.escape(search_term)}").
               with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
-              to_return(status: 200, body: rummager_response_body.to_json)
+              to_return(status: 200, body: unified_search_response_body.to_json)
     end
 
-    should "fetch results" do
-      stub_api("carmen")
-      expected = ["https://www.gov.uk/a", "https://www.gov.uk/b"]
-      assert_equal expected, JsonSearchClient.new.search("carmen")
+    should "support combined search response format" do
+      stub_combined_search("cheese")
+      expected = ["/a", "/b", "/c"]
+      base_url = URI.parse("http://www.gov.uk/api/search/govuk/search.json")
+      assert_equal expected, JsonSearchClient.new(:base_url => base_url, index: "mainstream").search("cheese")
     end
 
-    should "support Rummager response format" do
-      stub_rummager("cheese")
+    should "support combined search response format with an alternative index" do
+      stub_combined_search("cheese")
+      expected = ["/a", "/d"]
+      base_url = URI.parse("http://www.gov.uk/api/search/govuk/search.json")
+      assert_equal expected, JsonSearchClient.new(:base_url => base_url, index: "government").search("cheese")
+    end
+
+    should "support the unified search format" do
+      stub_unified_search("cheese")
       expected = ["/a", "/b"]
-      base_url = URI.parse("http://search.dev.gov.uk/search.json")
+      base_url = URI.parse("http://www.gov.uk/api/search.json")
       assert_equal expected, JsonSearchClient.new(:base_url => base_url).search("cheese")
-    end
-
-    should "allow overriding the index name" do
-      stub_api("chalk", "government")
-      expected = ["https://www.gov.uk/a", "https://www.gov.uk/b"]
-      assert_equal expected, JsonSearchClient.new(index: "government").search("chalk")
-    end
-
-    context "4xx response" do
-      should "raise an error" do
-        index = "doesnotexist"
-        search_term = "a"
-        stub_request(:get, "https://www.gov.uk/api/search.json?q=#{CGI.escape(search_term)}&index=#{index}").
-              with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
-              to_return(status: 400, body: "{}")
-
-        assert_raises RuntimeError do
-          JsonSearchClient.new(index: index).search(search_term)
-        end
-      end
     end
   end
 end
