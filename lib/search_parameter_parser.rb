@@ -85,7 +85,7 @@ private
       dir = "asc"
     end
     unless ALLOWED_SORT_FIELDS.include?(field)
-      @errors << "\"#{field}\" is not a valid sort field"
+      @errors << %{"#{field}" is not a valid sort field}
       return nil
     end
     return [field, dir]
@@ -114,7 +114,7 @@ private
         if ALLOWED_FILTER_FIELDS.include? field
           filters[field] = [*value]
         else
-          @errors << "\"#{field}\" is not a valid filter field"
+          @errors << %{"#{field}" is not a valid filter field}
         end
         @used_params << key
       end
@@ -128,12 +128,12 @@ private
       if (m = key.match(/\Afacet_(.*)/))
         field = m[1]
         if ALLOWED_FACET_FIELDS.include? field
-          count = parse_positive_integer(value, "facet \"#{field}\"")
+          count = parse_positive_integer(value, %{facet "#{field}"})
           unless count.nil?
             facets[field] = count
           end
         else
-          @errors << "\"#{field}\" is not a valid facet field"
+          @errors << %{"#{field}" is not a valid facet field}
         end
         @used_params << key
       end
@@ -145,7 +145,7 @@ private
     value = @params[param_name]
     @used_params << param_name
     unless value.nil?
-      value = parse_positive_integer(value, "parameter \"#{param_name}\"")
+      value = parse_positive_integer(value, %{parameter "#{param_name}"})
     end
     if value.nil?
       return default
@@ -157,11 +157,11 @@ private
     begin
       result = Integer(value, 10)
     rescue ArgumentError
-      @errors << "Invalid value \"#{value}\" for #{description} (expected positive integer)"
+      @errors << %{Invalid value "#{value}" for #{description} (expected positive integer)}
       return nil
     end
     if result < 0
-      @errors << "Invalid negative value \"#{value}\" for #{description} (expected positive integer)"
+      @errors << %{Invalid negative value "#{value}" for #{description} (expected positive integer)}
       return nil
     end
     result

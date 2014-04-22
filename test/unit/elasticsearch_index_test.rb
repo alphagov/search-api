@@ -286,12 +286,12 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_raw_search
-    stub_request(:get, "http://example.com:9200/test-index/_search").with(
+    stub_get = stub_request(:get, "http://example.com:9200/test-index/_search").with(
       body: %r{"query":"keyword search"},
       headers: {"Content-Type" => "application/json"}
     ).to_return(:body => '{"hits":{"hits":[]}}')
     @wrapper.raw_search({query: "keyword search"})
-    assert_requested(:get, "http://example.com:9200/test-index/_search")
+    assert_requested(stub_get)
   end
 
   def test_commit
