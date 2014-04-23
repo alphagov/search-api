@@ -6,6 +6,7 @@ class UnifiedSearchBuilder
   include Elasticsearch::Escaping
 
   DEFAULT_QUERY_ANALYZER = "query_default"
+  GOVERNMENT_BOOST_FACTOR = 0.4
 
   def initialize(params)
     @params = params
@@ -57,6 +58,22 @@ class UnifiedSearchBuilder
   end
 
   def query_hash
+    query = filtered_query
+    {
+      indices: {
+        indices: [:government],
+        query: {
+          custom_boost_factor: {
+            query: query,
+            boost_factor: GOVERNMENT_BOOST_FACTOR
+          }
+        },
+        no_match_query: query
+      }
+    }
+  end
+
+  def filtered_query
     filter = sort_filters
     if filter.nil?
       base_query

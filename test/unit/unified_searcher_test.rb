@@ -38,7 +38,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }]
   end
 
-  CHEESE_QUERY = {
+  BASE_CHEESE_QUERY = {
     custom_filters_score: {
       query: {bool: {
         should: [
@@ -90,10 +90,36 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }
   }
 
-  TIMESTAMP_EXISTS_WITH_CHEESE_QUERY = {
+  BASE_TIMESTAMP_EXISTS_WITH_CHEESE_QUERY = {
     filtered: {
       filter: {"exists" => {"field" => "public_timestamp"}},
-      query: CHEESE_QUERY,
+      query: BASE_CHEESE_QUERY,
+    }
+  }
+
+  CHEESE_QUERY = {
+    indices: {
+      indices: [:government],
+      query: {
+        custom_boost_factor: {
+          query: BASE_CHEESE_QUERY,
+          boost_factor: 0.4
+        }
+      },
+      no_match_query: BASE_CHEESE_QUERY
+    }
+  }
+
+  TIMESTAMP_EXISTS_WITH_CHEESE_QUERY = {
+    indices: {
+      indices: [:government],
+      query: {
+        custom_boost_factor: {
+          query: BASE_TIMESTAMP_EXISTS_WITH_CHEESE_QUERY,
+          boost_factor: 0.4
+        }
+      },
+      no_match_query: BASE_TIMESTAMP_EXISTS_WITH_CHEESE_QUERY
     }
   }
 
