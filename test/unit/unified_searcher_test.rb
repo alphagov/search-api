@@ -39,10 +39,54 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   CHEESE_QUERY = {
-    match: {
-      _all: {
-        query: "cheese"
-      }
+    custom_filters_score: {
+      query: {bool: {
+        should: [
+          {bool: {
+            must: [
+              {match: {_all: {
+                query: 'cheese',
+                analyzer: 'query_default',
+                minimum_should_match: '2<2 3<3 7<50%'
+              }}},
+            ],
+            should: [
+              {match_phrase: {'title' => {query: 'cheese', analyzer: 'query_default'}}},
+              {match_phrase: {'acronym' => {query: 'cheese', analyzer: 'query_default'}}},
+              {match_phrase: {'description' => {query: 'cheese', analyzer: 'query_default'}}},
+              {match_phrase: {'indexable_content' => {query: 'cheese', analyzer: 'query_default'}}},
+              {multi_match: {
+                query: 'cheese',
+                operator: 'and',
+                fields: ['title', 'acronym', 'description', 'indexable_content'],
+                analyzer: 'query_default',
+              }},
+              {multi_match: {
+                query: 'cheese',
+                operator: 'or',
+                fields: ['title', 'acronym', 'description', 'indexable_content'],
+                analyzer: 'shingled_query_analyzer',
+              }},
+            ]}},
+          {query_string: {
+            default_field: 'promoted_for',
+            query: 'cheese',
+            boost: 100,
+          }}
+        ]
+      }},
+      filters: [
+        {filter: {term: {format: 'smart-answer'}}, boost: 1.5},
+        {filter: {term: {format: 'transaction'}}, boost: 1.5},
+        {filter: {term: {format: 'topical_event'}}, boost: 1.5},
+        {filter: {term: {format: 'minister'}}, boost: 1.7},
+        {filter: {term: {format: 'organisation'}}, boost: 2.5},
+        {filter: {term: {format: 'topic'}}, boost: 1.5},
+        {filter: {term: {format: 'document_series'}}, boost: 1.3},
+        {filter: {term: {format: 'document_collection'}}, boost: 1.3},
+        {filter: {term: {format: 'operational_field'}}, boost: 1.5},
+        {filter: {term: {search_format_types: 'announcement'}}, script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"}
+      ]
     }
   }
 
