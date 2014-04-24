@@ -219,7 +219,11 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     should "have filter in query hash" do
       assert_equal(
         {"exists" => {"field" => "public_timestamp"}},
-        @builder.query_hash[:filtered][:filter]
+        @builder.query_hash[:indices][:query][:custom_boost_factor][:query][:filtered][:filter]
+      )
+      assert_equal(
+        {"exists" => {"field" => "public_timestamp"}},
+        @builder.query_hash[:indices][:no_match_query][:filtered][:filter]
       )
     end
   end
@@ -266,7 +270,11 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     should "have filter in query hash" do
       assert_equal(
         {"exists" => {"field" => "public_timestamp"}},
-        @builder.query_hash[:filtered][:filter]
+        @builder.query_hash[:indices][:query][:custom_boost_factor][:query][:filtered][:filter]
+      )
+      assert_equal(
+        {"exists" => {"field" => "public_timestamp"}},
+        @builder.query_hash[:indices][:no_match_query][:filtered][:filter]
       )
     end
   end
