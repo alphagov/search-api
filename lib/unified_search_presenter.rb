@@ -10,7 +10,7 @@ class UnifiedSearchPresenter
   #
   #     { organisation_registry: OrganisationRegistry.new(...) }
   def initialize(es_response, start, index_names, facet_fields = {}, registries = {},
-                 registry_by_field = {})
+                 registry_by_field = {}, suggestions = [])
     @start = start
     @results = es_response["hits"]["hits"].map do |result|
       doc = result.delete("fields")
@@ -23,6 +23,7 @@ class UnifiedSearchPresenter
     @facet_fields = facet_fields
     @registries = registries
     @registry_by_field = registry_by_field
+    @suggestions = suggestions
   end
 
   def present
@@ -31,6 +32,7 @@ class UnifiedSearchPresenter
       total: @total,
       start: @start,
       facets: presented_facets,
+      suggested_queries: @suggestions
     }
   end
 

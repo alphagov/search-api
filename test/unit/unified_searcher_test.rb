@@ -38,6 +38,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }]
   end
 
+  def stub_suggester
+    stub('Suggester', suggestions: ['cheese'])
+  end
+
   BASE_CHEESE_QUERY = {
     custom_filters_score: {
       query: {bool: {
@@ -127,7 +131,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {}, {})
+      @searcher = UnifiedSearcher.new(@combined_index, {}, {}, stub_suggester)
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -162,13 +166,17 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     should "include total result count" do
       assert_equal(3, @results[:total])
     end
+
+    should "include suggested queries" do
+      assert_equal ['cheese'], @results[:suggested_queries]
+    end
   end
 
   context "unfiltered, sorted search" do
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {}, {})
+      @searcher = UnifiedSearcher.new(@combined_index, {}, {}, stub_suggester)
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -210,7 +218,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {}, {})
+      @searcher = UnifiedSearcher.new(@combined_index, {}, {}, stub_suggester)
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -252,7 +260,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {}, {})
+      @searcher = UnifiedSearcher.new(@combined_index, {}, {}, stub_suggester)
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
