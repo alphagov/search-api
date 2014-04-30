@@ -29,7 +29,7 @@ class UnifiedSearcher
     ).present
   end
 
-  private
+private
 
   def suggested_queries(query)
     query.nil? ? [] : @suggester.suggestions(query)
