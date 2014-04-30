@@ -344,4 +344,22 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
   end
 
+  context "suggested queries" do
+    should "present suggestions in output" do
+      @suggestions = [
+        "self assessment",
+        "tax returns"
+      ]
+      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, {}, {}, {}, @suggestions).present
+
+      assert_equal ["self assessment", "tax returns"], @output[:suggested_queries]
+    end
+
+    should "default to an empty array when not present" do
+      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, {}, {}, {}).present
+
+      assert_equal [], @output[:suggested_queries]
+    end
+  end
+
 end

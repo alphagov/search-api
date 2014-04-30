@@ -25,6 +25,7 @@ class UnifiedSearcher
       params[:facets],
       registries,
       registry_by_field,
+      suggested_queries(params[:query]),
     ).present
   end
 

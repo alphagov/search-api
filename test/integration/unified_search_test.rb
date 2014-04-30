@@ -101,4 +101,14 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal last_response.status, 400
     assert_equal parsed_response, {"error" => "Unexpected parameters: foo, bar"}
   end
+
+  def test_returns_suggestions_given_query
+    get "/unified_search?q=afgananistan"
+    assert parsed_response["suggested_queries"].include? "Afghanistan"
+  end
+
+  def test_returns_no_suggestions_without_query
+    get "/unified_search"
+    assert_equal [], parsed_response["suggested_queries"]
+  end
 end
