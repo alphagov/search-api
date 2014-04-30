@@ -166,6 +166,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     should "include total result count" do
       assert_equal(3, @results[:total])
     end
+
+    should "include suggested queries" do
+      assert_equal ['cheese'], @results[:suggested_queries]
+    end
   end
 
   context "unfiltered, sorted search" do
