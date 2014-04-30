@@ -5,12 +5,13 @@ require "unified_search_presenter"
 
 class UnifiedSearcher
 
-  attr_reader :index, :registries, :registry_by_field
+  attr_reader :index, :registries, :registry_by_field, :suggester
 
-  def initialize(index, registries, registry_by_field)
+  def initialize(index, registries, registry_by_field, suggester)
     @index = index
     @registries = registries
     @registry_by_field = registry_by_field
+    @suggester = suggester
   end
 
   # Search and combine the indices and return a hash of ResultSet objects
@@ -25,5 +26,11 @@ class UnifiedSearcher
       registries,
       registry_by_field,
     ).present
+  end
+
+  private
+
+  def suggested_queries(query)
+    query.nil? ? [] : @suggester.suggestions(query)
   end
 end
