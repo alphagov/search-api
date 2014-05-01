@@ -12,7 +12,11 @@ class BulkLoader
     new_index = index_group.create_index
     @logger.info "Created index #{new_index.real_name}"
     old_index = index_group.current_real
-    @logger.info "Old index #{old_index.real_name}"
+    if old_index.nil?
+      @logger.info "No old index"
+    else
+      @logger.info "Old index #{old_index.real_name}"
+    end
 
     if old_index
       old_index.with_lock do
