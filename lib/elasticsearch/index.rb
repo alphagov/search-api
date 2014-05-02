@@ -380,8 +380,12 @@ module Elasticsearch
     # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
     def bulk_payload(document_hashes_or_payload)
       if document_hashes_or_payload.is_a?(Array)
+        links = document_hashes_or_payload.map {
+          |doc_hash| doc_hash["link"]
+        }.compact
+        popularities = lookup_popularities(links)
         index_items = document_hashes_or_payload.map do |doc_hash|
-          [index_action(doc_hash).to_json, doc_hash.to_json]
+          [index_action(doc_hash).to_json, index_doc(doc_hash, popularities).to_json]
         end
 
         # Make sure the payload ends with a newline character: elasticsearch
@@ -399,6 +403,76 @@ module Elasticsearch
           "_id" => (doc_hash["_id"] || doc_hash["link"])
         }
       }
+    end
+
+    def index_doc(doc_hash, popularities)
+      unless popularities.nil?
+        link = doc_hash["link"]
+        pop = popularities[link]
+        unless pop.nil?
+          doc_hash["popularity"] = pop
+        end
+      end
+      doc_hash
+    end
+
+    def lookup_popularities(links)
+      if traffic_index.nil?
+        return nil
+      end
+      results = traffic_index.raw_search({
+        query: {
+          terms: {
+            path_components: links
+          }
+        },
+        fields: ["rank_14"],
+        sort: [
+          { rank_14: { order: "asc" }}
+        ],
+        size: 10 * links.size,
+      })
+      ranks = Hash.new(traffic_index_size)
+      results["hits"]["hits"].each do |hit|
+        link = hit["_id"]
+        rank = hit["fields"]["rank_14"]
+        if rank.nil?
+          next
+        end
+        ranks[link] = [rank, ranks[link]].min
+      end
+      Hash[links.map { |link|
+        [link, 1.0 / ranks[link]]
+      }]
+    end
+
+    def traffic_index
+      if @_opened_traffic_index
+        return @_traffic_index
+      end
+      @_traffic_index = open_traffic_index
+      @_opened_traffic_index = true
+      return @_traffic_index
+    end
+
+    def traffic_index_size
+      results = traffic_index.raw_search({
+        query: { match_all: {}},
+        size: 0
+      })
+      results["hits"]["total"]
+    end
+
+    def open_traffic_index
+      if @index_name.start_with?("page-traffic")
+        return nil
+      end
+      result = settings.search_config.search_server.index("page-traffic")
+      if result.exists?
+        return result
+      else
+        return nil
+      end
     end
 
     def result_promoter
