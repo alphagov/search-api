@@ -7,6 +7,7 @@ class UnifiedSearchBuilder
 
   DEFAULT_QUERY_ANALYZER = "query_default"
   GOVERNMENT_BOOST_FACTOR = 0.4
+  POPULARITY_OFFSET = 0.001
 
   def initialize(params)
     @params = params
@@ -46,13 +47,18 @@ class UnifiedSearchBuilder
       return { match_all: {} }
     end
     {
-      custom_filters_score: {
+      custom_score: {
         query: {
-          bool: {
-            should: [core_query, promoted_items_query].compact
+          custom_filters_score: {
+            query: {
+              bool: {
+                should: [core_query, promoted_items_query].compact
+              }
+            },
+            filters: format_boosts + [time_boost]
           }
         },
-        filters: format_boosts + [time_boost]
+        script: "_score * (doc['popularity'].value + #{POPULARITY_OFFSET})"
       }
     }
   end
