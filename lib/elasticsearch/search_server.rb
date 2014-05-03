@@ -8,10 +8,11 @@ module Elasticsearch
   class SearchServer
     DEFAULT_MAPPING_KEY = "default"
 
-    def initialize(base_uri, schema, index_names)
+    def initialize(base_uri, schema, index_names, content_index_names)
       @base_uri = URI.parse(base_uri)
       @schema = schema
       @index_names = index_names
+      @content_index_names = content_index_names
     end
 
     def index_group(prefix)
@@ -29,8 +30,8 @@ module Elasticsearch
       end
     end
 
-    def all_indices
-      @index_names.map do |index_name|
+    def content_indices
+      @content_index_names.map do |index_name|
         index(index_name)
       end
     end

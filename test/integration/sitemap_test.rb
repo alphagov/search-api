@@ -116,20 +116,20 @@ class SitemapTest < IntegrationTest
 
   def test_should_generate_multiple_sitemaps
     SitemapGenerator.stubs(:sitemap_limit).returns(2)
-    generator = SitemapGenerator.new(search_server.all_indices)
+    generator = SitemapGenerator.new(search_server.content_indices)
     sitemap_xml = generator.sitemaps
     assert_equal 3, sitemap_xml.length
   end
 
   def test_should_not_include_recommended_links
-    generator = SitemapGenerator.new(search_server.all_indices)
+    generator = SitemapGenerator.new(search_server.content_indices)
     sitemap_xml = generator.sitemaps
     assert_equal 1, sitemap_xml.length
     refute_includes sitemap_xml[0], "/external-example-answer"
   end
 
   def test_should_not_include_inside_government_links
-    generator = SitemapGenerator.new(search_server.all_indices)
+    generator = SitemapGenerator.new(search_server.content_indices)
     sitemap_xml = generator.sitemaps
     assert_equal 1, sitemap_xml.length
     refute_includes sitemap_xml[0],  "/government/some-content"
