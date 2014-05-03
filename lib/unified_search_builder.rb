@@ -11,6 +11,7 @@ class UnifiedSearchBuilder
 
   def initialize(params)
     @params = params
+    @query = query_normalized
   end
 
   def payload
@@ -42,7 +43,6 @@ class UnifiedSearchBuilder
   end
 
   def base_query
-    @query = query_normalized
     if @query.nil?
       return { match_all: {} }
     end
@@ -143,6 +143,11 @@ class UnifiedSearchBuilder
   def sort_list
     order = @params[:order]
     if order.nil?
+      # Sort by popularity when there's no explicit ordering, and there's no
+      # query (so there's no relevance scores).
+      if @query.nil?
+        return [{ "popularity" => { order: "desc" } }]
+      end
       return nil
     end
     [{ order[0] => { order: order[1] } }]
