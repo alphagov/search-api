@@ -85,6 +85,22 @@ module ElasticsearchIntegration
     index_group.switch_to(index)
   end
 
+  def create_test_indexes
+    (@auxiliary_indexes + [@default_index_name]).each do |index|
+      create_test_index(index)
+    end
+  end
+
+  def insert_stub_popularity_data(path)
+    document_atts = {
+      "path_components" => path,
+      "rank_14" => 10,
+    }
+
+    response = RestClient.post("http://localhost:9200/page_traffic_test/page_traffic/", document_atts.to_json)
+    RestClient.post "http://localhost:9200/page_traffic_test/_refresh", nil
+  end
+
   def try_remove_test_index(index_name = @default_index_name)
     check_index_name(index_name)
     RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"

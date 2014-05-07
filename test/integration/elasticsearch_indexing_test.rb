@@ -28,8 +28,9 @@ class ElasticsearchIndexingTest < IntegrationTest
 
   def assert_document_is_in_rummager(document)
     retrieved = retrieve_document_from_rummager(document['link'])
+    retrieved_document_keys = retrieved.keys - ["popularity"]
 
-    assert_equal document.keys.sort, retrieved.keys.sort
+    assert_equal document.keys.sort, retrieved_document_keys.sort
 
     document.each do |key, value|
       assert_equal value, retrieved[key], "Field #{key} should be '#{value}' but was '#{retrieved[key]}'"

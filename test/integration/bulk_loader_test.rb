@@ -29,8 +29,9 @@ class BulkLoaderTest < IntegrationTest
 
   def assert_document_is_in_rummager(document)
     retrieved = retrieve_document_from_rummager(document['link'])
+    retrieved_document_keys = retrieved.keys - ["popularity"]
 
-    assert_equal document.keys.sort, retrieved.keys.sort
+    assert_equal document.keys.sort, retrieved_document_keys.sort
 
     document.each do |key, value|
       assert_equal value, retrieved[key], "Field #{key} should be '#{value}' but was '#{retrieved[key]}'"
@@ -52,7 +53,7 @@ class BulkLoaderTest < IntegrationTest
   end
 
   def test_indexes_documents
-    create_test_index
+    create_test_indexes
 
     bulk_loader = BulkLoader.new(app.settings.search_config, @default_index_name)
     bulk_loader.load_from(StringIO.new(index_payload(@sample_document)))
@@ -61,7 +62,9 @@ class BulkLoaderTest < IntegrationTest
   end
 
   def test_updates_an_existing_document
-    create_test_index
+    create_test_indexes
+    insert_stub_popularity_data(@sample_document["link"])
+
     index_group = search_server.index_group(@default_index_name)
     old_index = index_group.current_real
 
