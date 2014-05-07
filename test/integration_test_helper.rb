@@ -44,15 +44,15 @@ module ElasticsearchIntegration
     end
   end
 
-  def stub_elasticsearch_settings(index_names = ["rummager_test"], default = nil)
-    index_names.each do |n| check_index_name(n) end
+  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil)
+    content_index_names.each do |n| check_index_name(n) end
     check_index_name(default) unless default.nil?
 
-    @default_index_name = default || index_names.first
+    @default_index_name = default || content_index_names.first
 
     app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
-      "index_names" => index_names
+      "content_index_names" => content_index_names
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
     app.settings.stubs(:enable_queue).returns(false)
