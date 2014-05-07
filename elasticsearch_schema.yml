@@ -752,8 +752,34 @@ index:
           min_shingle_size: 2
 mappings:
 
-  page-traffic:
-    page-traffic:
+  page_traffic:
+    page_traffic:
+      _all: { enabled: false }
+      dynamic_templates: [
+        {
+          "view_count": {
+            match: "vc_*",
+            mapping: { type: long, stored: true }
+          }
+        },
+        {
+          "view_fraction": {
+            match: "vf_*",
+            mapping: { type: float, stored: true }
+          }
+        },
+        {
+          "rank": {
+            match: "rank_*",
+            mapping: { type: float, stored: true }
+          }
+        }
+      ]
+      properties:
+        path_components: { type: string, index: not_analyzed }
+
+  page_traffic_test:
+    page_traffic:
       _all: { enabled: false }
       dynamic_templates: [
         {

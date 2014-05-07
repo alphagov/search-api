@@ -39,18 +39,19 @@ class InvalidTestIndex < ArgumentError; end
 module ElasticsearchIntegration
   # Make sure that we're dealing with a test index (of the form <foo>_test)
   def check_index_name(index_name)
-    unless /^[a-z]+_test($|-)/.match index_name
+    unless /^[a-z_]+_test($|-)/.match index_name
       raise InvalidTestIndex, index_name
     end
   end
 
-  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil, auxiliary_index_names=[])
+  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil, auxiliary_index_names=["page_traffic_test"])
     (content_index_names + auxiliary_index_names).each do |n|
       check_index_name(n)
     end
     check_index_name(default) unless default.nil?
 
     @default_index_name = default || content_index_names.first
+    @auxiliary_indexes = auxiliary_index_names
 
     app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
@@ -71,7 +72,7 @@ module ElasticsearchIntegration
   end
 
   def enable_test_index_connections
-    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z]+_test.*)})
+    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_]+_test.*)})
   end
 
   def search_server

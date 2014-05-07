@@ -464,15 +464,23 @@ module Elasticsearch
     end
 
     def open_traffic_index
-      if @index_name.start_with?("page-traffic")
+      if @index_name.start_with?("page_traffic")
         return nil
       end
-      result = settings.search_config.search_server.index("page-traffic")
-      if result.exists?
-        return result
-      else
-        return nil
+
+      traffic_index_name = settings.search_config.auxiliary_index_names.find {|index|
+        index.start_with?("page_traffic")
+      }
+
+      if traffic_index_name
+        result = settings.search_config.search_server.index(traffic_index_name)
+
+        if result.exists?
+          return result
+        end
       end
+
+      return nil
     end
 
     def result_promoter
