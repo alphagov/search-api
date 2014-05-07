@@ -208,7 +208,7 @@ synonyms: &synonyms [
   "uj, ujm => universal jobmatch",
   "ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration",
   "utr, unique taxpayer reference",
-  
+
   # Acronyms with spaces or punctuation
   "c v => cv",
   "d l a => dla",
@@ -291,7 +291,7 @@ synonyms: &synonyms [
   "vehicle licence => vehicle licence, tax disc",
   "visa application => visa application, apply uk visa",
   "work trial => work trial, work experience, recruiters",
-  
+
   # Removing terms to return relevant content
   "flood areas => flood",
   "landfill sites => landfill",
@@ -350,7 +350,7 @@ synonyms: &synonyms [
   "v890 => sorn",
   "vaf4 => vaf4a",
   "vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration",
-  
+
   # Job searches
   "b26 3qz => jobs",  # Birmingham Airport jobs
 
@@ -633,7 +633,7 @@ synonyms: &synonyms [
   # "waitress => waitress, jobs",
   # "warehouse => warehouse, jobs",
   # "warehousing => warehousing, jobs",
-  
+
   # Override other synonyms
   "horse passport, horse passports => horse passport",
   "pet passport, pet passports => pet passport",
