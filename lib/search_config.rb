@@ -7,12 +7,21 @@ class SearchConfig
     Elasticsearch::SearchServer.new(
       elasticsearch["base_uri"],
       elasticsearch_schema,
-      index_names
+      index_names,
+      content_index_names,
     )
   end
 
   def index_names
-    elasticsearch["index_names"]
+    content_index_names + auxiliary_index_names
+  end
+
+  def content_index_names
+    elasticsearch["content_index_names"] || []
+  end
+
+  def auxiliary_index_names
+    elasticsearch["auxiliary_index_names"] || []
   end
 
   def elasticsearch_schema
