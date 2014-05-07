@@ -4,8 +4,6 @@ require "elasticsearch/search_server"
 class SearchConfig
 
   def search_server
-    puts "index_names: #{index_names}"
-    puts "content_index_names: #{content_index_names}"
     Elasticsearch::SearchServer.new(
       elasticsearch["base_uri"],
       elasticsearch_schema,

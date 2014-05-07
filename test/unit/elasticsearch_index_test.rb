@@ -6,8 +6,49 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def setup
-    base_uri = URI.parse("http://example.com:9200")
-    @wrapper = Elasticsearch::Index.new(base_uri, "test-index", default_mappings)
+    @base_uri = URI.parse("http://example.com:9200")
+    @wrapper = Elasticsearch::Index.new(@base_uri, "test-index", default_mappings)
+
+    @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic", page_traffic_mappings)
+    @wrapper.stubs(:traffic_index).returns(@traffic_index)
+    @traffic_index.stubs(:real_name).returns("page-traffic")
+  end
+
+  def stub_popularity_index_requests(paths, popularity, total=10)
+    # stub the request for total results
+    stub_request(:get, "http://example.com:9200/page-traffic/_search").
+            with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
+            to_return(:status => 200, :body => { "hits" => { "total" => total }}.to_json)
+
+    # stub the search for popularity data
+    expected_query = {
+      "query" => {
+        "terms" => {
+          "path_components" => paths,
+        },
+      },
+      "fields" => ["rank_14"],
+      "sort" => [
+        { "rank_14" => { "order" => "asc" } }
+      ],
+      "size" => total
+    }
+    response = {
+      "hits" => {
+        "hits" => paths.map {|path|
+          {
+            "_id" => path,
+            "fields" => {
+              "rank_14" => popularity
+            }
+          }
+        }
+      }
+    }
+
+    stub_request(:get, "http://example.com:9200/page-traffic/_search").
+            with(:body => expected_query.to_json).
+            to_return(:status => 200, :body => response.to_json, :headers => {})
   end
 
   def test_real_name
@@ -81,6 +122,8 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_should_bulk_update_documents
+    stub_popularity_index_requests(["/foo/bar"], 1.0)
+
     # TODO: factor out with FactoryGirl
     json_document = {
         "_type" => "edition",
@@ -91,7 +134,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE"}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0}
     eos
     response = <<-eos
 {"took":5,"items":[
@@ -107,6 +150,8 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_should_bulk_update_documents_with_id_field
+    stub_popularity_index_requests(["/a/link"], 1.0)
+
     document = stub("document", elasticsearch_export: {
         "_type" => "not_an_edition",
         "_id" => "some_id",
@@ -117,7 +162,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"not_an_edition","_id":"some_id"}}
-{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link"}
+{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":1.0}
   eos
     response = <<-eos
 {"took":5,"items":[
@@ -133,10 +178,12 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_should_bulk_update_documents_with_raw_command_stream
+    stub_popularity_index_requests(["/foo/bar"], 1.0)
+
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE"}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0}
     eos
     stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
         body: payload,
@@ -147,9 +194,11 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_should_raise_error_for_failures_in_bulk_update
+    stub_popularity_index_requests(["/foo/bar", "/foo/baz"], 1.0, 20)
+
     json_documents = [
-      { "_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE" },
-      { "_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO" }
+      { "_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "1.0" },
+      { "_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "1.0" }
     ]
     documents = json_documents.map do |json_document|
       stub("document", elasticsearch_export: json_document)
@@ -178,6 +227,11 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
         timeout: 20,
         open_timeout: 25
       )).returns(stub_response)
+
+    # stub out popularity logic as we don't care about these for the purpose of
+    # this unit test
+    @wrapper.stubs(:lookup_popularities)
+
     @wrapper.add([], timeout: 20, open_timeout: 25)
   end
 
