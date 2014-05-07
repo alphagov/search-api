@@ -727,6 +727,10 @@ index:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, stop, stemmer_override, stemmer_english, filter_shingle]
+        exact_match:
+          type: custom
+          tokenizer: keyword
+          filter: [trim, lowercase]
       filter:
         synonym:
           type: synonym
@@ -756,6 +760,13 @@ mappings:
         indexable_content: { type: string, index: analyzed }
         promoted_for: { type: string, index: analyzed, include_in_all: false }
         organisations: { type: string, index: not_analyzed, include_in_all: false }
+  metasearch:
+    best_bet:
+      _all: { enabled: false }
+      properties:
+        exact_query: { type: string, index: analyzed, analyzer: "exact_match" }
+        stem_query:  { type: string, index: analyzed }
+        details:     { type: string, index: not_analyzed }
   government:
     edition:
       _all: { enabled: true }
