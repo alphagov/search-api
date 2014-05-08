@@ -90,7 +90,7 @@ module Elasticsearch
         alias_info = MultiJson.decode(@client.get("_aliases"))
       rescue RestClient::ResourceNotFound => e
         response_body = MultiJson.decode(e.http_body)
-        if response_body['error'].start_with?("IndexMissingException") then 
+        if response_body['error'].start_with?("IndexMissingException") then
           return nil
         end
         raise
