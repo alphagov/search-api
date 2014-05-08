@@ -1,7 +1,7 @@
 module Elasticsearch
   module Escaping
     LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
-      + - && || ! ( ) { } [ ] ^ " ~ * ? : \\
+      + - && || ! ( ) { } [ ] ^ " ~ * ? : \\ /
     ].map { |s| Regexp.escape(s) }.join("|") + ")")
 
     LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/
