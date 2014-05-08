@@ -120,6 +120,10 @@ module ElasticsearchIntegration
     end
   end
 
+  def clean_popularity_index
+    try_remove_test_index 'page_traffic_test'
+  end
+
 end
 
 class IntegrationTest < MiniTest::Unit::TestCase

@@ -9,6 +9,8 @@ class BulkLoaderTest < IntegrationTest
     stub_elasticsearch_settings
     enable_test_index_connections
     try_remove_test_index
+    clean_popularity_index
+
     @sample_document = {
       "title" => "TITLE",
       "description" => "DESCRIPTION",
@@ -20,6 +22,7 @@ class BulkLoaderTest < IntegrationTest
 
   def teardown
     clean_index_group
+    clean_popularity_index
   end
 
   def retrieve_document_from_rummager(link)
