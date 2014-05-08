@@ -10,7 +10,8 @@ class Document
   end
 
   def self.from_hash(hash, mappings, es_score = nil)
-    field_names = mappings["edition"]["properties"].keys.map(&:to_s)
+    type = hash["_type"] || "edition"
+    field_names = mappings[type]["properties"].keys.map(&:to_s)
     self.new(field_names, hash, es_score)
   end
 
