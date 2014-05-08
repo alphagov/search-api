@@ -14,11 +14,11 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     @traffic_index.stubs(:real_name).returns("page_traffic")
   end
 
-  def stub_popularity_index_requests(paths, popularity, total=10)
+  def stub_popularity_index_requests(paths, popularity, total_pages=10, total_requested=total_pages, paths_to_return=paths)
     # stub the request for total results
     stub_request(:get, "http://example.com:9200/page_traffic/_search").
             with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
-            to_return(:status => 200, :body => { "hits" => { "total" => total }}.to_json)
+            to_return(:status => 200, :body => { "hits" => { "total" => total_pages }}.to_json)
 
     # stub the search for popularity data
     expected_query = {
@@ -31,11 +31,11 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       "sort" => [
         { "rank_14" => { "order" => "asc" } }
       ],
-      "size" => total
+      "size" => total_requested
     }
     response = {
       "hits" => {
-        "hits" => paths.map {|path|
+        "hits" => paths_to_return.map {|path|
           {
             "_id" => path,
             "fields" => {
@@ -218,6 +218,37 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       assert_equal "Failed inserts: /foo/baz", e.message
       assert_equal ["/foo/baz"], e.failed_keys
     end
+  end
+
+  def test_should_set_sensible_defaults_with_no_popularity_data
+    # return no popularity data for this path
+    stub_popularity_index_requests(["/foo/bar"], 0, 0, 10, [])
+
+    # TODO: factor out with FactoryGirl
+    json_document = {
+        "_type" => "edition",
+        "link" => "/foo/bar",
+        "title" => "TITLE ONE",
+    }
+    document = stub("document", elasticsearch_export: json_document)
+
+    # Note that this comes with a trailing newline, which elasticsearch needs
+    payload = <<-eos
+{"index":{"_type":"edition","_id":"/foo/bar"}}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0}
+eos
+    response = <<-eos
+{"took":5,"items":[
+{ "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+]}
+eos
+
+    request = stub_request(:post, "http://example.com:9200/test-index/_bulk")
+                  .with(body: payload)
+                  .to_return(body: response)
+    @wrapper.add [document]
+
+    assert_requested(request)
   end
 
   def test_should_allow_custom_timeouts_on_add

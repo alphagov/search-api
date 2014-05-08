@@ -441,8 +441,10 @@ module Elasticsearch
         end
         ranks[link] = [rank, ranks[link]].min
       end
+
       Hash[links.map { |link|
-        [link, 1.0 / ranks[link]]
+        popularity_score = (ranks[link] == 0) ? 0 : (1.0 / ranks[link])
+        [link, popularity_score]
       }]
     end
 
