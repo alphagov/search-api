@@ -50,6 +50,27 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal [1,2], document.elasticsearch_export["topics"]
   end
 
+  def test_should_use_the_specified_mappings_if_given
+    hash = {
+      "_type" => "best_bet",
+      "query" => "jobs"
+    }
+
+    mappings = default_mappings.merge(
+      "best_bet" => {
+        "properties" => {
+          "query" => { "type" => "string", "index" => "not_analyzed" }
+        }
+      }
+    )
+
+    document = Document.from_hash(hash, mappings)
+
+    assert_equal "jobs", document.to_hash["query"]
+    assert_equal "jobs", document.query
+    assert_equal "jobs", document.elasticsearch_export["query"]
+  end
+
   def test_should_ignore_fields_not_in_mappings
     hash = {
       "title" => "TITLE",
