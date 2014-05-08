@@ -393,7 +393,12 @@ module Elasticsearch
     end
 
     def index_action(doc_hash)
-      {"index" => {"_type" => doc_hash["_type"], "_id" => doc_hash["link"]}}
+      {
+        "index" => {
+          "_type" => doc_hash["_type"],
+          "_id" => (doc_hash["_id"] || doc_hash["link"])
+        }
+      }
     end
 
     def result_promoter
