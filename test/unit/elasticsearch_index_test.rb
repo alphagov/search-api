@@ -106,6 +106,32 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested(:post, "http://example.com:9200/test-index/_bulk")
   end
 
+  def test_should_bulk_update_documents_with_id_field
+    document = stub("document", elasticsearch_export: {
+        "_type" => "not_an_edition",
+        "_id" => "some_id",
+        "title" => "TITLE ONE",
+        "link" => "/a/link"
+    })
+
+    # Note that this comes with a trailing newline, which elasticsearch needs
+    payload = <<-eos
+{"index":{"_type":"not_an_edition","_id":"some_id"}}
+{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link"}
+  eos
+    response = <<-eos
+{"took":5,"items":[
+{ "index": { "_index":"test-index", "_type":"not_an_edition", "_id":"some_id", "ok":true } }
+]}
+    eos
+    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+        body: payload,
+        headers: {"Content-Type" => "application/json"}
+    ).to_return(body: response)
+    @wrapper.add [document]
+    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+  end
+
   def test_should_bulk_update_documents_with_raw_command_stream
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
