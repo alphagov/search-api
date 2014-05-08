@@ -777,6 +777,7 @@ mappings:
       ]
       properties:
         path_components: { type: string, index: not_analyzed }
+        rank_14: { type: float, stored: true }
 
   page_traffic_test:
     page_traffic:
@@ -803,6 +804,7 @@ mappings:
       ]
       properties:
         path_components: { type: string, index: not_analyzed }
+        rank_14: { type: float, stored: true }
 
   default:
     edition:
