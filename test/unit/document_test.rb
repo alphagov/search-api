@@ -50,8 +50,9 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal [1,2], document.elasticsearch_export["topics"]
   end
 
-  def test_should_use_the_specified_mappings_if_given
+  def test_should_permit_nonedition_documents
     hash = {
+      "_id" => "jobs_exact",
       "_type" => "best_bet",
       "query" => "jobs"
     }
@@ -69,6 +70,11 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "jobs", document.to_hash["query"]
     assert_equal "jobs", document.query
     assert_equal "jobs", document.elasticsearch_export["query"]
+
+    refute document.to_hash.has_key?("_type")
+    refute document.to_hash.has_key?("_id")
+    assert_equal "jobs_exact", document.elasticsearch_export["_id"]
+    assert_equal "best_bet", document.elasticsearch_export["_type"]
   end
 
   def test_should_ignore_fields_not_in_mappings

@@ -7,6 +7,8 @@ class Document
     @attributes = {}
     @es_score = es_score
     update_attributes!(attributes)
+    @id = attributes["_id"]
+    @type = attributes["_type"]
   end
 
   def self.from_hash(hash, mappings, es_score = nil)
@@ -51,7 +53,8 @@ class Document
           doc[key] = value
         end
       end
-      doc["_type"] = "edition"
+      doc["_type"] = @type || "edition"
+      doc["_id"] = @id if @id
     end
   end
 
