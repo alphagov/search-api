@@ -61,7 +61,9 @@ file suitable for loading into an elasticsearch index using rummager's
 In many cases, you should be able to fetch the `page-traffic.dump` data from
 preview.
 FIXME: describe how to get hold of a copy of `page-traffic.dump` data from
-preview, once jobs are set up to regularly extract this.
+preview, once jobs are set up to regularly extract this.  This will be
+implemented as part of
+https://www.pivotaltracker.com/s/projects/1010882/stories/70737424
 
 The [search-analytics project
 README](https://github.com/alphagov/search-analytics) describes how to set up
