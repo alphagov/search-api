@@ -24,10 +24,6 @@ class SearchConfig
     elasticsearch["auxiliary_index_names"] || []
   end
 
-  def auxiliary_index_names
-    elasticsearch["auxiliary_index_names"]
-  end
-
   def elasticsearch_schema
     @elasticsearch_schema ||= config_for("elasticsearch_schema")
   end
