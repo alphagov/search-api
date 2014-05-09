@@ -681,6 +681,8 @@ stems: &stems [
   "probate => probate",  # not probation
   "publication => publication",
   "publications => publication",
+  "recovery => recov",  # same as recover
+  "recoverable => recov",  # same as recover
   "responsibility => responsib",  # not response, responsive
   "responsibilities => responsib",
   "responsible => responsib",
