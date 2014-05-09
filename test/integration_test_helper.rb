@@ -39,12 +39,12 @@ class InvalidTestIndex < ArgumentError; end
 module ElasticsearchIntegration
   # Make sure that we're dealing with a test index (of the form <foo>_test)
   def check_index_name(index_name)
-    unless /^[a-z_]+_test($|-)/.match index_name
+    unless /^[a-z_-]+(_|-)test($|-)/.match index_name
       raise InvalidTestIndex, index_name
     end
   end
 
-  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil, auxiliary_index_names=["page_traffic_test"])
+  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil, auxiliary_index_names=["page-traffic-test"])
     (content_index_names + auxiliary_index_names).each do |n|
       check_index_name(n)
     end
@@ -72,7 +72,7 @@ module ElasticsearchIntegration
   end
 
   def enable_test_index_connections
-    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_]+_test.*)})
+    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)})
   end
 
   def search_server
@@ -97,8 +97,8 @@ module ElasticsearchIntegration
       "rank_14" => 10,
     }
 
-    response = RestClient.post("http://localhost:9200/page_traffic_test/page_traffic/", document_atts.to_json)
-    RestClient.post "http://localhost:9200/page_traffic_test/_refresh", nil
+    response = RestClient.post("http://localhost:9200/page-traffic-test/page-traffic/", document_atts.to_json)
+    RestClient.post "http://localhost:9200/page-traffic-test/_refresh", nil
   end
 
   def try_remove_test_index(index_name = @default_index_name)
@@ -121,7 +121,7 @@ module ElasticsearchIntegration
   end
 
   def clean_popularity_index
-    try_remove_test_index 'page_traffic_test'
+    try_remove_test_index 'page-traffic-test'
   end
 
 end

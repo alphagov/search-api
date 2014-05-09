@@ -9,14 +9,14 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     @base_uri = URI.parse("http://example.com:9200")
     @wrapper = Elasticsearch::Index.new(@base_uri, "test-index", default_mappings)
 
-    @traffic_index = Elasticsearch::Index.new(@base_uri, "page_traffic", page_traffic_mappings)
+    @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic", page_traffic_mappings)
     @wrapper.stubs(:traffic_index).returns(@traffic_index)
-    @traffic_index.stubs(:real_name).returns("page_traffic")
+    @traffic_index.stubs(:real_name).returns("page-traffic")
   end
 
   def stub_popularity_index_requests(paths, popularity, total_pages=10, total_requested=total_pages, paths_to_return=paths)
     # stub the request for total results
-    stub_request(:get, "http://example.com:9200/page_traffic/_search").
+    stub_request(:get, "http://example.com:9200/page-traffic/_search").
             with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
             to_return(:status => 200, :body => { "hits" => { "total" => total_pages }}.to_json)
 
@@ -46,7 +46,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       }
     }
 
-    stub_request(:get, "http://example.com:9200/page_traffic/_search").
+    stub_request(:get, "http://example.com:9200/page-traffic/_search").
             with(:body => expected_query.to_json).
             to_return(:status => 200, :body => response.to_json, :headers => {})
   end

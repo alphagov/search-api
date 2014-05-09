@@ -466,12 +466,12 @@ module Elasticsearch
     end
 
     def open_traffic_index
-      if @index_name.start_with?("page_traffic")
+      if @index_name.start_with?("page-traffic")
         return nil
       end
 
       traffic_index_name = settings.search_config.auxiliary_index_names.find {|index|
-        index.start_with?("page_traffic")
+        index.start_with?("page-traffic")
       }
 
       if traffic_index_name
