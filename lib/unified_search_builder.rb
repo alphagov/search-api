@@ -147,8 +147,9 @@ class UnifiedSearchBuilder
       # query (so there's no relevance scores).
       if @query.nil?
         return [{ "popularity" => { order: "desc" } }]
+      else
+        return nil
       end
-      return nil
     end
     [{ order[0] => { order: order[1] } }]
   end
