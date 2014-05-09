@@ -97,7 +97,7 @@ module ElasticsearchIntegration
       "rank_14" => 10,
     }
 
-    response = RestClient.post("http://localhost:9200/page-traffic-test/page-traffic/", document_atts.to_json)
+    RestClient.post "http://localhost:9200/page-traffic-test/page-traffic/", document_atts.to_json
     RestClient.post "http://localhost:9200/page-traffic-test/_refresh", nil
   end
 
@@ -123,7 +123,6 @@ module ElasticsearchIntegration
   def clean_popularity_index
     try_remove_test_index 'page-traffic-test'
   end
-
 end
 
 class IntegrationTest < MiniTest::Unit::TestCase
