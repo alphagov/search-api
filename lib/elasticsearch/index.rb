@@ -449,12 +449,12 @@ module Elasticsearch
     end
 
     def traffic_index
-      if @_opened_traffic_index
-        return @_traffic_index
+      if @opened_traffic_index
+        return @traffic_index
       end
-      @_traffic_index = open_traffic_index
-      @_opened_traffic_index = true
-      return @_traffic_index
+      @traffic_index = open_traffic_index
+      @opened_traffic_index = true
+      return @traffic_index
     end
 
     def traffic_index_size
