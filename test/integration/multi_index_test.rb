@@ -55,6 +55,7 @@ class MultiIndexTest < IntegrationTest
   def add_sample_documents(index_name, count)
     attributes = sample_document_attributes(index_name, count)
     attributes.each do |sample_document|
+      insert_stub_popularity_data(sample_document["link"])
       post "/#{index_name}/documents", MultiJson.encode(sample_document)
       assert last_response.ok?
     end

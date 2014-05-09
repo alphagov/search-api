@@ -7,9 +7,11 @@ class UnifiedSearchBuilder
 
   DEFAULT_QUERY_ANALYZER = "query_default"
   GOVERNMENT_BOOST_FACTOR = 0.4
+  POPULARITY_OFFSET = 0.001
 
   def initialize(params)
     @params = params
+    @query = query_normalized
   end
 
   def payload
@@ -41,18 +43,22 @@ class UnifiedSearchBuilder
   end
 
   def base_query
-    @query = query_normalized
     if @query.nil?
       return { match_all: {} }
     end
     {
-      custom_filters_score: {
+      custom_score: {
         query: {
-          bool: {
-            should: [core_query, promoted_items_query].compact
+          custom_filters_score: {
+            query: {
+              bool: {
+                should: [core_query, promoted_items_query].compact
+              }
+            },
+            filters: format_boosts + [time_boost]
           }
         },
-        filters: format_boosts + [time_boost]
+        script: "_score * (doc['popularity'].value + #{POPULARITY_OFFSET})"
       }
     }
   end
@@ -137,7 +143,13 @@ class UnifiedSearchBuilder
   def sort_list
     order = @params[:order]
     if order.nil?
-      return nil
+      # Sort by popularity when there's no explicit ordering, and there's no
+      # query (so there's no relevance scores).
+      if @query.nil?
+        return [{ "popularity" => { order: "desc" } }]
+      else
+        return nil
+      end
     end
     [{ order[0] => { order: order[1] } }]
   end

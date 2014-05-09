@@ -39,20 +39,24 @@ class InvalidTestIndex < ArgumentError; end
 module ElasticsearchIntegration
   # Make sure that we're dealing with a test index (of the form <foo>_test)
   def check_index_name(index_name)
-    unless /^[a-z]+_test($|-)/.match index_name
+    unless /^[a-z_-]+(_|-)test($|-)/.match index_name
       raise InvalidTestIndex, index_name
     end
   end
 
-  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil)
-    content_index_names.each do |n| check_index_name(n) end
+  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil, auxiliary_index_names=["page-traffic-test"])
+    (content_index_names + auxiliary_index_names).each do |n|
+      check_index_name(n)
+    end
     check_index_name(default) unless default.nil?
 
     @default_index_name = default || content_index_names.first
+    @auxiliary_indexes = auxiliary_index_names
 
     app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
-      "content_index_names" => content_index_names
+      "content_index_names" => content_index_names,
+      "auxiliary_index_names" => auxiliary_index_names
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
     app.settings.stubs(:enable_queue).returns(false)
@@ -68,7 +72,7 @@ module ElasticsearchIntegration
   end
 
   def enable_test_index_connections
-    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z]+_test.*)})
+    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)})
   end
 
   def search_server
@@ -79,6 +83,22 @@ module ElasticsearchIntegration
     index_group = search_server.index_group(group_name)
     index = index_group.create_index
     index_group.switch_to(index)
+  end
+
+  def create_test_indexes
+    (@auxiliary_indexes + [@default_index_name]).each do |index|
+      create_test_index(index)
+    end
+  end
+
+  def insert_stub_popularity_data(path)
+    document_atts = {
+      "path_components" => path,
+      "rank_14" => 10,
+    }
+
+    RestClient.post "http://localhost:9200/page-traffic-test/page-traffic/", document_atts.to_json
+    RestClient.post "http://localhost:9200/page-traffic-test/_refresh", nil
   end
 
   def try_remove_test_index(index_name = @default_index_name)
@@ -100,6 +120,9 @@ module ElasticsearchIntegration
     end
   end
 
+  def clean_popularity_index
+    try_remove_test_index 'page-traffic-test'
+  end
 end
 
 class IntegrationTest < MiniTest::Unit::TestCase

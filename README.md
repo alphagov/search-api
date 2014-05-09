@@ -29,6 +29,8 @@ development, you need to run both of these commands:
 
 ## Indexing GOV.UK content
 
+### Memory requirements
+
 In order to build the search index on a VM, you'll need to ensure that your VM
 has sufficient memory: 4Gb is probably a good amount; with 2Gb, the indexing
 process has a tendency to get killed by the out of memory killer.  Do this by
@@ -47,6 +49,40 @@ memory and killing itself.  Do this by editing
     env ES_HEAP_SIZE="1024m"
 
 Restart the VM (eg, with `vagrant reload`) after making these changes.
+
+### Popularity information
+
+The gov.uk search uses page popularity information extracted from Google
+Analytics as one of the factors in weighting search results.  This is extracted
+from Google Analytics by the search-analytics project, which produces a dump
+file suitable for loading into an elasticsearch index using rummager's
+`bulk_load` tool.  This should be loaded into the `page-traffic` index.
+
+In many cases, you should be able to fetch the `page-traffic.dump` data from
+preview.
+FIXME: describe how to get hold of a copy of `page-traffic.dump` data from
+preview, once jobs are set up to regularly extract this.  This will be
+implemented as part of
+https://www.pivotaltracker.com/s/projects/1010882/stories/70737424
+
+The [search-analytics project
+README](https://github.com/alphagov/search-analytics) describes how to set up
+and run the extraction of page traffic information from Google Analytics, if
+you need to get the data yourself.
+
+Once you have the popularity data in a file named `page-traffic.dump`, load it
+into elasticsearch using:
+
+    bundle exec bin/bulk_load page-traffic < page-traffic.dump
+
+The popularity information won't affect search results until an index migration
+is run after populating the page-traffic index. As part of the migration, the
+popularity for each document will be computed from the page-traffic index and
+merged into the documents. To do this, run:
+
+    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_index
+
+### Indexing panopticon content
 
 Since search indexing happens through Panopticon's single registration API,
 you'll need to have both Panopticon and Rummager running. By default, Panopticon
