@@ -248,7 +248,7 @@ synonyms: &synonyms [
   "soc code, soc codes => soc code, sponsorship, skilled worker",
   "social security => social security, benefits",
   "sponsor login => sponsorship management system",
-  "spouse visa => partner visa, family",
+  "spouse visa, spousal visa => spouse visa, partner visa, family",
   "starting a company => starting a company, starting a business",
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
   "visa4uk => visa4uk, uk visa",
@@ -257,6 +257,7 @@ synonyms: &synonyms [
 
   # Adding terms to raise the best results
   "book driving test => book driving test, book your practical driving test",
+  "british citizenship => british citizenship, british citizen",
   "bursaries, bursary => bursaries, bursary, extra, university",
   "business grant, business grants => business grants, business finance",
   "business loan, business loans => business loans, business finance",
@@ -360,6 +361,8 @@ synonyms: &synonyms [
   "gov => government",
   "hep => hepatitis",
   "lic => licence",
+  "min wage => minimum wage",
+  "no plate => number plate",
   "reg => registration",
   "ref number => ref number, reference number",
   "tacho, tacho graph, taco, taco graph => tachograph",
