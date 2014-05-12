@@ -221,8 +221,12 @@ class Rummager < Sinatra::Application
   #
   #   facet_FIELD: (where FIELD is a fieldname); count up values which are
   #   present in the field in the documents matched by the search, and return
-  #   information about these.  The value of this parameter is the limit on the
-  #   number of distinct field values which will be returned.
+  #   information about these.  The value of this parameter is the requested
+  #   number of distinct field values to be returned for the field.
+  #
+  #   Regardless of the parameter value, a facet value will be returned for any
+  #   filter which is in place on the field. This may cause the requested
+  #   number of values to be exceeded.
   #
   #   fields[]: fields to be returned in the result documents.  By default, all
   #   allowed fields will be returned, but this can be used to restrict the

@@ -22,6 +22,7 @@ class UnifiedSearcher
       es_response,
       params[:start],
       @index.index_name.split(","),
+      params[:filters],
       params[:facets],
       registries,
       registry_by_field,

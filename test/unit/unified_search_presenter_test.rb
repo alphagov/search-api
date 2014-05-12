@@ -157,6 +157,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         0,
         INDEX_NAMES,
         {},
+        {},
         {topic_registry: topic_registry},
         {topics: topic_registry},
       ).present
@@ -208,6 +209,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
+        {},
         {"organisations" => 1},
       ).present
     end
@@ -244,12 +246,113 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
   end
 
+  context "results with facets and a filter applied" do
+    setup do
+      @output = UnifiedSearchPresenter.new(
+        sample_es_response("facets" => sample_facet_data),
+        0,
+        INDEX_NAMES,
+        {"organisations" => ["hmrc"]},
+        {"organisations" => 2},
+      ).present
+    end
+
+    should "have facets" do
+      assert_contains @output.keys, :facets
+    end
+
+    should "have correct number of facets" do
+      assert_equal 1, @output[:facets].length
+    end
+
+    should "have correct number of facet values" do
+      assert_equal 2, @output[:facets]["organisations"][:options].length
+    end
+
+    should "have selected facet first" do
+      assert_equal({
+        :value => "hmrc",
+        :documents => 5,
+      }, @output[:facets]["organisations"][:options][0])
+    end
+
+    should "have unapplied facet value second" do
+      assert_equal({
+        :value => "hm-magic",
+        :documents => 7,
+      }, @output[:facets]["organisations"][:options][1])
+    end
+
+    should "have correct number of documents with no value" do
+      assert_equal(8, @output[:facets]["organisations"][:documents_with_no_value])
+    end
+
+    should "have correct total number of options" do
+      assert_equal(2, @output[:facets]["organisations"][:total_options])
+    end
+
+    should "have correct number of missing options" do
+      assert_equal(0, @output[:facets]["organisations"][:missing_options])
+    end
+  end
+
+  context "results with facets and a filter which matches nothing applied" do
+    setup do
+      @output = UnifiedSearchPresenter.new(
+        sample_es_response("facets" => sample_facet_data),
+        0,
+        INDEX_NAMES,
+        {"organisations" => ["hm-cheesemakers"]},
+        {"organisations" => 1},
+      ).present
+    end
+
+    should "have facets" do
+      assert_contains @output.keys, :facets
+    end
+
+    should "have correct number of facets" do
+      assert_equal 1, @output[:facets].length
+    end
+
+    should "have correct number of facet values" do
+      assert_equal 2, @output[:facets]["organisations"][:options].length
+    end
+
+    should "have selected facet first" do
+      assert_equal({
+        :value => "hm-cheesemakers",
+        :documents => 0,
+      }, @output[:facets]["organisations"][:options][0])
+    end
+
+    should "have unapplied facet value second" do
+      assert_equal({
+        :value => "hm-magic",
+        :documents => 7,
+      }, @output[:facets]["organisations"][:options][1])
+    end
+
+    should "have correct number of documents with no value" do
+      assert_equal(8, @output[:facets]["organisations"][:documents_with_no_value])
+    end
+
+    should "have correct total number of options" do
+      assert_equal(2, @output[:facets]["organisations"][:total_options])
+    end
+
+    should "have correct number of missing options" do
+      assert_equal(1, @output[:facets]["organisations"][:missing_options])
+    end
+  end
+
   context "results with facet counting only" do
     setup do
       @output = UnifiedSearchPresenter.new(
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
+        {},
         {"organisations" => 0},
       ).present
     end
@@ -291,6 +394,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response("facets" => sample_facet_data_with_topics),
         0,
         INDEX_NAMES,
+        {},
         {"organisations" => 1, "topics" => 1},
         {organisation_registry: org_registry},
         {organisations: org_registry},
@@ -350,13 +454,13 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         "self assessment",
         "tax returns"
       ]
-      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, {}, {}, {}, @suggestions).present
+      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, {}, {}, {}, {}, @suggestions).present
 
       assert_equal ["self assessment", "tax returns"], @output[:suggested_queries]
     end
 
     should "default to an empty array when not present" do
-      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, {}, {}, {}).present
+      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, {}, {}, {}, {}).present
 
       assert_equal [], @output[:suggested_queries]
     end
