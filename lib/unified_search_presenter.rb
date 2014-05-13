@@ -84,6 +84,7 @@ private
     top_unapplied = options.slice(0, requested_count).reject do |option|
       applied.include? option
     end
+
     applied + top_unapplied
   end
 
