@@ -800,9 +800,9 @@ mappings:
     best_bet:
       _all: { enabled: false }
       properties:
-        exact_query: { type: string, index: analyzed, analyzer: "exact_match" }
-        stem_query:  { type: string, index: analyzed }
-        details:     { type: string, index: not_analyzed }
+        exact_query:   { type: string, index: analyzed, analyzer: "exact_match" }
+        stemmed_query: { type: string, index: analyzed }
+        details:       { type: string, index: not_analyzed }
   government:
     edition:
       _all: { enabled: true }
