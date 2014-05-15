@@ -315,10 +315,15 @@ module Elasticsearch
       ResultSet.from_elasticsearch(@mappings, raw_search(payload))
     end
 
-    def raw_search(payload)
+    def raw_search(payload, type=nil)
       json_payload = payload.to_json
       logger.debug "Request payload: #{json_payload}"
-      MultiJson.decode(@client.get_with_payload("_search", json_payload))
+      if type.nil?
+        path = "_search"
+      else
+        path = "#{type}/_search"
+      end
+      MultiJson.decode(@client.get_with_payload(path, json_payload))
     end
 
     def delete(link)
