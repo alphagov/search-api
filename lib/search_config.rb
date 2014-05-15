@@ -56,6 +56,10 @@ class SearchConfig
     elasticsearch["govuk_index_names"]
   end
 
+  def metasearch_index_name
+    elasticsearch["metasearch_index_name"]
+  end
+
 private
   def config_for(kind)
     YAML.load_file(File.expand_path("../#{kind}.yml", File.dirname(__FILE__)))
