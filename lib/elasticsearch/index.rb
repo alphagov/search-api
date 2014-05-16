@@ -74,6 +74,7 @@ module Elasticsearch
       @client = build_client
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
+      @index_with_popularity = !(settings.search_config.auxiliary_index_names.include? @index_name)
       @mappings = mappings
       @promoted_results = promoted_results
     end
@@ -406,12 +407,13 @@ module Elasticsearch
     end
 
     def index_doc(doc_hash, popularities)
-      unless popularities.nil?
-        link = doc_hash["link"]
-        pop = popularities[link]
-        unless pop.nil?
-          doc_hash["popularity"] = pop
+      if @index_with_popularity
+        pop = 0.0
+        unless popularities.nil?
+          link = doc_hash["link"]
+          pop = popularities[link]
         end
+        doc_hash["popularity"] = pop
       end
       doc_hash
     end
