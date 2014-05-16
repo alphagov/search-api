@@ -56,7 +56,8 @@ module ElasticsearchIntegration
     app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
       "content_index_names" => content_index_names,
-      "auxiliary_index_names" => auxiliary_index_names
+      "auxiliary_index_names" => auxiliary_index_names,
+      "govuk_index_names" => content_index_names,
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
     app.settings.stubs(:enable_queue).returns(false)
@@ -148,6 +149,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
   def stub_index
     s = stub("stub index")
     Rummager.any_instance.stubs(:current_index).returns(s)
+    Rummager.any_instance.stubs(:unified_index).returns(s)
     s
   end
 
