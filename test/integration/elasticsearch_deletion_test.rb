@@ -36,9 +36,9 @@ class ElasticsearchDeletionTest < IntegrationTest
         "indexable_content" => "Tax, benefits, roads and stuff"
       },
       {
-          "title" => "Some other site",
-          "format" => "answer",
-          "link" => "http://example.com/",
+        "title" => "Some other site",
+        "format" => "answer",
+        "link" => "http://example.com/",
       }
     ]
   end
