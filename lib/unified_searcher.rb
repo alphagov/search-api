@@ -7,8 +7,9 @@ class UnifiedSearcher
 
   attr_reader :index, :registries, :registry_by_field, :suggester
 
-  def initialize(index, registries, registry_by_field, suggester)
+  def initialize(index, metaindex, registries, registry_by_field, suggester)
     @index = index
+    @metaindex = metaindex
     @registries = registries
     @registry_by_field = registry_by_field
     @suggester = suggester
@@ -16,7 +17,7 @@ class UnifiedSearcher
 
   # Search and combine the indices and return a hash of ResultSet objects
   def search(params)
-    builder = UnifiedSearchBuilder.new(params)
+    builder = UnifiedSearchBuilder.new(params, @metaindex)
     es_response = index.raw_search(builder.payload)
     UnifiedSearchPresenter.new(
       es_response,

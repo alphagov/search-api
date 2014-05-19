@@ -1,6 +1,7 @@
 require "test_helper"
 require "set"
 require "unified_searcher"
+require "search_parameter_parser"
 
 class UnifiedSearcherTest < ShouldaUnitTestCase
 
@@ -132,11 +133,26 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }
   }
 
+  def mock_best_bets(query)
+    @metasearch_index = stub("metasearch index")
+    @metasearch_index.expects(:raw_search).with(
+      {
+        query: {:bool => {:should => [{:match => {:exact_query => query}},
+                                      {:match => {:stemmed_query => query}}]}},
+        size: 1000,
+        fields: [:details],
+      }, "best_bet").returns(
+      {
+        "hits" => {"hits" => [], "total" => [].size}
+      })
+  end
+
   context "unfiltered, unsorted search" do
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {}, {}, stub_suggester)
+      mock_best_bets("cheese")
+      @searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester)
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -181,7 +197,8 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {}, {}, stub_suggester)
+      mock_best_bets("cheese")
+      @searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester)
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -223,7 +240,8 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {}, {}, stub_suggester)
+      mock_best_bets("cheese")
+      @searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester)
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -265,7 +283,8 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      @searcher = UnifiedSearcher.new(@combined_index, {}, {}, stub_suggester)
+      mock_best_bets("cheese")
+      @searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester)
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,

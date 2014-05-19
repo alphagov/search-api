@@ -66,6 +66,10 @@ class Rummager < Sinatra::Application
     search_server.index(settings.search_config.govuk_index_names.join(","))
   end
 
+  def metasearch_index
+    search_server.index(settings.search_config.metasearch_index_name)
+  end
+
   def lines_from_a_file(filepath)
     path = File.expand_path(filepath, File.dirname(__FILE__))
     lines = File.open(path).map(&:chomp)
@@ -231,7 +235,7 @@ class Rummager < Sinatra::Application
       })
     end
 
-    searcher = UnifiedSearcher.new(unified_index, registries, registry_by_field, suggester)
+    searcher = UnifiedSearcher.new(unified_index, metasearch_index, registries, registry_by_field, suggester)
     MultiJson.encode searcher.search(parser.parsed_params)
   end
 
