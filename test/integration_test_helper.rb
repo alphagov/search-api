@@ -41,7 +41,7 @@ module ElasticsearchIntegration
   # Make sure that we're dealing with a test index (of the form <foo>_test)
   def check_index_name(index_name)
     unless /^[a-z_-]+(_|-)test($|-)/.match index_name
-      raise InvalidTestIndex, index_name
+      raise InvalidTestIndex, "#{index_name} is not a valid test index name"
     end
   end
 
