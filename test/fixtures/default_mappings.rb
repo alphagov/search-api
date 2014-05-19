@@ -14,6 +14,11 @@ module Fixtures
             "link" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
             "indexable_content" => { "type" => "string", "index" => "analyzed"}
           }
+        },
+        "best_bet" => {
+          "properties" => {
+            "query" => { "type" => "string", "index" => "not_analyzed" }
+          }
         }
       }
     end

@@ -796,13 +796,14 @@ mappings:
         promoted_for: { type: string, index: analyzed, include_in_all: false }
         popularity: { type: float, stored: true }
         organisations: { type: string, index: not_analyzed, include_in_all: false }
-  metasearch:
+  metasearch: &metasearch
     best_bet:
       _all: { enabled: false }
       properties:
         exact_query:   { type: string, index: analyzed, analyzer: "exact_match" }
         stemmed_query: { type: string, index: analyzed }
         details:       { type: string, index: not_analyzed }
+  metasearch-test: *metasearch
   government:
     edition:
       _all: { enabled: true }

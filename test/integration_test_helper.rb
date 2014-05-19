@@ -44,7 +44,7 @@ module ElasticsearchIntegration
     end
   end
 
-  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil, auxiliary_index_names=["page-traffic-test"])
+  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil, auxiliary_index_names=["page-traffic-test", "metasearch-test"])
     (content_index_names + auxiliary_index_names).each do |n|
       check_index_name(n)
     end
@@ -89,6 +89,12 @@ module ElasticsearchIntegration
   def create_test_indexes
     (@auxiliary_indexes + [@default_index_name]).each do |index|
       create_test_index(index)
+    end
+  end
+
+  def clean_test_indexes
+    (@auxiliary_indexes + [@default_index_name]).each do |index|
+      try_remove_test_index(index)
     end
   end
 
