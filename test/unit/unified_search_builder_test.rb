@@ -49,6 +49,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       filters: {},
       fields: nil,
       facets: nil,
+      debug: {},
     }
     setup_best_bets([], [])
     @builder = UnifiedSearchBuilder.new(params, @metasearch_index)
@@ -68,6 +69,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: nil,
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -117,6 +119,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {"organisations" => ["hm-magic"]},
         fields: nil,
         facets: nil,
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -150,6 +153,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {"organisations" => ["hm-magic", "hmrc"]},
         fields: nil,
         facets: nil,
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -187,6 +191,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         },
         fields: nil,
         facets: nil,
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -224,6 +229,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: nil,
+        debug: {},
       }, @metasearch_index)
 
     end
@@ -247,6 +253,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: nil,
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -299,6 +306,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: nil,
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -350,6 +358,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         return_fields: ['title'],
         facets: nil,
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -372,6 +381,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: {"organisations" => 10},
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -407,6 +417,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {"organisations" => ["hm-magic"]},
         fields: nil,
         facets: {"organisations" => 10},
+        debug: {},
       }, @metasearch_index)
     end
 
@@ -442,6 +453,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {"section" => ["levitation"]},
         fields: nil,
         facets: {"organisations" => 10},
+        debug: {},
       }, @metasearch_index)
     end
 

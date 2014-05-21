@@ -172,6 +172,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         order: nil,
         filters: {},
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+        debug: {},
       })
     end
 
@@ -219,6 +220,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         order: ["public_timestamp", "asc"],
         filters: {},
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+        debug: {},
       })
     end
 
@@ -262,6 +264,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         filters: {"organisations" => ["ministry-of-magic"]},
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         facets: nil,
+        debug: {},
       })
     end
 
@@ -318,6 +321,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         filters: {},
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         facets: {"organisations" => 1},
+        debug: {},
       })
     end
 

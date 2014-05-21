@@ -13,7 +13,11 @@ class UnifiedSearchBuilder
   def initialize(params, metaindex)
     @params = params
     @query = query_normalized
-    @best_bets_checker = BestBetsChecker.new(metaindex, query_normalized)
+    if @params[:debug][:disable_best_bets]
+      @best_bets_checker = BestBetsChecker.new(metaindex, nil)
+    else
+      @best_bets_checker = BestBetsChecker.new(metaindex, query_normalized)
+    end
   end
 
   def payload
