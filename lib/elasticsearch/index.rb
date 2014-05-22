@@ -326,6 +326,17 @@ module Elasticsearch
       MultiJson.decode(@client.get_with_payload(path, json_payload))
     end
 
+    # Convert a best bet query to a string formed by joining the normalised
+    # words in the query with spaces.
+    def analyzed_best_bet_query(query)
+      analyzed_query = MultiJson.decode(@client.get_with_payload(
+        "_analyze?analyzer=best_bet_stemmed_match", query))
+
+      analyzed_query["tokens"].map { |token_info|
+        token_info["token"]
+      }.join(" ")
+    end
+
     def delete(link)
       begin
         # Can't use a simple delete, because we don't know the type
@@ -420,6 +431,31 @@ module Elasticsearch
         end
         doc_hash["popularity"] = pop
       end
+
+      doc_hash = prepare_if_best_bet(doc_hash)
+      doc_hash
+    end
+
+    # If a document is a best bet, and is using the stemmed_query field, we
+    # need to populate the stemmed_query_as_term field with a processed version
+    # of the field.  This produces a representation of the best-bet query with
+    # all words stemmed and lowercased, and joined with a single space.
+    #
+    # At search time, all best bets with at least one word in common with the
+    # user's query are fetched, and the stemmed_query_as_term field of each is
+    # checked to see if it is a substring match for the (similarly normalised)
+    # user's query.  If so, the best bet is used.
+    def prepare_if_best_bet(doc_hash)
+      if doc_hash["_type"] != "best_bet"
+        return doc_hash
+      end
+
+      stemmed_query = doc_hash["stemmed_query"]
+      if stemmed_query.nil?
+        return doc_hash
+      end
+
+      doc_hash["stemmed_query_as_term"] = " #{analyzed_best_bet_query(stemmed_query)} "
       doc_hash
     end
 

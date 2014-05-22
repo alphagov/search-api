@@ -15,7 +15,7 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
         }
       },
       size: 1000,
-      fields: [ :details ],
+      fields: [ :details, :stemmed_query_as_term ],
     }
   end
 
@@ -50,6 +50,7 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
     ).returns(
       bb_hits(hits)
     )
+    @index.expects(:analyzed_best_bet_query).with(query).returns(query)
   end
 
   context "without best bets" do

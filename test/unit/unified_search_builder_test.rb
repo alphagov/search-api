@@ -10,6 +10,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     @metasearch_index.stubs(:raw_search).returns({
       "hits" => {"hits" => [], "total" => 0}
     })
+    @metasearch_index.stubs(:analyzed_best_bet_query).returns("cheese")
   end
 
   def bb_doc(query, type, best_bets, worst_bets)
@@ -38,6 +39,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         bb_doc("cheese", "exact", best_bets, worst_bets)
       ], "total" => 1}
     })
+    @metasearch_index.expects(:analyzed_best_bet_query).returns("cheese")
   end
 
   def setup_best_bets_query(best_bets, worst_bets)

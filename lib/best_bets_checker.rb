@@ -100,12 +100,25 @@ private
   # the bet, and for best bets also a "position" key containing the position
   # the best bet should appear at.
   def fetch_bets
+    analyzed_users_query = " #{@index.analyzed_best_bet_query(@query)} "
     es_response = @index.raw_search(lookup_payload, "best_bet")
+    result = []
     es_response["hits"]["hits"].map do |hit|
       details = JSON.parse(hit["fields"]["details"])
       bet_query, _, bet_type = hit["_id"].rpartition('-')
-      [bet_query, bet_type, details["best_bets"], details["worst_bets"]]
+      stemmed_query_as_term = hit["fields"]["stemmed_query_as_term"]
+
+      # The search on the stemmed_query field is overly broad, so here we need
+      # to filter out such matches where the query in the bet is not a
+      # substring (modulo stemming) of the user's query.
+      unless stemmed_query_as_term.nil?
+        unless analyzed_users_query.include? stemmed_query_as_term
+          next
+        end
+      end
+      result << [bet_query, bet_type, details["best_bets"], details["worst_bets"]]
     end
+    result
   end
 
   # Return a payload for a query across the best_bets type in the metasearch
@@ -117,6 +130,12 @@ private
   # anywhere near this limit, and performance with 1000 should be okay, but
   # it's a good idea to avoid risking having to deal with huge numbers of
   # returned bets.
+  #
+  # It's not possible to build an elasticsearch query against the stemmed_query
+  # field which only returns results where the entire stemmed_query field value
+  # occurs as a phrase in the user's query.  Instead, we do an OR query to
+  # obtain a set of candidates which match that field, and use the
+  # stemmed_query_as_term field to look for substring matches in the user's query.
   def lookup_payload
     {
       query: {
@@ -128,7 +147,7 @@ private
         }
       },
       size: 1000,
-      fields: [ :details ]
+      fields: [ :details, :stemmed_query_as_term ]
     }
   end
 end

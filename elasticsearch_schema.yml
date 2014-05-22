@@ -806,6 +806,7 @@ mappings:
       properties:
         exact_query:   { type: string, index: analyzed, analyzer: "exact_match" }
         stemmed_query: { type: string, index: analyzed, analyzer: "best_bet_stemmed_match" }
+        stemmed_query_as_term: { type: string, index: not_analyzed }
         details:       { type: string, index: not_analyzed }
   metasearch-test: *metasearch
   government:

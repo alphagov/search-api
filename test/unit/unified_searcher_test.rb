@@ -140,11 +140,12 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: {:bool => {:should => [{:match => {:exact_query => query}},
                                       {:match => {:stemmed_query => query}}]}},
         size: 1000,
-        fields: [:details],
+        fields: [:details, :stemmed_query_as_term],
       }, "best_bet").returns(
       {
         "hits" => {"hits" => [], "total" => [].size}
       })
+    @metasearch_index.expects(:analyzed_best_bet_query).with(query).returns(query)
   end
 
   context "unfiltered, unsorted search" do
