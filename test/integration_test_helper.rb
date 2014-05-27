@@ -53,6 +53,7 @@ module ElasticsearchIntegration
     end
     check_index_name(default) unless default.nil?
 
+    @content_indexes = content_index_names
     @default_index_name = default || content_index_names.first
     @auxiliary_indexes = auxiliary_index_names
 
@@ -91,13 +92,13 @@ module ElasticsearchIntegration
   end
 
   def create_test_indexes
-    (@auxiliary_indexes + [@default_index_name]).each do |index|
+    (@auxiliary_indexes + @content_indexes).each do |index|
       create_test_index(index)
     end
   end
 
   def clean_test_indexes
-    (@auxiliary_indexes + [@default_index_name]).each do |index|
+    (@auxiliary_indexes + @content_indexes).each do |index|
       clean_index_group(index)
     end
   end

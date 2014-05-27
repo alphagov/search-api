@@ -26,13 +26,13 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
       )
     end
 
-    create_test_index
+    create_test_indexes
     add_sample_documents
     commit_index
   end
 
   def teardown
-    clean_index_group
+    clean_test_indexes
   end
 
   def sample_document_attributes

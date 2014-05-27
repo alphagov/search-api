@@ -9,7 +9,7 @@ class ElasticsearchClosingTest < IntegrationTest
   end
 
   def teardown
-    clean_index_group
+    clean_test_indexes
   end
 
   # When the index is closed, we don't particularly mind which exception gets

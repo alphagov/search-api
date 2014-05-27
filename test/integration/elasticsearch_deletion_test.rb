@@ -15,7 +15,7 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def teardown
-    clean_index_group
+    clean_test_indexes
   end
 
   def sample_document_attributes

@@ -13,6 +13,9 @@ class MultiIndexTest < IntegrationTest
     app.settings.search_config.stubs(:govuk_index_names).returns(INDEX_NAMES)
     enable_test_index_connections
 
+    @auxiliary_indexes.each do |index|
+      create_test_index(index)
+    end
     INDEX_NAMES.each do |index_name|
       try_remove_test_index(index_name)
       if index_name == "government_test"
@@ -27,9 +30,7 @@ class MultiIndexTest < IntegrationTest
   end
 
   def teardown
-    INDEX_NAMES.each do |index_name|
-      clean_index_group(index_name)
-    end
+    clean_test_indexes
   end
 
   def sample_document_attributes(index_name, count)

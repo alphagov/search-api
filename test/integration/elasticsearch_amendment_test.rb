@@ -7,12 +7,12 @@ class ElasticsearchAmendmentTest < IntegrationTest
   def setup
     stub_elasticsearch_settings
     enable_test_index_connections
-    create_test_index
+    create_test_indexes
     add_sample_document
   end
 
   def teardown
-    clean_index_group
+    clean_test_indexes
   end
 
   def sample_document_attributes
