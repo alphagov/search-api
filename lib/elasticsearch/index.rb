@@ -216,9 +216,10 @@ module Elasticsearch
     end
 
     def get(link)
-      logger.info "Retrieving document with link '#{link}'"
+      type, id = link_to_type_and_id(link)
+      logger.info "Retrieving document of type '#{type}', id '#{id}'"
       begin
-        response = @client.get("_all/#{CGI.escape(link)}")
+        response = @client.get("#{CGI.escape(type)}/#{CGI.escape(id)}")
       rescue RestClient::ResourceNotFound
         return nil
       end
@@ -338,14 +339,9 @@ module Elasticsearch
     end
 
     def delete(link)
+      type, id = link_to_type_and_id(link)
       begin
-        # Can't use a simple delete, because we don't know the type
-        payload = {
-          "term" => {
-            "link" => link
-          }
-        }
-        @client.delete_with_payload "_query", payload.to_json
+        @client.delete("#{CGI.escape(type)}/#{CGI.escape(id)}")
       rescue RestClient::ResourceNotFound
       rescue RestClient::Forbidden => e
         response_body = MultiJson.decode(e.http_body)
@@ -554,6 +550,18 @@ module Elasticsearch
         timeout: options[:timeout] || TIMEOUT_SECONDS,
         open_timeout: options[:open_timeout] || OPEN_TIMEOUT_SECONDS
       )
+    end
+
+    def link_to_type_and_id(link)
+      # If link starts with edition/ or best-bet/ then use those values for the
+      # type.  For backwards compact, if it starts with anything else currently
+      # assume that the type is edition.
+      # 
+      if (m = link.match(/\A(edition|best_bet)\/(.*)\Z/))
+        return [m[1], m[2]]
+      else
+        return ["edition", link]
+      end
     end
   end
 end
