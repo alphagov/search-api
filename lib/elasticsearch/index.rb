@@ -67,16 +67,18 @@ module Elasticsearch
 
     attr_reader :mappings, :index_name, :promoted_results
 
-    def initialize(base_uri, index_name, mappings, promoted_results = [])
+    def initialize(base_uri, index_name, mappings, promoted_results = [],
+                   search_config)
       # Save this for if and when we want to build custom Clients
       @index_uri = base_uri + "#{CGI.escape(index_name)}/"
 
       @client = build_client
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
-      @index_with_popularity = !(settings.search_config.auxiliary_index_names.include? @index_name)
       @mappings = mappings
       @promoted_results = promoted_results
+      @search_config = search_config
+      @index_with_popularity = !(@search_config.auxiliary_index_names.include? @index_name)
     end
 
     def field_names
@@ -513,12 +515,12 @@ module Elasticsearch
         return nil
       end
 
-      traffic_index_name = settings.search_config.auxiliary_index_names.find {|index|
+      traffic_index_name = @search_config.auxiliary_index_names.find {|index|
         index.start_with?("page-traffic")
       }
 
       if traffic_index_name
-        result = settings.search_config.search_server.index(traffic_index_name)
+        result = @search_config.search_server.index(traffic_index_name)
 
         if result.exists?
           return result

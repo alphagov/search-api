@@ -18,13 +18,15 @@ module Elasticsearch
   class IndexGroup
     attr_reader :promoted_results
 
-    def initialize(base_uri, name, index_settings, mappings, promoted_results = [])
+    def initialize(base_uri, name, index_settings, mappings, promoted_results = [],
+                   search_config)
       @base_uri = base_uri
       @client = Client.new(base_uri)
       @name = name
       @index_settings = index_settings
       @mappings = mappings
       @promoted_results = promoted_results
+      @search_config = search_config
     end
 
     def create_index
@@ -38,7 +40,8 @@ module Elasticsearch
 
       logger.info "Created index #{index_name}"
 
-      Index.new(@base_uri, index_name, @mappings, @promoted_results)
+      Index.new(@base_uri, index_name, @mappings, @promoted_results,
+                @search_config)
     end
 
     def switch_to(index)
@@ -84,7 +87,7 @@ module Elasticsearch
     end
 
     def current
-      Index.new(@base_uri, @name, @mappings, @promoted_results)
+      Index.new(@base_uri, @name, @mappings, @promoted_results, @search_config)
     end
 
     # The unaliased version of the current index
@@ -94,7 +97,8 @@ module Elasticsearch
     def current_real
       current_index = current
       if current_index.exists?
-        Index.new(@base_uri, current.real_name, @mappings, @promoted_results)
+        Index.new(@base_uri, current.real_name, @mappings, @promoted_results,
+                  @search_config)
       else
         nil
       end

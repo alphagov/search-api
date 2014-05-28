@@ -2,6 +2,7 @@ require "test_helper"
 require "multi_json"
 require "elasticsearch/search_server"
 require "elasticsearch/index_group"
+require "search_config"
 
 class IndexGroupTest < MiniTest::Unit::TestCase
 
@@ -38,6 +39,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
       @schema,
       ["mainstream", "custom"],
       ["mainstream"],
+      SearchConfig.new
     )
   end
 
@@ -344,7 +346,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     name = "my_index"
     index_settings = {"settings" => {}}
     mappings = {"default" => {}}
-    index_group = Elasticsearch::IndexGroup.new(base_uri, name, index_settings, mappings, promoted_results)
+    index_group = Elasticsearch::IndexGroup.new(base_uri, name, index_settings, mappings, promoted_results, SearchConfig.new)
 
     assert_equal promoted_results, index_group.current.promoted_results
   end

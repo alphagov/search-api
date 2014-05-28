@@ -9,6 +9,7 @@ class SearchConfig
       elasticsearch_schema,
       index_names,
       content_index_names,
+      self,
     )
   end
 
