@@ -560,4 +560,23 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     end
   end
 
+  context "search with debug disabling use of best bets" do
+    setup do
+      # No need to set up best bets query.
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: nil,
+        debug: {disable_best_bets: true},
+      }, @metasearch_index)
+    end
+
+    should "have not have a bool query in payload" do
+      assert @builder.payload[:query].keys != [:bool]
+    end
+  end
 end
