@@ -1,5 +1,6 @@
 require "test_helper"
 require "elasticsearch/index"
+require "search_config"
 require "webmock"
 
 class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
@@ -7,7 +8,8 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
 
   def setup
     base_uri = URI.parse("http://example.com:9200")
-    @wrapper = Elasticsearch::Index.new(base_uri, "test-index", default_mappings)
+    search_config = SearchConfig.new
+    @wrapper = Elasticsearch::Index.new(base_uri, "test-index", default_mappings, search_config)
   end
 
   def test_pagination_params_are_required

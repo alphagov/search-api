@@ -1,5 +1,6 @@
 require "test_helper"
 require "elasticsearch/index"
+require "search_config"
 require "webmock"
 
 class ElasticsearchIndexTest < MiniTest::Unit::TestCase
@@ -7,9 +8,10 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
   def setup
     @base_uri = URI.parse("http://example.com:9200")
-    @wrapper = Elasticsearch::Index.new(@base_uri, "test-index", default_mappings)
+    search_config = SearchConfig.new
+    @wrapper = Elasticsearch::Index.new(@base_uri, "test-index", default_mappings, search_config)
 
-    @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic", page_traffic_mappings)
+    @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic", page_traffic_mappings, search_config)
     @wrapper.stubs(:traffic_index).returns(@traffic_index)
     @traffic_index.stubs(:real_name).returns("page-traffic")
   end
