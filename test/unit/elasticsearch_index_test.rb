@@ -405,6 +405,15 @@ eos
     assert_requested(stub_get)
   end
 
+  def test_raw_search_with_type
+    stub_get = stub_request(:get, "http://example.com:9200/test-index/test-type/_search").with(
+      body: %r{"query":"keyword search"},
+      headers: {"Content-Type" => "application/json"}
+    ).to_return(:body => '{"hits":{"hits":[]}}')
+    @wrapper.raw_search({query: "keyword search"}, "test-type")
+    assert_requested(stub_get)
+  end
+
   def test_commit
     refresh_url = "http://example.com:9200/test-index/_refresh"
     stub_request(:post, refresh_url).to_return(

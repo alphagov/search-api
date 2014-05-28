@@ -57,15 +57,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "query" => "jobs"
     }
 
-    mappings = default_mappings.merge(
-      "best_bet" => {
-        "properties" => {
-          "query" => { "type" => "string", "index" => "not_analyzed" }
-        }
-      }
-    )
-
-    document = Document.from_hash(hash, mappings)
+    document = Document.from_hash(hash, default_mappings)
 
     assert_equal "jobs", document.to_hash["query"]
     assert_equal "jobs", document.query

@@ -8,8 +8,7 @@ class BulkLoaderTest < IntegrationTest
   def setup
     stub_elasticsearch_settings
     enable_test_index_connections
-    try_remove_test_index
-    clean_popularity_index
+    clean_test_indexes
 
     @sample_document = {
       "title" => "TITLE",
@@ -18,11 +17,11 @@ class BulkLoaderTest < IntegrationTest
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT"
     }
+    create_test_indexes
   end
 
   def teardown
-    clean_index_group
-    clean_popularity_index
+    clean_test_indexes
   end
 
   def retrieve_document_from_rummager(link)
@@ -49,15 +48,13 @@ class BulkLoaderTest < IntegrationTest
       }
     }
 
-    payload = [
+    [
       index_action.to_json,
       document.to_json
     ].join("\n") + "\n"
   end
 
   def test_indexes_documents
-    create_test_indexes
-
     bulk_loader = BulkLoader.new(app.settings.search_config, @default_index_name)
     bulk_loader.load_from(StringIO.new(index_payload(@sample_document)))
 
@@ -65,7 +62,6 @@ class BulkLoaderTest < IntegrationTest
   end
 
   def test_updates_an_existing_document
-    create_test_indexes
     insert_stub_popularity_data(@sample_document["link"])
 
     index_group = search_server.index_group(@default_index_name)

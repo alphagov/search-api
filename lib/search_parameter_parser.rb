@@ -63,6 +63,7 @@ private
       return_fields: return_fields,
       filters: filters,
       facets: facets,
+      debug: debug_options,
     }
 
     unused_params = @params.keys - @used_params
@@ -170,5 +171,22 @@ private
   def string_param(param_name)
     @used_params << param_name
     @params[param_name]
+  end
+
+  def debug_options
+    debug = @params["debug"] || ""
+    @used_params << "debug"
+
+    options = {}
+    debug.split(",").each { |option|
+      case option
+      when ""
+      when "disable_best_bets"
+        options[:disable_best_bets] = true
+      else
+        @errors << %{Unknown debug option "#{option}"}
+      end
+    }
+    options
   end
 end

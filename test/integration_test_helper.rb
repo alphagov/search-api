@@ -2,6 +2,7 @@ require "test_helper"
 require "app"
 require "elasticsearch/search_server"
 require "sidekiq/testing/inline"  # Make all queued jobs run immediately
+require 'debugger'
 
 module IntegrationFixtures
   include Fixtures::DefaultMappings
@@ -40,16 +41,19 @@ module ElasticsearchIntegration
   # Make sure that we're dealing with a test index (of the form <foo>_test)
   def check_index_name(index_name)
     unless /^[a-z_-]+(_|-)test($|-)/.match index_name
-      raise InvalidTestIndex, index_name
+      raise InvalidTestIndex, "#{index_name} is not a valid test index name"
     end
   end
 
-  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil, auxiliary_index_names=["page-traffic-test"])
+  def stub_elasticsearch_settings(content_index_names = ["rummager_test"], default = nil)
+    metasearch_index_name = "metasearch-test"
+    auxiliary_index_names=["page-traffic-test", metasearch_index_name]
     (content_index_names + auxiliary_index_names).each do |n|
       check_index_name(n)
     end
     check_index_name(default) unless default.nil?
 
+    @content_indexes = content_index_names
     @default_index_name = default || content_index_names.first
     @auxiliary_indexes = auxiliary_index_names
 
@@ -58,6 +62,7 @@ module ElasticsearchIntegration
       "content_index_names" => content_index_names,
       "auxiliary_index_names" => auxiliary_index_names,
       "govuk_index_names" => content_index_names,
+      "metasearch_index_name" => metasearch_index_name,
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
     app.settings.stubs(:enable_queue).returns(false)
@@ -87,8 +92,14 @@ module ElasticsearchIntegration
   end
 
   def create_test_indexes
-    (@auxiliary_indexes + [@default_index_name]).each do |index|
+    (@auxiliary_indexes + @content_indexes).each do |index|
       create_test_index(index)
+    end
+  end
+
+  def clean_test_indexes
+    (@auxiliary_indexes + @content_indexes).each do |index|
+      clean_index_group(index)
     end
   end
 

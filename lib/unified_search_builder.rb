@@ -1,3 +1,4 @@
+require "best_bets_checker"
 require "elasticsearch/escaping"
 require "unf"
 
@@ -9,16 +10,21 @@ class UnifiedSearchBuilder
   GOVERNMENT_BOOST_FACTOR = 0.4
   POPULARITY_OFFSET = 0.001
 
-  def initialize(params)
+  def initialize(params, metaindex)
     @params = params
     @query = query_normalized
+    if @params[:debug][:disable_best_bets]
+      @best_bets_checker = BestBetsChecker.new(metaindex, nil)
+    else
+      @best_bets_checker = BestBetsChecker.new(metaindex, query_normalized)
+    end
   end
 
   def payload
     Hash[{
       from: @params[:start],
       size: @params[:count],
-      query: query_hash,
+      query: query_hash_with_best_bets,
       filter: filters_hash,
       fields: @params[:return_fields],
       sort: sort_list,
@@ -61,6 +67,43 @@ class UnifiedSearchBuilder
         script: "_score * (doc['popularity'].value + #{POPULARITY_OFFSET})"
       }
     }
+  end
+
+  def best_bets
+    @best_bets_checker.best_bets
+  end
+
+  def worst_bets
+    @best_bets_checker.worst_bets
+  end
+
+  def query_hash_with_best_bets
+    bb = best_bets
+    wb = worst_bets
+    if bb.empty? && wb.empty?
+      return query_hash
+    end
+
+    bb_max_position = best_bets.keys.max
+    bb_queries = bb.map do |position, links|
+      {
+        custom_boost_factor: {
+          query: {
+            ids: { values: links },
+          },
+          boost_factor: (bb_max_position + 1 - position) * 1000000,
+        }
+      }
+    end
+    result = {
+      bool: {
+        should: [query_hash] + bb_queries
+      }
+    }
+    unless wb.empty?
+      result[:bool][:must_not] = [ { ids: { values: wb} } ]
+    end
+    result
   end
 
   def query_hash

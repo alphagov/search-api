@@ -18,7 +18,7 @@ class ElasticsearchIndexingTest < IntegrationTest
   end
 
   def teardown
-    clean_index_group
+    clean_test_indexes
   end
 
   def retrieve_document_from_rummager(link)
@@ -38,14 +38,14 @@ class ElasticsearchIndexingTest < IntegrationTest
   end
 
   def test_should_indicate_success_in_response_code_when_adding_a_new_document
-    create_test_index
+    create_test_indexes
 
     post "/documents", MultiJson.encode(@sample_document)
     assert last_response.ok?
   end
 
   def test_after_adding_a_document_to_index_should_be_able_to_retrieve_it_again
-    create_test_index
+    create_test_indexes
 
     post "/documents", MultiJson.encode(@sample_document)
 
@@ -54,7 +54,7 @@ class ElasticsearchIndexingTest < IntegrationTest
 
   def test_should_be_able_to_index_a_document_with_additional_fields
     add_field_to_mappings("topics")
-    create_test_index
+    create_test_indexes
 
     test_data = @sample_document.merge("topics" => [1,2])
 
@@ -74,7 +74,7 @@ class ElasticsearchIndexingTest < IntegrationTest
         "terms" => "job"
       }]
     end
-    create_test_index
+    create_test_indexes
 
     promoted_document = {
       "title" => "TITLE",

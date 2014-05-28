@@ -12,6 +12,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
       filters: {},
       facets: {},
+      debug: {},
     }.merge(params)
   end
 
@@ -219,6 +220,22 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal("Some requested fields are not valid return fields: [\"waffle\"]", p.error)
     assert !p.valid?
     assert_equal(expected_params({return_fields: ["title"]}), p.parsed_params)
+  end
+
+  should "understand the debug parameter" do
+    p = SearchParameterParser.new({"debug" => "disable_best_bets,,unknown_option"})
+
+    assert_equal(%{Unknown debug option "unknown_option"}, p.error)
+    assert !p.valid?
+    assert_equal expected_params({debug: {disable_best_bets: true}}), p.parsed_params
+  end
+
+  should "ignore empty options in the debug parameter" do
+    p = SearchParameterParser.new({"debug" => ",,"})
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal expected_params({debug: {}}), p.parsed_params
   end
 
 end

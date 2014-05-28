@@ -1,11 +1,68 @@
 require "test_helper"
+require "json"
 require "set"
 require "unified_search_builder"
 
 class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
+  
+  def stub_zero_best_bets
+    @metasearch_index = stub("metasearch index")
+    @metasearch_index.stubs(:raw_search).returns({
+      "hits" => {"hits" => [], "total" => 0}
+    })
+    @metasearch_index.stubs(:analyzed_best_bet_query).returns("cheese")
+  end
+
+  def bb_doc(query, type, best_bets, worst_bets)
+    {
+      "_index" => "metasearch-2014-05-14t17:27:17z-bc245536-f1c1-4f95-83e4-596199b81f0a",
+      "_type" => "best_bet",
+      "_id" => "#{query}-#{type}",
+      "_score" => 1.0,
+      "fields" => {
+        "details" => JSON.generate({
+          best_bets: best_bets.map do |link, position|
+            {link: link, position: position}
+          end,
+          worst_bets: worst_bets.map do |link|
+            {link: link}
+          end,
+        })
+      }
+    }
+  end
+
+  def setup_best_bets(best_bets, worst_bets)
+    @metasearch_index = stub("metasearch index")
+    @metasearch_index.stubs(:raw_search).returns({
+      "hits" => {"hits" => [
+        bb_doc("cheese", "exact", best_bets, worst_bets)
+      ], "total" => 1}
+    })
+    @metasearch_index.expects(:analyzed_best_bet_query).returns("cheese")
+  end
+
+  def setup_best_bets_query(best_bets, worst_bets)
+    params = {
+      start: 0,
+      count: 10,
+      query: "cheese ",
+      order: nil,
+      filters: {},
+      fields: nil,
+      facets: nil,
+      debug: {},
+    }
+    setup_best_bets([], [])
+    @builder_without_best_bets = UnifiedSearchBuilder.new(params, @metasearch_index)
+    @query_without_best_bets = @builder_without_best_bets.payload[:query]
+    setup_best_bets(best_bets, worst_bets)
+    @builder = UnifiedSearchBuilder.new(params, @metasearch_index)
+  end
 
   context "unfiltered search" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 20,
@@ -14,7 +71,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: nil,
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "strip whitespace from the query" do
@@ -54,6 +112,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with one filter" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -62,7 +121,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {"organisations" => ["hm-magic"]},
         fields: nil,
         facets: nil,
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "have filter in payload" do
@@ -86,6 +146,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with a filter with multiple options" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -94,7 +155,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {"organisations" => ["hm-magic", "hmrc"]},
         fields: nil,
         facets: nil,
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "have filter in payload" do
@@ -119,6 +181,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with multiple filters" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -130,7 +193,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         },
         fields: nil,
         facets: nil,
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "have filter in payload" do
@@ -158,6 +222,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "building search with unicode" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -166,7 +231,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: nil,
-      })
+        debug: {},
+      }, @metasearch_index)
 
     end
 
@@ -180,6 +246,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with ascending sort" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -188,7 +255,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: nil,
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "have sort in payload" do
@@ -231,6 +299,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with descending sort" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -239,7 +308,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: nil,
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "have sort in payload" do
@@ -281,6 +351,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with explicit return fields" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -289,7 +360,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         return_fields: ['title'],
         facets: nil,
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "have correct fields in payload" do
@@ -302,6 +374,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -310,7 +383,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {},
         fields: nil,
         facets: {"organisations" => 10},
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "not have filter in payload" do
@@ -336,6 +410,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet and filter on same field" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -344,7 +419,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {"organisations" => ["hm-magic"]},
         fields: nil,
         facets: {"organisations" => 10},
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "have correct filter" do
@@ -370,6 +446,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet and filter on different field" do
     setup do
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -378,7 +455,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         filters: {"section" => ["levitation"]},
         fields: nil,
         facets: {"organisations" => 10},
-      })
+        debug: {},
+      }, @metasearch_index)
     end
 
     should "have correct filter" do
@@ -405,4 +483,100 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     end
   end
 
+  context "search with a single best bet url" do
+    setup do
+      setup_best_bets_query([["/foo", 1]], [])
+    end
+
+    should "have correct query in payload" do
+      assert_equal(
+        {
+          bool: {
+            should: [
+              @query_without_best_bets,
+              {
+                custom_boost_factor: {
+                  query: {
+                    ids: { values: ["/foo"] },
+                  },
+                  boost_factor: 1000000,
+                }
+              }
+            ]
+          }
+        },
+        @builder.payload[:query])
+    end
+  end
+
+  context "search with two best bet urls" do
+    setup do
+      setup_best_bets_query([["/foo", 1], ["/bar", 2]], [])
+    end
+
+    should "have correct query in payload" do
+      assert_equal(
+        {
+          bool: {
+            should: [
+              @query_without_best_bets,
+              {
+                custom_boost_factor: {
+                  query: { ids: { values: ["/foo"] }, },
+                  boost_factor: 2000000,
+                }
+              },
+              {
+                custom_boost_factor: {
+                  query: { ids: { values: ["/bar"] }, },
+                  boost_factor: 1000000,
+                }
+              }
+            ]
+          }
+        },
+        @builder.payload[:query])
+    end
+  end
+
+  context "search with a worst bet" do
+    setup do
+      setup_best_bets_query([], ["/foo"])
+    end
+
+    should "have correct query in payload" do
+      assert_equal(
+        {
+          bool: {
+            should: [
+              @query_without_best_bets,
+            ],
+            must_not: [
+              { ids: { values: ["/foo"] } }
+            ],
+          }
+        },
+        @builder.payload[:query])
+    end
+  end
+
+  context "search with debug disabling use of best bets" do
+    setup do
+      # No need to set up best bets query.
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: nil,
+        debug: {disable_best_bets: true},
+      }, @metasearch_index)
+    end
+
+    should "have not have a bool query in payload" do
+      assert @builder.payload[:query].keys != [:bool]
+    end
+  end
 end

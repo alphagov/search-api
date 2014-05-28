@@ -8,3 +8,4 @@ document_collection_registry_index: "government"
 world_location_registry_index: "government"
 # These indices are passed in this order to Unified Search
 govuk_index_names: ["mainstream", "detailed", "government"]
+metasearch_index_name: "metasearch"

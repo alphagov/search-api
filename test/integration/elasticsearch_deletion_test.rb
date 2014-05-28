@@ -7,46 +7,65 @@ class ElasticsearchDeletionTest < IntegrationTest
   def setup
     stub_elasticsearch_settings
     enable_test_index_connections
-    try_remove_test_index
-    create_test_index
+    clean_test_indexes
+    create_test_indexes
 
     add_sample_documents
     commit_index
   end
 
   def teardown
-    clean_index_group
+    clean_test_indexes
   end
 
   def sample_document_attributes
     [
       {
-        "title" => "Cheese in my face",
-        "description" => "Hummus weevils",
-        "format" => "answer",
-        "link" => "/an-example-answer",
-        "indexable_content" => "I like my badger: he is tasty and delicious"
+        "documents" => [
+          {
+            "title" => "Cheese in my face",
+            "description" => "Hummus weevils",
+            "format" => "answer",
+            "link" => "/an-example-answer",
+            "indexable_content" => "I like my badger: he is tasty and delicious"
+          },
+          {
+            "title" => "Useful government information",
+            "description" => "Government, government, government. Developers.",
+            "format" => "answer",
+            "link" => "/another-example-answer",
+            "section" => "Crime",
+            "indexable_content" => "Tax, benefits, roads and stuff"
+          },
+          {
+            "title" => "Some other site",
+            "format" => "answer",
+            "link" => "http://example.com/",
+          }
+        ]
       },
       {
-        "title" => "Useful government information",
-        "description" => "Government, government, government. Developers.",
-        "format" => "answer",
-        "link" => "/another-example-answer",
-        "section" => "Crime",
-        "indexable_content" => "Tax, benefits, roads and stuff"
-      },
-      {
-          "title" => "Some other site",
-          "format" => "answer",
-          "link" => "http://example.com/",
+        "index" => "metasearch-test",
+        "documents" => [
+          {
+            "_id" => "jobs_exact",
+            "_type" => "best_bet",
+            "query" => "jobs",
+          }
+        ]
       }
     ]
   end
 
   def add_sample_documents
-    sample_document_attributes.each do |sample_document|
-      post "/documents", MultiJson.encode(sample_document)
-      assert last_response.ok?
+    sample_document_attributes.each do |index_data|
+      path = "/documents"
+      path = "/#{index_data['index']}#{path}" if index_data.has_key?('index')
+
+      index_data['documents'].each do |sample_document|
+        post path, MultiJson.encode(sample_document)
+        assert last_response.ok?
+      end
     end
   end
 
