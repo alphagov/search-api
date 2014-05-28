@@ -54,8 +54,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       debug: {},
     }
     setup_best_bets([], [])
-    @builder = UnifiedSearchBuilder.new(params, @metasearch_index)
-    @simple_query = @builder.payload[:query]
+    @builder_without_best_bets = UnifiedSearchBuilder.new(params, @metasearch_index)
+    @query_without_best_bets = @builder_without_best_bets.payload[:query]
     setup_best_bets(best_bets, worst_bets)
     @builder = UnifiedSearchBuilder.new(params, @metasearch_index)
   end
@@ -493,7 +493,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         {
           bool: {
             should: [
-              @simple_query,
+              @query_without_best_bets,
               {
                 custom_boost_factor: {
                   query: {
@@ -519,7 +519,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         {
           bool: {
             should: [
-              @simple_query,
+              @query_without_best_bets,
               {
                 custom_boost_factor: {
                   query: { ids: { values: ["/foo"] }, },
@@ -549,7 +549,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         {
           bool: {
             should: [
-              @simple_query,
+              @query_without_best_bets,
             ],
             must_not: [
               { ids: { values: ["/foo"] } }
