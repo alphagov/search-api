@@ -5,7 +5,7 @@ require "unified_search_builder"
 
 class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   
-  def stub_best_bets
+  def stub_zero_best_bets
     @metasearch_index = stub("metasearch index")
     @metasearch_index.stubs(:raw_search).returns({
       "hits" => {"hits" => [], "total" => 0}
@@ -62,7 +62,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "unfiltered search" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 20,
@@ -112,7 +112,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with one filter" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -146,7 +146,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with a filter with multiple options" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -181,7 +181,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with multiple filters" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -222,7 +222,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "building search with unicode" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -246,7 +246,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with ascending sort" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -299,7 +299,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with descending sort" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -351,7 +351,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with explicit return fields" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -374,7 +374,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -410,7 +410,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet and filter on same field" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
@@ -446,7 +446,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   context "search with facet and filter on different field" do
     setup do
-      stub_best_bets
+      stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new({
         start: 0,
         count: 10,
