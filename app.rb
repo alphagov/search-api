@@ -8,6 +8,8 @@ require "csv"
 
 require "document"
 require "result_set_presenter"
+require "govuk_searcher"
+require "govuk_search_presenter"
 require "unified_searcher"
 require "organisation_set_presenter"
 require "document_series_registry"
@@ -60,6 +62,12 @@ class Rummager < Sinatra::Application
   def world_location_registry
     index_name = settings.search_config.world_location_registry_index
     @@world_location_registry ||= WorldLocationRegistry.new(search_server.index(index_name)) if index_name
+  end
+
+  def govuk_indices
+    settings.search_config.govuk_index_names.map do |index_name|
+      search_server.index(index_name)
+    end
   end
 
   def unified_index
@@ -128,6 +136,71 @@ class Rummager < Sinatra::Application
 
   error Elasticsearch::BulkIndexFailure do
     halt(500, env['sinatra.error'].message)
+  end
+
+  before "/?:index?/search.?:request_format?" do
+    @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
+
+    if @query == ""
+      expires 3600, :public
+      halt 404
+    end
+
+    expires 3600, :public if @query.length < 20
+  end
+
+  # A mix of search results tailored for the GOV.UK site search
+  #
+  # The response looks like this:
+  #
+  #   {
+  #     "streams": {
+  #       "top-results": {
+  #         "title": "Top results",
+  #         "total": 3,
+  #         "results": [
+  #           ...
+  #         ]
+  #       },
+  #       "services-information": {
+  #         "title": "Services and information",
+  #         "total": 25,
+  #         "results": [
+  #           ...
+  #         ]
+  #       },
+  #       "departments-policy": {
+  #         "title": "Departments and policy",
+  #         "total": 19,
+  #         "results": [
+  #           ...
+  #         ]
+  #       }
+  #     },
+  #     "spelling_suggestions": [
+  #       ...
+  #     ]
+  #   }
+  get "/govuk/search.?:request_format?" do
+    json_only
+
+    organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
+
+    searcher = GovukSearcher.new(*govuk_indices)
+    result_streams = searcher.search(@query, organisation, params["sort"])
+
+    result_context = {
+      organisation_registry: organisation_registry,
+      topic_registry: topic_registry,
+      document_series_registry: document_series_registry,
+      document_collection_registry: document_collection_registry,
+      world_location_registry: world_location_registry
+    }
+
+    output = GovukSearchPresenter.new(result_streams, result_context).present
+    output["spelling_suggestions"] = suggester.suggestions(@query)
+
+    MultiJson.encode output
   end
 
   # Return a unified set of results for the GOV.UK site search.
@@ -237,6 +310,49 @@ class Rummager < Sinatra::Application
 
     searcher = UnifiedSearcher.new(unified_index, metasearch_index, registries, registry_by_field, suggester)
     MultiJson.encode searcher.search(parser.parsed_params)
+  end
+
+  # To search a named index:
+  #   /index_name/search?q=pie
+  #
+  # To search the primary index:
+  #   /search?q=pie
+  #
+  # To scope a search to an organisation:
+  #   /search?q=pie&organisation_slug=home-office
+  #
+  # To get the results in date order, rather than relevancy:
+  #   /search?q=pie&sort=public_timestamp&order=desc
+  #
+  # The response looks like this:
+  #
+  #   {
+  #     "total": 1,
+  #     "results": [
+  #       ...
+  #     ],
+  #     "spelling_suggestions": [
+  #       ...
+  #     ]
+  #   }
+  get "/?:index?/search.?:request_format?" do
+    json_only
+
+    organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
+    result_set = current_index.search(@query,
+      organisation: organisation,
+      sort: params["sort"],
+      order: params["order"])
+    presenter_context = {
+      organisation_registry: organisation_registry,
+      topic_registry: topic_registry,
+      document_series_registry: document_series_registry,
+      document_collection_registry: document_collection_registry,
+      world_location_registry: world_location_registry,
+      spelling_suggestions: suggester.suggestions(@query)
+    }
+    presenter = ResultSetPresenter.new(result_set, presenter_context)
+    MultiJson.encode presenter.present
   end
 
   # Perform an advanced search. Supports filters and pagination.
