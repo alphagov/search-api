@@ -57,7 +57,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     # Test that a reindex re-adds all the documents with new
     # stemming settings
 
-    get "/unified_search?q=directive"
+    get "/search?q=directive"
     assert_equal 2, MultiJson.decode(last_response.body)["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
@@ -68,10 +68,10 @@ class ElasticsearchMigrationTest < IntegrationTest
 
     index_group.switch_to new_index
 
-    get "/unified_search?q=directive"
+    get "/search?q=directive"
     assert_result_links "/important"
 
-    get "/unified_search?q=direct"
+    get "/search?q=direct"
     assert_result_links "/aliens"
   end
 end

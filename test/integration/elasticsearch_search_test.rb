@@ -140,50 +140,57 @@ class ElasticsearchSearchTest < IntegrationTest
   end
 
   def test_documents_with_public_timestamp_exhibit_a_decay_boost
-    get "/unified_search.json?q=mali"
+    get "/search.json?q=mali"
     assert last_response.ok?
     assert_result_links "/mali-1", "/mali-2", "/mali-3"
   end
 
   def test_should_search_by_content
-    get "/unified_search.json?q=badger"
+    get "/search.json?q=badger"
     assert last_response.ok?
     assert_result_links "/an-example-answer"
   end
 
   def test_can_scope_by_organisation
-    get "/unified_search.json?q=written&filter_organisations[]=home-office"
+    get "/search.json?q=written&organisation_slug=home-office"
     assert last_response.ok?
     assert_result_links "/written-by-ho"
   end
 
   def test_no_results_when_scoped_by_organisation
-    get "/unified_search.json?q=written&filter_organisations[]=ministry-of-justice"
+    get "/search.json?q=written&organisation_slug=ministry-of-justice"
     assert last_response.ok?
     assert_result_links # assert no results
   end
 
+  def test_can_sort_results_by_date
+    get "/search.json?q=mali&sort=public_timestamp&order=asc"
+    assert last_response.ok?
+    # Results should come out oldest-first
+    assert_result_links "/mali-3", "/mali-2", "/mali-1", order: true
+  end
+
   def test_should_match_stems
-    get "/unified_search.json?q=badgers"
+    get "/search.json?q=badgers"
     assert last_response.ok?
     assert_result_links "/an-example-answer"
   end
 
   def test_should_search_by_title
-    get "/unified_search.json?q=cheese"
+    get "/search.json?q=cheese"
     assert last_response.ok?
     assert_result_links "/an-example-answer"
   end
 
   def test_should_search_by_description
-    get "/unified_search.json?q=hummus"
+    get "/search.json?q=hummus"
     assert last_response.ok?
     assert_result_links "/an-example-answer"
   end
 
   def test_should_not_match_on_slug
     ["example", "%2Fan-example-answer"].each do |escaped_query|
-      get "/unified_search.json?q=#{escaped_query}"
+      get "/search.json?q=#{escaped_query}"
       assert last_response.ok?
       assert_no_results
     end
@@ -191,47 +198,47 @@ class ElasticsearchSearchTest < IntegrationTest
 
   def test_should_escape_lucene_characters
     ["badger)", "badger\\"].each do |problem|
-      get "/unified_search.json?q=#{CGI.escape(problem)}"
+      get "/search.json?q=#{CGI.escape(problem)}"
       assert last_response.ok?
       assert_result_links "/an-example-answer"
     end
   end
 
   def test_should_not_match_on_format
-    get "/unified_search.json?q=answer"
+    get "/search.json?q=answer"
     assert last_response.ok?
     assert_no_results
   end
 
   def test_should_not_match_on_section
-    get "/unified_search.json?q=crime"
+    get "/search.json?q=crime"
     assert last_response.ok?
     assert_no_results
   end
 
   def test_should_not_fail_on_conjunctions
     ["cheese AND ", "cheese OR ", " AND cheese", " OR cheese"].each do |term|
-      get "/unified_search.json?q=#{CGI.escape term}"
+      get "/search.json?q=#{CGI.escape term}"
       assert last_response.ok?
       assert_result_links "/an-example-answer"
     end
   end
 
   def test_should_not_fail_on_NOT
-    get "/unified_search.json?q=NOT"
+    get "/search.json?q=NOT"
     assert last_response.ok?
   end
 
   def test_should_not_parse_conjunctions_in_words
     # Testing a SHOUTY QUERY because Lucene only treats capitalised
     # conjunctions as special operators
-    get "/unified_search.json?q=PORK+PIES"
+    get "/search.json?q=PORK+PIES"
     assert last_response.ok?
     assert_result_links "/pork-pies"
   end
 
   def test_promoted_items_float_to_top_if_query_contains_a_promoted_keyword
-    get "/unified_search.json?q=promoted+jobs+in+birmingham"
+    get "/search.json?q=promoted+jobs+in+birmingham"
     assert last_response.ok?
     assert_result_links "/promoted", "/not-promoted"
   end

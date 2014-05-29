@@ -91,7 +91,7 @@ class ElasticsearchDeletionTest < IntegrationTest
 
     commit_index
 
-    get "/unified_search.json?q=cheese"
+    get "/search.json?q=cheese"
     assert_no_results
   end
 
@@ -116,7 +116,7 @@ class ElasticsearchDeletionTest < IntegrationTest
     end
 
     ["badger", "benefits"].each do |query|
-      get "/unified_search.json?q=#{query}"
+      get "/search.json?q=#{query}"
       assert_no_results
     end
   end
