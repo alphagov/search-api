@@ -269,7 +269,7 @@ eos
   end
 
   def test_get_document
-    document_url = "http://example.com:9200/test-index/_all/%2Fan-example-link"
+    document_url = "http://example.com:9200/test-index/edition/%2Fan-example-link"
     document_hash = {
       "_type" => "edition",
       "link" => "/an-example-link",
@@ -365,7 +365,7 @@ eos
   end
 
   def test_get_document_not_found
-    document_url = "http://example.com:9200/test-index/_all/%2Fa-bad-link"
+    document_url = "http://example.com:9200/test-index/edition/%2Fa-bad-link"
 
     not_found_response = {
       "_index" => "rummager",

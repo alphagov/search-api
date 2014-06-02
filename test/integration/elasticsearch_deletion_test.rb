@@ -96,6 +96,28 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def test_should_delete_an_item_with_a_full_url
+    get "/documents/edition/http:%2F%2Fexample.com%2F"
+    assert last_response.ok?
+
+    delete "/documents/edition/http:%2F%2Fexample.com%2F"
+    assert last_response.ok?
+
+    get "/documents/edition/http:%2F%2Fexample.com%2F"
+    assert last_response.not_found?
+  end
+
+  def test_should_delete_a_nonedition_by_type_and_id
+    get "/metasearch-test/documents/best_bet/jobs_exact"
+    assert last_response.ok?
+
+    delete "/metasearch-test/documents/best_bet/jobs_exact"
+    assert last_response.ok?
+
+    get "/metasearch-test/documents/best_bet/jobs_exact"
+    assert last_response.not_found?
+  end
+
+  def test_should_default_type_to_edition_and_id_to_link
     get "/documents/http:%2F%2Fexample.com%2F"
     assert last_response.ok?
 
