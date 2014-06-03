@@ -339,15 +339,4 @@ class IndexGroupTest < MiniTest::Unit::TestCase
 
     assert_requested delete_stub
   end
-
-  def test_promoted_results_passed_to_index
-    promoted_results = stub("promoted results")
-    base_uri = "http://localhost"
-    name = "my_index"
-    index_settings = {"settings" => {}}
-    mappings = {"default" => {}}
-    index_group = Elasticsearch::IndexGroup.new(base_uri, name, index_settings, mappings, promoted_results, SearchConfig.new)
-
-    assert_equal promoted_results, index_group.current.promoted_results
-  end
 end

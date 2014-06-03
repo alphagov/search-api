@@ -33,38 +33,4 @@ class SearchServerTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_promoted_results_generated_from_schema_settings
-    schema = EMPTY_SCHEMA.dup
-    schema["promoted_results"] = [{
-      "terms" => "job",
-      "link" => "/jobsearch"
-      }]
-    server = Elasticsearch::SearchServer.new(
-      "http://localhost:9200/",
-      schema,
-      ["mainstream", "custom"],
-      ["mainstream", "custom"],
-      SearchConfig.new,
-    )
-    promoted_results = server.promoted_results
-
-    assert_equal [["job"]], promoted_results.map {|r| r.terms}
-    assert_equal ["/jobsearch"], promoted_results.map {|r| r.link}
-  end
-
-  def test_promoted_results_passed_to_index_group
-    search_config = SearchConfig.new
-    server = Elasticsearch::SearchServer.new(
-      "http://localhost:9200/",
-      EMPTY_SCHEMA,
-      ["mainstream", "custom"],
-      ["mainstream", "custom"],
-      search_config,
-    )
-    promoted_results = stub("promoted results")
-    server.stubs(:promoted_results).returns(promoted_results)
-    Elasticsearch::IndexGroup.expects(:new).with(anything,anything,anything,anything,promoted_results,search_config)
-    server.index_group("mainstream")
-  end
-
 end

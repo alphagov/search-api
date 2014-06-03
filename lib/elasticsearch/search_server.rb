@@ -1,6 +1,5 @@
 require "uri"
 require "elasticsearch/index_group"
-require "promoted_result"
 
 module Elasticsearch
   class NoSuchIndex < ArgumentError; end
@@ -18,18 +17,12 @@ module Elasticsearch
     end
 
     def index_group(prefix)
-      IndexGroup.new(@base_uri, prefix, index_settings(prefix), mappings(prefix), promoted_results, @search_config)
+      IndexGroup.new(@base_uri, prefix, index_settings(prefix), mappings(prefix), @search_config)
     end
 
     def index(prefix)
       raise NoSuchIndex, prefix unless index_name_valid?(prefix)
       index_group(prefix).current
-    end
-
-    def promoted_results
-      @promoted_results ||= (@schema["promoted_results"] || []).map do |pr|
-        PromotedResult.new(pr["link"], pr["terms"])
-      end
     end
 
     def content_indices

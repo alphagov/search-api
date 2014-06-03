@@ -74,12 +74,8 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
                     fields: ['title', 'acronym', 'description', 'indexable_content'],
                     analyzer: 'shingled_query_analyzer',
                   }},
-                ]}},
-              {query_string: {
-                default_field: 'promoted_for',
-                query: 'cheese',
-                boost: 100,
-              }}
+                ]}
+              },
             ]
           }},
           filters: [

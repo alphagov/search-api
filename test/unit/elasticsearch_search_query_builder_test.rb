@@ -86,20 +86,6 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
     assert_equal expected, filters.last
   end
 
-  def test_promoted_search
-    builder = Elasticsearch::SearchQueryBuilder.new("jobs in birmingham", mappings)
-    promoted_search_clause = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][1]
-    expected = {
-        query_string: {
-          default_field: "promoted_for",
-          query: "jobs in birmingham",
-          boost: 100
-        }
-      }
-
-    assert_equal expected, promoted_search_clause
-  end
-
   def test_can_scope_to_an_organisation
     builder = Elasticsearch::SearchQueryBuilder.new("navajo", mappings, organisation: "foreign-commonwealth-office")
     term_condition = extract_condition_by_type(builder.query_hash, :term)
