@@ -11,7 +11,6 @@ require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
 require "elasticsearch/search_query_builder"
-require "result_promoter"
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
@@ -65,10 +64,9 @@ module Elasticsearch
     LONG_TIMEOUT_SECONDS = TIMEOUT_SECONDS * 3
     LONG_OPEN_TIMEOUT_SECONDS = OPEN_TIMEOUT_SECONDS * 3
 
-    attr_reader :mappings, :index_name, :promoted_results
+    attr_reader :mappings, :index_name
 
-    def initialize(base_uri, index_name, mappings, promoted_results = [],
-                   search_config)
+    def initialize(base_uri, index_name, mappings, search_config)
       # Save this for if and when we want to build custom Clients
       @index_uri = base_uri + "#{CGI.escape(index_name)}/"
 
@@ -76,7 +74,6 @@ module Elasticsearch
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
-      @promoted_results = promoted_results
       @search_config = search_config
       @index_with_popularity = !(@search_config.auxiliary_index_names.include? @index_name)
     end
@@ -140,7 +137,7 @@ module Elasticsearch
         logger.info "Adding #{documents.size} documents to #{index_name}"
       end
 
-      document_hashes = documents.map { |d| hash_from_document(d) }
+      document_hashes = documents.map { |d| d.elasticsearch_export }
       bulk_index(document_hashes, timeout_options)
     end
 
@@ -149,7 +146,7 @@ module Elasticsearch
       noun = documents.size > 1 ? "documents" : "document"
       logger.info "Queueing #{documents.size} #{noun} to add to #{index_name}"
 
-      document_hashes = documents.map { |d| hash_from_document(d) }
+      document_hashes = documents.map { |d| d.elasticsearch_export }
       queue.queue_many(document_hashes)
     end
 
@@ -524,22 +521,6 @@ module Elasticsearch
       end
 
       return nil
-    end
-
-    def result_promoter
-      @result_promoter ||= ResultPromoter.new(@promoted_results)
-    end
-
-    # Generate a hash from a Document to pass to elasticsearch.
-    #
-    # This allows for result promotion on top of the Document's in-built
-    # `elasticsearch_export` method.
-    def hash_from_document(document)
-      with_promotion(document.elasticsearch_export)
-    end
-
-    def with_promotion(document_hash)
-      result_promoter.with_promotion(document_hash)
     end
 
     def queue

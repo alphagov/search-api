@@ -696,26 +696,6 @@ stems: &stems [
   "universal => universal"
 ]
 
-# Promoted results
-#
-# When indexing a promoted item, the promoted_for field is set with the given
-# terms. At search time an extra query checks for matches between the user's
-# search phrase and the promoted item. The promoted item search does not have
-# a minimum_should_match so even a single word in common will trigger the
-# boosting. Any matches are boosted by 100x effectively forcing them to the
-# top.
-#
-# NOTES:
-#  - if you add items to this section, the index will need to be re-built
-#  - the terms are stemmed so there's no need to enter both 'job' and 'jobs'
-promoted_results:
-- terms: job
-  link: /jobsearch
-- terms: visa
-  link: /check-uk-visa
-- terms: budget
-  link: /government/topical-events/budget-2014
-
 index:
   settings:
     analysis:
@@ -797,7 +777,6 @@ mappings:
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
         link:        { type: string, index: not_analyzed, include_in_all: false }
         indexable_content: { type: string, index: analyzed }
-        promoted_for: { type: string, index: analyzed, include_in_all: false }
         popularity: { type: float, stored: true }
         organisations: { type: string, index: not_analyzed, include_in_all: false }
   metasearch: &metasearch
@@ -842,7 +821,6 @@ mappings:
         organisations: { type: string, index: not_analyzed, include_in_all: false }
         organisation_state: { type: string, index: not_analyzed, include_in_all: false }
         people: { type: string, index: not_analyzed, include_in_all: false }
-        promoted_for: { type: string, index: analyzed, include_in_all: false }
         popularity: { type: float, stored: true }
         public_timestamp: { type: date, index: not_analyzed, include_in_all: false }
         relevant_to_local_government: { type: boolean, index: not_analyzed, include_in_all: false }

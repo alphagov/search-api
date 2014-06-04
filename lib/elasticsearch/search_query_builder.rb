@@ -36,7 +36,7 @@ module Elasticsearch
           custom_filters_score: {
             query: {
               bool: {
-                should: [core_query, promoted_items_query].compact
+                should: [core_query]
               }
             },
             filters: format_boosts + [time_boost]
@@ -116,16 +116,6 @@ module Elasticsearch
           operator: "or",
           fields: match_fields.keys,
           analyzer: "shingled_query_analyzer"
-        }
-      }
-    end
-
-    def promoted_items_query
-      {
-        query_string: {
-          default_field: "promoted_for",
-          query: escape(@query),
-          boost: 100
         }
       }
     end

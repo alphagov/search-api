@@ -16,10 +16,6 @@ class ElasticsearchSearchTest < IntegrationTest
                           "public_timestamp" => { "type" => "date", "index" => "not_analyzed" },
                           "organisations" => { "type" => "string", "index" => "not_analyzed" },
                         })
-      schema["promoted_results"] = [{
-        "terms" => "promoted",
-        "link" => "/promoted"
-      }]
     end
 
     create_test_indexes
@@ -88,20 +84,6 @@ class ElasticsearchSearchTest < IntegrationTest
         "indexable_content" => "Written by the Home Office",
         "organisations" => "home-office"
       },
-      {
-        "title" => "Promoted",
-        "link" => "/promoted",
-        "indexable_content" => "This document is promoted."
-      },
-      {
-        "title" => "Not promoted",
-        "link" => "/not-promoted",
-        "indexable_content" =>
-          "This document is not promoted. But it has all the words " +
-          "in the test query, as follows: " +
-          "promoted jobs in birmingham. " +
-          "The promoted one should still come first."
-      }
     ]
   end
 
@@ -235,11 +217,5 @@ class ElasticsearchSearchTest < IntegrationTest
     get "/search.json?q=PORK+PIES"
     assert last_response.ok?
     assert_result_links "/pork-pies"
-  end
-
-  def test_promoted_items_float_to_top_if_query_contains_a_promoted_keyword
-    get "/search.json?q=promoted+jobs+in+birmingham"
-    assert last_response.ok?
-    assert_result_links "/promoted", "/not-promoted"
   end
 end
