@@ -9,7 +9,6 @@ LIBRARY_PATH = PROJECT_ROOT + "lib/"
 end
 
 INDICES = %w{mainstream detailed government}
-DEFAULT_HTML_URL = "https://www.gov.uk/search"
 DEFAULT_JSON_URL = "https://www.gov.uk/api/search.json"
 require "logging"
 require "search_config"
@@ -46,8 +45,7 @@ class HealthCheckCLI
       on 'l', 'local', "Connect to local index directly (default)"
       on 'limit=', "Limit to the first n tests", as: Integer
       on 'a', 'auth=', "Basic auth credentials (of the form 'user:pass'", as: HealthCheck::BasicAuthCredentials
-      on 'H', 'html=', "Connect to a frontend at the the given url (eg. #{DEFAULT_HTML_URL})", default: DEFAULT_HTML_URL
-      on 'j', 'json=', "Connect to a Rummager combined or unified search endpoint at the the given url (eg. #{DEFAULT_JSON_URL})", default: DEFAULT_JSON_URL
+      on 'j', 'json=', "Connect to a Rummager unified search endpoint at the the given url (eg. #{DEFAULT_JSON_URL})", default: DEFAULT_JSON_URL
       on 'v', 'verbose', "Show verbose logging output"
       run(health_checker)
     end
@@ -105,9 +103,7 @@ private
   end
 
   def search_client_for(index_name)
-    if opts.html?
-      HealthCheck::HtmlSearchClient.new(base_url: URI.parse(opts["html"]), authentication: opts[:auth], index: index_name)
-    elsif opts.json?
+    if opts.json?
       HealthCheck::JsonSearchClient.new(base_url: URI.parse(opts["json"]), authentication: opts[:auth], index: index_name)
     else
       HealthCheck::LocalSearchClient.new(index: index_name)
