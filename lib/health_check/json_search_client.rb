@@ -25,7 +25,7 @@ module HealthCheck
       case response
         when Net::HTTPSuccess # 2xx
           json_response = JSON.parse(response.body)
-          resp = extract_results(json_response)
+          extract_results(json_response)
         else
           raise "Unexpected response #{response}"
       end
@@ -45,25 +45,11 @@ module HealthCheck
       end
 
       def extract_results(json_response)
-        if json_response.is_a?(Hash) && json_response.has_key?('streams') # combined search endpoint
-          extract_combined_results(json_response['streams'])
-        elsif json_response.is_a?(Hash) && json_response.has_key?('results') # unified search endpoint
+        if json_response.is_a?(Hash) && json_response.has_key?('results')
           json_response['results'].map { |result| result["link"] }
         else
           raise "Unexpected response format: #{json_response.inspect}"
         end
-      end
-
-      def extract_combined_results(streams)
-        index_key = RESPONSE_INDEX_KEYS[@index]
-        selected_stream = streams[index_key]
-
-        # Count top results as being effectively present in all tabs
-        [streams['top-results'], selected_stream].map {|stream|
-          stream['results'].map {|result|
-            result['link']
-          }
-        }.flatten
       end
   end
 end
