@@ -601,5 +601,4 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       assert query[:indices][:query][:custom_boost_factor][:query].keys == [:custom_filters_score]
     end
   end
-
 end
