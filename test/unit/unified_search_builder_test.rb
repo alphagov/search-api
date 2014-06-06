@@ -597,7 +597,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
     should "have not have a custom_score clause to add popularity in payload" do
       query = @builder.payload[:query]
-      assert query.to_s !~ /popularity/
+      refute_match(/popularity/, query.to_s)
       assert query[:indices][:query][:custom_boost_factor][:query].keys == [:custom_filters_score]
     end
   end
