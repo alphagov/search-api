@@ -223,11 +223,11 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the debug parameter" do
-    p = SearchParameterParser.new({"debug" => "disable_best_bets,,unknown_option"})
+    p = SearchParameterParser.new({"debug" => "disable_best_bets,disable_popularity,,unknown_option"})
 
     assert_equal(%{Unknown debug option "unknown_option"}, p.error)
     assert !p.valid?
-    assert_equal expected_params({debug: {disable_best_bets: true}}), p.parsed_params
+    assert_equal expected_params({debug: {disable_best_bets: true, disable_popularity: true}}), p.parsed_params
   end
 
   should "ignore empty options in the debug parameter" do

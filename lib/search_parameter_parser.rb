@@ -174,6 +174,9 @@ private
   end
 
   def debug_options
+    # Note: this parameter is exposed publically via both the API on GOV.UK and
+    # the query parameters for search on GOV.UK.  Don't make it return anything
+    # sensitive.
     debug = @params["debug"] || ""
     @used_params << "debug"
 
@@ -183,6 +186,8 @@ private
       when ""
       when "disable_best_bets"
         options[:disable_best_bets] = true
+      when "disable_popularity"
+        options[:disable_popularity] = true
       else
         @errors << %{Unknown debug option "#{option}"}
       end

@@ -52,19 +52,28 @@ class UnifiedSearchBuilder
     if @query.nil?
       return { match_all: {} }
     end
+
+    if @params[:debug][:disable_popularity]
+      boosted_query
+    else
+      {
+        custom_score: {
+          query: boosted_query,
+          script: "_score * (doc['popularity'].value + #{POPULARITY_OFFSET})"
+        }
+      }
+    end
+  end
+
+  def boosted_query
     {
-      custom_score: {
+      custom_filters_score: {
         query: {
-          custom_filters_score: {
-            query: {
-              bool: {
-                should: [core_query]
-              }
-            },
-            filters: format_boosts + [time_boost]
+          bool: {
+            should: [core_query]
           }
         },
-        script: "_score * (doc['popularity'].value + #{POPULARITY_OFFSET})"
+        filters: format_boosts + [time_boost]
       }
     }
   end
@@ -188,7 +197,7 @@ class UnifiedSearchBuilder
     if order.nil?
       # Sort by popularity when there's no explicit ordering, and there's no
       # query (so there's no relevance scores).
-      if @query.nil?
+      if @query.nil? && !(@params[:debug][:disable_popularity])
         return [{ "popularity" => { order: "desc" } }]
       else
         return nil

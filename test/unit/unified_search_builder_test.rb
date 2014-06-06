@@ -579,4 +579,26 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       assert @builder.payload[:query].keys != [:bool]
     end
   end
+
+  context "search with debug disabling use of popularity" do
+    setup do
+      stub_zero_best_bets
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: nil,
+        debug: {disable_popularity: true},
+      }, @metasearch_index)
+    end
+
+    should "have not have a custom_score clause to add popularity in payload" do
+      query = @builder.payload[:query]
+      refute_match(/popularity/, query.to_s)
+      assert query[:indices][:query][:custom_boost_factor][:query].keys == [:custom_filters_score]
+    end
+  end
 end
