@@ -4,6 +4,7 @@ require "search_config"
 require_relative "exception_mailer"
 require "ses_mailer"  # For the exception_notification initialiser
 require "config/logging"
+require "airbrake"
 
 set :search_config, SearchConfig.new
 set :default_index_name, "mainstream"
@@ -19,3 +20,8 @@ disable :show_exceptions
 initializers_path = File.expand_path("config/initializers/*.rb", File.dirname(__FILE__))
 
 Dir[initializers_path].each { |f| require f }
+
+configure do
+  Airbrake.configuration.ignore << "Sinatra::NotFound"
+  use Airbrake::Sinatra
+end
