@@ -16,7 +16,6 @@ require "slop"
 require 'health_check/logging_config'
 require 'health_check/checker'
 require 'health_check/local_search_client'
-require 'health_check/html_search_client'
 require 'health_check/json_search_client'
 require 'health_check/downloader'
 require 'health_check/basic_auth_credentials'
