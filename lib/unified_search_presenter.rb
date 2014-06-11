@@ -65,6 +65,11 @@ private
       fields[:es_score] = metadata["_score"]
       fields[:_id] = metadata["_id"]
 
+      explain = metadata["_explanation"]
+      unless explain.nil?
+        fields[:_explanation] = explain
+      end
+
     end
   end
 

@@ -238,4 +238,12 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal expected_params({debug: {}}), p.parsed_params
   end
 
+  should "understand explain in the debug parameter" do
+    p = SearchParameterParser.new({"debug" => "explain"})
+
+    assert p.valid?
+    assert_equal expected_params({debug: {explain: true}}), p.parsed_params
+  end
+
+
 end

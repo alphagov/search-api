@@ -111,4 +111,13 @@ class UnifiedSearchTest < MultiIndexTest
     get "/unified_search"
     assert_equal [], parsed_response["suggested_queries"]
   end
+
+  def test_debug_explain_returns_explanations
+    get "/unified_search?debug=explain"
+    first_hit_explain = parsed_response["results"].first["_explanation"]
+    refute_nil first_hit_explain
+    assert first_hit_explain.keys.include?("value")
+    assert first_hit_explain.keys.include?("description")
+    assert first_hit_explain.keys.include?("details")
+  end
 end
