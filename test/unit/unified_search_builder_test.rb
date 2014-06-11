@@ -601,4 +601,24 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       assert query[:indices][:query][:custom_boost_factor][:query].keys == [:custom_filters_score]
     end
   end
+
+  context "search with debug explain" do
+    setup do
+      stub_zero_best_bets
+      @builder = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: nil,
+        debug: {explain: true},
+      }, @metasearch_index)
+    end
+
+    should "have not have a custom_score clause to add popularity in payload" do
+      assert @builder.payload[:explain] == true
+    end
+  end
 end

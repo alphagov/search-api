@@ -29,6 +29,7 @@ class UnifiedSearchBuilder
       fields: @params[:return_fields],
       sort: sort_list,
       facets: facets_hash,
+      explain: @params[:debug][:explain],
     }.reject{ |key, value|
       [nil, [], {}].include?(value)
     }]
