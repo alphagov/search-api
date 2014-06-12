@@ -1,7 +1,7 @@
 require "test_helper"
+require "elasticsearch/base_worker"
 require "elasticsearch/delete_worker"
 require "elasticsearch/index"
-require "failed_job_worker"
 
 class DeleteWorkerTest < MiniTest::Unit::TestCase
   def test_deletes_documents
@@ -32,7 +32,7 @@ class DeleteWorkerTest < MiniTest::Unit::TestCase
 
   def test_forwards_to_failure_queue
     stub_message = {}
-    FailedJobWorker.expects(:perform_async).with(stub_message)
+    Airbrake.expects(:notify_or_ignore).with(Elasticsearch::BaseWorker::FailedJobException.new(stub_message))
     fail_block = Elasticsearch::DeleteWorker.sidekiq_retries_exhausted_block
     fail_block.call(stub_message)
   end

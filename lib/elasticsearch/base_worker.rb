@@ -1,6 +1,6 @@
 require "sidekiq"
 require "sidekiq_json_encoding_patch"
-require "failed_job_worker"
+require "airbrake"
 
 module Elasticsearch
   # This class requires the `config.rb` file to be loaded, since it requires
@@ -22,7 +22,7 @@ module Elasticsearch
       self.class.logger
     end
 
-    # Logger is defined on the class for use inthe `sidekiq_retries_exhausted`
+    # Logger is defined on the class for use in the `sidekiq_retries_exhausted`
     # block, and as an instance method for use the rest of the time
     def self.logger
       Logging.logger[self]
@@ -31,9 +31,11 @@ module Elasticsearch
     def self.forward_to_failure_queue
       sidekiq_retries_exhausted do |msg|
         logger.warn "Job '#{msg["jid"]}' failed; forwarding to failure queue"
-        FailedJobWorker.perform_async(msg)
+        Airbrake.notify_or_ignore(FailedJobException.new(msg))
       end
     end
+
+    class FailedJobException < Exception; end
 
   private
     def index(index_name)

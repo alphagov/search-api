@@ -184,7 +184,7 @@ class Rummager < Sinatra::Application
   get "/govuk/search.?:request_format?" do
     json_only
 
-    organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
+    organisation = params["organisation_slug"] == "" ? nil : params["organisation_slug"]
 
     searcher = GovukSearcher.new(*govuk_indices)
     result_streams = searcher.search(@query, organisation, params["sort"])
@@ -338,7 +338,7 @@ class Rummager < Sinatra::Application
   get "/?:index?/search.?:request_format?" do
     json_only
 
-    organisation = params["organisation_slug"].blank? ? nil : params["organisation_slug"]
+    organisation = params["organisation_slug"] == "" ? nil : params["organisation_slug"]
     result_set = current_index.search(@query,
       organisation: organisation,
       sort: params["sort"],
