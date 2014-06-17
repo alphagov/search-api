@@ -7,6 +7,7 @@ class UnifiedSearchBuilder
   include Elasticsearch::Escaping
 
   DEFAULT_QUERY_ANALYZER = "query_default"
+  DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = 'default'
   GOVERNMENT_BOOST_FACTOR = 0.4
   POPULARITY_OFFSET = 0.001
 
@@ -247,13 +248,21 @@ class UnifiedSearchBuilder
     exact_field_boosts + [ exact_match_boost, shingle_token_filter_boost ]
   end
 
+  def query_analyzer
+    if @params[:debug][:disable_synonyms]
+      DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS
+    else
+      DEFAULT_QUERY_ANALYZER
+    end
+  end
+
   def exact_field_boosts
     match_fields.map {|field_name, _|
       {
         match_phrase: {
           field_name => {
             query: escape(@query),
-            analyzer: DEFAULT_QUERY_ANALYZER,
+            analyzer: query_analyzer,
           }
         }
       }
@@ -266,7 +275,7 @@ class UnifiedSearchBuilder
         query: escape(@query),
         operator: "and",
         fields: match_fields.keys,
-        analyzer: DEFAULT_QUERY_ANALYZER
+        analyzer: query_analyzer
       }
     }
   end
@@ -287,7 +296,7 @@ class UnifiedSearchBuilder
       match: {
         _all: {
           query: escape(@query),
-          analyzer: DEFAULT_QUERY_ANALYZER,
+          analyzer: query_analyzer,
           minimum_should_match: minimum_should_match
         }
       }

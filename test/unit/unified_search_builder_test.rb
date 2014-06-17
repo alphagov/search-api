@@ -621,4 +621,37 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       assert @builder.payload[:explain] == true
     end
   end
+
+  context "search with debug disabling use of synonyms" do
+    setup do
+      stub_zero_best_bets
+      @builder_with_synonyms = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: nil,
+        debug: {},
+      }, @metasearch_index)
+      @builder_without_synonyms = UnifiedSearchBuilder.new({
+        start: 0,
+        count: 20,
+        query: "cheese",
+        order: nil,
+        filters: {},
+        fields: nil,
+        facets: nil,
+        debug: {disable_synonyms: true},
+      }, @metasearch_index)
+    end
+
+    should "not mention the query_default analyzer" do
+      query_with_synonyms = @builder_with_synonyms.payload[:query]
+      query_without_synonyms = @builder_without_synonyms.payload[:query]
+      refute_match(/query_default/, query_without_synonyms.to_s)
+      assert_match(/query_default/, query_with_synonyms.to_s)
+    end
+  end
 end
