@@ -109,7 +109,7 @@ module ElasticsearchIntegration
       "rank_14" => 10,
     }
 
-    RestClient.post "http://localhost:9200/page-traffic-test/page-traffic/", document_atts.to_json
+    RestClient.post "http://localhost:9200/page-traffic-test/page-traffic/#{CGI.escape(path)}", document_atts.to_json
     RestClient.post "http://localhost:9200/page-traffic-test/_refresh", nil
   end
 
