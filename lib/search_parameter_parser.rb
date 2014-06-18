@@ -188,6 +188,8 @@ private
         options[:disable_best_bets] = true
       when "disable_popularity"
         options[:disable_popularity] = true
+      when "disable_synonyms"
+        options[:disable_synonyms] = true
       when "explain"
         options[:explain] = true
       else

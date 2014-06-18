@@ -245,5 +245,10 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal expected_params({debug: {explain: true}}), p.parsed_params
   end
 
+  should "understand disable_synonyms in the debug parameter" do
+    p = SearchParameterParser.new({"debug" => "disable_synonyms"})
 
+    assert p.valid?
+    assert_equal expected_params({debug: {disable_synonyms: true}}), p.parsed_params
+  end
 end
