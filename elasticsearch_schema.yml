@@ -779,6 +779,8 @@ mappings:
         indexable_content: { type: string, index: analyzed }
         popularity: { type: float, stored: true }
         organisations: { type: string, index: not_analyzed, include_in_all: false }
+        specialist_sectors: { type: string, index: "no", include_in_all: false }
+        tags: { type: string, index: not_analyzed, include_in_all: false }
   metasearch: &metasearch
     best_bet:
       _all: { enabled: false }
@@ -826,9 +828,11 @@ mappings:
         relevant_to_local_government: { type: boolean, index: not_analyzed, include_in_all: false }
         search_format_types: { type: string, index: not_analyzed, include_in_all: false }
         section:     { type: string, index: not_analyzed, include_in_all: false }
+        specialist_sectors: { type: string, index: "no", include_in_all: false }
         slug:        { type: string, index: not_analyzed, include_in_all: false }
         subsection:  { type: string, index: not_analyzed, include_in_all: false }
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
+        tags: { type: string, index: not_analyzed, include_in_all: false }
         title:       { type: string, index: analyzed }
         topics: { type: string, index: not_analyzed, include_in_all: false }
         world_locations: { type: string, index: not_analyzed, include_in_all: false }
