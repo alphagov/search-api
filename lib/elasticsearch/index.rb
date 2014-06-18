@@ -380,6 +380,42 @@ module Elasticsearch
       Logging.logger[self]
     end
 
+    def index_items_from_document_hashes(document_hashes)
+      links = document_hashes.map {
+        |doc_hash| doc_hash["link"]
+      }.compact
+      popularities = lookup_popularities(links)
+      document_hashes.map { |doc_hash|
+        [index_action(doc_hash).to_json, index_doc(doc_hash, popularities).to_json]
+      }
+    end
+
+    def index_items_from_raw_string(payload)
+      actions = []
+      links = []
+      payload.each_line.each_slice(2).map do |command, doc|
+        command_hash = MultiJson.decode(command)
+        doc_hash = MultiJson.decode(doc)
+        actions << [command_hash, doc_hash]
+        links << doc_hash["link"]
+      end
+      popularities = lookup_popularities(links.compact)
+      actions.map { |command_hash, doc_hash|
+        if command_hash.keys == ["index"]
+          doc_hash["_type"] = command_hash["index"]["_type"]
+          [
+            command_hash.to_json,
+            index_doc(doc_hash, popularities).to_json
+          ]
+        else
+          [
+            command_hash.to_json,
+            doc_hash.to_json
+          ]
+        end
+      }
+    end
+
     # Payload to index documents using the `_bulk` endpoint
     #
     # The format is as follows:
@@ -392,37 +428,9 @@ module Elasticsearch
     # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
     def bulk_payload(document_hashes_or_payload)
       if document_hashes_or_payload.is_a?(Array)
-        links = document_hashes_or_payload.map {
-          |doc_hash| doc_hash["link"]
-        }.compact
-        popularities = lookup_popularities(links)
-        index_items = document_hashes_or_payload.map do |doc_hash|
-          [index_action(doc_hash).to_json, index_doc(doc_hash, popularities).to_json]
-        end
+        index_items = index_items_from_document_hashes(document_hashes_or_payload)
       else
-        actions = []
-        links = []
-        document_hashes_or_payload.each_line.each_slice(2).map do |command, doc|
-          command_hash = MultiJson.decode(command)
-          doc_hash = MultiJson.decode(doc)
-          actions << [command_hash, doc_hash]
-          links << doc_hash["link"]
-        end
-        popularities = lookup_popularities(links.compact)
-        index_items = actions.map do |command_hash, doc_hash|
-          if command_hash.keys == ["index"]
-            doc_hash["_type"] = command_hash["index"]["_type"]
-            [
-              command_hash.to_json,
-              index_doc(doc_hash, popularities).to_json
-            ]
-          else
-            [
-              command_hash.to_json,
-              doc_hash.to_json
-            ]
-          end
-        end
+        index_items = index_items_from_raw_string(document_hashes_or_payload)
       end
 
       # Make sure the payload ends with a newline character: elasticsearch
