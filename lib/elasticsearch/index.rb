@@ -399,13 +399,35 @@ module Elasticsearch
         index_items = document_hashes_or_payload.map do |doc_hash|
           [index_action(doc_hash).to_json, index_doc(doc_hash, popularities).to_json]
         end
-
-        # Make sure the payload ends with a newline character: elasticsearch
-        # requires this.
-        index_items.flatten.join("\n") + "\n"
       else
-        document_hashes_or_payload
+        actions = []
+        links = []
+        document_hashes_or_payload.each_line.each_slice(2).map do |command, doc|
+          command_hash = MultiJson.decode(command)
+          doc_hash = MultiJson.decode(doc)
+          actions << [command_hash, doc_hash]
+          links << doc_hash["link"]
+        end
+        popularities = lookup_popularities(links.compact)
+        index_items = actions.map do |command_hash, doc_hash|
+          if command_hash.keys == ["index"]
+            doc_hash["_type"] = command_hash["index"]["_type"]
+            [
+              command_hash.to_json,
+              index_doc(doc_hash, popularities).to_json
+            ]
+          else
+            [
+              command_hash.to_json,
+              doc_hash.to_json
+            ]
+          end
+        end
       end
+
+      # Make sure the payload ends with a newline character: elasticsearch
+      # requires this.
+      index_items.flatten.join("\n") + "\n"
     end
 
     def index_action(doc_hash)

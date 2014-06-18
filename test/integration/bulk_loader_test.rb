@@ -29,9 +29,9 @@ class BulkLoaderTest < IntegrationTest
     MultiJson.decode(last_response.body)
   end
 
-  def assert_document_is_in_rummager(document)
+  def assert_document_is_in_rummager(document, skip_keys=["popularity"])
     retrieved = retrieve_document_from_rummager(document['link'])
-    retrieved_document_keys = retrieved.keys - ["popularity"]
+    retrieved_document_keys = retrieved.keys - skip_keys
 
     assert_equal document.keys.sort, retrieved_document_keys.sort
 
@@ -78,5 +78,23 @@ class BulkLoaderTest < IntegrationTest
     bulk_loader.load_from(StringIO.new(index_payload(doc_v2)))
 
     assert_document_is_in_rummager(doc_v2)
+  end
+
+  def test_adds_extra_fields
+    # We have to insert at least two popularity documents to get a popularity
+    # score other than 1.0, because the popularity is based on the rank of the
+    # document when ordered by traffic, and the rank is capped at the number of
+    # documents in the popularity index.  The actual value we insert here is a
+    # rank of 10, but because there are two documents the popularity value we
+    # get returned is 1/2.
+    insert_stub_popularity_data(@sample_document["link"])
+    insert_stub_popularity_data("/another-example")
+
+    bulk_loader = BulkLoader.new(app.settings.search_config, @default_index_name)
+    bulk_loader.load_from(StringIO.new(index_payload(@sample_document)))
+
+    assert_document_is_in_rummager(
+      @sample_document.merge("popularity" => 0.5), []
+    )
   end
 end
