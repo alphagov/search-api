@@ -185,7 +185,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[]}
     eos
     stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
         body: payload,

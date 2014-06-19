@@ -10,11 +10,11 @@ class SearchParameterParser
   ALLOWED_SORT_FIELDS = %w(public_timestamp)
 
   # The fields listed here are the only ones which can be used to filter by.
-  ALLOWED_FILTER_FIELDS = %w(organisations section format tag)
+  ALLOWED_FILTER_FIELDS = %w(organisations section format tags)
 
   # The fields listed here are the only ones which can be used to calculated
   # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
-  ALLOWED_FACET_FIELDS = %w(organisations section format tag)
+  ALLOWED_FACET_FIELDS = %w(organisations section format tags)
 
   # The fields listed here are the only ones that can be returned in search
   # results.  These are listed and validated explicitly, rather than simply
@@ -27,7 +27,7 @@ class SearchParameterParser
 
     public_timestamp
     organisations topics world_locations document_series
-    tag
+    tags
 
     format display_type
     section subsection subsubsection
