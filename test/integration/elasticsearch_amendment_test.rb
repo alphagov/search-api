@@ -19,6 +19,7 @@ class ElasticsearchAmendmentTest < IntegrationTest
     {
       "title" => "TITLE",
       "description" => "DESCRIPTION",
+      "organisations" => "hm-magic",
       "format" => "answer",
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT"
@@ -56,6 +57,24 @@ class ElasticsearchAmendmentTest < IntegrationTest
     parsed_response = MultiJson.decode(last_response.body)
 
     updates = {"title" => "A new title"}
+    sample_document_attributes.merge(updates).each do |key, value|
+      assert_equal value, parsed_response[key]
+    end
+  end
+
+  def test_should_amend_tags_correctly
+    post "/documents/%2Fan-example-answer", [
+      "specialist_sectors[]=oil-and-gas/licensing",
+    ].join("&")
+
+    get "/documents/%2Fan-example-answer"
+    assert last_response.ok?
+    parsed_response = MultiJson.decode(last_response.body)
+
+    updates = {
+      "tags" => ["organisation:hm-magic", "sector:oil-and-gas/licensing"],
+      "specialist_sectors" => ["oil-and-gas/licensing"],
+    }
     sample_document_attributes.merge(updates).each do |key, value|
       assert_equal value, parsed_response[key]
     end
