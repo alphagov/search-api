@@ -253,6 +253,35 @@ eos
     assert_requested(request)
   end
 
+  def test_should_populate_tags_field
+    stub_popularity_index_requests(["/foo/bar"], 1.0)
+
+    json_document = {
+      "_type" => "edition",
+      "link" => "/foo/bar",
+      "specialist_sectors" => ["oil-and-gas/licensing", "oil-and-gas/onshore-oil-and-gas"],
+      "organisations" => ["hm-magic"],
+    }
+    document = stub("document", elasticsearch_export: json_document)
+
+    # Note that this comes with a trailing newline, which elasticsearch needs
+    payload = <<-eos
+{"index":{"_type":"edition","_id":"/foo/bar"}}
+{"_type":"edition","link":"/foo/bar","specialist_sectors":["oil-and-gas/licensing","oil-and-gas/onshore-oil-and-gas"],"organisations":["hm-magic"],"popularity":1.0,"tags":["organisation:hm-magic","sector:oil-and-gas/licensing","sector:oil-and-gas/onshore-oil-and-gas"]}
+    eos
+    response = <<-eos
+{"took":5,"items":[
+  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+]}
+    eos
+    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+        body: payload,
+        headers: {"Content-Type" => "application/json"}
+    ).to_return(body: response)
+    @wrapper.add [document]
+    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+  end
+
   def test_should_allow_custom_timeouts_on_add
     stub_response = stub("response", body: '{"items": []}')
     RestClient::Request.expects(:execute)
