@@ -4,8 +4,8 @@ Rummager is now primarily based on elasticsearch.
 
 ## Get started
 
-Install [elasticsearch 0.20](http://www.elasticsearch.org/downloads/0-20-6/).
-Rummager doesn't work with 0.90.
+Install [elasticsearch 0.90](http://www.elasticsearch.org/downloads/0-90-13/).
+Rummager doesn't yet work with 1.0 or later.
 
 Run the application with `./startup.sh` this uses shotgun/thin.
 
