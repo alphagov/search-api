@@ -136,7 +136,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[]}
     eos
     response = <<-eos
 {"took":5,"items":[
@@ -164,7 +164,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"not_an_edition","_id":"some_id"}}
-{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":1.0}
+{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":1.0,"tags":[]}
   eos
     response = <<-eos
 {"took":5,"items":[
@@ -237,7 +237,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0,"tags":[]}
 eos
     response = <<-eos
 {"took":5,"items":[

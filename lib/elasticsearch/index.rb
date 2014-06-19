@@ -427,8 +427,18 @@ module Elasticsearch
         doc_hash["popularity"] = pop
       end
 
+      doc_hash = prepare_tag_field(doc_hash)
       doc_hash = prepare_if_best_bet(doc_hash)
       doc_hash
+    end
+
+    def prepare_tag_field(doc_hash)
+      tags = []
+      
+      tags.concat(Array(doc_hash["organisations"]).map { |org| "organisation:#{org}" })
+      tags.concat(Array(doc_hash["specialist_sectors"]).map { |sector| "sector:#{sector}" })
+
+      doc_hash.merge("tags" => tags)
     end
 
     # If a document is a best bet, and is using the stemmed_query field, we
