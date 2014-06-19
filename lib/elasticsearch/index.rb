@@ -75,7 +75,7 @@ module Elasticsearch
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
       @search_config = search_config
-      @index_with_popularity = !(@search_config.auxiliary_index_names.include? @index_name)
+      @is_content_index = !(@search_config.auxiliary_index_names.include? @index_name)
     end
 
     def field_names
@@ -448,18 +448,22 @@ module Elasticsearch
     end
 
     def index_doc(doc_hash, popularities)
-      if @index_with_popularity
-        pop = 0.0
-        unless popularities.nil?
-          link = doc_hash["link"]
-          pop = popularities[link]
-        end
-        doc_hash["popularity"] = pop
+      if @is_content_index
+        doc_hash = prepare_popularity_field(doc_hash, popularities)
+        doc_hash = prepare_tag_field(doc_hash)
       end
 
-      doc_hash = prepare_tag_field(doc_hash)
       doc_hash = prepare_if_best_bet(doc_hash)
       doc_hash
+    end
+
+    def prepare_popularity_field(doc_hash, popularities)
+      pop = 0.0
+      unless popularities.nil?
+        link = doc_hash["link"]
+        pop = popularities[link]
+      end
+      doc_hash.merge("popularity" => pop)
     end
 
     def prepare_tag_field(doc_hash)
