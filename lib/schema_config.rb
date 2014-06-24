@@ -1,3 +1,4 @@
+require "json"
 require "yaml"
 
 class SchemaConfig
@@ -29,7 +30,31 @@ private
   end
 
   def elasticsearch_mappings
-    schema_yaml["mappings"]
+    schema_yaml["mappings"].merge(
+      "default" => doctype_schemas,
+    )
+  end
+
+  def core_doctype_schema
+    load_json("default/core.json")
+  end
+
+  def doctype_schemas
+    files = Dir.new(doctype_path).select { |filename|
+      filename =~ /\A[a-z]+(_[a-z]+)*\.json\z/
+    }
+
+    files.each.with_object({}) do |filename, doctypes|
+      doctype = filename.split(".").first
+      doctypes[doctype] = load_doctype(filename)
+    end
+  end
+
+  def load_doctype(filename)
+    deep_merge(
+      core_doctype_schema,
+      load_json("default/doctypes/#{filename}"),
+    )
   end
 
   def synonym_filter
@@ -42,5 +67,19 @@ private
 
   def load_yaml(file_path)
     YAML.load_file(File.join(config_path, file_path))
+  end
+
+  def load_json(file_path)
+    JSON.parse(File.read(File.join(config_path, file_path)))
+  end
+
+  def doctype_path
+    File.join(config_path, "default", "doctypes")
+  end
+
+  def deep_merge(base_hash, other_hash)
+    base_hash.merge(other_hash) { |_, base_value, other_value|
+      deep_merge(base_value, other_value)
+    }
   end
 end
