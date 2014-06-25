@@ -51,6 +51,14 @@ private
   end
 
   def load_doctype(filename)
+    doctype_schema = load_json("default/doctypes/#{filename}")
+
+    # Strip the details key from each property -- it contains stuff that
+    # shouldn't be sent to elasticsearch
+    doctype_schema["properties"].each do |property, settings|
+      settings.reject! { |key, _| key == "details" }
+    end
+
     deep_merge(
       core_doctype_schema,
       load_json("default/doctypes/#{filename}"),
