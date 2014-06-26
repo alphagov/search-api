@@ -35,7 +35,7 @@ class ElasticsearchLockingTest < IntegrationTest
     index.add([sample_document])
     index.lock
     assert_raises Elasticsearch::IndexLocked do
-      index.delete(sample_document.link)
+      index.delete("edition", sample_document.link)
     end
   end
 
