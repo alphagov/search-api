@@ -340,7 +340,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: "cheese",
         filters: {},
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-        facets: {"organisations" => 1},
+        facets: {"organisations" => {requested: 1, examples: 0, example_fields: []}},
         debug: {},
       })
     end

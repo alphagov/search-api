@@ -1,6 +1,4 @@
-class SearchParameterParser
-
-  attr_reader :parsed_params
+class BaseParameterParser
 
   # The fields listed here are the only ones which the search results can be
   # ordered by.  These are listed and validated explicitly because
@@ -28,6 +26,15 @@ class SearchParameterParser
   # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
   ALLOWED_FACET_FIELDS = %w(organisations section format specialist_sectors)
 
+  # The fields for which facet examples are allowed to be requested.
+  # This is locked down because these can only be requested with the current
+  # version of elasticsearch by performing a separate query for each facet
+  # option.  This is done using the msearch API to perform many queries
+  # together, but is still potentially expensive.  They could be efficiently
+  # calculated with the top-documents aggregator in elasticsearch 1.3, so this
+  # restriction could be relaxed in future.
+  ALLOWED_FACET_EXAMPLE_FIELDS = %w(organisations section format specialist_sectors)
+
   # The fields listed here are the only ones that can be returned in search
   # results.  These are listed and validated explicitly, rather than simply
   # allowing any field in the schema, to keep the set of such fields as minimal
@@ -45,12 +52,66 @@ class SearchParameterParser
     section subsection subsubsection
   )
 
-  def initialize(params)
-    process(params)
-  end
+  # The fields which are returned by default for search results.
+  DEFAULT_RETURN_FIELDS = %w(
+    title description link slug
+
+    public_timestamp
+    organisations topics world_locations document_series
+    specialist_sectors
+
+    format display_type
+    section subsection subsubsection
+  )
+
+  # The fields which are returned by default for facet examples.
+  DEFAULT_FACET_EXAMPLE_FIELDS = %w(
+    link title
+  )
+
+  attr_reader :parsed_params, :errors
 
   def valid?
     @errors.empty?
+  end
+
+protected
+
+  def parse_positive_integer(value, description)
+    begin
+      result = Integer(value, 10)
+    rescue ArgumentError
+      @errors << %{Invalid value "#{value}" for #{description} (expected positive integer)}
+      return nil
+    end
+    if result < 0
+      @errors << %{Invalid negative value "#{value}" for #{description} (expected positive integer)}
+      return nil
+    end
+    result
+  end
+
+  def integer_param(param_name, default, description="")
+    value = @params[param_name]
+    @used_params << param_name
+    unless value.nil?
+      value = parse_positive_integer(value, %{parameter "#{param_name}"#{description}})
+    end
+    if value.nil?
+      return default
+    end
+    value
+  end
+
+  def string_param(param_name)
+    @used_params << param_name
+    @params[param_name]
+  end
+end
+
+class SearchParameterParser < BaseParameterParser
+  def initialize(params)
+    process(params)
   end
 
   def error
@@ -108,7 +169,7 @@ private
   def return_fields
     fields = string_param("fields")
     if fields.nil?
-      return ALLOWED_RETURN_FIELDS
+      return DEFAULT_RETURN_FIELDS
     end
     disallowed_fields = fields - ALLOWED_RETURN_FIELDS
     fields = fields - disallowed_fields
@@ -145,9 +206,11 @@ private
       if (m = key.match(/\Afacet_(.*)/))
         field = m[1]
         if ALLOWED_FACET_FIELDS.include? field
-          count = parse_positive_integer(value, %{facet "#{field}"})
-          unless count.nil?
-            facets[field] = count
+          facet_parser = FacetParameterParser.new(field, value)
+          if facet_parser.valid?
+            facets[field] = facet_parser.parsed_params
+          else
+            @errors.concat(facet_parser.errors)
           end
         else
           @errors << %{"#{field}" is not a valid facet field}
@@ -156,37 +219,6 @@ private
       end
     end
     facets
-  end
-
-  def integer_param(param_name, default)
-    value = @params[param_name]
-    @used_params << param_name
-    unless value.nil?
-      value = parse_positive_integer(value, %{parameter "#{param_name}"})
-    end
-    if value.nil?
-      return default
-    end
-    value
-  end
-
-  def parse_positive_integer(value, description)
-    begin
-      result = Integer(value, 10)
-    rescue ArgumentError
-      @errors << %{Invalid value "#{value}" for #{description} (expected positive integer)}
-      return nil
-    end
-    if result < 0
-      @errors << %{Invalid negative value "#{value}" for #{description} (expected positive integer)}
-      return nil
-    end
-    result
-  end
-
-  def string_param(param_name)
-    @used_params << param_name
-    @params[param_name]
   end
 
   def debug_options
@@ -213,5 +245,99 @@ private
       end
     }
     options
+  end
+end
+
+class FacetParameterParser < BaseParameterParser
+  attr_reader :parsed_params, :errors
+
+  def initialize(field, value)
+    @field = field
+    process(value)
+  end
+
+private
+
+  def process(value)
+    options = value.split(",")
+
+    @errors = []
+
+    # @used_params is populated as a side effect of the methods used to build
+    # up the hash of parsed params.
+    @used_params = []
+
+    # First parameter is just an integer; subsequent ones are key:value
+    requested = parse_positive_integer(options.shift, %{first parameter for facet "#{@field}"})
+    @params = parse_options_into_hash(options)
+
+    @parsed_params = {
+      requested: requested,
+      examples: examples,
+      example_fields: example_fields,
+      example_scope: example_scope,
+    }
+
+    if @parsed_params[:examples] > 0 && @parsed_params[:example_scope] != :global
+      # global scope means that examples are looked up for each facet value
+      # across the whole collection, not just for documents matching the query.
+      # This is likely to be a surprising default, so we require that callers
+      # explicitly ask for it.
+      @errors << %{example_scope parameter must currently be set to global when requesting examples}
+      @parsed_params[:examples] = 0
+    end
+
+    unused_params = @params.keys - @used_params
+    unless unused_params.empty?
+      @errors << %{Unexpected options for facet #{@field}: #{unused_params.join(', ')}}
+    end
+  end
+
+  def parse_options_into_hash(values)
+    params = {}
+    values.each do |value|
+      k_v = value.split(":", 2)
+      if k_v.length == 2
+        params[k_v[0]] = k_v[1]
+      else
+        @errors << %{Invalid parameter "#{value}" for facet "#{@field}; must be of form "key:value"}
+      end
+    end
+    params
+  end
+
+  def examples
+    value = integer_param("examples", 0, %{ in facet "#{@field}"})
+    if value != 0
+      unless ALLOWED_FACET_EXAMPLE_FIELDS.include? @field
+        @errors << %{Facet examples are not supported for field "#{@field}"}
+        value = 0
+      end
+    end
+    value
+  end
+
+  def example_fields
+    fields_str = string_param("example_fields")
+    if fields_str.nil?
+      return DEFAULT_FACET_EXAMPLE_FIELDS 
+    end
+    fields = fields_str.split(":")
+    disallowed_fields = fields - ALLOWED_RETURN_FIELDS
+    fields = fields - disallowed_fields
+
+    if disallowed_fields.any?
+      @errors << %{Some requested fields are not valid return fields: #{disallowed_fields} in parameter "example_fields" in facet "#{@field}"}
+    end
+    fields
+  end
+
+  def example_scope
+    scope = string_param("example_scope")
+    if scope == "global"
+      :global
+    else
+      nil
+    end
   end
 end

@@ -113,7 +113,8 @@ private
     end
     result = {}
     @facets.each do |field, facet_info|
-      requested_count = @facet_fields[field]
+      facet_parameters = @facet_fields[field]
+      requested_count = facet_parameters[:requested]
       options = facet_info["terms"]
       result[field] = {
         options: present_facet_options(field, options, requested_count),

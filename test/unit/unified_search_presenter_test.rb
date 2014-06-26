@@ -78,6 +78,10 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     }
   end
 
+  def facet_params(requested, options={})
+    options.merge(requested: requested)
+  end
+
   INDEX_NAMES = %w(mainstream government detailed)
 
   context "no results" do
@@ -210,7 +214,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         0,
         INDEX_NAMES,
         {},
-        {"organisations" => 1},
+        {"organisations" => facet_params(1)},
       ).present
     end
 
@@ -253,7 +257,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         0,
         INDEX_NAMES,
         {"organisations" => ["hmrc"]},
-        {"organisations" => 2},
+        {"organisations" => facet_params(2)},
       ).present
     end
 
@@ -303,7 +307,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         0,
         INDEX_NAMES,
         {"organisations" => ["hm-cheesemakers"]},
-        {"organisations" => 1},
+        {"organisations" => facet_params(1)},
       ).present
     end
 
@@ -353,7 +357,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         0,
         INDEX_NAMES,
         {},
-        {"organisations" => 0},
+        {"organisations" => facet_params(0)},
       ).present
     end
 
@@ -395,7 +399,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         0,
         INDEX_NAMES,
         {},
-        {"organisations" => 1, "topics" => 1},
+        {"organisations" => facet_params(1), "topics" => facet_params(1)},
         {organisation_registry: org_registry},
         {organisations: org_registry},
       ).present
@@ -465,5 +469,4 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       assert_equal [], @output[:suggested_queries]
     end
   end
-
 end
