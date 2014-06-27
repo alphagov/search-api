@@ -296,6 +296,14 @@
           }
         ]
       }
+    },
+    "opened_date": {
+      "type": "date",
+      "index": "no"
+    },
+    "closed_date": {
+      "type": "date",
+      "index": "no"
     }
   }
 }
