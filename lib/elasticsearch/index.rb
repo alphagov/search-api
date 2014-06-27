@@ -326,6 +326,15 @@ module Elasticsearch
       MultiJson.decode(@client.get_with_payload(path, json_payload))
     end
 
+    def msearch(bodies)
+      payload = bodies.map { |body|
+        "{}\n#{body.to_json}\n"
+      }.join("")
+      logger.debug "Request payload: #{payload}"
+      path = "_msearch"
+      MultiJson.decode(@client.get_with_payload(path, payload))
+    end
+
     # Convert a best bet query to a string formed by joining the normalised
     # words in the query with spaces.
     def analyzed_best_bet_query(query)
