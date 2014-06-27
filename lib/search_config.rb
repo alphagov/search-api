@@ -1,5 +1,6 @@
 require "yaml"
 require "elasticsearch/search_server"
+require "schema_config"
 
 class SearchConfig
 
@@ -26,7 +27,8 @@ class SearchConfig
   end
 
   def elasticsearch_schema
-    @elasticsearch_schema ||= config_for("elasticsearch_schema")
+    config_path = File.expand_path("../config/schema", File.dirname(__FILE__))
+    @elasticsearch_schema ||= SchemaConfig.new(config_path).elasticsearch_schema
   end
 
   def elasticsearch

@@ -422,12 +422,25 @@ class Rummager < Sinatra::Application
 
   delete "/?:index?/documents/*" do
     document_link = params["splat"].first
+
+    if (type = get_type_from_request_body(request.body))
+      id = document_link
+    else
+      type, id = current_index.link_to_type_and_id(document_link)
+    end
+
     if settings.enable_queue
       current_index.delete_queued(document_link)
       json_result 202, "Queued"
     else
-      simple_json_result(current_index.delete(document_link))
+      simple_json_result(current_index.delete(type, id))
     end
+  end
+
+  def get_type_from_request_body(request_body)
+    MultiJson.decode(request_body).fetch("_type", nil)
+  rescue MultiJson::DecodeError
+    nil
   end
 
   # Update an existing document

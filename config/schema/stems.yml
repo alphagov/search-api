@@ -1,0 +1,46 @@
+type: stemmer_override
+rules: [
+  "animal => animal",  # not animation
+  "animals => animal",  # not animation
+  "animation => animat",  # not animal
+  "animator => animat",  # not animal
+  "appointeeship => appointe",  # match appointee
+  "community => community",
+  "corporate => corporate",  # not corporation
+  "corporation => corporation",  # not corporal
+  "directive => directive",
+  "directives => directive",
+  "equalities => equality",
+  "equality => equality",
+  "fertiliser => fertiliser",  # not fertilisation
+  "fertilisers => fertiliser",  # not fertilisation
+  "fiancee => fianc",  # also match fiance
+  "fiancé => fianc",  # also match fiance
+  "fiancée => fianc",  # also match fiance
+  "governance => governance",  # not government
+  "housing => housing",
+  "intern => intern",
+  "interns => intern",
+  "internal => internal",
+  "international => international",
+  "mariner => mariner",  # not marine
+  "naturalization => naturalis",  # not natural, nature
+  "paye => paye",  # not pay
+  "permitted => permitted",
+  "permitting => permitting",  # not permit
+  "practical => practical",
+  "practice => practice",
+  "probate => probate",  # not probation
+  "publication => publication",
+  "publications => publication",
+  "recovery => recov",  # same as recover
+  "recoverable => recov",  # same as recover
+  "responsibility => responsib",  # not response, responsive
+  "responsibilities => responsib",
+  "responsible => responsib",
+  "saving => saving",
+  "savings => savings",
+  "signing => signing",
+  "sponsorship => sponsor",
+  "universal => universal"
+]

@@ -337,8 +337,7 @@ module Elasticsearch
       }.join(" ")
     end
 
-    def delete(link)
-      type, id = link_to_type_and_id(link)
+    def delete(type, id)
       begin
         @client.delete("#{CGI.escape(type)}/#{CGI.escape(id)}")
       rescue RestClient::ResourceNotFound
@@ -364,6 +363,17 @@ module Elasticsearch
 
     def commit
       @client.post "_refresh", nil
+    end
+
+    def link_to_type_and_id(link)
+      # If link starts with edition/ or best-bet/ then use those values for the
+      # type.  For backwards compact, if it starts with anything else currently
+      # assume that the type is edition.
+      if (m = link.match(/\A(edition|best_bet)\/(.*)\Z/))
+        return [m[1], m[2]]
+      else
+        return ["edition", link]
+      end
     end
 
   private
@@ -577,18 +587,6 @@ module Elasticsearch
         timeout: options[:timeout] || TIMEOUT_SECONDS,
         open_timeout: options[:open_timeout] || OPEN_TIMEOUT_SECONDS
       )
-    end
-
-    def link_to_type_and_id(link)
-      # If link starts with edition/ or best-bet/ then use those values for the
-      # type.  For backwards compact, if it starts with anything else currently
-      # assume that the type is edition.
-      # 
-      if (m = link.match(/\A(edition|best_bet)\/(.*)\Z/))
-        return [m[1], m[2]]
-      else
-        return ["edition", link]
-      end
     end
   end
 end
