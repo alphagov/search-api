@@ -18,24 +18,6 @@ class ResultSetPresenter
     presentable_hash
   end
 
-  PRESENTATION_FORMAT_TRANSLATION = {
-    "planner" => "answer",
-    "smart_answer" => "answer",
-    "calculator" => "answer",
-    "licence_finder" => "answer",
-    "custom_application" => "answer",
-    "calendar" => "answer"
-  }
-
-  FORMAT_NAME_ALTERNATIVES = {
-    "programme" => "Benefits & credits",
-    "transaction" => "Services",
-    "local_transaction" => "Services",
-    "place" => "Services",
-    "answer" => "Quick answers",
-    "specialist_guidance" => "Specialist guidance"
-  }
-
 private
   def results
     @result_set.results.map { |document| build_result(document) }

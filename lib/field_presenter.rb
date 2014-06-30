@@ -14,6 +14,8 @@ class FieldPresenter
     end
   end
 
+private
+
   # Return true if the field should be expanded (ie, there is a registry for
   # it).
   def should_expand(field)
@@ -32,5 +34,4 @@ class FieldPresenter
     end
     {"slug" => slug}
   end
-
 end
