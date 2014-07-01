@@ -15,6 +15,7 @@ require "organisation_set_presenter"
 require "document_series_registry"
 require "document_collection_registry"
 require "organisation_registry"
+require "specialist_sector_registry"
 require "suggester"
 require "topic_registry"
 require "world_location_registry"
@@ -62,6 +63,10 @@ class Rummager < Sinatra::Application
   def world_location_registry
     index_name = settings.search_config.world_location_registry_index
     @@world_location_registry ||= WorldLocationRegistry.new(search_server.index(index_name)) if index_name
+  end
+
+  def specialist_sector_registry
+    @@specialist_sector_registry ||= SpecialistSectorRegistry.new(unified_index)
   end
 
   def govuk_indices
@@ -289,14 +294,16 @@ class Rummager < Sinatra::Application
       topic_registry: topic_registry,
       document_series_registry: document_series_registry,
       document_collection_registry: document_collection_registry,
-      world_location_registry: world_location_registry
+      world_location_registry: world_location_registry,
+      specialist_sector_registry: specialist_sector_registry,
     }
     registry_by_field = {
       organisations: organisation_registry,
       topics: topic_registry,
       document_series: document_series_registry,
       document_collections: document_collection_registry,
-      world_locations: world_location_registry
+      world_locations: world_location_registry,
+      specialist_sectors: specialist_sector_registry,
     }
 
     parser = SearchParameterParser.new(request.params)
