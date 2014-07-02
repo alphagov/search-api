@@ -43,12 +43,17 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   end
 
   def query_options(options={})
+    base_filters = {
+      'not' => { 'term' => { 'format' => 'specialist_sector' } }
+    }
+    extra_filters = options.delete(:filters) || {}
+
     {
       start: 0,
       count: 20,
       query: "cheese",
       order: nil,
-      filters: {},
+      filters: base_filters.merge(extra_filters),
       fields: nil,
       facets: nil,
       debug: {},
