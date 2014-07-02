@@ -5,6 +5,7 @@ require 'document_collection_registry'
 require "organisation_registry"
 require "topic_registry"
 require "world_location_registry"
+require "specialist_sector_registry"
 
 class SearchTest < IntegrationTest
 
@@ -34,6 +35,16 @@ class SearchTest < IntegrationTest
       {
         link: "/government/world/angola",
         title: "Angola"
+      }
+    )
+  end
+
+  def oil_gas_sector
+    Document.new(
+      %w(link title),
+      {
+        link: "/oil-and-gas/licensing",
+        title: "Licensing"
       }
     )
   end
@@ -237,6 +248,29 @@ class SearchTest < IntegrationTest
     first_result = MultiJson.decode(last_response.body)["results"].first
     assert_equal 1, first_result["world_locations"].size
     assert_equal angola_world_location.title, first_result["world_locations"][0]["title"]
+  end
+
+  def test_handles_results_with_sectors
+    mappings = default_mappings
+    mappings["edition"]["properties"]["specialist_sectors"] = {"type" => "string"}
+    document = {
+      "_index" => "mainstream",
+      "_id" => "foo_id",
+      "_score" => "1.0",
+      "fields" => sample_document_attributes.merge("specialist_sectors" => ["oil-and-gas/licensing"])
+    }
+
+    stub_index.expects(:raw_search).returns({"hits" => {"hits" => [document], "total" => 1}})
+    stub_index.expects(:index_name).returns("mainstream,government,detailed")
+    stub_metasearch_index.expects(:analyzed_best_bet_query).with("bob").returns("bob")
+    stub_metasearch_index.expects(:raw_search).returns({"hits" => {"hits" => []}})
+    SpecialistSectorRegistry.any_instance.expects(:[])
+      .with("oil-and-gas/licensing")
+      .returns(oil_gas_sector)
+    get "/unified_search.json", {q: "bob"}
+    first_result = MultiJson.decode(last_response.body)["results"].first
+    assert_equal 1, first_result["specialist_sectors"].size
+    assert_equal oil_gas_sector.title, first_result["specialist_sectors"][0]["title"]
   end
 
   def test_returns_404_when_requested_with_non_json_url
