@@ -4,7 +4,15 @@ require "set"
 require "unified_search_builder"
 
 class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
-  
+
+  BASE_FILTERS = {
+    'not' => {
+      'term' => {
+        'format' => 'specialist_sector'
+      }
+    }
+  }
+
   def stub_zero_best_bets
     @metasearch_index = stub("metasearch index")
     @metasearch_index.stubs(:raw_search).returns({
@@ -63,6 +71,15 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     @builder = UnifiedSearchBuilder.new(query_options, @metasearch_index)
   end
 
+  def with_base_filters(filter)
+    {
+      "and" => [
+        filter,
+        BASE_FILTERS
+      ]
+    }
+  end
+
   context "unfiltered search" do
     setup do
       stub_zero_best_bets
@@ -93,9 +110,10 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "not have filter in payload" do
-      assert_does_not_contain(
-        @builder.payload.keys, :filter
+    should "only contain default filters in payload" do
+      assert_equal(
+        BASE_FILTERS,
+        @builder.payload[:filter]
       )
     end
 
@@ -124,9 +142,9 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "have correct filter" do
+    should "append correct filter to base filters" do
       assert_equal(
-        @builder.filters_hash, {"terms" => {"organisations" => ["hm-magic"]}}
+        @builder.filters_hash, with_base_filters({"terms" => {"organisations" => ["hm-magic"]}})
       )
     end
 
@@ -157,7 +175,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     should "have correct filter" do
       assert_equal(
         @builder.filters_hash,
-        {"terms" => {"organisations" => ["hm-magic", "hmrc"]}}
+        with_base_filters({"terms" => {"organisations" => ["hm-magic", "hmrc"]}})
       )
     end
 
@@ -194,6 +212,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         {"and" => [
           {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
           {"terms" => {"section" => ["levitation"]}},
+          BASE_FILTERS,
         ]}
       )
     end
@@ -241,9 +260,10 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "not have filter in payload" do
-      assert_does_not_contain(
-        @builder.payload.keys, :filter
+    should "only contain default filters in payload" do
+      assert_equal(
+        BASE_FILTERS,
+        @builder.payload[:filter]
       )
     end
 
@@ -290,9 +310,10 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "not have filter in payload" do
-      assert_does_not_contain(
-        @builder.payload.keys, :filter
+    should "only contain default filters in payload" do
+      assert_equal(
+        BASE_FILTERS,
+        @builder.payload[:filter]
       )
     end
 
@@ -351,9 +372,10 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "not have filter in payload" do
-      assert_does_not_contain(
-        @builder.payload.keys, :filter
+    should "only contain default filters in payload" do
+      assert_equal(
+        BASE_FILTERS,
+        @builder.payload[:filter]
       )
     end
 
@@ -365,7 +387,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
               field: "organisations",
               order: "count",
               size: 100000,
-            }
+            },
+            facet_filter: BASE_FILTERS,
           },
         },
         @builder.payload[:facets])
@@ -386,7 +409,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
     should "have correct filter" do
       assert_equal(
-        @builder.filters_hash, {"terms" => {"organisations" => ["hm-magic"]}}
+        @builder.filters_hash, with_base_filters({"terms" => {"organisations" => ["hm-magic"]}})
       )
     end
 
@@ -398,7 +421,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
               field: "organisations",
               order: "count",
               size: 100000,
-            }
+            },
+            facet_filter: BASE_FILTERS,
           },
         },
         @builder.payload[:facets])
@@ -419,7 +443,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
     should "have correct filter" do
       assert_equal(
-        @builder.filters_hash, {"terms" => {"section" => ["levitation"]}}
+        @builder.filters_hash, with_base_filters({"terms" => {"section" => ["levitation"]}})
       )
     end
 
@@ -432,9 +456,9 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
               order: "count",
               size: 100000,
             },
-            facet_filter: {
+            facet_filter: with_base_filters({
               "terms" => {"section" => ["levitation"]}
-            },
+            }),
           },
         },
         @builder.payload[:facets])

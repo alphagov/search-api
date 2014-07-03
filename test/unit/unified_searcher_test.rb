@@ -129,6 +129,14 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }
   }
 
+  BASE_FILTERS = {
+    'not' => {
+      'term' => {
+        'format' => 'specialist_sector'
+      }
+    }
+  }
+
   def mock_best_bets(query)
     @metasearch_index = stub("metasearch index")
     @metasearch_index.expects(:raw_search).with(
@@ -144,6 +152,15 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     @metasearch_index.expects(:analyzed_best_bet_query).with(query).returns(query)
   end
 
+  def with_base_filters(filter)
+    {
+      "and" => [
+        filter,
+        BASE_FILTERS
+      ]
+    }
+  end
+
   context "unfiltered, unsorted search" do
 
     setup do
@@ -155,6 +172,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         size: 20,
         query: CHEESE_QUERY,
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+        filter: BASE_FILTERS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
@@ -203,6 +221,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: TIMESTAMP_EXISTS_WITH_CHEESE_QUERY,
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         sort: [{"public_timestamp" => {order: "asc"}}],
+        filter: BASE_FILTERS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
@@ -245,7 +264,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         from: 0,
         size: 20,
         query: CHEESE_QUERY,
-        filter: {"terms" => {"organisations" => ["ministry-of-magic"]}},
+        filter: with_base_filters({"terms" => {"organisations" => ["ministry-of-magic"]}}),
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
@@ -295,8 +314,12 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
               field: "organisations",
               order: "count",
               size: 100000,
-            }}},
+            },
+            facet_filter: BASE_FILTERS,
+          }
+        },
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+        filter: BASE_FILTERS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3},
         "facets" => {"organisations" => {
