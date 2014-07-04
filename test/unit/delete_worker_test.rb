@@ -6,13 +6,13 @@ require "elasticsearch/index"
 class DeleteWorkerTest < MiniTest::Unit::TestCase
   def test_deletes_documents
     mock_index = mock("index")
-    mock_index.expects(:delete).with("/foobang")
+    mock_index.expects(:delete).with("edition", "/foobang")
     Elasticsearch::SearchServer.any_instance.expects(:index)
       .with("test-index")
       .returns(mock_index)
 
     worker = Elasticsearch::DeleteWorker.new
-    worker.perform("test-index", "/foobang")
+    worker.perform("test-index", "edition", "/foobang")
   end
 
   def test_retries_when_index_locked
@@ -24,10 +24,10 @@ class DeleteWorkerTest < MiniTest::Unit::TestCase
       .returns(mock_index)
 
     Elasticsearch::DeleteWorker.expects(:perform_in)
-      .with(lock_delay, "test-index", "/foobang")
+      .with(lock_delay, "test-index", "edition", "/foobang")
 
     worker = Elasticsearch::DeleteWorker.new
-    worker.perform("test-index", "/foobang")
+    worker.perform("test-index", "edition", "/foobang")
   end
 
   def test_forwards_to_failure_queue

@@ -19,9 +19,9 @@ class IndexQueueTest < MiniTest::Unit::TestCase
 
   def test_can_delete_documents
     Elasticsearch::DeleteWorker.expects(:perform_async)
-      .with("test-index", "/foobang")
+      .with("test-index", "edition", "/foobang")
     queue = Elasticsearch::IndexQueue.new("test-index")
-    queue.queue_delete("/foobang")
+    queue.queue_delete("edition", "/foobang")
   end
 
   def test_can_amend_documents
