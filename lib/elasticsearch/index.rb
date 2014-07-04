@@ -352,8 +352,8 @@ module Elasticsearch
       return true  # For consistency with the Solr API and simple_json_response
     end
 
-    def delete_queued(link)
-      queue.queue_delete(link)
+    def delete_queued(document_type, document_id)
+      queue.queue_delete(document_type, document_id)
     end
 
     def delete_all

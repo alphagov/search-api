@@ -14,8 +14,8 @@ module Elasticsearch
       BulkIndexWorker.perform_async(@index_name, document_hashes)
     end
 
-    def queue_delete(link)
-      DeleteWorker.perform_async(@index_name, link)
+    def queue_delete(document_type, document_id)
+      DeleteWorker.perform_async(@index_name, document_type, document_id)
     end
 
     def queue_amend(link, updates)

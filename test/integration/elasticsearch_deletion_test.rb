@@ -41,7 +41,14 @@ class ElasticsearchDeletionTest < IntegrationTest
             "title" => "Some other site",
             "format" => "answer",
             "link" => "http://example.com/",
-          }
+          },
+          {
+            "_type" => "cma_case",
+            "link" => "/cma-cases/merger-investigation",
+            "title" => "Merger investigation",
+            "description" => "An investigation into a merger",
+            "indexable_content" => "Merger merger merger",
+          },
         ]
       },
       {
@@ -106,7 +113,19 @@ class ElasticsearchDeletionTest < IntegrationTest
     assert last_response.not_found?
   end
 
-  def test_should_delete_a_nonedition_by_type_and_id
+  def test_should_accept_a_type_to_delete_a_document
+    delete "/metasearch-test/documents/cma-cases/merger-investigation", _type: "cma_case"
+    assert last_response.ok?
+  end
+
+  def test_should_accept_a_type_to_delete_a_document_when_queuing_enabled
+    app.settings.expects(:enable_queue).returns(true)
+
+    delete "/metasearch-test/documents/cma-cases/merger-investigation", _type: "cma_case"
+    assert last_response.successful?
+  end
+
+  def test_should_delete_a_best_bet_by_type_and_id
     get "/metasearch-test/documents/best_bet/jobs_exact"
     assert last_response.ok?
 

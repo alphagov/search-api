@@ -430,7 +430,7 @@ class Rummager < Sinatra::Application
     end
 
     if settings.enable_queue
-      current_index.delete_queued(document_link)
+      current_index.delete_queued(type, id)
       json_result 202, "Queued"
     else
       simple_json_result(current_index.delete(type, id))

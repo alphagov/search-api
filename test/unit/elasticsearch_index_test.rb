@@ -343,13 +343,13 @@ eos
 
   def test_queued_delete
     mock_queue = mock("document queue") do
-      expects(:queue_delete).with("/foobang")
+      expects(:queue_delete).with("edition", "/foobang")
     end
     Elasticsearch::IndexQueue.expects(:new)
       .with("test-index")
       .returns(mock_queue)
 
-    @wrapper.delete_queued("/foobang")
+    @wrapper.delete_queued("edition", "/foobang")
   end
 
   def test_amend
