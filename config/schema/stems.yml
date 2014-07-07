@@ -27,7 +27,6 @@ rules: [
   "naturalization => naturalis",  # not natural, nature
   "paye => paye",  # not pay
   "permitted => permitted",
-  "permitting => permitting",  # not permit
   "practical => practical",
   "practice => practice",
   "probate => probate",  # not probation

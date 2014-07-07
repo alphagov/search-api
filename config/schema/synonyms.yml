@@ -28,11 +28,12 @@ synonyms: [
   # Similar meanings
   "apply, claim",
   "attorney, deputy",
-  # "bank holiday, bank holidays, public holiday, public holidays",  # Temporarily disabled due to 'Romania and UK public holidays'
+  "bank holiday, bank holidays, public holiday, public holidays",
   "bankrupt, bankruptcy",
   # "car, vehicle",
   "car tax bands, vehicle tax rates",
   "complain, complaint",
+  # "copyright => copyright, intellectual property",
   "death, bereavement",
   "emissions, pollution",
   # "fees, costs, prices",
@@ -177,7 +178,7 @@ synonyms: [
   "idi, immigration directorate instructions",
   "iib => industrial injuries disablement benefit",
   "ilr => indefinite leave, settle, individualised learner record",
-  # "jsa, jobseeker’s allowance",
+  "jsa, jobseeker’s allowance",
   "lha, local housing allowance",
   "lpa, lasting power of attorney",
   "nasm => noise amelioration scheme military",
@@ -220,8 +221,6 @@ synonyms: [
 
   # Adding terms to return relevant content that doesn't mention the original search term
   "apostille => apostille, document legalised",
-  "backyard => backyard, local environmental data",
-  "back yard => back yard, backyard, local environmental data",
   "bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating",
   "benefit checker, benefits checker => benefits adviser",
   "bin collection => bin collection, rubbish collection",
@@ -235,7 +234,6 @@ synonyms: [
   "hpi check => used car check",
   "intestacy => intestacy, wills, inherits",
   "intestate => intestate, wills, inherits",
-  "ir35 => ir35, employment status",
   "kiev => kiev, kyiv, ukraine",
   "mot checker => mot check",
   "my account => your account, online account",  # Student finance login
@@ -244,7 +242,7 @@ synonyms: [
   "refuse collection => refuse collection, rubbish collection",
   "self certificate => self certification",
   "sign off, signing off, starting work => sign off, signing off, starting work, from benefits to work, return to work, adviser",
-  "snow, snow code => snow, ice, grit, winter, weather, closures",
+  # "snow, snow code => snow, ice, grit, winter, weather, closures",
   "soc code, soc codes => soc code, sponsorship, skilled worker",
   "social security => social security, benefits",
   "sponsor login => sponsorship management system",
@@ -253,45 +251,11 @@ synonyms: [
   "under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room",
   "visa4uk => visa4uk, uk visa",
   "waste carriers licence, waste carriers license => register as a waste carrier, licence",
-  "what's in your backyard, what's in my backyard, whats in your backyard, whats in my backyard, what's in your back yard, what's in my back yard, whats in your back yard, whats in my back yard, wiyby => local environmental",
 
   # Adding terms to raise the best results
-  "book driving test => book driving test, book your practical driving test",
   "british citizenship => british citizenship, british citizen",
-  "bursaries, bursary => bursaries, bursary, extra, university",
-  "business grant, business grants => business grants, business finance",
-  "business loan, business loans => business loans, business finance",
-  "business support => business support, business finance",
-  "child benefit charge => child benefit tax charge",
-  "copyright => copyright, intellectual property",
-  "driving test => driving test, practical driving test, driving or riding test",
-  "employment tribunal => employment tribunal, take",
-  "export licence, export licences => export licence, strategic, require a licence",
-  "fishing licence, fishing licences => fishing licence, rod licence",
-  "fishing license, fishing licenses => fishing licence, rod licence",
-  "gateway => gateway, government gateway",
-  # Intended to bring the main PHE and HMT Green Book landing pages into the top 3, above all their chapters
-  #   </government/organisations/public-health-england/series/immunisation-against-infectious-disease-the-green-book>
-  #   </government/publications/the-green-book-appraisal-and-evaluation-in-central-governent>
-  # TODO: review the need for this once we have other ways to manipulate result ordering
-  "green book => green book, appraisal evaluation central government, immunisation against infectious disease",
-  "green deal => green deal, green deal energy saving, energy grants, heating",
   "health check, health checks => nhs health check",
-  "holiday payment, holiday payments => holiday payment, holiday payments, paid early",
   "job share, job sharing => job share, job sharing, flexible working",
-  "legalisation, legalise => legalisation, legalise, document legalised",
-  "maintenance grant => maintenance grant, student finance",
-  # "new enterprise allowance => new enterprise allowance, start work, business idea",
-  "passport, passports => passport, replace your adult passport, child passport, first passport",
-  "pollution prevention, pollution prevention guidelines => pollution prevention guidance",
-  "redundancy => redundancy, redundant, redundancy pay",
-  "self assessment => self assessment, self assessment tax return, register for self assessment",
-  "student finance => student finance, student finance calculator, student loans, student grants, apply or support, log in",
-  # "trade => trade, trade tariff, ukti",
-  "utr, unique taxpayer reference => utr, unique taxpayer reference, register for self assessment",
-  "vehicle licence => vehicle licence, tax disc",
-  "visa application => visa application, apply uk visa",
-  "work trial => work trial, work experience, recruiters",
 
   # Removing terms to return relevant content
   "flood areas => flood",
@@ -381,6 +345,7 @@ synonyms: [
   "set 0 => set o",
   "vc5 => vc5, v5c",
   "v137 => v317",
+  "wimby => wiyby",
 
   # Split words that are usually one word
   "child care => childcare",
