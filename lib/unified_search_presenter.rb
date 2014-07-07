@@ -9,9 +9,14 @@ class UnifiedSearchPresenter
   # which gets passed to the ResultSetPresenter class. For example:
   #
   #     { organisation_registry: OrganisationRegistry.new(...) }
+  #
+  # `facet_examples` is {field_name => {facet_value => {total: count, examples: [{field: value}, ...]}}}
+  # ie: a hash keyed by field name, containing hashes keyed by facet value with
+  # values containing example information for the value.
   def initialize(es_response, start, index_names, applied_filters = {},
                  facet_fields = {}, registries = {},
-                 registry_by_field = {}, suggestions = [])
+                 registry_by_field = {}, suggestions = [],
+                 facet_examples={})
     @start = start
     @results = es_response["hits"]["hits"].map do |result|
       doc = result.delete("fields")
@@ -26,6 +31,7 @@ class UnifiedSearchPresenter
     @registries = registries
     @registry_by_field = registry_by_field
     @suggestions = suggestions
+    @facet_examples = facet_examples
   end
 
   def present
@@ -73,7 +79,7 @@ private
     end
   end
 
-  def facet_options(applied_options, options, requested_count)
+  def raw_facet_options(applied_options, options, requested_count)
     if applied_options.empty?
       applied = []
     else
@@ -97,14 +103,27 @@ private
     @field_presenter ||= FieldPresenter.new(registry_by_field)
   end
 
-  def present_facet_options(field, options, requested_count)
+  def facet_option(field, slug)
+    result = field_presenter.expand(field, slug)
+    field_examples = @facet_examples[field]
+    unless field_examples.nil?
+      unless result.is_a?(Hash)
+        result = {"slug" => result}
+      end
+      result["examples"] = field_examples.fetch(slug, [])
+    end
+    result
+  end
+
+  def facet_options(field, options, facet_parameters)
+    requested_count = facet_parameters[:requested]
     applied_options = @applied_filters[field] || []
-    facet_options(applied_options, options, requested_count).map do |option|
+    raw_facet_options(applied_options, options, requested_count).map { |option|
       {
-        value: field_presenter.expand(field, option["term"]),
+        value: facet_option(field, option["term"]),
         documents: option["count"],
       }
-    end
+    }
   end
 
   def presented_facets
@@ -114,13 +133,12 @@ private
     result = {}
     @facets.each do |field, facet_info|
       facet_parameters = @facet_fields[field]
-      requested_count = facet_parameters[:requested]
       options = facet_info["terms"]
       result[field] = {
-        options: present_facet_options(field, options, requested_count),
+        options: facet_options(field, options, facet_parameters),
         documents_with_no_value: facet_info["missing"],
         total_options: options.length,
-        missing_options: [options.length - requested_count, 0].max,
+        missing_options: [options.length - facet_parameters[:requested], 0].max,
       }
     end
     result

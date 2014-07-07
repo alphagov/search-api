@@ -452,6 +452,78 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
   end
 
+  context "results with facet examples" do
+    setup do
+      magic_org_document = Document.new(
+        %w(link title),
+        link: "/government/departments/hm-magic",
+        title: "Ministry of Magic"
+      )
+      org_registry = stub("org registry")
+      org_registry.expects(:[])
+        .with("hm-magic")
+        .returns(magic_org_document)
+
+      @output = UnifiedSearchPresenter.new(
+        sample_es_response("facets" => sample_facet_data),
+        0,
+        INDEX_NAMES,
+        {},
+        {"organisations" => facet_params(1),},
+        {organisation_registry: org_registry},
+        {organisations: org_registry},
+        [],
+        {"organisations" => {
+          "hm-magic" => {
+            "total" => 1,
+            "examples" => [{"title" => "Ministry of Magic"}],
+          }
+        }}
+      ).present
+    end
+
+    should "have facets" do
+      assert_contains @output.keys, :facets
+    end
+
+    should "have correct number of facets" do
+      assert_equal 1, @output[:facets].length
+    end
+
+    should "have correct number of facet values" do
+      assert_equal 1, @output[:facets]["organisations"][:options].length
+    end
+
+    should "have org facet value expanded, and include examples" do
+      assert_equal({
+        :value => {
+          "link" => "/government/departments/hm-magic",
+          "title" => "Ministry of Magic",
+          "slug" => "hm-magic",
+          "examples" => {
+            "total" => 1,
+            "examples" => [
+              {"title" => "Ministry of Magic"},
+            ],
+          },
+        },
+        :documents=>7,
+      }, @output[:facets]["organisations"][:options][0])
+    end
+
+    should "have correct number of documents with no value" do
+      assert_equal(8, @output[:facets]["organisations"][:documents_with_no_value])
+    end
+
+    should "have correct total number of options" do
+      assert_equal(2, @output[:facets]["organisations"][:total_options])
+    end
+
+    should "have correct number of missing options" do
+      assert_equal(1, @output[:facets]["organisations"][:missing_options])
+    end
+  end
+
   context "suggested queries" do
     should "present suggestions in output" do
       @suggestions = [

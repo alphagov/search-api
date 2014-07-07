@@ -40,11 +40,10 @@ class MultiIndexTest < IntegrationTest
         "link" => "/#{short_index_name}-#{i}",
         "indexable_content" => "Something something important content",
       }
-      fields["section"] = i
+      fields["section"] = ["#{i}"]
       if i % 2 == 0
         fields["topics"] = ["farming"]
       end
-      fields["section"] = ["#{i}"]
       if short_index_name == "government"
         fields["public_timestamp"] = "#{i+2000}-01-01T00:00:00"
       end

@@ -1,5 +1,6 @@
 # Performs a search across all indices used for the GOV.UK site search
 
+require "facet_example_fetcher"
 require "unified_search_builder"
 require "unified_search_presenter"
 
@@ -19,6 +20,8 @@ class UnifiedSearcher
   def search(params)
     builder = UnifiedSearchBuilder.new(params, @metaindex)
     es_response = index.raw_search(builder.payload)
+    example_fetcher = FacetExampleFetcher.new(index, es_response, params)
+    facet_examples = example_fetcher.fetch
     UnifiedSearchPresenter.new(
       es_response,
       params[:start],
@@ -28,6 +31,7 @@ class UnifiedSearcher
       registries,
       registry_by_field,
       suggested_queries(params[:query]),
+      facet_examples,
     ).present
   end
 
