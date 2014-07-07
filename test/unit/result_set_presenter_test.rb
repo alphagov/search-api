@@ -4,7 +4,7 @@ require "result_set_presenter"
 
 class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
-  FIELDS = %w(link title description format organisations topics document_series document_collections world_locations)
+  FIELDS = %w(link title description format organisations topics document_series document_collections world_locations specialist_sectors)
 
   def result_set
     documents = [
@@ -77,6 +77,17 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       "description" => "Full of foo.",
       "format" => "edition",
       "world_locations" => world_location_slugs
+    }
+    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+  end
+
+  def single_result_with_sectors(*sector_slugs)
+    document_hash = {
+      "link" => "/foo",
+      "title" => "Foo",
+      "description" => "Full of foo.",
+      "format" => "edition",
+      "specialist_sectors" => sector_slugs,
     }
     stub(results: [Document.new(FIELDS, document_hash)], total: 1)
   end
@@ -209,6 +220,30 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal "Angola", output["results"][0]["world_locations"][0]["title"]
     assert_equal "/government/world/angola", output["results"][0]["world_locations"][0]["link"]
     assert_equal "angola", output["results"][0]["world_locations"][0]["slug"]
+  end
+
+  def test_expands_sectors
+    oil_gas_sector = Document.new(
+      %w(link title),
+      link: "/oil-and-gas/licensing",
+      title: "Licensing"
+    )
+    specialist_sector_registry = stub("sector registry")
+    specialist_sector_registry.expects(:[])
+      .with("oil-and-gas/licensing")
+      .returns(oil_gas_sector)
+
+    presenter = ResultSetPresenter.new(
+      single_result_with_sectors("oil-and-gas/licensing"),
+      specialist_sector_registry: specialist_sector_registry,
+    )
+
+    output = presenter.present
+    assert_equal 1, output["results"][0]["specialist_sectors"].size
+    assert_instance_of Hash, output["results"][0]["specialist_sectors"][0]
+    assert_equal "Licensing", output["results"][0]["specialist_sectors"][0]["title"]
+    assert_equal "/oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["link"]
+    assert_equal "oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["slug"]
   end
 
   def test_unknown_organisations_just_have_slug

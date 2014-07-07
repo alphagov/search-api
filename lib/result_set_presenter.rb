@@ -51,6 +51,11 @@ private
         world_location_by_slug(slug)
       end
     end
+    if result['specialist_sectors']
+      result['specialist_sectors'].map! do |slug|
+        sector_by_slug(slug)
+      end
+    end
     result
   end
 
@@ -92,6 +97,10 @@ private
 
   def world_location_registry
     @context[:world_location_registry]
+  end
+
+  def specialist_sector_registry
+    @context[:specialist_sector_registry]
   end
 
   def spelling_suggestions
@@ -138,6 +147,15 @@ private
     world_location = world_location_registry && world_location_registry[slug]
     if world_location
       world_location.to_hash.merge("slug" => slug)
+    else
+      {"slug" => slug}
+    end
+  end
+
+  def sector_by_slug(slug)
+    sector = specialist_sector_registry && specialist_sector_registry[slug]
+    if sector
+      sector.to_hash.merge("slug" => slug)
     else
       {"slug" => slug}
     end

@@ -31,7 +31,7 @@
     },
     "specialist_sectors": {
       "type": "string",
-      "index": "no",
+      "index": "not_analyzed",
       "include_in_all": false
     },
     "tags": {

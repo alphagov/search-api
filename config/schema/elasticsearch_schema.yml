@@ -110,7 +110,7 @@ mappings:
         relevant_to_local_government: { type: boolean, index: not_analyzed, include_in_all: false }
         search_format_types: { type: string, index: not_analyzed, include_in_all: false }
         section:     { type: string, index: not_analyzed, include_in_all: false }
-        specialist_sectors: { type: string, index: "no", include_in_all: false }
+        specialist_sectors: { type: string, index: not_analyzed, include_in_all: false }
         slug:        { type: string, index: not_analyzed, include_in_all: false }
         subsection:  { type: string, index: not_analyzed, include_in_all: false }
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
