@@ -1,0 +1,75 @@
+{
+  "properties": {
+    "aircraft_category": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Aircraft category",
+        "ui_widget_type": "multi-select",
+        "allowed_values": [
+          {
+            "label": "Commercial - fixed wing",
+            "value": "commercial-fixed-wing"
+          },
+          {
+            "label": "Commercial - rotorcraft",
+            "value": "commercial-rotorcraft"
+          },
+          {
+            "label": "General aviation - fixed wing",
+            "value": "general-aviation-fixed-wing"
+          },
+          {
+            "label": "General aviation - rotorcraft",
+            "value": "general-aviation-rotorcraft"
+          },
+          {
+            "label": "Sport aviation and balloons",
+            "value": "sport-aviation-and-balloons"
+          }
+        ]
+      }
+    },
+    "report_type": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Report type",
+        "ui_widget_type": "multi-select",
+        "allowed_values": [
+          {
+            "label": "Annual safety reports",
+            "value": "annual-safety-reports"
+          },
+          {
+            "label": "Correspondence investigations",
+            "value": "correspondence-investigations"
+          },
+          {
+            "label": "Field investigations",
+            "value": "field-investigations"
+          },
+          {
+            "label": "Foreign reports",
+            "value": "foreign-reports"
+          },
+          {
+            "label": "Formal reports",
+            "value": "formal-reports"
+          },
+          {
+            "label": "Special bulletins",
+            "value": "special-bulletins"
+          }
+        ]
+      }
+    },
+    "date_of_occurrence": {
+      "type": "date",
+      "index": "no"
+    }
+  }
+}
+
