@@ -158,10 +158,18 @@ class IntegrationTest < MiniTest::Unit::TestCase
   end
 
   def stub_index
-    s = stub("stub index")
-    Rummager.any_instance.stubs(:current_index).returns(s)
-    Rummager.any_instance.stubs(:unified_index).returns(s)
-    s
+    return @s if @s
+    @s = stub("stub index")
+    Rummager.any_instance.stubs(:current_index).returns(@s)
+    Rummager.any_instance.stubs(:unified_index).returns(@s)
+    @s
+  end
+
+  def stub_metasearch_index
+    return @ms if @ms
+    @ms = stub("stub metasearch index")
+    Rummager.any_instance.stubs(:metasearch_index).returns(@ms)
+    @ms
   end
 
 private
