@@ -10,7 +10,19 @@ class SearchParameterParser
   ALLOWED_SORT_FIELDS = %w(public_timestamp)
 
   # The fields listed here are the only ones which can be used to filter by.
-  ALLOWED_FILTER_FIELDS = %w(organisations section format specialist_sectors)
+  ALLOWED_FILTER_FIELDS = %w(
+    document_type
+    format
+    organisations
+    section
+    specialist_sectors
+  )
+
+  # Incoming filter fields will have their names transformed according to the
+  # following mapping. Fields not listed here will be passed through unchanged.
+  FILTER_NAME_MAPPING = {
+    "document_type" => "_type",
+  }
 
   # The fields listed here are the only ones which can be used to calculated
   # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
@@ -113,7 +125,7 @@ private
       if (m = key.match(/\Afilter_(.*)/))
         field = m[1]
         if ALLOWED_FILTER_FIELDS.include? field
-          filters[field] = [*value]
+          filters[filter_name_lookup(field)] = [*value]
         else
           @errors << %{"#{field}" is not a valid filter field}
         end
@@ -121,6 +133,10 @@ private
       end
     end
     filters
+  end
+
+  def filter_name_lookup(name)
+    FILTER_NAME_MAPPING.fetch(name, name)
   end
 
   def facets

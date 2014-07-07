@@ -120,4 +120,31 @@ class UnifiedSearchTest < MultiIndexTest
     assert first_hit_explain.keys.include?("description")
     assert first_hit_explain.keys.include?("details")
   end
+
+  def test_can_scope_by_document_type
+    insert_document("mainstream_test", cma_case_attributes)
+    get "/unified_search?filter_document_type=cma_case"
+    assert last_response.ok?
+    assert_equal 1, parsed_response.fetch("total")
+    assert_equal(
+      hash_including(
+        "title" => cma_case_attributes.fetch("title"),
+        "link" => cma_case_attributes.fetch("link"),
+      ),
+      parsed_response.fetch("results").fetch(0),
+    )
+  end
+
+  def cma_case_attributes
+    {
+      "title" => "Somewhat Unique CMA Case",
+      "link" => "/cma-cases/somewhat-unique-cma-case",
+      "indexable_content" => "Mergers of cheeses and faces",
+      "_type" => "cma_case",
+      "tags" => [],
+      "topics" => ["farming"],
+      "section" => ["1"],
+    }
+  end
+  private :cma_case_attributes
 end

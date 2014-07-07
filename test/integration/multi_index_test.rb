@@ -25,7 +25,6 @@ class MultiIndexTest < IntegrationTest
       add_field_to_mappings("section")
       create_test_index(index_name)
       add_sample_documents(index_name, 2)
-      commit_index(index_name)
     end
   end
 
@@ -56,10 +55,15 @@ class MultiIndexTest < IntegrationTest
   def add_sample_documents(index_name, count)
     attributes = sample_document_attributes(index_name, count)
     attributes.each do |sample_document|
-      insert_stub_popularity_data(sample_document["link"])
-      post "/#{index_name}/documents", MultiJson.encode(sample_document)
-      assert last_response.ok?
+      insert_document(index_name, sample_document)
     end
+  end
+
+  def insert_document(index_name, attributes)
+    insert_stub_popularity_data(attributes["link"])
+    post "/#{index_name}/documents", MultiJson.encode(attributes)
+    assert last_response.ok?
+    commit_index(index_name)
   end
 
   def commit_index(index_name)

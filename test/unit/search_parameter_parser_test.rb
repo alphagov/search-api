@@ -137,6 +137,15 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal(expected_params({filters: {"organisations" => ["hm-magic"]}}), p.parsed_params)
   end
 
+  should "rewrite document_type filter to _type filter" do
+    p = SearchParameterParser.new("filter_document_type" => "cma_case")
+
+    assert_equal(
+      hash_including(filters: { "_type" => ["cma_case"] }),
+      p.parsed_params
+    )
+  end
+
   should "understand an ascending sort" do
     p = SearchParameterParser.new({"order" => "public_timestamp"})
 
