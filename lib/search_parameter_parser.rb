@@ -5,7 +5,9 @@ class BaseParameterParser
   # sorting by arbitrary fields can be expensive in terms of memory usage in
   # elasticsearch, and because elasticsearch gives fairly obscure error
   # messages if undefined sort fields are used.
-  ALLOWED_SORT_FIELDS = %w(public_timestamp)
+  ALLOWED_SORT_FIELDS = %w(
+    public_timestamp
+  )
 
   # The fields listed here are the only ones which can be used to filter by.
   ALLOWED_FILTER_FIELDS = %w(
@@ -24,7 +26,12 @@ class BaseParameterParser
 
   # The fields listed here are the only ones which can be used to calculated
   # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
-  ALLOWED_FACET_FIELDS = %w(organisations section format specialist_sectors)
+  ALLOWED_FACET_FIELDS = %w(
+    format
+    organisations
+    section
+    specialist_sectors
+  )
 
   # The fields for which facet examples are allowed to be requested.
   # This is locked down because these can only be requested with the current
@@ -33,7 +40,12 @@ class BaseParameterParser
   # together, but is still potentially expensive.  They could be efficiently
   # calculated with the top-documents aggregator in elasticsearch 1.3, so this
   # restriction could be relaxed in future.
-  ALLOWED_FACET_EXAMPLE_FIELDS = %w(organisations section format specialist_sectors)
+  ALLOWED_FACET_EXAMPLE_FIELDS = %w(
+    format
+    organisations
+    section
+    specialist_sectors
+  )
 
   # The fields listed here are the only ones that can be returned in search
   # results.  These are listed and validated explicitly, rather than simply
@@ -42,31 +54,46 @@ class BaseParameterParser
   # indexed without having to check that we don't break the display of search
   # results.
   ALLOWED_RETURN_FIELDS = %w(
-    title description link slug
-
+    description
+    display_type
+    document_series
+    format
+    link
+    organisations
     public_timestamp
-    organisations topics world_locations document_series
+    section
+    slug
     specialist_sectors
-
-    format display_type
-    section subsection subsubsection
+    subsection
+    subsubsection
+    title
+    topics
+    world_locations
   )
 
   # The fields which are returned by default for search results.
   DEFAULT_RETURN_FIELDS = %w(
-    title description link slug
-
+    description
+    display_type
+    document_series
+    format
+    link
+    organisations
     public_timestamp
-    organisations topics world_locations document_series
+    section
+    slug
     specialist_sectors
-
-    format display_type
-    section subsection subsubsection
+    subsection
+    subsubsection
+    title
+    topics
+    world_locations
   )
 
   # The fields which are returned by default for facet examples.
   DEFAULT_FACET_EXAMPLE_FIELDS = %w(
-    link title
+    link
+    title
   )
 
   attr_reader :parsed_params, :errors
