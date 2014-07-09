@@ -327,8 +327,9 @@ module Elasticsearch
     end
 
     def msearch(bodies)
+      header_json = "{}"
       payload = bodies.map { |body|
-        "{}\n#{body.to_json}\n"
+        "#{header_json}\n#{body.to_json}\n"
       }.join("")
       logger.debug "Request payload: #{payload}"
       path = "_msearch"
