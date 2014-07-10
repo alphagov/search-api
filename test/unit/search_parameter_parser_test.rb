@@ -9,10 +9,19 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       count: 10,
       query: nil,
       order: nil,
-      return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
+      return_fields: BaseParameterParser::ALLOWED_RETURN_FIELDS,
       filters: {},
       facets: {},
       debug: {},
+    }.merge(params)
+  end
+
+  def expected_facet_params(params)
+    {
+      requested: 0,
+      examples: 0,
+      example_fields: BaseParameterParser::DEFAULT_FACET_EXAMPLE_FIELDS,
+      example_scope: nil,
     }.merge(params)
   end
 
@@ -132,7 +141,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     p = SearchParameterParser.new({"filter_spells" => "levitation",
                                    "filter_organisations" => "hm-magic"})
 
-    assert_equal("\"spells\" is not a valid filter field", p.error)
+    assert_equal(%{"spells" is not a valid filter field}, p.error)
     assert !p.valid?
     assert_equal(expected_params({filters: {"organisations" => ["hm-magic"]}}), p.parsed_params)
   end
@@ -165,7 +174,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   should "complain about disallowed sort fields" do
     p = SearchParameterParser.new({"order" => "spells"})
 
-    assert_equal("\"spells\" is not a valid sort field", p.error)
+    assert_equal(%{"spells" is not a valid sort field}, p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end
@@ -173,7 +182,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   should "complain about disallowed descending sort fields" do
     p = SearchParameterParser.new({"order" => "-spells"})
 
-    assert_equal("\"spells\" is not a valid sort field", p.error)
+    assert_equal(%{"spells" is not a valid sort field}, p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end
@@ -183,7 +192,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params({facets: {"organisations" => 10}}), p.parsed_params)
+    assert_equal(expected_params({facets: {
+      "organisations" => expected_facet_params({requested: 10})
+    }}), p.parsed_params)
   end
 
   should "understand multiple facet fields" do
@@ -194,23 +205,75 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params({facets: {"organisations" => 10, "section" => 5}}), p.parsed_params)
+    assert_equal(expected_params({facets: {
+      "organisations" => expected_facet_params({requested: 10}),
+      "section" => expected_facet_params({requested: 5})
+    }}), p.parsed_params)
   end
 
   should "complain about disallowed facet fields" do
     p = SearchParameterParser.new({"facet_spells" => "10",
                                    "facet_organisations" => "10"})
 
-    assert_equal("\"spells\" is not a valid facet field", p.error)
+    assert_equal(%{"spells" is not a valid facet field}, p.error)
     assert !p.valid?
-    assert_equal(expected_params({facets: {"organisations" => 10}}), p.parsed_params)
+    assert_equal(expected_params({facets: {
+      "organisations" => expected_facet_params({requested: 10})
+    }}), p.parsed_params)
   end
 
   should "complain about invalid values for facet parameter" do
     p = SearchParameterParser.new({"facet_spells" => "levitation",
                                    "facet_organisations" => "magic"})
 
-    assert_equal("\"spells\" is not a valid facet field. Invalid value \"magic\" for facet \"organisations\" (expected positive integer)", p.error)
+    assert_equal(%{"spells" is not a valid facet field. Invalid value "magic" for first parameter for facet "organisations" (expected positive integer)}, p.error)
+    assert !p.valid?
+    assert_equal(expected_params({}), p.parsed_params)
+  end
+
+  should "complain about empty values for facet parameter" do
+    p = SearchParameterParser.new({"facet_organisations" => ""})
+
+    assert_equal(%{Invalid value "" for first parameter for facet "organisations" (expected positive integer)}, p.error)
+    assert !p.valid?
+    assert_equal(expected_params({}), p.parsed_params)
+  end
+
+  should "allow options in the values for the facet parameter" do
+    p = SearchParameterParser.new({"facet_organisations" => "10,examples:5,example_fields:slug:title,example_scope:global"})
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params({
+      facets: {
+        "organisations" => expected_facet_params({
+          requested: 10,
+          examples: 5,
+          example_fields: ["slug", "title"],
+          example_scope: :global,
+      })}}), p.parsed_params)
+  end
+
+  should "require the example_scope to be set to global" do
+    # Global scope is the only supported scope at present, but it's likely to
+    # be a surprising default, so we require that callers explicitly specify
+    # it.
+    p = SearchParameterParser.new({"facet_organisations" => "10,examples:5,example_fields:slug:title"})
+
+    assert_equal("example_scope parameter must currently be set to global when requesting examples", p.error)
+    assert !p.valid?
+    assert_equal(expected_params({facets: {}}), p.parsed_params)
+  end
+
+
+  should "validate options in the values for the facet parameter" do
+    p = SearchParameterParser.new({"facet_organisations" => "10,example:5,examples:lots,example_fields:unknown:title"})
+
+    assert_equal([
+      %{Invalid value "lots" for parameter "examples" in facet "organisations" (expected positive integer)},
+      %{Some requested fields are not valid return fields: ["unknown"] in parameter "example_fields" in facet "organisations"},
+      %{Unexpected options for facet organisations: example},
+    ].join(". "), p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end

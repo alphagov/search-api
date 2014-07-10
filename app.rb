@@ -230,8 +230,39 @@ class Rummager < Sinatra::Application
   #
   #   facet_FIELD: (where FIELD is a fieldname); count up values which are
   #   present in the field in the documents matched by the search, and return
-  #   information about these.  The value of this parameter is the requested
-  #   number of distinct field values to be returned for the field.
+  #   information about these.  The value of this parameter is a comma
+  #   separated list of options; the first option in the list is an integer
+  #   which controls the requested number of distinct field values to be
+  #   returned for the field.  Subsequent options are optional, and are colon
+  #   separated key:value pairs:
+  #
+  #   - examples:<integer number of example values to return>  This causes
+  #     facet values to contain an "examples" hash as an additional field,
+  #     which contains details of example documents which match the query.  The
+  #     examples are sorted by decreasing popularity.  An example facet value
+  #     in a response with this option set as "examples:1" might look like:
+  #
+  #         "value" => {
+  #           "slug" => "an-example-facet-slug",
+  #           "examples" => {
+  #             "total" => 3,  # The total number of matching examples
+  #             "examples" => [
+  #               {"title" => "Title of the first example", "link" => "/foo"},
+  #             ],
+  #           }
+  #         }
+  #
+  #   - example_scope:global.  If the examples option is supplied, the
+  #     example_scope:global option must be supplied too; this causes the
+  #     returned examples to be taken from all documents in which the facet
+  #     field has the given slug, rather than only from such documents which
+  #     match the query.
+  #
+  #   - example_fields:<colon separated list of fields>.  If the examples
+  #     option is supplied, this lists the fields which are returned for
+  #     each example.  By default, only a small number of fields are returned
+  #     for each.  Note that the list is colon separated rather than comma
+  #     separated, since commas are used to separate different options.
   #
   #   Regardless of the parameter value, a facet value will be returned for any
   #   filter which is in place on the field. This may cause the requested

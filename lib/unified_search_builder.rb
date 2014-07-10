@@ -224,7 +224,7 @@ class UnifiedSearchBuilder
       return nil
     end
     result = {}
-    facets.each do |field_name, count|
+    facets.each do |field_name, _|
       facet_hash = {
         terms: {
           field: field_name,
