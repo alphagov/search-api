@@ -20,6 +20,28 @@ module Helpers
     status status_code
     MultiJson.encode("result" => message)
   end
+
+  # Parse a query string, returning a hash of arrays.
+  #
+  # Handles parameters named either simply with their name, or with their
+  # name followed by a pair of square brackets (ie, "name[]").
+  #
+  # We do our own parameter parsing for the search endpoint because we don't
+  # want to force callers to use the Ruby/PHP convention of adding a [] to the
+  # end of a parameter name if the parameter has multiple values (but we also
+  # have to support being called from Ruby tools which insist on doing this).
+  def parse_query_string(query_string)
+    params = KeySpaceConstrainedParams.new
+
+    (query_string || '').split(/[&;] */n).each do |p|
+      name, value = p.split('=', 2).map { |s| unescape(s) }
+      name.gsub!(/\[\]\Z/, "")
+      params[name] ||= []
+      params[name] << value
+    end
+
+    return params.to_params_hash
+  end
 end
 
 class HelperAccessor

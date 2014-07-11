@@ -16,4 +16,17 @@ class HelpersTest < MiniTest::Unit::TestCase
     expects(:status).with(500)
     assert_equal '{"result":"error"}', simple_json_result(false)
   end
+
+  def test_parse_query_string
+    [
+      ["foo=bar", {"foo" => ["bar"]}],
+      ["foo[]=bar", {"foo" => ["bar"]}],
+      ["foo=bar&foo[]=baz", {"foo" => ["bar", "baz"]}],
+      ["foo=bar=baz", {"foo" => ["bar=baz"]}],
+      ["foo[bar]=baz", {"foo[bar]" => ["baz"]}],
+      ["foo[]=baz&q=more", {"foo" => ["baz"], "q" => ["more"]}],
+    ].each do |qs, expected|
+      assert_equal expected, parse_query_string(qs)
+    end
+  end
 end
