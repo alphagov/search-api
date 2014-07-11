@@ -36,7 +36,11 @@ private
     slugs = facet_options.map { |option|
       option["term"]
     }
-    fetch_by_slug(field_name, slugs, example_count, example_fields)
+    if slugs.empty?
+      {}
+    else
+      fetch_by_slug(field_name, slugs, example_count, example_fields)
+    end
   end
 
   def facet_example_searches(field_name, slugs, example_count, example_fields)

@@ -82,4 +82,32 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
       }, @fetcher.fetch)
     end
   end
+
+  context "one facet but no documents match query" do
+    setup do
+      @index = stub("content index")
+      @example_fields = %w{link title other_field}
+      main_query_response = {"facets" => {
+        "sector" => {
+          "terms" => [
+          ]
+        }
+      }}
+      params = {
+        facets: {
+          "sector" => {
+            requested: 10,
+            examples: 2,
+            example_fields: @example_fields,
+            example_scope: :global
+          }
+        }
+      }
+      @fetcher = FacetExampleFetcher.new(@index, main_query_response, params)
+    end
+
+    should "request and return facet examples" do
+      assert_equal({"sector" => {}}, @fetcher.fetch)
+    end
+  end
 end
