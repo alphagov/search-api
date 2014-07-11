@@ -39,14 +39,12 @@ class SearchTest < IntegrationTest
     )
   end
 
-  def oil_gas_sector
-    Document.new(
-      %w(link title),
-      {
-        link: "/oil-and-gas/licensing",
-        title: "Licensing"
-      }
-    )
+  def oil_gas_sector_fields
+    {
+      "link" => "/oil-and-gas/licensing",
+      "title" => "Licensing",
+      "slug" => "oil-and-gas/licensing",
+    }
   end
 
   def mod_organisation
@@ -266,11 +264,13 @@ class SearchTest < IntegrationTest
     stub_metasearch_index.expects(:raw_search).returns({"hits" => {"hits" => []}})
     SpecialistSectorRegistry.any_instance.expects(:[])
       .with("oil-and-gas/licensing")
-      .returns(oil_gas_sector)
+      .returns(oil_gas_sector_fields)
     get "/unified_search.json", {q: "bob"}
     first_result = MultiJson.decode(last_response.body)["results"].first
     assert_equal 1, first_result["specialist_sectors"].size
-    assert_equal oil_gas_sector.title, first_result["specialist_sectors"][0]["title"]
+    assert_equal oil_gas_sector_fields["title"], first_result["specialist_sectors"][0]["title"]
+    assert_equal oil_gas_sector_fields["link"], first_result["specialist_sectors"][0]["link"]
+    assert_equal oil_gas_sector_fields["slug"], first_result["specialist_sectors"][0]["slug"]
   end
 
   def test_returns_404_when_requested_with_non_json_url
