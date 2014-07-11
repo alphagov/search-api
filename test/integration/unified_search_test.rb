@@ -107,7 +107,7 @@ class UnifiedSearchTest < MultiIndexTest
 
   def test_validates_integer_params
     get "/unified_search?start=a"
-    assert_equal last_response.status, 400
+    assert_equal last_response.status, 422
     assert_equal parsed_response, {"error" => "Invalid value \"a\" for parameter \"start\" (expected positive integer)"}
   end
 
@@ -118,7 +118,7 @@ class UnifiedSearchTest < MultiIndexTest
 
   def test_validates_unknown_params
     get "/unified_search?foo&bar=1"
-    assert_equal last_response.status, 400
+    assert_equal last_response.status, 422
     assert_equal parsed_response, {"error" => "Unexpected parameters: foo, bar"}
   end
 
