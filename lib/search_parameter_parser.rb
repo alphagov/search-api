@@ -118,9 +118,31 @@ protected
     result
   end
 
-  def integer_param(param_name, default, description="")
-    value = @params[param_name]
+  # Get a parameter that occurs at most once
+  # Returns the string value of the parameter, or nil
+  def single_param(param_name, description="")
     @used_params << param_name
+    values = @params.fetch(param_name, [])
+    if values.size > 1
+      @errors << %{Too many values (#{values.size}) for parameter "#{param_name}"#{description} (must occur at most once)}
+    end
+    values.first
+  end
+
+  # Get a parameter represented as a comma separated list
+  # Multiple occurrences of the parameter will be joined together
+  def character_separated_param(param_name, separator=",")
+    @used_params << param_name
+    values = @params.fetch(param_name, [])
+    values.map { |value|
+      value.split(separator)
+    }.flatten
+  end
+
+  # Parse a parameter which should contain an integer and occur only once
+  # Returns the integer value, or nil
+  def single_integer_param(param_name, default, description="")
+    value = single_param(param_name, description)
     unless value.nil?
       value = parse_positive_integer(value, %{parameter "#{param_name}"#{description}})
     end
@@ -128,11 +150,6 @@ protected
       return default
     end
     value
-  end
-
-  def string_param(param_name)
-    @used_params << param_name
-    @params[param_name]
   end
 end
 
@@ -156,9 +173,9 @@ private
     @used_params = []
 
     @parsed_params = {
-      start: integer_param("start", 0),
-      count: integer_param("count", 10),
-      query: string_param("q"),
+      start: single_integer_param("start", 0),
+      count: single_integer_param("count", 10),
+      query: single_param("q"),
       order: order,
       return_fields: return_fields,
       filters: filters,
@@ -174,7 +191,7 @@ private
 
   # Get the order for search results to be returned in.
   def order
-    order = string_param("order")
+    order = single_param("order")
     if order.nil?
       return nil
     end
@@ -194,8 +211,8 @@ private
 
   # Get a list of the fields to request in results from elasticsearch
   def return_fields
-    fields = string_param("fields")
-    if fields.nil?
+    fields = character_separated_param("fields")
+    if fields.empty?
       return DEFAULT_RETURN_FIELDS
     end
     disallowed_fields = fields - ALLOWED_RETURN_FIELDS
@@ -209,11 +226,11 @@ private
 
   def filters
     filters = {}
-    @params.each do |key, value|
+    @params.each do |key, values|
       if (m = key.match(/\Afilter_(.*)/))
         field = m[1]
         if ALLOWED_FILTER_FIELDS.include? field
-          filters[filter_name_lookup(field)] = [*value]
+          filters[filter_name_lookup(field)] = values
         else
           @errors << %{"#{field}" is not a valid filter field}
         end
@@ -229,9 +246,10 @@ private
 
   def facets
     facets = {}
-    @params.each do |key, value|
+    @params.each do |key, values|
       if (m = key.match(/\Afacet_(.*)/))
         field = m[1]
+        value = single_param(key)
         if ALLOWED_FACET_FIELDS.include? field
           facet_parser = FacetParameterParser.new(field, value)
           if facet_parser.valid?
@@ -252,11 +270,10 @@ private
     # Note: this parameter is exposed publically via both the API on GOV.UK and
     # the query parameters for search on GOV.UK.  Don't make it return anything
     # sensitive.
-    debug = @params["debug"] || ""
-    @used_params << "debug"
+    debug_options = character_separated_param("debug")
 
     options = {}
-    debug.split(",").each { |option|
+    debug_options.each { |option|
       case option
       when ""
       when "disable_best_bets"
@@ -284,6 +301,10 @@ class FacetParameterParser < BaseParameterParser
   end
 
 private
+  # Return a string to be used in error messages
+  def facet_description
+    %{ in facet "#{@field}"}
+  end
 
   def process(value)
     options = value.split(",")
@@ -316,7 +337,7 @@ private
 
     unused_params = @params.keys - @used_params
     unless unused_params.empty?
-      @errors << %{Unexpected options for facet #{@field}: #{unused_params.join(', ')}}
+      @errors << %{Unexpected options#{facet_description}: #{unused_params.join(', ')}}
     end
   end
 
@@ -325,19 +346,20 @@ private
     values.each do |value|
       k_v = value.split(":", 2)
       if k_v.length == 2
-        params[k_v[0]] = k_v[1]
+        params[k_v[0]] ||= []
+        params[k_v[0]] << k_v[1]
       else
-        @errors << %{Invalid parameter "#{value}" for facet "#{@field}; must be of form "key:value"}
+        @errors << %{Invalid parameter "#{value}"#{facet_description}; must be of form "key:value"}
       end
     end
     params
   end
 
   def examples
-    value = integer_param("examples", 0, %{ in facet "#{@field}"})
+    value = single_integer_param("examples", 0, facet_description)
     if value != 0
       unless ALLOWED_FACET_EXAMPLE_FIELDS.include? @field
-        @errors << %{Facet examples are not supported for field "#{@field}"}
+        @errors << %{Facet examples are not supported#{facet_description}}
         value = 0
       end
     end
@@ -345,11 +367,10 @@ private
   end
 
   def example_fields
-    fields_str = string_param("example_fields")
-    if fields_str.nil?
+    fields = character_separated_param("example_fields", ":")
+    if fields.empty?
       return DEFAULT_FACET_EXAMPLE_FIELDS 
     end
-    fields = fields_str.split(":")
     disallowed_fields = fields - ALLOWED_RETURN_FIELDS
     fields = fields - disallowed_fields
 
@@ -360,7 +381,7 @@ private
   end
 
   def example_scope
-    scope = string_param("example_scope")
+    scope = single_param("example_scope", facet_description)
     if scope == "global"
       :global
     else

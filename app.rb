@@ -337,7 +337,7 @@ class Rummager < Sinatra::Application
       specialist_sectors: specialist_sector_registry,
     }
 
-    parser = SearchParameterParser.new(request.params)
+    parser = SearchParameterParser.new(parse_query_string(request.query_string))
 
     unless parser.valid?
       status 400
