@@ -88,6 +88,13 @@ module Elasticsearch
 
     def logging_exception_body(&block)
       yield
+    rescue RestClient::BadRequest => error
+      logger.send(
+        @error_log_level,
+        "BadRequest error from elasticsearch. " +
+        "Response: #{error.http_body}"
+      )
+      raise
     rescue RestClient::InternalServerError => error
       logger.send(
         @error_log_level,
