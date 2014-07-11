@@ -155,7 +155,7 @@ private
   def sector_by_slug(slug)
     sector = specialist_sector_registry && specialist_sector_registry[slug]
     if sector
-      sector.to_hash.merge("slug" => slug)
+      sector
     else
       {"slug" => slug}
     end

@@ -223,15 +223,15 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
   end
 
   def test_expands_sectors
-    oil_gas_sector = Document.new(
-      %w(link title),
-      link: "/oil-and-gas/licensing",
-      title: "Licensing"
-    )
+    oil_gas_sector_fields = {
+      "link" => "/oil-and-gas/licensing",
+      "title" => "Licensing",
+      "slug" => "oil-and-gas/licensing",
+    }
     specialist_sector_registry = stub("sector registry")
     specialist_sector_registry.expects(:[])
       .with("oil-and-gas/licensing")
-      .returns(oil_gas_sector)
+      .returns(oil_gas_sector_fields)
 
     presenter = ResultSetPresenter.new(
       single_result_with_sectors("oil-and-gas/licensing"),
