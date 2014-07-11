@@ -340,7 +340,7 @@ class Rummager < Sinatra::Application
     parser = SearchParameterParser.new(request.params)
 
     unless parser.valid?
-      status 400
+      status 422
       return MultiJson.encode({
         error: parser.error,
       })
