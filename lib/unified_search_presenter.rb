@@ -110,7 +110,7 @@ private
       unless result.is_a?(Hash)
         result = {"slug" => result}
       end
-      result["examples"] = field_examples.fetch(slug, [])
+      result["example_info"] = field_examples.fetch(slug, [])
     end
     result
   end

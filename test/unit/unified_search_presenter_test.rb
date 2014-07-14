@@ -500,7 +500,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           "link" => "/government/departments/hm-magic",
           "title" => "Ministry of Magic",
           "slug" => "hm-magic",
-          "examples" => {
+          "example_info" => {
             "total" => 1,
             "examples" => [
               {"title" => "Ministry of Magic"},

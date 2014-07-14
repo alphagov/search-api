@@ -244,7 +244,7 @@ class Rummager < Sinatra::Application
   #
   #         "value" => {
   #           "slug" => "an-example-facet-slug",
-  #           "examples" => {
+  #           "example_info" => {
   #             "total" => 3,  # The total number of matching examples
   #             "examples" => [
   #               {"title" => "Title of the first example", "link" => "/foo"},
