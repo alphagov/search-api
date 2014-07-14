@@ -31,20 +31,11 @@ module Helpers
   # end of a parameter name if the parameter has multiple values (but we also
   # have to support being called from Ruby tools which insist on doing this).
   def parse_query_string(query_string)
-    params = KeySpaceConstrainedParams.new
-
-    (query_string || '').split(/[&;] */n).each do |p|
-      name, value = p.split('=', 2).map { |s| unescape(s) }
-
-      # Ignore parameters with missing names or values
-      next if name.nil?
-
-      name.gsub!(/\[\]\Z/, "")
-      params[name] ||= []
-      params[name] << value unless value.nil?
-    end
-
-    return params.to_params_hash
+    CGI::parse(query_string).reduce({}) { |params, (name, values)|
+      params.merge(name.sub(/\[\]\Z/, "") => values) { |_, old, new|
+        old.concat(new)
+      }
+    }
   end
 end
 
