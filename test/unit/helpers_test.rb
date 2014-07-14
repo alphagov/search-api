@@ -25,6 +25,8 @@ class HelpersTest < MiniTest::Unit::TestCase
       ["foo=bar=baz", {"foo" => ["bar=baz"]}],
       ["foo[bar]=baz", {"foo[bar]" => ["baz"]}],
       ["foo[]=baz&q=more", {"foo" => ["baz"], "q" => ["more"]}],
+      ["foo=baz&&q=more", {"foo" => ["baz"], "q" => ["more"]}],
+      ["foo=baz&boo&q=more", {"foo" => ["baz"], "boo" => [], "q" => ["more"]}],
     ].each do |qs, expected|
       assert_equal expected, parse_query_string(qs)
     end
