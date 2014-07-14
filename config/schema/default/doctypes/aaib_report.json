@@ -40,28 +40,32 @@
         "ui_widget_type": "multi-select",
         "allowed_values": [
           {
-            "label": "Annual safety reports",
-            "value": "annual-safety-reports"
+            "label": "Annual safety report",
+            "value": "annual-safety-report"
           },
           {
-            "label": "Correspondence investigations",
-            "value": "correspondence-investigations"
+            "label": "Bulletin",
+            "value": "bulletin"
           },
           {
-            "label": "Field investigations",
-            "value": "field-investigations"
+            "label": "Correspondence investigation",
+            "value": "correspondence-investigation"
           },
           {
-            "label": "Foreign reports",
-            "value": "foreign-reports"
+            "label": "Field investigation",
+            "value": "field-investigation"
           },
           {
-            "label": "Formal reports",
-            "value": "formal-reports"
+            "label": "Foreign report",
+            "value": "foreign-report"
           },
           {
-            "label": "Special bulletins",
-            "value": "special-bulletins"
+            "label": "Formal report",
+            "value": "formal-report"
+          },
+          {
+            "label": "Special bulletin",
+            "value": "special-bulletin"
           }
         ]
       }
