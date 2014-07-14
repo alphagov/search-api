@@ -92,7 +92,7 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal({
       "value" => {
         "slug" => "2",
-        "examples" => {
+        "example_info" => {
           "total" => 3,
           "examples" => [
             {"section" => ["2"], "title" => "Sample mainstream document 2", "link" => "/mainstream-2"},
