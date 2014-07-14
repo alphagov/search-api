@@ -35,9 +35,13 @@ module Helpers
 
     (query_string || '').split(/[&;] */n).each do |p|
       name, value = p.split('=', 2).map { |s| unescape(s) }
+
+      # Ignore parameters with missing names or values
+      next if name.nil?
+
       name.gsub!(/\[\]\Z/, "")
       params[name] ||= []
-      params[name] << value
+      params[name] << value unless value.nil?
     end
 
     return params.to_params_hash
