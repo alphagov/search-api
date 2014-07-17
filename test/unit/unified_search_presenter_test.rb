@@ -1,6 +1,7 @@
 require "test_helper"
 require "unified_searcher"
 require "document"
+require "search_parameter_parser"
 
 class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
@@ -78,11 +79,72 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     }
   end
 
+  def sample_org_registry
+    magic_org_document = Document.new(
+      %w(link title),
+      link: "/government/departments/hm-magic",
+      title: "Ministry of Magic"
+    )
+    hmrc_org_document = Document.new(
+      %w(link title),
+      link: "/government/departments/hmrc",
+      title: "HMRC"
+    )
+    org_registry = stub("org registry")
+    org_registry.expects(:[])
+      .with("hm-magic")
+      .returns(magic_org_document)
+    org_registry.expects(:[])
+      .with("hmrc")
+      .returns(hmrc_org_document)
+    org_registry
+  end
+
+  def facet_response_magic
+    {
+      value: {
+        "link"=>"/government/departments/hm-magic",
+        "title"=>"Ministry of Magic",
+        "slug"=>"hm-magic",
+      },
+      documents: 7,
+    }
+  end
+
+  def facet_response_hmrc
+    {
+      value: {
+        "link"=>"/government/departments/hmrc",
+        "title"=>"HMRC",
+        "slug"=>"hmrc",
+      },
+      documents: 5,
+    }
+  end
+
   def facet_params(requested, options={})
-    options.merge(requested: requested)
+    {
+      requested: requested,
+      order: SearchParameterParser::DEFAULT_FACET_SORT,
+    }.merge(options)
   end
 
   INDEX_NAMES = %w(mainstream government detailed)
+
+  def search_presenter(options)
+    org_registry = options[:org_registry]
+    UnifiedSearchPresenter.new(
+      sample_es_response(options.fetch(:es_response, {})),
+      options.fetch(:start, 0),
+      INDEX_NAMES,
+      options.fetch(:filters, {}),
+      options.fetch(:facets, {}),
+      org_registry.nil? ? {} : {organisation_registry: org_registry},
+      org_registry.nil? ? {} : {organisations: org_registry},
+      options.fetch(:suggestions, []),
+      options.fetch(:facet_examples, {}),
+    )
+  end
 
   context "no results" do
     setup do
@@ -232,7 +294,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have correct top facet value value" do
       assert_equal({
-        :value=>"hm-magic",
+        :value=>{"slug"=>"hm-magic"},
         :documents=>7,
       }, @output[:facets]["organisations"][:options][0])
     end
@@ -275,14 +337,14 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have selected facet first" do
       assert_equal({
-        :value => "hmrc",
+        :value => {"slug" => "hmrc"},
         :documents => 5,
       }, @output[:facets]["organisations"][:options][0])
     end
 
     should "have unapplied facet value second" do
       assert_equal({
-        :value => "hm-magic",
+        :value => {"slug" => "hm-magic"},
         :documents => 7,
       }, @output[:facets]["organisations"][:options][1])
     end
@@ -325,14 +387,14 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have selected facet first" do
       assert_equal({
-        :value => "hm-cheesemakers",
+        :value => {"slug" => "hm-cheesemakers"},
         :documents => 0,
       }, @output[:facets]["organisations"][:options][0])
     end
 
     should "have unapplied facet value second" do
       assert_equal({
-        :value => "hm-magic",
+        :value => {"slug" => "hm-magic"},
         :documents => 7,
       }, @output[:facets]["organisations"][:options][1])
     end
@@ -382,17 +444,99 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
   end
 
+  context "results with facets sorted by ascending count" do
+    setup do
+      org_registry = sample_org_registry
+      @output = search_presenter(
+        es_response: {"facets" => sample_facet_data},
+        facets: {"organisations" => facet_params(10, order: [[:count, 1]])},
+        org_registry: org_registry
+      ).present
+    end
+
+    should "have facets sorted by ascending count" do
+      assert_equal [
+        facet_response_hmrc,
+        facet_response_magic,
+      ], @output[:facets]["organisations"][:options]
+    end
+  end
+
+  context "results with facets sorted by descending count" do
+    setup do
+      org_registry = sample_org_registry
+      @output = search_presenter(
+        es_response: {"facets" => sample_facet_data},
+        facets: {"organisations" => facet_params(10, order: [[:count, -1]])},
+        org_registry: org_registry
+      ).present
+    end
+
+    should "have facets sorted by descending count" do
+      assert_equal [
+        facet_response_magic,
+        facet_response_hmrc,
+      ], @output[:facets]["organisations"][:options]
+    end
+  end
+
+  context "results with facets sorted by ascending slug" do
+    setup do
+      org_registry = sample_org_registry
+      @output = search_presenter(
+        es_response: {"facets" => sample_facet_data},
+        facets: {"organisations" => facet_params(10, order: [[:"value.slug", 1]])},
+        org_registry: org_registry
+      ).present
+    end
+
+    should "have facets sorted by ascending slug" do
+      assert_equal [
+        facet_response_magic,
+        facet_response_hmrc,
+      ], @output[:facets]["organisations"][:options]
+    end
+  end
+
+  context "results with facets sorted by ascending link" do
+    setup do
+      org_registry = sample_org_registry
+      @output = search_presenter(
+        es_response: {"facets" => sample_facet_data},
+        facets: {"organisations" => facet_params(10, order: [[:"value.link", 1]])},
+        org_registry: org_registry
+      ).present
+    end
+
+    should "have facets sorted by ascending link" do
+      assert_equal [
+        facet_response_magic,
+        facet_response_hmrc,
+      ], @output[:facets]["organisations"][:options]
+    end
+  end
+
+  context "results with facets sorted by ascending title" do
+    setup do
+      org_registry = sample_org_registry
+      @output = search_presenter(
+        es_response: {"facets" => sample_facet_data},
+        facets: {"organisations" => facet_params(10, order: [[:"value.title", 1]])},
+        org_registry: org_registry
+      ).present
+    end
+
+    should "have facets sorted by ascending title" do
+      assert_equal [
+        facet_response_hmrc,
+        facet_response_magic,
+      ], @output[:facets]["organisations"][:options]
+    end
+  end
+
   context "results with facets and an org registry" do
     setup do
-      magic_org_document = Document.new(
-        %w(link title),
-        link: "/government/departments/hm-magic",
-        title: "Ministry of Magic"
-      )
-      org_registry = stub("org registry")
-      org_registry.expects(:[])
-        .with("hm-magic")
-        .returns(magic_org_document)
+      org_registry = sample_org_registry
 
       @output = UnifiedSearchPresenter.new(
         sample_es_response("facets" => sample_facet_data_with_topics),
@@ -431,8 +575,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have topic facet value un-expanded" do
       assert_equal({
-        :value=>"farming",
-        :documents=>4,
+        :value => {"slug" => "unknown_topic"},
+        :documents => 5,
       }, @output[:facets]["topics"][:options][0])
     end
 
@@ -454,15 +598,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with facet examples" do
     setup do
-      magic_org_document = Document.new(
-        %w(link title),
-        link: "/government/departments/hm-magic",
-        title: "Ministry of Magic"
-      )
-      org_registry = stub("org registry")
-      org_registry.expects(:[])
-        .with("hm-magic")
-        .returns(magic_org_document)
+      org_registry = sample_org_registry
 
       @output = UnifiedSearchPresenter.new(
         sample_es_response("facets" => sample_facet_data),

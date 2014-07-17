@@ -47,6 +47,24 @@ class BaseParameterParser
     specialist_sectors
   )
 
+  # The keys by which facet values can be sorted (using the "order" option).
+  # Multiple can be supplied, separated by colons - items which are equal
+  # according to the first option are sorted by the next key, etc.  keys can be
+  # preceded with a "-" to sort in descending order.
+  #  - filtered: sort fields which have filters applied to them first.
+  #  - count: sort values by number of matching documents.
+  #  - value.slug: sort values by the slug part of the value.
+  #  - value.title: sort values by the title of the value.
+  #  - value.link: sort values by the link of the value.
+  # 
+  ALLOWED_FACET_SORT_OPTIONS = %w(
+    filtered
+    count
+    value.slug
+    value.title
+    value.link
+  )
+
   # The fields listed here are the only ones that can be returned in search
   # results.  These are listed and validated explicitly, rather than simply
   # allowing any field in the schema, to keep the set of such fields as minimal
@@ -89,6 +107,13 @@ class BaseParameterParser
     topics
     world_locations
   )
+
+  # Default order in which facet results are sorted
+  DEFAULT_FACET_SORT = [
+    [:filtered, 1],
+    [:count, -1],
+    [:slug, 1],
+  ]
 
   # The fields which are returned by default for facet examples.
   DEFAULT_FACET_EXAMPLE_FIELDS = %w(
@@ -321,6 +346,7 @@ private
 
     @parsed_params = {
       requested: requested,
+      order: order,
       examples: examples,
       example_fields: example_fields,
       example_scope: example_scope,
@@ -353,6 +379,30 @@ private
       end
     end
     params
+  end
+
+  def order
+    orders = character_separated_param("order", ":")
+    result = []
+    orders.each do |order|
+      if order.start_with?('-')
+        option = order[1..-1]
+        dir = -1
+      else
+        option = order
+        dir = 1
+      end
+      if ALLOWED_FACET_SORT_OPTIONS.include?(option)
+        result << [option.to_sym, dir]
+      else
+        @errors << %{"#{option}" is not a valid sort option#{facet_description}}
+      end
+    end
+    if result.empty?
+      DEFAULT_FACET_SORT
+    else
+      result
+    end
   end
 
   def examples

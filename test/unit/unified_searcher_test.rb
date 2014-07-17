@@ -340,7 +340,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: "cheese",
         filters: {},
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-        facets: {"organisations" => {requested: 1, examples: 0, example_fields: []}},
+        facets: {"organisations" => {requested: 1, examples: 0, example_fields: [], order: SearchParameterParser::DEFAULT_FACET_SORT}},
         debug: {},
       })
     end
@@ -365,7 +365,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     should "have correct top facet option" do
       facet = @results[:facets]["organisations"]
-      assert_equal({value: "a", documents: 2}, facet[:options][0])
+      assert_equal({value: {"slug" => "a"}, documents: 2}, facet[:options][0])
     end
 
     should "include requested number of facets" do

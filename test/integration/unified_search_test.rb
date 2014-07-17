@@ -59,8 +59,8 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal({
       "section" => {
         "options" => [
-          {"value"=>"2", "documents"=>3},
-          {"value"=>"1", "documents"=>3},
+          {"value"=>{"slug"=>"1"}, "documents"=>3},
+          {"value"=>{"slug"=>"2"}, "documents"=>3},
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
@@ -76,7 +76,7 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal({
       "section" => {
         "options" => [
-          {"value"=>"2", "documents"=>3},
+          {"value"=>{"slug"=>"1"}, "documents"=>3},
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
@@ -91,13 +91,13 @@ class UnifiedSearchTest < MultiIndexTest
     facets = parsed_response["facets"]
     assert_equal({
       "value" => {
-        "slug" => "2",
+        "slug" => "1",
         "example_info" => {
           "total" => 3,
           "examples" => [
-            {"section" => ["2"], "title" => "Sample mainstream document 2", "link" => "/mainstream-2"},
-            {"section" => ["2"], "title" => "Sample detailed document 2", "link" => "/detailed-2"},
-            {"section" => ["2"], "title" => "Sample government document 2", "link" => "/government-2"},
+            {"section" => ["1"], "title" => "Sample mainstream document 1", "link" => "/mainstream-1"},
+            {"section" => ["1"], "title" => "Sample detailed document 1", "link" => "/detailed-1"},
+            {"section" => ["1"], "title" => "Sample government document 1", "link" => "/government-1"},
           ]
         }
       },
