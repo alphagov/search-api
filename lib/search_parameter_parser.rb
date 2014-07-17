@@ -59,6 +59,7 @@ class BaseParameterParser
     document_series
     format
     link
+    organisation_state
     organisations
     public_timestamp
     section

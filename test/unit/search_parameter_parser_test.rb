@@ -9,7 +9,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       count: 10,
       query: nil,
       order: nil,
-      return_fields: BaseParameterParser::ALLOWED_RETURN_FIELDS,
+      return_fields: BaseParameterParser::DEFAULT_RETURN_FIELDS,
       filters: {},
       facets: {},
       debug: {},
