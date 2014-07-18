@@ -382,22 +382,26 @@ private
   end
 
   def order
-    orders = character_separated_param("order", ":")
-    result = []
-    orders.each do |order|
+    orders = character_separated_param("order", ":").map { |order|
       if order.start_with?('-')
-        option = order[1..-1]
-        dir = -1
+        [order[1..-1], -1]
       else
-        option = order
-        dir = 1
+        [order, 1]
       end
-      if ALLOWED_FACET_SORT_OPTIONS.include?(option)
-        result << [option.to_sym, dir]
-      else
-        @errors << %{"#{option}" is not a valid sort option#{facet_description}}
-      end
+    }
+
+    valid_orders, invalid_orders = orders.partition { |option, _|
+      ALLOWED_FACET_SORT_OPTIONS.include?(option)
+    }
+
+    invalid_orders.each do |option, _|
+      @errors << %{"#{option}" is not a valid sort option#{facet_description}}
     end
+
+    result = valid_orders.map { |option, direction|
+      [option.to_sym, direction]
+    }
+
     if result.empty?
       DEFAULT_FACET_SORT
     else

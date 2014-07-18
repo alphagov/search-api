@@ -105,37 +105,49 @@ private
     )
   end
 
+  # Pick the top facet options, but include all applied facet options.
+  #
+  # Also, when picking the top facet options, don't count facet options which
+  # have a count of 0 documents (these happen when a filter is applied, but the
+  # filter doesn't match any documents for the current query).  This means that
+  # if a load of filters are applied, and the query is then changed while
+  # keeping the filters such that the filters match no documents, then the old
+  # filters are still returned in the response (so get shown in the UI such
+  # that the user can remove them), but a new set of filters are also suggested
+  # which might actually be useful.
+  def top_facet_options(options, requested_count)
+    suggested_options = options.sort.select { |option|
+      option.count > 0
+    }.take(requested_count)
+    applied_options = options.select(&:applied)
+    suggested_options.concat(applied_options).uniq.sort.map(&:as_hash)
+  end
+
   # Get the facet options, sorted according to the "order" option.
   #
   # Returns the requested number of options, but will additionally return any
   # options which are part of a filter. 
-  def facet_options(field, options, facet_parameters)
-    requested_count = facet_parameters[:requested]
-    orderings = facet_parameters[:order]
-    applied_options = (@applied_filters[field] || []).dup
+  def facet_options(field, calculated_options, facet_parameters)
+    applied_options = @applied_filters.fetch(field, [])
 
-    all_options = options.map { |option|
-      term, count = option["term"], option["count"]
+    all_options = calculated_options.map { |option|
+      [option["term"], option["count"]]
+    } + applied_options.map { |term|
+      [term, 0]
+    }
+
+    unique_options = all_options.uniq { |term, count|
+      term
+    }
+
+    option_objects = unique_options.map { |term, count|
       make_facet_option(field, term, count,
-        !applied_options.delete(term).nil?,
-        orderings,
+        applied_options.include?(term),
+        facet_parameters[:order],
       )
     }
-    all_options.concat applied_options.map { |term|
-      make_facet_option(field, term, 0, true, orderings)
-    }
- 
-    results = []
-    results_with_count = 0
-    all_options.sort.each { |option|
-      if results_with_count < requested_count || option.applied
-        results << option.as_hash
-        if option.count > 0
-          results_with_count += 1
-        end
-      end
-    }
-    results
+
+    top_facet_options(option_objects, facet_parameters[:requested])
   end
 
   def presented_facets
