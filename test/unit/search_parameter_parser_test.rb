@@ -19,6 +19,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   def expected_facet_params(params)
     {
       requested: 0,
+      order: BaseParameterParser::DEFAULT_FACET_SORT,
       examples: 0,
       example_fields: BaseParameterParser::DEFAULT_FACET_EXAMPLE_FIELDS,
       example_scope: nil,
@@ -293,6 +294,41 @@ class SearchParameterParserTest < ShouldaUnitTestCase
           examples: 5,
           example_fields: ["slug", "title"],
           example_scope: :global,
+      })}}), p.parsed_params)
+  end
+
+  should "understand the order option in facet parameters" do
+    p = SearchParameterParser.new("facet_organisations" => ["10,order:filtered:value.link:-count"])
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params({
+      facets: {
+        "organisations" => expected_facet_params({
+          requested: 10,
+          order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
+      })}}), p.parsed_params)
+  end
+
+  should "complain about invalid order options in facet parameters" do
+    p = SearchParameterParser.new("facet_organisations" => ["10,order:filt:value.unknown"])
+
+    assert_equal(%{"filt" is not a valid sort option in facet "organisations". "value.unknown" is not a valid sort option in facet "organisations"}, p.error)
+    assert !p.valid?
+    assert_equal(expected_params({}), p.parsed_params)
+  end
+
+
+  should "handle repeated order options in facet parameters" do
+    p = SearchParameterParser.new("facet_organisations" => ["10,order:filtered,order:value.link:-count"])
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params({
+      facets: {
+        "organisations" => expected_facet_params({
+          requested: 10,
+          order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
       })}}), p.parsed_params)
   end
 

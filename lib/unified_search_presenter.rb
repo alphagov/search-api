@@ -1,4 +1,5 @@
 require "elasticsearch/result_set"
+require "facet_option"
 require "field_presenter"
 require "result_set_presenter"
 
@@ -79,51 +80,74 @@ private
     end
   end
 
-  def raw_facet_options(applied_options, options, requested_count)
-    if applied_options.empty?
-      applied = []
-    else
-      option_counts = Hash[options.map { |option|
-        [option["term"], option["count"]]
-      }]
-      option_counts.default = 0
-      applied = applied_options.map do |term|
-        { "term" => term, "count" => option_counts[term] }
-      end
-    end
-
-    top_unapplied = options.slice(0, requested_count).reject do |option|
-      applied.include? option
-    end
-
-    applied + top_unapplied
-  end
-
   def field_presenter
     @field_presenter ||= FieldPresenter.new(registry_by_field)
   end
 
-  def facet_option(field, slug)
+  def facet_option_fields(field, slug)
     result = field_presenter.expand(field, slug)
+    unless result.is_a?(Hash)
+      result = {"slug" => result}
+    end
     field_examples = @facet_examples[field]
     unless field_examples.nil?
-      unless result.is_a?(Hash)
-        result = {"slug" => result}
-      end
       result["example_info"] = field_examples.fetch(slug, [])
     end
     result
   end
 
-  def facet_options(field, options, facet_parameters)
-    requested_count = facet_parameters[:requested]
-    applied_options = @applied_filters[field] || []
-    raw_facet_options(applied_options, options, requested_count).map { |option|
-      {
-        value: facet_option(field, option["term"]),
-        documents: option["count"],
-      }
+  def make_facet_option(field, term, count, applied, orderings)
+    FacetOption.new(
+      facet_option_fields(field, term),
+      count,
+      applied,
+      orderings,
+    )
+  end
+
+  # Pick the top facet options, but include all applied facet options.
+  #
+  # Also, when picking the top facet options, don't count facet options which
+  # have a count of 0 documents (these happen when a filter is applied, but the
+  # filter doesn't match any documents for the current query).  This means that
+  # if a load of filters are applied, and the query is then changed while
+  # keeping the filters such that the filters match no documents, then the old
+  # filters are still returned in the response (so get shown in the UI such
+  # that the user can remove them), but a new set of filters are also suggested
+  # which might actually be useful.
+  def top_facet_options(options, requested_count)
+    suggested_options = options.sort.select { |option|
+      option.count > 0
+    }.take(requested_count)
+    applied_options = options.select(&:applied)
+    suggested_options.concat(applied_options).uniq.sort.map(&:as_hash)
+  end
+
+  # Get the facet options, sorted according to the "order" option.
+  #
+  # Returns the requested number of options, but will additionally return any
+  # options which are part of a filter. 
+  def facet_options(field, calculated_options, facet_parameters)
+    applied_options = @applied_filters.fetch(field, [])
+
+    all_options = calculated_options.map { |option|
+      [option["term"], option["count"]]
+    } + applied_options.map { |term|
+      [term, 0]
     }
+
+    unique_options = all_options.uniq { |term, count|
+      term
+    }
+
+    option_objects = unique_options.map { |term, count|
+      make_facet_option(field, term, count,
+        applied_options.include?(term),
+        facet_parameters[:order],
+      )
+    }
+
+    top_facet_options(option_objects, facet_parameters[:requested])
   end
 
   def presented_facets

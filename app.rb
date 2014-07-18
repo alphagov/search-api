@@ -236,6 +236,21 @@ class Rummager < Sinatra::Application
   #   returned for the field.  Subsequent options are optional, and are colon
   #   separated key:value pairs:
   #
+  #   - order:<colon separated list of ordering types>
+  #
+  #     The available ordering types are:
+  #
+  #     - count: order by the number of documents in the search matching the
+  #       facet value.
+  #     - slug: the slug in the facet value
+  #     - link: the link in the facet value
+  #     - title: the title in the facet value
+  #     - filtered: whether the value is used in an active filter
+  #     
+  #     Each ordering may be preceded by a "-" to sort in descending order.
+  #     Multiple orderings can be specified, in priority order, separated by a
+  #     colon.  The default ordering is "filtered:-count:slug".
+  #
   #   - examples:<integer number of example values to return>  This causes
   #     facet values to contain an "examples" hash as an additional field,
   #     which contains details of example documents which match the query.  The
