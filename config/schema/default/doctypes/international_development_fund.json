@@ -1,0 +1,269 @@
+{
+  "properties": {
+    "application_state": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Applications",
+        "ui_widget_type": "single-select",
+        "preposition": "which are",
+        "allowed_values": [
+          {
+            "label": "Open",
+            "value": "open"
+          },
+          {
+            "label": "Closed",
+            "value": "closed"
+          },
+          {
+            "label": "All",
+            "value": "",
+            "non_described": true
+          }
+        ]
+      }
+    },
+    "location": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Countries and regions",
+        "ui_widget_type": "multi-select",
+        "preposition": "for",
+        "allowed_values": [
+          {
+            "label": "Afghanistan",
+            "value": "afghanistan"
+          },
+          {
+            "label": "Bangladesh",
+            "value": "bangladesh"
+          },
+          {
+            "label": "Burma",
+            "value": "burma"
+          },
+          {
+            "label": "Democratic Republic of Congo",
+            "value": "democratic-republic-of-congo"
+          },
+          {
+            "label": "Ethiopia",
+            "value": "ethiopia"
+          },
+          {
+            "label": "Ghana",
+            "value": "ghana"
+          },
+          {
+            "label": "India",
+            "value": "india"
+          },
+          {
+            "label": "Kenya",
+            "value": "kenya"
+          },
+          {
+            "label": "Kyrgyzstan",
+            "value": "kyrgyzstan"
+          },
+          {
+            "label": "Liberia",
+            "value": "liberia"
+          },
+          {
+            "label": "Malawi",
+            "value": "malawi"
+          },
+          {
+            "label": "Mozambique",
+            "value": "mozambique"
+          },
+          {
+            "label": "Nepal",
+            "value": "nepal"
+          },
+          {
+            "label": "Nigeria",
+            "value": "nigeria"
+          },
+          {
+            "label": "The Occupied Palestinian Territories",
+            "value": "the-occupied-palestinian-territories"
+          },
+          {
+            "label": "Pakistan",
+            "value": "pakistan"
+          },
+          {
+            "label": "Rwanda",
+            "value": "rwanda"
+          },
+          {
+            "label": "Sierra Leone",
+            "value": "sierra-leone"
+          },
+          {
+            "label": "Somalia",
+            "value": "somalia"
+          },
+          {
+            "label": "South Africa",
+            "value": "south-africa"
+          },
+          {
+            "label": "Sudan",
+            "value": "sudan"
+          },
+          {
+            "label": "South Sudan",
+            "value": "south-sudan"
+          },
+          {
+            "label": "Tajikistan",
+            "value": "tajikistan"
+          },
+          {
+            "label": "Tanzania",
+            "value": "tanzania"
+          },
+          {
+            "label": "Uganda",
+            "value": "uganda"
+          },
+          {
+            "label": "Yemen",
+            "value": "yemen"
+          },
+          {
+            "label": "Zambia",
+            "value": "zambia"
+          },
+          {
+            "label": "Zimbabwe",
+            "value": "zimbabwe"
+          }
+        ]
+      }
+    },
+    "idf_sector": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Sector",
+        "ui_widget_type": "multi-select",
+        "preposition": "for",
+        "allowed_values": [
+          {
+            "label": "Education",
+            "value": "education"
+          },
+          {
+            "label": "Health",
+            "value": "health"
+          },
+          {
+            "label": "Humanitarian emergencies/disasters",
+            "value": "humanitarian-emergencies-disasters"
+          },
+          {
+            "label": "Disabilities",
+            "value": "disabilities"
+          },
+          {
+            "label": "Climate change",
+            "value": "climate-change"
+          },
+          {
+            "label": "Girls and women",
+            "value": "girls-and-women"
+          },
+          {
+            "label": "Water and sanitation",
+            "value": "water-and-sanitation"
+          },
+          {
+            "label": "Empowerment and accountability",
+            "value": "empowerment-and-accountability"
+          },
+          {
+            "label": "Private sector/commercial",
+            "value": "private-sector-commercial"
+          },
+          {
+            "label": "Livelihoods",
+            "value": "livelihoods"
+          },
+          {
+            "label": "Peace and access to justice",
+            "value": "peace-and-access-to-justice"
+          }
+        ]
+      }
+    },
+    "eligible_entities": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Eligible organisations",
+        "ui_widget_type": "multi-select",
+        "preposition": "open to",
+        "allowed_values": [
+          {
+            "label": "Non-governmental organisations (NGOs)",
+            "value": "non-governmental-organisations"
+          },
+          {
+            "label": "UK-based non-profit organisations",
+            "value": "uk-based-non-profit-organisations"
+          },
+          {
+            "label": "UK-based small and diaspora organisations",
+            "value": "uk-based-small-and-diaspora-organisations"
+          },
+          {
+            "label": "Companies",
+            "value": "companies"
+          },
+          {
+            "label": "Local government",
+            "value": "local-government"
+          },
+          {
+            "label": "Educational institutions",
+            "value": "educational-institutions"
+          },
+          {
+            "label": "Individuals",
+            "value": "individuals"
+          },
+          {
+            "label": "Humanitarian relief organisations",
+            "value": "humanitarian-relief-organisations"
+          }
+        ]
+      }
+    },
+    "value_of_fund": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Value of fund",
+        "ui_widget_type": "multi-select",
+        "preposition": "with value",
+        "allowed_values": [
+          {"label": "Up to £100,000", "value": "up-to-100000"},
+          {"label": "£100,001 to £500,000", "value": "100001-500000"},
+          {"label": "£500,001 to £1,000,000", "value": "500001-to-1000000"},
+          {"label": "More than £1,000,000", "value": "more-than-1000000"}
+        ]
+      }
+    }
+  }
+}
