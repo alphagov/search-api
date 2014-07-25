@@ -149,7 +149,7 @@
         ]
       }
     },
-    "idf_sector": {
+    "development_sector": {
       "type": "string",
       "index": "not_analyzed",
       "include_in_all": false,
