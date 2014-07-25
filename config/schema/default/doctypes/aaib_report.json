@@ -73,6 +73,18 @@
     "date_of_occurrence": {
       "type": "date",
       "index": "no"
+    },
+    "registration": {
+      "type": "string",
+      "index": "analyzed"
+    },
+    "aircraft_type": {
+      "type": "string",
+      "index": "analyzed"
+    },
+    "location": {
+      "type": "string",
+      "index": "analyzed"
     }
   }
 }
