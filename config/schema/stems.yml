@@ -6,6 +6,8 @@ rules: [
   "animator => animat",  # not animal
   "appointeeship => appointe",  # match appointee
   "community => community",
+  "complaint => complain",  # same as complain
+  "complaints => complain",
   "corporate => corporate",  # not corporation
   "corporation => corporation",  # not corporal
   "directive => directive",
@@ -24,6 +26,8 @@ rules: [
   "internal => internal",
   "international => international",
   "mariner => mariner",  # not marine
+  "nationality => nationality",  # not national
+  "nationalities => nationality",
   "naturalization => naturalis",  # not natural, nature
   "paye => paye",  # not pay
   "permitted => permitted",
