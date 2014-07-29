@@ -58,24 +58,18 @@ Restart the VM (eg, with `vagrant reload`) after making these changes.
 
 The gov.uk search uses page popularity information extracted from Google
 Analytics as one of the factors in weighting search results.  This is extracted
-from Google Analytics by the search-analytics project, which produces a dump
-file suitable for loading into an elasticsearch index using rummager's
-`bulk_load` tool.  This should be loaded into the `page-traffic` index.
+from Google Analytics by the search-analytics project, but for dev machines,
+you should be able to obtain a copy of the page traffic index from preview when
+you run the standard replication of search indexes from preview to dev.
 
-In many cases, you should be able to fetch the `page-traffic.dump` data from
-preview.
-FIXME: describe how to get hold of a copy of `page-traffic.dump` data from
-preview, once jobs are set up to regularly extract this.  This will be
-implemented as part of
-https://www.pivotaltracker.com/s/projects/1010882/stories/70737424
+If you do need to fetch the analytics data directly yourself, the
+[search-analytics project README](https://github.com/alphagov/search-analytics)
+describes how to set up and run the extraction of page traffic information from
+Google Analytics.  It will produce a dump file suitable for loading into an
+elasticsearch index using rummager's `bulk_load` tool.
 
-The [search-analytics project
-README](https://github.com/alphagov/search-analytics) describes how to set up
-and run the extraction of page traffic information from Google Analytics, if
-you need to get the data yourself.
-
-Once you have the popularity data in a file named `page-traffic.dump`, load it
-into elasticsearch using:
+Once you have the popularity data in a file named, say, `page-traffic.dump`,
+load it into elasticsearch using:
 
     bundle exec bin/bulk_load page-traffic < page-traffic.dump
 
