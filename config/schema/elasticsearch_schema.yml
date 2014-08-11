@@ -112,6 +112,7 @@ mappings:
         section:     { type: string, index: not_analyzed, include_in_all: false }
         specialist_sectors: { type: string, index: not_analyzed, include_in_all: false }
         slug:        { type: string, index: not_analyzed, include_in_all: false }
+        statistics_announcement_state: { type: string, index: not_analyzed, include_in_all: false }
         subsection:  { type: string, index: not_analyzed, include_in_all: false }
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
         tags: { type: string, index: not_analyzed, include_in_all: false }
