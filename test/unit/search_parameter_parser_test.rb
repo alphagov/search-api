@@ -26,6 +26,52 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     }.merge(params)
   end
 
+  def schemas
+    # allowed values omitted
+    {
+      "cma_case" => {
+        "properties" => {
+          "case_type" => {
+            "type" => "string",
+            "index" => "not_analyzed",
+            "include_in_all" => false,
+          },
+          "case_state" => {
+            "type" => "string",
+            "index" => "not_analyzed",
+            "include_in_all" => false,
+          },
+          "market_sector" => {
+            "type" => "string",
+            "index" => "not_analyzed",
+            "include_in_all" => false,
+          },
+          "outcome_type" => {
+            "type" => "string",
+            "index" => "not_analyzed",
+            "include_in_all" => false,
+          },
+          "opened_date" => {
+            "type" => "date",
+            "index" => "no",
+          },
+          "closed_date" => {
+            "type" => "date",
+            "index" => "no",
+          }
+        }
+      }
+    }
+  end
+
+  def text_filter(value)
+    SearchParameterParser::TextFieldFilter.new(value)
+  end
+
+  def date_filter(value)
+    SearchParameterParser::DateFieldFilter.new(value)
+  end
+
   should "return valid params given nothing" do
     p = SearchParameterParser.new({})
 
@@ -151,7 +197,14 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params(filters: {"organisations" => ["hm-magic"]}), p.parsed_params)
+    assert_equal(
+      hash_including(filters: {
+        "organisations" => [
+          SearchParameterParser::TextFieldFilter.new("hm-magic")
+        ]
+      }),
+      p.parsed_params,
+    )
   end
 
   should "understand multiple filter paramers" do
@@ -172,12 +225,76 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "rewrite document_type filter to _type filter" do
-    p = SearchParameterParser.new("filter_document_type" => ["cma_case"])
+    parser = SearchParameterParser.new(
+      { "filter_document_type" => ["cma_case"] },
+      schemas,
+    )
 
     assert_equal(
       hash_including(filters: { "_type" => ["cma_case"] }),
-      p.parsed_params
+      parser.parsed_params,
     )
+  end
+
+  context "when a document type is not present" do
+    should "ignore parameters in the schema" do
+      params = {
+        "filter_case_type" => ["mergers"],
+      }
+
+      parser = SearchParameterParser.new(params, schemas)
+
+      refute parser.valid?, "Parameters should be invalid"
+      assert_equal(
+        %{"case_type" is not a valid filter field},
+        parser.error,
+      )
+    end
+  end
+
+  context "when a document type is present" do
+    should "accept parameters from that document schema" do
+      params = {
+        "filter_document_type" => ["cma_case"],
+        "filter_case_type" => ["mergers"],
+      }
+
+      parser = SearchParameterParser.new(params, schemas)
+
+      assert parser.valid?, "Parameters should be valid: #{parser.errors}"
+
+      assert_equal(
+        hash_including(filters: {
+          "_type" => ["cma_case"],
+          "case_type" => [text_filter("mergers")],
+        }),
+        parser.parsed_params
+      )
+
+    end
+
+    context "when the filter field is a date type" do
+      should "include the type in return value of #parsed_params" do
+        params = {
+          "filter_document_type" => ["cma_case"],
+          "filter_opened_date" => "from:2014-04-01 00:00",
+        }
+
+        parser = SearchParameterParser.new(params, schemas)
+
+        assert parser.valid?, "Parameters should be valid: #{parser.errors}"
+
+        assert_equal(
+          hash_including(filters: {
+            "_type" => ["cma_case"],
+            "opened_date" => [
+              date_filter("from:2014-04-01 00:00"),
+            ],
+          }),
+          parser.parsed_params,
+        )
+      end
+    end
   end
 
   should "understand an ascending sort" do

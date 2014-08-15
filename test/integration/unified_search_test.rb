@@ -164,7 +164,38 @@ class UnifiedSearchTest < MultiIndexTest
       "tags" => [],
       "topics" => ["farming"],
       "section" => ["1"],
+      "opened_date" => Time.parse("2014-04-01 09:00").iso8601,
     }
   end
   private :cma_case_attributes
+
+  def test_can_filter_between_dates
+    insert_document("mainstream_test", cma_case_attributes)
+
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
+    assert last_response.ok?
+    assert_equal 1, parsed_response.fetch("total")
+    assert_equal(
+      hash_including(
+        "title" => cma_case_attributes.fetch("title"),
+        "link" => cma_case_attributes.fetch("link"),
+      ),
+      parsed_response.fetch("results").fetch(0),
+    )
+  end
+
+  def test_can_filter_between_dates_with_reversed_parameter_order
+    insert_document("mainstream_test", cma_case_attributes)
+
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
+    assert last_response.ok?
+    assert_equal 1, parsed_response.fetch("total")
+    assert_equal(
+      hash_including(
+        "title" => cma_case_attributes.fetch("title"),
+        "link" => cma_case_attributes.fetch("link"),
+      ),
+      parsed_response.fetch("results").fetch(0),
+    )
+  end
 end

@@ -180,7 +180,13 @@ protected
 end
 
 class SearchParameterParser < BaseParameterParser
-  def initialize(params)
+  def initialize(params, schema_mappings = {})
+    @schema_mappings = schema_mappings
+    @document_types = params.fetch("filter_document_type", [no_document_type])
+    if @document_types.size > 1
+      raise "SearchParameterParser can only handle one document type"
+    end
+
     process(params)
   end
 
@@ -189,6 +195,12 @@ class SearchParameterParser < BaseParameterParser
   end
 
 private
+
+  def no_document_type
+    :no_document_type
+  end
+
+  attr_reader :schema_mappings
 
   def process(params)
     @params = params
@@ -250,13 +262,30 @@ private
     fields
   end
 
+  Filter = Struct.new(:value)
+  DateFieldFilter = Class.new(Filter)
+  TextFieldFilter = Class.new(Filter)
+
+  def build_filter(field_name, value)
+    type = schema.fetch(field_name, {}).fetch("type", "text")
+
+    field_class = {
+      "date" => DateFieldFilter,
+      "text" => TextFieldFilter,
+    }.fetch(type)
+
+    field_class.new(value)
+  end
+
   def filters
     filters = {}
     @params.each do |key, values|
       if (m = key.match(/\Afilter_(.*)/))
         field = m[1]
-        if ALLOWED_FILTER_FIELDS.include? field
-          filters[filter_name_lookup(field)] = values
+        if allowed_filter_fields.include? field
+          filters[filter_name_lookup(field)] = Array(values).map { |value|
+            build_filter(field, value)
+          }
         else
           @errors << %{"#{field}" is not a valid filter field}
         end
@@ -264,6 +293,32 @@ private
       end
     end
     filters
+  end
+
+  def allowed_filter_fields
+    ALLOWED_FILTER_FIELDS + schema_fields
+  end
+
+  def schema_fields
+    schema.fetch("properties").keys
+  end
+
+  def schema
+    schema_mappings
+      .merge( no_document_type => null_schema )
+      .fetch(document_type) {
+        raise "Schema not found for #{document_type}"
+      }
+  end
+
+  def null_schema
+    {
+      "properties" => {},
+    }
+  end
+
+  def document_type
+    @document_types && @document_types.first
   end
 
   def filter_name_lookup(name)

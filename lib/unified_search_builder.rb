@@ -194,6 +194,17 @@ class UnifiedSearchBuilder
     {"terms" => { field => filter_values } }
   end
 
+  def date_filter(field, filter_values)
+    {
+      "range" => {
+        field => {
+          "from" => filter_values["from"],
+          "to" => filter_values["to"],
+        }.reject { |_, v| v.nil? }
+      }
+    }
+  end
+
   # Get a list of fields being sorted by
   def sort_fields
     order = @params[:order]
