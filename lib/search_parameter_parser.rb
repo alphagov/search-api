@@ -267,11 +267,11 @@ private
   TextFieldFilter = Class.new(Filter)
 
   def build_filter(field_name, value)
-    type = schema.fetch(field_name, {}).fetch("type", "text")
+    type = schema_get_field_type(field_name)
 
     field_class = {
       "date" => DateFieldFilter,
-      "text" => TextFieldFilter,
+      "string" => TextFieldFilter,
     }.fetch(type)
 
     field_class.new(value)
@@ -279,9 +279,9 @@ private
 
   def filters
     filters = {}
-    @params.each do |key, values|
-      if (m = key.match(/\Afilter_(.*)/))
-        field = m[1]
+    @params.each do |filter_param, values|
+      if filter_param.start_with?("filter_")
+        field = filter_param.sub("filter_", "")
         if allowed_filter_fields.include? field
           filters[filter_name_lookup(field)] = Array(values).map { |value|
             build_filter(field, value)
@@ -289,7 +289,7 @@ private
         else
           @errors << %{"#{field}" is not a valid filter field}
         end
-        @used_params << key
+        @used_params << filter_param
       end
     end
     filters
@@ -297,6 +297,13 @@ private
 
   def allowed_filter_fields
     ALLOWED_FILTER_FIELDS + schema_fields
+  end
+
+  def schema_get_field_type(field_name)
+    schema
+      .fetch("properties")
+      .fetch(field_name, {})
+      .fetch("type", "string")
   end
 
   def schema_fields

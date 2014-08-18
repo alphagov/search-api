@@ -212,7 +212,17 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params(filters: {"organisations" => ["hm-magic", "hmrc"]}), p.parsed_params)
+    assert_equal(
+      expected_params(
+        filters: {
+          "organisations" => [
+            text_filter("hm-magic"),
+            text_filter("hmrc"),
+          ],
+        }
+      ),
+      p.parsed_params,
+    )
   end
 
   should "complain about disallowed filter fields" do
@@ -221,7 +231,10 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
     assert_equal(%{"spells" is not a valid filter field}, p.error)
     assert !p.valid?
-    assert_equal(expected_params({filters: {"organisations" => ["hm-magic"]}}), p.parsed_params)
+    assert_equal(
+      expected_params(filters: {"organisations" => [text_filter("hm-magic")]}),
+      p.parsed_params,
+    )
   end
 
   should "rewrite document_type filter to _type filter" do
@@ -231,7 +244,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     )
 
     assert_equal(
-      hash_including(filters: { "_type" => ["cma_case"] }),
+      hash_including(filters: { "_type" => [text_filter("cma_case")] }),
       parser.parsed_params,
     )
   end
@@ -265,7 +278,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
       assert_equal(
         hash_including(filters: {
-          "_type" => ["cma_case"],
+          "_type" => [text_filter("cma_case")],
           "case_type" => [text_filter("mergers")],
         }),
         parser.parsed_params
@@ -286,7 +299,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
         assert_equal(
           hash_including(filters: {
-            "_type" => ["cma_case"],
+            "_type" => [text_filter("cma_case")],
             "opened_date" => [
               date_filter("from:2014-04-01 00:00"),
             ],
