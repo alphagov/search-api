@@ -128,7 +128,7 @@ private
   # Returns the requested number of options, but will additionally return any
   # options which are part of a filter. 
   def facet_options(field, calculated_options, facet_parameters)
-    applied_options = @applied_filters.fetch(field, [])
+    applied_options = filter_values_for_field(field)
 
     all_options = calculated_options.map { |option|
       [option["term"], option["count"]]
@@ -148,6 +148,12 @@ private
     }
 
     top_facet_options(option_objects, facet_parameters[:requested])
+  end
+
+  def filter_values_for_field(field)
+    filter = @applied_filters.find { |filter| filter.field_name == field }
+
+    filter ? filter.values : []
   end
 
   def presented_facets

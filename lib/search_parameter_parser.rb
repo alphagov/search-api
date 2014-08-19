@@ -262,30 +262,13 @@ private
     fields
   end
 
-  Filter = Struct.new(:value)
-  DateFieldFilter = Class.new(Filter)
-  TextFieldFilter = Class.new(Filter)
-
-  def build_filter(field_name, value)
-    type = schema_get_field_type(field_name)
-
-    field_class = {
-      "date" => DateFieldFilter,
-      "string" => TextFieldFilter,
-    }.fetch(type)
-
-    field_class.new(value)
-  end
-
   def filters
-    filters = {}
+    filters = []
     @params.each do |filter_param, values|
       if filter_param.start_with?("filter_")
         field = filter_param.sub("filter_", "")
         if allowed_filter_fields.include? field
-          filters[filter_name_lookup(field)] = Array(values).map { |value|
-            build_filter(field, value)
-          }
+          filters.push(build_filter(filter_name_lookup(field), values))
         else
           @errors << %{"#{field}" is not a valid filter field}
         end
@@ -293,6 +276,67 @@ private
       end
     end
     filters
+  end
+
+  class Filter
+    attr_reader :field_name, :values
+
+    def initialize(field_name, values)
+      @field_name = field_name
+      @values = Array(values)
+    end
+
+    def type
+      raise NotImplementedError
+    end
+
+    def ==(other)
+      [field_name, values] == [other.field_name, other.values]
+    end
+  end
+
+  class DateFieldFilter < Filter
+    def initialize(field_name, values)
+      super
+      @values = parse_dates(@values)
+    end
+
+    def type
+      "date"
+    end
+
+  private
+    def parse_dates(values)
+      values.map { |combined_from_and_to|
+        from = parse_date(combined_from_and_to.match(/from:([^,]+)/)[1])
+        to = parse_date(combined_from_and_to.match(/to:([^,]+)/)[1])
+
+        Value.new(from, to)
+      }
+    end
+
+    def parse_date(string)
+      Date.parse(string) rescue nil
+    end
+
+    Value = Struct.new(:from, :to)
+  end
+
+  class TextFieldFilter < Filter
+    def type
+      "string"
+    end
+  end
+
+  def build_filter(field_name, values)
+    type = schema_get_field_type(field_name)
+
+    field_class = {
+      "date" => DateFieldFilter,
+      "string" => TextFieldFilter,
+    }.fetch(type)
+
+    field_class.new(field_name, values)
   end
 
   def allowed_filter_fields

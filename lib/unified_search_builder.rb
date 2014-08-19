@@ -167,10 +167,10 @@ class UnifiedSearchBuilder
   end
 
   def filters_hash(excluding=[])
-    filter_groups = @params[:filters].reject { |field, filter_values|
-      excluding.include? field
-    }.map { |field, filter_values|
-      terms_filter(field, filter_values)
+    filter_groups = @params.fetch(:filters).reject { |filter|
+      excluding.include?(filter.field_name)
+    }.map { |filter|
+      filter_hash(filter)
     }
 
     # exclude any specialist sector documents from the search results, as we
@@ -190,16 +190,29 @@ class UnifiedSearchBuilder
     combine_filters(filter_groups)
   end
 
-  def terms_filter(field, filter_values)
-    {"terms" => { field => filter_values } }
+  def filter_hash(filter)
+    case filter.type
+    when "string"
+      terms_filter(filter)
+    when "date"
+      date_filter(filter)
+    else
+      raise "Filter type not supported"
+    end
   end
 
-  def date_filter(field, filter_values)
+  def terms_filter(filter)
+    {"terms" => { filter.field_name => filter.values } }
+  end
+
+  def date_filter(filter)
+    value = filter.values.first
+
     {
       "range" => {
-        field => {
-          "from" => filter_values["from"],
-          "to" => filter_values["to"],
+        filter.field_name => {
+          "from" => value["from"].iso8601,
+          "to" => value["to"].iso8601,
         }.reject { |_, v| v.nil? }
       }
     }

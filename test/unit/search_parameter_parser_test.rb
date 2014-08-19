@@ -10,7 +10,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       query: nil,
       order: nil,
       return_fields: BaseParameterParser::DEFAULT_RETURN_FIELDS,
-      filters: {},
+      filters: [],
       facets: {},
       debug: {},
     }.merge(params)
@@ -64,12 +64,15 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     }
   end
 
-  def text_filter(value)
-    SearchParameterParser::TextFieldFilter.new(value)
+  def text_filter(field_name, values)
+    SearchParameterParser::TextFieldFilter.new(field_name, values)
   end
 
-  def date_filter(value)
-    SearchParameterParser::DateFieldFilter.new(value)
+  def date_filter(field_name, values)
+    SearchParameterParser::DateFieldFilter.new(
+      field_name,
+      values,
+    )
   end
 
   should "return valid params given nothing" do
@@ -198,11 +201,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(
-      hash_including(filters: {
-        "organisations" => [
-          SearchParameterParser::TextFieldFilter.new("hm-magic")
-        ]
-      }),
+      hash_including(filters: [
+        text_filter("organisations", ["hm-magic"])
+      ]),
       p.parsed_params,
     )
   end
@@ -214,12 +215,13 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert p.valid?
     assert_equal(
       expected_params(
-        filters: {
-          "organisations" => [
-            text_filter("hm-magic"),
-            text_filter("hmrc"),
-          ],
-        }
+        filters: [
+          text_filter("organisations", [
+              "hm-magic",
+              "hmrc",
+            ]
+          )
+        ],
       ),
       p.parsed_params,
     )
@@ -232,7 +234,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal(%{"spells" is not a valid filter field}, p.error)
     assert !p.valid?
     assert_equal(
-      expected_params(filters: {"organisations" => [text_filter("hm-magic")]}),
+      expected_params(filters: [text_filter("organisations", ["hm-magic"])]),
       p.parsed_params,
     )
   end
@@ -244,7 +246,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     )
 
     assert_equal(
-      hash_including(filters: { "_type" => [text_filter("cma_case")] }),
+      hash_including(filters: [ text_filter("_type", ["cma_case"]) ]),
       parser.parsed_params,
     )
   end
@@ -277,10 +279,10 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       assert parser.valid?, "Parameters should be valid: #{parser.errors}"
 
       assert_equal(
-        hash_including(filters: {
-          "_type" => [text_filter("cma_case")],
-          "case_type" => [text_filter("mergers")],
-        }),
+        hash_including(filters: [
+          text_filter("_type",["cma_case"]),
+          text_filter("case_type", ["mergers"]),
+        ]),
         parser.parsed_params
       )
 
@@ -290,22 +292,39 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       should "include the type in return value of #parsed_params" do
         params = {
           "filter_document_type" => ["cma_case"],
-          "filter_opened_date" => "from:2014-04-01 00:00",
+          "filter_opened_date" => "from:2014-04-01 00:00,to:2014-04-02 00:00",
         }
 
         parser = SearchParameterParser.new(params, schemas)
 
         assert parser.valid?, "Parameters should be valid: #{parser.errors}"
 
+        opened_date_filter = parser.parsed_params.fetch(:filters)
+          .find { |filter| filter.field_name == "opened_date" }
+
         assert_equal(
-          hash_including(filters: {
-            "_type" => [text_filter("cma_case")],
-            "opened_date" => [
-              date_filter("from:2014-04-01 00:00"),
-            ],
-          }),
-          parser.parsed_params,
+          Date.parse("2014-04-01 00:00"),
+          opened_date_filter.values.first.from,
         )
+
+        assert_equal(
+          Date.parse("2014-04-02 00:00"),
+          opened_date_filter.values.first.to,
+        )
+      end
+    end
+
+    context "filtering a date field with an invalid date" do
+      should "does not filter on date" do
+        params = {
+          "filter_document_type" => ["cma_case"],
+          "filter_opened_date" => "from:2014-bananas-01 00:00,to:2014-04-02 00:00",
+        }
+
+        parser = SearchParameterParser.new(params, schemas)
+
+        opened_date_filter = parser.parsed_params.fetch(:filters)
+          .find { |filter| filter.field_name == "opened_date" }
       end
     end
   end

@@ -137,7 +137,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       sample_es_response(options.fetch(:es_response, {})),
       options.fetch(:start, 0),
       INDEX_NAMES,
-      options.fetch(:filters, {}),
+      options.fetch(:filters, []),
       options.fetch(:facets, {}),
       org_registry.nil? ? {} : {organisation_registry: org_registry},
       org_registry.nil? ? {} : {organisations: org_registry},
@@ -222,7 +222,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response,
         0,
         INDEX_NAMES,
-        {},
+        [],
         {},
         {topic_registry: topic_registry},
         {topics: topic_registry},
@@ -275,7 +275,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
-        {},
+        [],
         {"organisations" => facet_params(1)},
       ).present
     end
@@ -318,7 +318,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
-        {"organisations" => ["hmrc"]},
+        [text_filter("organisations", ["hmrc"])],
         {"organisations" => facet_params(2)},
       ).present
     end
@@ -368,7 +368,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
-        {"organisations" => ["hm-cheesemakers"]},
+        [text_filter("organisations", ["hm-cheesemakers"])],
         {"organisations" => facet_params(1)},
       ).present
     end
@@ -418,7 +418,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
-        {},
+        [],
         {"organisations" => facet_params(0)},
       ).present
     end
@@ -542,7 +542,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response("facets" => sample_facet_data_with_topics),
         0,
         INDEX_NAMES,
-        {},
+        [],
         {"organisations" => facet_params(1), "topics" => facet_params(1)},
         {organisation_registry: org_registry},
         {organisations: org_registry},
@@ -604,7 +604,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
-        {},
+        [],
         {"organisations" => facet_params(1),},
         {organisation_registry: org_registry},
         {organisations: org_registry},
@@ -666,15 +666,19 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         "self assessment",
         "tax returns"
       ]
-      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, {}, {}, {}, {}, @suggestions).present
+      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, [], {}, {}, {}, @suggestions).present
 
       assert_equal ["self assessment", "tax returns"], @output[:suggested_queries]
     end
 
     should "default to an empty array when not present" do
-      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, {}, {}, {}, {}).present
+      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, [], {}, {}, {}).present
 
       assert_equal [], @output[:suggested_queries]
     end
+  end
+
+  def text_filter(field_name, values)
+    SearchParameterParser::TextFieldFilter.new(field_name, values)
   end
 end

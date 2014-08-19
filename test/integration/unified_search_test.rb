@@ -164,7 +164,7 @@ class UnifiedSearchTest < MultiIndexTest
       "tags" => [],
       "topics" => ["farming"],
       "section" => ["1"],
-      "opened_date" => Time.parse("2014-04-01 09:00").iso8601,
+      "opened_date" => "2014-04-01",
     }
   end
   private :cma_case_attributes

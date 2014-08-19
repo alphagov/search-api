@@ -2,6 +2,7 @@ require "test_helper"
 require "json"
 require "set"
 require "unified_search_builder"
+require "search_parameter_parser"
 
 class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
@@ -61,6 +62,17 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       facets: nil,
       debug: {},
     }.merge(options)
+  end
+
+  def text_filter(field_name, values)
+    SearchParameterParser::TextFieldFilter.new(field_name, values)
+  end
+
+  def date_filter(field_name, values)
+    SearchParameterParser::DateFieldFilter.new(
+      field_name,
+      values,
+    )
   end
 
   def setup_best_bets_query(best_bets, worst_bets)
@@ -130,7 +142,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new(
         query_options(
-          filters: {"organisations" => ["hm-magic"]},
+          filters: [ text_filter("organisations", ["hm-magic"]) ],
         ),
         @metasearch_index
       )
@@ -160,7 +172,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new(
         query_options(
-          filters: {"organisations" => ["hm-magic", "hmrc"]},
+          filters: [ text_filter("organisations", ["hm-magic", "hmrc"]) ],
         ),
         @metasearch_index
       )
@@ -191,10 +203,10 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new(
         query_options(
-          filters: {
-            "organisations" => ["hm-magic", "hmrc"],
-            "section" => ["levitation"],
-          }
+          filters: [
+            text_filter("organisations", ["hm-magic", "hmrc"]),
+            text_filter("section", ["levitation"]),
+          ],
         ),
         @metasearch_index
       )
@@ -400,7 +412,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new(
         query_options(
-          filters: {"organisations" => ["hm-magic"]},
+          filters: [ text_filter("organisations", ["hm-magic"]) ],
           facets: {"organisations" => 10},
         ),
         @metasearch_index
@@ -434,7 +446,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new(
         query_options(
-          filters: {"section" => ["levitation"]},
+          filters: [ text_filter("section", "levitation") ],
           facets: {"organisations" => 10},
         ),
         @metasearch_index
