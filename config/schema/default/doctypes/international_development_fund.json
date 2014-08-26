@@ -1,11 +1,11 @@
 {
   "properties": {
-    "application_state": {
+    "fund_state": {
       "type": "string",
       "index": "not_analyzed",
       "include_in_all": false,
       "details": {
-        "name": "Applications",
+        "name": "Funds",
         "ui_widget_type": "single-select",
         "preposition": "which are",
         "allowed_values": [
@@ -30,7 +30,7 @@
       "index": "not_analyzed",
       "include_in_all": false,
       "details": {
-        "name": "Countries and regions",
+        "name": "Countries",
         "ui_widget_type": "multi-select",
         "preposition": "for",
         "allowed_values": [
@@ -159,8 +159,32 @@
         "preposition": "for",
         "allowed_values": [
           {
+            "label": "Agriculture",
+            "value": "agriculture"
+          },
+          {
+            "label": "Climate change",
+            "value": "climate-change"
+          },
+          {
+            "label": "Disabilities",
+            "value": "disabilities"
+          },
+          {
             "label": "Education",
             "value": "education"
+          },
+          {
+            "label": "Empowerment and accountability",
+            "value": "empowerment-and-accountability"
+          },
+          {
+            "label": "Environment",
+            "value": "environment"
+          },
+          {
+            "label": "Girls and women",
+            "value": "girls-and-women"
           },
           {
             "label": "Health",
@@ -171,36 +195,28 @@
             "value": "humanitarian-emergencies-disasters"
           },
           {
-            "label": "Disabilities",
-            "value": "disabilities"
-          },
-          {
-            "label": "Climate change",
-            "value": "climate-change"
-          },
-          {
-            "label": "Girls and women",
-            "value": "girls-and-women"
-          },
-          {
-            "label": "Water and sanitation",
-            "value": "water-and-sanitation"
-          },
-          {
-            "label": "Empowerment and accountability",
-            "value": "empowerment-and-accountability"
-          },
-          {
-            "label": "Private sector/commercial",
-            "value": "private-sector-commercial"
-          },
-          {
             "label": "Livelihoods",
             "value": "livelihoods"
           },
           {
             "label": "Peace and access to justice",
             "value": "peace-and-access-to-justice"
+          },
+          {
+            "label": "Private sector/business",
+            "value": "private-sector-business"
+          },
+          {
+            "label": "Technology",
+            "value": "technology"
+          },
+          {
+            "label": "Trade",
+            "value": "trade"
+          },
+          {
+            "label": "Water and sanitation",
+            "value": "water-and-sanitation"
           }
         ]
       }
@@ -249,12 +265,12 @@
         ]
       }
     },
-    "value_of_fund": {
+    "value_of_funding": {
       "type": "string",
       "index": "not_analyzed",
       "include_in_all": false,
       "details": {
-        "name": "Value of fund",
+        "name": "Value of funding",
         "ui_widget_type": "multi-select",
         "preposition": "with value",
         "allowed_values": [
