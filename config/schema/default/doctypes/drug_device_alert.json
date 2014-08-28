@@ -10,11 +10,11 @@
         "preposition": "for",
         "allowed_values": [
           {
-            "label": "Drugs",
+            "label": "Drug Alert",
             "value": "drugs"
           },
           {
-            "label": "Devices",
+            "label": "Medical Device Alert",
             "value": "devices"
           }
         ]
