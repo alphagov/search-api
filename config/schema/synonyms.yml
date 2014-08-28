@@ -315,10 +315,17 @@ synonyms: [
   "vaf4 => vaf4a",
   "vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration",
 
+  # Spaces or hyphens
+  "pa28 => pa28, pa 28",
+  "pa38 => pa38, pa 38",
+
   # Job searches
   "b26 3qz => jobs",  # Birmingham Airport jobs
 
   # Abbreviations
+  "b737 => b737, boeing 737",
+  "b747 => b747, boeing 747",
+  "b777 => b777, boeing 777",
   "cert => certificate",
   "digi => digital",
   "gov => government",
