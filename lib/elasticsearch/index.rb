@@ -154,7 +154,10 @@ module Elasticsearch
       client = timeout_options ? build_client(timeout_options) : @client
       response = client.post("_bulk", bulk_payload(document_hashes_or_payload), content_type: :json)
       items = MultiJson.decode(response.body)["items"]
-      failed_items = items.select { |item| item["index"].has_key?("error") }
+      failed_items = items.select do |item|
+        data = item["index"] || item["create"]
+        data.has_key?("error")
+      end
       if failed_items.any?
         # Because bulk writes return a 200 status code regardless, we need to
         # parse through the errors to detect responses that indicate a locked
