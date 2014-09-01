@@ -308,15 +308,24 @@ private
   private
     def parse_dates(values)
       values.map { |combined_from_and_to|
-        from = parse_date(combined_from_and_to.match(/from:([^,]+)/)[1])
-        to = parse_date(combined_from_and_to.match(/to:([^,]+)/)[1])
+        dates = combined_from_and_to.split(",").reduce({}) { |dates, param|
+          key, date = param.split(":")
+          dates.merge(key => parse_date(date))
+        }
 
-        Value.new(from, to)
+        Value.new(
+          dates.fetch("from", null_date),
+          dates.fetch("to", null_date),
+        )
       }
     end
 
     def parse_date(string)
       Date.parse(string) rescue nil
+    end
+
+    def null_date
+      OpenStruct.new(iso8601: nil)
     end
 
     Value = Struct.new(:from, :to)
