@@ -228,4 +228,22 @@ class UnifiedSearchTest < MultiIndexTest
       parsed_response.fetch("results").fetch(0),
     )
   end
+
+  def test_cannot_provide_date_filter_key_multiple_times
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
+    assert_equal 422, last_response.status
+    assert_equal(
+      {"error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)}},
+      parsed_response,
+    )
+  end
+
+  def test_cannot_provide_invalid_dates_for_date_filter
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
+    assert_equal 422, last_response.status
+    assert_equal(
+      {"error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date}},
+      parsed_response,
+    )
+  end
 end

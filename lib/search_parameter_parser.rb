@@ -268,7 +268,9 @@ private
       if filter_param.start_with?("filter_")
         field = filter_param.sub("filter_", "")
         if allowed_filter_fields.include? field
-          filters.push(build_filter(filter_name_lookup(field), values))
+          filter = build_filter(filter_name_lookup(field), values)
+          filters.push(filter)
+          @errors.concat(filter.errors) unless filter.valid?
         else
           @errors << %{"#{field}" is not a valid filter field}
         end
@@ -279,11 +281,12 @@ private
   end
 
   class Filter
-    attr_reader :field_name, :values
+    attr_reader :field_name, :values, :errors
 
     def initialize(field_name, values)
       @field_name = field_name
       @values = Array(values)
+      @errors = []
     end
 
     def type
@@ -292,6 +295,10 @@ private
 
     def ==(other)
       [field_name, values] == [other.field_name, other.values]
+    end
+
+    def valid?
+      errors.empty?
     end
   end
 
@@ -307,6 +314,10 @@ private
 
   private
     def parse_dates(values)
+      if values.count > 1
+        @errors << %{Too many values (#{values.size}) for parameter "#{field_name}" (must occur at most once)}
+      end
+
       values.map { |combined_from_and_to|
         dates = combined_from_and_to.split(",").reduce({}) { |dates, param|
           key, date = param.split(":")
@@ -321,7 +332,10 @@ private
     end
 
     def parse_date(string)
-      Date.parse(string) rescue nil
+      Date.parse(string)
+    rescue
+      @errors << %{Invalid value "#{string}" for parameter "#{field_name}" (expected ISO8601 date}
+      null_date
     end
 
     def null_date
