@@ -263,20 +263,34 @@ private
   end
 
   def filters
-    filters = []
-    @params.each do |filter_param, values|
-      if filter_param.start_with?("filter_")
-        field = filter_param.sub("filter_", "")
-        if allowed_filter_fields.include? field
-          filter = build_filter(filter_name_lookup(field), values)
-          filters.push(filter)
-          @errors.concat(filter.errors) unless filter.valid?
-        else
-          @errors << %{"#{field}" is not a valid filter field}
-        end
-        @used_params << filter_param
-      end
+    raw_params = @params.select { |name, _| name.start_with?("filter_") }
+
+    filter_params = raw_params.reduce({}) { |params, (name, value)|
+      params.merge(name.sub("filter_", "") => value)
+    }
+
+    allowed_filters, disallowed_filters = filter_params.partition { |field, _|
+      allowed_filter_fields.include?(field)
+    }
+
+    filters = allowed_filters.map { |field, values|
+      build_filter(filter_name_lookup(field), values)
+    }
+
+    valid_filters, invalid_filters = filters.partition(&:valid?)
+
+    invalid_filters.flat_map(&:errors).each do |error|
+      @errors << error
     end
+
+    disallowed_filters.each do |field, _|
+      @errors << %{"#{field}" is not a valid filter field}
+    end
+
+    raw_params.each do |name, _|
+      @used_params << name
+    end
+
     filters
   end
 
