@@ -32,6 +32,7 @@ class UnifiedSearcher
       registry_by_field,
       suggested_queries(params[:query]),
       facet_examples,
+      index.mappings,
     ).present
   end
 

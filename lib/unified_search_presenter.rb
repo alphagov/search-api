@@ -17,7 +17,7 @@ class UnifiedSearchPresenter
   def initialize(es_response, start, index_names, applied_filters = {},
                  facet_fields = {}, registries = {},
                  registry_by_field = {}, suggestions = [],
-                 facet_examples={})
+                 facet_examples={}, mappings={})
     @start = start
     @results = es_response["hits"]["hits"].map do |result|
       doc = result.delete("fields")
@@ -33,6 +33,7 @@ class UnifiedSearchPresenter
     @registry_by_field = registry_by_field
     @suggestions = suggestions
     @facet_examples = facet_examples
+    @mappings = mappings
   end
 
   def present
@@ -47,7 +48,7 @@ class UnifiedSearchPresenter
 
 private
 
-  attr_reader :registries, :registry_by_field
+  attr_reader :registries, :registry_by_field, :mappings
 
   def presented_results
     # This uses the "standard" ResultSetPresenter to expand fields like
@@ -55,7 +56,7 @@ private
     # the output in other ways.
 
     result_set = ResultSet.new(@results, nil)
-    ResultSetPresenter.new(result_set, registries).present["results"].each do |fields|
+    ResultSetPresenter.new(result_set, registries, mappings).present["results"].each do |fields|
       metadata = fields.delete(:_metadata)
 
       # Replace the "_index" field, which contains the concrete name of the

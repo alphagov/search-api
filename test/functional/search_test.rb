@@ -258,7 +258,7 @@ class SearchTest < IntegrationTest
       "fields" => sample_document_attributes.merge("specialist_sectors" => ["oil-and-gas/licensing"])
     }
 
-    stub_index.expects(:mappings).returns(mappings)
+    stub_index.expects(:mappings).twice.returns(mappings)
     stub_index.expects(:raw_search).returns({"hits" => {"hits" => [document], "total" => 1}})
     stub_index.expects(:index_name).returns("mainstream,government,detailed")
     stub_metasearch_index.expects(:analyzed_best_bet_query).with("bob").returns("bob")
