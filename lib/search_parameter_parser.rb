@@ -179,13 +179,49 @@ protected
   end
 end
 
+class Schema
+
+  attr_reader :mappings, :document_type
+
+  def initialize(document_type, schema_mappings = {})
+    @document_type = document_type
+    @mappings = schema_mappings
+  end
+
+  def get_field_type(field_name)
+    schema
+      .fetch("properties")
+      .fetch(field_name, {})
+      .fetch("type", "string")
+  end
+
+  def fields
+    schema.fetch("properties").keys
+  end
+
+  def schema
+    mappings
+      .merge( :no_document_type => null_schema )
+      .fetch(document_type) {
+        raise "Schema not found for #{document_type}"
+      }
+  end
+
+  def null_schema
+    {
+      "properties" => {},
+    }
+  end
+
+end
+
 class SearchParameterParser < BaseParameterParser
   def initialize(params, schema_mappings = {})
-    @schema_mappings = schema_mappings
     @document_types = params.fetch("filter_document_type", [no_document_type])
     if @document_types.size > 1
       raise "SearchParameterParser can only handle one document type"
     end
+    @schema = Schema.new(document_type, schema_mappings)
 
     process(params)
   end
@@ -200,7 +236,7 @@ private
     :no_document_type
   end
 
-  attr_reader :schema_mappings
+  attr_reader :schema
 
   def process(params)
     @params = params
@@ -247,13 +283,17 @@ private
     return [field, dir]
   end
 
+  def allowed_return_fields
+    ALLOWED_RETURN_FIELDS + schema.fields
+  end
+
   # Get a list of the fields to request in results from elasticsearch
   def return_fields
     fields = character_separated_param("fields")
     if fields.empty?
       return DEFAULT_RETURN_FIELDS
     end
-    disallowed_fields = fields - ALLOWED_RETURN_FIELDS
+    disallowed_fields = fields - allowed_return_fields
     fields = fields - disallowed_fields
 
     if disallowed_fields.any?
@@ -366,7 +406,7 @@ private
   end
 
   def build_filter(field_name, values)
-    type = schema_get_field_type(field_name)
+    type = schema.get_field_type(field_name)
 
     field_class = {
       "date" => DateFieldFilter,
@@ -377,32 +417,7 @@ private
   end
 
   def allowed_filter_fields
-    ALLOWED_FILTER_FIELDS + schema_fields
-  end
-
-  def schema_get_field_type(field_name)
-    schema
-      .fetch("properties")
-      .fetch(field_name, {})
-      .fetch("type", "string")
-  end
-
-  def schema_fields
-    schema.fetch("properties").keys
-  end
-
-  def schema
-    schema_mappings
-      .merge( no_document_type => null_schema )
-      .fetch(document_type) {
-        raise "Schema not found for #{document_type}"
-      }
-  end
-
-  def null_schema
-    {
-      "properties" => {},
-    }
+    ALLOWED_FILTER_FIELDS + schema.fields
   end
 
   def document_type
@@ -569,7 +584,7 @@ private
     if fields.empty?
       return DEFAULT_FACET_EXAMPLE_FIELDS 
     end
-    disallowed_fields = fields - ALLOWED_RETURN_FIELDS
+    disallowed_fields = fields - allowed_return_fields
     fields = fields - disallowed_fields
 
     if disallowed_fields.any?

@@ -39,6 +39,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }]
   end
 
+  def cma_case_mapping
+    MultiJson.load(File.read("config/schema/default/doctypes/cma_case.json"))
+  end
+
   def stub_suggester
     stub('Suggester', suggestions: ['cheese'])
   end
@@ -190,6 +194,11 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:index_name).returns(
         "mainstream,detailed,government"
       )
+      @combined_index.expects(:mappings).returns(
+        {
+          "cma_case" => cma_case_mapping
+        }
+      )
 
       @results = @searcher.search({
         start: 0,
@@ -239,6 +248,11 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:index_name).returns(
         "mainstream,detailed,government"
       )
+      @combined_index.expects(:mappings).returns(
+        {
+          "cma_case" => cma_case_mapping
+        }
+      )
 
       @results = @searcher.search({
         start: 0,
@@ -282,6 +296,11 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       })
       @combined_index.expects(:index_name).returns(
         "mainstream,detailed,government"
+      )
+      @combined_index.expects(:mappings).returns(
+        {
+          "cma_case" => cma_case_mapping
+        }
       )
 
       @results = @searcher.search({
@@ -343,6 +362,11 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       })
       @combined_index.expects(:index_name).returns(
         "mainstream,detailed,government"
+      )
+      @combined_index.expects(:mappings).returns(
+        {
+          "cma_case" => cma_case_mapping
+        }
       )
 
       @results = @searcher.search({
