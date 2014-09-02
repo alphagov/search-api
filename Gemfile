@@ -42,3 +42,4 @@ group :development do
 end
 
 gem "debugger", group: [:development, :test]
+gem "pry", group: [:development, :test]

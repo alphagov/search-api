@@ -43,6 +43,17 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     stub('Suggester', suggestions: ['cheese'])
   end
 
+  def text_filter(field_name, values)
+    SearchParameterParser::TextFieldFilter.new(field_name, values)
+  end
+
+  def date_filter(field_name, values)
+    SearchParameterParser::DateFieldFilter.new(
+      field_name,
+      values,
+    )
+  end
+
   BASE_CHEESE_QUERY = {
     custom_score: {
       query: {
@@ -277,7 +288,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         start: 0,
         count: 20,
         query: "cheese",
-        filters: {"organisations" => ["ministry-of-magic"]},
+        filters: [ text_filter("organisations", ["ministry-of-magic"]) ],
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         facets: nil,
         debug: {},

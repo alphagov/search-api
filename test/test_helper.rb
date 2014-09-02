@@ -44,7 +44,7 @@ module TestHelpers
 
     def ==(other)
       @subset.all? { |k,v|
-        other.has_key?(k) && other[k] == v
+        other.has_key?(k) && v == other[k]
       }
     end
 

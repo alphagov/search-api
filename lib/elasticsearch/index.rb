@@ -168,6 +168,9 @@ module Elasticsearch
         if blocked_items.any?
           raise IndexLocked
         else
+          # TODO This error should include the error messages from
+          # elasticsearch, not just the IDs of the documents that weren't
+          # inserted
           raise BulkIndexFailure.new(failed_items.map { |item| item["index"]["_id"] })
         end
       end

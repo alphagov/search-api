@@ -180,7 +180,13 @@ protected
 end
 
 class SearchParameterParser < BaseParameterParser
-  def initialize(params)
+  def initialize(params, schema_mappings = {})
+    @schema_mappings = schema_mappings
+    @document_types = params.fetch("filter_document_type", [no_document_type])
+    if @document_types.size > 1
+      raise "SearchParameterParser can only handle one document type"
+    end
+
     process(params)
   end
 
@@ -189,6 +195,12 @@ class SearchParameterParser < BaseParameterParser
   end
 
 private
+
+  def no_document_type
+    :no_document_type
+  end
+
+  attr_reader :schema_mappings
 
   def process(params)
     @params = params
@@ -251,19 +263,150 @@ private
   end
 
   def filters
-    filters = {}
-    @params.each do |key, values|
-      if (m = key.match(/\Afilter_(.*)/))
-        field = m[1]
-        if ALLOWED_FILTER_FIELDS.include? field
-          filters[filter_name_lookup(field)] = values
-        else
-          @errors << %{"#{field}" is not a valid filter field}
-        end
-        @used_params << key
-      end
+    raw_params = @params.select { |name, _| name.start_with?("filter_") }
+
+    filter_params = raw_params.reduce({}) { |params, (name, value)|
+      params.merge(name.sub("filter_", "") => value)
+    }
+
+    allowed_filters, disallowed_filters = filter_params.partition { |field, _|
+      allowed_filter_fields.include?(field)
+    }
+
+    filters = allowed_filters.map { |field, values|
+      build_filter(filter_name_lookup(field), values)
+    }
+
+    valid_filters, invalid_filters = filters.partition(&:valid?)
+
+    invalid_filters.flat_map(&:errors).each do |error|
+      @errors << error
     end
+
+    disallowed_filters.each do |field, _|
+      @errors << %{"#{field}" is not a valid filter field}
+    end
+
+    raw_params.each do |name, _|
+      @used_params << name
+    end
+
     filters
+  end
+
+  class Filter
+    attr_reader :field_name, :values, :errors
+
+    def initialize(field_name, values)
+      @field_name = field_name
+      @values = Array(values)
+      @errors = []
+    end
+
+    def type
+      raise NotImplementedError
+    end
+
+    def ==(other)
+      [field_name, values] == [other.field_name, other.values]
+    end
+
+    def valid?
+      errors.empty?
+    end
+  end
+
+  class DateFieldFilter < Filter
+    def initialize(field_name, values)
+      super
+      @values = parse_dates(@values)
+    end
+
+    def type
+      "date"
+    end
+
+  private
+    def parse_dates(values)
+      if values.count > 1
+        @errors << %{Too many values (#{values.size}) for parameter "#{field_name}" (must occur at most once)}
+      end
+
+      values.map { |combined_from_and_to|
+        dates = combined_from_and_to.split(",").reduce({}) { |dates, param|
+          key, date = param.split(":")
+          dates.merge(key => parse_date(date))
+        }
+
+        Value.new(
+          dates.fetch("from", null_date),
+          dates.fetch("to", null_date),
+        )
+      }
+    end
+
+    def parse_date(string)
+      Date.parse(string)
+    rescue
+      @errors << %{Invalid value "#{string}" for parameter "#{field_name}" (expected ISO8601 date}
+      null_date
+    end
+
+    def null_date
+      OpenStruct.new(iso8601: nil)
+    end
+
+    Value = Struct.new(:from, :to)
+  end
+
+  class TextFieldFilter < Filter
+    def type
+      "string"
+    end
+  end
+
+  def build_filter(field_name, values)
+    type = schema_get_field_type(field_name)
+
+    field_class = {
+      "date" => DateFieldFilter,
+      "string" => TextFieldFilter,
+    }.fetch(type)
+
+    field_class.new(field_name, values)
+  end
+
+  def allowed_filter_fields
+    ALLOWED_FILTER_FIELDS + schema_fields
+  end
+
+  def schema_get_field_type(field_name)
+    schema
+      .fetch("properties")
+      .fetch(field_name, {})
+      .fetch("type", "string")
+  end
+
+  def schema_fields
+    schema.fetch("properties").keys
+  end
+
+  def schema
+    schema_mappings
+      .merge( no_document_type => null_schema )
+      .fetch(document_type) {
+        raise "Schema not found for #{document_type}"
+      }
+  end
+
+  def null_schema
+    {
+      "properties" => {},
+    }
+  end
+
+  def document_type
+    @document_types && @document_types.first
   end
 
   def filter_name_lookup(name)

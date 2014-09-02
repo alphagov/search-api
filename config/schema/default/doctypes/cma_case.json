@@ -299,7 +299,7 @@
     },
     "opened_date": {
       "type": "date",
-      "index": "no"
+      "index": "analyzed"
     },
     "closed_date": {
       "type": "date",

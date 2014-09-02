@@ -164,7 +164,86 @@ class UnifiedSearchTest < MultiIndexTest
       "tags" => [],
       "topics" => ["farming"],
       "section" => ["1"],
+      "opened_date" => "2014-04-01",
     }
   end
   private :cma_case_attributes
+
+  def test_can_filter_between_dates
+    insert_document("mainstream_test", cma_case_attributes)
+
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
+    assert last_response.ok?
+    assert_equal 1, parsed_response.fetch("total")
+    assert_equal(
+      hash_including(
+        "title" => cma_case_attributes.fetch("title"),
+        "link" => cma_case_attributes.fetch("link"),
+      ),
+      parsed_response.fetch("results").fetch(0),
+    )
+  end
+
+  def test_can_filter_between_dates_with_reversed_parameter_order
+    insert_document("mainstream_test", cma_case_attributes)
+
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
+    assert last_response.ok?
+    assert_equal 1, parsed_response.fetch("total")
+    assert_equal(
+      hash_including(
+        "title" => cma_case_attributes.fetch("title"),
+        "link" => cma_case_attributes.fetch("link"),
+      ),
+      parsed_response.fetch("results").fetch(0),
+    )
+  end
+
+  def test_can_filter_from_date
+    insert_document("mainstream_test", cma_case_attributes)
+
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
+    assert last_response.ok?
+    assert_equal 1, parsed_response.fetch("total")
+    assert_equal(
+      hash_including(
+        "title" => cma_case_attributes.fetch("title"),
+        "link" => cma_case_attributes.fetch("link"),
+      ),
+      parsed_response.fetch("results").fetch(0),
+    )
+  end
+
+  def test_can_filter_to_date
+    insert_document("mainstream_test", cma_case_attributes)
+
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
+    assert last_response.ok?
+    assert_equal 1, parsed_response.fetch("total")
+    assert_equal(
+      hash_including(
+        "title" => cma_case_attributes.fetch("title"),
+        "link" => cma_case_attributes.fetch("link"),
+      ),
+      parsed_response.fetch("results").fetch(0),
+    )
+  end
+
+  def test_cannot_provide_date_filter_key_multiple_times
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
+    assert_equal 422, last_response.status
+    assert_equal(
+      {"error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)}},
+      parsed_response,
+    )
+  end
+
+  def test_cannot_provide_invalid_dates_for_date_filter
+    get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
+    assert_equal 422, last_response.status
+    assert_equal(
+      {"error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date}},
+      parsed_response,
+    )
+  end
 end
