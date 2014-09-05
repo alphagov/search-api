@@ -148,6 +148,7 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal 1, parsed_response.fetch("total")
     assert_equal(
       hash_including(
+        "document_type" => cma_case_attributes.fetch("_type"),
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
       ),
