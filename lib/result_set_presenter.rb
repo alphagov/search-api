@@ -188,7 +188,11 @@ private
   end
 
   def schema(document)
-    @mappings.fetch(document.fetch(:_metadata, {}).fetch("_type", nil), {})
+    @mappings.fetch(document_type(document), {})
+  end
+
+  def document_type(document)
+    document.fetch(:_metadata, {}).fetch("_type", nil)
   end
 
   def schema_get_expandable_fields(document)

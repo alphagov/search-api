@@ -78,6 +78,7 @@ private
         fields[:_explanation] = explain
       end
 
+      fields[:document_type] = metadata["_type"]
     end
   end
 
