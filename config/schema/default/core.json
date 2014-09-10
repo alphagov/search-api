@@ -43,6 +43,11 @@
       "type": "date",
       "index": "not_analyzed",
       "include_in_all": false
+    },
+    "last_update": {
+      "type": "date",
+      "index": "not_analyzed",
+      "include_in_all": false
     }
   }
 }
