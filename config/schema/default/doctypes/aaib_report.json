@@ -72,7 +72,7 @@
     },
     "date_of_occurrence": {
       "type": "date",
-      "index": "no"
+      "index": "analyzed"
     },
     "registration": {
       "type": "string",
