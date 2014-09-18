@@ -459,6 +459,8 @@ private
         options[:disable_popularity] = true
       when "disable_synonyms"
         options[:disable_synonyms] = true
+      when "downweight_closed_orgs"
+        options[:downweight_closed_orgs] = true
       when "explain"
         options[:explain] = true
       else
