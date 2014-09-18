@@ -75,9 +75,20 @@ class UnifiedSearchBuilder
             should: [core_query]
           }
         },
-        filters: format_boosts + [time_boost]
+        filters: boost_filters,
+        score_mode: "multiply",
       }
     }
+  end
+
+  def boost_filters
+    boosts = format_boosts + [time_boost]
+
+    if @params[:debug][:downweight_closed_orgs]
+      boosts << closed_org_boost
+    end
+
+    boosts
   end
 
   def best_bets
@@ -412,6 +423,13 @@ class UnifiedSearchBuilder
     {
       filter: { term: { search_format_types: "announcement" } },
       script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
+    }
+  end
+
+  def closed_org_boost
+    {
+      filter: { term: { organisation_state: "closed" } },
+      boost: 0.3,
     }
   end
 
