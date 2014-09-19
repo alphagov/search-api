@@ -103,7 +103,8 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
             {filter: {term: {format: 'document_series'}}, boost: 1.3},
             {filter: {term: {format: 'document_collection'}}, boost: 1.3},
             {filter: {term: {format: 'operational_field'}}, boost: 1.5},
-            {filter: {term: {search_format_types: 'announcement'}}, script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"}
+            {filter: {term: {search_format_types: 'announcement'}}, script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"},
+            {filter: {term: {organisation_state: 'closed'}}, boost: 0.3},
           ],
           score_mode: 'multiply',
         }

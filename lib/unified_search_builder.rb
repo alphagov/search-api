@@ -82,13 +82,7 @@ class UnifiedSearchBuilder
   end
 
   def boost_filters
-    boosts = format_boosts + [time_boost]
-
-    if @params[:debug][:downweight_closed_orgs]
-      boosts << closed_org_boost
-    end
-
-    boosts
+    format_boosts + [time_boost] + [closed_org_boost]
   end
 
   def best_bets
