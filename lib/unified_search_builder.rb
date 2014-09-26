@@ -82,7 +82,7 @@ class UnifiedSearchBuilder
   end
 
   def boost_filters
-    format_boosts + [time_boost] + [closed_org_boost]
+    format_boosts + [time_boost] + [closed_org_boost] + [devolved_org_boost]
   end
 
   def best_bets
@@ -423,6 +423,13 @@ class UnifiedSearchBuilder
   def closed_org_boost
     {
       filter: { term: { organisation_state: "closed" } },
+      boost: 0.3,
+    }
+  end
+
+  def devolved_org_boost
+    {
+      filter: { term: { organisation_state: "devolved" } },
       boost: 0.3,
     }
   end
