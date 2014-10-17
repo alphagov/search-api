@@ -119,6 +119,10 @@
           }
         ]
       }
+    },
+    "issued_date": {
+      "type": "date",
+      "index": "analyzed"
     }
   }
 }
