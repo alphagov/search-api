@@ -1,0 +1,63 @@
+{
+  "properties": {
+    "railway_type": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Railway type",
+        "ui_widget_type": "multi-select",
+        "allowed_values": [
+          {
+            "label": "Heavy rail",
+            "value": "heavy-rail"
+          },
+          {
+            "label": "Light rail",
+            "value": "light-rail"
+          },
+          {
+            "label": "Metros",
+            "value": "metros"
+          },
+          {
+            "label": "Heritage railways",
+            "value": "heritage-railways"
+          }
+        ]
+      }
+    },
+    "report_type": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false,
+      "details": {
+        "name": "Report type",
+        "ui_widget_type": "multi-select",
+        "allowed_values": [
+          {
+            "label": "Investigation reports",
+            "value": "investigation-reports"
+          },
+          {
+            "label": "Bulletins",
+            "value": "bulletins"
+          },
+          {
+            "label": "Interim reports",
+            "value": "interim-reports"
+          },
+          {
+            "label": "Discontinuation reports",
+            "value": "discontinuation-reports"
+          }
+        ]
+      }
+    },
+    "date_of_occurrence": {
+      "type": "date",
+      "index": "analyzed"
+    }
+  }
+}
+
