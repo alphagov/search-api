@@ -102,6 +102,10 @@
           }
         ]
       }
+    },
+    "first_published_at": {
+      "type": "date",
+      "index": "no"
     }
   }
 }
