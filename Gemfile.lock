@@ -1,6 +1,5 @@
 GEM
   remote: https://rubygems.org/
-  remote: https://gem.fury.io/govuk/
   specs:
     PriorityQueue (0.1.2)
     activesupport (3.2.12)
