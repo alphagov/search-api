@@ -36,20 +36,20 @@
         "ui_widget_type": "multi-select",
         "allowed_values": [
           {
-            "label": "Investigation reports",
-            "value": "investigation-reports"
+            "label": "Investigation report",
+            "value": "investigation-report"
           },
           {
-            "label": "Bulletins",
-            "value": "bulletins"
+            "label": "Bulletin",
+            "value": "bulletin"
           },
           {
-            "label": "Interim reports",
-            "value": "interim-reports"
+            "label": "Interim report",
+            "value": "interim-report"
           },
           {
-            "label": "Discontinuation reports",
-            "value": "discontinuation-reports"
+            "label": "Discontinuation report",
+            "value": "discontinuation-report"
           }
         ]
       }
