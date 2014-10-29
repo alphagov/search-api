@@ -40,20 +40,20 @@
         "ui_widget_type": "multi-select",
         "allowed_values": [
           {
-            "label": "Investigation reports",
-            "value": "investigation-reports"
+            "label": "Investigation report",
+            "value": "investigation-report"
           },
           {
-            "label": "Safety bulletins",
-            "value": "safety-bulletins"
+            "label": "Safety bulletin",
+            "value": "safety-bulletin"
           },
           {
-            "label": "Completed preliminary examinations",
-            "value": "completed-preliminary-examinations"
+            "label": "Completed preliminary examination",
+            "value": "completed-preliminary-examination"
           },
           {
-            "label": "Overseas reports",
-            "value": "overseas-reports"
+            "label": "Overseas report",
+            "value": "overseas-report"
           }
         ]
       }
