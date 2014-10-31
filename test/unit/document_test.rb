@@ -69,6 +69,17 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "best_bet", document.elasticsearch_export["_type"]
   end
 
+  def test_should_raise_helpful_error_for_unconfigured_types
+    hash = {
+      "_id" => "jobs_exact",
+      "_type" => "cheese"
+    }
+
+    assert_raises RuntimeError do
+      Document.from_hash(hash, default_mappings)
+    end
+  end
+
   def test_should_ignore_fields_not_in_mappings
     hash = {
       "title" => "TITLE",
