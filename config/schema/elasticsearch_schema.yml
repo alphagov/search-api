@@ -86,6 +86,7 @@ mappings:
             unique_reference: {type: string, index: not_analyzed}
             command_paper_number: {type: string, index: not_analyzed}
             hoc_paper_number: {type: string, index: not_analyzed}
+        latest_change_note: { type: string, index: not_analyzed, include_in_all: false }
         description: { type: string, index: analyzed }
         display_type: { type: string, index: not_analyzed, include_in_all: false }
         document_collections: { type: string, index: not_analyzed, include_in_all: false }

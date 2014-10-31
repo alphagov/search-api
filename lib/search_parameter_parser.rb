@@ -80,6 +80,7 @@ class BaseParameterParser
     document_series
     format
     last_update
+    latest_change_note
     link
     organisation_state
     organisations
