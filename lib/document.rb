@@ -13,6 +13,9 @@ class Document
 
   def self.from_hash(hash, mappings, es_score = nil)
     type = hash["_type"] || "edition"
+    if mappings[type].nil?
+      raise "Unexpected document type '#{type}'. Document types must be configured"
+    end
     field_names = mappings[type]["properties"].keys.map(&:to_s)
     self.new(field_names, hash, es_score)
   end
