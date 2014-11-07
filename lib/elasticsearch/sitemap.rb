@@ -108,7 +108,7 @@ class SitemapGenerator
     builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
         chunk.each do |url|
-          url = "#{base_url}#{url}" if url.start_with?("/")
+          url = URI.join(base_url, url) unless url.start_with?("http")
           xml.url {
             xml.loc url
           }
