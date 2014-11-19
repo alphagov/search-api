@@ -285,9 +285,9 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "have correct sort list" do
+    should "put documents without a timestamp at the bottom" do
       assert_equal(
-        [{"public_timestamp" => {order: "asc"}}],
+        [{"public_timestamp" => {order: "asc", missing: "_last"}}],
         @builder.sort_list
       )
     end
@@ -335,13 +335,6 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "have correct sort list" do
-      assert_equal(
-        [{"public_timestamp" => {order: "desc"}}],
-        @builder.sort_list
-      )
-    end
-
     should "have filter in query hash" do
       assert_equal(
         {"exists" => {"field" => "public_timestamp"}},
@@ -350,6 +343,13 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       assert_equal(
         {"exists" => {"field" => "public_timestamp"}},
         @builder.query_hash[:indices][:no_match_query][:filtered][:filter]
+      )
+    end
+
+    should "put documents without a timestamp at the bottom" do
+      assert_equal(
+        [{"public_timestamp" => {order: "desc", missing: "_last"}}],
+        @builder.sort_list
       )
     end
   end

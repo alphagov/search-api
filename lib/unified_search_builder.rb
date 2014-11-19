@@ -234,8 +234,7 @@ class UnifiedSearchBuilder
 
   # Get a list describing the sort order (or nil)
   def sort_list
-    order = @params[:order]
-    if order.nil?
+    if @params[:order].nil?
       # Sort by popularity when there's no explicit ordering, and there's no
       # query (so there's no relevance scores).
       if @query.nil? && !(@params[:debug][:disable_popularity])
@@ -244,7 +243,10 @@ class UnifiedSearchBuilder
         return nil
       end
     end
-    [{ order[0] => { order: order[1] } }]
+
+    field, order = @params[:order]
+
+    [{field => {order: order, missing: "_last"}}]
   end
 
   def facets_hash
