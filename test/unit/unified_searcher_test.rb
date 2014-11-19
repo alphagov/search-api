@@ -243,7 +243,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         size: 20,
         query: TIMESTAMP_EXISTS_WITH_CHEESE_QUERY,
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-        sort: [{"public_timestamp" => {order: "asc"}}],
+        sort: [{"public_timestamp" => {order: "asc", missing: "_last"}}],
         filter: BASE_FILTERS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
