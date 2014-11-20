@@ -24,7 +24,12 @@ class UnifiedSearchTest < MultiIndexTest
     links = parsed_response["results"].map do |result|
       result["link"]
     end
-    assert_equal ["/government-1", "/government-2"], links
+
+    # The government links have dates, so appear before all the other links
+    assert_equal ["/government-1", "/government-2"], links.slice(0, 2)
+
+    # The other documents have no dates, so appear in an undefined order
+    assert_equal ["/detailed-1", "/detailed-2", "/mainstream-1", "/mainstream-2"], links.slice(2, 6).sort
   end
 
   def test_sort_by_date_descending
@@ -32,7 +37,12 @@ class UnifiedSearchTest < MultiIndexTest
     links = parsed_response["results"].map do |result|
       result["link"]
     end
-    assert_equal ["/government-2", "/government-1"], links
+
+    # The government links have dates, so appear before all the other links
+    assert_equal ["/government-2", "/government-1"], links.slice(0, 2)
+
+    # The other documents have no dates, so appear in an undefined order
+    assert_equal ["/detailed-1", "/detailed-2", "/mainstream-1", "/mainstream-2"], links.slice(2, 6).sort
   end
 
   def test_filter_by_section

@@ -123,7 +123,7 @@ class UnifiedSearchBuilder
   end
 
   def query_hash
-    query = filtered_query
+    query = base_query
     {
       indices: {
         indices: [:government],
@@ -138,20 +138,6 @@ class UnifiedSearchBuilder
     }
   end
 
-  def filtered_query
-    filter = sort_filters
-    if filter.nil?
-      base_query
-    else
-      {
-        filtered: {
-          filter: filter,
-          query: base_query,
-        }
-      }
-    end
-  end
-
   def combine_filters(filters)
     if filters.length == 0
       nil
@@ -160,15 +146,6 @@ class UnifiedSearchBuilder
     else
       {"and" => filters}
     end
-  end
-
-  def sort_filters
-    # Filters to ensure that fields being sorted by exist.
-    combine_filters(
-      sort_fields.map { |field|
-        {"exists" => {"field" => field}}
-      }
-    )
   end
 
   def filters_hash(excluding=[])

@@ -114,13 +114,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }
   }
 
-  BASE_TIMESTAMP_EXISTS_WITH_CHEESE_QUERY = {
-    filtered: {
-      filter: {"exists" => {"field" => "public_timestamp"}},
-      query: BASE_CHEESE_QUERY,
-    }
-  }
-
   CHEESE_QUERY = {
     indices: {
       indices: [:government],
@@ -131,19 +124,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         }
       },
       no_match_query: BASE_CHEESE_QUERY
-    }
-  }
-
-  TIMESTAMP_EXISTS_WITH_CHEESE_QUERY = {
-    indices: {
-      indices: [:government],
-      query: {
-        custom_boost_factor: {
-          query: BASE_TIMESTAMP_EXISTS_WITH_CHEESE_QUERY,
-          boost_factor: 0.4
-        }
-      },
-      no_match_query: BASE_TIMESTAMP_EXISTS_WITH_CHEESE_QUERY
     }
   }
 
@@ -241,7 +221,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
-        query: TIMESTAMP_EXISTS_WITH_CHEESE_QUERY,
+        query: CHEESE_QUERY,
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         sort: [{"public_timestamp" => {order: "asc", missing: "_last"}}],
         filter: BASE_FILTERS,
