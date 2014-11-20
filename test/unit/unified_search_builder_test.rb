@@ -291,19 +291,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         @builder.sort_list
       )
     end
-
-    should "have filter in query hash" do
-      assert_equal(
-        {"exists" => {"field" => "public_timestamp"}},
-        @builder.query_hash[:indices][:query][:custom_boost_factor][:query][:filtered][:filter]
-      )
-      assert_equal(
-        {"exists" => {"field" => "public_timestamp"}},
-        @builder.query_hash[:indices][:no_match_query][:filtered][:filter]
-      )
-    end
   end
-
 
   context "search with descending sort" do
     setup do
@@ -332,17 +320,6 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     should "not have facets in payload" do
       assert_does_not_contain(
         @builder.payload.keys, :facets
-      )
-    end
-
-    should "have filter in query hash" do
-      assert_equal(
-        {"exists" => {"field" => "public_timestamp"}},
-        @builder.query_hash[:indices][:query][:custom_boost_factor][:query][:filtered][:filter]
-      )
-      assert_equal(
-        {"exists" => {"field" => "public_timestamp"}},
-        @builder.query_hash[:indices][:no_match_query][:filtered][:filter]
       )
     end
 
