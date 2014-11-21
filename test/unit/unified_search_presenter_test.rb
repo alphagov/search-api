@@ -207,6 +207,25 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
   end
 
+  context "results with no fields" do
+    setup do
+      @empty_result = sample_docs.first.tap {|doc|
+        doc['fields'] = nil
+      }
+      response = sample_es_response.tap {|response|
+        response['hits']['hits'] = [ @empty_result ]
+      }
+
+      @output = UnifiedSearchPresenter.new(response, 0, INDEX_NAMES).present
+    end
+
+    should 'return only basic metadata of fields' do
+      expected_keys = [:index, :es_score, :_id, :document_type]
+
+      assert_equal expected_keys, @output[:results].first.keys
+    end
+  end
+
   context "results with a registry" do
     setup do
       farming_topic_document = Document.new(

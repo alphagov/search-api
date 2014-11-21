@@ -20,7 +20,7 @@ class UnifiedSearchPresenter
                  facet_examples={}, mappings={})
     @start = start
     @results = es_response["hits"]["hits"].map do |result|
-      doc = result.delete("fields")
+      doc = result.delete("fields") || {}
       doc[:_metadata] = result
       doc
     end
