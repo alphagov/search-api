@@ -1,7 +1,7 @@
 require "timed_cache"
 
 class SpecialistSectorRegistry
-  CACHE_LIFETIME_SECONDS = 1800
+  CACHE_LIFETIME_SECONDS = 300
 
   def initialize(index, clock = Time)
     @index = index
