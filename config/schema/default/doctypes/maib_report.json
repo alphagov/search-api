@@ -54,6 +54,10 @@
           {
             "label": "Overseas report",
             "value": "overseas-report"
+          },
+          {
+            "label": "Discontinued investigation",
+            "value": "discontinued-investigation"
           }
         ]
       }
