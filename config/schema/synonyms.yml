@@ -558,6 +558,10 @@ synonyms: [
   "wether => whether, weather",
   "wharehouse => warehouse",
   "wheather => whether, weather",
+  
+  # Temporary fix for MAA regulatory articles
+  "RA1002 => RA 1002",
+  "RA1003 => RA 1003",
 
   # Temporary fix for payroll terms
   # "480 => 480, payroll",
