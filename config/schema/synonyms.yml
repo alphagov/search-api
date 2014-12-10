@@ -172,6 +172,7 @@ synonyms: [
   "fcoc, future character of conflict",
   "foi, freedom of information",
   "gae => government authorised exchange",
+  "gdhif, green deal home improvement fund",
   "gsc => government security classifications",
   "hmcs, hmcts, hm courts tribunals service",
   "idi, immigration directorate instructions",
@@ -265,7 +266,6 @@ synonyms: [
   "adif => birth or adoption certificate form, student finance forms",
   "br1, br 1 => br1, state pension claim form",
   "br19, br 19 => br19, state pension statement",
-  "cis305, cis 305, cis340, cis 340 => construction industry scheme",
   "cwf1 => register for self assessment",
   "d184 => divorce",
   "d46p => d46p, renew 70", # 'D46P' appears in content but returns no results
@@ -347,6 +347,7 @@ synonyms: [
   "government getaway => government gateway",
   "ipc bri => ipc br1",
   "rapid claim => rapid claim, rapid reclaim",
+  "riab => raib",
   "universal jobsearch => universal jobmatch",
   "set 0 => set o",
   "vc5 => vc5, v5c",
