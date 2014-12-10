@@ -1,10 +1,14 @@
 type: stemmer_override
 rules: [
+  "accessibility => accessib",  # not access
+  "accessible => accessib",  # not access
   "animal => animal",  # not animation
   "animals => animal",  # not animation
   "animation => animat",  # not animal
   "animator => animat",  # not animal
   "appointeeship => appointe",  # match appointee
+  "collection => collection",  # DfE COLLECT not collection
+  "collections => collection",  # DfE COLLECT not collection
   "community => community",
   "complaint => complain",  # same as complain
   "complaints => complain",
@@ -29,6 +33,7 @@ rules: [
   "nationality => nationality",  # not national
   "nationalities => nationality",
   "naturalization => naturalis",  # not natural, nature
+  "parking => parking",  # not park
   "paye => paye",  # not pay
   "permitted => permitted",
   "practical => practical",
@@ -45,5 +50,7 @@ rules: [
   "savings => savings",
   "signing => signing",
   "sponsorship => sponsor",
+  "tramway => tram",
+  "tramways => tram",
   "universal => universal"
 ]
