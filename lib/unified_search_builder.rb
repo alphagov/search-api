@@ -141,16 +141,6 @@ class UnifiedSearchBuilder
       filter_hash(filter)
     }
 
-    # exclude any specialist sector documents from the search results, as we
-    # currently do not wish to display them
-    filter_groups << {
-      "not" => {
-        "term" => {
-          "format" => "specialist_sector"
-        }
-      }
-    }
-
     # Don't add additional filters to filter_groups without making sure that
     # the facet_filter values used in facets include the filter too.  It's
     # usually better to add additional filters to the query, so that they
