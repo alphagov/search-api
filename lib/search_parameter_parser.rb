@@ -218,7 +218,7 @@ private
     @parsed_params = {
       start: single_integer_param("start", 0),
       count: single_integer_param("count", 10),
-      query: single_param("q"),
+      query: normalize_query(single_param("q")),
       order: order,
       return_fields: return_fields,
       filters: filters,
@@ -229,6 +229,32 @@ private
     unused_params = @params.keys - @used_params
     unless unused_params.empty?
       @errors << "Unexpected parameters: #{unused_params.join(', ')}"
+    end
+  end
+
+  def normalize_query(query)
+    unless query.nil?
+      query = normalize_unicode(query, "query")
+    end
+    unless query.nil?
+      query = query.strip
+      if query.length == 0
+        nil
+      else
+        query
+      end
+    end
+  end
+
+  def normalize_unicode(s, description)
+    normalizer = UNF::Normalizer.instance
+    begin
+      # Put strings into NFKC-normal form to ensure that accent handling works
+      # correctly in elasticsearch.
+      s = normalizer.normalize(s, :nfkc).strip
+    rescue ArgumentError
+      @errors << %{Invalid unicode in #{description}}
+      return nil
     end
   end
 

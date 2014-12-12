@@ -101,13 +101,6 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "strip whitespace from the query" do
-      assert_equal(
-        "cheese",
-        @builder.query_normalized
-      )
-    end
-
     should "have correct 'from' parameter in payload" do
       assert_equal(
         0,
@@ -232,25 +225,6 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     should "not have facets in payload" do
       assert_does_not_contain(
         @builder.payload.keys, :facets
-      )
-    end
-  end
-
-  context "building search with unicode" do
-    setup do
-      stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          query: "cafe\u0300 ",
-        ),
-        @metasearch_index
-      )
-    end
-
-    should "put the query in normalized form" do
-      assert_equal(
-        "caf\u00e8",
-        @builder.query_normalized
       )
     end
   end
