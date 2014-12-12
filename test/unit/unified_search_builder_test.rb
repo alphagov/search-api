@@ -6,13 +6,8 @@ require "search_parameter_parser"
 
 class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
-  BASE_FILTERS = {
-    'not' => {
-      'term' => {
-        'format' => 'specialist_sector'
-      }
-    }
-  }
+  # Set BASE_FILTERS if needed to add some default filters to search.
+  BASE_FILTERS = nil
 
   def stub_zero_best_bets
     @metasearch_index = stub("metasearch index")
@@ -84,12 +79,16 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   end
 
   def with_base_filters(filter)
-    {
-      "and" => [
-        filter,
-        BASE_FILTERS
-      ]
-    }
+    if BASE_FILTERS
+      {
+        "and" => [
+          filter,
+          BASE_FILTERS
+        ]
+      }
+    else
+      filter
+    end
   end
 
   context "unfiltered search" do
@@ -218,7 +217,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
           {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
           {"terms" => {"section" => ["levitation"]}},
           BASE_FILTERS,
-        ]}
+        ].compact}
       )
     end
 
@@ -351,7 +350,6 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
               order: "count",
               size: 100000,
             },
-            facet_filter: BASE_FILTERS,
           },
         },
         @builder.payload[:facets])
@@ -385,7 +383,6 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
               order: "count",
               size: 100000,
             },
-            facet_filter: BASE_FILTERS,
           },
         },
         @builder.payload[:facets])

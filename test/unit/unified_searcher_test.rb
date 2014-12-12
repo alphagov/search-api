@@ -127,13 +127,8 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }
   }
 
-  BASE_FILTERS = {
-    'not' => {
-      'term' => {
-        'format' => 'specialist_sector'
-      }
-    }
-  }
+  # Set BASE_FILTERS if needed to add some default filters to search.
+  BASE_FILTERS = nil
 
   def mock_best_bets(query)
     @metasearch_index = stub("metasearch index")
@@ -151,12 +146,16 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   def with_base_filters(filter)
-    {
-      "and" => [
-        filter,
-        BASE_FILTERS
-      ]
-    }
+    if BASE_FILTERS
+      {
+        "and" => [
+          filter,
+          BASE_FILTERS
+        ]
+      }
+    else
+      filter
+    end
   end
 
   context "unfiltered, unsorted search" do
@@ -170,7 +169,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         size: 20,
         query: CHEESE_QUERY,
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-        filter: BASE_FILTERS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
@@ -224,7 +222,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: CHEESE_QUERY,
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         sort: [{"public_timestamp" => {order: "asc", missing: "_last"}}],
-        filter: BASE_FILTERS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
@@ -328,11 +325,9 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
               order: "count",
               size: 100000,
             },
-            facet_filter: BASE_FILTERS,
           }
         },
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-        filter: BASE_FILTERS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3},
         "facets" => {"organisations" => {
