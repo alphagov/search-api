@@ -195,6 +195,30 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal(expected_params(query: "hello"), p.parsed_params)
   end
 
+  should "strip whitespace from the query" do
+    p = SearchParameterParser.new("q" => ["cheese "])
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params(query: "cheese"), p.parsed_params)
+  end
+
+  should "put the query in normalized form" do
+    p = SearchParameterParser.new("q" => ["cafe\u0300 "])
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params(query: "caf\u00e8"), p.parsed_params)
+  end
+
+  should "complain about invalid unicode in the query" do
+    p = SearchParameterParser.new("q" => ["\xff"])
+
+    assert_equal("Invalid unicode in query", p.error)
+    assert !p.valid?
+    assert_equal(expected_params(query: nil), p.parsed_params)
+  end
+
   should "understand filter paramers" do
     p = SearchParameterParser.new({"filter_organisations" => ["hm-magic"]})
 

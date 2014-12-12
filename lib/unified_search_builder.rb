@@ -13,11 +13,11 @@ class UnifiedSearchBuilder
 
   def initialize(params, metaindex)
     @params = params
-    @query = query_normalized
+    @query = params[:query]
     if @params[:debug][:disable_best_bets]
       @best_bets_checker = BestBetsChecker.new(metaindex, nil)
     else
-      @best_bets_checker = BestBetsChecker.new(metaindex, query_normalized)
+      @best_bets_checker = BestBetsChecker.new(metaindex, @query)
     end
   end
 
@@ -34,20 +34,6 @@ class UnifiedSearchBuilder
     }.reject{ |key, value|
       [nil, [], {}].include?(value)
     }]
-  end
-
-  def query_normalized
-    if @params[:query].nil?
-      return nil
-    end
-    # Put the query into NFKC-normal form to ensure that accent handling works
-    # correctly in elasticsearch.
-    normalizer = UNF::Normalizer.instance
-    query = normalizer.normalize(@params[:query], :nfkc).strip
-    if query.length == 0
-      return nil
-    end
-    query
   end
 
   def base_query
