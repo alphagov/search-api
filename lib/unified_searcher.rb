@@ -20,7 +20,8 @@ class UnifiedSearcher
   def search(params)
     builder = UnifiedSearchBuilder.new(params, @metaindex)
     es_response = index.raw_search(builder.payload)
-    example_fetcher = FacetExampleFetcher.new(index, es_response, params)
+    example_fetcher = FacetExampleFetcher.new(index, es_response, params,
+                                              builder)
     facet_examples = example_fetcher.fetch
     UnifiedSearchPresenter.new(
       es_response,

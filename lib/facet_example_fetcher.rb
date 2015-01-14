@@ -1,9 +1,10 @@
 # Fetch example values for facets
 class FacetExampleFetcher
-  def initialize(index, es_response, params)
+  def initialize(index, es_response, params, search_builder)
     @index = index
     @response_facets = es_response["facets"]
     @params = params
+    @search_builder = search_builder
   end
 
   # Fetch all requested example facet values
@@ -26,10 +27,18 @@ class FacetExampleFetcher
   end
 
 private
-  # Fetch facet examples for a given field
   def fetch_for_field(field_name, facet_params)
     example_count = facet_params[:examples]
     example_fields = facet_params[:example_fields]
+    scope = facet_params[:example_scope]
+
+    if scope == :query
+      query = @search_builder.query
+      filter = @search_builder.filter
+    else
+      query = nil
+      filter = nil
+    end
 
     facet_options = @response_facets.fetch(field_name, {}).fetch("terms", [])
 
@@ -39,16 +48,25 @@ private
     if slugs.empty?
       {}
     else
-      fetch_by_slug(field_name, slugs, example_count, example_fields)
+      fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
     end
   end
 
-  def facet_example_searches(field_name, slugs, example_count, example_fields)
+  def facet_example_searches(field_name, slugs, example_count, example_fields, query, query_filter)
     slugs.map { |slug|
+      if query_filter.nil?
+        filter = { term: { field_name => slug } }
+      else
+        filter = { and: [
+          { term: { field_name => slug } },
+          query_filter,
+        ]}
+      end
       {
         query: {
           filtered: {
-            filter: { term: { field_name => slug } },
+            query: query,
+            filter: filter,
           }
         },
         size: example_count,
@@ -59,8 +77,8 @@ private
   end
 
   # Fetch facet examples for a set of slugs
-  def fetch_by_slug(field_name, slugs, example_count, example_fields)
-    searches = facet_example_searches(field_name, slugs, example_count, example_fields)
+  def fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
+    searches = facet_example_searches(field_name, slugs, example_count, example_fields, query, filter)
     responses = @index.msearch(searches)
     response_list = responses["responses"]
     result = {}
