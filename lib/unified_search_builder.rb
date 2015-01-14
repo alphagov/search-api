@@ -25,8 +25,8 @@ class UnifiedSearchBuilder
     Hash[{
       from: @params[:start],
       size: @params[:count],
-      query: query_hash_with_best_bets,
-      filter: filters_hash,
+      query: query,
+      filter: filter,
       fields: @params[:return_fields],
       sort: sort_list,
       facets: facets_hash,
@@ -34,6 +34,14 @@ class UnifiedSearchBuilder
     }.reject{ |key, value|
       [nil, [], {}].include?(value)
     }]
+  end
+
+  def query
+    @_query ||= query_hash_with_best_bets
+  end
+
+  def filter
+    @_filter ||= filters_hash
   end
 
   def base_query

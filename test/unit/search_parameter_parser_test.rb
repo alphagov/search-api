@@ -528,15 +528,36 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       })}}), p.parsed_params)
   end
 
-  should "require the example_scope to be set to global" do
-    # Global scope is the only supported scope at present, but it's likely to
-    # be a surprising default, so we require that callers explicitly specify
-    # it.
+  should "require the example_scope to be set" do
     p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_fields:slug:title"])
 
-    assert_equal("example_scope parameter must currently be set to global when requesting examples", p.error)
+    assert_equal("example_scope parameter must be set to 'query' or 'global' when requesting examples", p.error)
     assert !p.valid?
     assert_equal(expected_params({facets: {}}), p.parsed_params)
+  end
+
+  should "allow example_scope to be set to 'query'" do
+    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"])
+
+    assert p.valid?
+    assert_equal(expected_params({
+      facets: {
+        "organisations" => expected_facet_params({
+          requested: 10,
+          examples: 5,
+          example_fields: ["slug", "title"],
+          example_scope: :query,
+        })
+      }
+    }), p.parsed_params)
+  end
+
+  should "complain about an invalid example_scope option" do
+    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_scope:invalid"])
+
+    assert_equal("example_scope parameter must be set to 'query' or 'global' when requesting examples", p.error)
+    assert !p.valid?
+    assert_equal(expected_params({}), p.parsed_params)
   end
 
   should "complain about a repeated example_scope option" do

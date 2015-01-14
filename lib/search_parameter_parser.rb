@@ -68,6 +68,12 @@ class BaseParameterParser
     value.link
   )
 
+  # Scopes that are allowed when requesting examples for facets
+  #  - query: Return only examples that match the query and filters
+  #  - global: Return examples for the facet regardless of whether they match
+  #            the query and filters
+  ALLOWED_EXAMPLE_SCOPES = [:global, :query]
+
   # The fields listed here are the only ones that can be returned in search
   # results.  These are listed and validated explicitly, rather than simply
   # allowing any field in the schema, to keep the set of such fields as minimal
@@ -532,12 +538,12 @@ private
       example_scope: example_scope,
     }
 
-    if @parsed_params[:examples] > 0 && @parsed_params[:example_scope] != :global
+    if @parsed_params[:examples] > 0 && !ALLOWED_EXAMPLE_SCOPES.include?(@parsed_params[:example_scope])
       # global scope means that examples are looked up for each facet value
       # across the whole collection, not just for documents matching the query.
       # This is likely to be a surprising default, so we require that callers
       # explicitly ask for it.
-      @errors << %{example_scope parameter must currently be set to global when requesting examples}
+      @errors << %{example_scope parameter must be set to 'query' or 'global' when requesting examples}
       @parsed_params[:examples] = 0
     end
 
@@ -618,6 +624,8 @@ private
     scope = single_param("example_scope", facet_description)
     if scope == "global"
       :global
+    elsif scope == "query"
+      :query
     else
       nil
     end

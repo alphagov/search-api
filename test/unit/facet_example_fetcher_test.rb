@@ -3,9 +3,21 @@ require "facet_example_fetcher"
 
 class FacetExampleFetcherTest < ShouldaUnitTestCase
 
-  def query_for_example(field, value, return_fields)
+  def query_for_example_global(field, value, return_fields)
     {
-      query: {filtered: {filter: {term: {field => value}}}},
+      query: {filtered: {query: nil, filter: {term: {field => value}}}},
+      size: 2,
+      fields: return_fields,
+      sort: [{popularity: {order: :desc}}]
+    }
+  end
+
+  def query_for_example_query(field, value, return_fields, query, filter)
+    {
+      query: {filtered: {query: query, filter: {and: [
+        {term: {field => value}},
+        filter
+      ]}}},
       size: 2,
       fields: return_fields,
       sort: [{popularity: {order: :desc}}]
@@ -26,7 +38,8 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
   context "no facet" do
     setup do
       @index = stub("content index")
-      @fetcher = FacetExampleFetcher.new(@index, {}, {})
+      @builder = stub("builder")
+      @fetcher = FacetExampleFetcher.new(@index, {}, {}, @builder)
     end
 
     should "get an empty hash of examples" do
@@ -34,7 +47,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
   end
 
-  context "one facet" do
+  context "one facet with global scope" do
     setup do
       @index = stub("content index")
       @example_fields = %w{link title other_field}
@@ -56,14 +69,73 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           }
         }
       }
-      @fetcher = FacetExampleFetcher.new(@index, main_query_response, params)
+      @builder = stub("builder")
+      @fetcher = FacetExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
     should "request and return facet examples" do
       @index.expects(:msearch)
         .with([
-          query_for_example("sector", "sector_1", @example_fields),
-          query_for_example("sector", "sector_2", @example_fields),
+          query_for_example_global("sector", "sector_1", @example_fields),
+          query_for_example_global("sector", "sector_2", @example_fields),
+        ]).returns({"responses" => [
+          response_for_example(3, ["example_1", "example_2"]),
+          response_for_example(1, ["example_3"]),
+        ]})
+
+      assert_equal({
+        "sector" => {
+          "sector_1" => {total: 3, examples: [
+              {"title" => "example_1"},
+              {"title" => "example_2"}
+            ]},
+          "sector_2" => {total: 1, examples: [
+              {"title" => "example_3"}
+            ]},
+        }
+      }, @fetcher.fetch)
+    end
+  end
+
+  context "one facet with query scope" do
+    setup do
+      @index = stub("content index")
+      @example_fields = %w{link title other_field}
+
+      main_query_response = {"facets" => {
+        "sector" => {
+          "terms" => [
+            {"term" => "sector_1"},
+            {"term" => "sector_2"},
+          ]
+        }
+      }}
+
+      params = {
+        facets: {
+          "sector" => {
+            requested: 10,
+            examples: 2,
+            example_fields: @example_fields,
+            example_scope: :query
+          }
+        }
+      }
+
+      @builder = stub("builder")
+      @fetcher = FacetExampleFetcher.new(@index, main_query_response, params, @builder)
+    end
+
+    should "request and return facet examples with query scope" do
+      query = {match: {_all: {query: "hello"}}}
+      filter = {terms: {organisations: ["hm-magic"]}}
+      @builder.expects(:query).returns(query)
+      @builder.expects(:filter).returns(filter)
+
+      @index.expects(:msearch)
+        .with([
+          query_for_example_query("sector", "sector_1", @example_fields, query, filter),
+          query_for_example_query("sector", "sector_2", @example_fields, query, filter),
         ]).returns({"responses" => [
           response_for_example(3, ["example_1", "example_2"]),
           response_for_example(1, ["example_3"]),
@@ -103,7 +175,8 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           }
         }
       }
-      @fetcher = FacetExampleFetcher.new(@index, main_query_response, params)
+      @builder = stub("builder")
+      @fetcher = FacetExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
     should "request and return facet examples" do
