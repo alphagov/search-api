@@ -16,6 +16,7 @@ class BaseParameterParser
   ALLOWED_FILTER_FIELDS = %w(
     document_type
     format
+    manual
     organisations
     section
     specialist_sectors
@@ -31,6 +32,7 @@ class BaseParameterParser
   # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
   ALLOWED_FACET_FIELDS = %w(
     format
+    manual
     organisations
     section
     specialist_sectors
