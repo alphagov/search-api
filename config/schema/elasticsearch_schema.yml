@@ -116,6 +116,7 @@ mappings:
         statistics_announcement_state: { type: string, index: not_analyzed, include_in_all: false }
         subsection:  { type: string, index: not_analyzed, include_in_all: false }
         subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
+        mainstream_browse_pages: { type: string, index: not_analyzed, include_in_all: false }
         tags: { type: string, index: not_analyzed, include_in_all: false }
         title:       { type: string, index: analyzed }
         topics: { type: string, index: not_analyzed, include_in_all: false }
