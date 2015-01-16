@@ -58,14 +58,10 @@ end
 def index_names
   case ENV["RUMMAGER_INDEX"]
   when "all"
-    content_index_names
+    search_config.index_names
   when String
     [ENV["RUMMAGER_INDEX"]]
   else
     raise "You must specify an index name in RUMMAGER_INDEX, or 'all'"
   end
-end
-
-def content_index_names
-  search_config.content_index_names
 end
