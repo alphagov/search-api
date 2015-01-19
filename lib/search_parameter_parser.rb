@@ -336,15 +336,16 @@ private
   end
 
   def schema
-    schema_mappings
+    @_schema ||= schema_mappings
       .merge( no_document_type => null_schema )
-      .fetch(document_type) {
-        raise "Schema not found for #{document_type}"
-      }
+      .fetch(document_type) do
+        @errors << %{Schema not found for document type "#{document_type}"%}
+        {}
+      end
   end
 
   def schema_fields
-    schema.fetch("properties").keys
+    schema.fetch("properties", {}).keys
   end
 
   def allowed_filter_fields
@@ -357,7 +358,7 @@ private
 
   def schema_get_field_type(field_name)
     schema
-      .fetch("properties")
+      .fetch("properties", {})
       .fetch(field_name, {})
       .fetch("type", "string")
   end
