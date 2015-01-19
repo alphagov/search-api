@@ -49,6 +49,8 @@ class BaseParameterParser
   # restriction could be relaxed in future.
   ALLOWED_FACET_EXAMPLE_FIELDS = %w(
     format
+    mainstream_browse_pages
+    manual
     organisations
     section
     specialist_sectors
@@ -92,6 +94,8 @@ class BaseParameterParser
     last_update
     latest_change_note
     link
+    mainstream_browse_pages
+    manual
     organisation_state
     organisations
     public_timestamp
