@@ -24,6 +24,11 @@
       "type": "float",
       "stored": true
     },
+    "entities": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false
+    },
     "organisations": {
       "type": "string",
       "index": "not_analyzed",
