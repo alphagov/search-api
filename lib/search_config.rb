@@ -2,6 +2,7 @@ require "yaml"
 require "elasticsearch/search_server"
 require "schema_config"
 require "entity_extractor_client"
+require "connection_error_swallower"
 require "plek"
 
 class SearchConfig
@@ -71,17 +72,24 @@ class SearchConfig
   end
 
   def entity_extractor
-    if @enable_entity_extraction
-      EntityExtractorClient.new(
-        Plek.current.find('entity-extractor'),
-        swallow_connection_errors: in_development_environment?
-      )
+    if @enable_entity_extraction && !in_development_environment?
+      standard_entity_extractor
+    elsif @enable_entity_extraction && in_development_environment?
+      error_swallowing_entity_extractor
     else
       null_entity_extractor
     end
   end
 
 private
+  def standard_entity_extractor
+    EntityExtractorClient.new(Plek.current.find('entity-extractor'))
+  end
+
+  def error_swallowing_entity_extractor
+    ConnectionErrorSwallower.new(standard_entity_extractor)
+  end
+
   def null_entity_extractor
     ->(_) { [] }
   end
