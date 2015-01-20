@@ -478,6 +478,7 @@ module Elasticsearch
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_mainstream_browse_page_field(doc_hash)
         doc_hash = prepare_tag_field(doc_hash)
+        doc_hash = prepare_entities_field(doc_hash)
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
@@ -518,11 +519,24 @@ module Elasticsearch
 
     def prepare_tag_field(doc_hash)
       tags = []
-      
+
       tags.concat(Array(doc_hash["organisations"]).map { |org| "organisation:#{org}" })
       tags.concat(Array(doc_hash["specialist_sectors"]).map { |sector| "sector:#{sector}" })
 
       doc_hash.merge("tags" => tags)
+    end
+
+    def prepare_entities_field(doc_hash)
+      entities = entity_extractor.call(doc_hash['indexable_content'] || "")
+      if entities.any?
+        doc_hash.merge("entities" => entities)
+      else
+        doc_hash
+      end
+    end
+
+    def entity_extractor
+      @search_config.entity_extractor
     end
 
     # If a document is a best bet, and is using the stemmed_query field, we

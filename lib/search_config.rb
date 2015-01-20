@@ -1,8 +1,15 @@
 require "yaml"
 require "elasticsearch/search_server"
 require "schema_config"
+require "entity_extractor_client"
+require "plek"
 
 class SearchConfig
+  attr_accessor :entity_extractor
+
+  def initialize(options = {})
+    @entity_extractor = options[:entity_extractor] || default_entity_extractor
+  end
 
   def search_server
     Elasticsearch::SearchServer.new(
@@ -61,6 +68,10 @@ class SearchConfig
 
   def metasearch_index_name
     elasticsearch["metasearch_index_name"]
+  end
+
+  def default_entity_extractor
+    EntityExtractorClient.new(Plek.current.find('entity-extractor'))
   end
 
 private

@@ -13,6 +13,8 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic", page_traffic_mappings, search_config)
     @wrapper.stubs(:traffic_index).returns(@traffic_index)
+    @entity_extractor = stub("entity_extractor", call: [])
+    @wrapper.stubs(:entity_extractor).returns(@entity_extractor)
     @traffic_index.stubs(:real_name).returns("page-traffic")
   end
 
@@ -51,6 +53,14 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://example.com:9200/page-traffic/_search").
             with(:body => expected_query.to_json).
             to_return(:status => 200, :body => response.to_json, :headers => {})
+  end
+
+  def successful_response
+    <<-eos
+{"took":5,"items":[
+  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+]}
+    eos
   end
 
   def test_real_name
@@ -251,6 +261,61 @@ eos
     @wrapper.add [document]
 
     assert_requested(request)
+  end
+
+  def test_calls_entity_extractor_and_stores_entities_in_index
+    stub_popularity_index_requests(["/foo/bar"], 1.0)
+
+    indexable_content = "this is the indexable content"
+    @entity_extractor.expects(:call).with(indexable_content).returns(["1"])
+
+    document = stub("document", elasticsearch_export: {
+      "_type" => "edition",
+      "link" => "/foo/bar",
+      "title" => "TITLE ONE",
+      "indexable_content" => indexable_content,
+    })
+
+    response = <<-eos
+{"took":5,"items":[
+{ "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+]}
+    eos
+
+    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+        body: /^{.*"entities":\["1"\]}/,
+        headers: {"Content-Type" => "application/json"}
+    ).to_return(body: response)
+    @wrapper.add [document]
+    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+  end
+
+  def test_stores_no_entities_if_none_found
+    stub_popularity_index_requests(["/foo/bar"], 1.0)
+
+    indexable_content = "this is the indexable content"
+    @entity_extractor.expects(:call).with(indexable_content).returns([])
+
+    document = stub("document", elasticsearch_export: {
+      "_type" => "edition",
+      "link" => "/foo/bar",
+      "title" => "TITLE ONE",
+      "indexable_content" => indexable_content,
+    })
+
+    response = <<-eos
+{"took":5,"items":[
+{ "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+]}
+    eos
+
+    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+        body: //,
+        headers: {"Content-Type" => "application/json"}
+    ).to_return(body: response)
+    @wrapper.add [document]
+    assert_not_requested :post, "http://example.com:9200/test-index/_bulk", body: /^{.*"entities":.*}/
+    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
   end
 
   def test_should_populate_tags_field
