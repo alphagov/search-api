@@ -1,4 +1,5 @@
 require "test_helper"
+require "fixtures/entity_extractor_stubs"
 require "app"
 require "elasticsearch/search_server"
 require "sidekiq/testing/inline"  # Make all queued jobs run immediately
@@ -6,6 +7,7 @@ require 'debugger'
 
 module IntegrationFixtures
   include Fixtures::DefaultMappings
+  include Fixtures::EntityExtractorStubs
 
   def sample_document_attributes
     {
@@ -64,6 +66,7 @@ module ElasticsearchIntegration
       "govuk_index_names" => content_index_names,
       "metasearch_index_name" => metasearch_index_name,
     })
+    stub_entity_extractor
     app.settings.stubs(:default_index_name).returns(@default_index_name)
     app.settings.stubs(:enable_queue).returns(false)
   end
