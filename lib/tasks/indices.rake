@@ -23,8 +23,23 @@ namespace :rummager do
     end
   end
 
-  desc "Migrates an index group to a new index"
-  task :migrate_index do
+  desc "Migrates an index group to a new index, optionally extracting entities (default false)
+
+Seamlessly creates a new index in the same index_group using the latest
+schema, copies over all data and switches over the index_groups alias to point
+to the new index on success. For safety it verifies that the new index
+contains exactly the same number of documents as the original index.
+
+You should run this task if the index schema has changed.
+
+The extract_entities option allows you to enable entity_extraction during the
+index migration. This is a potentially slow operation for an entire index
+(10ms * 100k docs = circa 15 mins). Normally you don't want to do this because
+the entities data will not change, however if you want to rebuild the entities
+data for some reason, you can enable this flag.
+"
+  task :migrate_index, [:extract_entities] do |t, args|
+    extract_entities = (args[:extract_entities] || "") =~ /\A(y|true|1|yes)\Z/
     index_names.each do |index_name|
       index_group = search_server.index_group(index_name)
 
@@ -33,7 +48,7 @@ namespace :rummager do
 
       if old_index
         old_index.with_lock do
-          new_index.populate_from old_index
+          new_index.populate_from(old_index, {extract_entities: extract_entities})
 
           # Now bulk inserts fail if any of their operations fail (de47247),
           # and now we lock the old index to avoid any writes (87a7c60), the
