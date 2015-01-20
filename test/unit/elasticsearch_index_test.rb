@@ -13,7 +13,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic", page_traffic_mappings, search_config)
     @wrapper.stubs(:traffic_index).returns(@traffic_index)
-    @entity_extractor = stub("entity_extractor", call: [])
+    @entity_extractor = stub("entity_extractor", call: nil)
     @wrapper.stubs(:entity_extractor).returns(@entity_extractor)
     @traffic_index.stubs(:real_name).returns("page-traffic")
   end
