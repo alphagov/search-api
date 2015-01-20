@@ -1,8 +1,16 @@
 require "yaml"
 require "elasticsearch/search_server"
 require "schema_config"
+require "entity_extractor_client"
+require "connection_error_swallower"
+require "plek"
 
 class SearchConfig
+  attr_accessor :enable_entity_extraction
+
+  def initialize
+    @enable_entity_extraction = in_development_environment?
+  end
 
   def search_server
     Elasticsearch::SearchServer.new(
@@ -63,7 +71,33 @@ class SearchConfig
     elasticsearch["metasearch_index_name"]
   end
 
+  def entity_extractor
+    if @enable_entity_extraction && !in_development_environment?
+      standard_entity_extractor
+    elsif @enable_entity_extraction && in_development_environment?
+      error_swallowing_entity_extractor
+    else
+      null_entity_extractor
+    end
+  end
+
 private
+  def standard_entity_extractor
+    EntityExtractorClient.new(Plek.current.find('entity-extractor'))
+  end
+
+  def error_swallowing_entity_extractor
+    ConnectionErrorSwallower.new(standard_entity_extractor)
+  end
+
+  def null_entity_extractor
+    ->(_) { [] }
+  end
+
+  def in_development_environment?
+    ENV['RACK_ENV'] == 'development'
+  end
+
   def config_for(kind)
     YAML.load_file(File.expand_path("../#{kind}.yml", File.dirname(__FILE__)))
   end
