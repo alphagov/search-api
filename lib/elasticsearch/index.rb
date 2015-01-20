@@ -130,7 +130,7 @@ module Elasticsearch
       end
     end
 
-    def add(documents, timeout_options = nil)
+    def add(documents, options = {})
       if documents.size == 1
         logger.info "Adding #{documents.size} document to #{index_name}"
       else
@@ -138,7 +138,7 @@ module Elasticsearch
       end
 
       document_hashes = documents.map { |d| d.elasticsearch_export }
-      bulk_index(document_hashes, timeout_options)
+      bulk_index(document_hashes, options)
     end
 
     # Add documents asynchronously to the index.
@@ -150,9 +150,9 @@ module Elasticsearch
       queue.queue_many(document_hashes)
     end
 
-    def bulk_index(document_hashes_or_payload, timeout_options = nil )
-      client = timeout_options ? build_client(timeout_options) : @client
-      response = client.post("_bulk", bulk_payload(document_hashes_or_payload), content_type: :json)
+    def bulk_index(document_hashes_or_payload, options = {} )
+      client = build_client(options)
+      response = client.post("_bulk", bulk_payload(document_hashes_or_payload, options), content_type: :json)
       items = MultiJson.decode(response.body)["items"]
       failed_items = items.select do |item|
         data = item["index"] || item["create"]
@@ -200,15 +200,16 @@ module Elasticsearch
       queue.queue_amend(link, updates)
     end
 
-    def populate_from(source_index)
+    def populate_from(source_index, option_overrides = {})
       total_indexed = 0
-      timeout_options = {
+      options = {
         timeout: LONG_TIMEOUT_SECONDS,
-        open_timeout: LONG_OPEN_TIMEOUT_SECONDS
-      }
-      all_docs = source_index.all_documents(timeout_options)
+        open_timeout: LONG_OPEN_TIMEOUT_SECONDS,
+        extract_entities: false
+      }.merge(option_overrides)
+      all_docs = source_index.all_documents(options)
       all_docs.each_slice(self.class.populate_batch_size) do |documents|
-        add(documents, timeout_options)
+        add(documents, options)
         total_indexed += documents.length
         logger.info do
           progress = "#{total_indexed}/#{all_docs.size}"
@@ -236,8 +237,8 @@ module Elasticsearch
       Document.from_hash(hash, @mappings)
     end
 
-    def all_documents(timeout_options = nil)
-      client = timeout_options ? build_client(timeout_options) : @client
+    def all_documents(options = nil)
+      client = options ? build_client(options) : @client
 
       # Set off a scan query to get back a scroll ID and result count
       search_body = {query: {match_all: {}}}
@@ -406,17 +407,17 @@ module Elasticsearch
       Logging.logger[self]
     end
 
-    def index_items_from_document_hashes(document_hashes)
+    def index_items_from_document_hashes(document_hashes, options)
       links = document_hashes.map {
         |doc_hash| doc_hash["link"]
       }.compact
       popularities = lookup_popularities(links)
       document_hashes.map { |doc_hash|
-        [index_action(doc_hash).to_json, index_doc(doc_hash, popularities).to_json]
+        [index_action(doc_hash).to_json, index_doc(doc_hash, popularities, options).to_json]
       }
     end
 
-    def index_items_from_raw_string(payload)
+    def index_items_from_raw_string(payload, options)
       actions = []
       links = []
       payload.each_line.each_slice(2).map do |command, doc|
@@ -431,7 +432,7 @@ module Elasticsearch
           doc_hash["_type"] = command_hash["index"]["_type"]
           [
             command_hash.to_json,
-            index_doc(doc_hash, popularities).to_json
+            index_doc(doc_hash, popularities, options).to_json
           ]
         else
           [
@@ -452,11 +453,11 @@ module Elasticsearch
     #   { <document source> }
     #
     # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
-    def bulk_payload(document_hashes_or_payload)
+    def bulk_payload(document_hashes_or_payload, options)
       if document_hashes_or_payload.is_a?(Array)
-        index_items = index_items_from_document_hashes(document_hashes_or_payload)
+        index_items = index_items_from_document_hashes(document_hashes_or_payload, options)
       else
-        index_items = index_items_from_raw_string(document_hashes_or_payload)
+        index_items = index_items_from_raw_string(document_hashes_or_payload, options)
       end
 
       # Make sure the payload ends with a newline character: elasticsearch
@@ -473,12 +474,14 @@ module Elasticsearch
       }
     end
 
-    def index_doc(doc_hash, popularities)
+    def index_doc(doc_hash, popularities, options)
       if @is_content_index
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_mainstream_browse_page_field(doc_hash)
         doc_hash = prepare_tag_field(doc_hash)
-        doc_hash = prepare_entities_field(doc_hash)
+        if options.fetch(:extract_entities, true)
+          doc_hash = prepare_entities_field(doc_hash)
+        end
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)

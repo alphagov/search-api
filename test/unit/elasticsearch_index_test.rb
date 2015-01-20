@@ -707,13 +707,35 @@ eos
       open_timeout: Elasticsearch::Index::LONG_OPEN_TIMEOUT_SECONDS
     }
     stub_doc = stub("document")
-    old_index = mock("old index") do
-      stubs(:index_name).returns("Old index")  # Logging: not critical
-      expects(:all_documents).with(timeout_params).returns([stub_doc])
-    end
-    @wrapper.expects(:add).with([stub_doc], timeout_params)
+    old_index = mock("old index")
+    old_index.stubs(:index_name).returns("Old index")
+    old_index.expects(:all_documents).with(has_entries(timeout_params)).returns([stub_doc])
+    @wrapper.expects(:add).with([stub_doc], has_entries(timeout_params))
     @wrapper.expects(:commit).at_most_once  # Not central to this test
 
+    @wrapper.populate_from(old_index)
+  end
+
+  def test_should_not_call_entity_extractor_on_population
+    stub_popularity_index_requests(["/foo/bar"], 1.0)
+    document = stub("document", elasticsearch_export: {
+      "_type" => "edition",
+      "link" => "/foo/bar",
+      "title" => "TITLE ONE",
+      "indexable_content" => "the fake document content"
+    })
+    old_index = mock("old index") do
+      stubs(:index_name).returns("Old index")
+      stubs(:all_documents).returns([document])
+    end
+    stub_request(:post, "http://example.com:9200/#{@wrapper.index_name}/_bulk").with(
+        body: //,
+        headers: {"Content-Type" => "application/json"}
+    ).to_return(body: '{"items":[]}')
+
+    @entity_extractor.unstub(:call)
+    @entity_extractor.expects(:call).never
+    @wrapper.stubs(:commit)
     @wrapper.populate_from(old_index)
   end
 
