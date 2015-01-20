@@ -531,7 +531,7 @@ module Elasticsearch
 
     def prepare_entities_field(doc_hash)
       entities = entity_extractor.call(doc_hash['indexable_content'] || "")
-      if entities.any?
+      if entities
         doc_hash.merge("entities" => entities)
       else
         doc_hash

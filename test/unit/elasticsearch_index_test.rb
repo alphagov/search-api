@@ -290,11 +290,11 @@ eos
     assert_requested(:post, "http://example.com:9200/test-index/_bulk")
   end
 
-  def test_stores_no_entities_if_none_found
+  def test_stores_no_entities_if_entity_extraction_returns_nil_due_to_swallowing_an_error
     stub_popularity_index_requests(["/foo/bar"], 1.0)
 
     indexable_content = "this is the indexable content"
-    @entity_extractor.expects(:call).with(indexable_content).returns([])
+    @entity_extractor.expects(:call).with(indexable_content).returns(nil)
 
     document = stub("document", elasticsearch_export: {
       "_type" => "edition",
