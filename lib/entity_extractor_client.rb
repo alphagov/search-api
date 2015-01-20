@@ -11,18 +11,37 @@ class EntityExtractorClient
     @service_base_url = URI.parse(service_base_url)
     @options = default_options.merge(options)
     @logger = options[:logger] || Logging.logger[self]
+    @swallow_connection_errors = options[:swallow_connection_errors] || false
+    @had_connection_error = false
   end
 
   def call(document)
-    response = RestClient.post(extract_url, document, @options)
-    JSON.parse(response)
-  rescue RestClient::Exception => e
-    logger.error(e)
-    nil
+    if swallow_connection_errors? && had_connection_error?
+      nil
+    else
+      response = RestClient.post(extract_url, document, @options)
+      JSON.parse(response)
+    end
+  rescue Errno::ECONNREFUSED => e
+    if swallow_connection_errors?
+      logger.error(e)
+      @had_connection_error = true
+      nil
+    else
+      raise
+    end
   end
 
 private
   attr_reader :logger
+
+  def swallow_connection_errors?
+    @swallow_connection_errors
+  end
+
+  def had_connection_error?
+    @had_connection_error
+  end
 
   def extract_url
     service_base_url.clone.tap do |url|

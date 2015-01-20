@@ -72,7 +72,10 @@ class SearchConfig
 
   def entity_extractor
     if @enable_entity_extraction
-      EntityExtractorClient.new(Plek.current.find('entity-extractor'))
+      EntityExtractorClient.new(
+        Plek.current.find('entity-extractor'),
+        swallow_connection_errors: in_development_environment?
+      )
     else
       null_entity_extractor
     end
