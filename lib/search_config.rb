@@ -5,10 +5,10 @@ require "entity_extractor_client"
 require "plek"
 
 class SearchConfig
-  attr_accessor :entity_extractor
+  attr_accessor :enable_entity_extraction
 
-  def initialize(options = {})
-    @entity_extractor = options[:entity_extractor] || default_entity_extractor
+  def initialize
+    @enable_entity_extraction = in_development_environment?
   end
 
   def search_server
@@ -70,11 +70,23 @@ class SearchConfig
     elasticsearch["metasearch_index_name"]
   end
 
-  def default_entity_extractor
-    EntityExtractorClient.new(Plek.current.find('entity-extractor'))
+  def entity_extractor
+    if @enable_entity_extraction
+      EntityExtractorClient.new(Plek.current.find('entity-extractor'))
+    else
+      null_entity_extractor
+    end
   end
 
 private
+  def null_entity_extractor
+    ->(_) { [] }
+  end
+
+  def in_development_environment?
+    ENV['RACK_ENV'] == 'development'
+  end
+
   def config_for(kind)
     YAML.load_file(File.expand_path("../#{kind}.yml", File.dirname(__FILE__)))
   end
