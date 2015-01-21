@@ -72,7 +72,7 @@ class SearchConfig
   end
 
   def entity_extractor
-    if @enable_entity_extraction && !in_development_environment?
+    @entity_extractor ||= if @enable_entity_extraction && !in_development_environment?
       standard_entity_extractor
     elsif @enable_entity_extraction && in_development_environment?
       error_swallowing_entity_extractor
