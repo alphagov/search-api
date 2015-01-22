@@ -264,7 +264,7 @@ module Elasticsearch
 
       batch_size = self.class.scroll_batch_size
       ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
-        hit["fields"]["link"]
+        hit.fetch("fields", {})["link"]
       end
     end
 
