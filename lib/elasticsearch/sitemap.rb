@@ -92,7 +92,9 @@ class SitemapGenerator
 
       @sitemap_indices.each do |index|
         index.all_document_links(EXCLUDED_FORMATS).each do |document|
-          yielder << document
+          if document
+            yielder << document
+          end
         end
       end
     end

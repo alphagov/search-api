@@ -75,6 +75,9 @@ class SitemapTest < IntegrationTest
         "indexable_content" => "Tax, benefits, roads and stuff"
       },
       {
+        "title" => "Bad document missing a link field",
+      },
+      {
         "title" => "Some content from Inside Gov",
         "description" => "We list some inside gov results in the mainstream index.",
         "format" => "inside-government-link",
