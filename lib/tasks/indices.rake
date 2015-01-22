@@ -3,7 +3,7 @@ namespace :rummager do
   desc "Lists current Rummager indices, pass [all] to show inactive indices"
   task :list_indices, :all do |_, args|
     show_all = args[:all] || false
-    all_index_names.each do |name|
+    index_names.each do |name|
       index_group = search_server.index_group(name)
       active_index_name = index_group.current.real_name
       if show_all
