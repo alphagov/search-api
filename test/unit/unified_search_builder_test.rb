@@ -9,6 +9,10 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   # Set BASE_FILTERS if needed to add some default filters to search.
   BASE_FILTERS = nil
 
+  def stub_entity_extractor
+    stub("entity extractor", call: [])
+  end
+
   def stub_zero_best_bets
     @metasearch_index = stub("metasearch index")
     @metasearch_index.stubs(:raw_search).returns({
@@ -70,12 +74,20 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     )
   end
 
+  def make_search_builder(options={})
+    UnifiedSearchBuilder.new(
+      query_options(options),
+      @metasearch_index,
+      stub_entity_extractor
+    )
+  end
+
   def setup_best_bets_query(best_bets, worst_bets)
     setup_best_bets([], [])
-    @builder_without_best_bets = UnifiedSearchBuilder.new(query_options, @metasearch_index)
+    @builder_without_best_bets = make_search_builder
     @query_without_best_bets = @builder_without_best_bets.payload[:query]
     setup_best_bets(best_bets, worst_bets)
-    @builder = UnifiedSearchBuilder.new(query_options, @metasearch_index)
+    @builder = make_search_builder
   end
 
   def with_base_filters(filter)
@@ -94,10 +106,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "unfiltered search" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options,
-        @metasearch_index
-      )
+      @builder = make_search_builder
     end
 
     should "have correct 'from' parameter in payload" do
@@ -132,11 +141,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with one filter" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          filters: [ text_filter("organisations", ["hm-magic"]) ],
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        filters: [ text_filter("organisations", ["hm-magic"]) ]
       )
     end
 
@@ -162,11 +168,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with a filter with multiple options" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          filters: [ text_filter("organisations", ["hm-magic", "hmrc"]) ],
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        filters: [ text_filter("organisations", ["hm-magic", "hmrc"]) ],
       )
     end
 
@@ -193,14 +196,11 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with multiple filters" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          filters: [
-            text_filter("organisations", ["hm-magic", "hmrc"]),
-            text_filter("section", ["levitation"]),
-          ],
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        filters: [
+          text_filter("organisations", ["hm-magic", "hmrc"]),
+          text_filter("section", ["levitation"]),
+        ],
       )
     end
 
@@ -231,11 +231,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with ascending sort" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          order: ["public_timestamp", "asc"],
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        order: ["public_timestamp", "asc"],
       )
     end
 
@@ -269,11 +266,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with descending sort" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          order: ["public_timestamp", "desc"],
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        order: ["public_timestamp", "desc"],
       )
     end
 
@@ -307,11 +301,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with explicit return fields" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          return_fields: ['title'],
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        return_fields: ['title'],
       )
     end
 
@@ -326,11 +317,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with facet" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          facets: {"organisations" => 10},
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        facets: {"organisations" => 10},
       )
     end
 
@@ -359,12 +347,9 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with facet and filter on same field" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          filters: [ text_filter("organisations", ["hm-magic"]) ],
-          facets: {"organisations" => 10},
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        filters: [ text_filter("organisations", ["hm-magic"]) ],
+        facets: {"organisations" => 10},
       )
     end
 
@@ -392,12 +377,9 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with facet and filter on different field" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(
-          filters: [ text_filter("section", "levitation") ],
-          facets: {"organisations" => 10},
-        ),
-        @metasearch_index
+      @builder = make_search_builder(
+        filters: [ text_filter("section", "levitation") ],
+        facets: {"organisations" => 10},
       )
     end
 
@@ -505,9 +487,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with debug disabling use of best bets" do
     setup do
       # No need to set up best bets query.
-      @builder = UnifiedSearchBuilder.new(
-        query_options(debug: {disable_best_bets: true}),
-        @metasearch_index
+      @builder = make_search_builder(
+        debug: {disable_best_bets: true}
       )
     end
 
@@ -519,9 +500,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with debug disabling use of popularity" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(debug: {disable_popularity: true}),
-        @metasearch_index
+      @builder = make_search_builder(
+        debug: {disable_popularity: true}
       )
     end
 
@@ -535,9 +515,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with debug explain" do
     setup do
       stub_zero_best_bets
-      @builder = UnifiedSearchBuilder.new(
-        query_options(debug: {explain: true}),
-        @metasearch_index
+      @builder = make_search_builder(
+        debug: {explain: true},
       )
     end
 
@@ -549,14 +528,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   context "search with debug disabling use of synonyms" do
     setup do
       stub_zero_best_bets
-      @builder_with_synonyms = UnifiedSearchBuilder.new(
-        query_options,
-        @metasearch_index
-      )
-      @builder_without_synonyms = UnifiedSearchBuilder.new(
-        query_options(debug: {disable_synonyms: true}),
-        @metasearch_index
-      )
+      @builder_with_synonyms = make_search_builder
+      @builder_without_synonyms = make_search_builder(debug: {disable_synonyms: true})
     end
 
     should "not mention the query_default analyzer" do

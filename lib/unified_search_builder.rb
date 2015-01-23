@@ -11,7 +11,7 @@ class UnifiedSearchBuilder
   GOVERNMENT_BOOST_FACTOR = 0.4
   POPULARITY_OFFSET = 0.001
 
-  def initialize(params, metaindex)
+  def initialize(params, metaindex, entity_extractor)
     @params = params
     @query = params[:query]
     if @params[:debug][:disable_best_bets]
@@ -19,6 +19,7 @@ class UnifiedSearchBuilder
     else
       @best_bets_checker = BestBetsChecker.new(metaindex, @query)
     end
+    @entity_extractor = entity_extractor
   end
 
   def payload
@@ -76,7 +77,7 @@ class UnifiedSearchBuilder
   end
 
   def boost_filters
-    format_boosts + [time_boost] + [closed_org_boost] + [devolved_org_boost]
+    (format_boosts + [time_boost, closed_org_boost, devolved_org_boost, entities_boost]).compact
   end
 
   def best_bets
@@ -397,4 +398,14 @@ class UnifiedSearchBuilder
     }
   end
 
+  def entities_boost
+    {
+      filter: { terms: { entities: entities} },
+      boost: 20
+    } unless entities.empty?
+  end
+
+  def entities
+    @entities ||= @entity_extractor.call(@query) || []
+  end
 end

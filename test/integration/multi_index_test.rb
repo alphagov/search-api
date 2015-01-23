@@ -16,6 +16,12 @@ class MultiIndexTest < IntegrationTest
     @auxiliary_indexes.each do |index|
       create_test_index(index)
     end
+
+    reset_content_indexes
+    populate_content_indexes
+  end
+
+  def reset_content_indexes
     INDEX_NAMES.each do |index_name|
       try_remove_test_index(index_name)
       if index_name == "government_test"
@@ -24,6 +30,11 @@ class MultiIndexTest < IntegrationTest
       add_field_to_mappings("topics")
       add_field_to_mappings("section")
       create_test_index(index_name)
+    end
+  end
+
+  def populate_content_indexes
+    INDEX_NAMES.each do |index_name|
       add_sample_documents(index_name, 2)
     end
   end

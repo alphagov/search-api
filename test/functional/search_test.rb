@@ -263,6 +263,7 @@ class SearchTest < IntegrationTest
     stub_index.expects(:index_name).returns("mainstream,government,detailed")
     stub_metasearch_index.expects(:analyzed_best_bet_query).with("bob").returns("bob")
     stub_metasearch_index.expects(:raw_search).returns({"hits" => {"hits" => []}})
+    stub_entity_extractor
     SpecialistSectorRegistry.any_instance.expects(:[])
       .with("oil-and-gas/licensing")
       .returns(oil_gas_sector_fields)
