@@ -163,12 +163,16 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     end
   end
 
+  def make_searcher
+    UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester, stub_entity_extractor)
+  end
+
   context "unfiltered, unsorted search" do
 
     setup do
       @combined_index = stub("unified index")
       mock_best_bets("cheese")
-      @searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester, stub_entity_extractor)
+      @searcher = make_searcher
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -220,7 +224,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     setup do
       @combined_index = stub("unified index")
       mock_best_bets("cheese")
-      @searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester, stub_entity_extractor)
+      @searcher = make_searcher
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -269,7 +273,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     setup do
       @combined_index = stub("unified index")
       mock_best_bets("cheese")
-      @searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester, stub_entity_extractor)
+      @searcher = make_searcher
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
@@ -318,7 +322,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     setup do
       @combined_index = stub("unified index")
       mock_best_bets("cheese")
-      @searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester, stub_entity_extractor)
+      @searcher = make_searcher
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
