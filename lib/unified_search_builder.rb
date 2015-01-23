@@ -400,12 +400,12 @@ class UnifiedSearchBuilder
 
   def entities_boost
     {
-      filter: { terms: { entities: find_entities} },
+      filter: { terms: { entities: entities} },
       boost: 20
-    } unless find_entities.empty?
+    } unless entities.empty?
   end
 
-  def find_entities
+  def entities
     @entities ||= @entity_extractor.call(@query) || []
   end
 end

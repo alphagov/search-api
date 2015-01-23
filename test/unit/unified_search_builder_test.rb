@@ -517,9 +517,6 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     end
   end
 
-  context "" do
-  end
-
   context "search with debug disabling use of best bets" do
     setup do
       # No need to set up best bets query.
