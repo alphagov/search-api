@@ -9,7 +9,7 @@ class SearchConfig
   attr_accessor :enable_entity_extraction
 
   def initialize
-    @enable_entity_extraction = in_development_environment?
+    @enable_entity_extraction = nil
   end
 
   def search_server
@@ -72,10 +72,13 @@ class SearchConfig
   end
 
   def entity_extractor
-    @entity_extractor ||= if @enable_entity_extraction && !in_development_environment?
-      standard_entity_extractor
-    elsif @enable_entity_extraction && in_development_environment?
-      error_swallowing_entity_extractor
+    raise "Must set 'enable_entity_extraction' in initializer" if @enable_entity_extraction.nil?
+    @entity_extractor ||= if @enable_entity_extraction
+      if in_development_environment?
+        error_swallowing_entity_extractor
+      else
+        standard_entity_extractor
+      end
     else
       null_entity_extractor
     end
@@ -95,7 +98,7 @@ private
   end
 
   def in_development_environment?
-    ENV['RACK_ENV'] == 'development'
+    %w{development test}.include?(ENV['RACK_ENV'])
   end
 
   def config_for(kind)
