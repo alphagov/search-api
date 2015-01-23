@@ -9,6 +9,10 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
   # Set BASE_FILTERS if needed to add some default filters to search.
   BASE_FILTERS = nil
 
+  def stub_entity_extractor
+    stub("entity extractor", call: [])
+  end
+
   def stub_zero_best_bets
     @metasearch_index = stub("metasearch index")
     @metasearch_index.stubs(:raw_search).returns({
@@ -72,10 +76,11 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
 
   def setup_best_bets_query(best_bets, worst_bets)
     setup_best_bets([], [])
-    @builder_without_best_bets = UnifiedSearchBuilder.new(query_options, @metasearch_index)
+    @builder_without_best_bets = UnifiedSearchBuilder.new(query_options, @metasearch_index, stub_entity_extractor)
     @query_without_best_bets = @builder_without_best_bets.payload[:query]
     setup_best_bets(best_bets, worst_bets)
-    @builder = UnifiedSearchBuilder.new(query_options, @metasearch_index)
+    @builder = UnifiedSearchBuilder.new(query_options, @metasearch_index,
+                                        stub_entity_extractor)
   end
 
   def with_base_filters(filter)
@@ -96,7 +101,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new(
         query_options,
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -136,7 +142,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         query_options(
           filters: [ text_filter("organisations", ["hm-magic"]) ],
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -166,7 +173,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         query_options(
           filters: [ text_filter("organisations", ["hm-magic", "hmrc"]) ],
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -200,7 +208,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
             text_filter("section", ["levitation"]),
           ],
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -235,7 +244,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         query_options(
           order: ["public_timestamp", "asc"],
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -273,7 +283,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         query_options(
           order: ["public_timestamp", "desc"],
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -311,7 +322,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         query_options(
           return_fields: ['title'],
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -330,7 +342,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
         query_options(
           facets: {"organisations" => 10},
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -364,7 +377,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
           filters: [ text_filter("organisations", ["hm-magic"]) ],
           facets: {"organisations" => 10},
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -397,7 +411,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
           filters: [ text_filter("section", "levitation") ],
           facets: {"organisations" => 10},
         ),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -502,12 +517,16 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     end
   end
 
+  context "" do
+  end
+
   context "search with debug disabling use of best bets" do
     setup do
       # No need to set up best bets query.
       @builder = UnifiedSearchBuilder.new(
         query_options(debug: {disable_best_bets: true}),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -521,7 +540,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new(
         query_options(debug: {disable_popularity: true}),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -537,7 +557,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = UnifiedSearchBuilder.new(
         query_options(debug: {explain: true}),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
@@ -551,11 +572,13 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder_with_synonyms = UnifiedSearchBuilder.new(
         query_options,
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
       @builder_without_synonyms = UnifiedSearchBuilder.new(
         query_options(debug: {disable_synonyms: true}),
-        @metasearch_index
+        @metasearch_index,
+        stub_entity_extractor,
       )
     end
 
