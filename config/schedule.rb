@@ -1,5 +1,5 @@
 set :output, {:error => 'log/cron.error.log', :standard => 'log/cron.log'}
-job_type :rake, 'cd :path && /usr/local/bin/govuk_setenv search bundle exec rake :task'
+job_type :rake, 'cd :path && /usr/local/bin/govuk_setenv search bundle exec rake :task :output'
 
 # Sitemap filenames are generated based on the current day and hour. Putting
 # this at 10 past gets around any problems that might arise from running just
