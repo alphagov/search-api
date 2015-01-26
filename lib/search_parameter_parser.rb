@@ -501,6 +501,8 @@ private
         options[:disable_popularity] = true
       when "disable_synonyms"
         options[:disable_synonyms] = true
+      when "disable_entities"
+        options[:disable_entities] = true
       when "explain"
         options[:explain] = true
       else

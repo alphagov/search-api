@@ -19,7 +19,11 @@ class UnifiedSearchBuilder
     else
       @best_bets_checker = BestBetsChecker.new(metaindex, @query)
     end
-    @entity_extractor = entity_extractor
+    if @params[:debug][:disable_entities]
+      @entity_extractor = ->(_) { [] }
+    else
+      @entity_extractor = entity_extractor
+    end
   end
 
   def payload
