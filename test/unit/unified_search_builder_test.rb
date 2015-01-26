@@ -539,4 +539,32 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       assert_match(/query_default/, query_with_synonyms.to_s)
     end
   end
+
+  context "search with debug disabling use of entities" do
+    setup do
+      stub_zero_best_bets
+      @entity_extractor = stub("entity extractor", call: ["1"])
+    end
+
+    should "mention entities in the query if the disable_entities setting is false" do
+      builder = UnifiedSearchBuilder.new(
+        query_options(debug: {disable_entities: false}),
+        @metasearch_index,
+        @entity_extractor,
+      )
+      query = builder.payload[:query]
+      assert_match(/entities/, query.to_s)
+    end
+
+    should "not mention entities in the query if the disable_entities setting is true" do
+      builder = UnifiedSearchBuilder.new(
+        query_options(debug: {disable_entities: true}),
+        @metasearch_index,
+        @entity_extractor,
+      )
+      @entity_extractor.expects(:call).never
+      query = builder.payload[:query]
+      refute_match(/entities/, query.to_s)
+    end
+  end
 end
