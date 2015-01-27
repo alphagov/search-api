@@ -87,7 +87,8 @@ data for some reason, you can enable this flag.
   end
 
   desc "Migrates from an index with the actual index name to an alias"
-  task :migrate_from_unaliased_index do
+  task :migrate_from_unaliased_index, [:extract_entities] do |t, args|
+    extract_entities = (args[:extract_entities] || "") =~ /\A(y|true|1|yes)\Z/
     # WARNING: this is potentially dangerous, and will leave the search
     # unavailable for a very short (sub-second) period of time
 
@@ -105,7 +106,7 @@ data for some reason, you can enable this flag.
       logger.info "...index '#{new_index.real_name}' created"
 
       logger.info "Populating new #{index_name} index..."
-      new_index.populate_from index_group.current
+      new_index.populate_from(index_group.current, {extract_entities: extract_entities})
       logger.info "...index populated."
 
       logger.info "Deleting #{index_name} index..."
