@@ -6,8 +6,6 @@
       "include_in_all": false,
       "details": {
         "name": "Alert type",
-        "ui_widget_type": "multi-select",
-        "preposition": "for",
         "allowed_values": [
           {
             "label": "Drug alert",
@@ -26,8 +24,6 @@
       "include_in_all": false,
       "details": {
         "name": "Medical specialism",
-        "ui_widget_type": "multi-select",
-        "preposition": "about",
         "allowed_values": [
           {
             "label": "Anaesthetics",

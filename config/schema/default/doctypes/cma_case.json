@@ -6,8 +6,6 @@
       "include_in_all": false,
       "details": {
         "name": "Case type",
-        "ui_widget_type": "multi-select",
-        "preposition": "of type",
         "allowed_values": [
           {
             "label": "CA98 and civil cartels",
@@ -46,8 +44,6 @@
       "include_in_all": false,
       "details": {
         "name": "Case state",
-        "ui_widget_type": "single-select",
-        "preposition": "which are",
         "allowed_values": [
           {
             "label": "Open",
@@ -56,11 +52,6 @@
           {
             "label": "Closed",
             "value": "closed"
-          },
-          {
-            "label": "All",
-            "value": "",
-            "non_described": true
           }
         ]
       }
@@ -71,8 +62,6 @@
       "include_in_all": false,
       "details": {
         "name": "Market sector",
-        "ui_widget_type": "multi-select",
-        "preposition": "about",
         "allowed_values": [
           {
             "label": "Aerospace",
@@ -199,8 +188,6 @@
       "include_in_all": false,
       "details": {
         "name": "Outcome",
-        "ui_widget_type": "multi-select",
-        "preposition": "with outcome",
         "allowed_values": [
           {
             "label": "CA98 - no grounds for action",

@@ -6,7 +6,6 @@
       "include_in_all": false,
       "details": {
         "name": "Railway type",
-        "ui_widget_type": "multi-select",
         "allowed_values": [
           {
             "label": "Heavy rail",
@@ -33,7 +32,6 @@
       "include_in_all": false,
       "details": {
         "name": "Report type",
-        "ui_widget_type": "multi-select",
         "allowed_values": [
           {
             "label": "Investigation report",
@@ -60,4 +58,3 @@
     }
   }
 }
-

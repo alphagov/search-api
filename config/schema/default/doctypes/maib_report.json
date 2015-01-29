@@ -6,7 +6,6 @@
       "include_in_all": false,
       "details": {
         "name": "Vessel type",
-        "ui_widget_type": "multi-select",
         "allowed_values": [
           {
             "label": "Merchant vessel 100 gross tons or over",
@@ -37,7 +36,6 @@
       "include_in_all": false,
       "details": {
         "name": "Report type",
-        "ui_widget_type": "multi-select",
         "allowed_values": [
           {
             "label": "Investigation report",
@@ -68,4 +66,3 @@
     }
   }
 }
-
