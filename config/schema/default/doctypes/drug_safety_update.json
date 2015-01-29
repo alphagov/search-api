@@ -6,7 +6,6 @@
       "include_in_all": false,
       "details": {
         "name": "Therapeutic area",
-        "ui_widget_type": "multi-select",
         "allowed_values": [
           {
             "label": "Anaesthesia and intensive care",
