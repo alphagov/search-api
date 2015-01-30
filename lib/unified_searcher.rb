@@ -6,21 +6,19 @@ require "unified_search_presenter"
 
 class UnifiedSearcher
 
-  attr_reader :index, :registries, :registry_by_field, :suggester, :entity_extractor
+  attr_reader :index, :registries, :registry_by_field, :suggester
 
-  def initialize(index, metaindex, registries, registry_by_field, suggester,
-                 entity_extractor)
+  def initialize(index, metaindex, registries, registry_by_field, suggester)
     @index = index
     @metaindex = metaindex
     @registries = registries
     @registry_by_field = registry_by_field
     @suggester = suggester
-    @entity_extractor = entity_extractor
   end
 
   # Search and combine the indices and return a hash of ResultSet objects
   def search(params)
-    builder = UnifiedSearchBuilder.new(params, @metaindex, entity_extractor)
+    builder = UnifiedSearchBuilder.new(params, @metaindex)
     es_response = index.raw_search(builder.payload)
     example_fetcher = FacetExampleFetcher.new(index, es_response, params,
                                               builder)

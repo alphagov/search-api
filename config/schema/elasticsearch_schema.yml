@@ -107,7 +107,6 @@ mappings:
         organisation_state: { type: string, index: not_analyzed, include_in_all: false }
         people: { type: string, index: not_analyzed, include_in_all: false }
         popularity: { type: float, stored: true }
-        entities: { type: string, index: not_analyzed, include_in_all: false }
         public_timestamp: { type: date, index: not_analyzed, include_in_all: false }
         relevant_to_local_government: { type: boolean, index: not_analyzed, include_in_all: false }
         search_format_types: { type: string, index: not_analyzed, include_in_all: false }
