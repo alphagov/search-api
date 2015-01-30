@@ -23,7 +23,7 @@ namespace :rummager do
     end
   end
 
-  desc "Migrates an index group to a new index, optionally extracting entities (default false)
+  desc "Migrates an index group to a new index.
 
 Seamlessly creates a new index in the same index_group using the latest
 schema, copies over all data and switches over the index_groups alias to point
@@ -32,14 +32,8 @@ contains exactly the same number of documents as the original index.
 
 You should run this task if the index schema has changed.
 
-The extract_entities option allows you to enable entity_extraction during the
-index migration. This is a potentially slow operation for an entire index
-(10ms * 100k docs = circa 15 mins). Normally you don't want to do this because
-the entities data will not change, however if you want to rebuild the entities
-data for some reason, you can enable this flag.
 "
-  task :migrate_index, [:extract_entities] do |t, args|
-    extract_entities = (args[:extract_entities] || "") =~ /\A(y|true|1|yes)\Z/
+  task :migrate_index do
     index_names.each do |index_name|
       index_group = search_server.index_group(index_name)
 
@@ -48,7 +42,7 @@ data for some reason, you can enable this flag.
 
       if old_index
         old_index.with_lock do
-          new_index.populate_from(old_index, {extract_entities: extract_entities})
+          new_index.populate_from old_index
 
           # Now bulk inserts fail if any of their operations fail (de47247),
           # and now we lock the old index to avoid any writes (87a7c60), the
@@ -87,8 +81,7 @@ data for some reason, you can enable this flag.
   end
 
   desc "Migrates from an index with the actual index name to an alias"
-  task :migrate_from_unaliased_index, [:extract_entities] do |t, args|
-    extract_entities = (args[:extract_entities] || "") =~ /\A(y|true|1|yes)\Z/
+  task :migrate_from_unaliased_index do
     # WARNING: this is potentially dangerous, and will leave the search
     # unavailable for a very short (sub-second) period of time
 
@@ -106,7 +99,7 @@ data for some reason, you can enable this flag.
       logger.info "...index '#{new_index.real_name}' created"
 
       logger.info "Populating new #{index_name} index..."
-      new_index.populate_from(index_group.current, {extract_entities: extract_entities})
+      new_index.populate_from index_group.current
       logger.info "...index populated."
 
       logger.info "Deleting #{index_name} index..."

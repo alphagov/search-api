@@ -47,10 +47,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     stub('Suggester', suggestions: ['cheese'])
   end
 
-  def stub_entity_extractor
-    stub('Entity Extractor', call: ["1", "2"])
-  end
-
   def text_filter(field_name, values)
     SearchParameterParser::TextFieldFilter.new(field_name, values)
   end
@@ -110,7 +106,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
             {filter: {term: {search_format_types: 'announcement'}}, script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"},
             {filter: {term: {organisation_state: 'closed'}}, boost: 0.3},
             {filter: {term: {organisation_state: 'devolved'}}, boost: 0.3},
-            {filter: {terms: {entities: ['1', '2']}}, boost: 20},
           ],
           score_mode: 'multiply',
         }
@@ -164,7 +159,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   def make_searcher
-    UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester, stub_entity_extractor)
+    UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester)
   end
 
   context "unfiltered, unsorted search" do

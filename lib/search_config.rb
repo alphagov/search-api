@@ -1,17 +1,9 @@
 require "yaml"
 require "elasticsearch/search_server"
 require "schema_config"
-require "entity_extractor_client"
-require "connection_error_swallower"
 require "plek"
 
 class SearchConfig
-  attr_accessor :enable_entity_extraction
-
-  def initialize
-    @enable_entity_extraction = nil
-  end
-
   def search_server
     Elasticsearch::SearchServer.new(
       elasticsearch["base_uri"],
@@ -71,32 +63,7 @@ class SearchConfig
     elasticsearch["metasearch_index_name"]
   end
 
-  def entity_extractor
-    raise "Must set 'enable_entity_extraction' in initializer" if @enable_entity_extraction.nil?
-    @entity_extractor ||= if @enable_entity_extraction
-      if in_development_environment?
-        error_swallowing_entity_extractor
-      else
-        standard_entity_extractor
-      end
-    else
-      null_entity_extractor
-    end
-  end
-
 private
-  def standard_entity_extractor
-    EntityExtractorClient.new(Plek.current.find('entity-extractor'))
-  end
-
-  def error_swallowing_entity_extractor
-    ConnectionErrorSwallower.new(standard_entity_extractor)
-  end
-
-  def null_entity_extractor
-    ->(_) { [] }
-  end
-
   def in_development_environment?
     %w{development test}.include?(ENV['RACK_ENV'])
   end
