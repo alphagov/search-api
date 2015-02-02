@@ -141,6 +141,9 @@ class BaseParameterParser
     title
   )
 
+  # A special value used to filter for missing fields.
+  MISSING_FIELD_SPECIAL_VALUE = "_MISSING"
+
   attr_reader :parsed_params, :errors
 
   def valid?
@@ -389,11 +392,12 @@ private
   end
 
   class Filter
-    attr_reader :field_name, :values, :errors
+    attr_reader :field_name, :include_missing, :values, :errors
 
     def initialize(field_name, values)
       @field_name = field_name
-      @values = Array(values)
+      @include_missing = values.include? BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE
+      @values = Array(values).reject { |value| value == BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE }
       @errors = []
     end
 

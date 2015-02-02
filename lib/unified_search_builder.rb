@@ -132,13 +132,21 @@ class UnifiedSearchBuilder
     }
   end
 
-  def combine_filters(filters)
+  # Combine filters using an operator
+  #
+  # `filters` should be a sequence of filters. nil filters are ignored.
+  # `op` should be :and or :or
+  #
+  # If 0 non-nil filters are supplied, returns nil.  Otherwise returns the
+  # elasticsearch query required to match the filters
+  def combine_filters(filters, op)
+    filters = filters.compact
     if filters.length == 0
       nil
     elsif filters.length == 1
       filters.first
     else
-      {"and" => filters}
+      {op => filters}
     end
   end
 
@@ -153,22 +161,30 @@ class UnifiedSearchBuilder
     # the facet_filter values used in facets include the filter too.  It's
     # usually better to add additional filters to the query, so that they
     # automatically apply to facet calculation.
-    combine_filters(filter_groups)
+    combine_filters(filter_groups, :and)
   end
 
   def filter_hash(filter)
+    es_filters = []
+    if filter.include_missing
+      es_filters << {"missing" => { field: filter.field_name } }
+    end
+
     case filter.type
     when "string"
-      terms_filter(filter)
+      es_filters << terms_filter(filter)
     when "date"
-      date_filter(filter)
+      es_filters << date_filter(filter)
     else
       raise "Filter type not supported"
     end
+    combine_filters(es_filters, :or)
   end
 
   def terms_filter(filter)
-    {"terms" => { filter.field_name => filter.values } }
+    if filter.values.size > 0
+      {"terms" => { filter.field_name => filter.values } }
+    end
   end
 
   def date_filter(filter)

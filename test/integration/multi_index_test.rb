@@ -27,7 +27,7 @@ class MultiIndexTest < IntegrationTest
       if index_name == "government_test"
         add_field_to_mappings("public_timestamp", "date")
       end
-      add_field_to_mappings("topics")
+      add_field_to_mappings("specialist_sectors")
       add_field_to_mappings("section")
       create_test_index(index_name)
     end
@@ -53,7 +53,7 @@ class MultiIndexTest < IntegrationTest
       }
       fields["section"] = ["#{i}"]
       if i % 2 == 0
-        fields["topics"] = ["farming"]
+        fields["specialist_sectors"] = ["farming"]
       end
       if short_index_name == "government"
         fields["public_timestamp"] = "#{i+2000}-01-01T00:00:00"

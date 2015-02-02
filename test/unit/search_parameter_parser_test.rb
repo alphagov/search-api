@@ -251,6 +251,32 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     )
   end
 
+  should "understand filter for missing field" do
+    p = SearchParameterParser.new({"filter_organisations" => ["_MISSING"]})
+
+    assert_equal("", p.error)
+    assert p.valid?
+
+    filters = p.parsed_params[:filters]
+    assert_equal 1, filters.size
+    assert_equal "organisations", filters[0].field_name
+    assert_equal true, filters[0].include_missing
+    assert_equal [], filters[0].values
+  end
+
+  should "understand filter for missing field or specific value" do
+    p = SearchParameterParser.new({"filter_organisations" => ["_MISSING", "hmrc"]})
+
+    assert_equal("", p.error)
+    assert p.valid?
+
+    filters = p.parsed_params[:filters]
+    assert_equal 1, filters.size
+    assert_equal "organisations", filters[0].field_name
+    assert_equal true, filters[0].include_missing
+    assert_equal ["hmrc"], filters[0].values
+  end
+
   should "complain about disallowed filter fields" do
     p = SearchParameterParser.new({"filter_spells" => ["levitation"],
                                    "filter_organisations" => ["hm-magic"]})
@@ -325,6 +351,32 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
         opened_date_filter = parser.parsed_params.fetch(:filters)
           .find { |filter| filter.field_name == "opened_date" }
+
+        assert_equal(
+          Date.parse("2014-04-01 00:00"),
+          opened_date_filter.values.first.from,
+        )
+
+        assert_equal(
+          Date.parse("2014-04-02 00:00"),
+          opened_date_filter.values.first.to,
+        )
+      end
+
+      should "understand date filter for missing field or specific value" do
+        parser = SearchParameterParser.new({
+          "filter_document_type" => ["cma_case"],
+          "filter_opened_date" => ["_MISSING", "from:2014-04-01 00:00,to:2014-04-02 00:00"],
+        }, schemas)
+
+        assert_equal("", parser.error)
+        assert parser.valid?
+
+        opened_date_filter = parser.parsed_params.fetch(:filters)
+          .find { |filter| filter.field_name == "opened_date" }
+
+        assert_equal "opened_date", opened_date_filter.field_name
+        assert_equal true, opened_date_filter.include_missing
 
         assert_equal(
           Date.parse("2014-04-01 00:00"),

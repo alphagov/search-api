@@ -55,11 +55,35 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal links, ["/detailed-1", "/government-1", "/mainstream-1"], links
   end
 
+  def test_can_filter_for_missing_section_field
+    get "/unified_search?filter_specialist_sectors=_MISSING"
+    assert last_response.ok?
+    links = parsed_response["results"].map do |result|
+      result["link"]
+    end
+    links.sort!
+    assert_equal ["/detailed-1", "/government-1", "/mainstream-1"], links
+  end
+
+  def test_can_filter_for_missing_or_specific_value_section_field
+    get "/unified_search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
+    assert last_response.ok?
+    links = parsed_response["results"].map do |result|
+      result["link"]
+    end
+    links.sort!
+    assert_equal [
+      "/detailed-1", "/detailed-2",
+      "/government-1", "/government-2",
+      "/mainstream-1", "/mainstream-2",
+    ], links
+  end
+
   def test_only_contains_fields_which_are_present
     get "/unified_search?q=important&order=public_timestamp"
     results = parsed_response["results"]
-    refute_includes results[0].keys, "topics"
-    assert_equal ["farming"], results[1]["topics"]
+    refute_includes results[0].keys, "specialist_sectors"
+    assert_equal [{"slug"=>"farming"}], results[1]["specialist_sectors"]
   end
 
   def test_facet_counting
@@ -173,7 +197,7 @@ class UnifiedSearchTest < MultiIndexTest
       "indexable_content" => "Mergers of cheeses and faces",
       "_type" => "cma_case",
       "tags" => [],
-      "topics" => ["farming"],
+      "specialist_sectors" => ["farming"],
       "section" => ["1"],
       "opened_date" => "2014-04-01",
     }
