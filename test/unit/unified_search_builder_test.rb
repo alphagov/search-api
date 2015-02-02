@@ -208,7 +208,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     should "have correct filter" do
       assert_equal(
         @builder.filters_hash,
-        {"and" => [
+        {:and => [
           {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
           {"terms" => {"section" => ["levitation"]}},
           BASE_FILTERS,
