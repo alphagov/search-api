@@ -183,4 +183,65 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
       assert_equal({"sector" => {}}, @fetcher.fetch)
     end
   end
+
+  context "one facet with 1000 matches" do
+    setup do
+      @index = stub("content index")
+      @example_fields = %w{link title other_field}
+
+      main_query_response = {"facets" => {
+        "sector" => {
+          "terms" => Array((0..999).map { |i|
+            {"term" => "sector_#{i}"}
+          })
+        }
+      }}
+
+      params = {
+        facets: {
+          "sector" => {
+            requested: 10,
+            examples: 2,
+            example_fields: @example_fields,
+            example_scope: :query
+          }
+        }
+      }
+
+      @builder = stub("builder")
+      @fetcher = FacetExampleFetcher.new(@index, main_query_response, params, @builder)
+    end
+
+    should "request and return facet examples with query scope" do
+      query = {match: {_all: {query: "hello"}}}
+      filter = {terms: {organisations: ["hm-magic"]}}
+      @builder.expects(:query).returns(query)
+      @builder.expects(:filter).returns(filter)
+
+      (0..19).each do |group_num|
+        sector_numbers = (group_num * 50 .. group_num * 50 + 49)
+        expected_queries = Array(
+          sector_numbers.map { |sector_num|
+            query_for_example_query("sector", "sector_#{sector_num}", @example_fields, query, filter)
+          })
+        stub_responses = Array(
+          sector_numbers.map { |sector_num|
+            response_for_example(sector_num, ["example_#{sector_num}"])
+          })
+        @index.expects(:msearch)
+          .with(expected_queries).returns({"responses" => stub_responses})
+      end
+
+      assert_equal({
+        "sector" => Hash[
+          (0..999).map { |sector_num|
+            [
+              "sector_#{sector_num}",
+              {total: sector_num, examples: [{"title" => "example_#{sector_num}"}]}
+            ]
+          }
+        ]
+      }, @fetcher.fetch)
+    end
+  end
 end

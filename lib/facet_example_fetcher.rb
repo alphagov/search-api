@@ -48,7 +48,7 @@ private
     if slugs.empty?
       {}
     else
-      fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
+      batched_fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
     end
   end
 
@@ -76,9 +76,23 @@ private
     }
   end
 
+  def batched_fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
+    # Elasticsearch has an internal queue limit on the number of searches to be
+    # performed: this defaults to 1000.  If we go close to this limit, we risk
+    # getting error responses saying that the queue is full.  Therefore,
+    # instead of sending all the searches at once, we send them in batches of
+    # 50.
+
+    some_results = slugs.each_slice(50).map { |fewer_slugs|
+      fetch_by_slug(field_name, fewer_slugs, example_count, example_fields, query, filter)
+    }
+    some_results.reduce(&:merge)
+  end
+
   # Fetch facet examples for a set of slugs
   def fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
-    searches = facet_example_searches(field_name, slugs, example_count, example_fields, query, filter)
+    searches = facet_example_searches(field_name, slugs, example_count,
+                                      example_fields, query, filter)
     responses = @index.msearch(searches)
     response_list = responses["responses"]
     result = {}
