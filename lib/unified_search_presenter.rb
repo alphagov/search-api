@@ -171,6 +171,7 @@ private
         documents_with_no_value: facet_info["missing"],
         total_options: options.length,
         missing_options: [options.length - facet_parameters[:requested], 0].max,
+        scope: facet_parameters[:scope],
       }
     end
     result

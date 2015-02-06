@@ -232,7 +232,7 @@ class UnifiedSearchBuilder
       return nil
     end
     result = {}
-    facets.each do |field_name, _|
+    facets.each do |field_name, options|
       facet_hash = {
         terms: {
           field: field_name,
@@ -244,7 +244,11 @@ class UnifiedSearchBuilder
           size: 100000,
         }
       }
-      facet_filter = filters_hash([field_name])
+      if options[:scope] == :exclude_field_filter
+        facet_filter = filters_hash([field_name])
+      elsif options[:scope] == :all_filters
+        facet_filter = filters_hash([])
+      end
       unless facet_filter.nil?
         facet_hash[:facet_filter] = facet_filter
       end
