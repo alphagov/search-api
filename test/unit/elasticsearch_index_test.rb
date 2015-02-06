@@ -144,7 +144,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[]}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[],"format":"edition"}
     eos
     response = <<-eos
 {"took":5,"items":[
@@ -172,7 +172,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"not_an_edition","_id":"some_id"}}
-{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":1.0,"tags":[]}
+{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":1.0,"tags":[],"format":"not_an_edition"}
   eos
     response = <<-eos
 {"took":5,"items":[
@@ -193,7 +193,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[]}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[],"format":"edition"}
     eos
     stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
         body: payload,
@@ -245,7 +245,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0,"tags":[]}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0,"tags":[],"format":"edition"}
 eos
     response = <<-eos
 {"took":5,"items":[
@@ -275,7 +275,7 @@ eos
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","specialist_sectors":["oil-and-gas/licensing","oil-and-gas/onshore-oil-and-gas"],"organisations":["hm-magic"],"popularity":1.0,"tags":["organisation:hm-magic","sector:oil-and-gas/licensing","sector:oil-and-gas/onshore-oil-and-gas"]}
+{"_type":"edition","link":"/foo/bar","specialist_sectors":["oil-and-gas/licensing","oil-and-gas/onshore-oil-and-gas"],"organisations":["hm-magic"],"popularity":1.0,"tags":["organisation:hm-magic","sector:oil-and-gas/licensing","sector:oil-and-gas/onshore-oil-and-gas"],"format":"edition"}
     eos
     response = <<-eos
 {"took":5,"items":[
@@ -304,7 +304,7 @@ eos
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","section":"benefits","subsection":"entitlement","popularity":1.0,"mainstream_browse_pages":["benefits/entitlement"],"tags":[]}
+{"_type":"edition","link":"/foo/bar","section":"benefits","subsection":"entitlement","popularity":1.0,"mainstream_browse_pages":["benefits/entitlement"],"tags":[],"format":"edition"}
     eos
     response = <<-eos
 {"took":5,"items":[
