@@ -545,6 +545,7 @@ private
 
     @parsed_params = {
       requested: requested,
+      scope: scope,
       order: order,
       examples: examples,
       example_fields: example_fields,
@@ -578,6 +579,30 @@ private
       end
     end
     params
+  end
+
+  # The scope of the facet.
+  #
+  # Defaults to "exclude_field_filter", meaning that facet values should be
+  # calculated as if no filters are applied to the field the facet is for.
+  # This is appropriate for populating multi-select facet filter boxes, to
+  # allow other facet values to be chosen.
+  #
+  # May also be 'all_filters", to mean that facet values should be calculated
+  # after applying all filters - ie, just on the documents which will be
+  # included in the result set.
+  def scope
+    value = single_param("scope", facet_description)
+    if value.nil?
+      :exclude_field_filter
+    elsif value == "all_filters"
+      :all_filters
+    elsif value == "exclude_field_filter"
+      :exclude_field_filter
+    else
+      @errors << %{"#{value}" is not a valid scope option#{facet_description}}
+      nil
+    end
   end
 
   def order

@@ -357,7 +357,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: "cheese",
         filters: {},
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-        facets: {"organisations" => {requested: 1, examples: 0, example_fields: [], order: SearchParameterParser::DEFAULT_FACET_SORT}},
+        facets: {"organisations" => {requested: 1, examples: 0, example_fields: [], order: SearchParameterParser::DEFAULT_FACET_SORT, scope: :exclude_field_filter}},
         debug: {},
       })
     end
@@ -394,6 +394,11 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     should "include number of documents with no value" do
       facet = @results[:facets]["organisations"]
       assert_equal(7, facet[:documents_with_no_value])
+    end
+
+    should "include requested facet scope" do
+      facet = @results[:facets]["organisations"]
+      assert_equal(:exclude_field_filter, facet[:scope])
     end
   end
 

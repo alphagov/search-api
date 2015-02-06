@@ -19,6 +19,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   def expected_facet_params(params)
     {
       requested: 0,
+      scope: :exclude_field_filter,
       order: BaseParameterParser::DEFAULT_FACET_SORT,
       examples: 0,
       example_fields: BaseParameterParser::DEFAULT_FACET_EXAMPLE_FIELDS,
@@ -555,6 +556,29 @@ class SearchParameterParserTest < ShouldaUnitTestCase
           requested: 10,
           order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
       })}}), p.parsed_params)
+  end
+
+  should "understand the scope option in facet parameters" do
+    p = SearchParameterParser.new("facet_organisations" => ["10,scope:all_filters"])
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params({
+      facets: {
+        "organisations" => expected_facet_params({
+          requested: 10,
+          scope: :all_filters,
+        })
+      }
+    }), p.parsed_params)
+  end
+
+  should "complain about invalid scope options in facet parameters" do
+    p = SearchParameterParser.new("facet_organisations" => ["10,scope:unknown"])
+
+    assert_equal(%{"unknown" is not a valid scope option in facet "organisations"}, p.error)
+    assert !p.valid?
+    assert_equal(expected_params({}), p.parsed_params)
   end
 
   should "complain about a repeated examples option" do

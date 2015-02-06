@@ -313,7 +313,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     setup do
       stub_zero_best_bets
       @builder = make_search_builder(
-        facets: {"organisations" => 10},
+        facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
       )
     end
 
@@ -344,7 +344,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       stub_zero_best_bets
       @builder = make_search_builder(
         filters: [ text_filter("organisations", ["hm-magic"]) ],
-        facets: {"organisations" => 10},
+        facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
       )
     end
 
@@ -369,12 +369,45 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     end
   end
 
+  context "search with facet and filter on same field, and scope set to all_filters" do
+    setup do
+      stub_zero_best_bets
+      @builder = make_search_builder(
+        filters: [ text_filter("organisations", ["hm-magic"]) ],
+        facets: {"organisations" => {requested: 10, scope: :all_filters}},
+      )
+    end
+
+    should "have correct filter" do
+      assert_equal(
+        @builder.filters_hash, with_base_filters({"terms" => {"organisations" => ["hm-magic"]}})
+      )
+    end
+
+    should "have correct facet in payload" do
+      assert_equal(
+        {
+          "organisations" => {
+            terms: {
+              field: "organisations",
+              order: "count",
+              size: 100000,
+            },
+            facet_filter: with_base_filters({
+              "terms" => {"organisations" => ["hm-magic"]}
+            }),
+          },
+        },
+        @builder.payload[:facets])
+    end
+  end
+
   context "search with facet and filter on different field" do
     setup do
       stub_zero_best_bets
       @builder = make_search_builder(
         filters: [ text_filter("section", "levitation") ],
-        facets: {"organisations" => 10},
+        facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
       )
     end
 

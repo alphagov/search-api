@@ -99,8 +99,21 @@ class UnifiedSearchTest < MultiIndexTest
         "documents_with_no_value" => 0,
         "total_options" => 2,
         "missing_options" => 0,
+        "scope" => "exclude_field_filter",
       }
     }, facets)
+  end
+
+  def test_facet_counting_with_filter_on_field_and_exclude_field_filter_scope
+    get "/unified_search?q=important&facet_section=2"
+    assert_equal 6, parsed_response["total"]
+    facets_without_filter = parsed_response["facets"]
+
+    get "/unified_search?q=important&facet_section=2&filter_section=1"
+    assert_equal 3, parsed_response["total"]
+    facets_with_filter = parsed_response["facets"]
+
+    assert_equal(facets_with_filter, facets_without_filter)
   end
 
   def test_facet_counting_missing_options
@@ -115,6 +128,25 @@ class UnifiedSearchTest < MultiIndexTest
         "documents_with_no_value" => 0,
         "total_options" => 2,
         "missing_options" => 1,
+        "scope" => "exclude_field_filter",
+      }
+    }, facets)
+  end
+
+  def test_facet_counting_with_filter_on_field_and_all_filters_scope
+    get "/unified_search?q=important&facet_section=2,scope:all_filters&filter_section=1"
+    assert_equal 3, parsed_response["total"]
+    facets = parsed_response["facets"]
+
+    assert_equal({
+      "section" => {
+        "options" => [
+          {"value"=>{"slug"=>"1"}, "documents"=>3},
+        ],
+        "documents_with_no_value" => 0,
+        "total_options" => 1,
+        "missing_options" => 0,
+        "scope" => "all_filters",
       }
     }, facets)
   end
