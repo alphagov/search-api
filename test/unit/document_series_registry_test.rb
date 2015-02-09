@@ -1,11 +1,11 @@
 require "test_helper"
 require "document"
-require "document_series_registry"
+require "registry"
 
 class DocumentSeriesRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @document_series_registry = DocumentSeriesRegistry.new(@index)
+    @document_series_registry = Registry::DocumentSeries.new(@index)
   end
 
   def rail_statistics

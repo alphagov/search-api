@@ -1,11 +1,11 @@
 require "test_helper"
 require "document"
-require "organisation_registry"
+require "registry"
 
 class OrganisationRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @organisation_registry = OrganisationRegistry.new(@index)
+    @organisation_registry = Registry::Organisation.new(@index)
   end
 
   def mod_document
@@ -23,7 +23,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     # This is to make sure the cache expiry is expressed in seconds; DateTime,
     # for example, treats number addition as a number of days.
     TimedCache.expects(:new).with(is_a(Fixnum), Time)
-    OrganisationRegistry.new(stub("index"))
+    Registry::Organisation.new(stub("index"))
   end
 
   def test_can_fetch_all_organisations

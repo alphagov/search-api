@@ -1,11 +1,11 @@
 require "test_helper"
 require "document"
-require "topic_registry"
+require "registry"
 
 class TopicRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @topic_registry = TopicRegistry.new(@index)
+    @topic_registry = Registry::Topic.new(@index)
   end
 
   def housing_document
@@ -23,7 +23,7 @@ class TopicRegistryTest < MiniTest::Unit::TestCase
     # This is to make sure the cache expiry is expressed in seconds; DateTime,
     # for example, treats number addition as a number of days.
     TimedCache.expects(:new).with(is_a(Fixnum), Time)
-    TopicRegistry.new(stub("index"))
+    Registry::Topic.new(stub("index"))
   end
 
   def test_can_fetch_topic_by_slug

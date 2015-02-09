@@ -1,11 +1,11 @@
 require "test_helper"
 require "document"
-require "specialist_sector_registry"
+require "registry"
 
-class SectorRegistryTest < MiniTest::Unit::TestCase
+class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @specialist_sector_registry = SpecialistSectorRegistry.new(@index)
+    @specialist_sector_registry = Registry::SpecialistSector.new(@index)
   end
 
   def oil_and_gas_fields

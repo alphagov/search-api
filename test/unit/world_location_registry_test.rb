@@ -1,11 +1,11 @@
 require "test_helper"
 require "document"
-require "world_location_registry"
+require "registry"
 
 class WorldLocationRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @world_location_registry = WorldLocationRegistry.new(@index)
+    @world_location_registry = Registry::WorldLocation.new(@index)
   end
 
   def angola
