@@ -1,11 +1,6 @@
 # encoding: utf-8
 require "integration_test_helper"
-require 'document_series_registry'
-require 'document_collection_registry'
-require "organisation_registry"
-require "topic_registry"
-require "world_location_registry"
-require "specialist_sector_registry"
+require "registry"
 
 class SearchTest < IntegrationTest
 
@@ -79,7 +74,7 @@ class SearchTest < IntegrationTest
   end
 
   def setup
-    OrganisationRegistry.any_instance.stubs(:all).returns([])
+    Registry::Organisation.any_instance.stubs(:all).returns([])
   end
 
   def test_returns_json_for_search_results
@@ -110,7 +105,7 @@ class SearchTest < IntegrationTest
 
   def test_does_not_suggest_corrections_for_organisation_acronyms
     stub_index.expects(:search).returns(stub(results: [], total: 0))
-    OrganisationRegistry.any_instance.expects(:all)
+    Registry::Organisation.any_instance.expects(:all)
       .returns([dft_organisation])
     get "/search.json", {q: "DFT"} # DFT would get a suggestion
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
@@ -118,7 +113,7 @@ class SearchTest < IntegrationTest
 
   def test_matches_organisation_acronyms_in_any_letter_case
     stub_index.expects(:search).returns(stub(results: [], total: 0))
-    OrganisationRegistry.any_instance.expects(:all)
+    Registry::Organisation.any_instance.expects(:all)
       .returns([dft_organisation])
     get "/search.json", {q: "dft"} # DFT would get a suggestion
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
@@ -134,7 +129,7 @@ class SearchTest < IntegrationTest
     )
 
     stub_index.expects(:search).returns(stub(results: [], total: 0))
-    OrganisationRegistry.any_instance.expects(:all)
+    Registry::Organisation.any_instance.expects(:all)
       .returns([organisation_without_acronym])
     get "/search.json", {q: "pies"}
     assert_equal [], MultiJson.decode(last_response.body)["spelling_suggestions"]
@@ -167,7 +162,7 @@ class SearchTest < IntegrationTest
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
-    DocumentSeriesRegistry.any_instance.expects(:[])
+    Registry::DocumentSeries.any_instance.expects(:[])
       .with("bus-timetables")
       .returns(bus_timetables_document_series)
     get "/search.json", {q: "bob"}
@@ -185,7 +180,7 @@ class SearchTest < IntegrationTest
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
-    DocumentCollectionRegistry.any_instance.expects(:[])
+    Registry::DocumentCollection.any_instance.expects(:[])
       .with("learning-to-drive")
       .returns(learning_to_drive_document_collection)
     get "/search.json", {q: "bob"}
@@ -203,7 +198,7 @@ class SearchTest < IntegrationTest
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
-    OrganisationRegistry.any_instance.expects(:[])
+    Registry::Organisation.any_instance.expects(:[])
       .with("ministry-of-defence")
       .returns(mod_organisation)
     get "/search.json", {q: "bob"}
@@ -221,7 +216,7 @@ class SearchTest < IntegrationTest
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
-    TopicRegistry.any_instance.expects(:[])
+    Registry::Topic.any_instance.expects(:[])
       .with("housing")
       .returns(housing_topic)
     get "/search.json", {q: "bob"}
@@ -239,7 +234,7 @@ class SearchTest < IntegrationTest
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
-    WorldLocationRegistry.any_instance.expects(:[])
+    Registry::WorldLocation.any_instance.expects(:[])
       .with("angola")
       .returns(angola_world_location)
     get "/search.json", {q: "bob"}
@@ -263,7 +258,7 @@ class SearchTest < IntegrationTest
     stub_index.expects(:index_name).returns("mainstream,government,detailed")
     stub_metasearch_index.expects(:analyzed_best_bet_query).with("bob").returns("bob")
     stub_metasearch_index.expects(:raw_search).returns({"hits" => {"hits" => []}})
-    SpecialistSectorRegistry.any_instance.expects(:[])
+    Registry::SpecialistSector.any_instance.expects(:[])
       .with("oil-and-gas/licensing")
       .returns(oil_gas_sector_fields)
     get "/unified_search.json", {q: "bob"}

@@ -1,22 +1,18 @@
 require "test_helper"
 require "document"
-require "specialist_sector_registry"
+require "registry"
 
-class SectorRegistryTest < MiniTest::Unit::TestCase
+class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @specialist_sector_registry = SpecialistSectorRegistry.new(@index)
-  end
-
-  def oil_and_gas_fields
-    {
-      "link" => "/oil-and-gas/licensing",
-      "title" => "Licensing"
-    }
+    @specialist_sector_registry = Registry::SpecialistSector.new(@index)
   end
 
   def oil_and_gas
-    Document.new(%w(link title), oil_and_gas_fields)
+    Document.new(%w(link title), {
+      "link" => "/oil-and-gas/licensing",
+      "title" => "Licensing"
+    })
   end
 
   def test_can_fetch_sector_by_slug
@@ -52,13 +48,6 @@ class SectorRegistryTest < MiniTest::Unit::TestCase
       .with("specialist_sector", anything)
       .returns(document_enumerator)
       .once
-    assert @specialist_sector_registry["oil-and-gas/licensing"]
-  end
-
-  def test_uses_cache
-    # Make sure we're using TimedCache#get; TimedCache is tested elsewhere, so
-    # we don't need to worry about cache expiry tests here.
-    TimedCache.any_instance.expects(:get).returns({"oil-and-gas/licensing" => oil_and_gas_fields})
     assert @specialist_sector_registry["oil-and-gas/licensing"]
   end
 end

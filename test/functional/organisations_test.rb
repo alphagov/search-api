@@ -1,8 +1,5 @@
 require "integration_test_helper"
-require 'document_series_registry'
-require "organisation_registry"
-require "topic_registry"
-require "world_location_registry"
+require "registry"
 
 class OrganisationsTest < IntegrationTest
 
@@ -19,7 +16,7 @@ class OrganisationsTest < IntegrationTest
   end
 
   def test_returns_a_total
-    OrganisationRegistry.any_instance.expects(:all).returns([mod_organisation])
+    Registry::Organisation.any_instance.expects(:all).returns([mod_organisation])
 
     get "/organisations.json"
 
@@ -28,7 +25,7 @@ class OrganisationsTest < IntegrationTest
   end
 
   def test_returns_all_organisations
-    OrganisationRegistry.any_instance.expects(:all).returns([mod_organisation])
+    Registry::Organisation.any_instance.expects(:all).returns([mod_organisation])
 
     get "/organisations.json"
 
