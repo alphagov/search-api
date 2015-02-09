@@ -19,6 +19,7 @@ class BaseParameterParser
     mainstream_browse_pages
     manual
     organisations
+    policies
     section
     specialist_sectors
   )
@@ -36,6 +37,7 @@ class BaseParameterParser
     mainstream_browse_pages
     manual
     organisations
+    policies
     section
     specialist_sectors
   )
@@ -98,6 +100,7 @@ class BaseParameterParser
     manual
     organisation_state
     organisations
+    policies
     public_timestamp
     section
     slug
