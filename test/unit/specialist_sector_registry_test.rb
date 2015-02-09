@@ -8,15 +8,11 @@ class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
     @specialist_sector_registry = Registry::SpecialistSector.new(@index)
   end
 
-  def oil_and_gas_fields
-    {
+  def oil_and_gas
+    Document.new(%w(link title), {
       "link" => "/oil-and-gas/licensing",
       "title" => "Licensing"
-    }
-  end
-
-  def oil_and_gas
-    Document.new(%w(link title), oil_and_gas_fields)
+    })
   end
 
   def test_can_fetch_sector_by_slug
@@ -52,13 +48,6 @@ class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
       .with("specialist_sector", anything)
       .returns(document_enumerator)
       .once
-    assert @specialist_sector_registry["oil-and-gas/licensing"]
-  end
-
-  def test_uses_cache
-    # Make sure we're using TimedCache#get; TimedCache is tested elsewhere, so
-    # we don't need to worry about cache expiry tests here.
-    TimedCache.any_instance.expects(:get).returns({"oil-and-gas/licensing" => oil_and_gas_fields})
     assert @specialist_sector_registry["oil-and-gas/licensing"]
   end
 end
