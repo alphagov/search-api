@@ -447,7 +447,7 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
             should: [
               @query_without_best_bets,
               {
-                custom_boost_factor: {
+                function_score: {
                   query: {
                     ids: { values: ["/foo"] },
                   },
@@ -473,13 +473,13 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
             should: [
               @query_without_best_bets,
               {
-                custom_boost_factor: {
+                function_score: {
                   query: { ids: { values: ["/foo"] }, },
                   boost_factor: 2000000,
                 }
               },
               {
-                custom_boost_factor: {
+                function_score: {
                   query: { ids: { values: ["/bar"] }, },
                   boost_factor: 1000000,
                 }
@@ -533,10 +533,13 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
 
-    should "have not have a custom_score clause to add popularity in payload" do
+    should "have not have a function_score clause to add popularity in payload" do
       query = @builder.payload[:query]
       refute_match(/popularity/, query.to_s)
-      assert query[:indices][:query][:custom_boost_factor][:query].keys == [:custom_filters_score]
+      assert_equal(
+        query[:indices][:query][:function_score][:query].keys,
+        [:function_score]
+      )
     end
   end
 

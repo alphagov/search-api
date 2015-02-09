@@ -59,9 +59,11 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   BASE_CHEESE_QUERY = {
-    custom_score: {
+    function_score: {
+      boost_mode: :multiply,
       query: {
-        custom_filters_score: {
+        function_score: {
+          boost_mode: :multiply,
           query: {bool: {
             should: [
               {bool: {
@@ -93,24 +95,28 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
               },
             ]
           }},
-          filters: [
-            {filter: {term: {format: 'smart-answer'}}, boost: 1.5},
-            {filter: {term: {format: 'transaction'}}, boost: 1.5},
-            {filter: {term: {format: 'topical_event'}}, boost: 1.5},
-            {filter: {term: {format: 'minister'}}, boost: 1.7},
-            {filter: {term: {format: 'organisation'}}, boost: 2.5},
-            {filter: {term: {format: 'topic'}}, boost: 1.5},
-            {filter: {term: {format: 'document_series'}}, boost: 1.3},
-            {filter: {term: {format: 'document_collection'}}, boost: 1.3},
-            {filter: {term: {format: 'operational_field'}}, boost: 1.5},
-            {filter: {term: {search_format_types: 'announcement'}}, script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"},
-            {filter: {term: {organisation_state: 'closed'}}, boost: 0.3},
-            {filter: {term: {organisation_state: 'devolved'}}, boost: 0.3},
+          functions: [
+            {filter: {term: {format: 'smart-answer'}}, boost_factor: 1.5},
+            {filter: {term: {format: 'transaction'}}, boost_factor: 1.5},
+            {filter: {term: {format: 'topical_event'}}, boost_factor: 1.5},
+            {filter: {term: {format: 'minister'}}, boost_factor: 1.7},
+            {filter: {term: {format: 'organisation'}}, boost_factor: 2.5},
+            {filter: {term: {format: 'topic'}}, boost_factor: 1.5},
+            {filter: {term: {format: 'document_series'}}, boost_factor: 1.3},
+            {filter: {term: {format: 'document_collection'}}, boost_factor: 1.3},
+            {filter: {term: {format: 'operational_field'}}, boost_factor: 1.5},
+            {filter: {term: {search_format_types: 'announcement'}}, script_score: {
+              script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
+            }},
+            {filter: {term: {organisation_state: 'closed'}}, boost_factor: 0.3},
+            {filter: {term: {organisation_state: 'devolved'}}, boost_factor: 0.3},
           ],
           score_mode: 'multiply',
         }
       },
-      script: "_score * (doc['popularity'].value + #{UnifiedSearchBuilder::POPULARITY_OFFSET})"
+      script_score: {
+        script: "doc['popularity'].value + #{UnifiedSearchBuilder::POPULARITY_OFFSET}"
+      },
     }
   }
 
@@ -118,7 +124,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     indices: {
       indices: [:government],
       query: {
-        custom_boost_factor: {
+        function_score: {
           query: BASE_CHEESE_QUERY,
           boost_factor: 0.4
         }
