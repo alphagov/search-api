@@ -478,6 +478,7 @@ module Elasticsearch
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_mainstream_browse_page_field(doc_hash)
         doc_hash = prepare_tag_field(doc_hash)
+        doc_hash = prepare_format_field(doc_hash)
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
@@ -523,6 +524,14 @@ module Elasticsearch
       tags.concat(Array(doc_hash["specialist_sectors"]).map { |sector| "sector:#{sector}" })
 
       doc_hash.merge("tags" => tags)
+    end
+
+    def prepare_format_field(doc_hash)
+      if doc_hash["format"].nil?
+        doc_hash.merge("format" => doc_hash["_type"])
+      else
+        doc_hash
+      end
     end
 
     # If a document is a best bet, and is using the stemmed_query field, we

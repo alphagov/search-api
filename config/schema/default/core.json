@@ -3,6 +3,11 @@
     "enabled": true
   },
   "properties": {
+    "format": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false
+    },
     "title": {
       "type": "string",
       "index": "analyzed"

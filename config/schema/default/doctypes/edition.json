@@ -1,10 +1,5 @@
 {
   "properties": {
-    "format": {
-      "type": "string",
-      "index": "not_analyzed",
-      "include_in_all": false
-    },
     "section": {
       "type": "string",
       "index": "not_analyzed",
