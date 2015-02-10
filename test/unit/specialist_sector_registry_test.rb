@@ -50,4 +50,10 @@ class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
       .once
     assert @specialist_sector_registry["oil-and-gas/licensing"]
   end
+
+  def test_uses_300_second_cache_lifetime
+    TimedCache.expects(:new).with(300, anything)
+
+    Registry::SpecialistSector.new(@index)
+  end
 end
