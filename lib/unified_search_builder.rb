@@ -53,9 +53,12 @@ class UnifiedSearchBuilder
       boosted_query
     else
       {
-        custom_score: {
+        function_score: {
+          boost_mode: :multiply, # Multiply script score with query score
           query: boosted_query,
-          script: "_score * (doc['popularity'].value + #{POPULARITY_OFFSET})"
+          script_score: {
+            script: "doc['popularity'].value + #{POPULARITY_OFFSET}",
+          }
         }
       }
     end
@@ -63,13 +66,14 @@ class UnifiedSearchBuilder
 
   def boosted_query
     {
-      custom_filters_score: {
+      function_score: {
+        boost_mode: :multiply,
         query: {
           bool: {
             should: [core_query]
           }
         },
-        filters: boost_filters,
+        functions: boost_filters,
         score_mode: "multiply",
       }
     }
@@ -97,7 +101,7 @@ class UnifiedSearchBuilder
     bb_max_position = best_bets.keys.max
     bb_queries = bb.map do |position, links|
       {
-        custom_boost_factor: {
+        function_score: {
           query: {
             ids: { values: links },
           },
@@ -122,7 +126,7 @@ class UnifiedSearchBuilder
       indices: {
         indices: [:government],
         query: {
-          custom_boost_factor: {
+          function_score: {
             query: query,
             boost_factor: GOVERNMENT_BOOST_FACTOR
           }
@@ -387,7 +391,7 @@ class UnifiedSearchBuilder
     boosted_formats.map do |format, boost|
       {
         filter: { term: { format: format } },
-        boost: boost
+        boost_factor: boost
       }
     end
   end
@@ -399,21 +403,23 @@ class UnifiedSearchBuilder
   def time_boost
     {
       filter: { term: { search_format_types: "announcement" } },
-      script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
+      script_score: {
+        script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
+      }
     }
   end
 
   def closed_org_boost
     {
       filter: { term: { organisation_state: "closed" } },
-      boost: 0.3,
+      boost_factor: 0.3,
     }
   end
 
   def devolved_org_boost
     {
       filter: { term: { organisation_state: "devolved" } },
-      boost: 0.3,
+      boost_factor: 0.3,
     }
   end
 end
