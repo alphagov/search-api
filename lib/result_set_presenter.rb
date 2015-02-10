@@ -29,32 +29,32 @@ private
 
     if result['document_series'] && should_expand_document_series?
       result['document_series'] = result['document_series'].map do |slug|
-        document_series_by_slug(slug)
+        structure_by_slug(document_series_registry, slug)
       end
     end
     if result['document_collections'] && should_expand_document_collections?
       result['document_collections'] = result['document_collections'].map do |slug|
-        document_collection_by_slug(slug)
+        structure_by_slug(document_collection_registry, slug)
       end
     end
     if result['organisations'] && should_expand_organisations?
       result['organisations'] = result['organisations'].map do |slug|
-        organisation_by_slug(slug)
+        structure_by_slug(organisation_registry, slug)
       end
     end
     if result['topics'] && should_expand_topics?
       result['topics'] = result['topics'].map do |slug|
-        topic_by_slug(slug)
+        structure_by_slug(topic_registry, slug)
       end
     end
     if result['world_locations'] && should_expand_world_locations?
       result['world_locations'] = result['world_locations'].map do |slug|
-        world_location_by_slug(slug)
+        structure_by_slug(world_location_registry, slug)
       end
     end
     if result['specialist_sectors']
       result['specialist_sectors'].map! do |slug|
-        sector_by_slug(slug)
+        structure_by_slug(specialist_sector_registry, slug)
       end
     end
     result
@@ -108,55 +108,9 @@ private
     @context[:spelling_suggestions]
   end
 
-  def document_series_by_slug(slug)
-    document_series = document_series_registry && document_series_registry[slug]
-    if document_series
-      document_series.to_hash.merge("slug" => slug)
-    else
-      {"slug" => slug}
-    end
-  end
-
-  def document_collection_by_slug(slug)
-    document_collection = document_collection_registry && document_collection_registry[slug]
-    if document_collection
-      document_collection.to_hash.merge("slug" => slug)
-    else
-      {"slug" => slug}
-    end
-  end
-
-  def organisation_by_slug(slug)
-    organisation = organisation_registry && organisation_registry[slug]
-    if organisation
-      organisation.to_hash.merge("slug" => slug)
-    else
-      {"slug" => slug}
-    end
-  end
-
-  def topic_by_slug(slug)
-    topic = topic_registry && topic_registry[slug]
-    if topic
-      topic.to_hash.merge("slug" => slug)
-    else
-      {"slug" => slug}
-    end
-  end
-
-  def world_location_by_slug(slug)
-    world_location = world_location_registry && world_location_registry[slug]
-    if world_location
-      world_location.to_hash.merge("slug" => slug)
-    else
-      {"slug" => slug}
-    end
-  end
-
-  def sector_by_slug(slug)
-    sector = specialist_sector_registry && specialist_sector_registry[slug]
-    if sector
-      sector
+  def structure_by_slug(structure, slug)
+    if item = structure && structure[slug]
+      item.to_hash.merge("slug" => slug)
     else
       {"slug" => slug}
     end
