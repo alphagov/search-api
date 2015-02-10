@@ -54,7 +54,7 @@ module Elasticsearch
       # Response of the form:
       #   { "index_name" => { "aliases" => { "a1" => {}, "a2" => {} } }
       aliased_indices = indices.select { |name, details|
-        details["aliases"].include? @name
+        details.fetch("aliases", {}).include? @name
       }
 
       # For any existing indices with this alias, remove the alias
@@ -103,7 +103,7 @@ module Elasticsearch
 
     def clean
       alias_map.each do |name, details|
-        delete(name) if details["aliases"].empty?
+        delete(name) if details.fetch("aliases", {}).empty?
       end
     end
 
