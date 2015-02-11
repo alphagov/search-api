@@ -23,7 +23,7 @@ class ElasticsearchIndexingTest < IntegrationTest
 
   def retrieve_document_from_rummager(link)
     get "/documents/#{CGI::escape(link)}"
-    MultiJson.decode(last_response.body)
+    JSON.parse(last_response.body)
   end
 
   def assert_document_is_in_rummager(document)
@@ -40,14 +40,14 @@ class ElasticsearchIndexingTest < IntegrationTest
   def test_should_indicate_success_in_response_code_when_adding_a_new_document
     create_test_indexes
 
-    post "/documents", MultiJson.encode(@sample_document)
+    post "/documents", @sample_document.to_json
     assert last_response.ok?
   end
 
   def test_after_adding_a_document_to_index_should_be_able_to_retrieve_it_again
     create_test_indexes
 
-    post "/documents", MultiJson.encode(@sample_document)
+    post "/documents", @sample_document.to_json
 
     assert_document_is_in_rummager(@sample_document)
   end
@@ -58,7 +58,7 @@ class ElasticsearchIndexingTest < IntegrationTest
 
     test_data = @sample_document.merge("topics" => [1,2])
 
-    post "/documents", MultiJson.encode(test_data)
+    post "/documents", test_data.to_json
 
     assert_document_is_in_rummager(test_data)
   end

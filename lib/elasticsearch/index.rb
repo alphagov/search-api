@@ -2,7 +2,6 @@ require "document"
 require "logging"
 require "cgi"
 require "rest-client"
-require "multi_json"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"
@@ -87,9 +86,9 @@ module Elasticsearch
       # { real_name => { "aliases" => { alias => {} } } }
       # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
       begin
-        alias_info = MultiJson.decode(@client.get("_aliases"))
+        alias_info = JSON.parse(@client.get("_aliases"))
       rescue RestClient::ResourceNotFound => e
-        response_body = MultiJson.decode(e.http_body)
+        response_body = JSON.parse(e.http_body)
         if response_body['error'].start_with?("IndexMissingException") then
           return nil
         end
@@ -153,7 +152,7 @@ module Elasticsearch
     def bulk_index(document_hashes_or_payload, options = {} )
       client = build_client(options)
       response = client.post("_bulk", bulk_payload(document_hashes_or_payload, options), content_type: :json)
-      items = MultiJson.decode(response.body)["items"]
+      items = JSON.parse(response.body)["items"]
       failed_items = items.select do |item|
         data = item["index"] || item["create"]
         data.has_key?("error")
@@ -229,7 +228,7 @@ module Elasticsearch
         return nil
       end
 
-      document_from_hash(MultiJson.decode(response.body)["_source"])
+      document_from_hash(JSON.parse(response.body)["_source"])
     end
 
     def document_from_hash(hash)
@@ -329,7 +328,7 @@ module Elasticsearch
       else
         path = "#{type}/_search"
       end
-      MultiJson.decode(@client.get_with_payload(path, json_payload))
+      JSON.parse(@client.get_with_payload(path, json_payload))
     end
 
     def msearch(bodies)
@@ -339,13 +338,13 @@ module Elasticsearch
       }.join("")
       logger.debug "Request payload: #{payload}"
       path = "_msearch"
-      MultiJson.decode(@client.get_with_payload(path, payload))
+      JSON.parse(@client.get_with_payload(path, payload))
     end
 
     # Convert a best bet query to a string formed by joining the normalised
     # words in the query with spaces.
     def analyzed_best_bet_query(query)
-      analyzed_query = MultiJson.decode(@client.get_with_payload(
+      analyzed_query = JSON.parse(@client.get_with_payload(
         "_analyze?analyzer=best_bet_stemmed_match", query))
 
       analyzed_query["tokens"].map { |token_info|
@@ -358,7 +357,7 @@ module Elasticsearch
         @client.delete("#{CGI.escape(type)}/#{CGI.escape(id)}")
       rescue RestClient::ResourceNotFound
       rescue RestClient::Forbidden => e
-        response_body = MultiJson.decode(e.http_body)
+        response_body = JSON.parse(e.http_body)
         if locked_index_error?(response_body["error"])
           raise IndexLocked
         else
@@ -420,8 +419,8 @@ module Elasticsearch
       actions = []
       links = []
       payload.each_line.each_slice(2).map do |command, doc|
-        command_hash = MultiJson.decode(command)
-        doc_hash = MultiJson.decode(doc)
+        command_hash = JSON.parse(command)
+        doc_hash = JSON.parse(doc)
         actions << [command_hash, doc_hash]
         links << doc_hash["link"]
       end

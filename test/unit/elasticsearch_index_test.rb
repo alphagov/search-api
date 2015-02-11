@@ -64,7 +64,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_real_name
     stub_request(:get, "http://example.com:9200/test-index/_aliases")
       .to_return(
-        body: MultiJson.encode({"real-name" => { "aliases" => { "test-index" => {} } }}),
+        body: {"real-name" => { "aliases" => { "test-index" => {} } }}.to_json,
         headers: {"Content-Type" => "application/json"}
       )
 
@@ -99,7 +99,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_exists
     stub_request(:get, "http://example.com:9200/test-index/_aliases")
       .to_return(
-        body: MultiJson.encode({"real-name" => { "aliases" => { "test-index" => {} } }}),
+        body: {"real-name" => { "aliases" => { "test-index" => {} } }}.to_json,
         headers: {"Content-Type" => "application/json"}
       )
 
@@ -497,9 +497,9 @@ eos
   def test_can_fetch_documents_by_format
     search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=500"
     stub_request(:get, search_pattern).with(
-      body: MultiJson.encode({query: {term: {format: "organisation"}}})
+      body: {query: {term: {format: "organisation"}}}.to_json
     ).to_return(
-      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 10}})
+      body: {_scroll_id: "abcdefgh", hits: {total: 10}}.to_json
     )
 
     hits = (1..10).map { |i|
@@ -522,9 +522,9 @@ eos
       fields: ["title", "link"]
     }
     stub_request(:get, search_pattern).with(
-      body: MultiJson.encode(query)
+      body: query.to_json
     ).to_return(
-      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 10}})
+      body: {_scroll_id: "abcdefgh", hits: {total: 10}}.to_json
     )
 
     hits = (1..10).map { |i|
@@ -550,9 +550,9 @@ eos
       fields: ["title", "link", "wumpus"]
     }
     stub_request(:get, search_pattern).with(
-      body: MultiJson.encode(query)
+      body: query.to_json
     ).to_return(
-      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 10}})
+      body: {_scroll_id: "abcdefgh", hits: {total: 10}}.to_json
     )
 
     hits = [
@@ -573,9 +573,9 @@ eos
     # Test that we can count the documents without retrieving them all
     search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=50"
     stub_request(:get, search_pattern).with(
-      body: MultiJson.encode({query: {match_all: {}}})
+      body: {query: {match_all: {}}}.to_json
     ).to_return(
-      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 100}})
+      body: {_scroll_id: "abcdefgh", hits: {total: 100}}.to_json
     ).then.to_raise("should never happen")
     assert_equal @wrapper.all_documents.size, 100
   end
@@ -584,9 +584,9 @@ eos
     search_uri = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=50"
 
     stub_request(:get, search_uri).with(
-      body: MultiJson.encode({query: {match_all: {}}})
+      body: {query: {match_all: {}}}.to_json
     ).to_return(
-      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 100}})
+      body: {_scroll_id: "abcdefgh", hits: {total: 100}}.to_json
     )
     hits = (1..100).map { |i|
       { "_source" => { "link" => "/foo-#{i}" } }
@@ -610,9 +610,9 @@ eos
     Elasticsearch::Index.stubs(:scroll_batch_size).returns(2)
 
     stub_request(:get, search_uri).with(
-      body: MultiJson.encode({query: {match_all: {}}})
+      body: {query: {match_all: {}}}.to_json
     ).to_return(
-      body: MultiJson.encode({_scroll_id: "abcdefgh", hits: {total: 3}})
+      body: {_scroll_id: "abcdefgh", hits: {total: 3}}.to_json
     )
     hits = (1..3).map { |i|
       { "_source" => { "link" => "/foo-#{i}" } }
@@ -664,11 +664,9 @@ eos
   end
 
   def scroll_response_body(scroll_id, total_results, results)
-      MultiJson.encode(
-        {
-          _scroll_id: scroll_id,
-          hits: {total: total_results, hits: results}
-        }
-      )
+    {
+      _scroll_id: scroll_id,
+      hits: {total: total_results, hits: results}
+    }.to_json
   end
 end

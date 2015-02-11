@@ -76,7 +76,7 @@ results = index.search(query, search_options)
 
 if options[:show_query_hash]
   puts "QUERY:"
-  puts MultiJson.dump(index.search_query(query, search_options), pretty: true)
+  puts JSON.pretty_generate(index.search_query(query, search_options))
 end
 
 if options[:compare]
@@ -86,7 +86,7 @@ if options[:compare]
   puts "Search 2: #{results2.total}"
   if options[:show_query_hash]
     puts "QUERY2:"
-    puts MultiJson.dump(index.search_query(query, search_options), pretty: true)
+    puts JSON.pretty_generate(index.search_query(query, search_options))
   end
 
   puts tabulate([3, 50, 3, 50], ["sc", "title", "sc", "title"])

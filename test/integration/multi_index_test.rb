@@ -71,7 +71,7 @@ class MultiIndexTest < IntegrationTest
 
   def insert_document(index_name, attributes)
     insert_stub_popularity_data(attributes["link"])
-    post "/#{index_name}/documents", MultiJson.encode(attributes)
+    post "/#{index_name}/documents", attributes.to_json
     assert last_response.ok?, "Failed to insert document"
     commit_index(index_name)
   end
@@ -81,6 +81,6 @@ class MultiIndexTest < IntegrationTest
   end
 
   def parsed_response
-    MultiJson.decode(last_response.body)
+    JSON.parse(last_response.body)
   end
 end

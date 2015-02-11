@@ -53,7 +53,7 @@ class BestBetsTest < MultiIndexTest
 
   def add_sample_bets(bets) 
     bets.each do |doc|
-      post "/#{METASEARCH_INDEX_NAME}/documents", MultiJson.encode(doc)
+      post "/#{METASEARCH_INDEX_NAME}/documents", doc.to_json
       assert last_response.ok?
     end
     commit_index(METASEARCH_INDEX_NAME)

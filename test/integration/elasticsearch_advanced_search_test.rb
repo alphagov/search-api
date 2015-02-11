@@ -88,7 +88,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
 
   def add_sample_documents
     sample_document_attributes.each do |sample_document|
-      post "/documents", MultiJson.encode(sample_document)
+      post "/documents", sample_document.to_json
       assert last_response.ok?
     end
   end
@@ -103,7 +103,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
       hash = links.pop
       order = hash[:order]
     end
-    parsed_response = MultiJson.decode(last_response.body)
+    parsed_response = JSON.parse(last_response.body)
     parsed_links = parsed_response['results'].map { |r| r["link"] }
     if order
       assert_equal links, parsed_links
@@ -113,7 +113,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   end
 
   def assert_result_total(total)
-    parsed_response = MultiJson.decode(last_response.body)
+    parsed_response = JSON.parse(last_response.body)
     assert_equal total, parsed_response['total']
   end
 
@@ -190,7 +190,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
       }
     ]
     more_documents.each do |sample_document|
-      post "/documents", MultiJson.encode(sample_document)
+      post "/documents", sample_document.to_json
       assert last_response.ok?
     end
     commit_index
@@ -210,7 +210,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
 
     assert last_response.ok?
     assert_result_total 1
-    parsed_response = MultiJson.decode(last_response.body)
+    parsed_response = JSON.parse(last_response.body)
     assert_equal ["ministry-of-cheese"], parsed_response["results"][0]["organisations"]
   end
 

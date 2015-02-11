@@ -78,7 +78,7 @@ module Elasticsearch
 
     def next_page(scroll_id)
       response = @client.get(scroll_page_uri(scroll_id))
-      MultiJson.decode(response)
+      JSON.parse(response)
     end
 
     def initial_scroll_result(batch_size, search_body)
@@ -87,7 +87,7 @@ module Elasticsearch
         search_uri(batch_size),
         search_body.to_json
       )
-      MultiJson.decode(scroll_response)
+      JSON.parse(scroll_response)
     end
 
     def logger

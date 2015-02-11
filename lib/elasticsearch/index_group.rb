@@ -29,7 +29,7 @@ module Elasticsearch
       index_payload = @index_settings.merge("mappings" => @mappings)
       @client.put(
         "#{CGI.escape(index_name)}/",
-        MultiJson.encode(index_payload),
+        index_payload.to_json,
         content_type: :json
       )
 
@@ -41,7 +41,7 @@ module Elasticsearch
     def switch_to(index)
       # Loading this manually rather than using `index_map` because we may have
       # unaliased indices, which won't match the new naming convention.
-      indices = MultiJson.decode(@client.get("_aliases"))
+      indices = JSON.parse(@client.get("_aliases"))
 
       # Bail if there is an existing index with this name.
       # elasticsearch won't allow us to add an alias with the same name as an
@@ -75,7 +75,7 @@ module Elasticsearch
 
       @client.post(
         "/_aliases",
-        MultiJson.encode(payload),
+        payload.to_json,
         content_type: :json
       )
     end
@@ -121,7 +121,7 @@ module Elasticsearch
     def alias_map
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
-      indices = MultiJson.decode(@client.get("_aliases"))
+      indices = JSON.parse(@client.get("_aliases"))
       indices.select { |name| name_pattern.match name }
     end
 

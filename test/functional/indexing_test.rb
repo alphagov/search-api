@@ -19,7 +19,7 @@ class IndexingTest < IntegrationTest
     index.expects(:document_from_hash).with(document_hashes[0]).returns(:foo)
     index.expects(:add).with([:foo]).returns(true)
 
-    post "/documents", MultiJson.encode(document_hashes), :content_type => :json
+    post "/documents", document_hashes.to_json, :content_type => :json
 
     assert_equal 200, last_response.status
   end
@@ -30,7 +30,7 @@ class IndexingTest < IntegrationTest
     index.expects(:document_from_hash).with(document_hashes[0]).returns(:foo)
     index.expects(:add_queued).with([:foo]).returns(true)
 
-    post "/documents", MultiJson.encode(document_hashes), :content_type => :json
+    post "/documents", document_hashes.to_json, :content_type => :json
 
     assert_equal 202, last_response.status
   end
@@ -41,7 +41,7 @@ class IndexingTest < IntegrationTest
     index.expects(:document_from_hash).with(document_hashes[0]).returns(:foo)
     index.expects(:add).raises(Elasticsearch::BulkIndexFailure.new([]))
 
-    post "/documents", MultiJson.encode(document_hashes), :content_type => :json
+    post "/documents", document_hashes.to_json, :content_type => :json
 
     assert_equal 500, last_response.status
   end
