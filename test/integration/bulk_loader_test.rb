@@ -26,7 +26,7 @@ class BulkLoaderTest < IntegrationTest
 
   def retrieve_document_from_rummager(link)
     get "/documents/#{CGI::escape(link)}"
-    MultiJson.decode(last_response.body)
+    JSON.parse(last_response.body)
   end
 
   def assert_document_is_in_rummager(document, skip_keys=["popularity"])
@@ -70,7 +70,7 @@ class BulkLoaderTest < IntegrationTest
     doc_v1 = @sample_document.merge({"title" => "Original Title"})
     doc_v2 = @sample_document.merge({"title" => "New Title"})
 
-    post "/documents", MultiJson.encode(doc_v1)
+    post "/documents", doc_v1.to_json
     old_index.commit
     assert_document_is_in_rummager(doc_v1)
 

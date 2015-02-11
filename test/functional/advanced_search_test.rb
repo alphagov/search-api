@@ -12,7 +12,7 @@ class AdvancedSearchTest < IntegrationTest
       .returns(stub(total: 1, results: [sample_document]))
     get "/rummager_test/advanced_search", {per_page: '1', page: '1', keywords: 'meh'}, "HTTP_ACCEPT" => "application/json"
     assert last_response.ok?, "Bad status: #{last_response.status}"
-    result = MultiJson.decode(last_response.body)
+    result = JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
     assert_equal 1, result["total"]
   end
@@ -24,7 +24,7 @@ class AdvancedSearchTest < IntegrationTest
     expected_result = {'total' => 1, 'results' => [sample_document_attributes]}
     assert last_response.ok?, "Bad status: #{last_response.status}"
     assert_match /application\/json/, last_response.headers["Content-Type"]
-    result = MultiJson.decode(last_response.body)
+    result = JSON.parse(last_response.body)
     assert_equal expected_result, result
   end
 end

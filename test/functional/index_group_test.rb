@@ -1,5 +1,4 @@
 require "test_helper"
-require "multi_json"
 require "elasticsearch/search_server"
 require "elasticsearch/index_group"
 require "search_config"
@@ -8,7 +7,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
 
   ELASTICSEARCH_OK = {
     status: 200,
-    body: MultiJson.encode({"ok" => true, "acknowledged" => true})
+    body: {"ok" => true, "acknowledged" => true}.to_json
   }
 
   def setup
@@ -44,10 +43,10 @@ class IndexGroupTest < MiniTest::Unit::TestCase
   end
 
   def test_create_index
-    expected_body = MultiJson.encode({
+    expected_body = {
       "settings" => @schema["index"]["settings"],
       "mappings" => @schema["mappings"]["default"]
-    })
+    }.to_json
     stub = stub_request(:put, %r(http://localhost:9200/mainstream-.*/))
       .with(body: expected_body)
       .to_return(
@@ -63,10 +62,10 @@ class IndexGroupTest < MiniTest::Unit::TestCase
   end
 
   def test_create_index_with_custom_mappings
-    expected_body = MultiJson.encode({
+    expected_body = {
       "settings" => @schema["index"]["settings"],
       "mappings" => @schema["mappings"]["custom"]
-    })
+    }.to_json
     stub = stub_request(:put, %r(http://localhost:9200/custom-.*/))
       .with(body: expected_body)
       .to_return(
@@ -86,15 +85,15 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     get_stub = stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           "test-new" => { "aliases" => {} }
-        })
+        }.to_json
       )
-    expected_body = MultiJson.encode({
+    expected_body = {
       "actions" => [
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
-    })
+    }.to_json
     post_stub = stub_request(:post, "http://localhost:9200/_aliases")
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
@@ -110,18 +109,18 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     get_stub = stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-new" => { "aliases" => {} }
-        })
+        }.to_json
       )
 
-    expected_body = MultiJson.encode({
+    expected_body = {
       "actions" => [
         { "remove" => { "index" => "test-old", "alias" => "test" } },
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
-    })
+    }.to_json
     post_stub = stub_request(:post, "http://localhost:9200/_aliases")
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
@@ -138,20 +137,20 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     get_stub = stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-old2" => { "aliases" => { "test" => {} } },
           "test-new" => { "aliases" => {} }
-        })
+        }.to_json
       )
 
-    expected_body = MultiJson.encode({
+    expected_body = {
       "actions" => [
         { "remove" => { "index" => "test-old", "alias" => "test" } },
         { "remove" => { "index" => "test-old2", "alias" => "test" } },
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
-    })
+    }.to_json
     post_stub = stub_request(:post, "http://localhost:9200/_aliases")
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
@@ -167,9 +166,9 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     get_stub = stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           "test" => { "aliases" => {} }
-        })
+        }.to_json
       )
 
     assert_raises RuntimeError do
@@ -181,8 +180,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
-        })
+        body: {}.to_json
       )
 
     assert_equal [], @server.index_group("test").index_names
@@ -193,9 +191,9 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           index_name => { "aliases" => { "test" => {} } }
-        })
+        }.to_json
       )
 
     assert_equal [index_name], @server.index_group("test").index_names
@@ -208,10 +206,10 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           this_name => { "aliases" => {} },
           other_name => { "aliases" => {} }
-        })
+        }.to_json
       )
 
     assert_equal [this_name], @server.index_group("test").index_names
@@ -221,8 +219,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
-        })
+        body: {}.to_json
       )
 
     @server.index_group("test").clean
@@ -233,9 +230,9 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           index_name => { "aliases" => {} }
-        })
+        }.to_json
       )
 
     delete_stub = stub_request(:delete, "http://localhost:9200/#{index_name}")
@@ -251,9 +248,9 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           index_name => { "aliases" => { "test" => {} } }
-        })
+        }.to_json
       )
 
     @server.index_group("test").clean
@@ -267,10 +264,10 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           index_names[0] => { "aliases" => {} },
           index_names[1] => { "aliases" => {} }
-        })
+        }.to_json
       )
 
     delete_stubs = index_names.map { |index_name|
@@ -290,10 +287,10 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           live_name => { "aliases" => { "test" => {} } },
           dead_name => { "aliases" => {} }
-        })
+        }.to_json
       )
 
     delete_stub = stub_request(:delete, "http://localhost:9200/#{dead_name}")
@@ -310,9 +307,9 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           index_name => { "aliases" => { "something_else" => {} } }
-        })
+        }.to_json
       )
 
     @server.index_group("test").clean
@@ -326,10 +323,10 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
-        body: MultiJson.encode({
+        body: {
           this_name => { "aliases" => {} },
           other_name => { "aliases" => {} }
-        })
+        }.to_json
       )
 
     delete_stub = stub_request(:delete, "http://localhost:9200/#{this_name}")

@@ -3,7 +3,7 @@
 end
 
 require "sinatra"
-require "multi_json"
+require "json"
 require "csv"
 
 require "document"
@@ -200,7 +200,7 @@ class Rummager < Sinatra::Application
     output = GovukSearchPresenter.new(result_streams, result_context).present
     output["spelling_suggestions"] = suggester.suggestions(@query)
 
-    MultiJson.encode output
+    output.to_json
   end
 
   # Return a unified set of results for the GOV.UK site search.
@@ -354,13 +354,11 @@ class Rummager < Sinatra::Application
 
     unless parser.valid?
       status 422
-      return MultiJson.encode({
-        error: parser.error,
-      })
+      return { error: parser.error }.to_json
     end
 
     searcher = UnifiedSearcher.new(unified_index, metasearch_index, registries, registry_by_field, suggester)
-    MultiJson.encode searcher.search(parser.parsed_params)
+    searcher.search(parser.parsed_params).to_json
   end
 
   # To search a named index:
@@ -403,7 +401,7 @@ class Rummager < Sinatra::Application
       spelling_suggestions: suggester.suggestions(@query)
     }
     presenter = ResultSetPresenter.new(result_set, presenter_context)
-    MultiJson.encode presenter.present
+    presenter.present.to_json
   end
 
   # Perform an advanced search. Supports filters and pagination.
@@ -435,20 +433,20 @@ class Rummager < Sinatra::Application
     # Using request.params because it is just the params from the request
     # rather than things added by Sinatra (eg splat, captures, index and format)
     result_set = current_index.advanced_search(request.params)
-    MultiJson.encode ResultSetPresenter.new(result_set).present
+    ResultSetPresenter.new(result_set).present.to_json
   end
 
   get "/organisations.?:request_format?" do
     json_only
 
     organisations = organisation_registry.all
-    MultiJson.encode OrganisationSetPresenter.new(organisations).present
+    OrganisationSetPresenter.new(organisations).present.to_json
   end
 
   # Insert (or overwrite) a document
   post "/?:index?/documents" do
     request.body.rewind
-    documents = [MultiJson.decode(request.body.read)].flatten.map { |hash|
+    documents = [JSON.parse(request.body.read)].flatten.map { |hash|
       current_index.document_from_hash(hash)
     }
 
@@ -468,7 +466,7 @@ class Rummager < Sinatra::Application
     document = current_index.get(params["splat"].first)
     halt 404 unless document
 
-    MultiJson.encode document.to_hash
+    document.to_hash.to_json
   end
 
   delete "/?:index?/documents/*" do
@@ -489,8 +487,8 @@ class Rummager < Sinatra::Application
   end
 
   def get_type_from_request_body(request_body)
-    MultiJson.decode(request_body).fetch("_type", nil)
-  rescue MultiJson::DecodeError
+    JSON.parse(request_body.read).fetch("_type", nil)
+  rescue JSON::ParserError
     nil
   end
 
@@ -547,7 +545,7 @@ class Rummager < Sinatra::Application
         "scheduled" => scheduled_count
       }
     end
-    MultiJson.encode(status)
+    status.to_json
   end
 
 end

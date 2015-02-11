@@ -39,7 +39,7 @@ class ElasticsearchMigrationTest < IntegrationTest
 
   def add_sample_documents
     sample_document_attributes.each do |sample_document|
-      post "/documents", MultiJson.encode(sample_document)
+      post "/documents", sample_document.to_json
       assert last_response.ok?
     end
   end
@@ -49,7 +49,7 @@ class ElasticsearchMigrationTest < IntegrationTest
   end
 
   def assert_result_links(*links)
-    parsed_response = MultiJson.decode(last_response.body)
+    parsed_response = JSON.parse(last_response.body)
     assert_equal links, parsed_response["results"].map { |r| r["link"] }
   end
 
@@ -58,7 +58,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     # stemming settings
 
     get "/search?q=directive"
-    assert_equal 2, MultiJson.decode(last_response.body)["results"].length
+    assert_equal 2, JSON.parse(last_response.body)["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
 

@@ -89,7 +89,7 @@ class ElasticsearchSearchTest < IntegrationTest
 
   def add_sample_documents
     sample_document_attributes.each do |sample_document|
-      post "/documents", MultiJson.encode(sample_document)
+      post "/documents", sample_document.to_json
       assert last_response.ok?
     end
   end
@@ -105,7 +105,7 @@ class ElasticsearchSearchTest < IntegrationTest
       order = hash[:order]
     end
 
-    parsed_response = MultiJson.decode(last_response.body)
+    parsed_response = JSON.parse(last_response.body)
     case parsed_response
       when Hash
         result_links = parsed_response["results"].map { |r| r["link"] }

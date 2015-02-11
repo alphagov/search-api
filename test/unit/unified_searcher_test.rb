@@ -40,7 +40,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   def cma_case_mapping
-    MultiJson.load(File.read("config/schema/default/doctypes/cma_case.json"))
+    JSON.parse(File.read("config/schema/default/doctypes/cma_case.json"))
   end
 
   def stub_suggester
