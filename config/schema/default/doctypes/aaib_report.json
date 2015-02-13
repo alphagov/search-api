@@ -82,7 +82,7 @@
     },
     "location": {
       "type": "string",
-      "index": "analyzed"
+      "index": "not_analyzed"
     }
   }
 }
