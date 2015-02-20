@@ -92,11 +92,11 @@
             "value": "defence"
           },
           {
-            "label": "Distribution and Service Industries",
+            "label": "Distribution and service industries",
             "value": "distribution-and-service-industries"
           },
           {
-            "label": "Electronics Industry",
+            "label": "Electronics",
             "value": "electronics-industry"
           },
           {
@@ -136,11 +136,11 @@
             "value": "mineral-extraction-mining-and-quarrying"
           },
           {
-            "label": "Motor Industry",
+            "label": "Motor industry",
             "value": "motor-industry"
           },
           {
-            "label": "Oil and Gas refining and Petrochemicals",
+            "label": "Oil and gas refining and petrochemicals",
             "value": "oil-and-gas-refining-and-petrochemicals"
           },
           {
@@ -156,7 +156,7 @@
             "value": "public-markets"
           },
           {
-            "label": "Recreation and Leisure",
+            "label": "Recreation and leisure",
             "value": "recreation-and-leisure"
           },
           {
@@ -266,7 +266,15 @@
             "value": "mergers-phase-2-prohibition"
           },
           {
-            "label": "Consumer enforcement - no action",
+            "label": "Mergers - phase 2 cancellation",
+            "value": "mergers-phase-2-cancellation"
+          },
+          {
+            "label": "Mergers - phase 1 public interest interventions",
+            "value": "mergers-phase-1-public-interest-interventions"
+          },
+          {
+            "label": "Consumer enforcement - no formal action",
             "value": "consumer-enforcement-no-action"
           },
           {
@@ -276,6 +284,10 @@
           {
             "label": "Consumer enforcement - undertakings",
             "value": "consumer-enforcement-undertakings"
+          },
+          {
+            "label": "Consumer enforcement - changes to business practices agreed",
+            "value": "consumer-enforcement-changes-to-business-practices-agreed"
           },
           {
             "label": "Regulatory references and appeals - final determination",
