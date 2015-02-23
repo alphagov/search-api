@@ -384,6 +384,7 @@ class UnifiedSearchBuilder
       "document_series"   => 1.3,
       "document_collection" => 1.3,
       "operational_field" => 1.5,
+      "contact"           => 0.3,
     }
   end
 
