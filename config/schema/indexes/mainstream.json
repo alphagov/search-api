@@ -1,0 +1,19 @@
+{
+  "document_types": [
+    "aaib_report",
+    "cma_case",
+    "contact",
+    "countryside_stewardship_grant",
+    "drug_safety_update",
+    "edition",
+    "european_structural_investment_fund",
+    "hmrc_manual",
+    "hmrc_manual_section",
+    "international_development_fund",
+    "maib_report",
+    "manual",
+    "manual_section",
+    "medical_safety_alert",
+    "raib_report"
+  ]
+}
