@@ -9,15 +9,6 @@ class ElasticsearchSearchTest < IntegrationTest
     enable_test_index_connections
     try_remove_test_index
 
-    stub_modified_schema do |schema|
-      properties = schema["mappings"]["default"]["edition"]["properties"]
-      properties.merge!({
-                          "search_format_types" => { "type" => "string", "index" => "not_analyzed" },
-                          "public_timestamp" => { "type" => "date", "index" => "not_analyzed" },
-                          "organisations" => { "type" => "string", "index" => "not_analyzed" },
-                        })
-    end
-
     create_test_indexes
     add_sample_documents
     commit_index

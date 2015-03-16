@@ -85,7 +85,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_returns_semantic_response_for_invalid_query
-    get "/search", { q: "bob", sort: "not_in_schema" }
+    get "/mainstream_test/search", { q: "bob", sort: "not_in_schema" }
     assert_equal 422, last_response.status
     assert_equal "Sorting on unknown property: not_in_schema", last_response.body
   end
@@ -253,9 +253,10 @@ class SearchTest < IntegrationTest
       "fields" => sample_document_attributes.merge("specialist_sectors" => ["oil-and-gas/licensing"])
     }
 
-    stub_index.expects(:mappings).twice.returns(mappings)
+    stub_index.stubs(:schema).returns(nil)
+    stub_index.stubs(:mappings).returns(mappings)
     stub_index.expects(:raw_search).returns({"hits" => {"hits" => [document], "total" => 1}})
-    stub_index.expects(:index_name).returns("mainstream,government,detailed")
+    stub_index.expects(:index_names).returns(%w{mainstream government detailed})
     stub_metasearch_index.expects(:analyzed_best_bet_query).with("bob").returns("bob")
     stub_metasearch_index.expects(:raw_search).returns({"hits" => {"hits" => []}})
     Registry::SpecialistSector.any_instance.expects(:[])

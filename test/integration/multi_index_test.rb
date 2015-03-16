@@ -24,11 +24,6 @@ class MultiIndexTest < IntegrationTest
   def reset_content_indexes
     INDEX_NAMES.each do |index_name|
       try_remove_test_index(index_name)
-      if index_name == "government_test"
-        add_field_to_mappings("public_timestamp", "date")
-      end
-      add_field_to_mappings("specialist_sectors")
-      add_field_to_mappings("section")
       create_test_index(index_name)
     end
   end

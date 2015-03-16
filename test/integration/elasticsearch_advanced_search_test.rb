@@ -5,26 +5,11 @@ require "rest-client"
 class ElasticsearchAdvancedSearchTest < IntegrationTest
 
   def setup
-    @index_name = "rummager_test"
+    @index_name = "mainstream_test"
 
     stub_elasticsearch_settings([@index_name])
     enable_test_index_connections
     try_remove_test_index
-
-    stub_modified_schema do |schema|
-      properties = schema["mappings"]["default"]["edition"]["properties"]
-      properties.merge!(
-        "boolean_property" => { "type" => "boolean", "index" => "not_analyzed" },
-        "date_property" => { "type" => "date", "index" => "not_analyzed" },
-        "organisations" => { "type" => "string", "index" => "not_analyzed" },
-        "attachments" => {
-          "properties" => {
-            "title" => {"type" => "string", "index" => "not_analyzed"},
-            "command_paper_number" => {"type" => "string", "index" => "not_analyzed"},
-          }
-        }
-      )
-    end
 
     create_test_indexes
     add_sample_documents
@@ -43,8 +28,8 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "format" => "answer",
         "link" => "/an-example-answer",
         "indexable_content" => "I like my badger: he is tasty and delicious",
-        "boolean_property" => true,
-        "date_property" => "2012-01-01"
+        "relevant_to_local_government" => true,
+        "updated_at" => "2012-01-01"
       },
       {
         "title" => "Useful government information",
@@ -53,8 +38,8 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "link" => "/another-example-answer",
         "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff",
-        "boolean_property" => false,
-        "date_property" => "2012-01-03"
+        "relevant_to_local_government" => false,
+        "updated_at" => "2012-01-03"
       },
       {
         "title" => "Cheesey government information",
@@ -63,15 +48,15 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "link" => "/yet-another-example-answer",
         "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff, mostly about cheese",
-        "boolean_property" => true,
-        "date_property" => "2012-01-04",
+        "relevant_to_local_government" => true,
+        "updated_at" => "2012-01-04",
         "organisations" => ["ministry-of-cheese"]
       },
       {
         "title" => "Pork pies",
         "link" => "/pork-pies",
-        "boolean_property" => true,
-        "date_property" => "2012-01-02"
+        "relevant_to_local_government" => true,
+        "updated_at" => "2012-01-02"
       },
       {
         "title" => "Doc with attachments",
@@ -161,14 +146,14 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   end
 
   def test_should_allow_boolean_filtering
-    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&boolean_property=true"
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true"
     assert last_response.ok?
     assert_result_total 3
     assert_result_links "/an-example-answer", "/yet-another-example-answer", "/pork-pies", order: false
   end
 
   def test_should_allow_date_filtering
-    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&date_property[before]=2012-01-03"
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&updated_at[before]=2012-01-03"
     assert last_response.ok?
     assert_result_total 3
     assert_result_links "/an-example-answer", "/another-example-answer", "/pork-pies", order: false
@@ -185,8 +170,8 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "link" => "/cheese-example-answer",
         "section" => "Crime",
         "indexable_content" => "Cheese tax.  Cheese recipies.  Cheese music.",
-        "boolean_property" => true,
-        "date_property" => "2012-01-01"
+        "relevant_to_local_government" => true,
+        "updated_at" => "2012-01-01"
       }
     ]
     more_documents.each do |sample_document|
@@ -195,8 +180,8 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     end
     commit_index
 
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&section=Crime"
 
-    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&boolean_property=true&date_property[after]=2012-01-02&keywords=tax&section=Crime"
     assert last_response.ok?
     assert_result_total 1
     assert_result_links "/yet-another-example-answer"
@@ -206,7 +191,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     # The new organisation registry expands organisations from slugs into
     # hashes; for backwards compatibility, we shouldn't do this until it's
     # configured (and until clients can handle either format).
-    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&boolean_property=true&date_property[after]=2012-01-02&keywords=tax&section=Crime"
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&section=Crime"
 
     assert last_response.ok?
     assert_result_total 1
@@ -215,7 +200,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   end
 
   def test_should_allow_ordering_by_properties
-    get "/#{@index_name}/advanced_search.json?per_page=4&page=1&order[date_property]=desc"
+    get "/#{@index_name}/advanced_search.json?per_page=4&page=1&order[updated_at]=desc"
     assert last_response.ok?
     assert_result_total 5
     assert_result_links "/yet-another-example-answer", "/another-example-answer", "/pork-pies", "/an-example-answer"

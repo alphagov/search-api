@@ -1,4 +1,5 @@
 require "test_helper"
+require "app"
 require "elasticsearch/search_server"
 require "elasticsearch/index_group"
 require "search_config"
@@ -11,28 +12,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
   }
 
   def setup
-    @schema = {
-      "index" => {
-        "settings" => "awesomeness"
-      },
-      "mappings" => {
-        "default" => {
-          "edition" => {
-            "properties" => {
-              "title" => { "type" => "string" }
-            }
-          }
-        },
-        "custom" => {
-          "edition" => {
-            "properties" => {
-              "title" => { "type" => "string" },
-              "description" => { "type" => "string" }
-            }
-          }
-        }
-      }
-    }
+    @schema = Rummager.settings.search_config.search_server.schema
     @server = Elasticsearch::SearchServer.new(
       "http://localhost:9200/",
       @schema,
@@ -44,8 +24,8 @@ class IndexGroupTest < MiniTest::Unit::TestCase
 
   def test_create_index
     expected_body = {
-      "settings" => @schema["index"]["settings"],
-      "mappings" => @schema["mappings"]["default"]
+      "settings" => @schema.elasticsearch_settings("mainstream"),
+      "mappings" => @schema.elasticsearch_mappings("mainstream"),
     }.to_json
     stub = stub_request(:put, %r(http://localhost:9200/mainstream-.*/))
       .with(body: expected_body)
@@ -58,26 +38,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     assert_requested(stub)
     assert index.is_a? Elasticsearch::Index
     assert_match(/^mainstream-/, index.index_name)
-    assert_equal ["title"], index.field_names
-  end
-
-  def test_create_index_with_custom_mappings
-    expected_body = {
-      "settings" => @schema["index"]["settings"],
-      "mappings" => @schema["mappings"]["custom"]
-    }.to_json
-    stub = stub_request(:put, %r(http://localhost:9200/custom-.*/))
-      .with(body: expected_body)
-      .to_return(
-        status: 200,
-        body: '{"ok": true, "acknowledged": true}'
-      )
-    index = @server.index_group("custom").create_index
-
-    assert_requested(stub)
-    assert index.is_a? Elasticsearch::Index
-    assert_match(/^custom-/, index.index_name)
-    assert_equal ["title", "description"], index.field_names
+    assert index.field_names.include? "title"
   end
 
   def test_switch_index_with_no_existing_alias

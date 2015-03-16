@@ -3,7 +3,7 @@ require "rest-client"
 require_relative "multi_index_test"
 
 class BestBetsTest < MultiIndexTest
-  METASEARCH_INDEX_NAME = "metasearch-test"
+  METASEARCH_INDEX_NAME = "metasearch_test"
 
   def setup
     super
@@ -61,9 +61,6 @@ class BestBetsTest < MultiIndexTest
 
   def setup_metasearch_index
     try_remove_test_index(METASEARCH_INDEX_NAME)
-    stub_modified_schema do |schema|
-      schema["mappings"][METASEARCH_INDEX_NAME] = schema["mappings"]["metasearch"]
-    end
     create_test_index(METASEARCH_INDEX_NAME)
     add_sample_bets(sample_bets)
   end
