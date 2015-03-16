@@ -51,15 +51,4 @@ class ElasticsearchIndexingTest < IntegrationTest
 
     assert_document_is_in_rummager(@sample_document)
   end
-
-  def test_should_be_able_to_index_a_document_with_additional_fields
-    add_field_to_mappings("topics")
-    create_test_indexes
-
-    test_data = @sample_document.merge("topics" => [1,2])
-
-    post "/documents", test_data.to_json
-
-    assert_document_is_in_rummager(test_data)
-  end
 end

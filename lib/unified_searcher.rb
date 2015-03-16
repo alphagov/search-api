@@ -26,14 +26,14 @@ class UnifiedSearcher
     UnifiedSearchPresenter.new(
       es_response,
       params[:start],
-      @index.index_name.split(","),
+      index.index_names,
       params[:filters],
       params[:facets],
       registries,
       registry_by_field,
       suggested_queries(params[:query]),
       facet_examples,
-      index.mappings,
+      index.schema,
     ).present
   end
 

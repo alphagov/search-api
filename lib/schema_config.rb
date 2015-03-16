@@ -1,16 +1,34 @@
 require "json"
 require "yaml"
+require "schema/index_schema"
 
 class SchemaConfig
   def initialize(config_path)
     @config_path = config_path
+    @index_schemas = IndexSchemaParser.parse_all(config_path)
   end
 
-  def elasticsearch_schema
-    {
-      "index" => elasticsearch_index,
-      "mappings" => elasticsearch_mappings,
-    }
+  def schema_for_alias_name(alias_name)
+    @index_schemas.each do |index_name, schema|
+      if alias_name.start_with?(index_name)
+        return schema
+      end
+    end
+    raise RuntimeError("No schema found for alias `#{alias_name}")
+  end
+
+  def elasticsearch_settings(index_name)
+    @settings ||= elasticsearch_index["settings"]
+  end
+
+  def elasticsearch_mappings(index_name)
+    index_name = index_name.sub(/[-_]test$/, '')
+    special_mappings = schema_yaml["mappings"]
+    if special_mappings.include?(index_name)
+      special_mappings[index_name]
+    else
+      @index_schemas.fetch(index_name).es_mappings
+    end
   end
 
 private
@@ -29,42 +47,6 @@ private
     end
   end
 
-  def elasticsearch_mappings
-    schema_yaml["mappings"].merge(
-      "default" => doctype_schemas,
-    )
-  end
-
-  def core_doctype_schema
-    load_json("default/core.json")
-  end
-
-  def doctype_schemas
-    files = Dir.new(doctype_path).select { |filename|
-      filename =~ /\A[a-z]+(_[a-z]+)*\.json\z/
-    }
-
-    files.each.with_object({}) do |filename, doctypes|
-      doctype = filename.split(".").first
-      doctypes[doctype] = load_doctype(filename)
-    end
-  end
-
-  def load_doctype(filename)
-    doctype_schema = load_json("default/doctypes/#{filename}")
-
-    # Strip the details key from each property -- it contains stuff that
-    # shouldn't be sent to elasticsearch
-    doctype_schema["properties"].each do |property, settings|
-      settings.reject! { |key, _| key == "details" }
-    end
-
-    deep_merge(
-      core_doctype_schema,
-      load_json("default/doctypes/#{filename}"),
-    )
-  end
-
   def synonym_filter
     load_yaml("synonyms.yml")
   end
@@ -75,19 +57,5 @@ private
 
   def load_yaml(file_path)
     YAML.load_file(File.join(config_path, file_path))
-  end
-
-  def load_json(file_path)
-    JSON.parse(File.read(File.join(config_path, file_path), encoding: 'UTF-8'))
-  end
-
-  def doctype_path
-    File.join(config_path, "default", "doctypes")
-  end
-
-  def deep_merge(base_hash, other_hash)
-    base_hash.merge(other_hash) { |_, base_value, other_value|
-      deep_merge(base_value, other_value)
-    }
   end
 end

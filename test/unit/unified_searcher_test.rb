@@ -39,8 +39,19 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }]
   end
 
-  def cma_case_mapping
-    JSON.parse(File.read("config/schema/default/doctypes/cma_case.json"))
+  def cma_case_allowed_values
+    return {
+      "case_state" => [
+        {
+          "label" => "Open",
+          "value" => "open",
+        },
+        {
+          "label" => "Closed",
+          "value" => "closed",
+        },
+      ]
+    }
   end
 
   def stub_suggester
@@ -169,6 +180,19 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester)
   end
 
+  def make_schema
+    schema = stub("schema")
+    index_schema = stub("index schema")
+    document_schema = stub("document_schema")
+
+    schema.stubs(:schema_for_alias_name).returns(index_schema)
+    index_schema.stubs(:document_type).returns(document_schema)
+    document_schema.stubs(:allowed_values).returns({
+      "cma_case" => cma_case_allowed_values
+    })
+    [schema, document_schema]
+  end
+
   context "unfiltered, unsorted search" do
 
     setup do
@@ -183,14 +207,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.expects(:index_name).returns(
-        "mainstream,detailed,government"
+      @combined_index.expects(:index_names).returns(
+        %w{mainstream detailed government}
       )
-      @combined_index.expects(:mappings).returns(
-        {
-          "cma_case" => cma_case_mapping
-        }
-      )
+      @combined_index.expects(:schema).returns(make_schema[0])
 
       @results = @searcher.search({
         start: 0,
@@ -236,14 +256,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.expects(:index_name).returns(
-        "mainstream,detailed,government"
+      @combined_index.expects(:index_names).returns(
+        %w{mainstream detailed government}
       )
-      @combined_index.expects(:mappings).returns(
-        {
-          "cma_case" => cma_case_mapping
-        }
-      )
+      @combined_index.expects(:schema).returns(make_schema[0])
 
       @results = @searcher.search({
         start: 0,
@@ -285,14 +301,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.expects(:index_name).returns(
-        "mainstream,detailed,government"
+      @combined_index.expects(:index_names).returns(
+        %w{mainstream detailed government}
       )
-      @combined_index.expects(:mappings).returns(
-        {
-          "cma_case" => cma_case_mapping
-        }
-      )
+      @combined_index.expects(:schema).returns(make_schema[0])
 
       @results = @searcher.search({
         start: 0,
@@ -349,14 +361,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
           ]
         }},
       })
-      @combined_index.expects(:index_name).returns(
-        "mainstream,detailed,government"
+      @combined_index.expects(:index_names).returns(
+        %w{mainstream detailed government}
       )
-      @combined_index.expects(:mappings).returns(
-        {
-          "cma_case" => cma_case_mapping
-        }
-      )
+      @combined_index.expects(:schema).returns(make_schema[0])
 
       @results = @searcher.search({
         start: 0,

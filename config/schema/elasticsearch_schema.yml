@@ -61,8 +61,6 @@ mappings:
 
   page-traffic-test: *page-traffic
 
-  default:
-    # See config/schema/default/doctypes/*.json
   metasearch: &metasearch
     best_bet:
       _all: { enabled: false }
@@ -72,56 +70,3 @@ mappings:
         stemmed_query_as_term: { type: string, index: not_analyzed }
         details:       { type: string, index: not_analyzed }
   metasearch-test: *metasearch
-  government:
-    edition:
-      _all: { enabled: true }
-      properties:
-        id:          { type: long, index: not_analyzed, include_in_all: false }
-        acronym:     { type: string, index: analyzed }
-        attachments:
-          properties:
-            content: {type: string, index: analyzed}
-            title: {type: string, index: analyzed}
-            isbn: {type: string, index: not_analyzed}
-            unique_reference: {type: string, index: not_analyzed}
-            command_paper_number: {type: string, index: not_analyzed}
-            hoc_paper_number: {type: string, index: not_analyzed}
-        latest_change_note: { type: string, index: not_analyzed, include_in_all: false }
-        description: { type: string, index: analyzed }
-        display_type: { type: string, index: not_analyzed, include_in_all: false }
-        document_collections: { type: string, index: not_analyzed, include_in_all: false }
-        document_series: { type: string, index: not_analyzed, include_in_all: false }
-        release_timestamp: { type: date, index: not_analyzed, include_in_all: false }
-        format:      { type: string, index: not_analyzed, include_in_all: false }
-        indexable_content: { type: string, index: analyzed }
-        link:        { type: string, index: not_analyzed, include_in_all: false }
-
-        # Note: the "metadata" property is intended for the storage of additional
-        # non-searchable document properties. This allows additional information
-        # to be stored and displayed in search results without having to make
-        # changes to the schema.
-        metadata: { type: object, index: no }
-
-        operational_field: { type: string, index: not_analyzed, include_in_all: false }
-        organisations: { type: string, index: not_analyzed, include_in_all: false }
-        organisation_state: { type: string, index: not_analyzed, include_in_all: false }
-        people: { type: string, index: not_analyzed, include_in_all: false }
-        policies: { type: string, index: not_analyzed, include_in_all: false }
-        popularity: { type: float, stored: true }
-        public_timestamp: { type: date, index: not_analyzed, include_in_all: false }
-        relevant_to_local_government: { type: boolean, index: not_analyzed, include_in_all: false }
-        search_format_types: { type: string, index: not_analyzed, include_in_all: false }
-        section:     { type: string, index: not_analyzed, include_in_all: false }
-        specialist_sectors: { type: string, index: not_analyzed, include_in_all: false }
-        slug:        { type: string, index: not_analyzed, include_in_all: false }
-        statistics_announcement_state: { type: string, index: not_analyzed, include_in_all: false }
-        subsection:  { type: string, index: not_analyzed, include_in_all: false }
-        subsubsection:  { type: string, index: not_analyzed, include_in_all: false }
-        mainstream_browse_pages: { type: string, index: not_analyzed, include_in_all: false }
-        tags: { type: string, index: not_analyzed, include_in_all: false }
-        title:       { type: string, index: analyzed }
-        topics: { type: string, index: not_analyzed, include_in_all: false }
-        world_locations: { type: string, index: not_analyzed, include_in_all: false }
-        has_official_document: { type: boolean, index: not_analyzed, include_in_all: false }
-        has_command_paper: { type: boolean, index: not_analyzed, include_in_all: false }
-        has_act_paper: { type: boolean, index: not_analyzed, include_in_all: false }

@@ -71,7 +71,7 @@ class Rummager < Sinatra::Application
   end
 
   def unified_index
-    search_server.index(settings.search_config.govuk_index_names.join(","))
+    search_server.index_for_search(settings.search_config.govuk_index_names)
   end
 
   def metasearch_index

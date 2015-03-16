@@ -2,10 +2,10 @@ require "active_support/inflector"
 
 class ResultSetPresenter
 
-  def initialize(result_set, context = {}, mappings = {})
+  def initialize(result_set, context = {}, schema = nil)
     @result_set = result_set
     @context = context
-    @mappings = mappings
+    @schema = schema
   end
 
   def present
@@ -117,14 +117,22 @@ private
   end
 
   def expand_metadata(document_attrs)
+    if @schema.nil?
+      return document_attrs
+    end
+
+    document_schema = schema_for_document(document_attrs)
+
     params_to_expand = document_attrs.select { |k, _|
-      schema_get_expandable_fields(document_attrs).include?(k)
+      document_schema.allowed_values.include?(k)
     }
 
     expanded_params = params_to_expand.reduce({}) { |params, (field_name, values)|
       params.merge(
-        field_name => Array(values).map { |values|
-          schema_get_field_label(document_attrs, field_name, values)
+        field_name => Array(values).map { |raw_value|
+          document_schema.allowed_values[field_name].find { |allowed_value|
+            allowed_value.fetch("value") == raw_value
+          }
         }
       )
     }
@@ -132,29 +140,13 @@ private
     document_attrs.merge(expanded_params)
   end
 
-  def schema_get_field_label(document, field_name, value)
-    schema(document)
-      .fetch("properties")
-      .fetch(field_name, {})
-      .fetch("details", {})
-      .fetch("allowed_values", [])
-      .find {|allowed_value| allowed_value.fetch("value") == value }
-  end
-
-  def schema(document)
-    @mappings.fetch(document_type(document), {})
+  def schema_for_document(document)
+    index = document[:_metadata]["_index"]
+    index_schema = @schema.schema_for_alias_name(index)
+    index_schema.document_type(document_type(document))
   end
 
   def document_type(document)
     document.fetch(:_metadata, {}).fetch("_type", nil)
-  end
-
-  def schema_get_expandable_fields(document)
-    schema(document)
-      .fetch("properties", {})
-      .select { |_, value|
-        value.fetch("details", {}).fetch("allowed_values", {}).any?
-      }
-      .keys
   end
 end

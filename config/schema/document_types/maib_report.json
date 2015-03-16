@@ -1,0 +1,55 @@
+{
+  "fields": [
+    "vessel_type",
+    "report_type",
+    "date_of_occurrence"
+  ],
+
+  "allowed_values": {
+    "vessel_type": [
+      {
+        "label": "Merchant vessel 100 gross tons or over",
+        "value": "merchant-vessel-100-gross-tons-or-over"
+      },
+      {
+        "label": "Merchant vessel under 100 gross tons",
+        "value": "merchant-vessel-under-100-gross-tons"
+      },
+      {
+        "label": "Fishing vessel",
+        "value": "fishing-vessel"
+      },
+      {
+        "label": "Recreational craft - sail",
+        "value": "recreational-craft-sail"
+      },
+      {
+        "label": "Recreational craft - power",
+        "value": "recreational-craft-power"
+      }
+    ],
+
+    "report_type": [
+      {
+        "label": "Investigation report",
+        "value": "investigation-report"
+      },
+      {
+        "label": "Safety bulletin",
+        "value": "safety-bulletin"
+      },
+      {
+        "label": "Completed preliminary examination",
+        "value": "completed-preliminary-examination"
+      },
+      {
+        "label": "Overseas report",
+        "value": "overseas-report"
+      },
+      {
+        "label": "Discontinued investigation",
+        "value": "discontinued-investigation"
+      }
+    ]
+  }
+}

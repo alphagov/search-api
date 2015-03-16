@@ -1,0 +1,111 @@
+{
+  "fields": [
+    "alert_type",
+    "medical_specialism",
+    "issued_date"
+  ],
+
+  "allowed_values": {
+    "alert_type": [
+      {
+        "label": "Drug alert",
+        "value": "drugs"
+      },
+      {
+        "label": "Medical device alert",
+        "value": "devices"
+      }
+    ],
+
+    "medical_specialism": [
+      {
+        "label": "Anaesthetics",
+        "value": "anaesthetics"
+      },
+      {
+        "label": "Cardiology",
+        "value": "cardiology"
+      },
+      {
+        "label": "Care home staff",
+        "value": "care-home-staff"
+      },
+      {
+        "label": "Cosmetic surgery",
+        "value": "cosmetic-surgery"
+      },
+      {
+        "label": "Critical care",
+        "value": "critical-care"
+      },
+      {
+        "label": "Dentistry",
+        "value": "dentistry"
+      },
+      {
+        "label": "General practice",
+        "value": "general-practice"
+      },
+      {
+        "label": "General surgery",
+        "value": "general-surgery"
+      },
+      {
+        "label": "Haematology and oncology",
+        "value": "haematology-oncology"
+      },
+      {
+        "label": "Infection prevention",
+        "value": "infection-prevention"
+      },
+      {
+        "label": "Obstetrics and gynaecology",
+        "value": "obstetrics-gynaecology"
+      },
+      {
+        "label": "Ophthalmology",
+        "value": "ophthalmology"
+      },
+      {
+        "label": "Orthopaedics",
+        "value": "orthopaedics"
+      },
+      {
+        "label": "Paediatrics",
+        "value": "paediatrics"
+      },
+      {
+        "label": "Pathology",
+        "value": "pathology"
+      },
+      {
+        "label": "Pharmacy",
+        "value": "pharmacy"
+      },
+      {
+        "label": "Physiotherapy and occupational therapy",
+        "value": "physiotherapy-occupational-therapy"
+      },
+      {
+        "label": "Radiology",
+        "value": "radiology"
+      },
+      {
+        "label": "Renal medicine",
+        "value": "renal-medicine"
+      },
+      {
+        "label": "Theatre practitioners",
+        "value": "theatre-practitioners"
+      },
+      {
+        "label": "Urology",
+        "value": "urology"
+      },
+      {
+        "label": "Vascular and cardiac surgery",
+        "value": "vascular-cardiac-surgery"
+      }
+    ]
+  }
+}

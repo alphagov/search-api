@@ -1,0 +1,103 @@
+{
+  "fields": [
+    "therapeutic_area",
+    "first_published_at"
+  ],
+
+  "allowed_values": {
+    "therapeutic_area": [
+      {
+        "label": "Anaesthesia and intensive care",
+        "value": "anaesthesia-intensive-care"
+      },
+      {
+        "label": "Cancer",
+        "value": "cancer"
+      },
+      {
+        "label": "Cardiovascular disease and lipidology",
+        "value": "cardiovascular-disease-lipidology"
+      },
+      {
+        "label": "Dentistry",
+        "value": "dentistry"
+      },
+      {
+        "label": "Dermatology",
+        "value": "dermatology"
+      },
+      {
+        "label": "Ear, nose and throat",
+        "value": "ear-nose-throat"
+      },
+      {
+        "label": "Endocrinology, diabetology and metabolism",
+        "value": "endocrinology-diabetology-metabolism"
+      },
+      {
+        "label": "GI, hepatology and pancreatic disorders",
+        "value": "gi-hepatology-pancreatic-disorders"
+      },
+      {
+        "label": "Haematology",
+        "value": "haematology"
+      },
+      {
+        "label": "Immunology and vaccination",
+        "value": "immunology-vaccination"
+      },
+      {
+        "label": "Immunosuppression and transplantation",
+        "value": "immunosuppression-transplantation"
+      },
+      {
+        "label": "Infectious disease",
+        "value": "infectious-disease"
+      },
+      {
+        "label": "Neurology",
+        "value": "neurology"
+      },
+      {
+        "label": "Nutrition and dietetics",
+        "value": "nutrition-dietetics"
+      },
+      {
+        "label": "Obstetrics, gynaecology and fertility",
+        "value": "obstetrics-gynaecology-fertility"
+      },
+      {
+        "label": "Ophthalmology",
+        "value": "ophthalmology"
+      },
+      {
+        "label": "Paediatrics and neonatology",
+        "value": "paediatrics-neonatology"
+      },
+      {
+        "label": "Pain management and palliation",
+        "value": "pain-management-palliation"
+      },
+      {
+        "label": "Psychiatry",
+        "value": "psychiatry"
+      },
+      {
+        "label": "Radiology and imaging",
+        "value": "radiology-imaging"
+      },
+      {
+        "label": "Respiratory disease and allergy",
+        "value": "respiratory-disease-allergy"
+      },
+      {
+        "label": "Rheumatology",
+        "value": "rheumatology"
+      },
+      {
+        "label": "Urology and nephrology",
+        "value": "urology-nephrology"
+      }
+    ]
+  }
+}

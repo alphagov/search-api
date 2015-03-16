@@ -5,7 +5,7 @@ require "cgi"
 class ElasticsearchIndexGroupTest < IntegrationTest
 
   def setup
-    @group_name = "rummager_test"
+    @group_name = "mainstream_test"
     stub_elasticsearch_settings [@group_name]
     enable_test_index_connections
     try_remove_test_index
@@ -24,7 +24,7 @@ class ElasticsearchIndexGroupTest < IntegrationTest
     assert_equal 1, @index_group.index_names.count
     assert_equal index.index_name, @index_group.index_names[0]
     assert_equal(
-      app.settings.search_config.elasticsearch_schema["mappings"]["default"],
+      app.settings.search_config.search_server.schema.elasticsearch_mappings("mainstream"),
       index.mappings
     )
   end

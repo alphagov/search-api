@@ -52,7 +52,7 @@ class ElasticsearchDeletionTest < IntegrationTest
         ]
       },
       {
-        "index" => "metasearch-test",
+        "index" => "metasearch_test",
         "documents" => [
           {
             "_id" => "jobs_exact",
@@ -114,25 +114,25 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def test_should_accept_a_type_to_delete_a_document
-    delete "/metasearch-test/documents/cma-cases/merger-investigation", _type: "cma_case"
+    delete "/metasearch_test/documents/cma-cases/merger-investigation", _type: "cma_case"
     assert last_response.ok?
   end
 
   def test_should_accept_a_type_to_delete_a_document_when_queuing_enabled
     app.settings.expects(:enable_queue).returns(true)
 
-    delete "/metasearch-test/documents/cma-cases/merger-investigation", _type: "cma_case"
+    delete "/metasearch_test/documents/cma-cases/merger-investigation", _type: "cma_case"
     assert last_response.successful?
   end
 
   def test_should_delete_a_best_bet_by_type_and_id
-    get "/metasearch-test/documents/best_bet/jobs_exact"
+    get "/metasearch_test/documents/best_bet/jobs_exact"
     assert last_response.ok?
 
-    delete "/metasearch-test/documents/best_bet/jobs_exact"
+    delete "/metasearch_test/documents/best_bet/jobs_exact"
     assert last_response.ok?
 
-    get "/metasearch-test/documents/best_bet/jobs_exact"
+    get "/metasearch_test/documents/best_bet/jobs_exact"
     assert last_response.not_found?
   end
 
