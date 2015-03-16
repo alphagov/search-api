@@ -1,8 +1,7 @@
 require "json"
-require "schema/document_types"
 
 class IndexSchema
-  attr_reader :name
+  attr_reader :name, :document_types
 
   def initialize(name, document_types)
     @name = name
@@ -41,8 +40,7 @@ class IndexSchemaParser
     )
   end
 
-  def self.parse_all(config_path)
-    known_document_types = DocumentTypesParser.new(config_path).parse
+  def self.parse_all(config_path, known_document_types)
     Hash[IndexSchemaParser::index_schema_paths(config_path).map { |index_name, schema_file_path|
       [
         index_name,

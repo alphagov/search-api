@@ -1,11 +1,17 @@
 require "json"
 require "yaml"
+require "schema/document_types"
+require "schema/field_definitions"
 require "schema/index_schema"
 
 class SchemaConfig
+  attr_reader :field_definitions
+
   def initialize(config_path)
     @config_path = config_path
-    @index_schemas = IndexSchemaParser.parse_all(config_path)
+    @field_definitions = FieldDefinitionParser.new(config_path).parse
+    @document_types = DocumentTypesParser.new(config_path, @field_definitions).parse
+    @index_schemas = IndexSchemaParser.parse_all(config_path, @document_types)
   end
 
   def schema_for_alias_name(alias_name)
@@ -19,6 +25,11 @@ class SchemaConfig
 
   def elasticsearch_settings(index_name)
     @settings ||= elasticsearch_index["settings"]
+  end
+
+  def document_types(index_name)
+    index_name = index_name.sub(/[-_]test$/, '')
+    @index_schemas.fetch(index_name).document_types
   end
 
   def elasticsearch_mappings(index_name)

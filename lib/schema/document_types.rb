@@ -1,5 +1,4 @@
 require "json"
-require "schema/field_definitions"
 
 class DocumentType
   attr_reader :name, :fields, :allowed_values
@@ -101,13 +100,12 @@ end
 class DocumentTypesParser
   attr_reader :config_path
 
-  def initialize(config_path)
+  def initialize(config_path, field_definitions)
     @config_path = config_path
+    @field_definitions = field_definitions
   end
 
   def parse
-    @field_definitions = FieldDefinitionParser.new(config_path).parse
-
     Hash[document_type_paths.map { |document_type, file_path|
       [
         document_type,

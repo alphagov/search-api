@@ -7,6 +7,10 @@ class DocumentTypesTest < ShouldaUnitTestCase
     assert_equal message, exc.message
   end
 
+  def schema_dir
+    File.expand_path('../../../config/schema', File.dirname(__FILE__))
+  end
+
   def cma_case_allowed_values
     [
       {
@@ -22,7 +26,8 @@ class DocumentTypesTest < ShouldaUnitTestCase
 
   context "after loading standard types" do
     setup do
-      @types = DocumentTypesParser.new(File.expand_path('../../../config/schema', File.dirname(__FILE__))).parse
+      field_definitions = FieldDefinitionParser.new(schema_dir).parse
+      @types = DocumentTypesParser.new(schema_dir, field_definitions).parse
       @identifier_es_config = {"type"=>"string", "index"=>"not_analyzed", "include_in_all"=>false}
     end
 
@@ -77,7 +82,7 @@ class DocumentTypesTest < ShouldaUnitTestCase
 
   context "when configuration is invalid" do
     setup do
-      @definitions = FieldDefinitionParser.new(File.expand_path('../../../config/schema', File.dirname(__FILE__))).parse
+      @definitions = FieldDefinitionParser.new(schema_dir).parse
       @parser = DocumentTypeParser.new("/config/path/doc_type.json", nil, @definitions)
     end
 
