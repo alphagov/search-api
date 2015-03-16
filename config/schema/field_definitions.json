@@ -1,0 +1,298 @@
+{
+  "format": {
+    "type": "identifier"
+  },
+
+  "title": {
+    "type": "searchable_text"
+  },
+
+  "description": {
+    "type": "searchable_text"
+  },
+
+  "link": {
+    "description": "The link to the document.  This is usually the path component of the URL of the document, including a leading slash, but sometimes omits the leading slash, and is sometimes an absolute URL of related content which does not appear on GOV.UK",
+    "type": "identifier"
+  },
+
+  "indexable_content": {
+    "type": "searchable_text"
+  },
+
+  "popularity": {
+    "type": "stored_float"
+  },
+
+  "organisations": {
+    "type": "identifiers"
+  },
+
+  "specialist_sectors": {
+    "description": "The navigation \"topics\" that the document is assigned to.  Nothing to do with \"policy areas\"",
+    "type": "identifiers"
+  },
+
+  "policies": {
+    "type": "identifiers"
+  },
+
+  "mainstream_browse_pages": {
+    "type": "identifiers"
+  },
+
+  "tags": {
+    "type": "identifiers"
+  },
+
+  "updated_at": {
+    "type": "searchable_date"
+  },
+
+  "last_update": {
+    "type": "searchable_date"
+  },
+
+  "public_timestamp": {
+    "type": "searchable_date"
+  },
+
+  "latest_change_note": {
+    "type": "unsearchable_text"
+  },
+
+  "section": {
+    "type": "identifier"
+  },
+
+  "subsection": {
+    "type": "identifier"
+  },
+
+  "subsubsection": {
+    "type": "identifier"
+  },
+
+  "id": {
+    "type": "identifier"
+  },
+
+  "acronym": {
+    "type": "searchable_text"
+  },
+
+  "attachments": {
+    "type": "object",
+    "children": {
+      "content": { "type": "searchable_text" },
+      "title": { "type": "searchable_text" },
+      "isbn": { "type": "identifier" },
+      "unique_reference": { "type": "identifier" },
+      "command_paper_number": { "type": "identifier" },
+      "hoc_paper_number": { "type": "identifier" }
+    }
+  },
+
+  "display_type": {
+    "type": "identifier"
+  },
+
+  "document_collections": {
+    "type": "identifiers"
+  },
+
+  "document_series": {
+    "type": "identifiers"
+  },
+
+  "release_timestamp": {
+    "type": "searchable_date"
+  },
+
+  "metadata": {
+    "description": "The \"metadata\" field is intended for the storage of additional non-searchable document data. This allows additional information to be stored and displayed in search results without having to make changes to the schema.",
+    "type": "opaque_object"
+  },
+
+  "operational_field": {
+    "type": "identifier"
+  },
+
+  "organisation_state": {
+    "type": "identifier"
+  },
+
+  "people": {
+    "type": "identifiers"
+  },
+
+  "relevant_to_local_government": {
+    "type": "boolean"
+  },
+
+  "search_format_types": {
+    "type": "identifiers"
+  },
+
+  "slug": {
+    "type": "identifier"
+  },
+
+  "statistics_announcement_state": {
+    "type": "identifier"
+  },
+
+  "topics": {
+    "description": "The policy areas that the document is associated with.  Nothing to do with \"specialist sectors\"",
+    "type": "identifiers"
+  },
+
+  "world_locations": {
+    "type": "identifiers"
+  },
+
+  "has_official_document": {
+    "type": "boolean"
+  },
+
+  "has_command_paper": {
+    "type": "boolean"
+  },
+
+  "has_act_paper": {
+    "type": "boolean"
+  },
+
+  "aircraft_category": {
+    "type": "identifiers"
+  },
+
+  "report_type": {
+    "type": "identifier"
+  },
+
+  "date_of_occurrence": {
+    "type": "searchable_date"
+  },
+
+  "registration": {
+    "type": "identifier"
+  },
+
+  "aircraft_type": {
+    "type": "searchable_text"
+  },
+
+  "location": {
+    "type": "identifiers"
+  },
+
+  "case_type": {
+    "type": "identifier"
+  },
+
+  "case_state": {
+    "type": "identifier"
+  },
+
+  "market_sector": {
+    "type": "identifier"
+  },
+
+  "outcome_type": {
+    "type": "identifier"
+  },
+
+  "opened_date": {
+    "type": "searchable_date"
+  },
+
+  "closed_date": {
+    "type": "searchable_date"
+  },
+
+  "contact_group": {
+    "type": "identifier"
+  },
+
+  "grant_type": {
+    "type": "identifier"
+  },
+
+  "land_use": {
+    "type": "identifier"
+  },
+
+  "tiers_or_standalone_items": {
+    "type": "identifier"
+  },
+
+  "funding_amount": {
+    "description": "Funding (per unit per year)",
+    "type": "identifier"
+  },
+
+  "therapeutic_area": {
+    "type": "identifiers"
+  },
+
+  "first_published_at": {
+    "type": "searchable_date"
+  },
+
+  "fund_state": {
+    "type": "identifier"
+  },
+
+  "fund_type": {
+    "type": "identifiers"
+  },
+
+  "funding_source": {
+    "type": "identifiers"
+  },
+
+  "closing_date": {
+    "type": "searchable_date"
+  },
+
+  "manual": {
+    "type": "identifier"
+  },
+
+  "hmrc_manual_section_id": {
+    "type": "identifier"
+  },
+
+  "development_sector": {
+    "type": "identifiers"
+  },
+
+  "eligible_entities": {
+    "type": "identifiers"
+  },
+
+  "value_of_funding": {
+    "type": "identifiers"
+  },
+
+  "vessel_type": {
+    "type": "identifiers"
+  },
+
+  "alert_type": {
+    "type": "identifier"
+  },
+
+  "medical_specialism": {
+    "type": "identifiers"
+  },
+
+  "issued_date": {
+    "type": "searchable_date"
+  },
+
+  "railway_type": {
+    "type": "identifiers"
+  }
+}
