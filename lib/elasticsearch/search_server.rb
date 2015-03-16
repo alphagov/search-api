@@ -1,11 +1,12 @@
 require "uri"
 require "elasticsearch/index_group"
+require "elasticsearch/index_for_search"
 
 module Elasticsearch
   class NoSuchIndex < ArgumentError; end
 
   class SearchServer
-    DEFAULT_MAPPING_KEY = "default"
+    attr_reader :schema
 
     def initialize(base_uri, schema, index_names, content_index_names,
                    search_config)
@@ -17,12 +18,24 @@ module Elasticsearch
     end
 
     def index_group(prefix)
-      IndexGroup.new(@base_uri, prefix, index_settings(prefix), mappings(prefix), @search_config)
+      IndexGroup.new(
+        @base_uri,
+        prefix,
+        @schema,
+        @search_config
+      )
     end
 
     def index(prefix)
       raise NoSuchIndex, prefix unless index_name_valid?(prefix)
       index_group(prefix).current
+    end
+
+    def index_for_search(names)
+      names.each do |name|
+        raise NoSuchIndex, name unless index_name_valid?(name)
+      end
+      IndexForSearch.new(@base_uri, names, @schema, @search_config)
     end
 
     def content_indices
@@ -32,15 +45,6 @@ module Elasticsearch
     end
 
   private
-    def index_settings(prefix)
-      @schema["index"]
-    end
-
-    def mappings(prefix)
-      mappings = @schema["mappings"]
-      mappings[prefix] || mappings[DEFAULT_MAPPING_KEY]
-    end
-
     def index_name_valid?(index_name)
       index_name.split(",").all? do |name|
         @index_names.include?(name)
