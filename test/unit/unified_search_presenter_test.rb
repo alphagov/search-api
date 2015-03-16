@@ -143,7 +143,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       org_registry.nil? ? {} : {organisations: org_registry},
       options.fetch(:suggestions, []),
       options.fetch(:facet_examples, {}),
-      options.fetch(:mappings, {})
+      options.fetch(:schema, nil)
     )
   end
 
