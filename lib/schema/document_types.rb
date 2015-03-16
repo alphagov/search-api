@@ -125,7 +125,7 @@ private
 
   def document_type_paths
     Dir.new(File.join(config_path, "document_types")).select { |filename|
-      filename =~ /\A[a-z]+(_[a-z]+)*\.json\z/
+      filename =~ /\A[a-z][_a-z]*\.json\z/
     }.map { |filename|
       [
         filename.sub(/.json$/, ''),

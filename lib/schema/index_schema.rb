@@ -88,7 +88,7 @@ private
 
   def self.index_schema_paths(config_path)
     Dir.new(File.join(config_path, "indexes")).select { |filename|
-      filename =~ /\A[a-z]+(_[a-z]+)*\.json\z/
+      filename =~ /\A[a-z][-a-z]*\.json\z/
     }.map { |filename|
       [
         filename.sub(/.json$/, ''),
