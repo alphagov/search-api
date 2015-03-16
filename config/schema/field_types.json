@@ -1,0 +1,83 @@
+{
+  "identifier": {
+    "description": "An identifier, can be used for exact (case and whitespace sensitive) lookup and facetting",
+    "es_config": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false
+    }
+  },
+
+  "identifiers": {
+    "description": "Like identifier, but can occur multiple times in a single document",
+    "multivalued": true,
+    "es_config": {
+      "type": "string",
+      "index": "not_analyzed",
+      "include_in_all": false
+    }
+  },
+
+  "searchable_text": {
+    "description": "A piece of plain text that should be split into words and considered in searches",
+    "es_config": {
+      "type": "string",
+      "index": "analyzed",
+      "include_in_all": true
+    }
+  },
+
+  "unsearchable_text": {
+    "description": "A piece of text which can be returned, but which is not searchable",
+    "es_config": {
+      "type": "string",
+      "index": "no",
+      "include_in_all": false
+    }
+  },
+
+  "stored_float": {
+    "description": "A floating point number stored such that it can be used in ranking calculations",
+    "es_config": {
+      "type": "float",
+      "store": true
+    }
+  },
+
+  "boolean": {
+    "description": "A boolean value which can be returned and used for filtering and facetting",
+    "es_config": {
+      "type": "boolean",
+      "include_in_all": false
+    }
+  },
+
+  "searchable_date": {
+    "description": "A date which can be returned and used for ordering, filtering and facetting",
+    "es_config": {
+      "type": "date",
+      "include_in_all": false
+    }
+  },
+
+  "object": {
+    "description": "A JSON object which contains a defined set of child fields.",
+    "children": "named",
+    "es_config": {
+      "type": "object",
+      "enabled": "true",
+      "dynamic": "strict",
+      "include_in_all": false
+    }
+  },
+
+  "opaque_object": {
+    "description": "A JSON object which is returned, but not parsed or modified by elasticsearch",
+    "children": "dynamic",
+    "es_config": {
+      "type": "object",
+      "enabled": "false",
+      "include_in_all": false
+    }
+  }
+}
