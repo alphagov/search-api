@@ -5,8 +5,8 @@ The purpose of the schema is to define:
 
  - which fields are allowed to be present in documents passed to the search
    indexer
- - how these fields should be processed both at search indexing time
- - how these fields should be searched at search query time
+ - how these fields should be processed at indexing time
+ - how these fields should be searched at query time
 
 The schema is used to produce the elasticsearch configuration for each index,
 but is also used to control how the fields are processed before passing them to
@@ -33,7 +33,7 @@ the name of the type, and has the following properties:
    allowed to contain multiple values, and will be represented as an array when
    documents are being returned.
 
- - `children`: (optional) - if present, the field is contains child fields (ie,
+ - `children`: (optional) - if present, the field contains child fields (ie,
    the field values will be JSON objects containing the child fields).  This
    must be set to one of two values:
 
