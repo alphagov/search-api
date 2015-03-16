@@ -1,0 +1,22 @@
+{
+  "fields": [
+    "format",
+    "title",
+    "title",
+    "format",
+    "title",
+    "description",
+    "link",
+    "indexable_content",
+    "popularity",
+    "organisations",
+    "specialist_sectors",
+    "policies",
+    "mainstream_browse_pages",
+    "tags",
+    "updated_at",
+    "last_update",
+    "public_timestamp",
+    "latest_change_note"
+  ]
+}

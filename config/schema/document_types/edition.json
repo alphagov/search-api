@@ -1,0 +1,32 @@
+{
+  "fields": [
+    "section",
+    "subsection",
+    "subsubsection",
+    "id",
+    "acronym",
+    "attachments",
+    "display_type",
+    "document_collections",
+    "document_series",
+    "release_timestamp",
+    "metadata",
+    "operational_field",
+    "organisations",
+    "organisation_state",
+    "people",
+    "policies",
+    "popularity",
+    "public_timestamp",
+    "relevant_to_local_government",
+    "search_format_types",
+    "specialist_sectors",
+    "slug",
+    "statistics_announcement_state",
+    "topics",
+    "world_locations",
+    "has_official_document",
+    "has_command_paper",
+    "has_act_paper"
+  ]
+}

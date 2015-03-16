@@ -1,0 +1,242 @@
+{
+  "fields": [
+    "fund_state",
+    "location",
+    "development_sector",
+    "eligible_entities",
+    "value_of_funding"
+  ],
+
+  "allowed_values": {
+    "fund_state": [
+      {
+        "label": "Open",
+        "value": "open"
+      },
+      {
+        "label": "Closed",
+        "value": "closed"
+      }
+    ],
+
+    "location": [
+      {
+        "label": "Afghanistan",
+        "value": "afghanistan"
+      },
+      {
+        "label": "Bangladesh",
+        "value": "bangladesh"
+      },
+      {
+        "label": "Burma",
+        "value": "burma"
+      },
+      {
+        "label": "Democratic Republic of Congo",
+        "value": "democratic-republic-of-congo"
+      },
+      {
+        "label": "Ethiopia",
+        "value": "ethiopia"
+      },
+      {
+        "label": "Ghana",
+        "value": "ghana"
+      },
+      {
+        "label": "India",
+        "value": "india"
+      },
+      {
+        "label": "Kenya",
+        "value": "kenya"
+      },
+      {
+        "label": "Kyrgyzstan",
+        "value": "kyrgyzstan"
+      },
+      {
+        "label": "Liberia",
+        "value": "liberia"
+      },
+      {
+        "label": "Malawi",
+        "value": "malawi"
+      },
+      {
+        "label": "Mozambique",
+        "value": "mozambique"
+      },
+      {
+        "label": "Nepal",
+        "value": "nepal"
+      },
+      {
+        "label": "Nigeria",
+        "value": "nigeria"
+      },
+      {
+        "label": "The Occupied Palestinian Territories",
+        "value": "the-occupied-palestinian-territories"
+      },
+      {
+        "label": "Pakistan",
+        "value": "pakistan"
+      },
+      {
+        "label": "Rwanda",
+        "value": "rwanda"
+      },
+      {
+        "label": "Sierra Leone",
+        "value": "sierra-leone"
+      },
+      {
+        "label": "Somalia",
+        "value": "somalia"
+      },
+      {
+        "label": "South Africa",
+        "value": "south-africa"
+      },
+      {
+        "label": "Sudan",
+        "value": "sudan"
+      },
+      {
+        "label": "South Sudan",
+        "value": "south-sudan"
+      },
+      {
+        "label": "Tajikistan",
+        "value": "tajikistan"
+      },
+      {
+        "label": "Tanzania",
+        "value": "tanzania"
+      },
+      {
+        "label": "Uganda",
+        "value": "uganda"
+      },
+      {
+        "label": "Yemen",
+        "value": "yemen"
+      },
+      {
+        "label": "Zambia",
+        "value": "zambia"
+      },
+      {
+        "label": "Zimbabwe",
+        "value": "zimbabwe"
+      }
+    ],
+
+    "development_sector": [
+      {
+        "label": "Agriculture",
+        "value": "agriculture"
+      },
+      {
+        "label": "Climate change",
+        "value": "climate-change"
+      },
+      {
+        "label": "Disabilities",
+        "value": "disabilities"
+      },
+      {
+        "label": "Education",
+        "value": "education"
+      },
+      {
+        "label": "Empowerment and accountability",
+        "value": "empowerment-and-accountability"
+      },
+      {
+        "label": "Environment",
+        "value": "environment"
+      },
+      {
+        "label": "Girls and women",
+        "value": "girls-and-women"
+      },
+      {
+        "label": "Health",
+        "value": "health"
+      },
+      {
+        "label": "Humanitarian emergencies/disasters",
+        "value": "humanitarian-emergencies-disasters"
+      },
+      {
+        "label": "Livelihoods",
+        "value": "livelihoods"
+      },
+      {
+        "label": "Peace and access to justice",
+        "value": "peace-and-access-to-justice"
+      },
+      {
+        "label": "Private sector/business",
+        "value": "private-sector-business"
+      },
+      {
+        "label": "Technology",
+        "value": "technology"
+      },
+      {
+        "label": "Trade",
+        "value": "trade"
+      },
+      {
+        "label": "Water and sanitation",
+        "value": "water-and-sanitation"
+      }
+    ],
+
+    "eligible_entities": [
+      {
+        "label": "Non-governmental organisations (NGOs)",
+        "value": "non-governmental-organisations"
+      },
+      {
+        "label": "UK-based non-profit organisations",
+        "value": "uk-based-non-profit-organisations"
+      },
+      {
+        "label": "UK-based small and diaspora organisations",
+        "value": "uk-based-small-and-diaspora-organisations"
+      },
+      {
+        "label": "Companies",
+        "value": "companies"
+      },
+      {
+        "label": "Local government",
+        "value": "local-government"
+      },
+      {
+        "label": "Educational institutions",
+        "value": "educational-institutions"
+      },
+      {
+        "label": "Individuals",
+        "value": "individuals"
+      },
+      {
+        "label": "Humanitarian relief organisations",
+        "value": "humanitarian-relief-organisations"
+      }
+    ],
+
+    "value_of_funding": [
+      {"label": "Up to £100,000", "value": "up-to-100000"},
+      {"label": "£100,001 to £500,000", "value": "100001-500000"},
+      {"label": "£500,001 to £1,000,000", "value": "500001-to-1000000"},
+      {"label": "More than £1,000,000", "value": "more-than-1000000"}
+    ]
+  }
+}
