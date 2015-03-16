@@ -66,6 +66,9 @@ private
     if fields.nil?
       raise_error %{Missing "fields"}
     end
+    if fields != fields.uniq
+      raise_error %{Duplicate entries in "fields"}
+    end
 
     allowed_values = raw.delete("allowed_values") || {}
 
