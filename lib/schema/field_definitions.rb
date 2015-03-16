@@ -68,7 +68,7 @@ private
         type,
         es_config,
         value.delete("description") || "",
-        children = children
+        children,
       )
 
       unless value.empty?
