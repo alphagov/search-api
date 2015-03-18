@@ -19,9 +19,9 @@ module Elasticsearch
   class BulkIndexFailure < RuntimeError
     attr_reader :failed_keys
 
-    def initialize(failed_keys)
-      super "Failed inserts: #{failed_keys.join(', ')}"
-      @failed_keys = failed_keys
+    def initialize(failed_items)
+      super "Failed inserts: #{failed_items.map { |id, error| "#{id} (#{error})" }.join(', ')}"
+      @failed_keys = failed_items.map { |id, _| id }
     end
   end
 
@@ -170,7 +170,12 @@ module Elasticsearch
           # TODO This error should include the error messages from
           # elasticsearch, not just the IDs of the documents that weren't
           # inserted
-          raise BulkIndexFailure.new(failed_items.map { |item| item["index"]["_id"] })
+          raise BulkIndexFailure.new(failed_items.map { |item|
+            [
+              item["index"]["_id"],
+              item["index"]["error"],
+            ]
+          })
         end
       end
       response
