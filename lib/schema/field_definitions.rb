@@ -3,30 +3,6 @@ require "schema/field_types"
 
 FieldDefinition = Struct.new("FieldDefinition", :name, :type, :es_config, :description, :children, :allowed_values)
 
-class FieldDefinitions
-  def initialize(definitions)
-    @definitions = definitions
-  end
-
-  def self.parse(config_path)
-    FieldDefinitionParser.new(config_path).parse
-  end
-
-  def get(field_name)
-    @definitions.fetch(field_name) do
-      raise %{Undefined field "#{field_name}"}
-    end
-  end
-
-  def es_config
-    result = {}
-    @definitions.each { |field_name, definition|
-      result[field_name] = definition.es_config
-    }
-    result
-  end
-end
-
 class FieldDefinitionParser
   def initialize(config_path)
     @config_path = config_path
@@ -60,7 +36,7 @@ private
 
       es_config = type.es_config
       if children
-        es_config = es_config.merge({"properties" => children.es_config})
+        es_config = es_config.merge({"properties" => es_config_for_child_fields(children)})
       end
 
       definition = FieldDefinition.new(
@@ -76,7 +52,15 @@ private
       end
       definitions[field_name] = definition
     end
-    FieldDefinitions.new(definitions)
+    definitions
+  end
+
+  def es_config_for_child_fields(children)
+    result = {}
+    children.each { |field_name, definition|
+      result[field_name] = definition.es_config
+    }
+    result
   end
 
   def load_json

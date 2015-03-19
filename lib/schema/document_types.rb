@@ -37,7 +37,10 @@ class DocumentTypeParser
     end
 
     fields = Hash[field_names.map { |field_name|
-      [field_name, field_definitions.get(field_name)]
+      field_definition = field_definitions.fetch(field_name) do
+        raise_error(%{Undefined field "#{field_name}"})
+      end
+      [field_name, field_definition]
     }]
 
     add_allowed_values_to_field_definitions(fields, allowed_values)
@@ -103,7 +106,7 @@ class DocumentTypesParser
   end
 
   def parse
-    @field_definitions = FieldDefinitions.parse(config_path)
+    @field_definitions = FieldDefinitionParser.new(config_path).parse
 
     Hash[document_type_paths.map { |document_type, file_path|
       [
