@@ -77,13 +77,20 @@ class DocumentTypesTest < ShouldaUnitTestCase
 
   context "when configuration is invalid" do
     setup do
-      @definitions = FieldDefinitions.parse(File.expand_path('../../../config/schema', File.dirname(__FILE__)))
+      @definitions = FieldDefinitionParser.new(File.expand_path('../../../config/schema', File.dirname(__FILE__))).parse
       @parser = DocumentTypeParser.new("/config/path/doc_type.json", nil, @definitions)
     end
 
     should "fail if document type doesn't specify `fields`" do
       DocumentTypeParser.any_instance.stubs(:load_json).returns({})
       assert_raises_message(%{Missing "fields", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
+    end
+
+    should "fail if document type specifies unknown entries in `fields`" do
+      DocumentTypeParser.any_instance.stubs(:load_json).returns({
+        "fields" => ["unknown_field"],
+      })
+      assert_raises_message(%{Undefined field \"unknown_field\", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
     end
 
     should "fail if document type has an unknown property" do
