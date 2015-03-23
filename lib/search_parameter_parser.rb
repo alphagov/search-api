@@ -14,6 +14,7 @@ class BaseParameterParser
 
   # The fields listed here are the only ones which can be used to filter by.
   ALLOWED_FILTER_FIELDS = %w(
+    document_collections
     document_type
     format
     mainstream_browse_pages
@@ -33,6 +34,7 @@ class BaseParameterParser
   # The fields listed here are the only ones which can be used to calculated
   # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
   ALLOWED_FACET_FIELDS = %w(
+    document_collections
     format
     mainstream_browse_pages
     manual
@@ -91,6 +93,7 @@ class BaseParameterParser
   ALLOWED_RETURN_FIELDS = %w(
     description
     display_type
+    document_collections
     document_series
     format
     last_update
