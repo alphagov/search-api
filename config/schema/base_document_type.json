@@ -4,6 +4,7 @@
     "title",
     "description",
     "link",
+    "content_id",
     "indexable_content",
     "popularity",
     "organisations",
