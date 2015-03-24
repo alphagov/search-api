@@ -298,5 +298,13 @@
 
   "railway_type": {
     "type": "identifiers"
+  },
+
+  "is_political": {
+    "type": "boolean"
+  },
+
+  "government": {
+    "type": "identifier"
   }
 }
