@@ -96,6 +96,8 @@ class BaseParameterParser
     document_collections
     document_series
     format
+    government_name
+    is_historic
     last_update
     latest_change_note
     link
