@@ -36,6 +36,26 @@
     }
   },
 
+  "best_bet_exact_match_text": {
+    "description": "Type used in best-bets implementation for matching the whole stored query exactly (other than lowercasing and whitespace trimming)",
+    "multivalued": false,
+    "es_config": {
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "exact_match"
+    }
+  },
+
+  "best_bet_stemmed_match_text": {
+    "description": "Type used in best-bets implementation for matching the stored query with stemming and word splitting",
+    "multivalued": false,
+    "es_config": {
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "best_bet_stemmed_match"
+    }
+  },
+
   "stored_float": {
     "description": "A floating point number stored such that it can be used in ranking calculations",
     "es_config": {
