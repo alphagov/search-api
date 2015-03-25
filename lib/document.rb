@@ -2,8 +2,8 @@ class Document
 
   attr_reader :es_score
 
-  def initialize(field_names, attributes = {}, es_score = nil)
-    @field_names = field_names.map(&:to_s)
+  def initialize(field_definitions, attributes = {}, es_score = nil)
+    @field_definitions = field_definitions
     @attributes = {}
     @es_score = es_score
     update_attributes!(attributes)
@@ -11,13 +11,13 @@ class Document
     @type = attributes["_type"]
   end
 
-  def self.from_hash(hash, mappings, es_score = nil)
+  def self.from_hash(hash, document_types, es_score = nil)
     type = hash["_type"] || "edition"
-    if mappings[type].nil?
+    doc_type = document_types[type]
+    if doc_type.nil?
       raise "Unexpected document type '#{type}'. Document types must be configured"
     end
-    field_names = mappings[type]["properties"].keys.map(&:to_s)
-    self.new(field_names, hash, es_score)
+    self.new(doc_type.fields, hash, es_score)
   end
 
   def update_attributes!(attributes)
@@ -27,11 +27,11 @@ class Document
   end
 
   def has_field?(field_name)
-    @field_names.include?(field_name.to_s)
+    @field_definitions.include?(field_name.to_s)
   end
 
-  def get(key)
-    @attributes[key.to_s]
+  def get(field_name)
+    @attributes[field_name.to_s]
   end
 
   def set(key, value)
@@ -42,12 +42,12 @@ class Document
 
   def weighted(factor)
     weighted_score = @es_score ? @es_score * factor : nil
-    Document.new(@field_names, @attributes, weighted_score)
+    Document.new(@field_definitions, @attributes, weighted_score)
   end
 
   def elasticsearch_export
     Hash.new.tap do |doc|
-      @field_names.each do |key|
+      @field_definitions.keys.each do |key|
         value = get(key)
         if value.is_a?(Array)
           value = value.map {|v| v.is_a?(Document) ? v.elasticsearch_export : v }
@@ -62,13 +62,13 @@ class Document
   end
 
   def to_hash
-    field_values = Hash[@field_names.map { |key|
-      value = get(key)
+    field_values = Hash[@field_definitions.keys.map { |field_name|
+      value = get(field_name)
       if value.is_a?(Array)
         value = value.map { |v| v.is_a?(Document) ? v.to_hash : v }
       end
-      [key.to_s, value]
-    }.select{ |key, value|
+      [field_name.to_s, value]
+    }.select{ |_, value|
       ![nil, []].include?(value)
     }]
 
