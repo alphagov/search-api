@@ -298,5 +298,20 @@
 
   "railway_type": {
     "type": "identifiers"
+  },
+
+  "is_political": {
+    "description": "If the content is considered political in nature, reflecting views of the government it was published under",
+    "type": "boolean"
+  },
+
+  "is_historic": {
+    "description": "If the content is political and published by a previous government, it is considered historic and not reflecting of the current government",
+    "type": "boolean"
+  },
+
+  "government_name": {
+    "description": "The name of the Government that first published this document, eg, '1970 to 1974 Conservative government'",
+    "type": "unsearchable_text"
   }
 }

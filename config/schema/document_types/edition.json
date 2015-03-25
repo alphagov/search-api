@@ -27,6 +27,9 @@
     "world_locations",
     "has_official_document",
     "has_command_paper",
-    "has_act_paper"
+    "has_act_paper",
+    "is_political",
+    "is_historic",
+    "government_name"
   ]
 }
