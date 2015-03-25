@@ -31,11 +31,23 @@ class Document
   end
 
   def get(field_name)
-    @attributes[field_name.to_s]
+    field_name = field_name.to_s
+    # Convert to array for consistency between elasticsearch 0.90 and 1.0.
+    # When we no longer support elasticsearch <1.0, values in @attributes will
+    # always be arrays.
+    values = Array(@attributes[field_name])
+    if @field_definitions[field_name].type.multivalued
+      values
+    else
+      values.first
+    end
   end
 
   def set(key, value)
     if has_field?(key)
+      if value.is_a?(Array) && value.size > 1 && !@field_definitions[key].type.multivalued
+        raise "Multiple values supplied for '#{key}' which is a single-valued field"
+      end
       @attributes[key.to_s] = value
     end
   end
@@ -66,6 +78,8 @@ class Document
       value = get(field_name)
       if value.is_a?(Array)
         value = value.map { |v| v.is_a?(Document) ? v.to_hash : v }
+      else
+        value = value.is_a?(Document) ? value.to_hash : value
       end
       [field_name.to_s, value]
     }.select{ |_, value|
