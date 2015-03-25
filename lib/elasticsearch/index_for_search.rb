@@ -42,17 +42,15 @@ module Elasticsearch
       JSON.parse(@client.get_with_payload(path, payload))
     end
 
-    # `options` must have the following key:
-    #   :fields - a list of field names to be included in the document
-    def documents_by_format(format, options = {})
+    def documents_by_format(format, field_definitions)
       batch_size = 500
-      search_body = {query: {term: {format: format}}}
-      search_body.merge!(fields: options[:fields])
-      field_names = options[:fields]
-      result_key = "fields"
+      search_body = {
+        query: {term: {format: format}},
+        fields: field_definitions.keys,
+      }
 
       ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
-        Document.new(field_names, hit[result_key])
+        Document.new(field_definitions, hit["fields"])
       end
     end
 

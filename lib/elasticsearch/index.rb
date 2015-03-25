@@ -271,25 +271,15 @@ module Elasticsearch
       end
     end
 
-    # `options` can have the following keys:
-    #   :fields - a list of field names to be included in the document, if not
-    #             specified, the mappings are used.
-    def documents_by_format(format, options = {})
+    def documents_by_format(format, field_definitions)
       batch_size = 500
-      search_body = {query: {term: {format: format}}}
-      if options[:fields]
-        search_body.merge!(fields: options[:fields])
-        field_names = options[:fields]
-        result_key = "fields"
-      else
-        # Use all field names from the mappings
-        # TODO: remove duplication between this and Document.from_hash
-        field_names = @mappings["edition"]["properties"].keys.map(&:to_s)
-        result_key = "_source"
-      end
+      search_body = {
+        query: {term: {format: format}},
+        fields: field_definitions.keys,
+      }
 
       ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
-        Document.new(field_names, hit[result_key])
+        Document.new(field_definitions, hit["fields"])
       end
     end
 
