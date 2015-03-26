@@ -16,10 +16,6 @@
     "type": "identifier"
   },
 
-  "content_id": {
-    "type": "identifier"
-  },
-
   "indexable_content": {
     "type": "searchable_text"
   },
