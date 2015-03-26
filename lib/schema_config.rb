@@ -34,12 +34,7 @@ class SchemaConfig
 
   def elasticsearch_mappings(index_name)
     index_name = index_name.sub(/[-_]test$/, '')
-    special_mappings = schema_yaml["mappings"]
-    if special_mappings.include?(index_name)
-      special_mappings[index_name]
-    else
-      @index_schemas.fetch(index_name).es_mappings
-    end
+    @index_schemas.fetch(index_name).es_mappings
   end
 
 private
