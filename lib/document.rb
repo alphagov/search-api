@@ -32,10 +32,15 @@ class Document
 
   def get(field_name)
     field_name = field_name.to_s
+    values = @attributes[field_name]
     # Convert to array for consistency between elasticsearch 0.90 and 1.0.
     # When we no longer support elasticsearch <1.0, values in @attributes will
     # always be arrays.
-    values = Array(@attributes[field_name])
+    if values.nil?
+      values = []
+    elsif !(values.is_a?(Array))
+      values = [values]
+    end
     if @field_definitions[field_name].type.multivalued
       values
     else

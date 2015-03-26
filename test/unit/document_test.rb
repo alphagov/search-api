@@ -162,4 +162,14 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "/batman", weighted_doc.link
     assert_nil weighted_doc.es_score
   end
+
+  def test_should_handle_opaque_object_fields
+    metadata = { "foo" => true, "bar" => 1 }
+    document_hash = {
+      "metadata" => metadata
+    }
+    doc = Document.new(sample_field_definitions(%w(metadata)), document_hash)
+
+    assert_equal metadata, doc.metadata
+  end
 end
