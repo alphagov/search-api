@@ -65,7 +65,7 @@ module Elasticsearch
 
     attr_reader :mappings, :index_name
 
-    def initialize(base_uri, index_name, mappings, search_config)
+    def initialize(base_uri, index_name, base_index_name, mappings, search_config)
       # Save this for if and when we want to build custom Clients
       @index_uri = base_uri + "#{CGI.escape(index_name)}/"
 
@@ -74,7 +74,8 @@ module Elasticsearch
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
       @search_config = search_config
-      @is_content_index = !(@search_config.auxiliary_index_names.include? @index_name)
+      @document_types = @search_config.schema_config.document_types(base_index_name)
+      @is_content_index = !(@search_config.auxiliary_index_names.include? base_index_name)
     end
 
     def field_names
