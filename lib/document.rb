@@ -43,12 +43,13 @@ class Document
     end
   end
 
-  def set(key, value)
-    if has_field?(key)
-      if value.is_a?(Array) && value.size > 1 && !@field_definitions[key].type.multivalued
-        raise "Multiple values supplied for '#{key}' which is a single-valued field"
+  def set(field_name, value)
+    field_name = field_name.to_s
+    if has_field?(field_name)
+      if value.is_a?(Array) && value.size > 1 && !@field_definitions[field_name].type.multivalued
+        raise "Multiple values supplied for '#{field_name}' which is a single-valued field"
       end
-      @attributes[key.to_s] = value
+      @attributes[field_name] = value
     end
   end
 
