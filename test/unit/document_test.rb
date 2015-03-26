@@ -1,13 +1,8 @@
 require "test_helper"
 require "document"
+require "sample_config"
 
 class DocumentTest < MiniTest::Unit::TestCase
-  include Fixtures::DefaultMappings
-
-  def setup
-    @mappings = default_mappings
-  end
-
   def test_should_turn_hash_into_document
     hash = {
       "title" => "TITLE",
@@ -20,7 +15,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "indexable_content" => "HERE IS SOME CONTENT",
     }
 
-    document = Document.from_hash(hash, @mappings)
+    document = Document.from_hash(hash, sample_document_types)
 
     assert_equal "TITLE", document.title
     assert_equal "DESCRIPTION", document.description
@@ -32,36 +27,18 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "HERE IS SOME CONTENT", document.indexable_content
   end
 
-  def test_should_turn_hash_with_non_standard_field_into_document
-    hash = {
-      "title" => "TITLE",
-      "description" => "DESCRIPTION",
-      "format" => "guide",
-      "link" => "/an-example-guide",
-      "topics" => [1,2]
-    }
-
-    mappings = default_mappings
-    mappings['edition']['properties'].merge!({"topics" => { "type" => "string", "index" => "not_analyzed" }})
-    document = Document.from_hash(hash, mappings)
-
-    assert_equal [1,2], document.to_hash["topics"]
-    assert_equal [1,2], document.topics
-    assert_equal [1,2], document.elasticsearch_export["topics"]
-  end
-
   def test_should_permit_nonedition_documents
     hash = {
       "_id" => "jobs_exact",
       "_type" => "best_bet",
-      "query" => "jobs"
+      "stemmed_query" => "jobs"
     }
 
-    document = Document.from_hash(hash, default_mappings)
+    document = Document.from_hash(hash, sample_document_types)
 
-    assert_equal "jobs", document.to_hash["query"]
-    assert_equal "jobs", document.query
-    assert_equal "jobs", document.elasticsearch_export["query"]
+    assert_equal "jobs", document.to_hash["stemmed_query"]
+    assert_equal "jobs", document.stemmed_query
+    assert_equal "jobs", document.elasticsearch_export["stemmed_query"]
 
     refute document.to_hash.has_key?("_type")
     refute document.to_hash.has_key?("_id")
@@ -76,7 +53,7 @@ class DocumentTest < MiniTest::Unit::TestCase
     }
 
     assert_raises RuntimeError do
-      Document.from_hash(hash, default_mappings)
+      Document.from_hash(hash, sample_document_types)
     end
   end
 
@@ -89,7 +66,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "some_other_field" => "test"
     }
 
-    document = Document.from_hash(hash, @mappings)
+    document = Document.from_hash(hash, sample_document_types)
 
     refute_includes document.to_hash.keys, "some_other_field"
     refute document.respond_to?("some_other_field")
@@ -104,7 +81,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       :indexable_content => "HERE IS SOME CONTENT"
     }
 
-    document = Document.from_hash(hash, @mappings)
+    document = Document.from_hash(hash, sample_document_types)
 
     assert_equal "TITLE", document.title
   end
@@ -118,7 +95,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "indexable_content" => "HERE IS SOME CONTENT"
     }
 
-    document = Document.from_hash(hash, @mappings)
+    document = Document.from_hash(hash, sample_document_types)
     assert_equal hash, document.to_hash
   end
 
@@ -130,7 +107,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "link" => "/an-example-guide"
     }
 
-    document = Document.from_hash(hash, @mappings)
+    document = Document.from_hash(hash, sample_document_types)
     assert_equal hash.keys.sort, document.to_hash.keys.sort
   end
 
@@ -142,7 +119,7 @@ class DocumentTest < MiniTest::Unit::TestCase
         "format" => "guide",
         "link" => "/an-example-guide",
     }
-    document = Document.from_hash(hash, @mappings)
+    document = Document.from_hash(hash, sample_document_types)
 
     assert_equal hash.keys.sort, document.elasticsearch_export.keys.sort
   end
@@ -151,26 +128,26 @@ class DocumentTest < MiniTest::Unit::TestCase
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    assert_equal 5.2, Document.new(field_names, hash, 5.2).es_score
+    assert_equal 5.2, Document.new(sample_field_definitions(field_names), hash, 5.2).es_score
   end
 
   def test_includes_elasticsearch_score_in_hash
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    assert_equal 5.2, Document.new(field_names, hash, 5.2).to_hash["es_score"]
+    assert_equal 5.2, Document.new(sample_field_definitions(field_names), hash, 5.2).to_hash["es_score"]
   end
 
   def test_leaves_out_blank_score
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    refute_includes Document.new(field_names, hash).to_hash, "es_score"
+    refute_includes Document.new(sample_field_definitions(field_names), hash).to_hash, "es_score"
   end
 
   def test_weighted_score
     document_hash = {"link" => "/batman", "title" => "Batman"}
-    doc = Document.new(%w(link title), document_hash, 2.8)
+    doc = Document.new(sample_field_definitions(%w(link title)), document_hash, 2.8)
 
     weighted_doc = doc.weighted(0.5)
     assert_equal "/batman", weighted_doc.link
@@ -180,7 +157,7 @@ class DocumentTest < MiniTest::Unit::TestCase
 
   def test_weighting_without_score
     document_hash = {"link" => "/batman"}
-    doc = Document.new(%w(link), document_hash)
+    doc = Document.new(sample_field_definitions(%w(link)), document_hash)
 
     weighted_doc = doc.weighted(0.5)
     assert_equal "/batman", weighted_doc.link

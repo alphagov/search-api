@@ -1,6 +1,7 @@
 require "test_helper"
 require "elasticsearch/index"
 require "search_config"
+require "sample_config"
 require "webmock"
 
 class ElasticsearchIndexTest < MiniTest::Unit::TestCase
@@ -9,16 +10,16 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def setup
     @base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
-    @wrapper = Elasticsearch::Index.new(@base_uri, "test-index", default_mappings, search_config)
+    @wrapper = Elasticsearch::Index.new(@base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
 
-    @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic", page_traffic_mappings, search_config)
+    @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
     @wrapper.stubs(:traffic_index).returns(@traffic_index)
-    @traffic_index.stubs(:real_name).returns("page-traffic")
+    @traffic_index.stubs(:real_name).returns("page-traffic_test")
   end
 
   def stub_popularity_index_requests(paths, popularity, total_pages=10, total_requested=total_pages, paths_to_return=paths)
     # stub the request for total results
-    stub_request(:get, "http://example.com:9200/page-traffic/_search").
+    stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
             with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
             to_return(:status => 200, :body => { "hits" => { "total" => total_pages }}.to_json)
 
@@ -48,7 +49,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       }
     }
 
-    stub_request(:get, "http://example.com:9200/page-traffic/_search").
+    stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
             with(:body => expected_query.to_json).
             to_return(:status => 200, :body => response.to_json, :headers => {})
   end
@@ -56,15 +57,15 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def successful_response
     <<-eos
 {"took":5,"items":[
-  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } }
 ]}
     eos
   end
 
   def test_real_name
-    stub_request(:get, "http://example.com:9200/test-index/_aliases")
+    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
-        body: {"real-name" => { "aliases" => { "test-index" => {} } }}.to_json,
+        body: {"real-name" => { "aliases" => { "mainstream_test" => {} } }}.to_json,
         headers: {"Content-Type" => "application/json"}
       )
 
@@ -72,7 +73,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_real_name_when_no_index
-    stub_request(:get, "http://example.com:9200/test-index/_aliases")
+    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
         status: 404,
         body: '{"error":"IndexMissingException[[text-index] missing]","status":404}',
@@ -86,7 +87,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_real_name_when_no_index_es0_20
     # elasticsearch is weird: even though /index/_status 404s if the index
     # doesn't exist, /index/_aliases returns a 200.
-    stub_request(:get, "http://example.com:9200/test-index/_aliases")
+    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
         status: 200,
         body: "{}",
@@ -97,9 +98,9 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_exists
-    stub_request(:get, "http://example.com:9200/test-index/_aliases")
+    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
-        body: {"real-name" => { "aliases" => { "test-index" => {} } }}.to_json,
+        body: {"real-name" => { "aliases" => { "mainstream_test" => {} } }}.to_json,
         headers: {"Content-Type" => "application/json"}
       )
 
@@ -107,7 +108,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_exists_when_no_index
-    stub_request(:get, "http://example.com:9200/test-index/_aliases")
+    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
         status: 404,
         body: '{"error":"IndexMissingException[[text-index] missing]","status":404}',
@@ -121,7 +122,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_exists_when_no_index_es0_20
     # elasticsearch was weird before version 0.90: even though /index/_status
     # 404s if the index doesn't exist, /index/_aliases returned a 200.
-    stub_request(:get, "http://example.com:9200/test-index/_aliases")
+    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
         status: 200,
         body: "{}",
@@ -148,15 +149,15 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     eos
     response = <<-eos
 {"took":5,"items":[
-  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } }
 ]}
     eos
-    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+    stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
         headers: {"Content-Type" => "application/json"}
     ).to_return(body: response)
     @wrapper.add [document]
-    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+    assert_requested(:post, "http://example.com:9200/mainstream_test/_bulk")
   end
 
   def test_should_bulk_update_documents_with_id_field
@@ -176,15 +177,15 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   eos
     response = <<-eos
 {"took":5,"items":[
-{ "index": { "_index":"test-index", "_type":"not_an_edition", "_id":"some_id", "ok":true } }
+{ "index": { "_index":"mainstream_test", "_type":"not_an_edition", "_id":"some_id", "ok":true } }
 ]}
     eos
-    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+    stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
         headers: {"Content-Type" => "application/json"}
     ).to_return(body: response)
     @wrapper.add [document]
-    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+    assert_requested(:post, "http://example.com:9200/mainstream_test/_bulk")
   end
 
   def test_should_bulk_update_documents_with_raw_command_stream
@@ -195,12 +196,12 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 {"index":{"_type":"edition","_id":"/foo/bar"}}
 {"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[],"format":"edition"}
     eos
-    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+    stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
         headers: {"Content-Type" => "application/json"}
     ).to_return(body: '{"items":[]}')
     @wrapper.bulk_index payload
-    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+    assert_requested(:post, "http://example.com:9200/mainstream_test/_bulk")
   end
 
   def test_should_raise_error_for_failures_in_bulk_update
@@ -215,11 +216,11 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     end
     response = <<-eos
 {"took":0,"items":[
-  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } },
-  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/baz", "error":"stuff" } }
+  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } },
+  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/baz", "error":"stuff" } }
 ]}
     eos
-    stub_request(:post, "http://example.com:9200/test-index/_bulk").to_return(body: response)
+    stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").to_return(body: response)
 
     begin
       @wrapper.add(documents)
@@ -249,11 +250,11 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 eos
     response = <<-eos
 {"took":5,"items":[
-{ "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+{ "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } }
 ]}
 eos
 
-    request = stub_request(:post, "http://example.com:9200/test-index/_bulk")
+    request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk")
                   .with(body: payload)
                   .to_return(body: response)
     @wrapper.add [document]
@@ -279,15 +280,15 @@ eos
     eos
     response = <<-eos
 {"took":5,"items":[
-  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } }
 ]}
     eos
-    stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+    stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
         headers: {"Content-Type" => "application/json"}
     ).to_return(body: response)
     @wrapper.add [document]
-    assert_requested(:post, "http://example.com:9200/test-index/_bulk")
+    assert_requested(:post, "http://example.com:9200/mainstream_test/_bulk")
   end
 
   def test_should_populate_mainstream_browse_pages_field
@@ -308,11 +309,11 @@ eos
     eos
     response = <<-eos
 {"took":5,"items":[
-  { "index": { "_index":"test-index", "_type":"edition", "_id":"/foo/bar", "ok":true } }
+  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } }
 ]}
     eos
 
-    bulk_request = stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+    bulk_request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
         headers: {"Content-Type" => "application/json"}
     ).to_return(body: response)
@@ -340,11 +341,11 @@ eos
 
   response = <<-EOS
 {"took":5,"items":[
-  { "index": { "_index":"test-index", "_type":"edition", "_id":"/document/thing", "ok":true } }
+  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/document/thing", "ok":true } }
 ]}
 EOS
 
-    bulk_request = stub_request(:post, "http://example.com:9200/test-index/_bulk").with(
+    bulk_request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
         headers: {"Content-Type" => "application/json"}
     ).to_return(body: response)
@@ -371,7 +372,7 @@ EOS
   end
 
   def test_get_document
-    document_url = "http://example.com:9200/test-index/edition/%2Fan-example-link"
+    document_url = "http://example.com:9200/mainstream_test/edition/%2Fan-example-link"
     document_hash = {
       "_type" => "edition",
       "link" => "/an-example-link",
@@ -379,7 +380,7 @@ EOS
     }
 
     document_response = {
-      "_index" => "test-index",
+      "_index" => "mainstream_test",
       "_type" => "edition",
       "_id" => "/an-example-link",
       "_version" => 4,
@@ -408,7 +409,7 @@ EOS
       expects(:queue_many).with([json_document])
     end
     Elasticsearch::IndexQueue.expects(:new)
-      .with("test-index")
+      .with("mainstream_test")
       .returns(mock_queue)
 
     @wrapper.add_queued([document])
@@ -419,7 +420,7 @@ EOS
       expects(:queue_delete).with("edition", "/foobang")
     end
     Elasticsearch::IndexQueue.expects(:new)
-      .with("test-index")
+      .with("mainstream_test")
       .returns(mock_queue)
 
     @wrapper.delete_queued("edition", "/foobang")
@@ -467,7 +468,7 @@ EOS
   end
 
   def test_get_document_not_found
-    document_url = "http://example.com:9200/test-index/edition/%2Fa-bad-link"
+    document_url = "http://example.com:9200/mainstream_test/edition/%2Fa-bad-link"
 
     not_found_response = {
       "_index" => "rummager",
@@ -486,12 +487,12 @@ EOS
   end
 
   def test_basic_keyword_search
-    stub_request(:get, "http://example.com:9200/test-index/_search").with(
+    stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},
       headers: {"Content-Type" => "application/json"}
     ).to_return(:body => '{"hits":{"hits":[]}}')
     @wrapper.search "keyword search"
-    assert_requested(:get, "http://example.com:9200/test-index/_search")
+    assert_requested(:get, "http://example.com:9200/mainstream_test/_search")
   end
 
   def test_raises_error_for_invalid_query
@@ -501,7 +502,7 @@ EOS
   end
 
   def test_raw_search
-    stub_get = stub_request(:get, "http://example.com:9200/test-index/_search").with(
+    stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},
       headers: {"Content-Type" => "application/json"}
     ).to_return(:body => '{"hits":{"hits":[]}}')
@@ -510,7 +511,7 @@ EOS
   end
 
   def test_raw_search_with_type
-    stub_get = stub_request(:get, "http://example.com:9200/test-index/test-type/_search").with(
+    stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/test-type/_search").with(
       body: %r{"query":"keyword search"},
       headers: {"Content-Type" => "application/json"}
     ).to_return(:body => '{"hits":{"hits":[]}}')
@@ -519,7 +520,7 @@ EOS
   end
 
   def test_commit
-    refresh_url = "http://example.com:9200/test-index/_refresh"
+    refresh_url = "http://example.com:9200/mainstream_test/_refresh"
     stub_request(:post, refresh_url).to_return(
       body: '{"ok":true,"_shards":{"total":1,"successful":1,"failed":0}}'
     )
@@ -528,34 +529,9 @@ EOS
   end
 
   def test_can_fetch_documents_by_format
-    search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=500"
+    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
     stub_request(:get, search_pattern).with(
-      body: {query: {term: {format: "organisation"}}}.to_json
-    ).to_return(
-      body: {_scroll_id: "abcdefgh", hits: {total: 10}}.to_json
-    )
-
-    hits = (1..10).map { |i|
-      { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
-    }
-    stub_request(:get, scroll_uri("abcdefgh")).to_return(
-      body: scroll_response_body("abcdefgh", 10, hits)
-    ).then.to_return(
-      body: scroll_response_body("abcdefgh", 10, [])
-    ).then.to_raise("should never happen")
-
-    result = @wrapper.documents_by_format("organisation")
-    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map(&:title)
-  end
-
-  def test_can_fetch_documents_by_format_with_certain_fields
-    search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=500"
-    query = {
-      query: {term: {format: "organisation"}},
-      fields: ["title", "link"]
-    }
-    stub_request(:get, search_pattern).with(
-      body: query.to_json
+      body: {query: {term: {format: "organisation"}}, fields: %w{title link}}
     ).to_return(
       body: {_scroll_id: "abcdefgh", hits: {total: 10}}.to_json
     )
@@ -569,42 +545,39 @@ EOS
       body: scroll_response_body("abcdefgh", 10, [])
     ).then.to_raise("should never happen")
 
-    result = @wrapper.documents_by_format("organisation", fields: %w(title link)).to_a
+    result = @wrapper.documents_by_format("organisation", sample_field_definitions(%w(link title)))
     assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map(&:title)
-    assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map(&:link)
   end
 
-  def test_can_fetch_documents_by_format_with_fields_not_in_mappings
-    # Notably, we want to be able to query for organisation acronyms before we
-    # work out how best to add them to the mappings
-    search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=500"
+  def test_can_fetch_documents_by_format_with_certain_fields
+    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
     query = {
       query: {term: {format: "organisation"}},
-      fields: ["title", "link", "wumpus"]
+      fields: ["title", "link"]
     }
     stub_request(:get, search_pattern).with(
-      body: query.to_json
+      body: query
     ).to_return(
       body: {_scroll_id: "abcdefgh", hits: {total: 10}}.to_json
     )
 
-    hits = [
-      { "fields" => { "link" => "/org", "title" => "Org", "wumpus" => "totes" } }
-    ]
+    hits = (1..10).map { |i|
+      { "fields" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
+    }
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
-      body: scroll_response_body("abcdefgh", 1, hits)
+      body: scroll_response_body("abcdefgh", 10, hits)
     ).then.to_return(
       body: scroll_response_body("abcdefgh", 10, [])
     ).then.to_raise("should never happen")
 
-    result = @wrapper.documents_by_format("organisation", fields: %w(title link wumpus)).to_a
-    first = result[0]
-    assert_equal "totes", first.wumpus
+    result = @wrapper.documents_by_format("organisation", sample_field_definitions(%w(link title))).to_a
+    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map(&:title)
+    assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map(&:link)
   end
 
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
-    search_pattern = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=50"
+    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=50"
     stub_request(:get, search_pattern).with(
       body: {query: {match_all: {}}}.to_json
     ).to_return(
@@ -614,7 +587,7 @@ EOS
   end
 
   def test_all_documents
-    search_uri = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=50"
+    search_uri = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=50"
 
     stub_request(:get, search_uri).with(
       body: {query: {match_all: {}}}.to_json
@@ -638,7 +611,7 @@ EOS
   end
 
   def test_changing_scroll_id
-    search_uri = "http://example.com:9200/test-index/_search?scroll=60m&search_type=scan&size=2"
+    search_uri = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=2"
 
     Elasticsearch::Index.stubs(:scroll_batch_size).returns(2)
 

@@ -1,16 +1,18 @@
 require "test_helper"
 require "document"
 require "registry"
+require "schema/field_definitions"
+require "sample_config"
 
 class OrganisationRegistryTest < MiniTest::Unit::TestCase
   def setup
-    @index = stub("elasticsearch index")
-    @organisation_registry = Registry::Organisation.new(@index)
+    @index = stub("elasticsearch index_for_search")
+    @organisation_registry = Registry::Organisation.new(@index, sample_field_definitions)
   end
 
   def mod_document
     Document.new(
-      %w(slug link title acronym organisation_type organisation_state),
+      sample_field_definitions(%w(slug link title acronym organisation_type organisation_state)),
       {
         link: "/government/organisations/ministry-of-defence",
         slug: "ministry-of-defence",
@@ -29,7 +31,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_indicates_organisation_type_from_index
     fully_labelled_document = Document.new(
-      %w(slug link title acronym organisation_type),
+      sample_field_definitions(%w(slug link title acronym organisation_type)),
       {
         slug: "office-of-the-fonz",
         link: "/government/organisations/office-of-the-fonz",
@@ -46,7 +48,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
 
   def test_organisation_type_from_index_takes_precedence
     fully_labelled_document = Document.new(
-      %w(slug link title acronym organisation_type),
+      sample_field_definitions(%w(slug link title acronym organisation_type)),
       {
         slug: "ministry-of-defence",
         link: "/government/organisations/ministry-of-defence",
@@ -77,7 +79,7 @@ class OrganisationRegistryTest < MiniTest::Unit::TestCase
     # know about the field and will raise an error on #acronym calls.
 
     document = Document.new(
-      %w(slug link title),
+      sample_field_definitions(%w(slug link title)),
       {
         slug: "ministry-of-justice",
         link: "/government/organisations/ministry-of-justice",

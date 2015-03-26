@@ -1,16 +1,18 @@
 require "test_helper"
 require "document"
 require "registry"
+require "schema/field_definitions"
+require "sample_config"
 
 class BaseRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @base_registry = Registry::BaseRegistry.new(@index, "example-format")
+    @base_registry = Registry::BaseRegistry.new(@index, sample_field_definitions, "example-format")
   end
 
   def example_document
     Document.new(
-      %w(slug link title),
+      sample_field_definitions(%w(slug link title)),
       {
         slug: "example-document",
         link: "/government/example-document",
@@ -23,12 +25,12 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
     # This is to make sure the cache expiry is expressed in seconds; DateTime,
     # for example, treats number addition as a number of days.
     TimedCache.expects(:new).with(is_a(Fixnum), Time)
-    Registry::BaseRegistry.new(@index, "example-format")
+    Registry::BaseRegistry.new(@index, sample_field_definitions, "example-format")
   end
 
   def test_can_fetch_document_series_by_slug
     @index.stubs(:documents_by_format)
-      .with("elasticsearch index", anything)
+      .with("example-format", anything)
       .returns([example_document])
 
     fetched_document = @base_registry["example-document"]
@@ -39,7 +41,7 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("example-format", fields: %w{slug link title})
+      .with("example-format", sample_field_definitions(%w{slug link title}))
     fetched_documents = @base_registry["example-document"]
   end
 
@@ -54,7 +56,7 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
     document_enumerator = stub("enumerator")
     document_enumerator.expects(:to_a).returns([example_document]).once
     @index.stubs(:documents_by_format)
-      .with("example_format", anything)
+      .with("example-format", anything)
       .returns(document_enumerator)
       .once
     assert @base_registry["example-document"]
