@@ -2,6 +2,11 @@
 require "integration_test_helper"
 
 class MultipleBackendsTest < IntegrationTest
+  def setup
+    super
+    stub_elasticsearch_settings
+  end
+
   def test_passes_search_to_chosen_backend
     chosen_index = mock("chosen index")
     chosen_index.expects(:search).returns(stub(results: [], total: 0))
@@ -13,7 +18,7 @@ class MultipleBackendsTest < IntegrationTest
 
   def test_actions_other_than_search_use_primary_backend_as_default
     default_index = mock("default index", get: { 'example' => 'document' })
-    Elasticsearch::SearchServer.any_instance.expects(:index).with("mainstream").returns(default_index)
+    Elasticsearch::SearchServer.any_instance.expects(:index).with("mainstream_test").returns(default_index)
     get "/documents/abc"
   end
 

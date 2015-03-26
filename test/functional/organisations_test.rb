@@ -1,11 +1,17 @@
 require "integration_test_helper"
 require "registry"
+require "sample_config"
 
 class OrganisationsTest < IntegrationTest
 
+  def setup
+    super
+    stub_elasticsearch_settings
+  end
+
   def mod_organisation
     Document.new(
-      %w(link title acronym organisation_type),
+      sample_field_definitions(%w(link title acronym organisation_type)),
       {
         link: "/government/organisations/ministry-of-defence",
         title: "Ministry of Defence",
