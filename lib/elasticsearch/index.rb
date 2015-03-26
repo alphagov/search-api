@@ -238,7 +238,7 @@ module Elasticsearch
     end
 
     def document_from_hash(hash)
-      Document.from_hash(hash, @mappings)
+      Document.from_hash(hash, @document_types)
     end
 
     def all_documents(options = nil)
@@ -287,7 +287,7 @@ module Elasticsearch
     def search(keywords, options={})
       builder = SearchQueryBuilder.new(keywords, @mappings, options)
       raise InvalidQuery.new(builder.error) unless builder.valid?
-      ResultSet.from_elasticsearch(@mappings, raw_search(builder.query_hash))
+      ResultSet.from_elasticsearch(@document_types, raw_search(builder.query_hash))
     end
 
     def advanced_search(params)
@@ -313,7 +313,7 @@ module Elasticsearch
 
       payload.merge!(query_builder.query_hash)
 
-      ResultSet.from_elasticsearch(@mappings, raw_search(payload))
+      ResultSet.from_elasticsearch(@document_types, raw_search(payload))
     end
 
     def raw_search(payload, type=nil)
