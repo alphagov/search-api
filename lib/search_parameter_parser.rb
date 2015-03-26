@@ -17,6 +17,7 @@ class BaseParameterParser
     document_collections
     document_type
     format
+    link
     mainstream_browse_pages
     manual
     organisations
