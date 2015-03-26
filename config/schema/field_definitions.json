@@ -82,7 +82,7 @@
   },
 
   "attachments": {
-    "type": "object",
+    "type": "objects",
     "children": {
       "content": { "type": "searchable_text" },
       "title": { "type": "searchable_text" },

@@ -24,8 +24,8 @@ class FieldTypesTest < ShouldaUnitTestCase
       assert_nil @types.get("identifiers").children
     end
 
-    should "know that the `object` type has named children" do
-      assert_equal "named", @types.get("object").children
+    should "know that the `objects` type has named children" do
+      assert_equal "named", @types.get("objects").children
     end
 
     should "know that the `opaque_object` type has dynamic children" do

@@ -38,7 +38,6 @@
 
   "best_bet_exact_match_text": {
     "description": "Type used in best-bets implementation for matching the whole stored query exactly (other than lowercasing and whitespace trimming)",
-    "multivalued": false,
     "es_config": {
       "type": "string",
       "index": "analyzed",
@@ -48,7 +47,6 @@
 
   "best_bet_stemmed_match_text": {
     "description": "Type used in best-bets implementation for matching the stored query with stemming and word splitting",
-    "multivalued": false,
     "es_config": {
       "type": "string",
       "index": "analyzed",
@@ -80,9 +78,10 @@
     }
   },
 
-  "object": {
+  "objects": {
     "description": "A JSON object which contains a defined set of child fields.",
     "children": "named",
+    "multivalued": true,
     "es_config": {
       "type": "object",
       "enabled": "true",
