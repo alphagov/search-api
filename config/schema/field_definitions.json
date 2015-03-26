@@ -228,7 +228,7 @@
   },
 
   "tiers_or_standalone_items": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "funding_amount": {
