@@ -224,7 +224,7 @@
   },
 
   "land_use": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "tiers_or_standalone_items": {
