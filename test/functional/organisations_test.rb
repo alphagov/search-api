@@ -1,6 +1,5 @@
 require "integration_test_helper"
 require "registry"
-require "sample_config"
 
 class OrganisationsTest < IntegrationTest
 

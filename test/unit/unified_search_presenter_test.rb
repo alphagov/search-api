@@ -2,7 +2,6 @@ require "test_helper"
 require "unified_searcher"
 require "document"
 require "search_parameter_parser"
-require "sample_config"
 
 class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 

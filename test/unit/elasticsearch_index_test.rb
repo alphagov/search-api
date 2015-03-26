@@ -1,7 +1,6 @@
 require "test_helper"
 require "elasticsearch/index"
 require "search_config"
-require "sample_config"
 require "webmock"
 
 class ElasticsearchIndexTest < MiniTest::Unit::TestCase

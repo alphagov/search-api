@@ -1,7 +1,6 @@
 require "test_helper"
 require "document"
 require "elasticsearch/result_set"
-require "sample_config"
 
 class ResultSetTest < ShouldaUnitTestCase
 

@@ -2,7 +2,6 @@ require "test_helper"
 require "document"
 require "registry"
 require "schema/field_definitions"
-require "sample_config"
 
 class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
   def setup

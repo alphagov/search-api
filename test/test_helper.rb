@@ -23,7 +23,11 @@ if ENV["USE_SIMPLECOV"]
   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 end
 
+require "sample_config"
+
 module TestHelpers
+  include SampleConfig
+
   def load_yaml_fixture(filename)
     YAML.load_file(File.expand_path("fixtures/#{filename}", File.dirname(__FILE__)))
   end

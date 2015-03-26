@@ -1,6 +1,5 @@
 # encoding: utf-8
 require "integration_test_helper"
-require "sample_config"
 require "registry"
 
 class SearchTest < IntegrationTest

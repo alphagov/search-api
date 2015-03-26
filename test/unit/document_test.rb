@@ -1,6 +1,5 @@
 require "test_helper"
 require "document"
-require "sample_config"
 
 class DocumentTest < MiniTest::Unit::TestCase
   def test_should_turn_hash_into_document
