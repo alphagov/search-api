@@ -37,31 +37,31 @@ class Rummager < Sinatra::Application
 
   def document_series_registry
     index_name = settings.search_config.document_series_registry_index
-    @@document_series_registry ||= Registry::DocumentSeries.new(search_server.index(index_name)) if index_name
+    @@document_series_registry ||= Registry::DocumentSeries.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
   end
 
   def document_collection_registry
     index_name = settings.search_config.document_collection_registry_index
-    @@document_collection_registry ||= Registry::DocumentCollection.new(search_server.index(index_name)) if index_name
+    @@document_collection_registry ||= Registry::DocumentCollection.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
   end
 
   def organisation_registry
     index_name = settings.search_config.organisation_registry_index
-    @@organisation_registry ||= Registry::Organisation.new(search_server.index(index_name)) if index_name
+    @@organisation_registry ||= Registry::Organisation.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
   end
 
   def topic_registry
     index_name = settings.search_config.topic_registry_index
-    @@topic_registry ||= Registry::Topic.new(search_server.index(index_name)) if index_name
+    @@topic_registry ||= Registry::Topic.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
   end
 
   def world_location_registry
     index_name = settings.search_config.world_location_registry_index
-    @@world_location_registry ||= Registry::WorldLocation.new(search_server.index(index_name)) if index_name
+    @@world_location_registry ||= Registry::WorldLocation.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
   end
 
   def specialist_sector_registry
-    @@specialist_sector_registry ||= Registry::SpecialistSector.new(unified_index)
+    @@specialist_sector_registry ||= Registry::SpecialistSector.new(unified_index, search_server.schema.field_definitions)
   end
 
   def govuk_indices

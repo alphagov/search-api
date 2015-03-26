@@ -37,7 +37,7 @@ module Elasticsearch
 
       logger.info "Created index #{index_name}"
 
-      Index.new(@base_uri, index_name, mappings, @search_config)
+      Index.new(@base_uri, index_name, @name, mappings, @search_config)
     end
 
     def switch_to(index)
@@ -83,7 +83,7 @@ module Elasticsearch
     end
 
     def current
-      Index.new(@base_uri, @name, mappings, @search_config)
+      Index.new(@base_uri, @name, @name, mappings, @search_config)
     end
 
     # The unaliased version of the current index
@@ -93,7 +93,7 @@ module Elasticsearch
     def current_real
       current_index = current
       if current_index.exists?
-        Index.new(@base_uri, current.real_name, mappings, @search_config)
+        Index.new(@base_uri, current.real_name, @name, mappings, @search_config)
       else
         nil
       end

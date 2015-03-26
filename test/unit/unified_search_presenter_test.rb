@@ -81,12 +81,12 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   def sample_org_registry
     magic_org_document = Document.new(
-      %w(link title),
+      sample_field_definitions(%w{link title}),
       link: "/government/departments/hm-magic",
       title: "Ministry of Magic"
     )
     hmrc_org_document = Document.new(
-      %w(link title),
+      sample_field_definitions(%w{link title}),
       link: "/government/departments/hmrc",
       title: "HMRC"
     )
@@ -229,7 +229,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with a registry" do
     setup do
       farming_topic_document = Document.new(
-        %w(link title),
+        sample_field_definitions(%w{link title}),
         link: "/government/topics/farming",
         title: "Farming"
       )

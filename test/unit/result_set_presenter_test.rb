@@ -14,13 +14,13 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
         "description" => "Full of foo.",
         "format" => "edition"
       }
-    ].map { |h| Document.new(FIELDS, h) }
+    ].map { |h| Document.new(sample_field_definitions(FIELDS), h) }
 
     stub("result set", results: documents, total: 1)
   end
 
   def single_result_with_format(format)
-    stub(results: [Document.new(FIELDS, :format => format)], total: 1)
+    stub(results: [Document.new(sample_field_definitions(FIELDS), :format => format)], total: 1)
   end
 
   def single_result_with_document_series(*document_series_slugs)
@@ -32,7 +32,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
         "document_series" => document_series_slugs
       }
 
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(sample_field_definitions(FIELDS), document_hash)], total: 1)
   end
 
   def single_result_with_document_collection(*document_collection_slugs)
@@ -44,7 +44,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
         "document_collections" => document_collection_slugs
       }
 
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(sample_field_definitions(FIELDS), document_hash)], total: 1)
   end
 
   def single_result_with_organisations(*organisation_slugs)
@@ -56,7 +56,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
         "organisations" => organisation_slugs
       }
 
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(sample_field_definitions(FIELDS), document_hash)], total: 1)
   end
 
   def single_result_with_topics(*topic_slugs)
@@ -67,7 +67,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       "format" => "edition",
       "topics" => topic_slugs
     }
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(sample_field_definitions(FIELDS), document_hash)], total: 1)
   end
 
   def single_result_with_world_locations(*world_location_slugs)
@@ -78,7 +78,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       "format" => "edition",
       "world_locations" => world_location_slugs
     }
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(sample_field_definitions(FIELDS), document_hash)], total: 1)
   end
 
   def single_result_with_sectors(*sector_slugs)
@@ -89,7 +89,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       "format" => "edition",
       "specialist_sectors" => sector_slugs,
     }
-    stub(results: [Document.new(FIELDS, document_hash)], total: 1)
+    stub(results: [Document.new(sample_field_definitions(FIELDS), document_hash)], total: 1)
   end
 
   def test_generates_json_from_documents
@@ -102,7 +102,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
   def test_expands_document_series
     rail_statistics_document = Document.new(
-      %w(link title),
+      sample_field_definitions(%w(link title)),
       link: "/government/organisations/department-for-transport/series/rail-statistics",
       title: "Rail statistics"
     )
@@ -127,7 +127,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
   def test_expands_document_collection
     rail_statistics_document = Document.new(
-      %w(link title),
+      sample_field_definitions(%w(link title)),
       link: "/government/collections/rail-statistics",
       title: "Rail statistics"
     )
@@ -152,7 +152,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
   def test_expands_organisations
     mod_document = Document.new(
-      %w(link title),
+      sample_field_definitions(%w(link title)),
       link: "/government/organisations/ministry-of-defence",
       title: "Ministry of Defence (MoD)"
     )
@@ -176,7 +176,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
   def test_expands_topics
     housing_document = Document.new(
-      %w(link title),
+      sample_field_definitions(%w(link title)),
       link: "/government/topics/housing",
       title: "Housing"
     )
@@ -200,7 +200,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
   def test_expands_world_locations
     angola_world_location = Document.new(
-      %w(link title),
+      sample_field_definitions(%w(link title)),
       link: "/government/world/angola",
       title: "Angola"
     )

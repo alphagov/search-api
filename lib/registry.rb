@@ -4,9 +4,14 @@ module Registry
   class BaseRegistry
     CACHE_LIFETIME = 12 * 3600  # 12 hours
 
-    def initialize(index, format, fields = %w{slug link title}, clock = Time)
+    def initialize(index, field_definitions, format, fields = %w{slug link title}, clock = Time)
       @cache = TimedCache.new(self.class::CACHE_LIFETIME, clock) { fetch }
-      @fields = fields
+
+      @field_definitions = fields.reduce({}) { |result, field|
+        result[field] = field_definitions[field]
+        result
+      }
+
       @format = format
       @index = index
     end
@@ -25,19 +30,19 @@ module Registry
     end
 
     def find_documents_by_format
-      @index.documents_by_format(@format, fields: @fields)
+      @index.documents_by_format(@format, @field_definitions)
     end
   end
 
   class DocumentCollection < BaseRegistry
-    def initialize(index)
-      super(index, "document_collection")
+    def initialize(index, field_definitions)
+      super(index, field_definitions, "document_collection")
     end
   end
 
   class DocumentSeries < BaseRegistry
-    def initialize(index)
-      super(index, "document_series")
+    def initialize(index, field_definitions)
+      super(index, field_definitions, "document_series")
     end
   end
 
@@ -52,8 +57,8 @@ module Registry
     MINISTERIAL_DEPARTMENT_LINKS = load_ministerial_departments
     MINISTERIAL_DEPARTMENT_TYPE = "Ministerial department"
 
-    def initialize(index)
-      super(index, "organisation", %w{slug link title acronym organisation_type organisation_state})
+    def initialize(index, field_definitions)
+      super(index, field_definitions, "organisation", %w{slug link title acronym organisation_type organisation_state})
     end
 
   private
@@ -77,8 +82,8 @@ module Registry
   class SpecialistSector < BaseRegistry
     CACHE_LIFETIME = 300
 
-    def initialize(index)
-      super(index, "specialist_sector", %w{link title})
+    def initialize(index, field_definitions)
+      super(index, field_definitions, "specialist_sector", %w{link title})
     end
 
     def [](slug)
@@ -106,14 +111,14 @@ module Registry
   end
 
   class Topic < BaseRegistry
-    def initialize(index)
-      super(index, "topic")
+    def initialize(index, field_definitions)
+      super(index, field_definitions, "topic")
     end
   end
 
   class WorldLocation < BaseRegistry
-    def initialize(index)
-      super(index, "world_location")
+    def initialize(index, field_definitions)
+      super(index, field_definitions, "world_location")
     end
   end
 end

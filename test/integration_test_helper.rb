@@ -17,20 +17,7 @@ module IntegrationFixtures
   end
 
   def sample_document
-    Document.from_hash(sample_document_attributes, default_mappings)
-  end
-
-  def sample_recommended_document_attributes
-    {
-      "title" => "TITLE1",
-      "description" => "DESCRIPTION",
-      "format" => "recommended-link",
-      "link" => "/URL"
-    }
-  end
-
-  def sample_recommended_document
-    Document.from_hash(sample_recommended_document_attributes, default_mappings)
+    Document.from_hash(sample_document_attributes, sample_document_types)
   end
 end
 
@@ -62,6 +49,11 @@ module ElasticsearchIntegration
       "auxiliary_index_names" => auxiliary_index_names,
       "govuk_index_names" => content_index_names,
       "metasearch_index_name" => metasearch_index_name,
+      "organisation_registry_index" => @default_index_name,
+      "topic_registry_index" => @default_index_name,
+      "document_series_registry_index" => @default_index_name,
+      "document_collection_registry_index" => @default_index_name,
+      "world_location_registry_index" => @default_index_name,
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
     app.settings.stubs(:enable_queue).returns(false)

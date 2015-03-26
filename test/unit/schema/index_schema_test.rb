@@ -7,9 +7,15 @@ class IndexSchemaTest < ShouldaUnitTestCase
     assert_equal message, exc.message
   end
 
+  def schema_dir
+    File.expand_path('../../../config/schema', File.dirname(__FILE__))
+  end
+
   context "after loading standard index schemas" do
     setup do
-      @index_schemas = IndexSchemaParser.parse_all(File.expand_path('../../../config/schema', File.dirname(__FILE__)))
+      field_definitions = FieldDefinitionParser.new(schema_dir).parse
+      document_types = DocumentTypesParser.new(schema_dir, field_definitions).parse
+      @index_schemas = IndexSchemaParser.parse_all(schema_dir, document_types)
       @identifier_es_config = {"type"=>"string", "index"=>"not_analyzed", "include_in_all"=>false}
     end
 
@@ -32,8 +38,9 @@ class IndexSchemaTest < ShouldaUnitTestCase
 
   context "when configuration is invalid" do
     setup do
-      @document_types = DocumentTypesParser.new(File.expand_path('../../../config/schema', File.dirname(__FILE__))).parse
-      @parser = IndexSchemaParser.new("index", "index.json", @document_types)
+      field_definitions = FieldDefinitionParser.new(schema_dir).parse
+      document_types = DocumentTypesParser.new(schema_dir, field_definitions).parse
+      @parser = IndexSchemaParser.new("index", "index.json", document_types)
     end
 
     should "fail if index schema specifies an unknown document type" do

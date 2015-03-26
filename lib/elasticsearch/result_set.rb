@@ -8,10 +8,10 @@ class ResultSet
     @total = total
   end
 
-  def self.from_elasticsearch(mappings, elasticsearch_response)
+  def self.from_elasticsearch(document_types, elasticsearch_response)
     total = elasticsearch_response["hits"]["total"]
     results = elasticsearch_response["hits"]["hits"].map { |hit|
-      document_from_hit(hit, mappings)
+      document_from_hit(hit, document_types)
     }.freeze
 
     ResultSet.new(results, total)
@@ -46,7 +46,7 @@ class ResultSet
   end
 
 private
-  def self.document_from_hit(hit, mappings)
-    Document.from_hash(hit["_source"], mappings, hit["_score"])
+  def self.document_from_hit(hit, document_types)
+    Document.from_hash(hit["_source"], document_types, hit["_score"])
   end
 end

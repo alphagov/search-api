@@ -1,5 +1,4 @@
 require "json"
-require "schema/field_definitions"
 
 class DocumentType
   attr_reader :name, :fields, :allowed_values
@@ -27,9 +26,9 @@ class DocumentTypeParser
   end
 
   def parse
-    field_names, allowed_values = parse_file
+    field_names, allowed_values, use_base_type = parse_file
 
-    unless base_type.nil?
+    unless base_type.nil? || !use_base_type
       field_names = merge_field_names(field_names)
       unless base_type.allowed_values.empty?
         raise_error %{Specifying `allowed_values` in base document type is not supported}
@@ -65,6 +64,8 @@ private
   def parse_file
     raw = load_json
 
+    use_base_type = raw.delete("use_base_type") { true }
+
     fields = raw.delete("fields")
     if fields.nil?
       raise_error %{Missing "fields"}
@@ -79,7 +80,7 @@ private
       raise_error %{Unknown keys (#{raw.keys.join(", ")})}
     end
 
-    [fields, allowed_values]
+    [fields, allowed_values, use_base_type]
   end
 
   def merge_field_names(field_names)
@@ -101,13 +102,12 @@ end
 class DocumentTypesParser
   attr_reader :config_path
 
-  def initialize(config_path)
+  def initialize(config_path, field_definitions)
     @config_path = config_path
+    @field_definitions = field_definitions
   end
 
   def parse
-    @field_definitions = FieldDefinitionParser.new(config_path).parse
-
     Hash[document_type_paths.map { |document_type, file_path|
       [
         document_type,
@@ -128,7 +128,7 @@ private
 
   def document_type_paths
     Dir.new(File.join(config_path, "document_types")).select { |filename|
-      filename =~ /\A[a-z][_a-z]*\.json\z/
+      filename =~ /\A[a-z][-_a-z]*\.json\z/
     }.map { |filename|
       [
         filename.sub(/.json$/, ''),

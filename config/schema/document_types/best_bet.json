@@ -1,0 +1,9 @@
+{
+  "use_base_type": false,
+  "fields": [
+    "exact_query",
+    "stemmed_query",
+    "stemmed_query_as_term",
+    "details"
+  ]
+}

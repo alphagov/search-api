@@ -9,7 +9,7 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   def setup
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
-    @wrapper = Elasticsearch::Index.new(base_uri, "test-index", default_mappings, search_config)
+    @wrapper = Elasticsearch::Index.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
   end
 
   def test_pagination_params_are_required
@@ -143,8 +143,8 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def test_returns_the_hits_converted_into_documents
-    Document.expects(:from_hash).with({"woo" => "hoo"}, default_mappings, nil).returns :woo_hoo
-    stub_request(:get, "http://example.com:9200/test-index/_search")
+    Document.expects(:from_hash).with({"woo" => "hoo"}, anything, nil).returns :woo_hoo
+    stub_request(:get, "http://example.com:9200/mainstream_test/_search")
       .to_return(:status => 200, :body => "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"woo\": \"hoo\"}}]}}", :headers => {})
     result_set = @wrapper.advanced_search(default_params)
     assert_equal 10, result_set.total
@@ -156,7 +156,7 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def stub_empty_search(with_args = {})
-    r = stub_request(:get, "http://example.com:9200/test-index/_search")
+    r = stub_request(:get, "http://example.com:9200/mainstream_test/_search")
     r.with(with_args) unless with_args.empty?
     r.to_return(:status => 200, :body => "{\"hits\": {\"total\": 0, \"hits\": []}}", :headers => {})
   end

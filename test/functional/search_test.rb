@@ -4,9 +4,15 @@ require "registry"
 
 class SearchTest < IntegrationTest
 
+  def setup
+    super
+    stub_elasticsearch_settings
+    Registry::Organisation.any_instance.stubs(:all).returns([])
+  end
+
   def bus_timetables_document_series
     Document.new(
-      %w(link title),
+      sample_document_types["edition"].fields,
       {
         link: "/government/organisations/department-for-transport/series/bus-timetables",
         title: "Bus Timetables"
@@ -16,7 +22,7 @@ class SearchTest < IntegrationTest
 
   def learning_to_drive_document_collection
     Document.new(
-      %w(link title),
+      sample_document_types["edition"].fields,
       {
         link: "/government/collections/learning-to-drive",
         title: "Learning to Drive"
@@ -26,7 +32,7 @@ class SearchTest < IntegrationTest
 
   def angola_world_location
     Document.new(
-      %w(link title),
+      sample_document_types["edition"].fields,
       {
         link: "/government/world/angola",
         title: "Angola"
@@ -44,7 +50,7 @@ class SearchTest < IntegrationTest
 
   def mod_organisation
     Document.new(
-      %w(link title),
+      sample_document_types["edition"].fields,
       {
         link: "/government/organisations/ministry-of-defence",
         title: "Ministry of Defence (MoD)"
@@ -54,7 +60,7 @@ class SearchTest < IntegrationTest
 
   def dft_organisation
     Document.new(
-      %w(link title acronym),
+      sample_document_types["edition"].fields,
       {
         link: "/government/organisations/department-for-transport",
         title: "Department for Transport",
@@ -65,16 +71,12 @@ class SearchTest < IntegrationTest
 
   def housing_topic
     Document.new(
-      %w(link title),
+      sample_document_types["edition"].fields,
       {
         link: "/government/topics/housing",
         title: "Housing"
       }
     )
-  end
-
-  def setup
-    Registry::Organisation.any_instance.stubs(:all).returns([])
   end
 
   def test_returns_json_for_search_results
@@ -121,7 +123,7 @@ class SearchTest < IntegrationTest
 
   def test_handles_organisations_without_acronyms_for_suggestions
     organisation_without_acronym = Document.new(
-      %w(link title acronym),
+      sample_document_types["edition"].fields,
       {
         link: "/government/organisations/acronymless-department",
         title: "Acronymless Department"
@@ -154,11 +156,9 @@ class SearchTest < IntegrationTest
   end
 
   def test_handles_results_with_document_series
-    mappings = default_mappings
-    mappings["edition"]["properties"]["document_series"] = {"type" => "string"}
     document = Document.from_hash(
       sample_document_attributes.merge(document_series: ["bus-timetables"]),
-      mappings
+      sample_document_types
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
@@ -172,11 +172,9 @@ class SearchTest < IntegrationTest
   end
 
   def test_handles_results_with_document_collections
-    mappings = default_mappings
-    mappings["edition"]["properties"]["document_collections"] = {"type" => "string"}
     document = Document.from_hash(
       sample_document_attributes.merge(document_collections: ["learning-to-drive"]),
-      mappings
+      sample_document_types
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
@@ -190,11 +188,9 @@ class SearchTest < IntegrationTest
   end
 
   def test_handles_results_with_organisations
-    mappings = default_mappings
-    mappings["edition"]["properties"]["organisations"] = {"type" => "string"}
     document = Document.from_hash(
       sample_document_attributes.merge(organisations: ["ministry-of-defence"]),
-      mappings
+      sample_document_types
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
@@ -208,11 +204,9 @@ class SearchTest < IntegrationTest
   end
 
   def test_handles_results_with_topics
-    mappings = default_mappings
-    mappings["edition"]["properties"]["topics"] = {"type" => "string"}
     document = Document.from_hash(
       sample_document_attributes.merge(topics: ["housing"]),
-      mappings
+      sample_document_types
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))
@@ -226,11 +220,9 @@ class SearchTest < IntegrationTest
   end
 
   def test_handles_results_with_world_locations
-    mappings = default_mappings
-    mappings["edition"]["properties"]["world_locations"] = {"type" => "string"}
     document = Document.from_hash(
       sample_document_attributes.merge(world_locations: ["angola"]),
-      mappings
+      sample_document_types
     )
 
     stub_index.expects(:search).returns(stub(results: [document], total: 1))

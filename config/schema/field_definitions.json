@@ -82,7 +82,7 @@
   },
 
   "attachments": {
-    "type": "object",
+    "type": "objects",
     "children": {
       "content": { "type": "searchable_text" },
       "title": { "type": "searchable_text" },
@@ -119,6 +119,10 @@
   },
 
   "organisation_state": {
+    "type": "identifier"
+  },
+
+  "organisation_type": {
     "type": "identifier"
   },
 
@@ -309,5 +313,35 @@
   "government_name": {
     "description": "The name of the Government that first published this document, eg, '1970 to 1974 Conservative government'",
     "type": "unsearchable_text"
+  },
+
+  "exact_query": {
+    "description": "Field used in the best-bet implementation to perform an exact match between a user's query and a stored best-bet",
+    "type": "best_bet_exact_match_text"
+  },
+
+  "stemmed_query": {
+    "description": "Field used in the best-bet implementation to perform a stemmed match between a user's query and a stored best-bet",
+    "type": "best_bet_stemmed_match_text"
+  },
+
+  "stemmed_query_as_term": {
+    "description": "Field used in the best-bet implementation to hold the raw form of a stemmed query",
+    "type": "identifier"
+  },
+
+  "details": {
+    "description": "Field used in the best-bet implementation to store the modifications to be made to the query when a best-bet is matched",
+     "type": "unsearchable_text"
+  },
+
+  "path_components": {
+    "description": "Field used in the page-traffic index to hold the full paths of each component of a url.  eg: a document with a path of '/foo/bar/baz' would have the values '/foo', '/foo/bar' and '/foo/bar/baz' in this field.  This allows all the pages under a given URL component to be identified.",
+    "type": "identifiers"
+  },
+
+  "rank_14": {
+    "description": "Field used in the page-traffic index to hold the rank of this page in the list of pages on the website when ordered by traffic.  This is a fairly stable value used in ranking calculations.",
+    "type": "stored_float"
   }
 }

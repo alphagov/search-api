@@ -19,7 +19,7 @@ class ElasticsearchAmendmentTest < IntegrationTest
     {
       "title" => "TITLE",
       "description" => "DESCRIPTION",
-      "organisations" => "hm-magic",
+      "organisations" => ["hm-magic"],
       "format" => "answer",
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT"

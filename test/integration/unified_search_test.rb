@@ -161,9 +161,9 @@ class UnifiedSearchTest < MultiIndexTest
         "example_info" => {
           "total" => 3,
           "examples" => [
-            {"section" => ["1"], "title" => "Sample mainstream document 1", "link" => "/mainstream-1"},
-            {"section" => ["1"], "title" => "Sample detailed document 1", "link" => "/detailed-1"},
-            {"section" => ["1"], "title" => "Sample government document 1", "link" => "/government-1"},
+            {"section" => "1", "title" => "Sample mainstream document 1", "link" => "/mainstream-1"},
+            {"section" => "1", "title" => "Sample detailed document 1", "link" => "/detailed-1"},
+            {"section" => "1", "title" => "Sample government document 1", "link" => "/government-1"},
           ]
         }
       },

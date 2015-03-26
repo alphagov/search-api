@@ -11,30 +11,30 @@ class SearchServerTest < MiniTest::Unit::TestCase
   end
 
   def test_returns_an_index
-    search_server = Elasticsearch::SearchServer.new("http://l", schema_config, ["a", "b"], ["a"], SearchConfig.new)
-    index = search_server.index("a")
+    search_server = Elasticsearch::SearchServer.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], ["mainstream_test"], SearchConfig.new)
+    index = search_server.index("mainstream_test")
     assert index.is_a?(Elasticsearch::Index)
-    assert_equal "a", index.index_name
+    assert_equal "mainstream_test", index.index_name
   end
 
   def test_raises_an_error_for_unknown_index
-    search_server = Elasticsearch::SearchServer.new("http://l", schema_config, ["a", "b"], ["a"], SearchConfig.new)
+    search_server = Elasticsearch::SearchServer.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], ["mainstream_test"], SearchConfig.new)
     assert_raises Elasticsearch::NoSuchIndex do
       search_server.index("z")
     end
   end
 
   def test_can_get_multi_index
-    search_server = Elasticsearch::SearchServer.new("http://l", schema_config, ["a", "b"], ["a"], SearchConfig.new)
-    index = search_server.index("a,b")
-    assert index.is_a?(Elasticsearch::Index)
-    assert_equal "a,b", index.index_name
+    search_server = Elasticsearch::SearchServer.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], ["mainstream_test"], SearchConfig.new)
+    index = search_server.index_for_search(%w{mainstream_test page-traffic_test})
+    assert index.is_a?(Elasticsearch::IndexForSearch)
+    assert_equal ["mainstream_test", "page-traffic_test"], index.index_names
   end
 
   def test_raises_an_error_for_unknown_index_in_multi_index
-    search_server = Elasticsearch::SearchServer.new("http://l", schema_config, ["a", "b"], ["a"], SearchConfig.new)
+    search_server = Elasticsearch::SearchServer.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], ["mainstream_test"], SearchConfig.new)
     assert_raises Elasticsearch::NoSuchIndex do
-      search_server.index("a,z")
+      search_server.index_for_search(%w{mainstream_test unknown})
     end
   end
 
