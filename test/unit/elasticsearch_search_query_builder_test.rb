@@ -2,6 +2,10 @@ require "test_helper"
 require "elasticsearch/search_query_builder"
 
 class SearchQueryBuilderTest < ShouldaUnitTestCase
+  def setup
+    Timecop.freeze
+    super
+  end
 
   def mappings(properties = {})
     {
@@ -81,7 +85,10 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
     filters = builder.query_hash[:query][:function_score][:functions]
     expected = {
       filter: { term: { search_format_types: "announcement" } },
-      script_score: { script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)" },
+      script_score: {
+        script: "((0.05 / ((3.16*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)",
+        params: {now: (Time.now.to_i / 60) * 60000},
+      },
     }
     assert_equal expected, filters.last
   end

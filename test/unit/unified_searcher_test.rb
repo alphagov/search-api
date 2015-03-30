@@ -4,6 +4,10 @@ require "unified_searcher"
 require "search_parameter_parser"
 
 class UnifiedSearcherTest < ShouldaUnitTestCase
+  def setup
+    Timecop.freeze
+    super
+  end
 
   def sample_docs
     [{
@@ -118,7 +122,8 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
             {filter: {term: {format: 'operational_field'}}, boost_factor: 1.5},
             {filter: {term: {format: 'contact'}}, boost_factor: 0.3},
             {filter: {term: {search_format_types: 'announcement'}}, script_score: {
-              script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
+              script: "((0.05 / ((3.16*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)",
+              params: {now: (Time.now.to_i / 60) * 60000},
             }},
             {filter: {term: {organisation_state: 'closed'}}, boost_factor: 0.3},
             {filter: {term: {organisation_state: 'devolved'}}, boost_factor: 0.3},

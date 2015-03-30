@@ -30,6 +30,7 @@ group :test do
   gem "rack-test"
   gem "mocha", :require => false
   gem "webmock", "1.9.3", :require => false
+  gem "timecop", "0.7.3"
 end
 
 group :development do
