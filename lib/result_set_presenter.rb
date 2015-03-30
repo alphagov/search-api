@@ -123,6 +123,8 @@ private
 
     document_schema = schema_for_document(document_attrs)
 
+    document_attrs = apply_multivalued(document_schema, document_attrs)
+
     params_to_expand = document_attrs.select { |k, _|
       document_schema.allowed_values.include?(k)
     }
@@ -138,6 +140,32 @@ private
     }
 
     document_attrs.merge(expanded_params)
+  end
+
+  def apply_multivalued(document_schema, document_attrs)
+    document_attrs.reduce({}) { |result, (field_name, values)|
+      if field_name[0] == '_'
+        # Special fields are always returned as single values.
+        result[field_name] = values
+        return result
+      end
+
+      # Convert to array for consistency between elasticsearch 0.90 and 1.0.
+      # When we no longer support elasticsearch <1.0, values here will
+      # always be an array, so this block can be removed.
+      if values.nil?
+        values = []
+      elsif !(values.is_a?(Array))
+        values = [values]
+      end
+
+      if document_schema.fields.fetch(field_name).type.multivalued
+        result[field_name] = values
+      else
+        result[field_name] = values.first
+      end
+      result
+    }
   end
 
   def schema_for_document(document)

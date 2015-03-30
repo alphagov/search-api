@@ -183,14 +183,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   def make_schema
     schema = stub("schema")
     index_schema = stub("index schema")
-    document_schema = stub("document_schema")
 
     schema.stubs(:schema_for_alias_name).returns(index_schema)
-    index_schema.stubs(:document_type).returns(document_schema)
-    document_schema.stubs(:allowed_values).returns({
-      "cma_case" => cma_case_allowed_values
-    })
-    [schema, document_schema]
+    index_schema.stubs(:document_type).returns(sample_document_types["cma_case"])
+    schema
   end
 
   context "unfiltered, unsorted search" do
@@ -210,7 +206,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:index_names).returns(
         %w{mainstream detailed government}
       )
-      @combined_index.expects(:schema).returns(make_schema[0])
+      @combined_index.expects(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -259,7 +255,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:index_names).returns(
         %w{mainstream detailed government}
       )
-      @combined_index.expects(:schema).returns(make_schema[0])
+      @combined_index.expects(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -304,7 +300,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:index_names).returns(
         %w{mainstream detailed government}
       )
-      @combined_index.expects(:schema).returns(make_schema[0])
+      @combined_index.expects(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -364,7 +360,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:index_names).returns(
         %w{mainstream detailed government}
       )
-      @combined_index.expects(:schema).returns(make_schema[0])
+      @combined_index.expects(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
