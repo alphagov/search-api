@@ -570,7 +570,7 @@ module Elasticsearch
       ranks = Hash.new(traffic_index_size)
       results["hits"]["hits"].each do |hit|
         link = hit["_id"]
-        rank = hit["fields"]["rank_14"]
+        rank = Array(hit["fields"]["rank_14"]).first
         if rank.nil?
           next
         end
