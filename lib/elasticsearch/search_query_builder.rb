@@ -33,13 +33,13 @@ module Elasticsearch
         from: 0,
         size: @limit,
         query: {
-          custom_filters_score: {
+          function_score: {
             query: {
               bool: {
                 should: [core_query]
               }
             },
-            filters: format_boosts + [time_boost]
+            functions: format_boosts + [time_boost]
           }
         },
         sort: sort
@@ -204,7 +204,7 @@ module Elasticsearch
       boosted_formats.map do |format, boost|
         {
           filter: { term: { format: format } },
-          boost: boost
+          boost_factor: boost
         }
       end
     end
@@ -216,7 +216,9 @@ module Elasticsearch
     def time_boost
       {
         filter: { term: { search_format_types: "announcement" } },
-        script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
+        script_score: {
+          script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
+        }
       }
     end
   end

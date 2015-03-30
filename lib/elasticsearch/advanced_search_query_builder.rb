@@ -85,7 +85,7 @@ module Elasticsearch
       if @keywords
         {
           query: {
-            custom_filters_score: {
+            function_score: {
               query: {
                 bool: {
                   should: [
@@ -106,9 +106,11 @@ module Elasticsearch
                   ]
                 }
               },
-              filters: [
+              functions: [
                 filter: { term: { search_format_types: "edition" } },
-                script: "((0.15 / ((3.1*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)"
+                script_score: {
+                  script: "((0.15 / ((3.1*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
+                }
               ]
             }
           }
