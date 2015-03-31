@@ -54,7 +54,7 @@
     }
   },
 
-  "stored_float": {
+  "float": {
     "description": "A floating point number stored such that it can be used in ranking calculations",
     "es_config": {
       "type": "float",
@@ -70,7 +70,7 @@
     }
   },
 
-  "searchable_date": {
+  "date": {
     "description": "A date which can be returned and used for ordering, filtering and facetting",
     "es_config": {
       "type": "date",
