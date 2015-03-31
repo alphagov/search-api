@@ -242,10 +242,11 @@ class SearchTest < IntegrationTest
       "_index" => "mainstream",
       "_id" => "foo_id",
       "_score" => "1.0",
+      "_type" => "edition",
       "fields" => sample_document_attributes.merge("specialist_sectors" => ["oil-and-gas/licensing"])
     }
 
-    stub_index.stubs(:schema).returns(nil)
+    stub_index.stubs(:schema).returns(sample_schema)
     stub_index.stubs(:mappings).returns(mappings)
     stub_index.expects(:raw_search).returns({"hits" => {"hits" => [document], "total" => 1}})
     stub_index.expects(:index_names).returns(%w{mainstream government detailed})

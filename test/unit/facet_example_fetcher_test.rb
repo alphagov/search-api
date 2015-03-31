@@ -35,9 +35,17 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     }
   end
 
+  def stub_index(name)
+    schema = stub("schema")
+    schema.stubs(:field_definitions).returns(sample_field_definitions)
+    index = stub("content index")
+    index.stubs(:schema).returns(schema)
+    index
+  end
+
   context "no facet" do
     setup do
-      @index = stub("content index")
+      @index = stub_index("content index")
       @builder = stub("builder")
       @fetcher = FacetExampleFetcher.new(@index, {}, {}, @builder)
     end
@@ -49,7 +57,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
 
   context "one facet with global scope" do
     setup do
-      @index = stub("content index")
+      @index = stub_index("content index")
       @example_fields = %w{link title other_field}
       main_query_response = {"facets" => {
         "sector" => {
@@ -99,7 +107,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
 
   context "one facet with query scope" do
     setup do
-      @index = stub("content index")
+      @index = stub_index("content index")
       @example_fields = %w{link title other_field}
 
       main_query_response = {"facets" => {
@@ -157,7 +165,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
 
   context "one facet but no documents match query" do
     setup do
-      @index = stub("content index")
+      @index = stub_index("content index")
       @example_fields = %w{link title other_field}
       main_query_response = {"facets" => {
         "sector" => {
@@ -186,7 +194,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
 
   context "one facet with 1000 matches" do
     setup do
-      @index = stub("content index")
+      @index = stub_index("content index")
       @example_fields = %w{link title other_field}
 
       main_query_response = {"facets" => {

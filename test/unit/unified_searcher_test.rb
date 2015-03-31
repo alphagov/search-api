@@ -155,7 +155,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
   def mock_best_bets(query)
     @metasearch_index = stub("metasearch index")
-    @metasearch_index.expects(:raw_search).with(
+    @metasearch_index.stubs(:raw_search).with(
       {
         query: {:bool => {:should => [{:match => {:exact_query => query}},
                                       {:match => {:stemmed_query => query}}]}},
@@ -165,7 +165,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       {
         "hits" => {"hits" => [], "total" => [].size}
       })
-    @metasearch_index.expects(:analyzed_best_bet_query).with(query).returns(query)
+    @metasearch_index.stubs(:analyzed_best_bet_query).with(query).returns(query)
   end
 
   def with_base_filters(filter)
@@ -190,6 +190,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     index_schema = stub("index schema")
 
     schema.stubs(:schema_for_alias_name).returns(index_schema)
+    schema.stubs(:field_definitions)
     index_schema.stubs(:document_type).returns(sample_document_types["cma_case"])
     schema
   end
@@ -208,10 +209,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.expects(:index_names).returns(
+      @combined_index.stubs(:index_names).returns(
         %w{mainstream detailed government}
       )
-      @combined_index.expects(:schema).returns(make_schema)
+      @combined_index.stubs(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -248,7 +249,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index = stub("unified index")
       mock_best_bets("cheese")
       @searcher = make_searcher
-      @combined_index.expects(:raw_search).with({
+      @combined_index.stubs(:raw_search).with({
         from: 0,
         size: 20,
         query: CHEESE_QUERY,
@@ -257,10 +258,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.expects(:index_names).returns(
+      @combined_index.stubs(:index_names).returns(
         %w{mainstream detailed government}
       )
-      @combined_index.expects(:schema).returns(make_schema)
+      @combined_index.stubs(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -293,7 +294,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index = stub("unified index")
       mock_best_bets("cheese")
       @searcher = make_searcher
-      @combined_index.expects(:raw_search).with({
+      @combined_index.stubs(:raw_search).with({
         from: 0,
         size: 20,
         query: CHEESE_QUERY,
@@ -302,10 +303,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.expects(:index_names).returns(
+      @combined_index.stubs(:index_names).returns(
         %w{mainstream detailed government}
       )
-      @combined_index.expects(:schema).returns(make_schema)
+      @combined_index.stubs(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -338,7 +339,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index = stub("unified index")
       mock_best_bets("cheese")
       @searcher = make_searcher
-      @combined_index.expects(:raw_search).with({
+      @combined_index.stubs(:raw_search).with({
         from: 0,
         size: 20,
         query: CHEESE_QUERY,
@@ -362,10 +363,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
           ]
         }},
       })
-      @combined_index.expects(:index_names).returns(
+      @combined_index.stubs(:index_names).returns(
         %w{mainstream detailed government}
       )
-      @combined_index.expects(:schema).returns(make_schema)
+      @combined_index.stubs(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
