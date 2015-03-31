@@ -25,7 +25,7 @@ class ElasticsearchClosingTest < IntegrationTest
 
     index = search_server.index_group(@default_index_name).current
     index.close
-    assert_raises *restclient_4xx_errors do
+    assert_raises *(restclient_4xx_errors + [Elasticsearch::BulkIndexFailure]) do
       index.add([sample_document])
     end
 
