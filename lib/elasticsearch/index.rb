@@ -357,11 +357,6 @@ module Elasticsearch
       queue.queue_delete(document_type, document_id)
     end
 
-    def delete_all
-      @client.delete_with_payload("_query", {match_all: {}}.to_json)
-      commit
-    end
-
     def commit
       @client.post "_refresh", nil
     end
