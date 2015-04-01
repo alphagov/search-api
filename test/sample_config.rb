@@ -22,4 +22,7 @@ module SampleConfig
     @sample_document_types ||= DocumentTypesParser.new(schema_dir, sample_field_definitions).parse
   end
 
+  def sample_schema
+    @sample_schema ||= SchemaConfig.new(schema_dir)
+  end
 end

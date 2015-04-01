@@ -28,7 +28,7 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def test_keyword_param_is_converted_to_a_boosted_title_and_unboosted_general_query
-    stub_empty_search(:body => "{\"from\":0,\"size\":1,\"query\":{\"custom_filters_score\":{\"query\":{\"bool\":{\"should\":[{\"query_string\":{\"query\":\"happy fun time\",\"fields\":[\"title^3\"],\"default_operator\":\"and\",\"analyzer\":\"default\"}},{\"query_string\":{\"query\":\"happy fun time\",\"analyzer\":\"query_default\"}}]}},\"filters\":[{\"filter\":{\"term\":{\"search_format_types\":\"edition\"}},\"script\":\"((0.15 / ((3.1*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)\"}]}},\"filter\":{}}")
+    stub_empty_search(:body => "{\"from\":0,\"size\":1,\"query\":{\"function_score\":{\"query\":{\"bool\":{\"should\":[{\"query_string\":{\"query\":\"happy fun time\",\"fields\":[\"title^3\"],\"default_operator\":\"and\",\"analyzer\":\"default\"}},{\"query_string\":{\"query\":\"happy fun time\",\"analyzer\":\"query_default\"}}]}},\"functions\":[{\"filter\":{\"term\":{\"search_format_types\":\"edition\"}},\"script_score\":{\"script\":\"((0.15 / ((3.1*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)\",\"params\":{\"now\":#{(Time.now.to_i / 60) * 60000}}}}]}},\"filter\":{}}")
     @wrapper.advanced_search(default_params.merge('keywords' => 'happy fun time'))
   end
 

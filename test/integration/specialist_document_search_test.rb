@@ -32,6 +32,6 @@ class SpecialistDocumentSearchTest < MultiIndexTest
     first_result = parsed_response["results"].first
 
     assert first_result.has_key? "case_type"
-    assert first_result["case_type"] == [{"label" => "Mergers", "value" => "mergers"}]
+    assert_equal [{"label" => "Mergers", "value" => "mergers"}], first_result["case_type"]
   end
 end

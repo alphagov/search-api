@@ -5,6 +5,7 @@ class FacetExampleFetcher
     @response_facets = es_response["facets"]
     @params = params
     @search_builder = search_builder
+    @field_definitions = index.schema.field_definitions
   end
 
   # Fetch all requested example facet values
@@ -100,9 +101,35 @@ private
       hits = response["hits"]
       result[slug] = {
         total: hits["total"],
-        examples: hits["hits"].map { |hit| hit["fields"] },
+        examples: hits["hits"].map { |hit| apply_multivalued(hit["fields"]) },
       }
     }
     result
+  end
+
+  def apply_multivalued(document_attrs)
+    document_attrs.reduce({}) { |result, (field_name, values)|
+      if field_name[0] == '_'
+        # Special fields are always returned as single values.
+        result[field_name] = values
+        return result
+      end
+
+      # Convert to array for consistency between elasticsearch 0.90 and 1.0.
+      # When we no longer support elasticsearch <1.0, values here will
+      # always be an array, so this block can be removed.
+      if values.nil?
+        values = []
+      elsif !(values.is_a?(Array))
+        values = [values]
+      end
+
+      if @field_definitions.fetch(field_name).type.multivalued
+        result[field_name] = values
+      else
+        result[field_name] = values.first
+      end
+      result
+    }
   end
 end

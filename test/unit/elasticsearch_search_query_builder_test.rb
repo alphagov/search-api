@@ -2,6 +2,10 @@ require "test_helper"
 require "elasticsearch/search_query_builder"
 
 class SearchQueryBuilderTest < ShouldaUnitTestCase
+  def setup
+    Timecop.freeze
+    super
+  end
 
   def mappings(properties = {})
     {
@@ -13,7 +17,7 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
   end
 
   def extract_condition_by_type(query_hash, condition_type)
-    must_conditions = query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
+    must_conditions = query_hash[:query][:function_score][:query][:bool][:should][0][:bool][:must]
     must_conditions.find { |condition| condition.keys == [condition_type] }
   end
 
@@ -36,13 +40,13 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
   def test_minimum_should_match_has_sensible_default
     builder = Elasticsearch::SearchQueryBuilder.new("one two three", mappings)
 
-    must_conditions = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:must]
+    must_conditions = builder.query_hash[:query][:function_score][:query][:bool][:should][0][:bool][:must]
     assert_equal "2<2 3<3 7<50%", must_conditions[0][:match][:_all][:minimum_should_match]
   end
 
   def test_shingle_boosts
     builder = Elasticsearch::SearchQueryBuilder.new("quick brown fox", mappings)
-    shingle_condition = builder.query_hash[:query][:custom_filters_score][:query][:bool][:should][0][:bool][:should].detect do |condition|
+    shingle_condition = builder.query_hash[:query][:function_score][:query][:bool][:should][0][:bool][:should].detect do |condition|
       condition[:multi_match] &&
           condition[:multi_match][:analyzer] == "shingled_query_analyzer"
     end
@@ -60,28 +64,31 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
 
   def test_format_boosts
     builder = Elasticsearch::SearchQueryBuilder.new("cherokee", mappings)
-    filters = builder.query_hash[:query][:custom_filters_score][:filters]
+    filters = builder.query_hash[:query][:function_score][:functions]
 
     expected = [
-      { filter: { term: { format: "smart-answer" } },      boost: 1.5 },
-      { filter: { term: { format: "transaction" } },       boost: 1.5 },
-      { filter: { term: { format: "topical_event" } },     boost: 1.5 },
-      { filter: { term: { format: "minister" } },          boost: 1.7 },
-      { filter: { term: { format: "organisation" } },      boost: 2.5 },
-      { filter: { term: { format: "topic" } },             boost: 1.5 },
-      { filter: { term: { format: "document_series" } },   boost: 1.3 },
-      { filter: { term: { format: "document_collection" } }, boost: 1.3 },
-      { filter: { term: { format: "operational_field" } }, boost: 1.5 },
+      { filter: { term: { format: "smart-answer" } },      boost_factor: 1.5 },
+      { filter: { term: { format: "transaction" } },       boost_factor: 1.5 },
+      { filter: { term: { format: "topical_event" } },     boost_factor: 1.5 },
+      { filter: { term: { format: "minister" } },          boost_factor: 1.7 },
+      { filter: { term: { format: "organisation" } },      boost_factor: 2.5 },
+      { filter: { term: { format: "topic" } },             boost_factor: 1.5 },
+      { filter: { term: { format: "document_series" } },   boost_factor: 1.3 },
+      { filter: { term: { format: "document_collection" } }, boost_factor: 1.3 },
+      { filter: { term: { format: "operational_field" } }, boost_factor: 1.5 },
     ]
     assert_equal expected, filters[0..-2]
   end
 
   def test_time_boost
     builder = Elasticsearch::SearchQueryBuilder.new("sioux", mappings)
-    filters = builder.query_hash[:query][:custom_filters_score][:filters]
+    filters = builder.query_hash[:query][:function_score][:functions]
     expected = {
       filter: { term: { search_format_types: "announcement" } },
-      script: "((0.05 / ((3.16*pow(10,-11)) * abs(time() - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)"
+      script_score: {
+        script: "((0.05 / ((3.16*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)",
+        params: {now: (Time.now.to_i / 60) * 60000},
+      },
     }
     assert_equal expected, filters.last
   end

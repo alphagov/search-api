@@ -357,11 +357,6 @@ module Elasticsearch
       queue.queue_delete(document_type, document_id)
     end
 
-    def delete_all
-      @client.delete_with_payload("_query", {match_all: {}}.to_json)
-      commit
-    end
-
     def commit
       @client.post "_refresh", nil
     end
@@ -570,7 +565,7 @@ module Elasticsearch
       ranks = Hash.new(traffic_index_size)
       results["hits"]["hits"].each do |hit|
         link = hit["_id"]
-        rank = hit["fields"]["rank_14"]
+        rank = Array(hit["fields"]["rank_14"]).first
         if rank.nil?
           next
         end

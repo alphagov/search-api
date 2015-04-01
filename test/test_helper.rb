@@ -12,6 +12,7 @@ require "fixtures/default_mappings"
 require "pp"
 require "shoulda-context"
 require "logging"
+require "timecop"
 
 require "webmock/minitest"
 WebMock.disable_net_connect!
@@ -27,6 +28,10 @@ require "sample_config"
 
 module TestHelpers
   include SampleConfig
+
+  def teardown
+    Timecop.return
+  end
 
   def load_yaml_fixture(filename)
     YAML.load_file(File.expand_path("fixtures/#{filename}", File.dirname(__FILE__)))
