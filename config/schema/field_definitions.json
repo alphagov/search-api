@@ -21,7 +21,7 @@
   },
 
   "popularity": {
-    "type": "stored_float"
+    "type": "float"
   },
 
   "organisations": {
@@ -46,15 +46,15 @@
   },
 
   "updated_at": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "last_update": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "public_timestamp": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "latest_change_note": {
@@ -106,7 +106,7 @@
   },
 
   "release_timestamp": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "metadata": {
@@ -176,7 +176,7 @@
   },
 
   "date_of_occurrence": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "registration": {
@@ -208,11 +208,11 @@
   },
 
   "opened_date": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "closed_date": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "contact_group": {
@@ -241,7 +241,7 @@
   },
 
   "first_published_at": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "fund_state": {
@@ -257,7 +257,7 @@
   },
 
   "closing_date": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "manual": {
@@ -293,7 +293,7 @@
   },
 
   "issued_date": {
-    "type": "searchable_date"
+    "type": "date"
   },
 
   "railway_type": {
@@ -342,6 +342,6 @@
 
   "rank_14": {
     "description": "Field used in the page-traffic index to hold the rank of this page in the list of pages on the website when ordered by traffic.  This is a fairly stable value used in ranking calculations.",
-    "type": "stored_float"
+    "type": "float"
   }
 }
