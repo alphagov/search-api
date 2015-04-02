@@ -172,7 +172,7 @@
   },
 
   "report_type": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "date_of_occurrence": {
@@ -180,7 +180,7 @@
   },
 
   "registration": {
-    "type": "identifier"
+    "type": "searchable_text"
   },
 
   "aircraft_type": {
@@ -192,19 +192,19 @@
   },
 
   "case_type": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "case_state": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "market_sector": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "outcome_type": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "opened_date": {
@@ -220,7 +220,7 @@
   },
 
   "grant_type": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "land_use": {
@@ -233,7 +233,7 @@
 
   "funding_amount": {
     "description": "Funding (per unit per year)",
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "therapeutic_area": {
@@ -245,7 +245,7 @@
   },
 
   "fund_state": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "fund_type": {
@@ -285,7 +285,7 @@
   },
 
   "alert_type": {
-    "type": "identifier"
+    "type": "identifiers"
   },
 
   "medical_specialism": {
