@@ -4,7 +4,7 @@ class BulkLoader
   def initialize(search_config, index_name, options = {})
     @search_config = search_config
     @index_name = index_name
-    @batch_size = options[:batch_size] || 1024 * 1024
+    @batch_size = options[:batch_size] || 256 * 1024
     @logger = options[:logger] || Logger.new(nil)
   end
 
