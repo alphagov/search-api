@@ -180,7 +180,7 @@
   },
 
   "registration": {
-    "type": "identifier"
+    "type": "searchable_text"
   },
 
   "aircraft_type": {
