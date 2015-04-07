@@ -65,15 +65,12 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     }
   end
 
-  def text_filter(field_name, values)
-    SearchParameterParser::TextFieldFilter.new(field_name, values)
+  def text_filter(field_name, values, rejects=false)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, rejects)
   end
 
-  def date_filter(field_name, values)
-    SearchParameterParser::DateFieldFilter.new(
-      field_name,
-      values,
-    )
+  def date_filter(field_name, values, rejects)
+    SearchParameterParser::DateFieldFilter.new(field_name, values, rejects)
   end
 
   should "return valid params given nothing" do
@@ -233,6 +230,36 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     )
   end
 
+  should "understand reject paramers" do
+    p = SearchParameterParser.new({"reject_organisations" => ["hm-magic"]})
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(
+      hash_including(filters: [
+        text_filter("organisations", ["hm-magic"], true)
+      ]),
+      p.parsed_params,
+    )
+  end
+
+  should "understand some rejects and some filter paramers" do
+    p = SearchParameterParser.new({
+      "reject_organisations" => ["hm-magic"],
+      "filter_mainstream_browse_pages" => ["cheese"],
+    })
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(
+      hash_including(filters: [
+        text_filter("mainstream_browse_pages", ["cheese"]),
+        text_filter("organisations", ["hm-magic"], true),
+      ]),
+      p.parsed_params,
+    )
+  end
+
   should "understand multiple filter paramers" do
     p = SearchParameterParser.new({"filter_organisations" => ["hm-magic", "hmrc"]})
 
@@ -286,6 +313,18 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert !p.valid?
     assert_equal(
       expected_params(filters: [text_filter("organisations", ["hm-magic"])]),
+      p.parsed_params,
+    )
+  end
+
+  should "complain about disallowed reject fields" do
+    p = SearchParameterParser.new({"reject_spells" => ["levitation"],
+                                   "reject_organisations" => ["hm-magic"]})
+
+    assert_equal(%{"spells" is not a valid reject field}, p.error)
+    assert !p.valid?
+    assert_equal(
+      expected_params(filters: [text_filter("organisations", ["hm-magic"], true)]),
       p.parsed_params,
     )
   end
@@ -445,7 +484,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert !p.valid?
     assert_equal(expected_params(order: ["public_timestamp", "asc"]), p.parsed_params)
   end
- 
+
   should "understand a facet field" do
     p = SearchParameterParser.new("facet_organisations" => ["10"])
 
@@ -507,7 +546,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       "organisations" => expected_facet_params(requested: 5)
     }), p.parsed_params)
   end
- 
+
   should "allow options in the values for the facet parameter" do
     p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:global"])
 

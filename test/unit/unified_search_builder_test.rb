@@ -59,15 +59,8 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
     }.merge(options)
   end
 
-  def text_filter(field_name, values)
-    SearchParameterParser::TextFieldFilter.new(field_name, values)
-  end
-
-  def date_filter(field_name, values)
-    SearchParameterParser::DateFieldFilter.new(
-      field_name,
-      values,
-    )
+  def text_filter(field_name, values, reject = false)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, reject)
   end
 
   def make_search_builder(options={})
@@ -187,6 +180,41 @@ class UnifiedSearcherBuilderTest < ShouldaUnitTestCase
       )
     end
   end
+
+  context "search with a filter and rejects" do
+    setup do
+      stub_zero_best_bets
+      @builder = make_search_builder(
+        filters: [
+          text_filter("organisations", ["hm-magic", "hmrc"]),
+          text_filter("mainstream_browse_pages", ["benefits"], true),
+        ],
+      )
+    end
+
+    should "have filter in payload" do
+      assert_contains(
+        @builder.payload.keys, :filter
+      )
+    end
+
+    should "have correct filter" do
+      assert_equal(
+        @builder.filters_hash,
+        with_base_filters({bool: {
+          must: {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
+          must_not: {"terms" => {"mainstream_browse_pages" => ["benefits"]}},
+        }})
+      )
+    end
+
+    should "not have facets in payload" do
+      assert_does_not_contain(
+        @builder.payload.keys, :facets
+      )
+    end
+  end
+
 
   context "search with multiple filters" do
     setup do

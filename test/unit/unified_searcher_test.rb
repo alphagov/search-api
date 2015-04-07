@@ -62,15 +62,12 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     stub('Suggester', suggestions: ['cheese'])
   end
 
-  def text_filter(field_name, values)
-    SearchParameterParser::TextFieldFilter.new(field_name, values)
+  def text_filter(field_name, values, reject = false)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, reject)
   end
 
-  def date_filter(field_name, values)
-    SearchParameterParser::DateFieldFilter.new(
-      field_name,
-      values,
-    )
+  def date_filter(field_name, values, reject = false)
+    SearchParameterParser::DateFieldFilter.new(field_name, values, reject)
   end
 
   BASE_CHEESE_QUERY = {

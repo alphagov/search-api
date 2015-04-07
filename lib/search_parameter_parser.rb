@@ -1,4 +1,5 @@
 require "ostruct"
+require "unf"
 
 class BaseParameterParser
 
@@ -319,36 +320,47 @@ private
     fields
   end
 
-  def filters
-    raw_params = @params.select { |name, _| name.start_with?("filter_") }
-
-    filter_params = raw_params.reduce({}) { |params, (name, value)|
-      params.merge(name.sub("filter_", "") => value)
+  def parameters_starting_with(prefix)
+    @params.select { |name, _|
+      name.start_with?(prefix)
+    }.each_with_object({}) { |(name, value), result|
+      @used_params << name
+      result[name.sub(prefix, "")] = value
     }
+  end
 
-    allowed_filters, disallowed_filters = filter_params.partition { |field, _|
+  def validate_filter_parameters(parameters, type)
+    allowed, disallowed = parameters.partition { |field, _|
       allowed_filter_fields.include?(field)
     }
 
-    filters = allowed_filters.map { |field, values|
-      build_filter(filter_name_lookup(field), values)
-    }
-
-    valid_filters, invalid_filters = filters.partition(&:valid?)
-
-    invalid_filters.flat_map(&:errors).each do |error|
-      @errors << error
+    disallowed.each do |field, _|
+      @errors << %{"#{field}" is not a valid #{type} field}
     end
 
-    disallowed_filters.each do |field, _|
-      @errors << %{"#{field}" is not a valid filter field}
-    end
+    allowed
+  end
 
-    raw_params.each do |name, _|
-      @used_params << name
-    end
+  def filters
+    filter_parameters = parameters_starting_with("filter_")
+    reject_parameters = parameters_starting_with("reject_")
 
-    filters
+    build_filters(
+      validate_filter_parameters(filter_parameters, "filter"),
+      validate_filter_parameters(reject_parameters, "reject")
+    )
+  end
+
+  def build_filters(filter_parameters, reject_parameters)
+    filters = filter_parameters.map { |field, values|
+      build_filter(filter_name_lookup(field), values, false)
+    }.compact
+
+    rejects = reject_parameters.map { |field, values|
+      build_filter(filter_name_lookup(field), values, true)
+    }.compact
+
+    filters.concat(rejects)
   end
 
   def schema
@@ -389,7 +401,7 @@ private
     @document_types && @document_types.first
   end
 
-  def build_filter(field_name, values)
+  def build_filter(field_name, values, reject)
     type = schema_get_field_type(field_name)
 
     field_class = {
@@ -397,16 +409,23 @@ private
       "string" => TextFieldFilter,
     }.fetch(type)
 
-    field_class.new(field_name, values)
+    filter = field_class.new(field_name, values, reject)
+    if filter.valid?
+      filter
+    else
+      @errors.concat(filter.errors)
+      nil
+    end
   end
 
   class Filter
-    attr_reader :field_name, :include_missing, :values, :errors
+    attr_reader :field_name, :include_missing, :values, :reject, :errors
 
-    def initialize(field_name, values)
+    def initialize(field_name, values, reject)
       @field_name = field_name
       @include_missing = values.include? BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE
       @values = Array(values).reject { |value| value == BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE }
+      @reject = reject
       @errors = []
     end
 
@@ -415,7 +434,7 @@ private
     end
 
     def ==(other)
-      [field_name, values] == [other.field_name, other.values]
+      [field_name, values, reject] == [other.field_name, other.values, other.reject]
     end
 
     def valid?
@@ -424,7 +443,7 @@ private
   end
 
   class DateFieldFilter < Filter
-    def initialize(field_name, values)
+    def initialize(field_name, values, reject)
       super
       @values = parse_dates(@values)
     end
