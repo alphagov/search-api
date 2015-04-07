@@ -55,6 +55,16 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal links, ["/detailed-1", "/government-1", "/mainstream-1"], links
   end
 
+  def test_reject_by_section
+    get "/unified_search?reject_section=1"
+    assert last_response.ok?
+    links = parsed_response["results"].map do |result|
+      result["link"]
+    end
+    links.sort!
+    assert_equal links, ["/detailed-2", "/government-2", "/mainstream-2"], links
+  end
+
   def test_can_filter_for_missing_section_field
     get "/unified_search?filter_specialist_sectors=_MISSING"
     assert last_response.ok?
@@ -76,6 +86,20 @@ class UnifiedSearchTest < MultiIndexTest
       "/detailed-1", "/detailed-2",
       "/government-1", "/government-2",
       "/mainstream-1", "/mainstream-2",
+    ], links
+  end
+
+  def test_can_filter_and_reject
+    get "/unified_search?reject_section=1&filter_specialist_sectors[]=farming"
+    assert last_response.ok?
+    links = parsed_response["results"].map do |result|
+      result["link"]
+    end
+    links.sort!
+    assert_equal [
+      "/detailed-2",
+      "/government-2",
+      "/mainstream-2",
     ], links
   end
 

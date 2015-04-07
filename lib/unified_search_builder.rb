@@ -1,6 +1,5 @@
 require "best_bets_checker"
 require "elasticsearch/escaping"
-require "unf"
 
 # Builds a query for a search across all GOV.UK indices
 class UnifiedSearchBuilder
@@ -155,17 +154,39 @@ class UnifiedSearchBuilder
   end
 
   def filters_hash(excluding=[])
-    filter_groups = @params.fetch(:filters).reject { |filter|
+    rejects = []
+    filters = []
+
+    @params.fetch(:filters).reject { |filter|
       excluding.include?(filter.field_name)
-    }.map { |filter|
-      filter_hash(filter)
+    }.each { |filter|
+      if filter.reject
+        rejects << filter_hash(filter)
+      else
+        filters << filter_hash(filter)
+      end
     }
 
-    # Don't add additional filters to filter_groups without making sure that
-    # the facet_filter values used in facets include the filter too.  It's
-    # usually better to add additional filters to the query, so that they
-    # automatically apply to facet calculation.
-    combine_filters(filter_groups, :and)
+    filters = combine_filters(filters, :and)
+    rejects = combine_filters(rejects, :and)
+
+    if filters
+      if rejects
+        {bool: {
+          must: filters,
+          must_not: rejects,
+        }}
+      else
+        filters
+      end
+    else
+      if rejects
+        {not: rejects}
+      else
+        nil
+      end
+    end
+
   end
 
   def filter_hash(filter)

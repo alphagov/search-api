@@ -698,7 +698,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
   end
 
-  def text_filter(field_name, values)
-    SearchParameterParser::TextFieldFilter.new(field_name, values)
+  def text_filter(field_name, values, reject = false)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, reject)
   end
 end
