@@ -204,7 +204,7 @@
   },
 
   "outcome_type": {
-    "type": "identifiers"
+    "type": "identifier"
   },
 
   "opened_date": {
