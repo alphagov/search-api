@@ -37,7 +37,16 @@
       "type": "string",
       "index": "analyzed",
       "include_in_all": true,
-      "copy_to": ["spelling_text"]
+      "copy_to": ["spelling_text"],
+      "fields": {
+        "synonym": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "index_analyzer": "with_index_synonyms",
+          "search_analyzer": "with_search_synonyms"
+        }
+      }
     }
   },
 

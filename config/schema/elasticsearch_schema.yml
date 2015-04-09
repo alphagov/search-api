@@ -2,11 +2,28 @@ index:
   settings:
     analysis:
       analyzer:
-        default:  # Indexing analyzer: doesn't use custom synonyms
+        default:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used at index time for the .synonym variants of searchable
+        # text fields.
+        with_index_synonyms:
+          type: custom
+          tokenizer: standard
+          filter: [standard, lowercase, index_synonym, synonym_protwords, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used at search time for the .synonym variants of searchable
+        # text fields.
+        with_search_synonyms:
+          type: custom
+          tokenizer: standard
+          filter: [standard, lowercase, search_synonym, synonym_protwords, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
+
         query_default:
           type: custom
           tokenizer: standard

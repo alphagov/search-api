@@ -3,6 +3,7 @@ require "yaml"
 require "schema/document_types"
 require "schema/field_definitions"
 require "schema/index_schema"
+require "schema/synonyms"
 
 class SchemaConfig
   attr_reader :field_definitions
@@ -12,6 +13,7 @@ class SchemaConfig
     @field_definitions = FieldDefinitionParser.new(config_path).parse
     @document_types = DocumentTypesParser.new(config_path, @field_definitions).parse
     @index_schemas = IndexSchemaParser.parse_all(config_path, @document_types)
+    @index_synonyms, @search_synonyms = SynonymParser.new(config_path).parse
   end
 
   def schema_for_alias_name(alias_name)
@@ -49,6 +51,9 @@ private
       index["settings"]["analysis"]["filter"].merge!(
         "synonym" => synonym_filter,
         "stemmer_override" => stems_filter,
+        "index_synonym" => @index_synonyms.es_config,
+        "search_synonym" => @search_synonyms.es_config,
+        "synonym_protwords" => @index_synonyms.protwords_config,
       )
     end
   end
