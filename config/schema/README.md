@@ -98,8 +98,46 @@ These files contain a JSON object with the following keys:
 
  - `document_types`: An array of the names of the document types allowed in this index.
 
+## Synonyms
+
+Synonyms are defined in the `synonyms.yml` file.
+
+Synonyms are specified in "lucene" syntax.  Each synonym group is represented
+as comma separated lists of synonyms, and optionally a "=>" symbol.
+
+If the => is provided, the left hand side contains a list of words which are
+combined at search time into a group, and the right hand side contains the list
+of words which are combined at index time into that same group.  ie, the left
+hand side is the mapping applied to searches, and the right hand side is the
+mapping applied to documents.
+
+If there is no =>, the same group of words is used at index time as at
+search time.
+
+Some examples:
+
+    foo, bar => baz
+
+means "a search for 'foo' or 'bar' should return documents with 'baz' in them"
+
+    foo => bar, baz
+
+means "a search for 'foo' should return documents with 'bar' or 'baz' in them"
+
+    foo, bar, baz
+
+is the same as `foo, bar, baz => foo, bar, baz` and means "a search for
+foo, bar or baz should return documents with any of them".
+
 ## Additional configuration
 
-Additional configuration is defined in the `elasticsearch_schema.yml`,
-`stems.yml` and `synonyms.yml` files.  This configuration is merged with the
-JSON configuration, and then passed to elasticsearch directly.
+Additional configuration is defined in the `elasticsearch_schema.yml` and
+`stems.yml` files.  This configuration is merged with the JSON configuration,
+and then passed to elasticsearch directly.
+
+The `old_synonyms.yml` contains a set of synonyms which were applied in an old,
+and moderately broken, way.  This is kept separate from the `synonyms.yml` file
+so that we can support and modify the lists for the new synonym approach
+without changing things for the old approach.  Once we're happy with the new
+approach, we'll delete the `old_synonyms.yml` file, and remove support for
+using it.
