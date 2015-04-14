@@ -24,30 +24,52 @@ index:
           filter: [standard, lowercase, search_synonym, synonym_protwords, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
+        # No longer used, but defined to avoid errors during deploy
+        # (specifically, if an index has been migrated, but beofre the app
+        # servers have been restarted, the "query_default" analyzer needs to
+        # exist or queries will fail due to the analyzer they're trying to use
+        # not being found).
         query_default:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, synonym, stop, stemmer_override, stemmer_english]
+          filter: [standard, lowercase, old_synonym, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used at query time for old-style synonym expansion.
+        query_with_old_synonyms:
+          type: custom
+          tokenizer: standard
+          filter: [standard, lowercase, old_synonym, stop, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used at query time for old-style shingle matching.
         shingled_query_analyzer:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, stop, stemmer_override, stemmer_english, filter_shingle]
+
+        # An analyzer for doing "exact" word matching (but stripping wrapping whitespace, and case insensitive).
         exact_match:
           type: custom
           tokenizer: keyword
           filter: [trim, lowercase]
           char_filter: [normalize_quotes]
+
+        # An analyzer for doing stemmed word matching for best bets.
         best_bet_stemmed_match:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used to process text supplied to the field for use in spelling correction.
         spelling_analyzer:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, shingle]
           char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used to process text fields for use for sorting.
         string_for_sorting:
           type: custom
           tokenizer: keyword

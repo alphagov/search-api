@@ -4,7 +4,7 @@ module Elasticsearch
   class SearchQueryBuilder
     include Elasticsearch::Escaping
 
-    QUERY_ANALYZER = "query_default"
+    QUERY_ANALYZER = "query_with_old_synonyms"
 
     # `query`    - a string to search for
     # `mappings` - the field definitions for the index this query is going to

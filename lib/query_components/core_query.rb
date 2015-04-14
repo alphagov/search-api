@@ -1,6 +1,6 @@
 module QueryComponents
   class CoreQuery < BaseComponent
-    DEFAULT_QUERY_ANALYZER = 'query_default'
+    DEFAULT_QUERY_ANALYZER = "query_with_old_synonyms"
     DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = 'default'
 
     # TODO: The `score` here doesn't actually do anything.
