@@ -86,10 +86,10 @@
     "children": {
       "content": { "type": "searchable_text" },
       "title": { "type": "searchable_text" },
-      "isbn": { "type": "identifier" },
-      "unique_reference": { "type": "identifier" },
-      "command_paper_number": { "type": "identifier" },
-      "hoc_paper_number": { "type": "identifier" }
+      "isbn": { "type": "searchable_identifier" },
+      "unique_reference": { "type": "searchable_identifier" },
+      "command_paper_number": { "type": "searchable_identifier" },
+      "hoc_paper_number": { "type": "searchable_identifier" }
     }
   },
 
