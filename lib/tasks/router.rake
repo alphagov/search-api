@@ -4,7 +4,7 @@ namespace :router do
     require 'gds_api/router'
 
     @router_api = GdsApi::Router.new(Plek.current.find('router-api'))
-    @app_id = 'search'
+    @app_id = 'rummager'
   end
 
   task :register_backend => :router_environment do
