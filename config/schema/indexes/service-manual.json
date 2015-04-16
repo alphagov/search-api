@@ -1,5 +1,7 @@
 {
   "document_types": [
-    "edition"
+    "edition",
+    "manual",
+    "manual_section"
   ]
 }
