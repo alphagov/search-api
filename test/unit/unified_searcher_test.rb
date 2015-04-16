@@ -136,14 +136,25 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
   CHEESE_QUERY = {
     indices: {
-      indices: [:government],
+      index: :government,
       query: {
         function_score: {
           query: BASE_CHEESE_QUERY,
           boost_factor: 0.4
         }
       },
-      no_match_query: BASE_CHEESE_QUERY
+      no_match_query: {
+        indices: {
+          index: :"service-manual",
+          query: {
+            function_score: {
+              query: BASE_CHEESE_QUERY,
+              boost_factor: 0.1
+            }
+          },
+          no_match_query: BASE_CHEESE_QUERY
+        }
+      }
     }
   }
 
