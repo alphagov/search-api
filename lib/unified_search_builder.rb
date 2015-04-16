@@ -8,6 +8,7 @@ class UnifiedSearchBuilder
   DEFAULT_QUERY_ANALYZER = "query_default"
   DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = 'default'
   GOVERNMENT_BOOST_FACTOR = 0.4
+  SERVICE_MANUAL_BOOST_FACTOR = 0.1
   POPULARITY_OFFSET = 0.001
 
   def initialize(params, metaindex)
@@ -123,14 +124,25 @@ class UnifiedSearchBuilder
     query = base_query
     {
       indices: {
-        indices: [:government],
+        index: :government,
         query: {
           function_score: {
             query: query,
             boost_factor: GOVERNMENT_BOOST_FACTOR
           }
         },
-        no_match_query: query
+        no_match_query: {
+          indices: {
+            index: :"service-manual",
+            query: {
+              function_score: {
+                query: query,
+                boost_factor: SERVICE_MANUAL_BOOST_FACTOR
+              }
+            },
+            no_match_query: query
+          }
+        }
       }
     }
   end
