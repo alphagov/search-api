@@ -144,25 +144,6 @@ class DocumentTest < MiniTest::Unit::TestCase
     refute_includes Document.new(sample_field_definitions(field_names), hash).to_hash, "es_score"
   end
 
-  def test_weighted_score
-    document_hash = {"link" => "/batman", "title" => "Batman"}
-    doc = Document.new(sample_field_definitions(%w(link title)), document_hash, 2.8)
-
-    weighted_doc = doc.weighted(0.5)
-    assert_equal "/batman", weighted_doc.link
-    assert_equal "Batman", weighted_doc.title
-    assert_equal 1.4, weighted_doc.es_score
-  end
-
-  def test_weighting_without_score
-    document_hash = {"link" => "/batman"}
-    doc = Document.new(sample_field_definitions(%w(link)), document_hash)
-
-    weighted_doc = doc.weighted(0.5)
-    assert_equal "/batman", weighted_doc.link
-    assert_nil weighted_doc.es_score
-  end
-
   def test_should_handle_opaque_object_fields
     metadata = { "foo" => true, "bar" => 1 }
     document_hash = {

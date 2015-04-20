@@ -58,11 +58,6 @@ class Document
     end
   end
 
-  def weighted(factor)
-    weighted_score = @es_score ? @es_score * factor : nil
-    Document.new(@field_definitions, @attributes, weighted_score)
-  end
-
   def elasticsearch_export
     Hash.new.tap do |doc|
       @field_definitions.keys.each do |key|
