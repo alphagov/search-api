@@ -124,6 +124,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
             }},
             {filter: {term: {organisation_state: 'closed'}}, boost_factor: 0.3},
             {filter: {term: {organisation_state: 'devolved'}}, boost_factor: 0.3},
+            {filter: {term: {is_historic: true}}, boost_factor: 0.5},
           ],
           score_mode: 'multiply',
         }
