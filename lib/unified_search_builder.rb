@@ -80,7 +80,7 @@ class UnifiedSearchBuilder
   end
 
   def boost_filters
-    (format_boosts + [time_boost, closed_org_boost, devolved_org_boost]).compact
+    (format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]).compact
   end
 
   def best_bets
@@ -461,6 +461,13 @@ class UnifiedSearchBuilder
     {
       filter: { term: { organisation_state: "devolved" } },
       boost_factor: 0.3,
+    }
+  end
+
+  def historic_edition_boost
+    {
+      filter: { term: { is_historic: true } },
+      boost_factor: 0.5,
     }
   end
 end
