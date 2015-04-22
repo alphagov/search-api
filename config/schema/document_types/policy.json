@@ -1,5 +1,7 @@
 {
   "fields": [
-    "slug"
+    "slug",
+    "organisations",
+    "people"
   ]
 }
