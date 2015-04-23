@@ -1,0 +1,30 @@
+require "test_helper"
+require "elasticsearch/index_for_search"
+require "search_config"
+
+class CombinedIndexSchemaTest < MiniTest::Unit::TestCase
+  def setup
+    @base_uri = URI.parse("http://example.com:9200")
+    @search_config = SearchConfig.new
+    @index_names = @search_config.content_index_names
+    @combined_schema = CombinedIndexSchema.new(@index_names, @search_config.schema_config)
+  end
+
+  def test_basic_field_definitions
+    # The title and public_timestamp fields are defined in the
+    # base_document_type, so are available in all documents holding content.
+    assert_equal "searchable_sortable_text", @combined_schema.field_definitions["title"].type.name
+    assert_equal "searchable_text", @combined_schema.field_definitions["description"].type.name
+    assert_equal "date", @combined_schema.field_definitions["public_timestamp"].type.name
+  end
+
+  def test_merged_field_definitions
+    # The location field is defined in both the
+    # international_development_fund document type, and in the
+    # european_structural_investment_fund document type, with different
+    # allowed_values.  Check that allowed values from both lists are present.
+    locations = @combined_schema.field_definitions["location"].allowed_values
+    assert locations.include?({"label"=>"Afghanistan", "value"=>"afghanistan"})
+    assert locations.include?({"label"=>"North East", "value"=>"north-east"})
+  end
+end

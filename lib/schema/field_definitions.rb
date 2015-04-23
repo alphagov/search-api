@@ -3,6 +3,25 @@ require "schema/field_types"
 
 FieldDefinition = Struct.new("FieldDefinition", :name, :type, :es_config, :description, :children, :allowed_values)
 
+class FieldDefinition
+  # Merge this field definition with another one.
+  #
+  # Assumes that the definitions are for the same field (but probably for a
+  # different document type).  Therefore, the only thing that can differ is the
+  # allowed_values setting, so we only have to do anything if allowed_values
+  # are set.
+  def merge(other)
+    unless other.nil?
+      if other.allowed_values
+        result = self.clone
+        result.allowed_values = ((result.allowed_values || []) + other.allowed_values).uniq
+        return result
+      end
+    end
+    self
+  end
+end
+
 class FieldDefinitionParser
   def initialize(config_path)
     @config_path = config_path
