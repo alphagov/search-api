@@ -2,7 +2,7 @@ require "timed_cache"
 
 module Registry
   class BaseRegistry
-    CACHE_LIFETIME = 12 * 3600  # 12 hours
+    CACHE_LIFETIME = 300 # 5 minutes
 
     def initialize(index, field_definitions, format, fields = %w{slug link title}, clock = Time)
       @cache = TimedCache.new(self.class::CACHE_LIFETIME, clock) { fetch }
@@ -80,8 +80,6 @@ module Registry
   end
 
   class SpecialistSector < BaseRegistry
-    CACHE_LIFETIME = 300
-
     def initialize(index, field_definitions)
       super(index, field_definitions, "specialist_sector", %w{link title})
     end
