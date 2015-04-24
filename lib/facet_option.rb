@@ -47,7 +47,7 @@ private
     when :"value.slug"
       value.fetch("slug", "") <=> other.value.fetch("slug", "")
     when :"value.title"
-      value.fetch("title", "") <=> other.value.fetch("title", "")
+      value.fetch("title", "").downcase <=> other.value.fetch("title", "").downcase
     when :"value.link"
       value.fetch("link", "") <=> other.value.fetch("link", "")
     end
