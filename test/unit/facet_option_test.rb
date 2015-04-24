@@ -81,6 +81,14 @@ class FacetOptionTest  < MiniTest::Unit::TestCase
     )
   end
 
+  def test_compare_by_title_ignores_case
+    orderings = [[:"value.title", 1]]
+    assert(
+      FacetOption.new({"title" => "a"}, 0, false, orderings) <
+      FacetOption.new({"title" => "Z"}, 0, false, orderings)
+    )
+  end
+
   def test_compare_by_link_ascending
     orderings = [[:"value.link", 1]]
     assert(
