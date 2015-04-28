@@ -23,6 +23,7 @@ class BaseParameterParser
     manual
     organisations
     policies
+    public_timestamp
     section
     specialist_sectors
   )
