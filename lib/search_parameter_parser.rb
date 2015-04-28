@@ -23,6 +23,7 @@ class BaseParameterParser
     manual
     organisations
     policies
+    public_timestamp
     section
     specialist_sectors
   )
@@ -385,6 +386,13 @@ private
   end
 
   def schema_get_field_type(field_name)
+    # Short term hack to recognise `public_timstamp` as date-field for filtering
+    # Without a `document_type` a schema can't be matched (see `schema`) and a
+    # type can't be found, defaulting to string.
+    if field_name == 'public_timestamp'
+      return 'date'
+    end
+
     schema
       .fetch("properties", {})
       .fetch(field_name, {})
