@@ -345,6 +345,38 @@
     "type": "float"
   },
 
+  "fault_type": {
+    "type": "identifiers"
+  },
+
+  "faulty_item_type": {
+    "type": "identifiers"
+  },
+
+  "manufacturer": {
+    "type": "identifiers"
+  },
+
+  "serial_number": {
+    "type": "identifiers"
+  },
+
+  "faulty_item_model": {
+    "type": "identifiers"
+  },
+
+  "alert_issue_date": {
+    "type": "date"
+  },
+
+  "build_start_date": {
+    "type": "date"
+  },
+
+  "build_end_date": {
+    "type": "date"
+  },
+
   "spelling_text": {
     "description": "Generated field, populated with the same content as sent to the _all field, but tokenised into words, lowercased and shingled, not stemmed, etc",
     "type": "spelling_text"
