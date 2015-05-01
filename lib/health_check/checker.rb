@@ -16,7 +16,7 @@ module HealthCheck
       Logging.logger[self].info("Connecting to #{@search_client.to_s}")
 
       checks.each do |check|
-        search_results = search_client.search(check.search_term)
+        search_results = search_client.search(check.search_term)[:results]
         result = check.result(search_results)
         calculator.add(result)
       end

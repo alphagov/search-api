@@ -17,7 +17,10 @@ module HealthCheck
       case response
         when Net::HTTPSuccess # 2xx
           json_response = JSON.parse(response.body)
-          extract_results(json_response)
+          {
+            results: extract_results(json_response),
+            suggested_queries: json_response['suggested_queries']
+          }
         else
           raise "Unexpected response #{response}"
       end

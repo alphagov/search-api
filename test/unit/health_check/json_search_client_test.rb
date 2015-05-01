@@ -15,6 +15,10 @@ module HealthCheck
           {
             "link" => "/b"
           }
+        ],
+        "suggested_queries" => [
+          "A",
+          "B"
         ]
       }
     end
@@ -27,7 +31,7 @@ module HealthCheck
 
     should "support the unified search format" do
       stub_unified_search("cheese")
-      expected = ["/a", "/b"]
+      expected = { results: ["/a", "/b"], suggested_queries: %w[A B] }
       base_url = URI.parse("http://www.gov.uk/api/search.json")
       assert_equal expected, JsonSearchClient.new(:base_url => base_url).search("cheese")
     end
