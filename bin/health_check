@@ -88,12 +88,7 @@ class HealthCheckCLI
 
   def run_search_result_test_on_index(index_name)
     check_file_path = DATA_DIR + "#{index_name}-weighted-search-terms.csv"
-    check_file = open(check_file_path)
-
-    if opts["limit"]
-      # Take the first n + 1 lines (including header row) from the check file
-      check_file = StringIO.new(check_file.take(opts["limit"] + 1).join)
-    end
+    check_file = open_file(check_file_path)
 
     HealthCheck::Checker.new(
       search_client: search_client_for(index_name),
@@ -107,6 +102,17 @@ class HealthCheckCLI
     else
       HealthCheck::LocalSearchClient.new(index: index_name)
     end
+  end
+
+  def open_file(filename)
+    file = open(filename)
+
+    # Take the first n + 1 lines (including header row) from the check file
+    if opts["limit"]
+      file = StringIO.new(file.take(opts['limit'] + 1).join)
+    end
+
+    file
   end
 end
 
