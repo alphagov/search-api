@@ -17,6 +17,7 @@ module HealthCheck
           check.path             = row["see..."].sub(%r{https://www.gov.uk}, "")
           check.minimum_rank     = Integer(row["in the top ... results"])
           check.weight = parse_integer_with_comma(row["Monthly searches"]) || 1
+
           if check.valid?
             checks << check
           else

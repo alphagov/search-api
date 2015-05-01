@@ -21,10 +21,6 @@ require 'health_check/downloader'
 require 'health_check/basic_auth_credentials'
 
 class HealthCheckCLI
-
-  class Usage < StandardError; end
-
-
   attr_reader :opts, :args
 
   def usage(opts, message = nil)
@@ -40,7 +36,7 @@ class HealthCheckCLI
     Runs a health check on the specified index/indices.
     }
       on 'd', 'download', "Download search healthcheck data"
-      on 'h', 'help', "Show help"
+      on 'h', 'help', "Show this message"
       on 'l', 'local', "Connect to local index directly (default)"
       on 'limit=', "Limit to the first n tests", as: Integer
       on 'a', 'auth=', "Basic auth credentials (of the form 'user:pass'", as: HealthCheck::BasicAuthCredentials
@@ -67,10 +63,9 @@ class HealthCheckCLI
     elsif illegal_indices(args).any?
       usage(opts, "ERROR: Unrecognised index(es) #{illegal_indices(args).join(", ")}")
     elsif opts.help?
-      puts "help"
       usage(opts)
     else
-      run_tests(args)
+      run_search_result_tests(args)
     end
   end
 
@@ -78,18 +73,23 @@ class HealthCheckCLI
     indices - INDICES
   end
 
-private
-  def run_tests(indices)
-    scores = indices.map { |index_name| run_one_test(index_name) }
+  private
+
+  def run_search_result_tests(indices)
+    scores = indices.map do |index_name|
+      run_search_result_test_on_index(index_name)
+    end
+
     scores.zip(indices).inject(HealthCheck::Calculator.new) do |summary, (result, index_name)|
       result.summarise("#{index_name.capitalize} score")
       summary + result
     end.summarise("Overall score")
   end
 
-  def run_one_test(index_name)
+  def run_search_result_test_on_index(index_name)
     check_file_path = DATA_DIR + "#{index_name}-weighted-search-terms.csv"
     check_file = open(check_file_path)
+
     if opts["limit"]
       # Take the first n + 1 lines (including header row) from the check file
       check_file = StringIO.new(check_file.take(opts["limit"] + 1).join)
@@ -103,7 +103,7 @@ private
 
   def search_client_for(index_name)
     if opts.json?
-      HealthCheck::JsonSearchClient.new(base_url: URI.parse(opts["json"]), authentication: opts[:auth], index: index_name)
+      HealthCheck::JsonSearchClient.new(base_url: URI.parse(opts["json"]), authentication: opts[:auth])
     else
       HealthCheck::LocalSearchClient.new(index: index_name)
     end

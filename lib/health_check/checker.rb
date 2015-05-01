@@ -5,12 +5,10 @@ require "health_check/calculator"
 
 module HealthCheck
   class Checker
-
     attr_reader :search_client
 
     def initialize(options = {})
-      @test_data = options[:test_data]
-
+      @test_data_file = options[:test_data]
       @search_client = options[:search_client]
     end
 
@@ -22,12 +20,13 @@ module HealthCheck
         result = check.result(search_results)
         calculator.add(result)
       end
+
       calculator
     end
 
     private
       def checks
-        CheckFileParser.new(@test_data).checks.sort { |a,b| b.weight <=> a.weight }
+        CheckFileParser.new(@test_data_file).checks.sort { |a,b| b.weight <=> a.weight }
       end
 
       def calculator
