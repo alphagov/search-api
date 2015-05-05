@@ -4,13 +4,11 @@ require "health_check/check_file_parser"
 require "health_check/calculator"
 
 module HealthCheck
-  class Checker
-
+  class SearchChecker
     attr_reader :search_client
 
     def initialize(options = {})
-      @test_data = options[:test_data]
-
+      @test_data_file = options[:test_data]
       @search_client = options[:search_client]
     end
 
@@ -18,16 +16,17 @@ module HealthCheck
       Logging.logger[self].info("Connecting to #{@search_client.to_s}")
 
       checks.each do |check|
-        search_results = search_client.search(check.search_term)
+        search_results = search_client.search(check.search_term)[:results]
         result = check.result(search_results)
         calculator.add(result)
       end
+
       calculator
     end
 
     private
       def checks
-        CheckFileParser.new(@test_data).checks.sort { |a,b| b.weight <=> a.weight }
+        CheckFileParser.new(@test_data_file).checks.sort { |a,b| b.weight <=> a.weight }
       end
 
       def calculator

@@ -25,7 +25,8 @@ module HealthCheck
       @search_index.expects(:search).with(term).returns(result_set)
 
       client = LocalSearchClient.new(index: @index_name)
-      assert_equal [result.link], client.search(term)
+      expected = { results: [result.link] }
+      assert_equal expected, client.search(term)
     end
   end
 end

@@ -1,5 +1,5 @@
 require "csv"
-require "health_check/check"
+require "health_check/search_check"
 
 module HealthCheck
   class CheckFileParser
@@ -11,12 +11,13 @@ module HealthCheck
       checks = []
       CSV.parse(@file, headers: true).each do |row|
         begin
-          check = Check.new
+          check = SearchCheck.new
           check.search_term      = row["When I search for..."]
           check.imperative       = row["Then I..."]
           check.path             = row["see..."].sub(%r{https://www.gov.uk}, "")
           check.minimum_rank     = Integer(row["in the top ... results"])
           check.weight = parse_integer_with_comma(row["Monthly searches"]) || 1
+
           if check.valid?
             checks << check
           else

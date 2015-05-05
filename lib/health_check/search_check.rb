@@ -1,9 +1,9 @@
+require "health_check/result"
 
 module HealthCheck
-  Check = Struct.new(:search_term, :imperative, :path, :minimum_rank, :weight)
-  Result = Struct.new(:success, :score, :possible_score)
+  SearchCheck = Struct.new(:search_term, :imperative, :path, :minimum_rank, :weight)
 
-  class Check
+  class SearchCheck
     def valid_imperative?
       ["should", "should not"].include?(imperative)
     end

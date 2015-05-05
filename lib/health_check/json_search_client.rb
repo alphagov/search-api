@@ -5,34 +5,33 @@ require "cgi"
 
 module HealthCheck
   class JsonSearchClient
-
-    RESPONSE_INDEX_KEYS = {
-      "mainstream" => "services-information",
-      "detailed" => "services-information",
-      "government" => "departments-policy"
-    }
-
     def initialize(options={})
       @base_url       = options[:base_url] || URI.parse("https://www.gov.uk/api/search.json")
       @authentication = options[:authentication] || nil
-      @index          = options[:index] || "mainstream"
     end
 
-    def search(term)
-      request = Net::HTTP::Get.new((@base_url + "?q=#{CGI.escape(term)}").request_uri)
+    def search(term, params = {})
+      params = { q: term }.merge(params)
+      query_string = params.map { |k, v| "#{k}=" + CGI.escape(v.to_s) }.join('&')
+      url = [@base_url, query_string].join('?')
+
+      request = Net::HTTP::Get.new(url)
       request.basic_auth(*@authentication) if @authentication
       response = http_client.request(request)
       case response
         when Net::HTTPSuccess # 2xx
           json_response = JSON.parse(response.body)
-          extract_results(json_response)
+          {
+            results: extract_results(json_response),
+            suggested_queries: json_response['suggested_queries']
+          }
         else
           raise "Unexpected response #{response}"
       end
     end
 
     def to_s
-      "JSON endpoint #{@base_url} [index=#{@index} auth=#{@authentication ? "yes" : "no"}]"
+      "JSON endpoint #{@base_url} [auth=#{@authentication ? "yes" : "no"}]"
     end
 
     private

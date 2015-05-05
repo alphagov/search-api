@@ -17,7 +17,7 @@ module HealthCheck
 
   private
     def extract_results(result_set)
-      result_set.results.map { |r| r.link }
+      { results: result_set.results.map { |r| r.link } }
     end
   end
 end
