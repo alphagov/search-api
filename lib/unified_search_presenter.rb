@@ -18,7 +18,6 @@ class UnifiedSearchPresenter
   def initialize(search_params,
                  es_response,
                  registries = {},
-                 suggestions = [],
                  facet_examples = {},
                  schema = nil)
 
@@ -29,7 +28,6 @@ class UnifiedSearchPresenter
     @facet_fields = search_params[:facets] || {}
 
     @registries = registries
-    @suggestions = suggestions
     @facet_examples = facet_examples
     @schema = schema
   end
@@ -40,7 +38,7 @@ class UnifiedSearchPresenter
       total: es_response["hits"]["total"],
       start: search_params[:start],
       facets: presented_facets,
-      suggested_queries: @suggestions
+      suggested_queries: []
     }
   end
 

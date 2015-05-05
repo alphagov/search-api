@@ -140,7 +140,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       },
       sample_es_response(options.fetch(:es_response, {})),
       org_registry.nil? ? {} : { organisations: org_registry },
-      options.fetch(:suggestions, []),
       options.fetch(:facet_examples, {}),
       options.fetch(:schema, nil)
     )
@@ -625,7 +624,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         },
         sample_es_response("facets" => sample_facet_data),
         { organisations: org_registry },
-        [],
         {"organisations" => {
           "hm-magic" => {
             "total" => 1,
@@ -674,24 +672,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have correct number of missing options" do
       assert_equal(1, @output[:facets]["organisations"][:missing_options])
-    end
-  end
-
-  context "suggested queries" do
-    should "present suggestions in output" do
-      @suggestions = [
-        "self assessment",
-        "tax returns"
-      ]
-      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, {}, @suggestions).present
-
-      assert_equal ["self assessment", "tax returns"], @output[:suggested_queries]
-    end
-
-    should "default to an empty array when not present" do
-      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response).present
-
-      assert_equal [], @output[:suggested_queries]
     end
   end
 

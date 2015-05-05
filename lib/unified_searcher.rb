@@ -5,14 +5,12 @@ require "unified_search_builder"
 require "unified_search_presenter"
 
 class UnifiedSearcher
+  attr_reader :index, :registries
 
-  attr_reader :index, :registries, :suggester
-
-  def initialize(index, metaindex, registries, suggester)
+  def initialize(index, metaindex, registries)
     @index = index
     @metaindex = metaindex
     @registries = registries
-    @suggester = suggester
   end
 
   # Search and combine the indices and return a hash of ResultSet objects
@@ -26,15 +24,8 @@ class UnifiedSearcher
       params,
       es_response,
       registries,
-      suggested_queries(params[:query]),
       facet_examples,
       index.schema
     ).present
-  end
-
-private
-
-  def suggested_queries(query)
-    query.nil? ? [] : @suggester.suggestions(query)
   end
 end

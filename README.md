@@ -9,8 +9,6 @@ Rummager doesn't yet work with 1.0 or later.
 
 Install [Redis 2.x](http://redis.io/download)
 
-Install [GNU Aspell](http://aspell.net)
-
 Run the application with `./startup.sh` this uses shotgun/thin.
 
 To create indices, or to update them to the latest index settings, run:

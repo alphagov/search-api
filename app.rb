@@ -13,7 +13,6 @@ require "govuk_search_presenter"
 require "unified_searcher"
 require "organisation_set_presenter"
 require "registry"
-require "suggester"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
 require "redis"
@@ -76,31 +75,6 @@ class Rummager < Sinatra::Application
 
   def metasearch_index
     search_server.index(settings.search_config.metasearch_index_name)
-  end
-
-  def lines_from_a_file(filepath)
-    path = File.expand_path(filepath, File.dirname(__FILE__))
-    lines = File.open(path).map(&:chomp)
-    lines.reject { |line| line.start_with?('#') || line.empty? }
-  end
-
-  def ignores_from_file
-    @@_ignores_from_file ||= lines_from_a_file("config/suggest/ignore.txt")
-  end
-
-  def blacklist_from_file
-    @@_blacklist_from_file ||= lines_from_a_file("config/suggest/blacklist.txt")
-  end
-
-  def suggester
-    ignore = ignores_from_file
-    if organisation_registry
-      ignore = ignore + organisation_registry.all.map(&:acronym).reject(&:nil?)
-    end
-    digit_or_word_containing_a_digit = /\d/
-    ignore = ignore + [digit_or_word_containing_a_digit]
-    Suggester.new(ignore: MatcherSet.new(ignore),
-                  blacklist: MatcherSet.new(blacklist_from_file))
   end
 
   def text_error(content)
@@ -198,7 +172,7 @@ class Rummager < Sinatra::Application
     }
 
     output = GovukSearchPresenter.new(result_streams, result_context).present
-    output["spelling_suggestions"] = suggester.suggestions(@query)
+    output["spelling_suggestions"] = []
 
     output.to_json
   end
@@ -349,7 +323,7 @@ class Rummager < Sinatra::Application
       return { error: parser.error }.to_json
     end
 
-    searcher = UnifiedSearcher.new(unified_index, metasearch_index, registries, suggester)
+    searcher = UnifiedSearcher.new(unified_index, metasearch_index, registries)
     searcher.search(parser.parsed_params).to_json
   end
 
@@ -392,7 +366,7 @@ class Rummager < Sinatra::Application
       document_series: document_series_registry,
       document_collections: document_collection_registry,
       world_locations: world_location_registry,
-      spelling_suggestions: suggester.suggestions(@query)
+      spelling_suggestions: [],
     }
 
     presenter = ResultSetPresenter.new(result_set, presenter_context)

@@ -99,62 +99,6 @@ class SearchTest < IntegrationTest
     assert_match(/application\/json/, last_response.headers["Content-Type"])
   end
 
-  def test_returns_spelling_suggestions_when_hash_requested
-    stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "speling"}
-    assert_equal ["spelling"], JSON.parse(last_response.body)["spelling_suggestions"]
-  end
-
-  def test_does_not_suggest_corrections_for_organisation_acronyms
-    stub_index.expects(:search).returns(stub(results: [], total: 0))
-    Registry::Organisation.any_instance.expects(:all)
-      .returns([dft_organisation])
-    get "/search.json", {q: "DFT"} # DFT would get a suggestion
-    assert_equal [], JSON.parse(last_response.body)["spelling_suggestions"]
-  end
-
-  def test_matches_organisation_acronyms_in_any_letter_case
-    stub_index.expects(:search).returns(stub(results: [], total: 0))
-    Registry::Organisation.any_instance.expects(:all)
-      .returns([dft_organisation])
-    get "/search.json", {q: "dft"} # DFT would get a suggestion
-    assert_equal [], JSON.parse(last_response.body)["spelling_suggestions"]
-  end
-
-  def test_handles_organisations_without_acronyms_for_suggestions
-    organisation_without_acronym = Document.new(
-      sample_document_types["edition"].fields,
-      {
-        link: "/government/organisations/acronymless-department",
-        title: "Acronymless Department"
-      }
-    )
-
-    stub_index.expects(:search).returns(stub(results: [], total: 0))
-    Registry::Organisation.any_instance.expects(:all)
-      .returns([organisation_without_acronym])
-    get "/search.json", {q: "pies"}
-    assert_equal [], JSON.parse(last_response.body)["spelling_suggestions"]
-  end
-
-  def test_does_not_suggest_corrections_for_words_in_ignore_file
-    stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "sorn"} # sorn would get a suggestion
-    assert_equal [], JSON.parse(last_response.body)["spelling_suggestions"]
-  end
-
-  def test_does_not_suggest_corrections_for_numbers_or_words_containing_numbers
-    stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "v5c 2013"} # v5c would get a suggestion
-    assert_equal [], JSON.parse(last_response.body)["spelling_suggestions"]
-  end
-
-  def test_does_not_suggest_corrections_in_blacklist_file
-    stub_index.expects(:search).returns(stub(results: [], total: 0))
-    get "/search.json", {q: "penison"} # penison would get an inappropriate suggestion
-    assert_equal ["pension"], JSON.parse(last_response.body)["spelling_suggestions"]
-  end
-
   def test_handles_results_with_document_series
     document = Document.from_hash(
       sample_document_attributes.merge(document_series: ["bus-timetables"]),

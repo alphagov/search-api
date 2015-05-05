@@ -10,7 +10,9 @@ class AdvancedSearchTest < IntegrationTest
   def test_returns_json_for_advanced_search_results
     Elasticsearch::Index.any_instance.stubs(:advanced_search)
       .returns(stub(total: 1, results: [sample_document]))
+
     get "/mainstream_test/advanced_search", {per_page: '1', page: '1', keywords: 'meh'}, "HTTP_ACCEPT" => "application/json"
+
     assert last_response.ok?, "Bad status: #{last_response.status}"
     result = JSON.parse(last_response.body)
     assert_match /application\/json/, last_response.headers["Content-Type"]
@@ -20,8 +22,10 @@ class AdvancedSearchTest < IntegrationTest
   def test_json_response_includes_total_and_results
     Elasticsearch::Index.any_instance.stubs(:advanced_search)
       .returns(stub(total: 1, results: [sample_document]))
+
     get "/mainstream_test/advanced_search.json", {per_page: '1', page: '1', keywords: 'meh'}
-    expected_result = {'total' => 1, 'results' => [sample_document_attributes]}
+    expected_result = {'total' => 1, 'results' => [sample_document_attributes], 'spelling_suggestions' => []}
+
     assert last_response.ok?, "Bad status: #{last_response.status}"
     assert_match /application\/json/, last_response.headers["Content-Type"]
     result = JSON.parse(last_response.body)

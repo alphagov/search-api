@@ -9,14 +9,11 @@ class ResultSetPresenter
   end
 
   def present
-    presentable_hash = {
+    {
       "total" => @result_set.total,
-      "results" => results
+      "results" => results,
+      "spelling_suggestions" => []
     }
-    if spelling_suggestions
-      presentable_hash["spelling_suggestions"] = spelling_suggestions
-    end
-    presentable_hash
   end
 
 private
@@ -102,10 +99,6 @@ private
 
   def specialist_sector_registry
     @context[:specialist_sectors]
-  end
-
-  def spelling_suggestions
-    @context[:spelling_suggestions]
   end
 
   def structure_by_slug(structure, slug)

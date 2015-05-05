@@ -274,27 +274,4 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal 1, output["results"][0]["organisations"].size
     assert_equal "ministry-of-silly-walks", output["results"][0]["organisations"][0]
   end
-
-  def test_includes_spelling_suggestions
-    presenter = ResultSetPresenter.new(
-      result_set,
-      spelling_suggestions: ["spelling can be improved"]
-    )
-
-    output = presenter.present
-    expected = [
-      "spelling can be improved"
-    ]
-    assert_equal expected, output["spelling_suggestions"]
-  end
-
-  def test_excludes_spelling_suggestions_when_not_supplied
-    presenter = ResultSetPresenter.new(
-      result_set,
-      spelling_suggestions: nil # nil, not empty array
-    )
-
-    output = presenter.present
-    assert_equal ["total", "results"], output.keys
-  end
 end
