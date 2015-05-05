@@ -134,6 +134,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   def search_presenter(options)
     org_registry = options[:org_registry]
     UnifiedSearchPresenter.new(
+      { start: options.fetch(:start, 0) },
       sample_es_response(options.fetch(:es_response, {})),
       options.fetch(:start, 0),
       INDEX_NAMES,
@@ -155,7 +156,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           "total" => 0
         }
       }
-      @output = UnifiedSearchPresenter.new(results, 0, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, results, 0, INDEX_NAMES).present
     end
 
     should "present empty list of results" do
@@ -173,7 +174,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with no registries" do
     setup do
-      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, 0, INDEX_NAMES).present
     end
 
     should "have correct total" do
@@ -216,7 +217,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         response['hits']['hits'] = [ @empty_result ]
       }
 
-      @output = UnifiedSearchPresenter.new(response, 0, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, response, 0, INDEX_NAMES).present
     end
 
     should 'return only basic metadata of fields' do
@@ -239,6 +240,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         .returns(farming_topic_document)
 
       @output = UnifiedSearchPresenter.new(
+        { start: 0 },
         sample_es_response,
         0,
         INDEX_NAMES,
@@ -292,6 +294,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with facets" do
     setup do
       @output = UnifiedSearchPresenter.new(
+        { start: 0 },
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
@@ -335,6 +338,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with facets and a filter applied" do
     setup do
       @output = UnifiedSearchPresenter.new(
+        { start: 0 },
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
@@ -385,6 +389,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with facets and a filter which matches nothing applied" do
     setup do
       @output = UnifiedSearchPresenter.new(
+        { start: 0 },
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
@@ -435,6 +440,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with facet counting only" do
     setup do
       @output = UnifiedSearchPresenter.new(
+        { start: 0 },
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
@@ -559,6 +565,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       org_registry = sample_org_registry
 
       @output = UnifiedSearchPresenter.new(
+        { start: 0 },
         sample_es_response("facets" => sample_facet_data_with_topics),
         0,
         INDEX_NAMES,
@@ -621,6 +628,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       org_registry = sample_org_registry
 
       @output = UnifiedSearchPresenter.new(
+        { start: 0 },
         sample_es_response("facets" => sample_facet_data),
         0,
         INDEX_NAMES,
@@ -686,13 +694,13 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         "self assessment",
         "tax returns"
       ]
-      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, [], {}, {}, {}, @suggestions).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, 0, INDEX_NAMES, [], {}, {}, {}, @suggestions).present
 
       assert_equal ["self assessment", "tax returns"], @output[:suggested_queries]
     end
 
     should "default to an empty array when not present" do
-      @output = UnifiedSearchPresenter.new(sample_es_response, 0, INDEX_NAMES, [], {}, {}, {}).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, 0, INDEX_NAMES, [], {}, {}, {}).present
 
       assert_equal [], @output[:suggested_queries]
     end

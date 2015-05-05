@@ -14,10 +14,18 @@ class UnifiedSearchPresenter
   # `facet_examples` is {field_name => {facet_value => {total: count, examples: [{field: value}, ...]}}}
   # ie: a hash keyed by field name, containing hashes keyed by facet value with
   # values containing example information for the value.
-  def initialize(es_response, start, index_names, applied_filters = {},
-                 facet_fields = {}, registries = {},
-                 registry_by_field = {}, suggestions = [],
-                 facet_examples={}, schema=nil)
+  def initialize(search_params,
+                 es_response,
+                 start,
+                 index_names,
+                 applied_filters = {},
+                 facet_fields = {},
+                 registries = {},
+                 registry_by_field = {},
+                 suggestions = [],
+                 facet_examples = {},
+                 schema = nil)
+
     @start = start
     @results = es_response["hits"]["hits"].map do |result|
       doc = result.delete("fields") || {}
@@ -128,7 +136,7 @@ private
   # Get the facet options, sorted according to the "order" option.
   #
   # Returns the requested number of options, but will additionally return any
-  # options which are part of a filter. 
+  # options which are part of a filter.
   def facet_options(field, calculated_options, facet_parameters)
     applied_options = filter_values_for_field(field)
 

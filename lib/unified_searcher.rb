@@ -24,6 +24,7 @@ class UnifiedSearcher
                                               builder)
     facet_examples = example_fetcher.fetch
     UnifiedSearchPresenter.new(
+      params,
       es_response,
       params[:start],
       index.index_names,
