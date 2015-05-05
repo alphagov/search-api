@@ -16,17 +16,14 @@ class UnifiedSearchPresenter
   # values containing example information for the value.
   def initialize(search_params,
                  es_response,
-                 start,
                  index_names,
-                 applied_filters = {},
-                 facet_fields = {},
                  registries = {},
                  registry_by_field = {},
                  suggestions = [],
                  facet_examples = {},
                  schema = nil)
 
-    @start = start
+    @start = search_params[:start]
     @results = es_response["hits"]["hits"].map do |result|
       doc = result.delete("fields") || {}
       doc[:_metadata] = result
@@ -35,8 +32,10 @@ class UnifiedSearchPresenter
     @facets = es_response["facets"]
     @total = es_response["hits"]["total"]
     @index_names = index_names
-    @applied_filters = applied_filters
-    @facet_fields = facet_fields
+
+    @applied_filters = search_params[:filters] || []
+    @facet_fields = search_params[:facets] || {}
+
     @registries = registries
     @registry_by_field = registry_by_field
     @suggestions = suggestions

@@ -26,10 +26,7 @@ class UnifiedSearcher
     UnifiedSearchPresenter.new(
       params,
       es_response,
-      params[:start],
       index.index_names,
-      params[:filters],
-      params[:facets],
       registries,
       registry_by_field,
       suggested_queries(params[:query]),
