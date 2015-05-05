@@ -23,7 +23,8 @@
     "es_config": {
       "type": "string",
       "index": "not_analyzed",
-      "include_in_all": true
+      "include_in_all": true,
+      "copy_to": ["spelling_text"]
     }
   },
 
@@ -32,7 +33,8 @@
     "es_config": {
       "type": "string",
       "index": "analyzed",
-      "include_in_all": true
+      "include_in_all": true,
+      "copy_to": ["spelling_text"]
     }
   },
 
@@ -41,6 +43,16 @@
     "es_config": {
       "type": "string",
       "index": "no",
+      "include_in_all": false
+    }
+  },
+
+  "spelling_text": {
+    "description": "Text which is tokenised into words and lowercased, but not stemmed, stopworded, etc. This can be used for spelling correction, or exact word matching",
+    "es_config": {
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "spelling_analyzer",
       "include_in_all": false
     }
   },
