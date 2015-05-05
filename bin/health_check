@@ -15,6 +15,7 @@ require "search_config"
 require "slop"
 require 'health_check/logging_config'
 require 'health_check/search_checker'
+require 'health_check/suggestion_checker'
 require 'health_check/local_search_client'
 require 'health_check/json_search_client'
 require 'health_check/downloader'
@@ -65,6 +66,7 @@ class HealthCheckCLI
     elsif opts.help?
       usage(opts)
     else
+      run_suggestions_test if opts.json?
       run_search_result_tests(args)
     end
   end
@@ -94,6 +96,18 @@ class HealthCheckCLI
       search_client: search_client_for(index_name),
       test_data: check_file
     ).run!
+  end
+
+  # Run a health-check on the suggestions in suggestions.csv
+  def run_suggestions_test
+    check_file = open_file(DATA_DIR + "suggestions.csv")
+
+    calculator = HealthCheck::SuggestionChecker.new(
+      search_client: search_client_for(nil),
+      test_data: check_file
+    ).run!
+
+    calculator.summarise("Overall score")
   end
 
   def search_client_for(index_name)
