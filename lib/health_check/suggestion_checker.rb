@@ -15,7 +15,7 @@ module HealthCheck
       calculator = Calculator.new
 
       parsed_checks.each do |search_term, expected_result|
-        suggested_queries = @search_client.search(search_term)[:suggested_queries]
+        suggested_queries = @search_client.search(search_term, count: 0)[:suggested_queries]
 
         check = SuggestionCheck.new(
           search_term: search_term,

@@ -26,7 +26,7 @@ other-thing,,
         }
 
         responses.each do |term, suggestions|
-          stub_request(:get, "https://www.gov.uk/api/search.json?q=#{term}").
+          stub_request(:get, "https://www.gov.uk/api/search.json?count=0&q=#{term}").
             to_return(body: JSON.dump(results: [], suggested_queries: suggestions))
         end
 

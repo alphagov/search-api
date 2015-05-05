@@ -10,8 +10,12 @@ module HealthCheck
       @authentication = options[:authentication] || nil
     end
 
-    def search(term)
-      request = Net::HTTP::Get.new((@base_url + "?q=#{CGI.escape(term)}").request_uri)
+    def search(term, params = {})
+      params = { q: term }.merge(params)
+      query_string = params.map { |k, v| "#{k}=" + CGI.escape(v.to_s) }.join('&')
+      url = [@base_url, query_string].join('?')
+
+      request = Net::HTTP::Get.new(url)
       request.basic_auth(*@authentication) if @authentication
       response = http_client.request(request)
       case response
