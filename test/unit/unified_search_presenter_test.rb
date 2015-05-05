@@ -129,8 +129,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     }.merge(options)
   end
 
-  INDEX_NAMES = %w(mainstream government detailed)
-
   def search_presenter(options)
     org_registry = options[:org_registry]
     UnifiedSearchPresenter.new(
@@ -140,7 +138,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         facets: options.fetch(:facets, {}),
       },
       sample_es_response(options.fetch(:es_response, {})),
-      INDEX_NAMES,
       org_registry.nil? ? {} : {organisation_registry: org_registry},
       org_registry.nil? ? {} : {organisations: org_registry},
       options.fetch(:suggestions, []),
@@ -157,7 +154,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           "total" => 0
         }
       }
-      @output = UnifiedSearchPresenter.new({ start: 0 }, results, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, results).present
     end
 
     should "present empty list of results" do
@@ -175,7 +172,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with no registries" do
     setup do
-      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response).present
     end
 
     should "have correct total" do
@@ -188,7 +185,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have short index names" do
       @output[:results].each do |result|
-        assert_contains INDEX_NAMES, result[:index]
+        assert_contains %w[mainstream detailed government service-manual], result[:index]
       end
     end
 
@@ -218,7 +215,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         response['hits']['hits'] = [ @empty_result ]
       }
 
-      @output = UnifiedSearchPresenter.new({ start: 0 }, response, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, response).present
     end
 
     should 'return only basic metadata of fields' do
@@ -243,7 +240,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       @output = UnifiedSearchPresenter.new(
         { start: 0 },
         sample_es_response,
-        INDEX_NAMES,
         {topic_registry: topic_registry},
         {topics: topic_registry},
       ).present
@@ -259,7 +255,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have short index names" do
       @output[:results].each do |result|
-        assert_contains INDEX_NAMES, result[:index]
+        assert_contains %w[mainstream detailed government service-manual], result[:index]
       end
     end
 
@@ -294,7 +290,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       @output = UnifiedSearchPresenter.new(
         { start: 0, facets: { "organisations" => facet_params(1) } },
         sample_es_response("facets" => sample_facet_data),
-        INDEX_NAMES
       ).present
     end
 
@@ -339,7 +334,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           facets: {"organisations" => facet_params(2)},
         },
         sample_es_response("facets" => sample_facet_data),
-        INDEX_NAMES
       ).present
     end
 
@@ -391,7 +385,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           facets: {"organisations" => facet_params(1)},
         },
         sample_es_response("facets" => sample_facet_data),
-        INDEX_NAMES
       ).present
     end
 
@@ -442,7 +435,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           facets: { "organisations" => facet_params(0) },
         },
         sample_es_response("facets" => sample_facet_data),
-        INDEX_NAMES
       ).present
     end
 
@@ -567,9 +559,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           facets: {"organisations" => facet_params(1), "topics" => facet_params(1)},
         },
         sample_es_response("facets" => sample_facet_data_with_topics),
-        INDEX_NAMES,
-        {organisation_registry: org_registry},
-        {organisations: org_registry},
+        { organisation_registry: org_registry },
+        { organisations: org_registry },
       ).present
     end
 
@@ -630,7 +621,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           facets: { "organisations" => facet_params(1) }
         },
         sample_es_response("facets" => sample_facet_data),
-        INDEX_NAMES,
         {organisation_registry: org_registry},
         {organisations: org_registry},
         [],
@@ -691,13 +681,13 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         "self assessment",
         "tax returns"
       ]
-      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, INDEX_NAMES, {}, {}, @suggestions).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, {}, {}, @suggestions).present
 
       assert_equal ["self assessment", "tax returns"], @output[:suggested_queries]
     end
 
     should "default to an empty array when not present" do
-      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, INDEX_NAMES).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response).present
 
       assert_equal [], @output[:suggested_queries]
     end

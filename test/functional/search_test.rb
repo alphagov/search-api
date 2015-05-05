@@ -249,7 +249,6 @@ class SearchTest < IntegrationTest
     stub_index.stubs(:schema).returns(sample_schema)
     stub_index.stubs(:mappings).returns(mappings)
     stub_index.expects(:raw_search).returns({"hits" => {"hits" => [document], "total" => 1}})
-    stub_index.expects(:index_names).returns(%w{mainstream government detailed})
     stub_metasearch_index.expects(:analyzed_best_bet_query).with("bob").returns("bob")
     stub_metasearch_index.expects(:raw_search).returns({"hits" => {"hits" => []}})
     Registry::SpecialistSector.any_instance.expects(:[])

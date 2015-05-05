@@ -17,7 +17,6 @@ class UnifiedSearchPresenter
   # values containing example information for the value.
   def initialize(search_params,
                  es_response,
-                 index_names,
                  registries = {},
                  registry_by_field = {},
                  suggestions = [],
@@ -26,12 +25,10 @@ class UnifiedSearchPresenter
 
     @es_response = es_response
     @facets = es_response["facets"]
-
     @search_params = search_params
     @applied_filters = search_params[:filters] || []
     @facet_fields = search_params[:facets] || {}
 
-    @index_names = index_names
     @registries = registries
     @registry_by_field = registry_by_field
     @suggestions = suggestions
@@ -62,13 +59,11 @@ private
     ResultSetPresenter.new(result_set, registries, schema).present["results"].each do |fields|
       metadata = fields.delete(:_metadata)
 
-      # Replace the "_index" field, which contains the concrete name of the
-      # index, with an "index" field containing the aliased name of the index
-      # (eg, "mainstream").
-      long_name = metadata["_index"]
-      fields[:index] = @index_names.find { |short_name|
-        long_name.start_with? short_name
-      }
+      # Translate index names like `mainstream-2015-05-06t09..` into its
+      # proper name, eg. "mainstream", "government" or "service-manual".
+      # The regex takes the string until the first digit. After that, strip any
+      # trailing dash from the string.
+      fields[:index] = metadata["_index"].match(%r[^\D+]).to_s.chomp('-')
 
       # Put the elasticsearch score in es_score; this is used in templates when
       # debugging is requested, so it's nicer to be explicit about what score
