@@ -343,5 +343,10 @@
   "rank_14": {
     "description": "Field used in the page-traffic index to hold the rank of this page in the list of pages on the website when ordered by traffic.  This is a fairly stable value used in ranking calculations.",
     "type": "float"
+  },
+
+  "spelling_text": {
+    "description": "Generated field, populated with the same content as sent to the _all field, but tokenised into words, lowercased and shingled, not stemmed, etc",
+    "type": "spelling_text"
   }
 }

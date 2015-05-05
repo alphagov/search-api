@@ -22,6 +22,10 @@ index:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, stemmer_override, stemmer_english]
+        spelling_analyzer:
+          type: custom
+          tokenizer: standard
+          filter: [standard, lowercase, shingle]
       filter:
         stemmer_english:
           type: stemmer
