@@ -1,14 +1,14 @@
 require_relative "../../test_helper"
 require "health_check/logging_config"
-require "health_check/check"
+require "health_check/search_check"
 Logging.logger.root.appenders = nil
 
 module HealthCheck
-  class CheckTest < ShouldaUnitTestCase
+  class SearchCheckTest < ShouldaUnitTestCase
     context "result" do
       context "'should' checks" do
         should "return a Result" do
-          check = Check.new("carmen", "should", "/a", 1, 200)
+          check = SearchCheck.new("carmen", "should", "/a", 1, 200)
           search_results = ["https://www.gov.uk/a"]
 
           result = check.result(search_results)
@@ -20,7 +20,7 @@ module HealthCheck
 
         context "desired result is outside of the desired ranking" do
           should "return a failure Result" do
-            check = Check.new("carmen", "should", "/a", 1, 200)
+            check = SearchCheck.new("carmen", "should", "/a", 1, 200)
             search_results = ["https://www.gov.uk/b", "https://www.gov.uk/a"]
 
             result = check.result(search_results)
@@ -33,7 +33,7 @@ module HealthCheck
 
         context "desired result isn't in the results" do
           should "return a failure Result" do
-            check = Check.new("carmen", "should", "/a", 1, 200)
+            check = SearchCheck.new("carmen", "should", "/a", 1, 200)
             search_results = ["https://www.gov.uk/b", "https://www.gov.uk/a"]
 
             result = check.result(search_results)
@@ -49,7 +49,7 @@ module HealthCheck
     context "'should not' checks" do
       context "an undesirable result is in the top N" do
         should "fail" do
-          check = Check.new("carmen", "should not", "/a", 1, 200)
+          check = SearchCheck.new("carmen", "should not", "/a", 1, 200)
           search_results = ["https://www.gov.uk/a", "https://www.gov.uk/b"]
 
           logger = mock("logger")
@@ -64,7 +64,7 @@ module HealthCheck
 
       context "an undesirable result is after the top N" do
         should "pass" do
-          check = Check.new("carmen", "should not", "/a", 1, 200)
+          check = SearchCheck.new("carmen", "should not", "/a", 1, 200)
           search_results = ["https://www.gov.uk/b", "https://www.gov.uk/a"]
 
           logger = mock("logger")
@@ -79,7 +79,7 @@ module HealthCheck
 
       context "an undesirable result doesn't appear" do
         should "pass" do
-          check = Check.new("carmen", "should not", "/x", 1, 200)
+          check = SearchCheck.new("carmen", "should not", "/x", 1, 200)
           search_results = ["https://www.gov.uk/a", "https://www.gov.uk/b"]
 
           logger = mock("logger")

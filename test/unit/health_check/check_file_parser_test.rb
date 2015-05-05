@@ -13,7 +13,7 @@ module HealthCheck
 600,a,should,https://www.gov.uk/a,1
 500,b,should,https://www.gov.uk/b,1
 """
-      expected = [Check.new("a", "should", "/a", 1, 600), Check.new("b", "should", "/b", 1, 500)]
+      expected = [SearchCheck.new("a", "should", "/a", 1, 600), SearchCheck.new("b", "should", "/b", 1, 500)]
       assert_equal expected, checks(data)
     end
 
@@ -29,7 +29,7 @@ module HealthCheck
       data = """Monthly searches,When I search for...,Then I...,see...,in the top ... results
 \"6,000\",a,should,https://www.gov.uk/a,1
 """
-      expected = [Check.new("a", "should", "/a", 1, 6_000)]
+      expected = [SearchCheck.new("a", "should", "/a", 1, 6_000)]
       assert_equal expected, checks(data)
     end
 
@@ -45,7 +45,7 @@ mistake,a,should,https://www.gov.uk/a,1
       data = """Monthly searches,When I search for...,Then I...,see...,in the top ... results
 ,a,should,https://www.gov.uk/a,1
 """
-      expected = [Check.new("a", "should", "/a", 1, 1)]
+      expected = [SearchCheck.new("a", "should", "/a", 1, 1)]
       assert_equal expected, checks(data)
     end
 

@@ -1,5 +1,5 @@
 require "csv"
-require "health_check/check"
+require "health_check/search_check"
 
 module HealthCheck
   class CheckFileParser
@@ -11,7 +11,7 @@ module HealthCheck
       checks = []
       CSV.parse(@file, headers: true).each do |row|
         begin
-          check = Check.new
+          check = SearchCheck.new
           check.search_term      = row["When I search for..."]
           check.imperative       = row["Then I..."]
           check.path             = row["see..."].sub(%r{https://www.gov.uk}, "")

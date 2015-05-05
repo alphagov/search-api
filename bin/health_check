@@ -14,7 +14,7 @@ require "logging"
 require "search_config"
 require "slop"
 require 'health_check/logging_config'
-require 'health_check/checker'
+require 'health_check/search_checker'
 require 'health_check/local_search_client'
 require 'health_check/json_search_client'
 require 'health_check/downloader'
@@ -90,7 +90,7 @@ class HealthCheckCLI
     check_file_path = DATA_DIR + "#{index_name}-weighted-search-terms.csv"
     check_file = open_file(check_file_path)
 
-    HealthCheck::Checker.new(
+    HealthCheck::SearchChecker.new(
       search_client: search_client_for(index_name),
       test_data: check_file
     ).run!

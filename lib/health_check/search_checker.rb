@@ -4,7 +4,7 @@ require "health_check/check_file_parser"
 require "health_check/calculator"
 
 module HealthCheck
-  class Checker
+  class SearchChecker
     attr_reader :search_client
 
     def initialize(options = {})
