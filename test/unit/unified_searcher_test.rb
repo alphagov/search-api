@@ -178,7 +178,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   context "unfiltered, unsorted search" do
-
     setup do
       @combined_index = stub("unified index")
       @searcher = make_searcher
@@ -202,23 +201,13 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       })
     end
 
-    should "include results from all indexes" do
-      assert_equal(
-        ["government", "mainstream", "detailed"].to_set,
-        @results[:results].map { |result|
-          result[:index]
-        }.to_set
-      )
-    end
-
     should "include suggested queries" do
       assert_equal ['cheese'], @results[:suggested_queries]
     end
   end
 
   context "unfiltered, sorted search" do
-
-    setup do
+    should 'call raw_search with the results from the builder' do
       @combined_index = stub("unified index")
       @searcher = make_searcher
       @combined_index.stubs(:raw_search).with({
@@ -241,20 +230,10 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         debug: {},
       })
     end
-
-    should "include results from all indexes" do
-      assert_equal(
-        ["government", "mainstream", "detailed"].to_set,
-        @results[:results].map do |result|
-          result[:index]
-        end.to_set
-      )
-    end
   end
 
   context "filtered, unsorted search" do
-
-    setup do
+    should 'call raw_search with the results from the builder' do
       @combined_index = stub("unified index")
       @searcher = make_searcher
       @combined_index.stubs(:raw_search).with({
@@ -277,19 +256,9 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         debug: {},
       })
     end
-
-    should "include results from all indexes" do
-      assert_equal(
-        ["government", "mainstream", "detailed"].to_set,
-        @results[:results].map do |result|
-          result[:index]
-        end.to_set
-      )
-    end
   end
 
   context "faceted, unsorted search" do
-
     setup do
       @combined_index = stub("unified index")
       @searcher = make_searcher
@@ -337,15 +306,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       })
     end
 
-    should "include results from all indexes" do
-      assert_equal(
-        ["government", "mainstream", "detailed"].to_set,
-        @results[:results].map do |result|
-          result[:index]
-        end.to_set
-      )
-    end
-
     should "include requested number of facet options" do
       facet = @results[:facets]["organisations"]
       assert_equal(1, facet[:options].length)
@@ -372,5 +332,4 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       assert_equal(:exclude_field_filter, facet[:scope])
     end
   end
-
 end
