@@ -211,10 +211,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       )
     end
 
-    should "include total result count" do
-      assert_equal(3, @results[:total])
-    end
-
     should "include suggested queries" do
       assert_equal ['cheese'], @results[:suggested_queries]
     end
@@ -254,10 +250,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         end.to_set
       )
     end
-
-    should "include total result count" do
-      assert_equal(3, @results[:total])
-    end
   end
 
   context "filtered, unsorted search" do
@@ -293,10 +285,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
           result[:index]
         end.to_set
       )
-    end
-
-    should "include total result count" do
-      assert_equal(3, @results[:total])
     end
   end
 
@@ -356,10 +344,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
           result[:index]
         end.to_set
       )
-    end
-
-    should "include total result count" do
-      assert_equal(3, @results[:total])
     end
 
     should "include requested number of facet options" do
