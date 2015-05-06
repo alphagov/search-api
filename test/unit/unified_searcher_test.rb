@@ -43,21 +43,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }]
   end
 
-  def cma_case_allowed_values
-    return {
-      "case_state" => [
-        {
-          "label" => "Open",
-          "value" => "open",
-        },
-        {
-          "label" => "Closed",
-          "value" => "closed",
-        },
-      ]
-    }
-  end
-
   def stub_suggester
     stub('Suggester', suggestions: ['cheese'])
   end
@@ -159,9 +144,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     }
   }
 
-  # Set BASE_FILTERS if needed to add some default filters to search.
-  BASE_FILTERS = nil
-
   def mock_best_bets(query)
     @metasearch_index = stub("metasearch index")
     @metasearch_index.stubs(:raw_search).with(
@@ -177,21 +159,12 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     @metasearch_index.stubs(:analyzed_best_bet_query).with(query).returns(query)
   end
 
-  def with_base_filters(filter)
-    if BASE_FILTERS
-      {
-        "and" => [
-          filter,
-          BASE_FILTERS
-        ]
-      }
-    else
-      filter
-    end
-  end
-
   def make_searcher
-    UnifiedSearcher.new(@combined_index, @metasearch_index, {}, stub_suggester)
+    mock_best_bets("cheese")
+
+    searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, stub_suggester)
+    @combined_index.stubs(:schema).returns(make_schema)
+    searcher
   end
 
   def make_schema
@@ -208,7 +181,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      mock_best_bets("cheese")
       @searcher = make_searcher
       @combined_index.expects(:raw_search).with({
         from: 0,
@@ -218,10 +190,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.stubs(:index_names).returns(
-        %w{mainstream detailed government}
-      )
-      @combined_index.stubs(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -256,7 +224,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      mock_best_bets("cheese")
       @searcher = make_searcher
       @combined_index.stubs(:raw_search).with({
         from: 0,
@@ -267,10 +234,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.stubs(:index_names).returns(
-        %w{mainstream detailed government}
-      )
-      @combined_index.stubs(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -301,21 +264,16 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      mock_best_bets("cheese")
       @searcher = make_searcher
       @combined_index.stubs(:raw_search).with({
         from: 0,
         size: 20,
         query: CHEESE_QUERY,
-        filter: with_base_filters({"terms" => {"organisations" => ["ministry-of-magic"]}}),
+        filter: { "terms" => {"organisations" => ["ministry-of-magic"] } },
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
       }).returns({
         "hits" => {"hits" => sample_docs, "total" => 3}
       })
-      @combined_index.stubs(:index_names).returns(
-        %w{mainstream detailed government}
-      )
-      @combined_index.stubs(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -346,7 +304,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
     setup do
       @combined_index = stub("unified index")
-      mock_best_bets("cheese")
       @searcher = make_searcher
       @combined_index.stubs(:raw_search).with({
         from: 0,
@@ -372,10 +329,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
           ]
         }},
       })
-      @combined_index.stubs(:index_names).returns(
-        %w{mainstream detailed government}
-      )
-      @combined_index.stubs(:schema).returns(make_schema)
 
       @results = @searcher.search({
         start: 0,
@@ -383,7 +336,15 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: "cheese",
         filters: {},
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-        facets: {"organisations" => {requested: 1, examples: 0, example_fields: [], order: SearchParameterParser::DEFAULT_FACET_SORT, scope: :exclude_field_filter}},
+        facets: {
+          "organisations" => {
+            requested: 1,
+            examples: 0,
+            example_fields: [],
+            order: SearchParameterParser::DEFAULT_FACET_SORT,
+            scope: :exclude_field_filter
+          }
+        },
         debug: {},
       })
     end
