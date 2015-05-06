@@ -131,7 +131,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   context "faceted, unsorted search" do
-    setup do
+    should 'call raw_search with the results from the builder' do
       @combined_index = stub("unified index")
       @searcher = make_searcher
       @combined_index.stubs(:raw_search).with({
@@ -175,32 +175,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         },
         debug: {},
       })
-    end
-
-    should "include requested number of facet options" do
-      facet = @results[:facets]["organisations"]
-      assert_equal(1, facet[:options].length)
-    end
-
-    should "have correct top facet option" do
-      facet = @results[:facets]["organisations"]
-      assert_equal({value: {"slug" => "a"}, documents: 2}, facet[:options][0])
-    end
-
-    should "include requested number of facets" do
-      facet = @results[:facets]["organisations"]
-      assert_equal(2, facet[:total_options])
-      assert_equal(1, facet[:missing_options])
-    end
-
-    should "include number of documents with no value" do
-      facet = @results[:facets]["organisations"]
-      assert_equal(7, facet[:documents_with_no_value])
-    end
-
-    should "include requested facet scope" do
-      facet = @results[:facets]["organisations"]
-      assert_equal(:exclude_field_filter, facet[:scope])
     end
   end
 end
