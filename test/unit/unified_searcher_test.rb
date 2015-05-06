@@ -4,43 +4,13 @@ require "unified_searcher"
 require "search_parameter_parser"
 
 class UnifiedSearcherTest < ShouldaUnitTestCase
+  EMPTY_ES_RESPONSE = {
+    "hits" => { "hits" => {}, "total" => 0 }
+  }
+
   def setup
     Timecop.freeze
     super
-  end
-
-  def sample_docs
-    [{
-      "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",
-      _type: "edition",
-      _id: "/government/publications/staffordshire-cheese",
-      _score: 3.0514863,
-      "fields" => {
-        "description" => "Staffordshire Cheese Product of Designated Origin (PDO) and Staffordshire Organic Cheese.",
-        "title" => "Staffordshire Cheese",
-        "link" => "/government/publications/staffordshire-cheese",
-      },
-    }, {
-      "_index" => "mainstream-2014-03-19t14:35:28z-6472f975-dc38-49a5-98eb-c498e619650c",
-      _type: "edition",
-      _id: "/duty-relief-for-imports-and-exports",
-      _score: 0.49672604,
-      "fields" => {
-        "description" => "Schemes that offer reduced or zero rate duty and VAT for imports and exports",
-        "title" => "Duty relief for imports and exports",
-        "link" => "/duty-relief-for-imports-and-exports",
-      },
-    }, {
-      "_index" => "detailed-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
-      _type: "edition",
-      _id: "/dairy-farming-and-schemes",
-      _score: 0.34655035,
-      "fields" => {
-        "description" => "Information on hygiene standards and milking practices for UK dairy farmers, with a guide to EU schemes for dairy farmers and producers",
-        "title" => "Dairy farming and schemes",
-        "link" => "/dairy-farming-and-schemes",
-      },
-    }]
   end
 
   def stub_suggester
@@ -186,9 +156,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         size: 20,
         query: CHEESE_QUERY,
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-      }).returns({
-        "hits" => {"hits" => sample_docs, "total" => 3}
-      })
+      }).returns(EMPTY_ES_RESPONSE)
 
       @results = @searcher.search({
         start: 0,
@@ -212,9 +180,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: CHEESE_QUERY,
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         sort: [{"public_timestamp" => {order: "asc", missing: "_last"}}],
-      }).returns({
-        "hits" => {"hits" => sample_docs, "total" => 3}
-      })
+      }).returns(EMPTY_ES_RESPONSE)
 
       @results = @searcher.search({
         start: 0,
@@ -238,9 +204,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         query: CHEESE_QUERY,
         filter: { "terms" => {"organisations" => ["ministry-of-magic"] } },
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-      }).returns({
-        "hits" => {"hits" => sample_docs, "total" => 3}
-      })
+      }).returns(EMPTY_ES_RESPONSE)
 
       @results = @searcher.search({
         start: 0,
@@ -272,8 +236,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
           }
         },
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
-      }).returns({
-        "hits" => {"hits" => sample_docs, "total" => 3},
+      }).returns(EMPTY_ES_RESPONSE.merge(
         "facets" => {"organisations" => {
           "missing" => 7,
           "terms" => [
@@ -281,7 +244,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
             {"term" => "b", "count" => 1,},
           ]
         }},
-      })
+      ))
 
       @results = @searcher.search({
         start: 0,
