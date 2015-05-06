@@ -25,95 +25,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
     SearchParameterParser::DateFieldFilter.new(field_name, values, reject)
   end
 
-  BASE_CHEESE_QUERY = {
-    function_score: {
-      boost_mode: :multiply,
-      query: {
-        function_score: {
-          boost_mode: :multiply,
-          query: {bool: {
-            should: [
-              {bool: {
-                must: [
-                  {match: {_all: {
-                    query: 'cheese',
-                    analyzer: 'query_default',
-                    minimum_should_match: '2<2 3<3 7<50%'
-                  }}},
-                ],
-                should: [
-                  {match_phrase: {'title' => {query: 'cheese', analyzer: 'query_default'}}},
-                  {match_phrase: {'acronym' => {query: 'cheese', analyzer: 'query_default'}}},
-                  {match_phrase: {'description' => {query: 'cheese', analyzer: 'query_default'}}},
-                  {match_phrase: {'indexable_content' => {query: 'cheese', analyzer: 'query_default'}}},
-                  {multi_match: {
-                    query: 'cheese',
-                    operator: 'and',
-                    fields: ['title', 'acronym', 'description', 'indexable_content'],
-                    analyzer: 'query_default',
-                  }},
-                  {multi_match: {
-                    query: 'cheese',
-                    operator: 'or',
-                    fields: ['title', 'acronym', 'description', 'indexable_content'],
-                    analyzer: 'shingled_query_analyzer',
-                  }},
-                ]}
-              },
-            ]
-          }},
-          functions: [
-            {filter: {term: {format: 'smart-answer'}}, boost_factor: 1.5},
-            {filter: {term: {format: 'transaction'}}, boost_factor: 1.5},
-            {filter: {term: {format: 'topical_event'}}, boost_factor: 1.5},
-            {filter: {term: {format: 'minister'}}, boost_factor: 1.7},
-            {filter: {term: {format: 'organisation'}}, boost_factor: 2.5},
-            {filter: {term: {format: 'topic'}}, boost_factor: 1.5},
-            {filter: {term: {format: 'document_series'}}, boost_factor: 1.3},
-            {filter: {term: {format: 'document_collection'}}, boost_factor: 1.3},
-            {filter: {term: {format: 'operational_field'}}, boost_factor: 1.5},
-            {filter: {term: {format: 'contact'}}, boost_factor: 0.3},
-            {filter: {term: {search_format_types: 'announcement'}}, script_score: {
-              script: "((0.05 / ((3.16*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)",
-              params: {now: (Time.now.to_i / 60) * 60000},
-            }},
-            {filter: {term: {organisation_state: 'closed'}}, boost_factor: 0.3},
-            {filter: {term: {organisation_state: 'devolved'}}, boost_factor: 0.3},
-            {filter: {term: {is_historic: true}}, boost_factor: 0.5},
-          ],
-          score_mode: 'multiply',
-        }
-      },
-      script_score: {
-        script: "doc['popularity'].value + #{UnifiedSearchBuilder::POPULARITY_OFFSET}"
-      },
-    }
-  }
-
-  CHEESE_QUERY = {
-    indices: {
-      index: :government,
-      query: {
-        function_score: {
-          query: BASE_CHEESE_QUERY,
-          boost_factor: 0.4
-        }
-      },
-      no_match_query: {
-        indices: {
-          index: :"service-manual",
-          query: {
-            function_score: {
-              query: BASE_CHEESE_QUERY,
-              boost_factor: 0.1
-            }
-          },
-          no_match_query: BASE_CHEESE_QUERY
-        }
-      }
-    }
-  }
-
   def mock_best_bets(query)
     @metasearch_index = stub("metasearch index")
     @metasearch_index.stubs(:raw_search).with(
@@ -131,6 +42,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
 
   def make_searcher
     mock_best_bets("cheese")
+    UnifiedSearchBuilder.any_instance.stubs query: 'A SUPER LONG QUERY'
 
     searcher = UnifiedSearcher.new(@combined_index, @metasearch_index, {}, stub_suggester)
     @combined_index.stubs(:schema).returns(make_schema)
@@ -154,7 +66,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.expects(:raw_search).with({
         from: 0,
         size: 20,
-        query: CHEESE_QUERY,
+        query: 'A SUPER LONG QUERY',
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
       }).returns(EMPTY_ES_RESPONSE)
 
@@ -177,7 +89,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.stubs(:raw_search).with({
         from: 0,
         size: 20,
-        query: CHEESE_QUERY,
+        query: 'A SUPER LONG QUERY',
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         sort: [{"public_timestamp" => {order: "asc", missing: "_last"}}],
       }).returns(EMPTY_ES_RESPONSE)
@@ -201,7 +113,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.stubs(:raw_search).with({
         from: 0,
         size: 20,
-        query: CHEESE_QUERY,
+        query: 'A SUPER LONG QUERY',
         filter: { "terms" => {"organisations" => ["ministry-of-magic"] } },
         fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
       }).returns(EMPTY_ES_RESPONSE)
@@ -225,7 +137,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
       @combined_index.stubs(:raw_search).with({
         from: 0,
         size: 20,
-        query: CHEESE_QUERY,
+        query: 'A SUPER LONG QUERY',
         facets: {
           "organisations" => {
             terms: {
