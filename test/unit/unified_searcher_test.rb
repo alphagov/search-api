@@ -178,7 +178,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   context "unfiltered, unsorted search" do
-    setup do
+    should 'call raw_search with the results from the builder' do
       @combined_index = stub("unified index")
       @searcher = make_searcher
       @combined_index.expects(:raw_search).with({
@@ -199,10 +199,6 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
         return_fields: SearchParameterParser::ALLOWED_RETURN_FIELDS,
         debug: {},
       })
-    end
-
-    should "include suggested queries" do
-      assert_equal ['cheese'], @results[:suggested_queries]
     end
   end
 
