@@ -280,7 +280,7 @@ class Rummager < Sinatra::Application
 
     parser = SearchParameterParser.new(
       parse_query_string(request.query_string),
-      current_index.mappings,
+      unified_index_schema,
     )
 
     unless parser.valid?

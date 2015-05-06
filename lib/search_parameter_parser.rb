@@ -18,23 +18,6 @@ class BaseParameterParser
     "title" => "title.sort"
   }
 
-  # The fields listed here are the only ones which can be used to filter by.
-  ALLOWED_FILTER_FIELDS = %w(
-    display_type
-    document_collections
-    document_type
-    format
-    link
-    mainstream_browse_pages
-    manual
-    organisations
-    people
-    policies
-    public_timestamp
-    section
-    specialist_sectors
-  )
-
   # Incoming filter fields will have their names transformed according to the
   # following mapping. Fields not listed here will be passed through unchanged.
   FILTER_NAME_MAPPING = {
@@ -42,7 +25,7 @@ class BaseParameterParser
   }
 
   # The fields listed here are the only ones which can be used to calculated
-  # facets for.  This should be a subset of ALLOWED_FILTER_FIELDS
+  # facets for.  This should be a subset of allowed_filter_fields
   ALLOWED_FACET_FIELDS = %w(
     display_type
     document_collections
@@ -223,13 +206,8 @@ protected
 end
 
 class SearchParameterParser < BaseParameterParser
-  def initialize(params, schema_mappings = {})
-    @schema_mappings = schema_mappings
-    @document_types = params.fetch("filter_document_type", [no_document_type])
-    if @document_types.size > 1
-      raise "SearchParameterParser can only handle one document type"
-    end
-
+  def initialize(params, schema)
+    @schema = schema
     process(params)
   end
 
@@ -238,12 +216,6 @@ class SearchParameterParser < BaseParameterParser
   end
 
 private
-
-  def no_document_type
-    :no_document_type
-  end
-
-  attr_reader :schema_mappings
 
   def process(params)
     @params = params
@@ -374,60 +346,38 @@ private
     filters.concat(rejects)
   end
 
-  def schema
-    @_schema ||= schema_mappings
-      .merge( no_document_type => null_schema )
-      .fetch(document_type) do
-        @errors << %{Schema not found for document type "#{document_type}"%}
-        {}
-      end
-  end
-
-  def schema_fields
-    schema.fetch("properties", {}).keys
-  end
-
   def allowed_filter_fields
-    ALLOWED_FILTER_FIELDS + schema_fields
+    # document_type is a special case, because it's an alias for the internal
+    # "_type" field.
+    ["document_type"] + @schema.allowed_filter_fields
   end
 
   def allowed_return_fields
-    ALLOWED_RETURN_FIELDS + schema_fields
+    @schema.field_definitions.keys
   end
 
   def schema_get_field_type(field_name)
-    # Short term hack to recognise `public_timstamp` as date-field for filtering
-    # Without a `document_type` a schema can't be matched (see `schema`) and a
-    # type can't be found, defaulting to string.
-    if field_name == 'public_timestamp'
-      return 'date'
-    end
-
-    schema
-      .fetch("properties", {})
-      .fetch(field_name, {})
-      .fetch("type", "string")
-  end
-
-  def null_schema
-    {
-      "properties" => {},
-    }
-  end
-
-  def document_type
-    @document_types && @document_types.first
+    @schema.field_definitions.fetch(field_name).type
   end
 
   def build_filter(field_name, values, reject)
-    type = schema_get_field_type(field_name)
+    if field_name == '_type'
+      filter_type = "text"
+    else
+      filter_type = @schema.field_definitions.fetch(field_name).type.filter_type
+    end
 
-    field_class = {
+    if filter_type.nil?
+      @errors << %{"#{field_name}" has no filter_type defined}
+      return nil
+    end
+
+    filter_class = {
+      "text" => TextFieldFilter,
       "date" => DateFieldFilter,
-      "string" => TextFieldFilter,
-    }.fetch(type)
+    }.fetch(filter_type)
 
-    filter = field_class.new(field_name, values, reject)
+    filter = filter_class.new(field_name, values, reject)
     if filter.valid?
       filter
     else
