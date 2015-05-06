@@ -6,13 +6,12 @@ require "unified_search_presenter"
 
 class UnifiedSearcher
 
-  attr_reader :index, :registries, :registry_by_field, :suggester
+  attr_reader :index, :registries, :suggester
 
-  def initialize(index, metaindex, registries, registry_by_field, suggester)
+  def initialize(index, metaindex, registries, suggester)
     @index = index
     @metaindex = metaindex
     @registries = registries
-    @registry_by_field = registry_by_field
     @suggester = suggester
   end
 
@@ -27,7 +26,6 @@ class UnifiedSearcher
       params,
       es_response,
       registries,
-      registry_by_field,
       suggested_queries(params[:query]),
       facet_examples,
       index.schema

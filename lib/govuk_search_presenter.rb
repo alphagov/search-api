@@ -15,7 +15,7 @@ class GovukSearchPresenter
   # `presenter_context` should be a map from registry names to registries,
   # which gets passed to the ResultSetPresenter class. For example:
   #
-  #     { organisation_registry: OrganisationRegistry.new(...) }
+  #     { organisations: OrganisationRegistry.new(...) }
   def initialize(result_sets, presenter_context = {})
     unknown_keys = result_sets.keys - STREAM_TITLES.keys
     if unknown_keys.any?

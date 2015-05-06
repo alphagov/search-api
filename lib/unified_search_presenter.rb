@@ -10,7 +10,7 @@ class UnifiedSearchPresenter
   # `registries` should be a map from registry names to registries,
   # which gets passed to the ResultSetPresenter class. For example:
   #
-  #     { organisation_registry: OrganisationRegistry.new(...) }
+  #     { organisations: OrganisationRegistry.new(...) }
   #
   # `facet_examples` is {field_name => {facet_value => {total: count, examples: [{field: value}, ...]}}}
   # ie: a hash keyed by field name, containing hashes keyed by facet value with
@@ -18,7 +18,6 @@ class UnifiedSearchPresenter
   def initialize(search_params,
                  es_response,
                  registries = {},
-                 registry_by_field = {},
                  suggestions = [],
                  facet_examples = {},
                  schema = nil)
@@ -30,7 +29,6 @@ class UnifiedSearchPresenter
     @facet_fields = search_params[:facets] || {}
 
     @registries = registries
-    @registry_by_field = registry_by_field
     @suggestions = suggestions
     @facet_examples = facet_examples
     @schema = schema
@@ -48,7 +46,7 @@ class UnifiedSearchPresenter
 
 private
 
-  attr_reader :registries, :registry_by_field, :schema
+  attr_reader :registries, :schema
 
   def presented_results
     # This uses the "standard" ResultSetPresenter to expand fields like
@@ -81,7 +79,7 @@ private
   end
 
   def field_presenter
-    @field_presenter ||= FieldPresenter.new(registry_by_field)
+    @field_presenter ||= FieldPresenter.new(registries)
   end
 
   def search_results

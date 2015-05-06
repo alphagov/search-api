@@ -81,27 +81,27 @@ private
   end
 
   def document_series_registry
-    @context[:document_series_registry]
+    @context[:document_series]
   end
 
   def document_collection_registry
-    @context[:document_collection_registry]
+    @context[:document_collections]
   end
 
   def organisation_registry
-    @context[:organisation_registry]
+    @context[:organisations]
   end
 
   def topic_registry
-    @context[:topic_registry]
+    @context[:topics]
   end
 
   def world_location_registry
-    @context[:world_location_registry]
+    @context[:world_locations]
   end
 
   def specialist_sector_registry
-    @context[:specialist_sector_registry]
+    @context[:specialist_sectors]
   end
 
   def spelling_suggestions

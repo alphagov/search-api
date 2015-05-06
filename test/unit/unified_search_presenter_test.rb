@@ -138,8 +138,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         facets: options.fetch(:facets, {}),
       },
       sample_es_response(options.fetch(:es_response, {})),
-      org_registry.nil? ? {} : {organisation_registry: org_registry},
-      org_registry.nil? ? {} : {organisations: org_registry},
+      org_registry.nil? ? {} : { organisations: org_registry },
       options.fetch(:suggestions, []),
       options.fetch(:facet_examples, {}),
       options.fetch(:schema, nil)
@@ -240,8 +239,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       @output = UnifiedSearchPresenter.new(
         { start: 0 },
         sample_es_response,
-        {topic_registry: topic_registry},
-        {topics: topic_registry},
+        { topics: topic_registry },
       ).present
     end
 
@@ -559,7 +557,6 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           facets: {"organisations" => facet_params(1), "topics" => facet_params(1)},
         },
         sample_es_response("facets" => sample_facet_data_with_topics),
-        { organisation_registry: org_registry },
         { organisations: org_registry },
       ).present
     end
@@ -621,8 +618,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           facets: { "organisations" => facet_params(1) }
         },
         sample_es_response("facets" => sample_facet_data),
-        {organisation_registry: org_registry},
-        {organisations: org_registry},
+        { organisations: org_registry },
         [],
         {"organisations" => {
           "hm-magic" => {
@@ -681,7 +677,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         "self assessment",
         "tax returns"
       ]
-      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, {}, {}, @suggestions).present
+      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response, {}, @suggestions).present
 
       assert_equal ["self assessment", "tax returns"], @output[:suggested_queries]
     end

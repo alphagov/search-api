@@ -191,7 +191,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   end
 
   def make_searcher
-    UnifiedSearcher.new(@combined_index, @metasearch_index, {}, {}, stub_suggester)
+    UnifiedSearcher.new(@combined_index, @metasearch_index, {}, stub_suggester)
   end
 
   def make_schema

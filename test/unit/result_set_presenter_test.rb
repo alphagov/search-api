@@ -113,7 +113,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
     presenter = ResultSetPresenter.new(
       single_result_with_document_series("rail-statistics"),
-      document_series_registry: document_series_registry
+      document_series: document_series_registry
     )
 
     output = presenter.present
@@ -138,7 +138,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
     presenter = ResultSetPresenter.new(
       single_result_with_document_collection("rail-statistics"),
-      document_collection_registry: document_collection_registry
+      document_collections: document_collection_registry
     )
 
     output = presenter.present
@@ -163,7 +163,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
     presenter = ResultSetPresenter.new(
       single_result_with_organisations("ministry-of-defence"),
-      organisation_registry: organisation_registry
+      organisations: organisation_registry
     )
 
     output = presenter.present
@@ -187,7 +187,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
     presenter = ResultSetPresenter.new(
       single_result_with_topics("housing"),
-      topic_registry: topic_registry
+      topics: topic_registry
     )
 
     output = presenter.present
@@ -211,7 +211,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
     presenter = ResultSetPresenter.new(
       single_result_with_world_locations("angola"),
-      world_location_registry: world_location_registry
+      world_locations: world_location_registry
     )
 
     output = presenter.present
@@ -235,7 +235,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
     presenter = ResultSetPresenter.new(
       single_result_with_sectors("oil-and-gas/licensing"),
-      specialist_sector_registry: specialist_sector_registry,
+      specialist_sectors: specialist_sector_registry,
     )
 
     output = presenter.present
@@ -253,7 +253,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
     presenter = ResultSetPresenter.new(
       single_result_with_organisations("ministry-of-silly-walks"),
-      organisation_registry: organisation_registry
+      organisations: organisation_registry
     )
 
     output = presenter.present
@@ -267,7 +267,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
   def test_organisations_not_modified_if_no_registry_available
     presenter = ResultSetPresenter.new(
       single_result_with_organisations("ministry-of-silly-walks"),
-      organisation_registry: nil
+      organisations: nil
     )
 
     output = presenter.present
