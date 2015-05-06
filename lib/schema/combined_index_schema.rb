@@ -27,6 +27,17 @@ class CombinedIndexSchema
     }
   end
 
+  # Get the names of fields which are allowed to be filtered on.
+  #
+  # This is all fields which have a FieldType for which "filter_type" is defined.
+  def allowed_filter_fields
+    @allowed_filter_fields ||= each_field_with_object(Set.new) { |field_name, field_definition, results|
+      if field_definition.type.filter_type
+        results << field_name
+      end
+    }.to_a
+  end
+
 private
 
   # Call &block for every field defined in any of the document types.

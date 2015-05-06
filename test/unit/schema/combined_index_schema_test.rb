@@ -27,4 +27,9 @@ class CombinedIndexSchemaTest < MiniTest::Unit::TestCase
     assert locations.include?({"label"=>"Afghanistan", "value"=>"afghanistan"})
     assert locations.include?({"label"=>"North East", "value"=>"north-east"})
   end
+
+  def test_allowed_filter_fields
+    refute @combined_schema.allowed_filter_fields.include? "title"
+    assert @combined_schema.allowed_filter_fields.include? "organisations"
+  end
 end

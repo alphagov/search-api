@@ -1,6 +1,6 @@
 require "json"
 
-FieldType = Struct.new("FieldType", :name, :description, :es_config, :multivalued, :children)
+FieldType = Struct.new("FieldType", :name, :filter_type, :description, :es_config, :multivalued, :children)
 
 class FieldTypes
   def initialize(config_path)
@@ -23,6 +23,11 @@ private
         raise %{Missing "es_config" in field type "#{type_name}" in "#{types_file_path}"}
       end
 
+      filter_type = value.delete("filter_type")
+      unless [nil, "text", "date"].include? filter_type
+        raise %{Invalid value for "filter_type" ("#{filter_type}") in field type "#{type_name}" in "#{types_file_path}"}
+      end
+
       children = value.delete("children")
       unless [nil, "named", "dynamic"].include? children
         raise %{Invalid value for "children" ("#{children}") in field type "#{type_name}" in "#{types_file_path}"}
@@ -30,6 +35,7 @@ private
 
       type = FieldType.new(
         type_name,
+        filter_type,
         value.delete("description") || "",
         es_config,
         value.delete("multivalued") || false,
