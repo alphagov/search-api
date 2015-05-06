@@ -5,32 +5,30 @@ require "result_set_presenter"
 
 # Presents a combined set of results for a GOV.UK site search
 class UnifiedSearchPresenter
+  attr_reader :es_response, :search_params
 
   # `registries` should be a map from registry names to registries,
   # which gets passed to the ResultSetPresenter class. For example:
   #
-  #     { organisation_registry: OrganisationRegistry.new(...) }
+  #     { organisations: OrganisationRegistry.new(...) }
   #
   # `facet_examples` is {field_name => {facet_value => {total: count, examples: [{field: value}, ...]}}}
   # ie: a hash keyed by field name, containing hashes keyed by facet value with
   # values containing example information for the value.
-  def initialize(es_response, start, index_names, applied_filters = {},
-                 facet_fields = {}, registries = {},
-                 registry_by_field = {}, suggestions = [],
-                 facet_examples={}, schema=nil)
-    @start = start
-    @results = es_response["hits"]["hits"].map do |result|
-      doc = result.delete("fields") || {}
-      doc[:_metadata] = result
-      doc
-    end
+  def initialize(search_params,
+                 es_response,
+                 registries = {},
+                 suggestions = [],
+                 facet_examples = {},
+                 schema = nil)
+
+    @es_response = es_response
     @facets = es_response["facets"]
-    @total = es_response["hits"]["total"]
-    @index_names = index_names
-    @applied_filters = applied_filters
-    @facet_fields = facet_fields
+    @search_params = search_params
+    @applied_filters = search_params[:filters] || []
+    @facet_fields = search_params[:facets] || {}
+
     @registries = registries
-    @registry_by_field = registry_by_field
     @suggestions = suggestions
     @facet_examples = facet_examples
     @schema = schema
@@ -39,8 +37,8 @@ class UnifiedSearchPresenter
   def present
     {
       results: presented_results,
-      total: @total,
-      start: @start,
+      total: es_response["hits"]["total"],
+      start: search_params[:start],
       facets: presented_facets,
       suggested_queries: @suggestions
     }
@@ -48,24 +46,22 @@ class UnifiedSearchPresenter
 
 private
 
-  attr_reader :registries, :registry_by_field, :schema
+  attr_reader :registries, :schema
 
   def presented_results
     # This uses the "standard" ResultSetPresenter to expand fields like
     # organisations and topics.  It then makes a few further changes to tidy up
     # the output in other ways.
 
-    result_set = ResultSet.new(@results, nil)
+    result_set = ResultSet.new(search_results, nil)
     ResultSetPresenter.new(result_set, registries, schema).present["results"].each do |fields|
       metadata = fields.delete(:_metadata)
 
-      # Replace the "_index" field, which contains the concrete name of the
-      # index, with an "index" field containing the aliased name of the index
-      # (eg, "mainstream").
-      long_name = metadata["_index"]
-      fields[:index] = @index_names.find { |short_name|
-        long_name.start_with? short_name
-      }
+      # Translate index names like `mainstream-2015-05-06t09..` into its
+      # proper name, eg. "mainstream", "government" or "service-manual".
+      # The regex takes the string until the first digit. After that, strip any
+      # trailing dash from the string.
+      fields[:index] = metadata["_index"].match(%r[^\D+]).to_s.chomp('-')
 
       # Put the elasticsearch score in es_score; this is used in templates when
       # debugging is requested, so it's nicer to be explicit about what score
@@ -83,7 +79,15 @@ private
   end
 
   def field_presenter
-    @field_presenter ||= FieldPresenter.new(registry_by_field)
+    @field_presenter ||= FieldPresenter.new(registries)
+  end
+
+  def search_results
+    es_response["hits"]["hits"].map do |result|
+      doc = result.delete("fields") || {}
+      doc[:_metadata] = result
+      doc
+    end
   end
 
   def facet_option_fields(field, slug)
@@ -128,7 +132,7 @@ private
   # Get the facet options, sorted according to the "order" option.
   #
   # Returns the requested number of options, but will additionally return any
-  # options which are part of a filter. 
+  # options which are part of a filter.
   def facet_options(field, calculated_options, facet_parameters)
     applied_options = filter_values_for_field(field)
 

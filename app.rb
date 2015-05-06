@@ -190,11 +190,11 @@ class Rummager < Sinatra::Application
     result_streams = searcher.search(@query, organisation, params["sort"])
 
     result_context = {
-      organisation_registry: organisation_registry,
-      topic_registry: topic_registry,
-      document_series_registry: document_series_registry,
-      document_collection_registry: document_collection_registry,
-      world_location_registry: world_location_registry
+      organisations: organisation_registry,
+      topics: topic_registry,
+      document_series: document_series_registry,
+      document_collections: document_collection_registry,
+      world_locations: world_location_registry
     }
 
     output = GovukSearchPresenter.new(result_streams, result_context).present
@@ -241,7 +241,7 @@ class Rummager < Sinatra::Application
   #     - link: the link in the facet value
   #     - title: the title in the facet value
   #     - filtered: whether the value is used in an active filter
-  #     
+  #
   #     Each ordering may be preceded by a "-" to sort in descending order.
   #     Multiple orderings can be specified, in priority order, separated by a
   #     colon.  The default ordering is "filtered:-count:slug".
@@ -331,14 +331,6 @@ class Rummager < Sinatra::Application
     json_only
 
     registries = {
-      organisation_registry: organisation_registry,
-      topic_registry: topic_registry,
-      document_series_registry: document_series_registry,
-      document_collection_registry: document_collection_registry,
-      world_location_registry: world_location_registry,
-      specialist_sector_registry: specialist_sector_registry,
-    }
-    registry_by_field = {
       organisations: organisation_registry,
       topics: topic_registry,
       document_series: document_series_registry,
@@ -357,7 +349,7 @@ class Rummager < Sinatra::Application
       return { error: parser.error }.to_json
     end
 
-    searcher = UnifiedSearcher.new(unified_index, metasearch_index, registries, registry_by_field, suggester)
+    searcher = UnifiedSearcher.new(unified_index, metasearch_index, registries, suggester)
     searcher.search(parser.parsed_params).to_json
   end
 
@@ -388,18 +380,21 @@ class Rummager < Sinatra::Application
     json_only
 
     organisation = params["organisation_slug"] == "" ? nil : params["organisation_slug"]
+
     result_set = current_index.search(@query,
       organisation: organisation,
       sort: params["sort"],
       order: params["order"])
+
     presenter_context = {
-      organisation_registry: organisation_registry,
-      topic_registry: topic_registry,
-      document_series_registry: document_series_registry,
-      document_collection_registry: document_collection_registry,
-      world_location_registry: world_location_registry,
+      organisations: organisation_registry,
+      topics: topic_registry,
+      document_series: document_series_registry,
+      document_collections: document_collection_registry,
+      world_locations: world_location_registry,
       spelling_suggestions: suggester.suggestions(@query)
     }
+
     presenter = ResultSetPresenter.new(result_set, presenter_context)
     presenter.present.to_json
   end
