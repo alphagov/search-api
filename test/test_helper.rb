@@ -1,5 +1,14 @@
 ENV['RACK_ENV'] = 'test'
 
+# Simplecov should be required before any other code is loaded to prevent
+# false negatives.
+if ENV["USE_SIMPLECOV"]
+  require "simplecov"
+  require "simplecov-rcov"
+  SimpleCov.start
+  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+end
+
 $LOAD_PATH << File.expand_path('../../', __FILE__)
 $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
@@ -16,13 +25,6 @@ require "timecop"
 
 require "webmock/minitest"
 WebMock.disable_net_connect!
-
-if ENV["USE_SIMPLECOV"]
-  require "simplecov"
-  require "simplecov-rcov"
-  SimpleCov.start
-  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-end
 
 require "sample_config"
 
