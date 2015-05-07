@@ -5,7 +5,6 @@ class FacetExampleFetcher
     @response_facets = es_response["facets"]
     @params = params
     @search_builder = search_builder
-    @field_definitions = index.schema.field_definitions
   end
 
   # Fetch all requested example facet values
@@ -28,6 +27,11 @@ class FacetExampleFetcher
   end
 
 private
+
+  def field_definitions
+    @index.schema.field_definitions
+  end
+
   def fetch_for_field(field_name, facet_params)
     example_count = facet_params[:examples]
     example_fields = facet_params[:example_fields]
@@ -124,7 +128,7 @@ private
         values = [values]
       end
 
-      if @field_definitions.fetch(field_name).type.multivalued
+      if field_definitions.fetch(field_name).type.multivalued
         result[field_name] = values
       else
         result[field_name] = values.first

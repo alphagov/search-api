@@ -126,6 +126,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     {
       requested: requested,
       order: SearchParameterParser::DEFAULT_FACET_SORT,
+      scope: :exclude_field_filter,
     }.merge(options)
   end
 
@@ -301,6 +302,11 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have correct number of facet values" do
       assert_equal 1, @output[:facets]["organisations"][:options].length
+    end
+
+    should "include requested facet scope" do
+      facet = @output[:facets]["organisations"]
+      assert_equal :exclude_field_filter, facet[:scope]
     end
 
     should "have correct top facet value value" do
