@@ -9,6 +9,21 @@ class UnifiedSearchTest < MultiIndexTest
     assert last_response.ok?
   end
 
+  def test_spell_checking_with_typo
+    # The word "important" is imported into the elasticsearch index by the
+    # MultiIndexTest setup block.
+
+    get "/unified_search?q=imprtant"
+
+    assert_equal ['important'], parsed_response['suggested_queries']
+  end
+
+  def test_spell_checking_without_typo
+    get "/unified_search?q=milliband"
+
+    assert_equal [], parsed_response['suggested_queries']
+  end
+
   def test_returns_docs_from_all_indexes
     get "/unified_search?q=important"
     links = parsed_response["results"].map do |result|

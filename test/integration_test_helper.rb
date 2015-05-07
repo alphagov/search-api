@@ -54,13 +54,16 @@ module ElasticsearchIntegration
       "document_series_registry_index" => @default_index_name,
       "document_collection_registry_index" => @default_index_name,
       "world_location_registry_index" => @default_index_name,
+      "spelling_index_names" => content_index_names,
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
     app.settings.stubs(:enable_queue).returns(false)
   end
 
   def enable_test_index_connections
-    WebMock.disable_net_connect!(allow: %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)})
+    # Prevent tests from messing with development/production data.
+    only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)}
+    WebMock.disable_net_connect!(allow: only_test_databases)
   end
 
   def search_server

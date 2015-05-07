@@ -68,6 +68,12 @@ module TestHelpers
       @subset.inspect
     end
   end
+
+  def stub_elasticsearch_request(hash)
+    hash.each do |url, response|
+      stub_request(:get, "http://localhost:9200#{url}").to_return(body: JSON.dump(response))
+    end
+  end
 end
 
 class MiniTest::Unit::TestCase

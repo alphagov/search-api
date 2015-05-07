@@ -5,7 +5,7 @@ class UnifiedSearcherTest < ShouldaUnitTestCase
   context "#search" do
     should 'search with the results from the builder and return a presenter' do
       index = stub('index', :schema)
-      searcher = UnifiedSearcher.new(index, stub, stub, stub)
+      searcher = UnifiedSearcher.new(index, stub, stub)
 
       search_payload = stub('payload')
       UnifiedSearchBuilder.any_instance.expects(:payload).returns(search_payload)

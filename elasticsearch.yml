@@ -9,3 +9,8 @@ world_location_registry_index: "government"
 # These indices are passed in this order to GovukSearcher
 govuk_index_names: ["mainstream", "detailed", "government", "service-manual"]
 metasearch_index_name: "metasearch"
+
+# When doing spell checking, which indices to use?
+spelling_index_names:
+  - mainstream
+  - government

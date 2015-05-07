@@ -198,7 +198,12 @@ class SearchTest < IntegrationTest
     Registry::SpecialistSector.any_instance.expects(:[])
       .with("oil-and-gas/licensing")
       .returns(oil_gas_sector_fields)
+
+    # Stub the spell check-request.
+    stub_elasticsearch_request('/mainstream_test/_search' => {})
+
     get "/unified_search.json", {q: "bob"}
+
     first_result = JSON.parse(last_response.body)["results"].first
     assert_equal 1, first_result["specialist_sectors"].size
     assert_equal oil_gas_sector_fields["title"], first_result["specialist_sectors"][0]["title"]

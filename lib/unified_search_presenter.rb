@@ -2,6 +2,7 @@ require "elasticsearch/result_set"
 require "facet_option"
 require "field_presenter"
 require "result_set_presenter"
+require "unified_search/spell_check_presenter"
 
 # Presents a combined set of results for a GOV.UK site search
 class UnifiedSearchPresenter
@@ -38,13 +39,17 @@ class UnifiedSearchPresenter
       total: es_response["hits"]["total"],
       start: search_params[:start],
       facets: presented_facets,
-      suggested_queries: []
+      suggested_queries: suggested_queries
     }
   end
 
 private
 
   attr_reader :registries, :schema
+
+  def suggested_queries
+    UnifiedSearch::SpellCheckPresenter.new(es_response).present
+  end
 
   def presented_results
     # This uses the "standard" ResultSetPresenter to expand fields like
