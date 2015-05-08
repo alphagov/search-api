@@ -30,7 +30,7 @@ module UnifiedSearch
     # Organisation acronyms like `dvla` and 'gds' are sometimes considered
     # spelling errors. We use the organisation index to ignore all acronyms.
     def organisation_acronyms
-      organisation_registry = registries.fetch(:organisations)
+      organisation_registry = registries.organisations
       organisation_registry.all.map(&:acronym).compact.map(&:downcase)
     end
   end
