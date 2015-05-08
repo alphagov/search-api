@@ -21,13 +21,13 @@
   },
 
   "searchable_identifier": {
-    "description": "Like an identifier, but should also be considered in searches in the _all field",
+    "description": "Like an identifier, but should also be considered in non-field-specific text searches",
     "filter_type": "text",
     "es_config": {
       "type": "string",
       "index": "not_analyzed",
       "include_in_all": true,
-      "copy_to": ["spelling_text"]
+      "copy_to": ["spelling_text", "all_searchable_text"]
     }
   },
 
@@ -37,7 +37,25 @@
       "type": "string",
       "index": "analyzed",
       "include_in_all": true,
-      "copy_to": ["spelling_text"],
+      "copy_to": ["spelling_text", "all_searchable_text"],
+      "fields": {
+        "synonym": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "index_analyzer": "with_index_synonyms",
+          "search_analyzer": "with_search_synonyms"
+        }
+      }
+    }
+  },
+
+  "all_searchable_text_type": {
+    "description": "A type for a special single field that all searchable text is copied into (using `copy_to` directives in elasticsearch). We use this instead of the built-in `_all` so that we can analyze it in multiple ways",
+    "es_config": {
+      "type": "string",
+      "index": "analyzed",
+      "include_in_all": false,
       "fields": {
         "synonym": {
           "type": "string",

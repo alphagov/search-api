@@ -1,5 +1,6 @@
 {
   "fields": [
+    "all_searchable_text",
     "format",
     "title",
     "description",
