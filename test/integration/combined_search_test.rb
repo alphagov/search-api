@@ -37,9 +37,4 @@ class CombinedSearchTest < MultiIndexTest
     get "/govuk/search?q=important"
     assert_equal 3, parsed_response["streams"]["top-results"]["results"].count
   end
-
-  def test_returns_spelling_suggestions
-    get "/govuk/search?q=afgananistan"
-    assert parsed_response["spelling_suggestions"].include? "Afghanistan"
-  end
 end
