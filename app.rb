@@ -12,12 +12,12 @@ require "govuk_searcher"
 require "govuk_search_presenter"
 require "unified_searcher"
 require "organisation_set_presenter"
-require "registry"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
 require "redis"
 require "matcher_set"
 require "search_parameter_parser"
+require "registries"
 
 require_relative "config"
 require_relative "helpers"
@@ -34,33 +34,11 @@ class Rummager < Sinatra::Application
     halt(404)
   end
 
-  def document_series_registry
-    index_name = settings.search_config.document_series_registry_index
-    @@document_series_registry ||= Registry::DocumentSeries.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
-  end
-
-  def document_collection_registry
-    index_name = settings.search_config.document_collection_registry_index
-    @@document_collection_registry ||= Registry::DocumentCollection.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
-  end
-
-  def organisation_registry
-    index_name = settings.search_config.organisation_registry_index
-    @@organisation_registry ||= Registry::Organisation.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
-  end
-
-  def topic_registry
-    index_name = settings.search_config.topic_registry_index
-    @@topic_registry ||= Registry::Topic.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
-  end
-
-  def world_location_registry
-    index_name = settings.search_config.world_location_registry_index
-    @@world_location_registry ||= Registry::WorldLocation.new(search_server.index_for_search([index_name]), search_server.schema.field_definitions) if index_name
-  end
-
-  def specialist_sector_registry
-    @@specialist_sector_registry ||= Registry::SpecialistSector.new(unified_index, search_server.schema.field_definitions)
+  def registries
+    @@registries ||= Registries.new(
+      search_server,
+      settings.search_config
+    )
   end
 
   def govuk_indices
@@ -163,15 +141,7 @@ class Rummager < Sinatra::Application
     searcher = GovukSearcher.new(*govuk_indices)
     result_streams = searcher.search(@query, organisation, params["sort"])
 
-    result_context = {
-      organisations: organisation_registry,
-      topics: topic_registry,
-      document_series: document_series_registry,
-      document_collections: document_collection_registry,
-      world_locations: world_location_registry
-    }
-
-    output = GovukSearchPresenter.new(result_streams, result_context).present
+    output = GovukSearchPresenter.new(result_streams, registries).present
     output["spelling_suggestions"] = []
 
     output.to_json
@@ -304,15 +274,6 @@ class Rummager < Sinatra::Application
   get "/unified_search.?:request_format?" do
     json_only
 
-    registries = {
-      organisations: organisation_registry,
-      topics: topic_registry,
-      document_series: document_series_registry,
-      document_collections: document_collection_registry,
-      world_locations: world_location_registry,
-      specialist_sectors: specialist_sector_registry,
-    }
-
     parser = SearchParameterParser.new(
       parse_query_string(request.query_string),
       current_index.mappings,
@@ -360,14 +321,9 @@ class Rummager < Sinatra::Application
       sort: params["sort"],
       order: params["order"])
 
-    presenter_context = {
-      organisations: organisation_registry,
-      topics: topic_registry,
-      document_series: document_series_registry,
-      document_collections: document_collection_registry,
-      world_locations: world_location_registry,
-      spelling_suggestions: [],
-    }
+    presenter_context = registries.as_hash.merge(
+      spelling_suggestions: []
+    )
 
     presenter = ResultSetPresenter.new(result_set, presenter_context)
     presenter.present.to_json
@@ -408,7 +364,7 @@ class Rummager < Sinatra::Application
   get "/organisations.?:request_format?" do
     json_only
 
-    organisations = organisation_registry.all
+    organisations = registries.organisations.all
     OrganisationSetPresenter.new(organisations).present.to_json
   end
 

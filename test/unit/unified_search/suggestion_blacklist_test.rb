@@ -21,7 +21,7 @@ class UnifiedSearch::SuggestionBlacklistTest < ShouldaUnitTestCase
 
     def blacklist
       UnifiedSearch::SuggestionBlacklist.new(
-        organisations: stubbed_organisation_registry
+        stub(organisations: stubbed_organisation_registry)
       )
     end
 
