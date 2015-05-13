@@ -112,6 +112,7 @@ class BaseParameterParser
     manual
     organisation_state
     organisations
+    people
     policies
     public_timestamp
     section
