@@ -11,6 +11,7 @@ class BaseParameterParser
   ALLOWED_SORT_FIELDS = %w(
     last_update
     public_timestamp
+    title
   )
 
   # The fields listed here are the only ones which can be used to filter by.
