@@ -119,4 +119,10 @@ module Registry
       super(index, field_definitions, "world_location")
     end
   end
+
+  class Person < BaseRegistry
+    def initialize(index, field_definitions)
+      super(index, field_definitions, "people")
+    end
+  end
 end

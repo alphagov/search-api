@@ -79,6 +79,16 @@ class SearchTest < IntegrationTest
     )
   end
 
+  def example_people
+    Document.new(
+      sample_document_types["edition"].fields,
+      {
+        link: "/government/people/example-people",
+        title: "Example Person"
+      }
+    )
+  end
+
   def test_returns_json_for_search_results
     stub_index.expects(:search).returns(stub(results: [sample_document], total: 1))
     get "/search", {q: "bob"}, "HTTP_ACCEPT" => "application/json"
@@ -209,6 +219,22 @@ class SearchTest < IntegrationTest
     assert_equal oil_gas_sector_fields["title"], first_result["specialist_sectors"][0]["title"]
     assert_equal oil_gas_sector_fields["link"], first_result["specialist_sectors"][0]["link"]
     assert_equal oil_gas_sector_fields["slug"], first_result["specialist_sectors"][0]["slug"]
+  end
+
+  def test_handles_results_with_people
+    document = Document.from_hash(
+      sample_document_attributes.merge(people: ["example-people"]),
+      sample_document_types
+    )
+
+    stub_index.expects(:search).returns(stub(results: [document], total: 1))
+    Registry::Person.any_instance.expects(:[])
+      .with("example-people")
+      .returns(example_people)
+    get "/search.json", {q: "bob"}
+    first_result = JSON.parse(last_response.body)["results"].first
+    assert_equal 1, first_result["people"].size
+    assert_equal example_people.title, first_result["people"][0]["title"]
   end
 
   def test_returns_404_when_requested_with_non_json_url

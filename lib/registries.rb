@@ -13,6 +13,7 @@ class Registries < Struct.new(:search_server, :search_config)
       document_collections: document_collections,
       world_locations: world_locations,
       specialist_sectors: specialist_sectors,
+      people: people,
     }
   end
 
@@ -59,6 +60,14 @@ class Registries < Struct.new(:search_server, :search_config)
   def specialist_sectors
     index_name = settings.search_config.govuk_index_names
     @specialist_sector_registry ||= Registry::SpecialistSector.new(
+      index_for_search(index_name),
+      field_definitions
+    )
+  end
+
+  def people
+    index_name = settings.search_config.people_registry_index
+    @people_registry ||= Registry::Person.new(
       index_for_search(index_name),
       field_definitions
     )

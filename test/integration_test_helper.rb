@@ -54,6 +54,7 @@ module ElasticsearchIntegration
       "document_series_registry_index" => @default_index_name,
       "document_collection_registry_index" => @default_index_name,
       "world_location_registry_index" => @default_index_name,
+      "people_registry_index" => @default_index_name,
       "spelling_index_names" => content_index_names,
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
