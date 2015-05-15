@@ -39,3 +39,67 @@
 - spol
 - stgo
 - swmp
+
+# Never try to correct full names of cabinet members. These can be removed in
+# the future when elasticsearch has "learned" that their names are correct
+# because they are found often in government/mainstream indices.
+
+- david cameron
+- george osborne
+- theresa may
+- philip hammond
+- michael fallon
+- michael gove
+- chris grayling
+- nicky morgan
+- mark harper
+- baroness stowell
+- amber rudd
+- priti patel
+- robert halfon
+- sajid javid
+- john whittingdale
+- iain duncan smith
+- patrick mcloughlin
+- liz truss
+- anna soubry
+- greg clark
+- justine greening
+- theresa villiers
+- jeremy hunt
+- stephen crabb
+- greg hands
+- matt hancock
+- david mundell
+- oliver letwin
+- jeremy wright
+- baroness anelay
+- ros altmann
+- mark francois
+- penny mordaunt
+- john hayes
+- alistair burt
+- jo johnson
+- philip dunne
+- ed timpson
+- nick boles
+- andrea leadsom
+- anne milton
+- george eustice
+- harriett baldwin
+- francis maude
+- therese coffey
+- grant shapps
+- ben gummer
+- justin tomlinson
+- rory stewart
+- james wharton
+- marcus jones
+- ben wallace
+- andrew jones
+- caroline dinenage
+- mark lancaster
+- john penrose
+- damian hinds
+- tracey crouch
+- dominic raab
