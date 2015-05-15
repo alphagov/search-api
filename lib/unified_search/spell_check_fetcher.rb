@@ -35,7 +35,7 @@ module UnifiedSearch
     def elasticsearch_query
       {
         size: 0,
-        suggest: QueryComponents::Suggest.new(search_term).payload
+        suggest: QueryComponents::Suggest.new(query: search_term).payload
       }
     end
 

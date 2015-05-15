@@ -8,15 +8,14 @@ require "unified_search/spell_check_fetcher"
 class UnifiedSearcher
   attr_reader :index, :registries
 
-  def initialize(index, metaindex, registries)
+  def initialize(index, registries)
     @index = index
-    @metaindex = metaindex
     @registries = registries
   end
 
   # Search and combine the indices and return a hash of ResultSet objects
   def search(params)
-    builder = UnifiedSearchBuilder.new(params, @metaindex)
+    builder = UnifiedSearchBuilder.new(params)
     es_response = index.raw_search(builder.payload)
 
     example_fetcher = FacetExampleFetcher.new(index, es_response, params,

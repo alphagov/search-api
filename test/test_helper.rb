@@ -74,6 +74,19 @@ module TestHelpers
       stub_request(:get, "http://localhost:9200#{url}").to_return(body: JSON.dump(response))
     end
   end
+
+  def search_query_params(options={})
+    {
+      start: 0,
+      count: 20,
+      query: "cheese",
+      order: nil,
+      filters: {},
+      fields: nil,
+      facets: nil,
+      debug: {},
+    }.merge(options)
+  end
 end
 
 class MiniTest::Unit::TestCase

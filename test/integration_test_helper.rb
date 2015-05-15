@@ -146,7 +146,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
   def stub_metasearch_index
     return @ms if @ms
     @ms = stub("stub metasearch index")
-    Rummager.any_instance.stubs(:metasearch_index).returns(@ms)
+    BestBetsChecker.any_instance.stubs(:metasearch_index).returns(@ms)
     @ms
   end
 

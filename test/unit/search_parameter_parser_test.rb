@@ -69,10 +69,6 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     SearchParameterParser::TextFieldFilter.new(field_name, values, rejects)
   end
 
-  def date_filter(field_name, values, rejects)
-    SearchParameterParser::DateFieldFilter.new(field_name, values, rejects)
-  end
-
   should "return valid params given nothing" do
     p = SearchParameterParser.new({})
 
