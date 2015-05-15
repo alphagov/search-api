@@ -4,7 +4,7 @@
   },
 
   "title": {
-    "type": "searchable_text"
+    "type": "searchable_sortable_text"
   },
 
   "description": {
