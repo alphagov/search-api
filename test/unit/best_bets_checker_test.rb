@@ -44,7 +44,7 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
 
   def setup_checker(query, hits)
     @index = stub("metasearch index")
-    @checker = BestBetsChecker.new(@index, query)
+    @checker = BestBetsChecker.new(query, @index)
     @index.expects(:raw_search).with(
       best_bets_query(query), "best_bet"
     ).returns(

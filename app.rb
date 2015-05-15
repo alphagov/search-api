@@ -51,10 +51,6 @@ class Rummager < Sinatra::Application
     search_server.index_for_search(settings.search_config.govuk_index_names)
   end
 
-  def metasearch_index
-    search_server.index(settings.search_config.metasearch_index_name)
-  end
-
   def text_error(content)
     halt 403, {"Content-Type" => "text/plain"}, content
   end
@@ -284,7 +280,7 @@ class Rummager < Sinatra::Application
       return { error: parser.error }.to_json
     end
 
-    searcher = UnifiedSearcher.new(unified_index, metasearch_index, registries)
+    searcher = UnifiedSearcher.new(unified_index, registries)
     searcher.search(parser.parsed_params).to_json
   end
 
