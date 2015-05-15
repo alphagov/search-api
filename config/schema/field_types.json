@@ -38,6 +38,23 @@
     }
   },
 
+  "searchable_sortable_text": {
+    "description": "A piece of plain text that should be split into words and considered in searches, but can also be sorted on",
+    "es_config": {
+      "type": "string",
+      "index": "analyzed",
+      "include_in_all": true,
+      "copy_to": ["spelling_text"],
+      "fields": {
+        "sort": {
+          "type": "string",
+          "index": "not_analyzed",
+          "include_in_all": false
+        }
+      }
+    }
+  },
+
   "unsearchable_text": {
     "description": "A piece of text which can be returned, but which is not searchable",
     "es_config": {

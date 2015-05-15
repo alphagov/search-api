@@ -14,6 +14,10 @@ class BaseParameterParser
     title
   )
 
+  SORT_MAPPINGS = {
+    "title" => "title.sort"
+  }
+
   # The fields listed here are the only ones which can be used to filter by.
   ALLOWED_FILTER_FIELDS = %w(
     display_type
@@ -309,7 +313,7 @@ private
       @errors << %{"#{field}" is not a valid sort field}
       return nil
     end
-    return [field, dir]
+    return [SORT_MAPPINGS.fetch(field, field), dir]
   end
 
   # Get a list of the fields to request in results from elasticsearch
