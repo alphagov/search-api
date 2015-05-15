@@ -26,6 +26,10 @@ index:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, shingle]
+        string_for_sorting:
+          type: custom
+          tokenizer: keyword
+          filter: [trim, lowercase]
       filter:
         stemmer_english:
           type: stemmer

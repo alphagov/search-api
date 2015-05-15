@@ -60,6 +60,18 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal ["/detailed-1", "/detailed-2", "/mainstream-1", "/mainstream-2"], links.slice(2, 6).sort
   end
 
+  def test_sort_by_title_ascending
+    get "/unified_search?order=title"
+    titles = parsed_response["results"].map do |result|
+      result["title"]
+    end
+
+    lowercase_titles = titles.map(&:downcase)
+
+    assert_equal lowercase_titles, lowercase_titles.sort
+  end
+
+
   def test_filter_by_section
     get "/unified_search?filter_section=1"
     assert last_response.ok?
@@ -200,9 +212,9 @@ class UnifiedSearchTest < MultiIndexTest
         "example_info" => {
           "total" => 3,
           "examples" => [
-            {"section" => "1", "title" => "Sample mainstream document 1", "link" => "/mainstream-1"},
-            {"section" => "1", "title" => "Sample detailed document 1", "link" => "/detailed-1"},
-            {"section" => "1", "title" => "Sample government document 1", "link" => "/government-1"},
+            {"section" => "1", "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
+            {"section" => "1", "title" => "sample detailed document 1", "link" => "/detailed-1"},
+            {"section" => "1", "title" => "sample government document 1", "link" => "/government-1"},
           ]
         }
       },
