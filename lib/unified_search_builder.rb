@@ -32,8 +32,6 @@ class UnifiedSearchBuilder
     )
   end
 
-  private
-
   def query
     QueryComponents::Query.new(params).payload
   end
@@ -41,6 +39,8 @@ class UnifiedSearchBuilder
   def filter
     QueryComponents::Filter.new(params).payload
   end
+
+  private
 
   def sort
     QueryComponents::Sort.new(params).payload
