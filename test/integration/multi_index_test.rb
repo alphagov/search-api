@@ -41,8 +41,12 @@ class MultiIndexTest < IntegrationTest
   def sample_document_attributes(index_name, count)
     short_index_name = index_name.sub("_test", "")
     (1..count).map do |i|
+      title = "Sample #{short_index_name} document #{i}"
+      if i % 2 == 1
+        title = title.downcase
+      end
       fields = {
-        "title" => "Sample #{short_index_name} document #{i}",
+        "title" => title,
         "link" => "/#{short_index_name}-#{i}",
         "indexable_content" => "Something something important content",
       }

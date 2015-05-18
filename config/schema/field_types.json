@@ -48,7 +48,8 @@
       "fields": {
         "sort": {
           "type": "string",
-          "index": "not_analyzed",
+          "index": "analyzed",
+          "analyzer": "string_for_sorting",
           "include_in_all": false
         }
       }
