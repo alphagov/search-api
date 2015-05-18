@@ -222,6 +222,28 @@ class UnifiedSearchTest < MultiIndexTest
     }, facets.fetch("section").fetch("options").fetch(0))
   end
 
+  def test_facet_examples_with_example_scope_query
+    get "/unified_search?q=important&facet_section=1,examples:5,example_scope:query,example_fields:link:title:section"
+
+    assert_equal 6, parsed_response["total"]
+
+    facets = parsed_response["facets"]
+    assert_equal({
+      "value" => {
+        "slug" => "1",
+        "example_info" => {
+          "total" => 3,
+          "examples" => [
+            {"section" => "1", "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
+            {"section" => "1", "title" => "sample detailed document 1", "link" => "/detailed-1"},
+            {"section" => "1", "title" => "sample government document 1", "link" => "/government-1"},
+          ]
+        }
+      },
+      "documents" => 3,
+    }, facets.fetch("section").fetch("options").fetch(0))
+  end
+
   def test_validates_integer_params
     get "/unified_search?start=a"
     assert_equal last_response.status, 422
