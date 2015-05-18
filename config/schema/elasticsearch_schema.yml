@@ -26,10 +26,22 @@ index:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, shingle]
+          char_filter: [normalize_quotes]
         string_for_sorting:
           type: custom
           tokenizer: keyword
           filter: [trim, lowercase]
+
+      char_filter:
+        normalize_quotes:
+          type: "mapping"
+          mappings:
+            - "\u0091=>\u0027"
+            - "\u0092=>\u0027"
+            - "\u2018=>\u0027"
+            - "\u2019=>\u0027"
+            - "\uFF07=>\u0027"
+
       filter:
         stemmer_english:
           type: stemmer
