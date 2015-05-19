@@ -46,6 +46,10 @@ class SearchConfig
     elasticsearch["organisation_registry_index"]
   end
 
+  def people_registry_index
+    elasticsearch["people_registry_index"]
+  end
+
   def topic_registry_index
     elasticsearch["topic_registry_index"]
   end

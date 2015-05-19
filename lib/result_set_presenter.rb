@@ -54,6 +54,11 @@ private
         structure_by_slug(specialist_sector_registry, slug)
       end
     end
+    if result['people'] && should_expand_people?
+      result['people'].map! do |slug|
+        structure_by_slug(people_registry, slug)
+      end
+    end
     result
   end
 
@@ -75,6 +80,10 @@ private
 
   def should_expand_world_locations?
     !! world_location_registry
+  end
+
+  def should_expand_people?
+    !! people_registry
   end
 
   def document_series_registry
@@ -99,6 +108,10 @@ private
 
   def specialist_sector_registry
     @context[:specialist_sectors]
+  end
+
+  def people_registry
+    @context[:people]
   end
 
   def structure_by_slug(structure, slug)

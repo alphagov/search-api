@@ -4,7 +4,7 @@ require "result_set_presenter"
 
 class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
-  FIELDS = %w(link title description format organisations topics document_series document_collections world_locations specialist_sectors)
+  FIELDS = %w(link title description format organisations topics document_series document_collections world_locations specialist_sectors people)
 
   def result_set
     documents = [
@@ -88,6 +88,17 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       "description" => "Full of foo.",
       "format" => "edition",
       "specialist_sectors" => sector_slugs,
+    }
+    stub(results: [Document.new(sample_field_definitions(FIELDS), document_hash)], total: 1)
+  end
+
+  def single_result_with_people(*people_slugs)
+    document_hash = {
+      "link" => "/foo",
+      "title" => "Foo",
+      "description" => "Full of foo.",
+      "format" => "edition",
+      "people" => people_slugs,
     }
     stub(results: [Document.new(sample_field_definitions(FIELDS), document_hash)], total: 1)
   end
@@ -244,6 +255,30 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal "Licensing", output["results"][0]["specialist_sectors"][0]["title"]
     assert_equal "/oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["link"]
     assert_equal "oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["slug"]
+  end
+
+  def test_expands_people
+    people_document = Document.new(
+      sample_field_definitions(%w(link title)),
+      link: "/government/people/example-people",
+      title: "Example People"
+    )
+    people_registry = stub("people registry")
+    people_registry.expects(:[])
+      .with("example-people")
+      .returns(people_document)
+
+    presenter = ResultSetPresenter.new(
+      single_result_with_people("example-people"),
+      people: people_registry
+    )
+
+    output = presenter.present
+    assert_equal 1, output["results"][0]["people"].size
+    assert_instance_of Hash, output["results"][0]["people"][0]
+    assert_equal "Example People", output["results"][0]["people"][0]["title"]
+    assert_equal "/government/people/example-people", output["results"][0]["people"][0]["link"]
+    assert_equal "example-people", output["results"][0]["people"][0]["slug"]
   end
 
   def test_unknown_organisations_just_have_slug

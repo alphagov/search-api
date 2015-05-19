@@ -6,6 +6,7 @@ topic_registry_index: "government"
 document_series_registry_index: "government"
 document_collection_registry_index: "government"
 world_location_registry_index: "government"
+people_registry_index: "government"
 # These indices are passed in this order to GovukSearcher
 govuk_index_names: ["mainstream", "detailed", "government", "service-manual"]
 metasearch_index_name: "metasearch"
