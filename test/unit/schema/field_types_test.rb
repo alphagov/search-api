@@ -20,6 +20,10 @@ class FieldTypesTest < ShouldaUnitTestCase
       assert @types.get("identifiers").multivalued
     end
 
+    should "know that the `identifiers` type has a `text` filter type" do
+      assert_equal "text", @types.get("identifiers").filter_type
+    end
+
     should "know that the `identifiers` type does not have children" do
       assert_nil @types.get("identifiers").children
     end
@@ -51,6 +55,16 @@ class FieldTypesTest < ShouldaUnitTestCase
         @types.get("identifier")
       end
       assert_equal %{Missing "es_config" in field type "identifier" in "/config/path/field_types.json"}, exc.message
+    end
+
+    should "fail if a field type has an invalid `filter_type` property" do
+      FieldTypes.any_instance.stubs(:load_json).returns(
+        {"identifier" => {"es_config" => {}, "filter_type" => "bad value"}}
+      )
+      exc = assert_raises(RuntimeError) do
+        @types.get("identifier")
+      end
+      assert_equal %{Invalid value for "filter_type" ("bad value") in field type "identifier" in "/config/path/field_types.json"}, exc.message
     end
 
     should "fail if a field type has an invalid `children` property" do

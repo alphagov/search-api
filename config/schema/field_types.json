@@ -1,6 +1,7 @@
 {
   "identifier": {
     "description": "An identifier, can be used for exact (case and whitespace sensitive) lookup and facetting",
+    "filter_type": "text",
     "es_config": {
       "type": "string",
       "index": "not_analyzed",
@@ -10,6 +11,7 @@
 
   "identifiers": {
     "description": "Like identifier, but can occur multiple times in a single document",
+    "filter_type": "text",
     "multivalued": true,
     "es_config": {
       "type": "string",
@@ -20,6 +22,7 @@
 
   "searchable_identifier": {
     "description": "Like an identifier, but should also be considered in searches in the _all field",
+    "filter_type": "text",
     "es_config": {
       "type": "string",
       "index": "not_analyzed",
@@ -111,6 +114,7 @@
 
   "date": {
     "description": "A date which can be returned and used for ordering, filtering and facetting",
+    "filter_type": "date",
     "es_config": {
       "type": "date",
       "include_in_all": false

@@ -18,6 +18,7 @@ require "redis"
 require "matcher_set"
 require "search_parameter_parser"
 require "registries"
+require "schema/combined_index_schema"
 
 require_relative "config"
 require_relative "helpers"
@@ -45,6 +46,13 @@ class Rummager < Sinatra::Application
     settings.search_config.govuk_index_names.map do |index_name|
       search_server.index(index_name)
     end
+  end
+
+  def unified_index_schema
+    @unified_index_schema ||= CombinedIndexSchema.new(
+      settings.search_config.govuk_index_names,
+      settings.search_config.schema_config
+    )
   end
 
   def unified_index
@@ -272,7 +280,7 @@ class Rummager < Sinatra::Application
 
     parser = SearchParameterParser.new(
       parse_query_string(request.query_string),
-      current_index.mappings,
+      unified_index_schema,
     )
 
     unless parser.valid?

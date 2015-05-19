@@ -27,50 +27,45 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     }.merge(params)
   end
 
-  def schemas
-    # allowed values omitted
-    {
-      "cma_case" => {
-        "properties" => {
-          "case_type" => {
-            "type" => "string",
-            "index" => "not_analyzed",
-            "include_in_all" => false,
-          },
-          "case_state" => {
-            "type" => "string",
-            "index" => "not_analyzed",
-            "include_in_all" => false,
-          },
-          "market_sector" => {
-            "type" => "string",
-            "index" => "not_analyzed",
-            "include_in_all" => false,
-          },
-          "outcome_type" => {
-            "type" => "string",
-            "index" => "not_analyzed",
-            "include_in_all" => false,
-          },
-          "opened_date" => {
-            "type" => "date",
-            "index" => "no",
-          },
-          "closed_date" => {
-            "type" => "date",
-            "index" => "no",
-          }
-        }
-      }
-    }
-  end
-
   def text_filter(field_name, values, rejects=false)
     SearchParameterParser::TextFieldFilter.new(field_name, values, rejects)
   end
 
+  def setup
+    @schema = stub("combined index schema")
+    date_type = stub("date type")
+    date_type.stubs(:filter_type).returns("date")
+    identifier_type = stub("identifier type")
+    identifier_type.stubs(:filter_type).returns("text")
+    string_type = stub("string type")
+    string_type.stubs(:filter_type).returns(nil)
+    field_definitions = {}
+    allowed_filter_fields = []
+    [
+      ["title", string_type],
+      ["description", string_type],
+      ["mainstream_browse_pages", identifier_type],
+      ["organisations", identifier_type],
+      ["public_timestamp", date_type],
+      ["slug", identifier_type],
+      ["link", identifier_type],
+
+      ["case_type", identifier_type],
+      ["opened_date", date_type],
+    ].each { |field, type|
+      definition = stub("#{field} definition")
+      definition.stubs(:type).returns(type)
+      field_definitions[field] = definition
+      if type.filter_type
+        allowed_filter_fields << field
+      end
+    }
+    @schema.stubs(:field_definitions).returns(field_definitions)
+    @schema.stubs(:allowed_filter_fields).returns(allowed_filter_fields)
+  end
+
   should "return valid params given nothing" do
-    p = SearchParameterParser.new({})
+    p = SearchParameterParser.new({}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -78,7 +73,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about an unknown parameter" do
-    p = SearchParameterParser.new({"p" => ["extra"]})
+    p = SearchParameterParser.new({"p" => ["extra"]}, @schema)
 
     assert_equal("Unexpected parameters: p", p.error)
     assert !p.valid?
@@ -86,7 +81,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about multiple unknown parameters" do
-    p = SearchParameterParser.new({"p" => ["extra"], "boo" => ["goose"]})
+    p = SearchParameterParser.new({"p" => ["extra"], "boo" => ["goose"]}, @schema)
 
     assert_equal("Unexpected parameters: p, boo", p.error)
     assert !p.valid?
@@ -94,15 +89,14 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the start parameter" do
-    p = SearchParameterParser.new({"start" => ["5"]})
-
+    p = SearchParameterParser.new({"start" => ["5"]}, @schema) 
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params(start: 5), p.parsed_params)
   end
 
   should "complain about a non-integer start parameter" do
-    p = SearchParameterParser.new({"start" => ["5.5"]})
+    p = SearchParameterParser.new({"start" => ["5.5"]}, @schema)
 
     assert_equal("Invalid value \"5.5\" for parameter \"start\" (expected positive integer)", p.error)
     assert !p.valid?
@@ -110,7 +104,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a negative start parameter" do
-    p = SearchParameterParser.new({"start" => ["-1"]})
+    p = SearchParameterParser.new({"start" => ["-1"]}, @schema)
 
     assert_equal("Invalid negative value \"-1\" for parameter \"start\" (expected positive integer)", p.error)
     assert !p.valid?
@@ -118,7 +112,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a non-decimal start parameter" do
-    p = SearchParameterParser.new({"start" => ["x"]})
+    p = SearchParameterParser.new({"start" => ["x"]}, @schema)
 
     assert_equal("Invalid value \"x\" for parameter \"start\" (expected positive integer)", p.error)
     assert !p.valid?
@@ -126,7 +120,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated start parameter" do
-    p = SearchParameterParser.new("start" => ["2", "3"])
+    p = SearchParameterParser.new({"start" => ["2", "3"]}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "start" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -134,7 +128,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the count parameter" do
-    p = SearchParameterParser.new({"count" => ["5"]})
+    p = SearchParameterParser.new({"count" => ["5"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -142,7 +136,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a non-integer count parameter" do
-    p = SearchParameterParser.new({"count" => ["5.5"]})
+    p = SearchParameterParser.new({"count" => ["5.5"]}, @schema)
 
     assert_equal("Invalid value \"5.5\" for parameter \"count\" (expected positive integer)", p.error)
     assert !p.valid?
@@ -150,7 +144,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a negative count parameter" do
-    p = SearchParameterParser.new({"count" => ["-1"]})
+    p = SearchParameterParser.new({"count" => ["-1"]}, @schema)
 
     assert_equal("Invalid negative value \"-1\" for parameter \"count\" (expected positive integer)", p.error)
     assert !p.valid?
@@ -158,7 +152,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a non-decimal count parameter" do
-    p = SearchParameterParser.new({"count" => ["x"]})
+    p = SearchParameterParser.new({"count" => ["x"]}, @schema)
 
     assert_equal("Invalid value \"x\" for parameter \"count\" (expected positive integer)", p.error)
     assert !p.valid?
@@ -166,7 +160,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated count parameter" do
-    p = SearchParameterParser.new("count" => ["2", "3"])
+    p = SearchParameterParser.new({"count" => ["2", "3"]}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "count" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -174,7 +168,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the q parameter" do
-    p = SearchParameterParser.new({"q" => ["search-term"]})
+    p = SearchParameterParser.new({"q" => ["search-term"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -182,7 +176,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated q parameter" do
-    p = SearchParameterParser.new("q" => ["hello", "world"])
+    p = SearchParameterParser.new({"q" => ["hello", "world"]}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "q" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -190,7 +184,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "strip whitespace from the query" do
-    p = SearchParameterParser.new("q" => ["cheese "])
+    p = SearchParameterParser.new({"q" => ["cheese "]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -198,7 +192,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "put the query in normalized form" do
-    p = SearchParameterParser.new("q" => ["cafe\u0300 "])
+    p = SearchParameterParser.new({"q" => ["cafe\u0300 "]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -206,7 +200,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about invalid unicode in the query" do
-    p = SearchParameterParser.new("q" => ["\xff"])
+    p = SearchParameterParser.new({"q" => ["\xff"]}, @schema)
 
     assert_equal("Invalid unicode in query", p.error)
     assert !p.valid?
@@ -214,7 +208,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand filter paramers" do
-    p = SearchParameterParser.new({"filter_organisations" => ["hm-magic"]})
+    p = SearchParameterParser.new({"filter_organisations" => ["hm-magic"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -227,7 +221,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand reject paramers" do
-    p = SearchParameterParser.new({"reject_organisations" => ["hm-magic"]})
+    p = SearchParameterParser.new({"reject_organisations" => ["hm-magic"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -243,7 +237,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     p = SearchParameterParser.new({
       "reject_organisations" => ["hm-magic"],
       "filter_mainstream_browse_pages" => ["cheese"],
-    })
+    }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -257,7 +251,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand multiple filter paramers" do
-    p = SearchParameterParser.new({"filter_organisations" => ["hm-magic", "hmrc"]})
+    p = SearchParameterParser.new({"filter_organisations" => ["hm-magic", "hmrc"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -276,7 +270,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand filter for missing field" do
-    p = SearchParameterParser.new({"filter_organisations" => ["_MISSING"]})
+    p = SearchParameterParser.new({"filter_organisations" => ["_MISSING"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -289,7 +283,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand filter for missing field or specific value" do
-    p = SearchParameterParser.new({"filter_organisations" => ["_MISSING", "hmrc"]})
+    p = SearchParameterParser.new({"filter_organisations" => ["_MISSING", "hmrc"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -302,8 +296,13 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about disallowed filter fields" do
-    p = SearchParameterParser.new({"filter_spells" => ["levitation"],
-                                   "filter_organisations" => ["hm-magic"]})
+    p = SearchParameterParser.new(
+      {
+        "filter_spells" => ["levitation"],
+        "filter_organisations" => ["hm-magic"]
+      },
+      @schema,
+    )
 
     assert_equal(%{"spells" is not a valid filter field}, p.error)
     assert !p.valid?
@@ -314,8 +313,13 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about disallowed reject fields" do
-    p = SearchParameterParser.new({"reject_spells" => ["levitation"],
-                                   "reject_organisations" => ["hm-magic"]})
+    p = SearchParameterParser.new(
+      {
+        "reject_spells" => ["levitation"],
+        "reject_organisations" => ["hm-magic"]
+      },
+      @schema,
+    )
 
     assert_equal(%{"spells" is not a valid reject field}, p.error)
     assert !p.valid?
@@ -328,7 +332,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   should "rewrite document_type filter to _type filter" do
     parser = SearchParameterParser.new(
       { "filter_document_type" => ["cma_case"] },
-      schemas,
+      @schema,
     )
 
     assert_equal(
@@ -337,112 +341,74 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     )
   end
 
-  context "when a document type is not present" do
-    should "ignore parameters in the schema" do
+  context "when the filter field is a date type" do
+    should "include the type in return value of #parsed_params" do
       params = {
-        "filter_case_type" => ["mergers"],
+        "filter_document_type" => ["cma_case"],
+        "filter_opened_date" => "from:2014-04-01 00:00,to:2014-04-02 00:00",
       }
 
-      parser = SearchParameterParser.new(params, schemas)
+      parser = SearchParameterParser.new(params, @schema)
 
-      refute parser.valid?, "Parameters should be invalid"
+      assert parser.valid?, "Parameters should be valid: #{parser.errors}"
+
+      opened_date_filter = parser.parsed_params.fetch(:filters)
+      .find { |filter| filter.field_name == "opened_date" }
+
       assert_equal(
-        %{"case_type" is not a valid filter field},
-        parser.error,
+        Date.parse("2014-04-01 00:00"),
+        opened_date_filter.values.first.from,
+      )
+
+      assert_equal(
+        Date.parse("2014-04-02 00:00"),
+        opened_date_filter.values.first.to,
+      )
+    end
+
+    should "understand date filter for missing field or specific value" do
+      parser = SearchParameterParser.new({
+        "filter_document_type" => ["cma_case"],
+        "filter_opened_date" => ["_MISSING", "from:2014-04-01 00:00,to:2014-04-02 00:00"],
+      }, @schema)
+
+      assert_equal("", parser.error)
+      assert parser.valid?
+
+      opened_date_filter = parser.parsed_params.fetch(:filters)
+      .find { |filter| filter.field_name == "opened_date" }
+
+      assert_equal "opened_date", opened_date_filter.field_name
+      assert_equal true, opened_date_filter.include_missing
+
+      assert_equal(
+        Date.parse("2014-04-01 00:00"),
+        opened_date_filter.values.first.from,
+      )
+
+      assert_equal(
+        Date.parse("2014-04-02 00:00"),
+        opened_date_filter.values.first.to,
       )
     end
   end
 
-  context "when a document type is present" do
-    should "accept parameters from that document schema" do
+  context "filtering a date field with an invalid date" do
+    should "does not filter on date" do
       params = {
         "filter_document_type" => ["cma_case"],
-        "filter_case_type" => ["mergers"],
+        "filter_opened_date" => "from:2014-bananas-01 00:00,to:2014-04-02 00:00",
       }
 
-      parser = SearchParameterParser.new(params, schemas)
+      parser = SearchParameterParser.new(params, @schema)
 
-      assert parser.valid?, "Parameters should be valid: #{parser.errors}"
-
-      assert_equal(
-        hash_including(filters: [
-          text_filter("_type",["cma_case"]),
-          text_filter("case_type", ["mergers"]),
-        ]),
-        parser.parsed_params
-      )
-
-    end
-
-    context "when the filter field is a date type" do
-      should "include the type in return value of #parsed_params" do
-        params = {
-          "filter_document_type" => ["cma_case"],
-          "filter_opened_date" => "from:2014-04-01 00:00,to:2014-04-02 00:00",
-        }
-
-        parser = SearchParameterParser.new(params, schemas)
-
-        assert parser.valid?, "Parameters should be valid: #{parser.errors}"
-
-        opened_date_filter = parser.parsed_params.fetch(:filters)
-          .find { |filter| filter.field_name == "opened_date" }
-
-        assert_equal(
-          Date.parse("2014-04-01 00:00"),
-          opened_date_filter.values.first.from,
-        )
-
-        assert_equal(
-          Date.parse("2014-04-02 00:00"),
-          opened_date_filter.values.first.to,
-        )
-      end
-
-      should "understand date filter for missing field or specific value" do
-        parser = SearchParameterParser.new({
-          "filter_document_type" => ["cma_case"],
-          "filter_opened_date" => ["_MISSING", "from:2014-04-01 00:00,to:2014-04-02 00:00"],
-        }, schemas)
-
-        assert_equal("", parser.error)
-        assert parser.valid?
-
-        opened_date_filter = parser.parsed_params.fetch(:filters)
-          .find { |filter| filter.field_name == "opened_date" }
-
-        assert_equal "opened_date", opened_date_filter.field_name
-        assert_equal true, opened_date_filter.include_missing
-
-        assert_equal(
-          Date.parse("2014-04-01 00:00"),
-          opened_date_filter.values.first.from,
-        )
-
-        assert_equal(
-          Date.parse("2014-04-02 00:00"),
-          opened_date_filter.values.first.to,
-        )
-      end
-    end
-
-    context "filtering a date field with an invalid date" do
-      should "does not filter on date" do
-        params = {
-          "filter_document_type" => ["cma_case"],
-          "filter_opened_date" => "from:2014-bananas-01 00:00,to:2014-04-02 00:00",
-        }
-
-        parser = SearchParameterParser.new(params, schemas)
-
-        opened_date_filter = parser.parsed_params.fetch(:filters)
-          .find { |filter| filter.field_name == "opened_date" }
-      end
+      opened_date_filter = parser.parsed_params.fetch(:filters)
+      .find { |filter| filter.field_name == "opened_date" }
     end
   end
 
   should "understand an ascending sort" do
-    p = SearchParameterParser.new("order" => ["public_timestamp"])
+    p = SearchParameterParser.new({"order" => ["public_timestamp"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -450,7 +416,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand a descending sort" do
-    p = SearchParameterParser.new("order" => ["-public_timestamp"])
+    p = SearchParameterParser.new({"order" => ["-public_timestamp"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -458,7 +424,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about disallowed sort fields" do
-    p = SearchParameterParser.new("order" => ["spells"])
+    p = SearchParameterParser.new({"order" => ["spells"]}, @schema)
 
     assert_equal(%{"spells" is not a valid sort field}, p.error)
     assert !p.valid?
@@ -466,7 +432,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about disallowed descending sort fields" do
-    p = SearchParameterParser.new("order" => ["-spells"])
+    p = SearchParameterParser.new({"order" => ["-spells"]}, @schema)
 
     assert_equal(%{"spells" is not a valid sort field}, p.error)
     assert !p.valid?
@@ -474,7 +440,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated sort parameter" do
-    p = SearchParameterParser.new("order" => ["public_timestamp", "something_else"])
+    p = SearchParameterParser.new({"order" => ["public_timestamp", "something_else"]}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "order" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -482,7 +448,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand a facet field" do
-    p = SearchParameterParser.new("facet_organisations" => ["10"])
+    p = SearchParameterParser.new({"facet_organisations" => ["10"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -492,10 +458,10 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand multiple facet fields" do
-    p = SearchParameterParser.new(
+    p = SearchParameterParser.new({
       "facet_organisations" => ["10"],
       "facet_section" => ["5"],
-    )
+    }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -506,8 +472,10 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about disallowed facet fields" do
-    p = SearchParameterParser.new("facet_spells" => ["10"],
-                                  "facet_organisations" => ["10"])
+    p = SearchParameterParser.new({
+      "facet_spells" => ["10"],
+      "facet_organisations" => ["10"],
+    }, @schema)
 
     assert_equal(%{"spells" is not a valid facet field}, p.error)
     assert !p.valid?
@@ -517,8 +485,10 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about invalid values for facet parameter" do
-    p = SearchParameterParser.new("facet_spells" => ["levitation"],
-                                  "facet_organisations" => ["magic"])
+    p = SearchParameterParser.new({
+      "facet_spells" => ["levitation"],
+      "facet_organisations" => ["magic"],
+    }, @schema)
 
     assert_equal(%{"spells" is not a valid facet field. Invalid value "magic" for first parameter for facet "organisations" (expected positive integer)}, p.error)
     assert !p.valid?
@@ -526,7 +496,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about empty values for facet parameter" do
-    p = SearchParameterParser.new("facet_organisations" => [""])
+    p = SearchParameterParser.new({"facet_organisations" => [""]}, @schema)
 
     assert_equal(%{Invalid value "" for first parameter for facet "organisations" (expected positive integer)}, p.error)
     assert !p.valid?
@@ -534,7 +504,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated facet parameter" do
-    p = SearchParameterParser.new("facet_organisations" => ["5", "6"])
+    p = SearchParameterParser.new({"facet_organisations" => ["5", "6"]}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "facet_organisations" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -544,7 +514,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "allow options in the values for the facet parameter" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:global"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:global"],
+    }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -559,7 +531,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the order option in facet parameters" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,order:filtered:value.link:-count"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,order:filtered:value.link:-count"],
+    }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -572,7 +546,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about invalid order options in facet parameters" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,order:filt:value.unknown"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,order:filt:value.unknown"],
+    }, @schema)
 
     assert_equal(%{"filt" is not a valid sort option in facet "organisations". "value.unknown" is not a valid sort option in facet "organisations"}, p.error)
     assert !p.valid?
@@ -581,7 +557,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
 
   should "handle repeated order options in facet parameters" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,order:filtered,order:value.link:-count"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,order:filtered,order:value.link:-count"],
+    }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -594,7 +572,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the scope option in facet parameters" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,scope:all_filters"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,scope:all_filters"],
+    }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -609,7 +589,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about invalid scope options in facet parameters" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,scope:unknown"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,scope:unknown"],
+    }, @schema)
 
     assert_equal(%{"unknown" is not a valid scope option in facet "organisations"}, p.error)
     assert !p.valid?
@@ -617,7 +599,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated examples option" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,examples:6,example_scope:global"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,examples:5,examples:6,example_scope:global"],
+    }, @schema)
 
     assert_equal(%{Too many values (2) for parameter "examples" in facet "organisations" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -625,7 +609,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "merge fields from repeated example_fields options" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_fields:slug,example_fields:title:link,example_scope:global"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,examples:5,example_fields:slug,example_fields:title:link,example_scope:global"],
+    }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -640,7 +626,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "require the example_scope to be set" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_fields:slug:title"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,examples:5,example_fields:slug:title"],
+    }, @schema)
 
     assert_equal("example_scope parameter must be set to 'query' or 'global' when requesting examples", p.error)
     assert !p.valid?
@@ -648,7 +636,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "allow example_scope to be set to 'query'" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
+    }, @schema)
 
     assert p.valid?
     assert_equal(expected_params({
@@ -664,7 +654,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about an invalid example_scope option" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_scope:invalid"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,examples:5,example_scope:invalid"],
+    }, @schema)
 
     assert_equal("example_scope parameter must be set to 'query' or 'global' when requesting examples", p.error)
     assert !p.valid?
@@ -672,7 +664,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated example_scope option" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,examples:5,example_scope:global,example_scope:global"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,examples:5,example_scope:global,example_scope:global"],
+    }, @schema)
 
     assert_equal(%{Too many values (2) for parameter "example_scope" in facet "organisations" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -680,7 +674,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "validate options in the values for the facet parameter" do
-    p = SearchParameterParser.new("facet_organisations" => ["10,example:5,examples:lots,example_fields:unknown:title"])
+    p = SearchParameterParser.new({
+      "facet_organisations" => ["10,example:5,examples:lots,example_fields:unknown:title"],
+    }, @schema)
 
     assert_equal([
       %{Invalid value "lots" for parameter "examples" in facet "organisations" (expected positive integer)},
@@ -692,7 +688,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the fields parameter" do
-    p = SearchParameterParser.new("fields" => ["title", "description"])
+    p = SearchParameterParser.new({"fields" => ["title", "description"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -700,7 +696,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about invalid fields parameters" do
-    p = SearchParameterParser.new("fields" => ["title", "waffle"])
+    p = SearchParameterParser.new({"fields" => ["title", "waffle"]}, @schema)
 
     assert_equal("Some requested fields are not valid return fields: [\"waffle\"]", p.error)
     assert !p.valid?
@@ -708,7 +704,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the debug parameter" do
-    p = SearchParameterParser.new("debug" => ["disable_best_bets,disable_popularity,,unknown_option"])
+    p = SearchParameterParser.new({"debug" => ["disable_best_bets,disable_popularity,,unknown_option"]}, @schema)
 
     assert_equal(%{Unknown debug option "unknown_option"}, p.error)
     assert !p.valid?
@@ -716,7 +712,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "merge values from repeated debug parameters" do
-    p = SearchParameterParser.new("debug" => ["disable_best_bets,explain", "disable_popularity"])
+    p = SearchParameterParser.new({"debug" => ["disable_best_bets,explain", "disable_popularity"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -724,7 +720,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "ignore empty options in the debug parameter" do
-    p = SearchParameterParser.new("debug" => [",,"])
+    p = SearchParameterParser.new({"debug" => [",,"]}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -732,14 +728,14 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand explain in the debug parameter" do
-    p = SearchParameterParser.new("debug" => ["explain"])
+    p = SearchParameterParser.new({"debug" => ["explain"]}, @schema)
 
     assert p.valid?
     assert_equal expected_params({debug: {explain: true}}), p.parsed_params
   end
 
   should "understand disable_synonyms in the debug parameter" do
-    p = SearchParameterParser.new("debug" => ["disable_synonyms"])
+    p = SearchParameterParser.new({"debug" => ["disable_synonyms"]}, @schema)
 
     assert p.valid?
     assert_equal expected_params({debug: {disable_synonyms: true}}), p.parsed_params
