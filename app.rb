@@ -105,52 +105,6 @@ class Rummager < Sinatra::Application
     expires 3600, :public if @query.length < 20
   end
 
-  # A mix of search results tailored for the GOV.UK site search
-  #
-  # The response looks like this:
-  #
-  #   {
-  #     "streams": {
-  #       "top-results": {
-  #         "title": "Top results",
-  #         "total": 3,
-  #         "results": [
-  #           ...
-  #         ]
-  #       },
-  #       "services-information": {
-  #         "title": "Services and information",
-  #         "total": 25,
-  #         "results": [
-  #           ...
-  #         ]
-  #       },
-  #       "departments-policy": {
-  #         "title": "Departments and policy",
-  #         "total": 19,
-  #         "results": [
-  #           ...
-  #         ]
-  #       }
-  #     },
-  #     "spelling_suggestions": [
-  #       ...
-  #     ]
-  #   }
-  get "/govuk/search.?:request_format?" do
-    json_only
-
-    organisation = params["organisation_slug"] == "" ? nil : params["organisation_slug"]
-
-    searcher = GovukSearcher.new(*govuk_indices)
-    result_streams = searcher.search(@query, organisation, params["sort"])
-
-    output = GovukSearchPresenter.new(result_streams, registries).present
-    output["spelling_suggestions"] = []
-
-    output.to_json
-  end
-
   # Return a unified set of results for the GOV.UK site search.
   #
   # Parameters:
