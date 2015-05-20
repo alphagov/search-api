@@ -130,6 +130,10 @@
     "type": "identifiers"
   },
 
+  "policy_groups": {
+    "type": "identifiers"
+  },
+
   "relevant_to_local_government": {
     "type": "boolean"
   },

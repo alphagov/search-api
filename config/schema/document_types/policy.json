@@ -1,6 +1,7 @@
 {
   "fields": [
     "slug",
-    "people"
+    "people",
+    "policy_groups"
   ]
 }
