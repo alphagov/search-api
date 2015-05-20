@@ -248,7 +248,7 @@ module Elasticsearch
       search_body = {query: {match_all: {}}}
       batch_size = self.class.scroll_batch_size
       ScrollEnumerator.new(client, search_body, batch_size) do |hit|
-        document_from_hash(hit["_source"])
+        document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
       end
     end
 
