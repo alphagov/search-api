@@ -6,10 +6,12 @@ index:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, stop, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
         query_default:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, synonym, stop, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
         shingled_query_analyzer:
           type: custom
           tokenizer: standard
@@ -18,21 +20,29 @@ index:
           type: custom
           tokenizer: keyword
           filter: [trim, lowercase]
+          char_filter: [normalize_quotes]
         best_bet_stemmed_match:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
         spelling_analyzer:
           type: custom
           tokenizer: standard
           filter: [standard, lowercase, shingle]
-          char_filter: [normalize_quotes]
+          char_filter: [normalize_quotes, strip_quotes]
         string_for_sorting:
           type: custom
           tokenizer: keyword
           filter: [trim, lowercase]
+          char_filter: [normalize_quotes, strip_quotes]
 
       char_filter:
+        strip_quotes:
+          type: "pattern_replace"
+          pattern: "\'"
+          replacement: ""
+
         normalize_quotes:
           type: "mapping"
           mappings:
