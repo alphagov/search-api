@@ -1,3 +1,6 @@
+require "query_components/core_query"
+require "query_components/text_query"
+
 module QueryComponents
   class Query < BaseComponent
     GOVERNMENT_BOOST_FACTOR = 0.4
@@ -40,7 +43,11 @@ module QueryComponents
         return { match_all: {} }
       end
 
-      core_query = QueryComponents::CoreQuery.new(params).payload
+      if debug[:new_weighting]
+        core_query = QueryComponents::TextQuery.new(params).payload
+      else
+        core_query = QueryComponents::CoreQuery.new(params).payload
+      end
       boosted_query = QueryComponents::Booster.new(params).wrap(core_query)
       QueryComponents::Popularity.new(params).wrap(boosted_query)
     end

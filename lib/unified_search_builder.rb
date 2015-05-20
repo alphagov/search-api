@@ -3,7 +3,6 @@ require "elasticsearch/escaping"
 
 require "query_components/base_component"
 require "query_components/booster"
-require "query_components/core_query"
 require "query_components/sort"
 require "query_components/popularity"
 require "query_components/best_bets"
