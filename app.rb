@@ -8,7 +8,6 @@ require "csv"
 
 require "document"
 require "result_set_presenter"
-require "govuk_searcher"
 require "govuk_search_presenter"
 require "unified_searcher"
 require "organisation_set_presenter"
