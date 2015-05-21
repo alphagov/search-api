@@ -2,7 +2,7 @@ module ElasticsearchIntegrationHelpers
   AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"]
   INDEX_NAMES = ["mainstream_test", "detailed_test", "government_test"]
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
-
+  REGISTRY_INDEX = "government_test"
 
   class InvalidTestIndex < ArgumentError; end
 
@@ -24,12 +24,12 @@ module ElasticsearchIntegrationHelpers
       "auxiliary_index_names" => AUXILIARY_INDEX_NAMES,
       "govuk_index_names" => INDEX_NAMES,
       "metasearch_index_name" => "metasearch_test",
-      "organisation_registry_index" => DEFAULT_INDEX_NAME,
-      "topic_registry_index" => DEFAULT_INDEX_NAME,
-      "document_series_registry_index" => DEFAULT_INDEX_NAME,
-      "document_collection_registry_index" => DEFAULT_INDEX_NAME,
-      "world_location_registry_index" => DEFAULT_INDEX_NAME,
-      "people_registry_index" => DEFAULT_INDEX_NAME,
+      "organisation_registry_index" => REGISTRY_INDEX,
+      "topic_registry_index" => REGISTRY_INDEX,
+      "document_series_registry_index" => REGISTRY_INDEX,
+      "document_collection_registry_index" => REGISTRY_INDEX,
+      "world_location_registry_index" => REGISTRY_INDEX,
+      "people_registry_index" => REGISTRY_INDEX,
       "spelling_index_names" => INDEX_NAMES,
     })
     app.settings.stubs(:default_index_name).returns(DEFAULT_INDEX_NAME)

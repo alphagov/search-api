@@ -8,8 +8,6 @@ require "csv"
 
 require "document"
 require "result_set_presenter"
-require "govuk_searcher"
-require "govuk_search_presenter"
 require "unified_searcher"
 require "organisation_set_presenter"
 require "elasticsearch/index"
@@ -103,52 +101,6 @@ class Rummager < Sinatra::Application
     end
 
     expires 3600, :public if @query.length < 20
-  end
-
-  # A mix of search results tailored for the GOV.UK site search
-  #
-  # The response looks like this:
-  #
-  #   {
-  #     "streams": {
-  #       "top-results": {
-  #         "title": "Top results",
-  #         "total": 3,
-  #         "results": [
-  #           ...
-  #         ]
-  #       },
-  #       "services-information": {
-  #         "title": "Services and information",
-  #         "total": 25,
-  #         "results": [
-  #           ...
-  #         ]
-  #       },
-  #       "departments-policy": {
-  #         "title": "Departments and policy",
-  #         "total": 19,
-  #         "results": [
-  #           ...
-  #         ]
-  #       }
-  #     },
-  #     "spelling_suggestions": [
-  #       ...
-  #     ]
-  #   }
-  get "/govuk/search.?:request_format?" do
-    json_only
-
-    organisation = params["organisation_slug"] == "" ? nil : params["organisation_slug"]
-
-    searcher = GovukSearcher.new(*govuk_indices)
-    result_streams = searcher.search(@query, organisation, params["sort"])
-
-    output = GovukSearchPresenter.new(result_streams, registries).present
-    output["spelling_suggestions"] = []
-
-    output.to_json
   end
 
   # Return a unified set of results for the GOV.UK site search.
@@ -290,47 +242,6 @@ class Rummager < Sinatra::Application
 
     searcher = UnifiedSearcher.new(unified_index, registries)
     searcher.search(parser.parsed_params).to_json
-  end
-
-  # To search a named index:
-  #   /index_name/search?q=pie
-  #
-  # To search the primary index:
-  #   /search?q=pie
-  #
-  # To scope a search to an organisation:
-  #   /search?q=pie&organisation_slug=home-office
-  #
-  # To get the results in date order, rather than relevancy:
-  #   /search?q=pie&sort=public_timestamp&order=desc
-  #
-  # The response looks like this:
-  #
-  #   {
-  #     "total": 1,
-  #     "results": [
-  #       ...
-  #     ],
-  #     "spelling_suggestions": [
-  #       ...
-  #     ]
-  #   }
-  get "/?:index?/search.?:request_format?" do
-    json_only
-
-    organisation = params["organisation_slug"] == "" ? nil : params["organisation_slug"]
-
-    result_set = current_index.search(@query,
-      organisation: organisation,
-      sort: params["sort"],
-      order: params["order"])
-
-    presenter_context = registries.as_hash.merge(
-      spelling_suggestions: []
-    )
-
-    presenter = ResultSetPresenter.new(result_set, presenter_context)
-    presenter.present.to_json
   end
 
   # Perform an advanced search. Supports filters and pagination.
