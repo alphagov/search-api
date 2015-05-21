@@ -1,6 +1,8 @@
 module ElasticsearchIntegrationHelpers
   AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"]
   INDEX_NAMES = ["mainstream_test", "detailed_test", "government_test"]
+  DEFAULT_INDEX_NAME = INDEX_NAMES.first
+
 
   class InvalidTestIndex < ArgumentError; end
 
@@ -16,23 +18,21 @@ module ElasticsearchIntegrationHelpers
       check_index_name(n)
     end
 
-    @default_index_name = INDEX_NAMES.first
-
     app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
       "content_index_names" => INDEX_NAMES,
       "auxiliary_index_names" => AUXILIARY_INDEX_NAMES,
       "govuk_index_names" => INDEX_NAMES,
       "metasearch_index_name" => "metasearch_test",
-      "organisation_registry_index" => @default_index_name,
-      "topic_registry_index" => @default_index_name,
-      "document_series_registry_index" => @default_index_name,
-      "document_collection_registry_index" => @default_index_name,
-      "world_location_registry_index" => @default_index_name,
-      "people_registry_index" => @default_index_name,
+      "organisation_registry_index" => DEFAULT_INDEX_NAME,
+      "topic_registry_index" => DEFAULT_INDEX_NAME,
+      "document_series_registry_index" => DEFAULT_INDEX_NAME,
+      "document_collection_registry_index" => DEFAULT_INDEX_NAME,
+      "world_location_registry_index" => DEFAULT_INDEX_NAME,
+      "people_registry_index" => DEFAULT_INDEX_NAME,
       "spelling_index_names" => INDEX_NAMES,
     })
-    app.settings.stubs(:default_index_name).returns(@default_index_name)
+    app.settings.stubs(:default_index_name).returns(DEFAULT_INDEX_NAME)
     app.settings.stubs(:enable_queue).returns(false)
   end
 
@@ -46,7 +46,7 @@ module ElasticsearchIntegrationHelpers
     app.settings.search_config.search_server
   end
 
-  def create_test_index(group_name = @default_index_name)
+  def create_test_index(group_name = DEFAULT_INDEX_NAME)
     index_group = search_server.index_group(group_name)
     index = index_group.create_index
     index_group.switch_to(index)
@@ -74,14 +74,14 @@ module ElasticsearchIntegrationHelpers
     RestClient.post "http://localhost:9200/page-traffic_test/_refresh", nil
   end
 
-  def try_remove_test_index(index_name = @default_index_name)
+  def try_remove_test_index(index_name = DEFAULT_INDEX_NAME)
     check_index_name(index_name)
     RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"
   rescue RestClient::ResourceNotFound
     # Index doesn't exist: that's fine
   end
 
-  def clean_index_group(group_name = @default_index_name)
+  def clean_index_group(group_name = DEFAULT_INDEX_NAME)
     check_index_name(group_name)
     index_group = search_server.index_group(group_name)
     # Delete any indices left over from switching
