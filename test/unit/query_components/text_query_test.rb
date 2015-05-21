@@ -3,20 +3,20 @@ require "unified_search_builder"
 
 class TextQueryTest < ShouldaUnitTestCase
   context "search with debug disabling use of synonyms" do
-    should "use the query_with_old_synonyms analyzer" do
+    should "use the all_searchable_text.synonym field" do
       builder = QueryComponents::TextQuery.new(search_query_params)
 
       query = builder.payload
 
-      assert_match(/query_with_old_synonyms/, query.to_s)
+      assert_match(/all_searchable_text.synonym/, query.to_s)
     end
 
-    should "not use the query_with_old_synonyms analyzer" do
+    should "not use the all_searchable_text.synonym field" do
       builder = QueryComponents::TextQuery.new(search_query_params(debug: { disable_synonyms: true }))
 
       query = builder.payload
 
-      refute_match(/query_with_old_synonyms/, query.to_s)
+      refute_match(/all_searchable_text.synonym/, query.to_s)
     end
   end
 end

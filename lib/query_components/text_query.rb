@@ -1,12 +1,10 @@
 module QueryComponents
   class TextQuery < BaseComponent
-    DEFAULT_QUERY_ANALYZER = "query_with_old_synonyms"
-    DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = 'default'
-
-    # TODO: The `score` here doesn't actually do anything.
+    # Fields that we want to do a field-specific match for, together with a
+    # boost value used for that match.
     MATCH_FIELDS = {
       "title" => 5,
-      "acronym" => 5, # Ensure that organisations rank brilliantly for their acronym
+      "acronym" => 5,
       "description" => 2,
       "indexable_content" => 1,
     }
@@ -47,69 +45,94 @@ module QueryComponents
       }
     end
 
-    private
+  private
 
     def must_conditions
-      [query_string_query]
+      [all_searchable_text_query]
+    end
+
+    def all_searchable_text_query
+      # Return the highest weight obtained by searching for the text when
+      # analyzed in different ways (with a small bonus if it matches in
+      # multiple of these ways).
+      queries = []
+      queries << match_query(:all_searchable_text, search_term)
+      queries << match_query(:"all_searchable_text.synonym", search_term) unless debug[:disable_synonyms]
+      dis_max_query(queries, tie_breaker: 0.1)
     end
 
     def should_conditions
-      exact_field_boosts + [ exact_match_boost, shingle_token_filter_boost ]
+      groups = []
+      groups << field_boosts_words
+      groups << field_boosts_phrase
+      groups << field_boosts_all_terms
+      groups << field_boosts_synonyms unless debug[:disable_synonyms]
+
+      groups.map { |queries|
+        dis_max_query(queries)
+      }
     end
 
-    def query_string_query
+    def field_boosts_words
+      # Return the highest weight found by looking for a word-based match in
+      # individual fields
+      MATCH_FIELDS.map { |field_name, boost|
+        match_query(field_name, search_term, boost: boost)
+      }
+    end
+
+    def field_boosts_phrase
+      # Return the highest weight found by looking for a phrase match in
+      # individual fields
+      MATCH_FIELDS.map { |field_name, boost|
+        match_query(field_name, search_term, type: :phrase, boost: boost)
+      }
+    end
+
+    def field_boosts_all_terms
+      # Return the highest weight found by looking for a match of all terms
+      # individual fields
+      MATCH_FIELDS.map { |field_name, boost|
+        match_query(field_name, search_term, type: :boolean, operator: :and, boost: boost)
+      }
+    end
+
+    def field_boosts_synonyms
+      # Return the highest weight found by looking for a synonym-expanded word
+      # match in individual fields
+      MATCH_FIELDS.map { |field_name, boost|
+        match_query("#{field_name}.synonym", search_term, boost: boost)
+      }
+    end
+
+    def dis_max_query(queries, tie_breaker: 0.0, boost: 1.0)
+      # Calculates a score by running all the queries, and taking the maximum.
+      # Adds in the scores for the other queries multiplied by `tie_breaker`.
+      if queries.size == 1
+        queries.first
+      else
+        {
+          dis_max: {
+            queries: queries,
+            tie_breaker: tie_breaker,
+            boost: boost,
+          }
+        }
+      end
+    end
+
+    def match_query(field_name, query, type: :boolean, boost: 1.0, operator: :or)
       {
         match: {
-          _all: {
-            query: escape(search_term),
-            analyzer: query_analyzer,
+          field_name => {
+            type: type,
+            boost: boost,
+            query: query,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
+            operator: operator,
           }
         }
       }
-    end
-
-    def exact_field_boosts
-      MATCH_FIELDS.map do |field_name, _|
-        {
-          match_phrase: {
-            field_name => {
-              query: escape(search_term),
-              analyzer: query_analyzer,
-            }
-          }
-        }
-      end
-    end
-
-    def exact_match_boost
-      {
-        multi_match: {
-          query: escape(search_term),
-          operator: "and",
-          fields: MATCH_FIELDS.keys,
-          analyzer: query_analyzer
-        }
-      }
-    end
-
-    def shingle_token_filter_boost
-      {
-        multi_match: {
-          query: escape(search_term),
-          operator: "or",
-          fields: MATCH_FIELDS.keys,
-          analyzer: "shingled_query_analyzer"
-        }
-      }
-    end
-
-    def query_analyzer
-      if debug[:disable_synonyms]
-        DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS
-      else
-        DEFAULT_QUERY_ANALYZER
-      end
     end
   end
 end
