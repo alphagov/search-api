@@ -24,6 +24,8 @@ end
 class InvalidTestIndex < ArgumentError; end
 
 module ElasticsearchIntegration
+  AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"]
+
   # Make sure that we're dealing with a test index (of the form <foo>_test)
   def check_index_name(index_name)
     unless /^[a-z_-]+(_|-)test($|-)/.match index_name
@@ -32,23 +34,21 @@ module ElasticsearchIntegration
   end
 
   def stub_elasticsearch_settings(content_index_names = ["mainstream_test"], default = nil)
-    metasearch_index_name = "metasearch_test"
-    auxiliary_index_names=["page-traffic_test", metasearch_index_name]
-    (content_index_names + auxiliary_index_names).each do |n|
+    (content_index_names + AUXILIARY_INDEX_NAMES).each do |n|
       check_index_name(n)
     end
+
     check_index_name(default) unless default.nil?
 
     @content_indexes = content_index_names
     @default_index_name = default || content_index_names.first
-    @auxiliary_indexes = auxiliary_index_names
 
     app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
       "content_index_names" => content_index_names,
-      "auxiliary_index_names" => auxiliary_index_names,
+      "auxiliary_index_names" => AUXILIARY_INDEX_NAMES,
       "govuk_index_names" => content_index_names,
-      "metasearch_index_name" => metasearch_index_name,
+      "metasearch_index_name" => "metasearch_test",
       "organisation_registry_index" => @default_index_name,
       "topic_registry_index" => @default_index_name,
       "document_series_registry_index" => @default_index_name,
@@ -78,13 +78,13 @@ module ElasticsearchIntegration
   end
 
   def create_test_indexes
-    (@auxiliary_indexes + @content_indexes).each do |index|
+    (AUXILIARY_INDEX_NAMES + @content_indexes).each do |index|
       create_test_index(index)
     end
   end
 
   def clean_test_indexes
-    (@auxiliary_indexes + @content_indexes).each do |index|
+    (AUXILIARY_INDEX_NAMES + @content_indexes).each do |index|
       clean_index_group(index)
     end
   end

@@ -13,7 +13,7 @@ class MultiIndexTest < IntegrationTest
     app.settings.search_config.stubs(:govuk_index_names).returns(INDEX_NAMES)
     enable_test_index_connections
 
-    @auxiliary_indexes.each do |index|
+    AUXILIARY_INDEX_NAMES.each do |index|
       create_test_index(index)
     end
 
