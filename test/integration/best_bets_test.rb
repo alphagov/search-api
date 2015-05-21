@@ -7,12 +7,7 @@ class BestBetsTest < MultiIndexTest
 
   def setup
     super
-    setup_metasearch_index
-  end
-
-  def teardown
-    super
-    clean_index_group(METASEARCH_INDEX_NAME)
+    add_sample_bets(sample_bets)
   end
 
   def sample_bet(query, type, best_bets, worst_bets)
@@ -51,18 +46,12 @@ class BestBetsTest < MultiIndexTest
     ]
   end
 
-  def add_sample_bets(bets) 
+  def add_sample_bets(bets)
     bets.each do |doc|
       post "/#{METASEARCH_INDEX_NAME}/documents", doc.to_json
       assert last_response.ok?
     end
     commit_index(METASEARCH_INDEX_NAME)
-  end
-
-  def setup_metasearch_index
-    try_remove_test_index(METASEARCH_INDEX_NAME)
-    create_test_index(METASEARCH_INDEX_NAME)
-    add_sample_bets(sample_bets)
   end
 
   def get_links(path)
