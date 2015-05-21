@@ -1,111 +1,58 @@
+# EntityExpander
+#
+# Takes an elasticsearch result, which can have arrays of slugs and translates
+# those into objects with extra data. For example, a result can contain
+# organisations like this:
+#
+#   { "organisations": ["/mod"] }
+#
+# `#new_result(result)` will replace the slugs by an object from the
+# organisations-registry (sourced from the government-index):
+#
+#  { "organisations": [{ "title": "Ministry of Defence", "slug": "/mod" }] }
+#
 class EntityExpander
-  def initialize(context)
-    @context = context
+  attr_reader :registries
+
+  def initialize(registries)
+    @registries = registries
   end
 
+  # Field name to Registry name.
+  MAPPING = {
+    'document_series' => :document_series,
+    'document_collections' => :document_collections,
+    'organisations' => :organisations,
+    'topics' => :topics,
+    'world_locations' => :world_locations,
+    'specialist_sectors' => :specialist_sectors,
+    'people' => :people,
+  }
+
   def new_result(result)
-    if result['document_series'] && should_expand_document_series?
-      result['document_series'] = result['document_series'].map do |slug|
-        structure_by_slug(document_series_registry, slug)
-      end
-    end
+    MAPPING.each do |field_name, registry_name|
+      next unless result[field_name]
 
-    if result['document_collections'] && should_expand_document_collections?
-      result['document_collections'] = result['document_collections'].map do |slug|
-        structure_by_slug(document_collection_registry, slug)
-      end
-    end
+      registry = registries[registry_name]
+      next unless registry
 
-    if result['organisations'] && should_expand_organisations?
-      result['organisations'] = result['organisations'].map do |slug|
-        structure_by_slug(organisation_registry, slug)
-      end
-    end
-
-    if result['topics'] && should_expand_topics?
-      result['topics'] = result['topics'].map do |slug|
-        structure_by_slug(topic_registry, slug)
-      end
-    end
-
-    if result['world_locations'] && should_expand_world_locations?
-      result['world_locations'] = result['world_locations'].map do |slug|
-        structure_by_slug(world_location_registry, slug)
-      end
-    end
-
-    if result['specialist_sectors']
-      result['specialist_sectors'].map! do |slug|
-        structure_by_slug(specialist_sector_registry, slug)
-      end
-    end
-
-    if result['people'] && should_expand_people?
-      result['people'].map! do |slug|
-        structure_by_slug(people_registry, slug)
+      result[field_name] = result[field_name].map do |slug|
+        item_from_registry_by_slug(registry, slug)
       end
     end
 
     result
   end
 
-  def should_expand_document_series?
-    !! document_series_registry
-  end
+  private
 
-  def should_expand_document_collections?
-    !! document_collection_registry
-  end
+  def item_from_registry_by_slug(registry, slug)
+    expanded_item = registry[slug]
 
-  def should_expand_organisations?
-    !! organisation_registry
-  end
-
-  def should_expand_topics?
-    !! topic_registry
-  end
-
-  def should_expand_world_locations?
-    !! world_location_registry
-  end
-
-  def should_expand_people?
-    !! people_registry
-  end
-
-  def document_series_registry
-    @context[:document_series]
-  end
-
-  def document_collection_registry
-    @context[:document_collections]
-  end
-
-  def organisation_registry
-    @context[:organisations]
-  end
-
-  def topic_registry
-    @context[:topics]
-  end
-
-  def world_location_registry
-    @context[:world_locations]
-  end
-
-  def specialist_sector_registry
-    @context[:specialist_sectors]
-  end
-
-  def people_registry
-    @context[:people]
-  end
-
-  def structure_by_slug(structure, slug)
-    if item = structure && structure[slug]
-      item.to_hash.merge("slug" => slug)
+    if expanded_item
+      expanded_item.to_hash.merge("slug" => slug)
     else
-      {"slug" => slug}
+      { "slug" => slug }
     end
   end
 end
