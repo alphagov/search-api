@@ -6,7 +6,7 @@ class ElasticsearchIndexGroupTest < IntegrationTest
 
   def setup
     @group_name = "mainstream_test"
-    stub_elasticsearch_settings [@group_name]
+    stub_elasticsearch_settings
     enable_test_index_connections
     try_remove_test_index
 

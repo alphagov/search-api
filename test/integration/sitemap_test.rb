@@ -8,7 +8,7 @@ class SitemapTest < IntegrationTest
 
   def setup
     @index_names = %w(mainstream_test detailed_test government_test)
-    stub_elasticsearch_settings(@index_names)
+    stub_elasticsearch_settings
     enable_test_index_connections
 
     @index_names.each do |i|

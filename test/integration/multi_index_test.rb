@@ -5,9 +5,6 @@ require "rest-client"
 # Base class for tests which depend on having multiple indexes with test data
 # set up.
 class MultiIndexTest < IntegrationTest
-
-  INDEX_NAMES = ["mainstream_test", "detailed_test", "government_test"]
-
   def setup
     stub_elasticsearch_configuration
     create_meta_indexes
@@ -15,7 +12,7 @@ class MultiIndexTest < IntegrationTest
   end
 
   def stub_elasticsearch_configuration
-    stub_elasticsearch_settings(INDEX_NAMES)
+    stub_elasticsearch_settings
     app.settings.search_config.stubs(:govuk_index_names).returns(INDEX_NAMES)
     enable_test_index_connections
   end

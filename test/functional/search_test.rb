@@ -210,7 +210,7 @@ class SearchTest < IntegrationTest
       .returns(oil_gas_sector_fields)
 
     # Stub the spell check-request.
-    stub_elasticsearch_request('/mainstream_test/_search' => {})
+    stub_elasticsearch_request('/mainstream_test,detailed_test,government_test/_search' => {})
 
     get "/unified_search.json", {q: "bob"}
 

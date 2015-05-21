@@ -1,5 +1,6 @@
 module ElasticsearchIntegrationHelpers
   AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"]
+  INDEX_NAMES = ["mainstream_test", "detailed_test", "government_test"]
 
   class InvalidTestIndex < ArgumentError; end
 
@@ -10,21 +11,18 @@ module ElasticsearchIntegrationHelpers
     end
   end
 
-  def stub_elasticsearch_settings(content_index_names = ["mainstream_test"], default = nil)
-    (content_index_names + AUXILIARY_INDEX_NAMES).each do |n|
+  def stub_elasticsearch_settings
+    (INDEX_NAMES + AUXILIARY_INDEX_NAMES).each do |n|
       check_index_name(n)
     end
 
-    check_index_name(default) unless default.nil?
-
-    @content_indexes = content_index_names
-    @default_index_name = default || content_index_names.first
+    @default_index_name = INDEX_NAMES.first
 
     app.settings.search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
-      "content_index_names" => content_index_names,
+      "content_index_names" => INDEX_NAMES,
       "auxiliary_index_names" => AUXILIARY_INDEX_NAMES,
-      "govuk_index_names" => content_index_names,
+      "govuk_index_names" => INDEX_NAMES,
       "metasearch_index_name" => "metasearch_test",
       "organisation_registry_index" => @default_index_name,
       "topic_registry_index" => @default_index_name,
@@ -32,7 +30,7 @@ module ElasticsearchIntegrationHelpers
       "document_collection_registry_index" => @default_index_name,
       "world_location_registry_index" => @default_index_name,
       "people_registry_index" => @default_index_name,
-      "spelling_index_names" => content_index_names,
+      "spelling_index_names" => INDEX_NAMES,
     })
     app.settings.stubs(:default_index_name).returns(@default_index_name)
     app.settings.stubs(:enable_queue).returns(false)
@@ -55,13 +53,13 @@ module ElasticsearchIntegrationHelpers
   end
 
   def create_test_indexes
-    (AUXILIARY_INDEX_NAMES + @content_indexes).each do |index|
+    (AUXILIARY_INDEX_NAMES + INDEX_NAMES).each do |index|
       create_test_index(index)
     end
   end
 
   def clean_test_indexes
-    (AUXILIARY_INDEX_NAMES + @content_indexes).each do |index|
+    (AUXILIARY_INDEX_NAMES + INDEX_NAMES).each do |index|
       clean_index_group(index)
     end
   end
