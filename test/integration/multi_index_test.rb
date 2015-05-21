@@ -72,6 +72,7 @@ class MultiIndexTest < IntegrationTest
   end
 
   def insert_document(index_name, attributes)
+    attributes.stringify_keys!
     insert_stub_popularity_data(attributes["link"])
     post "/#{index_name}/documents", attributes.to_json
     assert last_response.ok?, "Failed to insert document"

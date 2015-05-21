@@ -4,6 +4,10 @@ require_relative "multi_index_test"
 
 class UnifiedSearchTest < MultiIndexTest
   def setup
+    # `@@registries` are set in Rummager and is *not* reset between tests. To
+    # prevent caching issues we manually clear them here to make a "new" app.
+    Rummager.class_variable_set(:'@@registries', nil)
+
     stub_elasticsearch_configuration
     create_meta_indexes
   end
@@ -408,7 +412,35 @@ class UnifiedSearchTest < MultiIndexTest
     )
   end
 
+  def test_expandinging_of_organisations
+    reset_content_indexes
+
+    commit_document("mainstream_test",
+      title: 'Advice on Treatment of Dragons',
+      link: '/dragon-guide',
+      organisations: ['/ministry-of-magic']
+    )
+
+    commit_document("government_test",
+      slug: '/ministry-of-magic',
+      title: 'Ministry of Magic',
+      link: '/ministry-of-magic-site',
+      format: 'organisation'
+    )
+
+    get "/unified_search.json?q=dragons"
+
+    assert_equal first_result['organisations'],
+      [{ "slug"=>"/ministry-of-magic",
+         "link"=>"/ministry-of-magic-site",
+         "title"=>"Ministry of Magic" }]
+  end
+
   private
+
+  def first_result
+    @first_result ||= parsed_response['results'].first
+  end
 
   def result_links
     @_result_links ||= parsed_response["results"].map do |result|
