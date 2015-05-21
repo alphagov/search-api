@@ -70,12 +70,18 @@ class MultiIndexTest < IntegrationTest
     attributes.each do |sample_document|
       insert_document(index_name, sample_document)
     end
+
+    commit_index(index_name)
   end
 
   def insert_document(index_name, attributes)
     insert_stub_popularity_data(attributes["link"])
     post "/#{index_name}/documents", attributes.to_json
     assert last_response.ok?, "Failed to insert document"
+  end
+
+  def commit_document(index_name, attributes)
+    insert_document(index_name, attributes)
     commit_index(index_name)
   end
 

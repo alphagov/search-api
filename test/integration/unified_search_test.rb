@@ -300,7 +300,7 @@ class UnifiedSearchTest < MultiIndexTest
 
   def test_can_scope_by_document_type
     reset_content_indexes
-    insert_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case"
 
@@ -318,7 +318,7 @@ class UnifiedSearchTest < MultiIndexTest
 
   def test_can_filter_between_dates
     reset_content_indexes
-    insert_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
 
@@ -335,7 +335,7 @@ class UnifiedSearchTest < MultiIndexTest
 
   def test_can_filter_between_dates_with_reversed_parameter_order
     reset_content_indexes
-    insert_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
 
@@ -352,7 +352,7 @@ class UnifiedSearchTest < MultiIndexTest
 
   def test_can_filter_from_date
     reset_content_indexes
-    insert_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
 
@@ -369,7 +369,7 @@ class UnifiedSearchTest < MultiIndexTest
 
   def test_can_filter_to_date
     reset_content_indexes
-    insert_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
 
