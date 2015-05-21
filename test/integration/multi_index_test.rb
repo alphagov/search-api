@@ -9,16 +9,21 @@ class MultiIndexTest < IntegrationTest
   INDEX_NAMES = ["mainstream_test", "detailed_test", "government_test"]
 
   def setup
+    stub_elasticsearch_configuration
+    create_meta_indexes
+    reset_content_indexes_with_content
+  end
+
+  def stub_elasticsearch_configuration
     stub_elasticsearch_settings(INDEX_NAMES)
     app.settings.search_config.stubs(:govuk_index_names).returns(INDEX_NAMES)
     enable_test_index_connections
+  end
 
+  def create_meta_indexes
     AUXILIARY_INDEX_NAMES.each do |index|
       create_test_index(index)
     end
-
-    reset_content_indexes
-    populate_content_indexes
   end
 
   def reset_content_indexes
@@ -26,6 +31,11 @@ class MultiIndexTest < IntegrationTest
       try_remove_test_index(index_name)
       create_test_index(index_name)
     end
+  end
+
+  def reset_content_indexes_with_content
+    reset_content_indexes
+    populate_content_indexes
   end
 
   def populate_content_indexes

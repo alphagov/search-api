@@ -3,14 +3,22 @@ require "rest-client"
 require_relative "multi_index_test"
 
 class UnifiedSearchTest < MultiIndexTest
+  def setup
+    stub_elasticsearch_configuration
+    create_meta_indexes
+  end
 
   def test_returns_success
+    reset_content_indexes
+
     get "/unified_search?q=important"
 
     assert last_response.ok?
   end
 
   def test_spell_checking_with_typo
+    reset_content_indexes_with_content
+
     # The word "important" is imported into the elasticsearch index by the
     # MultiIndexTest setup block.
 
@@ -20,12 +28,16 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_spell_checking_without_typo
+    reset_content_indexes_with_content
+
     get "/unified_search?q=milliband"
 
     assert_equal [], parsed_response['suggested_queries']
   end
 
   def test_returns_docs_from_all_indexes
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important"
 
     assert result_links.include? "/detailed-1"
@@ -34,6 +46,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_sort_by_date_ascending
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&order=public_timestamp"
 
     # The government links have dates, so appear before all the other links
@@ -46,6 +60,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_sort_by_date_descending
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&order=-public_timestamp"
 
     # The government links have dates, so appear before all the other links
@@ -58,6 +74,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_sort_by_title_ascending
+    reset_content_indexes_with_content
+
     get "/unified_search?order=title"
     lowercase_titles = result_titles.map(&:downcase)
 
@@ -65,6 +83,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_filter_by_section
+    reset_content_indexes_with_content
+
     get "/unified_search?filter_section=1"
 
     assert_equal ["/mainstream-1", "/detailed-1", "/government-1"],
@@ -72,6 +92,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_reject_by_section
+    reset_content_indexes_with_content
+
     get "/unified_search?reject_section=1"
 
     assert_equal ["/detailed-2", "/government-2", "/mainstream-2"],
@@ -79,6 +101,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_for_missing_section_field
+    reset_content_indexes_with_content
+
     get "/unified_search?filter_specialist_sectors=_MISSING"
 
     assert_equal ["/detailed-1", "/government-1", "/mainstream-1"],
@@ -86,6 +110,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_for_missing_or_specific_value_section_field
+    reset_content_indexes_with_content
+
     get "/unified_search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
     assert_equal [
@@ -96,6 +122,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_and_reject
+    reset_content_indexes_with_content
+
     get "/unified_search?reject_section=1&filter_specialist_sectors[]=farming"
 
     assert_equal [
@@ -106,6 +134,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_only_contains_fields_which_are_present
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&order=public_timestamp"
 
     results = parsed_response["results"]
@@ -114,6 +144,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_counting
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&facet_section=2"
 
     assert_equal 6, parsed_response["total"]
@@ -135,6 +167,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_counting_with_filter_on_field_and_exclude_field_filter_scope
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&facet_section=2"
 
     assert_equal 6, parsed_response["total"]
@@ -148,6 +182,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_counting_missing_options
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&facet_section=1"
 
     assert_equal 6, parsed_response["total"]
@@ -166,6 +202,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_counting_with_filter_on_field_and_all_filters_scope
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&facet_section=2,scope:all_filters&filter_section=1"
 
     assert_equal 3, parsed_response["total"]
@@ -185,6 +223,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_examples
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&facet_section=1,examples:5,example_scope:global,example_fields:link:title:section"
 
     assert_equal 6, parsed_response["total"]
@@ -206,6 +246,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_examples_with_example_scope_query
+    reset_content_indexes_with_content
+
     get "/unified_search?q=important&facet_section=1,examples:5,example_scope:query,example_fields:link:title:section"
 
     assert_equal 6, parsed_response["total"]
@@ -228,6 +270,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_validates_integer_params
+    reset_content_indexes
+
     get "/unified_search?start=a"
 
     assert_equal last_response.status, 422
@@ -235,12 +279,16 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_allows_integer_params_leading_zeros
+    reset_content_indexes
+
     get "/unified_search?start=09"
 
     assert last_response.ok?
   end
 
   def test_validates_unknown_params
+    reset_content_indexes
+
     get "/unified_search?foo&bar=1"
 
     assert_equal last_response.status, 422
@@ -248,6 +296,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_debug_explain_returns_explanations
+    reset_content_indexes_with_content
+
     get "/unified_search?debug=explain"
 
     first_hit_explain = parsed_response["results"].first["_explanation"]
@@ -258,6 +308,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_scope_by_document_type
+    reset_content_indexes
     insert_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case"
@@ -275,6 +326,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_between_dates
+    reset_content_indexes
     insert_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
@@ -291,6 +343,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_between_dates_with_reversed_parameter_order
+    reset_content_indexes
     insert_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
@@ -307,6 +360,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_from_date
+    reset_content_indexes
     insert_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
@@ -323,6 +377,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_to_date
+    reset_content_indexes
     insert_document("mainstream_test", cma_case_attributes)
 
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
@@ -339,6 +394,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_cannot_provide_date_filter_key_multiple_times
+    reset_content_indexes
+
     get "/unified_search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
 
     assert_equal 422, last_response.status
@@ -349,6 +406,8 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_cannot_provide_invalid_dates_for_date_filter
+    reset_content_indexes
+
     get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
 
     assert_equal 422, last_response.status
