@@ -33,24 +33,18 @@ class MultiIndexTest < IntegrationTest
     end
   end
 
-  def reset_content_indexes_with_content
+  def reset_content_indexes_with_content(params = { section_count: 2 })
     reset_content_indexes
-    populate_content_indexes
-  end
-
-  def populate_content_indexes
-    INDEX_NAMES.each do |index_name|
-      add_sample_documents(index_name, 2)
-    end
+    populate_content_indexes(params)
   end
 
   def teardown
     clean_test_indexes
   end
 
-  def sample_document_attributes(index_name, count)
+  def sample_document_attributes(index_name, section_count)
     short_index_name = index_name.sub("_test", "")
-    (1..count).map do |i|
+    (1..section_count).map do |i|
       title = "Sample #{short_index_name} document #{i}"
       if i % 2 == 1
         title = title.downcase
@@ -91,5 +85,13 @@ class MultiIndexTest < IntegrationTest
 
   def parsed_response
     JSON.parse(last_response.body)
+  end
+
+  private
+
+  def populate_content_indexes(params)
+    INDEX_NAMES.each do |index_name|
+      add_sample_documents(index_name, params[:section_count])
+    end
   end
 end

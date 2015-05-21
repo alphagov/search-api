@@ -17,7 +17,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_spell_checking_with_typo
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     # The word "important" is imported into the elasticsearch index by the
     # MultiIndexTest setup block.
@@ -28,7 +28,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_spell_checking_without_typo
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?q=milliband"
 
@@ -36,7 +36,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_returns_docs_from_all_indexes
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?q=important"
 
@@ -46,35 +46,27 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_sort_by_date_ascending
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?q=important&order=public_timestamp"
 
-    # The government links have dates, so appear before all the other links
-    assert_equal ["/government-1", "/government-2"],
-      result_links.slice(0, 2)
-
-    # The other documents have no dates, so appear in an undefined order
-    assert_equal ["/detailed-1", "/detailed-2", "/mainstream-1", "/mainstream-2"],
-      result_links.slice(2, 6).sort
+    assert_equal ["/government-1", "/detailed-1", "/mainstream-1"],
+      result_links
   end
 
   def test_sort_by_date_descending
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?q=important&order=-public_timestamp"
 
-    # The government links have dates, so appear before all the other links
-    assert_equal ["/government-2", "/government-1"],
-      result_links.slice(0, 2)
-
+    # The government links have dates, so appear before all the other links.
     # The other documents have no dates, so appear in an undefined order
-    assert_equal ["/detailed-1", "/detailed-2", "/mainstream-1", "/mainstream-2"],
-      result_links.slice(2, 6).sort
+    assert_equal ["/government-1", "/detailed-1", "/mainstream-1"],
+      result_links
   end
 
   def test_sort_by_title_ascending
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?order=title"
     lowercase_titles = result_titles.map(&:downcase)
@@ -83,7 +75,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_filter_by_section
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?filter_section=1"
 
@@ -92,7 +84,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_reject_by_section
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?reject_section=1"
 
@@ -101,7 +93,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_for_missing_section_field
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?filter_specialist_sectors=_MISSING"
 
@@ -110,19 +102,16 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_can_filter_for_missing_or_specific_value_section_field
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
-    assert_equal [
-      "/detailed-1", "/detailed-2",
-      "/government-1", "/government-2",
-      "/mainstream-1", "/mainstream-2",
-    ], result_links.sort
+    assert_equal ["/detailed-1", "/government-1", "/mainstream-1"],
+      result_links.sort
   end
 
   def test_can_filter_and_reject
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?reject_section=1&filter_specialist_sectors[]=farming"
 
@@ -134,7 +123,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_only_contains_fields_which_are_present
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&order=public_timestamp"
 
@@ -144,7 +133,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_counting
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&facet_section=2"
 
@@ -166,8 +155,10 @@ class UnifiedSearchTest < MultiIndexTest
     }, facets)
   end
 
+  # TODO: The `section` facet is determined by the document size index. This
+  # should be made more explicit.
   def test_facet_counting_with_filter_on_field_and_exclude_field_filter_scope
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&facet_section=2"
 
@@ -182,7 +173,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_counting_missing_options
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&facet_section=1"
 
@@ -202,7 +193,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_counting_with_filter_on_field_and_all_filters_scope
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&facet_section=2,scope:all_filters&filter_section=1"
 
@@ -223,7 +214,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_examples
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&facet_section=1,examples:5,example_scope:global,example_fields:link:title:section"
 
@@ -246,7 +237,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_facet_examples_with_example_scope_query
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&facet_section=1,examples:5,example_scope:query,example_fields:link:title:section"
 
@@ -296,7 +287,7 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_debug_explain_returns_explanations
-    reset_content_indexes_with_content
+    reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?debug=explain"
 
