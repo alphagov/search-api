@@ -3,14 +3,25 @@ require "rest-client"
 require_relative "multi_index_test"
 
 class CombinedSearchTest < MultiIndexTest
+  def setup
+    stub_elasticsearch_configuration
+  end
 
   def test_returns_success
+    create_meta_indexes
+    reset_content_indexes
+
     get "/govuk/search?q=important"
+
     assert last_response.ok?
   end
 
   def test_returns_streams
+    create_meta_indexes
+    reset_content_indexes
+
     get "/govuk/search?q=important"
+
     expected_streams = [
       "top-results",
       "services-information",
@@ -34,7 +45,10 @@ class CombinedSearchTest < MultiIndexTest
   end
 
   def test_returns_3_top_results
+    reset_content_indexes_with_content(section_count: 1)
+
     get "/govuk/search?q=important"
+
     assert_equal 3, parsed_response["streams"]["top-results"]["results"].count
   end
 end
