@@ -244,47 +244,6 @@ class Rummager < Sinatra::Application
     searcher.search(parser.parsed_params).to_json
   end
 
-  # To search a named index:
-  #   /index_name/search?q=pie
-  #
-  # To search the primary index:
-  #   /search?q=pie
-  #
-  # To scope a search to an organisation:
-  #   /search?q=pie&organisation_slug=home-office
-  #
-  # To get the results in date order, rather than relevancy:
-  #   /search?q=pie&sort=public_timestamp&order=desc
-  #
-  # The response looks like this:
-  #
-  #   {
-  #     "total": 1,
-  #     "results": [
-  #       ...
-  #     ],
-  #     "spelling_suggestions": [
-  #       ...
-  #     ]
-  #   }
-  get "/?:index?/search.?:request_format?" do
-    json_only
-
-    organisation = params["organisation_slug"] == "" ? nil : params["organisation_slug"]
-
-    result_set = current_index.search(@query,
-      organisation: organisation,
-      sort: params["sort"],
-      order: params["order"])
-
-    presenter_context = registries.as_hash.merge(
-      spelling_suggestions: []
-    )
-
-    presenter = ResultSetPresenter.new(result_set, presenter_context)
-    presenter.present.to_json
-  end
-
   # Perform an advanced search. Supports filters and pagination.
   #
   # Returns the first N results if no keywords or filters supplied

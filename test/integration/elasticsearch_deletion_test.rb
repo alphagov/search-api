@@ -98,7 +98,7 @@ class ElasticsearchDeletionTest < IntegrationTest
 
     commit_index
 
-    get "/search.json?q=cheese"
+    get "/unified_search.json?q=cheese"
     assert_no_results
   end
 
