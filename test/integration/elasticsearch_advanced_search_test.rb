@@ -7,7 +7,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   def setup
     @index_name = "mainstream_test"
 
-    stub_elasticsearch_settings([@index_name])
+    stub_elasticsearch_settings
     enable_test_index_connections
     try_remove_test_index
 

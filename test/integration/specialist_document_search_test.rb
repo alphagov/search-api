@@ -23,7 +23,7 @@ class SpecialistDocumentSearchTest < MultiIndexTest
       "section" => ["1"],
     }
 
-    insert_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes)
   end
 
   def test_extra_fields_decorated_by_schema

@@ -23,7 +23,7 @@ class ElasticsearchClosingTest < IntegrationTest
   def test_should_fail_to_insert_or_get_when_index_closed
     create_test_index
 
-    index = search_server.index_group(@default_index_name).current
+    index = search_server.index_group(DEFAULT_INDEX_NAME).current
     index.close
     assert_raises *(restclient_4xx_errors + [Elasticsearch::BulkIndexFailure]) do
       index.add([sample_document])

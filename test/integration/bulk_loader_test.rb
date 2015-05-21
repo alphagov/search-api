@@ -55,7 +55,7 @@ class BulkLoaderTest < IntegrationTest
   end
 
   def test_indexes_documents
-    bulk_loader = BulkLoader.new(app.settings.search_config, @default_index_name)
+    bulk_loader = BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
     bulk_loader.load_from(StringIO.new(index_payload(@sample_document)))
 
     assert_document_is_in_rummager(@sample_document)
@@ -64,7 +64,7 @@ class BulkLoaderTest < IntegrationTest
   def test_updates_an_existing_document
     insert_stub_popularity_data(@sample_document["link"])
 
-    index_group = search_server.index_group(@default_index_name)
+    index_group = search_server.index_group(DEFAULT_INDEX_NAME)
     old_index = index_group.current_real
 
     doc_v1 = @sample_document.merge({"title" => "Original Title"})
@@ -74,7 +74,7 @@ class BulkLoaderTest < IntegrationTest
     old_index.commit
     assert_document_is_in_rummager(doc_v1)
 
-    bulk_loader = BulkLoader.new(app.settings.search_config, @default_index_name)
+    bulk_loader = BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
     bulk_loader.load_from(StringIO.new(index_payload(doc_v2)))
 
     assert_document_is_in_rummager(doc_v2)
@@ -90,7 +90,7 @@ class BulkLoaderTest < IntegrationTest
     insert_stub_popularity_data(@sample_document["link"])
     insert_stub_popularity_data("/another-example")
 
-    bulk_loader = BulkLoader.new(app.settings.search_config, @default_index_name)
+    bulk_loader = BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
     bulk_loader.load_from(StringIO.new(index_payload(@sample_document)))
 
     assert_document_is_in_rummager(
