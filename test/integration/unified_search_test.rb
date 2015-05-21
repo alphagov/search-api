@@ -46,23 +46,23 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_sort_by_date_ascending
-    reset_content_indexes_with_content(section_count: 1)
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&order=public_timestamp"
 
-    assert_equal ["/government-1", "/detailed-1", "/mainstream-1"],
-      result_links
+    assert_equal ["/government-1", "/government-2"],
+      result_links.take(2)
   end
 
   def test_sort_by_date_descending
-    reset_content_indexes_with_content(section_count: 1)
+    reset_content_indexes_with_content(section_count: 2)
 
     get "/unified_search?q=important&order=-public_timestamp"
 
     # The government links have dates, so appear before all the other links.
     # The other documents have no dates, so appear in an undefined order
-    assert_equal ["/government-1", "/detailed-1", "/mainstream-1"],
-      result_links
+    assert_equal ["/government-2", "/government-1"],
+      result_links.take(2)
   end
 
   def test_sort_by_title_ascending
