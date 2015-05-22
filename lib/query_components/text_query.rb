@@ -77,7 +77,7 @@ module QueryComponents
       # Return the highest weight found by looking for a word-based match in
       # individual fields
       MATCH_FIELDS.map { |field_name, boost|
-        match_query(field_name, search_term, boost: boost)
+        match_query("#{field_name}.no_stop", search_term, boost: boost)
       }
     end
 
@@ -85,7 +85,7 @@ module QueryComponents
       # Return the highest weight found by looking for a phrase match in
       # individual fields
       MATCH_FIELDS.map { |field_name, boost|
-        match_query(field_name, search_term, type: :phrase, boost: boost)
+        match_query("#{field_name}.no_stop", search_term, type: :phrase, boost: boost)
       }
     end
 
@@ -93,7 +93,7 @@ module QueryComponents
       # Return the highest weight found by looking for a match of all terms
       # individual fields
       MATCH_FIELDS.map { |field_name, boost|
-        match_query(field_name, search_term, type: :boolean, operator: :and, boost: boost)
+        match_query("#{field_name}.no_stop", search_term, type: :boolean, operator: :and, boost: boost)
       }
     end
 

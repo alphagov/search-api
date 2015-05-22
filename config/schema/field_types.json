@@ -39,6 +39,12 @@
       "include_in_all": true,
       "copy_to": ["spelling_text", "all_searchable_text"],
       "fields": {
+        "no_stop": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "analyzer": "searchable_text"
+        },
         "synonym": {
           "type": "string",
           "index": "analyzed",
@@ -55,6 +61,7 @@
     "es_config": {
       "type": "string",
       "index": "analyzed",
+      "analyzer": "searchable_text",
       "include_in_all": false,
       "fields": {
         "synonym": {
