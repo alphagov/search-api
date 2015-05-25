@@ -9,32 +9,17 @@ module QueryComponents
       "indexable_content" => 1,
     }
 
-    # The following specification generates the following values for minimum_should_match
-    #
-    # Number of | Minimum
-    # optional  | should
-    # clauses   | match
-    # ----------+---------
-    # 1         | 1
-    # 2         | 2
-    # 3         | 2
-    # 4         | 3
-    # 5         | 3
-    # 6         | 3
-    # 7         | 3
-    # 8+        | 50%
-    #
-    # This table was worked out by using the comparison feature of
-    # bin/search with various example queries of different lengths (3, 4, 5,
-    # 7, 9 words) and inspecting the consequences on search results.
-    #
     # Reference for the minimum_should_match syntax:
     # http://lucene.apache.org/solr/api-3_6_2/org/apache/solr/util/doc-files/min-should-match.html
     #
-    # In summary, a clause of the form "N<M" means when there are MORE than
-    # N clauses then M clauses should match. So, 2<2 means when there are
-    # MORE than 2 clauses then 2 should match.
-    MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%"
+    # In summary, a clause of the form "N<M" means when there are MORE than N
+    # clauses then M clauses should match. 2<-1 means when there are MORE than
+    # 2 clauses then 1 may be missing.
+    #
+    # This configuration says that if there are 3-5 terms, allow one to be
+    # missing; 6-7 terms, allow two to be missing, 8 more more terms, require
+    # 75% present (rounded down).
+    MINIMUM_SHOULD_MATCH = "2<-1 5<-2 7<75%"
 
     def payload
       {
