@@ -45,6 +45,12 @@
           "include_in_all": false,
           "analyzer": "searchable_text"
         },
+        "shingles": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "analyzer": "with_shingles"
+        },
         "synonym": {
           "type": "string",
           "index": "analyzed",

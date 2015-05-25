@@ -52,6 +52,7 @@ module QueryComponents
       groups << field_boosts_phrase
       groups << field_boosts_all_terms
       groups << field_boosts_synonyms unless debug[:disable_synonyms]
+      groups << field_boosts_shingles
 
       groups.map { |queries|
         dis_max_query(queries)
@@ -87,6 +88,14 @@ module QueryComponents
       # match in individual fields
       MATCH_FIELDS.map { |field_name, boost|
         match_query("#{field_name}.synonym", search_term, boost: boost)
+      }
+    end
+
+    def field_boosts_shingles
+      # Return the highest weight found by looking for a shingle match in
+      # individual fields
+      MATCH_FIELDS.map { |field_name, boost|
+        match_query("#{field_name}.shingles", search_term, boost: boost)
       }
     end
 

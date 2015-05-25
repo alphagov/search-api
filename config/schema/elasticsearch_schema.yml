@@ -30,6 +30,12 @@ index:
           filter: [standard, lowercase, search_synonym, synonym_protwords, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
+        # Analzyer used to search across pairs of adjacent words.
+        with_shingles:
+          type: custom
+          tokenizer: standard
+          filter: [standard, lowercase, stemmer_override, stemmer_english, text_shingles]
+
         # No longer used, but defined to avoid errors during deploy
         # (specifically, if an index has been migrated, but beofre the app
         # servers have been restarted, the "query_default" analyzer needs to
@@ -52,7 +58,7 @@ index:
         shingled_query_analyzer:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stop, stemmer_override, stemmer_english, filter_shingle]
+          filter: [standard, lowercase, stop, stemmer_override, stemmer_english, old_shingles]
 
         # An analyzer for doing "exact" word matching (but stripping wrapping whitespace, and case insensitive).
         exact_match:
@@ -101,7 +107,16 @@ index:
         stemmer_english:
           type: stemmer
           name: english
-        filter_shingle:
+
+        # Filter used in the analyzer for ".shingle" subfields
+        text_shingles:
+          type: shingle
+          max_shingle_size: 2
+          min_shingle_size: 2
+          output_unigrams: false
+
+        # Shingle filter used for the old weighting
+        old_shingles:
           type: shingle
           max_shingle_size: 2
           min_shingle_size: 2
