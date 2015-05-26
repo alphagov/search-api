@@ -31,6 +31,7 @@ module ElasticsearchIntegrationHelpers
       "world_location_registry_index" => REGISTRY_INDEX,
       "people_registry_index" => REGISTRY_INDEX,
       "spelling_index_names" => INDEX_NAMES,
+      "popularity_rank_offset" => 10,
     })
     app.settings.stubs(:default_index_name).returns(DEFAULT_INDEX_NAME)
     app.settings.stubs(:enable_queue).returns(false)
