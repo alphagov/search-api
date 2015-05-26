@@ -94,6 +94,25 @@
           "index": "analyzed",
           "analyzer": "string_for_sorting",
           "include_in_all": false
+        },
+        "no_stop": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "analyzer": "searchable_text"
+        },
+        "shingles": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "analyzer": "with_shingles"
+        },
+        "synonym": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "index_analyzer": "with_index_synonyms",
+          "search_analyzer": "with_search_synonyms"
         }
       }
     }
