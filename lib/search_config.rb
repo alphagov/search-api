@@ -66,6 +66,10 @@ class SearchConfig
     elasticsearch["metasearch_index_name"]
   end
 
+  def popularity_rank_offset
+    elasticsearch["popularity_rank_offset"]
+  end
+
 private
   def config_path
     File.expand_path("../config/schema", File.dirname(__FILE__))

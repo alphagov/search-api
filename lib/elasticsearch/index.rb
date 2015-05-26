@@ -573,7 +573,11 @@ module Elasticsearch
       end
 
       Hash[links.map { |link|
-        popularity_score = (ranks[link] == 0) ? 0 : (1.0 / ranks[link])
+        popularity_score = if ranks[link] == 0
+          0
+        else
+          1.0 / (ranks[link] + @search_config.popularity_rank_offset)
+        end
         [link, popularity_score]
       }]
     end

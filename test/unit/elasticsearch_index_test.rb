@@ -144,7 +144,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[],"format":"edition"}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"tags":[],"format":"edition"}
     eos
     response = <<-eos
 {"took":5,"items":[
@@ -172,7 +172,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"not_an_edition","_id":"some_id"}}
-{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":1.0,"tags":[],"format":"not_an_edition"}
+{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":0.09090909090909091,"tags":[],"format":"not_an_edition"}
   eos
     response = <<-eos
 {"took":5,"items":[
@@ -193,7 +193,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":1.0,"tags":[],"format":"edition"}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"tags":[],"format":"edition"}
     eos
     stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
@@ -207,8 +207,8 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_popularity_index_requests(["/foo/bar", "/foo/baz"], 1.0, 20)
 
     json_documents = [
-      { "_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "1.0" },
-      { "_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "1.0" }
+      { "_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "0.09090909090909091" },
+      { "_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091" }
     ]
     documents = json_documents.map do |json_document|
       stub("document", elasticsearch_export: json_document)
@@ -275,7 +275,7 @@ eos
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","specialist_sectors":["oil-and-gas/licensing","oil-and-gas/onshore-oil-and-gas"],"organisations":["hm-magic"],"popularity":1.0,"tags":["organisation:hm-magic","sector:oil-and-gas/licensing","sector:oil-and-gas/onshore-oil-and-gas"],"format":"edition"}
+{"_type":"edition","link":"/foo/bar","specialist_sectors":["oil-and-gas/licensing","oil-and-gas/onshore-oil-and-gas"],"organisations":["hm-magic"],"popularity":0.09090909090909091,"tags":["organisation:hm-magic","sector:oil-and-gas/licensing","sector:oil-and-gas/onshore-oil-and-gas"],"format":"edition"}
     eos
     response = <<-eos
 {"took":5,"items":[
@@ -304,7 +304,7 @@ eos
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","section":"benefits","subsection":"entitlement","popularity":1.0,"mainstream_browse_pages":["benefits/entitlement"],"tags":[],"format":"edition"}
+{"_type":"edition","link":"/foo/bar","section":"benefits","subsection":"entitlement","popularity":0.09090909090909091,"mainstream_browse_pages":["benefits/entitlement"],"tags":[],"format":"edition"}
     eos
     response = <<-eos
 {"took":5,"items":[
@@ -335,7 +335,7 @@ eos
 
     payload = <<-EOS
 {"index":{"_type":"edition","_id":"/document/thing"}}
-{"_type":"edition","link":"/document/thing","last_update":"2015-03-26T10:300:00.006+00:00","popularity":1.0,"tags":[],"format":"edition","public_timestamp":"2015-03-26T10:300:00.006+00:00"}
+{"_type":"edition","link":"/document/thing","last_update":"2015-03-26T10:300:00.006+00:00","popularity":0.09090909090909091,"tags":[],"format":"edition","public_timestamp":"2015-03-26T10:300:00.006+00:00"}
     EOS
 
   response = <<-EOS
