@@ -145,7 +145,7 @@ module Elasticsearch
         \d{2}:\d{2}:\d{2}  # Time
         z
         -
-        \h{8}-\h{4}-\h{4}-\h{4}-\h{12}  # UUID
+        \h[-\h]*  # UUID
         \Z
       }x
     end
