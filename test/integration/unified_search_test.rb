@@ -436,6 +436,14 @@ class UnifiedSearchTest < MultiIndexTest
          "title"=>"Ministry of Magic" }]
   end
 
+  def test_id_search
+    reset_content_indexes_with_content(section_count: 1)
+
+    get "/unified_search?q=id1&debug=new_weighting"
+
+    assert result_links.include? "/mainstream-1"
+  end
+
   private
 
   def first_result

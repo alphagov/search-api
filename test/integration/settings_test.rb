@@ -44,6 +44,12 @@ class SettingsTest < IntegrationTest
       "The small brown dog" => ["the small", "small brown", "brown dog"]
   end
 
+  def test_with_id_codes_analyzer
+    assert_tokenisation :with_id_codes,
+      "You will need forms A.10, P11,  P 12, P 13D, P45X and P-60. Z:90, \"V 50\" B_52 C4 3/2007  M\\18. :/!  (RA) 1002" =>
+      %w{a10 10 p11 p12 12 p13d 13d p45xand p45x p60 60 z90 90 v50 50 b52 52c4 52 c43 c4 32007 2007m 2007 m18 18 ra1002 1002}
+  end
+
 private
 
   # Verifies that certain input will be tokenised as expected by the specified
