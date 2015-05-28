@@ -39,7 +39,12 @@ class SettingsTest < IntegrationTest
       "It's A Small W’rld" => ["its a small wrld"]
   end
 
-  private
+  def test_with_shingles_analyzer
+    assert_tokenisation :with_shingles,
+      "The small brown dog" => ["the small", "small brown", "brown dog"]
+  end
+
+private
 
   # Verifies that certain input will be tokenised as expected by the specified
   # analyzer. 

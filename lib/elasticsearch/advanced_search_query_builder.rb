@@ -100,7 +100,7 @@ module Elasticsearch
                     {
                       query_string: {
                         query: escape(@keywords),
-                        analyzer: "query_default"
+                        analyzer: "query_with_old_synonyms"
                       }
                     }
                   ]

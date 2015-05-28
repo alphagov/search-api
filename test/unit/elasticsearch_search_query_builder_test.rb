@@ -30,7 +30,7 @@ class SearchQueryBuilderTest < ShouldaUnitTestCase
       match: {
         _all: {
           query: "tomahawk",
-          analyzer: "query_default"
+          analyzer: "query_with_old_synonyms"
         },
       }
     }

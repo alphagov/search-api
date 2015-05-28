@@ -1,4 +1,9 @@
 {
+  "all_searchable_text": {
+    "description": "Special field which searchable text is copied into; similar to the standard `_all` field, but more customisable",
+    "type": "all_searchable_text_type"
+  },
+
   "format": {
     "type": "identifier"
   },
