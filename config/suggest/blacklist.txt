@@ -1,4 +1,0 @@
-# Words not to be used as suggestions.
-fuck
-fucks
-penis
