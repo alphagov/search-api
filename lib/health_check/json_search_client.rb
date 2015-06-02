@@ -13,7 +13,15 @@ module HealthCheck
     def search(term, params = {})
       params = { q: term }.merge(params)
       query_string = params.map { |k, v| "#{k}=" + CGI.escape(v.to_s) }.join('&')
-      url = [@base_url, query_string].join('?')
+      url_components = [@base_url, query_string]
+
+      # base_url can be in the form of example.org/search.json?debug=something
+      # or example.org/search.json.
+      url = if @base_url.to_s.include?('?')
+        url_components.join('&')
+      else
+        url_components.join('?')
+      end
 
       request = Net::HTTP::Get.new(url)
       request.basic_auth(*@authentication) if @authentication
