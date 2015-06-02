@@ -1,15 +1,27 @@
 # Rummager
 
-Rummager is now primarily based on elasticsearch.
+Rummager is the internal GOV.UK API for search.
 
-## Get started
+## Live examples
 
-Install [elasticsearch 0.90](http://www.elasticsearch.org/downloads/0-90-13/).
-Rummager doesn't yet work with 1.0 or later.
+- [alphagov/frontend](https://github.com/alphagov/frontend) uses Rummager to serve the GOV.UK search at [gov.uk/search](https://www.gov.uk/search).
+- [alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses Rummager to serve document finders like [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports).
 
-Install [Redis 2.x](http://redis.io/download)
+This API is publicly accessible:
 
-Run the application with `./startup.sh` this uses shotgun/thin.
+https://www.gov.uk/api/search.json?q=taxes
+![Screenshot of API Response](docs/api-screenshot.png)
+
+## Technical documentation
+
+This is a Sinatra application that provides an API for search to multiple applications. It isn't supposed to be used by regular users, but it is publicly available on [gov.uk/api/search.json](https://www.gov.uk/api/search.json?q=taxes).
+
+### Dependencies
+
+- [elasticsearch](https://github.com/elastic/elasticsearch) - "You Know, for Search...".
+- [redis](https://github.com/redis/redis) - used by indexing workers.
+
+### Setup
 
 To create indices, or to update them to the latest index settings, run:
 
@@ -22,6 +34,18 @@ If you have indices from a Rummager instance before aliased indices, run:
 If you don't know which of these you need to run, try running the first one; it
 will fail safely with an error if you have an unmigrated index.
 
+### Running the application
+
+If you're running the GDS development VM:
+
+    cd /var/govuk/development && bundle exec bowl rummager
+
+If you're not running the GDS development VM:
+
+    ./startup.sh
+
+Rummager should then be available at [rummager.dev.gov.uk](http://rummager.dev.gov.uk/unified_search.json?q=taxes).
+
 Rummager has an asynchronous mode, disabled in development by default, that
 posts documents to a queue to be indexed later by a worker. To run this in
 development, you need to run both of these commands:
@@ -29,124 +53,74 @@ development, you need to run both of these commands:
     ENABLE_QUEUE=1 ./startup.sh
     bundle exec rake jobs:work
 
-## Indexing GOV.UK content
+### Running the test suite
 
-### Memory requirements
+    bundle exec rake
 
-In order to build the search index on a VM, you'll need to ensure that your VM
-has sufficient memory: 4Gb is probably a good amount; with 2Gb, the indexing
-process has a tendency to get killed by the out of memory killer.  Do this by
-adding a `Vagrantfile.localconfig` to the same directory as your Vagrantfile:
+### Indexing & Reindexing
 
-    $ cat ./Vagrantfile.localconfig
-    config.vm.provider :virtualbox do |vm|
-      vm.customize [ "modifyvm", :id, "--memory", "4096", "--cpus", "2" ]
-    end
-
-It's probably a good idea to give elasticsearch more memory, too, since that
-will make indexing faster, and also avoid risk of elasticsearch running out of
-memory and killing itself.  Do this by editing
-/etc/init/elasticsearch-govuk-development.conf to include the line:
-
-    env ES_HEAP_SIZE="1024m"
-
-Restart the VM (eg, with `vagrant reload`) after making these changes.
-
-### Popularity information
-
-The gov.uk search uses page popularity information extracted from Google
-Analytics as one of the factors in weighting search results.  This is extracted
-from Google Analytics by the search-analytics project, but for dev machines,
-you should be able to obtain a copy of the page traffic index from preview when
-you run the standard replication of search indexes from preview to dev.
-
-If you do need to fetch the analytics data directly yourself, the
-[search-analytics project README](https://github.com/alphagov/search-analytics)
-describes how to set up and run the extraction of page traffic information from
-Google Analytics.  It will produce a dump file suitable for loading into an
-elasticsearch index using rummager's `bulk_load` tool.
-
-Once you have the popularity data in a file named, say, `page-traffic.dump`,
-load it into elasticsearch using:
-
-    bundle exec bin/bulk_load page-traffic < page-traffic.dump
-
-The popularity information won't affect search results until an index migration
-is run after populating the page-traffic index. As part of the migration, the
-popularity for each document will be computed from the page-traffic index and
-merged into the documents. To do this, run:
+After changing the schema, you'll need to migrate the index.
 
     RUMMAGER_INDEX=all bundle exec rake rummager:migrate_index
 
-### Indexing panopticon content
+### Example API output
 
-Since search indexing happens through Panopticon's single registration API,
-you'll need to have both Panopticon and Rummager running. By default, Panopticon
-will not try to index search content in development mode, so you'll need to pass
-an extra environment variable to it.
+The simplest query:
 
-If you have [Bowler](https://github.com/JordanHatch/bowler) installed, you can
-set these both running with a single command from the `development` repository:
+    curl 'http://rummager.dev.gov.uk/unified_search.json?q=taxes'
 
-    UPDATE_SEARCH=1 bowl panopticon rummager
+For the most up to date query syntax and API output, check the documentation for individual endpoints in [app.rb](app.rb).
 
-The next stage is to register content from the applications you want. For
-example:
+```json
+{  
+   "results":[  
+      {  
+         "title":"Renew vehicle tax",
+         "subsection":"car-tax-discs",
+         "description":"Get vehicle tax from the DVLA for your car, motorbike, lorry, bus or other vehicle - online, by phone or at the Post Office",
+         "link":"/vehicle-tax",
+         "format":"transaction",
+         "organisations":[  
+            {  
+               "slug":"department-for-transport",
+               "link":"/government/organisations/department-for-transport",
+               "title":"Department for Transport",
+               "acronym":"DFT",
+               "organisation_type":"Ministerial department",
+               "organisation_state":"live"
+            },
+            {  
+               "slug":"driver-and-vehicle-licensing-agency",
+               "link":"/government/organisations/driver-and-vehicle-licensing-agency",
+               "title":"Driver and Vehicle Licensing Agency",
+               "acronym":"DVLA",
+               "organisation_state":"live"
+            }
+         ],
+         "public_timestamp":"2014-12-09T16:21:03+00:00",
+         "section":"driving",
+         "index":"mainstream",
+         "es_score":0.29372323,
+         "_id":"/vehicle-tax",
+         "document_type":"edition"
+      },
+      { ... }
+      ],
+   "total":11876,
+   "start":0,
+   "facets":{  
 
-  * Business Support Finder
-  * Calendars
-  * Licence Finder
-  * Publisher
-  * Smart Answers
-  * Trade Tariff
+   },
+   "suggested_queries":[]
+}
+```
 
-To re-register content for a single application, go to its directory and run:
 
-    bundle exec rake panopticon:register
+### Additional Docs
 
-To register content for all the applications, go to the `replication` directory
-in the `development` project and run:
+- [Health Check](docs/health-check.md): usage instructions for the Health Check functionality.
+- [Popularity information](docs/popularity.md): Rummager uses Google Analytics data to improve search results.
 
-    ./rebuild-search-local.sh
+## Licence
 
-To rebuild from the Whitehall application, follow the [instructions in the
-app](https://github.com/alphagov/whitehall#getting-search-running-locally).
-
-## Adding a new index
-
-To add a new index to Rummager, you'll first need to add it to the list of index
-names Rummager knows about in [`elasticsearch.yml`](elasticsearch.yml). For
-instance, you might change it to:
-
-    index_names: ["mainstream", "detailed", "government", "my_new_index"]
-
-To create the index, you'll need to run:
-
-    RUMMAGER_INDEX=my_new_index bundle exec rake rummager:migrate_index
-
-This task will fail if you've already created an index with this name, as
-Rummager can't add an alias that is the name of an existing index. In this case,
-you'll either need to delete your existing index or, if you want to keep its
-contents, run:
-
-    RUMMAGER_INDEX=my_new_index bundle exec rake rummager:migrate_from_unaliased_index
-
-## Health check
-
-As we work on rummager we want some objective metrics of the performance of search. That's what the health check is for.
-
-To run it first download the healthcheck data:
-
-$ ./bin/health_check -d
-
-Then run against your chosen indices:
-
-$ ./bin/health_check mainstream detailed government
-
-Against remote:
-
-$ ./bin/health_check -j "https://www.gov.uk/api/search.json" mainstream detailed government
-
-Against development:
-
-$ ./bin/health_check -j "http://www.dev.gov.uk/api/search.json" mainstream detailed government
+[MIT License](LICENCE.txt)
