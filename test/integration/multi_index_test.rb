@@ -49,7 +49,7 @@ class MultiIndexTest < IntegrationTest
       fields = {
         "title" => title,
         "link" => "/#{short_index_name}-#{i}",
-        "indexable_content" => "Something something important content",
+        "indexable_content" => "Something something important content id #{i}",
       }
       fields["section"] = ["#{i}"]
       if i % 2 == 0

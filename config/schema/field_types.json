@@ -57,6 +57,12 @@
           "include_in_all": false,
           "index_analyzer": "with_index_synonyms",
           "search_analyzer": "with_search_synonyms"
+        },
+        "id_codes": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "analyzer": "with_id_codes"
         }
       }
     }
@@ -76,6 +82,12 @@
           "include_in_all": false,
           "index_analyzer": "with_index_synonyms",
           "search_analyzer": "with_search_synonyms"
+        },
+        "id_codes": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "analyzer": "with_id_codes"
         }
       }
     }
@@ -113,6 +125,12 @@
           "include_in_all": false,
           "index_analyzer": "with_index_synonyms",
           "search_analyzer": "with_search_synonyms"
+        },
+        "id_codes": {
+          "type": "string",
+          "index": "analyzed",
+          "include_in_all": false,
+          "analyzer": "with_id_codes"
         }
       }
     }

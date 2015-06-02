@@ -43,6 +43,7 @@ module QueryComponents
       queries = []
       queries << match_query(:all_searchable_text, search_term)
       queries << match_query(:"all_searchable_text.synonym", search_term) unless debug[:disable_synonyms]
+      queries << match_query(:"all_searchable_text.id_codes", search_term, minimum_should_match: "1")
       dis_max_query(queries, tie_breaker: 0.1)
     end
 
@@ -53,6 +54,7 @@ module QueryComponents
       groups << field_boosts_all_terms
       groups << field_boosts_synonyms unless debug[:disable_synonyms]
       groups << field_boosts_shingles
+      groups << field_boosts_id_codes
 
       groups.map { |queries|
         dis_max_query(queries)
@@ -99,6 +101,14 @@ module QueryComponents
       }
     end
 
+    def field_boosts_id_codes
+      # Return the highest weight found by looking for an id_code match in
+      # individual fields
+      MATCH_FIELDS.map { |field_name, boost|
+        match_query("#{field_name}.id_codes", search_term, minimum_should_match: "1", boost: boost)
+      }
+    end
+
     def dis_max_query(queries, tie_breaker: 0.0, boost: 1.0)
       # Calculates a score by running all the queries, and taking the maximum.
       # Adds in the scores for the other queries multiplied by `tie_breaker`.
@@ -115,14 +125,14 @@ module QueryComponents
       end
     end
 
-    def match_query(field_name, query, type: :boolean, boost: 1.0, operator: :or)
+    def match_query(field_name, query, type: :boolean, boost: 1.0, minimum_should_match: MINIMUM_SHOULD_MATCH, operator: :or)
       {
         match: {
           field_name => {
             type: type,
             boost: boost,
             query: query,
-            minimum_should_match: MINIMUM_SHOULD_MATCH,
+            minimum_should_match: minimum_should_match,
             operator: operator,
           }
         }
