@@ -61,6 +61,7 @@ class BaseParameterParser
   # preceded with a "-" to sort in descending order.
   #  - filtered: sort fields which have filters applied to them first.
   #  - count: sort values by number of matching documents.
+  #  - value: sort by value if string, sort by title if not a string
   #  - value.slug: sort values by the slug part of the value.
   #  - value.title: sort values by the title of the value.
   #  - value.link: sort values by the link of the value.
@@ -68,6 +69,7 @@ class BaseParameterParser
   ALLOWED_FACET_SORT_OPTIONS = %w(
     filtered
     count
+    value
     value.slug
     value.title
     value.link

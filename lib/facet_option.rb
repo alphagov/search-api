@@ -44,6 +44,12 @@ private
       )
     when :count
       count <=> other.count
+    when :value
+      if value.is_a?(String)
+        value.downcase <=> other.value.downcase
+      else
+        value.fetch("title", "").downcase <=> other.value.fetch("title", "").downcase
+      end
     when :"value.slug"
       value.fetch("slug", "") <=> other.value.fetch("slug", "")
     when :"value.title"
