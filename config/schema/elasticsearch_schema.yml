@@ -136,7 +136,7 @@ index:
       filter:
         stemmer_english:
           type: stemmer
-          name: english
+          name: porter2
 
         # Filter used in the analyzer for ".shingle" subfields
         text_shingles:
