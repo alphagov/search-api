@@ -105,6 +105,22 @@ class FacetOptionTest  < MiniTest::Unit::TestCase
     )
   end
 
+  def test_compare_by_value
+    orderings = [[:value, 1]]
+    assert(
+      FacetOption.new("a", 0, false, orderings) <
+      FacetOption.new("b", 0, false, orderings)
+    )
+  end
+
+  def test_compare_by_value_with_title
+    orderings = [[:value, 1]]
+    assert(
+      FacetOption.new({"title" => "a"}, 0, false, orderings) <
+      FacetOption.new({"title" => "b"}, 0, false, orderings)
+    )
+  end
+
   def test_fall_back_to_slug_ordering
     orderings = [[:count, 1]]
     assert(
