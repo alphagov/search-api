@@ -43,6 +43,7 @@ class HealthCheckCLI
       on 'a', 'auth=', "Basic auth credentials (of the form 'user:pass'", as: HealthCheck::BasicAuthCredentials
       on 'j', 'json=', "Connect to a Rummager unified search endpoint at the the given url (eg. #{DEFAULT_JSON_URL})", default: DEFAULT_JSON_URL
       on 'v', 'verbose', "Show verbose logging output"
+      on 'type=', "Which tests to run. 'suggestions' or 'results' (default)"
       run(health_checker)
     end
   end
@@ -66,8 +67,11 @@ class HealthCheckCLI
     elsif opts.help?
       usage(opts)
     else
-      run_suggestions_test if opts.json?
-      run_search_result_tests(args)
+      if opts["type"] == "suggestions"
+        run_suggestions_test
+      else
+        run_search_result_tests(args)
+      end
     end
   end
 
