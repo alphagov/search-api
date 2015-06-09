@@ -7,6 +7,11 @@ class SettingsTest < IntegrationTest
       "It's Mitt’s" => ["it", "mitt"]
   end
 
+  def test_uses_correct_stemming
+    assert_tokenisation :default,
+      "news" => ["news"]
+  end
+
   def test_query_default
     assert_tokenisation :query_default,
       "It's A Small World" => ["it", "small", "world"],
