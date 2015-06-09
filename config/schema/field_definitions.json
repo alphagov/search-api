@@ -98,6 +98,11 @@
     }
   },
 
+  "detailed_format": {
+    "description": "A slugified version of the display_type field",
+    "type": "identifier"
+  },
+
   "display_type": {
     "type": "identifier"
   },

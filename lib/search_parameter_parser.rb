@@ -27,7 +27,7 @@ class BaseParameterParser
   # The fields listed here are the only ones which can be used to calculated
   # facets for.  This should be a subset of allowed_filter_fields
   ALLOWED_FACET_FIELDS = %w(
-    display_type
+    detailed_format
     document_collections
     format
     mainstream_browse_pages
@@ -89,6 +89,7 @@ class BaseParameterParser
   # results.
   ALLOWED_RETURN_FIELDS = %w(
     description
+    detailed_format
     display_type
     document_collections
     document_series
