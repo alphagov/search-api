@@ -122,7 +122,7 @@ module Registry
 
   class Person < BaseRegistry
     def initialize(index, field_definitions)
-      super(index, field_definitions, "people")
+      super(index, field_definitions, "person")
     end
   end
 end
