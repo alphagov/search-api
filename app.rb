@@ -40,12 +40,6 @@ class Rummager < Sinatra::Application
     )
   end
 
-  def govuk_indices
-    settings.search_config.govuk_index_names.map do |index_name|
-      search_server.index(index_name)
-    end
-  end
-
   def unified_index_schema
     @unified_index_schema ||= CombinedIndexSchema.new(
       settings.search_config.govuk_index_names,
@@ -90,17 +84,6 @@ class Rummager < Sinatra::Application
 
   error Elasticsearch::BulkIndexFailure do
     halt(500, env['sinatra.error'].message)
-  end
-
-  before "/?:index?/search.?:request_format?" do
-    @query = params["q"].to_s.gsub(/[\u{0}-\u{1f}]/, "").strip
-
-    if @query == ""
-      expires 3600, :public
-      halt 404
-    end
-
-    expires 3600, :public if @query.length < 20
   end
 
   # Return a unified set of results for the GOV.UK site search.
