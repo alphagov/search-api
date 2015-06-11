@@ -20,8 +20,11 @@ class BulkLoader
 
   def load_from_current_index
     build_and_switch_index do |queue|
-      index_group.current_real.all_documents(timeout_options).each_slice(@document_batch_size) do |documents|
-        queue.push(documents.map(&:elasticsearch_export))
+      current_index = index_group.current_real
+      if current_index
+        current_index.all_documents(timeout_options).each_slice(@document_batch_size) do |documents|
+          queue.push(documents.map(&:elasticsearch_export))
+        end
       end
     end
   end

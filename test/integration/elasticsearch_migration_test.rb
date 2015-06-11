@@ -139,4 +139,20 @@ class ElasticsearchMigrationTest < IntegrationTest
     get "/unified_search?q=directive"
     assert_equal 2, JSON.parse(last_response.body)["results"].length
   end
+
+  def test_reindex_with_no_existing_index
+    # Test that a reindex will still create the index and alias with no
+    # existing index
+
+    try_remove_test_index
+
+    BulkLoader.new(search_config, "mainstream_test").load_from_current_index
+
+    index_group = search_server.index_group("mainstream_test")
+    new_index = index_group.current_real
+    refute_nil new_index
+
+    # Ensure it's an aliased index
+    refute_equal "mainstream_test", new_index.real_name
+  end
 end
