@@ -34,6 +34,39 @@ class BulkLoader
     end
   end
 
+  def load_from_current_index
+    new_index = index_group.create_index
+    old_index = index_group.current_real
+
+    if old_index
+      old_index.with_lock do
+        new_index.populate_from old_index
+
+        # Now bulk inserts fail if any of their operations fail (de47247),
+        # and now we lock the old index to avoid any writes (87a7c60), the
+        # document counts should always match if we get to this point without
+        # throwing an exception, but it's a nice safeguard to have
+        new_count = new_index.all_documents.size
+        old_count = old_index.all_documents.size
+        unless new_count == old_count
+          @logger.error(
+            "Population miscount: new index has #{new_count} documents, " +
+            "while old index has #{old_count}."
+          )
+          raise RuntimeError, "Population count mismatch"
+        end
+
+        # Switch aliases inside the lock so we avoid a race condition where a
+        # new index exists, but the old index is available for writes
+        index_group.switch_to new_index
+
+        old_index.close
+      end
+    else
+      index_group.switch_to new_index
+    end
+  end
+
 private
   def do_indexing(index, iostream)
     @logger.info "Indexing to #{index.real_name}"
