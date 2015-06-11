@@ -5,7 +5,7 @@ class BulkLoader
     @search_config = search_config
     @index_name = index_name
     @batch_size = options[:batch_size] || 256 * 1024
-    @logger = options[:logger] || Logger.new(nil)
+    @logger = Logging.logger[self]
   end
 
   def load_from(iostream)

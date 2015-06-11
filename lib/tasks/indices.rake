@@ -37,7 +37,7 @@ You should run this task if the index schema has changed.
     require 'bulk_loader'
 
     index_names.each do |index_name|
-      BulkLoader.new(search_config, index_name, :logger => logger).load_from_current_index
+      BulkLoader.new(search_config, index_name).load_from_current_index
     end
   end
 

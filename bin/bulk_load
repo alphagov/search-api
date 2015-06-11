@@ -26,7 +26,7 @@ load the alias is switched over.
 }
   run do |opts, args|
     if args.size == 1
-      BulkLoader.new(search_config, args.first, logger: Logger.new(STDERR)).load_from($stdin)
+      BulkLoader.new(search_config, args.first).load_from($stdin)
     else
       puts self
     end
