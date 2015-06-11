@@ -43,8 +43,12 @@ module ElasticsearchIntegrationHelpers
     WebMock.disable_net_connect!(allow: only_test_databases)
   end
 
+  def search_config
+    app.settings.search_config
+  end
+
   def search_server
-    app.settings.search_config.search_server
+    search_config.search_server
   end
 
   def create_test_index(group_name = DEFAULT_INDEX_NAME)

@@ -1,5 +1,6 @@
 require "integration_test_helper"
 require "rack/logger"
+require "bulk_loader"
 
 class ElasticsearchMigrationTest < IntegrationTest
 
@@ -15,7 +16,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     @stemmer["rules"] = ["fish => fish"]
 
     create_test_indexes
-    add_sample_documents
+    add_documents(sample_document_attributes)
     commit_index
   end
 
@@ -38,9 +39,9 @@ class ElasticsearchMigrationTest < IntegrationTest
     ]
   end
 
-  def add_sample_documents
-    sample_document_attributes.each do |sample_document|
-      post "/documents", sample_document.to_json
+  def add_documents(documents)
+    documents.each do |document|
+      post "/documents", document.to_json
       assert last_response.ok?
     end
   end
@@ -64,15 +65,53 @@ class ElasticsearchMigrationTest < IntegrationTest
     @stemmer["rules"] = ["directive => directive"]
 
     index_group = search_server.index_group("mainstream_test")
-    new_index = index_group.create_index
-    new_index.populate_from index_group.current
+    original_index_name = index_group.current_real.real_name
 
-    index_group.switch_to new_index
+    BulkLoader.new(search_config, "mainstream_test").load_from_current_index
+
+    # Ensure the indexes have actually been switched.
+    refute_equal original_index_name, index_group.current_real.real_name
 
     get "/unified_search?q=directive"
     assert_result_links "/important"
 
     get "/unified_search?q=direct"
     assert_result_links "/aliens"
+  end
+
+  def test_full_reindex_multiple_batches
+    index_group = search_server.index_group("mainstream_test")
+    extra_documents = (Elasticsearch::Index.populate_batch_size + 5).times.map do |n|
+      {
+        "_type" => "edition",
+        "title" => "Document #{n}",
+        "format" => "answer",
+        "link" => "/doc-#{n}",
+      }
+    end
+    index_group.current_real.bulk_index(extra_documents)
+    commit_index
+
+    get "/unified_search?q=directive"
+    assert_equal 2, JSON.parse(last_response.body)["results"].length
+
+    @stemmer["rules"] = ["directive => directive"]
+
+    index_group = search_server.index_group("mainstream_test")
+    original_index_name = index_group.current_real.real_name
+
+    BulkLoader.new(search_config, "mainstream_test").load_from_current_index
+
+    # Ensure the indexes have actually been switched.
+    refute_equal original_index_name, index_group.current_real.real_name
+
+    get "/unified_search?q=directive"
+    assert_result_links "/important"
+
+    get "/unified_search?q=direct"
+    assert_result_links "/aliens"
+
+    get "/unified_search?q=Document&count=100"
+    assert_equal Elasticsearch::Index.populate_batch_size + 5, JSON.parse(last_response.body)["results"].length
   end
 end
