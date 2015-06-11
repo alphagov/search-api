@@ -649,21 +649,6 @@ EOS
     @wrapper.all_documents(timeout: 20, open_timeout: 25)
   end
 
-  def test_should_specify_longer_timeouts_on_population
-    timeout_params = {
-      timeout: Elasticsearch::Index::LONG_TIMEOUT_SECONDS,
-      open_timeout: Elasticsearch::Index::LONG_OPEN_TIMEOUT_SECONDS
-    }
-    stub_doc = stub("document")
-    old_index = mock("old index")
-    old_index.stubs(:index_name).returns("Old index")
-    old_index.expects(:all_documents).with(has_entries(timeout_params)).returns([stub_doc])
-    @wrapper.expects(:add).with([stub_doc], has_entries(timeout_params))
-    @wrapper.expects(:commit).at_most_once  # Not central to this test
-
-    @wrapper.populate_from(old_index)
-  end
-
   def scroll_uri(scroll_id)
      "http://example.com:9200/_search/scroll?scroll=60m&scroll_id=#{scroll_id}"
   end
