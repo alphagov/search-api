@@ -26,6 +26,34 @@ class BulkLoader
     end
   end
 
+  def load_from_current_unaliased_index
+    old_index = index_group.current
+    real_old_index_name = old_index.real_name
+    unless real_old_index_name == @index_name
+      # This task only makes sense if we're migrating from an unaliased index
+      raise "Expecting index name #{@index_name.inspect}; found #{real_old_index_name.inspect}"
+    end
+
+    new_index = index_group.create_index
+    @logger.info "...index '#{new_index.real_name}' created"
+
+    @logger.info "Populating new #{@index_name} index..."
+    populate_index(new_index) do |queue|
+      old_index.all_documents(timeout_options).each_slice(@document_batch_size) do |documents|
+        queue.push(documents.map(&:elasticsearch_export))
+      end
+    end
+    @logger.info "...index populated."
+
+    @logger.info "Deleting #{@index_name} index..."
+    index_group.send :delete, CGI.escape(@index_name)
+    @logger.info "...deleted."
+
+    @logger.info "Switching #{@index_name}..."
+    index_group.switch_to new_index
+    @logger.info "...switched"
+  end
+
 private
 
   def build_and_switch_index(&producer_block)

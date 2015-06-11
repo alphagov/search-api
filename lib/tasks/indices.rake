@@ -56,30 +56,10 @@ You should run this task if the index schema has changed.
     # WARNING: this is potentially dangerous, and will leave the search
     # unavailable for a very short (sub-second) period of time
 
+    require 'bulk_loader'
+
     index_names.each do |index_name|
-      index_group = search_server.index_group(index_name)
-
-      real_index_name = index_group.current.real_name
-      unless real_index_name == index_name
-        # This task only makes sense if we're migrating from an unaliased index
-        raise "Expecting index name #{index_name.inspect}; found #{real_index_name.inspect}"
-      end
-
-      logger.info "Creating new #{index_name} index..."
-      new_index = index_group.create_index
-      logger.info "...index '#{new_index.real_name}' created"
-
-      logger.info "Populating new #{index_name} index..."
-      new_index.populate_from index_group.current
-      logger.info "...index populated."
-
-      logger.info "Deleting #{index_name} index..."
-      index_group.send :delete, CGI.escape(index_name)
-      logger.info "...deleted."
-
-      logger.info "Switching #{index_name}..."
-      index_group.switch_to new_index
-      logger.info "...switched"
+      BulkLoader.new(search_config, index_name).load_from_current_unaliased_index
     end
   end
 
