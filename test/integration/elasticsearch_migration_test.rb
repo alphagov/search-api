@@ -80,8 +80,9 @@ class ElasticsearchMigrationTest < IntegrationTest
   end
 
   def test_full_reindex_multiple_batches
+    test_batch_size = 30
     index_group = search_server.index_group("mainstream_test")
-    extra_documents = (Elasticsearch::Index.populate_batch_size + 5).times.map do |n|
+    extra_documents = (test_batch_size + 5).times.map do |n|
       {
         "_type" => "edition",
         "title" => "Document #{n}",
@@ -100,7 +101,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     index_group = search_server.index_group("mainstream_test")
     original_index_name = index_group.current_real.real_name
 
-    BulkLoader.new(search_config, "mainstream_test").load_from_current_index
+    BulkLoader.new(search_config, "mainstream_test", :document_batch_size => test_batch_size).load_from_current_index
 
     # Ensure the indexes have actually been switched.
     refute_equal original_index_name, index_group.current_real.real_name
@@ -112,6 +113,30 @@ class ElasticsearchMigrationTest < IntegrationTest
     assert_result_links "/aliens"
 
     get "/unified_search?q=Document&count=100"
-    assert_equal Elasticsearch::Index.populate_batch_size + 5, JSON.parse(last_response.body)["results"].length
+    assert_equal test_batch_size + 5, JSON.parse(last_response.body)["results"].length
+  end
+
+  def test_handles_errors_correctly
+    # Test that an error while re-indexing is reported, and aborts the whole process.
+
+    Elasticsearch::Index.any_instance.stubs(:bulk_index).raises(Elasticsearch::IndexLocked)
+
+    get "/unified_search?q=directive"
+    assert_equal 2, JSON.parse(last_response.body)["results"].length
+
+    @stemmer["rules"] = ["directive => directive"]
+
+    index_group = search_server.index_group("mainstream_test")
+    original_index_name = index_group.current_real.real_name
+
+    assert_raises Elasticsearch::IndexLocked do
+      BulkLoader.new(search_config, "mainstream_test").load_from_current_index
+    end
+
+    # Ensure the the indexes haven't been swapped
+    assert_equal original_index_name, index_group.current_real.real_name
+
+    get "/unified_search?q=directive"
+    assert_equal 2, JSON.parse(last_response.body)["results"].length
   end
 end
