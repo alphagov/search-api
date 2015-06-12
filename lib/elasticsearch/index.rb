@@ -40,11 +40,6 @@ module Elasticsearch
       end
     end
 
-    # The number of documents to insert at once when populating
-    def self.populate_batch_size
-      50
-    end
-
     # The number of documents to retrieve at once when retrieving all documents
     # Gotcha: this is actually the number of documents per shard, so there will
     # be up to some multiple of this number per page.
@@ -57,11 +52,6 @@ module Elasticsearch
 
     # How long to wait for a connection to the elasticsearch server
     OPEN_TIMEOUT_SECONDS = 5.0
-
-    # Extra-long timeouts for migrations, since we're more worried about these
-    # completing reliably than completing quickly
-    LONG_TIMEOUT_SECONDS = TIMEOUT_SECONDS * 3
-    LONG_OPEN_TIMEOUT_SECONDS = OPEN_TIMEOUT_SECONDS * 3
 
     attr_reader :mappings, :index_name
 
@@ -203,26 +193,6 @@ module Elasticsearch
 
     def amend_queued(link, updates)
       queue.queue_amend(link, updates)
-    end
-
-    def populate_from(source_index, option_overrides = {})
-      total_indexed = 0
-      options = {
-        timeout: LONG_TIMEOUT_SECONDS,
-        open_timeout: LONG_OPEN_TIMEOUT_SECONDS,
-      }.merge(option_overrides)
-      all_docs = source_index.all_documents(options)
-      all_docs.each_slice(self.class.populate_batch_size) do |documents|
-        add(documents, options)
-        total_indexed += documents.length
-        logger.info do
-          progress = "#{total_indexed}/#{all_docs.size}"
-          source_name = source_index.index_name
-          "Populated #{progress} from #{source_name} into #{index_name}"
-        end
-      end
-
-      commit
     end
 
     def get(link)
