@@ -210,8 +210,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       @empty_result = sample_docs.first.tap {|doc|
         doc['fields'] = nil
       }
-      response = sample_es_response.tap {|response|
-        response['hits']['hits'] = [ @empty_result ]
+      response = sample_es_response.tap {|es_response|
+        es_response['hits']['hits'] = [ @empty_result ]
       }
 
       @output = UnifiedSearchPresenter.new({ start: 0 }, response).present

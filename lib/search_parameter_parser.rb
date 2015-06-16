@@ -431,14 +431,14 @@ private
       end
 
       values.map { |combined_from_and_to|
-        dates = combined_from_and_to.split(",").reduce({}) { |dates, param|
+        dates_hash = combined_from_and_to.split(",").reduce({}) { |dates, param|
           key, date = param.split(":")
           dates.merge(key => parse_date(date))
         }
 
         Value.new(
-          dates.fetch("from", null_date),
-          dates.fetch("to", null_date),
+          dates_hash.fetch("from", null_date),
+          dates_hash.fetch("to", null_date),
         )
       }
     end
