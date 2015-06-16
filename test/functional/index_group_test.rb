@@ -124,7 +124,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
 
   def test_switch_index_with_existing_real_index
     new_index = stub("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
         body: {

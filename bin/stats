@@ -25,7 +25,7 @@ def number_with_delimiter(number)
 end
 
 def words_without_punctuation(copy)
-  words = copy.split(/\s+/) # this will include lots of things not wordy, and include variations that have eg punctuation
+  copy.split(/\s+/) # this will include lots of things not wordy, and include variations that have eg punctuation
 end
 
 # The indexes which make up GOV.UK. Excludes the Service Manual

@@ -265,7 +265,7 @@ private
     begin
       # Put strings into NFKC-normal form to ensure that accent handling works
       # correctly in elasticsearch.
-      s = normalizer.normalize(s, :nfkc).strip
+      normalizer.normalize(s, :nfkc).strip
     rescue ArgumentError
       @errors << %{Invalid unicode in #{description}}
       return nil
