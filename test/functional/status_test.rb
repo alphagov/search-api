@@ -62,7 +62,7 @@ class StatusTest < IntegrationTest
     assert_equal 2, parsed_response["queues"]["bulk"]["scheduled"]
   end
 
-  def test_shows_zero_retry_count
+  def test_shows_zero_retry_count_scheduled
     Sidekiq::ScheduledSet.expects(:new).returns([])
     Sidekiq::Stats.any_instance.expects(:queues).returns(
       {"bulk" => 12}
