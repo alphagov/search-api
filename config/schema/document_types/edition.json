@@ -31,7 +31,8 @@
     "has_act_paper",
     "is_political",
     "is_historic",
-    "government_name"
+    "government_name",
+    "important_to_policy"
   ],
 
   "allowed_values": {

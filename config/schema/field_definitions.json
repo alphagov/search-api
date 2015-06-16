@@ -394,5 +394,10 @@
   "spelling_text": {
     "description": "Generated field, populated with the same content as sent to the _all field, but tokenised into words, lowercased and shingled, not stemmed, etc",
     "type": "spelling_text"
+  },
+
+  "important_to_policy": {
+    "description": "A flag set by editors to mark a document as being important to policy",
+    "type": "boolean"
   }
 }
