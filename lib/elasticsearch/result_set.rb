@@ -17,7 +17,6 @@ class ResultSet
     ResultSet.new(results, total)
   end
 
-private
   def self.document_from_hit(hit, document_types)
     Document.from_hash(hit["_source"], document_types, hit["_score"])
   end
