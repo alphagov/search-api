@@ -4,7 +4,7 @@ gem "unicorn", "4.6.2"
 gem "raindrops", "0.11.0"
 gem "sinatra", "1.3.4"
 gem "rake", "0.9.2", :require => false
-gem "rack", "1.5.2"
+gem "rack", "~> 1.6"
 gem "rest-client", "1.6.7"
 gem "logging", "1.8.1"
 gem 'nokogiri', "1.5.5"
