@@ -160,8 +160,7 @@ private
   end
 
   def filter_values_for_field(field)
-    filter = @applied_filters.find { |filter| filter.field_name == field }
-
+    filter = @applied_filters.find { |applied_filter| applied_filter.field_name == field }
     filter ? filter.values : []
   end
 

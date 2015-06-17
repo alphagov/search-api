@@ -136,7 +136,6 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
 
   def test_returns_the_total_and_the_hits
     stub_empty_search()
-    expected_result = {total: 0, results: []}
     result_set = @wrapper.advanced_search(default_params)
     assert_equal 0, result_set.total
     assert_equal [], result_set.results

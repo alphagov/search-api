@@ -89,7 +89,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the start parameter" do
-    p = SearchParameterParser.new({"start" => ["5"]}, @schema) 
+    p = SearchParameterParser.new({"start" => ["5"]}, @schema)
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params(start: 5), p.parsed_params)
@@ -403,7 +403,9 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       parser = SearchParameterParser.new(params, @schema)
 
       opened_date_filter = parser.parsed_params.fetch(:filters)
-      .find { |filter| filter.field_name == "opened_date" }
+        .find { |filter| filter.field_name == "opened_date" }
+
+      assert_nil opened_date_filter
     end
   end
 

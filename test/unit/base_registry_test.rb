@@ -41,7 +41,8 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
       .with("example-format", sample_field_definitions(%w{slug link title}))
-    fetched_documents = @base_registry["example-document"]
+
+    @base_registry["example-document"]
   end
 
   def test_returns_nil_if_document_collection_not_found
