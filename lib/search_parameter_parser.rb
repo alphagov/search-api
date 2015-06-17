@@ -35,6 +35,7 @@ class BaseParameterParser
     organisations
     people
     policies
+    search_format_types
     section
     specialist_sectors
   )
