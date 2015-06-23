@@ -11,6 +11,7 @@ class BaseParameterParser
   ALLOWED_SORT_FIELDS = %w(
     last_update
     public_timestamp
+    closing_date
     title
   )
 
