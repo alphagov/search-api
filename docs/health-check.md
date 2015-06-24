@@ -8,12 +8,12 @@ $ ./bin/health_check -d
 
 Then run against your chosen indices:
 
-$ ./bin/health_check mainstream detailed government
+$ ./bin/health_check
 
 Against remote:
 
-$ ./bin/health_check -j "https://www.gov.uk/api/search.json" mainstream detailed government
+$ ./bin/health_check -j "https://www.gov.uk/api/search.json"
 
 Against development:
 
-$ ./bin/health_check -j "http://www.dev.gov.uk/api/search.json" mainstream detailed government
+$ ./bin/health_check -j "http://www.dev.gov.uk/api/search.json"

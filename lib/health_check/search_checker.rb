@@ -1,5 +1,4 @@
 require "uri"
-require "health_check/local_search_client"
 require "health_check/check_file_parser"
 require "health_check/calculator"
 
