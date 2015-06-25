@@ -90,7 +90,7 @@ class HealthCheckCLI
     check_file = open_file(DATA_DIR + "suggestions.csv")
 
     calculator = HealthCheck::SuggestionChecker.new(
-      search_client: search_client_for(nil),
+      search_client: search_client,
       test_data: check_file
     ).run!
 
