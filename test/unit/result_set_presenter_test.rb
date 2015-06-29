@@ -140,7 +140,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
 
   def test_expands_sectors
     oil_gas_sector_fields = {
-      "link" => "/oil-and-gas/licensing",
+      "link" => "/topic/oil-and-gas/licensing",
       "title" => "Licensing",
       "slug" => "oil-and-gas/licensing",
     }
@@ -158,7 +158,7 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
     assert_equal 1, output["results"][0]["specialist_sectors"].size
     assert_instance_of Hash, output["results"][0]["specialist_sectors"][0]
     assert_equal "Licensing", output["results"][0]["specialist_sectors"][0]["title"]
-    assert_equal "/oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["link"]
+    assert_equal "/topic/oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["link"]
     assert_equal "oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["slug"]
   end
 

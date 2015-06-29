@@ -81,30 +81,7 @@ module Registry
 
   class SpecialistSector < BaseRegistry
     def initialize(index, field_definitions)
-      super(index, field_definitions, "specialist_sector", %w{link title})
-    end
-
-    def [](slug)
-      all[slug]
-    end
-
-  private
-    def fetch
-      Hash[find_documents_by_format.map { |document|
-        # Specialist sector documents don't come from whitehall and so they don't
-        # have a slug in search.  Panopticon constructs the link field from the
-        # slug (held in panopticon) by adding a '/' prefix, so rather than do the
-        # work now to add a slug and reindex the sectors, we construct a slug
-        # field for the cached sector results in SpecialistSectorRegistry by
-        # removing this '/'.
-        #
-        # This can be removed if the slug is ever actually added to
-        # specialist_sector documents.
-        fields = document.to_hash
-        slug = fields["link"][1..-1]
-        fields["slug"] = slug
-        [slug, fields]
-      }]
+      super(index, field_definitions, "specialist_sector")
     end
   end
 
