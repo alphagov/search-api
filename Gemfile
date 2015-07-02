@@ -5,7 +5,7 @@ gem "raindrops", "0.11.0"
 gem "sinatra", "1.3.4"
 gem "rake", "0.9.2", :require => false
 gem "rack", "~> 1.6"
-gem "rest-client", "1.6.7"
+gem "rest-client", "1.8.0"
 gem "logging", "1.8.1"
 gem 'nokogiri', "1.5.5"
 gem 'whenever', require: false
@@ -14,7 +14,7 @@ gem "sidekiq", "2.13.0"
 # pin to version that includes security vulnerability fix
 gem "redis-namespace", "1.3.1"
 gem "plek", "1.5.0"
-gem "gds-api-adapters", "7.18.0"
+gem "gds-api-adapters", "20.1.1"
 gem "rack-logstasher", "0.0.3"
 gem 'airbrake', '4.0.0'
 gem "unf", "0.1.3"

@@ -20,7 +20,7 @@ namespace :router do
     ].each do |path, type|
       begin
         puts "Registering #{type} route #{path}"
-        @router_api.add_route path, type, @app_id, :skip_commit => true
+        @router_api.add_route path, type, @app_id
       rescue => e
         puts "Error registering route: #{e.message}"
         raise
