@@ -1,16 +1,6 @@
 app_path = File.dirname(__FILE__)
 $:.unshift(app_path) unless $:.include?(app_path)
 
-# Raindrops is only loaded when running under Unicorn so we need the conditional
-# to prevent an undefined constant error.
-#
-# This middleware adds a /_raindrops path that exposes stats. To see this in
-# development, start the app like this instead of the usual running under thin:
-#    bundle exec unicorn -l 3009
-if defined?(Raindrops)
-	use Raindrops::Middleware, :stats => $stats
-end
-
 require "env"
 
 require "bundler"

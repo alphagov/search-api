@@ -1,6 +1,3 @@
-require 'raindrops'
-$stats ||= Raindrops::Middleware::Stats.new
-
 def load_file_if_exists(config, file)
   config.instance_eval(File.read(file)) if File.exist?(file)
 end
