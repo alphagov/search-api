@@ -83,41 +83,6 @@ class BaseParameterParser
   #            the query and filters
   ALLOWED_EXAMPLE_SCOPES = [:global, :query]
 
-  # The fields listed here are the only ones that can be returned in search
-  # results.  These are listed and validated explicitly, rather than simply
-  # allowing any field in the schema, to keep the set of such fields as minimal
-  # as possible.  This lets us reorganise the way other fields are stored and
-  # indexed without having to check that we don't break the display of search
-  # results.
-  ALLOWED_RETURN_FIELDS = %w(
-    description
-    detailed_format
-    display_type
-    document_collections
-    document_series
-    format
-    government_name
-    is_historic
-    last_update
-    latest_change_note
-    link
-    mainstream_browse_pages
-    manual
-    organisation_state
-    organisations
-    people
-    policies
-    public_timestamp
-    section
-    slug
-    specialist_sectors
-    subsection
-    subsubsection
-    title
-    topics
-    world_locations
-  )
-
   # The fields which are returned by default for search results.
   DEFAULT_RETURN_FIELDS = %w(
     description
