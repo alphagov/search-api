@@ -193,7 +193,7 @@ class Rummager < Sinatra::Application
   #       ],
   #       "total": 19,
   #       "offset": 0,
-  #       "spelling_suggestions": [
+  #       "suggested_queries": [
   #         ...
   #       ],
   #       "facets": {
@@ -256,7 +256,8 @@ class Rummager < Sinatra::Application
     # Using request.params because it is just the params from the request
     # rather than things added by Sinatra (eg splat, captures, index and format)
     result_set = current_index.advanced_search(request.params)
-    ResultSetPresenter.new(result_set).present.to_json
+    results = ResultSetPresenter.new(result_set).results
+    { total: result_set.total, results: results }.to_json
   end
 
   get "/organisations.?:request_format?" do

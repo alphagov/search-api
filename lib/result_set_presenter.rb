@@ -10,18 +10,11 @@ class ResultSetPresenter
     @schema = schema
   end
 
-  def present
-    {
-      "total" => @result_set.total,
-      "results" => results,
-      "spelling_suggestions" => []
-    }
-  end
-
-private
   def results
     @result_set.results.map { |document| build_result(document) }
   end
+
+private
 
   def build_result(document)
     result = expand_metadata(document.to_hash)

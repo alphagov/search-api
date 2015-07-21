@@ -3,17 +3,16 @@ require "document"
 require "result_set_presenter"
 
 class ResultSetPresenterTest < MiniTest::Unit::TestCase
-
-  FIELDS = %w(link title description format organisations topics document_series document_collections world_locations specialist_sectors people)
-
-  # Tests
+  FIELDS = %w(link title description format organisations topics document_series
+              document_collections world_locations specialist_sectors people)
 
   def test_generates_json_from_documents
     presenter = ResultSetPresenter.new(result_set)
-    output = presenter.present
-    assert_equal 1, output["results"].length
-    # Check all the fields from the document are present
-    assert_equal [], %w(link title description format) - output["results"][0].keys
+
+    results = presenter.results
+
+    assert_equal 1, results.length
+    assert_equal [], %w(link title description format) - results[0].keys
   end
 
   def test_expands_document_series
@@ -32,13 +31,14 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       document_series: document_series_registry
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["document_series"].size
-    assert_instance_of Hash, output["results"][0]["document_series"][0]
-    assert_equal "Rail statistics", output["results"][0]["document_series"][0]["title"]
+    results = presenter.results
+
+    assert_equal 1, results[0]["document_series"].size
+    assert_instance_of Hash, results[0]["document_series"][0]
+    assert_equal "Rail statistics", results[0]["document_series"][0]["title"]
     assert_equal "/government/organisations/department-for-transport/series/rail-statistics",
-      output["results"][0]["document_series"][0]["link"]
-    assert_equal "rail-statistics", output["results"][0]["document_series"][0]["slug"]
+      results[0]["document_series"][0]["link"]
+    assert_equal "rail-statistics", results[0]["document_series"][0]["slug"]
   end
 
   def test_expands_document_collection
@@ -57,13 +57,14 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       document_collections: document_collection_registry
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["document_collections"].size
-    assert_instance_of Hash, output["results"][0]["document_collections"][0]
-    assert_equal "Rail statistics", output["results"][0]["document_collections"][0]["title"]
+    results = presenter.results
+
+    assert_equal 1, results[0]["document_collections"].size
+    assert_instance_of Hash, results[0]["document_collections"][0]
+    assert_equal "Rail statistics", results[0]["document_collections"][0]["title"]
     assert_equal "/government/collections/rail-statistics",
-      output["results"][0]["document_collections"][0]["link"]
-    assert_equal "rail-statistics", output["results"][0]["document_collections"][0]["slug"]
+      results[0]["document_collections"][0]["link"]
+    assert_equal "rail-statistics", results[0]["document_collections"][0]["slug"]
   end
 
   def test_expands_organisations
@@ -82,12 +83,13 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       organisations: organisation_registry
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["organisations"].size
-    assert_instance_of Hash, output["results"][0]["organisations"][0]
-    assert_equal "Ministry of Defence (MoD)", output["results"][0]["organisations"][0]["title"]
-    assert_equal "/government/organisations/ministry-of-defence", output["results"][0]["organisations"][0]["link"]
-    assert_equal "ministry-of-defence", output["results"][0]["organisations"][0]["slug"]
+    results = presenter.results
+
+    assert_equal 1, results[0]["organisations"].size
+    assert_instance_of Hash, results[0]["organisations"][0]
+    assert_equal "Ministry of Defence (MoD)", results[0]["organisations"][0]["title"]
+    assert_equal "/government/organisations/ministry-of-defence", results[0]["organisations"][0]["link"]
+    assert_equal "ministry-of-defence", results[0]["organisations"][0]["slug"]
   end
 
   def test_expands_topics
@@ -106,12 +108,13 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       topics: topic_registry
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["topics"].size
-    assert_instance_of Hash, output["results"][0]["topics"][0]
-    assert_equal "Housing", output["results"][0]["topics"][0]["title"]
-    assert_equal "/government/topics/housing", output["results"][0]["topics"][0]["link"]
-    assert_equal "housing", output["results"][0]["topics"][0]["slug"]
+    results = presenter.results
+
+    assert_equal 1, results[0]["topics"].size
+    assert_instance_of Hash, results[0]["topics"][0]
+    assert_equal "Housing", results[0]["topics"][0]["title"]
+    assert_equal "/government/topics/housing", results[0]["topics"][0]["link"]
+    assert_equal "housing", results[0]["topics"][0]["slug"]
   end
 
   def test_expands_world_locations
@@ -130,12 +133,13 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       world_locations: world_location_registry
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["world_locations"].size
-    assert_instance_of Hash, output["results"][0]["world_locations"][0]
-    assert_equal "Angola", output["results"][0]["world_locations"][0]["title"]
-    assert_equal "/government/world/angola", output["results"][0]["world_locations"][0]["link"]
-    assert_equal "angola", output["results"][0]["world_locations"][0]["slug"]
+    results = presenter.results
+
+    assert_equal 1, results[0]["world_locations"].size
+    assert_instance_of Hash, results[0]["world_locations"][0]
+    assert_equal "Angola", results[0]["world_locations"][0]["title"]
+    assert_equal "/government/world/angola", results[0]["world_locations"][0]["link"]
+    assert_equal "angola", results[0]["world_locations"][0]["slug"]
   end
 
   def test_expands_sectors
@@ -154,12 +158,13 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       specialist_sectors: specialist_sector_registry,
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["specialist_sectors"].size
-    assert_instance_of Hash, output["results"][0]["specialist_sectors"][0]
-    assert_equal "Licensing", output["results"][0]["specialist_sectors"][0]["title"]
-    assert_equal "/topic/oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["link"]
-    assert_equal "oil-and-gas/licensing", output["results"][0]["specialist_sectors"][0]["slug"]
+    results = presenter.results
+
+    assert_equal 1, results[0]["specialist_sectors"].size
+    assert_instance_of Hash, results[0]["specialist_sectors"][0]
+    assert_equal "Licensing", results[0]["specialist_sectors"][0]["title"]
+    assert_equal "/topic/oil-and-gas/licensing", results[0]["specialist_sectors"][0]["link"]
+    assert_equal "oil-and-gas/licensing", results[0]["specialist_sectors"][0]["slug"]
   end
 
   def test_expands_people
@@ -178,12 +183,13 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       people: people_registry
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["people"].size
-    assert_instance_of Hash, output["results"][0]["people"][0]
-    assert_equal "Example People", output["results"][0]["people"][0]["title"]
-    assert_equal "/government/people/example-people", output["results"][0]["people"][0]["link"]
-    assert_equal "example-people", output["results"][0]["people"][0]["slug"]
+    results = presenter.results
+
+    assert_equal 1, results[0]["people"].size
+    assert_instance_of Hash, results[0]["people"][0]
+    assert_equal "Example People", results[0]["people"][0]["title"]
+    assert_equal "/government/people/example-people", results[0]["people"][0]["link"]
+    assert_equal "example-people", results[0]["people"][0]["slug"]
   end
 
   def test_unknown_organisations_just_have_slug
@@ -196,12 +202,13 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       organisations: organisation_registry
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["organisations"].size
-    assert_instance_of Hash, output["results"][0]["organisations"][0]
-    refute_includes output["results"][0]["organisations"][0], "title"
-    refute_includes output["results"][0]["organisations"][0], "link"
-    assert_equal "ministry-of-silly-walks", output["results"][0]["organisations"][0]["slug"]
+    results = presenter.results
+
+    assert_equal 1, results[0]["organisations"].size
+    assert_instance_of Hash, results[0]["organisations"][0]
+    refute_includes results[0]["organisations"][0], "title"
+    refute_includes results[0]["organisations"][0], "link"
+    assert_equal "ministry-of-silly-walks", results[0]["organisations"][0]["slug"]
   end
 
   def test_organisations_not_modified_if_no_registry_available
@@ -210,9 +217,10 @@ class ResultSetPresenterTest < MiniTest::Unit::TestCase
       organisations: nil
     )
 
-    output = presenter.present
-    assert_equal 1, output["results"][0]["organisations"].size
-    assert_equal "ministry-of-silly-walks", output["results"][0]["organisations"][0]
+    results = presenter.results
+
+    assert_equal 1, results[0]["organisations"].size
+    assert_equal "ministry-of-silly-walks", results[0]["organisations"][0]
   end
 
   private

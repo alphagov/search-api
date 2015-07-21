@@ -56,8 +56,7 @@ private
   # the output in other ways.
   def presented_results
     presenter = ResultSetPresenter.new(result_set, registries, schema)
-    results = presenter.present["results"]
-    results.map { |result| present_result_with_metadata(result) }
+    presenter.results.map { |result| present_result_with_metadata(result) }
   end
 
   def field_presenter
