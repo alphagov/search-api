@@ -51,46 +51,27 @@ private
     UnifiedSearch::SpellCheckPresenter.new(es_response).present
   end
 
+  # This uses the "standard" ResultSetPresenter to expand fields like
+  # organisations and topics. It then makes a few further changes to tidy up
+  # the output in other ways.
   def presented_results
-    # This uses the "standard" ResultSetPresenter to expand fields like
-    # organisations and topics.  It then makes a few further changes to tidy up
-    # the output in other ways.
-
-    result_set = ResultSet.new(search_results, nil)
-    ResultSetPresenter.new(result_set, registries, schema).present["results"].each do |fields|
-      metadata = fields.delete(:_metadata)
-
-      # Translate index names like `mainstream-2015-05-06t09..` into its
-      # proper name, eg. "mainstream", "government" or "service-manual".
-      # The regex takes the string until the first digit. After that, strip any
-      # trailing dash from the string.
-      fields[:index] = metadata["_index"].match(%r[^\D+]).to_s.chomp('-')
-
-      # Put the elasticsearch score in es_score; this is used in templates when
-      # debugging is requested, so it's nicer to be explicit about what score
-      # it is.
-      fields[:es_score] = metadata["_score"]
-      fields[:_id] = metadata["_id"]
-
-      explain = metadata["_explanation"]
-      unless explain.nil?
-        fields[:_explanation] = explain
-      end
-
-      fields[:document_type] = metadata["_type"]
-    end
+    presenter = ResultSetPresenter.new(result_set, registries, schema)
+    results = presenter.present["results"]
+    results.map { |result| present_result_with_metadata(result) }
   end
 
   def field_presenter
     @field_presenter ||= FieldPresenter.new(registries)
   end
 
-  def search_results
-    es_response["hits"]["hits"].map do |result|
+  def result_set
+    search_results = es_response["hits"]["hits"].map do |result|
       doc = result.delete("fields") || {}
       doc[:_metadata] = result
       doc
     end
+
+    ResultSet.new(search_results, nil)
   end
 
   def facet_option_fields(field, slug)
@@ -180,6 +161,29 @@ private
         scope: facet_parameters[:scope],
       }
     end
+    result
+  end
+
+  def present_result_with_metadata(result)
+    metadata = result.delete(:_metadata)
+
+    # Translate index names like `mainstream-2015-05-06t09..` into its
+    # proper name, eg. "mainstream", "government" or "service-manual".
+    # The regex takes the string until the first digit. After that, strip any
+    # trailing dash from the string.
+    result[:index] = metadata["_index"].match(%r[^\D+]).to_s.chomp('-')
+
+    # Put the elasticsearch score in es_score; this is used in templates when
+    # debugging is requested, so it's nicer to be explicit about what score
+    # it is.
+    result[:es_score] = metadata["_score"]
+    result[:_id] = metadata["_id"]
+
+    if metadata["_explanation"]
+      result[:_explanation] = metadata["_explanation"]
+    end
+
+    result[:document_type] = metadata["_type"]
     result
   end
 end
