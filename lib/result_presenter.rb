@@ -22,7 +22,7 @@ private
   def expand_metadata
     return document.to_hash if schema.nil?
 
-    document_attrs = apply_multivalued
+    document_attrs = convert_elasticsearch_array_fields
 
     params_to_expand = document_attrs.select do |k, _|
       document_schema.allowed_values.include?(k)
@@ -41,31 +41,17 @@ private
     document_attrs.merge(expanded_params)
   end
 
-  def apply_multivalued
+  # Elasticsearch returns all fields as arrays by default. We convert those
+  # arrays into a single value here, unless we've explicitly set the field to
+  # be "multivalued" in the database schema.
+  def convert_elasticsearch_array_fields
     document_attrs = document.to_hash
-    document_attrs.reduce({}) do |result, (field_name, values)|
-      if field_name[0] == '_'
-        # Special fields are always returned as single values.
-        result[field_name] = values
-        return result
-      end
-
-      # Convert to array for consistency between elasticsearch 0.90 and 1.0.
-      # When we no longer support elasticsearch <1.0, values here will
-      # always be an array, so this block can be removed.
-      if values.nil?
-        values = []
-      elsif !(values.is_a?(Array))
-        values = [values]
-      end
-
-      if document_schema.fields.fetch(field_name).type.multivalued
-        result[field_name] = values
-      else
-        result[field_name] = values.first
-      end
-      result
+    document_attrs.each do |field_name, values|
+      next if field_name[0] == '_'
+      next if document_schema.fields.fetch(field_name).type.multivalued
+      document_attrs[field_name] = values.first
     end
+    document_attrs
   end
 
   def document_schema
