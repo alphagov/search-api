@@ -1,5 +1,6 @@
 require "active_support/inflector"
 require "entity_expander"
+require "snippet"
 
 class ResultSetPresenter
 
@@ -25,6 +26,7 @@ private
   def build_result(document)
     result = expand_metadata(document.to_hash)
     result = EntityExpander.new(@context).new_result(result)
+    result[:snippet] = Snippet.new(result).text
     result
   end
 

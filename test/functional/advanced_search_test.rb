@@ -24,11 +24,10 @@ class AdvancedSearchTest < IntegrationTest
       .returns(stub(total: 1, results: [sample_document]))
 
     get "/mainstream_test/advanced_search.json", {per_page: '1', page: '1', keywords: 'meh'}
-    expected_result = {'total' => 1, 'results' => [sample_document_attributes], 'spelling_suggestions' => []}
+    result = JSON.parse(last_response.body)
 
     assert last_response.ok?, "Bad status: #{last_response.status}"
     assert_match /application\/json/, last_response.headers["Content-Type"]
-    result = JSON.parse(last_response.body)
-    assert_equal expected_result, result
+    assert_equal sample_document.title, result['results'].first['title']
   end
 end
