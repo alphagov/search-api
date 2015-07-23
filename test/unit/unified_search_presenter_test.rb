@@ -1,7 +1,8 @@
 require "test_helper"
 require "unified_searcher"
 require "document"
-require "search_parameter_parser"
+require "parameter_parser/search_parameter_parser"
+require "parameter_parser/facet_parameter_parser"
 
 class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
