@@ -12,8 +12,6 @@ class Snippet
   def text
     if document['format'] == "organisation" && document["organisation_state"] != "closed"
       description_with_organisation_prefix
-    elsif original_description.blank? && document["format"] == "specialist_sector"
-      "List of information about #{document["title"]}."
     else
       truncated_description
     end
