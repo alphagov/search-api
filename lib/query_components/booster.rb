@@ -36,6 +36,9 @@ module QueryComponents
         "document_collection" => 1.3,
         "operational_field" => 1.5,
         "contact"           => 0.3,
+
+        # Hide mainstream browse pages for now.
+        "mainstream_browse_page" => 0,
       }
     end
 
