@@ -48,7 +48,7 @@ private
   def presented_results
     results = es_response["hits"]["hits"].map do |result|
       doc = result.delete("fields") || {}
-      doc[:_metadata] = result
+      doc[:_raw_result] = result.freeze
       doc
     end
 
@@ -57,7 +57,7 @@ private
     end
 
     results.map do |result|
-      result.delete(:_metadata)
+      result.delete(:_raw_result)
       result
     end
   end

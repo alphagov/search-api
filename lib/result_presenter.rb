@@ -63,33 +63,33 @@ private
   def document_schema
     @document_schema ||= begin
       result = document.to_hash
-      index = result[:_metadata]["_index"]
+      index = result[:_raw_result]["_index"]
       index_schema = schema.schema_for_alias_name(index)
-      document_type = result.fetch(:_metadata, {}).fetch("_type", nil)
+      document_type = result.fetch(:_raw_result, {}).fetch("_type", nil)
       index_schema.document_type(document_type)
     end
   end
 
   def add_debug_values(result)
-    return result unless result[:_metadata]
+    return result unless result[:_raw_result]
 
     # Translate index names like `mainstream-2015-05-06t09..` into its
     # proper name, eg. "mainstream", "government" or "service-manual".
     # The regex takes the string until the first digit. After that, strip any
     # trailing dash from the string.
-    result[:index] = result[:_metadata]["_index"].match(%r[^\D+]).to_s.chomp('-')
+    result[:index] = result[:_raw_result]["_index"].match(%r[^\D+]).to_s.chomp('-')
 
     # Put the elasticsearch score in es_score; this is used in templates when
     # debugging is requested, so it's nicer to be explicit about what score
     # it is.
-    result[:es_score] = result[:_metadata]["_score"]
-    result[:_id] = result[:_metadata]["_id"]
+    result[:es_score] = result[:_raw_result]["_score"]
+    result[:_id] = result[:_raw_result]["_id"]
 
-    if result[:_metadata]["_explanation"]
-      result[:_explanation] = result[:_metadata]["_explanation"]
+    if result[:_raw_result]["_explanation"]
+      result[:_explanation] = result[:_raw_result]["_explanation"]
     end
 
-    result[:document_type] = result[:_metadata]["_type"]
+    result[:document_type] = result[:_raw_result]["_type"]
     result
   end
 
