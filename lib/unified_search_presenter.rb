@@ -46,17 +46,12 @@ private
   end
 
   def presented_results
-    results = es_response["hits"]["hits"].map do |result|
-      doc = result.delete("fields") || {}
-      doc[:_raw_result] = result.freeze
-      doc
-    end
+    es_response["hits"]["hits"].map do |raw_result|
+      result = raw_result.delete("fields") || {}
+      result[:_raw_result] = raw_result.freeze
 
-    results = results.map do |document|
-      ResultPresenter.new(document, @registries, @schema).present
-    end
+      result = ResultPresenter.new(result, @registries, @schema).present
 
-    results.map do |result|
       result.delete(:_raw_result)
       result
     end
