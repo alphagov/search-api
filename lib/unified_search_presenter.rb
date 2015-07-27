@@ -51,21 +51,19 @@ private
   # organisations and topics. It then makes a few further changes to tidy up
   # the output in other ways.
   def presented_results
-    results = result_set.results.map do |document|
+    results = results_with_metadata.map do |document|
       ResultPresenter.new(document, registries, schema).present
     end
 
     results.map { |result| present_result_with_metadata(result) }
   end
 
-  def result_set
-    search_results = es_response["hits"]["hits"].map do |result|
+  def results_with_metadata
+    es_response["hits"]["hits"].map do |result|
       doc = result.delete("fields") || {}
       doc[:_metadata] = result
       doc
     end
-
-    ResultSet.new(search_results, nil)
   end
 
   def presented_facets
