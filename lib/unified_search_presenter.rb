@@ -47,13 +47,7 @@ private
 
   def presented_results
     es_response["hits"]["hits"].map do |raw_result|
-      result = raw_result.delete("fields") || {}
-      result[:_raw_result] = raw_result.freeze
-
-      result = ResultPresenter.new(result, @registries, @schema).present
-
-      result.delete(:_raw_result)
-      result
+      ResultPresenter.new(raw_result.to_hash, @registries, @schema).present
     end
   end
 

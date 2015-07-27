@@ -4,8 +4,9 @@ require "result_presenter"
 class ResultPresenterTest < MiniTest::Unit::TestCase
   def test_conversion_values_to_single_objects
     document = {
-      "format" => ['a-string'],
-      _raw_result: { '_type' => 'raib_report', '_index' => 'mainstream_test' }
+      '_type' => 'raib_report',
+      '_index' => 'mainstream_test',
+      'fields' => { 'format' => ['a-string'] }
     }
 
     result = ResultPresenter.new(document, nil, sample_schema).present
@@ -14,9 +15,10 @@ class ResultPresenterTest < MiniTest::Unit::TestCase
   end
 
   def test_conversion_values_to_labelled_objects
-    document =  {
-      "railway_type" => ['heavy-rail', 'light-rail'],
-      _raw_result: { '_type' => 'raib_report', '_index' => 'mainstream_test' }
+    document = {
+      '_type' => 'raib_report',
+      '_index' => 'mainstream_test',
+      'fields' => { 'railway_type' => ['heavy-rail', 'light-rail'] }
     }
 
     result = ResultPresenter.new(document, nil, sample_schema).present

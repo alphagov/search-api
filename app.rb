@@ -258,7 +258,9 @@ class Rummager < Sinatra::Application
     # rather than things added by Sinatra (eg splat, captures, index and format)
     result_set = current_index.advanced_search(request.params)
     results = result_set.results.map do |document|
-      ResultPresenter.new(document, {}, nil).present
+      # Wrap in hash to be compatible with the way UnifiedSearch works.
+      raw_result = { "fields" => document.to_hash }
+      ResultPresenter.new(raw_result, {}, nil).present
     end
 
     { total: result_set.total, results: results }.to_json
