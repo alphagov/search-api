@@ -7,7 +7,7 @@ require "json"
 require "csv"
 
 require "document"
-require "result_set_presenter"
+require "result_presenter"
 require "unified_searcher"
 require "organisation_set_presenter"
 require "elasticsearch/index"
@@ -257,7 +257,10 @@ class Rummager < Sinatra::Application
     # Using request.params because it is just the params from the request
     # rather than things added by Sinatra (eg splat, captures, index and format)
     result_set = current_index.advanced_search(request.params)
-    results = ResultSetPresenter.new(result_set).results
+    results = result_set.results.map do |document|
+      ResultPresenter.new(document, {}, nil).present
+    end
+
     { total: result_set.total, results: results }.to_json
   end
 

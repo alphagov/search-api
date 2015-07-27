@@ -1,5 +1,5 @@
 require "elasticsearch/result_set"
-require "result_set_presenter"
+require "result_presenter"
 require "facet_result_presenter"
 require "unified_search/spell_check_presenter"
 
@@ -47,12 +47,15 @@ private
     UnifiedSearch::SpellCheckPresenter.new(es_response).present
   end
 
-  # This uses the "standard" ResultSetPresenter to expand fields like
+  # This uses the "standard" ResultPresenter to expand fields like
   # organisations and topics. It then makes a few further changes to tidy up
   # the output in other ways.
   def presented_results
-    presenter = ResultSetPresenter.new(result_set, registries, schema)
-    presenter.results.map { |result| present_result_with_metadata(result) }
+    results = result_set.results.map do |document|
+      ResultPresenter.new(document, registries, schema).present
+    end
+
+    results.map { |result| present_result_with_metadata(result) }
   end
 
   def result_set
