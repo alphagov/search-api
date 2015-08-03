@@ -74,7 +74,7 @@ module QueryComponents
     def closed_org_boost
       {
         filter: { term: { organisation_state: "closed" } },
-        boost_factor: 0.3,
+        boost_factor: 0.2,
       }
     end
 
