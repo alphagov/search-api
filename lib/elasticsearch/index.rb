@@ -72,6 +72,14 @@ module Elasticsearch
       @mappings["edition"]["properties"].keys
     end
 
+    # Translate index names like `mainstream-2015-05-06t09..` into its
+    # proper name, eg. "mainstream", "government" or "service-manual".
+    # The regex takes the string until the first digit. After that, strip any
+    # trailing dash from the string.
+    def self.strip_alias_from_index_name(aliased_index_name)
+      aliased_index_name.match(%r[^\D+]).to_s.chomp('-')
+    end
+
     def real_name
       # If the index exists, it will return something of the form:
       # { real_name => { "aliases" => { alias => {} } } }

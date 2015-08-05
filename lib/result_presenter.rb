@@ -71,11 +71,7 @@ private
     # Advanced search only passes through data, not the entire raw result.
     return result unless raw_result["_index"]
 
-    # Translate index names like `mainstream-2015-05-06t09..` into its
-    # proper name, eg. "mainstream", "government" or "service-manual".
-    # The regex takes the string until the first digit. After that, strip any
-    # trailing dash from the string.
-    result[:index] = raw_result["_index"].match(%r[^\D+]).to_s.chomp('-')
+    result[:index] = Elasticsearch::Index.strip_alias_from_index_name(raw_result["_index"])
 
     # Put the elasticsearch score in es_score; this is used in templates when
     # debugging is requested, so it's nicer to be explicit about what score
