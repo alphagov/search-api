@@ -26,14 +26,14 @@ module Elasticsearch
       )
     end
 
-    def index(prefix)
-      raise NoSuchIndex, prefix unless index_name_valid?(prefix)
-      index_group(prefix).current
+    def index(index_name)
+      validate_index_name!(index_name)
+      index_group(index_name).current
     end
 
     def index_for_search(names)
-      names.each do |name|
-        raise NoSuchIndex, name unless index_name_valid?(name)
+      names.each do |index_name|
+        validate_index_name!(index_name)
       end
       IndexForSearch.new(@base_uri, names, @schema, @search_config)
     end
@@ -45,6 +45,13 @@ module Elasticsearch
     end
 
   private
+    def validate_index_name!(index_name)
+      return if index_name_valid?(index_name)
+
+      raise NoSuchIndex,
+        "Index name #{index_name} is not specified in the elasticsearch settings."
+    end
+
     def index_name_valid?(index_name)
       index_name.split(",").all? do |name|
         @index_names.include?(name)
