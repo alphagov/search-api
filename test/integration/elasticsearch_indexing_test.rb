@@ -23,7 +23,7 @@ class ElasticsearchIndexingTest < IntegrationTest
 
   def retrieve_document_from_rummager(link)
     get "/documents/#{CGI::escape(link)}"
-    JSON.parse(last_response.body)
+    parsed_response
   end
 
   def assert_document_is_in_rummager(document)

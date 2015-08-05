@@ -51,7 +51,6 @@ class ElasticsearchMigrationTest < IntegrationTest
   end
 
   def assert_result_links(*links)
-    parsed_response = JSON.parse(last_response.body)
     assert_equal links, parsed_response["results"].map { |r| r["link"] }
   end
 
@@ -60,7 +59,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     # stemming settings
 
     get "/unified_search?q=directive"
-    assert_equal 2, JSON.parse(last_response.body)["results"].length
+    assert_equal 2, parsed_response["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
 
@@ -94,7 +93,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     commit_index
 
     get "/unified_search?q=directive"
-    assert_equal 2, JSON.parse(last_response.body)["results"].length
+    assert_equal 2, parsed_response["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
 
@@ -113,7 +112,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     assert_result_links "/aliens"
 
     get "/unified_search?q=Document&count=100"
-    assert_equal test_batch_size + 5, JSON.parse(last_response.body)["results"].length
+    assert_equal test_batch_size + 5, parsed_response["results"].length
   end
 
   def test_handles_errors_correctly
@@ -122,7 +121,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     Elasticsearch::Index.any_instance.stubs(:bulk_index).raises(Elasticsearch::IndexLocked)
 
     get "/unified_search?q=directive"
-    assert_equal 2, JSON.parse(last_response.body)["results"].length
+    assert_equal 2, parsed_response["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
 
@@ -137,7 +136,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     assert_equal original_index_name, index_group.current_real.real_name
 
     get "/unified_search?q=directive"
-    assert_equal 2, JSON.parse(last_response.body)["results"].length
+    assert_equal 2, parsed_response["results"].length
   end
 
   def test_reindex_with_no_existing_index

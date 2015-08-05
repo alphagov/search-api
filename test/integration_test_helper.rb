@@ -14,6 +14,10 @@ class IntegrationTest < MiniTest::Unit::TestCase
     Rummager
   end
 
+  def parsed_response
+    JSON.parse(last_response.body)
+  end
+
 private
 
   def deep_copy(hash)

@@ -88,7 +88,6 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
       hash = links.pop
       order = hash[:order]
     end
-    parsed_response = JSON.parse(last_response.body)
     parsed_links = parsed_response['results'].map { |r| r["link"] }
     if order
       assert_equal links, parsed_links
@@ -98,7 +97,6 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   end
 
   def assert_result_total(total)
-    parsed_response = JSON.parse(last_response.body)
     assert_equal total, parsed_response['total']
   end
 
@@ -195,7 +193,6 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
 
     assert last_response.ok?
     assert_result_total 1
-    parsed_response = JSON.parse(last_response.body)
     assert_equal ["ministry-of-cheese"], parsed_response["results"][0]["organisations"]
   end
 
