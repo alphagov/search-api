@@ -16,6 +16,7 @@
     "medical_safety_alert",
     "policy",
     "raib_report",
+    "utiac_decision",
     "vehicle_recalls_and_faults_alert"
   ]
 }

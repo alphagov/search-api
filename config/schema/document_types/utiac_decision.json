@@ -1,0 +1,9 @@
+{
+  "fields": [
+    "country",
+    "country_guidance",
+    "decision_reported",
+    "judges",
+    "promulgation_date"
+  ]
+}

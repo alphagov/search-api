@@ -399,5 +399,21 @@
   "important_to_policy": {
     "description": "A flag set by editors to mark a document as being important to policy",
     "type": "boolean"
+  },
+
+  "country": {
+    "type": "identifier"
+  },
+  "country_guidance": {
+    "type": "identifier"
+  },
+  "decision_reported": {
+    "type": "identifier"
+  },
+  "judges": {
+    "type": "searchable_identifiers"
+  },
+  "promulgation_date": {
+    "type": "date"
   }
 }
