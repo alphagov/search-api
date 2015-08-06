@@ -8,9 +8,13 @@ class Rummager < Sinatra::Application
   end
 
   delete '/content' do
-    raw_result = find_result_by_link(params["link"])
-    delete_result_from_index(raw_result)
-    json_result 204, "Deleted the link from search index"
+    begin
+      raw_result = find_result_by_link(params["link"])
+      delete_result_from_index(raw_result)
+      json_result 204, "Deleted the link from search index"
+    rescue Elasticsearch::IndexLocked
+      json_result 423, "The index is locked. Please try again later."
+    end
   end
 
 private
