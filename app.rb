@@ -22,6 +22,8 @@ require "schema/combined_index_schema"
 require_relative "config"
 require_relative "helpers"
 
+require "routes/content"
+
 class Rummager < Sinatra::Application
   def search_server
     settings.search_config.search_server

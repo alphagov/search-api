@@ -87,10 +87,6 @@ class MultiIndexTest < IntegrationTest
     post "/#{index_name}/commit", nil
   end
 
-  def parsed_response
-    JSON.parse(last_response.body)
-  end
-
   private
 
   def populate_content_indexes(params)
