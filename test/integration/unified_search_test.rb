@@ -8,7 +8,7 @@ class UnifiedSearchTest < MultiIndexTest
     # prevent caching issues we manually clear them here to make a "new" app.
     Rummager.class_variable_set(:'@@registries', nil)
 
-    stub_elasticsearch_configuration
+    stub_elasticsearch_settings
     create_meta_indexes
   end
 

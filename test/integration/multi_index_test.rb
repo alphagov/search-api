@@ -6,14 +6,9 @@ require "rest-client"
 # set up.
 class MultiIndexTest < IntegrationTest
   def setup
-    stub_elasticsearch_configuration
+    stub_elasticsearch_settings
     create_meta_indexes
     reset_content_indexes_with_content
-  end
-
-  def stub_elasticsearch_configuration
-    stub_elasticsearch_settings
-    app.settings.search_config.stubs(:govuk_index_names).returns(INDEX_NAMES)
   end
 
   def create_meta_indexes

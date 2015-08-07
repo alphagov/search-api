@@ -32,6 +32,7 @@ module ElasticsearchIntegrationHelpers
     })
     app.settings.stubs(:default_index_name).returns(DEFAULT_INDEX_NAME)
     app.settings.stubs(:enable_queue).returns(false)
+    app.settings.search_config.stubs(:govuk_index_names).returns(INDEX_NAMES)
   end
 
   def search_config
