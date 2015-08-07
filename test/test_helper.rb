@@ -29,7 +29,10 @@ require "logging"
 require "timecop"
 
 require "webmock/minitest"
-WebMock.disable_net_connect!
+
+# Prevent tests from messing with development/production data.
+only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)}
+WebMock.disable_net_connect!(allow: only_test_databases)
 
 require "sample_config"
 

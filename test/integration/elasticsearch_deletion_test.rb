@@ -6,7 +6,6 @@ class ElasticsearchDeletionTest < IntegrationTest
 
   def setup
     stub_elasticsearch_settings
-    enable_test_index_connections
     clean_test_indexes
     create_test_indexes
 

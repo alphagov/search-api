@@ -34,12 +34,6 @@ module ElasticsearchIntegrationHelpers
     app.settings.stubs(:enable_queue).returns(false)
   end
 
-  def enable_test_index_connections
-    # Prevent tests from messing with development/production data.
-    only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)}
-    WebMock.disable_net_connect!(allow: only_test_databases)
-  end
-
   def search_config
     app.settings.search_config
   end

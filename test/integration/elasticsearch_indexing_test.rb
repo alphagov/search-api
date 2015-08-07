@@ -6,7 +6,6 @@ class ElasticsearchIndexingTest < IntegrationTest
 
   def setup
     stub_elasticsearch_settings
-    enable_test_index_connections
     try_remove_test_index
     @sample_document = {
       "title" => "TITLE",

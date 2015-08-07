@@ -4,7 +4,6 @@ class ElasticsearchLockingTest < IntegrationTest
 
   def setup
     stub_elasticsearch_settings
-    enable_test_index_connections
     try_remove_test_index
     create_test_indexes
   end

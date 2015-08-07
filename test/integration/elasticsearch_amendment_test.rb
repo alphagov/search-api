@@ -6,7 +6,6 @@ class ElasticsearchAmendmentTest < IntegrationTest
 
   def setup
     stub_elasticsearch_settings
-    enable_test_index_connections
     create_test_indexes
     add_sample_document
   end

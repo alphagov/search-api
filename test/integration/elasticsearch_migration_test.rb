@@ -6,7 +6,6 @@ class ElasticsearchMigrationTest < IntegrationTest
 
   def setup
     stub_elasticsearch_settings
-    enable_test_index_connections
     try_remove_test_index
 
     schema = app.settings.search_config.schema_config
