@@ -4,18 +4,15 @@ module ElasticsearchIntegrationHelpers
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
   REGISTRY_INDEX = "government_test"
 
-  class InvalidTestIndex < ArgumentError; end
-
-  # Make sure that we're dealing with a test index (of the form <foo>_test)
-  def check_index_name(index_name)
-    unless /^[a-z_-]+(_|-)test($|-)/.match index_name
-      raise InvalidTestIndex, "#{index_name} is not a valid test index name"
+  def check_index_name!(index_name)
+    unless /^[a-z_-]+(_|-)test($|-)/.match(index_name)
+      raise "#{index_name} is not a valid test index name"
     end
   end
 
   def stub_elasticsearch_settings
     (INDEX_NAMES + AUXILIARY_INDEX_NAMES).each do |n|
-      check_index_name(n)
+      check_index_name!(n)
     end
 
     app.settings.search_config.stubs(:elasticsearch).returns({
@@ -80,14 +77,14 @@ module ElasticsearchIntegrationHelpers
   end
 
   def try_remove_test_index(index_name = DEFAULT_INDEX_NAME)
-    check_index_name(index_name)
+    check_index_name!(index_name)
     RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"
   rescue RestClient::ResourceNotFound
     # Index doesn't exist: that's fine
   end
 
   def clean_index_group(group_name = DEFAULT_INDEX_NAME)
-    check_index_name(group_name)
+    check_index_name!(group_name)
     index_group = search_server.index_group(group_name)
     # Delete any indices left over from switching
     index_group.clean
