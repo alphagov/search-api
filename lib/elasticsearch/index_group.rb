@@ -1,6 +1,5 @@
 require "time"
 require "securerandom"
-require "rest-client"
 require "cgi"
 require "elasticsearch/index"
 

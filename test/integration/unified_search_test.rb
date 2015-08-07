@@ -1,5 +1,4 @@
 require "integration_test_helper"
-require "rest-client"
 require_relative "multi_index_test"
 
 class UnifiedSearchTest < MultiIndexTest

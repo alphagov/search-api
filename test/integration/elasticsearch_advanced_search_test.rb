@@ -1,6 +1,5 @@
 require "integration_test_helper"
 require "app"
-require "rest-client"
 
 class ElasticsearchAdvancedSearchTest < IntegrationTest
 

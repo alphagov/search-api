@@ -1,5 +1,4 @@
 require "rake/testtask"
-require "rest-client"
 require "logging"
 
 PROJECT_ROOT = File.dirname(__FILE__)

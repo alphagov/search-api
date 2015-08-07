@@ -1,6 +1,5 @@
 require "integration_test_helper"
 require "app"
-require "rest-client"
 
 # Base class for tests which depend on having multiple indexes with test data
 # set up.

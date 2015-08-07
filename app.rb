@@ -1,3 +1,5 @@
+require "rest-client"
+
 %w[ lib ].each do |path|
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end

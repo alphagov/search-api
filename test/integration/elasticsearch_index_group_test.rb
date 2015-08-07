@@ -1,5 +1,4 @@
 require "integration_test_helper"
-require "rest-client"
 require "cgi"
 
 class ElasticsearchIndexGroupTest < IntegrationTest

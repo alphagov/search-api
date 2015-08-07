@@ -1,6 +1,5 @@
 require "test_helper"
 require "elasticsearch/client"
-require "rest-client"
 require "logging"
 
 class ClientTest < MiniTest::Unit::TestCase
