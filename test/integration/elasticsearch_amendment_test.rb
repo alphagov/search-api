@@ -38,14 +38,6 @@ class ElasticsearchAmendmentTest < IntegrationTest
     end
   end
 
-  # Test disabled due to timeout flakiness
-  # TODO: find a way to make this non-flaky
-  #
-  #def test_should_404_on_missing_document
-  #  get "/documents/%2Fa-missing-answer"
-  #  assert last_response.not_found?
-  #end
-
   def test_should_amend_a_document
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 
@@ -85,12 +77,4 @@ class ElasticsearchAmendmentTest < IntegrationTest
     get "/documents/%2Fwibble"
     assert last_response.not_found?
   end
-
-  # Test disabled due to timeout flakiness
-  # TODO: find a way to make this non-flaky
-  #
-  #def test_should_404_amending_missing_document
-  #  post "/documents/%2Fa-missing-answer", "title=A+new+title"
-  #  assert last_response.not_found?
-  #end
 end
