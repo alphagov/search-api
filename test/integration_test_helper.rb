@@ -17,10 +17,4 @@ class IntegrationTest < MiniTest::Unit::TestCase
   def parsed_response
     JSON.parse(last_response.body)
   end
-
-private
-
-  def deep_copy(hash)
-    Marshal.load(Marshal.dump(hash))
-  end
 end
