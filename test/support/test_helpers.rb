@@ -5,10 +5,6 @@ module TestHelpers
     Timecop.return
   end
 
-  def load_yaml_fixture(filename)
-    YAML.load_file(File.expand_path("fixtures/#{filename}", File.dirname(__FILE__)))
-  end
-
   # This can be used to partially match a hash in the context of an assert_equal
   # e.g. The following would pass
   #
