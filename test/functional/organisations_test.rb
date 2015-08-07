@@ -25,7 +25,6 @@ class OrganisationsTest < IntegrationTest
 
     get "/organisations.json"
 
-    parsed_response = JSON.parse(last_response.body)
     assert_equal 1, parsed_response["total"]
   end
 
@@ -34,7 +33,6 @@ class OrganisationsTest < IntegrationTest
 
     get "/organisations.json"
 
-    parsed_response = JSON.parse(last_response.body)
     assert_equal 1, parsed_response["results"].size
     assert_equal mod_organisation.link, parsed_response["results"][0]["link"]
     assert_equal mod_organisation.title, parsed_response["results"][0]["title"]

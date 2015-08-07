@@ -8,7 +8,7 @@ class DocumentViewtest < IntegrationTest
 
     assert_equal 200, last_response.status
     assert last_response.content_type.start_with? "application/json"
-    assert_equal sample_document.to_hash, JSON.parse(last_response.body)
+    assert_equal sample_document.to_hash, parsed_response
   end
 
   def test_should_404_on_missing_document
