@@ -79,10 +79,6 @@ class ElasticsearchDeletionTest < IntegrationTest
     post "/commit", nil
   end
 
-  def assert_no_results
-    assert_equal [], parsed_response["results"]
-  end
-
   def test_should_404_on_deleted_content
     delete "/documents/%2Fan-example-answer"
     assert last_response.ok?
@@ -98,7 +94,8 @@ class ElasticsearchDeletionTest < IntegrationTest
     commit_index
 
     get "/unified_search.json?q=cheese"
-    assert_no_results
+
+    assert_equal [], parsed_response["results"]
   end
 
   def test_should_delete_an_item_with_a_full_url

@@ -90,26 +90,11 @@ module ElasticsearchIntegrationHelpers
     end
   end
 
-  def clean_popularity_index
-    try_remove_test_index 'page-traffic_test'
-  end
-
-  def assert_no_results
-    assert_equal [], parsed_response["results"]
-  end
-
   def stub_index
     return @s if @s
     @s = stub("stub index")
     Rummager.any_instance.stubs(:current_index).returns(@s)
     Rummager.any_instance.stubs(:unified_index).returns(@s)
     @s
-  end
-
-  def stub_metasearch_index
-    return @ms if @ms
-    @ms = stub("stub metasearch index")
-    BestBetsChecker.any_instance.stubs(:metasearch_index).returns(@ms)
-    @ms
   end
 end
