@@ -184,26 +184,28 @@ For example:
 
 Returns something like:
 
-    {
-      "results": [
-        {...},
-        {...}
-      ],
-      "total": 19,
-      "offset": 0,
-      "spelling_suggestions": [
-        ...
-      ],
-      "facets": {
-        "organisations": {
-          "options": [
-            {
-              "value": "department-for-business-innovation-skills",
-              "documents": 788
-            }, ...],
-          "documents_with_no_value": 1610,
-          "total_options": 94,
-          "missing_options": 84
-        }
-      }
+```json
+{
+  "results": [
+    {...},
+    {...}
+  ],
+  "total": 19,
+  "offset": 0,
+  "spelling_suggestions": [
+    ...
+  ],
+  "facets": {
+    "organisations": {
+      "options": [
+        {
+          "value": "department-for-business-innovation-skills",
+          "documents": 788
+        }, ...],
+      "documents_with_no_value": 1610,
+      "total_options": 94,
+      "missing_options": 84
     }
+  }
+}
+```
