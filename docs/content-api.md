@@ -1,4 +1,4 @@
-## Rummager API
+## Rummager Content API
 
 ### `GET /content/?link=/a-link`
 
