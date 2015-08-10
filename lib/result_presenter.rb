@@ -21,6 +21,7 @@ class ResultPresenter
     result = expand_entities(result)
     result = add_calculated_fields(result)
     result = add_debug_values(result)
+    result = temporarily_fix_link_field(result)
     result
   end
 
@@ -89,6 +90,15 @@ private
 
   def add_calculated_fields(result)
     result[:snippet] = Snippet.new(result).text
+    result
+  end
+
+  def temporarily_fix_link_field(result)
+    return result if result['link'].nil? ||
+      result['link'].starts_with?('http') ||
+      result['link'].starts_with?('/')
+
+    result['link'] = '/' + result['link']
     result
   end
 end
