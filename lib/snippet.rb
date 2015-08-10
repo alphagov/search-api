@@ -10,7 +10,7 @@ class Snippet
   end
 
   def text
-    if document['format'] == "organisation" && document["organisation_state"] != "closed"
+    if needs_organsation_prefix?
       description_with_organisation_prefix
     else
       truncated_description
@@ -29,5 +29,11 @@ private
 
   def original_description
     document['description'] || ""
+  end
+
+  def needs_organsation_prefix?
+    document['format'] == "organisation" &&
+      document["organisation_state"] != "closed" &&
+      !document['description'].starts_with?("The home of")
   end
 end
