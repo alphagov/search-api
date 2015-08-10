@@ -24,7 +24,7 @@ GEM
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     ffi (1.9.0)
-    gds-api-adapters (20.1.1)
+    gds-api-adapters (23.2.2)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -63,12 +63,12 @@ GEM
     netrc (0.10.3)
     nokogiri (1.5.5)
     null_logger (0.0.1)
-    plek (1.5.0)
+    plek (1.11.0)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
-    rack (1.6.2)
+    rack (1.6.4)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-logstasher (0.0.3)
@@ -119,7 +119,7 @@ GEM
       ansi
     unf (0.1.3)
       unf_ext
-    unf_ext (0.0.6)
+    unf_ext (0.0.7.1)
     unicorn (4.6.2)
       kgio (~> 2.6)
       rack
@@ -137,13 +137,13 @@ PLATFORMS
 DEPENDENCIES
   airbrake (= 4.0.0)
   ci_reporter (= 1.7.1)
-  gds-api-adapters (= 20.1.1)
+  gds-api-adapters (= 23.2.2)
   logging (= 1.8.1)
   minitest (= 4.6.1)
   mocha
   mr-sparkle (= 0.2.0)
   nokogiri (= 1.5.5)
-  plek (= 1.5.0)
+  plek (= 1.11.0)
   pry
   rack (~> 1.6)
   rack-logstasher (= 0.0.3)
@@ -163,3 +163,6 @@ DEPENDENCIES
   unicorn (= 4.6.2)
   webmock (~> 1.21.0)
   whenever
+
+BUNDLED WITH
+   1.10.6
