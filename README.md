@@ -63,58 +63,13 @@ After changing the schema, you'll need to migrate the index.
 
     RUMMAGER_INDEX=all bundle exec rake rummager:migrate_index
 
-### Example API output
+### API documentation
 
-The simplest query:
+For the most up to date query syntax and API output:
 
-    curl 'http://rummager.dev.gov.uk/unified_search.json?q=taxes'
-
-For the most up to date query syntax and API output, check the documentation for individual endpoints in [app.rb](app.rb).
-
-```json
-{  
-   "results":[  
-      {  
-         "title":"Renew vehicle tax",
-         "subsection":"car-tax-discs",
-         "description":"Get vehicle tax from the DVLA for your car, motorbike, lorry, bus or other vehicle - online, by phone or at the Post Office",
-         "link":"/vehicle-tax",
-         "format":"transaction",
-         "organisations":[  
-            {  
-               "slug":"department-for-transport",
-               "link":"/government/organisations/department-for-transport",
-               "title":"Department for Transport",
-               "acronym":"DFT",
-               "organisation_type":"Ministerial department",
-               "organisation_state":"live"
-            },
-            {  
-               "slug":"driver-and-vehicle-licensing-agency",
-               "link":"/government/organisations/driver-and-vehicle-licensing-agency",
-               "title":"Driver and Vehicle Licensing Agency",
-               "acronym":"DVLA",
-               "organisation_state":"live"
-            }
-         ],
-         "public_timestamp":"2014-12-09T16:21:03+00:00",
-         "section":"driving",
-         "index":"mainstream",
-         "es_score":0.29372323,
-         "_id":"/vehicle-tax",
-         "document_type":"edition"
-      },
-      { ... }
-      ],
-   "total":11876,
-   "start":0,
-   "facets":{  
-
-   },
-   "suggested_queries":[]
-}
-```
-
+- [docs/unified-search-api.md](docs/unified-search-api.md) for the unified search
+  endpoint (`/unified-search.json`).
+- [docs/content-api.md](docs/content-api.md) for the `/content/*` endpoint.
 
 ### Additional Docs
 
