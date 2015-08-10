@@ -20,14 +20,17 @@ class UnifiedSearchTest < MultiIndexTest
   end
 
   def test_spell_checking_with_typo
-    reset_content_indexes_with_content(section_count: 1)
+    reset_content_indexes
 
-    # The word "important" is imported into the elasticsearch index by the
-    # MultiIndexTest setup block.
+    commit_document("mainstream_test",
+      title: "I am the result",
+      description: "This is a test search result",
+      link: "/some-nice-link"
+    )
 
-    get "/unified_search?q=imprtant"
+    get "/unified_search?q=serch"
 
-    assert_equal ['important'], parsed_response['suggested_queries']
+    assert_equal ['search'], parsed_response['suggested_queries']
   end
 
   def test_spell_checking_without_typo
