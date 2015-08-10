@@ -9,7 +9,6 @@ require "elasticsearch/index_queue"
 require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
-require "elasticsearch/search_query_builder"
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
@@ -260,12 +259,6 @@ module Elasticsearch
       ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
         Document.new(field_definitions, hit["fields"])
       end
-    end
-
-    def search(keywords, options={})
-      builder = SearchQueryBuilder.new(keywords, @mappings, options)
-      raise InvalidQuery.new(builder.error) unless builder.valid?
-      ResultSet.from_elasticsearch(@document_types, raw_search(builder.query_hash))
     end
 
     def advanced_search(params)

@@ -485,21 +485,6 @@ EOS
     assert_requested :get, document_url
   end
 
-  def test_basic_keyword_search
-    stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
-      body: %r{"query":"keyword search"},
-      headers: {"Content-Type" => "application/json"}
-    ).to_return(:body => '{"hits":{"hits":[]}}')
-    @wrapper.search "keyword search"
-    assert_requested(:get, "http://example.com:9200/mainstream_test/_search")
-  end
-
-  def test_raises_error_for_invalid_query
-    assert_raises Elasticsearch::InvalidQuery do
-      @wrapper.search("keyword search", sort: "not_a_field_in_mappings")
-    end
-  end
-
   def test_raw_search
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},
