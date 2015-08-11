@@ -20,7 +20,7 @@ class Snippet
 private
 
   def description_with_organisation_prefix
-    "The home of #{document["title"]} on GOV.UK. #{truncated_description}"
+    "The home of #{document["title"]} on GOV.UK. #{truncated_description}".chomp(' ')
   end
 
   def truncated_description
@@ -34,6 +34,6 @@ private
   def needs_organsation_prefix?
     document['format'] == "organisation" &&
       document["organisation_state"] != "closed" &&
-      !document['description'].starts_with?("The home of")
+      !document['description'].to_s.starts_with?("The home of")
   end
 end
