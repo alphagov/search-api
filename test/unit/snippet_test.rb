@@ -34,6 +34,18 @@ class SnippetTest < MiniTest::Unit::TestCase
     assert_equal "The home of Ministry of Magic on GOV.UK. A description.", snippet
   end
 
+  def test_organisation_snippets_should_get_prefixed_when_necessary
+    document = {
+      "title" => "Ministry of Magic",
+      "format" => "organisation", "organisation_state" => "open",
+      "description" => "The home of Ministry of Magic on GOV.UK. A description."
+    }
+
+    snippet = Snippet.new(document).text
+
+    assert_equal "The home of Ministry of Magic on GOV.UK. A description.", snippet
+  end
+
   def test_closed_organisation_snippet_should_not_get_prefixed
     document = { "format" => "organisation", "organisation_state" => "closed", "description" => "A description." }
 
