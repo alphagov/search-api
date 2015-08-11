@@ -14,5 +14,7 @@ namespace :sitemap do
 
     `ln -sf #{sitemap_index_path} #{sitemap_link_path}`
     fail("Symlinking failed") unless $?.success?
+
+    sitemap.cleanup
   end
 end
