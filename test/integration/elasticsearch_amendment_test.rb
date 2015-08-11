@@ -1,12 +1,10 @@
 require "integration_test_helper"
 require "app"
-require "rest-client"
 
 class ElasticsearchAmendmentTest < IntegrationTest
 
   def setup
     stub_elasticsearch_settings
-    enable_test_index_connections
     create_test_indexes
     add_sample_document
   end
@@ -39,14 +37,6 @@ class ElasticsearchAmendmentTest < IntegrationTest
       assert_equal value, parsed_response[key]
     end
   end
-
-  # Test disabled due to timeout flakiness
-  # TODO: find a way to make this non-flaky
-  #
-  #def test_should_404_on_missing_document
-  #  get "/documents/%2Fa-missing-answer"
-  #  assert last_response.not_found?
-  #end
 
   def test_should_amend_a_document
     post "/documents/%2Fan-example-answer", "title=A+new+title"
@@ -87,12 +77,4 @@ class ElasticsearchAmendmentTest < IntegrationTest
     get "/documents/%2Fwibble"
     assert last_response.not_found?
   end
-
-  # Test disabled due to timeout flakiness
-  # TODO: find a way to make this non-flaky
-  #
-  #def test_should_404_amending_missing_document
-  #  post "/documents/%2Fa-missing-answer", "title=A+new+title"
-  #  assert last_response.not_found?
-  #end
 end

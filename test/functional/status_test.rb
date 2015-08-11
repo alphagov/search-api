@@ -9,8 +9,6 @@ class StatusTest < IntegrationTest
     assert last_response.ok?
     # Don't mind whether the response type has a charset
     assert_equal "application/json", last_response.content_type.split(";")[0]
-
-    parsed_response = JSON.parse(last_response.body)
     assert_equal ["bulk"], parsed_response["queues"].keys
     assert_equal 12, parsed_response["queues"]["bulk"]["jobs"]
   end
@@ -28,7 +26,6 @@ class StatusTest < IntegrationTest
     get "/_status"
 
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
     assert_equal 2, parsed_response["queues"]["bulk"]["retries"]
   end
 
@@ -41,7 +38,6 @@ class StatusTest < IntegrationTest
     get "/_status"
 
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
     assert_equal 0, parsed_response["queues"]["bulk"]["retries"]
   end
 
@@ -58,7 +54,6 @@ class StatusTest < IntegrationTest
     get "/_status"
 
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
     assert_equal 2, parsed_response["queues"]["bulk"]["scheduled"]
   end
 
@@ -71,7 +66,6 @@ class StatusTest < IntegrationTest
     get "/_status"
 
     assert last_response.ok?
-    parsed_response = JSON.parse(last_response.body)
     assert_equal 0, parsed_response["queues"]["bulk"]["scheduled"]
   end
 end

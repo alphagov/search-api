@@ -4,18 +4,15 @@ module ElasticsearchIntegrationHelpers
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
   REGISTRY_INDEX = "government_test"
 
-  class InvalidTestIndex < ArgumentError; end
-
-  # Make sure that we're dealing with a test index (of the form <foo>_test)
-  def check_index_name(index_name)
-    unless /^[a-z_-]+(_|-)test($|-)/.match index_name
-      raise InvalidTestIndex, "#{index_name} is not a valid test index name"
+  def check_index_name!(index_name)
+    unless /^[a-z_-]+(_|-)test($|-)/.match(index_name)
+      raise "#{index_name} is not a valid test index name"
     end
   end
 
   def stub_elasticsearch_settings
     (INDEX_NAMES + AUXILIARY_INDEX_NAMES).each do |n|
-      check_index_name(n)
+      check_index_name!(n)
     end
 
     app.settings.search_config.stubs(:elasticsearch).returns({
@@ -35,12 +32,7 @@ module ElasticsearchIntegrationHelpers
     })
     app.settings.stubs(:default_index_name).returns(DEFAULT_INDEX_NAME)
     app.settings.stubs(:enable_queue).returns(false)
-  end
-
-  def enable_test_index_connections
-    # Prevent tests from messing with development/production data.
-    only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)}
-    WebMock.disable_net_connect!(allow: only_test_databases)
+    app.settings.search_config.stubs(:govuk_index_names).returns(INDEX_NAMES)
   end
 
   def search_config
@@ -80,14 +72,14 @@ module ElasticsearchIntegrationHelpers
   end
 
   def try_remove_test_index(index_name = DEFAULT_INDEX_NAME)
-    check_index_name(index_name)
+    check_index_name!(index_name)
     RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"
   rescue RestClient::ResourceNotFound
     # Index doesn't exist: that's fine
   end
 
   def clean_index_group(group_name = DEFAULT_INDEX_NAME)
-    check_index_name(group_name)
+    check_index_name!(group_name)
     index_group = search_server.index_group(group_name)
     # Delete any indices left over from switching
     index_group.clean
@@ -98,26 +90,11 @@ module ElasticsearchIntegrationHelpers
     end
   end
 
-  def clean_popularity_index
-    try_remove_test_index 'page-traffic_test'
-  end
-
-  def assert_no_results
-    assert_equal [], JSON.parse(last_response.body)["results"]
-  end
-
   def stub_index
     return @s if @s
     @s = stub("stub index")
     Rummager.any_instance.stubs(:current_index).returns(@s)
     Rummager.any_instance.stubs(:unified_index).returns(@s)
     @s
-  end
-
-  def stub_metasearch_index
-    return @ms if @ms
-    @ms = stub("stub metasearch index")
-    BestBetsChecker.any_instance.stubs(:metasearch_index).returns(@ms)
-    @ms
   end
 end

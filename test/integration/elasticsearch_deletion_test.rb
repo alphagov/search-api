@@ -1,12 +1,10 @@
 require "integration_test_helper"
 require "app"
-require "rest-client"
 
 class ElasticsearchDeletionTest < IntegrationTest
 
   def setup
     stub_elasticsearch_settings
-    enable_test_index_connections
     clean_test_indexes
     create_test_indexes
 
@@ -80,10 +78,6 @@ class ElasticsearchDeletionTest < IntegrationTest
     post "/commit", nil
   end
 
-  def assert_no_results
-    assert_equal [], parsed_response["results"]
-  end
-
   def test_should_404_on_deleted_content
     delete "/documents/%2Fan-example-answer"
     assert last_response.ok?
@@ -99,7 +93,8 @@ class ElasticsearchDeletionTest < IntegrationTest
     commit_index
 
     get "/unified_search.json?q=cheese"
-    assert_no_results
+
+    assert_equal [], parsed_response["results"]
   end
 
   def test_should_delete_an_item_with_a_full_url

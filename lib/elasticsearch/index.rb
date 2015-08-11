@@ -1,7 +1,6 @@
 require "document"
 require "logging"
 require "cgi"
-require "rest-client"
 require "json"
 require "elasticsearch/advanced_search_query_builder"
 require "elasticsearch/client"

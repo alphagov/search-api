@@ -58,9 +58,8 @@ class SettingsTest < IntegrationTest
 private
 
   # Verifies that certain input will be tokenised as expected by the specified
-  # analyzer. 
+  # analyzer.
   def assert_tokenisation(analyzer, assertions)
-    enable_test_index_connections
     refresh_test_index
 
     assertions.each do |query, expected_output|

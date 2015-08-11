@@ -1,6 +1,5 @@
 require "integration_test_helper"
 require "app"
-require "rest-client"
 
 class ElasticsearchAdvancedSearchTest < IntegrationTest
 
@@ -8,7 +7,6 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     @index_name = "mainstream_test"
 
     stub_elasticsearch_settings
-    enable_test_index_connections
     try_remove_test_index
 
     create_test_indexes

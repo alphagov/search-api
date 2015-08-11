@@ -1,6 +1,5 @@
 require "integration_test_helper"
 require "app"
-require "rest-client"
 require "nokogiri"
 require "elasticsearch/sitemap"
 
@@ -9,7 +8,6 @@ class SitemapTest < IntegrationTest
   def setup
     @index_names = %w(mainstream_test detailed_test government_test)
     stub_elasticsearch_settings
-    enable_test_index_connections
 
     @index_names.each do |i|
       try_remove_test_index(i)

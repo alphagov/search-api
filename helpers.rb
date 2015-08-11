@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Helpers
   include Rack::Utils
   alias_method :h, :escape_html
