@@ -28,10 +28,7 @@ class Sitemap
           sitemap_filenames.each do |sitemap_filename|
             xml.sitemap {
               xml.loc "#{base_url}/#{@subdirectory}/#{sitemap_filename}"
-              # Ideally want to use %:z to indicate timezone, however, due to difference
-              # in ruby versions 1.9.3 and 1.9.2, production uses 1.9.2
-              # so we need to use Z, instead.
-              xml.lastmod @timestamp.strftime("%FT%TZ")
+              xml.lastmod @timestamp.strftime("%FT%T%:z")
             }
           end
         end
