@@ -1,5 +1,5 @@
 require "test_helper"
-require "elasticsearch/sitemap"
+require "sitemap/sitemap"
 
 class SitemapCleanupTest < MiniTest::Unit::TestCase
   def test_should_delete_old_sitemaps

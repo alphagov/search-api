@@ -1,5 +1,5 @@
 require "test_helper"
-require "elasticsearch/sitemap"
+require "sitemap/sitemap"
 
 class SitemapGeneratorTest < MiniTest::Unit::TestCase
   def test_should_generate_sitemap

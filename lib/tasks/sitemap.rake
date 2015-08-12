@@ -1,4 +1,4 @@
-require "elasticsearch/sitemap"
+require "sitemap/sitemap"
 
 namespace :sitemap do
   desc "Generate new sitemap files and if all is ok switch symlink"

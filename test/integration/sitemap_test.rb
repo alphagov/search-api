@@ -1,7 +1,7 @@
 require "integration_test_helper"
 require "app"
 require "nokogiri"
-require "elasticsearch/sitemap"
+require "sitemap/sitemap"
 
 class SitemapTest < IntegrationTest
 
