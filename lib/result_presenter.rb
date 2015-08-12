@@ -1,5 +1,5 @@
 require "entity_expander"
-require "snippet"
+require "active_support/core_ext/string"
 
 class ResultPresenter
   attr_reader :raw_result, :registries, :schema
@@ -19,7 +19,6 @@ class ResultPresenter
     end
 
     result = expand_entities(result)
-    result = add_calculated_fields(result)
     result = add_debug_values(result)
     result = temporarily_fix_link_field(result)
     result
@@ -85,11 +84,6 @@ private
     end
 
     result[:document_type] = raw_result["_type"]
-    result
-  end
-
-  def add_calculated_fields(result)
-    result[:snippet] = Snippet.new(result).text
     result
   end
 
