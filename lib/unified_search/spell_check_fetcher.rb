@@ -40,7 +40,7 @@ module UnifiedSearch
     end
 
     def spelling_index_names
-      Rummager.search_config.elasticsearch.fetch('spelling_index_names')
+      Rummager.search_config.spelling_index_names
     end
   end
 end

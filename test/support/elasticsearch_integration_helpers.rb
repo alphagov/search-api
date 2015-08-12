@@ -2,7 +2,6 @@ module ElasticsearchIntegrationHelpers
   AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"]
   INDEX_NAMES = ["mainstream_test", "detailed_test", "government_test"]
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
-  REGISTRY_INDEX = "government_test"
 
   def check_index_name!(index_name)
     unless /^[a-z_-]+(_|-)test($|-)/.match(index_name)
@@ -19,20 +18,13 @@ module ElasticsearchIntegrationHelpers
       "base_uri" => "http://localhost:9200",
       "content_index_names" => INDEX_NAMES,
       "auxiliary_index_names" => AUXILIARY_INDEX_NAMES,
-      "govuk_index_names" => INDEX_NAMES,
       "metasearch_index_name" => "metasearch_test",
-      "organisation_registry_index" => REGISTRY_INDEX,
-      "topic_registry_index" => REGISTRY_INDEX,
-      "document_series_registry_index" => REGISTRY_INDEX,
-      "document_collection_registry_index" => REGISTRY_INDEX,
-      "world_location_registry_index" => REGISTRY_INDEX,
-      "people_registry_index" => REGISTRY_INDEX,
+      "registry_index" => "government_test",
       "spelling_index_names" => INDEX_NAMES,
       "popularity_rank_offset" => 10,
     })
     app.settings.stubs(:default_index_name).returns(DEFAULT_INDEX_NAME)
     app.settings.stubs(:enable_queue).returns(false)
-    app.settings.search_config.stubs(:govuk_index_names).returns(INDEX_NAMES)
   end
 
   def search_config

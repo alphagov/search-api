@@ -47,13 +47,13 @@ class Rummager < Sinatra::Application
 
   def unified_index_schema
     @unified_index_schema ||= CombinedIndexSchema.new(
-      settings.search_config.govuk_index_names,
+      settings.search_config.content_index_names,
       settings.search_config.schema_config
     )
   end
 
   def unified_index
-    search_server.index_for_search(settings.search_config.govuk_index_names)
+    search_server.index_for_search(settings.search_config.content_index_names)
   end
 
   def text_error(content)
@@ -152,7 +152,7 @@ class Rummager < Sinatra::Application
   get "/organisations.?:request_format?" do
     json_only
 
-    organisations = registries.organisations.all
+    organisations = registries[:organisations].all
     OrganisationSetPresenter.new(organisations).present.to_json
   end
 

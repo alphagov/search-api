@@ -8,77 +8,35 @@ class Registries < Struct.new(:search_server, :search_config)
   def as_hash
     @registries ||= {
       organisations: organisations,
-      topics: topics,
-      document_series: document_series,
-      document_collections: document_collections,
-      world_locations: world_locations,
       specialist_sectors: specialist_sectors,
-      people: people,
+      topics: registry_for_document_format('topic'),
+      document_series: registry_for_document_format('document_series'),
+      document_collections: registry_for_document_format('document_collection'),
+      world_locations: registry_for_document_format('world_location'),
+      people: registry_for_document_format('person'),
     }
   end
 
+private
+
   def organisations
-    index_name = search_config.organisation_registry_index
-    @organisations ||= Registry::Organisation.new(
-      index_for_search(index_name),
-      field_definitions
-    ) if index_name
-  end
-
-  def topics
-    index_name = search_config.topic_registry_index
-    @topics ||= Registry::Topic.new(
-      index_for_search(index_name),
-      field_definitions
-    ) if index_name
-  end
-
-  def document_series
-    index_name = search_config.document_series_registry_index
-    @document_series ||= Registry::DocumentSeries.new(
-      index_for_search(index_name),
-      field_definitions
-    ) if index_name
-  end
-
-  def document_collections
-    index_name = search_config.document_collection_registry_index
-    @document_collections ||= Registry::DocumentCollection.new(
-      index_for_search(index_name),
-      field_definitions
-    ) if index_name
-  end
-
-  def world_locations
-    index_name = search_config.world_location_registry_index
-    @world_locations ||= Registry::WorldLocation.new(
-      index_for_search(index_name),
-      field_definitions
-    ) if index_name
+    Registry::Organisation.new(index, field_definitions)
   end
 
   def specialist_sectors
-    index_name = settings.search_config.govuk_index_names
-    @specialist_sector_registry ||= Registry::SpecialistSector.new(
-      index_for_search(index_name),
-      field_definitions
+    Registry::BaseRegistry.new(
+      search_server.index_for_search(settings.search_config.content_index_names),
+      field_definitions,
+      "specialist_sector"
     )
   end
 
-  def people
-    index_name = settings.search_config.people_registry_index
-    @people_registry ||= Registry::Person.new(
-      index_for_search(index_name),
-      field_definitions
-    )
+  def registry_for_document_format(format)
+    Registry::BaseRegistry.new(index, field_definitions, format)
   end
 
-  private
-
-  def index_for_search(index_name)
-    search_server.index_for_search(
-      index_name.is_a?(Array) ? index_name : [index_name]
-    )
+  def index
+    search_server.index_for_search([settings.search_config.registry_index])
   end
 
   def field_definitions
