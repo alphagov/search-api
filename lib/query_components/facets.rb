@@ -1,8 +1,6 @@
 module QueryComponents
   class Facets < BaseComponent
     def payload
-      return if search_params.facets.nil?
-
       search_params.facets.reduce({}) do |result, (field_name, options)|
         result[field_name] = facet_hash_for_facet(field_name, options)
         result
