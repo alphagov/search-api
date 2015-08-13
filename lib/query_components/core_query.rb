@@ -105,7 +105,7 @@ module QueryComponents
     end
 
     def query_analyzer
-      if debug[:disable_synonyms]
+      if search_params.disable_synonyms?
         DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS
       else
         DEFAULT_QUERY_ANALYZER

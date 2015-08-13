@@ -43,7 +43,7 @@ module QueryComponents
         return { match_all: {} }
       end
 
-      if debug[:new_weighting]
+      if search_params.enable_new_weighting?
         core_query = QueryComponents::TextQuery.new(search_params).payload
       else
         core_query = QueryComponents::CoreQuery.new(search_params).payload

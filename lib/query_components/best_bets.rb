@@ -1,7 +1,7 @@
 module QueryComponents
   class BestBets < BaseComponent
     def wrap(original_query)
-      return original_query if debug[:disable_best_bets] || no_bets?
+      return original_query if search_params.disable_best_bets? || no_bets?
 
       result = {
         bool: {

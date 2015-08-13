@@ -5,7 +5,7 @@ module QueryComponents
       if search_params.order.nil?
         # Sort by popularity when there's no explicit ordering, and there's no
         # query (so there's no relevance scores).
-        if search_term.nil? && !(debug[:disable_popularity])
+        if search_term.nil? && !search_params.disable_popularity?
           return [{ "popularity" => { order: "desc" } }]
         else
           return nil
