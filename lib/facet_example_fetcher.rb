@@ -50,6 +50,7 @@ private
     slugs = facet_options.map { |option|
       option["term"]
     }
+
     if slugs.empty?
       {}
     else
@@ -100,14 +101,18 @@ private
                                       example_fields, query, filter)
     responses = @index.msearch(searches)
     response_list = responses["responses"]
+    prepare_response(slugs, response_list)
+  end
+
+  def prepare_response(slugs, response_list)
     result = {}
     slugs.zip(response_list) { |slug, response|
-      hits = response["hits"]
       result[slug] = {
-        total: hits["total"],
-        examples: hits["hits"].map { |hit| apply_multivalued(hit["fields"]) },
+        total: response["hits"]["total"],
+        examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["fields"] || {}) },
       }
     }
+
     result
   end
 

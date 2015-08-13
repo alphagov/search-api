@@ -43,6 +43,26 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     index
   end
 
+  context "#prepare_response" do
+    should "map an empty response" do
+      fetcher = FacetExampleFetcher.new(@index, {}, {}, @builder)
+
+      response = fetcher.send(:prepare_response, [], [])
+
+      assert_equal response, {}
+    end
+
+    should "map a response to facets without fields" do
+      fetcher = FacetExampleFetcher.new(@index, {}, {}, @builder)
+      slugs = ['a-slug-name']
+      response_list = [{ 'hits' => { 'total' => 1, 'hits' => [ { '_id' => 'a-slug-name' }]}}]
+
+      response = fetcher.send(:prepare_response, slugs, response_list)
+
+      assert_equal response, { "a-slug-name" => { total: 1, examples: [{}] } }
+    end
+  end
+
   context "no facet" do
     setup do
       @index = stub_index("content index")
