@@ -34,18 +34,6 @@ module Registry
     end
   end
 
-  class DocumentCollection < BaseRegistry
-    def initialize(index, field_definitions)
-      super(index, field_definitions, "document_collection")
-    end
-  end
-
-  class DocumentSeries < BaseRegistry
-    def initialize(index, field_definitions)
-      super(index, field_definitions, "document_series")
-    end
-  end
-
   class Organisation < BaseRegistry
     def self.load_ministerial_departments
       file_path = File.join(File.dirname(__FILE__), "..", "config", "ministerial_departments.txt")
@@ -76,30 +64,6 @@ module Registry
       end
 
       organisation
-    end
-  end
-
-  class SpecialistSector < BaseRegistry
-    def initialize(index, field_definitions)
-      super(index, field_definitions, "specialist_sector")
-    end
-  end
-
-  class Topic < BaseRegistry
-    def initialize(index, field_definitions)
-      super(index, field_definitions, "topic")
-    end
-  end
-
-  class WorldLocation < BaseRegistry
-    def initialize(index, field_definitions)
-      super(index, field_definitions, "world_location")
-    end
-  end
-
-  class Person < BaseRegistry
-    def initialize(index, field_definitions)
-      super(index, field_definitions, "person")
     end
   end
 end

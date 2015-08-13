@@ -6,7 +6,7 @@ require "schema/field_definitions"
 class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @specialist_sector_registry = Registry::SpecialistSector.new(@index, sample_field_definitions)
+    @specialist_sector_registry = Registry::BaseRegistry.new(@index, sample_field_definitions, "specialist_sector")
   end
 
   def oil_and_gas
@@ -45,6 +45,6 @@ class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
   def test_uses_300_second_cache_lifetime
     TimedCache.expects(:new).with(300, anything)
 
-    Registry::SpecialistSector.new(@index, sample_field_definitions)
+    Registry::BaseRegistry.new(@index, sample_field_definitions, "specialist_sector")
   end
 end
