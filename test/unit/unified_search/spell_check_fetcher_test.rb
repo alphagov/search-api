@@ -11,7 +11,7 @@ class UnifiedSearch::SpellCheckFetcherTest < ShouldaUnitTestCase
         '/mainstream,government/_search' => { suggest: { spelling_suggestions: 'a-hash' } }
       )
 
-      es_response = UnifiedSearch::SpellCheckFetcher.new('bolo', stub('registries')).es_response
+      es_response = UnifiedSearch::SpellCheckFetcher.new(SearchParameters.new(query: 'bolo'), stub('registries')).es_response
 
       assert_equal es_response, { 'spelling_suggestions' => 'a-hash' }
     end

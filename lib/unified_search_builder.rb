@@ -12,45 +12,41 @@ require "query_components/facets"
 
 # Builds a query for a search across all GOV.UK indices
 class UnifiedSearchBuilder
-  attr_reader :params
+  attr_reader :search_params
 
-  def initialize(params)
-    @params = params
+  def initialize(search_params)
+    @search_params = search_params
   end
 
   def payload
     hash_without_blank_values(
-      from: params[:start],
-      size: params[:count],
-      fields: params[:return_fields],
+      from: search_params.start,
+      size: search_params.count,
+      fields: search_params.return_fields,
       query: query,
       filter: filter,
       sort: sort,
       facets: facets,
-      explain: explain_query?,
+      explain: search_params.debug[:explain],
     )
   end
 
   def query
-    QueryComponents::Query.new(params).payload
+    QueryComponents::Query.new(search_params).payload
   end
 
   def filter
-    QueryComponents::Filter.new(params).payload
+    QueryComponents::Filter.new(search_params).payload
   end
 
   private
 
   def sort
-    QueryComponents::Sort.new(params).payload
+    QueryComponents::Sort.new(search_params).payload
   end
 
   def facets
-    QueryComponents::Facets.new(params).payload
-  end
-
-  def explain_query?
-    params[:debug] && params[:debug][:explain]
+    QueryComponents::Facets.new(search_params).payload
   end
 
   def hash_without_blank_values(hash)

@@ -1,10 +1,14 @@
 # Fetch example values for facets
 class FacetExampleFetcher
-  def initialize(index, es_response, params, search_builder)
+  def initialize(index, es_response, search_params, search_builder)
     @index = index
     @response_facets = es_response["facets"]
-    @params = params
+    @search_params = search_params
     @search_builder = search_builder
+  end
+
+  def facets
+    @search_params.facets
   end
 
   # Fetch all requested example facet values
@@ -12,7 +16,6 @@ class FacetExampleFetcher
   # ie: a hash keyed by field name, containing hashes keyed by facet value with
   # values containing example information for the value.
   def fetch
-    facets = @params[:facets]
     if facets.nil? || @response_facets.nil?
       return {}
     end

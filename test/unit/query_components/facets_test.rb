@@ -28,8 +28,10 @@ class FacetsTest < ShouldaUnitTestCase
   context "search with facet and filter on same field" do
     setup do
       @builder = QueryComponents::Facets.new(
-        filters: [ text_filter("organisations", ["hm-magic"]) ],
-        facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
+        SearchParameters.new(
+          filters: [ text_filter("organisations", ["hm-magic"]) ],
+          facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
+        )
       )
     end
 
@@ -51,8 +53,10 @@ class FacetsTest < ShouldaUnitTestCase
   context "search with facet and filter on same field, and scope set to all_filters" do
     setup do
       @builder = QueryComponents::Facets.new(
-        filters: [ text_filter("organisations", ["hm-magic"]) ],
-        facets: {"organisations" => {requested: 10, scope: :all_filters}},
+        SearchParameters.new(
+          filters: [ text_filter("organisations", ["hm-magic"]) ],
+          facets: {"organisations" => {requested: 10, scope: :all_filters}},
+        )
       )
     end
 
@@ -77,8 +81,10 @@ class FacetsTest < ShouldaUnitTestCase
   context "search with facet and filter on different field" do
     setup do
       @builder = QueryComponents::Facets.new(
-        filters: [ text_filter("section", "levitation") ],
-        facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
+        SearchParameters.new(
+          filters: [ text_filter("section", "levitation") ],
+          facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
+        )
       )
     end
 

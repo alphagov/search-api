@@ -2,20 +2,15 @@ module QueryComponents
   class BaseComponent
     include Elasticsearch::Escaping
 
-    attr_reader :params
+    attr_reader :search_params
+    delegate :debug, to: :search_params
 
-    def initialize(params = {})
-      @params = params
+    def initialize(search_params = SearchParameters.new)
+      @search_params = search_params
     end
-
-  protected
 
     def search_term
-      params[:query]
-    end
-
-    def debug
-      params[:debug] || {}
+      search_params.query
     end
   end
 end

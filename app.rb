@@ -18,6 +18,7 @@ require "redis"
 require "matcher_set"
 require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"
+require "search_parameters"
 require "registries"
 require "schema/combined_index_schema"
 
@@ -107,8 +108,9 @@ class Rummager < Sinatra::Application
       return { error: parser.error }.to_json
     end
 
+    search_params = SearchParameters.new(parser.parsed_params)
     searcher = UnifiedSearcher.new(unified_index, registries)
-    searcher.search(parser.parsed_params).to_json
+    searcher.search(search_params).to_json
   end
 
   # Perform an advanced search. Supports filters and pagination.

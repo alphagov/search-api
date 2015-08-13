@@ -134,11 +134,11 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   def search_presenter(options)
     org_registry = options[:org_registry]
     UnifiedSearchPresenter.new(
-      {
+      SearchParameters.new(
         start: options.fetch(:start, 0),
         filters: options.fetch(:filters, []),
         facets: options.fetch(:facets, {}),
-      },
+      ),
       sample_es_response(options.fetch(:es_response, {})),
       org_registry.nil? ? {} : { organisations: org_registry },
       options.fetch(:facet_examples, {}),
@@ -154,7 +154,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           "total" => 0
         }
       }
-      @output = UnifiedSearchPresenter.new({ start: 0 }, results).present
+      @output = UnifiedSearchPresenter.new(SearchParameters.new(start: 0), results).present
     end
 
     should "present empty list of results" do
@@ -172,7 +172,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with no registries" do
     setup do
-      @output = UnifiedSearchPresenter.new({ start: 0 }, sample_es_response).present
+      @output = UnifiedSearchPresenter.new(SearchParameters.new(start: 0), sample_es_response).present
     end
 
     should "have correct total" do
@@ -215,7 +215,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         es_response['hits']['hits'] = [ @empty_result ]
       }
 
-      @output = UnifiedSearchPresenter.new({ start: 0 }, response).present
+      @output = UnifiedSearchPresenter.new(SearchParameters.new(start: 0), response).present
     end
 
     should 'return only basic metadata of fields' do
@@ -238,7 +238,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         .returns(farming_topic_document)
 
       @output = UnifiedSearchPresenter.new(
-        { start: 0 },
+        SearchParameters.new(start: 0),
         sample_es_response,
         { topics: topic_registry },
       ).present
@@ -287,7 +287,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with facets" do
     setup do
       @output = UnifiedSearchPresenter.new(
-        { start: 0, facets: { "organisations" => facet_params(1) } },
+        SearchParameters.new(start: 0, facets: { "organisations" => facet_params(1) }),
         sample_es_response("facets" => sample_facet_data),
       ).present
     end
@@ -332,11 +332,11 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with facets and a filter applied" do
     setup do
       @output = UnifiedSearchPresenter.new(
-        {
+        SearchParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hmrc"])],
           facets: {"organisations" => facet_params(2)},
-        },
+        ),
         sample_es_response("facets" => sample_facet_data),
       ).present
     end
@@ -383,11 +383,11 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with facets and a filter which matches nothing applied" do
     setup do
       @output = UnifiedSearchPresenter.new(
-        {
+        SearchParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hm-cheesemakers"])],
           facets: {"organisations" => facet_params(1)},
-        },
+        ),
         sample_es_response("facets" => sample_facet_data),
       ).present
     end
@@ -434,10 +434,10 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   context "results with facet counting only" do
     setup do
       @output = UnifiedSearchPresenter.new(
-        {
+        SearchParameters.new(
           start: 0,
           facets: { "organisations" => facet_params(0) },
-        },
+        ),
         sample_es_response("facets" => sample_facet_data),
       ).present
     end
@@ -558,10 +558,10 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       org_registry = sample_org_registry
 
       @output = UnifiedSearchPresenter.new(
-        {
+        SearchParameters.new(
           start: 0,
           facets: {"organisations" => facet_params(1), "topics" => facet_params(1)},
-        },
+        ),
         sample_es_response("facets" => sample_facet_data_with_topics),
         { organisations: org_registry },
       ).present
@@ -619,10 +619,10 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       org_registry = sample_org_registry
 
       @output = UnifiedSearchPresenter.new(
-        {
+        SearchParameters.new(
           start: 0,
           facets: { "organisations" => facet_params(1) }
-        },
+        ),
         sample_es_response("facets" => sample_facet_data),
         { organisations: org_registry },
         {"organisations" => {

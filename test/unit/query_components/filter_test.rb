@@ -5,7 +5,7 @@ class FilterTest < ShouldaUnitTestCase
   context "search with one filter" do
     should "append the correct text filters" do
       builder = QueryComponents::Filter.new(
-        filters: [ text_filter("organisations", ["hm-magic"]) ]
+        SearchParameters.new(filters: [ text_filter("organisations", ["hm-magic"]) ])
       )
 
       result = builder.payload
@@ -18,7 +18,7 @@ class FilterTest < ShouldaUnitTestCase
 
     should "append the correct date filters" do
       builder = QueryComponents::Filter.new(
-        filters: [ make_date_filter_param("field_with_date", ["from:2014-04-01 00:00,to:2014-04-02 00:00"]) ]
+        SearchParameters.new(filters: [ make_date_filter_param("field_with_date", ["from:2014-04-01 00:00,to:2014-04-02 00:00"]) ])
       )
 
       result = builder.payload
@@ -37,7 +37,7 @@ class FilterTest < ShouldaUnitTestCase
   context "search with a filter with multiple options" do
     should "have correct filter" do
       builder = QueryComponents::Filter.new(
-        filters: [ text_filter("organisations", ["hm-magic", "hmrc"]) ],
+        SearchParameters.new(filters: [ text_filter("organisations", ["hm-magic", "hmrc"]) ],)
       )
 
       result = builder.payload
@@ -52,10 +52,12 @@ class FilterTest < ShouldaUnitTestCase
   context "search with a filter and rejects" do
     should "have correct filter" do
       builder = QueryComponents::Filter.new(
-        filters: [
-          text_filter("organisations", ["hm-magic", "hmrc"]),
-          reject_filter("mainstream_browse_pages", ["benefits"]),
-        ],
+        SearchParameters.new(
+          filters: [
+            text_filter("organisations", ["hm-magic", "hmrc"]),
+            reject_filter("mainstream_browse_pages", ["benefits"]),
+          ]
+        )
       )
 
       result = builder.payload
@@ -73,10 +75,12 @@ class FilterTest < ShouldaUnitTestCase
   context "search with multiple filters" do
     should "have correct filter" do
       builder = QueryComponents::Filter.new(
-        filters: [
-          text_filter("organisations", ["hm-magic", "hmrc"]),
-          text_filter("section", ["levitation"]),
-        ],
+        SearchParameters.new(
+          filters: [
+            text_filter("organisations", ["hm-magic", "hmrc"]),
+            text_filter("section", ["levitation"]),
+          ],
+        )
       )
 
       result = builder.payload

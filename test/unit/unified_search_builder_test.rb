@@ -21,7 +21,7 @@ class UnifiedSearchBuilderTest < ShouldaUnitTestCase
 
   def builder_with_params(params)
     UnifiedSearchBuilder.new(
-      { filters: [] }.merge(params)
+      SearchParameters.new({ filters: [] }.merge(params))
     )
   end
 end
