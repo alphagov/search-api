@@ -238,7 +238,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         .returns(farming_topic_document)
 
       @output = UnifiedSearchPresenter.new(
-        SearchParameters.new(start: 0),
+        SearchParameters.new(start: 0, return_fields: %w[topics]),
         sample_es_response,
         { topics: topic_registry },
       ).present
