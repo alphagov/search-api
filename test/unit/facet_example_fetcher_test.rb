@@ -45,7 +45,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
 
   context "#prepare_response" do
     should "map an empty response" do
-      fetcher = FacetExampleFetcher.new(@index, {}, {}, @builder)
+      fetcher = FacetExampleFetcher.new(@index, {}, SearchParameters.new, @builder)
 
       response = fetcher.send(:prepare_response, [], [])
 
@@ -53,7 +53,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
 
     should "map a response to facets without fields" do
-      fetcher = FacetExampleFetcher.new(@index, {}, {}, @builder)
+      fetcher = FacetExampleFetcher.new(@index, {}, SearchParameters.new, @builder)
       slugs = ['a-slug-name']
       response_list = [{ 'hits' => { 'total' => 1, 'hits' => [ { '_id' => 'a-slug-name' }]}}]
 
@@ -67,7 +67,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     setup do
       @index = stub_index("content index")
       @builder = stub("builder")
-      @fetcher = FacetExampleFetcher.new(@index, {}, {}, @builder)
+      @fetcher = FacetExampleFetcher.new(@index, {}, SearchParameters.new, @builder)
     end
 
     should "get an empty hash of examples" do
@@ -87,7 +87,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           ]
         }
       }}
-      params = {
+      params = SearchParameters.new(
         facets: {
           "sector" => {
             requested: 10,
@@ -96,7 +96,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
             example_scope: :global
           }
         }
-      }
+      )
       @builder = stub("builder")
       @fetcher = FacetExampleFetcher.new(@index, main_query_response, params, @builder)
     end
@@ -139,7 +139,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
         }
       }}
 
-      params = {
+      params = SearchParameters.new(
         facets: {
           "sector" => {
             requested: 10,
@@ -148,7 +148,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
             example_scope: :query
           }
         }
-      }
+      )
 
       @builder = stub("builder")
       @fetcher = FacetExampleFetcher.new(@index, main_query_response, params, @builder)
@@ -193,7 +193,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           ]
         }
       }}
-      params = {
+      params = SearchParameters.new(
         facets: {
           "sector" => {
             requested: 10,
@@ -202,7 +202,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
             example_scope: :global
           }
         }
-      }
+      )
       @builder = stub("builder")
       @fetcher = FacetExampleFetcher.new(@index, main_query_response, params, @builder)
     end
@@ -225,7 +225,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
         }
       }}
 
-      params = {
+      params = SearchParameters.new(
         facets: {
           "sector" => {
             requested: 10,
@@ -234,7 +234,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
             example_scope: :query
           }
         }
-      }
+      )
 
       @builder = stub("builder")
       @fetcher = FacetExampleFetcher.new(@index, main_query_response, params, @builder)

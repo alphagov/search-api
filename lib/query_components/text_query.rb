@@ -42,7 +42,11 @@ module QueryComponents
       # multiple of these ways).
       queries = []
       queries << match_query(:all_searchable_text, search_term)
-      queries << match_query(:"all_searchable_text.synonym", search_term) unless debug[:disable_synonyms]
+
+      unless search_params.disable_synonyms?
+        queries << match_query(:"all_searchable_text.synonym", search_term)
+      end
+
       queries << match_query(:"all_searchable_text.id_codes", search_term, minimum_should_match: "1")
       dis_max_query(queries, tie_breaker: 0.1)
     end
@@ -52,7 +56,7 @@ module QueryComponents
       groups << field_boosts_words
       groups << field_boosts_phrase
       groups << field_boosts_all_terms
-      groups << field_boosts_synonyms unless debug[:disable_synonyms]
+      groups << field_boosts_synonyms unless search_params.disable_synonyms?
       groups << field_boosts_shingles
       groups << field_boosts_id_codes
 

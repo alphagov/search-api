@@ -4,7 +4,7 @@ module QueryComponents
       rejects = []
       filters = []
 
-      param_filters = params.fetch(:filters).reject do |filter|
+      param_filters = search_params.filters.reject do |filter|
         excluding.include?(filter.field_name)
       end
 

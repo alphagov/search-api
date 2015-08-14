@@ -37,15 +37,15 @@ module TestHelpers
   end
 
   def search_query_params(options={})
-    {
+    SearchParameters.new({
       start: 0,
       count: 20,
       query: "cheese",
       order: nil,
       filters: {},
-      fields: nil,
+      return_fields: nil,
       facets: nil,
       debug: {},
-    }.merge(options)
+    }.merge(options))
   end
 end

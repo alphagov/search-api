@@ -33,7 +33,7 @@ class UnifiedSearchPresenter
     {
       results: presented_results,
       total: es_response["hits"]["total"],
-      start: search_params[:start],
+      start: search_params.start,
       facets: presented_facets,
       suggested_queries: suggested_queries
     }

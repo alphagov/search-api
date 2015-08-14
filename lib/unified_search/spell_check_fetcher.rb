@@ -16,7 +16,7 @@ require 'unified_search/suggestion_blacklist'
 # Our solution is to run a separate query to fetch the suggestions, only using
 # the indices we want.
 module UnifiedSearch
-  class SpellCheckFetcher < Struct.new(:search_term, :registries)
+  class SpellCheckFetcher < Struct.new(:search_params, :registries)
     def es_response
       return unless should_correct_query?
       search_client.raw_search(elasticsearch_query)['suggest']
@@ -25,7 +25,7 @@ module UnifiedSearch
   private
 
     def should_correct_query?
-      SuggestionBlacklist.new(registries).should_correct?(search_term)
+      SuggestionBlacklist.new(registries).should_correct?(search_params.query)
     end
 
     def search_client
@@ -35,7 +35,7 @@ module UnifiedSearch
     def elasticsearch_query
       {
         size: 0,
-        suggest: QueryComponents::Suggest.new(query: search_term).payload
+        suggest: QueryComponents::Suggest.new(search_params).payload
       }
     end
 

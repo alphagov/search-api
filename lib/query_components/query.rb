@@ -7,7 +7,7 @@ module QueryComponents
     SERVICE_MANUAL_BOOST_FACTOR = 0.1
 
     def payload
-      QueryComponents::BestBets.new(params).wrap(query_hash)
+      QueryComponents::BestBets.new(search_params).wrap(query_hash)
     end
 
     private
@@ -43,13 +43,13 @@ module QueryComponents
         return { match_all: {} }
       end
 
-      if debug[:new_weighting]
-        core_query = QueryComponents::TextQuery.new(params).payload
+      if search_params.enable_new_weighting?
+        core_query = QueryComponents::TextQuery.new(search_params).payload
       else
-        core_query = QueryComponents::CoreQuery.new(params).payload
+        core_query = QueryComponents::CoreQuery.new(search_params).payload
       end
-      boosted_query = QueryComponents::Booster.new(params).wrap(core_query)
-      QueryComponents::Popularity.new(params).wrap(boosted_query)
+      boosted_query = QueryComponents::Booster.new(search_params).wrap(core_query)
+      QueryComponents::Popularity.new(search_params).wrap(boosted_query)
     end
   end
 end

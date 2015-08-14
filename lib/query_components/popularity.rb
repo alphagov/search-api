@@ -3,7 +3,7 @@ module QueryComponents
     POPULARITY_OFFSET = 0.001
 
     def wrap(boosted_query)
-      return boosted_query if debug[:disable_popularity]
+      return boosted_query if search_params.disable_popularity?
 
       {
         function_score: {

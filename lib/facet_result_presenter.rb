@@ -16,7 +16,7 @@ class FacetResultPresenter
 
     result = {}
     facets.each do |field, facet_info|
-      facet_parameters = facet_fields[field]
+      facet_parameters = search_params.facets[field]
 
       options = facet_info["terms"]
       result[field] = {
@@ -32,14 +32,6 @@ class FacetResultPresenter
   end
 
 private
-
-  def applied_filters
-    search_params[:filters] || []
-  end
-
-  def facet_fields
-    search_params[:facets] || {}
-  end
 
   # Get the facet options, sorted according to the "order" option.
   #
@@ -69,7 +61,7 @@ private
   end
 
   def filter_values_for_field(field)
-    filter = applied_filters.find { |applied_filter| applied_filter.field_name == field }
+    filter = search_params.filters.find { |applied_filter| applied_filter.field_name == field }
     filter ? filter.values : []
   end
 

@@ -14,21 +14,20 @@ class UnifiedSearcher
   end
 
   # Search and combine the indices and return a hash of ResultSet objects
-  def search(params)
-    builder = UnifiedSearchBuilder.new(params)
+  def search(search_params)
+    builder = UnifiedSearchBuilder.new(search_params)
     es_response = index.raw_search(builder.payload)
 
-    example_fetcher = FacetExampleFetcher.new(index, es_response, params,
-                                              builder)
+    example_fetcher = FacetExampleFetcher.new(index, es_response, search_params, builder)
     facet_examples = example_fetcher.fetch
 
     # Augment the response with the suggest result from a separate query.
-    if params[:query]
-      es_response['suggest'] = fetch_spell_checks(params)
+    if search_params.query
+      es_response['suggest'] = fetch_spell_checks(search_params)
     end
 
     UnifiedSearchPresenter.new(
-      params,
+      search_params,
       es_response,
       registries,
       facet_examples,
@@ -38,7 +37,7 @@ class UnifiedSearcher
 
 private
 
-  def fetch_spell_checks(params)
-    UnifiedSearch::SpellCheckFetcher.new(params[:query], registries).es_response
+  def fetch_spell_checks(search_params)
+    UnifiedSearch::SpellCheckFetcher.new(search_params, registries).es_response
   end
 end
