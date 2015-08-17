@@ -1,4 +1,5 @@
 require "logging"
+require "rest-client"
 
 module Elasticsearch
   class Client
