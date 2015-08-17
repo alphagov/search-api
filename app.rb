@@ -1,12 +1,12 @@
 require "rest-client"
+require "sinatra"
+require "json"
+require "csv"
+require "redis"
 
 %w[ lib ].each do |path|
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
-
-require "sinatra"
-require "json"
-require "csv"
 
 require "document"
 require "result_presenter"
@@ -14,7 +14,6 @@ require "unified_searcher"
 require "organisation_set_presenter"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
-require "redis"
 require "matcher_set"
 require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"

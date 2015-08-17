@@ -1,7 +1,7 @@
 require "sinatra"
 require_relative "env"
 require "search_config"
-require "config/logging"
+require "config/logging_setup"
 require "airbrake"
 
 set :search_config, SearchConfig.new

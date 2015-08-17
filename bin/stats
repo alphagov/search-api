@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
+
+require "set"
+
 PROJECT_ROOT = File.dirname(__FILE__) + "/../"
 LIBRARY_PATH = PROJECT_ROOT + "lib/"
 $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
-
-require 'set'
 
 require "elasticsearch/search_server"
 require "search_config"
