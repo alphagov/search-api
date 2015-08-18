@@ -1,8 +1,8 @@
 class FieldPresenter
-  attr_reader :registry_by_field
+  attr_reader :registries
 
-  def initialize(registry_by_field)
-    @registry_by_field = registry_by_field
+  def initialize(registries)
+    @registries = registries
   end
 
   # Expand a field given a slug, if the field should be expanded.
@@ -19,13 +19,13 @@ private
   # Return true if the field should be expanded (ie, there is a registry for
   # it).
   def should_expand(field)
-    !! registry_by_field[field.to_sym]
+    !! registries[field.to_sym]
   end
 
   # Return an expanded value for a field given a slug.  Always returns a hash
   # with at least the key "slug".
   def value_by_slug(field, slug)
-    registry = registry_by_field[field.to_sym]
+    registry = registries[field.to_sym]
     if registry
       value = registry[slug]
       if value
