@@ -21,7 +21,7 @@ module Registry
     end
 
     def [](slug)
-      all.find { |o| o.slug == slug }
+      all.find { |o| o['slug'] == slug }
     end
 
   private

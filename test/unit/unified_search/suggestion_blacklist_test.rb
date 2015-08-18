@@ -26,15 +26,12 @@ class UnifiedSearch::SuggestionBlacklistTest < ShouldaUnitTestCase
     end
 
     def stubbed_organisation_registry
-      mod_organisation = Document.new(
-        sample_field_definitions(%w(link title acronym organisation_type)),
-        {
-          link: "/government/organisations/ministry-of-defence",
-          title: "Ministry of Defence",
-          acronym: "MoD",
-          organisation_type: "Ministerial department"
-        }
-      )
+      mod_organisation = {
+        "link" => "/government/organisations/ministry-of-defence",
+        "title" => "Ministry of Defence",
+        "acronym" => "MoD",
+        "organisation_type" => "Ministerial department"
+      }
 
       stub('organisation_registry', all: [mod_organisation])
     end

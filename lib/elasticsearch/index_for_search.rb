@@ -1,5 +1,6 @@
 require "json"
 require "elasticsearch/client"
+require "multivalue_converter"
 
 module Elasticsearch
 
@@ -49,7 +50,7 @@ module Elasticsearch
       }
 
       ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
-        Document.new(field_definitions, hit["fields"])
+        MultivalueConverter.new(hit["fields"], field_definitions).converted_hash
       end
     end
 

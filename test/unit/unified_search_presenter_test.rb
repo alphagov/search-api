@@ -81,24 +81,16 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   end
 
   def sample_org_registry
-    magic_org_document = Document.new(
-      sample_field_definitions(%w{link title}),
-      link: "/government/departments/hm-magic",
-      title: "Ministry of Magic"
-    )
-    hmrc_org_document = Document.new(
-      sample_field_definitions(%w{link title}),
-      link: "/government/departments/hmrc",
-      title: "HMRC"
-    )
-    org_registry = stub("org registry")
-    org_registry.expects(:[])
-      .with("hm-magic")
-      .returns(magic_org_document)
-    org_registry.expects(:[])
-      .with("hmrc")
-      .returns(hmrc_org_document)
-    org_registry
+    {
+      "hm-magic" => {
+        "link" => "/government/departments/hm-magic",
+        "title" => "Ministry of Magic"
+      },
+      "hmrc" => {
+        "link" => "/government/departments/hmrc",
+        "title" => "HMRC"
+      }
+    }
   end
 
   def facet_response_magic
@@ -227,15 +219,12 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with a registry" do
     setup do
-      farming_topic_document = Document.new(
-        sample_field_definitions(%w{link title}),
-        link: "/government/topics/farming",
-        title: "Farming"
-      )
-      topic_registry = stub("topic registry")
-      topic_registry.expects(:[])
-        .with("farming")
-        .returns(farming_topic_document)
+      topic_registry = {
+        "farming" => {
+          "link" => "/government/topics/farming",
+          "title" => "Farming"
+        }
+      }
 
       @output = UnifiedSearchPresenter.new(
         SearchParameters.new(start: 0),

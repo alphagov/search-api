@@ -10,12 +10,11 @@ class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
   end
 
   def oil_and_gas
-    Document.new(
-      sample_field_definitions(%w{link slug title}),
-      link: "/topic/oil-and-gas/licensing",
-      slug: "oil-and-gas/licensing",
-      title: "Licensing"
-    )
+    {
+      "link" => "/topic/oil-and-gas/licensing",
+      "slug" => "oil-and-gas/licensing",
+      "title" => "Licensing"
+    }
   end
 
   def test_can_fetch_sector_by_slug
@@ -23,8 +22,7 @@ class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
       .with("specialist_sector", anything)
       .returns([oil_and_gas])
     sector = @specialist_sector_registry["oil-and-gas/licensing"]
-    assert_equal oil_and_gas.link, sector.link
-    assert_equal oil_and_gas.title, sector.title
+    assert_equal oil_and_gas, sector
   end
 
   def test_only_required_fields_are_requested_from_index

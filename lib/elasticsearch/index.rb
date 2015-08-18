@@ -9,6 +9,7 @@ require "elasticsearch/index_queue"
 require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
+require "multivalue_converter"
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
@@ -257,7 +258,7 @@ module Elasticsearch
       }
 
       ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
-        Document.new(field_definitions, hit["fields"])
+        MultivalueConverter.new(hit["fields"], field_definitions).converted_hash
       end
     end
 

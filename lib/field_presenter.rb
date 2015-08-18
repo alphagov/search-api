@@ -29,7 +29,7 @@ private
     if registry
       value = registry[slug]
       if value
-        return value.to_hash.merge("slug" => slug)
+        return value.merge("slug" => slug)
       end
     end
     {"slug" => slug}
