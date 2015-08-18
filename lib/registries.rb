@@ -20,7 +20,12 @@ class Registries < Struct.new(:search_server, :search_config)
 private
 
   def organisations
-    Registry::Organisation.new(index, field_definitions)
+    Registry::BaseRegistry.new(
+      index,
+      field_definitions,
+      "organisation",
+      %w{slug link title acronym organisation_type organisation_state}
+    )
   end
 
   def specialist_sectors
