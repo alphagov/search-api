@@ -12,7 +12,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     @wrapper = Elasticsearch::Index.new(@base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
 
     @traffic_index = Elasticsearch::Index.new(@base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
-    @wrapper.stubs(:traffic_index).returns(@traffic_index)
+    PopularityLookup.any_instance.stubs(:traffic_index).returns(@traffic_index)
     @traffic_index.stubs(:real_name).returns("page-traffic_test")
   end
 
