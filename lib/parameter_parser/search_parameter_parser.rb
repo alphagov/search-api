@@ -1,6 +1,8 @@
 require_relative "base_parameter_parser"
 
 class SearchParameterParser < BaseParameterParser
+  VIRTUAL_FIELDS = %w[title_with_highlighting description_with_highlighting]
+
   def initialize(params, schema)
     @schema = schema
     process(params)
@@ -148,7 +150,7 @@ private
   end
 
   def allowed_return_fields
-    @schema.field_definitions.keys
+    @schema.field_definitions.keys + VIRTUAL_FIELDS
   end
 
   def schema_get_field_type(field_name)

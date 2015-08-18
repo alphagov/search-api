@@ -47,7 +47,7 @@ private
 
   def presented_results
     es_response["hits"]["hits"].map do |raw_result|
-      ResultPresenter.new(raw_result.to_hash, @registries, @schema).present
+      ResultPresenter.new(raw_result.to_hash, @registries, @schema, search_params).present
     end
   end
 

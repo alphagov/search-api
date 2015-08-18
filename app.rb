@@ -143,7 +143,8 @@ class Rummager < Sinatra::Application
     results = result_set.results.map do |document|
       # Wrap in hash to be compatible with the way UnifiedSearch works.
       raw_result = { "fields" => document.to_hash }
-      ResultPresenter.new(raw_result, {}, nil).present
+      search_params = SearchParameters.new(return_fields: raw_result['fields'].keys)
+      ResultPresenter.new(raw_result, {}, nil, search_params).present
     end
 
     { total: result_set.total, results: results }.to_json

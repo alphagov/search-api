@@ -8,6 +8,7 @@ require "query_components/popularity"
 require "query_components/best_bets"
 require "query_components/query"
 require "query_components/filter"
+require "query_components/highlight"
 require "query_components/facets"
 
 # Builds a query for a search across all GOV.UK indices
@@ -22,11 +23,14 @@ class UnifiedSearchBuilder
     hash_without_blank_values(
       from: search_params.start,
       size: search_params.count,
-      fields: search_params.return_fields,
+      # `title` and `description` always needed to potentially populate virtual
+      # fields. If not explicitly requested they will not be sent to the user.
+      fields: search_params.return_fields + %w[title description],
       query: query,
       filter: filter,
       sort: sort,
       facets: facets,
+      highlight: highlight,
       explain: search_params.debug[:explain],
     )
   end
@@ -47,6 +51,10 @@ class UnifiedSearchBuilder
 
   def facets
     QueryComponents::Facets.new(search_params).payload
+  end
+
+  def highlight
+    QueryComponents::Highlight.new(search_params).payload
   end
 
   def hash_without_blank_values(hash)

@@ -1,13 +1,18 @@
 require "entity_expander"
 require "active_support/core_ext/string"
+require "active_support/core_ext/hash"
+
+require "highlighted_description"
+require "highlighted_title"
 
 class ResultPresenter
-  attr_reader :raw_result, :registries, :schema
+  attr_reader :raw_result, :registries, :schema, :search_params
 
-  def initialize(raw_result, registries, schema)
+  def initialize(raw_result, registries, schema, search_params)
     @raw_result = raw_result
     @registries = registries
     @schema = schema
+    @search_params = search_params
   end
 
   def present
@@ -18,9 +23,12 @@ class ResultPresenter
       result = expand_allowed_values(result)
     end
 
+    result = add_virtual_fields(result)
     result = expand_entities(result)
-    result = add_debug_values(result)
     result = temporarily_fix_link_field(result)
+    result = only_return_explicitely_requested_values(result)
+    result = add_debug_values(result)
+
     result
   end
 
@@ -85,6 +93,22 @@ private
 
     result[:document_type] = raw_result["_type"]
     result
+  end
+
+  def add_virtual_fields(result)
+    if search_params.field_requested?('title_with_highlighting')
+      result['title_with_highlighting'] = HighlightedTitle.new(raw_result).text
+    end
+
+    if search_params.field_requested?('description_with_highlighting')
+      result['description_with_highlighting'] = HighlightedDescription.new(raw_result).text
+    end
+
+    result
+  end
+
+  def only_return_explicitely_requested_values(result)
+    result.slice(*search_params.return_fields)
   end
 
   def temporarily_fix_link_field(result)

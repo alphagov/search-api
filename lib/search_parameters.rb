@@ -6,10 +6,14 @@ class SearchParameters
                 :filters, :debug
 
   def initialize(params = {})
-    params = { facets: [], filters: {}, debug: {} }.merge(params)
+    params = { facets: [], filters: {}, debug: {}, return_fields: [] }.merge(params)
     params.each do |k, v|
       public_send("#{k}=", v)
     end
+  end
+
+  def field_requested?(name)
+    return_fields.include?(name)
   end
 
   def disable_popularity?

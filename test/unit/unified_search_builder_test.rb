@@ -14,7 +14,7 @@ class UnifiedSearchBuilderTest < ShouldaUnitTestCase
 
       assert_equal 11, result[:from]
       assert_equal 34, result[:size]
-      assert_equal ['a_field'], result[:fields]
+      assert result[:fields].include?('a_field')
       assert result.key?(:query)
     end
   end
