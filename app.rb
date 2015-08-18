@@ -11,7 +11,6 @@ end
 require "document"
 require "result_presenter"
 require "unified_searcher"
-require "organisation_set_presenter"
 require "elasticsearch/index"
 require "elasticsearch/search_server"
 require "matcher_set"
@@ -148,13 +147,6 @@ class Rummager < Sinatra::Application
     end
 
     { total: result_set.total, results: results }.to_json
-  end
-
-  get "/organisations.?:request_format?" do
-    json_only
-
-    organisations = registries[:organisations].all
-    OrganisationSetPresenter.new(organisations).present.to_json
   end
 
   # Insert (or overwrite) a document
