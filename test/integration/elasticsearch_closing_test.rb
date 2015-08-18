@@ -27,9 +27,5 @@ class ElasticsearchClosingTest < IntegrationTest
     assert_raises *(restclient_4xx_errors + [Elasticsearch::BulkIndexFailure]) do
       index.add([sample_document])
     end
-
-    assert_raises *restclient_4xx_errors do
-      index.get("/foobang")
-    end
   end
 end

@@ -370,32 +370,6 @@ EOS
     @wrapper.add([], timeout: 20, open_timeout: 25)
   end
 
-  def test_get_document
-    document_url = "http://example.com:9200/mainstream_test/edition/%2Fan-example-link"
-    document_hash = {
-      "_type" => "edition",
-      "link" => "/an-example-link",
-      "title" => "I am a title"
-    }
-
-    document_response = {
-      "_index" => "mainstream_test",
-      "_type" => "edition",
-      "_id" => "/an-example-link",
-      "_version" => 4,
-      "exists" => true,
-      "_source" =>  document_hash
-    }
-    stub_request(:get, document_url).to_return(body: document_response.to_json)
-
-    document = @wrapper.get("/an-example-link")
-    assert document.is_a? Document
-    assert_equal "/an-example-link", document.get(:link)
-    assert_equal "/an-example-link", document.link
-    assert_equal document_hash["title"], document.title
-    assert_requested :get, document_url
-  end
-
   def test_add_queued_documents
     json_document = {
         "_type" => "edition",
@@ -464,25 +438,6 @@ EOS
     assert_raises Elasticsearch::DocumentNotFound do
       @wrapper.amend("/foobang", "title" => "New title")
     end
-  end
-
-  def test_get_document_not_found
-    document_url = "http://example.com:9200/mainstream_test/edition/%2Fa-bad-link"
-
-    not_found_response = {
-      "_index" => "rummager",
-      "_type" => "edition",
-      "_id" => "/a-bad-link",
-      "exists" => false
-    }.to_json
-
-    stub_request(:get, document_url).to_return(
-      status: 404,
-      body: not_found_response
-    )
-
-    assert_nil @wrapper.get("/a-bad-link")
-    assert_requested :get, document_url
   end
 
   def test_raw_search

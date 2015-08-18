@@ -169,13 +169,6 @@ class Rummager < Sinatra::Application
     simple_json_result(current_index.commit)
   end
 
-  get "/?:index?/documents/*" do
-    document = current_index.get(params["splat"].first)
-    halt 404 unless document
-
-    document.to_hash.to_json
-  end
-
   delete "/?:index?/documents/*" do
     document_link = params["splat"].first
 
