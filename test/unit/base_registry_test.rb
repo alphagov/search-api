@@ -10,14 +10,11 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
   end
 
   def example_document
-    Document.new(
-      sample_field_definitions(%w(slug link title)),
-      {
-        slug: "example-document",
-        link: "/government/example-document",
-        title: "Example document"
-      }
-    )
+    {
+      "slug" => "example-document",
+      "link" => "/government/example-document",
+      "title" => "Example document"
+    }
   end
 
   def test_uses_time_as_default_clock
@@ -33,9 +30,7 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
       .returns([example_document])
 
     fetched_document = @base_registry["example-document"]
-    assert_equal example_document.slug, fetched_document.slug
-    assert_equal example_document.link, fetched_document.link
-    assert_equal example_document.title, fetched_document.title
+    assert_equal example_document, fetched_document
   end
 
   def test_only_required_fields_are_requested_from_index

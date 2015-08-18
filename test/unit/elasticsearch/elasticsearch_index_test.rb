@@ -530,7 +530,7 @@ EOS
     ).then.to_raise("should never happen")
 
     result = @wrapper.documents_by_format("organisation", sample_field_definitions(%w(link title)))
-    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map(&:title)
+    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map { |r| r['title'] }
   end
 
   def test_can_fetch_documents_by_format_with_certain_fields
@@ -555,8 +555,8 @@ EOS
     ).then.to_raise("should never happen")
 
     result = @wrapper.documents_by_format("organisation", sample_field_definitions(%w(link title))).to_a
-    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map(&:title)
-    assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map(&:link)
+    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map { |r| r['title'] }
+    assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map { |r| r['link'] }
   end
 
   def test_all_documents_size

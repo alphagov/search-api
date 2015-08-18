@@ -31,7 +31,7 @@ module UnifiedSearch
     # spelling errors. We use the organisation index to ignore all acronyms.
     def organisation_acronyms
       organisation_registry = registries[:organisations]
-      organisation_registry.all.map(&:acronym).compact.map(&:downcase)
+      organisation_registry.all.map { |r| r['acronym'] }.compact.map(&:downcase)
     end
   end
 end

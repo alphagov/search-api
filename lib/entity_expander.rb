@@ -50,7 +50,7 @@ class EntityExpander
     expanded_item = registry[slug]
 
     if expanded_item
-      expanded_item.to_hash.merge("slug" => slug)
+      expanded_item.merge("slug" => slug)
     else
       { "slug" => slug }
     end
