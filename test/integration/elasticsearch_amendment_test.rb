@@ -29,25 +29,10 @@ class ElasticsearchAmendmentTest < IntegrationTest
     assert last_response.ok?
   end
 
-  def test_should_get_a_document_through_elasticsearch
-    get "/documents/%2Fan-example-answer"
-    assert last_response.ok?
-
-    sample_document_attributes.each do |key, value|
-      assert_equal value, parsed_response[key]
-    end
-  end
-
   def test_should_amend_a_document
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 
-    get "/documents/%2Fan-example-answer"
-    assert last_response.ok?
-
-    updates = {"title" => "A new title"}
-    sample_document_attributes.merge(updates).each do |key, value|
-      assert_equal value, parsed_response[key]
-    end
+    assert_document_is_in_rummager(sample_document_attributes.merge("title" => "A new title"))
   end
 
   def test_should_amend_tags_correctly
@@ -55,26 +40,15 @@ class ElasticsearchAmendmentTest < IntegrationTest
       "specialist_sectors[]=oil-and-gas/licensing",
     ].join("&")
 
-    get "/documents/%2Fan-example-answer"
-    assert last_response.ok?
-
-    updates = {
+    assert_document_is_in_rummager(sample_document_attributes.merge(
       "tags" => ["organisation:hm-magic", "sector:oil-and-gas/licensing"],
       "specialist_sectors" => ["oil-and-gas/licensing"],
-    }
-    sample_document_attributes.merge(updates).each do |key, value|
-      assert_equal value, parsed_response[key]
-    end
+    ))
   end
 
   def test_should_fail_to_amend_link
     post "/documents/%2Fan-example-answer", "link=/wibble"
-    refute last_response.ok?
 
-    get "/documents/%2Fan-example-answer"
-    assert last_response.ok?
-
-    get "/documents/%2Fwibble"
-    assert last_response.not_found?
+    assert_document_is_in_rummager(sample_document_attributes)
   end
 end

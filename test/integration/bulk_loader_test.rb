@@ -22,22 +22,6 @@ class BulkLoaderTest < IntegrationTest
     clean_test_indexes
   end
 
-  def retrieve_document_from_rummager(link)
-    get "/documents/#{CGI::escape(link)}"
-    parsed_response
-  end
-
-  def assert_document_is_in_rummager(document, skip_keys=["popularity"])
-    retrieved = retrieve_document_from_rummager(document['link'])
-    retrieved_document_keys = retrieved.keys - skip_keys
-
-    assert_equal document.keys.sort, retrieved_document_keys.sort
-
-    document.each do |key, value|
-      assert_equal value, retrieved[key], "Field #{key} should be '#{value}' but was '#{retrieved[key]}'"
-    end
-  end
-
   def index_payload(document)
     index_action = {
       "index" => {
@@ -94,7 +78,7 @@ class BulkLoaderTest < IntegrationTest
     bulk_loader.load_from(StringIO.new(index_payload(@sample_document)))
 
     assert_document_is_in_rummager(
-      @sample_document.merge("popularity" => 1.0/12), []
+      @sample_document.merge("popularity" => 1.0/12)
     )
   end
 end

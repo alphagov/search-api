@@ -19,22 +19,6 @@ class ElasticsearchIndexingTest < IntegrationTest
     clean_test_indexes
   end
 
-  def retrieve_document_from_rummager(link)
-    get "/documents/#{CGI::escape(link)}"
-    parsed_response
-  end
-
-  def assert_document_is_in_rummager(document)
-    retrieved = retrieve_document_from_rummager(document['link'])
-    retrieved_document_keys = retrieved.keys - ["popularity"]
-
-    assert_equal document.keys.sort, retrieved_document_keys.sort
-
-    document.each do |key, value|
-      assert_equal value, retrieved[key], "Field #{key} should be '#{value}' but was '#{retrieved[key]}'"
-    end
-  end
-
   def test_should_indicate_success_in_response_code_when_adding_a_new_document
     create_test_indexes
 
