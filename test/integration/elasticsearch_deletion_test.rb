@@ -79,33 +79,28 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def test_should_404_on_deleted_content
+    # an-example-answer is added by the sample documents
     delete "/documents/%2Fan-example-answer"
-    assert last_response.ok?
 
-    get "/documents/%2Fan-example-answer"
-    assert last_response.not_found?
+    assert_document_missing_in_rummager(link: "an-example-answer")
   end
 
   def test_should_not_return_deleted_content_in_search
+    # an-example-answer is added by the sample documents
     delete "/documents/%2Fan-example-answer"
-    assert last_response.ok?
 
     commit_index
-
     get "/unified_search.json?q=cheese"
 
     assert_equal [], parsed_response["results"]
   end
 
   def test_should_delete_an_item_with_a_full_url
-    get "/documents/edition/http:%2F%2Fexample.com%2F"
-    assert last_response.ok?
-
+    # an-example-answer is added by the sample documents
     delete "/documents/edition/http:%2F%2Fexample.com%2F"
     assert last_response.ok?
 
-    get "/documents/edition/http:%2F%2Fexample.com%2F"
-    assert last_response.not_found?
+    assert_document_missing_in_rummager(link: "http//example.com/")
   end
 
   def test_should_accept_a_type_to_delete_a_document
@@ -121,24 +116,20 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def test_should_delete_a_best_bet_by_type_and_id
-    get "/metasearch_test/documents/best_bet/jobs_exact"
-    assert last_response.ok?
-
+    # jobs_exact best bet is added by add_sample_documents
     delete "/metasearch_test/documents/best_bet/jobs_exact"
-    assert last_response.ok?
 
-    get "/metasearch_test/documents/best_bet/jobs_exact"
-    assert last_response.not_found?
+    assert_raises RestClient::ResourceNotFound do
+      RestClient.get("http://localhost:9200/metasearch_test/best_bet/jobs_exact")
+    end
   end
 
   def test_should_default_type_to_edition_and_id_to_link
-    get "/documents/http:%2F%2Fexample.com%2F"
-    assert last_response.ok?
-
+    # url is added by add_sample_documents
     delete "/documents/http:%2F%2Fexample.com%2F"
-    assert last_response.ok?
 
-    get "/documents/http:%2F%2Fexample.com%2F"
-    assert last_response.not_found?
+    assert_raises RestClient::ResourceNotFound do
+      RestClient.get("http://localhost:9200/mainstream_test/edition/#{CGI.escape("http://example.com/")}")
+    end
   end
 end
