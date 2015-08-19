@@ -26,7 +26,7 @@ namespace :publishing_api do
       publisher.publish(route.merge(
         format: "special_route",
         publishing_app: "rummager",
-        rendering_app: "frontend",
+        rendering_app: "rummager",
         public_updated_at: Time.now.iso8601,
         update_type: "major",
       ))
