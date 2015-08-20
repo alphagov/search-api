@@ -17,7 +17,7 @@ class ResultsWithHighlightingTest < MultiIndexTest
     get "/unified_search?q=result&fields[]=title_with_highlighting"
 
     refute first_search_result.key?('title')
-    assert_equal "I am the <em>result</em>",
+    assert_equal "I am the <mark>result</mark>",
       first_search_result['title_with_highlighting']
   end
 
@@ -44,7 +44,7 @@ class ResultsWithHighlightingTest < MultiIndexTest
     get "/unified_search?q=result&fields[]=description_with_highlighting"
 
     refute first_search_result.key?('description')
-    assert_equal "This is a test search <em>result</em> of many <em>results</em>.",
+    assert_equal "This is a test search <mark>result</mark> of many <mark>results</mark>.",
       first_search_result['description_with_highlighting']
   end
 
@@ -57,9 +57,9 @@ class ResultsWithHighlightingTest < MultiIndexTest
 
     get "/unified_search?q=highlight&fields[]=title_with_highlighting,description_with_highlighting"
 
-    assert_equal "Escape &amp; <em>highlight</em> the description as well.",
+    assert_equal "Escape &amp; <mark>highlight</mark> the description as well.",
       first_search_result['description_with_highlighting']
-    assert_equal "Escape &amp; <em>highlight</em> my title",
+    assert_equal "Escape &amp; <mark>highlight</mark> my title",
       first_search_result['title_with_highlighting']
   end
 
@@ -72,7 +72,7 @@ class ResultsWithHighlightingTest < MultiIndexTest
     get "/unified_search?q=word&fields[]=description_with_highlighting"
     description = first_search_result['description_with_highlighting']
 
-    assert description.starts_with?("<em>word</em>")
+    assert description.starts_with?("<mark>word</mark>")
     assert description.ends_with?("…")
   end
 
