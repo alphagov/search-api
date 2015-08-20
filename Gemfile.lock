@@ -163,6 +163,3 @@ DEPENDENCIES
   unicorn (= 4.6.2)
   webmock (~> 1.21.0)
   whenever
-
-BUNDLED WITH
-   1.10.6
