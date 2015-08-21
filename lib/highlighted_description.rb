@@ -35,7 +35,7 @@ private
     # versions are the same.
     escaped_original = Rack::Utils.escape_html(original_description)
     highlighted_without_tags = highlighted_description
-      .gsub('<em>', '').gsub('</em>', '')
+      .gsub('<mark>', '').gsub('</mark>', '')
 
     output = highlighted_description
 

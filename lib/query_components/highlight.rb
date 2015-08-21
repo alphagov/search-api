@@ -2,8 +2,8 @@ module QueryComponents
   class Highlight < BaseComponent
     def payload
       {
-        pre_tags: ['<em>'],
-        post_tags: ['</em>'],
+        pre_tags: ['<mark>'],
+        post_tags: ['</mark>'],
         encoder: 'html',
         fields: {
           title: {
