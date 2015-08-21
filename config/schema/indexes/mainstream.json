@@ -16,6 +16,7 @@
     "medical_safety_alert",
     "policy",
     "raib_report",
-    "vehicle_recalls_and_faults_alert"
+    "vehicle_recalls_and_faults_alert",
+    "asylum_support_decision"
   ]
 }

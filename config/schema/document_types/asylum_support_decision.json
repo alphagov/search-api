@@ -1,0 +1,190 @@
+{
+  "fields": [
+    "tribunal_decision_decision_date",
+    "tribunal_decision_judges",
+    "tribunal_decision_category",
+    "tribunal_decision_sub_category",
+    "tribunal_decision_landmark",
+    "tribunal_decision_reference_number"
+  ],
+  "allowed_values": {
+  "tribunal_decision_judges": [
+    {
+      "label": "Alan Ponting",
+      "value": "alan-ponting"
+    },
+    {
+      "label": "Alison Lock",
+      "value": "alison-lock"
+    },
+    {
+      "label": "Allan Briddock",
+      "value": "allan-briddock"
+    },
+    {
+      "label": "Anne-Marie Tootell",
+      "value": "anne-marie-tootell"
+    },
+    {
+      "label": "Charlotte Bayati",
+      "value": "charlotte-bayati"
+    },
+    {
+      "label": "Christopher Rayner",
+      "value": "christopher-rayner"
+    },
+    {
+      "label": "David Saunders",
+      "value": "david-saunders"
+    },
+    {
+      "label": "Dr E Prince",
+      "value": "dr-e-prince"
+    },
+    {
+      "label": "Fiona Ripley",
+      "value": "fiona-ripley"
+    },
+    {
+      "label": "Fozia Rizvi",
+      "value": "fozia-rizvi"
+    },
+    {
+      "label": "Gary Garland",
+      "value": "gary-garland"
+    },
+    {
+      "label": "Gill Carter",
+      "value": "gill-carter"
+    },
+    {
+      "label": "Ian Lewis",
+      "value": "ian-lewis"
+    },
+    {
+      "label": "Jessica Wyman",
+      "value": "jessica-wyman"
+    },
+    {
+      "label": "Joanna Swaney",
+      "value": "joanna-swaney"
+    },
+    {
+      "label": "Julie Cornes",
+      "value": "julie-cornes"
+    },
+    {
+      "label": "Laurence Brass",
+      "value": "laurence-brass"
+    },
+    {
+      "label": "Margaret Phelan",
+      "value": "margaret-phelan"
+    },
+    {
+      "label": "Martin Penrose",
+      "value": "martin-penrose"
+    },
+    {
+      "label": "Noor-Ul Khan",
+      "value": "noor-ul-khan"
+    },
+    {
+      "label": "Paulene Gandhi",
+      "value": "paulene-gandhi"
+    },
+    {
+      "label": "Rafaquat Hussain",
+      "value": "rafaquat-hussain"
+    },
+    {
+      "label": "Rebecca Owens",
+      "value": "rebecca-owens"
+    },
+    {
+      "label": "Richard Briden",
+      "value": "richard-briden"
+    },
+    {
+      "label": "Sally Verity Smith",
+      "value": "sally-verity-smith"
+    },
+    {
+      "label": "Salma Bashir",
+      "value": "salma-bashir"
+    },
+    {
+      "label": "Sanjay Lal",
+      "value": "sanjay-lal"
+    },
+    {
+      "label": "Sarah Breach",
+      "value": "sarah-breach"
+    },
+    {
+      "label": "Sehba Storey",
+      "value": "sehba-storey"
+    },
+    {
+      "label": "Sheila Grewal",
+      "value": "sheila-grewal"
+    },
+    {
+      "label": "Susannah Walker",
+      "value": "susannah-walker"
+    },
+    {
+      "label": "Victoria Woollen",
+      "value": "victoria-woollen"
+    }
+  ],
+  "tribunal_decision_category": [
+    {
+      "label": "Asylum Seeker, Definition of",
+      "value": "asylum-seeker-definition-of"
+    },
+    {
+      "label": "Breach of Conditions by:",
+      "value": "breach-of-conditions-by"
+    },
+    {
+      "label": "European Convention of Human Rights",
+      "value": "european-convention-of-human-rights"
+    },
+    {
+      "label": "Financial Assessment",
+      "value": "financial-assessment"
+    },
+    {
+      "label": "Local Authority Support",
+      "value": "local-authority-support"
+    },
+    {
+      "label": "Medical Evidence",
+      "value": "medical-evidence"
+    },
+    {
+      "label": "Practice and Procedure",
+      "value": "practice-and-procedure"
+    },
+    {
+      "label": "Social Security Benefits",
+      "value": "social-security-benefits"
+    },
+    {
+      "label": "Section 4",
+      "value": "section-4"
+    }
+  ],
+  "tribunal_decision_landmark": [
+    {
+      "label": "Not Landmark",
+      "value": "not-landmark"
+    },
+    {
+      "label": "Landmark",
+      "value": "landmark"
+    }
+  ]
+}
+}
