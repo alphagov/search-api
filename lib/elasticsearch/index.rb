@@ -10,6 +10,8 @@ require "elasticsearch/escaping"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
 require "multivalue_converter"
+require "indexer/document_preparer"
+require "indexer/popularity_lookup"
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
@@ -156,6 +158,7 @@ module Elasticsearch
         data = item["index"] || item["create"]
         data.has_key?("error")
       end
+
       if failed_items.any?
         # Because bulk writes return a 200 status code regardless, we need to
         # parse through the errors to detect responses that indicate a locked
@@ -301,6 +304,8 @@ module Elasticsearch
 
     # Convert a best bet query to a string formed by joining the normalised
     # words in the query with spaces.
+    #
+    # duplicated in document_preparer.rb
     def analyzed_best_bet_query(query)
       analyzed_query = JSON.parse(@client.get_with_payload(
         "_analyze?analyzer=best_bet_stemmed_match", query))
@@ -426,169 +431,16 @@ module Elasticsearch
     end
 
     def index_doc(doc_hash, popularities, options)
-      if @is_content_index
-        doc_hash = prepare_popularity_field(doc_hash, popularities)
-        doc_hash = prepare_mainstream_browse_page_field(doc_hash)
-        doc_hash = prepare_tag_field(doc_hash)
-        doc_hash = prepare_format_field(doc_hash)
-        doc_hash = prepare_public_timestamp_field(doc_hash)
-      end
-
-      doc_hash = prepare_if_best_bet(doc_hash)
-      doc_hash
-    end
-
-    def prepare_popularity_field(doc_hash, popularities)
-      pop = 0.0
-      unless popularities.nil?
-        link = doc_hash["link"]
-        pop = popularities[link]
-      end
-      doc_hash.merge("popularity" => pop)
-    end
-
-    def prepare_mainstream_browse_page_field(doc_hash)
-      # Mainstream browse pages were modelled as three separate fields:
-      # section, subsection and subsubsection.  This is unhelpful in many ways,
-      # so model them instead as a single field containing the full path.
-      #
-      # In future, we'll get them in this form directly, at which point we'll
-      # also be able to there may be multiple browse pages tagged to a piece of
-      # content.
-      return doc_hash if doc_hash["mainstream_browse_pages"]
-
-      path = [
-        doc_hash["section"],
-        doc_hash["subsection"],
-        doc_hash["subsubsection"]
-      ].compact.join("/")
-
-      if path == ""
-        doc_hash
-      else
-        doc_hash.merge("mainstream_browse_pages" => [path])
-      end
-    end
-
-    def prepare_tag_field(doc_hash)
-      tags = []
-
-      tags.concat(Array(doc_hash["organisations"]).map { |org| "organisation:#{org}" })
-      tags.concat(Array(doc_hash["specialist_sectors"]).map { |sector| "sector:#{sector}" })
-
-      doc_hash.merge("tags" => tags)
-    end
-
-    def prepare_format_field(doc_hash)
-      if doc_hash["format"].nil?
-        doc_hash.merge("format" => doc_hash["_type"])
-      else
-        doc_hash
-      end
-    end
-
-    def prepare_public_timestamp_field(doc_hash)
-      if doc_hash["public_timestamp"].nil? && !doc_hash["last_update"].nil?
-        doc_hash.merge("public_timestamp" => doc_hash["last_update"])
-      else
-        doc_hash
-      end
-    end
-
-    # If a document is a best bet, and is using the stemmed_query field, we
-    # need to populate the stemmed_query_as_term field with a processed version
-    # of the field.  This produces a representation of the best-bet query with
-    # all words stemmed and lowercased, and joined with a single space.
-    #
-    # At search time, all best bets with at least one word in common with the
-    # user's query are fetched, and the stemmed_query_as_term field of each is
-    # checked to see if it is a substring match for the (similarly normalised)
-    # user's query.  If so, the best bet is used.
-    def prepare_if_best_bet(doc_hash)
-      if doc_hash["_type"] != "best_bet"
-        return doc_hash
-      end
-
-      stemmed_query = doc_hash["stemmed_query"]
-      if stemmed_query.nil?
-        return doc_hash
-      end
-
-      doc_hash["stemmed_query_as_term"] = " #{analyzed_best_bet_query(stemmed_query)} "
-      doc_hash
+      DocumentPreparer.new(@client).prepared(
+        doc_hash,
+        popularities,
+        options,
+        @is_content_index
+      )
     end
 
     def lookup_popularities(links)
-      if traffic_index.nil?
-        return nil
-      end
-      results = traffic_index.raw_search({
-        query: {
-          terms: {
-            path_components: links
-          }
-        },
-        fields: ["rank_14"],
-        sort: [
-          { rank_14: { order: "asc" }}
-        ],
-        size: 10 * links.size,
-      })
-      ranks = Hash.new(traffic_index_size)
-      results["hits"]["hits"].each do |hit|
-        link = hit["_id"]
-        rank = Array(hit["fields"]["rank_14"]).first
-        if rank.nil?
-          next
-        end
-        ranks[link] = [rank, ranks[link]].min
-      end
-
-      Hash[links.map { |link|
-        popularity_score = if ranks[link] == 0
-          0
-        else
-          1.0 / (ranks[link] + @search_config.popularity_rank_offset)
-        end
-        [link, popularity_score]
-      }]
-    end
-
-    def traffic_index
-      if @opened_traffic_index
-        return @traffic_index
-      end
-      @traffic_index = open_traffic_index
-      @opened_traffic_index = true
-      return @traffic_index
-    end
-
-    def traffic_index_size
-      results = traffic_index.raw_search({
-        query: { match_all: {}},
-        size: 0
-      })
-      results["hits"]["total"]
-    end
-
-    def open_traffic_index
-      if @index_name.start_with?("page-traffic")
-        return nil
-      end
-
-      traffic_index_name = @search_config.auxiliary_index_names.find {|index|
-        index.start_with?("page-traffic")
-      }
-
-      if traffic_index_name
-        result = @search_config.search_server.index(traffic_index_name)
-
-        if result.exists?
-          return result
-        end
-      end
-
-      return nil
+      PopularityLookup.new(@index_name, @search_config).lookup_popularities(links)
     end
 
     def queue
