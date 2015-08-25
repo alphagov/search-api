@@ -290,38 +290,6 @@ eos
     assert_requested(:post, "http://example.com:9200/mainstream_test/_bulk")
   end
 
-  def test_should_populate_mainstream_browse_pages_field
-    stub_popularity_index_requests(["/foo/bar"], 1.0)
-
-    json_document = {
-      "_type" => "edition",
-      "link" => "/foo/bar",
-      "section" => "benefits",
-      "subsection" => "entitlement",
-    }
-    document = stub("document", elasticsearch_export: json_document)
-
-    # Note that this comes with a trailing newline, which elasticsearch needs
-    payload = <<-eos
-{"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","section":"benefits","subsection":"entitlement","popularity":0.09090909090909091,"mainstream_browse_pages":["benefits/entitlement"],"tags":[],"format":"edition"}
-    eos
-    response = <<-eos
-{"took":5,"items":[
-  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } }
-]}
-    eos
-
-    bulk_request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
-        body: payload,
-        headers: {"Content-Type" => "application/json"}
-    ).to_return(body: response)
-
-    @wrapper.add [document]
-
-    assert_requested(bulk_request)
-  end
-
   def test_should_populate_public_timestamp_based_on_last_update_field
     stub_popularity_index_requests(["/document/thing"], 1.0)
 

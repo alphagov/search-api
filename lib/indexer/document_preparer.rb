@@ -6,7 +6,6 @@ class DocumentPreparer
   def prepared(doc_hash, popularities, options, is_content_index)
     if is_content_index
       doc_hash = prepare_popularity_field(doc_hash, popularities)
-      doc_hash = prepare_mainstream_browse_page_field(doc_hash)
       doc_hash = prepare_tag_field(doc_hash)
       doc_hash = prepare_format_field(doc_hash)
       doc_hash = prepare_public_timestamp_field(doc_hash)
@@ -25,29 +24,6 @@ private
       pop = popularities[link]
     end
     doc_hash.merge("popularity" => pop)
-  end
-
-  def prepare_mainstream_browse_page_field(doc_hash)
-    # Mainstream browse pages were modelled as three separate fields:
-    # section, subsection and subsubsection.  This is unhelpful in many ways,
-    # so model them instead as a single field containing the full path.
-    #
-    # In future, we'll get them in this form directly, at which point we'll
-    # also be able to there may be multiple browse pages tagged to a piece of
-    # content.
-    return doc_hash if doc_hash["mainstream_browse_pages"]
-
-    path = [
-      doc_hash["section"],
-      doc_hash["subsection"],
-      doc_hash["subsubsection"]
-    ].compact.join("/")
-
-    if path == ""
-      doc_hash
-    else
-      doc_hash.merge("mainstream_browse_pages" => [path])
-    end
   end
 
   def prepare_tag_field(doc_hash)
