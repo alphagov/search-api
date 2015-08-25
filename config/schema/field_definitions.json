@@ -185,7 +185,15 @@
     "type": "identifiers"
   },
 
+  "aircraft_category_name": {
+    "type": "identifiers"
+  },
+
   "report_type": {
+    "type": "identifiers"
+  },
+
+  "report_type_name": {
     "type": "identifiers"
   },
 
