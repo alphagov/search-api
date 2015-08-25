@@ -1,7 +1,9 @@
 {
   "fields": [
     "aircraft_category",
+    "aircraft_category_name",
     "report_type",
+    "report_type_name",
     "date_of_occurrence",
     "registration",
     "aircraft_type",
