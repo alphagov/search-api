@@ -399,5 +399,23 @@
   "important_to_policy": {
     "description": "A flag set by editors to mark a document as being important to policy",
     "type": "boolean"
+  },
+  "tribunal_decision_decision_date": {
+    "type": "date"
+  },
+  "tribunal_decision_judges": {
+    "type": "searchable_identifiers"
+  },
+  "tribunal_decision_category": {
+    "type": "identifier"
+  },
+  "tribunal_decision_sub_category": {
+    "type": "identifier"
+  },
+  "tribunal_decision_landmark": {
+    "type": "identifier"
+  },
+  "tribunal_decision_reference_number": {
+    "type": "identifier"
   }
 }

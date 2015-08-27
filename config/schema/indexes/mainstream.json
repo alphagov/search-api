@@ -1,6 +1,7 @@
 {
   "document_types": [
     "aaib_report",
+    "asylum_support_decision",
     "cma_case",
     "contact",
     "countryside_stewardship_grant",
