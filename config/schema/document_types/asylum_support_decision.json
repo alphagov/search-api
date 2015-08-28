@@ -140,40 +140,94 @@
     ],
     "tribunal_decision_category": [
       {
-        "label": "Asylum Seeker, Definition of",
-        "value": "asylum-seeker-definition-of"
+        "label": "Section 95 (asylum-seekers)",
+        "value": "section-95-asylum-seekers"
       },
       {
-        "label": "Breach of Conditions by:",
-        "value": "breach-of-conditions-by"
+        "label": "Section 4(2) (failed asylum seekers)",
+        "value": "section-4-2-failed-asylum-seekers"
       },
       {
-        "label": "European Convention of Human Rights",
-        "value": "european-convention-of-human-rights"
+        "label": "Section 4(1) (neither an asylum seeker nor a failed asylum seeker)",
+        "value": "section-4-1-neither-an-asylum-seeker-nor-a-failed-asylum-seeker"
+      }
+    ],
+    "tribunal_decision_sub_category": [
+      {
+        "label": "Section 95 - jurisdiction",
+        "value": "section-95-jurisdiction"
       },
       {
-        "label": "Financial Assessment",
-        "value": "financial-assessment"
+        "label": "Section 95 - destitution",
+        "value": "section-95-destitution"
       },
       {
-        "label": "Local Authority Support",
-        "value": "local-authority-support"
+        "label": "Section 95 - children",
+        "value": "section-95-children"
       },
       {
-        "label": "Medical Evidence",
-        "value": "medical-evidence"
+        "label": "Section 95 - dependants",
+        "value": "section-95-dependants"
       },
       {
-        "label": "Practice and Procedure",
-        "value": "practice-and-procedure"
+        "label": "Section 95 - breach",
+        "value": "section-95-breach"
       },
       {
-        "label": "Social Security Benefits",
-        "value": "social-security-benefits"
+        "label": "Section 95 - other",
+        "value": "section-95-other"
       },
       {
-        "label": "Section 4",
-        "value": "section-4"
+        "label": "Section 4(2) - jurisdiction",
+        "value": "section-4-2-jurisdiction"
+      },
+      {
+        "label": "Section 4(2) - destitution",
+        "value": "section-4-2-destitution"
+      },
+      {
+        "label": "Section 4(2) - dependants",
+        "value": "section-4-2-dependants"
+      },
+      {
+        "label": "Section 4(2) - breach",
+        "value": "section-4-2-breach"
+      },
+      {
+        "label": "Section 4(2) - regulation 3(2) - steps to leave",
+        "value": "section-4-2-regulation-3-2-steps-to-leave"
+      },
+      {
+        "label": "Section 4(2) - regulation 3(2) - medical",
+        "value": "section-4-2-regulation-3-2-medical"
+      },
+      {
+        "label": "Section 4(2) - regulation 3(2) - no route of return",
+        "value": "section-4-2-regulation-3-2-no-route-of-return"
+      },
+      {
+        "label": "Section 4(2) - regulation 3(2) - judicial review",
+        "value": "section-4-2-regulation-3-2-judicial-review"
+      },
+      {
+        "label": "Section 4(2) - regulation 3(2) - human rights / fresh reps",
+        "value": "section-4-2-regulation-3-2-human-rights-fresh-reps"
+      },
+      {
+        "label": "Section 4(2) - regulation 3(2) - other",
+        "value": "section-4-2-regulation-3-2-other"
+      },
+      {
+        "label": "Section 4(1) - temporary submission / release",
+        "value": "section-4-1-temporary-submission-release"
+      },
+      {
+        "label": "Section 4(1) - bail",
+        "value": "section-4-1-bail"
+      },
+      {
+        "label": "Section 4(1) - other",
+        "value": "section-4-1-other"
       }
     ],
     "tribunal_decision_landmark": [
