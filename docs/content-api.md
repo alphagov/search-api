@@ -15,8 +15,6 @@ Currently returns a hash with one element: `raw_source`, which contains the raw 
 ```json
 {  
    "raw_source":{  
-      "section":"driving",
-      "subsection":"car-tax-discs",
       "organisations":[  
          "department-for-transport",
          "driver-and-vehicle-licensing-agency"

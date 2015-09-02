@@ -36,7 +36,6 @@ class BaseParameterParser
     people
     policies
     search_format_types
-    section
     specialist_sectors
   )
 
@@ -52,7 +51,6 @@ class BaseParameterParser
     mainstream_browse_pages
     manual
     organisations
-    section
     specialist_sectors
   )
 
@@ -91,11 +89,8 @@ class BaseParameterParser
     link
     organisations
     public_timestamp
-    section
     slug
     specialist_sectors
-    subsection
-    subsubsection
     title
     topics
     world_locations
