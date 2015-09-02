@@ -406,13 +406,25 @@
   "tribunal_decision_judges": {
     "type": "searchable_identifiers"
   },
+  "tribunal_decision_judges_name": {
+    "type": "searchable_identifiers"
+  },
   "tribunal_decision_category": {
+    "type": "identifier"
+  },
+  "tribunal_decision_category_name": {
     "type": "identifier"
   },
   "tribunal_decision_sub_category": {
     "type": "identifier"
   },
+  "tribunal_decision_sub_category_name": {
+    "type": "identifier"
+  },
   "tribunal_decision_landmark": {
+    "type": "identifier"
+  },
+  "tribunal_decision_landmark_name": {
     "type": "identifier"
   },
   "tribunal_decision_reference_number": {
