@@ -66,18 +66,6 @@
     "type": "unsearchable_text"
   },
 
-  "section": {
-    "type": "identifier"
-  },
-
-  "subsection": {
-    "type": "identifier"
-  },
-
-  "subsubsection": {
-    "type": "identifier"
-  },
-
   "id": {
     "type": "identifier"
   },
