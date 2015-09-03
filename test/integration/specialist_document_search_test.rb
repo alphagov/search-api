@@ -19,7 +19,6 @@ class SpecialistDocumentSearchTest < MultiIndexTest
       "opened_date" => "2014-08-22",
       "case_type" => "mergers",
       "_type" => "cma_case",
-      "section" => ["1"],
     }
 
     commit_document("mainstream_test", cma_case_attributes)

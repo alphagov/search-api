@@ -34,7 +34,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "description" => "Government, government, government. Developers.",
         "format" => "answer",
         "link" => "/another-example-answer",
-        "section" => "Crime",
+        "mainstream_browse_pages" => "crime/example",
         "indexable_content" => "Tax, benefits, roads and stuff",
         "relevant_to_local_government" => false,
         "updated_at" => "2012-01-03"
@@ -44,7 +44,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "description" => "Government, government, government. Developers.",
         "format" => "answer",
         "link" => "/yet-another-example-answer",
-        "section" => "Crime",
+        "mainstream_browse_pages" => "crime/example",
         "indexable_content" => "Tax, benefits, roads and stuff, mostly about cheese",
         "relevant_to_local_government" => true,
         "updated_at" => "2012-01-04",
@@ -128,7 +128,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
   end
 
   def test_should_filter_results_by_a_property
-    get "/#{@index_name}/advanced_search.json?per_page=2&page=1&section=Crime"
+    get "/#{@index_name}/advanced_search.json?per_page=2&page=1&mainstream_browse_pages=crime/example"
     assert last_response.ok?
     assert_result_total 2
     assert_result_links "/another-example-answer", "/yet-another-example-answer", order: false
@@ -164,7 +164,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
         "description" => "Government, government, government. cheese.",
         "format" => "answer",
         "link" => "/cheese-example-answer",
-        "section" => "Crime",
+        "mainstream_browse_pages" => "crime/example",
         "indexable_content" => "Cheese tax.  Cheese recipies.  Cheese music.",
         "relevant_to_local_government" => true,
         "updated_at" => "2012-01-01"
@@ -176,7 +176,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     end
     commit_index
 
-    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&section=Crime"
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&mainstream_browse_pages=crime/example"
 
     assert last_response.ok?
     assert_result_total 1
@@ -187,7 +187,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     # The new organisation registry expands organisations from slugs into
     # hashes; for backwards compatibility, we shouldn't do this until it's
     # configured (and until clients can handle either format).
-    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&section=Crime"
+    get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&mainstream_browse_pages=crime/example"
 
     assert last_response.ok?
     assert_result_total 1

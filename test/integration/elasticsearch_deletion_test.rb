@@ -32,7 +32,7 @@ class ElasticsearchDeletionTest < IntegrationTest
             "description" => "Government, government, government. Developers.",
             "format" => "answer",
             "link" => "/another-example-answer",
-            "section" => "Crime",
+            "mainstream_browse_pages" => "crime/example",
             "indexable_content" => "Tax, benefits, roads and stuff"
           },
           {

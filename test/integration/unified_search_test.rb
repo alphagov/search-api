@@ -80,25 +80,25 @@ class UnifiedSearchTest < MultiIndexTest
     assert_equal lowercase_titles, lowercase_titles.sort
   end
 
-  def test_filter_by_section
+  def test_filter_by_field
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?filter_section=1"
+    get "/unified_search?filter_mainstream_browse_pages=1"
 
     assert_equal ["/mainstream-1", "/detailed-1", "/government-1"],
       result_links
   end
 
-  def test_reject_by_section
+  def test_reject_by_field
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?reject_section=1"
+    get "/unified_search?reject_mainstream_browse_pages=1"
 
     assert_equal ["/detailed-2", "/government-2", "/mainstream-2"],
       result_links.sort
   end
 
-  def test_can_filter_for_missing_section_field
+  def test_can_filter_for_missing_field
     reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?filter_specialist_sectors=_MISSING"
@@ -107,7 +107,7 @@ class UnifiedSearchTest < MultiIndexTest
       result_links.sort
   end
 
-  def test_can_filter_for_missing_or_specific_value_section_field
+  def test_can_filter_for_missing_or_specific_value_in_field
     reset_content_indexes_with_content(section_count: 1)
 
     get "/unified_search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
@@ -119,7 +119,7 @@ class UnifiedSearchTest < MultiIndexTest
   def test_can_filter_and_reject
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?reject_section=1&filter_specialist_sectors[]=farming"
+    get "/unified_search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
     assert_equal [
       "/detailed-2",
@@ -141,14 +141,14 @@ class UnifiedSearchTest < MultiIndexTest
   def test_facet_counting
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_section=2"
+    get "/unified_search?q=important&facet_mainstream_browse_pages=2"
 
     assert_equal 6, parsed_response["total"]
 
     facets = parsed_response["facets"]
 
     assert_equal({
-      "section" => {
+      "mainstream_browse_pages" => {
         "options" => [
           {"value"=>{"slug"=>"1"}, "documents"=>3},
           {"value"=>{"slug"=>"2"}, "documents"=>3},
@@ -161,32 +161,33 @@ class UnifiedSearchTest < MultiIndexTest
     }, facets)
   end
 
-  # TODO: The `section` facet is determined by the document size index. This
-  # should be made more explicit.
+  # TODO: The `mainstream_browse_pages` fields are populated with a number, 1
+  # or 2. This should be made more explicit.
   def test_facet_counting_with_filter_on_field_and_exclude_field_filter_scope
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_section=2"
+    get "/unified_search?q=important&facet_mainstream_browse_pages=2"
 
     assert_equal 6, parsed_response["total"]
     facets_without_filter = parsed_response["facets"]
 
-    get "/unified_search?q=important&facet_section=2&filter_section=1"
+    get "/unified_search?q=important&facet_mainstream_browse_pages=2&filter_mainstream_browse_pages=1"
     assert_equal 3, parsed_response["total"]
     facets_with_filter = parsed_response["facets"]
 
     assert_equal(facets_with_filter, facets_without_filter)
+    assert_equal(2, facets_without_filter["mainstream_browse_pages"]["options"].size)
   end
 
   def test_facet_counting_missing_options
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_section=1"
+    get "/unified_search?q=important&facet_mainstream_browse_pages=1"
 
     assert_equal 6, parsed_response["total"]
     facets = parsed_response["facets"]
     assert_equal({
-      "section" => {
+      "mainstream_browse_pages" => {
         "options" => [
           {"value"=>{"slug"=>"1"}, "documents"=>3},
         ],
@@ -201,13 +202,13 @@ class UnifiedSearchTest < MultiIndexTest
   def test_facet_counting_with_filter_on_field_and_all_filters_scope
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_section=2,scope:all_filters&filter_section=1"
+    get "/unified_search?q=important&facet_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=1"
 
     assert_equal 3, parsed_response["total"]
     facets = parsed_response["facets"]
 
     assert_equal({
-      "section" => {
+      "mainstream_browse_pages" => {
         "options" => [
           {"value"=>{"slug"=>"1"}, "documents"=>3},
         ],
@@ -222,7 +223,7 @@ class UnifiedSearchTest < MultiIndexTest
   def test_facet_examples
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_section=1,examples:5,example_scope:global,example_fields:link:title:section"
+    get "/unified_search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
     assert_equal 6, parsed_response["total"]
     facets = parsed_response["facets"]
@@ -232,20 +233,20 @@ class UnifiedSearchTest < MultiIndexTest
         "example_info" => {
           "total" => 3,
           "examples" => [
-            {"section" => "1", "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
-            {"section" => "1", "title" => "sample detailed document 1", "link" => "/detailed-1"},
-            {"section" => "1", "title" => "sample government document 1", "link" => "/government-1"},
+            {"mainstream_browse_pages" => ["1"], "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
+            {"mainstream_browse_pages" => ["1"], "title" => "sample detailed document 1", "link" => "/detailed-1"},
+            {"mainstream_browse_pages" => ["1"], "title" => "sample government document 1", "link" => "/government-1"},
           ]
         }
       },
       "documents" => 3,
-    }, facets.fetch("section").fetch("options").fetch(0))
+    }, facets.fetch("mainstream_browse_pages").fetch("options").fetch(0))
   end
 
   def test_facet_examples_with_example_scope_query
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_section=1,examples:5,example_scope:query,example_fields:link:title:section"
+    get "/unified_search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
 
     assert_equal 6, parsed_response["total"]
 
@@ -256,14 +257,14 @@ class UnifiedSearchTest < MultiIndexTest
         "example_info" => {
           "total" => 3,
           "examples" => [
-            {"section" => "1", "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
-            {"section" => "1", "title" => "sample detailed document 1", "link" => "/detailed-1"},
-            {"section" => "1", "title" => "sample government document 1", "link" => "/government-1"},
+            {"mainstream_browse_pages" => ["1"], "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
+            {"mainstream_browse_pages" => ["1"], "title" => "sample detailed document 1", "link" => "/detailed-1"},
+            {"mainstream_browse_pages" => ["1"], "title" => "sample government document 1", "link" => "/government-1"},
           ]
         }
       },
       "documents" => 3,
-    }, facets.fetch("section").fetch("options").fetch(0))
+    }, facets.fetch("mainstream_browse_pages").fetch("options").fetch(0))
   end
 
   def test_validates_integer_params
@@ -472,7 +473,6 @@ class UnifiedSearchTest < MultiIndexTest
       "_type" => "cma_case",
       "tags" => [],
       "specialist_sectors" => ["farming"],
-      "section" => ["1"],
       "opened_date" => "2014-04-01",
     }
   end

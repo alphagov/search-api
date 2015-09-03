@@ -7,9 +7,6 @@ class DocumentTest < MiniTest::Unit::TestCase
       "title" => "TITLE",
       "description" => "DESCRIPTION",
       "format" => "answer",
-      "section" => "Life in the UK",
-      "subsection" => 'Queuing',
-      "subsubsection" => 'Barging to the front',
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT",
     }
@@ -19,9 +16,6 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "TITLE", document.title
     assert_equal "DESCRIPTION", document.description
     assert_equal "answer", document.format
-    assert_equal "Life in the UK", document.section
-    assert_equal "Queuing", document.subsection
-    assert_equal "Barging to the front", document.subsubsection
     assert_equal "/an-example-answer", document.link
     assert_equal "HERE IS SOME CONTENT", document.indexable_content
   end

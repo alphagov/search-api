@@ -38,21 +38,21 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def test_single_value_filter_param_is_turned_into_a_term_filter
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"section\":\"jones\"}}")}/)
-    @wrapper.advanced_search(default_params.merge('section' => 'jones'))
+    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"mainstream_browse_pages\":\"jones\"}}")}/)
+    @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => 'jones'))
 
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"section\":\"jones\"}}")}/)
-    @wrapper.advanced_search(default_params.merge('section' => ['jones']))
+    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"mainstream_browse_pages\":\"jones\"}}")}/)
+    @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones']))
   end
 
   def test_multiple_value_filter_param_is_turned_into_a_terms_filter
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"terms\":{\"section\":[\"jones\",\"richards\"]}}")}/)
-    @wrapper.advanced_search(default_params.merge('section' => ['jones', 'richards']))
+    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"terms\":{\"mainstream_browse_pages\":[\"jones\",\"richards\"]}}")}/)
+    @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones', 'richards']))
   end
 
   def test_filter_params_are_turned_into_anded_term_filters_on_that_property
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"and\":[{\"term\":{\"section\":\"jones\"}},{\"term\":{\"link\":\"richards\"}}]}")}/)
-    @wrapper.advanced_search(default_params.merge('section' => ['jones'], 'link' => ['richards']))
+    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"and\":[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}}]}")}/)
+    @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones'], 'link' => ['richards']))
   end
 
   def test_filter_params_on_a_boolean_mapping_property_are_convered_to_true_based_on_something_that_looks_truthy

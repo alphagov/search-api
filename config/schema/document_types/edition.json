@@ -1,8 +1,5 @@
 {
   "fields": [
-    "section",
-    "subsection",
-    "subsubsection",
     "id",
     "acronym",
     "attachments",
