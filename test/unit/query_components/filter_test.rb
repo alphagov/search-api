@@ -78,7 +78,7 @@ class FilterTest < ShouldaUnitTestCase
         SearchParameters.new(
           filters: [
             text_filter("organisations", ["hm-magic", "hmrc"]),
-            text_filter("section", ["levitation"]),
+            text_filter("mainstream_browse_pages", ["levitation"]),
           ],
         )
       )
@@ -89,7 +89,7 @@ class FilterTest < ShouldaUnitTestCase
         result,
         {:and => [
           {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
-          {"terms" => {"section" => ["levitation"]}},
+          {"terms" => {"mainstream_browse_pages" => ["levitation"]}},
         ].compact}
       )
     end

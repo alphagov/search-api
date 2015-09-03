@@ -463,14 +463,14 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   should "understand multiple facet fields" do
     p = SearchParameterParser.new({
       "facet_organisations" => ["10"],
-      "facet_section" => ["5"],
+      "facet_mainstream_browse_pages" => ["5"],
     }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params({facets: {
       "organisations" => expected_facet_params({requested: 10}),
-      "section" => expected_facet_params({requested: 5})
+      "mainstream_browse_pages" => expected_facet_params({requested: 5})
     }}), p.parsed_params)
   end
 

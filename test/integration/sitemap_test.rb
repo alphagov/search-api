@@ -61,7 +61,6 @@ class SitemapTest < IntegrationTest
         "description" => "Government, government, government. Developers.",
         "format" => "answer",
         "link" => "/another-example-answer",
-        "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
       },
       {
@@ -69,7 +68,6 @@ class SitemapTest < IntegrationTest
         "description" => "Government, government, government. Developers.",
         "format" => "recommended-link",
         "link" => "http://www.example.com/external-example-answer",
-        "section" => "Crime",
         "indexable_content" => "Tax, benefits, roads and stuff"
       },
       {
@@ -80,7 +78,6 @@ class SitemapTest < IntegrationTest
         "description" => "We list some inside gov results in the mainstream index.",
         "format" => "inside-government-link",
         "link" => "https://www.gov.uk/government/some-content",
-        "section" => "Inside Government"
       }
     ]
   end

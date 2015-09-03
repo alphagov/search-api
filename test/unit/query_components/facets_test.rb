@@ -82,7 +82,7 @@ class FacetsTest < ShouldaUnitTestCase
     setup do
       @builder = QueryComponents::Facets.new(
         SearchParameters.new(
-          filters: [ text_filter("section", "levitation") ],
+          filters: [ text_filter("mainstream_browse_pages", "levitation") ],
           facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
         )
       )
@@ -98,7 +98,7 @@ class FacetsTest < ShouldaUnitTestCase
               size: 100000,
             },
             facet_filter: {
-              "terms" => {"section" => ["levitation"]}
+              "terms" => {"mainstream_browse_pages" => ["levitation"]}
             },
           },
         },

@@ -9,7 +9,8 @@ module Fixtures
             "description" => { "type" => "string", "index" => "analyzed" },
             "format" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
             "link" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
-            "indexable_content" => { "type" => "string", "index" => "analyzed"}
+            "indexable_content" => { "type" => "string", "index" => "analyzed"},
+            "mainstream_browse_pages" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
           }
         },
         "best_bet" => {
