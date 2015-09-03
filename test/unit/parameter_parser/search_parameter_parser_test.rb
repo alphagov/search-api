@@ -14,6 +14,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       filters: [],
       facets: {},
       debug: {},
+      suggest: [],
     }.merge(params)
   end
 

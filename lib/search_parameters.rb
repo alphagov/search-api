@@ -3,7 +3,7 @@
 # Value object that holds the parsed parameters for a search.
 class SearchParameters
   attr_accessor :query, :order, :start, :count, :return_fields, :facets,
-                :filters, :debug
+                :filters, :debug, :suggest
 
   def initialize(params = {})
     params = { facets: [], filters: {}, debug: {}, return_fields: [] }.merge(params)

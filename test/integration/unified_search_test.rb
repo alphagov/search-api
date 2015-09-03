@@ -28,7 +28,7 @@ class UnifiedSearchTest < MultiIndexTest
       link: "/some-nice-link"
     )
 
-    get "/unified_search?q=serch"
+    get "/unified_search?q=serch&suggest=spelling"
 
     assert_equal ['search'], parsed_response['suggested_queries']
   end

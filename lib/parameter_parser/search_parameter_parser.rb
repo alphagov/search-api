@@ -31,6 +31,7 @@ private
       filters: filters,
       facets: facets,
       debug: debug_options,
+      suggest: character_separated_param("suggest"),
     }
 
     unused_params = @params.keys - @used_params
