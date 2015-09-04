@@ -290,39 +290,6 @@ eos
     assert_requested(:post, "http://example.com:9200/mainstream_test/_bulk")
   end
 
-  def test_should_populate_public_timestamp_based_on_last_update_field
-    stub_popularity_index_requests(["/document/thing"], 1.0)
-
-    json_document = {
-      "_type" => "edition",
-      "link" => "/document/thing",
-      "last_update" => "2015-03-26T10:300:00.006+00:00"
-    }
-
-    document = stub("document", elasticsearch_export: json_document)
-
-    payload = <<-EOS
-{"index":{"_type":"edition","_id":"/document/thing"}}
-{"_type":"edition","link":"/document/thing","last_update":"2015-03-26T10:300:00.006+00:00","popularity":0.09090909090909091,"tags":[],"format":"edition","public_timestamp":"2015-03-26T10:300:00.006+00:00"}
-    EOS
-
-  response = <<-EOS
-{"took":5,"items":[
-  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/document/thing", "ok":true } }
-]}
-EOS
-
-    bulk_request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
-        body: payload,
-        headers: {"Content-Type" => "application/json"}
-    ).to_return(body: response)
-
-    @wrapper.add [document]
-
-    assert_requested(bulk_request)
-  end
-
-
   def test_should_allow_custom_timeouts_on_add
     stub_response = stub("response", body: '{"items": []}')
     RestClient::Request.expects(:execute)

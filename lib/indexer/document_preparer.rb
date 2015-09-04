@@ -8,7 +8,6 @@ class DocumentPreparer
       doc_hash = prepare_popularity_field(doc_hash, popularities)
       doc_hash = prepare_tag_field(doc_hash)
       doc_hash = prepare_format_field(doc_hash)
-      doc_hash = prepare_public_timestamp_field(doc_hash)
     end
 
     doc_hash = prepare_if_best_bet(doc_hash)
@@ -38,14 +37,6 @@ private
   def prepare_format_field(doc_hash)
     if doc_hash["format"].nil?
       doc_hash.merge("format" => doc_hash["_type"])
-    else
-      doc_hash
-    end
-  end
-
-  def prepare_public_timestamp_field(doc_hash)
-    if doc_hash["public_timestamp"].nil? && !doc_hash["last_update"].nil?
-      doc_hash.merge("public_timestamp" => doc_hash["last_update"])
     else
       doc_hash
     end
