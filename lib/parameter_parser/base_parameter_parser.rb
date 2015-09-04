@@ -8,7 +8,6 @@ class BaseParameterParser
   # elasticsearch, and because elasticsearch gives fairly obscure error
   # messages if undefined sort fields are used.
   ALLOWED_SORT_FIELDS = %w(
-    last_update
     public_timestamp
     closing_date
     title
