@@ -8,7 +8,7 @@ class ContentEndpointsTest < IntegrationTest
   def test_content_document_not_found
     result = { "hits" => { "hits" => [] } }
 
-    stub_request(:get, "http://localhost:9200/mainstream_test,detailed_test,government_test/_search").
+    stub_request(:get, "http://localhost:9200/mainstream_test,government_test/_search").
       to_return(status: 200, body: JSON.dump(result))
 
     get "/content?link=/a-document/that-does-not-exist"
@@ -27,7 +27,7 @@ class ContentEndpointsTest < IntegrationTest
             "_score"=>1.0,
             "_source"=> 'THE_RAW_SOURCE' }]}}
 
-    stub_request(:get, "http://localhost:9200/mainstream_test,detailed_test,government_test/_search").
+    stub_request(:get, "http://localhost:9200/mainstream_test,government_test/_search").
       to_return(status: 200, body: JSON.dump(result))
 
     get "/content?link=a-document/in-search"
@@ -47,7 +47,7 @@ class ContentEndpointsTest < IntegrationTest
             "_score"=>1.0,
             "_source"=> 'THE_RAW_SOURCE' }]}}
 
-    stub_request(:get, "http://localhost:9200/mainstream_test,detailed_test,government_test/_search").
+    stub_request(:get, "http://localhost:9200/mainstream_test,government_test/_search").
       to_return(status: 200, body: JSON.dump(result))
 
     stub_request(:delete, "http://localhost:9200/mainstream_test/edition/%2Fvehicle-tax").
@@ -61,7 +61,7 @@ class ContentEndpointsTest < IntegrationTest
   def test_deleting_a_document_that_doesnt_exist
     result = { "hits" => { "hits" => [] } }
 
-    stub_request(:get, "http://localhost:9200/mainstream_test,detailed_test,government_test/_search").
+    stub_request(:get, "http://localhost:9200/mainstream_test,government_test/_search").
       to_return(status: 200, body: JSON.dump(result))
 
     delete "/content?link=a-document/in-search"
@@ -80,7 +80,7 @@ class ContentEndpointsTest < IntegrationTest
             "_score"=>1.0,
             "_source"=> 'THE_RAW_SOURCE' }]}}
 
-    stub_request(:get, "http://localhost:9200/mainstream_test,detailed_test,government_test/_search").
+    stub_request(:get, "http://localhost:9200/mainstream_test,government_test/_search").
       to_return(status: 200, body: JSON.dump(result))
 
     Elasticsearch::Index.any_instance.expects(:delete).raises(Elasticsearch::IndexLocked)

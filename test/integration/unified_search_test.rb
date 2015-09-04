@@ -46,7 +46,6 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?q=important"
 
-    assert result_links.include? "/detailed-1"
     assert result_links.include? "/government-1"
     assert result_links.include? "/mainstream-1"
   end
@@ -85,7 +84,7 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?filter_mainstream_browse_pages=1"
 
-    assert_equal ["/mainstream-1", "/detailed-1", "/government-1"],
+    assert_equal ["/mainstream-1", "/government-1"],
       result_links
   end
 
@@ -94,7 +93,7 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?reject_mainstream_browse_pages=1"
 
-    assert_equal ["/detailed-2", "/government-2", "/mainstream-2"],
+    assert_equal ["/government-2", "/mainstream-2"],
       result_links.sort
   end
 
@@ -103,7 +102,7 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?filter_specialist_sectors=_MISSING"
 
-    assert_equal ["/detailed-1", "/government-1", "/mainstream-1"],
+    assert_equal ["/government-1", "/mainstream-1"],
       result_links.sort
   end
 
@@ -112,7 +111,7 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
-    assert_equal ["/detailed-1", "/government-1", "/mainstream-1"],
+    assert_equal ["/government-1", "/mainstream-1"],
       result_links.sort
   end
 
@@ -122,7 +121,6 @@ class UnifiedSearchTest < MultiIndexTest
     get "/unified_search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
     assert_equal [
-      "/detailed-2",
       "/government-2",
       "/mainstream-2",
     ], result_links.sort
@@ -143,15 +141,15 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?q=important&facet_mainstream_browse_pages=2"
 
-    assert_equal 6, parsed_response["total"]
+    assert_equal 4, parsed_response["total"]
 
     facets = parsed_response["facets"]
 
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          {"value"=>{"slug"=>"1"}, "documents"=>3},
-          {"value"=>{"slug"=>"2"}, "documents"=>3},
+          {"value"=>{"slug"=>"1"}, "documents"=>2},
+          {"value"=>{"slug"=>"2"}, "documents"=>2},
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
@@ -168,11 +166,12 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?q=important&facet_mainstream_browse_pages=2"
 
-    assert_equal 6, parsed_response["total"]
+    assert_equal 4, parsed_response["total"]
     facets_without_filter = parsed_response["facets"]
 
     get "/unified_search?q=important&facet_mainstream_browse_pages=2&filter_mainstream_browse_pages=1"
-    assert_equal 3, parsed_response["total"]
+    assert_equal 2, parsed_response["total"]
+
     facets_with_filter = parsed_response["facets"]
 
     assert_equal(facets_with_filter, facets_without_filter)
@@ -184,12 +183,12 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?q=important&facet_mainstream_browse_pages=1"
 
-    assert_equal 6, parsed_response["total"]
+    assert_equal 4, parsed_response["total"]
     facets = parsed_response["facets"]
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          {"value"=>{"slug"=>"1"}, "documents"=>3},
+          {"value"=>{"slug"=>"1"}, "documents"=>2},
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
@@ -204,13 +203,13 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?q=important&facet_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=1"
 
-    assert_equal 3, parsed_response["total"]
+    assert_equal 2, parsed_response["total"]
     facets = parsed_response["facets"]
 
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          {"value"=>{"slug"=>"1"}, "documents"=>3},
+          {"value"=>{"slug"=>"1"}, "documents"=>2},
         ],
         "documents_with_no_value" => 0,
         "total_options" => 1,
@@ -225,21 +224,20 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
-    assert_equal 6, parsed_response["total"]
+    assert_equal 4, parsed_response["total"]
     facets = parsed_response["facets"]
     assert_equal({
       "value" => {
         "slug" => "1",
         "example_info" => {
-          "total" => 3,
+          "total" => 2,
           "examples" => [
             {"mainstream_browse_pages" => ["1"], "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
-            {"mainstream_browse_pages" => ["1"], "title" => "sample detailed document 1", "link" => "/detailed-1"},
             {"mainstream_browse_pages" => ["1"], "title" => "sample government document 1", "link" => "/government-1"},
           ]
         }
       },
-      "documents" => 3,
+      "documents" => 2,
     }, facets.fetch("mainstream_browse_pages").fetch("options").fetch(0))
   end
 
@@ -248,22 +246,21 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
 
-    assert_equal 6, parsed_response["total"]
+    assert_equal 4, parsed_response["total"]
 
     facets = parsed_response["facets"]
     assert_equal({
       "value" => {
         "slug" => "1",
         "example_info" => {
-          "total" => 3,
+          "total" => 2,
           "examples" => [
             {"mainstream_browse_pages" => ["1"], "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
-            {"mainstream_browse_pages" => ["1"], "title" => "sample detailed document 1", "link" => "/detailed-1"},
             {"mainstream_browse_pages" => ["1"], "title" => "sample government document 1", "link" => "/government-1"},
           ]
         }
       },
-      "documents" => 3,
+      "documents" => 2,
     }, facets.fetch("mainstream_browse_pages").fetch("options").fetch(0))
   end
 

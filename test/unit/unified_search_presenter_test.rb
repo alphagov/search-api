@@ -28,7 +28,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         "link" => "/duty-relief-for-imports-and-exports",
       },
     }, {
-      "_index" => "detailed-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
+      "_index" => "mainstream-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
       _type: "edition",
       _id: "/dairy-farming-and-schemes",
       "_score" => 0.34655035,
@@ -177,7 +177,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have short index names" do
       @output[:results].each do |result|
-        assert_contains %w[mainstream detailed government service-manual], result[:index]
+        assert_contains %w[mainstream government service-manual], result[:index]
       end
     end
 
@@ -243,7 +243,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have short index names" do
       @output[:results].each do |result|
-        assert_contains %w[mainstream detailed government service-manual], result[:index]
+        assert_contains %w[mainstream government service-manual], result[:index]
       end
     end
 
