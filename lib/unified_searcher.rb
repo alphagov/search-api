@@ -22,7 +22,7 @@ class UnifiedSearcher
     facet_examples = example_fetcher.fetch
 
     # Augment the response with the suggest result from a separate query.
-    if search_params.query
+    if search_params.suggest_spelling?
       es_response['suggest'] = fetch_spell_checks(search_params)
     end
 
