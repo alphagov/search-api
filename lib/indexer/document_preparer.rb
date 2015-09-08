@@ -6,7 +6,6 @@ class DocumentPreparer
   def prepared(doc_hash, popularities, options, is_content_index)
     if is_content_index
       doc_hash = prepare_popularity_field(doc_hash, popularities)
-      doc_hash = prepare_tag_field(doc_hash)
       doc_hash = prepare_format_field(doc_hash)
     end
 
@@ -23,15 +22,6 @@ private
       pop = popularities[link]
     end
     doc_hash.merge("popularity" => pop)
-  end
-
-  def prepare_tag_field(doc_hash)
-    tags = []
-
-    tags.concat(Array(doc_hash["organisations"]).map { |org| "organisation:#{org}" })
-    tags.concat(Array(doc_hash["specialist_sectors"]).map { |sector| "sector:#{sector}" })
-
-    doc_hash.merge("tags" => tags)
   end
 
   def prepare_format_field(doc_hash)
