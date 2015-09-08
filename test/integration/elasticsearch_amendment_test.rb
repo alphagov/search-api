@@ -35,17 +35,6 @@ class ElasticsearchAmendmentTest < IntegrationTest
     assert_document_is_in_rummager(sample_document_attributes.merge("title" => "A new title"))
   end
 
-  def test_should_amend_tags_correctly
-    post "/documents/%2Fan-example-answer", [
-      "specialist_sectors[]=oil-and-gas/licensing",
-    ].join("&")
-
-    assert_document_is_in_rummager(sample_document_attributes.merge(
-      "tags" => ["organisation:hm-magic", "sector:oil-and-gas/licensing"],
-      "specialist_sectors" => ["oil-and-gas/licensing"],
-    ))
-  end
-
   def test_should_fail_to_amend_link
     post "/documents/%2Fan-example-answer", "link=/wibble"
 

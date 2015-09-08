@@ -29,10 +29,6 @@ Currently returns a hash with one element: `raw_source`, which contains the raw 
       "mainstream_browse_pages":[  
          "driving/car-tax-discs"
       ],
-      "tags":[  
-         "organisation:department-for-transport",
-         "organisation:driver-and-vehicle-licensing-agency"
-      ],
       "_type":"edition",
       "_id":"/vehicle-tax"
    }

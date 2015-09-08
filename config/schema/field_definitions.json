@@ -46,10 +46,6 @@
     "type": "identifiers"
   },
 
-  "tags": {
-    "type": "identifiers"
-  },
-
   "updated_at": {
     "type": "date"
   },

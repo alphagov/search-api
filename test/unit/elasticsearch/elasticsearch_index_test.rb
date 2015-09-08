@@ -144,7 +144,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"tags":[],"format":"edition"}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"format":"edition"}
     eos
     response = <<-eos
 {"took":5,"items":[
@@ -172,7 +172,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"not_an_edition","_id":"some_id"}}
-{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":0.09090909090909091,"tags":[],"format":"not_an_edition"}
+{"_type":"not_an_edition","_id":"some_id","title":"TITLE ONE","link":"/a/link","popularity":0.09090909090909091,"format":"not_an_edition"}
   eos
     response = <<-eos
 {"took":5,"items":[
@@ -193,7 +193,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"tags":[],"format":"edition"}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"format":"edition"}
     eos
     stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
@@ -245,7 +245,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     # Note that this comes with a trailing newline, which elasticsearch needs
     payload = <<-eos
 {"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0,"tags":[],"format":"edition"}
+{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0,"format":"edition"}
 eos
     response = <<-eos
 {"took":5,"items":[
@@ -259,35 +259,6 @@ eos
     @wrapper.add [document]
 
     assert_requested(request)
-  end
-
-  def test_should_populate_tags_field
-    stub_popularity_index_requests(["/foo/bar"], 1.0)
-
-    json_document = {
-      "_type" => "edition",
-      "link" => "/foo/bar",
-      "specialist_sectors" => ["oil-and-gas/licensing", "oil-and-gas/onshore-oil-and-gas"],
-      "organisations" => ["hm-magic"],
-    }
-    document = stub("document", elasticsearch_export: json_document)
-
-    # Note that this comes with a trailing newline, which elasticsearch needs
-    payload = <<-eos
-{"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","specialist_sectors":["oil-and-gas/licensing","oil-and-gas/onshore-oil-and-gas"],"organisations":["hm-magic"],"popularity":0.09090909090909091,"tags":["organisation:hm-magic","sector:oil-and-gas/licensing","sector:oil-and-gas/onshore-oil-and-gas"],"format":"edition"}
-    eos
-    response = <<-eos
-{"took":5,"items":[
-  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } }
-]}
-    eos
-    stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
-        body: payload,
-        headers: {"Content-Type" => "application/json"}
-    ).to_return(body: response)
-    @wrapper.add [document]
-    assert_requested(:post, "http://example.com:9200/mainstream_test/_bulk")
   end
 
   def test_should_allow_custom_timeouts_on_add

@@ -468,7 +468,6 @@ class UnifiedSearchTest < MultiIndexTest
       "link" => "/cma-cases/somewhat-unique-cma-case",
       "indexable_content" => "Mergers of cheeses and faces",
       "_type" => "cma_case",
-      "tags" => [],
       "specialist_sectors" => ["farming"],
       "opened_date" => "2014-04-01",
     }
