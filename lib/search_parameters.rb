@@ -31,4 +31,8 @@ class SearchParameters
   def disable_best_bets?
     debug[:disable_best_bets]
   end
+
+  def suggest_spelling?
+    query && suggest.include?('spelling')
+  end
 end
