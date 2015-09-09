@@ -1,9 +1,7 @@
 require "health_check/result"
 
 module HealthCheck
-  SearchCheck = Struct.new(:search_term, :imperative, :path, :minimum_rank, :weight)
-
-  class SearchCheck
+  class SearchCheck < Struct.new(:search_term, :imperative, :path, :minimum_rank, :weight)
     def valid_imperative?
       ["should", "should not"].include?(imperative)
     end
@@ -29,28 +27,27 @@ module HealthCheck
     end
 
     def result(search_results)
-      found_index = search_results.index { |url|
-        URI.parse(url).path == path
-      }
-
+      found_index = search_results.index { |url| URI.parse(url).path == path }
       found_in_limit = found_index && found_index < minimum_rank
       success = !!(positive_check? ? found_in_limit : ! found_in_limit)
 
-      marker = "[#{weight}-POINT]"
+      position_found = found_index ? found_index + 1 : 0
+      found_label = found_index ? "FOUND" : "NOT FOUND"
       expectation = positive_check? ? "<= #{minimum_rank}" : "> #{minimum_rank}"
-      if found_index
-        message = "#{marker} Found '#{path}' for '#{search_term}' in position #{found_index + 1} (expected #{expectation})"
-      else
-        message = "#{marker} Didn't find '#{path}' for '#{search_term}' in any position (expected #{expectation})"
-      end
+      success_label = success ? "PASS" : "FAIL"
+
+      logging_output = [path, search_term, position_found, expectation].join(',')
       if success
-        logger.pass(message)
+        logger.pass logging_output
       else
-        logger.fail(message)
+        logger.fail logging_output
       end
 
       score = success ? weight : 0
-      Result.new(success, score, weight)
+      Result.new(
+        success, score, weight, success_label, found_label,
+        path, search_term, position_found, expectation
+      )
     end
 
     private
