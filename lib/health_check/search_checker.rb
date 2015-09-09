@@ -16,8 +16,8 @@ module HealthCheck
 
       checks.each do |check|
         search_results = search_client.search(check.search_term)[:results]
-        result = check.result(search_results)
-        calculator.add(result)
+        check_result   = check.result(search_results)
+        calculator.add(check_result)
       end
 
       calculator
