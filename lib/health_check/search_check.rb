@@ -27,7 +27,7 @@ module HealthCheck
     end
 
     def result(search_results)
-      SearchCheckResult.build(check: self, search_results: search_results)
+      SearchCheckResult.new(check: self, search_results: search_results).build
     end
   end
 end

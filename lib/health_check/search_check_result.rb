@@ -1,9 +1,5 @@
 module HealthCheck
   class SearchCheckResult
-    def self.build(check:, search_results:)
-      new(check: check, search_results: search_results).build
-    end
-
     def initialize(check:, search_results:)
       @check = check
       @search_results = search_results

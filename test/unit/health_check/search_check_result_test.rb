@@ -12,7 +12,7 @@ module HealthCheck
       end
 
       def build_result
-        @result = @subject.build(check: @check, search_results: @search_results)
+        @result = @subject.new(check: @check, search_results: @search_results).build
       end
 
       context "'should' checks" do
