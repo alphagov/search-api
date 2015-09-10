@@ -1,4 +1,4 @@
-require "health_check/result"
+require "health_check/suggestion_check_result"
 
 module HealthCheck
   class SuggestionCheck
@@ -18,13 +18,13 @@ module HealthCheck
       end
     end
 
-    # Create a Result with score of 0 or 1 out of 1. It's possible to use the
+    # Create a SuggestionCheckResult with score of 0 or 1 out of 1. It's possible to use the
     # `score and `possible_score` to add weighting to the scoring. For example
     # to give a test a "3 out of 5" score.
     def result
       score = success? ? 1 : 0
       possible_score = 1
-      Result.new(success?, score, possible_score)
+      SuggestionCheckResult.new(success?, score, possible_score)
     end
 
     # Compare the expected result and suggested query. When the expected result
