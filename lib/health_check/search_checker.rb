@@ -19,6 +19,7 @@ module HealthCheck
       checks.each do |check|
         search_results = search_client.search(check.search_term)[:results]
         check_result = check.result(search_results)
+        check_result.write_to_log
         @file_output << check_result
         calculator.add(check_result)
       end
