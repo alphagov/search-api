@@ -5,12 +5,7 @@ module HealthCheck
       @search_results = search_results
     end
 
-    def build
-      log_the_result
-      self
-    end
-
-    def log_the_result
+    def write_to_log
       logging_output = [path, search_term, position_found, expectation].join(',')
       if success
         logger.pass logging_output

@@ -1,18 +1,16 @@
 require_relative "../../test_helper"
 require "health_check/search_check_result"
 require "health_check/search_check"
-require "health_check/logging_config"
 
 module HealthCheck
   class SearchCheckResultTest < ShouldaUnitTestCase
     context ".build" do
       def setup
-        Logging.logger.root.appenders = nil
         @subject = SearchCheckResult
       end
 
       def build_result
-        @result = @subject.new(check: @check, search_results: @search_results).build
+        @result = @subject.new(check: @check, search_results: @search_results)
       end
 
       context "'should' checks" do
