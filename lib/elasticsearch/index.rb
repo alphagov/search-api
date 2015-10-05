@@ -32,18 +32,6 @@ module Elasticsearch
   class Index
     include Elasticsearch::Escaping
 
-    # An enumerator with a manually-specified size.
-    # This means we can count the number of documents in an index without
-    # having to load them all.
-    class SizedEnumerator < Enumerator
-      attr_reader :size
-
-      def initialize(size, &block)
-        super(&block)
-        @size = size
-      end
-    end
-
     # The number of documents to retrieve at once when retrieving all documents
     # Gotcha: this is actually the number of documents per shard, so there will
     # be up to some multiple of this number per page.
@@ -70,10 +58,6 @@ module Elasticsearch
       @search_config = search_config
       @document_types = @search_config.schema_config.document_types(base_index_name)
       @is_content_index = !(@search_config.auxiliary_index_names.include? base_index_name)
-    end
-
-    def field_names
-      @mappings["edition"]["properties"].keys
     end
 
     # Translate index names like `mainstream-2015-05-06t09..` into its
