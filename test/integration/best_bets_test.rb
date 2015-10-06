@@ -1,12 +1,17 @@
 require "integration_test_helper"
-require_relative "multi_index_test"
 
-class BestBetsTest < MultiIndexTest
+class BestBetsTest < IntegrationTest
   METASEARCH_INDEX_NAME = "metasearch_test"
 
   def setup
-    super
+    stub_elasticsearch_settings
+    reset_content_indexes_with_content
+    create_meta_indexes
     add_sample_bets(sample_bets)
+  end
+
+  def teardown
+    clean_test_indexes
   end
 
   def sample_bet(query, type, best_bets, worst_bets)

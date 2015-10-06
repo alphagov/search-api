@@ -1,7 +1,6 @@
 require "integration_test_helper"
-require_relative "multi_index_test"
 
-class UnifiedSearchTest < MultiIndexTest
+class UnifiedSearchTest < IntegrationTest
   def setup
     # `@@registries` are set in Rummager and is *not* reset between tests. To
     # prevent caching issues we manually clear them here to make a "new" app.
@@ -9,6 +8,10 @@ class UnifiedSearchTest < MultiIndexTest
 
     stub_elasticsearch_settings
     create_meta_indexes
+  end
+
+  def teardown
+    clean_test_indexes
   end
 
   def test_returns_success
@@ -84,8 +87,8 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?filter_mainstream_browse_pages=1"
 
-    assert_equal ["/mainstream-1", "/government-1"],
-      result_links
+    assert_equal ["/government-1", "/mainstream-1"],
+      result_links.sort
   end
 
   def test_reject_by_field
@@ -224,44 +227,10 @@ class UnifiedSearchTest < MultiIndexTest
 
     get "/unified_search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
-    assert_equal 4, parsed_response["total"]
-    facets = parsed_response["facets"]
-    assert_equal({
-      "value" => {
-        "slug" => "1",
-        "example_info" => {
-          "total" => 2,
-          "examples" => [
-            {"mainstream_browse_pages" => ["1"], "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
-            {"mainstream_browse_pages" => ["1"], "title" => "sample government document 1", "link" => "/government-1"},
-          ]
-        }
-      },
-      "documents" => 2,
-    }, facets.fetch("mainstream_browse_pages").fetch("options").fetch(0))
-  end
-
-  def test_facet_examples_with_example_scope_query
-    reset_content_indexes_with_content(section_count: 2)
-
-    get "/unified_search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
-
-    assert_equal 4, parsed_response["total"]
-
-    facets = parsed_response["facets"]
-    assert_equal({
-      "value" => {
-        "slug" => "1",
-        "example_info" => {
-          "total" => 2,
-          "examples" => [
-            {"mainstream_browse_pages" => ["1"], "title" => "sample mainstream document 1", "link" => "/mainstream-1"},
-            {"mainstream_browse_pages" => ["1"], "title" => "sample government document 1", "link" => "/government-1"},
-          ]
-        }
-      },
-      "documents" => 2,
-    }, facets.fetch("mainstream_browse_pages").fetch("options").fetch(0))
+    assert_equal(
+      ["/government-1", "/mainstream-1"],
+      parsed_response["facets"]["mainstream_browse_pages"]["options"].first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
+    )
   end
 
   def test_validates_integer_params

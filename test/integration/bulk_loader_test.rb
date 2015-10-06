@@ -44,8 +44,6 @@ class BulkLoaderTest < IntegrationTest
   end
 
   def test_updates_an_existing_document
-    insert_stub_popularity_data(@sample_document["link"])
-
     index_group = search_server.index_group(DEFAULT_INDEX_NAME)
     old_index = index_group.current_real
 
@@ -80,5 +78,17 @@ class BulkLoaderTest < IntegrationTest
     assert_document_is_in_rummager(
       @sample_document.merge("popularity" => 1.0/12)
     )
+  end
+
+private
+
+  def insert_stub_popularity_data(path)
+    document_atts = {
+      "path_components" => path,
+      "rank_14" => 10,
+    }
+
+    RestClient.post "http://localhost:9200/page-traffic_test/page-traffic/#{CGI.escape(path)}", document_atts.to_json
+    RestClient.post "http://localhost:9200/page-traffic_test/_refresh", nil
   end
 end

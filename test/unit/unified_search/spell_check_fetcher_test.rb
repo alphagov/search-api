@@ -7,9 +7,8 @@ class UnifiedSearch::SpellCheckFetcherTest < ShouldaUnitTestCase
     should "return the raw elasticsearch response" do
       UnifiedSearch::SuggestionBlacklist.any_instance.stubs(should_correct?: true)
 
-      stub_elasticsearch_request(
-        '/mainstream,government/_search' => { suggest: { spelling_suggestions: 'a-hash' } }
-      )
+      stub_request(:get, "http://localhost:9200/mainstream,government/_search")
+        .to_return(body: JSON.dump(suggest: { spelling_suggestions: 'a-hash' }))
 
       es_response = UnifiedSearch::SpellCheckFetcher.new(SearchParameters.new(query: 'bolo'), stub('registries')).es_response
 

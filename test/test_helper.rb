@@ -34,11 +34,14 @@ require "webmock/minitest"
 only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)}
 WebMock.disable_net_connect!(allow: only_test_databases)
 
-require "sample_config"
 require "support/test_helpers"
+require "support/hash_including_helpers"
+require "support/schema_helpers"
 
 class MiniTest::Unit::TestCase
   include TestHelpers
+  include HashIncludingHelpers
+  include SchemaHelpers
 end
 
 class ShouldaUnitTestCase < MiniTest::Unit::TestCase
