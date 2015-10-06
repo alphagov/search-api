@@ -3,15 +3,17 @@ require "logging"
 require "cgi"
 require "json"
 require "rest-client"
-require "elasticsearch/advanced_search_query_builder"
+require "elasticsearch/advanced_search"
 require "elasticsearch/client"
-require "elasticsearch/index_queue"
 require "elasticsearch/escaping"
+require "elasticsearch/index_queue"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
+require "indexer/bulk_payload_generator"
 require "multivalue_converter"
 require "indexer/document_preparer"
 require "indexer/popularity_lookup"
+
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
@@ -131,11 +133,7 @@ module Elasticsearch
     end
 
     def add(documents, options = {})
-      if documents.size == 1
-        logger.info "Adding #{documents.size} document to #{index_name}"
-      else
-        logger.info "Adding #{documents.size} documents to #{index_name}"
-      end
+      logger.info "Adding #{documents.size} document(s) to #{index_name}"
 
       document_hashes = documents.map { |d| d.elasticsearch_export }
       bulk_index(document_hashes, options)
@@ -143,8 +141,7 @@ module Elasticsearch
 
     # Add documents asynchronously to the index.
     def add_queued(documents)
-      noun = documents.size > 1 ? "documents" : "document"
-      logger.info "Queueing #{documents.size} #{noun} to add to #{index_name}"
+      logger.info "Queueing #{documents.size} document(s) to add to #{index_name}"
 
       document_hashes = documents.map { |d| d.elasticsearch_export }
       queue.queue_many(document_hashes)
@@ -152,7 +149,8 @@ module Elasticsearch
 
     def bulk_index(document_hashes_or_payload, options = {} )
       client = build_client(options)
-      response = client.post("_bulk", bulk_payload(document_hashes_or_payload, options), content_type: :json)
+      payload_generator = Elasticsearch::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
+      response = client.post("_bulk", payload_generator.bulk_payload(document_hashes_or_payload, options), content_type: :json)
       items = JSON.parse(response.body)["items"]
       failed_items = items.select do |item|
         data = item["index"] || item["create"]
@@ -266,29 +264,7 @@ module Elasticsearch
     end
 
     def advanced_search(params)
-      logger.info "params:#{params.inspect}"
-      if params["per_page"].nil? || params["page"].nil?
-        raise InvalidQuery.new("Pagination params are required.")
-      end
-
-      # Delete params that we don't want to be passed as filter_params
-      order     = params.delete("order")
-      keywords  = params.delete("keywords")
-      per_page  = params.delete("per_page").to_i
-      page      = params.delete("page").to_i
-
-      query_builder = AdvancedSearchQueryBuilder.new(keywords, params, order, @mappings)
-      raise InvalidQuery.new(query_builder.error) unless query_builder.valid?
-
-      starting_index = page <= 1 ? 0 : (per_page * (page - 1))
-      payload = {
-        "from" => starting_index,
-        "size" => per_page
-      }
-
-      payload.merge!(query_builder.query_hash)
-
-      ResultSet.from_elasticsearch(@document_types, raw_search(payload))
+      Elasticsearch::AdvancedSearch.new(@mappings, @document_types, @client).result_set(params)
     end
 
     def raw_search(payload, type=nil)
@@ -361,86 +337,6 @@ module Elasticsearch
 
     def logger
       Logging.logger[self]
-    end
-
-    def index_items_from_document_hashes(document_hashes, options)
-      links = document_hashes.map {
-        |doc_hash| doc_hash["link"]
-      }.compact
-      popularities = lookup_popularities(links)
-      document_hashes.map { |doc_hash|
-        [index_action(doc_hash).to_json, index_doc(doc_hash, popularities, options).to_json]
-      }
-    end
-
-    def index_items_from_raw_string(payload, options)
-      actions = []
-      links = []
-      payload.each_line.each_slice(2).map do |command, doc|
-        command_hash = JSON.parse(command)
-        doc_hash = JSON.parse(doc)
-        actions << [command_hash, doc_hash]
-        links << doc_hash["link"]
-      end
-      popularities = lookup_popularities(links.compact)
-      actions.map { |command_hash, doc_hash|
-        if command_hash.keys == ["index"]
-          doc_hash["_type"] = command_hash["index"]["_type"]
-          [
-            command_hash.to_json,
-            index_doc(doc_hash, popularities, options).to_json
-          ]
-        else
-          [
-            command_hash.to_json,
-            doc_hash.to_json
-          ]
-        end
-      }
-    end
-
-    # Payload to index documents using the `_bulk` endpoint
-    #
-    # The format is as follows:
-    #
-    #   {"index": {"_type": "edition", "_id": "/bank-holidays"}}
-    #   { <document source> }
-    #   {"index": {"_type": "edition", "_id": "/something-else"}}
-    #   { <document source> }
-    #
-    # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
-    def bulk_payload(document_hashes_or_payload, options)
-      if document_hashes_or_payload.is_a?(Array)
-        index_items = index_items_from_document_hashes(document_hashes_or_payload, options)
-      else
-        index_items = index_items_from_raw_string(document_hashes_or_payload, options)
-      end
-
-      # Make sure the payload ends with a newline character: elasticsearch
-      # requires this.
-      index_items.flatten.join("\n") + "\n"
-    end
-
-    def index_action(doc_hash)
-      {
-        "index" => {
-          "_type" => doc_hash["_type"],
-          "_id" => (doc_hash["_id"] || doc_hash["link"])
-        }
-      }
-    end
-
-    def index_doc(doc_hash, popularities, options)
-      DocumentPreparer.new(@client).prepared(
-        doc_hash,
-        popularities,
-        options,
-        @is_content_index
-      )
-    end
-
-    def lookup_popularities(links)
-      PopularityLookup.new(@index_name, @search_config).lookup_popularities(links)
     end
 
     def queue
