@@ -132,4 +132,12 @@ class ElasticsearchDeletionTest < IntegrationTest
       RestClient.get("http://localhost:9200/mainstream_test/edition/#{CGI.escape("http://example.com/")}")
     end
   end
+
+private
+
+  def assert_document_missing_in_rummager(link:)
+    assert_raises RestClient::ResourceNotFound do
+      fetch_document_from_rummager(link: link)
+    end
+  end
 end

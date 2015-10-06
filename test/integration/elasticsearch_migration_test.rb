@@ -40,13 +40,8 @@ class ElasticsearchMigrationTest < IntegrationTest
 
   def add_documents(documents)
     documents.each do |document|
-      post "/documents", document.to_json
-      assert last_response.ok?
+      insert_document("mainstream_test", document)
     end
-  end
-
-  def commit_index
-    post "/commit", nil
   end
 
   def assert_result_links(*links)

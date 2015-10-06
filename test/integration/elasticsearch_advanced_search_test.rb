@@ -71,13 +71,8 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
 
   def add_sample_documents
     sample_document_attributes.each do |sample_document|
-      post "/documents", sample_document.to_json
-      assert last_response.ok?
+      insert_document("mainstream_test", sample_document)
     end
-  end
-
-  def commit_index
-    post "/commit", nil
   end
 
   def assert_result_links(*links)
@@ -107,6 +102,7 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
 
   def test_should_search_by_nested_data
     get "/#{@index_name}/advanced_search.json?per_page=1&page=1&keywords=#{CGI.escape('Special thing')}"
+
     assert last_response.ok?
     assert_result_total 1
     assert_result_links "/doc-with-attachments"
@@ -171,9 +167,9 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
       }
     ]
     more_documents.each do |sample_document|
-      post "/documents", sample_document.to_json
-      assert last_response.ok?
+      insert_document("mainstream_test", sample_document)
     end
+
     commit_index
 
     get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&mainstream_browse_pages=crime/example"

@@ -1,11 +1,14 @@
 require "integration_test_helper"
-require_relative "../multi_index_test"
 
-class ResultsWithHighlightingTest < MultiIndexTest
+class ResultsWithHighlightingTest < IntegrationTest
   def setup
     stub_elasticsearch_settings
     create_meta_indexes
     reset_content_indexes
+  end
+
+  def teardown
+    clean_test_indexes
   end
 
   def test_returns_highlighted_title

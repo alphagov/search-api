@@ -1,10 +1,14 @@
 require "integration_test_helper"
-require_relative "multi_index_test"
 
-class SpecialistDocumentSearchTest < MultiIndexTest
+class SpecialistDocumentSearchTest < IntegrationTest
   def setup
-    super
+    stub_elasticsearch_settings
+    reset_content_indexes_with_content
     add_sample_cma_case
+  end
+
+  def teardown
+    clean_test_indexes
   end
 
   def add_sample_cma_case
