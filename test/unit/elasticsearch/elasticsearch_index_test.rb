@@ -261,21 +261,6 @@ eos
     assert_requested(request)
   end
 
-  def test_should_allow_custom_timeouts_on_add
-    stub_response = stub("response", body: '{"items": []}')
-    RestClient::Request.expects(:execute)
-      .with(has_entries(
-        timeout: 20,
-        open_timeout: 25
-      )).returns(stub_response)
-
-    # stub out popularity logic as we don't care about these for the purpose of
-    # this unit test
-    @wrapper.stubs(:lookup_popularities)
-
-    @wrapper.add([], timeout: 20, open_timeout: 25)
-  end
-
   def test_add_queued_documents
     json_document = {
         "_type" => "edition",

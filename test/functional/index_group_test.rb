@@ -38,7 +38,6 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     assert_requested(stub)
     assert index.is_a? Elasticsearch::Index
     assert_match(/^mainstream-/, index.index_name)
-    assert index.field_names.include? "title"
   end
 
   def test_switch_index_with_no_existing_alias
