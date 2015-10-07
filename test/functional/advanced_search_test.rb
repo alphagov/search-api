@@ -2,7 +2,6 @@ require "integration_test_helper"
 
 class AdvancedSearchTest < IntegrationTest
   def setup
-    super
     stub_elasticsearch_settings
   end
 
