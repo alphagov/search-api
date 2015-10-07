@@ -38,21 +38,4 @@ class ElasticsearchIndexingTest < IntegrationTest
 
     assert_document_is_in_rummager(@sample_document)
   end
-
-  def test_can_index_fields_of_type_opaque_object
-    create_test_indexes
-
-    document = {
-      "format" => "statistics_announcemnt",
-      "link" => "/a-link",
-      "metadata" => {
-        "confirmed" => true,
-        "display_date" => "27 August 2014 9:30am",
-      },
-    }
-
-    post "/documents", document.to_json
-
-    assert_document_is_in_rummager(document)
-  end
 end
