@@ -1,64 +1,39 @@
 require "integration_test_helper"
-require "cgi"
 
 class ElasticsearchIndexingTest < IntegrationTest
 
+  SAMPLE_DOCUMENT = {
+    "title" => "TITLE",
+    "description" => "DESCRIPTION",
+    "format" => "answer",
+    "link" => "/an-example-answer",
+    "indexable_content" => "HERE IS SOME CONTENT"
+  }
+
   def setup
     stub_elasticsearch_settings
-    try_remove_test_index
-    @sample_document = {
-      "title" => "TITLE",
-      "description" => "DESCRIPTION",
-      "format" => "answer",
-      "link" => "/an-example-answer",
-      "indexable_content" => "HERE IS SOME CONTENT"
-    }
+    create_test_indexes
   end
 
   def teardown
     clean_test_indexes
   end
 
-  def test_should_indicate_success_in_response_code_when_adding_a_new_document
-    create_test_indexes
+  def test_adding_a_document_to_the_search_index
+    post "/documents", SAMPLE_DOCUMENT.to_json
 
-    post "/documents", @sample_document.to_json
     assert last_response.ok?
+    assert_document_is_in_rummager(SAMPLE_DOCUMENT)
   end
 
-  def test_after_adding_a_document_to_index_should_be_able_to_retrieve_it_again
-    create_test_indexes
-
-    post "/documents", @sample_document.to_json
-
-    assert_document_is_in_rummager(@sample_document)
-  end
-
-  def test_after_adding_a_document_to_index_should_be_able_to_retrieve_it_again_async
+  def test_adding_a_document_to_the_search_index_with_queue
     # the queue is disabled in testing by default, but testing/sidekiq/inline
     # executes jobs immediatly.
     app.settings.enable_queue = true
-    create_test_indexes
 
-    post "/documents", @sample_document.to_json
+    post "/documents", SAMPLE_DOCUMENT.to_json
 
-    assert_document_is_in_rummager(@sample_document)
-  end
-
-  def test_can_index_fields_of_type_opaque_object
-    create_test_indexes
-
-    document = {
-      "format" => "statistics_announcemnt",
-      "link" => "/a-link",
-      "metadata" => {
-        "confirmed" => true,
-        "display_date" => "27 August 2014 9:30am",
-      },
-    }
-
-    post "/documents", document.to_json
-
-    assert_document_is_in_rummager(document)
+    assert_equal 202, last_response.status
+    assert_document_is_in_rummager(SAMPLE_DOCUMENT)
   end
 end
