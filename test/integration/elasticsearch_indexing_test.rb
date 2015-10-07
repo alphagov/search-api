@@ -23,14 +23,8 @@ class ElasticsearchIndexingTest < IntegrationTest
     create_test_indexes
 
     post "/documents", @sample_document.to_json
+
     assert last_response.ok?
-  end
-
-  def test_after_adding_a_document_to_index_should_be_able_to_retrieve_it_again
-    create_test_indexes
-
-    post "/documents", @sample_document.to_json
-
     assert_document_is_in_rummager(@sample_document)
   end
 
