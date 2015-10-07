@@ -22,7 +22,6 @@ require "minitest/autorun"
 require 'turn/autorun'
 require "rack/test"
 require "mocha/setup"
-require "fixtures/default_mappings"
 require "pp"
 require "shoulda-context"
 require "logging"
@@ -34,6 +33,7 @@ require "webmock/minitest"
 only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)}
 WebMock.disable_net_connect!(allow: only_test_databases)
 
+require "support/default_mappings"
 require "support/test_helpers"
 require "support/hash_including_helpers"
 require "support/schema_helpers"
