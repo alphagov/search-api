@@ -4,6 +4,7 @@ require "cgi"
 require "json"
 require "rest-client"
 require "elasticsearch/advanced_search"
+require "elasticsearch/amender"
 require "elasticsearch/client"
 require "elasticsearch/escaping"
 require "elasticsearch/index_queue"
@@ -166,22 +167,7 @@ module Elasticsearch
     end
 
     def amend(link, updates)
-      document = get(link)
-      raise DocumentNotFound.new(link) unless document
-
-      if updates.include? "link"
-        raise ArgumentError.new("Cannot change document links")
-      end
-
-      updates.each do |key, value|
-        if document.has_field?(key)
-          document.set key, value
-        else
-          raise ArgumentError.new("Unrecognised field '#{key}'")
-        end
-      end
-      add [document]
-      return true
+      Amender.new(self).amend(link, updates)
     end
 
     def amend_queued(link, updates)

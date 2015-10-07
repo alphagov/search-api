@@ -146,47 +146,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_equal 1, Elasticsearch::DeleteWorker.jobs.size
   end
 
-  def test_amend
-    mock_document = mock("document") do
-      expects(:has_field?).with("title").returns(true)
-      expects(:set).with("title", "New title")
-    end
-    @index.expects(:get).with("/foobang").returns(mock_document)
-    @index.expects(:add).with([mock_document])
-
-    @index.amend("/foobang", "title" => "New title")
-  end
-
-  def test_amend_with_link
-    @index.expects(:get).with("/foobang").returns(mock("document"))
-    @index.expects(:add).never
-
-    assert_raises ArgumentError do
-      @index.amend("/foobang", "link" => "/flibble")
-    end
-  end
-
-  def test_amend_with_bad_field
-    mock_document = mock("document") do
-      expects(:has_field?).with("fish").returns(false)
-    end
-    @index.expects(:get).with("/foobang").returns(mock_document)
-    @index.expects(:add).never
-
-    assert_raises ArgumentError do
-      @index.amend("/foobang", "fish" => "Trout")
-    end
-  end
-
-  def test_amend_missing_document
-    @index.expects(:get).with("/foobang").returns(nil)
-    @index.expects(:add).never
-
-    assert_raises Elasticsearch::DocumentNotFound do
-      @index.amend("/foobang", "title" => "New title")
-    end
-  end
-
   def test_raw_search
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},
