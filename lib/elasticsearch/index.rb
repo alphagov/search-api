@@ -129,6 +129,9 @@ module Elasticsearch
       queue.queue_many(document_hashes)
     end
 
+    # `bulk_index` is the only method that inserts/updates documents. The other
+    # indexing-methods like `add`, `add_queued` and `amend` eventually end up
+    # calling this method.
     def bulk_index(document_hashes_or_payload, options = {} )
       client = build_client(options)
       payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)

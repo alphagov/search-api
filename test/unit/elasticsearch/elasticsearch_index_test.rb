@@ -51,6 +51,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_add_sends_updates_to_the_bulk_index_endpoint
+    stub_tagging_lookup
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar"], 1.0)
 
@@ -81,6 +82,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_should_raise_error_for_failures_in_bulk_update
+    stub_tagging_lookup
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar", "/foo/baz"], 1.0, 20)
 
@@ -111,6 +113,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_should_bulk_update_documents_with_raw_command_stream
+    stub_tagging_lookup
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar"], 1.0)
 

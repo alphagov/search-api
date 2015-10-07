@@ -8,6 +8,7 @@ module Indexer
       if is_content_index
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)
+        doc_hash = prepare_tags_field(doc_hash)
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
@@ -23,6 +24,10 @@ module Indexer
         pop = popularities[link]
       end
       doc_hash.merge("popularity" => pop)
+    end
+
+    def prepare_tags_field(doc_hash)
+      Indexer::TagLookup.new.prepare_tags(doc_hash)
     end
 
     def prepare_format_field(doc_hash)
