@@ -66,16 +66,6 @@ class ElasticsearchDeletionTest < IntegrationTest
     assert_document_missing_in_rummager(link: "an-example-answer")
   end
 
-  def test_should_not_return_deleted_content_in_search
-    # an-example-answer is added by the sample documents
-    delete "/documents/%2Fan-example-answer"
-    commit_index
-
-    get "/unified_search.json?q=cheese"
-
-    assert_equal [], parsed_response["results"]
-  end
-
   def test_should_delete_an_item_with_a_full_url
     # an-example-answer is added by the sample documents
     delete "/documents/edition/http:%2F%2Fexample.com%2F"
