@@ -3,19 +3,9 @@ require "bulk_loader"
 require "cgi"
 
 class BulkLoaderTest < IntegrationTest
-
   def setup
     stub_tagging_lookup
     stub_elasticsearch_settings
-    clean_test_indexes
-
-    @sample_document = {
-      "title" => "TITLE",
-      "description" => "DESCRIPTION",
-      "format" => "answer",
-      "link" => "/an-example-answer",
-      "indexable_content" => "HERE IS SOME CONTENT"
-    }
     create_test_indexes
   end
 
@@ -23,42 +13,33 @@ class BulkLoaderTest < IntegrationTest
     clean_test_indexes
   end
 
-  def index_payload(document)
-    index_action = {
-      "index" => {
-        "_id" => document['link'],
-        "_type" => "edition"
-      }
-    }
-
-    [
-      index_action.to_json,
-      document.to_json
-    ].join("\n") + "\n"
-  end
-
   def test_indexes_documents
-    bulk_loader = BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
-    bulk_loader.load_from(StringIO.new(index_payload(@sample_document)))
+    bulk_load!(
+      "title" => "The old title",
+      "link" => "/some-link",
+    )
 
-    assert_document_is_in_rummager(@sample_document)
+    assert_document_is_in_rummager(
+      "title" => "The old title",
+      "link" => "/some-link",
+    )
   end
 
   def test_updates_an_existing_document
-    index_group = search_server.index_group(DEFAULT_INDEX_NAME)
-    old_index = index_group.current_real
+    commit_document("mainstream_test", {
+      "title" => "The old title",
+      "link" => "/some-link",
+    })
 
-    doc_v1 = @sample_document.merge({"title" => "Original Title"})
-    doc_v2 = @sample_document.merge({"title" => "New Title"})
+    bulk_load!(
+      "title" => "The new title",
+      "link" => "/some-link",
+    )
 
-    post "/documents", doc_v1.to_json
-    old_index.commit
-    assert_document_is_in_rummager(doc_v1)
-
-    bulk_loader = BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
-    bulk_loader.load_from(StringIO.new(index_payload(doc_v2)))
-
-    assert_document_is_in_rummager(doc_v2)
+    assert_document_is_in_rummager(
+      "title" => "The new title",
+      "link" => "/some-link",
+    )
   end
 
   def test_adds_extra_fields
@@ -70,18 +51,38 @@ class BulkLoaderTest < IntegrationTest
     # get returned is 1/(2 + popularity_rank_offset), where
     # popularity_rank_offset is a configuration value which is set to 10 by
     # default.
-    insert_stub_popularity_data(@sample_document["link"])
+    insert_stub_popularity_data("/some-popular-link")
     insert_stub_popularity_data("/another-example")
 
-    bulk_loader = BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
-    bulk_loader.load_from(StringIO.new(index_payload(@sample_document)))
+    bulk_load!(
+      "title" => "The new title",
+      "link" => "/some-popular-link",
+    )
 
     assert_document_is_in_rummager(
-      @sample_document.merge("popularity" => 1.0/12)
+      "title" => "The new title",
+      "link" => "/some-popular-link",
+      "popularity" => 1.0/12,
     )
   end
 
 private
+
+  def bulk_load!(document)
+    bulk_loader = BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
+    bulk_loader.load_from(StringIO.new(index_payload(document)))
+  end
+
+  def index_payload(document)
+    index_action = {
+      "index" => {
+        "_id" => document['link'],
+        "_type" => "edition"
+      }
+    }
+
+    [index_action.to_json, document.to_json].join("\n") + "\n"
+  end
 
   def insert_stub_popularity_data(path)
     document_atts = {
