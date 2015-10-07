@@ -34,6 +34,17 @@ class ElasticsearchIndexingTest < IntegrationTest
     assert_document_is_in_rummager(@sample_document)
   end
 
+  def test_after_adding_a_document_to_index_should_be_able_to_retrieve_it_again_async
+    # the queue is disabled in testing by default, but testing/sidekiq/inline
+    # executes jobs immediatly.
+    app.settings.enable_queue = true
+    create_test_indexes
+
+    post "/documents", @sample_document.to_json
+
+    assert_document_is_in_rummager(@sample_document)
+  end
+
   def test_can_index_fields_of_type_opaque_object
     create_test_indexes
 

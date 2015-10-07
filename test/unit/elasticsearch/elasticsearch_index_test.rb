@@ -2,6 +2,7 @@ require "test_helper"
 require "elasticsearch/index"
 require "search_config"
 require "webmock"
+require "sidekiq/testing"
 
 class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
@@ -128,22 +129,15 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_add_queued_documents
-    json_document = {
+    document = stub("document", elasticsearch_export: {
         "_type" => "edition",
         "link" => "/foo/bar",
         "title" => "TITLE ONE",
-    }
-    document = stub("document", elasticsearch_export: json_document)
-
-    mock_queue = mock("document queue") do
-      expects(:queue_many).with([json_document])
-    end
-
-    Elasticsearch::IndexQueue.expects(:new)
-      .with("mainstream_test")
-      .returns(mock_queue)
+    })
 
     @index.add_queued([document])
+
+    assert_equal 1, Elasticsearch::BulkIndexWorker.jobs.size
   end
 
   def test_queued_delete
