@@ -50,27 +50,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert @index.exists?
   end
 
-  def test_exists_when_no_index
-    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
-      .to_return(
-        status: 404,
-        body: '{"error":"IndexMissingException[[text-index] missing]","status":404}',
-      )
-
-    refute @index.exists?
-  end
-
-  def test_exists_when_no_index_es0_20
-    # elasticsearch was weird before version 0.90: even though /index/_status
-    # 404s if the index doesn't exist, /index/_aliases returned a 200.
-    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
-      .to_return(
-        body: "{}",
-      )
-
-    refute @index.exists?
-  end
-
   def test_add_sends_updates_to_the_bulk_index_endpoint
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar"], 1.0)
