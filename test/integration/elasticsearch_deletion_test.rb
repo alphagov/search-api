@@ -2,26 +2,9 @@ require "integration_test_helper"
 require "app"
 
 class ElasticsearchDeletionTest < IntegrationTest
-
-  SAMPLE_DOCUMENT_ATTRIBUTES = [
-    {
-      "index" => "metasearch_test",
-      "documents" => [
-        {
-          "_id" => "jobs_exact",
-          "_type" => "best_bet",
-          "query" => "jobs",
-          "link" => "/something",
-        }
-      ]
-    }
-  ]
-
   def setup
     stub_elasticsearch_settings
     create_test_indexes
-
-    add_sample_documents
   end
 
   def teardown
@@ -62,7 +45,14 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def test_should_delete_a_best_bet_by_type_and_id
-    # jobs_exact best bet is added by add_sample_documents
+    post "/metasearch_test/documents", {
+      "_id" => "jobs_exact",
+      "_type" => "best_bet",
+      "link" => "/something",
+    }.to_json
+
+    commit_index
+
     delete "/metasearch_test/documents/best_bet/jobs_exact"
 
     assert_raises RestClient::ResourceNotFound do
@@ -76,20 +66,5 @@ private
     assert_raises RestClient::ResourceNotFound do
       fetch_document_from_rummager(link: link)
     end
-  end
-
-  def add_sample_documents
-    SAMPLE_DOCUMENT_ATTRIBUTES.each do |index_data|
-      path = "/documents"
-      path = "/#{index_data['index']}#{path}" if index_data.has_key?('index')
-
-      index_data['documents'].each do |sample_document|
-        # TODO: Insert data directly into elasticsearch instead of sending
-        # it to rummager.
-        post path, sample_document.to_json
-      end
-    end
-
-    commit_index
   end
 end
