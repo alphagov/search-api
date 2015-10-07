@@ -141,14 +141,9 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_queued_delete
-    mock_queue = mock("document queue") do
-      expects(:queue_delete).with("edition", "/foobang")
-    end
-    Elasticsearch::IndexQueue.expects(:new)
-      .with("mainstream_test")
-      .returns(mock_queue)
-
     @index.delete_queued("edition", "/foobang")
+
+    assert_equal 1, Elasticsearch::DeleteWorker.jobs.size
   end
 
   def test_amend
