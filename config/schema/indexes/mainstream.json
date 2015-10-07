@@ -17,6 +17,7 @@
     "medical_safety_alert",
     "policy",
     "raib_report",
+    "tax_tribunal_decision",
     "utaac_decision",
     "vehicle_recalls_and_faults_alert"
   ]
