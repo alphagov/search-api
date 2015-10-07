@@ -35,7 +35,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
         body: "{}",
-        headers: {"Content-Type" => "application/json"}
       )
 
     assert_nil @index.real_name
@@ -73,7 +72,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
       body: payload,
-      headers: {"Content-Type" => "application/json"}
     ).to_return(body: response)
 
     @index.add([document])
@@ -122,7 +120,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     eos
     request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
-        headers: {"Content-Type" => "application/json"}
     ).to_return(body: '{"items":[]}')
 
     @index.bulk_index(payload)
@@ -377,7 +374,7 @@ private
     # stub the request for total results
     stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
             with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
-            to_return(:status => 200, :body => { "hits" => { "total" => total_pages }}.to_json)
+            to_return(body: { "hits" => { "total" => total_pages } }.to_json)
 
     # stub the search for popularity data
     expected_query = {
