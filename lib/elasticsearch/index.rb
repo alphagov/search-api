@@ -10,11 +10,8 @@ require "elasticsearch/escaping"
 require "elasticsearch/index_queue"
 require "elasticsearch/result_set"
 require "elasticsearch/scroll_enumerator"
-require "indexer/bulk_payload_generator"
 require "multivalue_converter"
-require "indexer/document_preparer"
-require "indexer/popularity_lookup"
-
+require "indexer"
 
 module Elasticsearch
   class InvalidQuery < ArgumentError; end
@@ -134,7 +131,7 @@ module Elasticsearch
 
     def bulk_index(document_hashes_or_payload, options = {} )
       client = build_client(options)
-      payload_generator = Elasticsearch::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
+      payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
       response = client.post("_bulk", payload_generator.bulk_payload(document_hashes_or_payload, options), content_type: :json)
       items = JSON.parse(response.body)["items"]
       failed_items = items.select do |item|

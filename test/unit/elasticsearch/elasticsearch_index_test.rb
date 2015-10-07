@@ -359,7 +359,7 @@ private
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
     traffic_index = Elasticsearch::Index.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
-    PopularityLookup.any_instance.stubs(:traffic_index).returns(traffic_index)
+    Indexer::PopularityLookup.any_instance.stubs(:traffic_index).returns(traffic_index)
     traffic_index.stubs(:real_name).returns("page-traffic_test")
   end
 end
