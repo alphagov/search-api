@@ -5,37 +5,6 @@ class ElasticsearchDeletionTest < IntegrationTest
 
   SAMPLE_DOCUMENT_ATTRIBUTES = [
     {
-      "documents" => [
-        {
-          "title" => "Cheese in my face",
-          "description" => "Hummus weevils",
-          "format" => "answer",
-          "link" => "/an-example-answer",
-          "indexable_content" => "I like my badger: he is tasty and delicious"
-        },
-        {
-          "title" => "Useful government information",
-          "description" => "Government, government, government. Developers.",
-          "format" => "answer",
-          "link" => "/another-example-answer",
-          "mainstream_browse_pages" => "crime/example",
-          "indexable_content" => "Tax, benefits, roads and stuff"
-        },
-        {
-          "title" => "Some other site",
-          "format" => "answer",
-          "link" => "http://example.com/",
-        },
-        {
-          "_type" => "cma_case",
-          "link" => "/cma-cases/merger-investigation",
-          "title" => "Merger investigation",
-          "description" => "An investigation into a merger",
-          "indexable_content" => "Merger merger merger",
-        },
-      ]
-    },
-    {
       "index" => "metasearch_test",
       "documents" => [
         {
@@ -59,26 +28,37 @@ class ElasticsearchDeletionTest < IntegrationTest
     clean_test_indexes
   end
 
-  def test_should_404_on_deleted_content
-    # an-example-answer is added by the sample documents
-    delete "/documents/%2Fan-example-answer"
+  def test_removes_a_document_from_the_index
+    commit_document("mainstream_test", {
+      "link" => "/an-example-page"
+    })
 
-    assert_document_missing_in_rummager(link: "an-example-answer")
+    delete "/documents/%2Fan-example-page"
+
+    assert_document_missing_in_rummager(link: "/an-example-page")
   end
 
-  def test_should_delete_an_item_with_a_full_url
-    # an-example-answer is added by the sample documents
+  def test_removes_a_document_from_the_index_queued
+    app.settings.enable_queue = true
+    commit_document("mainstream_test", {
+      "link" => "/an-example-page"
+    })
+
+    delete "/documents/%2Fan-example-page"
+
+    assert_equal 202, last_response.status
+    assert_document_missing_in_rummager(link: "/an-example-page")
+  end
+
+  def test_removes_document_with_url
+    commit_document("mainstream_test", {
+      "link" => "http://example.com/",
+    })
+
     delete "/documents/edition/http:%2F%2Fexample.com%2F"
+
     assert last_response.ok?
-
-    assert_document_missing_in_rummager(link: "http//example.com/")
-  end
-
-  def test_should_accept_a_type_to_delete_a_document_when_queuing_enabled
-    app.settings.expects(:enable_queue).returns(true)
-
-    delete "/metasearch_test/documents/cma-cases/merger-investigation", _type: "cma_case"
-    assert last_response.successful?
+    assert_document_missing_in_rummager(link: "http://example.com/")
   end
 
   def test_should_delete_a_best_bet_by_type_and_id
@@ -87,15 +67,6 @@ class ElasticsearchDeletionTest < IntegrationTest
 
     assert_raises RestClient::ResourceNotFound do
       RestClient.get("http://localhost:9200/metasearch_test/best_bet/jobs_exact")
-    end
-  end
-
-  def test_should_default_type_to_edition_and_id_to_link
-    # url is added by add_sample_documents
-    delete "/documents/http:%2F%2Fexample.com%2F"
-
-    assert_raises RestClient::ResourceNotFound do
-      RestClient.get("http://localhost:9200/mainstream_test/edition/#{CGI.escape("http://example.com/")}")
     end
   end
 
