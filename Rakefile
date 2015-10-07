@@ -13,20 +13,13 @@ require "config"
 Dir[File.join(PROJECT_ROOT, 'lib/tasks/*.rake')].each { |file| load file }
 
 desc "Run all the tests"
-task "test" => ["test:units", "test:functionals", "test:integration"]
+task "test" => ["test:units", "test:integration"]
 
 namespace "test" do
   desc "Run the unit tests"
   Rake::TestTask.new("units") do |t|
     t.libs << "test"
     t.test_files = FileList["test/unit/**/*_test.rb"]
-    t.verbose = true
-  end
-
-  desc "Run the functional tests"
-  Rake::TestTask.new("functionals") do |t|
-    t.libs << "test"
-    t.test_files = FileList["test/functional/**/*_test.rb"]
     t.verbose = true
   end
 
