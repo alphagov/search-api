@@ -10,8 +10,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     @index = build_mainstream_index
   end
 
-  # Elasticsearch::Index#real_name
-
   def test_real_name
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
@@ -43,8 +41,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_nil @index.real_name
   end
 
-  # Elasticsearch::Index#exists?
-
   def test_exists
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
@@ -74,8 +70,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     refute @index.exists?
   end
-
-  # Elasticsearch::Index#add
 
   def test_add_sends_updates_to_the_bulk_index_endpoint
     stub_traffic_index
@@ -138,8 +132,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     end
   end
 
-  # Elasticsearch::Index#bulk_index
-
   def test_should_bulk_update_documents_with_raw_command_stream
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar"], 1.0)
@@ -178,8 +170,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     @index.add_queued([document])
   end
 
-  # Elasticsearch::Index#delete_queued
-
   def test_queued_delete
     mock_queue = mock("document queue") do
       expects(:queue_delete).with("edition", "/foobang")
@@ -190,8 +180,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     @index.delete_queued("edition", "/foobang")
   end
-
-  # Elasticsearch::Index#amend
 
   def test_amend
     mock_document = mock("document") do
@@ -234,8 +222,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     end
   end
 
-  # Elasticsearch::Index#raw_search
-
   def test_raw_search
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},
@@ -256,8 +242,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested(stub_get)
   end
 
-  # Elasticsearch::Index#commit
-
   def test_commit
     refresh_url = "http://example.com:9200/mainstream_test/_refresh"
     stub_request(:post, refresh_url).to_return(
@@ -268,8 +252,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     assert_requested :post, refresh_url
   end
-
-  # Elasticsearch::Index#documents_by_format
 
   def test_can_fetch_documents_by_format
     search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
@@ -317,8 +299,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map { |r| r['title'] }
     assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map { |r| r['link'] }
   end
-
-  # Elasticsearch::Index#all_documents
 
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
