@@ -1,4 +1,4 @@
-module Elasticsearch
+module Indexer
   class BulkPayloadGenerator
     def initialize(index_name, search_config, client, is_content_index)
       @index_name = index_name
@@ -42,7 +42,7 @@ module Elasticsearch
     end
 
     def lookup_popularities(links)
-      PopularityLookup.new(@index_name, @search_config).lookup_popularities(links)
+      Indexer::PopularityLookup.new(@index_name, @search_config).lookup_popularities(links)
     end
 
     def index_action(doc_hash)
@@ -55,7 +55,7 @@ module Elasticsearch
     end
 
     def index_doc(doc_hash, popularities, options)
-      DocumentPreparer.new(@client).prepared(
+      Indexer::DocumentPreparer.new(@client).prepared(
         doc_hash,
         popularities,
         options,

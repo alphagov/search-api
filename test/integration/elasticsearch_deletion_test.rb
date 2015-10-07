@@ -3,79 +3,60 @@ require "app"
 
 class ElasticsearchDeletionTest < IntegrationTest
 
+  SAMPLE_DOCUMENT_ATTRIBUTES = [
+    {
+      "documents" => [
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious"
+        },
+        {
+          "title" => "Useful government information",
+          "description" => "Government, government, government. Developers.",
+          "format" => "answer",
+          "link" => "/another-example-answer",
+          "mainstream_browse_pages" => "crime/example",
+          "indexable_content" => "Tax, benefits, roads and stuff"
+        },
+        {
+          "title" => "Some other site",
+          "format" => "answer",
+          "link" => "http://example.com/",
+        },
+        {
+          "_type" => "cma_case",
+          "link" => "/cma-cases/merger-investigation",
+          "title" => "Merger investigation",
+          "description" => "An investigation into a merger",
+          "indexable_content" => "Merger merger merger",
+        },
+      ]
+    },
+    {
+      "index" => "metasearch_test",
+      "documents" => [
+        {
+          "_id" => "jobs_exact",
+          "_type" => "best_bet",
+          "query" => "jobs",
+          "link" => "/something",
+        }
+      ]
+    }
+  ]
+
   def setup
     stub_elasticsearch_settings
-    clean_test_indexes
     create_test_indexes
 
     add_sample_documents
-    commit_index
   end
 
   def teardown
     clean_test_indexes
-  end
-
-  def sample_document_attributes
-    [
-      {
-        "documents" => [
-          {
-            "title" => "Cheese in my face",
-            "description" => "Hummus weevils",
-            "format" => "answer",
-            "link" => "/an-example-answer",
-            "indexable_content" => "I like my badger: he is tasty and delicious"
-          },
-          {
-            "title" => "Useful government information",
-            "description" => "Government, government, government. Developers.",
-            "format" => "answer",
-            "link" => "/another-example-answer",
-            "mainstream_browse_pages" => "crime/example",
-            "indexable_content" => "Tax, benefits, roads and stuff"
-          },
-          {
-            "title" => "Some other site",
-            "format" => "answer",
-            "link" => "http://example.com/",
-          },
-          {
-            "_type" => "cma_case",
-            "link" => "/cma-cases/merger-investigation",
-            "title" => "Merger investigation",
-            "description" => "An investigation into a merger",
-            "indexable_content" => "Merger merger merger",
-          },
-        ]
-      },
-      {
-        "index" => "metasearch_test",
-        "documents" => [
-          {
-            "_id" => "jobs_exact",
-            "_type" => "best_bet",
-            "query" => "jobs",
-          }
-        ]
-      }
-    ]
-  end
-
-  def add_sample_documents
-    sample_document_attributes.each do |index_data|
-      path = "/documents"
-      path = "/#{index_data['index']}#{path}" if index_data.has_key?('index')
-
-      index_data['documents'].each do |sample_document|
-        post path, sample_document.to_json
-        assert last_response.ok?
-      end
-    end
-  end
-
-  def commit_index
-    post "/commit", nil
   end
 
   def test_should_404_on_deleted_content
@@ -88,8 +69,8 @@ class ElasticsearchDeletionTest < IntegrationTest
   def test_should_not_return_deleted_content_in_search
     # an-example-answer is added by the sample documents
     delete "/documents/%2Fan-example-answer"
-
     commit_index
+
     get "/unified_search.json?q=cheese"
 
     assert_equal [], parsed_response["results"]
@@ -101,11 +82,6 @@ class ElasticsearchDeletionTest < IntegrationTest
     assert last_response.ok?
 
     assert_document_missing_in_rummager(link: "http//example.com/")
-  end
-
-  def test_should_accept_a_type_to_delete_a_document
-    delete "/metasearch_test/documents/cma-cases/merger-investigation", _type: "cma_case"
-    assert last_response.ok?
   end
 
   def test_should_accept_a_type_to_delete_a_document_when_queuing_enabled
@@ -139,5 +115,20 @@ private
     assert_raises RestClient::ResourceNotFound do
       fetch_document_from_rummager(link: link)
     end
+  end
+
+  def add_sample_documents
+    SAMPLE_DOCUMENT_ATTRIBUTES.each do |index_data|
+      path = "/documents"
+      path = "/#{index_data['index']}#{path}" if index_data.has_key?('index')
+
+      index_data['documents'].each do |sample_document|
+        # TODO: Insert data directly into elasticsearch instead of sending
+        # it to rummager.
+        post path, sample_document.to_json
+      end
+    end
+
+    commit_index
   end
 end

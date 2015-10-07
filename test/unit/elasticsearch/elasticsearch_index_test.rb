@@ -2,6 +2,7 @@ require "test_helper"
 require "elasticsearch/index"
 require "search_config"
 require "webmock"
+require "sidekiq/testing"
 
 class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
@@ -9,8 +10,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def setup
     @index = build_mainstream_index
   end
-
-  # Elasticsearch::Index#real_name
 
   def test_real_name
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
@@ -37,13 +36,10 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
         body: "{}",
-        headers: {"Content-Type" => "application/json"}
       )
 
     assert_nil @index.real_name
   end
-
-  # Elasticsearch::Index#exists?
 
   def test_exists
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
@@ -53,29 +49,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     assert @index.exists?
   end
-
-  def test_exists_when_no_index
-    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
-      .to_return(
-        status: 404,
-        body: '{"error":"IndexMissingException[[text-index] missing]","status":404}',
-      )
-
-    refute @index.exists?
-  end
-
-  def test_exists_when_no_index_es0_20
-    # elasticsearch was weird before version 0.90: even though /index/_status
-    # 404s if the index doesn't exist, /index/_aliases returned a 200.
-    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
-      .to_return(
-        body: "{}",
-      )
-
-    refute @index.exists?
-  end
-
-  # Elasticsearch::Index#add
 
   def test_add_sends_updates_to_the_bulk_index_endpoint
     stub_traffic_index
@@ -100,7 +73,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
       body: payload,
-      headers: {"Content-Type" => "application/json"}
     ).to_return(body: response)
 
     @index.add([document])
@@ -138,8 +110,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     end
   end
 
-  # Elasticsearch::Index#bulk_index
-
   def test_should_bulk_update_documents_with_raw_command_stream
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar"], 1.0)
@@ -151,7 +121,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     eos
     request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
         body: payload,
-        headers: {"Content-Type" => "application/json"}
     ).to_return(body: '{"items":[]}')
 
     @index.bulk_index(payload)
@@ -160,81 +129,22 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_add_queued_documents
-    json_document = {
+    document = stub("document", elasticsearch_export: {
         "_type" => "edition",
         "link" => "/foo/bar",
         "title" => "TITLE ONE",
-    }
-    document = stub("document", elasticsearch_export: json_document)
-
-    mock_queue = mock("document queue") do
-      expects(:queue_many).with([json_document])
-    end
-
-    Elasticsearch::IndexQueue.expects(:new)
-      .with("mainstream_test")
-      .returns(mock_queue)
+    })
 
     @index.add_queued([document])
-  end
 
-  # Elasticsearch::Index#delete_queued
+    assert_equal 1, Elasticsearch::BulkIndexWorker.jobs.size
+  end
 
   def test_queued_delete
-    mock_queue = mock("document queue") do
-      expects(:queue_delete).with("edition", "/foobang")
-    end
-    Elasticsearch::IndexQueue.expects(:new)
-      .with("mainstream_test")
-      .returns(mock_queue)
-
     @index.delete_queued("edition", "/foobang")
+
+    assert_equal 1, Elasticsearch::DeleteWorker.jobs.size
   end
-
-  # Elasticsearch::Index#amend
-
-  def test_amend
-    mock_document = mock("document") do
-      expects(:has_field?).with("title").returns(true)
-      expects(:set).with("title", "New title")
-    end
-    @index.expects(:get).with("/foobang").returns(mock_document)
-    @index.expects(:add).with([mock_document])
-
-    @index.amend("/foobang", "title" => "New title")
-  end
-
-  def test_amend_with_link
-    @index.expects(:get).with("/foobang").returns(mock("document"))
-    @index.expects(:add).never
-
-    assert_raises ArgumentError do
-      @index.amend("/foobang", "link" => "/flibble")
-    end
-  end
-
-  def test_amend_with_bad_field
-    mock_document = mock("document") do
-      expects(:has_field?).with("fish").returns(false)
-    end
-    @index.expects(:get).with("/foobang").returns(mock_document)
-    @index.expects(:add).never
-
-    assert_raises ArgumentError do
-      @index.amend("/foobang", "fish" => "Trout")
-    end
-  end
-
-  def test_amend_missing_document
-    @index.expects(:get).with("/foobang").returns(nil)
-    @index.expects(:add).never
-
-    assert_raises Elasticsearch::DocumentNotFound do
-      @index.amend("/foobang", "title" => "New title")
-    end
-  end
-
-  # Elasticsearch::Index#raw_search
 
   def test_raw_search
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
@@ -256,8 +166,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested(stub_get)
   end
 
-  # Elasticsearch::Index#commit
-
   def test_commit
     refresh_url = "http://example.com:9200/mainstream_test/_refresh"
     stub_request(:post, refresh_url).to_return(
@@ -268,8 +176,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     assert_requested :post, refresh_url
   end
-
-  # Elasticsearch::Index#documents_by_format
 
   def test_can_fetch_documents_by_format
     search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
@@ -317,8 +223,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map { |r| r['title'] }
     assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map { |r| r['link'] }
   end
-
-  # Elasticsearch::Index#all_documents
 
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
@@ -418,7 +322,7 @@ private
     # stub the request for total results
     stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
             with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
-            to_return(:status => 200, :body => { "hits" => { "total" => total_pages }}.to_json)
+            to_return(body: { "hits" => { "total" => total_pages } }.to_json)
 
     # stub the search for popularity data
     expected_query = {
@@ -455,7 +359,7 @@ private
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
     traffic_index = Elasticsearch::Index.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
-    PopularityLookup.any_instance.stubs(:traffic_index).returns(traffic_index)
+    Indexer::PopularityLookup.any_instance.stubs(:traffic_index).returns(traffic_index)
     traffic_index.stubs(:real_name).returns("page-traffic_test")
   end
 end
