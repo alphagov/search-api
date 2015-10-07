@@ -154,10 +154,6 @@ private
     @schema.field_definitions.keys + VIRTUAL_FIELDS
   end
 
-  def schema_get_field_type(field_name)
-    @schema.field_definitions.fetch(field_name).type
-  end
-
   def build_filter(field_name, values, reject)
     if field_name == '_type'
       filter_type = "text"
