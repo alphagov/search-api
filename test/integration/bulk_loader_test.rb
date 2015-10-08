@@ -5,6 +5,7 @@ require "cgi"
 class BulkLoaderTest < IntegrationTest
 
   def setup
+    stub_tagging_lookup
     stub_elasticsearch_settings
     clean_test_indexes
 

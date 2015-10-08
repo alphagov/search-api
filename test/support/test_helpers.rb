@@ -15,4 +15,9 @@ module TestHelpers
       debug: {},
     }.merge(options))
   end
+
+  def stub_tagging_lookup
+    stub_request(:get, %r[#{Plek.find('contentapi')}/*]).
+      to_return(status: 404, body: {}.to_json)
+  end
 end
