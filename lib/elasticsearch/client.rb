@@ -53,19 +53,6 @@ module Elasticsearch
       request(:delete, path, payload, headers)
     end
 
-    # Execute the given block while recording RestClient errors at a different
-    # log level.
-    #
-    # Sometimes, a 500 error from elasticsearch doesn't mean something has gone
-    # wrong, such as when any of the shards in a scrolling query have run out
-    # of results.
-    def with_error_log_level(level, &block)
-      previous_level, @error_log_level = @error_log_level, level
-      return yield
-    ensure
-      @error_log_level = previous_level
-    end
-
   private
     def logger
       Logging.logger[self]

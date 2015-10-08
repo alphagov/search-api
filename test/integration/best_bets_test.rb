@@ -1,20 +1,142 @@
 require "integration_test_helper"
 
 class BestBetsTest < IntegrationTest
-  METASEARCH_INDEX_NAME = "metasearch_test"
-
   def setup
     stub_elasticsearch_settings
-    reset_content_indexes_with_content
+    reset_content_indexes
     create_meta_indexes
-    add_sample_bets(sample_bets)
   end
 
   def teardown
     clean_test_indexes
   end
 
-  def sample_bet(query, type, best_bets, worst_bets)
+  def test_exact_best_bet
+    commit_document("mainstream_test",
+      link: '/an-organic-result',
+      indexable_content: 'I will turn up in searches for "a forced best bet"',
+    )
+
+    commit_document("mainstream_test",
+    link: '/the-link-that-should-surface',
+      indexable_content: 'Empty.',
+    )
+
+    add_best_bet(
+      query: 'a forced best bet',
+      type: 'exact',
+      link: '/the-link-that-should-surface',
+      position: 1,
+    )
+
+    links = get_links "/unified_search?q=a+forced+best+bet"
+
+    assert_equal ["/the-link-that-should-surface", "/an-organic-result"], links
+  end
+
+  def test_exact_worst_bet
+    commit_document("mainstream_test",
+      indexable_content: 'I should not be shown.',
+      link: '/we-never-show-this',
+    )
+
+    add_worst_bet(
+      query: 'shown',
+      type: 'exact',
+      link: '/we-never-show-this',
+      position: 1,
+    )
+
+    links = get_links "/unified_search?q=shown"
+
+    refute links.include?("/we-never-show-this")
+  end
+
+  def test_stemmed_best_bet
+    commit_document("mainstream_test",
+      link: '/the-link-that-should-surface',
+    )
+
+    add_best_bet(
+      query: 'best bet',
+      type: 'stemmed',
+      link: '/the-link-that-should-surface',
+      position: 1,
+    )
+
+    links = get_links "/unified_search?q=best+bet+and+such"
+
+    assert_equal ["/the-link-that-should-surface"], links
+  end
+
+  def test_stemmed_best_bet_variant
+    commit_document("mainstream_test",
+      link: '/the-link-that-should-surface',
+    )
+
+    add_best_bet(
+      query: 'best bet',
+      type: 'stemmed',
+      link: '/the-link-that-should-surface',
+      position: 1,
+    )
+
+    # note that we're searching for "bests bet", not "best bet" here.
+    links = get_links "/unified_search?q=bests+bet"
+
+    assert_equal ["/the-link-that-should-surface"], links
+  end
+
+  def test_stemmed_best_bet_words_not_in_phrase_order
+    commit_document("mainstream_test",
+      link: '/only-shown-for-exact-matches',
+    )
+
+    add_best_bet(
+      query: 'best bet',
+      type: 'stemmed',
+      link: '/only-shown-for-exact-matches',
+      position: 1,
+    )
+
+    # note that we're searching for "bet best", not "best bet" here.
+    links = get_links "/unified_search?q=bet+best"
+
+    refute links.include?("/only-shown-for-exact-matches")
+  end
+
+private
+
+  def get_links(path)
+    get(path)
+    parsed_response["results"].map { |result| result["link"] }
+  end
+
+  def add_best_bet(args)
+    payload = build_sample_bet_hash(
+      query: args[:query],
+      type: args[:type],
+      best_bets: [args.slice(:link, :position)],
+      worst_bets: [],
+    )
+
+    post "/metasearch_test/documents", payload.to_json
+    commit_index("metasearch_test")
+  end
+
+  def add_worst_bet(args)
+    payload = build_sample_bet_hash(
+      query: args[:query],
+      type: args[:type],
+      best_bets: [],
+      worst_bets: [args.slice(:link, :position)],
+    )
+
+    post "/metasearch_test/documents", payload.to_json
+    commit_index("metasearch_test")
+  end
+
+  def build_sample_bet_hash(query:, type:, best_bets:, worst_bets:)
     {
       "#{type}_query" => query,
       details: JSON.generate(
@@ -27,101 +149,4 @@ class BestBetsTest < IntegrationTest
       _id: "#{query}-#{type}",
     }
   end
-
-  def sample_bets
-    [
-      sample_bet("forced best bet", "exact",
-                 [{link: "/mainstream-1", position: 1}], []),
-      sample_bet("important content", "exact",
-                 [], [{link: "/mainstream-1"}]),
-      sample_bet("forced best", "stemmed",
-                 [
-                   {link: "/mainstream-1", position: 2},
-                   {link: "/mainstream-2", position: 3},
-                 ], []),
-      sample_bet("best bet", "stemmed",
-                 [
-                   {link: "/mainstream-2", position: 1},
-                 ], []),
-      sample_bet("jobs", "stemmed",
-                 [
-                   {link: "/mainstream-1", position: 1},
-                 ], []),
-    ]
-  end
-
-  def add_sample_bets(bets)
-    bets.each do |doc|
-      post "/#{METASEARCH_INDEX_NAME}/documents", doc.to_json
-      assert last_response.ok?
-    end
-    commit_index(METASEARCH_INDEX_NAME)
-  end
-
-  def get_links(path)
-    get path
-    links = parsed_response["results"].map { |result| result["link"] }
-    get(path + "&debug=disable_best_bets")
-    no_bb_links = parsed_response["results"].map { |result| result["link"] }
-    [links, no_bb_links]
-  end
-
-  def test_exact_best_bet
-    links, no_bb_links = get_links "/unified_search?q=forced+best+bet"
-
-    assert_equal ["/mainstream-1"], links
-    assert_equal [], no_bb_links
-  end
-
-  def test_exact_worst_bet
-    links, no_bb_links = get_links "/unified_search?q=important+content"
-
-    assert !(links.include? "/mainstream-1")
-    assert no_bb_links.include? "/mainstream-1"
-  end
-
-  def test_stemmed_best_bet
-    links, no_bb_links = get_links "/unified_search?q=forced+best"
-
-    assert_equal ["/mainstream-1", "/mainstream-2"], links
-    assert_equal [], no_bb_links
-  end
-
-  def test_stemmed_variant_best_bet
-    links, no_bb_links = get_links "/unified_search?q=forced+bests"
-
-    assert_equal ["/mainstream-1", "/mainstream-2"], links
-    assert_equal [], no_bb_links
-  end
-
-  def test_stemmed_best_bet_words_not_in_phrase_order
-    # A stemmed best bet shouldn't get used if the terms were in the wrong
-    # order
-    links, no_bb_links = get_links "/unified_search?q=best+forced"
-
-    assert_equal [], links
-    assert_equal [], no_bb_links
-  end
-
-  def test_combined_stemmed_best_bets
-    links, no_bb_links = get_links "/unified_search?q=forced+best+bets"
-
-    assert_equal ["/mainstream-2", "/mainstream-1"], links
-    assert_equal [], no_bb_links
-  end
-
-  def test_stemmed_best_bet_matches_exact_search
-    links, no_bb_links = get_links "/unified_search?q=jobs"
-
-    assert_equal ["/mainstream-1"], links
-    assert_equal [], no_bb_links
-  end
-
-  def test_stemmed_best_bet_matches_larger_search
-    links, no_bb_links = get_links "/unified_search?q=jobs+site"
-
-    assert_equal ["/mainstream-1"], links
-    assert_equal [], no_bb_links
-  end
-
 end
