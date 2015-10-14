@@ -14,6 +14,14 @@
       {
         "label": "Medical device alert",
         "value": "devices"
+      },
+      {
+        "label": "Field safety notices",
+        "value": "field-safety"
+      },
+      {
+        "label": "Drug alerts: company-led",
+        "value": "company-led-drug"
       }
     ],
 
