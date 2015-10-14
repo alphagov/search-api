@@ -380,6 +380,18 @@
     "description": "A flag set by editors to mark a document as being important to policy",
     "type": "boolean"
   },
+  "tribunal_decision_categories": {
+    "type": "identifiers"
+  },
+  "tribunal_decision_categories_name": {
+    "type": "searchable_identifiers"
+  },
+  "tribunal_decision_country": {
+    "type": "identifier"
+  },
+  "tribunal_decision_country_name": {
+    "type": "searchable_identifier"
+  },
   "tribunal_decision_decision_date": {
     "type": "date"
   },
