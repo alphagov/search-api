@@ -22,7 +22,7 @@ module Indexer
       link = link.sub(/\A\//, '')
       begin
         content_api.artefact!(link)
-      rescue GdsApi::HTTPNotFound
+      rescue GdsApi::HTTPNotFound, GdsApi::HTTPGone
         nil
       end
     end
