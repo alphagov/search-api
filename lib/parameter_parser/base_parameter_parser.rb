@@ -11,6 +11,7 @@ class BaseParameterParser
     public_timestamp
     closing_date
     title
+    tribunal_decision_decision_date
   )
 
   SORT_MAPPINGS = {
