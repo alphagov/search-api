@@ -16,12 +16,12 @@
         "value": "devices"
       },
       {
-        "label": "Field safety notices",
-        "value": "field-safety"
+        "label": "Field safety notice",
+        "value": "field-safety-notices"
       },
       {
-        "label": "Drug alerts: company-led",
-        "value": "company-led-drug"
+        "label": "Drug alert: company-led",
+        "value": "company-led-drugs"
       }
     ],
 
