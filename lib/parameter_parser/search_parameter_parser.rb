@@ -263,7 +263,7 @@ private
       if (m = key.match(/\Afacet_(.*)/))
         field = m[1]
         value = single_param(key)
-        if ALLOWED_FACET_FIELDS.include? field
+        if allowed_filter_fields.include?(field)
           facet_parser = FacetParameterParser.new(field, value, allowed_return_fields)
           if facet_parser.valid?
             facets[field] = facet_parser.parsed_params

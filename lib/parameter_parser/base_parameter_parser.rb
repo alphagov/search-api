@@ -23,21 +23,6 @@ class BaseParameterParser
     "document_type" => "_type",
   }
 
-  # The fields listed here are the only ones which can be used to calculated
-  # facets for.  This should be a subset of allowed_filter_fields
-  ALLOWED_FACET_FIELDS = %w(
-    detailed_format
-    document_collections
-    format
-    mainstream_browse_pages
-    manual
-    organisations
-    people
-    policies
-    search_format_types
-    specialist_sectors
-  )
-
   # The fields for which facet examples are allowed to be requested.
   # This is locked down because these can only be requested with the current
   # version of elasticsearch by performing a separate query for each facet
