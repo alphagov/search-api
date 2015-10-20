@@ -27,22 +27,25 @@ module QueryComponents
       # May also be 'all_filters", to mean that facet values should be calculated
       # after applying all filters - ie, just on the documents which will be
       # included in the result set.
-      if options[:scope] == :exclude_field_filter
-        facet_filter = filters_hash([field_name])
+      filters = if options[:scope] == :exclude_field_filter
+        search_params.filters.reject do |filter|
+          filter.field_name == field_name
+        end
       elsif options[:scope] == :all_filters
-        facet_filter = filters_hash([])
+        search_params.filters
+      else
+        []
       end
 
-      unless facet_filter.nil?
-        facet_hash[:facet_filter] = facet_filter
+      if filters.any?
+        facet_hash[:facet_filter] = filter_query_for_filters(filters)
       end
 
       facet_hash
     end
 
-    # Possible duplication.
-    def filters_hash(excluding)
-      QueryComponents::Filter.new(search_params).payload(excluding)
+    def filter_query_for_filters(filters)
+      QueryComponents::Filter.new(search_params).payload(filters)
     end
   end
 end

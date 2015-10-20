@@ -1,12 +1,10 @@
 module QueryComponents
   class Filter < BaseComponent
-    def payload(excluding = [])
+    def payload(param_filters = nil)
+      param_filters ||= search_params.filters
+
       rejects = []
       filters = []
-
-      param_filters = search_params.filters.reject do |filter|
-        excluding.include?(filter.field_name)
-      end
 
       param_filters.each do |filter|
         if filter.reject
