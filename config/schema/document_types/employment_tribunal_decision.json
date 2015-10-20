@@ -1,0 +1,9 @@
+{
+  "fields": [
+    "tribunal_decision_categories",
+    "tribunal_decision_categories_name",
+    "tribunal_decision_country",
+    "tribunal_decision_country_name",
+    "tribunal_decision_decision_date"
+  ]
+}
