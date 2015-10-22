@@ -16,6 +16,7 @@ class FacetsTest < ShouldaUnitTestCase
             terms: {
               field: "organisations",
               order: "count",
+              size: 100000,
             },
           },
         },
@@ -41,6 +42,7 @@ class FacetsTest < ShouldaUnitTestCase
             terms: {
               field: "organisations",
               order: "count",
+              size: 100000,
             },
           },
         },
@@ -65,6 +67,7 @@ class FacetsTest < ShouldaUnitTestCase
             terms: {
               field: "organisations",
               order: "count",
+              size: 100000,
             },
             facet_filter: {
               "terms" => {"organisations" => ["hm-magic"]}
@@ -92,6 +95,7 @@ class FacetsTest < ShouldaUnitTestCase
             terms: {
               field: "organisations",
               order: "count",
+              size: 100000,
             },
             facet_filter: {
               "terms" => {"mainstream_browse_pages" => ["levitation"]}
