@@ -15,9 +15,7 @@ module QueryComponents
           field: field_name,
           order: "count",
           # We want all the facet values so we can return an accurate count of
-          # the number of options.  With elasticsearch 0.90+ we can get this by
-          # setting size to 0, but at the time of writing we're using 0.20.6,
-          # so just have to set a high value for size.
+          # the number of options.
           size: 100000,
         }
       }
