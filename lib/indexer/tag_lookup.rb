@@ -3,53 +3,46 @@ require 'gds_api/content_api'
 module Indexer
   class TagLookup
     def prepare_tags(doc_hash)
-      artefact = artefact_for_link(doc_hash["link"])
-      if artefact.nil?
-        return doc_hash
-      end
-
-      from_content_api = tags_from_artefact(artefact)
-      doc_hash.merge(merge_tags(doc_hash, from_content_api))
+      artefact = find_document_from_content_api(doc_hash["link"])
+      return doc_hash unless artefact
+      add_tags_from_artefact(artefact, doc_hash)
     end
 
   private
 
-    def artefact_for_link(link)
-      if link.match(/\Ahttps?:\/\//)
-        # We don't support tags for things which are external links.
-        return nil
-      end
-      link = link.sub(/\A\//, '')
+    def find_document_from_content_api(link)
+      # We don't support tags for things which are external links.
+      return if link.match(/\Ahttps?:\/\//)
+
+      link_without_trailing_slash = link.sub(/\A\//, '')
       begin
-        content_api.artefact!(link)
+        content_api.artefact!(link_without_trailing_slash)
       rescue GdsApi::HTTPNotFound, GdsApi::HTTPGone
         nil
       end
     end
 
-    def tags_from_artefact(artefact)
-      tags = Hash.new { [] }
+    def add_tags_from_artefact(artefact, doc_hash)
+      doc_hash["organisations"] ||= []
+      doc_hash["mainstream_browse_pages"] ||= []
+      doc_hash["specialist_sectors"] ||= []
+
       artefact.tags.each do |tag|
-        slug = tag.slug
-        type = tag.details.type
-        case type
+        case tag.details.type
         when "organisation"
-          tags["organisations"] <<= slug
+          doc_hash["organisations"] << tag.slug
         when "section"
-          tags["mainstream_browse_pages"] <<= slug
+          doc_hash["mainstream_browse_pages"] << tag.slug
         when "specialist_sector"
-          tags["specialist_sectors"] <<= slug
+          doc_hash["specialist_sectors"] << tag.slug
         end
       end
-      tags
-    end
 
-    def merge_tags(doc_hash, extra_tags)
-      merged_tags = {}
-      %w{specialist_sectors mainstream_browse_pages organisations}.each do |tag_type|
-        merged_tags[tag_type] = doc_hash.fetch(tag_type, []).concat(extra_tags[tag_type]).uniq
-      end
-      merged_tags
+      doc_hash["organisations"].uniq!
+      doc_hash["mainstream_browse_pages"].uniq!
+      doc_hash["specialist_sectors"].uniq!
+
+      doc_hash
     end
 
     def content_api
