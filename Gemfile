@@ -10,6 +10,7 @@ gem 'nokogiri', "1.5.5"
 gem 'whenever', require: false
 gem "slop", "3.4.5"
 gem "sidekiq", "2.13.0"
+gem "sidekiq-statsd", "0.1.5"
 # pin to version that includes security vulnerability fix
 gem "redis-namespace", "1.3.1"
 gem "plek", "1.11.0"
