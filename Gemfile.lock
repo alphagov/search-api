@@ -100,6 +100,10 @@ GEM
       json
       redis (>= 3.0)
       redis-namespace
+    sidekiq-statsd (0.1.5)
+      activesupport
+      sidekiq (>= 2.6)
+      statsd-ruby (>= 1.1.0)
     simplecov (0.10.0)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -112,6 +116,7 @@ GEM
       rack-protection (~> 1.3)
       tilt (~> 1.3, >= 1.3.3)
     slop (3.4.5)
+    statsd-ruby (1.2.1)
     tilt (1.3.3)
     timecop (0.7.3)
     timers (1.1.0)
@@ -153,6 +158,7 @@ DEPENDENCIES
   rest-client (= 1.8.0)
   shoulda-context
   sidekiq (= 2.13.0)
+  sidekiq-statsd (= 0.1.5)
   simplecov (~> 0.10.0)
   simplecov-rcov
   sinatra (= 1.3.4)
