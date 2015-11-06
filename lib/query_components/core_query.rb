@@ -39,6 +39,15 @@ module QueryComponents
     MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%"
 
     def payload
+      if @search_params.quoted_search_phrase?
+        payload_for_quoted_phrase
+      else
+        payload_for_unquoted_phrase
+      end
+    end
+
+  private
+    def payload_for_unquoted_phrase
       {
         bool: {
           must: must_conditions,
@@ -47,7 +56,10 @@ module QueryComponents
       }
     end
 
-    private
+    def payload_for_quoted_phrase
+      groups = [ field_boosts_phrase ]
+      groups.map { |queries| dis_max_query(queries) }
+    end
 
     def must_conditions
       [query_string_query]
@@ -82,6 +94,14 @@ module QueryComponents
       end
     end
 
+    def field_boosts_phrase
+      # Return the highest weight found by looking for a phrase match in
+      # individual fields
+      MATCH_FIELDS.map { |field_name, boost|
+        match_query("#{field_name}.no_stop", search_term, type: :phrase, boost: boost)
+      }
+    end
+
     def exact_match_boost
       {
         multi_match: {
@@ -109,6 +129,36 @@ module QueryComponents
         DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS
       else
         DEFAULT_QUERY_ANALYZER
+      end
+    end
+
+    def match_query(field_name, query, type: :boolean, boost: 1.0, minimum_should_match: MINIMUM_SHOULD_MATCH, operator: :or)
+      {
+        match: {
+          field_name => {
+            type: type,
+            boost: boost,
+            query: query,
+            minimum_should_match: minimum_should_match,
+            operator: operator,
+          }
+        }
+      }
+    end
+
+    def dis_max_query(queries, tie_breaker: 0.0, boost: 1.0)
+      # Calculates a score by running all the queries, and taking the maximum.
+      # Adds in the scores for the other queries multiplied by `tie_breaker`.
+      if queries.size == 1
+        queries.first
+      else
+        {
+          dis_max: {
+            queries: queries,
+            tie_breaker: tie_breaker,
+            boost: boost,
+          }
+        }
       end
     end
   end
