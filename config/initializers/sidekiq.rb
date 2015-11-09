@@ -1,4 +1,5 @@
 require "sidekiq"
+require "sidekiq-statsd"
 
 redis_config_hash = YAML.load_file("config/redis.yml").symbolize_keys
 
