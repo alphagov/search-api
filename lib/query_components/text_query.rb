@@ -22,6 +22,20 @@ module QueryComponents
     MINIMUM_SHOULD_MATCH = "2<-1 5<-2 7<75%"
 
     def payload
+      if @search_params.quoted_search_phrase?
+        payload_for_quoted_phrase
+      else
+        payload_for_unquoted_phrase
+      end
+    end
+
+  private
+    def payload_for_quoted_phrase
+      groups = [ field_boosts_phrase ]
+      dismax_groups(groups)
+    end
+
+    def payload_for_unquoted_phrase
       {
         bool: {
           must: must_conditions,
@@ -29,8 +43,6 @@ module QueryComponents
         }
       }
     end
-
-  private
 
     def must_conditions
       [all_searchable_text_query]
@@ -59,10 +71,11 @@ module QueryComponents
       groups << field_boosts_synonyms unless search_params.disable_synonyms?
       groups << field_boosts_shingles
       groups << field_boosts_id_codes
+      dismax_groups(groups)
+    end
 
-      groups.map { |queries|
-        dis_max_query(queries)
-      }
+    def dismax_groups(groups)
+      groups.map { |queries| dis_max_query(queries) }
     end
 
     def field_boosts_words
