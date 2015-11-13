@@ -2,7 +2,7 @@ require "elasticsearch/base_worker"
 
 module Elasticsearch
   class AmendWorker < BaseWorker
-    forward_to_failure_queue
+    notify_of_failures
 
     def perform(index_name, document_link, updates)
       logger.info "Amending document '#{document_link}' in '#{index_name}'"

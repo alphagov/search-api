@@ -28,9 +28,9 @@ module Elasticsearch
       Logging.logger[self]
     end
 
-    def self.forward_to_failure_queue
+    def self.notify_of_failures
       sidekiq_retries_exhausted do |msg|
-        logger.warn "Job '#{msg["jid"]}' failed; forwarding to failure queue"
+        logger.warn "Job '#{msg["jid"]}' failed"
         Airbrake.notify_or_ignore(FailedJobException.new(msg))
       end
     end

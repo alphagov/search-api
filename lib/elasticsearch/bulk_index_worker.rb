@@ -2,7 +2,7 @@ require "elasticsearch/base_worker"
 
 module Elasticsearch
   class BulkIndexWorker < BaseWorker
-    forward_to_failure_queue
+    notify_of_failures
 
     def perform(index_name, document_hashes)
       noun = document_hashes.size > 1 ? "documents" : "document"

@@ -2,7 +2,7 @@ require "elasticsearch/base_worker"
 
 module Elasticsearch
   class DeleteWorker < BaseWorker
-    forward_to_failure_queue
+    notify_of_failures
 
     def perform(index_name, document_type, document_id = nil)
       # Handle previous method signature to cope with leftover queued jobs when
