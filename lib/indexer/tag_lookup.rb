@@ -46,7 +46,10 @@ module Indexer
     end
 
     def content_api
-      @content_api ||= GdsApi::ContentApi.new(Plek.find("contentapi"))
+      # We'll rarely look up the same content item twice in quick succession,
+      # so the cache isn't much use.  Additionally, it's not threadsafe, so
+      # using it can cause bulk imports to break.
+      @content_api ||= GdsApi::ContentApi.new(Plek.find("contentapi"), disable_cache: true)
     end
   end
 end
