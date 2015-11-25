@@ -17,11 +17,11 @@ module Indexer
     #   { <document source> }
     #
     # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
-    def bulk_payload(document_hashes_or_payload, options)
+    def bulk_payload(document_hashes_or_payload)
       if document_hashes_or_payload.is_a?(Array)
-        index_items = index_items_from_document_hashes(document_hashes_or_payload, options)
+        index_items = index_items_from_document_hashes(document_hashes_or_payload)
       else
-        index_items = index_items_from_raw_string(document_hashes_or_payload, options)
+        index_items = index_items_from_raw_string(document_hashes_or_payload)
       end
 
       # Make sure the payload ends with a newline character: elasticsearch
@@ -31,13 +31,13 @@ module Indexer
 
   private
 
-    def index_items_from_document_hashes(document_hashes, options)
+    def index_items_from_document_hashes(document_hashes)
       links = document_hashes.map {
         |doc_hash| doc_hash["link"]
       }.compact
       popularities = lookup_popularities(links)
       document_hashes.map { |doc_hash|
-        [index_action(doc_hash).to_json, index_doc(doc_hash, popularities, options).to_json]
+        [index_action(doc_hash).to_json, index_doc(doc_hash, popularities).to_json]
       }
     end
 
@@ -54,16 +54,15 @@ module Indexer
       }
     end
 
-    def index_doc(doc_hash, popularities, options)
+    def index_doc(doc_hash, popularities)
       Indexer::DocumentPreparer.new(@client).prepared(
         doc_hash,
         popularities,
-        options,
         @is_content_index
       )
     end
 
-    def index_items_from_raw_string(payload, options)
+    def index_items_from_raw_string(payload)
       actions = []
       links = []
       payload.each_line.each_slice(2).map do |command, doc|
@@ -78,7 +77,7 @@ module Indexer
           doc_hash["_type"] = command_hash["index"]["_type"]
           [
             command_hash.to_json,
-            index_doc(doc_hash, popularities, options).to_json
+            index_doc(doc_hash, popularities).to_json
           ]
         else
           [
