@@ -2,19 +2,19 @@
   "fields": [
     "all_searchable_text",
     "alpha_taxonomy",
-    "format",
-    "title",
     "description",
-    "link",
+    "format",
     "indexable_content",
-    "popularity",
-    "organisations",
-    "specialist_sectors",
-    "policies",
-    "mainstream_browse_pages",
-    "updated_at",
-    "public_timestamp",
     "latest_change_note",
-    "spelling_text"
+    "link",
+    "mainstream_browse_pages",
+    "organisations",
+    "policies",
+    "popularity",
+    "public_timestamp",
+    "specialist_sectors",
+    "spelling_text",
+    "title",
+    "updated_at"
   ]
 }
