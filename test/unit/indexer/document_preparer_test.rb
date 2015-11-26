@@ -6,9 +6,7 @@ describe Indexer::DocumentPreparer do
     let(:doc_hash) { {"link" => "some-slug" } }
 
     before do
-      Indexer::TagLookup.stubs(:new).returns(
-        OpenStruct.new(prepare_tags: doc_hash)
-      )
+      Indexer::TagLookup.stubs(:prepare_tags).returns(doc_hash)
     end
 
     describe "alpha taxonomies" do
