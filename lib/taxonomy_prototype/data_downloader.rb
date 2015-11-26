@@ -11,7 +11,7 @@ module TaxonomyPrototype
     # c) it's key and gid are populated in the SHEETS constant.
 
     class_attribute :cache_location
-    self.cache_location = File.dirname(__FILE__) + "../../data/prototype_taxonomy/import_dataset.csv"
+    self.cache_location = File.dirname(__FILE__) + "/../../data/prototype_taxonomy/import_dataset.csv"
 
     SHEETS = [
       { :name => "early_years", key: "1zjRy7XKrcroscX4cEqc4gM9Eq0DuVWEm_5wATsolRJY", gid: "1025053831" },
@@ -71,11 +71,17 @@ private
       "https://docs.google.com/spreadsheets/d/#{key}/pub?gid=#{gid}&single=true&output=tsv"
     end
 
+    # Standardise the appearance of taxonomy labels extracted from the spreadsheets.
     def sluggify(taxonomy_label)
-      # Standardise the appearance of taxonomy labels extracted from the
-      # spreadsheets.
       taxonomy_label.split(', ').map do |taxon|
-        taxon.gsub(/\W/, '')
+        taxon.downcase!
+        # Turn unwanted chars into hyphen
+        taxon.gsub!(/[^a-z0-9\-_]+/, '-')
+        # No more than one hyphen in a row.
+        taxon.gsub!(/-{2,}/, '-')
+        # Remove leading/trailing separator.
+        taxon.gsub!(/^-|-$/, '')
+        taxon
       end.join(' > ')
     end
   end
