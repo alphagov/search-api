@@ -1,6 +1,7 @@
 {
   "fields": [
     "all_searchable_text",
+    "alpha_taxonomy",
     "format",
     "title",
     "description",
@@ -14,7 +15,6 @@
     "updated_at",
     "public_timestamp",
     "latest_change_note",
-    "spelling_text",
-    "alpha_taxonomy"
+    "spelling_text"
   ]
 }
