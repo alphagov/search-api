@@ -14,6 +14,7 @@
     "updated_at",
     "public_timestamp",
     "latest_change_note",
-    "spelling_text"
+    "spelling_text",
+    "alpha_taxonomy"
   ]
 }

@@ -8,6 +8,10 @@
     "type": "identifier"
   },
 
+  "alpha_taxonomy": {
+    "type": "identifiers"
+  },
+
   "title": {
     "type": "searchable_sortable_text"
   },
