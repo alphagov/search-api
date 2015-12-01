@@ -4,7 +4,7 @@
 
 Returns information about the search result with the specified link.
 
-### Example reponse
+### Example response
 
 ```
 curl -XGET http://rummager.dev.gov.uk/content?link=/vehicle-tax
