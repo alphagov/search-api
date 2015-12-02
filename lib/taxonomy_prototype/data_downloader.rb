@@ -10,7 +10,10 @@ module TaxonomyPrototype
     # c) it's key and gid are populated in the SHEETS constant.
 
     class_attribute :cache_location
-    self.cache_location = File.dirname(__FILE__) + "/../../data/prototype_taxonomy/import_dataset.csv"
+    self.cache_location = begin
+      default = File.dirname(__FILE__) + "/../../data/alpha_taxonomy/import_dataset.csv"
+      ENV["TAXON_IMPORT_FILE"] || default
+    end
 
     SHEETS = [
       { :name => "early_years", key: "1zjRy7XKrcroscX4cEqc4gM9Eq0DuVWEm_5wATsolRJY", gid: "1025053831" },
