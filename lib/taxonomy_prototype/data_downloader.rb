@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'taxonomy_prototype/data_parser'
 
 module TaxonomyPrototype
   class DataDownloader
@@ -11,7 +12,7 @@ module TaxonomyPrototype
 
     class_attribute :cache_location
     self.cache_location = begin
-      default = File.dirname(__FILE__) + "/../../data/alpha_taxonomy/import_dataset.csv"
+      default = File.dirname(__FILE__) + "/../../data/alpha_taxonomy_import.csv"
       ENV["TAXON_IMPORT_FILE"] || default
     end
 
@@ -34,7 +35,7 @@ module TaxonomyPrototype
             remote_taxonomy_data = open(sheet_url).read
             logger.info "Downloaded #{sheet[:name]}"
 
-            DataParser.new(remote_taxonomy_data).write_to(file)
+            TaxonomyPrototype::DataParser.new(remote_taxonomy_data).write_to(file)
 
             logger.info "Finished copying #{sheet[:name]}"
           end
