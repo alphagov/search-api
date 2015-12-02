@@ -24,6 +24,7 @@ module Indexer
       if taxon
         doc_hash.merge("alpha_taxonomy" => taxon)
       else
+        doc_hash.delete("alpha_taxonomy")
         doc_hash
       end
     end
