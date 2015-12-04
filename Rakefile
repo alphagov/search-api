@@ -1,6 +1,5 @@
 require "rake/testtask"
 require "logging"
-require "pry-byebug"
 
 PROJECT_ROOT = File.dirname(__FILE__)
 LIBRARY_PATH = File.join(PROJECT_ROOT, "lib")
