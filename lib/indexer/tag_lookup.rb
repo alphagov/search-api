@@ -2,6 +2,10 @@ require 'gds_api/content_api'
 
 module Indexer
   class TagLookup
+    def self.prepare_tags(doc_hash)
+      new.prepare_tags(doc_hash)
+    end
+
     def prepare_tags(doc_hash)
       artefact = find_document_from_content_api(doc_hash["link"])
       return doc_hash unless artefact

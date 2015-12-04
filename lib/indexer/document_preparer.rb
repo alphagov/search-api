@@ -1,3 +1,5 @@
+require "taxonomy_prototype/taxon_finder"
+
 module Indexer
   class DocumentPreparer
     def initialize(client)
@@ -9,6 +11,7 @@ module Indexer
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)
         doc_hash = prepare_tags_field(doc_hash)
+        doc_hash = add_prototype_taxonomy(doc_hash)
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
@@ -16,6 +19,15 @@ module Indexer
     end
 
   private
+    def add_prototype_taxonomy(doc_hash)
+      taxon = ::TaxonomyPrototype::TaxonFinder.find_by(slug: doc_hash["link"])
+      if taxon
+        doc_hash.merge("alpha_taxonomy" => taxon)
+      else
+        doc_hash.delete("alpha_taxonomy")
+        doc_hash
+      end
+    end
 
     def prepare_popularity_field(doc_hash, popularities)
       pop = 0.0
@@ -27,7 +39,7 @@ module Indexer
     end
 
     def prepare_tags_field(doc_hash)
-      Indexer::TagLookup.new.prepare_tags(doc_hash)
+      Indexer::TagLookup.prepare_tags(doc_hash)
     end
 
     def prepare_format_field(doc_hash)

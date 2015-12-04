@@ -37,4 +37,4 @@ group :development do
   gem "mr-sparkle", "0.2.0"
 end
 
-gem "pry", group: [:development, :test]
+gem "pry-byebug", group: [:development, :test]

@@ -1,5 +1,6 @@
 require "rake/testtask"
 require "logging"
+require "pry-byebug"
 
 PROJECT_ROOT = File.dirname(__FILE__)
 LIBRARY_PATH = File.join(PROJECT_ROOT, "lib")
@@ -10,7 +11,7 @@ end
 
 require "config"
 
-Dir[File.join(PROJECT_ROOT, 'lib/tasks/*.rake')].each { |file| load file }
+Dir[File.join(PROJECT_ROOT, 'lib/tasks/**/*.rake')].each { |file| load file }
 
 desc "Run all the tests"
 task "test" => ["test:units", "test:integration"]
