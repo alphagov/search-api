@@ -4,6 +4,7 @@ module Indexer
   class DocumentPreparer
     def initialize(client)
       @client = client
+      @logger = Logging.logger[self]
     end
 
     def prepared(doc_hash, popularities, is_content_index)
@@ -22,6 +23,7 @@ module Indexer
     def add_prototype_taxonomy(doc_hash)
       taxon = ::TaxonomyPrototype::TaxonFinder.find_by(slug: doc_hash["link"])
       if taxon
+        @logger.info "ALPHA_TAX: Merging taxon #{taxon} for #{doc_hash["link"]}"
         doc_hash.merge("alpha_taxonomy" => taxon)
       else
         doc_hash.delete("alpha_taxonomy")
