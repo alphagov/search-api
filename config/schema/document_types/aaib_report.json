@@ -59,6 +59,10 @@
       {
         "label": "Special bulletin",
         "value": "special-bulletin"
+      },
+      {
+        "label": "Safety study",
+        "value": "safety-study"
       }
     ]
   }
