@@ -25,7 +25,7 @@ GEM
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     ffi (1.9.0)
-    gds-api-adapters (23.2.2)
+    gds-api-adapters (26.7.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -73,7 +73,7 @@ GEM
       byebug (~> 8.0)
       pry (~> 0.10)
     rack (1.6.4)
-    rack-cache (1.2)
+    rack-cache (1.5.1)
       rack (>= 0.4)
     rack-logstasher (0.0.3)
       logstash-event
@@ -146,7 +146,7 @@ PLATFORMS
 DEPENDENCIES
   airbrake (= 4.0.0)
   ci_reporter (= 1.7.1)
-  gds-api-adapters (= 23.2.2)
+  gds-api-adapters (= 26.7.0)
   logging (= 1.8.1)
   minitest (= 4.6.1)
   mocha
