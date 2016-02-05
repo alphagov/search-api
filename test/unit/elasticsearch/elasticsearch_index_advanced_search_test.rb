@@ -28,7 +28,49 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def test_keyword_param_is_converted_to_a_boosted_title_and_unboosted_general_query
-    stub_empty_search(:body => "{\"from\":0,\"size\":1,\"query\":{\"function_score\":{\"query\":{\"bool\":{\"should\":[{\"query_string\":{\"query\":\"happy fun time\",\"fields\":[\"title^3\"],\"default_operator\":\"and\",\"analyzer\":\"default\"}},{\"query_string\":{\"query\":\"happy fun time\",\"analyzer\":\"query_with_old_synonyms\"}}]}},\"functions\":[{\"filter\":{\"term\":{\"search_format_types\":\"edition\"}},\"script_score\":{\"script\":\"((0.15 / ((3.1*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)\",\"params\":{\"now\":#{(Time.now.to_i / 60) * 60000}}}}]}},\"filter\":{}}")
+    stub_empty_search(:body => {
+      "from" => 0,
+      "size" => 1,
+      "query" => {
+        "function_score" => {
+          "query" => {
+            "bool" => {
+              "should" => [
+                {
+                  "query_string" => {
+                    "query" => "happy fun time",
+                    "fields" => ["title^3"],
+                    "default_operator" => "and",
+                    "analyzer" => "default"
+                  }
+                },
+                {
+                  "query_string" =>
+                  {
+                    "query" => "happy fun time",
+                    "analyzer" => "query_with_old_synonyms"
+                  }
+                }
+              ]
+            }
+          },
+          "functions" => [
+            {
+              "filter" => {
+                "term" => {
+                  "search_format_types" => "edition"
+                }
+              },
+              "script_score" => {
+                "script" => "((0.15 / ((3.1*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
+                "params" => {"now" => (Time.now.to_i / 60) * 60000}
+              }
+            }
+          ]
+        }
+      },
+      "filter" => {"not" => {"term" => {"is_withdrawn" => true} } }
+    })
     @wrapper.advanced_search(default_params.merge('keywords' => 'happy fun time'))
   end
 
@@ -38,33 +80,33 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def test_single_value_filter_param_is_turned_into_a_term_filter
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"mainstream_browse_pages\":\"jones\"}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"term\":{\"mainstream_browse_pages\":\"jones\"}")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => 'jones'))
 
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"mainstream_browse_pages\":\"jones\"}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"term\":{\"mainstream_browse_pages\":\"jones\"}")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones']))
   end
 
   def test_multiple_value_filter_param_is_turned_into_a_terms_filter
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"terms\":{\"mainstream_browse_pages\":[\"jones\",\"richards\"]}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"terms\":{\"mainstream_browse_pages\":[\"jones\",\"richards\"]}")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones', 'richards']))
   end
 
   def test_filter_params_are_turned_into_anded_term_filters_on_that_property
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"and\":[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}}]}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"and\":[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones'], 'link' => ['richards']))
   end
 
   def test_filter_params_on_a_boolean_mapping_property_are_convered_to_true_based_on_something_that_looks_truthy
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"boolean_property\":true}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("{\"term\":{\"boolean_property\":true}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'true'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '1'))
   end
 
   def test_filter_params_on_a_boolean_mapping_property_are_convered_to_false_based_on_something_that_looks_falsey
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"term\":{\"boolean_property\":false}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"term\":{\"boolean_property\":false}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'false'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '0'))
   end
@@ -83,20 +125,20 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   def test_filter_params_on_a_date_mapping_property_are_turned_into_a_range_filter_with_order_based_on_the_key_in_the_value
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
 
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => {'to' => '2013-02-02'}))
 
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\"}}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"range\":{\"date_property\":{\"from\":\"2013-02-02\"}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => {'from' => '2013-02-02'}))
 
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\",\"to\":\"2013-02-03\"}}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"range\":{\"date_property\":{\"from\":\"2013-02-02\",\"to\":\"2013-02-03\"}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => {'from' => '2013-02-02', 'to' => '2013-02-03'}))
 
     # Deprecated date range options
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => {'before' => '2013-02-02'}))
 
-    stub_empty_search(:body => /#{Regexp.escape("\"filter\":{\"range\":{\"date_property\":{\"from\":\"2013-02-02\"}}}")}/)
+    stub_empty_search(:body => /#{Regexp.escape("\"range\":{\"date_property\":{\"from\":\"2013-02-02\"}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => {'after' => '2013-02-02'}))
   end
 

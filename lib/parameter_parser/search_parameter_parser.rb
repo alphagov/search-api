@@ -299,6 +299,10 @@ private
         options[:new_weighting] = true
       when "explain"
         options[:explain] = true
+      when "include_withdrawn"
+        # Withdrawn content is excluded from regular searches but is useful for
+        # content audits
+        options[:include_withdrawn] = true
       else
         @errors << %{Unknown debug option "#{option}"}
       end

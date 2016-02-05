@@ -70,6 +70,7 @@ For the most up to date query syntax and API output:
 - [docs/unified-search-api.md](docs/unified-search-api.md) for the unified search
   endpoint (`/unified-search.json`).
 - [docs/content-api.md](docs/content-api.md) for the `/content/*` endpoint.
+- [docs/documents.md](docs/documents.md) for the `*/documents/` endpoint.
 
 ### Additional Docs
 

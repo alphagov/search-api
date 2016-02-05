@@ -308,6 +308,11 @@
     "type": "boolean"
   },
 
+  "is_withdrawn": {
+    "description": "If the content has been published but then withdrawn",
+    "type": "boolean"
+  },
+
   "government_name": {
     "description": "The name of the Government that first published this document, eg, '1970 to 1974 Conservative government'",
     "type": "unsearchable_text"
