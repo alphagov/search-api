@@ -413,6 +413,34 @@ class UnifiedSearchTest < IntegrationTest
     assert result_links.include? "/mainstream-1"
   end
 
+  def test_withdrawn_content
+    reset_content_indexes
+
+    commit_document("mainstream_test",
+      title: "I am the result",
+      description: "This is a test search result",
+      link: "/some-nice-link",
+      is_withdrawn: true
+    )
+
+    get "/unified_search?q=test"
+    assert_equal 0, parsed_response.fetch("total")
+  end
+
+  def test_withdrawn_content_with_flag
+    reset_content_indexes
+
+    commit_document("mainstream_test",
+      title: "I am the result",
+      description: "This is a test search result",
+      link: "/some-nice-link",
+      is_withdrawn: true
+    )
+
+    get "/unified_search?q=test&debug=include_withdrawn"
+    assert_equal 1, parsed_response.fetch("total")
+  end
+
   private
 
   def first_result

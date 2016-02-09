@@ -128,7 +128,12 @@ module Elasticsearch
     end
 
     def filter_query_hash
+      # Withdrawn documents should never be part of advanced search
+      withdrawn_query = {"not" => { "term" => {"is_withdrawn" => true } } }
+
       filters = filters_hash
+      filters << withdrawn_query
+
       if filters.size > 1
         filters = {"and" => filters}
       else

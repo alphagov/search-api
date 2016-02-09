@@ -2,10 +2,14 @@ require "test_helper"
 require "unified_search_builder"
 
 class FilterTest < ShouldaUnitTestCase
+  def make_search_params(filters, include_withdrawn: true)
+    SearchParameters.new(filters: filters, debug: {include_withdrawn: include_withdrawn})
+  end
+
   context "search with one filter" do
     should "append the correct text filters" do
       builder = QueryComponents::Filter.new(
-        SearchParameters.new(filters: [ text_filter("organisations", ["hm-magic"]) ])
+        make_search_params([text_filter("organisations", ["hm-magic"])])
       )
 
       result = builder.payload
@@ -18,14 +22,14 @@ class FilterTest < ShouldaUnitTestCase
 
     should "append the correct date filters" do
       builder = QueryComponents::Filter.new(
-        SearchParameters.new(filters: [ make_date_filter_param("field_with_date", ["from:2014-04-01 00:00,to:2014-04-02 00:00"]) ])
+        make_search_params([make_date_filter_param("field_with_date", ["from:2014-04-01 00:00,to:2014-04-02 00:00"])])
       )
 
       result = builder.payload
 
       assert_equal(
         result,
-        {"range"=>{"field_with_date"=>{"from"=>"2014-04-01", "to"=>"2014-04-02"}}}
+        {"range" => {"field_with_date" => {"from" => "2014-04-01", "to" => "2014-04-02"}}}
       )
     end
 
@@ -37,7 +41,7 @@ class FilterTest < ShouldaUnitTestCase
   context "search with a filter with multiple options" do
     should "have correct filter" do
       builder = QueryComponents::Filter.new(
-        SearchParameters.new(filters: [ text_filter("organisations", ["hm-magic", "hmrc"]) ],)
+        make_search_params([text_filter("organisations", ["hm-magic", "hmrc"])])
       )
 
       result = builder.payload
@@ -52,8 +56,8 @@ class FilterTest < ShouldaUnitTestCase
   context "search with a filter and rejects" do
     should "have correct filter" do
       builder = QueryComponents::Filter.new(
-        SearchParameters.new(
-          filters: [
+        make_search_params(
+          [
             text_filter("organisations", ["hm-magic", "hmrc"]),
             reject_filter("mainstream_browse_pages", ["benefits"]),
           ]
@@ -75,8 +79,8 @@ class FilterTest < ShouldaUnitTestCase
   context "search with multiple filters" do
     should "have correct filter" do
       builder = QueryComponents::Filter.new(
-        SearchParameters.new(
-          filters: [
+        make_search_params(
+          [
             text_filter("organisations", ["hm-magic", "hmrc"]),
             text_filter("mainstream_browse_pages", ["levitation"]),
           ],
@@ -87,10 +91,12 @@ class FilterTest < ShouldaUnitTestCase
 
       assert_equal(
         result,
-        {:and => [
-          {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
-          {"terms" => {"mainstream_browse_pages" => ["levitation"]}},
-        ].compact}
+        {
+          and: [
+            {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
+            {"terms" => {"mainstream_browse_pages" => ["levitation"]}},
+          ].compact
+        }
       )
     end
 
