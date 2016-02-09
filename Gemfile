@@ -38,3 +38,4 @@ group :development do
 end
 
 gem "pry-byebug", group: [:development, :test]
+gem "govuk_message_queue_consumer", "~> 2.0.0"
