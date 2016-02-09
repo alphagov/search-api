@@ -6,6 +6,7 @@ class IndexDocuments
     businesssupportfinder
     calculators
     calendars
+    collections-publisher
     hmrc-manuals-api
     licencefinder
     policy-publisher
