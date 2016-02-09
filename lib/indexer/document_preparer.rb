@@ -9,6 +9,7 @@ module Indexer
 
     def prepared(doc_hash, popularities, is_content_index)
       if is_content_index
+        doc_hash = copy_legacy_topic_to_policy_area(doc_hash)
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)
         doc_hash = prepare_tags_field(doc_hash)
@@ -50,6 +51,14 @@ module Indexer
       else
         doc_hash
       end
+    end
+
+    def copy_legacy_topic_to_policy_area(doc_hash)
+      if doc_hash["topics"]
+        doc_hash["policy_areas"] = doc_hash["topics"]
+      end
+
+      doc_hash
     end
 
     # If a document is a best bet, and is using the stemmed_query field, we

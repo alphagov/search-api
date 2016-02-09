@@ -46,6 +46,11 @@
     "type": "identifiers"
   },
 
+  "policy_areas": {
+    "description": "Policy areas are managed in Whitehall. They're an old grouping of policies, which we're expecting to deprecate soon.",
+    "type": "identifiers"
+  },
+
   "mainstream_browse_pages": {
     "type": "identifiers"
   },
