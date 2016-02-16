@@ -93,6 +93,7 @@ class BaseParameterParser
     specialist_sectors
     title
     topics
+    policy_areas
     world_locations
   )
 
