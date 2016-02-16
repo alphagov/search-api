@@ -7,6 +7,8 @@ namespace :message_queue do
     # RABBITMQ_USER
     # RABBITMQ_PASSWORD
 
+    # Load Airbrake to make govuk_message_queue_consumer send error notifications.
+    require 'airbrake'
     require 'govuk_message_queue_consumer'
     require_relative '../index_documents'
 

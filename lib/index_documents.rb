@@ -69,7 +69,11 @@ private
 
   def update_index(base_path, links)
     indices_with_base_path(base_path).map do |index|
-      index.amend(base_path, links)
+      begin
+        index.amend(base_path, links)
+      rescue Elasticsearch::DocumentNotFound => e
+        Airbrake.notify_or_ignore(e)
+      end
     end
   end
 
