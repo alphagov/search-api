@@ -14,6 +14,7 @@ class IndexDocuments
   }
 
   def process(message)
+    $stdout.puts "Processing message: #{message.payload.inspect}"
     index_links_from_message(message)
     message.ack
   end
