@@ -14,20 +14,28 @@ class IndexDocuments
   }
 
   def process(message)
-    if publishing_app_migrated?(message)
-      raw_links = links_from_payload(message)
-
-      unless raw_links.empty?
-        links = rummager_fields_from_links(raw_links)
-        base_path = document_base_path(message)
-        update_index(base_path, links)
-      end
-    end
-
+    $stdout.puts "Processing message: #{message.payload.inspect}"
+    index_links_from_message(message)
     message.ack
+  rescue GdsApi::HTTPServerError => e
+    $stderr.puts "An error occurred!"
+    $stderr.puts e.inspect
+    message.retry
   end
 
 private
+
+  def index_links_from_message(message)
+    return unless publishing_app_migrated?(message)
+    raw_links = links_from_payload(message)
+
+    unless raw_links.empty?
+      links = rummager_fields_from_links(raw_links)
+      base_path = document_base_path(message)
+      update_index(base_path, links)
+    end
+  end
+
   def publishing_app_migrated?(message)
     MIGRATED_TAGGING_APPS.include? message.payload["publishing_app"]
   end
@@ -69,7 +77,11 @@ private
 
   def update_index(base_path, links)
     indices_with_base_path(base_path).map do |index|
-      index.amend(base_path, links)
+      begin
+        index.amend(base_path, links)
+      rescue Elasticsearch::DocumentNotFound => e
+        Airbrake.notify_or_ignore(e)
+      end
     end
   end
 

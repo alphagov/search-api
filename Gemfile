@@ -14,7 +14,7 @@ gem "sidekiq-statsd", "0.1.5"
 # pin to version that includes security vulnerability fix
 gem "redis-namespace", "1.3.1"
 gem "plek", "1.11.0"
-gem "gds-api-adapters", "28.0.0"
+gem "gds-api-adapters", "~> 28.0.2"
 gem "rack-logstasher", "0.0.3"
 gem 'airbrake', '4.0.0'
 gem "unf", "0.1.3"
@@ -38,4 +38,4 @@ group :development do
 end
 
 gem "pry-byebug", group: [:development, :test]
-gem "govuk_message_queue_consumer", "~> 2.0.0"
+gem "govuk_message_queue_consumer", "~> 2.0.1"
