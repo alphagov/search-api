@@ -14,20 +14,23 @@ class IndexDocuments
   }
 
   def process(message)
-    if publishing_app_migrated?(message)
-      raw_links = links_from_payload(message)
-
-      unless raw_links.empty?
-        links = rummager_fields_from_links(raw_links)
-        base_path = document_base_path(message)
-        update_index(base_path, links)
-      end
-    end
-
+    index_links_from_message(message)
     message.ack
   end
 
 private
+
+  def index_links_from_message(message)
+    return unless publishing_app_migrated?(message)
+    raw_links = links_from_payload(message)
+
+    unless raw_links.empty?
+      links = rummager_fields_from_links(raw_links)
+      base_path = document_base_path(message)
+      update_index(base_path, links)
+    end
+  end
+
   def publishing_app_migrated?(message)
     MIGRATED_TAGGING_APPS.include? message.payload["publishing_app"]
   end
