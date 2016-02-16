@@ -17,6 +17,10 @@ class IndexDocuments
     $stdout.puts "Processing message: #{message.payload.inspect}"
     index_links_from_message(message)
     message.ack
+  rescue GdsApi::HTTPServerError => e
+    $stderr.puts "An error occurred!"
+    $stderr.puts e.inspect
+    message.retry
   end
 
 private
