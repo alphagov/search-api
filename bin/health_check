@@ -69,7 +69,7 @@ class HealthCheckCLI
     end
   end
 
-  private
+private
 
   def run_search_result_tests
     scores = run_search_result_test_on_index

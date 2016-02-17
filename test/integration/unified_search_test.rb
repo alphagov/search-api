@@ -441,7 +441,7 @@ class UnifiedSearchTest < IntegrationTest
     assert_equal 1, parsed_response.fetch("total")
   end
 
-  private
+private
 
   def first_result
     @first_result ||= parsed_response['results'].first

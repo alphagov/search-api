@@ -43,7 +43,7 @@ class SearchParameters
     query && suggest.include?('spelling')
   end
 
-  private
+private
 
   def determine_if_quoted_phrase
     if @query =~ QUOTED_STRING_REGEX

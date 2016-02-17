@@ -40,6 +40,7 @@ class SchemaConfig
   end
 
 private
+
   attr_reader :config_path
 
   def schema_yaml

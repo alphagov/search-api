@@ -53,7 +53,8 @@ module Elasticsearch
       end
     end
 
-private
+  private
+
     def logger
       Logging.logger[self]
     end

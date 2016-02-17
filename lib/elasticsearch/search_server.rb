@@ -45,6 +45,7 @@ module Elasticsearch
     end
 
   private
+
     def validate_index_name!(index_name)
       return if index_name_valid?(index_name)
 

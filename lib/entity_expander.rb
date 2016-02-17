@@ -45,7 +45,7 @@ class EntityExpander
     result
   end
 
-  private
+private
 
   def item_from_registry_by_slug(registry, slug)
     expanded_item = registry[slug]

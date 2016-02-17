@@ -10,6 +10,7 @@ class FacetParameterParser < BaseParameterParser
   end
 
 private
+
   # Return a string to be used in error messages
   def facet_description
     %{ in facet "#{@field}"}

@@ -27,7 +27,8 @@ module HealthCheck
       calculator
     end
 
-    private
+  private
+
     def checks
       CheckFileParser.new(@test_data_file).checks.sort { |a,b| b.weight <=> a.weight }
     end

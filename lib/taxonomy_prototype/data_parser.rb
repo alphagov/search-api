@@ -19,7 +19,8 @@ module TaxonomyPrototype
       end
     end
 
-private
+  private
+
     def relevant_columns_in(remote_taxonomy_data)
       tsv_data = CSV.parse(remote_taxonomy_data, col_sep: "\t", headers: true)
       desired_columns = ["mapped to", "link"]

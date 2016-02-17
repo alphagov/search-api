@@ -30,7 +30,7 @@ module HealthCheck
       calculator
     end
 
-    private
+  private
 
     def parsed_checks
       CSV.parse(@test_data_file, headers: true).map do |row|

@@ -128,6 +128,7 @@ class QuotedAndUnquotedSearchTest < IntegrationTest
 
 
 private
+
   def commit_london_transport_docs
     commit_document("mainstream_test",
       title: "This is about London and its environs",

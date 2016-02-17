@@ -47,6 +47,7 @@ module QueryComponents
     end
 
   private
+
     def payload_for_unquoted_phrase
       {
         bool: {

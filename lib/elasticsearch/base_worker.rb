@@ -38,6 +38,7 @@ module Elasticsearch
     class FailedJobException < Exception; end
 
   private
+
     def index(index_name)
       settings.search_config.search_server.index(index_name)
     end

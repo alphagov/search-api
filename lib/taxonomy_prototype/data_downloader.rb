@@ -48,7 +48,8 @@ module TaxonomyPrototype
       end
     end
 
-private
+  private
+
     def spreadsheet_url(key: ,gid:)
       "https://docs.google.com/spreadsheets/d/#{key}/pub?gid=#{gid}&single=true&output=tsv"
     end

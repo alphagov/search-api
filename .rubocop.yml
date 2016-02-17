@@ -49,12 +49,6 @@ Performance/StringReplacement:
   Exclude:
     - 'lib/health_check/check_file_parser.rb'
 
-# Offense count: 18
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AccessModifierIndentation:
-  Enabled: false
-
 # Offense count: 3
 # Cop supports --auto-correct.
 Style/AlignArray:
@@ -96,11 +90,6 @@ Style/ClosingParenthesisIndentation:
     - 'test/integration/unified_search/results_with_highlighting_test.rb'
     - 'test/integration/unified_search_test.rb'
     - 'test/unit/parameter_parser/search_parameter_parser_test.rb'
-
-# Offense count: 23
-# Cop supports --auto-correct.
-Style/EmptyLinesAroundAccessModifier:
-  Enabled: false
 
 # Offense count: 8
 # Cop supports --auto-correct.

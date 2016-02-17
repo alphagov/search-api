@@ -25,6 +25,7 @@ module Registry
     end
 
   private
+
     def fetch
       find_documents_by_format.to_a
     end

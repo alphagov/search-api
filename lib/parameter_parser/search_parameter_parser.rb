@@ -215,6 +215,7 @@ private
     end
 
   private
+
     def parse_dates(values)
       if values.count > 1
         @errors << %{Too many values (#{values.size}) for parameter "#{field_name}" (must occur at most once)}

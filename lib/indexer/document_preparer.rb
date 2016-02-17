@@ -21,6 +21,7 @@ module Indexer
     end
 
   private
+
     def add_prototype_taxonomy(doc_hash)
       taxon = ::TaxonomyPrototype::TaxonFinder.find_by(slug: doc_hash["link"])
       if taxon

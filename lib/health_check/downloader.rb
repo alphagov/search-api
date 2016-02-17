@@ -20,7 +20,7 @@ module HealthCheck
       )
     end
 
-    private
+  private
 
     def spreadsheet_url(gid:)
       "https://docs.google.com/spreadsheet/pub?key=0AmD7K4ab1dYrdDR5c2tITTNHRUZqajFTTU8wODAzZ1E&single=true&output=csv&gid=#{gid}"

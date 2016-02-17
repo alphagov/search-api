@@ -11,6 +11,7 @@ class SitemapCleanup
   end
 
 private
+
   attr_reader :directory, :days_to_keep
 
   def all_sitemaps

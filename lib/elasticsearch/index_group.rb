@@ -106,6 +106,7 @@ module Elasticsearch
     end
 
   private
+
     def logger
       Logging.logger[self]
     end

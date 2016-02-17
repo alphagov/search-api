@@ -54,6 +54,7 @@ module Elasticsearch
     end
 
   private
+
     def search_uri(batch_size)
       URI::Generic.build(
         path: "_search",

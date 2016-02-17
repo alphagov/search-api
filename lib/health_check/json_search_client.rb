@@ -42,7 +42,8 @@ module HealthCheck
       "JSON endpoint #{@base_url} [auth=#{@authentication ? "yes" : "no"}]"
     end
 
-    private
+  private
+
     def http_client
       @_http_client ||= begin
         http = Net::HTTP.new(@base_url.host, @base_url.port)

@@ -16,7 +16,7 @@ module QueryComponents
       result
     end
 
-    private
+  private
 
     # `best_bet_queries` make sure documents with the specified IDs are returned
     # by elasticsearch. It also adds a huge boost factor for these results, to

@@ -109,6 +109,7 @@ class Document
   end
 
 private
+
   def is_assignment?(method_name)
     method_name.to_s[-1] == "="
   end

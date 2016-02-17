@@ -43,7 +43,7 @@ class UnifiedSearchBuilder
     QueryComponents::Filter.new(search_params).payload
   end
 
-  private
+private
 
   def sort
     QueryComponents::Sort.new(search_params).payload

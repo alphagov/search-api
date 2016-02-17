@@ -23,6 +23,7 @@ class TimedCache
   end
 
 private
+
   def refresh_needed?
     @cached_result.nil? || @cache_updated.nil? || cache_age >= @lifetime
   end

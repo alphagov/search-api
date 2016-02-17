@@ -30,7 +30,8 @@ module HealthCheck
       checks
     end
 
-    private
+  private
+
     def parse_integer_with_comma(raw)
       if raw.nil? || raw.strip.empty?
         nil
