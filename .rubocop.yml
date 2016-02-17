@@ -16,6 +16,11 @@ Lint/ParenthesesAsGroupedExpression:
 Style/ClosingParenthesisIndentation:
   Enabled: false
 
+# This cop doesn't make things clearer in a lot of cases. Using the modifier
+# should be up to the developer. 
+Style/IfUnlessModifier:
+  Enabled: false
+
 # Offense count: 1
 # Cop supports --auto-correct.
 Performance/StringReplacement:
@@ -27,12 +32,6 @@ Style/ClassVars:
   Exclude:
     - 'app.rb'
     - 'lib/unified_search/suggestion_blacklist.rb'
-
-# Offense count: 40
-# Cop supports --auto-correct.
-# Configuration parameters: MaxLineLength.
-Style/IfUnlessModifier:
-  Enabled: false
 
 # Offense count: 2
 Style/MethodCalledOnDoEndBlock:
