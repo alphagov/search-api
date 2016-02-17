@@ -79,12 +79,6 @@ Style/BarePercentLiterals:
 Style/BracesAroundHashParameters:
   Enabled: false
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep.
-Style/CaseIndentation:
-  Enabled: false
-
 # Offense count: 2
 Style/ClassVars:
   Exclude:
@@ -122,17 +116,6 @@ Style/ExtraSpacing:
     - 'test/unit/elasticsearch/elasticsearch_escaping_test.rb'
     - 'test/unit/facet_option_test.rb'
 
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/FirstParameterIndentation:
-  Exclude:
-    - 'lib/elasticsearch/index.rb'
-    - 'lib/indexer/document_preparer.rb'
-    - 'lib/tasks/publishing_api.rake'
-    - 'test/unit/elasticsearch/elasticsearch_index_test.rb'
-    - 'test/unit/query_components/popularity_test.rb'
-
 # Offense count: 76
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, UseHashRocketsWithSymbolValues.
@@ -144,26 +127,6 @@ Style/HashSyntax:
 # Configuration parameters: MaxLineLength.
 Style/IfUnlessModifier:
   Enabled: false
-
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/IndentationConsistency:
-  Exclude:
-    - 'lib/health_check/check_file_parser.rb'
-    - 'lib/health_check/json_search_client.rb'
-    - 'lib/health_check/search_checker.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: Width.
-Style/IndentationWidth:
-  Exclude:
-    - 'lib/elasticsearch/advanced_search_query_builder.rb'
-    - 'lib/health_check/json_search_client.rb'
-    - 'lib/health_check/search_check.rb'
-    - 'lib/indexer/popularity_lookup.rb'
-    - 'test/unit/elasticsearch/elasticsearch_index_test.rb'
 
 # Offense count: 4
 # Cop supports --auto-correct.
@@ -193,12 +156,6 @@ Style/MultilineBlockChain:
 Style/MultilineBlockLayout:
   Exclude:
     - 'lib/indexer/bulk_payload_generator.rb'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/MultilineOperationIndentation:
-  Enabled: false
 
 # Offense count: 1
 # Cop supports --auto-correct.

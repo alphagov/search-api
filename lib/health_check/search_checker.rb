@@ -28,12 +28,12 @@ module HealthCheck
     end
 
     private
-      def checks
-        CheckFileParser.new(@test_data_file).checks.sort { |a,b| b.weight <=> a.weight }
-      end
+    def checks
+      CheckFileParser.new(@test_data_file).checks.sort { |a,b| b.weight <=> a.weight }
+    end
 
-      def calculator
-        @_calculator ||= Calculator.new
-      end
+    def calculator
+      @_calculator ||= Calculator.new
+    end
   end
 end

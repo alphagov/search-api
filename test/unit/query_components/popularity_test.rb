@@ -12,9 +12,9 @@ class PopularityTest < ShouldaUnitTestCase
 
   context "with disabling of popularity" do
     should "disable popularity" do
-      builder = QueryComponents::Popularity.new(search_query_params(
-        debug: { disable_popularity: true }
-      ))
+      builder = QueryComponents::Popularity.new(
+        search_query_params(debug: { disable_popularity: true })
+      )
 
       result = builder.wrap({ some: 'query' })
 

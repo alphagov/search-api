@@ -55,7 +55,9 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar"], 1.0)
 
-    document = stub("document", elasticsearch_export: {
+    document = stub(
+      "document",
+      elasticsearch_export: {
         "_type" => "edition",
         "link" => "/foo/bar",
         "title" => "TITLE ONE",
@@ -123,7 +125,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 {"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"format":"edition"}
     eos
     request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
-        body: payload,
+      body: payload,
     ).to_return(body: '{"items":[]}')
 
     @index.bulk_index(payload)
@@ -296,8 +298,8 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_should_allow_custom_timeouts_on_iteration
     RestClient::Request.expects(:execute)
       .with(has_entries(
-        timeout: 20,
-        open_timeout: 25
+              timeout: 20,
+              open_timeout: 25
       )).returns('{"hits": {"total": 0}}')
     @index.all_documents(timeout: 20, open_timeout: 25)
   end
@@ -305,7 +307,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 private
 
   def scroll_uri(scroll_id)
-     "http://example.com:9200/_search/scroll?scroll=60m&scroll_id=#{scroll_id}"
+    "http://example.com:9200/_search/scroll?scroll=60m&scroll_id=#{scroll_id}"
   end
 
   def scroll_response_body(scroll_id, total_results, results)
@@ -324,8 +326,8 @@ private
   def stub_popularity_index_requests(paths, popularity, total_pages=10, total_requested=total_pages, paths_to_return=paths)
     # stub the request for total results
     stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
-            with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
-            to_return(body: { "hits" => { "total" => total_pages } }.to_json)
+      with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
+      to_return(body: { "hits" => { "total" => total_pages } }.to_json)
 
     # stub the search for popularity data
     expected_query = {
@@ -354,8 +356,8 @@ private
     }
 
     stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
-            with(:body => expected_query.to_json).
-            to_return(:body => response.to_json)
+      with(:body => expected_query.to_json).
+      to_return(:body => response.to_json)
   end
 
   def stub_traffic_index

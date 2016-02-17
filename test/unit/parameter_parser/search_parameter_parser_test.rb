@@ -354,7 +354,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       assert parser.valid?, "Parameters should be valid: #{parser.errors}"
 
       opened_date_filter = parser.parsed_params.fetch(:filters)
-      .find { |filter| filter.field_name == "opened_date" }
+        .find { |filter| filter.field_name == "opened_date" }
 
       assert_equal(
         Date.parse("2014-04-01 00:00"),
@@ -377,7 +377,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       assert parser.valid?
 
       opened_date_filter = parser.parsed_params.fetch(:filters)
-      .find { |filter| filter.field_name == "opened_date" }
+        .find { |filter| filter.field_name == "opened_date" }
 
       assert_equal "opened_date", opened_date_filter.field_name
       assert_equal true, opened_date_filter.include_missing

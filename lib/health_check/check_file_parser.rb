@@ -31,16 +31,16 @@ module HealthCheck
     end
 
     private
-      def parse_integer_with_comma(raw)
-        if raw.nil? || raw.strip.empty?
-          nil
-        else
-          Integer(raw.gsub(",", ""))
-        end
+    def parse_integer_with_comma(raw)
+      if raw.nil? || raw.strip.empty?
+        nil
+      else
+        Integer(raw.gsub(",", ""))
       end
+    end
 
-      def logger
-        Logging.logger[self]
-      end
+    def logger
+      Logging.logger[self]
+    end
   end
 end
