@@ -1,0 +1,464 @@
+# Offense count: 1
+# Cop supports --auto-correct.
+# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
+Lint/DefEndAlignment:
+  Enabled: false
+
+# Offense count: 3
+# Cop supports --auto-correct.
+# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
+Lint/EndAlignment:
+  Enabled: false
+
+# Offense count: 2
+Lint/HandleExceptions:
+  Exclude:
+    - 'lib/elasticsearch/index.rb'
+    - 'test/support/integration_test.rb'
+
+# Offense count: 3
+Lint/ParenthesesAsGroupedExpression:
+  Exclude:
+    - 'test/unit/elasticsearch/elasticsearch_index_test.rb'
+
+# Offense count: 2
+# Cop supports --auto-correct.
+Lint/StringConversionInInterpolation:
+  Exclude:
+    - 'lib/health_check/search_checker.rb'
+    - 'lib/health_check/suggestion_checker.rb'
+
+# Offense count: 16
+# Cop supports --auto-correct.
+# Configuration parameters: IgnoreEmptyBlocks.
+Lint/UnusedBlockArgument:
+  Exclude:
+    - 'bin/bulk_load'
+    - 'bin/lock_updates'
+    - 'lib/best_bets_checker.rb'
+    - 'lib/bulk_loader.rb'
+    - 'lib/elasticsearch/advanced_search_query_builder.rb'
+    - 'lib/elasticsearch/index_group.rb'
+    - 'lib/facet_result_presenter.rb'
+    - 'lib/parameter_parser/search_parameter_parser.rb'
+    - 'lib/unified_search_builder.rb'
+    - 'test/unit/unified_search_presenter_test.rb'
+
+# Offense count: 7
+# Cop supports --auto-correct.
+# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods.
+Lint/UnusedMethodArgument:
+  Exclude:
+    - 'lib/bulk_loader.rb'
+    - 'lib/document.rb'
+    - 'lib/elasticsearch/client.rb'
+    - 'lib/schema/combined_index_schema.rb'
+    - 'lib/schema_config.rb'
+    - 'test/unit/facet_example_fetcher_test.rb'
+
+# Offense count: 3
+Lint/UselessAssignment:
+  Exclude:
+    - 'lib/index_documents.rb'
+    - 'test/unit/query_components/text_query_test.rb'
+
+# Offense count: 1
+# Cop supports --auto-correct.
+Performance/StringReplacement:
+  Exclude:
+    - 'lib/health_check/check_file_parser.rb'
+
+# Offense count: 18
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/AccessModifierIndentation:
+  Enabled: false
+
+# Offense count: 3
+# Cop supports --auto-correct.
+Style/AlignArray:
+  Exclude:
+    - 'test/unit/query_components/best_bets_test.rb'
+    - 'test/unit/result_presenter_test.rb'
+
+# Offense count: 2
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/AndOr:
+  Exclude:
+    - 'lib/document.rb'
+
+# Offense count: 22
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/BarePercentLiterals:
+  Exclude:
+    - 'bin/bulk_load'
+    - 'bin/health_check'
+    - 'bin/lock_updates'
+    - 'test/unit/query_components/text_query_test.rb'
+    - 'test/unit/search_parameter_test.rb'
+
+# Offense count: 119
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/BracesAroundHashParameters:
+  Enabled: false
+
+# Offense count: 3
+# Cop supports --auto-correct.
+# Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep.
+Style/CaseIndentation:
+  Enabled: false
+
+# Offense count: 2
+Style/ClassVars:
+  Exclude:
+    - 'app.rb'
+    - 'lib/unified_search/suggestion_blacklist.rb'
+
+# Offense count: 28
+# Cop supports --auto-correct.
+Style/ClosingParenthesisIndentation:
+  Exclude:
+    - 'lib/facet_result_presenter.rb'
+    - 'lib/health_check/logging_config.rb'
+    - 'test/integration/best_bets_test.rb'
+    - 'test/integration/quoted_and_unquoted_searches_test.rb'
+    - 'test/integration/unified_search/results_with_highlighting_test.rb'
+    - 'test/integration/unified_search_test.rb'
+    - 'test/unit/parameter_parser/search_parameter_parser_test.rb'
+
+# Offense count: 3
+# Cop supports --auto-correct.
+Style/ElseAlignment:
+  Exclude:
+    - 'lib/elasticsearch/advanced_search_query_builder.rb'
+    - 'lib/health_check/json_search_client.rb'
+    - 'lib/indexer/popularity_lookup.rb'
+
+# Offense count: 3
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/EmptyElse:
+  Exclude:
+    - 'lib/elasticsearch/index_group.rb'
+    - 'lib/parameter_parser/facet_parameter_parser.rb'
+    - 'lib/query_components/filter.rb'
+
+# Offense count: 23
+# Cop supports --auto-correct.
+Style/EmptyLinesAroundAccessModifier:
+  Enabled: false
+
+# Offense count: 5
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/EmptyLinesAroundBlockBody:
+  Exclude:
+    - 'app.rb'
+    - 'lib/tasks/indices.rake'
+    - 'lib/tasks/queue.rake'
+    - 'test/unit/health_check/suggestion_checker_test.rb'
+    - 'test/unit/schema/document_types_test.rb'
+
+# Offense count: 32
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
+# Offense count: 1
+# Cop supports --auto-correct.
+Style/EmptyLinesAroundMethodBody:
+  Exclude:
+    - 'lib/indexer/popularity_lookup.rb'
+
+# Offense count: 2
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/EmptyLinesAroundModuleBody:
+  Exclude:
+    - 'lib/elasticsearch/index_for_search.rb'
+    - 'lib/elasticsearch/index_group.rb'
+
+# Offense count: 8
+# Cop supports --auto-correct.
+# Configuration parameters: AllowForAlignment.
+Style/ExtraSpacing:
+  Exclude:
+    - 'lib/elasticsearch/base_worker.rb'
+    - 'lib/elasticsearch/index.rb'
+    - 'lib/elasticsearch/scroll_enumerator.rb'
+    - 'lib/search_parameters.rb'
+    - 'test/integration/sitemap_test.rb'
+    - 'test/integration_test_helper.rb'
+    - 'test/unit/elasticsearch/elasticsearch_escaping_test.rb'
+    - 'test/unit/facet_option_test.rb'
+
+# Offense count: 6
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/FirstParameterIndentation:
+  Exclude:
+    - 'lib/elasticsearch/index.rb'
+    - 'lib/indexer/document_preparer.rb'
+    - 'lib/tasks/publishing_api.rake'
+    - 'test/unit/elasticsearch/elasticsearch_index_test.rb'
+    - 'test/unit/query_components/popularity_test.rb'
+
+# Offense count: 76
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles, UseHashRocketsWithSymbolValues.
+Style/HashSyntax:
+  Enabled: false
+
+# Offense count: 40
+# Cop supports --auto-correct.
+# Configuration parameters: MaxLineLength.
+Style/IfUnlessModifier:
+  Enabled: false
+
+# Offense count: 6
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/IndentationConsistency:
+  Exclude:
+    - 'lib/health_check/check_file_parser.rb'
+    - 'lib/health_check/json_search_client.rb'
+    - 'lib/health_check/search_checker.rb'
+
+# Offense count: 5
+# Cop supports --auto-correct.
+# Configuration parameters: Width.
+Style/IndentationWidth:
+  Exclude:
+    - 'lib/elasticsearch/advanced_search_query_builder.rb'
+    - 'lib/health_check/json_search_client.rb'
+    - 'lib/health_check/search_check.rb'
+    - 'lib/indexer/popularity_lookup.rb'
+    - 'test/unit/elasticsearch/elasticsearch_index_test.rb'
+
+# Offense count: 4
+# Cop supports --auto-correct.
+Style/MethodCallParentheses:
+  Exclude:
+    - 'lib/best_bets_checker.rb'
+    - 'test/unit/base_registry_test.rb'
+    - 'test/unit/elasticsearch/elasticsearch_index_advanced_search_test.rb'
+    - 'test/unit/sitemap/sitemap_index_test.rb'
+
+# Offense count: 2
+Style/MethodCalledOnDoEndBlock:
+  Exclude:
+    - 'lib/elasticsearch/advanced_search_query_builder.rb'
+    - 'lib/taxonomy_prototype/data_parser.rb'
+
+# Offense count: 4
+Style/MultilineBlockChain:
+  Exclude:
+    - 'lib/document.rb'
+    - 'lib/parameter_parser/search_parameter_parser.rb'
+    - 'lib/schema/document_types.rb'
+    - 'lib/schema/index_schema.rb'
+
+# Offense count: 1
+# Cop supports --auto-correct.
+Style/MultilineBlockLayout:
+  Exclude:
+    - 'lib/indexer/bulk_payload_generator.rb'
+
+# Offense count: 1
+# Cop supports --auto-correct.
+Style/MultilineIfThen:
+  Exclude:
+    - 'lib/elasticsearch/index.rb'
+
+# Offense count: 10
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/MultilineOperationIndentation:
+  Enabled: false
+
+# Offense count: 3
+# Cop supports --auto-correct.
+Style/ParallelAssignment:
+  Exclude:
+    - 'config/logging_setup.rb'
+    - 'lib/best_bets_checker.rb'
+
+# Offense count: 1
+# Cop supports --auto-correct.
+# Configuration parameters: AllowSafeAssignment.
+Style/ParenthesesAroundCondition:
+  Exclude:
+    - 'lib/health_check/basic_auth_credentials.rb'
+
+# Offense count: 13
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/PercentQLiterals:
+  Exclude:
+    - 'test/unit/query_components/text_query_test.rb'
+    - 'test/unit/search_parameter_test.rb'
+
+# Offense count: 5
+# Cop supports --auto-correct.
+# Configuration parameters: AllowMultipleReturnValues.
+Style/RedundantReturn:
+  Exclude:
+    - 'lib/elasticsearch/index.rb'
+    - 'lib/indexer/popularity_lookup.rb'
+    - 'lib/parameter_parser/search_parameter_parser.rb'
+    - 'lib/sitemap/sitemap.rb'
+
+# Offense count: 2
+# Cop supports --auto-correct.
+Style/SpaceAfterColon:
+  Exclude:
+    - 'test/integration/unified_search/results_with_highlighting_test.rb'
+
+# Offense count: 17
+# Cop supports --auto-correct.
+Style/SpaceAfterComma:
+  Exclude:
+    - 'lib/elasticsearch/advanced_search_query_builder.rb'
+    - 'lib/health_check/search_checker.rb'
+    - 'lib/taxonomy_prototype/data_downloader.rb'
+    - 'test/support/hash_including_helpers.rb'
+    - 'test/unit/health_check/calculator_test.rb'
+
+# Offense count: 20
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/SpaceAroundEqualsInParameterDefault:
+  Enabled: false
+
+# Offense count: 53
+# Cop supports --auto-correct.
+# Configuration parameters: MultiSpaceAllowedForOperators.
+Style/SpaceAroundOperators:
+  Exclude:
+    - 'test/integration/bulk_loader_test.rb'
+    - 'test/integration/unified_search_test.rb'
+    - 'test/support/integration_test.rb'
+    - 'test/unit/elasticsearch/elasticsearch_escaping_test.rb'
+    - 'test/unit/facet_option_test.rb'
+    - 'test/unit/health_check/json_search_client_test.rb'
+    - 'test/unit/result_presenter_test.rb'
+    - 'test/unit/schema/combined_index_schema_test.rb'
+    - 'test/unit/schema/document_types_test.rb'
+    - 'test/unit/schema/index_schema_test.rb'
+    - 'test/unit/taxonomy_prototype/data_parser_test.rb'
+    - 'test/unit/unified_search_presenter_test.rb'
+
+# Offense count: 2
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/SpaceBeforeBlockBraces:
+  Enabled: false
+
+# Offense count: 2
+# Cop supports --auto-correct.
+Style/SpaceBeforeComma:
+  Exclude:
+    - 'lib/taxonomy_prototype/data_downloader.rb'
+    - 'test/support/default_mappings.rb'
+
+# Offense count: 18
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
+Style/SpaceInsideBlockBraces:
+  Enabled: false
+
+# Offense count: 21
+# Cop supports --auto-correct.
+Style/SpaceInsideBrackets:
+  Exclude:
+    - 'lib/best_bets_checker.rb'
+    - 'lib/facet_example_fetcher.rb'
+    - 'lib/query_components/core_query.rb'
+    - 'lib/query_components/text_query.rb'
+    - 'test/unit/best_bets_checker_test.rb'
+    - 'test/unit/facet_example_fetcher_test.rb'
+    - 'test/unit/parameter_parser/search_parameter_parser_test.rb'
+    - 'test/unit/query_components/sort_test_test.rb'
+    - 'test/unit/sitemap/sitemap_generator_test.rb'
+    - 'test/unit/unified_search/spell_check_presenter_test.rb'
+    - 'test/unit/unified_search_presenter_test.rb'
+
+# Offense count: 740
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SupportedStyles.
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+# Offense count: 9
+# Cop supports --auto-correct.
+Style/SpaceInsideParens:
+  Exclude:
+    - 'lib/elasticsearch/advanced_search_query_builder.rb'
+    - 'lib/elasticsearch/index.rb'
+    - 'test/unit/search_parameter_test.rb'
+
+# Offense count: 1
+# Cop supports --auto-correct.
+Style/SpaceInsideRangeLiteral:
+  Exclude:
+    - 'test/unit/facet_example_fetcher_test.rb'
+
+# Offense count: 13
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+
+# Offense count: 6
+Style/StructInheritance:
+  Exclude:
+    - 'lib/health_check/basic_auth_credentials.rb'
+    - 'lib/health_check/search_check.rb'
+    - 'lib/registries.rb'
+    - 'lib/unified_search/spell_check_fetcher.rb'
+    - 'lib/unified_search/spell_check_presenter.rb'
+    - 'lib/unified_search/suggestion_blacklist.rb'
+
+# Offense count: 4
+# Cop supports --auto-correct.
+# Configuration parameters: IgnoredMethods.
+Style/SymbolProc:
+  Exclude:
+    - 'lib/bulk_loader.rb'
+    - 'lib/elasticsearch/index.rb'
+    - 'lib/taxonomy_prototype/data_parser.rb'
+
+# Offense count: 2
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/TrailingBlankLines:
+  Exclude:
+    - 'lib/health_check/calculator.rb'
+    - 'test/unit/health_check/calculator_test.rb'
+
+# Offense count: 10
+# Cop supports --auto-correct.
+Style/TrailingWhitespace:
+  Exclude:
+    - 'test/integration/quoted_and_unquoted_searches_test.rb'
+    - 'test/unit/search_parameter_test.rb'
+
+# Offense count: 16
+# Cop supports --auto-correct.
+Style/UnneededPercentQ:
+  Exclude:
+    - 'bin/bulk_load'
+    - 'bin/health_check'
+    - 'bin/lock_updates'
+    - 'test/unit/query_components/text_query_test.rb'
+    - 'test/unit/search_parameter_test.rb'
+
+# Offense count: 45
+# Cop supports --auto-correct.
+# Configuration parameters: WordRegex.
+Style/WordArray:
+  MinSize: 4
