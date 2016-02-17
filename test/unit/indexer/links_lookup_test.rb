@@ -13,8 +13,23 @@ describe Indexer::LinksLookup do
 
       assert_equal rummager_links, {
         "mainstream_browse_pages" => [],
-        "organisations"=>[],
+        "organisations" => [],
         "specialist_sectors" => ["/hela"]
+      }
+    end
+
+    it "returns transformed links when non-existing items are linked" do
+      stub_request(:get, "http://publishing-api.dev.gov.uk/v2/content/4da67807").
+        to_return(status: 404, body: {}.to_json)
+
+      rummager_links = rummager_links_for({
+        "topics" => ["4da67807"]
+      })
+
+      assert_equal rummager_links, {
+        "mainstream_browse_pages" => [],
+        "organisations" => [],
+        "specialist_sectors" => []
       }
     end
 

@@ -28,6 +28,7 @@ module Indexer
     end
 
   private
+
     def rummager_field_mappers
       {
         "mainstream_browse_pages" => lambda { |links| sorted_link_paths(links, "mainstream_browse_pages") },
@@ -41,7 +42,10 @@ module Indexer
     end
 
     def base_path(content_id)
-      publishing_api.get_content(content_id)["base_path"]
+      publishing_api.get_content!(content_id)["base_path"]
+    rescue GdsApi::HTTPNotFound
+      # Content items in the links hash may not exist yet.
+      nil
     end
 
     def publishing_api

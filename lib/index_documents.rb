@@ -24,6 +24,7 @@ class IndexDocuments
   end
 
 private
+
   def index_links_from_message(message)
     return unless publishing_app_migrated?(message)
     raw_links = links_from_payload(message)
