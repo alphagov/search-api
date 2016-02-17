@@ -33,7 +33,8 @@ Style/StructInheritance:
     - 'lib/unified_search/spell_check_presenter.rb'
     - 'lib/unified_search/suggestion_blacklist.rb'
 
-# Offense count: 2
+# The class vars in these two files are acceptable because
+# they aren't inherited.
 Style/ClassVars:
   Exclude:
     - 'app.rb'
