@@ -121,7 +121,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated start parameter" do
-    p = SearchParameterParser.new({"start" => ["2", "3"]}, @schema)
+    p = SearchParameterParser.new({"start" => %w(2 3)}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "start" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -161,7 +161,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated count parameter" do
-    p = SearchParameterParser.new({"count" => ["2", "3"]}, @schema)
+    p = SearchParameterParser.new({"count" => %w(2 3)}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "count" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -177,7 +177,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated q parameter" do
-    p = SearchParameterParser.new({"q" => ["hello", "world"]}, @schema)
+    p = SearchParameterParser.new({"q" => %w(hello world)}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "q" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -284,7 +284,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand filter for missing field or specific value" do
-    p = SearchParameterParser.new({"filter_organisations" => ["_MISSING", "hmrc"]}, @schema)
+    p = SearchParameterParser.new({"filter_organisations" => %w(_MISSING hmrc)}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
@@ -415,7 +415,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params({order: ["public_timestamp", "asc"]}), p.parsed_params)
+    assert_equal(expected_params({order: %w(public_timestamp asc)}), p.parsed_params)
   end
 
   should "understand a descending sort" do
@@ -423,7 +423,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params({order: ["public_timestamp", "desc"]}), p.parsed_params)
+    assert_equal(expected_params({order: %w(public_timestamp desc)}), p.parsed_params)
   end
 
   should "complain about disallowed sort fields" do
@@ -443,11 +443,11 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated sort parameter" do
-    p = SearchParameterParser.new({"order" => ["public_timestamp", "something_else"]}, @schema)
+    p = SearchParameterParser.new({"order" => %w(public_timestamp something_else)}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "order" (must occur at most once)}, p.error)
     assert !p.valid?
-    assert_equal(expected_params(order: ["public_timestamp", "asc"]), p.parsed_params)
+    assert_equal(expected_params(order: %w(public_timestamp asc)), p.parsed_params)
   end
 
   should "understand a facet field" do
@@ -507,7 +507,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "complain about a repeated facet parameter" do
-    p = SearchParameterParser.new({"facet_organisations" => ["5", "6"]}, @schema)
+    p = SearchParameterParser.new({"facet_organisations" => %w(5 6)}, @schema)
 
     assert_equal(%{Too many values (2) for parameter "facet_organisations" (must occur at most once)}, p.error)
     assert !p.valid?
@@ -528,7 +528,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
         "organisations" => expected_facet_params({
           requested: 10,
           examples: 5,
-          example_fields: ["slug", "title"],
+          example_fields: %w(slug title),
           example_scope: :global,
       })}}), p.parsed_params)
   end
@@ -623,7 +623,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
         "organisations" => expected_facet_params({
           requested: 10,
           examples: 5,
-          example_fields: ["slug", "title", "link"],
+          example_fields: %w(slug title link),
           example_scope: :global,
       })}}), p.parsed_params)
   end
@@ -649,7 +649,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
         "organisations" => expected_facet_params({
           requested: 10,
           examples: 5,
-          example_fields: ["slug", "title"],
+          example_fields: %w(slug title),
           example_scope: :query,
         })
       }
@@ -691,15 +691,15 @@ class SearchParameterParserTest < ShouldaUnitTestCase
   end
 
   should "understand the fields parameter" do
-    p = SearchParameterParser.new({"fields" => ["title", "description"]}, @schema)
+    p = SearchParameterParser.new({"fields" => %w(title description)}, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params({return_fields: ["title", "description"]}), p.parsed_params)
+    assert_equal(expected_params({return_fields: %w(title description)}), p.parsed_params)
   end
 
   should "complain about invalid fields parameters" do
-    p = SearchParameterParser.new({"fields" => ["title", "waffle"]}, @schema)
+    p = SearchParameterParser.new({"fields" => %w(title waffle)}, @schema)
 
     assert_equal("Some requested fields are not valid return fields: [\"waffle\"]", p.error)
     assert !p.valid?

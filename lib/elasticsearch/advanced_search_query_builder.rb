@@ -55,7 +55,7 @@ module Elasticsearch
       # formatted.
       !(value.is_a?(Hash) &&
         value.keys.any? &&
-        (value.keys - ['from', 'to', 'before', 'after']).empty? &&
+        (value.keys - %w(from to before after)).empty? &&
         (value.values.reject { |date| date.to_s =~ /\A\d{4}-\d{2}-\d{2}\Z/}).empty?)
     end
 

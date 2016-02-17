@@ -13,7 +13,7 @@ require "bulk_loader"
 
 Slop.parse(help: true) do
   search_config = SearchConfig.new
-  banner %Q{Usage: #{File.basename(__FILE__)} {#{search_config.index_names.join("|")}} lock|unlock
+  banner %{Usage: #{File.basename(__FILE__)} {#{search_config.index_names.join("|")}} lock|unlock
 
 Lock/Unlock an index for writes.
 

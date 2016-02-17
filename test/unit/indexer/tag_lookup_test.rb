@@ -17,9 +17,9 @@ describe Indexer::TagLookup do
     it 'returns an unchanged document if the document is HTTP Gone' do
       stub_request(:get, "#{Plek.find('contentapi')}/no-link.json").to_return(status: 410)
 
-      result = Indexer::TagLookup.prepare_tags({ "link" => "/no-link", "specialist_sectors" => ["foo", "foo", "bar"] })
+      result = Indexer::TagLookup.prepare_tags({ "link" => "/no-link", "specialist_sectors" => %w(foo foo bar) })
 
-      assert_equal({"link" => "/no-link", "specialist_sectors" => ["foo", "foo", "bar"]}, result)
+      assert_equal({"link" => "/no-link", "specialist_sectors" => %w(foo foo bar)}, result)
     end
 
     it 'returns an unchanged document for external URLs' do
@@ -52,9 +52,9 @@ describe Indexer::TagLookup do
         ]
       })
 
-      result = Indexer::TagLookup.prepare_tags({ "link" => "/foo/bar", "specialist_sectors" => ["foo", "foo", "baz"] })
+      result = Indexer::TagLookup.prepare_tags({ "link" => "/foo/bar", "specialist_sectors" => %w(foo foo baz) })
 
-      assert_equal ["foo", "baz", "bar"], result["specialist_sectors"]
+      assert_equal %w(foo baz bar), result["specialist_sectors"]
     end
   end
 end

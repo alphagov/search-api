@@ -15,7 +15,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     @server = Elasticsearch::SearchServer.new(
       "http://localhost:9200/",
       @schema,
-      ["mainstream", "custom"],
+      %w(mainstream custom),
       ["mainstream"],
       SearchConfig.new
     )

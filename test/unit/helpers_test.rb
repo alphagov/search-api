@@ -21,7 +21,7 @@ class HelpersTest < MiniTest::Unit::TestCase
     [
       ["foo=bar", {"foo" => ["bar"]}],
       ["foo[]=bar", {"foo" => ["bar"]}],
-      ["foo=bar&foo[]=baz", {"foo" => ["bar", "baz"]}],
+      ["foo=bar&foo[]=baz", {"foo" => %w(bar baz)}],
       ["foo=bar=baz", {"foo" => ["bar=baz"]}],
       ["foo[bar]=baz", {"foo[bar]" => ["baz"]}],
       ["foo[]=baz&q=more", {"foo" => ["baz"], "q" => ["more"]}],

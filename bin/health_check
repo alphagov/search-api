@@ -31,7 +31,7 @@ class HealthCheckCLI
   def run!
     health_checker = self
     Slop.parse do
-      banner %Q{Usage: #{File.basename(__FILE__)}
+      banner %{Usage: #{File.basename(__FILE__)}
 
     Runs a health check.
     }

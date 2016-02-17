@@ -3,7 +3,7 @@ require "matcher_set"
 
 class MatcherSetTest < MiniTest::Unit::TestCase
   def test_should_match_strings
-    matcher_set = MatcherSet.new(["foo", "bang"])
+    matcher_set = MatcherSet.new(%w(foo bang))
     assert matcher_set.include?("foo")
     refute matcher_set.include?("baz")
   end

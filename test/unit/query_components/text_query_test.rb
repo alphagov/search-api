@@ -22,7 +22,7 @@ class TextQueryTest < ShouldaUnitTestCase
 
   context "quoted strings" do
     should "call the payload for quoted strings" do
-      params = search_query_params(query: %Q{"all sorts of stuff"})
+      params = search_query_params(query: %{"all sorts of stuff"})
       builder = QueryComponents::TextQuery.new(params)
       builder.expects(:payload_for_quoted_phrase).once
       query = builder.payload
@@ -31,7 +31,7 @@ class TextQueryTest < ShouldaUnitTestCase
 
   context "unquoted strings" do
     should "call the payload for unquoted strings" do
-      params = search_query_params(query: %Q{all sorts of stuff})
+      params = search_query_params(query: %{all sorts of stuff})
       builder = QueryComponents::TextQuery.new(params)
       builder.expects(:payload_for_unquoted_phrase).once
       query = builder.payload

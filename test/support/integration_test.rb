@@ -10,7 +10,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
   }
 
   AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"]
-  INDEX_NAMES = ["mainstream_test", "government_test"]
+  INDEX_NAMES = %w(mainstream_test government_test)
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
 
   def sample_document

@@ -207,7 +207,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
     query = {
       query: {term: {format: "organisation"}},
-      fields: ["title", "link"]
+      fields: %w(title link)
     }
     stub_request(:get, search_pattern).with(
       body: query

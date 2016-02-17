@@ -15,10 +15,9 @@ module HealthCheck
             "link" => "/b"
           }
         ],
-        "suggested_queries" => [
-          "A",
-          "B"
-        ]
+        "suggested_queries" => %w(
+A
+B)
       }
     end
 

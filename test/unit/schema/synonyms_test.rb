@@ -11,7 +11,7 @@ class SynonymsTest < ShouldaUnitTestCase
   end
 
   should "number the synonym groups differently" do
-    parse_synonyms(["one", "two"])
+    parse_synonyms(%w(one two))
 
     assert_search_synonyms_contain "one=>!S0"
     assert_search_synonyms_contain "two=>!S1"

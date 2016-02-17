@@ -56,17 +56,6 @@ Style/AlignArray:
     - 'test/unit/query_components/best_bets_test.rb'
     - 'test/unit/result_presenter_test.rb'
 
-# Offense count: 22
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/BarePercentLiterals:
-  Exclude:
-    - 'bin/bulk_load'
-    - 'bin/health_check'
-    - 'bin/lock_updates'
-    - 'test/unit/query_components/text_query_test.rb'
-    - 'test/unit/search_parameter_test.rb'
-
 # Offense count: 119
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -152,14 +141,6 @@ Style/MultilineBlockLayout:
 Style/ParenthesesAroundCondition:
   Exclude:
     - 'lib/health_check/basic_auth_credentials.rb'
-
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/PercentQLiterals:
-  Exclude:
-    - 'test/unit/query_components/text_query_test.rb'
-    - 'test/unit/search_parameter_test.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
@@ -271,19 +252,3 @@ Style/StructInheritance:
     - 'lib/unified_search/spell_check_fetcher.rb'
     - 'lib/unified_search/spell_check_presenter.rb'
     - 'lib/unified_search/suggestion_blacklist.rb'
-
-# Offense count: 16
-# Cop supports --auto-correct.
-Style/UnneededPercentQ:
-  Exclude:
-    - 'bin/bulk_load'
-    - 'bin/health_check'
-    - 'bin/lock_updates'
-    - 'test/unit/query_components/text_query_test.rb'
-    - 'test/unit/search_parameter_test.rb'
-
-# Offense count: 45
-# Cop supports --auto-correct.
-# Configuration parameters: WordRegex.
-Style/WordArray:
-  MinSize: 4

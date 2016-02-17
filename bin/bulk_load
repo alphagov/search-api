@@ -15,7 +15,7 @@ require "bulk_loader"
 
 Slop.parse(help: true) do
   search_config = SearchConfig.new
-  banner %Q{Usage: #{File.basename(__FILE__)} {#{search_config.index_names.join("|")}}
+  banner %{Usage: #{File.basename(__FILE__)} {#{search_config.index_names.join("|")}}
 
 Bulk loads data from stdin to the specified index. The data should be in the
 format accepted by the elastic search bulk command[1].

@@ -106,7 +106,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           query_for_example_global("sector", "sector_1", @example_fields),
           query_for_example_global("sector", "sector_2", @example_fields),
         ]).returns({"responses" => [
-          response_for_example(3, ["example_1", "example_2"]),
+          response_for_example(3, %w(example_1 example_2)),
           response_for_example(1, ["example_3"]),
         ]})
 
@@ -164,7 +164,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           query_for_example_query("sector", "sector_1", @example_fields, query, filter),
           query_for_example_query("sector", "sector_2", @example_fields, query, filter),
         ]).returns({"responses" => [
-          response_for_example(3, ["example_1", "example_2"]),
+          response_for_example(3, %w(example_1 example_2)),
           response_for_example(1, ["example_3"]),
         ]})
 

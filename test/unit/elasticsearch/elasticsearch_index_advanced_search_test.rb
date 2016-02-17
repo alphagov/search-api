@@ -89,7 +89,7 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
 
   def test_multiple_value_filter_param_is_turned_into_a_terms_filter
     stub_empty_search(:body => /#{Regexp.escape("\"terms\":{\"mainstream_browse_pages\":[\"jones\",\"richards\"]}")}/)
-    @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones', 'richards']))
+    @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => %w(jones richards)))
   end
 
   def test_filter_params_are_turned_into_anded_term_filters_on_that_property
