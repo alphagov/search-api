@@ -1,5 +1,4 @@
 class ResultSet
-
   attr_reader :total, :results
 
   # Initialise from a list of Document objects.

@@ -77,7 +77,6 @@ class DocumentTypesTest < ShouldaUnitTestCase
         @types["cma_case"].allowed_values["case_state"]
       )
     end
-
   end
 
   context "when configuration is invalid" do

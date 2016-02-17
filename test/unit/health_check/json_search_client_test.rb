@@ -5,7 +5,6 @@ Logging.logger.root.appenders = nil
 
 module HealthCheck
   class JsonSearchClientTest < ShouldaUnitTestCase
-
     def unified_search_response_body
       {
         "results" => [

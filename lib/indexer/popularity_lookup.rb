@@ -63,7 +63,6 @@ module Indexer
     end
 
     def open_traffic_index
-
       if @index_name.start_with?("page-traffic")
         return nil
       end

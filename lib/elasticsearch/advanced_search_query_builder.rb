@@ -203,6 +203,5 @@ module Elasticsearch
     def boolean_properties
       @boolean_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "boolean" }.keys
     end
-
   end
 end

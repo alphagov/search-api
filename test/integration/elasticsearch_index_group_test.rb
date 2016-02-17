@@ -2,7 +2,6 @@ require "integration_test_helper"
 require "cgi"
 
 class ElasticsearchIndexGroupTest < IntegrationTest
-
   def setup
     @group_name = "mainstream_test"
     stub_elasticsearch_settings

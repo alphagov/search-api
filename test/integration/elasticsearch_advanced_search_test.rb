@@ -2,7 +2,6 @@ require "integration_test_helper"
 require "app"
 
 class ElasticsearchAdvancedSearchTest < IntegrationTest
-
   def setup
     @index_name = "mainstream_test"
 

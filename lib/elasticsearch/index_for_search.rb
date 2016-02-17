@@ -3,7 +3,6 @@ require "elasticsearch/client"
 require "multivalue_converter"
 
 module Elasticsearch
-
   class IndexForSearch
     attr_reader :index_names, :schema
 

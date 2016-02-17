@@ -3,7 +3,6 @@ require "rack/logger"
 require "bulk_loader"
 
 class ElasticsearchMigrationTest < IntegrationTest
-
   def setup
     stub_elasticsearch_settings
     try_remove_test_index

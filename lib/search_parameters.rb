@@ -52,5 +52,4 @@ class SearchParameters
       @is_quoted_phrase = false
     end
   end
-
 end

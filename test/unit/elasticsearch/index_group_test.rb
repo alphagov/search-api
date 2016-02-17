@@ -5,7 +5,6 @@ require "elasticsearch/index_group"
 require "search_config"
 
 class IndexGroupTest < MiniTest::Unit::TestCase
-
   ELASTICSEARCH_OK = {
     status: 200,
     body: {"ok" => true, "acknowledged" => true}.to_json

@@ -2,7 +2,6 @@ require "test_helper"
 require "schema/field_definitions"
 
 class FieldDefinitionsTest < ShouldaUnitTestCase
-
   context "after loading definitions" do
     setup do
       @definitions = FieldDefinitionParser.new(File.expand_path('../../../config/schema', File.dirname(__FILE__))).parse
@@ -41,5 +40,4 @@ class FieldDefinitionsTest < ShouldaUnitTestCase
       assert_equal [value1, value2, value3], merged.allowed_values.sort_by {|item| item["value"]}
     end
   end
-
 end

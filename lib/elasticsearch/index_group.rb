@@ -4,7 +4,6 @@ require "cgi"
 require "elasticsearch/index"
 
 module Elasticsearch
-
   # A group of related indexes.
   #
   # An index group, say "mainstream", consists of a number of indexes of the

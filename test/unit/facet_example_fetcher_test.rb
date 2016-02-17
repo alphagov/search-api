@@ -2,7 +2,6 @@ require "test_helper"
 require "facet_example_fetcher"
 
 class FacetExampleFetcherTest < ShouldaUnitTestCase
-
   def query_for_example_global(field, value, return_fields)
     {
       query: {filtered: {query: nil, filter: {term: {field => value}}}},

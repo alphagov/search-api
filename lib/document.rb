@@ -1,5 +1,4 @@
 class Document
-
   attr_reader :es_score
 
   def initialize(field_definitions, attributes = {}, es_score = nil)

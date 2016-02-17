@@ -3,7 +3,6 @@ require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"
 
 class SearchParameterParserTest < ShouldaUnitTestCase
-
   def expected_params(params)
     {
       start: 0,

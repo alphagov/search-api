@@ -29,6 +29,5 @@ module HealthCheck
                      self.score + other.score,
                      self.possible_score + other.possible_score)
     end
-
   end
 end

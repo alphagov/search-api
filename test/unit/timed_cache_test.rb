@@ -2,7 +2,6 @@ require "test_helper"
 require "timed_cache"
 
 class TimedCacheTest < MiniTest::Unit::TestCase
-
   def test_result_is_not_called_until_needed
     fetch = stub("fetch")
     fetch.expects(:call).never

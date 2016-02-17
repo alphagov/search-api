@@ -5,7 +5,6 @@ require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"
 
 class UnifiedSearchPresenterTest < ShouldaUnitTestCase
-
   def sample_docs
     [{
       "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",

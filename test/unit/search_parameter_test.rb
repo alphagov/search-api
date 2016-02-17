@@ -3,13 +3,12 @@ require "search_parameters"
 
 
 class SearchParameterTest < ShouldaUnitTestCase
-
   context "quoted_search_phrase?" do
     should "return false if query isn't quote enclosed" do
       params = SearchParameters.new(query: "my query")
       assert_equal false, params.quoted_search_phrase?
     end
-    
+
     should "return false if entire query isn't quote enclosed" do
       params = SearchParameters.new(query: %Q{This is "part of my" query} )
       assert_equal false, params.quoted_search_phrase?
@@ -39,7 +38,7 @@ class SearchParameterTest < ShouldaUnitTestCase
       params = SearchParameters.new(query: %Q{  \t  "phrase enclosed with quotes"} )
       assert_equal true, params.quoted_search_phrase?
     end
-  
+
     should "return true if query enclosed with quotes but with trailing whitespace" do
       params = SearchParameters.new(query: %Q{"phrase enclosed with quotes"  \t  } )
       assert_equal true, params.quoted_search_phrase?
@@ -52,7 +51,6 @@ class SearchParameterTest < ShouldaUnitTestCase
   end
 
   context "query" do
-    
     should "return the query if there are no enclosing quotes" do
       params = SearchParameters.new(query: %Q{my query})
       assert_equal %Q{my query}, params.query

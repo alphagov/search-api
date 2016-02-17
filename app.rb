@@ -218,7 +218,6 @@ class Rummager < Sinatra::Application
   end
 
   delete "/?:index?/documents" do
-
     if params["delete_all"]
       # No longer supported; instead use the
       # `rummager:switch_to_empty_index` Rake command
@@ -247,5 +246,4 @@ class Rummager < Sinatra::Application
     end
     status.to_json
   end
-
 end

@@ -2,7 +2,6 @@ require "test_helper"
 require "schema/field_types"
 
 class FieldTypesTest < ShouldaUnitTestCase
-
   context "after loading standard types" do
     setup do
       @types = FieldTypes.new(File.expand_path('../../../config/schema', File.dirname(__FILE__)))

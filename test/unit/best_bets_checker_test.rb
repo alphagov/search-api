@@ -3,7 +3,6 @@ require "json"
 require "best_bets_checker"
 
 class BestBetsCheckerTest < ShouldaUnitTestCase
-
   def best_bets_query(query)
     {
       query: {
@@ -172,5 +171,4 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
       assert_equal(["/jobsearch"], @checker.worst_bets)
     end
   end
-
 end

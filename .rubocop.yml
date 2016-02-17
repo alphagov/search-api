@@ -108,37 +108,6 @@ Style/ClosingParenthesisIndentation:
 Style/EmptyLinesAroundAccessModifier:
   Enabled: false
 
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'app.rb'
-    - 'lib/tasks/indices.rake'
-    - 'lib/tasks/queue.rake'
-    - 'test/unit/health_check/suggestion_checker_test.rb'
-    - 'test/unit/schema/document_types_test.rb'
-
-# Offense count: 32
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'lib/indexer/popularity_lookup.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'lib/elasticsearch/index_for_search.rb'
-    - 'lib/elasticsearch/index_group.rb'
-
 # Offense count: 8
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment.
@@ -379,21 +348,6 @@ Style/StructInheritance:
     - 'lib/unified_search/spell_check_fetcher.rb'
     - 'lib/unified_search/spell_check_presenter.rb'
     - 'lib/unified_search/suggestion_blacklist.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/TrailingBlankLines:
-  Exclude:
-    - 'lib/health_check/calculator.rb'
-    - 'test/unit/health_check/calculator_test.rb'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-Style/TrailingWhitespace:
-  Exclude:
-    - 'test/integration/quoted_and_unquoted_searches_test.rb'
-    - 'test/unit/search_parameter_test.rb'
 
 # Offense count: 16
 # Cop supports --auto-correct.

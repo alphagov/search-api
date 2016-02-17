@@ -1,7 +1,6 @@
 require "integration_test_helper"
 
 class ElasticsearchLockingTest < IntegrationTest
-
   def setup
     stub_elasticsearch_settings
     try_remove_test_index
