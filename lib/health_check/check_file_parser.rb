@@ -36,7 +36,7 @@ module HealthCheck
       if raw.nil? || raw.strip.empty?
         nil
       else
-        Integer(raw.gsub(",", ""))
+        Integer(raw.delete(","))
       end
     end
 
