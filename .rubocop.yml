@@ -1,3 +1,7 @@
+# Don't care about single/double quotes inside interpolation
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+
 # Offense count: 2
 Lint/HandleExceptions:
   Exclude:
@@ -236,12 +240,6 @@ Style/SpaceInsideParens:
 Style/SpaceInsideRangeLiteral:
   Exclude:
     - 'test/unit/facet_example_fetcher_test.rb'
-
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/StringLiteralsInInterpolation:
-  Enabled: false
 
 # Offense count: 6
 Style/StructInheritance:
