@@ -1,7 +1,6 @@
 {
   "fields": [
     "all_searchable_text",
-    "alpha_taxonomy",
     "description",
     "format",
     "indexable_content",
