@@ -58,7 +58,7 @@ module QueryComponents
     end
 
     def payload_for_quoted_phrase
-      groups = [ field_boosts_phrase ]
+      groups = [field_boosts_phrase]
       groups.map { |queries| dis_max_query(queries) }
     end
 
@@ -67,7 +67,7 @@ module QueryComponents
     end
 
     def should_conditions
-      exact_field_boosts + [ exact_match_boost, shingle_token_filter_boost ]
+      exact_field_boosts + [exact_match_boost, shingle_token_filter_boost]
     end
 
     def query_string_query

@@ -62,7 +62,7 @@ class BulkLoaderTest < IntegrationTest
     assert_document_is_in_rummager(
       "title" => "The new title",
       "link" => "/some-popular-link",
-      "popularity" => 1.0/12,
+      "popularity" => 1.0 / 12,
     )
   end
 

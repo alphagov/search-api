@@ -14,7 +14,7 @@ module HashIncludingHelpers
     end
 
     def ==(other)
-      @subset.all? { |k,v|
+      @subset.all? { |k, v|
         other.has_key?(k) && v == other[k]
       }
     end

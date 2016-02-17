@@ -147,13 +147,13 @@ private
       query: {
         bool: {
           should: [
-            { match: { exact_query: @query }},
-            { match: { stemmed_query: @query }}
+            { match: { exact_query: @query } },
+            { match: { stemmed_query: @query } }
           ]
         }
       },
       size: 1000,
-      fields: [ :details, :stemmed_query_as_term ]
+      fields: [:details, :stemmed_query_as_term]
     }
   end
 end

@@ -38,7 +38,7 @@ class FacetsTest < ShouldaUnitTestCase
       @builder = QueryComponents::Facets.new(
         make_search_params(
           filters: [text_filter("organisations", ["hm-magic"])],
-          facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
+          facets: { "organisations" => { requested: 10, scope: :exclude_field_filter } },
         )
       )
     end
@@ -63,7 +63,7 @@ class FacetsTest < ShouldaUnitTestCase
       @builder = QueryComponents::Facets.new(
         make_search_params(
           filters: [text_filter("organisations", ["hm-magic"])],
-          facets: {"organisations" => {requested: 10, scope: :all_filters}},
+          facets: { "organisations" => { requested: 10, scope: :all_filters } },
         )
       )
     end
@@ -78,7 +78,7 @@ class FacetsTest < ShouldaUnitTestCase
               size: 100000,
             },
             facet_filter: {
-              "terms" => {"organisations" => ["hm-magic"]}
+              "terms" => { "organisations" => ["hm-magic"] }
             },
           },
         },
@@ -91,7 +91,7 @@ class FacetsTest < ShouldaUnitTestCase
       @builder = QueryComponents::Facets.new(
         make_search_params(
           filters: [text_filter("mainstream_browse_pages", "levitation")],
-          facets: {"organisations" => {requested: 10, scope: :exclude_field_filter}},
+          facets: { "organisations" => { requested: 10, scope: :exclude_field_filter } },
         )
       )
     end
@@ -106,7 +106,7 @@ class FacetsTest < ShouldaUnitTestCase
               size: 100000,
             },
             facet_filter: {
-              "terms" => {"mainstream_browse_pages" => ["levitation"]}
+              "terms" => { "mainstream_browse_pages" => ["levitation"] }
             },
           },
         },

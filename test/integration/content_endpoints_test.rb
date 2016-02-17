@@ -26,7 +26,7 @@ class ContentEndpointsTest < IntegrationTest
 
     assert last_response.ok?
     assert_equal(
-      {"title" => "A nice title", "link" => "a-document/in-search"},
+      { "title" => "A nice title", "link" => "a-document/in-search" },
       parsed_response['raw_source']
     )
   end

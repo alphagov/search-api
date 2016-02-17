@@ -14,7 +14,7 @@ module QueryComponents
 
       field, order = search_params.order
 
-      [{field => {order: order, missing: "_last"}}]
+      [{ field => { order: order, missing: "_last" } }]
     end
   end
 end

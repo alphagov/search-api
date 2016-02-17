@@ -62,7 +62,7 @@ class Document
       @field_definitions.keys.each do |key|
         value = get(key)
         if value.is_a?(Array)
-          value = value.map {|v| v.is_a?(Document) ? v.elasticsearch_export : v }
+          value = value.map { |v| v.is_a?(Document) ? v.elasticsearch_export : v }
         end
         unless value.nil? || (value.respond_to?(:empty?) && value.empty?)
           doc[key] = value
@@ -82,7 +82,7 @@ class Document
         value = value.is_a?(Document) ? value.to_hash : value
       end
       [field_name.to_s, value]
-    }.select{ |_, value|
+    }.select { |_, value|
       ![nil, []].include?(value)
     }]
 

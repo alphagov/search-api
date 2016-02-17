@@ -6,7 +6,7 @@ require "elasticsearch/delete_worker"
 class IndexQueueTest < MiniTest::Unit::TestCase
   def sample_document_hashes
     %w(foo bar baz).map do |slug|
-      {link: "/#{slug}", title: slug.capitalize}
+      { link: "/#{slug}", title: slug.capitalize }
     end
   end
 

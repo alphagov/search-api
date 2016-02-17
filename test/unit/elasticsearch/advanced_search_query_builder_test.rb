@@ -16,7 +16,7 @@ class AdvancedSearchQueryBuilderTest < MiniTest::Unit::TestCase
       query_hash,
       {
         "filter" => {
-          "not" => { "term" => {"is_withdrawn" => true} }
+          "not" => { "term" => { "is_withdrawn" => true } }
         }
       }
     )
@@ -24,7 +24,7 @@ class AdvancedSearchQueryBuilderTest < MiniTest::Unit::TestCase
 
 
   def test_builder_single_filters
-    builder = build_builder("how to drive", {"format" => "organisation"})
+    builder = build_builder("how to drive", { "format" => "organisation" })
     query_hash = builder.filter_query_hash
 
     assert_equal(
@@ -32,8 +32,8 @@ class AdvancedSearchQueryBuilderTest < MiniTest::Unit::TestCase
       {
         "filter" => {
           "and" => [
-            { "term" => {"format" => "organisation"} },
-            { "not" => { "term" => {"is_withdrawn" => true} } }
+            { "term" => { "format" => "organisation" } },
+            { "not" => { "term" => { "is_withdrawn" => true } } }
           ]
         }
       }
@@ -41,7 +41,7 @@ class AdvancedSearchQueryBuilderTest < MiniTest::Unit::TestCase
   end
 
   def test_builder_multiple_filters
-    builder = build_builder("how to drive", {"format" => "organisation", "specialist_sectors" => "driving"})
+    builder = build_builder("how to drive", { "format" => "organisation", "specialist_sectors" => "driving" })
     query_hash = builder.filter_query_hash
 
     assert_equal(
@@ -49,9 +49,9 @@ class AdvancedSearchQueryBuilderTest < MiniTest::Unit::TestCase
       {
         "filter" => {
           "and" => [
-            { "term" => {"format" => "organisation"} },
-            { "term" => {"specialist_sectors" => "driving"} },
-            { "not" => { "term" => {"is_withdrawn" => true} } }
+            { "term" => { "format" => "organisation" } },
+            { "term" => { "specialist_sectors" => "driving" } },
+            { "not" => { "term" => { "is_withdrawn" => true } } }
           ]
         }
       }

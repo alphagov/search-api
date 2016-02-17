@@ -6,7 +6,7 @@ class UnifiedSearch::SpellCheckPresenterTest < ShouldaUnitTestCase
     should "parse the elasticsearch response and return suggestions" do
       es_response = {
         "suggest" => {
-          "spelling_suggestions" => [ {
+          "spelling_suggestions" => [{
             "text" => "some query",
             "options" => [{
               "text" => "the first suggestion",

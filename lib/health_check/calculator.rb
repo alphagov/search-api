@@ -2,7 +2,7 @@ module HealthCheck
   class Calculator
     attr_reader :success_count, :total_count, :score, :possible_score
 
-    def initialize(success_count=0, total_count=0, score=0, possible_score=0, options = {})
+    def initialize(success_count = 0, total_count = 0, score = 0, possible_score = 0, options = {})
       @success_count = success_count
       @total_count = total_count
       @score = score

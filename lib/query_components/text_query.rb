@@ -32,7 +32,7 @@ module QueryComponents
   private
 
     def payload_for_quoted_phrase
-      groups = [ field_boosts_phrase ]
+      groups = [field_boosts_phrase]
       dismax_groups(groups)
     end
 

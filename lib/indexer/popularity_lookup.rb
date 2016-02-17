@@ -18,7 +18,7 @@ module Indexer
         },
         fields: ["rank_14"],
         sort: [
-          { rank_14: { order: "asc" }}
+          { rank_14: { order: "asc" } }
         ],
         size: 10 * links.size,
       })
@@ -56,7 +56,7 @@ module Indexer
 
     def traffic_index_size
       results = traffic_index.raw_search({
-        query: { match_all: {}},
+        query: { match_all: {} },
         size: 0
       })
       results["hits"]["total"]

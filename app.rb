@@ -56,7 +56,7 @@ class Rummager < Sinatra::Application
   end
 
   def text_error(content)
-    halt 403, {"Content-Type" => "text/plain"}, content
+    halt 403, { "Content-Type" => "text/plain" }, content
   end
 
   def json_only
@@ -197,7 +197,7 @@ class Rummager < Sinatra::Application
     unless request.form_data?
       halt(
         415,
-        {"Content-Type" => "text/plain"},
+        { "Content-Type" => "text/plain" },
         "Amendments require application/x-www-form-urlencoded data"
       )
     end

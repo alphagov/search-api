@@ -41,7 +41,7 @@ class ResultsWithHighlightingTest < IntegrationTest
   def test_returns_highlighted_description
     commit_document("mainstream_test",
       link: "/some-nice-link",
-      description:"This is a test search result of many results."
+      description: "This is a test search result of many results."
     )
 
     get "/unified_search?q=result&fields[]=description_with_highlighting"
@@ -55,7 +55,7 @@ class ResultsWithHighlightingTest < IntegrationTest
     commit_document("mainstream_test",
       title: "Escape & highlight my title",
       link: "/some-nice-link",
-      description:"Escape & highlight the description as well."
+      description: "Escape & highlight the description as well."
     )
 
     get "/unified_search?q=highlight&fields[]=title_with_highlighting,description_with_highlighting"

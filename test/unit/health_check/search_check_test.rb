@@ -10,7 +10,7 @@ module HealthCheck
 
     context "#result" do
       should "delegate to it's corresponding results class" do
-        SearchCheckResult.expects(:new).with({check: @subject, search_results:  @search_results})
+        SearchCheckResult.expects(:new).with({ check: @subject, search_results:  @search_results })
         @subject.result(@search_results)
       end
     end

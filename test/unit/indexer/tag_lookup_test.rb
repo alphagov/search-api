@@ -9,7 +9,7 @@ describe Indexer::TagLookup do
     it 'returns an unchanged document if there are no tags for the document' do
       stub_request(:get, "#{Plek.find('contentapi')}/no-link.json").to_return(status: 404)
 
-      result = Indexer::TagLookup.prepare_tags({ "link" => "/no-link"})
+      result = Indexer::TagLookup.prepare_tags({ "link" => "/no-link" })
 
       assert_equal({ "link" => "/no-link" }, result)
     end
@@ -19,11 +19,11 @@ describe Indexer::TagLookup do
 
       result = Indexer::TagLookup.prepare_tags({ "link" => "/no-link", "specialist_sectors" => %w(foo foo bar) })
 
-      assert_equal({"link" => "/no-link", "specialist_sectors" => %w(foo foo bar)}, result)
+      assert_equal({ "link" => "/no-link", "specialist_sectors" => %w(foo foo bar) }, result)
     end
 
     it 'returns an unchanged document for external URLs' do
-      result = Indexer::TagLookup.prepare_tags({ "link" => "http://example.com/some-link"})
+      result = Indexer::TagLookup.prepare_tags({ "link" => "http://example.com/some-link" })
 
       assert_equal({ "link" => "http://example.com/some-link" }, result)
     end
@@ -37,7 +37,7 @@ describe Indexer::TagLookup do
         ]
       })
 
-      result = Indexer::TagLookup.prepare_tags({ "link" => "/foo/bar"})
+      result = Indexer::TagLookup.prepare_tags({ "link" => "/foo/bar" })
 
       assert_equal ["benefits/more-advice"], result["specialist_sectors"]
       assert_equal ["benefits/advice"], result["mainstream_browse_pages"]

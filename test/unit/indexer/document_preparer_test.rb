@@ -5,7 +5,7 @@ describe Indexer::DocumentPreparer do
   describe "#prepared" do
     describe "alpha taxonomies" do
       before do
-        Indexer::TagLookup.stubs(:prepare_tags).returns({"link" => "some-slug" })
+        Indexer::TagLookup.stubs(:prepare_tags).returns({ "link" => "some-slug" })
       end
 
       it "adds an alpha taxonomy to the doc if a match is found" do

@@ -79,7 +79,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
         fields["specialist_sectors"] = ["farming"]
       end
       if short_index_name == "government"
-        fields["public_timestamp"] = "#{i+2000}-01-01T00:00:00"
+        fields["public_timestamp"] = "#{i + 2000}-01-01T00:00:00"
       end
       fields
     end

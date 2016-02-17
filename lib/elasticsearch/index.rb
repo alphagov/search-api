@@ -93,13 +93,13 @@ module Elasticsearch
 
     # Apply a write lock to this index, making it read-only
     def lock
-      request_body = {"index" => {"blocks" => {"write" => true}}}.to_json
+      request_body = { "index" => { "blocks" => { "write" => true } } }.to_json
       @client.put("_settings", request_body, content_type: :json)
     end
 
     # Remove any write lock applied to this index
     def unlock
-      request_body = {"index" => {"blocks" => {"write" => false}}}.to_json
+      request_body = { "index" => { "blocks" => { "write" => false } } }.to_json
       @client.put("_settings", request_body, content_type: :json)
     end
 
@@ -132,7 +132,7 @@ module Elasticsearch
     # `bulk_index` is the only method that inserts/updates documents. The other
     # indexing-methods like `add`, `add_queued` and `amend` eventually end up
     # calling this method.
-    def bulk_index(document_hashes_or_payload, options = {} )
+    def bulk_index(document_hashes_or_payload, options = {})
       client = build_client(options)
       payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
       response = client.post("_bulk", payload_generator.bulk_payload(document_hashes_or_payload), content_type: :json)
@@ -194,7 +194,7 @@ module Elasticsearch
       client = options ? build_client(options) : @client
 
       # Set off a scan query to get back a scroll ID and result count
-      search_body = {query: {match_all: {}}}
+      search_body = { query: { match_all: {} } }
       batch_size = self.class.scroll_batch_size
       ScrollEnumerator.new(client, search_body, batch_size) do |hit|
         document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
@@ -224,7 +224,7 @@ module Elasticsearch
     def documents_by_format(format, field_definitions)
       batch_size = 500
       search_body = {
-        query: {term: {format: format}},
+        query: { term: { format: format } },
         fields: field_definitions.keys,
       }
 
@@ -237,7 +237,7 @@ module Elasticsearch
       Elasticsearch::AdvancedSearch.new(@mappings, @document_types, @client).result_set(params)
     end
 
-    def raw_search(payload, type=nil)
+    def raw_search(payload, type = nil)
       json_payload = payload.to_json
       logger.debug "Request payload: #{json_payload}"
       if type.nil?
@@ -314,7 +314,7 @@ module Elasticsearch
       IndexQueue.new(index_name)
     end
 
-    def build_client(options={})
+    def build_client(options = {})
       Client.new(
         @index_uri,
         timeout: options[:timeout] || TIMEOUT_SECONDS,

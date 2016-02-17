@@ -50,7 +50,7 @@ module TaxonomyPrototype
 
   private
 
-    def spreadsheet_url(key: ,gid:)
+    def spreadsheet_url(key:, gid:)
       "https://docs.google.com/spreadsheets/d/#{key}/pub?gid=#{gid}&single=true&output=tsv"
     end
   end

@@ -17,7 +17,7 @@ module Helpers
   def json_result(status_code, message)
     content_type :json
     status status_code
-    {"result" => message}.to_json
+    { "result" => message }.to_json
   end
 
   # Parse a query string, returning a hash of arrays.

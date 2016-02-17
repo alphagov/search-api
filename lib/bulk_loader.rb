@@ -118,13 +118,13 @@ private
   end
 
   def byte_size(lines)
-    lines.inject(0) {|memo, l| memo + l.size}
+    lines.inject(0) { |memo, l| memo + l.size }
   end
 
   # Breaks the given input stream into batches of line pairs of at least
   # `batch_size` bytes (including newlines). Always keeps line pairs together.
   # Yields each batch of lines.
-  def in_even_sized_batches(iostream, batch_size=@iostream_batch_size, &_block)
+  def in_even_sized_batches(iostream, batch_size = @iostream_batch_size, &_block)
     chunk = []
     iostream.each_line.each_slice(2) do |command, document|
       chunk << command

@@ -4,22 +4,22 @@ require "facet_example_fetcher"
 class FacetExampleFetcherTest < ShouldaUnitTestCase
   def query_for_example_global(field, value, return_fields)
     {
-      query: {filtered: {query: nil, filter: {term: {field => value}}}},
+      query: { filtered: { query: nil, filter: { term: { field => value } } } },
       size: 2,
       fields: return_fields,
-      sort: [{popularity: {order: :desc}}]
+      sort: [{ popularity: { order: :desc } }]
     }
   end
 
   def query_for_example_query(field, value, return_fields, query, filter)
     {
-      query: {filtered: {query: query, filter: {and: [
-        {term: {field => value}},
+      query: { filtered: { query: query, filter: { and: [
+        { term: { field => value } },
         filter
-      ]}}},
+      ] } } },
       size: 2,
       fields: return_fields,
-      sort: [{popularity: {order: :desc}}]
+      sort: [{ popularity: { order: :desc } }]
     }
   end
 
@@ -28,7 +28,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
       "hits" => {
         "total" => total_examples,
         "hits" => titles.map { |title|
-          {"fields" => {"title" => title}}
+          { "fields" => { "title" => title } }
         }
       }
     }
@@ -54,7 +54,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     should "map a response to facets without fields" do
       fetcher = FacetExampleFetcher.new(@index, {}, SearchParameters.new, @builder)
       slugs = ['a-slug-name']
-      response_list = [{ 'hits' => { 'total' => 1, 'hits' => [ { '_id' => 'a-slug-name' }]}}]
+      response_list = [{ 'hits' => { 'total' => 1, 'hits' => [{ '_id' => 'a-slug-name' }] } }]
 
       response = fetcher.send(:prepare_response, slugs, response_list)
 
@@ -78,14 +78,14 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     setup do
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
-      main_query_response = {"facets" => {
+      main_query_response = { "facets" => {
         "sector" => {
           "terms" => [
-            {"term" => "sector_1"},
-            {"term" => "sector_2"},
+            { "term" => "sector_1" },
+            { "term" => "sector_2" },
           ]
         }
-      }}
+      } }
       params = SearchParameters.new(
         facets: {
           "sector" => {
@@ -105,20 +105,20 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
         .with([
           query_for_example_global("sector", "sector_1", @example_fields),
           query_for_example_global("sector", "sector_2", @example_fields),
-        ]).returns({"responses" => [
+        ]).returns({ "responses" => [
           response_for_example(3, %w(example_1 example_2)),
           response_for_example(1, ["example_3"]),
-        ]})
+        ] })
 
       assert_equal({
         "sector" => {
-          "sector_1" => {total: 3, examples: [
-              {"title" => "example_1"},
-              {"title" => "example_2"}
-            ]},
-          "sector_2" => {total: 1, examples: [
-              {"title" => "example_3"}
-            ]},
+          "sector_1" => { total: 3, examples: [
+              { "title" => "example_1" },
+              { "title" => "example_2" }
+            ] },
+          "sector_2" => { total: 1, examples: [
+              { "title" => "example_3" }
+            ] },
         }
       }, @fetcher.fetch)
     end
@@ -129,14 +129,14 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
 
-      main_query_response = {"facets" => {
+      main_query_response = { "facets" => {
         "sector" => {
           "terms" => [
-            {"term" => "sector_1"},
-            {"term" => "sector_2"},
+            { "term" => "sector_1" },
+            { "term" => "sector_2" },
           ]
         }
-      }}
+      } }
 
       params = SearchParameters.new(
         facets: {
@@ -154,8 +154,8 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
 
     should "request and return facet examples with query scope" do
-      query = {match: {_all: {query: "hello"}}}
-      filter = {terms: {organisations: ["hm-magic"]}}
+      query = { match: { _all: { query: "hello" } } }
+      filter = { terms: { organisations: ["hm-magic"] } }
       @builder.expects(:query).returns(query)
       @builder.expects(:filter).returns(filter)
 
@@ -163,20 +163,20 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
         .with([
           query_for_example_query("sector", "sector_1", @example_fields, query, filter),
           query_for_example_query("sector", "sector_2", @example_fields, query, filter),
-        ]).returns({"responses" => [
+        ]).returns({ "responses" => [
           response_for_example(3, %w(example_1 example_2)),
           response_for_example(1, ["example_3"]),
-        ]})
+        ] })
 
       assert_equal({
         "sector" => {
-          "sector_1" => {total: 3, examples: [
-              {"title" => "example_1"},
-              {"title" => "example_2"}
-            ]},
-          "sector_2" => {total: 1, examples: [
-              {"title" => "example_3"}
-            ]},
+          "sector_1" => { total: 3, examples: [
+              { "title" => "example_1" },
+              { "title" => "example_2" }
+            ] },
+          "sector_2" => { total: 1, examples: [
+              { "title" => "example_3" }
+            ] },
         }
       }, @fetcher.fetch)
     end
@@ -186,12 +186,12 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     setup do
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
-      main_query_response = {"facets" => {
+      main_query_response = { "facets" => {
         "sector" => {
           "terms" => [
           ]
         }
-      }}
+      } }
       params = SearchParameters.new(
         facets: {
           "sector" => {
@@ -207,7 +207,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
 
     should "request and return facet examples" do
-      assert_equal({"sector" => {}}, @fetcher.fetch)
+      assert_equal({ "sector" => {} }, @fetcher.fetch)
     end
   end
 
@@ -216,13 +216,13 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
 
-      main_query_response = {"facets" => {
+      main_query_response = { "facets" => {
         "sector" => {
           "terms" => Array((0..999).map { |i|
-            {"term" => "sector_#{i}"}
+            { "term" => "sector_#{i}" }
           })
         }
-      }}
+      } }
 
       params = SearchParameters.new(
         facets: {
@@ -240,13 +240,13 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
 
     should "request and return facet examples with query scope" do
-      query = {match: {_all: {query: "hello"}}}
-      filter = {terms: {organisations: ["hm-magic"]}}
+      query = { match: { _all: { query: "hello" } } }
+      filter = { terms: { organisations: ["hm-magic"] } }
       @builder.expects(:query).returns(query)
       @builder.expects(:filter).returns(filter)
 
       (0..19).each do |group_num|
-        sector_numbers = (group_num * 50 .. group_num * 50 + 49)
+        sector_numbers = (group_num * 50..group_num * 50 + 49)
         expected_queries = Array(
           sector_numbers.map { |sector_num|
             query_for_example_query("sector", "sector_#{sector_num}", @example_fields, query, filter)
@@ -256,7 +256,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
             response_for_example(sector_num, ["example_#{sector_num}"])
           })
         @index.expects(:msearch)
-          .with(expected_queries).returns({"responses" => stub_responses})
+          .with(expected_queries).returns({ "responses" => stub_responses })
       end
 
       assert_equal({
@@ -264,7 +264,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           (0..999).map { |sector_num|
             [
               "sector_#{sector_num}",
-              {total: sector_num, examples: [{"title" => "example_#{sector_num}"}]}
+              { total: sector_num, examples: [{ "title" => "example_#{sector_num}" }] }
             ]
           }
         ]

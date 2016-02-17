@@ -55,7 +55,7 @@ private
 
       es_config = type.es_config
       if children
-        es_config = es_config.merge({"properties" => es_config_for_child_fields(children)})
+        es_config = es_config.merge({ "properties" => es_config_for_child_fields(children) })
       end
 
       definition = FieldDefinition.new(

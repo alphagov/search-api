@@ -10,37 +10,37 @@ class SearchParameterTest < ShouldaUnitTestCase
     end
 
     should "return false if entire query isn't quote enclosed" do
-      params = SearchParameters.new(query: %{This is "part of my" query} )
+      params = SearchParameters.new(query: %{This is "part of my" query})
       assert_equal false, params.quoted_search_phrase?
     end
 
     should "return false if query doesn't have ending quotes" do
-      params = SearchParameters.new(query: %{"unclosed quotes} )
+      params = SearchParameters.new(query: %{"unclosed quotes})
       assert_equal false, params.quoted_search_phrase?
     end
 
     should "return false if query doesn't have starting quotes" do
-      params = SearchParameters.new(query: %{unclosed quotes"} )
+      params = SearchParameters.new(query: %{unclosed quotes"})
       assert_equal false, params.quoted_search_phrase?
     end
 
     should "return true if query enclosed with quotes" do
-      params = SearchParameters.new(query: %{"phrase enclosed with quotes"} )
+      params = SearchParameters.new(query: %{"phrase enclosed with quotes"})
       assert_equal true, params.quoted_search_phrase?
     end
 
     should "return false if enclosed with quotes but has intervening quotes" do
-      params = SearchParameters.new(query: %{"phrase enclosed with quotes and "quotes" in the middle} )
+      params = SearchParameters.new(query: %{"phrase enclosed with quotes and "quotes" in the middle})
       assert_equal false, params.quoted_search_phrase?
     end
 
     should "return true if query enclosed with quotes but with leading whitespace" do
-      params = SearchParameters.new(query: %{  \t  "phrase enclosed with quotes"} )
+      params = SearchParameters.new(query: %{  \t  "phrase enclosed with quotes"})
       assert_equal true, params.quoted_search_phrase?
     end
 
     should "return true if query enclosed with quotes but with trailing whitespace" do
-      params = SearchParameters.new(query: %{"phrase enclosed with quotes"  \t  } )
+      params = SearchParameters.new(query: %{"phrase enclosed with quotes"  \t  })
       assert_equal true, params.quoted_search_phrase?
     end
 

@@ -32,6 +32,6 @@ private
         return value.merge("slug" => slug)
       end
     end
-    {"slug" => slug}
+    { "slug" => slug }
   end
 end

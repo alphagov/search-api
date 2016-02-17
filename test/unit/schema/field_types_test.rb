@@ -49,7 +49,7 @@ class FieldTypesTest < ShouldaUnitTestCase
     end
 
     should "fail if a field type has no es_config property" do
-      FieldTypes.any_instance.stubs(:load_json).returns({"identifier" => {}})
+      FieldTypes.any_instance.stubs(:load_json).returns({ "identifier" => {} })
       exc = assert_raises(RuntimeError) do
         @types.get("identifier")
       end
@@ -58,7 +58,7 @@ class FieldTypesTest < ShouldaUnitTestCase
 
     should "fail if a field type has an invalid `filter_type` property" do
       FieldTypes.any_instance.stubs(:load_json).returns(
-        {"identifier" => {"es_config" => {}, "filter_type" => "bad value"}}
+        { "identifier" => { "es_config" => {}, "filter_type" => "bad value" } }
       )
       exc = assert_raises(RuntimeError) do
         @types.get("identifier")
@@ -68,7 +68,7 @@ class FieldTypesTest < ShouldaUnitTestCase
 
     should "fail if a field type has an invalid `children` property" do
       FieldTypes.any_instance.stubs(:load_json).returns(
-        {"identifier" => {"es_config" => {}, "children" => "bad value"}}
+        { "identifier" => { "es_config" => {}, "children" => "bad value" } }
       )
       exc = assert_raises(RuntimeError) do
         @types.get("identifier")
@@ -78,7 +78,7 @@ class FieldTypesTest < ShouldaUnitTestCase
 
     should "fail if a field type has an unknown property" do
       FieldTypes.any_instance.stubs(:load_json).returns(
-        {"identifier" => {"es_config" => {}, "foo" => true}}
+        { "identifier" => { "es_config" => {}, "foo" => true } }
       )
       exc = assert_raises(RuntimeError) do
         @types.get("identifier")

@@ -8,7 +8,7 @@ class SortTest < ShouldaUnitTestCase
 
       result = builder.payload
 
-      assert_equal result, [ { "popularity" => {order: "desc" } }]
+      assert_equal result, [{ "popularity" => { order: "desc" } }]
     end
   end
 
@@ -29,7 +29,7 @@ class SortTest < ShouldaUnitTestCase
       result = builder.payload
 
       assert_equal(
-        [{"public_timestamp" => {order: "asc", missing: "_last"}}],
+        [{ "public_timestamp" => { order: "asc", missing: "_last" } }],
         result
       )
     end
@@ -42,7 +42,7 @@ class SortTest < ShouldaUnitTestCase
       result = builder.payload
 
       assert_equal(
-        [{"public_timestamp" => {order: "desc", missing: "_last"}}],
+        [{ "public_timestamp" => { order: "desc", missing: "_last" } }],
         result
       )
     end

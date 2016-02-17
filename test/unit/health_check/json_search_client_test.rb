@@ -23,7 +23,7 @@ B)
 
     def stub_unified_search(search_term)
       stub_request(:get, "http://www.gov.uk/api/search.json?q=#{CGI.escape(search_term)}").
-        with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+        with(headers: { 'Accept' => '*/*', 'User-Agent' => 'Ruby' }).
         to_return(status: 200, body: unified_search_response_body.to_json)
     end
 

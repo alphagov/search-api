@@ -48,7 +48,7 @@ module Elasticsearch
       request(:get, path, payload, headers)
     end
 
-    def delete_with_payload(path, payload, headers={})
+    def delete_with_payload(path, payload, headers = {})
       request(:delete, path, payload, headers)
     end
 

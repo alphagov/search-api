@@ -136,7 +136,7 @@ class UnifiedSearchTest < IntegrationTest
 
     results = parsed_response["results"]
     refute_includes results[0].keys, "specialist_sectors"
-    assert_equal [{"slug"=>"farming"}], results[1]["specialist_sectors"]
+    assert_equal [{ "slug" => "farming" }], results[1]["specialist_sectors"]
   end
 
   def test_facet_counting
@@ -151,8 +151,8 @@ class UnifiedSearchTest < IntegrationTest
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          {"value"=>{"slug"=>"1"}, "documents"=>2},
-          {"value"=>{"slug"=>"2"}, "documents"=>2},
+          { "value" => { "slug" => "1" }, "documents" => 2 },
+          { "value" => { "slug" => "2" }, "documents" => 2 },
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
@@ -191,7 +191,7 @@ class UnifiedSearchTest < IntegrationTest
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          {"value"=>{"slug"=>"1"}, "documents"=>2},
+          { "value" => { "slug" => "1" }, "documents" => 2 },
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
@@ -212,7 +212,7 @@ class UnifiedSearchTest < IntegrationTest
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          {"value"=>{"slug"=>"1"}, "documents"=>2},
+          { "value" => { "slug" => "1" }, "documents" => 2 },
         ],
         "documents_with_no_value" => 0,
         "total_options" => 1,
@@ -239,7 +239,7 @@ class UnifiedSearchTest < IntegrationTest
     get "/unified_search?start=a"
 
     assert_equal last_response.status, 422
-    assert_equal parsed_response, {"error" => "Invalid value \"a\" for parameter \"start\" (expected positive integer)"}
+    assert_equal parsed_response, { "error" => "Invalid value \"a\" for parameter \"start\" (expected positive integer)" }
   end
 
   def test_allows_integer_params_leading_zeros
@@ -256,7 +256,7 @@ class UnifiedSearchTest < IntegrationTest
     get "/unified_search?foo&bar=1"
 
     assert_equal last_response.status, 422
-    assert_equal parsed_response, {"error" => "Unexpected parameters: foo, bar"}
+    assert_equal parsed_response, { "error" => "Unexpected parameters: foo, bar" }
   end
 
   def test_debug_explain_returns_explanations
@@ -364,7 +364,7 @@ class UnifiedSearchTest < IntegrationTest
 
     assert_equal 422, last_response.status
     assert_equal(
-      {"error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)}},
+      { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} },
       parsed_response,
     )
   end
@@ -376,7 +376,7 @@ class UnifiedSearchTest < IntegrationTest
 
     assert_equal 422, last_response.status
     assert_equal(
-      {"error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date}},
+      { "error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date} },
       parsed_response,
     )
   end
@@ -400,9 +400,9 @@ class UnifiedSearchTest < IntegrationTest
     get "/unified_search.json?q=dragons"
 
     assert_equal first_result['organisations'],
-      [{ "slug"=>"/ministry-of-magic",
-         "link"=>"/ministry-of-magic-site",
-         "title"=>"Ministry of Magic" }]
+      [{ "slug" => "/ministry-of-magic",
+         "link" => "/ministry-of-magic-site",
+         "title" => "Ministry of Magic" }]
   end
 
   def test_id_search

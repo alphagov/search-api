@@ -64,7 +64,7 @@ private
         filter = { and: [
           { term: { field_name => slug } },
           query_filter,
-        ]}
+        ] }
       end
       {
         query: {
@@ -75,7 +75,7 @@ private
         },
         size: example_count,
         fields: example_fields,
-        sort: [ { popularity: { order: :desc } } ],
+        sort: [{ popularity: { order: :desc } }],
       }
     }
   end

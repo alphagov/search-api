@@ -14,7 +14,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_real_name
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
-        body: {"real-name" => { "aliases" => { "mainstream_test" => {} } }}.to_json,
+        body: { "real-name" => { "aliases" => { "mainstream_test" => {} } } }.to_json,
       )
 
     assert_equal "real-name", @index.real_name
@@ -44,7 +44,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_exists
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
-        body: {"real-name" => { "aliases" => { "mainstream_test" => {} } }}.to_json,
+        body: { "real-name" => { "aliases" => { "mainstream_test" => {} } } }.to_json,
       )
 
     assert @index.exists?
@@ -156,7 +156,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       body: %r{"query":"keyword search"},
     ).to_return(body: '{"hits":{"hits":[]}}')
 
-    @index.raw_search({query: "keyword search"})
+    @index.raw_search({ query: "keyword search" })
 
     assert_requested(stub_get)
   end
@@ -166,7 +166,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       body: %r{"query":"keyword search"},
     ).to_return(body: '{"hits":{"hits":[]}}')
 
-    @index.raw_search({query: "keyword search"}, "test-type")
+    @index.raw_search({ query: "keyword search" }, "test-type")
 
     assert_requested(stub_get)
   end
@@ -185,9 +185,9 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_can_fetch_documents_by_format
     search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
     stub_request(:get, search_pattern).with(
-      body: {query: {term: {format: "organisation"}}, fields: %w{title link}}
+      body: { query: { term: { format: "organisation" } }, fields: %w{title link} }
     ).to_return(
-      body: {_scroll_id: "abcdefgh", hits: {total: 10}}.to_json
+      body: { _scroll_id: "abcdefgh", hits: { total: 10 } }.to_json
     )
 
     hits = (1..10).map { |i|
@@ -200,19 +200,19 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     ).then.to_raise("should never happen")
 
     result = @index.documents_by_format("organisation", sample_field_definitions(%w(link title)))
-    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map { |r| r['title'] }
+    assert_equal (1..10).map { |i| "Organisation #{i}" }, result.map { |r| r['title'] }
   end
 
   def test_can_fetch_documents_by_format_with_certain_fields
     search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
     query = {
-      query: {term: {format: "organisation"}},
+      query: { term: { format: "organisation" } },
       fields: %w(title link)
     }
     stub_request(:get, search_pattern).with(
       body: query
     ).to_return(
-      body: {_scroll_id: "abcdefgh", hits: {total: 10}}.to_json
+      body: { _scroll_id: "abcdefgh", hits: { total: 10 } }.to_json
     )
 
     hits = (1..10).map { |i|
@@ -225,17 +225,17 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     ).then.to_raise("should never happen")
 
     result = @index.documents_by_format("organisation", sample_field_definitions(%w(link title))).to_a
-    assert_equal (1..10).map {|i| "Organisation #{i}" }, result.map { |r| r['title'] }
-    assert_equal (1..10).map {|i| "/organisation-#{i}" }, result.map { |r| r['link'] }
+    assert_equal (1..10).map { |i| "Organisation #{i}" }, result.map { |r| r['title'] }
+    assert_equal (1..10).map { |i| "/organisation-#{i}" }, result.map { |r| r['link'] }
   end
 
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
     search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=50"
     stub_request(:get, search_pattern).with(
-      body: {query: {match_all: {}}}.to_json
+      body: { query: { match_all: {} } }.to_json
     ).to_return(
-      body: {_scroll_id: "abcdefgh", hits: {total: 100}}.to_json
+      body: { _scroll_id: "abcdefgh", hits: { total: 100 } }.to_json
     ).then.to_raise("should never happen")
     assert_equal @index.all_documents.size, 100
   end
@@ -244,9 +244,9 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     search_uri = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=50"
 
     stub_request(:get, search_uri).with(
-      body: {query: {match_all: {}}}.to_json
+      body: { query: { match_all: {} } }.to_json
     ).to_return(
-      body: {_scroll_id: "abcdefgh", hits: {total: 100}}.to_json
+      body: { _scroll_id: "abcdefgh", hits: { total: 100 } }.to_json
     )
     hits = (1..100).map { |i|
       { "_source" => { "link" => "/foo-#{i}" } }
@@ -270,9 +270,9 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     Elasticsearch::Index.stubs(:scroll_batch_size).returns(2)
 
     stub_request(:get, search_uri).with(
-      body: {query: {match_all: {}}}.to_json
+      body: { query: { match_all: {} } }.to_json
     ).to_return(
-      body: {_scroll_id: "abcdefgh", hits: {total: 3}}.to_json
+      body: { _scroll_id: "abcdefgh", hits: { total: 3 } }.to_json
     )
     hits = (1..3).map { |i|
       { "_source" => { "link" => "/foo-#{i}" } }
@@ -313,7 +313,7 @@ private
   def scroll_response_body(scroll_id, total_results, results)
     {
       _scroll_id: scroll_id,
-      hits: {total: total_results, hits: results}
+      hits: { total: total_results, hits: results }
     }.to_json
   end
 
@@ -323,10 +323,10 @@ private
     Elasticsearch::Index.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
   end
 
-  def stub_popularity_index_requests(paths, popularity, total_pages=10, total_requested=total_pages, paths_to_return=paths)
+  def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)
     # stub the request for total results
     stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
-      with(body: { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
+      with(body: { "query" => { "match_all" => {} }, "size" => 0 }.to_json).
       to_return(body: { "hits" => { "total" => total_pages } }.to_json)
 
     # stub the search for popularity data

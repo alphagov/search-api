@@ -77,7 +77,7 @@ private
   def facet_option_fields(field, slug)
     result = field_presenter.expand(field, slug)
     unless result.is_a?(Hash)
-      result = {"slug" => result}
+      result = { "slug" => result }
     end
 
     field_examples = facet_examples[field]

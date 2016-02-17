@@ -137,7 +137,7 @@ protected
 
   # Get a parameter that occurs at most once
   # Returns the string value of the parameter, or nil
-  def single_param(param_name, description="")
+  def single_param(param_name, description = "")
     @used_params << param_name
     values = @params.fetch(param_name, [])
     if values.size > 1
@@ -148,7 +148,7 @@ protected
 
   # Get a parameter represented as a comma separated list
   # Multiple occurrences of the parameter will be joined together
-  def character_separated_param(param_name, separator=",")
+  def character_separated_param(param_name, separator = ",")
     @used_params << param_name
     values = @params.fetch(param_name, [])
     values.map { |value|
@@ -158,7 +158,7 @@ protected
 
   # Parse a parameter which should contain an integer and occur only once
   # Returns the integer value, or nil
-  def single_integer_param(param_name, default, description="")
+  def single_integer_param(param_name, default, description = "")
     value = single_param(param_name, description)
     unless value.nil?
       value = parse_positive_integer(value, %{parameter "#{param_name}"#{description}})

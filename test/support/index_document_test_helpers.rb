@@ -14,7 +14,7 @@ module IndexDocumentsTestHelpers
       to_return(status: 200, body: { id: 3333, base_path: "/path/3" }.to_json)
 
     stub_request(:get, "http://localhost:9200/mainstream_test,government_test/_search").
-      with(body: {query: {term: {link: "/topic/animal-welfare/pets"}}}.to_json).
+      with(body: { query: { term: { link: "/topic/animal-welfare/pets" } } }.to_json).
       to_return(status: 200, body: pet_topic_search_response_data)
 
     stub_request(:get, "http://localhost:9200/mainstream_test/edition/%2Ftopic%2Fanimal-welfare%2Fpets").
