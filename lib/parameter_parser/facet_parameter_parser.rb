@@ -139,8 +139,6 @@ private
       :global
     elsif scope == "query"
       :query
-    else
-      nil
     end
   end
 end

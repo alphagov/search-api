@@ -28,18 +28,17 @@ module Indexer
       results["hits"]["hits"].each do |hit|
         link = hit["_id"]
         rank = Array(hit["fields"]["rank_14"]).first
-        if rank.nil?
-          next
-        end
+        next if rank.nil?
         ranks[link] = [rank, ranks[link]].min
       end
 
       Hash[links.map { |link|
-        popularity_score = if ranks[link] == 0
-          0
+        if ranks[link] == 0
+          popularity_score = 0
         else
-          1.0 / (ranks[link] + @search_config.popularity_rank_offset)
+          popularity_score = 1.0 / (ranks[link] + @search_config.popularity_rank_offset)
         end
+
         [link, popularity_score]
       }]
     end

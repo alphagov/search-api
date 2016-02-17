@@ -43,8 +43,6 @@ module QueryComponents
           {
             not: rejected
           }
-        else
-          nil
         end
       end
     end

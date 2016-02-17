@@ -93,8 +93,6 @@ module Elasticsearch
       current_index = current
       if current_index.exists?
         Index.new(@base_uri, current.real_name, @name, mappings, @search_config)
-      else
-        nil
       end
     end
 

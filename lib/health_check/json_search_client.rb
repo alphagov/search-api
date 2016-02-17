@@ -17,10 +17,10 @@ module HealthCheck
 
       # base_url can be in the form of example.org/search.json?debug=something
       # or example.org/search.json.
-      url = if @base_url.to_s.include?('?')
-        url_components.join('&')
+      if @base_url.to_s.include?('?')
+        url = url_components.join('&')
       else
-        url_components.join('?')
+        url = url_components.join('?')
       end
 
       request = Net::HTTP::Get.new(url)

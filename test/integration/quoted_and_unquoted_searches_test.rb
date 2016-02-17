@@ -9,7 +9,7 @@ class QuotedAndUnquotedSearchTest < IntegrationTest
     stub_elasticsearch_settings
     create_meta_indexes
     reset_content_indexes
-    end
+  end
 
   def teardown
     clean_test_indexes
@@ -133,19 +133,19 @@ private
       title: "This is about London and its environs",
       indexable_content: 'London is a world-class city with a modern transport infrastucture',
       link: "/london-and-environs",
-      ) 
+      )
 
     commit_document("mainstream_test",
       title: "This is about the transport in Britain",
       indexable_content: 'Britain has a developed transport infrastructure, especially in London',
       link: "/transport-in-britain",
-      ) 
+      )
 
     commit_document("mainstream_test",
       title: "Transport for London formerly known as London Transport",
       indexable_content: 'Transport for London used to be known as London Transport',
       link: "/transport-for-london",
-      ) 
+      )
   end
 
   def commit_synonym_documents
@@ -153,13 +153,13 @@ private
       title: "Driving abroad",
       indexable_content: 'Driving abroad can be tricky.  For a start, they drive on the wrong side of the road',
       link: "/driving-abroad",
-      ) 
+      )
 
     commit_document("mainstream_test",
       title: "Driving overseas",
       indexable_content: 'Driving overseas can be tricky.  For a start, they drive on the wrong side of the road',
       link: "/driving-overseas",
-      ) 
+      )
   end
 
   def commit_stemming_documents
@@ -167,12 +167,12 @@ private
       title: "Dog ownership",
       indexable_content: 'Owning a dog is a lifelong commitment',
       link: "/dog-ownership",
-      ) 
+      )
 
     commit_document("mainstream_test",
       title: "Problem Dogs",
       indexable_content: 'Dogs which attack people can be put down and the owner prosecuted',
       link: "/problem_dogs",
-      ) 
+      )
   end
 end

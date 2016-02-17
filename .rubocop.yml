@@ -1,15 +1,3 @@
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
-Lint/DefEndAlignment:
-  Enabled: false
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
-Lint/EndAlignment:
-  Enabled: false
-
 # Offense count: 2
 Lint/HandleExceptions:
   Exclude:
@@ -128,23 +116,6 @@ Style/ClosingParenthesisIndentation:
     - 'test/integration/unified_search/results_with_highlighting_test.rb'
     - 'test/integration/unified_search_test.rb'
     - 'test/unit/parameter_parser/search_parameter_parser_test.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/ElseAlignment:
-  Exclude:
-    - 'lib/elasticsearch/advanced_search_query_builder.rb'
-    - 'lib/health_check/json_search_client.rb'
-    - 'lib/indexer/popularity_lookup.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyElse:
-  Exclude:
-    - 'lib/elasticsearch/index_group.rb'
-    - 'lib/parameter_parser/facet_parameter_parser.rb'
-    - 'lib/query_components/filter.rb'
 
 # Offense count: 23
 # Cop supports --auto-correct.
