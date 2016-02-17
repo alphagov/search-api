@@ -16,12 +16,6 @@ Lint/ParenthesesAsGroupedExpression:
 Style/ClosingParenthesisIndentation:
   Enabled: false
 
-# Offense count: 2
-Lint/HandleExceptions:
-  Exclude:
-    - 'lib/elasticsearch/index.rb'
-    - 'test/support/integration_test.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Performance/StringReplacement:

@@ -266,6 +266,8 @@ module Elasticsearch
       begin
         @client.delete("#{CGI.escape(type)}/#{CGI.escape(id)}")
       rescue RestClient::ResourceNotFound
+        # We are fine with trying to delete deleted documents.
+        true
       rescue RestClient::Forbidden => e
         response_body = JSON.parse(e.http_body)
         if locked_index_error?(response_body["error"])
@@ -274,6 +276,7 @@ module Elasticsearch
           raise
         end
       end
+
       true  # For consistency with the Solr API and simple_json_response
     end
 

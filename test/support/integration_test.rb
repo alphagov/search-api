@@ -156,6 +156,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
     RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"
   rescue RestClient::ResourceNotFound
     # Index doesn't exist: that's fine
+    true
   end
 
   def clean_index_group(group_name = DEFAULT_INDEX_NAME)
