@@ -41,12 +41,6 @@ Style/MultilineBlockChain:
     - 'lib/schema/document_types.rb'
     - 'lib/schema/index_schema.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/MultilineBlockLayout:
-  Exclude:
-    - 'lib/indexer/bulk_payload_generator.rb'
-
 # Offense count: 6
 Style/StructInheritance:
   Exclude:

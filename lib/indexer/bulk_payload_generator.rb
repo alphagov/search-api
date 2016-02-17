@@ -32,8 +32,8 @@ module Indexer
   private
 
     def index_items_from_document_hashes(document_hashes)
-      links = document_hashes.map {
-        |doc_hash| doc_hash["link"]
+      links = document_hashes.map { |doc_hash|
+        doc_hash["link"]
       }.compact
       popularities = lookup_popularities(links)
       document_hashes.map { |doc_hash|
