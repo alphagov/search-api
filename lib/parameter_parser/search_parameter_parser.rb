@@ -102,12 +102,14 @@ private
   end
 
   def parameters_starting_with(prefix)
-    @params.select { |name, _|
+    with_prefix = @params.select do |name, _|
       name.start_with?(prefix)
-    }.each_with_object({}) { |(name, value), result|
+    end
+
+    with_prefix.each_with_object({}) do |(name, value), result|
       @used_params << name
       result[name.sub(prefix, "")] = value
-    }
+    end
   end
 
   def validate_filter_parameters(parameters, type)

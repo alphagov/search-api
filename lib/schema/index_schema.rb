@@ -85,13 +85,15 @@ private
   end
 
   def self.index_schema_paths(config_path)
-    Dir.new(File.join(config_path, "indexes")).select { |filename|
+    files = Dir.new(File.join(config_path, "indexes")).select do |filename|
       filename =~ /\A[a-z][-a-z]*\.json\z/
-    }.map { |filename|
+    end
+
+    files.map do |filename|
       [
         filename.sub(/.json$/, ''),
         File.join(config_path, "indexes", filename),
       ]
-    }
+    end
   end
 end

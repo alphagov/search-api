@@ -74,17 +74,23 @@ class Document
   end
 
   def to_hash
-    field_values = Hash[@field_definitions.keys.map { |field_name|
+    definitions_and_values = @field_definitions.keys.map do |field_name|
       value = get(field_name)
+
       if value.is_a?(Array)
         value = value.map { |v| v.is_a?(Document) ? v.to_hash : v }
       else
         value = value.is_a?(Document) ? value.to_hash : value
       end
+
       [field_name.to_s, value]
-    }.select { |_, value|
+    end
+
+    without_empty_values = definitions_and_values.select do |_, value|
       ![nil, []].include?(value)
-    }]
+    end
+
+    field_values = Hash[without_empty_values]
 
     if es_score
       field_values.merge("es_score" => es_score)

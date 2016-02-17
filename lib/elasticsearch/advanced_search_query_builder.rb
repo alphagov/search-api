@@ -151,7 +151,7 @@ module Elasticsearch
     end
 
     def filters_hash
-      @filter_params.map do |property, filter_value|
+      filters = @filter_params.map do |property, filter_value|
         if date_properties.include?(property)
           date_property_filter(property, filter_value)
         elsif boolean_properties.include?(property)
@@ -159,7 +159,9 @@ module Elasticsearch
         else
           standard_property_filter(property, filter_value)
         end
-      end.compact
+      end
+
+      filters.compact
     end
 
     def date_property_filter(property, filter_value)

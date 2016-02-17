@@ -35,7 +35,7 @@ module TaxonomyPrototype
 
     # Standardise the appearance of taxonomy labels extracted from the spreadsheets.
     def sluggify(taxonomy_label)
-      taxonomy_label.split(', ').map do |taxon|
+      taxons = taxonomy_label.split(', ').map do |taxon|
         taxon.downcase!
         # Turn unwanted chars into hyphen
         taxon.gsub!(/[^a-z0-9\-_]+/, '-')
@@ -44,7 +44,9 @@ module TaxonomyPrototype
         # Remove leading/trailing separator.
         taxon.gsub!(/^-|-$/, '')
         taxon
-      end.join(' > ')
+      end
+
+      taxons.join(' > ')
     end
   end
 end

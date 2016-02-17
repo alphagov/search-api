@@ -27,20 +27,6 @@ Style/ClassVars:
     - 'app.rb'
     - 'lib/unified_search/suggestion_blacklist.rb'
 
-# Offense count: 2
-Style/MethodCalledOnDoEndBlock:
-  Exclude:
-    - 'lib/elasticsearch/advanced_search_query_builder.rb'
-    - 'lib/taxonomy_prototype/data_parser.rb'
-
-# Offense count: 4
-Style/MultilineBlockChain:
-  Exclude:
-    - 'lib/document.rb'
-    - 'lib/parameter_parser/search_parameter_parser.rb'
-    - 'lib/schema/document_types.rb'
-    - 'lib/schema/index_schema.rb'
-
 # Offense count: 6
 Style/StructInheritance:
   Exclude:
