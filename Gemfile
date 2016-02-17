@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "unicorn", "4.6.2"
 gem "sinatra", "1.3.4"
-gem "rake", "0.9.2", :require => false
+gem "rake", "~> 10.5"
 gem "rack", "~> 1.6"
 gem "rest-client", "1.8.0"
 gem "logging", "1.8.1"
