@@ -24,6 +24,6 @@ class ResultPresenterTest < MiniTest::Unit::TestCase
     result = ResultPresenter.new(document, nil, sample_schema, SearchParameters.new(return_fields: %w[railway_type])).present
 
     assert_equal [{ "label" => "Heavy rail", "value" => "heavy-rail" },
-        { "label" => "Light rail", "value" => "light-rail" }], result["railway_type"]
+                  { "label" => "Light rail", "value" => "light-rail" }], result["railway_type"]
   end
 end

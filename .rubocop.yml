@@ -22,13 +22,6 @@ Performance/StringReplacement:
   Exclude:
     - 'lib/health_check/check_file_parser.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/AlignArray:
-  Exclude:
-    - 'test/unit/query_components/best_bets_test.rb'
-    - 'test/unit/result_presenter_test.rb'
-
 # Offense count: 2
 Style/ClassVars:
   Exclude:
