@@ -18,12 +18,6 @@ Lint/HandleExceptions:
     - 'lib/elasticsearch/index.rb'
     - 'test/support/integration_test.rb'
 
-# Offense count: 3
-Lint/UselessAssignment:
-  Exclude:
-    - 'lib/index_documents.rb'
-    - 'test/unit/query_components/text_query_test.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Performance/StringReplacement:

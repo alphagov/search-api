@@ -25,7 +25,8 @@ class TextQueryTest < ShouldaUnitTestCase
       params = search_query_params(query: %{"all sorts of stuff"})
       builder = QueryComponents::TextQuery.new(params)
       builder.expects(:payload_for_quoted_phrase).once
-      query = builder.payload
+
+      builder.payload
     end
   end
 
@@ -34,7 +35,8 @@ class TextQueryTest < ShouldaUnitTestCase
       params = search_query_params(query: %{all sorts of stuff})
       builder = QueryComponents::TextQuery.new(params)
       builder.expects(:payload_for_unquoted_phrase).once
-      query = builder.payload
+
+      builder.payload
     end
   end
 end
