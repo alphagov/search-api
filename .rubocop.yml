@@ -9,13 +9,6 @@ Lint/ParenthesesAsGroupedExpression:
   Exclude:
     - 'test/unit/elasticsearch/elasticsearch_index_test.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Lint/StringConversionInInterpolation:
-  Exclude:
-    - 'lib/health_check/search_checker.rb'
-    - 'lib/health_check/suggestion_checker.rb'
-
 # Offense count: 16
 # Cop supports --auto-correct.
 # Configuration parameters: IgnoreEmptyBlocks.

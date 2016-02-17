@@ -14,7 +14,7 @@ module HealthCheck
     end
 
     def run!
-      Logging.logger[self].info("Connecting to #{@search_client.to_s}")
+      Logging.logger[self].info("Connecting to #{@search_client}")
 
       checks.each do |check|
         search_results = search_client.search(check.search_term)[:results]

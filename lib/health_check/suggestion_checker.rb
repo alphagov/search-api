@@ -10,7 +10,7 @@ module HealthCheck
     end
 
     def run!
-      Logging.logger[self].info("Connecting to #{@search_client.to_s}")
+      Logging.logger[self].info("Connecting to #{@search_client}")
 
       calculator = Calculator.new
 
