@@ -34,15 +34,6 @@ Style/ClassVars:
 Style/IfUnlessModifier:
   Enabled: false
 
-# Offense count: 4
-# Cop supports --auto-correct.
-Style/MethodCallParentheses:
-  Exclude:
-    - 'lib/best_bets_checker.rb'
-    - 'test/unit/base_registry_test.rb'
-    - 'test/unit/elasticsearch/elasticsearch_index_advanced_search_test.rb'
-    - 'test/unit/sitemap/sitemap_index_test.rb'
-
 # Offense count: 2
 Style/MethodCalledOnDoEndBlock:
   Exclude:

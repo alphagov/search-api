@@ -52,7 +52,7 @@ private
     end
     by_position.sort!
 
-    combined = Hash.new()
+    combined = Hash.new
     seen = Set.new
     by_position.each do |bet|
       position = bet[0]
