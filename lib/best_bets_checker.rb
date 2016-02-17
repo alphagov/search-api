@@ -30,7 +30,8 @@ private
   # Fetch the best bets, and populate @best_bets and @worst_bets
   def fetch
     if @query.nil?
-      best, worst = [], []
+      best = []
+      worst = []
     else
       best, worst = select_bets(fetch_bets)
     end
@@ -54,7 +55,8 @@ private
     combined = Hash.new()
     seen = Set.new
     by_position.each do |bet|
-      position, link = bet[0], bet[1]
+      position = bet[0]
+      link = bet[1]
       if seen.include? link
         next
       end

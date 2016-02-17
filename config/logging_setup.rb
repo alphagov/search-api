@@ -6,7 +6,8 @@ class PushableLogger
   # methods, we have to put together a class that'll assign them a level
 
   def initialize(logger, level)
-    @logger, @level = logger, level
+    @logger = logger
+    @level = level
   end
 
   def <<(message)
