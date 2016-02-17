@@ -380,15 +380,6 @@ Style/StructInheritance:
     - 'lib/unified_search/spell_check_presenter.rb'
     - 'lib/unified_search/suggestion_blacklist.rb'
 
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoredMethods.
-Style/SymbolProc:
-  Exclude:
-    - 'lib/bulk_loader.rb'
-    - 'lib/elasticsearch/index.rb'
-    - 'lib/taxonomy_prototype/data_parser.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

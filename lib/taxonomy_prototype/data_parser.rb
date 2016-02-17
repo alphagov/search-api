@@ -23,7 +23,7 @@ private
     def relevant_columns_in(remote_taxonomy_data)
       tsv_data = CSV.parse(remote_taxonomy_data, col_sep: "\t", headers: true)
       desired_columns = ["mapped to", "link"]
-      columns_in_data = tsv_data.headers.map { |header| header.downcase }
+      columns_in_data = tsv_data.headers.map(&:downcase)
 
       if desired_columns.all? { |column_name| columns_in_data.include? column_name }
         tsv_data.values_at(*desired_columns)

@@ -105,7 +105,7 @@ private
 
     yield q
     producer_complete = true
-    threads.each {|th| th.join }
+    threads.each(&:join)
 
     new_index.commit
   end

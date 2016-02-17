@@ -117,7 +117,7 @@ module Elasticsearch
     def add(documents, options = {})
       logger.info "Adding #{documents.size} document(s) to #{index_name}"
 
-      document_hashes = documents.map { |d| d.elasticsearch_export }
+      document_hashes = documents.map(&:elasticsearch_export)
       bulk_index(document_hashes, options)
     end
 
@@ -125,7 +125,7 @@ module Elasticsearch
     def add_queued(documents)
       logger.info "Queueing #{documents.size} document(s) to add to #{index_name}"
 
-      document_hashes = documents.map { |d| d.elasticsearch_export }
+      document_hashes = documents.map(&:elasticsearch_export)
       queue.queue_many(document_hashes)
     end
 
