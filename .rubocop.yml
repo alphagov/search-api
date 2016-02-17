@@ -62,13 +62,6 @@ Style/AlignArray:
     - 'test/unit/query_components/best_bets_test.rb'
     - 'test/unit/result_presenter_test.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AndOr:
-  Exclude:
-    - 'lib/document.rb'
-
 # Offense count: 22
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

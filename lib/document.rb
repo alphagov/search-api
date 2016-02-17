@@ -65,7 +65,7 @@ class Document
         if value.is_a?(Array)
           value = value.map {|v| v.is_a?(Document) ? v.elasticsearch_export : v }
         end
-        unless value.nil? or (value.respond_to?(:empty?) and value.empty?)
+        unless value.nil? || (value.respond_to?(:empty?) && value.empty?)
           doc[key] = value
         end
       end
