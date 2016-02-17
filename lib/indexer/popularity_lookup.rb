@@ -51,7 +51,7 @@ module Indexer
       end
       @traffic_index = open_traffic_index
       @opened_traffic_index = true
-      return @traffic_index
+      @traffic_index
     end
 
     def traffic_index_size
@@ -79,7 +79,7 @@ module Indexer
         end
       end
 
-      return nil
+      nil
     end
   end
 end

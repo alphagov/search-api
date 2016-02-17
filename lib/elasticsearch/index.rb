@@ -273,7 +273,7 @@ module Elasticsearch
           raise
         end
       end
-      return true  # For consistency with the Solr API and simple_json_response
+      true  # For consistency with the Solr API and simple_json_response
     end
 
     def delete_queued(document_type, document_id)

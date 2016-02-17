@@ -83,7 +83,7 @@ private
       @errors << %{"#{field}" is not a valid sort field}
       return nil
     end
-    return [SORT_MAPPINGS.fetch(field, field), dir]
+    [SORT_MAPPINGS.fetch(field, field), dir]
   end
 
   # Get a list of the fields to request in results from elasticsearch

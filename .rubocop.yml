@@ -228,16 +228,6 @@ Style/PercentQLiterals:
     - 'test/unit/query_components/text_query_test.rb'
     - 'test/unit/search_parameter_test.rb'
 
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - 'lib/elasticsearch/index.rb'
-    - 'lib/indexer/popularity_lookup.rb'
-    - 'lib/parameter_parser/search_parameter_parser.rb'
-    - 'lib/sitemap/sitemap.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/SpaceAfterColon:

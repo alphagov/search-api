@@ -17,7 +17,7 @@ class Sitemap
     FileUtils.mkdir_p(@output_path)
     sitemap_writer = SitemapWriter.new(@output_path, @timestamp)
     sitemap_filenames = sitemap_writer.write_sitemaps(content_indices)
-    return write_index(sitemap_filenames)
+    write_index(sitemap_filenames)
   end
 
   def write_index(sitemap_filenames)
