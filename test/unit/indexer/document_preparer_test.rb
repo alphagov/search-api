@@ -32,7 +32,7 @@ describe Indexer::DocumentPreparer do
           "topics" => %w(a b),
         }
         stub_request(:get, "http://contentapi.dev.gov.uk/some-link.json").
-          to_return(:status => 404, :body => "", :headers => {})
+          to_return(status: 404, body: "", headers: {})
 
         updated_doc_hash = Indexer::DocumentPreparer.new("fake_client").prepared(doc_hash, nil, true)
 

@@ -27,7 +27,7 @@ group :test do
   gem "ci_reporter", "1.7.1"
   gem "minitest", "4.6.1"
   gem "rack-test"
-  gem "mocha", :require => false
+  gem "mocha", require: false
   gem "webmock", "~> 1.21.0", require: false
   gem "timecop", "0.7.3"
 end

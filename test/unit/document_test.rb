@@ -67,11 +67,11 @@ class DocumentTest < MiniTest::Unit::TestCase
 
   def test_should_recognise_symbol_keys_in_hash
     hash = {
-      :title => "TITLE",
-      :description => "DESCRIPTION",
-      :format => "guide",
-      :link => "/an-example-guide",
-      :indexable_content => "HERE IS SOME CONTENT"
+      title: "TITLE",
+      description: "DESCRIPTION",
+      format: "guide",
+      link: "/an-example-guide",
+      indexable_content: "HERE IS SOME CONTENT"
     }
 
     document = Document.from_hash(hash, sample_document_types)

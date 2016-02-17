@@ -24,7 +24,7 @@ class Sitemap
     index_filename = "sitemap_#{@timestamp.strftime('%FT%H')}.xml"
     index_full_path = File.join(@output_path, index_filename)
     File.open(index_full_path, "w") do |sitemap_index_file|
-      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+      builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
         xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           sitemap_filenames.each do |sitemap_filename|
             xml.sitemap {

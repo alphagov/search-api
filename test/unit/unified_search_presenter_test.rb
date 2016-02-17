@@ -299,8 +299,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have correct top facet value value" do
       assert_equal({
-        :value=>{"slug"=>"hm-magic"},
-        :documents=>7,
+        value: {"slug"=>"hm-magic"},
+        documents: 7,
       }, @output[:facets]["organisations"][:options][0])
     end
 
@@ -343,15 +343,15 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have selected facet first" do
       assert_equal({
-        :value => {"slug" => "hmrc"},
-        :documents => 5,
+        value: {"slug" => "hmrc"},
+        documents: 5,
       }, @output[:facets]["organisations"][:options][0])
     end
 
     should "have unapplied facet value second" do
       assert_equal({
-        :value => {"slug" => "hm-magic"},
-        :documents => 7,
+        value: {"slug" => "hm-magic"},
+        documents: 7,
       }, @output[:facets]["organisations"][:options][1])
     end
 
@@ -394,15 +394,15 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have selected facet first" do
       assert_equal({
-        :value => {"slug" => "hm-cheesemakers"},
-        :documents => 0,
+        value: {"slug" => "hm-cheesemakers"},
+        documents: 0,
       }, @output[:facets]["organisations"][:options][0])
     end
 
     should "have unapplied facet value second" do
       assert_equal({
-        :value => {"slug" => "hm-magic"},
-        :documents => 7,
+        value: {"slug" => "hm-magic"},
+        documents: 7,
       }, @output[:facets]["organisations"][:options][1])
     end
 
@@ -570,19 +570,19 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have org facet value expanded" do
       assert_equal({
-        :value => {
+        value: {
           "link" => "/government/departments/hm-magic",
           "title" => "Ministry of Magic",
           "slug" => "hm-magic",
         },
-        :documents=>7,
+        documents: 7,
       }, @output[:facets]["organisations"][:options][0])
     end
 
     should "have topic facet value un-expanded" do
       assert_equal({
-        :value => {"slug" => "unknown_topic"},
-        :documents => 5,
+        value: {"slug" => "unknown_topic"},
+        documents: 5,
       }, @output[:facets]["topics"][:options][0])
     end
 
@@ -636,7 +636,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have org facet value expanded, and include examples" do
       assert_equal({
-        :value => {
+        value: {
           "link" => "/government/departments/hm-magic",
           "title" => "Ministry of Magic",
           "slug" => "hm-magic",
@@ -647,7 +647,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
             ],
           },
         },
-        :documents=>7,
+        documents: 7,
       }, @output[:facets]["organisations"][:options][0])
     end
 

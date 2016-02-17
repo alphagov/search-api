@@ -154,7 +154,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_raw_search
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},
-    ).to_return(:body => '{"hits":{"hits":[]}}')
+    ).to_return(body: '{"hits":{"hits":[]}}')
 
     @index.raw_search({query: "keyword search"})
 
@@ -164,7 +164,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_raw_search_with_type
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/test-type/_search").with(
       body: %r{"query":"keyword search"},
-    ).to_return(:body => '{"hits":{"hits":[]}}')
+    ).to_return(body: '{"hits":{"hits":[]}}')
 
     @index.raw_search({query: "keyword search"}, "test-type")
 
@@ -326,7 +326,7 @@ private
   def stub_popularity_index_requests(paths, popularity, total_pages=10, total_requested=total_pages, paths_to_return=paths)
     # stub the request for total results
     stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
-      with(:body => { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
+      with(body: { "query" => { "match_all" => {}}, "size" => 0 }.to_json).
       to_return(body: { "hits" => { "total" => total_pages } }.to_json)
 
     # stub the search for popularity data
@@ -356,8 +356,8 @@ private
     }
 
     stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
-      with(:body => expected_query.to_json).
-      to_return(:body => response.to_json)
+      with(body: expected_query.to_json).
+      to_return(body: response.to_json)
   end
 
   def stub_traffic_index

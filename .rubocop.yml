@@ -70,12 +70,6 @@ Style/ExtraSpacing:
     - 'test/unit/elasticsearch/elasticsearch_escaping_test.rb'
     - 'test/unit/facet_option_test.rb'
 
-# Offense count: 76
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, UseHashRocketsWithSymbolValues.
-Style/HashSyntax:
-  Enabled: false
-
 # Offense count: 40
 # Cop supports --auto-correct.
 # Configuration parameters: MaxLineLength.
