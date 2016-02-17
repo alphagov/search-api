@@ -39,3 +39,4 @@ end
 
 gem "pry-byebug", group: [:development, :test]
 gem "govuk_message_queue_consumer", "~> 2.0.1"
+gem "govuk-lint", "~> 0.6.1"
