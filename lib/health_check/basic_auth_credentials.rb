@@ -11,7 +11,7 @@ module HealthCheck
 
     def self.call(value)
       error = "Credentials must be of the form 'user:password'"
-      raise ArgumentError, error unless (value && value.include?(":"))
+      raise ArgumentError, error unless value && value.include?(":")
       new(*value.split(":", 2)).freeze
     end
   end

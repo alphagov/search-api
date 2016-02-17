@@ -7,16 +7,16 @@ Style/StringLiteralsInInterpolation:
 Style/BracesAroundHashParameters:
   Enabled: false
 
+# TODO: refactor tests that don't conform to this cop.
+Lint/ParenthesesAsGroupedExpression:
+  Exclude:
+    - 'test/**/*'
+
 # Offense count: 2
 Lint/HandleExceptions:
   Exclude:
     - 'lib/elasticsearch/index.rb'
     - 'test/support/integration_test.rb'
-
-# Offense count: 3
-Lint/ParenthesesAsGroupedExpression:
-  Exclude:
-    - 'test/unit/elasticsearch/elasticsearch_index_test.rb'
 
 # Offense count: 3
 Lint/UselessAssignment:
@@ -103,13 +103,6 @@ Style/MultilineBlockChain:
 Style/MultilineBlockLayout:
   Exclude:
     - 'lib/indexer/bulk_payload_generator.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowSafeAssignment.
-Style/ParenthesesAroundCondition:
-  Exclude:
-    - 'lib/health_check/basic_auth_credentials.rb'
 
 # Offense count: 6
 Style/StructInheritance:
