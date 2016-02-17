@@ -194,12 +194,6 @@ Style/MultilineBlockLayout:
   Exclude:
     - 'lib/indexer/bulk_payload_generator.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/MultilineIfThen:
-  Exclude:
-    - 'lib/elasticsearch/index.rb'
-
 # Offense count: 10
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

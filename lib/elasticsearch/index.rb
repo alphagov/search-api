@@ -74,7 +74,7 @@ module Elasticsearch
         alias_info = JSON.parse(@client.get("_aliases"))
       rescue RestClient::ResourceNotFound => e
         response_body = JSON.parse(e.http_body)
-        if response_body['error'].start_with?("IndexMissingException") then
+        if response_body['error'].start_with?("IndexMissingException")
           return nil
         end
         raise
