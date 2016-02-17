@@ -34,7 +34,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     }
   end
 
-  def stub_index(name)
+  def stub_index(_name)
     schema = stub("schema")
     schema.stubs(:field_definitions).returns(sample_field_definitions)
     index = stub("content index")

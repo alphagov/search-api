@@ -104,7 +104,7 @@ class Document
     end
   end
 
-  def respond_to_missing?(method_name, include_private)
+  def respond_to_missing?(method_name, _include_private)
     valid_assignment_method?(method_name) || has_field?(method_name)
   end
 

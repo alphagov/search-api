@@ -78,7 +78,7 @@ private
   #
   # Returns two arrays, one of best bets and one of worst bets.
   def select_bets(bets)
-    exact_bet = bets.find do |bet_query, bet_type, best, worst|
+    exact_bet = bets.find do |_bet_query, bet_type, _best, _worst|
       bet_type == "exact"
     end
     unless exact_bet.nil?
@@ -87,7 +87,7 @@ private
 
     best_bets = []
     worst_bets = []
-    bets.each do |bet_query, bet_type, best, worst|
+    bets.each do |_bet_query, _bet_type, best, worst|
       best_bets.concat best
       worst_bets.concat worst
     end

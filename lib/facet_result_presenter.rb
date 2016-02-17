@@ -46,7 +46,7 @@ private
       [term, 0]
     }
 
-    unique_options = all_options.uniq { |term, count|
+    unique_options = all_options.uniq { |term, _count|
       term
     }
 

@@ -58,7 +58,7 @@ private
   end
 
   def hash_without_blank_values(hash)
-    Hash[hash.reject { |key, value|
+    Hash[hash.reject { |_key, value|
       [nil, [], {}].include?(value)
     }]
   end

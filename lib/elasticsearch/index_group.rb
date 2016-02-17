@@ -53,7 +53,7 @@ module Elasticsearch
 
       # Response of the form:
       #   { "index_name" => { "aliases" => { "a1" => {}, "a2" => {} } }
-      aliased_indices = indices.select { |name, details|
+      aliased_indices = indices.select { |_name, details|
         details.fetch("aliases", {}).include? @name
       }
 

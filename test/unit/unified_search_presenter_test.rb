@@ -189,7 +189,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
 
     should "have only the fields returned from search engine" do
-      @output[:results].zip(sample_docs).each do |result, doc|
+      @output[:results].zip(sample_docs).each do |result, _doc|
         doc_fields = result.keys - [:_type, :_id]
         returned_fields = result.keys - [:esscore, :_type, :_id]
         assert_equal doc_fields, returned_fields
@@ -255,7 +255,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
 
     should "have only the fields returned from search engine" do
-      @output[:results].zip(sample_docs).each do |result, doc|
+      @output[:results].zip(sample_docs).each do |result, _doc|
         doc_fields = result.keys - [:_type, :_id]
         returned_fields = result.keys - [:esscore, :_type, :_id]
         assert_equal doc_fields, returned_fields

@@ -197,11 +197,11 @@ module Elasticsearch
     end
 
     def date_properties
-      @date_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "date" }.keys
+      @date_properties ||= @mappings["edition"]["properties"].select { |_p,h| h["type"] == "date" }.keys
     end
 
     def boolean_properties
-      @boolean_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "boolean" }.keys
+      @boolean_properties ||= @mappings["edition"]["properties"].select { |_p,h| h["type"] == "boolean" }.keys
     end
   end
 end

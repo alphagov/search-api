@@ -13,34 +13,6 @@ Lint/ParenthesesAsGroupedExpression:
   Exclude:
     - 'test/unit/elasticsearch/elasticsearch_index_test.rb'
 
-# Offense count: 16
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoreEmptyBlocks.
-Lint/UnusedBlockArgument:
-  Exclude:
-    - 'bin/bulk_load'
-    - 'bin/lock_updates'
-    - 'lib/best_bets_checker.rb'
-    - 'lib/bulk_loader.rb'
-    - 'lib/elasticsearch/advanced_search_query_builder.rb'
-    - 'lib/elasticsearch/index_group.rb'
-    - 'lib/facet_result_presenter.rb'
-    - 'lib/parameter_parser/search_parameter_parser.rb'
-    - 'lib/unified_search_builder.rb'
-    - 'test/unit/unified_search_presenter_test.rb'
-
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods.
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'lib/bulk_loader.rb'
-    - 'lib/document.rb'
-    - 'lib/elasticsearch/client.rb'
-    - 'lib/schema/combined_index_schema.rb'
-    - 'lib/schema_config.rb'
-    - 'test/unit/facet_example_fetcher_test.rb'
-
 # Offense count: 3
 Lint/UselessAssignment:
   Exclude:

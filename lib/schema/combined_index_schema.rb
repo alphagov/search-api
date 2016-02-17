@@ -45,7 +45,7 @@ private
   # Passes (field_name, field_definition, obj) to the block each time it is
   # called.
   # Returns obj.
-  def each_field_with_object(obj, &block)
+  def each_field_with_object(obj, &_block)
     document_types.values.each do |document_type|
       document_type.fields.each do |field_name, field_definition|
         yield field_name, field_definition, obj

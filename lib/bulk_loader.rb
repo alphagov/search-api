@@ -80,13 +80,13 @@ private
     end
   end
 
-  def populate_index(new_index, &producer_block)
+  def populate_index(new_index, &_producer_block)
     @logger.info "Indexing to #{new_index.real_name}"
     q = Queue.new
     producer_complete = false
 
     threads = []
-    @batch_concurrency.times do |n|
+    @batch_concurrency.times do |_n|
       th = Thread.new do
         loop do
           begin
@@ -124,7 +124,7 @@ private
   # Breaks the given input stream into batches of line pairs of at least
   # `batch_size` bytes (including newlines). Always keeps line pairs together.
   # Yields each batch of lines.
-  def in_even_sized_batches(iostream, batch_size=@iostream_batch_size, &block)
+  def in_even_sized_batches(iostream, batch_size=@iostream_batch_size, &_block)
     chunk = []
     iostream.each_line.each_slice(2) do |command, document|
       chunk << command

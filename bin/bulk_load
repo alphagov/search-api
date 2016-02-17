@@ -25,7 +25,7 @@ load the alias is switched over.
 
 [1] http://www.elasticsearch.org/guide/reference/api/bulk/
 }
-  run do |opts, args|
+  run do |_opts, args|
     if args.size == 1
       BulkLoader.new(search_config, args.first).load_from($stdin)
     else

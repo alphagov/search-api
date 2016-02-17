@@ -260,7 +260,7 @@ private
 
   def facets
     facets = {}
-    @params.each do |key, values|
+    @params.each do |key, _values|
       if (m = key.match(/\Afacet_(.*)/))
         field = m[1]
         value = single_param(key)

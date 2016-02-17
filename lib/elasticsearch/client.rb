@@ -74,7 +74,7 @@ module Elasticsearch
       (@base_uri + sub_path).to_s
     end
 
-    def logging_exception_body(&block)
+    def logging_exception_body(&_block)
       yield
     rescue RestClient::BadRequest => error
       logger.send(
