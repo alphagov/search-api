@@ -18,7 +18,7 @@ module Indexer
         },
         fields: ["rank_14"],
         sort: [
-          { rank_14: { order: "asc" }}
+          { rank_14: { order: "asc" } }
         ],
         size: 10 * links.size,
       })
@@ -28,18 +28,17 @@ module Indexer
       results["hits"]["hits"].each do |hit|
         link = hit["_id"]
         rank = Array(hit["fields"]["rank_14"]).first
-        if rank.nil?
-          next
-        end
+        next if rank.nil?
         ranks[link] = [rank, ranks[link]].min
       end
 
       Hash[links.map { |link|
-        popularity_score = if ranks[link] == 0
-          0
+        if ranks[link] == 0
+          popularity_score = 0
         else
-          1.0 / (ranks[link] + @search_config.popularity_rank_offset)
+          popularity_score = 1.0 / (ranks[link] + @search_config.popularity_rank_offset)
         end
+
         [link, popularity_score]
       }]
     end
@@ -52,19 +51,18 @@ module Indexer
       end
       @traffic_index = open_traffic_index
       @opened_traffic_index = true
-      return @traffic_index
+      @traffic_index
     end
 
     def traffic_index_size
       results = traffic_index.raw_search({
-        query: { match_all: {}},
+        query: { match_all: {} },
         size: 0
       })
       results["hits"]["total"]
     end
 
     def open_traffic_index
-
       if @index_name.start_with?("page-traffic")
         return nil
       end
@@ -81,7 +79,7 @@ module Indexer
         end
       end
 
-      return nil
+      nil
     end
   end
 end

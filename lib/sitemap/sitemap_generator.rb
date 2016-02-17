@@ -32,7 +32,7 @@ class SitemapGenerator
   end
 
   def generate_xml(chunk)
-    builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+    builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
         chunk.each do |url|
           url = Array(url).first

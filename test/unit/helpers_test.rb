@@ -19,14 +19,14 @@ class HelpersTest < MiniTest::Unit::TestCase
 
   def test_parse_query_string
     [
-      ["foo=bar", {"foo" => ["bar"]}],
-      ["foo[]=bar", {"foo" => ["bar"]}],
-      ["foo=bar&foo[]=baz", {"foo" => ["bar", "baz"]}],
-      ["foo=bar=baz", {"foo" => ["bar=baz"]}],
-      ["foo[bar]=baz", {"foo[bar]" => ["baz"]}],
-      ["foo[]=baz&q=more", {"foo" => ["baz"], "q" => ["more"]}],
-      ["foo=baz&&q=more", {"foo" => ["baz"], "q" => ["more"]}],
-      ["foo=baz&boo&q=more", {"foo" => ["baz"], "boo" => [], "q" => ["more"]}],
+      ["foo=bar", { "foo" => ["bar"] }],
+      ["foo[]=bar", { "foo" => ["bar"] }],
+      ["foo=bar&foo[]=baz", { "foo" => %w(bar baz) }],
+      ["foo=bar=baz", { "foo" => ["bar=baz"] }],
+      ["foo[bar]=baz", { "foo[bar]" => ["baz"] }],
+      ["foo[]=baz&q=more", { "foo" => ["baz"], "q" => ["more"] }],
+      ["foo=baz&&q=more", { "foo" => ["baz"], "q" => ["more"] }],
+      ["foo=baz&boo&q=more", { "foo" => ["baz"], "boo" => [], "q" => ["more"] }],
     ].each do |qs, expected|
       assert_equal expected, parse_query_string(qs)
     end

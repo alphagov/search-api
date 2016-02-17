@@ -20,7 +20,7 @@ class Rummager < Sinatra::Application
 private
 
   def find_result_by_link(link)
-    results = unified_index.raw_search(query: { term: { link: link }}, size: 1)
+    results = unified_index.raw_search(query: { term: { link: link } }, size: 1)
     raw_result = results['hits']['hits'].first
 
     unless raw_result

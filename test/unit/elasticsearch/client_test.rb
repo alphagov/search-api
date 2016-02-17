@@ -2,7 +2,6 @@ require "test_helper"
 require "elasticsearch/client"
 
 class ClientTest < MiniTest::Unit::TestCase
-
   def internal_server_error(body = "STUFF AND THINGS BROKE")
     RestClient::InternalServerError.new(
       # Can't use stub() here, because RestClient does weird inspection

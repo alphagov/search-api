@@ -1,7 +1,6 @@
 require "integration_test_helper"
 
 class ElasticsearchClosingTest < IntegrationTest
-
   def setup
     stub_elasticsearch_settings
     create_test_index

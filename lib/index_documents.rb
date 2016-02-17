@@ -87,9 +87,9 @@ private
 
   def indices_with_base_path(document_base_path)
     indices_to_search = search_server.index_for_search(search_config.content_index_names)
-    results = indices_to_search.raw_search(query: {term: {link: document_base_path}})
+    results = indices_to_search.raw_search(query: { term: { link: document_base_path } })
 
-    indices = results["hits"]["hits"].map do |hit|
+    results["hits"]["hits"].map do |hit|
       index = Elasticsearch::Index.strip_alias_from_index_name(hit["_index"])
       search_server.index(index) if index
     end

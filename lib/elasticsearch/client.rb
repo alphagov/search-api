@@ -3,7 +3,6 @@ require "rest-client"
 
 module Elasticsearch
   class Client
-
     # Sub-paths almost certainly shouldn't start with leading slashes,
     # since this will make the request relative to the server root
     SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_aliases", "/_search/scroll"]
@@ -49,11 +48,12 @@ module Elasticsearch
       request(:get, path, payload, headers)
     end
 
-    def delete_with_payload(path, payload, headers={})
+    def delete_with_payload(path, payload, headers = {})
       request(:delete, path, payload, headers)
     end
 
   private
+
     def logger
       Logging.logger[self]
     end
@@ -74,7 +74,7 @@ module Elasticsearch
       (@base_uri + sub_path).to_s
     end
 
-    def logging_exception_body(&block)
+    def logging_exception_body(&_block)
       yield
     rescue RestClient::BadRequest => error
       logger.send(

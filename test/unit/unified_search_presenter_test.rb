@@ -5,7 +5,6 @@ require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"
 
 class UnifiedSearchPresenterTest < ShouldaUnitTestCase
-
   def sample_docs
     [{
       "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",
@@ -53,8 +52,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     {
       "organisations" => {
         "terms" => [
-          {"term" => "hm-magic", "count" => 7},
-          {"term" => "hmrc", "count" => 5},
+          { "term" => "hm-magic", "count" => 7 },
+          { "term" => "hmrc", "count" => 5 },
         ],
         "missing" => 8,
       }
@@ -65,15 +64,15 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     {
       "organisations" => {
         "terms" => [
-          {"term" => "hm-magic", "count" => 7},
-          {"term" => "hmrc", "count" => 5},
+          { "term" => "hm-magic", "count" => 7 },
+          { "term" => "hmrc", "count" => 5 },
         ],
         "missing" => 8,
       },
       "topics" => {
         "terms" => [
-          {"term" => "farming", "count" => 4},
-          {"term" => "unknown_topic", "count" => 5},
+          { "term" => "farming", "count" => 4 },
+          { "term" => "unknown_topic", "count" => 5 },
         ],
         "missing" => 3,
       },
@@ -96,9 +95,9 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   def facet_response_magic
     {
       value: {
-        "link"=>"/government/departments/hm-magic",
-        "title"=>"Ministry of Magic",
-        "slug"=>"hm-magic",
+        "link" => "/government/departments/hm-magic",
+        "title" => "Ministry of Magic",
+        "slug" => "hm-magic",
       },
       documents: 7,
     }
@@ -107,15 +106,15 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
   def facet_response_hmrc
     {
       value: {
-        "link"=>"/government/departments/hmrc",
-        "title"=>"HMRC",
-        "slug"=>"hmrc",
+        "link" => "/government/departments/hmrc",
+        "title" => "HMRC",
+        "slug" => "hmrc",
       },
       documents: 5,
     }
   end
 
-  def facet_params(requested, options={})
+  def facet_params(requested, options = {})
     {
       requested: requested,
       order: SearchParameterParser::DEFAULT_FACET_SORT,
@@ -190,7 +189,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
 
     should "have only the fields returned from search engine" do
-      @output[:results].zip(sample_docs).each do |result, doc|
+      @output[:results].zip(sample_docs).each do |result, _doc|
         doc_fields = result.keys - [:_type, :_id]
         returned_fields = result.keys - [:esscore, :_type, :_id]
         assert_equal doc_fields, returned_fields
@@ -204,7 +203,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         doc['fields'] = nil
       }
       response = sample_es_response.tap {|es_response|
-        es_response['hits']['hits'] = [ @empty_result ]
+        es_response['hits']['hits'] = [@empty_result]
       }
 
       @output = UnifiedSearchPresenter.new(SearchParameters.new(start: 0), response).present
@@ -256,7 +255,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     end
 
     should "have only the fields returned from search engine" do
-      @output[:results].zip(sample_docs).each do |result, doc|
+      @output[:results].zip(sample_docs).each do |result, _doc|
         doc_fields = result.keys - [:_type, :_id]
         returned_fields = result.keys - [:esscore, :_type, :_id]
         assert_equal doc_fields, returned_fields
@@ -300,8 +299,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have correct top facet value value" do
       assert_equal({
-        :value=>{"slug"=>"hm-magic"},
-        :documents=>7,
+        value: { "slug" => "hm-magic" },
+        documents: 7,
       }, @output[:facets]["organisations"][:options][0])
     end
 
@@ -324,7 +323,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         SearchParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hmrc"])],
-          facets: {"organisations" => facet_params(2)},
+          facets: { "organisations" => facet_params(2) },
         ),
         sample_es_response("facets" => sample_facet_data),
       ).present
@@ -344,15 +343,15 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have selected facet first" do
       assert_equal({
-        :value => {"slug" => "hmrc"},
-        :documents => 5,
+        value: { "slug" => "hmrc" },
+        documents: 5,
       }, @output[:facets]["organisations"][:options][0])
     end
 
     should "have unapplied facet value second" do
       assert_equal({
-        :value => {"slug" => "hm-magic"},
-        :documents => 7,
+        value: { "slug" => "hm-magic" },
+        documents: 7,
       }, @output[:facets]["organisations"][:options][1])
     end
 
@@ -375,7 +374,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         SearchParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hm-cheesemakers"])],
-          facets: {"organisations" => facet_params(1)},
+          facets: { "organisations" => facet_params(1) },
         ),
         sample_es_response("facets" => sample_facet_data),
       ).present
@@ -395,15 +394,15 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have selected facet first" do
       assert_equal({
-        :value => {"slug" => "hm-cheesemakers"},
-        :documents => 0,
+        value: { "slug" => "hm-cheesemakers" },
+        documents: 0,
       }, @output[:facets]["organisations"][:options][0])
     end
 
     should "have unapplied facet value second" do
       assert_equal({
-        :value => {"slug" => "hm-magic"},
-        :documents => 7,
+        value: { "slug" => "hm-magic" },
+        documents: 7,
       }, @output[:facets]["organisations"][:options][1])
     end
 
@@ -456,8 +455,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     setup do
       org_registry = sample_org_registry
       @output = search_presenter(
-        es_response: {"facets" => sample_facet_data},
-        facets: {"organisations" => facet_params(10, order: [[:count, 1]])},
+        es_response: { "facets" => sample_facet_data },
+        facets: { "organisations" => facet_params(10, order: [[:count, 1]]) },
         org_registry: org_registry
       ).present
     end
@@ -474,8 +473,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     setup do
       org_registry = sample_org_registry
       @output = search_presenter(
-        es_response: {"facets" => sample_facet_data},
-        facets: {"organisations" => facet_params(10, order: [[:count, -1]])},
+        es_response: { "facets" => sample_facet_data },
+        facets: { "organisations" => facet_params(10, order: [[:count, -1]]) },
         org_registry: org_registry
       ).present
     end
@@ -492,8 +491,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     setup do
       org_registry = sample_org_registry
       @output = search_presenter(
-        es_response: {"facets" => sample_facet_data},
-        facets: {"organisations" => facet_params(10, order: [[:"value.slug", 1]])},
+        es_response: { "facets" => sample_facet_data },
+        facets: { "organisations" => facet_params(10, order: [[:"value.slug", 1]]) },
         org_registry: org_registry
       ).present
     end
@@ -510,8 +509,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     setup do
       org_registry = sample_org_registry
       @output = search_presenter(
-        es_response: {"facets" => sample_facet_data},
-        facets: {"organisations" => facet_params(10, order: [[:"value.link", 1]])},
+        es_response: { "facets" => sample_facet_data },
+        facets: { "organisations" => facet_params(10, order: [[:"value.link", 1]]) },
         org_registry: org_registry
       ).present
     end
@@ -528,8 +527,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     setup do
       org_registry = sample_org_registry
       @output = search_presenter(
-        es_response: {"facets" => sample_facet_data},
-        facets: {"organisations" => facet_params(10, order: [[:"value.title", 1]])},
+        es_response: { "facets" => sample_facet_data },
+        facets: { "organisations" => facet_params(10, order: [[:"value.title", 1]]) },
         org_registry: org_registry
       ).present
     end
@@ -549,7 +548,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
       @output = UnifiedSearchPresenter.new(
         SearchParameters.new(
           start: 0,
-          facets: {"organisations" => facet_params(1), "topics" => facet_params(1)},
+          facets: { "organisations" => facet_params(1), "topics" => facet_params(1) },
         ),
         sample_es_response("facets" => sample_facet_data_with_topics),
         { organisations: org_registry },
@@ -571,19 +570,19 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have org facet value expanded" do
       assert_equal({
-        :value => {
+        value: {
           "link" => "/government/departments/hm-magic",
           "title" => "Ministry of Magic",
           "slug" => "hm-magic",
         },
-        :documents=>7,
+        documents: 7,
       }, @output[:facets]["organisations"][:options][0])
     end
 
     should "have topic facet value un-expanded" do
       assert_equal({
-        :value => {"slug" => "unknown_topic"},
-        :documents => 5,
+        value: { "slug" => "unknown_topic" },
+        documents: 5,
       }, @output[:facets]["topics"][:options][0])
     end
 
@@ -614,12 +613,12 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         ),
         sample_es_response("facets" => sample_facet_data),
         { organisations: org_registry },
-        {"organisations" => {
+        { "organisations" => {
           "hm-magic" => {
             "total" => 1,
-            "examples" => [{"title" => "Ministry of Magic"}],
+            "examples" => [{ "title" => "Ministry of Magic" }],
           }
-        }}
+        } }
       ).present
     end
 
@@ -637,18 +636,18 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
     should "have org facet value expanded, and include examples" do
       assert_equal({
-        :value => {
+        value: {
           "link" => "/government/departments/hm-magic",
           "title" => "Ministry of Magic",
           "slug" => "hm-magic",
           "example_info" => {
             "total" => 1,
             "examples" => [
-              {"title" => "Ministry of Magic"},
+              { "title" => "Ministry of Magic" },
             ],
           },
         },
-        :documents=>7,
+        documents: 7,
       }, @output[:facets]["organisations"][:options][0])
     end
 

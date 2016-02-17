@@ -10,7 +10,7 @@ module QueryComponents
       QueryComponents::BestBets.new(search_params).wrap(query_hash)
     end
 
-    private
+  private
 
     def query_hash
       {

@@ -89,7 +89,7 @@ class SitemapTest < IntegrationTest
     sitemap_xml = generator.sitemaps
 
     assert_equal 1, sitemap_xml.length
-    refute_includes sitemap_xml[0],  "/government/some-content"
+    refute_includes sitemap_xml[0], "/government/some-content"
   end
 
 private

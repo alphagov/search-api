@@ -25,7 +25,7 @@ class SchemaConfig
     raise RuntimeError("No schema found for alias `#{alias_name}")
   end
 
-  def elasticsearch_settings(index_name)
+  def elasticsearch_settings(_index_name)
     @settings ||= elasticsearch_index["settings"]
   end
 
@@ -40,6 +40,7 @@ class SchemaConfig
   end
 
 private
+
   attr_reader :config_path
 
   def schema_yaml

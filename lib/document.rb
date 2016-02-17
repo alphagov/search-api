@@ -1,5 +1,4 @@
 class Document
-
   attr_reader :es_score
 
   def initialize(field_definitions, attributes = {}, es_score = nil)
@@ -63,9 +62,9 @@ class Document
       @field_definitions.keys.each do |key|
         value = get(key)
         if value.is_a?(Array)
-          value = value.map {|v| v.is_a?(Document) ? v.elasticsearch_export : v }
+          value = value.map { |v| v.is_a?(Document) ? v.elasticsearch_export : v }
         end
-        unless value.nil? or (value.respond_to?(:empty?) and value.empty?)
+        unless value.nil? || (value.respond_to?(:empty?) && value.empty?)
           doc[key] = value
         end
       end
@@ -75,17 +74,23 @@ class Document
   end
 
   def to_hash
-    field_values = Hash[@field_definitions.keys.map { |field_name|
+    definitions_and_values = @field_definitions.keys.map do |field_name|
       value = get(field_name)
+
       if value.is_a?(Array)
         value = value.map { |v| v.is_a?(Document) ? v.to_hash : v }
       else
         value = value.is_a?(Document) ? value.to_hash : value
       end
+
       [field_name.to_s, value]
-    }.select{ |_, value|
+    end
+
+    without_empty_values = definitions_and_values.select do |_, value|
       ![nil, []].include?(value)
-    }]
+    end
+
+    field_values = Hash[without_empty_values]
 
     if es_score
       field_values.merge("es_score" => es_score)
@@ -105,11 +110,12 @@ class Document
     end
   end
 
-  def respond_to_missing?(method_name, include_private)
+  def respond_to_missing?(method_name, _include_private)
     valid_assignment_method?(method_name) || has_field?(method_name)
   end
 
 private
+
   def is_assignment?(method_name)
     method_name.to_s[-1] == "="
   end

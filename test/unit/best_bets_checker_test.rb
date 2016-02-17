@@ -3,24 +3,23 @@ require "json"
 require "best_bets_checker"
 
 class BestBetsCheckerTest < ShouldaUnitTestCase
-
   def best_bets_query(query)
     {
       query: {
         bool: {
           should: [
-            { match: { exact_query: query }},
-            { match: { stemmed_query: query }}
+            { match: { exact_query: query } },
+            { match: { stemmed_query: query } }
           ]
         }
       },
       size: 1000,
-      fields: [ :details, :stemmed_query_as_term ],
+      fields: [:details, :stemmed_query_as_term],
     }
   end
 
   def bb_hits(hits)
-    { "hits" => {"hits" => hits, "total" => hits.length } }
+    { "hits" => { "hits" => hits, "total" => hits.length } }
   end
 
   def bb_doc(query, type, best_bets, worst_bets)
@@ -32,10 +31,10 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
       "fields" => {
         "details" => JSON.generate({
           best_bets: best_bets.map do |link, position|
-            {link: link, position: position}
+            { link: link, position: position }
           end,
           worst_bets: worst_bets.map do |link|
-            {link: link}
+            { link: link }
           end,
         })
       }
@@ -75,7 +74,7 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
     end
 
     should "find one best bet" do
-      assert_equal({1 => ["/jobsearch"]}, @checker.best_bets)
+      assert_equal({ 1 => ["/jobsearch"] }, @checker.best_bets)
     end
 
     should "not find any worst bets" do
@@ -108,7 +107,7 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
     end
 
     should "find just the exact best bet" do
-      assert_equal({1 => ["/jobsearch"]}, @checker.best_bets)
+      assert_equal({ 1 => ["/jobsearch"] }, @checker.best_bets)
     end
 
     should "not find any worst bets" do
@@ -125,7 +124,7 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
     end
 
     should "find both best bets" do
-      assert_equal({1 => ["/jobs", "/jobsearch"]}, @checker.best_bets)
+      assert_equal({ 1 => ["/jobs", "/jobsearch"] }, @checker.best_bets)
     end
 
     should "not find any worst bets" do
@@ -172,5 +171,4 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
       assert_equal(["/jobsearch"], @checker.worst_bets)
     end
   end
-
 end

@@ -5,14 +5,13 @@ module HealthCheck
   # Because this is a Struct, the object can be passed into a Net::HTTP::Get
   # request's #basic_auth method with the splat operator.
   class BasicAuthCredentials < Struct.new(:user, :password)
-
     # Since we've got to provide a `call` method for Slop, let's make that the
     # only way to instantiate this class.
     private_class_method :new
 
     def self.call(value)
       error = "Credentials must be of the form 'user:password'"
-      raise ArgumentError, error unless (value && value.include?(":"))
+      raise ArgumentError, error unless value && value.include?(":")
       new(*value.split(":", 2)).freeze
     end
   end

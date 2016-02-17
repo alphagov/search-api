@@ -5,7 +5,6 @@ require "elasticsearch/amend_worker"
 module Elasticsearch
   # A queue of operations on an index.
   class IndexQueue
-
     def initialize(index_name)
       @index_name = index_name
     end

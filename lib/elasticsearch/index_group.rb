@@ -4,7 +4,6 @@ require "cgi"
 require "elasticsearch/index"
 
 module Elasticsearch
-
   # A group of related indexes.
   #
   # An index group, say "mainstream", consists of a number of indexes of the
@@ -54,7 +53,7 @@ module Elasticsearch
 
       # Response of the form:
       #   { "index_name" => { "aliases" => { "a1" => {}, "a2" => {} } }
-      aliased_indices = indices.select { |name, details|
+      aliased_indices = indices.select { |_name, details|
         details.fetch("aliases", {}).include? @name
       }
 
@@ -93,8 +92,6 @@ module Elasticsearch
       current_index = current
       if current_index.exists?
         Index.new(@base_uri, current.real_name, @name, mappings, @search_config)
-      else
-        nil
       end
     end
 
@@ -109,6 +106,7 @@ module Elasticsearch
     end
 
   private
+
     def logger
       Logging.logger[self]
     end

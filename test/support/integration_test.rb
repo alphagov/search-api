@@ -10,7 +10,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
   }
 
   AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"]
-  INDEX_NAMES = ["mainstream_test", "government_test"]
+  INDEX_NAMES = %w(mainstream_test government_test)
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
 
   def sample_document
@@ -79,7 +79,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
         fields["specialist_sectors"] = ["farming"]
       end
       if short_index_name == "government"
-        fields["public_timestamp"] = "#{i+2000}-01-01T00:00:00"
+        fields["public_timestamp"] = "#{i + 2000}-01-01T00:00:00"
       end
       fields
     end
@@ -156,6 +156,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
     RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"
   rescue RestClient::ResourceNotFound
     # Index doesn't exist: that's fine
+    true
   end
 
   def clean_index_group(group_name = DEFAULT_INDEX_NAME)

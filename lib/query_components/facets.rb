@@ -7,7 +7,7 @@ module QueryComponents
       end
     end
 
-    private
+  private
 
     def facet_hash_for_facet(field_name, options)
       facet_hash = {

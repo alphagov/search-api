@@ -43,7 +43,7 @@ class UnifiedSearchBuilder
     QueryComponents::Filter.new(search_params).payload
   end
 
-  private
+private
 
   def sort
     QueryComponents::Sort.new(search_params).payload
@@ -58,7 +58,7 @@ class UnifiedSearchBuilder
   end
 
   def hash_without_blank_values(hash)
-    Hash[hash.reject { |key, value|
+    Hash[hash.reject { |_key, value|
       [nil, [], {}].include?(value)
     }]
   end

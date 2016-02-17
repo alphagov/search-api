@@ -3,7 +3,6 @@ require "document"
 require "elasticsearch/result_set"
 
 class ResultSetTest < ShouldaUnitTestCase
-
   context "empty result set" do
     setup do
       @response = {

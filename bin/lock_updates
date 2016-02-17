@@ -13,14 +13,14 @@ require "bulk_loader"
 
 Slop.parse(help: true) do
   search_config = SearchConfig.new
-  banner %Q{Usage: #{File.basename(__FILE__)} {#{search_config.index_names.join("|")}} lock|unlock
+  banner %{Usage: #{File.basename(__FILE__)} {#{search_config.index_names.join("|")}} lock|unlock
 
 Lock/Unlock an index for writes.
 
 This is useful for bulk rebuilds - lock the index before starting the export of the data.
 
 }
-  run do |opts, args|
+  run do |_opts, args|
     if args.size == 2 && %w{lock unlock}.include?(args[1])
       index = search_config.search_server.index_group(args[0])
       if args[1] == "lock"

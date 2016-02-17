@@ -61,7 +61,7 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
   def test_uses_cache
     # Make sure we're using TimedCache#get; TimedCache is tested elsewhere, so
     # we don't need to worry about cache expiry tests here.
-    TimedCache.any_instance.expects(:get).with().returns([example_document])
+    TimedCache.any_instance.expects(:get).with.returns([example_document])
     assert @base_registry["example-document"]
   end
 end

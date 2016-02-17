@@ -3,7 +3,7 @@ require "unified_search_builder"
 
 class FilterTest < ShouldaUnitTestCase
   def make_search_params(filters, include_withdrawn: true)
-    SearchParameters.new(filters: filters, debug: {include_withdrawn: include_withdrawn})
+    SearchParameters.new(filters: filters, debug: { include_withdrawn: include_withdrawn })
   end
 
   context "search with one filter" do
@@ -16,7 +16,7 @@ class FilterTest < ShouldaUnitTestCase
 
       assert_equal(
         result,
-        { "terms" => {"organisations" => ["hm-magic"] }}
+        { "terms" => { "organisations" => ["hm-magic"] } }
       )
     end
 
@@ -29,7 +29,7 @@ class FilterTest < ShouldaUnitTestCase
 
       assert_equal(
         result,
-        {"range" => {"field_with_date" => {"from" => "2014-04-01", "to" => "2014-04-02"}}}
+        { "range" => { "field_with_date" => { "from" => "2014-04-01", "to" => "2014-04-02" } } }
       )
     end
 
@@ -48,7 +48,7 @@ class FilterTest < ShouldaUnitTestCase
 
       assert_equal(
         result,
-        {"terms" => {"organisations" => ["hm-magic", "hmrc"]}}
+        { "terms" => { "organisations" => ["hm-magic", "hmrc"] } }
       )
     end
   end
@@ -68,10 +68,10 @@ class FilterTest < ShouldaUnitTestCase
 
       assert_equal(
         result,
-        {bool: {
-          must: {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
-          must_not: {"terms" => {"mainstream_browse_pages" => ["benefits"]}},
-        }}
+        { bool: {
+          must: { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
+          must_not: { "terms" => { "mainstream_browse_pages" => ["benefits"] } },
+        } }
       )
     end
   end
@@ -93,8 +93,8 @@ class FilterTest < ShouldaUnitTestCase
         result,
         {
           and: [
-            {"terms" => {"organisations" => ["hm-magic", "hmrc"]}},
-            {"terms" => {"mainstream_browse_pages" => ["levitation"]}},
+            { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
+            { "terms" => { "mainstream_browse_pages" => ["levitation"] } },
           ].compact
         }
       )

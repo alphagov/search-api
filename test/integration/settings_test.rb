@@ -3,8 +3,8 @@ require "integration_test_helper"
 class SettingsTest < IntegrationTest
   def test_default
     assert_tokenisation :default,
-      "It's A Small’s World" => ["it", "small", "world"],
-      "It's Mitt’s" => ["it", "mitt"]
+      "It's A Small’s World" => %w(it small world),
+      "It's Mitt’s" => %w(it mitt)
   end
 
   def test_uses_correct_stemming
@@ -14,8 +14,8 @@ class SettingsTest < IntegrationTest
 
   def test_query_default
     assert_tokenisation :query_default,
-      "It's A Small World" => ["it", "small", "world"],
-      "It's, It’s Mr. O'Neill" => ["it", "it", "mr", "oneil"]
+      "It's A Small World" => %w(it small world),
+      "It's, It’s Mr. O'Neill" => %w(it it mr oneil)
   end
 
   def test_shingled_query_analyzer
@@ -31,7 +31,7 @@ class SettingsTest < IntegrationTest
 
   def test_best_bet_stemmed_match
     assert_tokenisation :best_bet_stemmed_match,
-      "It’s A Small W'rld" => ["it", "a", "small", "wrld"]
+      "It’s A Small W'rld" => %w(it a small wrld)
   end
 
   def test_spelling_analyzer

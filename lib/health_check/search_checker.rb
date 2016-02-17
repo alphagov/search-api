@@ -14,7 +14,7 @@ module HealthCheck
     end
 
     def run!
-      Logging.logger[self].info("Connecting to #{@search_client.to_s}")
+      Logging.logger[self].info("Connecting to #{@search_client}")
 
       checks.each do |check|
         search_results = search_client.search(check.search_term)[:results]
@@ -27,13 +27,14 @@ module HealthCheck
       calculator
     end
 
-    private
-      def checks
-        CheckFileParser.new(@test_data_file).checks.sort { |a,b| b.weight <=> a.weight }
-      end
+  private
 
-      def calculator
-        @_calculator ||= Calculator.new
-      end
+    def checks
+      CheckFileParser.new(@test_data_file).checks.sort { |a, b| b.weight <=> a.weight }
+    end
+
+    def calculator
+      @_calculator ||= Calculator.new
+    end
   end
 end

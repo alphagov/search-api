@@ -31,7 +31,7 @@ class HealthCheckCLI
   def run!
     health_checker = self
     Slop.parse do
-      banner %Q{Usage: #{File.basename(__FILE__)}
+      banner %{Usage: #{File.basename(__FILE__)}
 
     Runs a health check.
     }
@@ -69,7 +69,7 @@ class HealthCheckCLI
     end
   end
 
-  private
+private
 
   def run_search_result_tests
     scores = run_search_result_test_on_index

@@ -24,8 +24,8 @@ class CombinedIndexSchemaTest < MiniTest::Unit::TestCase
     # european_structural_investment_fund document type, with different
     # allowed_values.  Check that allowed values from both lists are present.
     locations = @combined_schema.field_definitions["location"].allowed_values
-    assert locations.include?({"label"=>"Afghanistan", "value"=>"afghanistan"})
-    assert locations.include?({"label"=>"North East", "value"=>"north-east"})
+    assert locations.include?({ "label" => "Afghanistan", "value" => "afghanistan" })
+    assert locations.include?({ "label" => "North East", "value" => "north-east" })
   end
 
   def test_allowed_filter_fields

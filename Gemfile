@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "unicorn", "4.6.2"
 gem "sinatra", "1.3.4"
-gem "rake", "0.9.2", :require => false
+gem "rake", "~> 10.5"
 gem "rack", "~> 1.6"
 gem "rest-client", "1.8.0"
 gem "logging", "1.8.1"
@@ -27,7 +27,7 @@ group :test do
   gem "ci_reporter", "1.7.1"
   gem "minitest", "4.6.1"
   gem "rack-test"
-  gem "mocha", :require => false
+  gem "mocha", require: false
   gem "webmock", "~> 1.21.0", require: false
   gem "timecop", "0.7.3"
 end
@@ -39,3 +39,4 @@ end
 
 gem "pry-byebug", group: [:development, :test]
 gem "govuk_message_queue_consumer", "~> 2.0.1"
+gem "govuk-lint", "~> 0.6.1"

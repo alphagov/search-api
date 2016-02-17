@@ -33,7 +33,7 @@ end
 
 require "ci/reporter/rake/minitest" if ENV["RACK_ENV"] == "test"
 
-task :default => :test
+task default: :test
 
 def logger
   Logging.logger.root

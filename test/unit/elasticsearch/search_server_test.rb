@@ -37,5 +37,4 @@ class SearchServerTest < MiniTest::Unit::TestCase
       search_server.index_for_search(%w{mainstream_test unknown})
     end
   end
-
 end

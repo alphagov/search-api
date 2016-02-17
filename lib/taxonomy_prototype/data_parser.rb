@@ -19,11 +19,12 @@ module TaxonomyPrototype
       end
     end
 
-private
+  private
+
     def relevant_columns_in(remote_taxonomy_data)
       tsv_data = CSV.parse(remote_taxonomy_data, col_sep: "\t", headers: true)
       desired_columns = ["mapped to", "link"]
-      columns_in_data = tsv_data.headers.map { |header| header.downcase }
+      columns_in_data = tsv_data.headers.map(&:downcase)
 
       if desired_columns.all? { |column_name| columns_in_data.include? column_name }
         tsv_data.values_at(*desired_columns)
@@ -34,7 +35,7 @@ private
 
     # Standardise the appearance of taxonomy labels extracted from the spreadsheets.
     def sluggify(taxonomy_label)
-      taxonomy_label.split(', ').map do |taxon|
+      taxons = taxonomy_label.split(', ').map do |taxon|
         taxon.downcase!
         # Turn unwanted chars into hyphen
         taxon.gsub!(/[^a-z0-9\-_]+/, '-')
@@ -43,7 +44,9 @@ private
         # Remove leading/trailing separator.
         taxon.gsub!(/^-|-$/, '')
         taxon
-      end.join(' > ')
+      end
+
+      taxons.join(' > ')
     end
   end
 end

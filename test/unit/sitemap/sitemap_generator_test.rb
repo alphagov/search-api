@@ -5,7 +5,7 @@ class SitemapGeneratorTest < MiniTest::Unit::TestCase
   def test_should_generate_sitemap
     sitemap = SitemapGenerator.new('')
 
-    sitemap_xml = sitemap.generate_xml([ 'https://www.gov.uk/page', '/another-page', 'yet-another-page' ])
+    sitemap_xml = sitemap.generate_xml(['https://www.gov.uk/page', '/another-page', 'yet-another-page'])
     doc = Nokogiri::XML(sitemap_xml)
     urls = doc.css('url > loc').map(&:inner_html)
     assert_equal urls[0], 'https://www.gov.uk/page'

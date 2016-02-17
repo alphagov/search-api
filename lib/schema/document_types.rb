@@ -127,14 +127,18 @@ private
   end
 
   def document_type_paths
-    Dir.new(File.join(config_path, "document_types")).select { |filename|
+    files = Dir.new(File.join(config_path, "document_types"))
+
+    json_files = files.select do |filename|
       filename =~ /\A[a-z][-_a-z]*\.json\z/
-    }.map { |filename|
+    end
+
+    json_files.map do |filename|
       [
         filename.sub(/.json$/, ''),
         File.join(config_path, "document_types", filename),
       ]
-    }
+    end
   end
 
   def document_type_raw

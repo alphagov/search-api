@@ -7,7 +7,6 @@ module HealthCheck
   class SuggestionCheckerTest < ShouldaUnitTestCase
     context "result" do
       should "returns the correct calculator" do
-
         data = <<-doc
 Search term,Ideal suggestion,Alternative suggestion
 adress,address,

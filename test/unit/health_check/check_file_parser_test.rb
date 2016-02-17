@@ -3,7 +3,6 @@ require "health_check/check_file_parser"
 
 module HealthCheck
   class CheckFileParserTest < ShouldaUnitTestCase
-
     def checks(data)
       CheckFileParser.new(StringIO.new(data)).checks
     end

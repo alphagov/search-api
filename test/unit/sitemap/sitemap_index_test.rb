@@ -3,7 +3,7 @@ require "sitemap/sitemap"
 
 class SitemapIndexTest < MiniTest::Unit::TestCase
   def test_should_generate_index_sitemap
-    index_file = StringIO.new()
+    index_file = StringIO.new
     File.stubs(:open).yields(index_file)
     sitemap = Sitemap.new('/foo')
     sitemaps = ['sitemap_test_1.xml', 'sitemap_test_2.xml']

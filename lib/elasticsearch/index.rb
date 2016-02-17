@@ -74,7 +74,7 @@ module Elasticsearch
         alias_info = JSON.parse(@client.get("_aliases"))
       rescue RestClient::ResourceNotFound => e
         response_body = JSON.parse(e.http_body)
-        if response_body['error'].start_with?("IndexMissingException") then
+        if response_body['error'].start_with?("IndexMissingException")
           return nil
         end
         raise
@@ -93,13 +93,13 @@ module Elasticsearch
 
     # Apply a write lock to this index, making it read-only
     def lock
-      request_body = {"index" => {"blocks" => {"write" => true}}}.to_json
+      request_body = { "index" => { "blocks" => { "write" => true } } }.to_json
       @client.put("_settings", request_body, content_type: :json)
     end
 
     # Remove any write lock applied to this index
     def unlock
-      request_body = {"index" => {"blocks" => {"write" => false}}}.to_json
+      request_body = { "index" => { "blocks" => { "write" => false } } }.to_json
       @client.put("_settings", request_body, content_type: :json)
     end
 
@@ -117,7 +117,7 @@ module Elasticsearch
     def add(documents, options = {})
       logger.info "Adding #{documents.size} document(s) to #{index_name}"
 
-      document_hashes = documents.map { |d| d.elasticsearch_export }
+      document_hashes = documents.map(&:elasticsearch_export)
       bulk_index(document_hashes, options)
     end
 
@@ -125,14 +125,14 @@ module Elasticsearch
     def add_queued(documents)
       logger.info "Queueing #{documents.size} document(s) to add to #{index_name}"
 
-      document_hashes = documents.map { |d| d.elasticsearch_export }
+      document_hashes = documents.map(&:elasticsearch_export)
       queue.queue_many(document_hashes)
     end
 
     # `bulk_index` is the only method that inserts/updates documents. The other
     # indexing-methods like `add`, `add_queued` and `amend` eventually end up
     # calling this method.
-    def bulk_index(document_hashes_or_payload, options = {} )
+    def bulk_index(document_hashes_or_payload, options = {})
       client = build_client(options)
       payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
       response = client.post("_bulk", payload_generator.bulk_payload(document_hashes_or_payload), content_type: :json)
@@ -194,7 +194,7 @@ module Elasticsearch
       client = options ? build_client(options) : @client
 
       # Set off a scan query to get back a scroll ID and result count
-      search_body = {query: {match_all: {}}}
+      search_body = { query: { match_all: {} } }
       batch_size = self.class.scroll_batch_size
       ScrollEnumerator.new(client, search_body, batch_size) do |hit|
         document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
@@ -224,7 +224,7 @@ module Elasticsearch
     def documents_by_format(format, field_definitions)
       batch_size = 500
       search_body = {
-        query: {term: {format: format}},
+        query: { term: { format: format } },
         fields: field_definitions.keys,
       }
 
@@ -237,7 +237,7 @@ module Elasticsearch
       Elasticsearch::AdvancedSearch.new(@mappings, @document_types, @client).result_set(params)
     end
 
-    def raw_search(payload, type=nil)
+    def raw_search(payload, type = nil)
       json_payload = payload.to_json
       logger.debug "Request payload: #{json_payload}"
       if type.nil?
@@ -253,8 +253,9 @@ module Elasticsearch
     #
     # duplicated in document_preparer.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = JSON.parse(@client.get_with_payload(
-        "_analyze?analyzer=best_bet_stemmed_match", query))
+      analyzed_query = JSON.parse(
+        @client.get_with_payload("_analyze?analyzer=best_bet_stemmed_match", query)
+      )
 
       analyzed_query["tokens"].map { |token_info|
         token_info["token"]
@@ -265,6 +266,8 @@ module Elasticsearch
       begin
         @client.delete("#{CGI.escape(type)}/#{CGI.escape(id)}")
       rescue RestClient::ResourceNotFound
+        # We are fine with trying to delete deleted documents.
+        true
       rescue RestClient::Forbidden => e
         response_body = JSON.parse(e.http_body)
         if locked_index_error?(response_body["error"])
@@ -273,7 +276,8 @@ module Elasticsearch
           raise
         end
       end
-      return true  # For consistency with the Solr API and simple_json_response
+
+      true # For consistency with the Solr API and simple_json_response
     end
 
     def delete_queued(document_type, document_id)
@@ -313,7 +317,7 @@ module Elasticsearch
       IndexQueue.new(index_name)
     end
 
-    def build_client(options={})
+    def build_client(options = {})
       Client.new(
         @index_uri,
         timeout: options[:timeout] || TIMEOUT_SECONDS,

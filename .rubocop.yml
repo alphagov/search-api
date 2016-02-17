@@ -1,0 +1,41 @@
+# Don't care about single/double quotes inside interpolation
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+
+# No braces around parameters doesn't work very nicely in this
+# project because there are lots of hashes with string keys.
+Style/BracesAroundHashParameters:
+  Enabled: false
+
+# TODO: refactor tests that don't conform to this cop.
+Lint/ParenthesesAsGroupedExpression:
+  Exclude:
+    - 'test/**/*'
+
+# This cop doesn't work nicely with the style in the tests.
+Style/ClosingParenthesisIndentation:
+  Enabled: false
+
+# This cop doesn't make things clearer in a lot of cases. Using the modifier
+# should be up to the developer.
+Style/IfUnlessModifier:
+  Enabled: false
+
+# We shouldn't inherit from Struct, but existing violations are quite difficult
+# to refactor. We'll disable this cop for known occurences so no new violations
+# will be introduced.
+Style/StructInheritance:
+  Exclude:
+    - 'lib/health_check/basic_auth_credentials.rb'
+    - 'lib/health_check/search_check.rb'
+    - 'lib/registries.rb'
+    - 'lib/unified_search/spell_check_fetcher.rb'
+    - 'lib/unified_search/spell_check_presenter.rb'
+    - 'lib/unified_search/suggestion_blacklist.rb'
+
+# The class vars in these two files are acceptable because
+# they aren't inherited.
+Style/ClassVars:
+  Exclude:
+    - 'app.rb'
+    - 'lib/unified_search/suggestion_blacklist.rb'

@@ -12,10 +12,10 @@ module Elasticsearch
     end
 
     def unknown_keys
-      attachment_keys = if @mappings["edition"]["properties"]["attachments"]
-        @mappings["edition"]["properties"]["attachments"]["properties"].keys.map{|k| "attachments.#{k}"}
+      if @mappings["edition"]["properties"]["attachments"]
+        attachment_keys = @mappings["edition"]["properties"]["attachments"]["properties"].keys.map { |k| "attachments.#{k}" }
       else
-        []
+        attachment_keys = []
       end
 
       @unknown_keys ||= @filter_params.keys - (@mappings["edition"]["properties"].keys + attachment_keys)
@@ -39,7 +39,7 @@ module Elasticsearch
     BOOLEAN_TRUTHY = /\A(true|1)\Z/i
     BOOLEAN_FALSEY = /\A(false|0)\Z/i
     def invalid_boolean_property_value?(value)
-      (value.to_s !~ BOOLEAN_TRUTHY ) && (value.to_s !~ BOOLEAN_FALSEY)
+      (value.to_s !~ BOOLEAN_TRUTHY) && (value.to_s !~ BOOLEAN_FALSEY)
     end
 
     def invalid_date_properties
@@ -55,8 +55,8 @@ module Elasticsearch
       # formatted.
       !(value.is_a?(Hash) &&
         value.keys.any? &&
-        (value.keys - ['from', 'to', 'before', 'after']).empty? &&
-        (value.values.reject { |date| date.to_s =~ /\A\d{4}-\d{2}-\d{2}\Z/}).empty?)
+        (value.keys - %w(from to before after)).empty? &&
+        (value.values.reject { |date| date.to_s =~ /\A\d{4}-\d{2}-\d{2}\Z/ }).empty?)
     end
 
     def valid?
@@ -70,8 +70,8 @@ module Elasticsearch
       errors = []
       errors << "Querying unknown properties #{unknown_keys.inspect}" if unknown_keys.any?
       errors << "Sorting on unknown property #{unknown_sort_key.inspect}" if unknown_sort_key.any?
-      errors << invalid_boolean_properties.map { |p, v| "Invalid value #{v.inspect} for boolean property \"#{p}\""} if invalid_boolean_properties.any?
-      errors << invalid_date_properties.map { |p, v| "Invalid value #{v.inspect} for date property \"#{p}\""} if invalid_date_properties.any?
+      errors << invalid_boolean_properties.map { |p, v| "Invalid value #{v.inspect} for boolean property \"#{p}\"" } if invalid_boolean_properties.any?
+      errors << invalid_date_properties.map { |p, v| "Invalid value #{v.inspect} for date property \"#{p}\"" } if invalid_date_properties.any?
       errors.flatten.join('. ')
     end
 
@@ -119,7 +119,7 @@ module Elasticsearch
           }
         }
       else
-        {"query" => {"match_all" => {}}}
+        { "query" => { "match_all" => {} } }
       end
     end
 
@@ -129,29 +129,29 @@ module Elasticsearch
 
     def filter_query_hash
       # Withdrawn documents should never be part of advanced search
-      withdrawn_query = {"not" => { "term" => {"is_withdrawn" => true } } }
+      withdrawn_query = { "not" => { "term" => { "is_withdrawn" => true } } }
 
       filters = filters_hash
       filters << withdrawn_query
 
       if filters.size > 1
-        filters = {"and" => filters}
+        filters = { "and" => filters }
       else
         filters = filters.first
       end
-      {"filter" => filters || {}}
+      { "filter" => filters || {} }
     end
 
     def order_query_hash
       if @sort_order
-        {"sort" => [@sort_order]}
+        { "sort" => [@sort_order] }
       else
         {}
       end
     end
 
     def filters_hash
-      @filter_params.map do |property, filter_value|
+      filters = @filter_params.map do |property, filter_value|
         if date_properties.include?(property)
           date_property_filter(property, filter_value)
         elsif boolean_properties.include?(property)
@@ -159,11 +159,13 @@ module Elasticsearch
         else
           standard_property_filter(property, filter_value)
         end
-      end.compact
+      end
+
+      filters.compact
     end
 
     def date_property_filter(property, filter_value)
-      filter = {"range" => {property => {}}}
+      filter = { "range" => { property => {} } }
       if filter_value.has_key?("from")
         filter["range"][property]["from"] = filter_value["from"]
       end
@@ -182,27 +184,26 @@ module Elasticsearch
 
     def boolean_property_filter(property, filter_value)
       if filter_value.to_s =~ BOOLEAN_TRUTHY
-        {"term" => { property => true }}
+        { "term" => { property => true } }
       elsif filter_value.to_s =~ BOOLEAN_FALSEY
-        {"term" => { property => false }}
+        { "term" => { property => false } }
       end
     end
 
     def standard_property_filter(property, filter_value)
       if filter_value.is_a?(Array) && filter_value.size > 1
-        {"terms" => { property => filter_value } }
+        { "terms" => { property => filter_value } }
       else
-        {"term" => { property => filter_value.is_a?(Array) ? filter_value.first : filter_value } }
+        { "term" => { property => filter_value.is_a?(Array) ? filter_value.first : filter_value } }
       end
     end
 
     def date_properties
-      @date_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "date" }.keys
+      @date_properties ||= @mappings["edition"]["properties"].select { |_p, h| h["type"] == "date" }.keys
     end
 
     def boolean_properties
-      @boolean_properties ||= @mappings["edition"]["properties"].select { |p,h| h["type"] == "boolean" }.keys
+      @boolean_properties ||= @mappings["edition"]["properties"].select { |_p, h| h["type"] == "boolean" }.keys
     end
-
   end
 end

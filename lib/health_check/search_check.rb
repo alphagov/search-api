@@ -23,7 +23,7 @@ module HealthCheck
     end
 
     def valid?
-       valid_imperative? && valid_path? && valid_search_term? && valid_weight?
+      valid_imperative? && valid_path? && valid_search_term? && valid_weight?
     end
 
     def result(search_results)

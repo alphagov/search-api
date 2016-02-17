@@ -3,7 +3,6 @@ require "rack/logger"
 require "bulk_loader"
 
 class ElasticsearchMigrationTest < IntegrationTest
-
   def setup
     stub_elasticsearch_settings
     try_remove_test_index
@@ -94,7 +93,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     index_group = search_server.index_group("mainstream_test")
     original_index_name = index_group.current_real.real_name
 
-    BulkLoader.new(search_config, "mainstream_test", :document_batch_size => test_batch_size).load_from_current_index
+    BulkLoader.new(search_config, "mainstream_test", document_batch_size: test_batch_size).load_from_current_index
 
     # Ensure the indexes have actually been switched.
     refute_equal original_index_name, index_group.current_real.real_name

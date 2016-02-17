@@ -5,10 +5,9 @@ require "elasticsearch/index_group"
 require "search_config"
 
 class IndexGroupTest < MiniTest::Unit::TestCase
-
   ELASTICSEARCH_OK = {
     status: 200,
-    body: {"ok" => true, "acknowledged" => true}.to_json
+    body: { "ok" => true, "acknowledged" => true }.to_json
   }
 
   def setup
@@ -16,7 +15,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     @server = Elasticsearch::SearchServer.new(
       "http://localhost:9200/",
       @schema,
-      ["mainstream", "custom"],
+      %w(mainstream custom),
       ["mainstream"],
       SearchConfig.new
     )

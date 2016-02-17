@@ -58,7 +58,7 @@ module HealthCheck
       success ? possible_score : 0
     end
 
-private
+  private
 
     def logger
       Logging.logger[self]

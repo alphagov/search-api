@@ -1,7 +1,7 @@
 require "test_helper"
 require "elasticsearch/escaping"
 
-class ElasticsearchEscapingTest  < MiniTest::Unit::TestCase
+class ElasticsearchEscapingTest < MiniTest::Unit::TestCase
   class Dummy
     include Elasticsearch::Escaping
   end

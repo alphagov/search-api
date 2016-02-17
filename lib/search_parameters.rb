@@ -5,7 +5,7 @@ class SearchParameters
   attr_accessor :query, :order, :start, :count, :return_fields, :facets,
                 :filters, :debug, :suggest, :is_quoted_phrase
 
-  QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/   # starts and ends with quotes with no quotes in between, with or without leading or trailing whitespace
+  QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/ # starts and ends with quotes with no quotes in between, with or without leading or trailing whitespace
 
   def initialize(params = {})
     params = { facets: [], filters: {}, debug: {}, return_fields: [] }.merge(params)
@@ -43,7 +43,7 @@ class SearchParameters
     query && suggest.include?('spelling')
   end
 
-  private
+private
 
   def determine_if_quoted_phrase
     if @query =~ QUOTED_STRING_REGEX
@@ -52,5 +52,4 @@ class SearchParameters
       @is_quoted_phrase = false
     end
   end
-
 end

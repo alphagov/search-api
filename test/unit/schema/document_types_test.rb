@@ -28,7 +28,7 @@ class DocumentTypesTest < ShouldaUnitTestCase
     setup do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
       @types = DocumentTypesParser.new(schema_dir, field_definitions).parse
-      @identifier_es_config = {"type"=>"string", "index"=>"not_analyzed", "include_in_all"=>false}
+      @identifier_es_config = { "type" => "string", "index" => "not_analyzed", "include_in_all" => false }
     end
 
     should "recognise the `manual_section` type" do
@@ -77,7 +77,6 @@ class DocumentTypesTest < ShouldaUnitTestCase
         @types["cma_case"].allowed_values["case_state"]
       )
     end
-
   end
 
   context "when configuration is invalid" do
@@ -116,7 +115,7 @@ class DocumentTypesTest < ShouldaUnitTestCase
       base_type = @parser.parse
 
       subtype_parser = DocumentTypeParser.new("/config/path/subtype.json", base_type, @definitions)
-      DocumentTypeParser.any_instance.stubs(:load_json).returns({"fields" => []})
+      DocumentTypeParser.any_instance.stubs(:load_json).returns({ "fields" => [] })
 
       assert_raises_message(%{Specifying `allowed_values` in base document type is not supported, in document type definition in "/config/path/subtype.json"}) { subtype_parser.parse }
     end

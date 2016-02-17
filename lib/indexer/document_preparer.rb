@@ -21,6 +21,7 @@ module Indexer
     end
 
   private
+
     def add_prototype_taxonomy(doc_hash)
       taxon = ::TaxonomyPrototype::TaxonFinder.find_by(slug: doc_hash["link"])
       if taxon
@@ -86,8 +87,9 @@ module Indexer
 
     # duplicated in index.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = JSON.parse(@client.get_with_payload(
-        "_analyze?analyzer=best_bet_stemmed_match", query))
+      analyzed_query = JSON.parse(
+        @client.get_with_payload("_analyze?analyzer=best_bet_stemmed_match", query)
+      )
 
       analyzed_query["tokens"].map { |token_info|
         token_info["token"]

@@ -30,7 +30,8 @@ private
   # Fetch the best bets, and populate @best_bets and @worst_bets
   def fetch
     if @query.nil?
-      best, worst = [], []
+      best = []
+      worst = []
     else
       best, worst = select_bets(fetch_bets)
     end
@@ -51,10 +52,11 @@ private
     end
     by_position.sort!
 
-    combined = Hash.new()
+    combined = Hash.new
     seen = Set.new
     by_position.each do |bet|
-      position, link = bet[0], bet[1]
+      position = bet[0]
+      link = bet[1]
       if seen.include? link
         next
       end
@@ -76,7 +78,7 @@ private
   #
   # Returns two arrays, one of best bets and one of worst bets.
   def select_bets(bets)
-    exact_bet = bets.find do |bet_query, bet_type, best, worst|
+    exact_bet = bets.find do |_bet_query, bet_type, _best, _worst|
       bet_type == "exact"
     end
     unless exact_bet.nil?
@@ -85,7 +87,7 @@ private
 
     best_bets = []
     worst_bets = []
-    bets.each do |bet_query, bet_type, best, worst|
+    bets.each do |_bet_query, _bet_type, best, worst|
       best_bets.concat best
       worst_bets.concat worst
     end
@@ -145,13 +147,13 @@ private
       query: {
         bool: {
           should: [
-            { match: { exact_query: @query }},
-            { match: { stemmed_query: @query }}
+            { match: { exact_query: @query } },
+            { match: { stemmed_query: @query } }
           ]
         }
       },
       size: 1000,
-      fields: [ :details, :stemmed_query_as_term ]
+      fields: [:details, :stemmed_query_as_term]
     }
   end
 end

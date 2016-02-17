@@ -23,12 +23,12 @@ module QueryComponents
 
     def selected_queries(excluding = [])
       remaining = exclude_fields_from_filters(excluding, filters)
-      remaining.map {|filter| filter_hash(filter)}
+      remaining.map { |filter| filter_hash(filter) }
     end
 
     def rejected_queries(excluding = [])
       remaining = exclude_fields_from_filters(excluding, rejects)
-      remaining.map {|filter| filter_hash(filter)}
+      remaining.map { |filter| filter_hash(filter) }
     end
 
   private
@@ -37,7 +37,7 @@ module QueryComponents
       es_filters = []
 
       if filter.include_missing
-        es_filters << {"missing" => { field: filter.field_name } }
+        es_filters << { "missing" => { field: filter.field_name } }
       end
 
       field_name = filter.field_name

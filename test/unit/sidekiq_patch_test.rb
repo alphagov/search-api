@@ -9,9 +9,8 @@ require "elasticsearch/bulk_index_worker"
 require "app"
 
 class SidekiqPatchTest < MiniTest::Unit::TestCase
-
   def test_dumps_ascii_only
-    test_message = {message: "\u2018Get to da choppa!\u2019"}
+    test_message = { message: "\u2018Get to da choppa!\u2019" }
     assert_equal(
       '{"message":"\u2018Get to da choppa!\u2019"}',
       Sidekiq.dump_json(test_message)

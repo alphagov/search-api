@@ -10,7 +10,7 @@ module HealthCheck
     end
 
     def run!
-      Logging.logger[self].info("Connecting to #{@search_client.to_s}")
+      Logging.logger[self].info("Connecting to #{@search_client}")
 
       calculator = Calculator.new
 
@@ -30,7 +30,7 @@ module HealthCheck
       calculator
     end
 
-    private
+  private
 
     def parsed_checks
       CSV.parse(@test_data_file, headers: true).map do |row|

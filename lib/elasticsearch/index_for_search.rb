@@ -3,7 +3,6 @@ require "elasticsearch/client"
 require "multivalue_converter"
 
 module Elasticsearch
-
   class IndexForSearch
     attr_reader :index_names, :schema
 
@@ -21,7 +20,7 @@ module Elasticsearch
       @search_config = search_config
     end
 
-    def raw_search(payload, type=nil)
+    def raw_search(payload, type = nil)
       json_payload = payload.to_json
       logger.debug "Request payload: #{json_payload}"
       if type.nil?
@@ -45,7 +44,7 @@ module Elasticsearch
     def documents_by_format(format, field_definitions)
       batch_size = 500
       search_body = {
-        query: {term: {format: format}},
+        query: { term: { format: format } },
         fields: field_definitions.keys,
       }
 
@@ -54,12 +53,13 @@ module Elasticsearch
       end
     end
 
-private
+  private
+
     def logger
       Logging.logger[self]
     end
 
-    def build_client(options={})
+    def build_client(options = {})
       Client.new(
         @index_uri,
         timeout: options[:timeout] || TIMEOUT_SECONDS,

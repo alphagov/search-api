@@ -15,4 +15,8 @@ for d in images javascripts templates stylesheets; do
   ln -s ../../../Static/workspace/public/$d public/
 done
 
+bundle exec govuk-lint-ruby \
+  --format html --out rubocop-${GIT_COMMIT}.html \
+  --format clang
+
 USE_SIMPLECOV=true RACK_ENV=test bundle exec rake ci:setup:minitest test --trace

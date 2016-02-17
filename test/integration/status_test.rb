@@ -18,7 +18,7 @@ class StatusTest < IntegrationTest
 
     Sidekiq::RetrySet.expects(:new).returns(retries)
     Sidekiq::Stats.any_instance.expects(:queues).returns(
-      {"bulk" => 12}
+      { "bulk" => 12 }
     )
 
     get "/_status"
@@ -30,7 +30,7 @@ class StatusTest < IntegrationTest
   def test_shows_zero_retry_count
     Sidekiq::RetrySet.expects(:new).returns([])
     Sidekiq::Stats.any_instance.expects(:queues).returns(
-      {"bulk" => 12}
+      { "bulk" => 12 }
     )
 
     get "/_status"
@@ -44,7 +44,7 @@ class StatusTest < IntegrationTest
 
     Sidekiq::ScheduledSet.expects(:new).returns(scheduled)
     Sidekiq::Stats.any_instance.expects(:queues).returns(
-      {"bulk" => 12}
+      { "bulk" => 12 }
     )
 
     get "/_status"
@@ -56,7 +56,7 @@ class StatusTest < IntegrationTest
   def test_shows_zero_retry_count_scheduled
     Sidekiq::ScheduledSet.expects(:new).returns([])
     Sidekiq::Stats.any_instance.expects(:queues).returns(
-      {"bulk" => 12}
+      { "bulk" => 12 }
     )
 
     get "/_status"

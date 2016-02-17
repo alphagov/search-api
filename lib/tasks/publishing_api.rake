@@ -31,13 +31,14 @@ namespace :publishing_api do
     ]
 
     routes.each do |route|
-      publisher.publish(route.merge(
-        format: "special_route",
-        publishing_app: "rummager",
-        rendering_app: "rummager",
-        public_updated_at: Time.now.iso8601,
-        update_type: "major",
-      ))
+      publisher.publish(
+        route.merge(
+          format: "special_route",
+          publishing_app: "rummager",
+          rendering_app: "rummager",
+          public_updated_at: Time.now.iso8601,
+          update_type: "major",
+        ))
     end
   end
 end

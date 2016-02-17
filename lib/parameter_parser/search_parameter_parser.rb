@@ -83,7 +83,7 @@ private
       @errors << %{"#{field}" is not a valid sort field}
       return nil
     end
-    return [SORT_MAPPINGS.fetch(field, field), dir]
+    [SORT_MAPPINGS.fetch(field, field), dir]
   end
 
   # Get a list of the fields to request in results from elasticsearch
@@ -102,12 +102,14 @@ private
   end
 
   def parameters_starting_with(prefix)
-    @params.select { |name, _|
+    with_prefix = @params.select do |name, _|
       name.start_with?(prefix)
-    }.each_with_object({}) { |(name, value), result|
+    end
+
+    with_prefix.each_with_object({}) do |(name, value), result|
       @used_params << name
       result[name.sub(prefix, "")] = value
-    }
+    end
   end
 
   def validate_filter_parameters(parameters, type)
@@ -215,6 +217,7 @@ private
     end
 
   private
+
     def parse_dates(values)
       if values.count > 1
         @errors << %{Too many values (#{values.size}) for parameter "#{field_name}" (must occur at most once)}
@@ -259,7 +262,7 @@ private
 
   def facets
     facets = {}
-    @params.each do |key, values|
+    @params.each do |key, _values|
       if (m = key.match(/\Afacet_(.*)/))
         field = m[1]
         value = single_param(key)

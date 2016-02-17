@@ -1,5 +1,4 @@
 namespace :rummager do
-
   desc "Lists current Rummager indices, pass [all] to show inactive indices"
   task :list_indices, :all do |_, args|
     show_all = args[:all] || false

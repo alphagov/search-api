@@ -17,8 +17,8 @@ module TaxonomyPrototype
     end
 
     SHEETS = [
-      { :name => "early_years", key: "1zjRy7XKrcroscX4cEqc4gM9Eq0DuVWEm_5wATsolRJY", gid: "1025053831" },
-      { :name => "curriculum_content_mapping", key: "1rViQioxz5iu3hGYFldNOJift0PqjX0fYd8LZz07ljd4", gid: "678558707" },
+      { name: "early_years", key: "1zjRy7XKrcroscX4cEqc4gM9Eq0DuVWEm_5wATsolRJY", gid: "1025053831" },
+      { name: "curriculum_content_mapping", key: "1rViQioxz5iu3hGYFldNOJift0PqjX0fYd8LZz07ljd4", gid: "678558707" },
     ]
 
     def initialize(log_output: Logging.logger(STDOUT))
@@ -48,8 +48,9 @@ module TaxonomyPrototype
       end
     end
 
-private
-    def spreadsheet_url(key: ,gid:)
+  private
+
+    def spreadsheet_url(key:, gid:)
       "https://docs.google.com/spreadsheets/d/#{key}/pub?gid=#{gid}&single=true&output=tsv"
     end
   end

@@ -107,7 +107,7 @@ class IndexDocumentsTest < IntegrationTest
                                    "topics" => ["uuid-1"],
                                    "mainstream_browse_pages" => ["uuid-2"],
                                    "organisations" => ["uuid-3"],
-                                 }})
+                                 } })
   end
 
   def payload_empty_tags
@@ -115,11 +115,11 @@ class IndexDocumentsTest < IntegrationTest
                                 "topics" => [],
                                 "mainstream_browse_page" => [],
                                 "organisations" => [],
-                              }})
+                              } })
   end
 
   def payload_no_tags
-    payload_no_links.merge({"links" => {}})
+    payload_no_links.merge({ "links" => {} })
   end
 
   def payload_no_links

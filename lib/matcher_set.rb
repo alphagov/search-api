@@ -11,14 +11,14 @@ class MatcherSet
   def include?(candidate)
     @matchers.any? do |matcher|
       case matcher
-        when String
+      when String
           # casecmp returns 0 when the strings are equivalent, ignoring case
-          candidate.casecmp(matcher) == 0
-        when Regexp
+        candidate.casecmp(matcher) == 0
+      when Regexp
           # match returns nil if no match, or a MatchData if any matches
-          !! candidate.match(matcher)
-        else
-          raise "Unexpected matcher type: #{matcher}"
+        !! candidate.match(matcher)
+      else
+        raise "Unexpected matcher type: #{matcher}"
       end
     end
   end

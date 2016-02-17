@@ -20,6 +20,6 @@ class UnifiedSearchExpandsAllowedValuesTest < IntegrationTest
     get "/unified_search?filter_document_type=cma_case&fields=case_type,description,title"
     first_result = parsed_response["results"].first
 
-    assert_equal [{"label" => "Mergers", "value" => "mergers"}], first_result["case_type"]
+    assert_equal [{ "label" => "Mergers", "value" => "mergers" }], first_result["case_type"]
   end
 end

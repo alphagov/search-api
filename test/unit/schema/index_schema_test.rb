@@ -16,7 +16,7 @@ class IndexSchemaTest < ShouldaUnitTestCase
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
       document_types = DocumentTypesParser.new(schema_dir, field_definitions).parse
       @index_schemas = IndexSchemaParser.parse_all(schema_dir, document_types)
-      @identifier_es_config = {"type"=>"string", "index"=>"not_analyzed", "include_in_all"=>false}
+      @identifier_es_config = { "type" => "string", "index" => "not_analyzed", "include_in_all" => false }
     end
 
     should "have a schema for the mainstream index" do

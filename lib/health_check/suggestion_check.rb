@@ -33,7 +33,7 @@ module HealthCheck
       suggested_query.to_s.downcase == expected_result.to_s.downcase
     end
 
-    private
+  private
 
     def message
       if success?

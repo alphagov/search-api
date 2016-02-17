@@ -34,6 +34,7 @@ class FacetOption
   end
 
 private
+
   def cmp_by(ordering, other)
     case ordering
     when :filtered

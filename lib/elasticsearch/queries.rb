@@ -17,18 +17,18 @@ module Elasticsearch
       elsif filters.length == 1
         filters.first
       else
-        {op => filters}
+        { op => filters }
       end
     end
 
     def terms_filter(field_name, values)
       return nil if values.size == 0
 
-      {"terms" => { field_name => values } }
+      { "terms" => { field_name => values } }
     end
 
     def term_filter(field_name, value)
-      {"term" => { field_name => value } }
+      { "term" => { field_name => value } }
     end
 
     def date_filter(field_name, value)

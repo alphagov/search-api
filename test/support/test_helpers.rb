@@ -3,7 +3,7 @@ module TestHelpers
     Timecop.return
   end
 
-  def search_query_params(options={})
+  def search_query_params(options = {})
     SearchParameters.new({
       start: 0,
       count: 20,

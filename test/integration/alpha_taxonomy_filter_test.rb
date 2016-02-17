@@ -7,7 +7,7 @@ class AlphaTaxonomyFilterTest < IntegrationTest
   def setup
     stub_elasticsearch_settings
     create_test_indexes
-    TaxonomyPrototype::TaxonFinder.stubs(:find_by).returns(["foo", "bar"])
+    TaxonomyPrototype::TaxonFinder.stubs(:find_by).returns(%w(foo bar))
   end
 
   def teardown
