@@ -12,6 +12,10 @@ Lint/ParenthesesAsGroupedExpression:
   Exclude:
     - 'test/**/*'
 
+# This cop doesn't work nicely with the style in the tests.
+Style/ClosingParenthesisIndentation:
+  Enabled: false
+
 # Offense count: 2
 Lint/HandleExceptions:
   Exclude:
@@ -36,18 +40,6 @@ Style/ClassVars:
   Exclude:
     - 'app.rb'
     - 'lib/unified_search/suggestion_blacklist.rb'
-
-# Offense count: 28
-# Cop supports --auto-correct.
-Style/ClosingParenthesisIndentation:
-  Exclude:
-    - 'lib/facet_result_presenter.rb'
-    - 'lib/health_check/logging_config.rb'
-    - 'test/integration/best_bets_test.rb'
-    - 'test/integration/quoted_and_unquoted_searches_test.rb'
-    - 'test/integration/unified_search/results_with_highlighting_test.rb'
-    - 'test/integration/unified_search_test.rb'
-    - 'test/unit/parameter_parser/search_parameter_parser_test.rb'
 
 # Offense count: 8
 # Cop supports --auto-correct.
