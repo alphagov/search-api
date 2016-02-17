@@ -28,20 +28,6 @@ Style/ClassVars:
     - 'app.rb'
     - 'lib/unified_search/suggestion_blacklist.rb'
 
-# Offense count: 8
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment.
-Style/ExtraSpacing:
-  Exclude:
-    - 'lib/elasticsearch/base_worker.rb'
-    - 'lib/elasticsearch/index.rb'
-    - 'lib/elasticsearch/scroll_enumerator.rb'
-    - 'lib/search_parameters.rb'
-    - 'test/integration/sitemap_test.rb'
-    - 'test/integration_test_helper.rb'
-    - 'test/unit/elasticsearch/elasticsearch_escaping_test.rb'
-    - 'test/unit/facet_option_test.rb'
-
 # Offense count: 40
 # Cop supports --auto-correct.
 # Configuration parameters: MaxLineLength.

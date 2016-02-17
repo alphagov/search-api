@@ -277,7 +277,7 @@ module Elasticsearch
         end
       end
 
-      true  # For consistency with the Solr API and simple_json_response
+      true # For consistency with the Solr API and simple_json_response
     end
 
     def delete_queued(document_type, document_id)

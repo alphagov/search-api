@@ -13,7 +13,7 @@ module Elasticsearch
     include Sidekiq::Worker
 
     # How long to wait, by default, if the index is currently locked
-    LOCK_DELAY = 60  # seconds
+    LOCK_DELAY = 60 # seconds
 
     # Default options: can be overridden with `sidekiq_options` in subclasses
     sidekiq_options retry: 5, backtrace: 12

@@ -33,7 +33,7 @@ module Elasticsearch
         loop do
           # Get the next page and extract the next scroll ID from it
           page = next_page(scroll_id)
-          scroll_id = page.fetch("_scroll_id")  # Error if scroll ID absent
+          scroll_id = page.fetch("_scroll_id") # Error if scroll ID absent
 
           # The way we tell we've got through all the results is when
           # elasticsearch gives us an empty array of hits. This means all the
