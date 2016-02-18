@@ -31,7 +31,7 @@ GEM
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     ffi (1.9.0)
-    gds-api-adapters (28.0.2)
+    gds-api-adapters (28.1.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -174,7 +174,7 @@ PLATFORMS
 DEPENDENCIES
   airbrake (= 4.0.0)
   ci_reporter (= 1.7.1)
-  gds-api-adapters (~> 28.0.2)
+  gds-api-adapters (~> 28.1.0)
   govuk-lint (~> 0.6.1)
   govuk_message_queue_consumer (~> 2.0.1)
   logging (= 1.8.1)

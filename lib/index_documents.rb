@@ -1,5 +1,5 @@
 require_relative "../app"
-require 'gds_api/publishing_api_v2'
+require 'indexer/links_lookup'
 
 class IndexDocuments
   MIGRATED_TAGGING_APPS = %w{
@@ -30,7 +30,7 @@ private
     raw_links = links_from_payload(message)
 
     unless raw_links.empty?
-      links = rummager_fields_from_links(raw_links)
+      links = Indexer::LinksLookup.new.rummager_fields_from_links(raw_links)
       base_path = document_base_path(message)
       update_index(base_path, links)
     end
@@ -44,35 +44,8 @@ private
     message.payload.fetch("links", {})
   end
 
-  def rummager_fields_from_links(links)
-    results = {}
-    rummager_field_mappers.each { |field_name, mapper|
-      field_values = mapper.call(links)
-      if field_values
-        results[field_name] = field_values
-      end
-    }
-    results
-  end
-
-  def rummager_field_mappers
-    {
-      "mainstream_browse_pages" => lambda { |links| sorted_link_paths(links, "mainstream_browse_pages") },
-      "organisations" => lambda { |links| (sorted_link_paths(links, "lead_organisations") + sorted_link_paths(links, "organisations")).uniq },
-      "specialist_sectors" => lambda { |links| sorted_link_paths(links, "topics") },
-    }
-  end
-
-  def sorted_link_paths(links, link_types)
-    links.fetch(link_types, []).map { |content_id| base_path(content_id) }.compact.sort
-  end
-
   def document_base_path(message)
     message.payload.fetch("base_path")
-  end
-
-  def base_path(content_id)
-    publishing_api.get_content(content_id)["base_path"]
   end
 
   def update_index(base_path, links)
@@ -93,13 +66,6 @@ private
       index = Elasticsearch::Index.strip_alias_from_index_name(hit["_index"])
       search_server.index(index) if index
     end
-  end
-
-  def publishing_api
-    @publishing_api ||= GdsApi::PublishingApiV2.new(
-      Plek.new.find('publishing-api'),
-      bearer_token: ENV['PUBLISHING_API_BEARER_TOKEN'] || 'example'
-    )
   end
 
   def search_server
