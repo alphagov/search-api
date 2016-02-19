@@ -44,6 +44,12 @@ module Elasticsearch
       end
     end
 
+    def snapshot_bucket
+      Bucket.new(
+          bucket_name: search_config.snapshot_bucket_name
+      )
+    end
+
   private
 
     def validate_index_name!(index_name)

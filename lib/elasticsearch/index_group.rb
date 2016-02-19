@@ -13,12 +13,20 @@ module Elasticsearch
   #
   # One of these indexes is aliased to the group name itself.
   class IndexGroup
+
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
       @client = Client.new(base_uri)
       @name = name
       @schema = schema
       @search_config = search_config
+    end
+
+    def find_index(real_name)
+      # TODO: validate this against the API to make sure it actually exists
+      Elasticsearch::Index.new(
+        @base_uri, real_name, @name, mappings, @search_config
+      )
     end
 
     def create_index
