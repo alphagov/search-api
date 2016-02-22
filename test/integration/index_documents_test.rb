@@ -1,16 +1,13 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 require 'govuk_message_queue_consumer'
 require 'govuk_message_queue_consumer/test_helpers'
 require './lib/index_documents'
 
 class IndexDocumentsTest < IntegrationTest
-  include IndexDocumentsTestHelpers
-
   def setup
     stub_elasticsearch_settings
     create_test_indexes
     stub_tagging_lookup
-    stub_calls_for_index_documents_test
   end
 
   def teardown
@@ -18,114 +15,137 @@ class IndexDocumentsTest < IntegrationTest
   end
 
   def test_populated_tags_get_indexed_from_publishing_api
-    Elasticsearch::Amender.any_instance.expects(:amend)
-      .with('/topic/animal-welfare/pets', {
-              "mainstream_browse_pages" => ['/path/2'],
-              "organisations" => ['/path/3'],
-              "specialist_sectors" => ['/path/1'],
-            })
+    commit_document('mainstream_test', link: '/my-page')
 
-    m = GovukMessageQueueConsumer::MockMessage.new(payload_with_tags)
-    IndexDocuments.new.process(m)
+    stub_publishing_api_get_content('my-topic-id', base_path: "/topic/my-topic")
+    stub_publishing_api_get_content('my-browse-page-id', base_path: "/browse/my-browse-page")
+    stub_publishing_api_get_content('my-org-id', base_path: "/government/organisations/my-organisations")
 
-    assert m.acked?
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/my-page",
+      "publishing_app" => "policy-publisher",
+      "links" => {
+        "topics" => ["my-topic-id"],
+        "mainstream_browse_pages" => ["my-browse-page-id"],
+        "organisations" => ["my-org-id"],
+      }
+    })
+
+    IndexDocuments.new.process(message)
+
+    assert message.acked?
+    assert_document_is_in_rummager({
+      "link" => "/my-page",
+      "mainstream_browse_pages" => ["my-browse-page"],
+      "organisations" => ["my-organisations"],
+      "specialist_sectors" => ["my-topic"],
+    })
+  end
+
+  def test_skips_non_migrated_apps
+    commit_document("mainstream_test", link: '/my-page')
+
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/my-page",
+      "publishing_app" => "unmigrated-app",
+      "links" => {
+        "topics" => ["my-topic-id"],
+        "mainstream_browse_pages" => ["my-browse-page-id"],
+        "organisations" => ["my-org-id"],
+      }
+    })
+
+    IndexDocuments.new.process(message)
+
+    assert message.acked?
+    assert_document_is_in_rummager({
+      "link" => "/my-page",
+      "mainstream_browse_pages" => nil,
+      "organisations" => nil,
+      "specialist_sectors" => nil,
+    })
   end
 
   def test_empty_tags_get_indexed_from_publishing_api
-    Elasticsearch::Amender.any_instance.expects(:amend)
-      .with('/topic/animal-welfare/pets', {
-              "mainstream_browse_pages" => [],
-              "organisations" => [],
-              "specialist_sectors" => [],
-            })
+    commit_document("mainstream_test",
+      link: '/my-page',
+      topics: ['my-old-topic']
+    )
 
-    m = GovukMessageQueueConsumer::MockMessage.new(payload_empty_tags)
-    IndexDocuments.new.process(m)
+    stub_publishing_api_get_content('my-topic-id', base_path: "/topic/my-topic")
+    stub_publishing_api_get_content('my-browse-page-id', base_path: "/browse/my-browse-page")
+    stub_publishing_api_get_content('my-org-id', base_path: "/government/organisations/my-organisations")
 
-    assert m.acked?
-  end
-
-  def test_no_tags_no_update
-    Elasticsearch::Amender.any_instance.expects(:amend).never
-
-    m = GovukMessageQueueConsumer::MockMessage.new(payload_no_tags)
-    IndexDocuments.new.process(m)
-
-    assert m.acked?
-  end
-
-  def test_no_links_no_update
-    Elasticsearch::Amender.any_instance.expects(:amend).never
-
-    m = GovukMessageQueueConsumer::MockMessage.new(payload_no_links)
-    IndexDocuments.new.process(m)
-
-    assert m.acked?
-  end
-
-  def test_migrated_publishing_app_sorts_links
-    Elasticsearch::Amender.any_instance.expects(:amend)
-      .with('/topic/animal-welfare/pets', {
-              "mainstream_browse_pages" => [],
-              "organisations" => [],
-              "specialist_sectors" => sorted_links,
-            })
-    m = GovukMessageQueueConsumer::MockMessage.new(payload_migrated_publishing_app)
-    IndexDocuments.new.process(m)
-  end
-
-  def test_non_migrated_publishing_app_no_update
-    Elasticsearch::Amender.any_instance.expects(:amend).never
-
-    m = GovukMessageQueueConsumer::MockMessage.new(payload_non_migrated_publishing_app)
-    IndexDocuments.new.process(m)
-
-    assert m.acked?
-  end
-
-  def sorted_links
-    ['/path/1', '/path/2', '/path/3']
-  end
-
-
-  def payload_non_migrated_publishing_app
-    payload_no_tags.merge({
-                            "publishing_app" => "other-app",
-                          })
-  end
-
-  def payload_migrated_publishing_app
-    payload_with_tags.merge({
-                              "links" => {
-                                "topics" => ["uuid-3", "uuid-2", "uuid-1"],
-                              }
-                            })
-  end
-
-  def payload_with_tags
-    payload_empty_tags.merge({ "links" => {
-                                   "topics" => ["uuid-1"],
-                                   "mainstream_browse_pages" => ["uuid-2"],
-                                   "organisations" => ["uuid-3"],
-                                 } })
-  end
-
-  def payload_empty_tags
-    payload_no_tags.merge({ "links" => {
-                                "topics" => [],
-                                "mainstream_browse_page" => [],
-                                "organisations" => [],
-                              } })
-  end
-
-  def payload_no_tags
-    payload_no_links.merge({ "links" => {} })
-  end
-
-  def payload_no_links
-    {
-      "base_path" => "/topic/animal-welfare/pets",
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/my-page",
       "publishing_app" => "policy-publisher",
-    }
+      "links" => {
+        "topics" => [],
+        "mainstream_browse_pages" => [],
+        "organisations" => [],
+      }
+    })
+
+    IndexDocuments.new.process(message)
+
+    assert_document_is_in_rummager({
+      "link" => "/my-page",
+      "mainstream_browse_pages" => nil,
+      "organisations" => nil,
+      "specialist_sectors" => nil,
+    })
+  end
+
+  def test_no_links_are_sent
+    commit_document(
+      "mainstream_test",
+      link: '/my-tagged-page',
+      specialist_sectors: ['my-old-topic']
+    )
+
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/my-tagged-page",
+      "publishing_app" => "policy-publisher",
+      "links" => {}
+    })
+
+    IndexDocuments.new.process(message)
+
+    assert_document_is_in_rummager({
+      "link" => "/my-tagged-page",
+      "specialist_sectors" => ['my-old-topic'],
+    })
+  end
+
+  def test_links_are_amended
+    commit_document(
+      "mainstream_test",
+      link: '/my-tagged-page',
+      specialist_sectors: ['my-old-topic']
+    )
+
+    stub_publishing_api_get_content('a-topic-uid', base_path: "/topic/a-newly-chosen-topic")
+
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/my-tagged-page",
+      "publishing_app" => "policy-publisher",
+      "links" => {
+        "topics" => ['a-topic-uid']
+      }
+    })
+
+    IndexDocuments.new.process(message)
+
+    assert_document_is_in_rummager({
+      "link" => "/my-tagged-page",
+      "specialist_sectors" => ['a-newly-chosen-topic'],
+    })
+  end
+
+private
+
+  def stub_publishing_api_get_content(content_id, body)
+    stub_request(:get, "http://publishing-api.dev.gov.uk/v2/content/#{content_id}").
+      to_return(body: body.to_json)
   end
 end
