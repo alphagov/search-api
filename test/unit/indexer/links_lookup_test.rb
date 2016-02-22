@@ -4,17 +4,25 @@ require "indexer/links_lookup"
 describe Indexer::LinksLookup do
   describe "#rummager_fields_from_links" do
     it "returns transformed links" do
-      stub_request(:get, "http://publishing-api.dev.gov.uk/v2/content/b6b7d71f-ecf3-4ff0-8fee-f19041cbe6b5").
-        to_return(body: { base_path: "/hela" }.to_json)
+      stub_request(:get, "http://publishing-api.dev.gov.uk/v2/content/MSBP-CONTENT-ID").
+        to_return(body: { base_path: "/browse/working/time-off" }.to_json)
+
+      stub_request(:get, "http://publishing-api.dev.gov.uk/v2/content/ORG-CONTENT-ID").
+        to_return(body: { base_path: "/government/organisations/accelerated-access-review" }.to_json)
+
+      stub_request(:get, "http://publishing-api.dev.gov.uk/v2/content/TOPIC-CONTENT-ID").
+        to_return(body: { base_path: "/topic/schools-colleges-childrens-services/adoption-fostering" }.to_json)
 
       rummager_links = rummager_links_for({
-        "topics" => ["b6b7d71f-ecf3-4ff0-8fee-f19041cbe6b5"]
+        "topics" => ["TOPIC-CONTENT-ID"],
+        "mainstream_browse_pages" => ["MSBP-CONTENT-ID"],
+        "organisations" => ["ORG-CONTENT-ID"]
       })
 
       assert_equal rummager_links, {
-        "mainstream_browse_pages" => [],
-        "organisations" => [],
-        "specialist_sectors" => ["/hela"]
+        "mainstream_browse_pages" => ["working/time-off"],
+        "organisations" => ["accelerated-access-review"],
+        "specialist_sectors" => ["schools-colleges-childrens-services/adoption-fostering"]
       }
     end
 

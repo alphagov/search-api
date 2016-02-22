@@ -13,8 +13,8 @@ module Indexer
     # is turned into:
     #
     # {
-    #   "mainstream_browse_pages" => ['/a-base-path'],
-    #   "specialist_sectors" => ['/some-other-path']
+    #   "mainstream_browse_pages" => ['some/browse-slug'],
+    #   "specialist_sectors" => ['some/topic-slug']
     # }
     def rummager_fields_from_links(links)
       results = {}
@@ -42,7 +42,11 @@ module Indexer
     end
 
     def base_path(content_id)
-      publishing_api.get_content!(content_id)["base_path"]
+      base_path = publishing_api.get_content!(content_id)["base_path"]
+      base_path
+        .gsub('/government/organisations/', '')
+        .gsub('/topic/', '')
+        .gsub('/browse/', '')
     rescue GdsApi::HTTPNotFound
       # Content items in the links hash may not exist yet.
       nil
