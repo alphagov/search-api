@@ -175,15 +175,12 @@ module Elasticsearch
     end
 
     def get(link)
-      type, id = link_to_type_and_id(link)
-      logger.info "Retrieving document of type '#{type}', id '#{id}'"
       begin
-        response = @client.get("#{CGI.escape(type)}/#{CGI.escape(id)}")
+        response = @client.get("_all/#{CGI.escape(link)}")
+        document_from_hash(JSON.parse(response.body)["_source"])
       rescue RestClient::ResourceNotFound
-        return nil
+        nil
       end
-
-      document_from_hash(JSON.parse(response.body)["_source"])
     end
 
     def document_from_hash(hash)

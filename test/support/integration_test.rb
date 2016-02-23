@@ -189,7 +189,7 @@ private
   end
 
   def fetch_document_from_rummager(link:)
-    elasticsearch_url = "http://localhost:9200/mainstream_test/edition/#{CGI.escape(link)}"
+    elasticsearch_url = "http://localhost:9200/mainstream_test/_all/#{CGI.escape(link)}"
     raw_response = RestClient.get(elasticsearch_url)
     JSON.parse(raw_response)['_source']
   end
