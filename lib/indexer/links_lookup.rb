@@ -14,28 +14,22 @@ module Indexer
     #
     # {
     #   "mainstream_browse_pages" => ['some/browse-slug'],
-    #   "specialist_sectors" => ['some/topic-slug']
+    #   "specialist_sectors" => ['some/topic-slug'],
+    #   "organisations" => ['some-organisation']
     # }
     def rummager_fields_from_links(links)
-      results = {}
-      rummager_field_mappers.each do |field_name, mapper|
-        field_values = mapper.call(links)
-        if field_values
-          results[field_name] = field_values
-        end
-      end
-      results
+      browse_pages = sorted_link_paths(links, "mainstream_browse_pages")
+      organisations = (sorted_link_paths(links, "lead_organisations") + sorted_link_paths(links, "organisations")).uniq
+      specialist_sectors = sorted_link_paths(links, "topics")
+
+      {
+        "mainstream_browse_pages" => browse_pages,
+        "organisations" => organisations,
+        "specialist_sectors" => specialist_sectors,
+      }
     end
 
   private
-
-    def rummager_field_mappers
-      {
-        "mainstream_browse_pages" => lambda { |links| sorted_link_paths(links, "mainstream_browse_pages") },
-        "organisations" => lambda { |links| (sorted_link_paths(links, "lead_organisations") + sorted_link_paths(links, "organisations")).uniq },
-        "specialist_sectors" => lambda { |links| sorted_link_paths(links, "topics") },
-      }
-    end
 
     def sorted_link_paths(links, link_types)
       links.fetch(link_types, []).map { |content_id| base_path(content_id) }.compact.sort

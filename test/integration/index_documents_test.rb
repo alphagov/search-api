@@ -66,36 +66,6 @@ class IndexDocumentsTest < IntegrationTest
     })
   end
 
-  def test_empty_tags_get_indexed_from_publishing_api
-    commit_document("mainstream_test",
-      link: '/my-page',
-      topics: ['my-old-topic']
-    )
-
-    stub_publishing_api_get_content('my-topic-id', base_path: "/topic/my-topic")
-    stub_publishing_api_get_content('my-browse-page-id', base_path: "/browse/my-browse-page")
-    stub_publishing_api_get_content('my-org-id', base_path: "/government/organisations/my-organisations")
-
-    message = GovukMessageQueueConsumer::MockMessage.new({
-      "base_path" => "/my-page",
-      "publishing_app" => "policy-publisher",
-      "links" => {
-        "topics" => [],
-        "mainstream_browse_pages" => [],
-        "organisations" => [],
-      }
-    })
-
-    IndexDocuments.new.process(message)
-
-    assert_document_is_in_rummager({
-      "link" => "/my-page",
-      "mainstream_browse_pages" => nil,
-      "organisations" => nil,
-      "specialist_sectors" => nil,
-    })
-  end
-
   def test_no_links_are_sent
     commit_document(
       "mainstream_test",
@@ -113,7 +83,9 @@ class IndexDocumentsTest < IntegrationTest
 
     assert_document_is_in_rummager({
       "link" => "/my-tagged-page",
-      "specialist_sectors" => ['my-old-topic'],
+      "mainstream_browse_pages" => nil,
+      "organisations" => nil,
+      "specialist_sectors" => nil,
     })
   end
 

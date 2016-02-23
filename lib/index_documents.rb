@@ -30,11 +30,9 @@ private
     return unless publishing_app_migrated?(message)
     raw_links = links_from_payload(message)
 
-    unless raw_links.empty?
-      links = Indexer::LinksLookup.new.rummager_fields_from_links(raw_links)
-      base_path = document_base_path(message)
-      update_index(base_path, links)
-    end
+    links = Indexer::LinksLookup.new.rummager_fields_from_links(raw_links)
+    base_path = document_base_path(message)
+    update_index(base_path, links)
   end
 
   def publishing_app_migrated?(message)
