@@ -10,7 +10,7 @@ module Elasticsearch
       document = index.get(link)
 
       unless document
-        raise Elasticsearch::DocumentNotFound.new, link
+        raise Elasticsearch::DocumentNotFound, "`Index#get` can't find #{link}"
       end
 
       if updates.include? "link"
