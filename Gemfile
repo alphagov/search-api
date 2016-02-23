@@ -28,7 +28,7 @@ group :test do
   gem "minitest", "4.6.1"
   gem "rack-test"
   gem "mocha", require: false
-  gem "webmock", "~> 1.21.0", require: false
+  gem "webmock", "~> 1.24"
   gem "timecop", "0.7.3"
 end
 
