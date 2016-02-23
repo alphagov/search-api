@@ -5,6 +5,7 @@ class ElasticsearchAmendmentTest < IntegrationTest
   def setup
     stub_elasticsearch_settings
     create_test_indexes
+    stub_tagging_lookup
   end
 
   def teardown
