@@ -7,14 +7,14 @@ module Elasticsearch
     end
 
     def amend(link, updates)
+      if updates.include?("link")
+        raise ArgumentError, "Cannot change document the `link` attribute of a document."
+      end
+
       document = index.get(link)
 
       unless document
         raise Elasticsearch::DocumentNotFound, "`Index#get` can't find #{link}"
-      end
-
-      if updates.include? "link"
-        raise ArgumentError, "Cannot change document links"
       end
 
       updates.each do |key, value|
