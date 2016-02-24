@@ -63,11 +63,23 @@ module QueryComponents
     end
 
     def must_conditions
-      [query_string_query]
+      [all_searchable_text_query]
     end
 
     def should_conditions
       exact_field_boosts + [exact_match_boost, shingle_token_filter_boost]
+    end
+
+    def all_searchable_text_query
+      # Return the highest weight obtained by searching for the text when
+      # analyzed in different ways (with a small bonus if it matches in
+      # multiple of these ways).
+      queries = []
+
+      queries << query_string_query
+      queries << match_query("all_searchable_text.id_codes", search_term, minimum_should_match: "1")
+
+      dis_max_query(queries, tie_breaker: 0.1)
     end
 
     def query_string_query
