@@ -1,3 +1,3 @@
-require "elasticsearch/bulk_index_worker"
-require "elasticsearch/delete_worker"
-require "elasticsearch/amend_worker"
+require "indexer/workers/bulk_index_worker"
+require "indexer/workers/delete_worker"
+require "indexer/workers/amend_worker"

@@ -1,10 +1,10 @@
 require "test_helper"
-require "unified_searcher"
+require "searcher"
 require "document"
 require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"
 
-class UnifiedSearchPresenterTest < ShouldaUnitTestCase
+class SearchPresenterTest < ShouldaUnitTestCase
   def sample_docs
     [{
       "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",
@@ -124,8 +124,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   def search_presenter(options)
     org_registry = options[:org_registry]
-    UnifiedSearchPresenter.new(
-      SearchParameters.new(
+    Search::SearchPresenter.new(
+      Search::SearchParameters.new(
         start: options.fetch(:start, 0),
         filters: options.fetch(:filters, []),
         facets: options.fetch(:facets, {}),
@@ -145,7 +145,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
           "total" => 0
         }
       }
-      @output = UnifiedSearchPresenter.new(SearchParameters.new(start: 0), results).present
+      @output = Search::SearchPresenter.new(Search::SearchParameters.new(start: 0), results).present
     end
 
     should "present empty list of results" do
@@ -163,7 +163,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with no registries" do
     setup do
-      @output = UnifiedSearchPresenter.new(SearchParameters.new(start: 0), sample_es_response).present
+      @output = Search::SearchPresenter.new(Search::SearchParameters.new(start: 0), sample_es_response).present
     end
 
     should "have correct total" do
@@ -206,7 +206,7 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         es_response['hits']['hits'] = [@empty_result]
       }
 
-      @output = UnifiedSearchPresenter.new(SearchParameters.new(start: 0), response).present
+      @output = Search::SearchPresenter.new(Search::SearchParameters.new(start: 0), response).present
     end
 
     should 'return only basic metadata of fields' do
@@ -225,8 +225,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
         }
       }
 
-      @output = UnifiedSearchPresenter.new(
-        SearchParameters.new(start: 0, return_fields: %w[topics]),
+      @output = Search::SearchPresenter.new(
+        Search::SearchParameters.new(start: 0, return_fields: %w[topics]),
         sample_es_response,
         { topics: topic_registry },
       ).present
@@ -274,8 +274,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with facets" do
     setup do
-      @output = UnifiedSearchPresenter.new(
-        SearchParameters.new(start: 0, facets: { "organisations" => facet_params(1) }),
+      @output = Search::SearchPresenter.new(
+        Search::SearchParameters.new(start: 0, facets: { "organisations" => facet_params(1) }),
         sample_es_response("facets" => sample_facet_data),
       ).present
     end
@@ -319,8 +319,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with facets and a filter applied" do
     setup do
-      @output = UnifiedSearchPresenter.new(
-        SearchParameters.new(
+      @output = Search::SearchPresenter.new(
+        Search::SearchParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hmrc"])],
           facets: { "organisations" => facet_params(2) },
@@ -370,8 +370,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with facets and a filter which matches nothing applied" do
     setup do
-      @output = UnifiedSearchPresenter.new(
-        SearchParameters.new(
+      @output = Search::SearchPresenter.new(
+        Search::SearchParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hm-cheesemakers"])],
           facets: { "organisations" => facet_params(1) },
@@ -421,8 +421,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
 
   context "results with facet counting only" do
     setup do
-      @output = UnifiedSearchPresenter.new(
-        SearchParameters.new(
+      @output = Search::SearchPresenter.new(
+        Search::SearchParameters.new(
           start: 0,
           facets: { "organisations" => facet_params(0) },
         ),
@@ -545,8 +545,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     setup do
       org_registry = sample_org_registry
 
-      @output = UnifiedSearchPresenter.new(
-        SearchParameters.new(
+      @output = Search::SearchPresenter.new(
+        Search::SearchParameters.new(
           start: 0,
           facets: { "organisations" => facet_params(1), "topics" => facet_params(1) },
         ),
@@ -606,8 +606,8 @@ class UnifiedSearchPresenterTest < ShouldaUnitTestCase
     setup do
       org_registry = sample_org_registry
 
-      @output = UnifiedSearchPresenter.new(
-        SearchParameters.new(
+      @output = Search::SearchPresenter.new(
+        Search::SearchParameters.new(
           start: 0,
           facets: { "organisations" => facet_params(1) }
         ),

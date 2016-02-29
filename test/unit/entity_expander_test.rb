@@ -1,5 +1,5 @@
 require "test_helper"
-require "entity_expander"
+require "search/presenters/entity_expander"
 
 class EntityExpanderTest < MiniTest::Unit::TestCase
   # Since expanding is being done in the same way we only have to test one
@@ -13,7 +13,7 @@ class EntityExpanderTest < MiniTest::Unit::TestCase
 
     registries = { organisations: { "rail-statistics" => expandable_target } }
 
-    result = EntityExpander.new(registries).new_result(
+    result = Search::EntityExpander.new(registries).new_result(
       { "organisations" => ["rail-statistics"] }
     )
 

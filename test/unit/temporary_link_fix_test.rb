@@ -1,5 +1,5 @@
 require "test_helper"
-require "result_presenter"
+require "search/presenters/result_presenter"
 
 class TemporaryLinkFixTest < MiniTest::Unit::TestCase
   def test_appending_a_slash_to_the_link_field
@@ -9,7 +9,7 @@ class TemporaryLinkFixTest < MiniTest::Unit::TestCase
       'fields' => { 'link' => ['some/link'] }
     }
 
-    result = ResultPresenter.new(document, nil, sample_schema, SearchParameters.new(return_fields: %w[link])).present
+    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::SearchParameters.new(return_fields: %w[link])).present
 
     assert_equal "/some/link", result["link"]
   end
@@ -21,7 +21,7 @@ class TemporaryLinkFixTest < MiniTest::Unit::TestCase
       'fields' => { 'link' => ['http://example.org/some-link'] }
     }
 
-    result = ResultPresenter.new(document, nil, sample_schema, SearchParameters.new(return_fields: %w[link])).present
+    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::SearchParameters.new(return_fields: %w[link])).present
 
     assert_equal "http://example.org/some-link", result["link"]
   end
@@ -33,7 +33,7 @@ class TemporaryLinkFixTest < MiniTest::Unit::TestCase
       'fields' => { 'link' => ['/some-link'] }
     }
 
-    result = ResultPresenter.new(document, nil, sample_schema, SearchParameters.new(return_fields: %w[link])).present
+    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::SearchParameters.new(return_fields: %w[link])).present
 
     assert_equal "/some-link", result["link"]
   end

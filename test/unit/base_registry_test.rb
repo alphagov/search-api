@@ -1,12 +1,12 @@
 require "test_helper"
 require "document"
-require "registry"
+require "search/registry"
 require "schema/field_definitions"
 
 class BaseRegistryTest < MiniTest::Unit::TestCase
   def setup
     @index = stub("elasticsearch index")
-    @base_registry = Registry::BaseRegistry.new(@index, sample_field_definitions, "example-format")
+    @base_registry = Search::BaseRegistry.new(@index, sample_field_definitions, "example-format")
   end
 
   def example_document
@@ -20,8 +20,8 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
   def test_uses_time_as_default_clock
     # This is to make sure the cache expiry is expressed in seconds; DateTime,
     # for example, treats number addition as a number of days.
-    TimedCache.expects(:new).with(is_a(Fixnum), Time)
-    Registry::BaseRegistry.new(@index, sample_field_definitions, "example-format")
+    Search::TimedCache.expects(:new).with(is_a(Fixnum), Time)
+    Search::BaseRegistry.new(@index, sample_field_definitions, "example-format")
   end
 
   def test_can_fetch_document_series_by_slug
@@ -61,7 +61,7 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
   def test_uses_cache
     # Make sure we're using TimedCache#get; TimedCache is tested elsewhere, so
     # we don't need to worry about cache expiry tests here.
-    TimedCache.any_instance.expects(:get).with.returns([example_document])
+    Search::TimedCache.any_instance.expects(:get).with.returns([example_document])
     assert @base_registry["example-document"]
   end
 end

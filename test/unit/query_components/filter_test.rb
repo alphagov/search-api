@@ -1,9 +1,9 @@
 require "test_helper"
-require "unified_search_builder"
+require "search/search_builder"
 
 class FilterTest < ShouldaUnitTestCase
   def make_search_params(filters, include_withdrawn: true)
-    SearchParameters.new(filters: filters, debug: { include_withdrawn: include_withdrawn })
+    Search::SearchParameters.new(filters: filters, debug: { include_withdrawn: include_withdrawn })
   end
 
   context "search with one filter" do

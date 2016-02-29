@@ -54,7 +54,7 @@ class ContentEndpointsTest < IntegrationTest
       "link" => "a-document/in-search",
     })
 
-    Elasticsearch::Index.any_instance.expects(:delete).raises(Elasticsearch::IndexLocked)
+    SearchIndices::Index.any_instance.expects(:delete).raises(SearchIndices::IndexLocked)
 
     delete "/content?link=a-document/in-search"
 

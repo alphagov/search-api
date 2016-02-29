@@ -1,19 +1,19 @@
 require "test_helper"
-require "timed_cache"
+require "search/timed_cache"
 
 class TimedCacheTest < MiniTest::Unit::TestCase
   def test_result_is_not_called_until_needed
     fetch = stub("fetch")
     fetch.expects(:call).never
 
-    TimedCache.new(5) { fetch.call }
+    Search::TimedCache.new(5) { fetch.call }
   end
 
   def test_result_is_cached
     fetch = stub("fetch")
     fetch.expects(:call).returns("foo").once
 
-    cache = TimedCache.new(5) { fetch.call }
+    cache = Search::TimedCache.new(5) { fetch.call }
     2.times { assert_equal "foo", cache.get }
   end
 
@@ -30,7 +30,7 @@ class TimedCacheTest < MiniTest::Unit::TestCase
       expects(:call).returns("foo").once
     end
 
-    cache = TimedCache.new(5, clock) { fetch.call }
+    cache = Search::TimedCache.new(5, clock) { fetch.call }
     cache.get
     time_state.become("before expiry")
     cache.get
@@ -49,7 +49,7 @@ class TimedCacheTest < MiniTest::Unit::TestCase
       expects(:call).returns("foo").twice
     end
 
-    cache = TimedCache.new(5, clock) { fetch.call }
+    cache = Search::TimedCache.new(5, clock) { fetch.call }
     assert_equal "foo", cache.get
     time_state.become("after expiry")
     assert_equal "foo", cache.get

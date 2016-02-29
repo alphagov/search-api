@@ -29,13 +29,13 @@ Style/StructInheritance:
     - 'lib/health_check/basic_auth_credentials.rb'
     - 'lib/health_check/search_check.rb'
     - 'lib/registries.rb'
-    - 'lib/unified_search/spell_check_fetcher.rb'
-    - 'lib/unified_search/spell_check_presenter.rb'
-    - 'lib/unified_search/suggestion_blacklist.rb'
+    - 'lib/search/spell_check_fetcher.rb'
+    - 'lib/search/spell_check_presenter.rb'
+    - 'lib/search/suggestion_blacklist.rb'
 
 # The class vars in these two files are acceptable because
 # they aren't inherited.
 Style/ClassVars:
   Exclude:
     - 'app.rb'
-    - 'lib/unified_search/suggestion_blacklist.rb'
+    - 'lib/search/suggestion_blacklist.rb'

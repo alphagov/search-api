@@ -1,7 +1,7 @@
 require "test_helper"
-require "unified_search/suggestion_blacklist"
+require "search/suggestion_blacklist"
 
-class UnifiedSearch::SuggestionBlacklistTest < ShouldaUnitTestCase
+class Search::SuggestionBlacklistTest < ShouldaUnitTestCase
   context "#should_correct?" do
     should "correct normal strings" do
       assert blacklist.should_correct?("some test")
@@ -20,7 +20,7 @@ class UnifiedSearch::SuggestionBlacklistTest < ShouldaUnitTestCase
     end
 
     def blacklist
-      UnifiedSearch::SuggestionBlacklist.new(
+      Search::SuggestionBlacklist.new(
         { organisations: stubbed_organisation_registry }
       )
     end

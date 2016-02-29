@@ -1,10 +1,10 @@
 require "test_helper"
-require "unified_search_builder"
+require "search/search_builder"
 
 class SortTest < ShouldaUnitTestCase
   context "without explicit ordering" do
     should "order by popularity" do
-      builder = QueryComponents::Sort.new(SearchParameters.new)
+      builder = QueryComponents::Sort.new(Search::SearchParameters.new)
 
       result = builder.payload
 
@@ -14,7 +14,7 @@ class SortTest < ShouldaUnitTestCase
 
   context "with debug popularity off" do
     should "not explicitly order" do
-      builder = QueryComponents::Sort.new(SearchParameters.new(debug: { disable_popularity: true }))
+      builder = QueryComponents::Sort.new(Search::SearchParameters.new(debug: { disable_popularity: true }))
 
       result = builder.payload
 
@@ -24,7 +24,7 @@ class SortTest < ShouldaUnitTestCase
 
   context "search with ascending sort" do
     should "put documents without a timestamp at the bottom" do
-      builder = QueryComponents::Sort.new(SearchParameters.new(order: %w(public_timestamp asc)))
+      builder = QueryComponents::Sort.new(Search::SearchParameters.new(order: %w(public_timestamp asc)))
 
       result = builder.payload
 
@@ -37,7 +37,7 @@ class SortTest < ShouldaUnitTestCase
 
   context "search with descending sort" do
     should "put documents without a timestamp at the bottom" do
-      builder = QueryComponents::Sort.new(SearchParameters.new(order: %w(public_timestamp desc)))
+      builder = QueryComponents::Sort.new(Search::SearchParameters.new(order: %w(public_timestamp desc)))
 
       result = builder.payload
 

@@ -1,6 +1,6 @@
 require "integration_test_helper"
 require "rack/logger"
-require "bulk_loader"
+require "indexer/bulk_loader"
 
 class ElasticsearchMigrationTest < IntegrationTest
   def setup
@@ -59,7 +59,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     index_group = search_server.index_group("mainstream_test")
     original_index_name = index_group.current_real.real_name
 
-    BulkLoader.new(search_config, "mainstream_test").load_from_current_index
+    Indexer::BulkLoader.new(search_config, "mainstream_test").load_from_current_index
 
     # Ensure the indexes have actually been switched.
     refute_equal original_index_name, index_group.current_real.real_name
@@ -93,7 +93,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     index_group = search_server.index_group("mainstream_test")
     original_index_name = index_group.current_real.real_name
 
-    BulkLoader.new(search_config, "mainstream_test", document_batch_size: test_batch_size).load_from_current_index
+    Indexer::BulkLoader.new(search_config, "mainstream_test", document_batch_size: test_batch_size).load_from_current_index
 
     # Ensure the indexes have actually been switched.
     refute_equal original_index_name, index_group.current_real.real_name
@@ -111,7 +111,7 @@ class ElasticsearchMigrationTest < IntegrationTest
   def test_handles_errors_correctly
     # Test that an error while re-indexing is reported, and aborts the whole process.
 
-    Elasticsearch::Index.any_instance.stubs(:bulk_index).raises(Elasticsearch::IndexLocked)
+    SearchIndices::Index.any_instance.stubs(:bulk_index).raises(SearchIndices::IndexLocked)
 
     get "/unified_search?q=directive"
     assert_equal 2, parsed_response["results"].length
@@ -121,8 +121,8 @@ class ElasticsearchMigrationTest < IntegrationTest
     index_group = search_server.index_group("mainstream_test")
     original_index_name = index_group.current_real.real_name
 
-    assert_raises Elasticsearch::IndexLocked do
-      BulkLoader.new(search_config, "mainstream_test").load_from_current_index
+    assert_raises SearchIndices::IndexLocked do
+      Indexer::BulkLoader.new(search_config, "mainstream_test").load_from_current_index
     end
 
     # Ensure the the indexes haven't been swapped
@@ -138,7 +138,7 @@ class ElasticsearchMigrationTest < IntegrationTest
 
     try_remove_test_index
 
-    BulkLoader.new(search_config, "mainstream_test").load_from_current_index
+    Indexer::BulkLoader.new(search_config, "mainstream_test").load_from_current_index
 
     index_group = search_server.index_group("mainstream_test")
     new_index = index_group.current_real

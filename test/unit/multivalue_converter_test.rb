@@ -1,5 +1,5 @@
 require "test_helper"
-require "multivalue_converter"
+require "legacy_client/multivalue_converter"
 
 class MultivalueConverterTest < MiniTest::Unit::TestCase
   def test_keeps_multivalue_fields_as_array
@@ -8,7 +8,7 @@ class MultivalueConverterTest < MiniTest::Unit::TestCase
       "organisations" => %w(hmrc dvla),
     }
 
-    converted_hash = MultivalueConverter.new(fields, sample_field_definitions).converted_hash
+    converted_hash = LegacyClient::MultivalueConverter.new(fields, sample_field_definitions).converted_hash
 
     assert_equal %w(hmrc dvla), converted_hash["organisations"]
   end
@@ -19,7 +19,7 @@ class MultivalueConverterTest < MiniTest::Unit::TestCase
       "organisations" => %w(hmrc dvla),
     }
 
-    converted_hash = MultivalueConverter.new(fields, sample_field_definitions).converted_hash
+    converted_hash = LegacyClient::MultivalueConverter.new(fields, sample_field_definitions).converted_hash
 
     assert_equal "the title", converted_hash["title"]
   end
@@ -31,7 +31,7 @@ class MultivalueConverterTest < MiniTest::Unit::TestCase
       "organisations" => %w(hmrc dvla),
     }
 
-    converted_hash = MultivalueConverter.new(fields, sample_field_definitions).converted_hash
+    converted_hash = LegacyClient::MultivalueConverter.new(fields, sample_field_definitions).converted_hash
 
     assert_equal "the title", converted_hash["title"]
   end

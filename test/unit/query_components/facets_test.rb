@@ -1,9 +1,9 @@
 require "test_helper"
-require "unified_search_builder"
+require "search/search_builder"
 
 class FacetsTest < ShouldaUnitTestCase
   def make_search_params(facets:, filters: [])
-    SearchParameters.new(
+    Search::SearchParameters.new(
       filters: filters, facets: facets, debug: { include_withdrawn: true }
     )
   end

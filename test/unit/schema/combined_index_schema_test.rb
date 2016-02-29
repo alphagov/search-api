@@ -1,5 +1,5 @@
 require "test_helper"
-require "elasticsearch/index_for_search"
+require "legacy_client/index_for_search"
 require "search_config"
 
 class CombinedIndexSchemaTest < MiniTest::Unit::TestCase

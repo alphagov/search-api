@@ -1,15 +1,15 @@
 require "test_helper"
-require "elasticsearch/index"
+require "index"
 require "search_config"
 require "webmock"
 
-class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
+class IndexerIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def setup
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
-    @wrapper = Elasticsearch::Index.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
+    @wrapper = SearchIndices::Index.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
   end
 
   def test_pagination_params_are_required
@@ -203,7 +203,7 @@ class ElasticsearchIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def assert_rejected_search(expected_error, search_args)
-    e = assert_raises(Elasticsearch::InvalidQuery) do
+    e = assert_raises(SearchIndices::InvalidQuery) do
       @wrapper.advanced_search(search_args)
     end
     assert_equal expected_error, e.message

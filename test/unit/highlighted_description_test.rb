@@ -1,5 +1,5 @@
 require "test_helper"
-require "highlighted_description"
+require "search/presenters/highlighted_description"
 
 class HighlightedDescriptionTest < MiniTest::Unit::TestCase
   def test_adds_highlighting_if_present
@@ -8,7 +8,7 @@ class HighlightedDescriptionTest < MiniTest::Unit::TestCase
       "highlight" => { "description" => ["I will be <mark>hightlighted</mark>."] }
     }
 
-    highlighted_description = HighlightedDescription.new(raw_result).text
+    highlighted_description = Search::HighlightedDescription.new(raw_result).text
 
     assert_equal "I will be <mark>hightlighted</mark>.", highlighted_description
   end
@@ -18,7 +18,7 @@ class HighlightedDescriptionTest < MiniTest::Unit::TestCase
       "fields" => { "description" => "I will not be hightlighted & escaped." }
     }
 
-    highlighted_description = HighlightedDescription.new(raw_result).text
+    highlighted_description = Search::HighlightedDescription.new(raw_result).text
 
     assert_equal "I will not be hightlighted &amp; escaped.", highlighted_description
   end
@@ -28,7 +28,7 @@ class HighlightedDescriptionTest < MiniTest::Unit::TestCase
       "fields" => { "description" => ("This is a sentence that is too long." * 10) }
     }
 
-    highlighted_description = HighlightedDescription.new(raw_result).text
+    highlighted_description = Search::HighlightedDescription.new(raw_result).text
 
     assert_equal 225, highlighted_description.size
     assert highlighted_description.ends_with?('…')
@@ -39,7 +39,7 @@ class HighlightedDescriptionTest < MiniTest::Unit::TestCase
       "fields" => { "description" => nil }
     }
 
-    highlighted_description = HighlightedDescription.new(raw_result).text
+    highlighted_description = Search::HighlightedDescription.new(raw_result).text
 
     assert_equal "", highlighted_description
   end

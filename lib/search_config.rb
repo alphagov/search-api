@@ -1,6 +1,6 @@
 require "yaml"
-require "elasticsearch/search_server"
-require "schema_config"
+require "search_server"
+require "schema/schema_config"
 require "plek"
 
 class SearchConfig
@@ -18,7 +18,7 @@ class SearchConfig
   end
 
   def search_server
-    @server ||= Elasticsearch::SearchServer.new(
+    @server ||= SearchIndices::SearchServer.new(
       elasticsearch["base_uri"],
       schema_config,
       index_names,

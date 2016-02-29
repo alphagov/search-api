@@ -1,6 +1,6 @@
 require "test_helper"
 require "json"
-require "best_bets_checker"
+require "search/best_bets_checker"
 
 class BestBetsCheckerTest < ShouldaUnitTestCase
   def best_bets_query(query)
@@ -43,7 +43,7 @@ class BestBetsCheckerTest < ShouldaUnitTestCase
 
   def setup_checker(query, hits)
     @index = stub("metasearch index")
-    @checker = BestBetsChecker.new(query, @index)
+    @checker = Search::BestBetsChecker.new(query, @index)
     @index.expects(:raw_search).with(
       best_bets_query(query), "best_bet"
     ).returns(

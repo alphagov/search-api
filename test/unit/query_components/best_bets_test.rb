@@ -1,10 +1,10 @@
 require "test_helper"
-require "unified_search_builder"
+require "search/search_builder"
 
 class BestBetsTest < ShouldaUnitTestCase
   context "when best bets is disabled in debug" do
     should "return the query without modification" do
-      builder = QueryComponents::BestBets.new(SearchParameters.new(debug: { disable_best_bets: true }))
+      builder = QueryComponents::BestBets.new(Search::SearchParameters.new(debug: { disable_best_bets: true }))
 
       result = builder.wrap('QUERY')
 

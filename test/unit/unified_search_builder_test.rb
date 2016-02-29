@@ -1,9 +1,9 @@
 require "test_helper"
-require "unified_search_builder"
+require "search/search_builder"
 
-class UnifiedSearchBuilderTest < ShouldaUnitTestCase
+class SearchBuilderTest < ShouldaUnitTestCase
   def setup
-    BestBetsChecker.any_instance.stubs best_bets: [], worst_bets: []
+    Search::BestBetsChecker.any_instance.stubs best_bets: [], worst_bets: []
   end
 
   context "with a simple search query" do
@@ -20,8 +20,8 @@ class UnifiedSearchBuilderTest < ShouldaUnitTestCase
   end
 
   def builder_with_params(params)
-    UnifiedSearchBuilder.new(
-      SearchParameters.new({ filters: [] }.merge(params))
+    Search::SearchBuilder.new(
+      Search::SearchParameters.new({ filters: [] }.merge(params))
     )
   end
 end

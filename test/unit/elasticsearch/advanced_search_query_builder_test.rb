@@ -1,11 +1,11 @@
 require "test_helper"
-require "elasticsearch/advanced_search_query_builder"
+require "legacy_search/advanced_search_query_builder"
 
 class AdvancedSearchQueryBuilderTest < MiniTest::Unit::TestCase
   include Fixtures::DefaultMappings
 
   def build_builder(keywords = "", filter_params = {}, sort_order = {}, mappings = default_mappings)
-    Elasticsearch::AdvancedSearchQueryBuilder.new(keywords, filter_params, sort_order, mappings)
+    LegacySearch::AdvancedSearchQueryBuilder.new(keywords, filter_params, sort_order, mappings)
   end
 
   def test_builder_excludes_withdrawn

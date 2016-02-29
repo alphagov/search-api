@@ -1,9 +1,9 @@
 require "test_helper"
-require "highlighted_title"
+require "search/presenters/highlighted_title"
 
 class HighlightedTitleTest < MiniTest::Unit::TestCase
   def test_title_highlighted
-    title = HighlightedTitle.new({
+    title = Search::HighlightedTitle.new({
       "fields" => { "title" => "A Title" },
       "highlight" => { "title" => ["A Highlighted Title"] }
     })
@@ -12,7 +12,7 @@ class HighlightedTitleTest < MiniTest::Unit::TestCase
   end
 
   def test_fallback_title_is_escaped
-    title = HighlightedTitle.new({
+    title = Search::HighlightedTitle.new({
       "fields" => { "title" => "A & Title" },
     })
 

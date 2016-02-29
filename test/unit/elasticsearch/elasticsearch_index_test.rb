@@ -1,5 +1,5 @@
 require "test_helper"
-require "elasticsearch/index"
+require "index"
 require "search_config"
 require "webmock"
 require "sidekiq/testing"
@@ -108,7 +108,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     begin
       @index.add(documents)
       flunk("No exception raised")
-    rescue Elasticsearch::BulkIndexFailure => e
+    rescue SearchIndices::BulkIndexFailure => e
       assert_equal "Failed inserts: /foo/baz (stuff)", e.message
       assert_equal ["/foo/baz"], e.failed_keys
     end
@@ -142,13 +142,13 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
     @index.add_queued([document])
 
-    assert_equal 1, Elasticsearch::BulkIndexWorker.jobs.size
+    assert_equal 1, Indexer::BulkIndexWorker.jobs.size
   end
 
   def test_queued_delete
     @index.delete_queued("edition", "/foobang")
 
-    assert_equal 1, Elasticsearch::DeleteWorker.jobs.size
+    assert_equal 1, Indexer::DeleteWorker.jobs.size
   end
 
   def test_raw_search
@@ -267,7 +267,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   def test_changing_scroll_id
     search_uri = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=2"
 
-    Elasticsearch::Index.stubs(:scroll_batch_size).returns(2)
+    SearchIndices::Index.stubs(:scroll_batch_size).returns(2)
 
     stub_request(:get, search_uri).with(
       body: { query: { match_all: {} } }.to_json
@@ -320,7 +320,7 @@ private
   def build_mainstream_index
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
-    Elasticsearch::Index.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
+    SearchIndices::Index.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
   end
 
   def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)
@@ -363,7 +363,7 @@ private
   def stub_traffic_index
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
-    traffic_index = Elasticsearch::Index.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
+    traffic_index = SearchIndices::Index.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
     Indexer::PopularityLookup.any_instance.stubs(:traffic_index).returns(traffic_index)
     traffic_index.stubs(:real_name).returns("page-traffic_test")
   end

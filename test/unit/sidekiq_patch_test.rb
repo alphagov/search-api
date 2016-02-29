@@ -2,7 +2,7 @@ require "test_helper"
 
 # Require a worker class, which will trigger the Sidekiq patching, just as
 # loading it from the app will
-require "elasticsearch/bulk_index_worker"
+require "indexer/workers/bulk_index_worker"
 
 # This previously required "yajl/json_gem", which overwrote the JSON.generate
 # method with one that didn't support the `ascii_only` flag.

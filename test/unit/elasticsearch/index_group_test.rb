@@ -1,7 +1,7 @@
 require "test_helper"
 require "app"
-require "elasticsearch/search_server"
-require "elasticsearch/index_group"
+require "search_server"
+require "index_group"
 require "search_config"
 
 class IndexGroupTest < MiniTest::Unit::TestCase
@@ -12,7 +12,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
 
   def setup
     @schema = Rummager.settings.search_config.search_server.schema
-    @server = Elasticsearch::SearchServer.new(
+    @server = SearchIndices::SearchServer.new(
       "http://localhost:9200/",
       @schema,
       %w(mainstream custom),
@@ -35,7 +35,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     index = @server.index_group("mainstream").create_index
 
     assert_requested(stub)
-    assert index.is_a? Elasticsearch::Index
+    assert index.is_a? SearchIndices::Index
     assert_match(/^mainstream-/, index.index_name)
   end
 

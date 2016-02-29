@@ -1,9 +1,9 @@
 require "test_helper"
-require "elasticsearch/escaping"
+require "search/escaping"
 
-class ElasticsearchEscapingTest < MiniTest::Unit::TestCase
+class SearchEscapingTest < MiniTest::Unit::TestCase
   class Dummy
-    include Elasticsearch::Escaping
+    include Search::Escaping
   end
 
   def test_escapes_the_query_for_lucene_chars

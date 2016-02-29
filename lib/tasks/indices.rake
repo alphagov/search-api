@@ -33,10 +33,10 @@ You should run this task if the index schema has changed.
 
 "
   task :migrate_index do
-    require 'bulk_loader'
+    require 'indexer/bulk_loader'
 
     index_names.each do |index_name|
-      BulkLoader.new(search_config, index_name).load_from_current_index
+      Indexer::BulkLoader.new(search_config, index_name).load_from_current_index
     end
   end
 
@@ -55,10 +55,10 @@ You should run this task if the index schema has changed.
     # WARNING: this is potentially dangerous, and will leave the search
     # unavailable for a very short (sub-second) period of time
 
-    require 'bulk_loader'
+    require 'indexer/bulk_loader'
 
     index_names.each do |index_name|
-      BulkLoader.new(search_config, index_name).load_from_current_unaliased_index
+      Indexer::BulkLoader.new(search_config, index_name).load_from_current_unaliased_index
     end
   end
 

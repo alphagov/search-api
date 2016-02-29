@@ -1,7 +1,7 @@
 require "test_helper"
-require "unified_search/spell_check_presenter"
+require "search/presenters/spell_check_presenter"
 
-class UnifiedSearch::SpellCheckPresenterTest < ShouldaUnitTestCase
+class Search::SpellCheckPresenterTest < ShouldaUnitTestCase
   context "#present" do
     should "parse the elasticsearch response and return suggestions" do
       es_response = {
@@ -19,7 +19,7 @@ class UnifiedSearch::SpellCheckPresenterTest < ShouldaUnitTestCase
         }
       }
 
-      presenter = UnifiedSearch::SpellCheckPresenter.new(es_response)
+      presenter = Search::SpellCheckPresenter.new(es_response)
 
       assert_equal presenter.present, ["the first suggestion", "the second suggestion"]
     end
