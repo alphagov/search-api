@@ -50,6 +50,22 @@ You should run this task if the index schema has changed.
     end
   end
 
+  desc "Switches an index group to a specific index WITHOUT transferring data"
+  task :switch_to_named_index, [:new_index_name] do |_, args|
+    # This makes no assumptions on the contents of the new index.
+    # If it has been restored from a snapshot, you should check that the
+    # index is fully recovered first. See :check_recovery.
+    raise "The new index name must be supplied" unless args.new_index_name
+
+    index_names.each do |index_name|
+      if new_index_name.include?(index_name)
+        puts "Switching #{index_name} -> #{new_index_name}"
+        index_group = search_server.index_group(index_name)
+        index_group.switch_to(index_group.find_index(args.new_index_name))
+      end
+    end
+  end
+
   desc "Migrates from an index with the actual index name to an alias"
   task :migrate_from_unaliased_index do
     # WARNING: this is potentially dangerous, and will leave the search
@@ -67,5 +83,17 @@ You should run this task if the index schema has changed.
     index_names.each do |index_name|
       search_server.index_group(index_name).clean
     end
+  end
+
+  desc "Check whether a restored index has recovered"
+  task :check_recovery, [:index_name] do |_, args|
+    raise "An 'index_name' must be supplied" unless args.index_name
+
+    require 'elasticsearch/index'
+
+    puts Elasticsearch::Index.index_recovered?(
+      base_uri: elasticsearch_uri,
+      index_name: args.index_name
+    )
   end
 end

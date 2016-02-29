@@ -21,6 +21,13 @@ module Elasticsearch
       @search_config = search_config
     end
 
+    def find_index(real_name)
+      # TODO: validate this against the API to make sure it actually exists
+      Elasticsearch::Index.new(
+        @base_uri, real_name, @name, mappings, @search_config
+      )
+    end
+
     def create_index
       index_name = generate_name
       index_payload = {

@@ -18,6 +18,7 @@ gem "gds-api-adapters", "~> 28.1.0"
 gem "rack-logstasher", "0.0.3"
 gem 'airbrake', '4.0.0'
 gem "unf", "0.1.3"
+gem 'aws-sdk', '~> 2'
 
 group :test do
   gem "shoulda-context"

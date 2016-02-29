@@ -47,6 +47,14 @@ def search_server
   search_config.search_server
 end
 
+def bucket
+  search_server.snapshot_bucket
+end
+
+def elasticsearch_uri
+  SearchConfig.new.elasticsearch["base_uri"]
+end
+
 def index_names
   case ENV["RUMMAGER_INDEX"]
   when "all"
