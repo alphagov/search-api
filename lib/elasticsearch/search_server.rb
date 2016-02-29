@@ -46,7 +46,7 @@ module Elasticsearch
 
     def snapshot_bucket
       Bucket.new(
-          bucket_name: search_config.snapshot_bucket_name
+        bucket_name: search_config.snapshot_bucket_name
       )
     end
 

@@ -5,7 +5,10 @@ require "minitest/mock"
 
 class SnapshotRepositoryTest < MiniTest::Unit::TestCase
   def setup
-    @snapshot_repository = Elasticsearch::SnapshotRepository.new(base_uri: "localhost:9000/repository/", repository_name: "test-repository")
+    @snapshot_repository = Elasticsearch::SnapshotRepository.new(
+      base_uri: "localhost:9000/repository/",
+      repository_name: "test-repository",
+    )
   end
 
   def test_last_successful_snapshot
@@ -16,12 +19,12 @@ class SnapshotRepositoryTest < MiniTest::Unit::TestCase
   end
 
   def test_select_indices_from_groups
-    groups = ["mainstream", "government"]
+    groups = %w(mainstream government)
     indices = ["mainstream-2016-01-01....", "government-2016-01-01....", "service-manual-2016-01-01..."]
     result = Elasticsearch::SnapshotRepository.select_indices_from_groups(indices, groups)
     assert_equal(
       result,
-      {groups[0] => indices[0], groups[1] => indices[1]}
+      { groups[0] => indices[0], groups[1] => indices[1] }
     )
   end
 end

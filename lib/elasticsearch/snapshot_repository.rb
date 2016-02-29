@@ -4,7 +4,6 @@ require "logging"
 require "json"
 
 module Elasticsearch
-
   class SnapshotRepositoryBusy < Exception
   end
 
@@ -54,7 +53,7 @@ module Elasticsearch
       snapshot = response["snapshots"].first
 
       logger.info(
-        "Snapshot #{snapshot["snapshot"]}: #{snapshot["state"]}"
+        "Snapshot #{snapshot['snapshot']}: #{snapshot['state']}"
       )
       logger.debug(snapshot["shards_stats"].to_s)
 
@@ -63,8 +62,8 @@ module Elasticsearch
 
     def in_progress_snapshots
       snapshots = JSON(@client.get("_status"))["snapshots"]
-      snapshots.reject! {|snapshot| snapshot.fetch("state") == "SUCCESS"}
-      snapshots.map {|snapshot| snapshot.fetch("snapshot")}
+      snapshots.reject! { |snapshot| snapshot.fetch("state") == "SUCCESS" }
+      snapshots.map { |snapshot| snapshot.fetch("snapshot") }
     end
 
     def last_successful_snapshot(snapshots)
@@ -119,6 +118,7 @@ module Elasticsearch
     end
 
   private
+
     def logger
       Logging.logger[self]
     end

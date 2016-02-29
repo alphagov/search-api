@@ -55,14 +55,13 @@ You should run this task if the index schema has changed.
     # This makes no assumptions on the contents of the new index.
     # If it has been restored from a snapshot, you should check that the
     # index is fully recovered first. See :check_recovery.
-
-    new_index_name = args[:new_index_name] or raise "The new index name must be supplied"
+    raise "The new index name must be supplied" unless args.new_index_name
 
     index_names.each do |index_name|
       if new_index_name.include?(index_name)
         puts "Switching #{index_name} -> #{new_index_name}"
         index_group = search_server.index_group(index_name)
-        index_group.switch_to(index_group.find_index(new_index_name))
+        index_group.switch_to(index_group.find_index(args.new_index_name))
       end
     end
   end
@@ -88,14 +87,13 @@ You should run this task if the index schema has changed.
 
   desc "Check whether a restored index has recovered"
   task :check_recovery, [:index_name] do |_, args|
-
-    index_name = args.index_name or raise "An 'index_name' must be supplied"
+    raise "An 'index_name' must be supplied" unless args.index_name
 
     require 'elasticsearch/index'
 
     puts Elasticsearch::Index.index_recovered?(
       base_uri: elasticsearch_uri,
-      index_name: index_name
+      index_name: args.index_name
     )
   end
 end

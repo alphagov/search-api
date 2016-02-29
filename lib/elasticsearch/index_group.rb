@@ -13,7 +13,6 @@ module Elasticsearch
   #
   # One of these indexes is aliased to the group name itself.
   class IndexGroup
-
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
       @client = Client.new(base_uri)

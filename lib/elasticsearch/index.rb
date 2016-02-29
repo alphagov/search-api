@@ -302,7 +302,7 @@ module Elasticsearch
       # If something goes wrong, a shard may get stuck and never reach the DONE state.
       client = Client.new("#{base_uri}/#{index_name}/")
       index_info = JSON(client.get("_recovery"))[index_name]
-      index_info["shards"].all? { |shard_info|  shard_info["stage"] == "DONE"}
+      index_info["shards"].all? { |shard_info| shard_info["stage"] == "DONE" }
     end
 
   private
