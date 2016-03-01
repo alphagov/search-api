@@ -1,5 +1,5 @@
 require "test_helper"
-require "searcher"
+require "search/searcher"
 
 class SearcherTest < ShouldaUnitTestCase
   context "#search" do
@@ -13,7 +13,7 @@ class SearcherTest < ShouldaUnitTestCase
       Search::FacetExampleFetcher.any_instance.expects(:fetch).returns(stub('fetch'))
       Search::SearchPresenter.any_instance.expects(:present).returns(stub('presenter'))
 
-      Searcher.new(index, stub).search(Search::SearchParameters.new({}))
+      Search::Searcher.new(index, stub).search(Search::SearchParameters.new({}))
     end
   end
 end

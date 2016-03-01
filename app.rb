@@ -9,11 +9,12 @@ require "redis"
 end
 
 require "search/presenters/result_presenter"
-require "searcher"
-require "parameter_parser/search_parameter_parser"
-require "parameter_parser/facet_parameter_parser"
 require "search/search_parameters"
 require "search/registries"
+require "search/searcher"
+
+require "parameter_parser/search_parameter_parser"
+require "parameter_parser/facet_parameter_parser"
 require "schema/combined_index_schema"
 
 require_relative "config"
@@ -103,7 +104,7 @@ class Rummager < Sinatra::Application
     end
 
     search_params = Search::SearchParameters.new(parser.parsed_params)
-    searcher = Searcher.new(unified_index, registries)
+    searcher = Search::Searcher.new(unified_index, registries)
     searcher.search(search_params).to_json
   end
 

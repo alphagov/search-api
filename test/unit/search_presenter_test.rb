@@ -1,5 +1,5 @@
 require "test_helper"
-require "searcher"
+require "search/searcher"
 require "document"
 require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"
