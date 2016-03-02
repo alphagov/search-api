@@ -8,16 +8,13 @@ require "redis"
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
-require "document"
-require "result_presenter"
-require "unified_searcher"
-require "elasticsearch/index"
-require "elasticsearch/search_server"
-require "matcher_set"
+require "search/presenters/result_presenter"
+require "search/query_parameters"
+require "search/registries"
+require "search/query"
+
 require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"
-require "search_parameters"
-require "registries"
 require "schema/combined_index_schema"
 
 require_relative "config"
@@ -33,12 +30,12 @@ class Rummager < Sinatra::Application
   def current_index
     index_name = params["index"] || settings.default_index_name
     search_server.index(index_name)
-  rescue Elasticsearch::NoSuchIndex
+  rescue SearchIndices::NoSuchIndex
     halt(404)
   end
 
   def registries
-    @@registries ||= Registries.new(
+    @@registries ||= Search::Registries.new(
       search_server,
       settings.search_config
     )
@@ -82,11 +79,11 @@ class Rummager < Sinatra::Application
     halt(503, "Redis queue timed out")
   end
 
-  error Elasticsearch::InvalidQuery do
+  error SearchIndices::InvalidQuery do
     halt(422, env['sinatra.error'].message)
   end
 
-  error Elasticsearch::BulkIndexFailure do
+  error SearchIndices::BulkIndexFailure do
     halt(500, env['sinatra.error'].message)
   end
 
@@ -106,9 +103,9 @@ class Rummager < Sinatra::Application
       return { error: parser.error }.to_json
     end
 
-    search_params = SearchParameters.new(parser.parsed_params)
-    searcher = UnifiedSearcher.new(unified_index, registries)
-    searcher.search(search_params).to_json
+    search_params = Search::QueryParameters.new(parser.parsed_params)
+    searcher = Search::Query.new(unified_index, registries)
+    searcher.run(search_params).to_json
   end
 
   # Perform an advanced search. Supports filters and pagination.
@@ -141,10 +138,10 @@ class Rummager < Sinatra::Application
     # rather than things added by Sinatra (eg splat, captures, index and format)
     result_set = current_index.advanced_search(request.params)
     results = result_set.results.map do |document|
-      # Wrap in hash to be compatible with the way UnifiedSearch works.
+      # Wrap in hash to be compatible with the way Search works.
       raw_result = { "fields" => document.to_hash }
-      search_params = SearchParameters.new(return_fields: raw_result['fields'].keys)
-      ResultPresenter.new(raw_result, {}, nil, search_params).present
+      search_params = Search::QueryParameters.new(return_fields: raw_result['fields'].keys)
+      Search::ResultPresenter.new(raw_result, {}, nil, search_params).present
     end
 
     { total: result_set.total, results: results }.to_json
@@ -212,7 +209,7 @@ class Rummager < Sinatra::Application
       end
     rescue ArgumentError => e
       text_error e.message
-    rescue Elasticsearch::DocumentNotFound
+    rescue SearchIndices::DocumentNotFound
       halt 404
     end
   end

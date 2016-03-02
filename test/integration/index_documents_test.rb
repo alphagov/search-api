@@ -1,9 +1,9 @@
 require 'integration_test_helper'
 require 'govuk_message_queue_consumer'
 require 'govuk_message_queue_consumer/test_helpers'
-require './lib/index_documents'
+require 'indexer/index_documents'
 
-class IndexDocumentsTest < IntegrationTest
+class Indexer::IndexDocumentsTest < IntegrationTest
   def setup
     stub_elasticsearch_settings
     create_test_indexes
@@ -31,7 +31,7 @@ class IndexDocumentsTest < IntegrationTest
       }
     })
 
-    IndexDocuments.new.process(message)
+    Indexer::IndexDocuments.new.process(message)
 
     assert message.acked?
     assert_document_is_in_rummager({
@@ -55,7 +55,7 @@ class IndexDocumentsTest < IntegrationTest
       }
     })
 
-    IndexDocuments.new.process(message)
+    Indexer::IndexDocuments.new.process(message)
 
     assert message.acked?
     assert_document_is_in_rummager({
@@ -79,7 +79,7 @@ class IndexDocumentsTest < IntegrationTest
       "links" => {}
     })
 
-    IndexDocuments.new.process(message)
+    Indexer::IndexDocuments.new.process(message)
 
     assert_document_is_in_rummager({
       "link" => "/my-tagged-page",
@@ -106,7 +106,7 @@ class IndexDocumentsTest < IntegrationTest
       }
     })
 
-    IndexDocuments.new.process(message)
+    Indexer::IndexDocuments.new.process(message)
 
     assert_document_is_in_rummager({
       "link" => "/my-tagged-page",

@@ -11,7 +11,7 @@ $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 INDICES = %w{mainstream detailed government}
 
 require "search_config"
-require "bulk_loader"
+require "indexer/bulk_loader"
 
 Slop.parse(help: true) do
   search_config = SearchConfig.new
@@ -27,7 +27,7 @@ load the alias is switched over.
 }
   run do |_opts, args|
     if args.size == 1
-      BulkLoader.new(search_config, args.first).load_from($stdin)
+      Indexer::BulkLoader.new(search_config, args.first).load_from($stdin)
     else
       puts self
     end

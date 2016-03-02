@@ -25,17 +25,11 @@ Style/IfUnlessModifier:
 # to refactor. We'll disable this cop for known occurences so no new violations
 # will be introduced.
 Style/StructInheritance:
-  Exclude:
-    - 'lib/health_check/basic_auth_credentials.rb'
-    - 'lib/health_check/search_check.rb'
-    - 'lib/registries.rb'
-    - 'lib/unified_search/spell_check_fetcher.rb'
-    - 'lib/unified_search/spell_check_presenter.rb'
-    - 'lib/unified_search/suggestion_blacklist.rb'
+  Enabled: false
 
 # The class vars in these two files are acceptable because
 # they aren't inherited.
 Style/ClassVars:
   Exclude:
     - 'app.rb'
-    - 'lib/unified_search/suggestion_blacklist.rb'
+    - 'lib/search/suggestion_blacklist.rb'

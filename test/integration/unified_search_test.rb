@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class UnifiedSearchTest < IntegrationTest
+class SearchTest < IntegrationTest
   def setup
     # `@@registries` are set in Rummager and is *not* reset between tests. To
     # prevent caching issues we manually clear them here to make a "new" app.

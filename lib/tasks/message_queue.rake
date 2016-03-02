@@ -10,13 +10,13 @@ namespace :message_queue do
     # Load Airbrake to make govuk_message_queue_consumer send error notifications.
     require 'airbrake'
     require 'govuk_message_queue_consumer'
-    require_relative '../index_documents'
+    require 'indexer/index_documents'
 
     # routing_key is defaulted to '#'
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "rummager_to_be_indexed",
       exchange_name: "published_documents",
-      processor: IndexDocuments.new,
+      processor: Indexer::IndexDocuments.new,
     ).run
   end
 end

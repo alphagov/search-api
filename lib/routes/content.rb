@@ -1,8 +1,10 @@
+require "index"
+
 class Rummager < Sinatra::Application
   get '/content' do
     raw_result = find_result_by_link(params["link"])
     {
-      index: Elasticsearch::Index.strip_alias_from_index_name(raw_result['_index']),
+      index: SearchIndices::Index.strip_alias_from_index_name(raw_result['_index']),
       raw_source: raw_result['_source']
     }.to_json
   end
@@ -12,7 +14,7 @@ class Rummager < Sinatra::Application
       raw_result = find_result_by_link(params["link"])
       delete_result_from_index(raw_result)
       json_result 204, "Deleted the link from search index"
-    rescue Elasticsearch::IndexLocked
+    rescue SearchIndices::IndexLocked
       json_result 423, "The index is locked. Please try again later."
     end
   end
@@ -31,7 +33,7 @@ private
   end
 
   def delete_result_from_index(raw_result)
-    index_name = Elasticsearch::Index.strip_alias_from_index_name(raw_result['_index'])
+    index_name = SearchIndices::Index.strip_alias_from_index_name(raw_result['_index'])
     index = search_server.index(index_name)
     index.delete(raw_result['_type'], raw_result['_id'])
   end

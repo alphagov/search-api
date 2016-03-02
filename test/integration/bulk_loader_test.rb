@@ -1,5 +1,5 @@
 require "integration_test_helper"
-require "bulk_loader"
+require "indexer/bulk_loader"
 require "cgi"
 
 class BulkLoaderTest < IntegrationTest
@@ -69,7 +69,7 @@ class BulkLoaderTest < IntegrationTest
 private
 
   def bulk_load!(document)
-    bulk_loader = BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
+    bulk_loader = Indexer::BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
     bulk_loader.load_from(StringIO.new(index_payload(document)))
   end
 

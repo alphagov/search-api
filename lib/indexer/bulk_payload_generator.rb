@@ -55,7 +55,7 @@ module Indexer
     end
 
     def index_doc(doc_hash, popularities)
-      Indexer::DocumentPreparer.new(@client).prepared(
+      DocumentPreparer.new(@client).prepared(
         doc_hash,
         popularities,
         @is_content_index

@@ -9,7 +9,7 @@ LIBRARY_PATH = PROJECT_ROOT + "lib/"
 $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 
 require "search_config"
-require "bulk_loader"
+require "indexer/bulk_loader"
 
 Slop.parse(help: true) do
   search_config = SearchConfig.new
