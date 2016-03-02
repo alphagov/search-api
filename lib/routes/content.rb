@@ -22,8 +22,7 @@ class Rummager < Sinatra::Application
 private
 
   def find_result_by_link(link)
-    results = unified_index.raw_search(query: { term: { link: link } }, size: 1)
-    raw_result = results['hits']['hits'].first
+    raw_result = unified_index.get_document_by_link(link)
 
     unless raw_result
       halt 404, "No document found with link #{link}."
@@ -33,8 +32,7 @@ private
   end
 
   def delete_result_from_index(raw_result)
-    index_name = SearchIndices::Index.strip_alias_from_index_name(raw_result['_index'])
-    index = search_server.index(index_name)
+    index = search_server.index(raw_result['real_index_name'])
     index.delete(raw_result['_type'], raw_result['_id'])
   end
 end
