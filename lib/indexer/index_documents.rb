@@ -49,19 +49,17 @@ module Indexer
     end
 
     def update_index(base_path, links)
-      indices_with_base_path(base_path).map do |index|
-        index.amend(base_path, links)
-      end
+      index = get_index_for_document_with_path(base_path)
+      index.amend(base_path, links)
     end
 
-    def indices_with_base_path(document_base_path)
+    def get_index_for_document_with_path(document_base_path)
       indices_to_search = search_server.index_for_search(search_config.content_index_names)
       results = indices_to_search.raw_search(query: { term: { link: document_base_path } })
 
-      results["hits"]["hits"].map do |hit|
-        index = SearchIndices::Index.strip_alias_from_index_name(hit["_index"])
-        search_server.index(index) if index
-      end
+      hit = results["hits"]["hits"].first
+      index = SearchIndices::Index.strip_alias_from_index_name(hit["_index"])
+      search_server.index(index)
     end
 
     def search_server
