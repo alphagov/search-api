@@ -166,17 +166,17 @@ module SearchIndices
       response
     end
 
-    def amend(link, updates)
-      Indexer::Amender.new(self).amend(link, updates)
+    def amend(document_id, updates)
+      Indexer::Amender.new(self).amend(document_id, updates)
     end
 
-    def amend_queued(link, updates)
-      queue.queue_amend(link, updates)
+    def amend_queued(document_id, updates)
+      queue.queue_amend(document_id, updates)
     end
 
-    def get(link)
+    def get_document_by_id(document_id)
       begin
-        response = @client.get("_all/#{CGI.escape(link)}")
+        response = @client.get("_all/#{CGI.escape(document_id)}")
         document_from_hash(JSON.parse(response.body)["_source"])
       rescue RestClient::ResourceNotFound
         nil
