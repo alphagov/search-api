@@ -289,7 +289,8 @@ private
     debug_options = character_separated_param("debug")
 
     options = {}
-    debug_options.each { |option|
+
+    debug_options.each do |option|
       case option
       when ""
       when "disable_best_bets"
@@ -306,10 +307,13 @@ private
         # Withdrawn content is excluded from regular searches but is useful for
         # content audits
         options[:include_withdrawn] = true
+      when "use_id_codes"
+        options[:use_id_codes] = true
       else
         @errors << %{Unknown debug option "#{option}"}
       end
-    }
+    end
+
     options
   end
 end

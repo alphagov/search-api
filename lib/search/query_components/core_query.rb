@@ -63,7 +63,11 @@ module QueryComponents
     end
 
     def must_conditions
-      [all_searchable_text_query]
+      if @search_params.enable_id_codes?
+        [all_searchable_text_query]
+      else
+        [query_string_query]
+      end
     end
 
     def should_conditions

@@ -38,6 +38,10 @@ module Search
       debug[:disable_best_bets]
     end
 
+    def enable_id_codes?
+      debug[:use_id_codes]
+    end
+
     def suggest_spelling?
       query && suggest.include?('spelling')
     end
