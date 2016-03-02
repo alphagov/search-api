@@ -8,6 +8,7 @@ module Indexer
       calculators
       calendars
       collections-publisher
+      contacts
       contacts-admin
       hmrc-manuals-api
       licencefinder
