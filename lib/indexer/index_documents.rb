@@ -30,10 +30,12 @@ module Indexer
     def index_links_from_message(message)
       return unless publishing_app_migrated?(message)
       raw_links = links_from_payload(message)
-
       links = Indexer::LinksLookup.new.rummager_fields_from_links(raw_links)
-      base_path = document_base_path(message)
-      update_index(base_path, links)
+
+      base_path = message.payload.fetch("base_path")
+      document = get_document_for_base_path(base_path)
+      index = search_server.index(document['real_index_name'])
+      index.amend(document['_id'], links)
     end
 
     def publishing_app_migrated?(message)
@@ -44,22 +46,9 @@ module Indexer
       message.payload.fetch("links", {})
     end
 
-    def document_base_path(message)
-      message.payload.fetch("base_path")
-    end
-
-    def update_index(base_path, links)
-      index = get_index_for_document_with_path(base_path)
-      index.amend(base_path, links)
-    end
-
-    def get_index_for_document_with_path(document_base_path)
-      indices_to_search = search_server.index_for_search(search_config.content_index_names)
-      results = indices_to_search.raw_search(query: { term: { link: document_base_path } })
-
-      hit = results["hits"]["hits"].first
-      index = SearchIndices::Index.strip_alias_from_index_name(hit["_index"])
-      search_server.index(index)
+    def get_document_for_base_path(document_base_path)
+      unified_index = search_server.index_for_search(search_config.content_index_names)
+      unified_index.get_document_by_link(document_base_path)
     end
 
     def search_server
