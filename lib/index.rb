@@ -296,6 +296,15 @@ module SearchIndices
       end
     end
 
+    def self.index_recovered?(base_uri:, index_name:)
+      # Check if an index has recovered all its shards.
+      # https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-recovery.html
+      # If something goes wrong, a shard can get stuck and not reach the DONE state.
+      client = Elasticsearch::Client.new(host: base_uri).indices
+      index_info = client.recovery(index: index_name)[index_name]
+      index_info["shards"].all? { |shard_info| shard_info["stage"] == "DONE" }
+    end
+
   private
 
     # Parse an elasticsearch error message to determine whether it's caused by

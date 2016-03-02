@@ -26,7 +26,7 @@ require "pp"
 require "shoulda-context"
 require "logging"
 require "timecop"
-require "pry"
+require "pry-byebug"
 
 require "webmock/minitest"
 

@@ -4,6 +4,7 @@ auxiliary_index_names: ["page-traffic", "metasearch"]
 registry_index: "government"
 metasearch_index_name: "metasearch"
 popularity_rank_offset: 10
+repository_name: rummager-snapshots
 
 # When doing spell checking, which indices to use?
 spelling_index_names:
