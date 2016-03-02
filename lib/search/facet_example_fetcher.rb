@@ -3,11 +3,11 @@ module Search
   class FacetExampleFetcher
     attr_reader :search_params
 
-    def initialize(index, es_response, search_params, search_builder)
+    def initialize(index, es_response, search_params, query_builder)
       @index = index
       @response_facets = es_response["facets"]
       @search_params = search_params
-      @search_builder = search_builder
+      @query_builder = query_builder
     end
 
     # Fetch all requested example facet values
@@ -37,8 +37,8 @@ module Search
       scope = facet_params[:example_scope]
 
       if scope == :query
-        query = @search_builder.query
-        filter = @search_builder.filter
+        query = @query_builder.query
+        filter = @query_builder.filter
       else
         query = nil
         filter = nil

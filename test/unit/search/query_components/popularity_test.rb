@@ -1,5 +1,5 @@
 require "test_helper"
-require "search/search_builder"
+require "search/query_builder"
 
 class PopularityTest < ShouldaUnitTestCase
   should "add popularity to a query" do

@@ -1,5 +1,5 @@
 require "test_helper"
-require "search/search_builder"
+require "search/query_builder"
 
 class CoreQueryTest < ShouldaUnitTestCase
   context "search with debug disabling use of synonyms" do

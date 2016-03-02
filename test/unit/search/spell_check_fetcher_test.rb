@@ -10,7 +10,7 @@ class Search::SpellCheckFetcherTest < ShouldaUnitTestCase
       stub_request(:get, "http://localhost:9200/mainstream,government/_search")
         .to_return(body: JSON.dump(suggest: { spelling_suggestions: 'a-hash' }))
 
-      es_response = Search::SpellCheckFetcher.new(Search::SearchParameters.new(query: 'bolo'), stub('registries')).es_response
+      es_response = Search::SpellCheckFetcher.new(Search::QueryParameters.new(query: 'bolo'), stub('registries')).es_response
 
       assert_equal es_response, { 'spelling_suggestions' => 'a-hash' }
     end

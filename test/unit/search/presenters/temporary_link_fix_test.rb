@@ -9,7 +9,7 @@ class TemporaryLinkFixTest < MiniTest::Unit::TestCase
       'fields' => { 'link' => ['some/link'] }
     }
 
-    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::SearchParameters.new(return_fields: %w[link])).present
+    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
 
     assert_equal "/some/link", result["link"]
   end
@@ -21,7 +21,7 @@ class TemporaryLinkFixTest < MiniTest::Unit::TestCase
       'fields' => { 'link' => ['http://example.org/some-link'] }
     }
 
-    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::SearchParameters.new(return_fields: %w[link])).present
+    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
 
     assert_equal "http://example.org/some-link", result["link"]
   end
@@ -33,7 +33,7 @@ class TemporaryLinkFixTest < MiniTest::Unit::TestCase
       'fields' => { 'link' => ['/some-link'] }
     }
 
-    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::SearchParameters.new(return_fields: %w[link])).present
+    result = Search::ResultPresenter.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
 
     assert_equal "/some-link", result["link"]
   end

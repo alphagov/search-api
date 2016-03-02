@@ -13,7 +13,7 @@ require_relative "query_components/facets"
 
 module Search
   # Builds a query for a search across all GOV.UK indices
-  class SearchBuilder
+  class QueryBuilder
     attr_reader :search_params
 
     def initialize(search_params)

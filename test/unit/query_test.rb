@@ -1,19 +1,19 @@
 require "test_helper"
-require "search/searcher"
+require "search/query"
 
-class SearcherTest < ShouldaUnitTestCase
+class QueryTest < ShouldaUnitTestCase
   context "#search" do
     should 'search with the results from the builder and return a presenter' do
       index = stub('index', :schema)
 
       search_payload = stub('payload')
-      Search::SearchBuilder.any_instance.expects(:payload).returns(search_payload)
+      Search::QueryBuilder.any_instance.expects(:payload).returns(search_payload)
       index.expects(:raw_search).with(search_payload).returns({})
 
       Search::FacetExampleFetcher.any_instance.expects(:fetch).returns(stub('fetch'))
-      Search::SearchPresenter.any_instance.expects(:present).returns(stub('presenter'))
+      Search::ResultSetPresenter.any_instance.expects(:present).returns(stub('presenter'))
 
-      Search::Searcher.new(index, stub).search(Search::SearchParameters.new({}))
+      Search::Query.new(index, stub).run(Search::QueryParameters.new({}))
     end
   end
 end

@@ -1,6 +1,6 @@
 module Search
   # Mixin for building elasticsearch queries
-  module Queries
+  module QueryHelpers
   private
 
     # Combine filters using an operator

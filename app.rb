@@ -9,9 +9,9 @@ require "redis"
 end
 
 require "search/presenters/result_presenter"
-require "search/search_parameters"
+require "search/query_parameters"
 require "search/registries"
-require "search/searcher"
+require "search/query"
 
 require "parameter_parser/search_parameter_parser"
 require "parameter_parser/facet_parameter_parser"
@@ -103,9 +103,9 @@ class Rummager < Sinatra::Application
       return { error: parser.error }.to_json
     end
 
-    search_params = Search::SearchParameters.new(parser.parsed_params)
-    searcher = Search::Searcher.new(unified_index, registries)
-    searcher.search(search_params).to_json
+    search_params = Search::QueryParameters.new(parser.parsed_params)
+    searcher = Search::Query.new(unified_index, registries)
+    searcher.run(search_params).to_json
   end
 
   # Perform an advanced search. Supports filters and pagination.
@@ -140,7 +140,7 @@ class Rummager < Sinatra::Application
     results = result_set.results.map do |document|
       # Wrap in hash to be compatible with the way Search works.
       raw_result = { "fields" => document.to_hash }
-      search_params = Search::SearchParameters.new(return_fields: raw_result['fields'].keys)
+      search_params = Search::QueryParameters.new(return_fields: raw_result['fields'].keys)
       Search::ResultPresenter.new(raw_result, {}, nil, search_params).present
     end
 

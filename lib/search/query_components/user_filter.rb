@@ -1,12 +1,12 @@
-require 'search/queries'
+require 'search/query_helpers'
 
 module QueryComponents
   class UserFilter < BaseComponent
-    include Search::Queries
+    include Search::QueryHelpers
 
     attr_reader :rejects, :filters
 
-    def initialize(search_params = SearchParameters.new)
+    def initialize(search_params = QueryParameters.new)
       super
 
       @rejects = []

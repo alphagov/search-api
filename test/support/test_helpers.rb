@@ -4,7 +4,7 @@ module TestHelpers
   end
 
   def search_query_params(options = {})
-    Search::SearchParameters.new({
+    Search::QueryParameters.new({
       start: 0,
       count: 20,
       query: "cheese",

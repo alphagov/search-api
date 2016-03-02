@@ -1,10 +1,10 @@
 require_relative "user_filter"
 require_relative "visibility_filter"
-require 'search/queries'
+require 'search/query_helpers'
 
 module QueryComponents
   class Filter < BaseComponent
-    include Search::Queries
+    include Search::QueryHelpers
 
     def payload(excluded_field_names = [])
       user_filter = QueryComponents::UserFilter.new(search_params)

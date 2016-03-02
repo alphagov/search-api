@@ -44,7 +44,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
 
   context "#prepare_response" do
     should "map an empty response" do
-      fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::SearchParameters.new, @builder)
+      fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
 
       response = fetcher.send(:prepare_response, [], [])
 
@@ -52,7 +52,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
 
     should "map a response to facets without fields" do
-      fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::SearchParameters.new, @builder)
+      fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
       slugs = ['a-slug-name']
       response_list = [{ 'hits' => { 'total' => 1, 'hits' => [{ '_id' => 'a-slug-name' }] } }]
 
@@ -66,7 +66,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     setup do
       @index = stub_index("content index")
       @builder = stub("builder")
-      @fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::SearchParameters.new, @builder)
+      @fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
     end
 
     should "get an empty hash of examples" do
@@ -86,7 +86,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           ]
         }
       } }
-      params = Search::SearchParameters.new(
+      params = Search::QueryParameters.new(
         facets: {
           "sector" => {
             requested: 10,
@@ -138,7 +138,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
         }
       } }
 
-      params = Search::SearchParameters.new(
+      params = Search::QueryParameters.new(
         facets: {
           "sector" => {
             requested: 10,
@@ -192,7 +192,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
           ]
         }
       } }
-      params = Search::SearchParameters.new(
+      params = Search::QueryParameters.new(
         facets: {
           "sector" => {
             requested: 10,
@@ -224,7 +224,7 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
         }
       } }
 
-      params = Search::SearchParameters.new(
+      params = Search::QueryParameters.new(
         facets: {
           "sector" => {
             requested: 10,

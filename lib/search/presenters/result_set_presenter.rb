@@ -5,7 +5,7 @@ require_relative "spell_check_presenter"
 
 module Search
   # Presents a combined set of results for a GOV.UK site search
-  class SearchPresenter
+  class ResultSetPresenter
     attr_reader :es_response, :search_params
 
     # `registries` should be a map from registry names to registries,

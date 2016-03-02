@@ -4,7 +4,7 @@ module QueryComponents
 
     attr_reader :search_params
 
-    def initialize(search_params = Search::SearchParameters.new)
+    def initialize(search_params = Search::QueryParameters.new)
       @search_params = search_params
     end
 

@@ -1,8 +1,8 @@
-require 'search/queries'
+require 'search/query_helpers'
 
 module QueryComponents
   class VisibilityFilter < BaseComponent
-    include Search::Queries
+    include Search::QueryHelpers
 
     def rejected_queries
       return [] if search_params.debug[:include_withdrawn]

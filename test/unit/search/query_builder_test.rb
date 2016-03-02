@@ -1,7 +1,7 @@
 require "test_helper"
-require "search/search_builder"
+require "search/query_builder"
 
-class SearchBuilderTest < ShouldaUnitTestCase
+class QueryBuilderTest < ShouldaUnitTestCase
   def setup
     Search::BestBetsChecker.any_instance.stubs best_bets: [], worst_bets: []
   end
@@ -20,8 +20,8 @@ class SearchBuilderTest < ShouldaUnitTestCase
   end
 
   def builder_with_params(params)
-    Search::SearchBuilder.new(
-      Search::SearchParameters.new({ filters: [] }.merge(params))
+    Search::QueryBuilder.new(
+      Search::QueryParameters.new({ filters: [] }.merge(params))
     )
   end
 end

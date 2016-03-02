@@ -1,12 +1,12 @@
 # Performs a search across all indices used for the GOV.UK site search
 
 require_relative "facet_example_fetcher"
-require_relative "search_builder"
-require_relative "presenters/search_presenter"
+require_relative "query_builder"
+require_relative "presenters/result_set_presenter"
 require_relative "spell_check_fetcher"
 
 module Search
-  class Searcher
+  class Query
     attr_reader :index, :registries
 
     def initialize(index, registries)
@@ -15,11 +15,11 @@ module Search
     end
 
     # Search and combine the indices and return a hash of ResultSet objects
-    def search(search_params)
-      builder = Search::SearchBuilder.new(search_params)
+    def run(search_params)
+      builder = QueryBuilder.new(search_params)
       es_response = index.raw_search(builder.payload)
 
-      example_fetcher = Search::FacetExampleFetcher.new(index, es_response, search_params, builder)
+      example_fetcher = FacetExampleFetcher.new(index, es_response, search_params, builder)
       facet_examples = example_fetcher.fetch
 
       # Augment the response with the suggest result from a separate query.
@@ -27,7 +27,7 @@ module Search
         es_response['suggest'] = fetch_spell_checks(search_params)
       end
 
-      Search::SearchPresenter.new(
+      ResultSetPresenter.new(
         search_params,
         es_response,
         registries,
@@ -39,7 +39,7 @@ module Search
   private
 
     def fetch_spell_checks(search_params)
-      Search::SpellCheckFetcher.new(search_params, registries).es_response
+      SpellCheckFetcher.new(search_params, registries).es_response
     end
   end
 end
