@@ -18,7 +18,7 @@ class BestBetsTest < IntegrationTest
     )
 
     commit_document("mainstream_test",
-    link: '/the-link-that-should-surface',
+      link: '/the-link-that-should-surface',
       indexable_content: 'Empty.',
     )
 
