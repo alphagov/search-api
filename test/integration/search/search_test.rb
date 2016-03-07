@@ -22,6 +22,29 @@ class SearchTest < IntegrationTest
     assert last_response.ok?
   end
 
+  def test_id_code_with_space
+    # when debug mode includes "use_id_codes" and it searches for
+    # "P 60" instead of "P60" a P60 document should be found!
+
+    reset_content_indexes
+
+    commit_document(
+      "mainstream_test",
+      title: "Get P45, P60 and other forms for your employees",
+      description: "Get PAYE forms from HMRC including P45, P60, starter checklist (which replaced the P46), P11D(b)",
+      link: "/get-paye-forms-p45-p60"
+
+    )
+
+    get "/unified_search?q=p+60&debug=use_id_codes"
+
+    assert_equal(parsed_response['results'].size, 1)
+    assert_equal(parsed_response["results"][0]["link"], "/get-paye-forms-p45-p60")
+
+    get "/unified_search?q=p+60"
+    assert_equal(parsed_response['results'].size, 0)
+  end
+
   def test_spell_checking_with_typo
     reset_content_indexes
 

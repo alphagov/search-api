@@ -39,15 +39,14 @@ module QueryComponents
     end
 
     def base_query
-      if search_term.nil?
-        return { match_all: {} }
-      end
+      return { match_all: {} } if search_term.nil?
 
       if search_params.enable_new_weighting?
         core_query = QueryComponents::TextQuery.new(search_params).payload
       else
         core_query = QueryComponents::CoreQuery.new(search_params).payload
       end
+
       boosted_query = QueryComponents::Booster.new(search_params).wrap(core_query)
       QueryComponents::Popularity.new(search_params).wrap(boosted_query)
     end
