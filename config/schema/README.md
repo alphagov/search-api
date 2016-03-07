@@ -84,12 +84,28 @@ The document type files contain JSON object with the following keys:
  - `fields`: An array of field names which are allowed in documents of this
    type.  The field names must be defined in the `field_definitions.json` file.
 
- - `allowed_values`: Details of allowed values for fields in the document. This
-   is an object, keyed by field name.  If a field is not mentioned in this
-   object, any syntactically valid value is allowed.  The allowed values are
-   specified as an array of objects, in which the `value` key defines the
-   allowed value, and an additional `label` value contains a displayable
-   version of the value.
+ - `expanded_search_result_fields`: DEPRECATED. Sets up field "expansion" for a
+    field. This is used by the search result presenter to replace a raw value.
+
+    For example:
+
+    ```
+    "expanded_search_result_fields": {
+      "fault_type": [
+        {
+          "label": "Recall",
+          "value": "recall"
+        },
+        {
+          "label": "Non-urgent fault",
+          "value": "non_urgent_fault"
+        }
+      ],
+    ```
+
+    Will return make the presenter replace the `fault_type` with value `recall`
+    with the hash `{ "label": "Recall", "value": "recall" }`. This can be used
+    when displaying the search results.
 
 ## Indexes
 

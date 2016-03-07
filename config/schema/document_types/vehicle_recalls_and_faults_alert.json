@@ -10,7 +10,7 @@
     "build_end_date"
   ],
 
-  "allowed_values": {
+  "expanded_search_result_fields": {
     "fault_type": [
       {
         "label": "Recall",

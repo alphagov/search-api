@@ -4,7 +4,7 @@
     "first_published_at"
   ],
 
-  "allowed_values": {
+  "expanded_search_result_fields": {
     "therapeutic_area": [
       {
         "label": "Anaesthesia and intensive care",

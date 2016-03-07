@@ -1,20 +1,20 @@
 require "json"
 require "schema/field_types"
 
-FieldDefinition = Struct.new("FieldDefinition", :name, :type, :es_config, :description, :children, :allowed_values)
+FieldDefinition = Struct.new("FieldDefinition", :name, :type, :es_config, :description, :children, :expanded_search_result_fields)
 
 class FieldDefinition
   # Merge this field definition with another one.
   #
   # Assumes that the definitions are for the same field (but probably for a
   # different document type).  Therefore, the only thing that can differ is the
-  # allowed_values setting, so we only have to do anything if allowed_values
+  # expanded_search_result_fields setting, so we only have to do anything if expanded_search_result_fields
   # are set.
   def merge(other)
     unless other.nil?
-      if other.allowed_values
+      if other.expanded_search_result_fields
         result = self.clone
-        result.allowed_values = ((result.allowed_values || []) + other.allowed_values).uniq
+        result.expanded_search_result_fields = ((result.expanded_search_result_fields || []) + other.expanded_search_result_fields).uniq
         return result
       end
     end

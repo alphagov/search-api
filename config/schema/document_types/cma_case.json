@@ -8,7 +8,7 @@
     "closed_date"
   ],
 
-  "allowed_values": {
+  "expanded_search_result_fields": {
     "case_type": [
       {
         "label": "CA98 and civil cartels",
