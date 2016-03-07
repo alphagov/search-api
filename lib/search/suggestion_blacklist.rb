@@ -2,7 +2,7 @@ require_relative 'matcher_set'
 require_relative 'registry'
 
 module Search
-  class SuggestionBlacklist < Struct.new(:registries)
+  SuggestionBlacklist = Struct.new(:registries) do
     STRINGS_WITH_DIGITS = /\d/
 
     def should_correct?(string)

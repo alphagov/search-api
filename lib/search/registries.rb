@@ -1,7 +1,7 @@
 require_relative "registry"
 
 module Search
-  class Registries < Struct.new(:search_server, :search_config)
+  Registries = Struct.new(:search_server, :search_config) do
     def [](name)
       as_hash[name]
     end

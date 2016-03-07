@@ -21,12 +21,6 @@ Style/ClosingParenthesisIndentation:
 Style/IfUnlessModifier:
   Enabled: false
 
-# We shouldn't inherit from Struct, but existing violations are quite difficult
-# to refactor. We'll disable this cop for known occurences so no new violations
-# will be introduced.
-Style/StructInheritance:
-  Enabled: false
-
 # The class vars in these two files are acceptable because
 # they aren't inherited.
 Style/ClassVars:
