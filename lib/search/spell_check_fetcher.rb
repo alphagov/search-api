@@ -16,7 +16,7 @@ require_relative 'suggestion_blacklist'
 # Our solution is to run a separate query to fetch the suggestions, only using
 # the indices we want.
 module Search
-  class SpellCheckFetcher < Struct.new(:search_params, :registries)
+  SpellCheckFetcher = Struct.new(:search_params, :registries) do
     def es_response
       return unless should_correct_query?
       search_client.raw_search(elasticsearch_query)['suggest']

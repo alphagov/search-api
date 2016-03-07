@@ -4,7 +4,7 @@ module HealthCheck
   #
   # Because this is a Struct, the object can be passed into a Net::HTTP::Get
   # request's #basic_auth method with the splat operator.
-  class BasicAuthCredentials < Struct.new(:user, :password)
+  BasicAuthCredentials = Struct.new(:user, :password) do
     # Since we've got to provide a `call` method for Slop, let's make that the
     # only way to instantiate this class.
     private_class_method :new
