@@ -8,7 +8,7 @@ module Indexer
 
     def amend(document_id, updates)
       if updates.include?("link")
-        raise ArgumentError, "Cannot change document the `link` attribute of a document."
+        raise ArgumentError, "Cannot change the `link` attribute of a document."
       end
 
       document = index.get_document_by_id(document_id)
