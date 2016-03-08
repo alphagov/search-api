@@ -6,8 +6,8 @@ module Snapshot
   class SnapshotRepository
     attr_reader :repository_name
 
-    def initialize(base_uri:, repository_name:)
-      @client = Elasticsearch::Client.new(host: base_uri).snapshot
+    def initialize(base_uri:, repository_name:, **client_opts)
+      @client = Elasticsearch::Client.new(host: base_uri, **client_opts).snapshot
       @repository_name = repository_name
     end
 
@@ -53,6 +53,10 @@ module Snapshot
       logger.debug(snapshot["shards_stats"].to_s)
 
       snapshot["state"]
+    end
+
+    def delete_snapshot(snapshot_name)
+      client.delete(repository: repository_name, snapshot: snapshot_name)
     end
 
     def in_progress_snapshots

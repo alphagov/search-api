@@ -120,6 +120,31 @@ namespace :rummager do
       puts "Restored to indices:"
       puts snapshot_repository.restore_indexes(args.snapshot_name, index_names)
     end
+
+    desc "Remove old snapshots from the repository"
+    task :clean, [:repository_name] do |_, args|
+      repository_name = args.repository_name || search_config.repository_name
+
+      old_snapshots = bucket.list_snapshots(
+        repository_name,
+        before_time: DateTime.now - search_config.snapshot_max_age_days
+      )
+
+      snapshot_repository = Snapshot::SnapshotRepository.new(
+        base_uri: elasticsearch_uri,
+        repository_name: repository_name,
+        request_timeout: 5 * 60,
+      )
+
+      puts "Found #{old_snapshots.length} old snapshots..."
+
+      old_snapshots.each do |snapshot_name|
+        puts "Deleting #{snapshot_name}"
+        snapshot_repository.delete_snapshot(
+          snapshot_name,
+        )
+      end
+    end
   end
 
   def bucket

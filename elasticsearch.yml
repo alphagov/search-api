@@ -5,6 +5,7 @@ registry_index: "government"
 metasearch_index_name: "metasearch"
 popularity_rank_offset: 10
 repository_name: rummager-snapshots
+snapshot_max_age_days: 1
 
 # When doing spell checking, which indices to use?
 spelling_index_names:
