@@ -11,7 +11,7 @@ class DocumentTypesTest < ShouldaUnitTestCase
     File.expand_path('../../../config/schema', File.dirname(__FILE__))
   end
 
-  def cma_case_allowed_values
+  def cma_case_expanded_search_result_fields
     [
       {
         "label" => "Open",
@@ -60,21 +60,21 @@ class DocumentTypesTest < ShouldaUnitTestCase
       )
     end
 
-    should "not specify allowed_values for the `organisations` field" do
-      assert_nil @types["manual_section"].fields["organisations"].allowed_values
+    should "not specify expanded_search_result_fields for the `organisations` field" do
+      assert_nil @types["manual_section"].fields["organisations"].expanded_search_result_fields
     end
 
-    should "include allowed_values in the cma_case `case_state` field" do
+    should "include expanded_search_result_fields in the cma_case `case_state` field" do
       assert_equal(
-        cma_case_allowed_values,
-        @types["cma_case"].fields["case_state"].allowed_values
+        cma_case_expanded_search_result_fields,
+        @types["cma_case"].fields["case_state"].expanded_search_result_fields
       )
     end
 
-    should "allowed_values on a field should also be available from the document type" do
+    should "expanded_search_result_fields on a field should also be available from the document type" do
       assert_equal(
-        @types["cma_case"].fields["case_state"].allowed_values,
-        @types["cma_case"].allowed_values["case_state"]
+        @types["cma_case"].fields["case_state"].expanded_search_result_fields,
+        @types["cma_case"].expanded_search_result_fields["case_state"]
       )
     end
   end
@@ -105,11 +105,11 @@ class DocumentTypesTest < ShouldaUnitTestCase
       assert_raises_message(%{Unknown keys (unknown), in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
     end
 
-    should "fail if allowed values are specified in base type" do
+    should "fail if `expanded_search_result_fields` are specified in base type" do
       DocumentTypeParser.any_instance.stubs(:load_json).returns({
         "fields" => ["case_state"],
-        "allowed_values" => {
-          "case_state" => cma_case_allowed_values,
+        "expanded_search_result_fields" => {
+          "case_state" => cma_case_expanded_search_result_fields,
         },
       })
       base_type = @parser.parse
@@ -117,18 +117,18 @@ class DocumentTypesTest < ShouldaUnitTestCase
       subtype_parser = DocumentTypeParser.new("/config/path/subtype.json", base_type, @definitions)
       DocumentTypeParser.any_instance.stubs(:load_json).returns({ "fields" => [] })
 
-      assert_raises_message(%{Specifying `allowed_values` in base document type is not supported, in document type definition in "/config/path/subtype.json"}) { subtype_parser.parse }
+      assert_raises_message(%{Specifying `expanded_search_result_fields` in base document type is not supported, in document type definition in "/config/path/subtype.json"}) { subtype_parser.parse }
     end
 
-    should "fail if allowed_values are set for fields which aren't known" do
+    should "fail if expanded_search_result_fields are set for fields which aren't known" do
       DocumentTypeParser.any_instance.stubs(:load_json).returns({
         "fields" => ["case_state"],
-        "allowed_values" => {
-          "unknown_field" => cma_case_allowed_values,
+        "expanded_search_result_fields" => {
+          "unknown_field" => cma_case_expanded_search_result_fields,
         },
       })
 
-      assert_raises_message(%{Field "unknown_field" set in "allowed_values", but not in "fields", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
+      assert_raises_message(%{Field "unknown_field" set in "expanded_search_result_fields", but not in "fields", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
     end
   end
 end

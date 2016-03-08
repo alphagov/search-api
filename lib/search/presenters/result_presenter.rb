@@ -21,7 +21,7 @@ module Search
 
       if schema
         result = convert_elasticsearch_array_fields(result)
-        result = expand_allowed_values(result)
+        result = expand_fields_from_schema(result)
       end
 
       result = add_virtual_fields(result)
@@ -39,15 +39,15 @@ module Search
       EntityExpander.new(registries).new_result(result)
     end
 
-    def expand_allowed_values(result)
+    def expand_fields_from_schema(result)
       params_to_expand = result.select do |k, _|
-        document_schema.allowed_values.include?(k)
+        document_schema.expanded_search_result_fields.include?(k)
       end
 
       expanded_params = params_to_expand.reduce({}) do |params, (field_name, values)|
         params.merge(
           field_name => Array(values).map { |raw_value|
-            document_schema.allowed_values[field_name].find { |allowed_value|
+            document_schema.expanded_search_result_fields[field_name].find { |allowed_value|
               allowed_value.fetch("value") == raw_value
             }
           }

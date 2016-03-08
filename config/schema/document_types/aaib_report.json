@@ -8,7 +8,7 @@
     "location"
   ],
 
-  "allowed_values": {
+  "expanded_search_result_fields": {
     "aircraft_category": [
       {
         "label": "Commercial - fixed wing",

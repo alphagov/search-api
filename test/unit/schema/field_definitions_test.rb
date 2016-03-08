@@ -37,7 +37,7 @@ class FieldDefinitionsTest < ShouldaUnitTestCase
 
       assert_equal "foo", merged.name
       assert_equal "string", merged.type
-      assert_equal [value1, value2, value3], merged.allowed_values.sort_by { |item| item["value"] }
+      assert_equal [value1, value2, value3], merged.expanded_search_result_fields.sort_by { |item| item["value"] }
     end
   end
 end

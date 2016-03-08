@@ -22,8 +22,8 @@ class CombinedIndexSchemaTest < MiniTest::Unit::TestCase
     # The location field is defined in both the
     # international_development_fund document type, and in the
     # european_structural_investment_fund document type, with different
-    # allowed_values.  Check that allowed values from both lists are present.
-    locations = @combined_schema.field_definitions["location"].allowed_values
+    # expanded_search_result_fields.  Check that expansion values from both lists are present.
+    locations = @combined_schema.field_definitions["location"].expanded_search_result_fields
     assert locations.include?({ "label" => "Afghanistan", "value" => "afghanistan" })
     assert locations.include?({ "label" => "North East", "value" => "north-east" })
   end

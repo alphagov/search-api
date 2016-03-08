@@ -7,7 +7,7 @@
     "value_of_funding"
   ],
 
-  "allowed_values": {
+  "expanded_search_result_fields": {
     "fund_state": [
       {
         "label": "Open",

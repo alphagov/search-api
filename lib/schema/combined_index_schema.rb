@@ -17,10 +17,9 @@ class CombinedIndexSchema
   # Get a hash from field_name to FieldDefinition object, for all fields
   # allowed in any document type in the indexes.
   #
-  # Since FieldDefinitions can contain an "allowed_values" member, and this
+  # Since FieldDefinitions can contain an "expanded_search_result_fields" member, and this
   # may differ between document types, the definitions returned here will
-  # have combined "allowed_values" fields, containing all the allowed values
-  # for the field across all document types.
+  # have combined "expanded_search_result_fields" fields.
   def field_definitions
     @field_definitions ||= each_field_with_object({}) { |field_name, field_definition, results|
       results[field_name] = field_definition.merge(results[field_name])

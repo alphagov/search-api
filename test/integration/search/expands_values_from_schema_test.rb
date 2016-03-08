@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class SearchExpandsAllowedValuesTest < IntegrationTest
+class ExpandsValuesFromSchemaTest < IntegrationTest
   def setup
     stub_elasticsearch_settings
     reset_content_indexes

@@ -5,7 +5,7 @@
     "issued_date"
   ],
 
-  "allowed_values": {
+  "expanded_search_result_fields": {
     "alert_type": [
       {
         "label": "Drug alert",

@@ -5,7 +5,7 @@
     "date_of_occurrence"
   ],
 
-  "allowed_values": {
+  "expanded_search_result_fields": {
     "vessel_type": [
       {
         "label": "Merchant vessel 100 gross tons or over",

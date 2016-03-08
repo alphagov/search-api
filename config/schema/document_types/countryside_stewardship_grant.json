@@ -6,7 +6,7 @@
     "funding_amount"
   ],
 
-  "allowed_values": {
+  "expanded_search_result_fields": {
     "grant_type": [
       {
         "label": "Option",
