@@ -6,15 +6,16 @@ module Indexer
       @index = index
     end
 
-    def amend(link, updates)
+    def amend(document_id, updates)
       if updates.include?("link")
-        raise ArgumentError, "Cannot change document the `link` attribute of a document."
+        raise ArgumentError, "Cannot change the `link` attribute of a document."
       end
 
-      document = index.get(link)
+      document = index.get_document_by_id(document_id)
 
       unless document
-        raise SearchIndices::DocumentNotFound, "`Index#get` can't find #{link}"
+        raise SearchIndices::DocumentNotFound,
+          "Can't find document with _id #{document_id}"
       end
 
       updates.each do |key, value|
