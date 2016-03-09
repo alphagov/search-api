@@ -18,6 +18,7 @@ module Indexer
 
     EXCLUDED_FORMATS = %{
       email_alert_signup
+      redirect
     }
 
     def process(message)
