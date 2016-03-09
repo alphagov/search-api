@@ -24,17 +24,22 @@ module Indexer
       $stderr.puts "An error occurred!"
       $stderr.puts e.inspect
       message.retry
+    rescue ProcessingError => e
+      Airbrake.notify_or_ignore(e, parameters: message.payload)
+      message.discard
     end
 
   private
 
     def index_links_from_message(message)
       return unless publishing_app_migrated?(message)
-      raw_links = links_from_payload(message)
-      links = Indexer::LinksLookup.new.rummager_fields_from_links(raw_links)
 
       base_path = message.payload.fetch("base_path")
       document = get_document_for_base_path(base_path)
+
+      raw_links = links_from_payload(message)
+      links = Indexer::LinksLookup.new.rummager_fields_from_links(raw_links)
+
       index = search_server.index(document['real_index_name'])
       index.amend(document['_id'], links)
     end
@@ -49,7 +54,8 @@ module Indexer
 
     def get_document_for_base_path(document_base_path)
       unified_index = search_server.index_for_search(search_config.content_index_names)
-      unified_index.get_document_by_link(document_base_path)
+      document = unified_index.get_document_by_link(document_base_path)
+      document || raise(UnknownDocumentError, "#{document_base_path} not found in index")
     end
 
     def search_server
@@ -58,6 +64,12 @@ module Indexer
 
     def search_config
       @search_config ||= Rummager.settings.search_config
+    end
+
+    class ProcessingError < StandardError
+    end
+
+    class UnknownDocumentError < ProcessingError
     end
   end
 end
