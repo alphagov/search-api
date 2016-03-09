@@ -55,7 +55,7 @@ module Indexer
     def get_document_for_base_path(document_base_path)
       unified_index = search_server.index_for_search(search_config.content_index_names)
       document = unified_index.get_document_by_link(document_base_path)
-      document || raise(UnknownDocumentError, "#{document_base_path} not found in index")
+      document || raise(UnknownDocumentError, "Document not found in index")
     end
 
     def search_server
