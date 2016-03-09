@@ -42,6 +42,25 @@ class Indexer::IndexDocumentsTest < IntegrationTest
     })
   end
 
+  def test_tag_does_not_exist_yet
+    commit_document('mainstream_test', link: '/my-page')
+
+    stub_request(:get, "http://publishing-api.dev.gov.uk/v2/content/MY-ID").
+      to_return(status: 401, body: '{}')
+
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/my-page",
+      "publishing_app" => "policy-publisher",
+      "links" => {
+        "topics" => ["MY-ID"],
+      }
+    })
+
+    Indexer::IndexDocuments.new.process(message)
+
+    assert message.acked?
+  end
+
   def test_skips_non_migrated_apps
     commit_document("mainstream_test", link: '/my-page')
 
@@ -112,6 +131,20 @@ class Indexer::IndexDocumentsTest < IntegrationTest
       "link" => "/my-tagged-page",
       "specialist_sectors" => ['a-newly-chosen-topic'],
     })
+  end
+
+  def test_document_does_not_exist_in_elasticsearch
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/an-unknown-page",
+      "publishing_app" => "policy-publisher",
+      "links" => {
+        "topics" => ['a-topic-uid']
+      }
+    })
+
+    Indexer::IndexDocuments.new.process(message)
+
+    assert message.discarded?
   end
 
 private
