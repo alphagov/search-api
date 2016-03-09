@@ -21,6 +21,12 @@ module SearchIndices
       @search_config = search_config
     end
 
+    def index_for_name(real_name)
+      SearchIndices::Index.new(
+        @base_uri, real_name, @name, mappings, @search_config
+      )
+    end
+
     def create_index
       index_name = generate_name
       index_payload = {
