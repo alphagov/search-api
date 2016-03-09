@@ -23,6 +23,7 @@ class Indexer::IndexDocumentsTest < IntegrationTest
 
     message = GovukMessageQueueConsumer::MockMessage.new({
       "base_path" => "/my-page",
+      "document_type" => "some_format",
       "publishing_app" => "policy-publisher",
       "links" => {
         "topics" => ["my-topic-id"],
@@ -50,6 +51,7 @@ class Indexer::IndexDocumentsTest < IntegrationTest
 
     message = GovukMessageQueueConsumer::MockMessage.new({
       "base_path" => "/my-page",
+      "document_type" => "some_format",
       "publishing_app" => "policy-publisher",
       "links" => {
         "topics" => ["MY-ID"],
@@ -66,6 +68,7 @@ class Indexer::IndexDocumentsTest < IntegrationTest
 
     message = GovukMessageQueueConsumer::MockMessage.new({
       "base_path" => "/my-page",
+      "document_type" => "some_format",
       "publishing_app" => "unmigrated-app",
       "links" => {
         "topics" => ["my-topic-id"],
@@ -94,6 +97,7 @@ class Indexer::IndexDocumentsTest < IntegrationTest
 
     message = GovukMessageQueueConsumer::MockMessage.new({
       "base_path" => "/my-tagged-page",
+      "document_type" => "some_format",
       "publishing_app" => "policy-publisher",
       "links" => {}
     })
@@ -120,6 +124,7 @@ class Indexer::IndexDocumentsTest < IntegrationTest
     message = GovukMessageQueueConsumer::MockMessage.new({
       "base_path" => "/my-tagged-page",
       "publishing_app" => "policy-publisher",
+      "document_type" => "some_format",
       "links" => {
         "topics" => ['a-topic-uid']
       }
@@ -137,6 +142,7 @@ class Indexer::IndexDocumentsTest < IntegrationTest
     message = GovukMessageQueueConsumer::MockMessage.new({
       "base_path" => "/an-unknown-page",
       "publishing_app" => "policy-publisher",
+      "document_type" => "some_format",
       "links" => {
         "topics" => ['a-topic-uid']
       }
@@ -145,6 +151,21 @@ class Indexer::IndexDocumentsTest < IntegrationTest
     Indexer::IndexDocuments.new.process(message)
 
     assert message.discarded?
+  end
+
+  def test_ignore_messages_with_some_formats
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/an-unknown-page",
+      "publishing_app" => "policy-publisher",
+      "document_type" => "email_alert_signup",
+      "links" => {
+        "topics" => ['a-topic-uid']
+      }
+    })
+
+    Indexer::IndexDocuments.new.process(message)
+
+    assert message.acked?
   end
 
 private

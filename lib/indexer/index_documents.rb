@@ -16,6 +16,10 @@ module Indexer
       smartanswers
     }
 
+    EXCLUDED_FORMATS = %{
+      email_alert_signup
+    }
+
     def process(message)
       $stdout.puts "Processing message: #{message.payload.inspect}"
       index_links_from_message(message)
@@ -32,7 +36,7 @@ module Indexer
   private
 
     def index_links_from_message(message)
-      return unless publishing_app_migrated?(message)
+      return unless should_index_document?(message.payload)
 
       base_path = message.payload.fetch("base_path")
       document = get_document_for_base_path(base_path)
@@ -44,8 +48,9 @@ module Indexer
       index.amend(document['_id'], links)
     end
 
-    def publishing_app_migrated?(message)
-      MIGRATED_TAGGING_APPS.include? message.payload["publishing_app"]
+    def should_index_document?(content_item)
+      MIGRATED_TAGGING_APPS.include?(content_item.fetch("publishing_app")) &&
+        !EXCLUDED_FORMATS.include?(content_item.fetch("document_type"))
     end
 
     def links_from_payload(message)
