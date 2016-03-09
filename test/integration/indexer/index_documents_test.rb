@@ -42,6 +42,25 @@ class Indexer::IndexDocumentsTest < IntegrationTest
     })
   end
 
+  def test_tag_does_not_exist_yet
+    commit_document('mainstream_test', link: '/my-page')
+
+    stub_request(:get, "http://publishing-api.dev.gov.uk/v2/content/MY-ID").
+      to_return(status: 401, body: '{}')
+
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/my-page",
+      "publishing_app" => "policy-publisher",
+      "links" => {
+        "topics" => ["MY-ID"],
+      }
+    })
+
+    Indexer::IndexDocuments.new.process(message)
+
+    assert message.acked?
+  end
+
   def test_skips_non_migrated_apps
     commit_document("mainstream_test", link: '/my-page')
 

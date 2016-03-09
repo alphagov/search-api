@@ -41,8 +41,8 @@ module Indexer
         .gsub('/government/organisations/', '')
         .gsub('/topic/', '')
         .gsub('/browse/', '')
-    rescue GdsApi::HTTPNotFound
-      # Content items in the links hash may not exist yet.
+    rescue GdsApi::HTTPNotFound, # Items in the links hash may not exist yet.
+           GdsApi::HTTPUnauthorized # Items may be access limited.
       nil
     end
 
