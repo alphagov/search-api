@@ -12,7 +12,7 @@ class SearchConfig
     content_index_names
     spelling_index_names
     repository_name
-    snapshot_max_age_days
+    snapshot_max_age_hours
   ].each do |config_method|
     define_method config_method do
       elasticsearch.fetch(config_method)

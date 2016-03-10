@@ -121,13 +121,17 @@ namespace :rummager do
       puts snapshot_repository.restore_indexes(args.snapshot_name, index_names)
     end
 
-    desc "Remove old snapshots from the repository"
-    task :clean, [:repository_name] do |_, args|
+    desc "Delete old snapshots from the repository:
+      - snapshot age is optional and defaults to 24 hours. Provide the time in hours.
+      - repository_name is optional
+    "
+    task :clean, [:snapshot_max_age, :repository_name] do |_, args|
       repository_name = args.repository_name || search_config.repository_name
+      snapshot_max_age = args.snapshot_max_age.to_i || search_config.snapshot_max_age_hours
 
       old_snapshots = bucket.list_snapshots(
         repository_name,
-        before_time: DateTime.now - search_config.snapshot_max_age_days
+        before_time: DateTime.now - snapshot_max_age.hours
       )
 
       snapshot_repository = Snapshot::SnapshotRepository.new(
