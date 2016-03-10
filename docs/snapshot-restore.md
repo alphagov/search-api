@@ -55,7 +55,7 @@ This assumes you have some environment variables available:
 - AWS_BUCKET_NAME
 - AWS_BUCKET_REGION
 
-The name of the bucket to be used is configured in `elasticsearch.yml`.
+Default values such as `repository_name` and `snapshot_max_age` are set in: `elasticsearch.yml`.
 
 If you want to create your own repository (e.g. for development), you might
 want to create a filesystem backed repository instead. This is documented in
@@ -74,11 +74,13 @@ You can initiate a snapshot manually by running:
 rake rummager:snapshot:run[repository_name,snapshot_name]
 ```
 
+Optional parameters: `repository_name`, `snapshot_name`
+
 As above, you will need to ensure that AWS environment variables are set.
 
 If snapshot_name is left out, Rummager generates one based on the current time.
 
-If the repository does not exist, or elasticsearch is unable to process the
+If the repository does not exist, or Elasticsearch is unable to process the
 request, the task exits with a non zero code and prints a stack trace.
 
 Otherwise the exit code will be zero.
@@ -86,35 +88,49 @@ Otherwise the exit code will be zero.
 ## Monitoring snapshots
 ### Check if a snapshot has completed yet
 ```shell
-rake rummager:snapshot:check[snapshot_name]
+rake rummager:snapshot:check[repository_name,snapshot_name]
 ```
+
+Optional parameters: `repository_name`, `snapshot_name`
+
 This returns the status of a snapshot operation, e.g. "SUCCESS".
 
 ### Find the last successful snapshot
 ```shell
 # Print the name of the latest snapshot
-rake rummager:snapshot:latest
+rake rummager:snapshot:latest[before_time,repository_name]
 
 # Print the last snapshot excluding any after Jan 1st 2016
 rake 'rummager:snapshot:latest[2016-01-01 00:00:00]'
 ```
 
-These require access to the S3 bucket, so all of the AWS environment variables
-must be set.
+Optional parameters: `repository_name`, `before_time`
+
+Where `before_time` defaults to the time in which the rake task is run.
+
+If you are providing a custom `before_time`, it should be in a DateTime format.
+
+This is used to monitor the ongoing snapshot process and make sure our
+repository is keeping up to date.
 
 ### List all snapshots in the S3 bucket
 
 ```shell
 # Includes in-progress snapshots
-rake rummager:snapshot:list
+rake rummager:snapshot:list[repository_name]
 ```
+
+Optional parameters: `repository_name`
 
 This command also requires AWS environment variables to be set.
 
 ## Restore the latest snapshot
 ```shell
-INDEX_NAMES=all rake rummager:snapshot:restore[snapshot_name]
+INDEX_NAMES=all rake rummager:snapshot:restore[snapshot_name, repository_name]
 ```
+
+Optional parameters: `repository_name`
+
 Prints the names of the indexes that will be created.
 
 Exits with a non-zero code and prints a stack trace if elasticsearch is
@@ -122,8 +138,11 @@ unable to handle a request. Only one restore operation can happen at a time.
 
 ## Monitor a restore from snapshot
 ```shell
-rake rummager:check_recovery[new_index_name]
+rake rummager:check_recovery[new_index_name,repository_name]
 ```
+
+Optional parameters: `repository_name`
+
 Prints "true" or "false", depending on whether the restore is complete.
 
 Where `new_index_name` is the name that was printed by the `rummager:snapshot:restore`
@@ -137,6 +156,18 @@ over the alias:
 ```shell
 INDEX_NAMES=mainstream rake rummager:switch_to_named_index[new_index_name]
 ```
+
+## Delete old snapshots from the repository
+
+Delete snapshot older than a specific time:
+
+```shell
+rake rummager:clean[snapshot_max_age,repository_name]
+```
+
+Optional parameters: `snapshot_max_age`, `repository_name`
+
+Where `snapshot_max_age` defaults to 24 hours.
 
 ## Nightly rebuild process
 
