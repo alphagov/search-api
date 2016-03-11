@@ -24,6 +24,7 @@ module QueryComponents
     def boosted_formats
       {
         # Mainstream formats
+        "service_manual"    => 0.3,
         "smart-answer"      => 1.5,
         "transaction"       => 1.5,
 
