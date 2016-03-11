@@ -14,6 +14,7 @@ module Indexer
       licencefinder
       policy-publisher
       smartanswers
+      travel-advice-publisher
     }
 
     EXCLUDED_FORMATS = %{
