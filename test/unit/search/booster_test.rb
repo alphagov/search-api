@@ -31,15 +31,15 @@ class BoosterTest < ShouldaUnitTestCase
             { filter: { term: { format: "operational_field" } },       boost_factor: 1.5 },
             { filter: { term: { format: "contact" } },                 boost_factor: 0.3 },
             { filter: { term: { format: "mainstream_browse_page" } },  boost_factor: 0 },
+            { filter: { term: { organisation_state: "closed" } },      boost_factor: 0.2 },
+            { filter: { term: { organisation_state: "devolved" } },    boost_factor: 0.3 },
+            { filter: { term: { is_historic: true } },                 boost_factor: 0.5 },
             { filter: { term: { search_format_types: "announcement" } },
               script_score: {
                 script: "((0.05 / ((3.16*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)",
                 params: { now: 1457712000000 }
               }
             },
-            { filter: { term: { organisation_state: "closed" } }, boost_factor: 0.2 },
-            { filter: { term: { organisation_state: "devolved" } }, boost_factor: 0.3 },
-            { filter: { term: { is_historic: true } }, boost_factor: 0.5 }
           ]
         }
       }
