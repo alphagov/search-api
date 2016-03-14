@@ -48,6 +48,8 @@ module Indexer
 
       index = search_server.index(document['real_index_name'])
       index.amend(document['_id'], links)
+    rescue KeyError => e
+      raise MalformedMessage, "Content item attribute missing. #{e.message}"
     end
 
     def should_index_document?(content_item)
@@ -77,6 +79,9 @@ module Indexer
     end
 
     class UnknownDocumentError < ProcessingError
+    end
+
+    class MalformedMessage < ProcessingError
     end
   end
 end
