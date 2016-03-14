@@ -168,6 +168,20 @@ class Indexer::IndexDocumentsTest < IntegrationTest
     assert message.acked?
   end
 
+  def test_ignore_messages_with_missing_values
+    message = GovukMessageQueueConsumer::MockMessage.new({
+      "base_path" => "/an-unknown-page",
+      "publishing_app" => "policy-publisher",
+      "links" => {
+        "topics" => ['a-topic-uid']
+      }
+    })
+
+    Indexer::IndexDocuments.new.process(message)
+
+    assert message.discarded?
+  end
+
 private
 
   def stub_publishing_api_get_content(content_id, body)
