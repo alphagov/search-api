@@ -19,7 +19,7 @@ class BoosterTest < ShouldaUnitTestCase
             }
           },
           functions: [
-            { filter: { term: { format: "service_manual" } },          boost_factor: 0.3 },
+            { filter: { term: { manual: "service-manual" } },          boost_factor: 0.3 },
             { filter: { term: { format: "smart-answer" } },            boost_factor: 1.5 },
             { filter: { term: { format: "transaction" } },             boost_factor: 1.5 },
             { filter: { term: { format: "topical_event" } },           boost_factor: 1.5 },
