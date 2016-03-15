@@ -18,37 +18,36 @@ module QueryComponents
   private
 
     def boost_filters
-      format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]
+      boost_factor_filters + [time_boost]
     end
 
-    def boosted_formats
-      {
-        # Mainstream formats
-        "smart-answer"      => 1.5,
-        "transaction"       => 1.5,
+    def boost_factor_filters
+      [
+        # By manual
+        boost_factor_filter(:manual, 'service-manual',          0.3),
 
-        # Inside Gov formats
-        "topical_event"     => 1.5,
-        "minister"          => 1.7,
-        "organisation"      => 2.5,
-        "topic"             => 1.5,
-        "document_series"   => 1.3,
-        "document_collection" => 1.3,
-        "operational_field" => 1.5,
-        "contact"           => 0.3,
+        # By mainstream formats
+        boost_factor_filter(:format, "smart-answer",            1.5),
+        boost_factor_filter(:format, "transaction",             1.5),
+        boost_factor_filter(:format, "topical_event",           1.5),
+        boost_factor_filter(:format, "minister",                1.7),
+        boost_factor_filter(:format, "organisation",            2.5),
+        boost_factor_filter(:format, "topic",                   1.5),
+        boost_factor_filter(:format, "document_series",         1.3),
+        boost_factor_filter(:format, "document_collection",     1.3),
+        boost_factor_filter(:format, "operational_field",       1.5),
+        boost_factor_filter(:format, "contact",                 0.3),
 
         # Hide mainstream browse pages for now.
-        "mainstream_browse_page" => 0,
-      }
-    end
+        boost_factor_filter(:format, "mainstream_browse_page",  0),
 
-    def format_boosts
-      boosted_formats.map do |format, boost|
-        {
-          filter: { term: { format: format } },
-          boost_factor: boost
-        }
-      end
+        # By organisation state
+        boost_factor_filter(:organisation_state, "closed",      0.2),
+        boost_factor_filter(:organisation_state, "devolved",    0.3),
+
+        # By historic edition
+        boost_factor_filter(:is_historic, true,                 0.5),
+      ]
     end
 
     # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
@@ -71,24 +70,10 @@ module QueryComponents
       (Time.now.to_i / 60) * 60000
     end
 
-    def closed_org_boost
+    def boost_factor_filter(attribute, value, boost_factor)
       {
-        filter: { term: { organisation_state: "closed" } },
-        boost_factor: 0.2,
-      }
-    end
-
-    def devolved_org_boost
-      {
-        filter: { term: { organisation_state: "devolved" } },
-        boost_factor: 0.3,
-      }
-    end
-
-    def historic_edition_boost
-      {
-        filter: { term: { is_historic: true } },
-        boost_factor: 0.5,
+        filter: { term: { attribute => value } },
+        boost_factor: boost_factor,
       }
     end
   end
