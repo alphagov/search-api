@@ -24,18 +24,20 @@ module QueryComponents
     def boosted_formats
       {
         # Mainstream formats
-        "smart-answer"      => 1.5,
-        "transaction"       => 1.5,
+        "service_manual_guide" => 0.3,
+        "service_manual_topic" => 0.3,
+        "smart-answer" => 1.5,
+        "transaction" => 1.5,
 
         # Inside Gov formats
-        "topical_event"     => 1.5,
-        "minister"          => 1.7,
-        "organisation"      => 2.5,
-        "topic"             => 1.5,
-        "document_series"   => 1.3,
+        "topical_event" => 1.5,
+        "minister" => 1.7,
+        "organisation" => 2.5,
+        "topic" => 1.5,
+        "document_series" => 1.3,
         "document_collection" => 1.3,
         "operational_field" => 1.5,
-        "contact"           => 0.3,
+        "contact" => 0.3,
 
         # Hide mainstream browse pages for now.
         "mainstream_browse_page" => 0,
