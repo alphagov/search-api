@@ -173,3 +173,22 @@ Where `snapshot_max_age` defaults to 24 hours.
 
 There is a nightly jenkins job to rebuild the search indexes. This is also
 responsible for cleaning up out of date snapshots.
+
+## FAQ
+
+### Why does elasticsearch return 5xx errors?
+
+```
+Elasticsearch::Transport::Transport::Errors::InternalServerError: [500] {"error":"ElasticsearchIllegalStateException[trying to modify or unregister repository that is currently used ]","status":500}
+```
+
+```
+Elasticsearch::Transport::Transport::Errors::ServiceUnavailable: [503] {"error":"ConcurrentSnapshotExecutionException[[repo:snapshot] a snapshot is already running]","status":503}
+```
+
+Both of these errors mean we are trying to execute two snapshots at once,
+which is not possible.
+
+When we run a snapshot we ensure the repository is created first. If another
+snapshot is running at the same time, elasticsearch can fail before even running
+the snapshot request.
