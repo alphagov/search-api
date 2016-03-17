@@ -24,14 +24,17 @@ namespace :rummager do
       repo = Snapshot::SnapshotRepository.new(
         base_uri: elasticsearch_uri,
         repository_name: repository_name,
+
+        # The first snapshot of a large index can take a long time
+        request_timeout: 20 * 60,
       )
 
       puts snapshot_name
-      puts repo.create_snapshot(snapshot_name, indices)
+      puts repo.create_snapshot(snapshot_name, indices, wait_for_completion: true)
     end
 
     desc "Get the status of a snapshot, e.g. SUCCESS"
-    task :check, [:repository_name, :snapshot_name] do |_, args|
+    task :check, [:snapshot_name, :repository_name] do |_, args|
       raise "A 'snapshot_name' must be supplied" unless args.snapshot_name
       repository_name = args.repository_name || search_config.repository_name
 

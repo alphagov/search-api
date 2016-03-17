@@ -28,8 +28,9 @@ module Snapshot
     #
     # Raises a ServiceUnavailable exception if elasticsearch is already taking
     # another snapshot.
-    def create_snapshot(snapshot_name, index_names)
+    def create_snapshot(snapshot_name, index_names, wait_for_completion: false)
       client.create(
+        wait_for_completion: wait_for_completion,
         repository: repository_name,
         snapshot: snapshot_name,
         body: {
