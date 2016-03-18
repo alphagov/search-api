@@ -156,7 +156,9 @@ namespace :rummager do
             snapshot_name,
           )
         rescue Elasticsearch::Transport::Transport::Errors::NotFound
-          raise "Attempted to delete snapshot that doesn't exist"
+          # Sometimes elasticsearch (1.4) returns 404 for the delete operation.
+          # In this case we want to just move onto the next snapshot.
+          $stderr.puts "Attempted to delete snapshot that doesn't exist"
         end
       end
     end
