@@ -1,5 +1,6 @@
 require "snapshot/snapshot_repository"
 require "snapshot/bucket"
+require "elasticsearch"
 require "rest-client"
 require "aws-sdk"
 require "date"
@@ -29,8 +30,10 @@ namespace :rummager do
         request_timeout: 20 * 60,
       )
 
-      puts snapshot_name
-      puts repo.create_snapshot(snapshot_name, indices, wait_for_completion: true)
+      output = repo.create_snapshot(snapshot_name, indices, wait_for_completion: true)
+
+      puts "Creating snapshot with name: #{snapshot_name}"
+      puts "Elasticsearch returned: #{output}"
     end
 
     desc "Get the status of a snapshot, e.g. SUCCESS"
@@ -44,8 +47,8 @@ namespace :rummager do
           repository_name: repository_name,
         )
         puts repo.check_snapshot(args.snapshot_name)
-      rescue RestClient::ResourceNotFound
-        puts "Missing repository or snapshot. Try rummager:snapshot:list"
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
+        raise "Missing repository or snapshot. Try rummager:snapshot:list"
       end
     end
 
@@ -147,9 +150,14 @@ namespace :rummager do
 
       old_snapshots.each do |snapshot_name|
         puts "Deleting #{snapshot_name}"
-        snapshot_repository.delete_snapshot(
-          snapshot_name,
-        )
+
+        begin
+          snapshot_repository.delete_snapshot(
+            snapshot_name,
+          )
+        rescue Elasticsearch::Transport::Transport::Errors::NotFound
+          raise "Attempted to delete snapshot that doesn't exist"
+        end
       end
     end
   end
