@@ -19,6 +19,7 @@ module Indexer
 
     EXCLUDED_FORMATS = %{
       email_alert_signup
+      gone
       redirect
     }
 
