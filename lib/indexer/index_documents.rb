@@ -14,6 +14,7 @@ module Indexer
       licencefinder
       policy-publisher
       smartanswers
+      tariff
       travel-advice-publisher
     }
 
