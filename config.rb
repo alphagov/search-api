@@ -21,5 +21,6 @@ Dir[initializers_path].each { |f| require f }
 
 configure do
   Airbrake.configuration.ignore << "Sinatra::NotFound"
+  Airbrake.configuration.ignore << "LegacySearch::InvalidQuery"
   use Airbrake::Sinatra
 end
