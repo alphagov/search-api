@@ -35,6 +35,11 @@ module Indexer
     rescue ProcessingError => e
       Airbrake.notify_or_ignore(e, parameters: message.payload)
       message.discard
+    rescue StandardError => e
+      $stderr.puts "Unknown Exception: #{e.message}"
+      Airbrake.notify_or_ignore(e, parameters: message.payload)
+      sleep 1
+      message.retry
     end
 
   private
