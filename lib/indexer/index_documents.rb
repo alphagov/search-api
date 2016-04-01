@@ -25,9 +25,10 @@ module Indexer
     }
 
     def process(message)
-      $stdout.puts "Processing message: #{message.payload.inspect}"
-      index_links_from_message(message.payload)
-      message.ack
+      with_logging(message) do
+        index_links_from_message(message.payload)
+        message.ack
+      end
     rescue GdsApi::HTTPServerError => e
       $stderr.puts "An error occurred!"
       $stderr.puts e.inspect
@@ -43,6 +44,23 @@ module Indexer
     end
 
   private
+
+    def with_logging(message)
+      log_payload = message.payload.slice(*%w[
+        content_id
+        base_path
+        document_type
+        title
+        update_type
+        publishing_app
+      ])
+
+      puts "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json}"
+
+      yield
+
+      puts "Finished processing message [#{message.delivery_info.delivery_tag}]"
+    end
 
     def index_links_from_message(payload)
       return unless should_index_document?(payload)
