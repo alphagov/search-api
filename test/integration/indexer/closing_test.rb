@@ -2,6 +2,7 @@ require "integration_test_helper"
 
 class ElasticsearchClosingTest < IntegrationTest
   def setup
+    stub_tagging_lookup
     stub_elasticsearch_settings
     create_test_index
   end
@@ -14,7 +15,7 @@ class ElasticsearchClosingTest < IntegrationTest
     index = search_server.index_group(DEFAULT_INDEX_NAME).current
     index.close
 
-    assert_raises SearchIndices::BulkIndexFailure do
+    assert_raises Indexer::BulkIndexFailure do
       index.add([sample_document])
     end
   end

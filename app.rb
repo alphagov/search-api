@@ -83,7 +83,7 @@ class Rummager < Sinatra::Application
     halt(422, env['sinatra.error'].message)
   end
 
-  error SearchIndices::BulkIndexFailure do
+  error Indexer::BulkIndexFailure do
     halt(500, env['sinatra.error'].message)
   end
 

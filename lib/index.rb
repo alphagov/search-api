@@ -18,15 +18,6 @@ module SearchIndices
   class DocumentNotFound < RuntimeError; end
   class IndexLocked < RuntimeError; end
 
-  class BulkIndexFailure < RuntimeError
-    attr_reader :failed_keys
-
-    def initialize(failed_items)
-      super "Failed inserts: #{failed_items.map { |id, error| "#{id} (#{error})" }.join(', ')}"
-      @failed_keys = failed_items.map { |id, _| id }
-    end
-  end
-
   class Index
     include Search::Escaping
 
@@ -155,7 +146,7 @@ module SearchIndices
           # TODO This error should include the error messages from
           # elasticsearch, not just the IDs of the documents that weren't
           # inserted
-          raise BulkIndexFailure.new(failed_items.map { |item|
+          raise Indexer::BulkIndexFailure.new(failed_items.map { |item|
             [
               item["index"]["_id"],
               item["index"]["error"],
