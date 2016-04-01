@@ -46,7 +46,7 @@ module HealthCheck
         if expected_result_empty?
           "'#{search_term}' should not be corrected but corrects to '#{suggested_query}'"
         else
-          "'#{search_term}' should be be corrected to '#{expected_result}' but #{suggested_query.nil? ? 'does not correct' : "corrects to '#{suggested_query}'"}"
+          "'#{search_term}' should be corrected to '#{expected_result}' but #{suggested_query.nil? ? 'does not correct' : "corrects to '#{suggested_query}'"}"
         end
       end
     end
