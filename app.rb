@@ -79,7 +79,7 @@ class Rummager < Sinatra::Application
     halt(503, "Redis queue timed out")
   end
 
-  error SearchIndices::InvalidQuery do
+  error LegacySearch::InvalidQuery do
     halt(422, env['sinatra.error'].message)
   end
 

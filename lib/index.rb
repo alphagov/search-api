@@ -14,7 +14,6 @@ require "document"
 require "indexer/index_queue"
 
 module SearchIndices
-  class InvalidQuery < ArgumentError; end
   class DocumentNotFound < RuntimeError; end
   class IndexLocked < RuntimeError; end
 
