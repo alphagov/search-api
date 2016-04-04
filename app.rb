@@ -23,6 +23,9 @@ require_relative "helpers"
 require "routes/content"
 
 class Rummager < Sinatra::Application
+  # Stop double slashes in URLs (even escaped ones) being flattened to single ones
+  set :protection, except: [:path_traversal, :escaped_params, :frame_options]
+
   def search_server
     settings.search_config.search_server
   end

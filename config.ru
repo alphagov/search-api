@@ -26,9 +26,6 @@ else
     extra_request_headers: { "GOVUK-Request-Id" => "govuk_request_id", "x-varnish" => "varnish_id" }
 end
 
-# Stop double slashes in URLs (even escaped ones) being flattened to single ones
-set :protection, except: [:path_traversal, :escaped_params, :frame_options]
-
 enable :dump_errors, :raise_errors
 
 run Rummager
