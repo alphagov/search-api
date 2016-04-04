@@ -1,7 +1,9 @@
 source "https://rubygems.org"
 
 gem "unicorn", "4.6.2"
-gem "sinatra", "1.3.4"
+gem "tilt", "1.3.3"
+gem "rack-protection", "1.5.0"
+gem "sinatra", "1.4.7"
 gem "rake", "~> 10.5"
 gem "rack", "~> 1.6"
 gem "rest-client", "1.8.0"

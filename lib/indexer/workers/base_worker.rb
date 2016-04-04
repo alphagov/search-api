@@ -40,7 +40,7 @@ module Indexer
   private
 
     def index(index_name)
-      settings.search_config.search_server.index(index_name)
+      Rummager.settings.search_config.search_server.index(index_name)
     end
   end
 end
