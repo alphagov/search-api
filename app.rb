@@ -4,7 +4,7 @@ require "json"
 require "csv"
 require "redis"
 
-%w[ lib ].each do |path|
+%w[ . lib ].each do |path|
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
