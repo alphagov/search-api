@@ -105,7 +105,7 @@ GEM
     rack-logstasher (0.0.3)
       logstash-event
       rack
-    rack-protection (1.5.0)
+    rack-protection (1.5.3)
       rack
     rack-test (0.6.1)
       rack (>= 1.0)
@@ -161,7 +161,7 @@ GEM
       tilt (>= 1.3, < 3)
     slop (3.4.5)
     statsd-ruby (1.2.1)
-    tilt (1.3.3)
+    tilt (2.0.2)
     timecop (0.8.0)
     timers (4.0.4)
       hitimes
@@ -202,7 +202,6 @@ DEPENDENCIES
   plek (= 1.12.0)
   rack (~> 1.6)
   rack-logstasher (= 0.0.3)
-  rack-protection (= 1.5.0)
   rack-test
   rake (~> 10.5)
   redis-namespace (= 1.3.1)
@@ -214,7 +213,6 @@ DEPENDENCIES
   simplecov-rcov
   sinatra (= 1.4.7)
   slop (= 3.4.5)
-  tilt (= 1.3.3)
   timecop (= 0.8.0)
   turn
   unf (= 0.1.4)
