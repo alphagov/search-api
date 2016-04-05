@@ -3,20 +3,13 @@ require 'indexer/links_lookup'
 
 module Indexer
   class IndexDocuments
-    MIGRATED_TAGGING_APPS = %w{
-      businesssupportfinder
-      calculators
-      calendars
-      collections-publisher
-      contacts
-      contacts-admin
-      hmrc-manuals-api
-      licencefinder
-      policy-publisher
-      smartanswers
-      tariff
-      travel-advice-publisher
-    }
+    NON_MIGRATED_APPS = %w(
+      publisher
+      service-manual-publisher
+      specialist-publisher
+      whitehall
+      non-migrated-app
+    ).freeze
 
     EXCLUDED_FORMATS = %{
       email_alert_signup
@@ -63,7 +56,7 @@ module Indexer
     end
 
     def index_links_from_message(payload)
-      return unless should_index_document?(payload)
+      return if should_skip_document?(payload)
 
       base_path = payload.fetch("base_path")
       document = get_document_for_base_path(base_path)
@@ -81,9 +74,9 @@ module Indexer
       index.amend(document['_id'], links)
     end
 
-    def should_index_document?(content_item)
-      MIGRATED_TAGGING_APPS.include?(content_item.fetch("publishing_app")) &&
-        !EXCLUDED_FORMATS.include?(content_item.fetch("document_type"))
+    def should_skip_document?(content_item)
+      NON_MIGRATED_APPS.include?(content_item.fetch("publishing_app")) ||
+        EXCLUDED_FORMATS.include?(content_item.fetch("document_type"))
     end
 
     def get_document_for_base_path(document_base_path)
