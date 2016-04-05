@@ -69,7 +69,7 @@ class Indexer::IndexDocumentsTest < IntegrationTest
     message = GovukMessageQueueConsumer::MockMessage.new({
       "base_path" => "/my-page",
       "document_type" => "some_format",
-      "publishing_app" => "unmigrated-app",
+      "publishing_app" => "non-migrated-app",
       "links" => {
         "topics" => ["my-topic-id"],
         "mainstream_browse_pages" => ["my-browse-page-id"],
