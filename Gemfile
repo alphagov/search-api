@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "unicorn", "4.6.2"
+gem "unicorn", "5.1.0"
 gem "sinatra", "1.4.7"
 gem "rake", "~> 10.5"
 gem "rack", "~> 1.6"
