@@ -44,7 +44,6 @@ class FilterTest < ShouldaUnitTestCase
         { "range" => { "field_with_date" => { "from" => "2014-04-01", "to" => "2014-04-02" } } }
       )
     end
-
   end
 
   context "search with a filter with multiple options" do

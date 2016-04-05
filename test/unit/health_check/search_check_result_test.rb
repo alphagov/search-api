@@ -11,7 +11,7 @@ module HealthCheck
     def build_result
       @result = @subject.new(check: @check, search_results: @search_results)
     end
-    
+
     context ".build" do
       context "'should' checks" do
         context 'desired result is within the desired ranking' do
