@@ -142,17 +142,11 @@ module SearchIndices
         if blocked_items.any?
           raise IndexLocked
         else
-          # TODO This error should include the error messages from
-          # elasticsearch, not just the IDs of the documents that weren't
-          # inserted
-          raise Indexer::BulkIndexFailure.new(failed_items.map { |item|
-            [
-              item["index"]["_id"],
-              item["index"]["error"],
-            ]
-          })
+          Airbrake.notify(Indexer::BulkIndexFailure.new, parameters: { failed_items: failed_items })
+          raise Indexer::BulkIndexFailure
         end
       end
+
       response
     end
 

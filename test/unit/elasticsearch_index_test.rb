@@ -109,7 +109,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       @index.add(documents)
       flunk("No exception raised")
     rescue Indexer::BulkIndexFailure => e
-      assert_equal "Failed inserts: /foo/baz (stuff)", e.message
+      assert_equal "Indexer::BulkIndexFailure", e.message
     end
   end
 
