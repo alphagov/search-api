@@ -1,6 +1,6 @@
 ---
 :concurrency:  2
-:require: ./bootstrap_worker.rb
+:require: ./app.rb
 :logfile: ./log/sidekiq.log
 :queues:
   - default
