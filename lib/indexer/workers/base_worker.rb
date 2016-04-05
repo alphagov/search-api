@@ -3,12 +3,6 @@ require "sidekiq_json_encoding_patch"
 require "airbrake"
 
 module Indexer
-  # This class requires the `config.rb` file to be loaded, since it requires
-  # access to the `search_config` setting, but including it here can cause a
-  # circular require dependency, from:
-  #
-  #   SearchConfig -> SearchServer -> IndexGroup -> Index -> DocumentQueue ->
-  #   BulkIndexWorker -> SearchConfig
   class BaseWorker
     include Sidekiq::Worker
 
@@ -31,11 +25,9 @@ module Indexer
     def self.notify_of_failures
       sidekiq_retries_exhausted do |msg|
         logger.warn "Job '#{msg["jid"]}' failed"
-        Airbrake.notify_or_ignore(FailedJobException.new(msg))
+        Airbrake.notify_or_ignore(Indexer::FailedJobException.new, parameters: msg)
       end
     end
-
-    class FailedJobException < Exception; end
 
   private
 

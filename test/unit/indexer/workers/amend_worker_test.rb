@@ -32,7 +32,7 @@ class AmendWorkerTest < MiniTest::Unit::TestCase
 
   def test_forwards_to_failure_queue
     stub_message = {}
-    Airbrake.expects(:notify_or_ignore).with(Indexer::BaseWorker::FailedJobException.new(stub_message))
+    Airbrake.expects(:notify_or_ignore).with(Indexer::FailedJobException.new, parameters: stub_message)
     fail_block = Indexer::AmendWorker.sidekiq_retries_exhausted_block
     fail_block.call(stub_message)
   end

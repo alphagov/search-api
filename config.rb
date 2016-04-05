@@ -22,5 +22,10 @@ Dir[initializers_path].each { |f| require f }
 configure do
   Airbrake.configuration.ignore << "Sinatra::NotFound"
   Airbrake.configuration.ignore << "LegacySearch::InvalidQuery"
+
+  # We manually send `Indexer::BulkIndexFailure` to Airbrake with extra
+  # parameters for debugging. Ignore it here so that we don't send them twice.
+  Airbrake.configuration.ignore << "Indexer::BulkIndexFailure"
+
   use Airbrake::Sinatra
 end
