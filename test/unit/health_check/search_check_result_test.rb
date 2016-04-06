@@ -4,15 +4,15 @@ require "health_check/search_check"
 
 module HealthCheck
   class SearchCheckResultTest < ShouldaUnitTestCase
+    def setup
+      @subject = SearchCheckResult
+    end
+
+    def build_result
+      @result = @subject.new(check: @check, search_results: @search_results)
+    end
+
     context ".build" do
-      def setup
-        @subject = SearchCheckResult
-      end
-
-      def build_result
-        @result = @subject.new(check: @check, search_results: @search_results)
-      end
-
       context "'should' checks" do
         context 'desired result is within the desired ranking' do
           should "return a successful Result" do

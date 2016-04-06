@@ -6,6 +6,18 @@ class FilterTest < ShouldaUnitTestCase
     Search::QueryParameters.new(filters: filters, debug: { include_withdrawn: include_withdrawn })
   end
 
+  def make_date_filter_param(field_name, values)
+    SearchParameterParser::DateFieldFilter.new(field_name, values, false)
+  end
+
+  def text_filter(field_name, values)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, false)
+  end
+
+  def reject_filter(field_name, values)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, true)
+  end
+
   context "search with one filter" do
     should "append the correct text filters" do
       builder = QueryComponents::Filter.new(
@@ -31,10 +43,6 @@ class FilterTest < ShouldaUnitTestCase
         result,
         { "range" => { "field_with_date" => { "from" => "2014-04-01", "to" => "2014-04-02" } } }
       )
-    end
-
-    def make_date_filter_param(field_name, values)
-      SearchParameterParser::DateFieldFilter.new(field_name, values, false)
     end
   end
 
@@ -98,14 +106,6 @@ class FilterTest < ShouldaUnitTestCase
           ].compact
         }
       )
-    end
-
-    def text_filter(field_name, values)
-      SearchParameterParser::TextFieldFilter.new(field_name, values, false)
-    end
-
-    def reject_filter(field_name, values)
-      SearchParameterParser::TextFieldFilter.new(field_name, values, true)
     end
   end
 end
