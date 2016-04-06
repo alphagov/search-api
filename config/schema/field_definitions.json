@@ -411,12 +411,6 @@
   "tribunal_decision_judges_name": {
     "type": "searchable_identifiers"
   },
-  "tribunal_decision_categories": {
-    "type": "identifiers"
-  },
-  "tribunal_decision_categories_name": {
-    "type": "searchable_identifiers"
-  },
   "tribunal_decision_category": {
     "type": "identifier"
   },
