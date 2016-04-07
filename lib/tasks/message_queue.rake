@@ -11,11 +11,16 @@ namespace :message_queue do
     require 'airbrake'
     require 'govuk_message_queue_consumer'
     require 'indexer/index_documents'
+    require 'statsd'
+
+    statsd_client = Statsd.new
+    statsd_client.namespace = "govuk.app.rummager"
 
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "rummager_to_be_indexed",
       exchange_name: "published_documents",
       processor: Indexer::IndexDocuments.new,
+      statsd_client: statsd_client,
 
       # Only listen to "links" updates, which the publishing-api sends after
       # something updates the links hash.
