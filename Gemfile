@@ -45,5 +45,5 @@ group :development do
   gem "mr-sparkle", "0.3.0"
 end
 
-gem "govuk_message_queue_consumer", "~> 2.0.1"
+gem "govuk_message_queue_consumer", "~> 2.1.0"
 gem "govuk-lint", "~> 1.0.0"
