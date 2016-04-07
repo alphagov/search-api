@@ -39,6 +39,9 @@ module QueryComponents
         "operational_field" => 1.5,
         "contact" => 0.3,
 
+        # Should appear below mainstream content
+        "hmrc_manual_section" => 0.2,
+
         # Hide mainstream browse pages for now.
         "mainstream_browse_page" => 0,
       }
