@@ -1,6 +1,12 @@
 source "https://rubygems.org"
 
 gem "unicorn", "5.1.0"
+
+# We have been experiencing `ActiveSupport::Deprecation::MethodWrapper` errors
+# when deploying versions of this app with activesupport 4.0.13. Pin to this
+# version for now until we've upgraded other apps and fixed the issue.
+gem "activesupport", "3.2.12"
+
 gem "sinatra", "1.4.7"
 gem "rake", "~> 10.5"
 gem "rack", "~> 1.6"
