@@ -17,6 +17,7 @@ gem 'whenever', "~> 0.9.4", require: false
 gem "slop", "3.4.5"
 gem "sidekiq", "< 3"
 gem "sidekiq-statsd", "0.1.5"
+gem "statsd-ruby", "~> 1.3.0"
 # pin to version that includes security vulnerability fix
 gem "redis-namespace", "1.3.1"
 gem "plek", "1.12.0"

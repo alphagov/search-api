@@ -46,12 +46,20 @@ If you're not running the GDS development VM:
 
 Rummager should then be available at [rummager.dev.gov.uk](http://rummager.dev.gov.uk/unified_search.json?q=taxes).
 
-Rummager has an asynchronous mode, disabled in development by default, that
-posts documents to a queue to be indexed later by a worker. To run this in
-development, you need to run both of these commands:
+Rummager has an asynchronous mode, using sidekiq to manage index workers in a separate process.
+It is disabled in development by default.
+To run this in the development VM, you need to run both of these commands:
 
-    ENABLE_QUEUE=1 ./startup.sh
-    bundle exec rake jobs:work
+    # to start the sidekiq process
+    ENABLE_QUEUE=1 bundle exec rake jobs:work
+    # to start the rummager webapp
+    ENABLE_QUEUE=1 bundle exec mr-sparkle --force-polling -- -p 3009
+
+Rummager can subscribe to a queue of updates from publishing-api, backed by rabbitmq.
+At present Rummager is only interested in updates to the links hash.
+You can start the message queue consumer process in development by running:
+
+    govuk_setenv rummager bundle exec rake message_queue:index_documents_from_publishing_api
 
 ### Running the test suite
 
