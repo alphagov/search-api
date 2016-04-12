@@ -5,7 +5,6 @@ module Indexer
   class IndexDocuments
     NON_MIGRATED_APPS = %w(
       publisher
-      service-manual-publisher
       specialist-publisher
       whitehall
       non-migrated-app
