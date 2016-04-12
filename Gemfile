@@ -12,11 +12,16 @@ gem "rake", "~> 10.5"
 gem "rack", "~> 1.6"
 gem "rest-client", "1.8.0"
 gem "logging", "2.1.0"
-gem 'nokogiri', "1.6.7.2"
-gem 'whenever', "~> 0.9.4", require: false
+gem "nokogiri", "1.6.7.2"
+gem "whenever", "~> 0.9.4"
 gem "slop", "3.4.5"
 
-gem "sidekiq", "3.5.4"
+# Sidekiq is currently pinned to the latest 3.X.X version, because we don't
+# want to jump to the latest (4.X) immediately. It is advised to keep the latest
+# 3.X version running for a while before upgrading.
+#
+# https://github.com/mperham/sidekiq/blob/master/4.0-Upgrade.md#upgrade
+gem "sidekiq", "~> 3.5.4"
 gem "sidekiq-statsd", "0.1.5"
 gem "redis-namespace", "~> 1.5.2"
 
@@ -27,18 +32,21 @@ gem "gds-api-adapters", "~> 30.0"
 gem "rack-logstasher", "0.0.3"
 gem "airbrake", "~> 4.3.6"
 gem "unf", "0.1.4"
-gem 'aws-sdk', '~> 2.2.29'
-gem 'elasticsearch', '~> 1.0.15'
+gem "aws-sdk", "~> 2.2.29"
+gem "elasticsearch", "~> 1.0.15"
+
+gem "govuk_message_queue_consumer", "~> 2.1.0"
+gem "govuk-lint", "~> 1.0.0"
 
 group :test do
   gem "shoulda-context", "~> 1.2.1"
   gem "simplecov", "~> 0.10.0"
   gem "simplecov-rcov", "~> 0.2.3"
-  gem 'turn', "~> 0.9.7", require: false # Pretty printed test output
+  gem "turn", "~> 0.9.7" # Pretty printed test output
   gem "ci_reporter", "1.7.1"
   gem "minitest", "4.6.1"
   gem "rack-test", "~> 0.6.3"
-  gem "mocha", "~> 1.1.0", require: false
+  gem "mocha", "~> 1.1.0"
   gem "webmock", "~> 1.24"
   gem "timecop", "0.8.0"
 end
@@ -47,6 +55,3 @@ group :development do
   # (Intelligent) reloading server in development
   gem "mr-sparkle", "0.3.0"
 end
-
-gem "govuk_message_queue_consumer", "~> 2.1.0"
-gem "govuk-lint", "~> 1.0.0"

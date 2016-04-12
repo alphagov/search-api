@@ -220,7 +220,7 @@ DEPENDENCIES
   redis-namespace (~> 1.5.2)
   rest-client (= 1.8.0)
   shoulda-context (~> 1.2.1)
-  sidekiq (= 3.5.4)
+  sidekiq (~> 3.5.4)
   sidekiq-statsd (= 0.1.5)
   simplecov (~> 0.10.0)
   simplecov-rcov (~> 0.2.3)
