@@ -13,7 +13,7 @@ gem "rack", "~> 1.6"
 gem "rest-client", "1.8.0"
 gem "logging", "2.1.0"
 gem "nokogiri", "1.6.7.2"
-gem "whenever", "~> 0.9.4", require: false
+gem "whenever", "~> 0.9.4"
 gem "slop", "3.4.5"
 
 gem "sidekiq", "3.5.4"
@@ -37,11 +37,11 @@ group :test do
   gem "shoulda-context", "~> 1.2.1"
   gem "simplecov", "~> 0.10.0"
   gem "simplecov-rcov", "~> 0.2.3"
-  gem "turn", "~> 0.9.7", require: false # Pretty printed test output
+  gem "turn", "~> 0.9.7" # Pretty printed test output
   gem "ci_reporter", "1.7.1"
   gem "minitest", "4.6.1"
   gem "rack-test", "~> 0.6.3"
-  gem "mocha", "~> 1.1.0", require: false
+  gem "mocha", "~> 1.1.0"
   gem "webmock", "~> 1.24"
   gem "timecop", "0.8.0"
 end
