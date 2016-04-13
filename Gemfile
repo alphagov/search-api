@@ -39,8 +39,9 @@ gem "govuk_message_queue_consumer", "~> 2.1.0"
 gem "govuk-lint", "~> 1.0.0"
 
 group :test do
-  gem "minitest", "4.7.5"
-  gem "minitest-colorize"
+  gem "minitest", "~> 4.7.5"
+  gem "minitest-colorize", "~> 0.0.5"
+  gem "test-unit"
   gem "shoulda-context", "~> 1.2.1"
   gem "simplecov", "~> 0.10.0"
   gem "simplecov-rcov", "~> 0.2.3"
