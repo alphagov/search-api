@@ -17,9 +17,10 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
 require 'app'
 
-require "bundler/setup"
 require "minitest/autorun"
-require 'turn/autorun'
+require "minitest/colorize"
+
+require "bundler/setup"
 require "rack/test"
 require "mocha/setup"
 require "pp"

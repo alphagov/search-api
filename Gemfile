@@ -5,7 +5,7 @@ gem "unicorn", "5.1.0"
 # We have been experiencing `ActiveSupport::Deprecation::MethodWrapper` errors
 # when deploying versions of this app with activesupport 4.0.13. Pin to this
 # version for now until we've upgraded other apps and fixed the issue.
-gem "activesupport", "3.2.12"
+gem "activesupport", "3.2.22.2"
 
 gem "sinatra", "1.4.7"
 gem "rake", "~> 10.5"
@@ -39,12 +39,12 @@ gem "govuk_message_queue_consumer", "~> 2.1.0"
 gem "govuk-lint", "~> 1.0.0"
 
 group :test do
+  gem "test-unit-minitest", "~> 0.9.1"
+  gem "minitest-colorize", "~> 0.0.5"
   gem "shoulda-context", "~> 1.2.1"
   gem "simplecov", "~> 0.10.0"
   gem "simplecov-rcov", "~> 0.2.3"
-  gem "turn", "~> 0.9.7" # Pretty printed test output
   gem "ci_reporter", "1.7.1"
-  gem "minitest", "4.6.1"
   gem "rack-test", "~> 0.6.3"
   gem "mocha", "~> 1.1.0"
   gem "webmock", "~> 1.24"
