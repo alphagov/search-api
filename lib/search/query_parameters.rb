@@ -42,6 +42,10 @@ module Search
       debug[:use_id_codes]
     end
 
+    def show_query?
+      debug[:show_query]
+    end
+
     def suggest_spelling?
       query && suggest.include?('spelling')
     end

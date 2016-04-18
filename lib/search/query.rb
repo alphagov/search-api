@@ -17,7 +17,8 @@ module Search
     # Search and combine the indices and return a hash of ResultSet objects
     def run(search_params)
       builder = QueryBuilder.new(search_params)
-      es_response = index.raw_search(builder.payload)
+      payload = builder.payload
+      es_response = index.raw_search(payload)
 
       example_fetcher = FacetExampleFetcher.new(index, es_response, search_params, builder)
       facet_examples = example_fetcher.fetch
@@ -28,11 +29,12 @@ module Search
       end
 
       ResultSetPresenter.new(
-        search_params,
-        es_response,
-        registries,
-        facet_examples,
-        index.schema
+        search_params: search_params,
+        es_response: es_response,
+        registries: registries,
+        facet_examples: facet_examples,
+        schema: index.schema,
+        query_payload: payload
       ).present
     end
 

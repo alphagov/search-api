@@ -464,6 +464,14 @@ class SearchTest < IntegrationTest
     assert_equal 1, parsed_response.fetch("total")
   end
 
+  def test_show_the_query
+    reset_content_indexes
+
+    get "/unified_search?q=test&debug=show_query"
+
+    assert parsed_response.fetch("elasticsearch_query")
+  end
+
 private
 
   def first_result

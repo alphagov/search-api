@@ -1,3 +1,6 @@
+AllCops:
+  TargetRubyVersion: 2.3
+
 # Don't care about single/double quotes inside interpolation
 Style/StringLiteralsInInterpolation:
   Enabled: false

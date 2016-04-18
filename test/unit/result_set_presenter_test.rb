@@ -125,15 +125,15 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
   def search_presenter(options)
     org_registry = options[:org_registry]
     Search::ResultSetPresenter.new(
-      Search::QueryParameters.new(
+      search_params: Search::QueryParameters.new(
         start: options.fetch(:start, 0),
         filters: options.fetch(:filters, []),
         facets: options.fetch(:facets, {}),
       ),
-      sample_es_response(options.fetch(:es_response, {})),
-      org_registry.nil? ? {} : { organisations: org_registry },
-      options.fetch(:facet_examples, {}),
-      options.fetch(:schema, nil)
+      es_response: sample_es_response(options.fetch(:es_response, {})),
+      registries: org_registry.nil? ? {} : { organisations: org_registry },
+      facet_examples: options.fetch(:facet_examples, {}),
+      schema: options.fetch(:schema, nil)
     )
   end
 
@@ -145,7 +145,10 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
           "total" => 0
         }
       }
-      @output = Search::ResultSetPresenter.new(Search::QueryParameters.new(start: 0), results).present
+      @output = Search::ResultSetPresenter.new(
+        search_params: Search::QueryParameters.new(start: 0),
+        es_response: results,
+      ).present
     end
 
     should "present empty list of results" do
@@ -163,7 +166,10 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
 
   context "results with no registries" do
     setup do
-      @output = Search::ResultSetPresenter.new(Search::QueryParameters.new(start: 0), sample_es_response).present
+      @output = Search::ResultSetPresenter.new(
+        search_params: Search::QueryParameters.new(start: 0),
+        es_response: sample_es_response
+      ).present
     end
 
     should "have correct total" do
@@ -206,7 +212,10 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
         es_response['hits']['hits'] = [@empty_result]
       }
 
-      @output = Search::ResultSetPresenter.new(Search::QueryParameters.new(start: 0), response).present
+      @output = Search::ResultSetPresenter.new(
+        search_params: Search::QueryParameters.new(start: 0),
+        es_response: response
+      ).present
     end
 
     should 'return only basic metadata of fields' do
@@ -226,9 +235,9 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
       }
 
       @output = Search::ResultSetPresenter.new(
-        Search::QueryParameters.new(start: 0, return_fields: %w[topics]),
-        sample_es_response,
-        { topics: topic_registry },
+        search_params: Search::QueryParameters.new(start: 0, return_fields: %w[topics]),
+        es_response: sample_es_response,
+        registries: { topics: topic_registry },
       ).present
     end
 
@@ -275,8 +284,8 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
   context "results with facets" do
     setup do
       @output = Search::ResultSetPresenter.new(
-        Search::QueryParameters.new(start: 0, facets: { "organisations" => facet_params(1) }),
-        sample_es_response("facets" => sample_facet_data),
+        search_params: Search::QueryParameters.new(start: 0, facets: { "organisations" => facet_params(1) }),
+        es_response: sample_es_response("facets" => sample_facet_data),
       ).present
     end
 
@@ -320,12 +329,12 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
   context "results with facets and a filter applied" do
     setup do
       @output = Search::ResultSetPresenter.new(
-        Search::QueryParameters.new(
+        search_params: Search::QueryParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hmrc"])],
           facets: { "organisations" => facet_params(2) },
         ),
-        sample_es_response("facets" => sample_facet_data),
+        es_response: sample_es_response("facets" => sample_facet_data),
       ).present
     end
 
@@ -371,12 +380,12 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
   context "results with facets and a filter which matches nothing applied" do
     setup do
       @output = Search::ResultSetPresenter.new(
-        Search::QueryParameters.new(
+        search_params: Search::QueryParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hm-cheesemakers"])],
           facets: { "organisations" => facet_params(1) },
         ),
-        sample_es_response("facets" => sample_facet_data),
+        es_response: sample_es_response("facets" => sample_facet_data),
       ).present
     end
 
@@ -422,11 +431,11 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
   context "results with facet counting only" do
     setup do
       @output = Search::ResultSetPresenter.new(
-        Search::QueryParameters.new(
+        search_params: Search::QueryParameters.new(
           start: 0,
           facets: { "organisations" => facet_params(0) },
         ),
-        sample_es_response("facets" => sample_facet_data),
+        es_response: sample_es_response("facets" => sample_facet_data),
       ).present
     end
 
@@ -546,12 +555,12 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
       org_registry = sample_org_registry
 
       @output = Search::ResultSetPresenter.new(
-        Search::QueryParameters.new(
+        search_params: Search::QueryParameters.new(
           start: 0,
           facets: { "organisations" => facet_params(1), "topics" => facet_params(1) },
         ),
-        sample_es_response("facets" => sample_facet_data_with_topics),
-        { organisations: org_registry },
+        es_response: sample_es_response("facets" => sample_facet_data_with_topics),
+        registries: { organisations: org_registry },
       ).present
     end
 
@@ -607,13 +616,13 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
       org_registry = sample_org_registry
 
       @output = Search::ResultSetPresenter.new(
-        Search::QueryParameters.new(
+        search_params: Search::QueryParameters.new(
           start: 0,
           facets: { "organisations" => facet_params(1) }
         ),
-        sample_es_response("facets" => sample_facet_data),
-        { organisations: org_registry },
-        { "organisations" => {
+        es_response: sample_es_response("facets" => sample_facet_data),
+        registries: { organisations: org_registry },
+        facet_examples: { "organisations" => {
           "hm-magic" => {
             "total" => 1,
             "examples" => [{ "title" => "Ministry of Magic" }],
