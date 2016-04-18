@@ -32,7 +32,7 @@ module Search
         index,
         field_definitions,
         "organisation",
-        %w{slug link title acronym organisation_type organisation_state}
+        %w{slug content_id link title acronym organisation_type organisation_state}
       )
     end
 

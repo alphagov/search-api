@@ -8,6 +8,11 @@
     "type": "identifier"
   },
 
+  "content_id": {
+    "description": "The content_id of the item. This will not be present for all items, as most application do not send it.",
+    "type": "identifier"
+  },
+
   "title": {
     "type": "searchable_sortable_text"
   },

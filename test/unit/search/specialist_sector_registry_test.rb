@@ -27,7 +27,7 @@ class SpecialistSectorRegistryTest < MiniTest::Unit::TestCase
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("specialist_sector", sample_field_definitions(%w{link slug title}))
+      .with("specialist_sector", sample_field_definitions(%w{link slug title content_id}))
       .returns([])
     @specialist_sector_registry["oil-and-gas/licensing"]
   end

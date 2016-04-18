@@ -1,6 +1,7 @@
 {
   "fields": [
     "all_searchable_text",
+    "content_id",
     "description",
     "format",
     "indexable_content",
