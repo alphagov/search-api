@@ -14,7 +14,28 @@ https://www.gov.uk/api/search.json?q=taxes
 
 ## Technical documentation
 
-This is a Sinatra application that provides an API for search to multiple applications. It isn't supposed to be used by regular users, but it is publicly available on [gov.uk/api/search.json](https://www.gov.uk/api/search.json?q=taxes).
+Rummager is a Sinatra application that interfaces with Elasticsearch.
+
+It provides a [search API](docs/unified-search-api.md) that is used by multiple applications, and is publicly available at [gov.uk/api/search.json](https://www.gov.uk/api/search.json?q=taxes).
+
+There are two ways documents get added to the search index:
+
+1. Post to the [Documents API](docs/documents.md)
+2. Via the RabbitMQ consumer worker, which responds to notifications from the [Publishing API](https://github.com/alphagov/publishing-api).
+
+In future the documents API will be deprecated and rummager will consume only from the publishing API.
+
+There is also a separate [API for retrieving documents](docs/content-api.md) from the search index by their links.
+
+Rummager search results are weighted by [popularity](docs/popularity.md). We rebuild the index nightly to incorporate the latest analytics.
+
+## Nomenclature
+
+- **Link**: Either the base path for a content item, or an external link.
+- **Document**: An elasticsearch document, something we can search for.
+- **Document Type**: An [elasticsearch document type](https://www.elastic.co/guide/en/elasticsearch/guide/current/mapping.html) specifies the fields for a particular type of document. All our document types are defined in [config/schema/document_types](config/schema/document_types)
+- **Index**: An [elasticsearch search index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Rummager maintains several separate indices (`mainstream`, `details`, `government`, and `service-manual`), but searches return documents from all of them.
+- **Index Group**: An alias in elasticsearch that points to one index at a time. This allows us to rebuild indexes without downtime.
 
 ### Dependencies
 
