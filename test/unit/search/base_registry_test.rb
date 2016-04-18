@@ -35,7 +35,7 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
 
   def test_only_required_fields_are_requested_from_index
     @index.expects(:documents_by_format)
-      .with("example-format", sample_field_definitions(%w{slug link title}))
+      .with("example-format", sample_field_definitions(%w{slug link title content_id}))
 
     @base_registry["example-document"]
   end

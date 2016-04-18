@@ -29,6 +29,7 @@ class ElasticsearchIndexingTest < IntegrationTest
     })
 
     post "/documents", {
+      "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
       "format" => "answer",
       "link" => "/an-example-answer",
@@ -37,6 +38,7 @@ class ElasticsearchIndexingTest < IntegrationTest
 
     assert last_response.ok?
     assert_document_is_in_rummager({
+      "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
       "format" => "answer",
       "link" => "/an-example-answer",
