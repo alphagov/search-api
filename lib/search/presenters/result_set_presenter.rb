@@ -16,11 +16,11 @@ module Search
     # `facet_examples` is {field_name => {facet_value => {total: count, examples: [{field: value}, ...]}}}
     # ie: a hash keyed by field name, containing hashes keyed by facet value with
     # values containing example information for the value.
-    def initialize(search_params,
-                   es_response,
-                   registries = {},
-                   facet_examples = {},
-                   schema = nil)
+    def initialize(search_params:,
+                   es_response:,
+                   registries: {},
+                   facet_examples: {},
+                   schema: nil)
 
       @es_response = es_response
       @facets = es_response["facets"]

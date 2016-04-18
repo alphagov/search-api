@@ -28,11 +28,11 @@ module Search
       end
 
       ResultSetPresenter.new(
-        search_params,
-        es_response,
-        registries,
-        facet_examples,
-        index.schema
+        search_params: search_params,
+        es_response: es_response,
+        registries: registries,
+        facet_examples: facet_examples,
+        schema: index.schema
       ).present
     end
 
