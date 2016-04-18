@@ -20,7 +20,8 @@ module Search
                    es_response:,
                    registries: {},
                    facet_examples: {},
-                   schema: nil)
+                   schema: nil,
+                   query_payload: {})
 
       @es_response = es_response
       @facets = es_response["facets"]
@@ -28,16 +29,23 @@ module Search
       @registries = registries
       @facet_examples = facet_examples
       @schema = schema
+      @query_payload = query_payload
     end
 
     def present
-      {
+      response = {
         results: presented_results,
         total: es_response["hits"]["total"],
         start: search_params.start,
         facets: presented_facets,
         suggested_queries: suggested_queries
       }
+
+      if search_params.show_query?
+        response['elasticsearch_query'] = @query_payload
+      end
+
+      response
     end
 
   private
