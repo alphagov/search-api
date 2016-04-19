@@ -1,6 +1,6 @@
 module QueryComponents
   class Suggest < BaseComponent
-    SPELLING_FIELD = 'spelling_text'
+    SPELLING_FIELD = 'spelling_text'.freeze
 
     def payload
       {

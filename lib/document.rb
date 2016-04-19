@@ -37,7 +37,7 @@ class Document
     # always be arrays.
     if values.nil?
       values = []
-    elsif !(values.is_a?(Array))
+    elsif !values.is_a?(Array)
       values = [values]
     end
     if @field_definitions[field_name].type.multivalued

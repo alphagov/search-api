@@ -1,7 +1,7 @@
 require_relative "base_parameter_parser"
 
 class SearchParameterParser < BaseParameterParser
-  VIRTUAL_FIELDS = %w[title_with_highlighting description_with_highlighting]
+  VIRTUAL_FIELDS = %w[title_with_highlighting description_with_highlighting].freeze
 
   def initialize(params, schema)
     @schema = schema
@@ -46,7 +46,7 @@ private
     end
     unless query.nil?
       query = query.strip
-      if query.length == 0
+      if query.empty?
         nil
       else
         query

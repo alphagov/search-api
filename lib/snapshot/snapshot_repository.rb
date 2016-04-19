@@ -15,7 +15,7 @@ module Snapshot
     # The verify param requires delete permissions on the underlying data store
     def create_repository(type, settings)
       client.create_repository(
-        repository: "#{repository_name}",
+        repository: repository_name.to_s,
         body: {
           type: type,
           settings: settings
@@ -108,7 +108,7 @@ module Snapshot
   end
 
   class Restorer
-    RENAME_PATTERN = '(restored-)*(.+)-\d{4}-\d{2}-\d{2}t\d{2}:\d{2}:\d{2}z-[0-9a-f][-0-9a-f]*\Z'
+    RENAME_PATTERN = '(restored-)*(.+)-\d{4}-\d{2}-\d{2}t\d{2}:\d{2}:\d{2}z-[0-9a-f][-0-9a-f]*\Z'.freeze
 
     def initialize(client:, repository_name:, snapshot_name:, snapshot_indices:)
       @client = client

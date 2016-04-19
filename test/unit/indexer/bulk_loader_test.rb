@@ -12,7 +12,7 @@ class BulkLoaderTest < MiniTest::Unit::TestCase
       batches << batch
     end
 
-    assert_equal [["a\n", "b\n"], ["c\n", "d\n"]], batches
+    assert_equal [%W(a\n b\n), %W(c\n d\n)], batches
   end
 
   def test_line_pairs_are_not_split_if_batch_size_too_small_to_fit_first_pair_of_lines
@@ -23,7 +23,7 @@ class BulkLoaderTest < MiniTest::Unit::TestCase
       batches << batch
     end
 
-    assert_equal [["a\n", "b\n"], ["c\n", "d\n"]], batches
+    assert_equal [%W(a\n b\n), %W(c\n d\n)], batches
   end
 
   def test_line_pairs_are_not_split_if_batch_boundary_falls_in_second_pair_of_lines
@@ -34,6 +34,6 @@ class BulkLoaderTest < MiniTest::Unit::TestCase
       batches << batch
     end
 
-    assert_equal [["a\n", "b\n", "c\n", "d\n"], ["e\n", "f\n"]], batches
+    assert_equal [%W(a\n b\n c\n d\n), %W(e\n f\n)], batches
   end
 end

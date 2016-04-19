@@ -30,7 +30,7 @@ module HealthCheck
     # Compare the expected result and suggested query. When the expected result
     # is empty/nil, the suggested query should also be empty or nil?
     def success?
-      suggested_query.to_s.downcase == expected_result.to_s.downcase
+      suggested_query.to_s.casecmp(expected_result.to_s.downcase).zero?
     end
 
   private
@@ -42,12 +42,10 @@ module HealthCheck
         else
           "'#{search_term}' corrects to '#{expected_result}'"
         end
+      elsif expected_result_empty?
+        "'#{search_term}' should not be corrected but corrects to '#{suggested_query}'"
       else
-        if expected_result_empty?
-          "'#{search_term}' should not be corrected but corrects to '#{suggested_query}'"
-        else
-          "'#{search_term}' should be corrected to '#{expected_result}' but #{suggested_query.nil? ? 'does not correct' : "corrects to '#{suggested_query}'"}"
-        end
+        "'#{search_term}' should be corrected to '#{expected_result}' but #{suggested_query.nil? ? 'does not correct' : "corrects to '#{suggested_query}'"}"
       end
     end
 

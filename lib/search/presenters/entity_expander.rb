@@ -29,7 +29,7 @@ module Search
       'world_locations' => :world_locations,
       'specialist_sectors' => :specialist_sectors,
       'people' => :people,
-    }
+    }.freeze
 
     def new_result(result)
       MAPPING.each do |field_name, registry_name|

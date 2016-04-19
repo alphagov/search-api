@@ -53,7 +53,7 @@ class SitemapTest < IntegrationTest
       "format" => "inside-government-link",
       "link" => "https://www.gov.uk/government/some-content",
     }
-  ]
+  ].freeze
 
   def setup
     stub_elasticsearch_settings

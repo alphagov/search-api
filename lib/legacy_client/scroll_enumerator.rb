@@ -44,7 +44,7 @@ module LegacyClient
               "Retrieved #{hits_on_page} of #{size} documents"
             end
             page["hits"]["hits"].each do |hit|
-              yielder << block.call(hit)
+              yielder << yield(hit)
             end
           else
             break

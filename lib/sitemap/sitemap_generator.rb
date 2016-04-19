@@ -1,5 +1,5 @@
 class SitemapGenerator
-  EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"]
+  EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"].freeze
 
   def initialize(sitemap_indices)
     @sitemap_indices = sitemap_indices

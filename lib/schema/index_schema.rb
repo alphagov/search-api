@@ -49,6 +49,19 @@ class IndexSchemaParser
     }]
   end
 
+  def self.index_schema_paths(config_path)
+    files = Dir.new(File.join(config_path, "indexes")).select do |filename|
+      filename =~ /\A[a-z][-a-z]*\.json\z/
+    end
+
+    files.map do |filename|
+      [
+        filename.sub(/.json$/, ''),
+        File.join(config_path, "indexes", filename),
+      ]
+    end
+  end
+
 private
 
   def lookup_document_types(document_type_names)
@@ -82,18 +95,5 @@ private
 
   def load_json
     JSON.parse(File.read(@schema_file_path, encoding: 'UTF-8'))
-  end
-
-  def self.index_schema_paths(config_path)
-    files = Dir.new(File.join(config_path, "indexes")).select do |filename|
-      filename =~ /\A[a-z][-a-z]*\.json\z/
-    end
-
-    files.map do |filename|
-      [
-        filename.sub(/.json$/, ''),
-        File.join(config_path, "indexes", filename),
-      ]
-    end
   end
 end

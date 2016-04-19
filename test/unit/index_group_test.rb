@@ -8,7 +8,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
   ELASTICSEARCH_OK = {
     status: 200,
     body: { "ok" => true, "acknowledged" => true }.to_json
-  }
+  }.freeze
 
   def setup
     @schema = Rummager.settings.search_config.search_server.schema
