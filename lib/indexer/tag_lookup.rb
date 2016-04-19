@@ -1,4 +1,4 @@
-require 'gds_api/content_api'
+require 'services'
 
 module Indexer
   class TagLookup
@@ -20,7 +20,7 @@ module Indexer
 
       link_without_trailing_slash = link.sub(/\A\//, '')
       begin
-        content_api.artefact!(link_without_trailing_slash)
+        Services.content_api.artefact!(link_without_trailing_slash)
       rescue GdsApi::HTTPNotFound, GdsApi::HTTPGone
         nil
       end
@@ -47,13 +47,6 @@ module Indexer
       doc_hash["specialist_sectors"].uniq!
 
       doc_hash
-    end
-
-    def content_api
-      # We'll rarely look up the same content item twice in quick succession,
-      # so the cache isn't much use.  Additionally, it's not threadsafe, so
-      # using it can cause bulk imports to break.
-      @content_api ||= GdsApi::ContentApi.new(Plek.find("contentapi"), disable_cache: true)
     end
   end
 end
