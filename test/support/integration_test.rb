@@ -115,7 +115,6 @@ class IntegrationTest < MiniTest::Unit::TestCase
       "popularity_rank_offset" => 10,
     })
     app.settings.stubs(:default_index_name).returns(DEFAULT_INDEX_NAME)
-    app.settings.stubs(:enable_queue).returns(false)
   end
 
   def search_config

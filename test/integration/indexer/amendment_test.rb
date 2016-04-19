@@ -42,7 +42,6 @@ class ElasticsearchAmendmentTest < IntegrationTest
   end
 
   def test_should_amend_a_document_queued
-    app.settings.enable_queue = true
     commit_document("mainstream_test", {
       "title" => "The old title",
       "link" => "/an-example-answer",
@@ -51,10 +50,6 @@ class ElasticsearchAmendmentTest < IntegrationTest
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 
     assert_equal 202, last_response.status
-    assert_document_is_in_rummager({
-      "title" => "A new title",
-      "link" => "/an-example-answer",
-    })
   end
 
   def test_rejects_unknown_fields

@@ -22,7 +22,6 @@ class ElasticsearchDeletionTest < IntegrationTest
   end
 
   def test_removes_a_document_from_the_index_queued
-    app.settings.enable_queue = true
     commit_document("mainstream_test", {
       "link" => "/an-example-page"
     })
@@ -30,7 +29,6 @@ class ElasticsearchDeletionTest < IntegrationTest
     delete "/documents/%2Fan-example-page"
 
     assert_equal 202, last_response.status
-    assert_document_missing_in_rummager(link: "/an-example-page")
   end
 
   def test_removes_document_with_url
@@ -40,7 +38,6 @@ class ElasticsearchDeletionTest < IntegrationTest
 
     delete "/documents/edition/http:%2F%2Fexample.com%2F"
 
-    assert last_response.ok?
     assert_document_missing_in_rummager(link: "http://example.com/")
   end
 

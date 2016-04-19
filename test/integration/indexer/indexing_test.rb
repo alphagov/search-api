@@ -36,7 +36,6 @@ class ElasticsearchIndexingTest < IntegrationTest
       "indexable_content" => "HERE IS SOME CONTENT",
     }.to_json
 
-    assert last_response.ok?
     assert_document_is_in_rummager({
       "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
@@ -49,10 +48,6 @@ class ElasticsearchIndexingTest < IntegrationTest
 
   def test_adding_a_document_to_the_search_index_with_queue
     stub_tagging_lookup
-
-    # the queue is disabled in testing by default, but testing/sidekiq/inline
-    # executes jobs immediatly.
-    app.settings.enable_queue = true
 
     post "/documents", SAMPLE_DOCUMENT.to_json
 
