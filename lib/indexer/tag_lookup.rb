@@ -7,6 +7,10 @@ module Indexer
     end
 
     def prepare_tags(doc_hash)
+      # Rummager contains externals links (that have a full URL in the `link`
+      # field). These won't have tags associated with them so we can bail out.
+      return doc_hash if doc_hash["link"].match(/\Ahttps?:\/\//)
+
       artefact = find_document_from_content_api(doc_hash["link"])
       return doc_hash unless artefact
       add_tags_from_artefact(artefact, doc_hash)
@@ -15,9 +19,6 @@ module Indexer
   private
 
     def find_document_from_content_api(link)
-      # We don't support tags for things which are external links.
-      return if link.match(/\Ahttps?:\/\//)
-
       link_without_trailing_slash = link.sub(/\A\//, '')
       begin
         Services.content_api.artefact!(link_without_trailing_slash)
