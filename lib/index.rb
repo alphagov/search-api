@@ -11,7 +11,6 @@ require "search/result_set"
 require "indexer"
 require "indexer/amender"
 require "document"
-require "indexer/index_queue"
 
 module SearchIndices
   class DocumentNotFound < RuntimeError; end
@@ -111,16 +110,8 @@ module SearchIndices
       bulk_index(document_hashes, options)
     end
 
-    # Add documents asynchronously to the index.
-    def add_queued(documents)
-      logger.info "Queueing #{documents.size} document(s) to add to #{index_name}"
-
-      document_hashes = documents.map(&:elasticsearch_export)
-      queue.queue_many(document_hashes)
-    end
-
     # `bulk_index` is the only method that inserts/updates documents. The other
-    # indexing-methods like `add`, `add_queued` and `amend` eventually end up
+    # indexing-methods like `add` and `amend` eventually end up
     # calling this method.
     def bulk_index(document_hashes_or_payload, options = {})
       client = build_client(options)
@@ -152,10 +143,6 @@ module SearchIndices
 
     def amend(document_id, updates)
       Indexer::Amender.new(self).amend(document_id, updates)
-    end
-
-    def amend_queued(document_id, updates)
-      queue.queue_amend(document_id, updates)
     end
 
     def get_document_by_id(document_id)
@@ -261,10 +248,6 @@ module SearchIndices
       true # For consistency with the Solr API and simple_json_response
     end
 
-    def delete_queued(document_type, document_id)
-      queue.queue_delete(document_type, document_id)
-    end
-
     def commit
       @client.post "_refresh", nil
     end
@@ -301,10 +284,6 @@ module SearchIndices
 
     def logger
       Logging.logger[self]
-    end
-
-    def queue
-      Indexer::IndexQueue.new(index_name)
     end
 
     def build_client(options = {})
