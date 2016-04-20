@@ -1,7 +1,7 @@
 module QueryComponents
   class CoreQuery < BaseComponent
-    DEFAULT_QUERY_ANALYZER = "query_with_old_synonyms"
-    DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = 'default'
+    DEFAULT_QUERY_ANALYZER = "query_with_old_synonyms".freeze
+    DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = 'default'.freeze
 
     # TODO: The `score` here doesn't actually do anything.
     MATCH_FIELDS = {
@@ -9,7 +9,7 @@ module QueryComponents
       "acronym" => 5, # Ensure that organisations rank brilliantly for their acronym
       "description" => 2,
       "indexable_content" => 1,
-    }
+    }.freeze
 
     # The following specification generates the following values for minimum_should_match
     #
@@ -36,7 +36,7 @@ module QueryComponents
     # In summary, a clause of the form "N<M" means when there are MORE than
     # N clauses then M clauses should match. So, 2<2 means when there are
     # MORE than 2 clauses then 2 should match.
-    MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%"
+    MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%".freeze
 
     def payload
       if @search_params.quoted_search_phrase?

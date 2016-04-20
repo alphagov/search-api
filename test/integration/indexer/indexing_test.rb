@@ -10,7 +10,7 @@ class ElasticsearchIndexingTest < IntegrationTest
     "format" => "answer",
     "link" => "/an-example-answer",
     "indexable_content" => "HERE IS SOME CONTENT"
-  }
+  }.freeze
 
   def setup
     stub_elasticsearch_settings

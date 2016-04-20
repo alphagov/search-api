@@ -7,10 +7,10 @@ class IntegrationTest < MiniTest::Unit::TestCase
     "description" => "DESCRIPTION",
     "format" => "local_transaction",
     "link" => "/URL"
-  }
+  }.freeze
 
-  AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"]
-  INDEX_NAMES = %w(mainstream_test government_test)
+  AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"].freeze
+  INDEX_NAMES = %w(mainstream_test government_test).freeze
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
 
   def sample_document
@@ -74,7 +74,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
         "link" => "/#{short_index_name}-#{i}",
         "indexable_content" => "Something something important content id #{i}",
       }
-      fields["mainstream_browse_pages"] = ["#{i}"]
+      fields["mainstream_browse_pages"] = [i.to_s]
       if i % 2 == 0
         fields["specialist_sectors"] = ["farming"]
       end
@@ -95,7 +95,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
   end
 
   def check_index_name!(index_name)
-    unless /^[a-z_-]+(_|-)test($|-)/.match(index_name)
+    unless /^[a-z_-]+(_|-)test($|-)/ =~ index_name
       raise "#{index_name} is not a valid test index name"
     end
   end

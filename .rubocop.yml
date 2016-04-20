@@ -1,3 +1,13 @@
+# remove once https://github.com/alphagov/govuk-lint/pull/46 is merged
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Performance/TimesMap:
+  Enabled: false
+
 AllCops:
   TargetRubyVersion: 2.3
 

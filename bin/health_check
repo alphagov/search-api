@@ -11,7 +11,7 @@ LIBRARY_PATH = PROJECT_ROOT + "lib/"
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
-DEFAULT_JSON_URL = "https://www.gov.uk/api/search.json"
+DEFAULT_JSON_URL = "https://www.gov.uk/api/search.json".freeze
 require "search_config"
 require 'health_check/logging_config'
 require 'health_check/search_checker'
@@ -60,12 +60,10 @@ class HealthCheckCLI
       HealthCheck::Downloader.new(data_dir: DATA_DIR).download!
     elsif opts.help?
       usage(opts)
+    elsif opts["type"] == "suggestions"
+      run_suggestions_test
     else
-      if opts["type"] == "suggestions"
-        run_suggestions_test
-      else
-        run_search_result_tests
-      end
+      run_search_result_tests
     end
   end
 

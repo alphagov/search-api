@@ -128,7 +128,7 @@ module Search
         # always be an array, so this block can be removed.
         if values.nil?
           values = []
-        elsif !(values.is_a?(Array))
+        elsif !values.is_a?(Array)
           values = [values]
         end
 

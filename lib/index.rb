@@ -92,11 +92,11 @@ module SearchIndices
       @client.put("_settings", request_body, content_type: :json)
     end
 
-    def with_lock(&block)
+    def with_lock
       logger.info "Locking #{@index_name}"
       lock
       begin
-        block.call
+        yield
       ensure
         logger.info "Unlocking #{@index_name}"
         unlock

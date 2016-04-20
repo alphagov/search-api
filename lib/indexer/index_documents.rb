@@ -14,7 +14,7 @@ module Indexer
       email_alert_signup
       gone
       redirect
-    }
+    }.freeze
 
     def process(message)
       with_logging(message) do

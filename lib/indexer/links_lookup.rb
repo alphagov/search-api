@@ -1,4 +1,4 @@
-require 'gds_api/publishing_api_v2'
+require 'services'
 
 module Indexer
   class LinksLookup
@@ -36,7 +36,7 @@ module Indexer
     end
 
     def base_path(content_id)
-      base_path = publishing_api.get_content!(content_id)["base_path"]
+      base_path = Services.publishing_api.get_content!(content_id)["base_path"]
       base_path
         .gsub('/government/organisations/', '')
         .gsub('/topic/', '')
@@ -44,13 +44,6 @@ module Indexer
     rescue GdsApi::HTTPNotFound, # Items in the links hash may not exist yet.
            GdsApi::HTTPUnauthorized # Items may be access limited.
       nil
-    end
-
-    def publishing_api
-      @publishing_api ||= GdsApi::PublishingApiV2.new(
-        Plek.new.find('publishing-api'),
-        bearer_token: ENV['PUBLISHING_API_BEARER_TOKEN'] || 'example'
-      )
     end
   end
 end

@@ -7,7 +7,7 @@ module QueryComponents
       "acronym" => 5,
       "description" => 2,
       "indexable_content" => 1,
-    }
+    }.freeze
 
     # Reference for the minimum_should_match syntax:
     # http://lucene.apache.org/solr/api-3_6_2/org/apache/solr/util/doc-files/min-should-match.html
@@ -19,7 +19,7 @@ module QueryComponents
     # This configuration says that if there are 3-5 terms, allow one to be
     # missing; 6-7 terms, allow two to be missing, 8 more more terms, require
     # 75% present (rounded down).
-    MINIMUM_SHOULD_MATCH = "2<-1 5<-2 7<75%"
+    MINIMUM_SHOULD_MATCH = "2<-1 5<-2 7<75%".freeze
 
     def payload
       if @search_params.quoted_search_phrase?

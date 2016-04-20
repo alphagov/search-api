@@ -1,4 +1,4 @@
-require 'gds_api/content_api'
+require 'services'
 
 module Indexer
   class TagLookup
@@ -7,6 +7,10 @@ module Indexer
     end
 
     def prepare_tags(doc_hash)
+      # Rummager contains externals links (that have a full URL in the `link`
+      # field). These won't have tags associated with them so we can bail out.
+      return doc_hash if doc_hash["link"] =~ /\Ahttps?:\/\//
+
       artefact = find_document_from_content_api(doc_hash["link"])
       return doc_hash unless artefact
       add_tags_from_artefact(artefact, doc_hash)
@@ -15,12 +19,9 @@ module Indexer
   private
 
     def find_document_from_content_api(link)
-      # We don't support tags for things which are external links.
-      return if link.match(/\Ahttps?:\/\//)
-
       link_without_trailing_slash = link.sub(/\A\//, '')
       begin
-        content_api.artefact!(link_without_trailing_slash)
+        Services.content_api.artefact!(link_without_trailing_slash)
       rescue GdsApi::HTTPNotFound, GdsApi::HTTPGone
         nil
       end
@@ -47,13 +48,6 @@ module Indexer
       doc_hash["specialist_sectors"].uniq!
 
       doc_hash
-    end
-
-    def content_api
-      # We'll rarely look up the same content item twice in quick succession,
-      # so the cache isn't much use.  Additionally, it's not threadsafe, so
-      # using it can cause bulk imports to break.
-      @content_api ||= GdsApi::ContentApi.new(Plek.find("contentapi"), disable_cache: true)
     end
   end
 end

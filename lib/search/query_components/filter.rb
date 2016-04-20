@@ -38,12 +38,10 @@ module QueryComponents
         else
           selected
         end
-      else
-        if rejected
-          {
-            not: rejected
-          }
-        end
+      elsif rejected
+        {
+          not: rejected
+        }
       end
     end
   end

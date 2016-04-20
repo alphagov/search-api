@@ -9,7 +9,7 @@ $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 require "search_server"
 require "search_config"
 
-EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"]
+EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"].freeze
 
 def all_documents(indices)
   Enumerator.new do |yielder|

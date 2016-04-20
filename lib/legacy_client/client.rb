@@ -5,7 +5,7 @@ module LegacyClient
   class Client
     # Sub-paths almost certainly shouldn't start with leading slashes,
     # since this will make the request relative to the server root
-    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_aliases", "/_search/scroll"]
+    SAFE_ABSOLUTE_PATHS = ["/_bulk", "/_status", "/_aliases", "/_search/scroll"].freeze
 
     def initialize(base_uri, args = {})
       @base_uri = base_uri

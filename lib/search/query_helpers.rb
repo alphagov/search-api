@@ -12,7 +12,7 @@ module Search
     # elasticsearch query required to match the filters
     def combine_filters(filters, op)
       filters = filters.compact
-      if filters.length == 0
+      if filters.empty?
         nil
       elsif filters.length == 1
         filters.first
@@ -22,7 +22,7 @@ module Search
     end
 
     def terms_filter(field_name, values)
-      return nil if values.size == 0
+      return nil if values.empty?
 
       { "terms" => { field_name => values } }
     end

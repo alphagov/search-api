@@ -12,17 +12,17 @@ class BaseParameterParser
     closing_date
     title
     tribunal_decision_decision_date
-  )
+  ).freeze
 
   SORT_MAPPINGS = {
     "title" => "title.sort"
-  }
+  }.freeze
 
   # Incoming filter fields will have their names transformed according to the
   # following mapping. Fields not listed here will be passed through unchanged.
   FILTER_NAME_MAPPING = {
     "document_type" => "_type",
-  }
+  }.freeze
 
   # The fields listed here are the only ones which can be used to calculated
   # facets for.  This should be a subset of allowed_filter_fields
@@ -37,7 +37,7 @@ class BaseParameterParser
     policies
     search_format_types
     specialist_sectors
-  )
+  ).freeze
 
   # The fields for which facet examples are allowed to be requested.
   # This is locked down because these can only be requested with the current
@@ -52,7 +52,7 @@ class BaseParameterParser
     manual
     organisations
     specialist_sectors
-  )
+  ).freeze
 
   # The keys by which facet values can be sorted (using the "order" option).
   # Multiple can be supplied, separated by colons - items which are equal
@@ -72,13 +72,13 @@ class BaseParameterParser
     value.slug
     value.title
     value.link
-  )
+  ).freeze
 
   # Scopes that are allowed when requesting examples for facets
   #  - query: Return only examples that match the query and filters
   #  - global: Return examples for the facet regardless of whether they match
   #            the query and filters
-  ALLOWED_EXAMPLE_SCOPES = [:global, :query]
+  ALLOWED_EXAMPLE_SCOPES = [:global, :query].freeze
 
   # The fields which are returned by default for search results.
   DEFAULT_RETURN_FIELDS = %w(
@@ -95,23 +95,23 @@ class BaseParameterParser
     topics
     policy_areas
     world_locations
-  )
+  ).freeze
 
   # Default order in which facet results are sorted
   DEFAULT_FACET_SORT = [
     [:filtered, 1],
     [:count, -1],
     [:slug, 1],
-  ]
+  ].freeze
 
   # The fields which are returned by default for facet examples.
   DEFAULT_FACET_EXAMPLE_FIELDS = %w(
     link
     title
-  )
+  ).freeze
 
   # A special value used to filter for missing fields.
-  MISSING_FIELD_SPECIAL_VALUE = "_MISSING"
+  MISSING_FIELD_SPECIAL_VALUE = "_MISSING".freeze
 
   attr_reader :parsed_params, :errors
 

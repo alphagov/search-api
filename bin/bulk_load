@@ -8,7 +8,7 @@ LIBRARY_PATH = PROJECT_ROOT + "lib/"
 
 $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 
-INDICES = %w{mainstream detailed government}
+INDICES = %w{mainstream detailed government}.freeze
 
 require "search_config"
 require "indexer/bulk_loader"
