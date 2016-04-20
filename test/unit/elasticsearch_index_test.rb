@@ -132,24 +132,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert_requested(request)
   end
 
-  def test_add_queued_documents
-    document = stub("document", elasticsearch_export: {
-        "_type" => "edition",
-        "link" => "/foo/bar",
-        "title" => "TITLE ONE",
-    })
-
-    @index.add_queued([document])
-
-    assert_equal 1, Indexer::BulkIndexWorker.jobs.size
-  end
-
-  def test_queued_delete
-    @index.delete_queued("edition", "/foobang")
-
-    assert_equal 1, Indexer::DeleteWorker.jobs.size
-  end
-
   def test_raw_search
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},

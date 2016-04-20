@@ -22,6 +22,10 @@ require_relative "helpers"
 
 require "routes/content"
 
+require "indexer/workers/bulk_index_worker"
+require "indexer/workers/delete_worker"
+require "indexer/workers/amend_worker"
+
 class Rummager < Sinatra::Application
   # Stop double slashes in URLs (even escaped ones) being flattened to single ones
   set :protection, except: [:path_traversal, :escaped_params, :frame_options]
@@ -31,10 +35,13 @@ class Rummager < Sinatra::Application
   end
 
   def current_index
-    index_name = params["index"] || settings.default_index_name
     search_server.index(index_name)
   rescue SearchIndices::NoSuchIndex
     halt(404)
+  end
+
+  def index_name
+    @index_name ||= params["index"] || settings.default_index_name
   end
 
   def registries
@@ -157,12 +164,10 @@ class Rummager < Sinatra::Application
       current_index.document_from_hash(hash)
     }
 
-    if settings.enable_queue
-      current_index.add_queued(documents)
-      json_result 202, "Queued"
-    else
-      simple_json_result(current_index.add(documents))
-    end
+    document_hashes = documents.map(&:elasticsearch_export)
+    Indexer::BulkIndexWorker.perform_async(index_name, document_hashes)
+
+    json_result 202, "Queued"
   end
 
   post "/?:index?/commit" do
@@ -178,12 +183,9 @@ class Rummager < Sinatra::Application
       type, id = current_index.link_to_type_and_id(document_link)
     end
 
-    if settings.enable_queue
-      current_index.delete_queued(type, id)
-      json_result 202, "Queued"
-    else
-      simple_json_result(current_index.delete(type, id))
-    end
+    Indexer::DeleteWorker.perform_async(index_name, type, id)
+
+    json_result 202, "Queued"
   end
 
   def get_type_from_request_body(request_body)
@@ -203,13 +205,10 @@ class Rummager < Sinatra::Application
     end
 
     begin
-      if settings.enable_queue
-        current_index.amend_queued(params["splat"].first, request.POST)
-        json_result 202, "Queued"
-      else
-        current_index.amend(params["splat"].first, request.POST)
-        json_result 200, "OK"
-      end
+      document_id = params["splat"].first
+      updates = request.POST
+      Indexer::AmendWorker.perform_async(index_name, document_id, updates)
+      json_result 202, "Queued"
     rescue ArgumentError => e
       text_error e.message
     rescue SearchIndices::DocumentNotFound
