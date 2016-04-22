@@ -35,7 +35,12 @@ gem "unf", "~> 0.1.4"
 gem "aws-sdk", "~> 2.2.29"
 gem "elasticsearch", "~> 1.0.15"
 
-gem "govuk_message_queue_consumer", "~> 2.1.0"
+if ENV["MESSAGE_QUEUE_CONSUMER_DEV"]
+  gem "govuk_message_queue_consumer", path: "../govuk_message_queue_consumer"
+else
+  gem "govuk_message_queue_consumer", "~> 3.0.1"
+end
+
 gem "govuk-lint", "~> 1.0.0"
 
 group :test do
