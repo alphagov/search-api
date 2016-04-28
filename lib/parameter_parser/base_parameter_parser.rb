@@ -157,15 +157,13 @@ protected
   end
 
   # Parse a parameter which should contain an integer and occur only once
-  # Returns the integer value, or nil
+  # Returns the integer value, or the provided default
   def single_integer_param(param_name, default, description = "")
     value = single_param(param_name, description)
-    unless value.nil?
-      value = parse_positive_integer(value, %{parameter "#{param_name}"#{description}})
-    end
-    if value.nil?
-      return default
-    end
+    return default if value.nil?
+
+    value = parse_positive_integer(value, %{parameter "#{param_name}"#{description}})
+    return default if value.nil?
     value
   end
 end
