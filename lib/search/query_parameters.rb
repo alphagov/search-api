@@ -4,7 +4,9 @@ module Search
     attr_accessor :query, :order, :start, :count, :return_fields, :facets,
                   :filters, :debug, :suggest, :is_quoted_phrase
 
-    QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/ # starts and ends with quotes with no quotes in between, with or without leading or trailing whitespace
+    # starts and ends with quotes with no quotes in between, with or without
+    # leading or trailing whitespace
+    QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/
 
     def initialize(params = {})
       params = { facets: [], filters: {}, debug: {}, return_fields: [] }.merge(params)
