@@ -2,6 +2,7 @@ require_relative "base_parameter_parser"
 
 class SearchParameterParser < BaseParameterParser
   VIRTUAL_FIELDS = %w[title_with_highlighting description_with_highlighting].freeze
+  MAX_RESULTS = 1000
 
   def initialize(params, schema)
     @schema = schema
@@ -24,7 +25,7 @@ private
 
     @parsed_params = {
       start: single_integer_param("start", 0),
-      count: single_integer_param("count", 10),
+      count: capped_count,
       query: normalize_query(single_param("q")),
       order: order,
       return_fields: return_fields,
@@ -37,6 +38,16 @@ private
     unused_params = @params.keys - @used_params
     unless unused_params.empty?
       @errors << "Unexpected parameters: #{unused_params.join(', ')}"
+    end
+  end
+
+  def capped_count
+    specified_count = single_integer_param("count", 10)
+    if specified_count > MAX_RESULTS
+      @errors << "Maximum result set size (as specified in 'count') is #{MAX_RESULTS}"
+      return 10
+    else
+      specified_count
     end
   end
 

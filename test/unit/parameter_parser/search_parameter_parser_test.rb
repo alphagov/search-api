@@ -168,6 +168,14 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal(expected_params(count: 2), p.parsed_params)
   end
 
+  should "complain about an overly large count parameter" do
+    p = SearchParameterParser.new({ "count" => %w(1001) }, @schema)
+
+    assert_equal(%{Maximum result set size (as specified in 'count') is 1000}, p.error)
+    refute p.valid?
+    assert_equal(expected_params(count: 10), p.parsed_params)
+  end
+
   should "understand the q parameter" do
     p = SearchParameterParser.new({ "q" => ["search-term"] }, @schema)
 
