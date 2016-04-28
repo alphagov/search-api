@@ -213,6 +213,10 @@
     "type": "identifiers"
   },
 
+  "country": {
+    "type": "identifiers"
+  },
+
   "market_sector": {
     "type": "identifiers"
   },
