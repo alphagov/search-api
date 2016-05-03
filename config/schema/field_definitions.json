@@ -47,9 +47,19 @@
     "type": "identifiers"
   },
 
+  "publishing_app": {
+    "description": "Application that published this page",
+    "type": "identifier"
+  },
+
   "policy_areas": {
     "description": "Policy areas are managed in Whitehall. They're an old grouping of policies, which we're expecting to deprecate soon.",
     "type": "identifiers"
+  },
+
+  "rendering_app": {
+    "description": "Application that renders this page",
+    "type": "identifier"
   },
 
   "mainstream_browse_pages": {
