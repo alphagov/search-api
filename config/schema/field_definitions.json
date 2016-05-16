@@ -275,7 +275,8 @@
   },
 
   "manual": {
-    "type": "identifier"
+    "type": "identifier",
+    "description": "Base path of the manual this document belongs to. Eg `/service-manual` or `/hmrc-internal-manuals/air-passenger-duty`"
   },
 
   "hmrc_manual_section_id": {
