@@ -1,6 +1,7 @@
 {
   "fields": [
-    "country"
+    "country",
+    "first_published_at"
   ],
   "expanded_search_result_fields": {
     "country": [
