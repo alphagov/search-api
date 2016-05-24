@@ -28,8 +28,12 @@ class Search::SuggestionBlacklistTest < ShouldaUnitTestCase
       refute blacklist.should_correct?("86asrdv")
     end
 
-    should "correct words in ignore.txt" do
+    should "not correct words added to ignore.yml" do
       refute blacklist.should_correct?("bodrum")
+    end
+
+    should "not correct names added to ignore.yml" do
+      refute blacklist.should_correct?("Alan Turing")
     end
 
     should "correct words in the organization" do
