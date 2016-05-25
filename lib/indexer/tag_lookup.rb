@@ -1,5 +1,7 @@
 require 'services'
 
+# TagLookup finds the tags (links) from the publishing-api and merges them into
+# the document. If there aren't any links, the payload will be returned unchanged.
 module Indexer
   class TagLookup
     def self.prepare_tags(doc_hash)
@@ -11,43 +13,56 @@ module Indexer
       # field). These won't have tags associated with them so we can bail out.
       return doc_hash if doc_hash["link"] =~ /\Ahttps?:\/\//
 
-      artefact = find_document_from_content_api(doc_hash["link"])
-      return doc_hash unless artefact
-      add_tags_from_artefact(artefact, doc_hash)
+      content_id = find_content_id(doc_hash)
+      return doc_hash unless content_id
+
+      links = find_links(content_id)
+      return doc_hash unless links
+
+      doc_hash.merge(taggings_with_slugs(links))
     end
 
   private
 
-    def find_document_from_content_api(link)
-      link_without_trailing_slash = link.sub(/\A\//, '')
-      begin
-        Services.content_api.artefact!(link_without_trailing_slash)
-      rescue GdsApi::HTTPNotFound, GdsApi::HTTPGone
-        nil
+    # Some applications send the `content_id` for their items. This means we can
+    # skip the lookup from the publishing-api.
+    def find_content_id(doc_hash)
+      if doc_hash["content_id"].present?
+        doc_hash["content_id"]
+      else
+        GdsApi.with_retries(maximum_number_of_attempts: 5) do
+          Services.publishing_api.lookup_content_id(base_path: doc_hash["link"])
+        end
       end
     end
 
-    def add_tags_from_artefact(artefact, doc_hash)
-      doc_hash["organisations"] ||= []
-      doc_hash["mainstream_browse_pages"] ||= []
-      doc_hash["specialist_sectors"] ||= []
+    def find_links(content_id)
+      GdsApi.with_retries(maximum_number_of_attempts: 5) do
+        Services.publishing_api.get_expanded_links(content_id)['expanded_links']
+      end
+    end
 
-      artefact.tags.each do |tag|
-        case tag.details.type
-        when "organisation"
-          doc_hash["organisations"] << tag.slug
-        when "section"
-          doc_hash["mainstream_browse_pages"] << tag.slug
-        when "specialist_sector"
-          doc_hash["specialist_sectors"] << tag.slug
-        end
+    # Documents in rummager currently reference topics, browse pages and
+    # organisations by "slug", a concept that exists in Publisher and Whitehall.
+    # It does not exist in the publishing-api, so we need to infer the slug
+    # from the base path.
+    def taggings_with_slugs(links)
+      links_with_slugs = {}
+
+      # We still call topics "specialist sectors" in rummager.
+      links_with_slugs["specialist_sectors"] = links["topics"].to_a.map do |content_item|
+        content_item['base_path'].sub('/topic/', '')
       end
 
-      doc_hash["organisations"].uniq!
-      doc_hash["mainstream_browse_pages"].uniq!
-      doc_hash["specialist_sectors"].uniq!
+      links_with_slugs["mainstream_browse_pages"] = links["mainstream_browse_pages"].to_a.map do |content_item|
+        content_item['base_path'].sub('/browse/', '')
+      end
 
-      doc_hash
+      links_with_slugs["organisations"] = links["organisations"].to_a.map do |content_item|
+        content_item['base_path'].sub('/government/organisations/', '')
+      end
+
+      links_with_slugs
     end
   end
 end

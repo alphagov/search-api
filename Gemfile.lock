@@ -57,7 +57,7 @@ GEM
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.10)
-    gds-api-adapters (30.2.0)
+    gds-api-adapters (30.6.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -92,7 +92,7 @@ GEM
     lrucache (0.1.4)
       PriorityQueue (~> 0.1.2)
     metaclass (0.0.4)
-    mime-types (2.99.1)
+    mime-types (2.99.2)
     mini_portile2 (2.0.0)
     minitest (4.7.5)
     minitest-colorize (0.0.5)
@@ -204,7 +204,7 @@ DEPENDENCIES
   aws-sdk (~> 2.2.29)
   ci_reporter (~> 1.7.1)
   elasticsearch (~> 1.0.15)
-  gds-api-adapters (~> 30.0)
+  gds-api-adapters (~> 30.6)
   govuk-lint (~> 1.0.0)
   govuk_message_queue_consumer (~> 3.0.1)
   logging (~> 2.1.0)
