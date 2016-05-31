@@ -56,5 +56,13 @@ describe Indexer::TagLookup do
 
       assert_equal %w(foo baz bar), result["specialist_sectors"]
     end
+
+    it 'removes magic tags' do
+      content_api_has_an_artefact("foo/bar", { "owning_app" => "travel-advice-publisher", "format" => "travel-advice", "tags" => [] })
+
+      result = Indexer::TagLookup.prepare_tags({ "link" => "/foo/bar", "mainstream_browse_pages" => %w(foo abroad/living-abroad) })
+
+      assert_equal %w(foo), result["mainstream_browse_pages"]
+    end
   end
 end
