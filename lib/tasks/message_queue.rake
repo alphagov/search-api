@@ -10,7 +10,7 @@ namespace :message_queue do
     # Load Airbrake to make govuk_message_queue_consumer send error notifications.
     require 'airbrake'
     require 'govuk_message_queue_consumer'
-    require 'indexer/index_documents'
+    require 'indexer/message_processor'
     require 'statsd'
 
     statsd_client = Statsd.new
@@ -18,7 +18,7 @@ namespace :message_queue do
 
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "rummager_to_be_indexed",
-      processor: Indexer::IndexDocuments.new,
+      processor: Indexer::MessageProcessor.new,
       statsd_client: statsd_client,
     ).run
   end
