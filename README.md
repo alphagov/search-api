@@ -15,6 +15,8 @@ This API is publicly accessible:
 https://www.gov.uk/api/search.json?q=taxes
 ![Screenshot of API Response](docs/api-screenshot.png)
 
+You can read how to use the API in the blog post: ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
+
 ## Technical documentation
 
 Rummager is a Sinatra application that interfaces with Elasticsearch.
