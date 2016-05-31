@@ -1,5 +1,6 @@
 require "logging"
 require "rest-client"
+require "gds_api/govuk_headers"
 
 module LegacyClient
   class Client
@@ -96,6 +97,8 @@ module LegacyClient
       if headers == {}
         headers[:content_type] = "application/json"
       end
+
+      headers = headers.merge(GdsApi::GovukHeaders.headers)
 
       logging_exception_body do
         args = {
