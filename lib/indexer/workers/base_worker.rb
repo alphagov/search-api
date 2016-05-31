@@ -1,5 +1,4 @@
 require "sidekiq"
-require "sidekiq_json_encoding_patch"
 require "airbrake"
 
 module Indexer
