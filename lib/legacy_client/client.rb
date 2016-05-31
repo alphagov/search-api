@@ -1,5 +1,6 @@
 require "logging"
 require "rest-client"
+require "gds_api/govuk_headers"
 
 module LegacyClient
   class Client
@@ -97,13 +98,15 @@ module LegacyClient
         headers[:content_type] = "application/json"
       end
 
+      headers = headers.merge(GdsApi::GovukHeaders.headers)
+
       logging_exception_body do
         args = {
           method: method,
           url: url_for(path),
         }
         args[:payload] = payload if payload
-        args[:headers] = headers if headers
+        args[:headers] = headers
         args[:timeout] = @timeout if @timeout
         args[:open_timeout] = @open_timeout if @open_timeout
         logger.debug(args.reject { |k| k == :payload })

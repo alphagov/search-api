@@ -26,6 +26,10 @@ else
     extra_request_headers: { "GOVUK-Request-Id" => "govuk_request_id", "x-varnish" => "varnish_id" }
 end
 
+require "gds_api/middleware/govuk_header_sniffer"
+use GdsApi::GovukHeaderSniffer, 'HTTP_GOVUK_REQUEST_ID'
+use GdsApi::GovukHeaderSniffer, 'HTTP_GOVUK_ORIGINAL_URL'
+
 enable :dump_errors, :raise_errors
 
 run Rummager
