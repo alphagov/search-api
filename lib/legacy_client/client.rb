@@ -97,6 +97,8 @@ module LegacyClient
         headers[:content_type] = "application/json"
       end
 
+      headers = headers.merge(GdsApi::GovukHeaders.headers)
+
       logging_exception_body do
         args = {
           method: method,
