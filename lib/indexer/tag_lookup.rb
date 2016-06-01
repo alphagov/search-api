@@ -47,6 +47,13 @@ module Indexer
       doc_hash["mainstream_browse_pages"].uniq!
       doc_hash["specialist_sectors"].uniq!
 
+      # Content API adds two "magic tags" to artefacts when requesting an
+      # artefact over the API. Prevent these tags from ending up in Rummager.
+      if artefact["owning_app"] == "travel-advice-publisher" && artefact["format"] == "travel-advice"
+        doc_hash["mainstream_browse_pages"].delete("abroad/living-abroad")
+        doc_hash["mainstream_browse_pages"].delete("abroad/travel-abroad")
+      end
+
       doc_hash
     end
   end
