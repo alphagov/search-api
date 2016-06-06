@@ -52,6 +52,18 @@ module QueryComponents
         raise "Filter type not supported"
       end
 
+      associated_document_type = filter.associated_document_type
+      if associated_document_type
+        associated_document_filter = combine_filters(
+          [
+            terms_filter("slug", values),
+            term_filter("format", associated_document_type)
+          ],
+          :and
+        )
+        es_filters << associated_document_filter
+      end
+
       combine_filters(es_filters, :or)
     end
 
