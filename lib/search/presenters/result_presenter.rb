@@ -92,7 +92,10 @@ module Search
         result[:_explanation] = raw_result["_explanation"]
       end
 
+      # TODO: only return these values if they're actually requested by the user.
       result[:document_type] = raw_result["_type"]
+      result[:rummager_document_type] = raw_result["_type"]
+
       result
     end
 
