@@ -220,8 +220,6 @@ private
       case field_name
       when "organisations"
         "organisation"
-      else
-        nil
       end
     end
   end

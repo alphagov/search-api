@@ -138,5 +138,4 @@ class FilterTest < ShouldaUnitTestCase
       )
     end
   end
-
 end
