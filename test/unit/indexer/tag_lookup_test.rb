@@ -57,6 +57,39 @@ describe Indexer::TagLookup do
       assert_equal %w(foo baz bar), result["specialist_sectors"]
     end
 
+    it 'adds self-tags to organisation pages' do
+      content_api_has_an_artefact("organisations/land-registry", {
+        "tags" => []
+      })
+
+      result = Indexer::TagLookup.prepare_tags(
+        {
+          "link" => "/organisations/land-registry",
+          "slug" => "land-registry",
+          "format" => "organisation",
+        }
+      )
+
+      assert_equal %w(land-registry), result["organisations"]
+    end
+
+    it 'doesnt duplicate self-tags if passed in' do
+      content_api_has_an_artefact("organisations/land-registry", {
+        "tags" => []
+      })
+
+      result = Indexer::TagLookup.prepare_tags(
+        {
+          "link" => "/organisations/land-registry",
+          "slug" => "land-registry",
+          "format" => "organisation",
+          "organisations" => %w(land-registry)
+        }
+      )
+
+      assert_equal %w(land-registry), result["organisations"]
+    end
+
     it 'removes magic tags' do
       content_api_has_an_artefact("foo/bar", { "owning_app" => "travel-advice-publisher", "format" => "travel-advice", "tags" => [] })
 
