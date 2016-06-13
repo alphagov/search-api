@@ -11,6 +11,7 @@ module Indexer
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)
         doc_hash = prepare_tags_field(doc_hash)
+        doc_hash = add_self_to_organisations_links(doc_hash)
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
@@ -80,6 +81,24 @@ module Indexer
       analyzed_query["tokens"].map { |token_info|
         token_info["token"]
       }.join(" ")
+    end
+
+    def add_self_to_organisations_links(doc_hash)
+      # Consider an organisation page to linked to itself.
+      # This means that when filtering on an organisation,
+      # the organisation page gets included in the search results.
+      #
+      # This deliberately doesn't match up with the canonical representation
+      # of the organisation in the publishing api, since self-linking has
+      # a very fuzzy meaning: ids in links can mean both the thing (HMRC)
+      # and the content representing the thing (the HMRC home page).
+      if doc_hash["format"] == "organisation" && doc_hash["slug"]
+        doc_hash["organisations"] ||= []
+        doc_hash["organisations"] << doc_hash["slug"]
+        doc_hash["organisations"].uniq!
+      end
+
+      doc_hash
     end
   end
 end
