@@ -46,6 +46,23 @@ class ElasticsearchIndexingTest < IntegrationTest
     })
   end
 
+  def test_adding_a_document_to_the_search_index_with_organisation_self_tagging
+    stub_tagging_lookup
+
+    post "/documents", {
+      'title' => 'HMRC',
+      'link' => '/government/organisations/hmrc',
+      'slug' => 'hmrc',
+      'format' => 'organisation',
+      'organisations' => [],
+    }.to_json
+
+    assert_document_is_in_rummager({
+      "link" => "/government/organisations/hmrc",
+      "organisations" => ["hmrc"],
+    })
+  end
+
   def test_adding_a_document_to_the_search_index_with_queue
     stub_tagging_lookup
 

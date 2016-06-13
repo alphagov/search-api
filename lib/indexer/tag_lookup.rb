@@ -14,7 +14,6 @@ module Indexer
       artefact = find_document_from_content_api(doc_hash["link"])
       return doc_hash unless artefact
       add_tags_from_artefact(artefact, doc_hash)
-      add_self_links(doc_hash)
     end
 
   private
@@ -26,23 +25,6 @@ module Indexer
       rescue GdsApi::HTTPNotFound, GdsApi::HTTPGone
         nil
       end
-    end
-
-    def add_self_links(doc_hash)
-      # Consider an organisation page to linked to itself.
-      # This means that when filtering on an organisation,
-      # the organisation page gets included in the search results.
-      #
-      # This deliberately doesn't match up with the canonical representation
-      # of the organisation in the publishing api, since self-linking has
-      # a very fuzzy meaning: ids in links can mean both the thing (HMRC)
-      # and the content representing the thing (the HMRC home page).
-      if doc_hash["format"] == "organisation" && doc_hash["slug"]
-        doc_hash["organisations"] << doc_hash["slug"]
-        doc_hash["organisations"].uniq!
-      end
-
-      doc_hash
     end
 
     def add_tags_from_artefact(artefact, doc_hash)
