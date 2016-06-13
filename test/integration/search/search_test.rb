@@ -460,8 +460,9 @@ class SearchTest < IntegrationTest
       is_withdrawn: true
     )
 
-    get "/unified_search?q=test&debug=include_withdrawn"
+    get "/unified_search?q=test&debug=include_withdrawn&fields[]=is_withdrawn"
     assert_equal 1, parsed_response.fetch("total")
+    assert_equal true, parsed_response.dig("results", 0, "is_withdrawn")
   end
 
   def test_show_the_query
