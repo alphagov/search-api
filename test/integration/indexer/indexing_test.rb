@@ -1,8 +1,7 @@
 require "integration_test_helper"
-require "gds_api/test_helpers/content_api"
 
 class ElasticsearchIndexingTest < IntegrationTest
-  include GdsApi::TestHelpers::ContentApi
+  include GdsApi::TestHelpers::PublishingApiV2
 
   SAMPLE_DOCUMENT = {
     "title" => "TITLE",
@@ -22,11 +21,11 @@ class ElasticsearchIndexingTest < IntegrationTest
   end
 
   def test_adding_a_document_to_the_search_index
-    content_api_has_an_artefact("an-example-answer", {
-      "tags" => [
-        tag_for_slug("bar", "specialist_sector"),
-      ]
-    })
+    stub_tagging_lookup
+    publishing_api_has_expanded_links(
+      content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
+      expanded_links: {},
+    )
 
     post "/documents", {
       "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
@@ -42,7 +41,25 @@ class ElasticsearchIndexingTest < IntegrationTest
       "format" => "answer",
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT",
-      "specialist_sectors" => ["bar"]
+    })
+  end
+
+  def test_tagging_organisations_to_self
+    stub_tagging_lookup
+
+    post "/documents", {
+      "title" => "TITLE",
+      "format" => "organisation",
+      "slug" => "my-organisation",
+      "link" => "/an-example-organisation",
+    }.to_json
+
+    assert_document_is_in_rummager({
+      "title" => "TITLE",
+      "format" => "organisation",
+      "slug" => "my-organisation",
+      "link" => "/an-example-organisation",
+      "organisations" => ["my-organisation"],
     })
   end
 

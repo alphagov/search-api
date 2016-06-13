@@ -100,7 +100,7 @@ Rummager can subscribe to a queue of updates from publishing-api, backed by
 rabbitmq.  At present Rummager is only interested in updates to the links hash.
 You can start the message queue consumer process in development by running:
 
-    govuk_setenv rummager bundle exec rake message_queue:index_documents_from_publishing_api
+    govuk_setenv rummager bundle exec rake message_queue:listen_to_publishing_queue
 
 ### Running the test suite
 

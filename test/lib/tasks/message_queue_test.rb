@@ -3,11 +3,11 @@ require "govuk_message_queue_consumer"
 require "./lib/indexer/index_documents"
 load "./lib/tasks/message_queue.rake"
 
-class IndexDocumentsFromPublishingApiRakeTest < Test::Unit::TestCase
+class MessageProcessorRakeTest < Test::Unit::TestCase
   context "when indexing published documents to publishing-api" do
     should "use GovukMessageQueueConsumer::Consumer" do
-      indexer = Indexer::IndexDocuments.new
-      Indexer::IndexDocuments.expects(:new).returns(indexer)
+      indexer = Indexer::MessageProcessor.new
+      Indexer::MessageProcessor.expects(:new).returns(indexer)
 
       statsd_client = Statsd.new
       Statsd.expects(:new).returns(statsd_client)
@@ -22,7 +22,7 @@ class IndexDocumentsFromPublishingApiRakeTest < Test::Unit::TestCase
           statsd_client: statsd_client,
         ).returns(consumer)
 
-      Rake::Task["message_queue:index_documents_from_publishing_api"].invoke
+      Rake::Task["message_queue:listen_to_publishing_queue"].invoke
     end
   end
 end
