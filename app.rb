@@ -27,8 +27,16 @@ require "indexer/workers/delete_worker"
 require "indexer/workers/amend_worker"
 
 class Rummager < Sinatra::Application
-  # Stop double slashes in URLs (even escaped ones) being flattened to single ones
-  set :protection, except: [:path_traversal, :escaped_params, :frame_options]
+  # - Stop double slashes in URLs (even escaped ones) being flattened to single ones
+  #
+  # - Explicitly allow requests that are referred from other domains so we can link
+  #   to the search API.
+  #   JsonCsrf requires the referer to match this domain. This is one way to prevent
+  #   browsers from being tricked into making a request that returns sensitive
+  #   information or performs some dangerous action.
+  #   In our case the only public API is search and there is no sensitive or
+  #   personalised information in the response.
+  set :protection, except: [:path_traversal, :escaped_params, :frame_options, :json_csrf]
 
   def search_server
     settings.search_config.search_server
