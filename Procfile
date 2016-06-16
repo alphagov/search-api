@@ -1,2 +1,2 @@
 worker: bundle exec sidekiq -C ./config/sidekiq.yml
-publishing-api-document-indexer: bundle exec rake message_queue:index_documents_from_publishing_api
+publishing-queue-listener: bundle exec rake message_queue:listen_to_publishing_queue

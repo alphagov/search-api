@@ -30,7 +30,7 @@ module Indexer
     end
 
     def prepare_tags_field(doc_hash)
-      Indexer::TagLookup.prepare_tags(doc_hash)
+      Indexer::LinksLookup.prepare_tags(doc_hash)
     end
 
     def prepare_format_field(doc_hash)

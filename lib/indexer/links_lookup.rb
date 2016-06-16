@@ -1,49 +1,70 @@
 require 'services'
 
+# LinksLookup finds the tags (links) from the publishing-api and merges them into
+# the document. If there aren't any links, the payload will be returned unchanged.
 module Indexer
   class LinksLookup
-    # Given a "links hash" from the publishing-api, return a hash of links in
-    # "rummager-style". For example:
-    #
-    # {
-    #  "mainstream_browse_pages" => ["953a0469-1284-48ef-932f-354cc7099e7e"],
-    #  "topics" => ["974a8fdc-3306-4dd5-b349-34dc00b12ac2"]
-    # }
-    #
-    # is turned into:
-    #
-    # {
-    #   "mainstream_browse_pages" => ['some/browse-slug'],
-    #   "specialist_sectors" => ['some/topic-slug'],
-    #   "organisations" => ['some-organisation']
-    # }
-    def rummager_fields_from_links(links)
-      browse_pages = sorted_link_paths(links, "mainstream_browse_pages")
-      organisations = (sorted_link_paths(links, "lead_organisations") + sorted_link_paths(links, "organisations")).uniq
-      specialist_sectors = sorted_link_paths(links, "topics")
+    def self.prepare_tags(doc_hash)
+      new.prepare_tags(doc_hash)
+    end
 
-      {
-        "mainstream_browse_pages" => browse_pages,
-        "organisations" => organisations,
-        "specialist_sectors" => specialist_sectors,
-      }
+    def prepare_tags(doc_hash)
+      # Rummager contains externals links (that have a full URL in the `link`
+      # field). These won't have tags associated with them so we can bail out.
+      return doc_hash if doc_hash["link"] =~ /\Ahttps?:\/\//
+
+      # Bail out if the base_path doesn't exist in publishing-api
+      content_id = find_content_id(doc_hash)
+      return doc_hash unless content_id
+
+      # Bail out if the base_path doesn't exist in publishing-api
+      links = find_links(content_id)
+      return doc_hash unless links
+
+      doc_hash.merge(taggings_with_slugs(links))
     end
 
   private
 
-    def sorted_link_paths(links, link_types)
-      links.fetch(link_types, []).map { |content_id| base_path(content_id) }.compact.sort
+    # Some applications send the `content_id` for their items. This means we can
+    # skip the lookup from the publishing-api.
+    def find_content_id(doc_hash)
+      if doc_hash["content_id"].present?
+        doc_hash["content_id"]
+      else
+        GdsApi.with_retries(maximum_number_of_attempts: 5) do
+          Services.publishing_api.lookup_content_id(base_path: doc_hash["link"])
+        end
+      end
     end
 
-    def base_path(content_id)
-      base_path = Services.publishing_api.get_content!(content_id)["base_path"]
-      base_path
-        .gsub('/government/organisations/', '')
-        .gsub('/topic/', '')
-        .gsub('/browse/', '')
-    rescue GdsApi::HTTPNotFound, # Items in the links hash may not exist yet.
-           GdsApi::HTTPUnauthorized # Items may be access limited.
-      nil
+    def find_links(content_id)
+      GdsApi.with_retries(maximum_number_of_attempts: 5) do
+        Services.publishing_api.get_expanded_links(content_id)['expanded_links']
+      end
+    end
+
+    # Documents in rummager currently reference topics, browse pages and
+    # organisations by "slug", a concept that exists in Publisher and Whitehall.
+    # It does not exist in the publishing-api, so we need to infer the slug
+    # from the base path.
+    def taggings_with_slugs(links)
+      links_with_slugs = {}
+
+      # We still call topics "specialist sectors" in rummager.
+      links_with_slugs["specialist_sectors"] = links["topics"].to_a.map do |content_item|
+        content_item['base_path'].sub('/topic/', '')
+      end
+
+      links_with_slugs["mainstream_browse_pages"] = links["mainstream_browse_pages"].to_a.map do |content_item|
+        content_item['base_path'].sub('/browse/', '')
+      end
+
+      links_with_slugs["organisations"] = links["organisations"].to_a.map do |content_item|
+        content_item['base_path'].sub('/government/organisations/', '')
+      end
+
+      links_with_slugs
     end
   end
 end

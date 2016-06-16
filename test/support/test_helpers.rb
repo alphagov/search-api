@@ -1,4 +1,8 @@
+require "gds_api/test_helpers/publishing_api_v2"
+
 module TestHelpers
+  include GdsApi::TestHelpers::PublishingApiV2
+
   def teardown
     Timecop.return
   end
@@ -16,8 +20,8 @@ module TestHelpers
     }.merge(options))
   end
 
+  # This works because we first try to look up the content id for the base path.
   def stub_tagging_lookup
-    stub_request(:get, %r[#{Plek.find('contentapi')}/*]).
-      to_return(status: 404, body: {}.to_json)
+    publishing_api_has_lookups({})
   end
 end
