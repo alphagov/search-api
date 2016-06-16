@@ -17,14 +17,12 @@ module Indexer
     end
 
     def self.find_document(content_item)
-      @document ||= begin
-        # Note that in the future the publishing-api may allow items without
-        # `base_path`. When that starts we should bail out here instead of
-        # crashing.
-        document_base_path = content_item.fetch("base_path")
-        index = IndexFinder.content_index
-        index.get_document_by_link(document_base_path)
-      end
+      # Note that in the future the publishing-api may allow items without
+      # `base_path`. When that starts we should bail out here instead of
+      # crashing.
+      document_base_path = content_item.fetch("base_path")
+      index = IndexFinder.content_index
+      index.get_document_by_link(document_base_path)
     end
 
     def self.trigger_indexing_of_document(document)
