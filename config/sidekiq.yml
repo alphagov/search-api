@@ -1,5 +1,5 @@
 ---
-:concurrency:  2
+:concurrency:  16
 :require: ./app.rb
 :logfile: ./log/sidekiq.log
 :queues:
