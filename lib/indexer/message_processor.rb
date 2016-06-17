@@ -13,9 +13,14 @@ require_relative "change_notification_processor"
 # the links from the publishing-api.
 module Indexer
   class MessageProcessor
+    def initialize(statsd_client)
+      @statsd_client = statsd_client
+    end
+
     def process(message)
       with_logging(message) do
-        Indexer::ChangeNotificationProcessor.trigger(message.payload)
+        indexing_status = Indexer::ChangeNotificationProcessor.trigger(message.payload)
+        @statsd_client.increment("message_queue.indexer.#{indexing_status}")
         message.ack
       end
     rescue ProcessingError => e

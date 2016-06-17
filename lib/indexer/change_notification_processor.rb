@@ -8,12 +8,13 @@ require 'index_finder'
 # a "re-index", which means that the document will go through the DocumentPreparer
 # process and will look up the tags for the document again.
 module Indexer
-  class ChangeNotificationProcessor
+  module ChangeNotificationProcessor
     # Gets called with a content-item from the publishing-api message queue.
     def self.trigger(content_item)
       document = find_document(content_item)
-      return unless document
+      return :rejected unless document
       trigger_indexing_of_document(document)
+      :accepted
     end
 
     def self.find_document(content_item)
