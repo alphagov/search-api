@@ -20,7 +20,7 @@ namespace :message_queue do
 
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "rummager_to_be_indexed",
-      processor: Indexer::MessageProcessor.new,
+      processor: Indexer::MessageProcessor.new(statsd_client),
       statsd_client: statsd_client,
     ).run
   end
