@@ -13,7 +13,10 @@ module Indexer
     def self.trigger(content_item)
       document = find_document(content_item)
       return :rejected unless document
-      trigger_indexing_of_document(document)
+      index_name = document['real_index_name']
+      document_id = document['_id']
+      updates = {}
+      Indexer::AmendWorker.perform_async(index_name, document_id, updates)
       :accepted
     end
 
@@ -24,11 +27,6 @@ module Indexer
       document_base_path = content_item.fetch("base_path")
       index = IndexFinder.content_index
       index.get_document_by_link(document_base_path)
-    end
-
-    def self.trigger_indexing_of_document(document)
-      index = IndexFinder.by_name(document['real_index_name'])
-      index.trigger_document_reindex(document['_id'])
     end
   end
 end

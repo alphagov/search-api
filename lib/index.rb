@@ -145,14 +145,6 @@ module SearchIndices
       Indexer::Amender.new(self).amend(document_id, updates)
     end
 
-    # Adding an existing document to the index will overwrite the current
-    # document and has side effects such as looking up the links in the
-    # publishing-api again.
-    def trigger_document_reindex(document_id)
-      document = get_document_by_id(document_id)
-      add([document])
-    end
-
     def get_document_by_id(document_id)
       begin
         response = @client.get("_all/#{CGI.escape(document_id)}")
