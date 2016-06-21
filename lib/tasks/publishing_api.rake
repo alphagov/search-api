@@ -31,14 +31,21 @@ namespace :publishing_api do
     ]
 
     routes.each do |route|
-      publisher.publish(
-        route.merge(
+      begin
+        payload = route.merge(
           format: "special_route",
           publishing_app: "rummager",
           rendering_app: "rummager",
           public_updated_at: Time.now.iso8601,
           update_type: "major",
-        ))
+        )
+
+        publisher.publish(payload)
+      rescue GdsApi::TimedOutException
+        puts "WARNING: publishing-api timed out when trying to publish route #{payload.inspect}"
+      rescue GdsApi::HTTPServerError => e
+        puts "WARNING: publishing-api errored out when trying to publish route #{payload.inspect}\n\nError: #{e.inspect}"
+      end
     end
   end
 end
