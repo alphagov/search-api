@@ -24,7 +24,6 @@ module Search
       'document_series' => :document_series,
       'document_collections' => :document_collections,
       'organisations' => :organisations,
-      'topics' => :topics,
       'policy_areas' => :policy_areas,
       'world_locations' => :world_locations,
       'specialist_sectors' => :specialist_sectors,
