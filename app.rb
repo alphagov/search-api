@@ -3,6 +3,7 @@ require "sinatra"
 require "json"
 require "csv"
 require "redis"
+require "sigdump/setup"
 
 %w[ . lib ].each do |path|
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)

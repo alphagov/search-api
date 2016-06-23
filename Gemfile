@@ -34,6 +34,7 @@ gem "airbrake", "~> 4.3.6"
 gem "unf", "~> 0.1.4"
 gem "aws-sdk", "~> 2.2.29"
 gem "elasticsearch", "~> 1.0.15"
+gem "sigdump", "~> 0.2.4"
 
 if ENV["MESSAGE_QUEUE_CONSUMER_DEV"]
   gem "govuk_message_queue_consumer", path: "../govuk_message_queue_consumer"

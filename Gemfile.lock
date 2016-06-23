@@ -162,6 +162,7 @@ GEM
       activesupport
       sidekiq (>= 2.6)
       statsd-ruby (>= 1.1.0)
+    sigdump (0.2.4)
     simplecov (0.10.0)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -222,6 +223,7 @@ DEPENDENCIES
   shoulda-context (~> 1.2.1)
   sidekiq (~> 3.5.4)
   sidekiq-statsd (= 0.1.5)
+  sigdump (~> 0.2.4)
   simplecov (~> 0.10.0)
   simplecov-rcov (~> 0.2.3)
   sinatra (= 1.4.7)
