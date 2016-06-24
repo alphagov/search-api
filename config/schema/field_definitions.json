@@ -457,5 +457,8 @@
   },
   "tribunal_decision_reference_number": {
     "type": "identifier"
+  },
+  "dfid_authors": {
+    "type": "searchable_identifiers"
   }
 }

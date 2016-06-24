@@ -1,7 +1,8 @@
 {
   "fields": [
     "country",
-    "first_published_at"
+    "first_published_at",
+    "dfid_authors"
   ],
   "expanded_search_result_fields": {
     "country": [
