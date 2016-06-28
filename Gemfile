@@ -16,12 +16,7 @@ gem "nokogiri", "~> 1.6.7"
 gem "whenever", "~> 0.9.4"
 gem "slop", "~> 3.4.5"
 
-# Sidekiq is currently pinned to the latest 3.X.X version, because we don't
-# want to jump to the latest (4.X) immediately. It is advised to keep the latest
-# 3.X version running for a while before upgrading.
-#
-# https://github.com/mperham/sidekiq/blob/master/4.0-Upgrade.md#upgrade
-gem "sidekiq", "~> 3.5.4"
+gem "sidekiq", "~> 4.1.2"
 gem "sidekiq-statsd", "0.1.5"
 gem "redis-namespace", "~> 1.5.2"
 
