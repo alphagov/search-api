@@ -118,24 +118,15 @@ module SearchIndices
       payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
       response = client.post("_bulk", payload_generator.bulk_payload(document_hashes_or_payload), content_type: :json)
       items = JSON.parse(response.body)["items"]
-      failed_items = items.select do |item|
-        data = item["index"] || item["create"]
-        data.has_key?("error")
+      failed_items, index_locked_items = parse_failures(items)
+
+      if index_locked_items.any?
+        raise IndexLocked
       end
 
       if failed_items.any?
-        # Because bulk writes return a 200 status code regardless, we need to
-        # parse through the errors to detect responses that indicate a locked
-        # index
-        blocked_items = failed_items.select { |item|
-          locked_index_error?(item["index"]["error"])
-        }
-        if blocked_items.any?
-          raise IndexLocked
-        else
-          Airbrake.notify(Indexer::BulkIndexFailure.new, parameters: { failed_items: failed_items })
-          raise Indexer::BulkIndexFailure
-        end
+        Airbrake.notify(Indexer::BulkIndexFailure.new, parameters: { failed_items: failed_items })
+        raise Indexer::BulkIndexFailure
       end
 
       response
@@ -273,6 +264,23 @@ module SearchIndices
     end
 
   private
+
+    def parse_failures(items)
+      all_failed_items = items.select do |item|
+        data = item["index"] || item["create"]
+        data.has_key?("error")
+      end
+
+      # Because bulk writes return a 200 status code regardless, we need to
+      # parse through the errors to detect responses that indicate a locked
+      # index
+      index_locked_items, failed_items = all_failed_items.partition do |item|
+        data = item["index"] || item["create"]
+        locked_index_error?(data["error"])
+      end
+
+      [failed_items, index_locked_items]
+    end
 
     # Parse an elasticsearch error message to determine whether it's caused by
     # a write-locked index. An example write-lock error message:
