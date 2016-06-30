@@ -36,7 +36,8 @@ You should run this task if the index schema has changed.
     require 'indexer/bulk_loader'
 
     index_names.each do |index_name|
-      Indexer::BulkLoader.new(search_config, index_name).load_from_current_index
+      # Batch concurrency reduced from 12 to 3 until publishing api can handle the load.
+      Indexer::BulkLoader.new(search_config, index_name, batch_concurrency: 3).load_from_current_index
     end
   end
 
