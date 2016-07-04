@@ -7,7 +7,12 @@ module Services
       bearer_token: ENV['PUBLISHING_API_BEARER_TOKEN'] || 'example',
 
       # The cache is not threadsafe so using it can cause bulk imports to break
-      disable_cache: true
+      disable_cache: true,
+
+      # Currently, expanded-links consistently takes a long time for some
+      # content. This is required for indexing, so it's better to wait for this
+      # to complete than abort the request.
+      timeout: 20
     )
   end
 end
