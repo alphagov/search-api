@@ -26,7 +26,7 @@ module Indexer
 
     def warn_if_links_present_in(doc_hash)
       unexpected_links = %w{ mainstream_browse_pages organisations specialist_sectors }
-      if doc_hash.keys.any? { |key| key.in?(unexpected_links) }
+      if doc_hash.keys.any? { |key| unexpected_links.include?(key) }
         Airbrake.notify_or_ignore(UnexpectedLinksError.new, parameters: doc_hash)
       end
     end
