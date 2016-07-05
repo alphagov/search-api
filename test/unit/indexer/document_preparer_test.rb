@@ -3,15 +3,19 @@ require "indexer"
 
 describe Indexer::DocumentPreparer do
   describe "#prepared" do
-    describe "policy areas migration" do
-      it "copies topics to policy areas" do
-        stub_tagging_lookup
+    it "populates popularities" do
+      stub_tagging_lookup
 
-        doc_hash = { "link" => "/some-link", "topics" => %w(a b) }
-        updated_doc_hash = Indexer::DocumentPreparer.new("fake_client").prepared(doc_hash, nil, true)
+      doc_hash = {
+        "link" => "/some-link",
+      }
 
-        assert_equal %w(a b), updated_doc_hash["policy_areas"]
-      end
+      updated_doc_hash = Indexer::DocumentPreparer.new("fake_client").prepared(
+        doc_hash,
+        { "/some-link" => 0.5 }, true
+      )
+
+      assert_equal 0.5, updated_doc_hash["popularity"]
     end
 
     it "warns via Airbake if the doc contains any links we no longer expect" do

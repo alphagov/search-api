@@ -92,7 +92,6 @@ class BaseParameterParser
     slug
     specialist_sectors
     title
-    topics
     policy_areas
     world_locations
   ).freeze
