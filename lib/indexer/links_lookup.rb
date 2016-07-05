@@ -4,6 +4,10 @@ require 'services'
 # the document. If there aren't any links, the payload will be returned unchanged.
 module Indexer
   class LinksLookup
+    def initialize
+      @logger = Logging.logger[self]
+    end
+
     def self.prepare_tags(doc_hash)
       new.prepare_tags(doc_hash)
     end
@@ -39,8 +43,13 @@ module Indexer
     end
 
     def find_links(content_id)
-      GdsApi.with_retries(maximum_number_of_attempts: 5) do
-        Services.publishing_api.get_expanded_links(content_id)['expanded_links']
+      begin
+        GdsApi.with_retries(maximum_number_of_attempts: 5) do
+          Services.publishing_api.get_expanded_links(content_id)['expanded_links']
+        end
+      rescue GdsApi::TimedOutException => e
+        @logger.error("Timeout fetching expanded links for #{content_id}")
+        raise e
       end
     end
 
