@@ -6,7 +6,6 @@ module Indexer
     end
 
     def prepared(doc_hash, popularities, is_content_index)
-      warn_if_links_present_in(doc_hash)
       if is_content_index
         doc_hash = copy_legacy_topic_to_policy_area(doc_hash)
         doc_hash = prepare_popularity_field(doc_hash, popularities)
@@ -22,13 +21,6 @@ module Indexer
   private
 
     class UnexpectedLinksError < StandardError
-    end
-
-    def warn_if_links_present_in(doc_hash)
-      unexpected_links = %w{ mainstream_browse_pages organisations specialist_sectors }
-      if doc_hash.keys.any? { |key| unexpected_links.include?(key) }
-        Airbrake.notify_or_ignore(UnexpectedLinksError.new, parameters: doc_hash)
-      end
     end
 
     def prepare_popularity_field(doc_hash, popularities)
