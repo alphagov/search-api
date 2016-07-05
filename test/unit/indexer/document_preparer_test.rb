@@ -13,18 +13,5 @@ describe Indexer::DocumentPreparer do
         assert_equal %w(a b), updated_doc_hash["policy_areas"]
       end
     end
-
-    it "warns via Airbake if the doc contains any links we no longer expect" do
-      stub_tagging_lookup
-      doc_hash = {
-        "link" => "/some-link",
-        "specialist_sectors" => %w(foo bar)
-      }
-
-      Airbrake.expects(:notify_or_ignore).with(
-        Indexer::DocumentPreparer::UnexpectedLinksError.new, parameters: doc_hash
-      )
-      Indexer::DocumentPreparer.new("fake_client").prepared(doc_hash, nil, true)
-    end
   end
 end
