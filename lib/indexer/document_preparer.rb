@@ -10,7 +10,11 @@ module Indexer
         doc_hash = copy_legacy_topic_to_policy_area(doc_hash)
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)
-        doc_hash = prepare_tags_field(doc_hash)
+
+        unless ENV['SKIP_LINKS_INDEXING_TO_PREVENT_TIMEOUTS'] == '1'
+          doc_hash = prepare_tags_field(doc_hash)
+        end
+
         doc_hash = add_self_to_organisations_links(doc_hash)
       end
 
