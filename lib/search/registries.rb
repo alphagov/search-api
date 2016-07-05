@@ -10,6 +10,7 @@ module Search
       @registries ||= {
         organisations: organisations,
         specialist_sectors: specialist_sectors,
+        topics: registry_for_document_format('topic'),
 
         # Whitehall has a thing called `topic`, which is being renamed to "policy
         # area", because there already are seven things called "topic". Until
