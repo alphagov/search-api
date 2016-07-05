@@ -53,7 +53,7 @@
   },
 
   "policy_areas": {
-    "description": "Policy areas are managed in Whitehall. They're an old grouping of policies, which we're expecting to deprecate soon. Formally known as 'topics'.",
+    "description": "Policy areas are managed in Whitehall. They're an old grouping of policies, which we're expecting to deprecate soon.",
     "type": "identifiers"
   },
 
@@ -158,6 +158,11 @@
 
   "statistics_announcement_state": {
     "type": "identifier"
+  },
+
+  "topics": {
+    "description": "The policy areas that the document is associated with.  Nothing to do with \"specialist sectors\"",
+    "type": "identifiers"
   },
 
   "world_locations": {
