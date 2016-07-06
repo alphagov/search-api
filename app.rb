@@ -204,24 +204,10 @@ class Rummager < Sinatra::Application
 
   # Update an existing document
   post "/?:index?/documents/*" do
-    unless request.form_data?
-      halt(
-        415,
-        { "Content-Type" => "text/plain" },
-        "Amendments require application/x-www-form-urlencoded data"
-      )
-    end
-
-    begin
-      document_id = params["splat"].first
-      updates = request.POST
-      Indexer::AmendWorker.perform_async(index_name, document_id, updates)
-      json_result 202, "Queued"
-    rescue ArgumentError => e
-      text_error e.message
-    rescue SearchIndices::DocumentNotFound
-      halt 404
-    end
+    document_id = params["splat"].first
+    updates = request.POST
+    Indexer::AmendWorker.perform_async(index_name, document_id, updates)
+    json_result 202, "Queued"
   end
 
   delete "/?:index?/documents" do

@@ -13,7 +13,6 @@ require "indexer/amender"
 require "document"
 
 module SearchIndices
-  class DocumentNotFound < RuntimeError; end
   class IndexLocked < RuntimeError; end
 
   class Index

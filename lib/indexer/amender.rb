@@ -13,10 +13,7 @@ module Indexer
 
       document = index.get_document_by_id(document_id)
 
-      unless document
-        raise SearchIndices::DocumentNotFound,
-          "Can't find document with _id #{document_id}"
-      end
+      return unless document
 
       updates.each do |key, value|
         if document.has_field?(key)
