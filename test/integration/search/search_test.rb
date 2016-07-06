@@ -473,6 +473,31 @@ class SearchTest < IntegrationTest
     assert parsed_response.fetch("elasticsearch_query")
   end
 
+  def test_dfid_can_search_by_every_facet
+    reset_content_indexes
+    commit_document("mainstream_test", dfid_research_output_attributes)
+
+    facet_queries = %w(
+      filter_dfid_review_status[]=peer_reviewed
+      filter_country[]=TZ&filter_country[]=AL
+    )
+
+    facet_queries.each do |filter_query|
+      get "/unified_search?filter_document_type=dfid_research_output&#{filter_query}"
+
+      assert last_response.ok?
+      assert_equal 1, parsed_response.fetch("total"), "Failure to search by #{filter_query}"
+      assert_equal(
+        hash_including(
+          "document_type" => dfid_research_output_attributes.fetch("_type"),
+          "title" => dfid_research_output_attributes.fetch("title"),
+          "link" => dfid_research_output_attributes.fetch("link"),
+        ),
+        parsed_response.fetch("results").fetch(0),
+      )
+    end
+  end
+
 private
 
   def first_result
@@ -499,6 +524,18 @@ private
       "_type" => "cma_case",
       "specialist_sectors" => ["farming"],
       "opened_date" => "2014-04-01",
+    }
+  end
+
+  def dfid_research_output_attributes
+    {
+      "title" => "Somewhat Unique DFID Research Output",
+      "link" => "/dfid-research-outputs/somewhat-unique-dfid-research-output",
+      "indexable_content" => "Use of calcrete in gender roles in Tanzania",
+      "_type" => "dfid_research_output",
+      "country" => %w(TZ AL),
+      "dfid_review_status" => "peer_reviewed",
+      "first_published_at" => "2014-04-02",
     }
   end
 end

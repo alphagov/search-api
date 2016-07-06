@@ -2,9 +2,20 @@
   "fields": [
     "country",
     "first_published_at",
-    "dfid_authors"
+    "dfid_authors",
+    "dfid_review_status"
   ],
   "expanded_search_result_fields": {
+    "dfid_review_status": [
+      {
+        "value": "unreviewed",
+        "label": "Unreviewed"
+      },
+      {
+        "value": "peer_reviewed",
+        "label": "Peer reviewed"
+      }
+    ],
     "country": [
       {
         "value": "VA",
