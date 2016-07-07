@@ -3,7 +3,8 @@
     "country",
     "first_published_at",
     "dfid_authors",
-    "dfid_review_status"
+    "dfid_review_status",
+    "dfid_theme"
   ],
   "expanded_search_result_fields": {
     "dfid_review_status": [
@@ -812,6 +813,56 @@
       {
         "value": "SU",
         "label": "USSR"
+      }
+    ],
+    "dfid_theme": [
+      {
+        "value": "agriculture",
+        "label": "Agriculture"
+      },
+      {
+        "value": "climate_and_environment",
+        "label": "Climate and Environment"
+      },
+      {
+        "value": "economic_growth",
+        "label": "Economic Growth"
+      },
+      {
+        "value": "education",
+        "label": "Education"
+      },
+      {
+        "value": "food_and_nutrition",
+        "label": "Food and Nutrition"
+      },
+      {
+        "value": "governance_and_conflict",
+        "label": "Governance and Conflict"
+      },
+      {
+        "value": "health",
+        "label": "Health"
+      },
+      {
+        "value": "humanitarian_disasters_and_emergencies",
+        "label": "Humanitarian Disasters and Emergencies"
+      },
+      {
+        "value": "infrastructure",
+        "label": "Infrastructure"
+      },
+      {
+        "value": "research_communication_and_uptake",
+        "label": "Research Communication and Uptake"
+      },
+      {
+        "value": "social_change",
+        "label": "Social Change"
+      },
+      {
+        "value": "water_and_sanitation",
+        "label": "Water and Sanitation"
       }
     ]
   }

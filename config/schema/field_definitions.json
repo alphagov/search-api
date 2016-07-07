@@ -465,5 +465,9 @@
   "dfid_review_status": {
     "description": "Whether or not this item is peer reviewed (a code)",
     "type": "identifier"
+  },
+  "dfid_theme": {
+    "description": "The broad theme (or themes) to which the output applies",
+    "type": "searchable_identifiers"
   }
 }
