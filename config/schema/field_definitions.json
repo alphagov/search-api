@@ -469,5 +469,9 @@
   "dfid_theme": {
     "description": "The broad theme (or themes) to which the output applies",
     "type": "searchable_identifiers"
+  },
+  "dfid_document_type": {
+    "description": "The document type of the output (e.g. Book Chapter, Conference Paper)",
+    "type": "searchable_identifier"
   }
 }

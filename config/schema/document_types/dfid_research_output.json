@@ -4,7 +4,8 @@
     "first_published_at",
     "dfid_authors",
     "dfid_review_status",
-    "dfid_theme"
+    "dfid_theme",
+    "dfid_document_type"
   ],
   "expanded_search_result_fields": {
     "dfid_review_status": [
@@ -863,6 +864,272 @@
       {
         "value": "water_and_sanitation",
         "label": "Water and Sanitation"
+      }
+    ],
+    "dfid_document_type": [
+      {
+        "value": "abstract",
+        "label": "Abstract"
+      },
+      {
+        "value": "academic_thesis",
+        "label": "Academic Thesis"
+      },
+      {
+        "value": "annual_report",
+        "label": "Annual Report"
+      },
+      {
+        "value": "audio",
+        "label": "Audio"
+      },
+      {
+        "value": "bibliography",
+        "label": "Bibliography"
+      },
+      {
+        "value": "blog",
+        "label": "Blog"
+      },
+      {
+        "value": "book",
+        "label": "Book"
+      },
+      {
+        "value": "book_chapter",
+        "label": "Book Chapter"
+      },
+      {
+        "value": "briefing",
+        "label": "Briefing"
+      },
+      {
+        "value": "bulletin",
+        "label": "Bulletin"
+      },
+      {
+        "value": "bulletin_article",
+        "label": "Bulletin Article"
+      },
+      {
+        "value": "cd-rom",
+        "label": "CD-ROM"
+      },
+      {
+        "value": "case_study",
+        "label": "Case Study"
+      },
+      {
+        "value": "computer_software",
+        "label": "Computer Software"
+      },
+      {
+        "value": "conference_paper",
+        "label": "Conference Paper"
+      },
+      {
+        "value": "conference_poster",
+        "label": "Conference Poster"
+      },
+      {
+        "value": "conference_proceedings",
+        "label": "Conference Proceedings"
+      },
+      {
+        "value": "country_report",
+        "label": "Country Report"
+      },
+      {
+        "value": "dvd",
+        "label": "DVD"
+      },
+      {
+        "value": "dataset",
+        "label": "Dataset"
+      },
+      {
+        "value": "discussion_paper",
+        "label": "Discussion Paper"
+      },
+      {
+        "value": "document",
+        "label": "Document"
+      },
+      {
+        "value": "draft",
+        "label": "Draft"
+      },
+      {
+        "value": "evaluation_report",
+        "label": "Evaluation Report"
+      },
+      {
+        "value": "event_(miscellaneous)",
+        "label": "Event (Miscellaneous)"
+      },
+      {
+        "value": "extension_leaflet_booklet",
+        "label": "Extension Leaflet/Booklet"
+      },
+      {
+        "value": "fact_sheet",
+        "label": "Fact Sheet"
+      },
+      {
+        "value": "flyer",
+        "label": "Flyer"
+      },
+      {
+        "value": "highlights",
+        "label": "Highlights"
+      },
+      {
+        "value": "inception_report",
+        "label": "Inception Report"
+      },
+      {
+        "value": "interim_report",
+        "label": "Interim Report"
+      },
+      {
+        "value": "journal_article",
+        "label": "Journal Article"
+      },
+      {
+        "value": "journal_correspondence",
+        "label": "Journal Correspondence"
+      },
+      {
+        "value": "journal_editorial_commentary",
+        "label": "Journal Editorial/Commentary"
+      },
+      {
+        "value": "journal_issue",
+        "label": "Journal Issue"
+      },
+      {
+        "value": "key_document",
+        "label": "Key Document"
+      },
+      {
+        "value": "lessons_learned",
+        "label": "Lessons Learned"
+      },
+      {
+        "value": "literature_review",
+        "label": "Literature Review"
+      },
+      {
+        "value": "magazine_newsletter",
+        "label": "Magazine/Newsletter"
+      },
+      {
+        "value": "magazine_newsletter_newspaper_article",
+        "label": "Magazine/Newsletter/Newspaper Article"
+      },
+      {
+        "value": "manual",
+        "label": "Manual"
+      },
+      {
+        "value": "map",
+        "label": "Map"
+      },
+      {
+        "value": "media",
+        "label": "Media"
+      },
+      {
+        "value": "meeting",
+        "label": "Meeting"
+      },
+      {
+        "value": "meeting_report",
+        "label": "Meeting Report"
+      },
+      {
+        "value": "news",
+        "label": "News"
+      },
+      {
+        "value": "oral_presentation",
+        "label": "Oral Presentation"
+      },
+      {
+        "value": "poster",
+        "label": "Poster"
+      },
+      {
+        "value": "powerpoint_presentation",
+        "label": "PowerPoint Presentation"
+      },
+      {
+        "value": "protocol",
+        "label": "Protocol"
+      },
+      {
+        "value": "questionnaire",
+        "label": "Questionnaire"
+      },
+      {
+        "value": "radio",
+        "label": "Radio"
+      },
+      {
+        "value": "report",
+        "label": "Report"
+      },
+      {
+        "value": "research_paper",
+        "label": "Research Paper"
+      },
+      {
+        "value": "systematic_review",
+        "label": "Systematic Review"
+      },
+      {
+        "value": "technical_report",
+        "label": "Technical Report"
+      },
+      {
+        "value": "television",
+        "label": "Television"
+      },
+      {
+        "value": "thematic_summary",
+        "label": "Thematic Summary"
+      },
+      {
+        "value": "tool_kit",
+        "label": "Tool kit"
+      },
+      {
+        "value": "training_event",
+        "label": "Training Event"
+      },
+      {
+        "value": "training_materials",
+        "label": "Training Materials"
+      },
+      {
+        "value": "video",
+        "label": "Video"
+      },
+      {
+        "value": "visit",
+        "label": "Visit"
+      },
+      {
+        "value": "visit_report",
+        "label": "Visit Report"
+      },
+      {
+        "value": "web_content",
+        "label": "Web Content"
+      },
+      {
+        "value": "working_paper",
+        "label": "Working Paper"
       }
     ]
   }
