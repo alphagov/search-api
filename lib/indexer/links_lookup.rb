@@ -73,6 +73,10 @@ module Indexer
         content_item['base_path'].sub('/government/organisations/', '')
       end
 
+      links_with_slugs["taxons"] = links["taxons"].to_a.map do |content_item|
+        content_item['content_id']
+      end
+
       links_with_slugs
     end
   end

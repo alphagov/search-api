@@ -66,6 +66,10 @@
     "type": "identifiers"
   },
 
+  "taxons": {
+    "type": "identifiers"
+  },
+
   "updated_at": {
     "type": "date"
   },

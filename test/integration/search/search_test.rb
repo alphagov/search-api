@@ -498,6 +498,46 @@ class SearchTest < IntegrationTest
     end
   end
 
+  def test_taxonomy_can_be_returned
+    reset_content_indexes
+
+    commit_document("mainstream_test",
+      title: "I am the result",
+      description: "This is a test search result",
+      link: "/some-nice-link",
+      taxons: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
+    )
+
+    get "/unified_search?q=test&fields[]=taxons"
+    assert_equal 1, parsed_response.fetch("total")
+
+    taxons = parsed_response.dig("results", 0, "taxons")
+    assert_equal ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"], taxons
+  end
+
+  def test_taxonomy_can_be_filtered
+    reset_content_indexes
+
+    commit_document("mainstream_test",
+      title: "I am the result",
+      description: "This is a test search result",
+      link: "/some-nice-link",
+      taxons: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
+    )
+
+    get "/unified_search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
+
+    assert last_response.ok?
+    assert_equal 1, parsed_response.fetch("total")
+    assert_equal(
+      hash_including(
+        "title" => "I am the result",
+        "link" => "/some-nice-link",
+      ),
+      parsed_response.fetch("results").fetch(0),
+    )
+  end
+
 private
 
   def first_result
