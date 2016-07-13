@@ -68,6 +68,12 @@ class TaglookupDuringIndexingTest < IntegrationTest
             "base_path" => "/government/organisations/my-org/1",
           }
         ],
+        taxons: [
+          {
+            "content_id" => "TAXON-1",
+            "base_path" => "/alpha-taxonomy/my-taxon-1"
+          }
+        ],
       }
     )
 
@@ -80,6 +86,7 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "specialist_sectors" => ["my-topic/a", "my-topic/b"],
       "mainstream_browse_pages" => ["my-browse/1"],
       "organisations" => ["my-org/1"],
+      "taxons" => ["TAXON-1"],
     )
   end
 

@@ -1,6 +1,7 @@
 {
   "fields": [
     "all_searchable_text",
+    "taxons",
     "content_id",
     "description",
     "format",
