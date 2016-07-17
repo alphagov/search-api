@@ -23,6 +23,9 @@ configure do
   Airbrake.configuration.ignore << "Sinatra::NotFound"
   Airbrake.configuration.ignore << "LegacySearch::InvalidQuery"
 
+  # DocumentNotFound is inevitable since we process deletes and amends in parallel
+  Airbrake.configuration.ignore << "SearchIndices::DocumentNotFound"
+
   # We manually send `Indexer::BulkIndexFailure` to Airbrake with extra
   # parameters for debugging. Ignore it here so that we don't send them twice.
   Airbrake.configuration.ignore << "Indexer::BulkIndexFailure"
