@@ -68,7 +68,7 @@ class TaglookupDuringIndexingTest < IntegrationTest
             "base_path" => "/government/organisations/my-org/1",
           }
         ],
-        alpha_taxons: [
+        taxons: [
           {
             "content_id" => "TAXON-1",
             "base_path" => "/alpha-taxonomy/my-taxon-1"
