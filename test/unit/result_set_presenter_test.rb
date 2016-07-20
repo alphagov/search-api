@@ -34,7 +34,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
       "fields" => {
         "title" => "Dairy farming and schemes",
         "link" => "/dairy-farming-and-schemes",
-        "topics" => ["farming"],
+        "policy_areas" => ["farming"],
       },
     }]
   end
@@ -60,7 +60,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
     }
   end
 
-  def sample_facet_data_with_topics
+  def sample_facet_data_with_policy_areas
     {
       "organisations" => {
         "terms" => [
@@ -69,7 +69,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
         ],
         "missing" => 8,
       },
-      "topics" => {
+      "policy_areas" => {
         "terms" => [
           { "term" => "farming", "count" => 4 },
           { "term" => "unknown_topic", "count" => 5 },
@@ -227,7 +227,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
 
   context "results with a registry" do
     setup do
-      topic_registry = {
+      policy_area_registry = {
         "farming" => {
           "link" => "/government/topics/farming",
           "title" => "Farming"
@@ -235,9 +235,9 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
       }
 
       @output = Search::ResultSetPresenter.new(
-        search_params: Search::QueryParameters.new(start: 0, return_fields: %w[topics]),
+        search_params: Search::QueryParameters.new(start: 0, return_fields: %w[policy_areas]),
         es_response: sample_es_response,
-        registries: { topics: topic_registry },
+        registries: { policy_areas: policy_area_registry },
       ).present
     end
 
@@ -277,7 +277,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
         "link" => "/government/topics/farming",
         "title" => "Farming",
         "slug" => "farming",
-      }], result["topics"])
+      }], result["policy_areas"])
     end
   end
 
@@ -557,9 +557,9 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
       @output = Search::ResultSetPresenter.new(
         search_params: Search::QueryParameters.new(
           start: 0,
-          facets: { "organisations" => facet_params(1), "topics" => facet_params(1) },
+          facets: { "organisations" => facet_params(1), "policy_areas" => facet_params(1) },
         ),
-        es_response: sample_es_response("facets" => sample_facet_data_with_topics),
+        es_response: sample_es_response("facets" => sample_facet_data_with_policy_areas),
         registries: { organisations: org_registry },
       ).present
     end
@@ -574,7 +574,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
 
     should "have correct number of facet values" do
       assert_equal 1, @output[:facets]["organisations"][:options].length
-      assert_equal 1, @output[:facets]["topics"][:options].length
+      assert_equal 1, @output[:facets]["policy_areas"][:options].length
     end
 
     should "have org facet value expanded" do
@@ -592,22 +592,22 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
       assert_equal({
         value: { "slug" => "unknown_topic" },
         documents: 5,
-      }, @output[:facets]["topics"][:options][0])
+      }, @output[:facets]["policy_areas"][:options][0])
     end
 
     should "have correct number of documents with no value" do
       assert_equal(8, @output[:facets]["organisations"][:documents_with_no_value])
-      assert_equal(3, @output[:facets]["topics"][:documents_with_no_value])
+      assert_equal(3, @output[:facets]["policy_areas"][:documents_with_no_value])
     end
 
     should "have correct total number of options" do
       assert_equal(2, @output[:facets]["organisations"][:total_options])
-      assert_equal(2, @output[:facets]["topics"][:total_options])
+      assert_equal(2, @output[:facets]["policy_areas"][:total_options])
     end
 
     should "have correct number of missing options" do
       assert_equal(1, @output[:facets]["organisations"][:missing_options])
-      assert_equal(1, @output[:facets]["topics"][:missing_options])
+      assert_equal(1, @output[:facets]["policy_areas"][:missing_options])
     end
   end
 
