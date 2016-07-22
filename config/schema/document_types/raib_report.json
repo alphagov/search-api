@@ -41,6 +41,10 @@
       {
         "label": "Discontinuation report",
         "value": "discontinuation-report"
+      },
+      {
+        "label": "Safety digest",
+        "value": "safety-digest"
       }
     ]
   }
