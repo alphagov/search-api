@@ -141,7 +141,7 @@ class Rummager < Sinatra::Application
   # Arbitrary "filter parameters", anything which is defined in the mappings
   # for the index is allowed. Examples:
   #   search_format_types[]        - eg "consultation"
-  #   topics[]                     - eg "climate-change"
+  #   policy_areas[]               - eg "climate-change"
   #   organisations[]              - eg "cabinet-office"
   #   relevant_to_local_government - eg "1"
   #
