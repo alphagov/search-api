@@ -9,11 +9,7 @@ module Indexer
       if is_content_index
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)
-
-        unless ENV['SKIP_LINKS_INDEXING_TO_PREVENT_TIMEOUTS'] == '1'
-          doc_hash = prepare_tags_field(doc_hash)
-        end
-
+        doc_hash = prepare_tags_field(doc_hash)
         doc_hash = add_self_to_organisations_links(doc_hash)
       end
 
@@ -37,6 +33,12 @@ module Indexer
 
     def prepare_tags_field(doc_hash)
       Indexer::LinksLookup.prepare_tags(doc_hash)
+    rescue GdsApi::TimedOutException => e
+      if ENV['LOG_FAILED_LINKS_LOOKUP_AND_CONTINUE'] == '1'
+        puts "Unable to lookup links for link: #{doc_hash['link']}"
+      else
+        raise e
+      end
     end
 
     def prepare_format_field(doc_hash)
