@@ -27,7 +27,6 @@ gem "gds-api-adapters", "~> 31.0"
 gem "rack-logstasher", "~> 0.0.3"
 gem "airbrake", "~> 4.3.6"
 gem "unf", "~> 0.1.4"
-gem "aws-sdk", "~> 2.2.29"
 gem "elasticsearch", "~> 1.0.15"
 
 if ENV["MESSAGE_QUEUE_CONSUMER_DEV"]
@@ -57,4 +56,3 @@ group :development do
 end
 
 gem "pry-byebug", group: [:development, :test]
-
