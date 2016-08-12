@@ -1,5 +1,4 @@
 require "integration_test_helper"
-require "cgi"
 
 class ElasticsearchIndexGroupTest < IntegrationTest
   def setup

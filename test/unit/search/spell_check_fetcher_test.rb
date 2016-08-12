@@ -8,7 +8,10 @@ class Search::SpellCheckFetcherTest < ShouldaUnitTestCase
       Search::SuggestionBlacklist.any_instance.stubs(should_correct?: true)
 
       stub_request(:get, "http://localhost:9200/government/_search")
-        .to_return(body: JSON.dump(suggest: { spelling_suggestions: 'a-hash' }))
+      .to_return(
+        body: JSON.dump(suggest: { spelling_suggestions: 'a-hash' }),
+        headers: { "Content-Type" => "application/json" }
+      )
 
       es_response = Search::SpellCheckFetcher.new(Search::QueryParameters.new(query: 'bolo'), stub('registries')).es_response
 

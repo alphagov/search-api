@@ -12,7 +12,7 @@ class QuotedAndUnquotedSearchTest < IntegrationTest
   end
 
   def teardown
-    clean_test_indexes
+    clean_meta_indexes
   end
 
 

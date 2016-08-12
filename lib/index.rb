@@ -1,8 +1,5 @@
 require "logging"
-require "cgi"
 require "json"
-require "rest-client"
-require "legacy_client/client"
 require "legacy_client/multivalue_converter"
 require "legacy_client/scroll_enumerator"
 require "legacy_search/advanced_search"
@@ -28,15 +25,10 @@ module SearchIndices
     # How long to wait between reads when streaming data from the elasticsearch server
     TIMEOUT_SECONDS = 5.0
 
-    # How long to wait for a connection to the elasticsearch server
-    OPEN_TIMEOUT_SECONDS = 5.0
-
     attr_reader :mappings, :index_name
 
     def initialize(base_uri, index_name, base_index_name, mappings, search_config)
-      # Save this for if and when we want to build custom Clients
-      @index_uri = base_uri + "#{CGI.escape(index_name)}/"
-
+      @base_uri = base_uri
       @client = build_client
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
@@ -59,13 +51,9 @@ module SearchIndices
       # { real_name => { "aliases" => { alias => {} } } }
       # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
       begin
-        alias_info = JSON.parse(@client.get("_aliases"))
-      rescue RestClient::ResourceNotFound => e
-        response_body = JSON.parse(e.http_body)
-        if response_body['error'].start_with?("IndexMissingException")
-          return nil
-        end
-        raise
+        alias_info = @client.indices.get_aliases(index: @index_name)
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
+        return nil
       end
 
       alias_info.keys.first
@@ -76,19 +64,19 @@ module SearchIndices
     end
 
     def close
-      @client.post("_close", nil)
+      @client.indices.close(index: @index_name)
     end
 
     # Apply a write lock to this index, making it read-only
     def lock
-      request_body = { "index" => { "blocks" => { "write" => true } } }.to_json
-      @client.put("_settings", request_body, content_type: :json)
+      request_body = { "index" => { "blocks" => { "write" => true } } }
+      @client.indices.put_settings(index: @index_name, body: request_body)
     end
 
     # Remove any write lock applied to this index
     def unlock
-      request_body = { "index" => { "blocks" => { "write" => false } } }.to_json
-      @client.put("_settings", request_body, content_type: :json)
+      request_body = { "index" => { "blocks" => { "write" => false } } }
+      @client.indices.put_settings(index: @index_name, body: request_body)
     end
 
     def with_lock
@@ -113,10 +101,11 @@ module SearchIndices
     # indexing-methods like `add` and `amend` eventually end up
     # calling this method.
     def bulk_index(document_hashes_or_payload, options = {})
-      client = build_client(options)
+      @client = build_client(options)
       payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
-      response = client.post("_bulk", payload_generator.bulk_payload(document_hashes_or_payload), content_type: :json)
-      items = JSON.parse(response.body)["items"]
+      response = @client.bulk(index: @index_name, body: payload_generator.bulk_payload(document_hashes_or_payload))
+
+      items = response["items"]
       failed_items = items.select do |item|
         data = item["index"] || item["create"]
         data.has_key?("error")
@@ -146,9 +135,9 @@ module SearchIndices
 
     def get_document_by_id(document_id)
       begin
-        response = @client.get("_all/#{CGI.escape(document_id)}")
-        document_from_hash(JSON.parse(response.body)["_source"])
-      rescue RestClient::ResourceNotFound
+        response = @client.get(index: @index_name, type: "_all", id: document_id)
+        document_from_hash(response["_source"])
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
         nil
       end
     end
@@ -163,7 +152,7 @@ module SearchIndices
       # Set off a scan query to get back a scroll ID and result count
       search_body = { query: { match_all: {} } }
       batch_size = self.class.scroll_batch_size
-      LegacyClient::ScrollEnumerator.new(client, search_body, batch_size) do |hit|
+      LegacyClient::ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
         document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
       end
     end
@@ -183,7 +172,7 @@ module SearchIndices
       }
 
       batch_size = self.class.scroll_batch_size
-      LegacyClient::ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
+      LegacyClient::ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
         hit.fetch("fields", {})["link"]
       end
     end
@@ -195,24 +184,18 @@ module SearchIndices
         fields: field_definitions.keys,
       }
 
-      LegacyClient::ScrollEnumerator.new(@client, search_body, batch_size) do |hit|
+      LegacyClient::ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
         LegacyClient::MultivalueConverter.new(hit["fields"], field_definitions).converted_hash
       end
     end
 
     def advanced_search(params)
-      LegacySearch::AdvancedSearch.new(@mappings, @document_types, @client).result_set(params)
+      LegacySearch::AdvancedSearch.new(@mappings, @document_types, @client, @index_name).result_set(params)
     end
 
     def raw_search(payload, type = nil)
-      json_payload = payload.to_json
-      logger.debug "Request payload: #{json_payload}"
-      if type.nil?
-        path = "_search"
-      else
-        path = "#{type}/_search"
-      end
-      JSON.parse(@client.get_with_payload(path, json_payload))
+      logger.debug "Request payload: #{payload.to_json}"
+      @client.search(index: @index_name, type: type, body: payload)
     end
 
     # Convert a best bet query to a string formed by joining the normalised
@@ -220,9 +203,7 @@ module SearchIndices
     #
     # duplicated in document_preparer.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = JSON.parse(
-        @client.get_with_payload("_analyze?analyzer=best_bet_stemmed_match", query)
-      )
+      analyzed_query = @client.indices.analyze(index: @index_name, body: query, analyzer: "best_bet_stemmed_match")
 
       analyzed_query["tokens"].map { |token_info|
         token_info["token"]
@@ -231,13 +212,12 @@ module SearchIndices
 
     def delete(type, id)
       begin
-        @client.delete("#{CGI.escape(type)}/#{CGI.escape(id)}")
-      rescue RestClient::ResourceNotFound
+        @client.delete(index: @index_name, type: type, id: id)
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true
-      rescue RestClient::Forbidden => e
-        response_body = JSON.parse(e.http_body)
-        if locked_index_error?(response_body["error"])
+      rescue Elasticsearch::Transport::Transport::Errors::Forbidden => e
+        if locked_index_error?(e.message)
           raise IndexLocked
         else
           raise
@@ -248,7 +228,7 @@ module SearchIndices
     end
 
     def commit
-      @client.post "_refresh", nil
+      @client.indices.refresh(index: @index_name)
     end
 
     def link_to_type_and_id(link)
@@ -286,11 +266,7 @@ module SearchIndices
     end
 
     def build_client(options = {})
-      LegacyClient::Client.new(
-        @index_uri,
-        timeout: options[:timeout] || TIMEOUT_SECONDS,
-        open_timeout: options[:open_timeout] || OPEN_TIMEOUT_SECONDS
-      )
+      Services.elasticsearch(hosts: @base_uri, timeout: options[:timeout] || TIMEOUT_SECONDS)
     end
   end
 end

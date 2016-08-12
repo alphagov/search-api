@@ -10,7 +10,7 @@ describe Indexer::DocumentPreparer do
         "link" => "/some-link",
       }
 
-      updated_doc_hash = Indexer::DocumentPreparer.new("fake_client").prepared(
+      updated_doc_hash = Indexer::DocumentPreparer.new("fake_client", "fake_index").prepared(
         doc_hash,
         { "/some-link" => 0.5 }, true
       )

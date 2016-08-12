@@ -186,7 +186,11 @@ class IndexerIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   def test_returns_the_hits_converted_into_documents
     Document.expects(:from_hash).with({ "woo" => "hoo" }, anything, nil).returns :woo_hoo
     stub_request(:get, "http://example.com:9200/mainstream_test/_search")
-      .to_return(status: 200, body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"woo\": \"hoo\"}}]}}", headers: {})
+      .to_return(
+        status: 200,
+        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"woo\": \"hoo\"}}]}}",
+        headers: { "Content-Type" => "application/json" }
+      )
     result_set = @wrapper.advanced_search(default_params)
     assert_equal 10, result_set.total
     assert_equal [:woo_hoo], result_set.results
@@ -199,7 +203,11 @@ class IndexerIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   def stub_empty_search(with_args = {})
     r = stub_request(:get, "http://example.com:9200/mainstream_test/_search")
     r.with(with_args) unless with_args.empty?
-    r.to_return(status: 200, body: "{\"hits\": {\"total\": 0, \"hits\": []}}", headers: {})
+    r.to_return(
+      status: 200,
+      body: "{\"hits\": {\"total\": 0, \"hits\": []}}",
+      headers: { "Content-Type" => "application/json" }
+    )
   end
 
   def assert_rejected_search(expected_error, search_args)

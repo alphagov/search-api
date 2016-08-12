@@ -8,7 +8,7 @@ class BoosterTest < IntegrationTest
   end
 
   def teardown
-    clean_test_indexes
+    clean_meta_indexes
   end
 
   def test_service_manual_formats_are_weighted_down

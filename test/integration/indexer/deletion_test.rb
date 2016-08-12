@@ -52,15 +52,19 @@ class ElasticsearchDeletionTest < IntegrationTest
 
     delete "/metasearch_test/documents/best_bet/jobs_exact"
 
-    assert_raises RestClient::ResourceNotFound do
-      RestClient.get("http://localhost:9200/metasearch_test/best_bet/jobs_exact")
+    assert_raises Elasticsearch::Transport::Transport::Errors::NotFound do
+      client.get(
+        index: 'metasearch_test',
+        type: 'best_bet',
+        id: 'jobs_exact'
+      )
     end
   end
 
 private
 
   def assert_document_missing_in_rummager(link:)
-    assert_raises RestClient::ResourceNotFound do
+    assert_raises Elasticsearch::Transport::Transport::Errors::NotFound do
       fetch_document_from_rummager(link: link)
     end
   end

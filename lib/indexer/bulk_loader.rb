@@ -113,8 +113,7 @@ module Indexer
 
     def timeout_options
       {
-        timeout: 30.0,
-        open_timeout: 20.0
+        timeout: 30.0
       }
     end
 

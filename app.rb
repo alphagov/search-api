@@ -1,4 +1,3 @@
-require "rest-client"
 require "sinatra"
 require "json"
 require "csv"
@@ -89,7 +88,11 @@ class Rummager < Sinatra::Application
     content_type :json
   end
 
-  error RestClient::RequestTimeout do
+  error Elasticsearch::Transport::Transport::Errors::RequestTimeout do
+    halt(503, "Elasticsearch timed out")
+  end
+
+  error Elasticsearch::Transport::Transport::SnifferTimeoutError do
     halt(503, "Elasticsearch timed out")
   end
 

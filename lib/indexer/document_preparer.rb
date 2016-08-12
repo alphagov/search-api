@@ -1,7 +1,8 @@
 module Indexer
   class DocumentPreparer
-    def initialize(client)
+    def initialize(client, index_name)
       @client = client
+      @index_name = index_name
       @logger = Logging.logger[self]
     end
 
@@ -74,9 +75,7 @@ module Indexer
 
     # duplicated in index.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = JSON.parse(
-        @client.get_with_payload("_analyze?analyzer=best_bet_stemmed_match", query)
-      )
+      analyzed_query = @client.indices.analyze(index: @index_name, body: query, analyzer: "best_bet_stemmed_match")
 
       analyzed_query["tokens"].map { |token_info|
         token_info["token"]

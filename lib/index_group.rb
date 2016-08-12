@@ -1,6 +1,5 @@
 require "time"
 require "securerandom"
-require "cgi"
 require "index"
 
 module SearchIndices
@@ -15,7 +14,7 @@ module SearchIndices
   class IndexGroup
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
-      @client = LegacyClient::Client.new(base_uri)
+      @client = Services::elasticsearch(hosts: base_uri)
       @name = name
       @schema = schema
       @search_config = search_config
@@ -33,10 +32,9 @@ module SearchIndices
         "settings" => settings,
         "mappings" => mappings,
       }
-      @client.put(
-        "#{CGI.escape(index_name)}/",
-        index_payload.to_json,
-        content_type: :json
+      @client.indices.create(
+        index: index_name,
+        body: index_payload
       )
 
       logger.info "Created index #{index_name}"
@@ -47,7 +45,7 @@ module SearchIndices
     def switch_to(index)
       # Loading this manually rather than using `index_map` because we may have
       # unaliased indices, which won't match the new naming convention.
-      indices = JSON.parse(@client.get("_aliases"))
+      indices = @client.indices.get_aliases
 
       # Bail if there is an existing index with this name.
       # elasticsearch won't allow us to add an alias with the same name as an
@@ -79,11 +77,7 @@ module SearchIndices
 
       payload = { "actions" => actions }
 
-      @client.post(
-        "/_aliases",
-        payload.to_json,
-        content_type: :json
-      )
+      @client.indices.update_aliases(body: payload)
     end
 
     def current
@@ -134,7 +128,7 @@ module SearchIndices
     def alias_map
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
-      indices = JSON.parse(@client.get("_aliases"))
+      indices = @client.indices.get_aliases
       indices.select { |name| name_pattern.match name }
     end
 
@@ -155,7 +149,7 @@ module SearchIndices
 
     def delete(index_name)
       logger.info "Deleting index #{index_name}"
-      @client.delete CGI.escape(index_name)
+      @client.indices.delete(index: index_name)
     end
   end
 end

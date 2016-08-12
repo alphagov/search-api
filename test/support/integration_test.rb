@@ -20,8 +20,12 @@ class IntegrationTest < MiniTest::Unit::TestCase
   def insert_document(index_name, attributes)
     attributes.stringify_keys!
     type = attributes["_type"] || "edition"
-    url = "http://localhost:9200/#{index_name}/#{type}/#{CGI.escape(attributes['link'])}"
-    RestClient.put(url, attributes.to_json)
+    client.create(
+      index: index_name,
+      type: type,
+      id: attributes['link'],
+      body: attributes
+    )
   end
 
   def commit_document(index_name, attributes)
@@ -30,12 +34,15 @@ class IntegrationTest < MiniTest::Unit::TestCase
   end
 
   def commit_index(index_name = "mainstream_test")
-    url = "http://localhost:9200/#{index_name}/_refresh"
-    RestClient.post(url, nil)
+    client.indices.refresh(index: index_name)
   end
 
   def app
     Rummager
+  end
+
+  def client
+    @client ||= Services::elasticsearch(hosts: 'http://localhost:9200')
   end
 
   def parsed_response
@@ -54,6 +61,12 @@ class IntegrationTest < MiniTest::Unit::TestCase
   def create_meta_indexes
     AUXILIARY_INDEX_NAMES.each do |index|
       create_test_index(index)
+    end
+  end
+
+  def clean_meta_indexes
+    AUXILIARY_INDEX_NAMES.each do |index|
+      clean_index_group(index)
     end
   end
 
@@ -152,10 +165,9 @@ class IntegrationTest < MiniTest::Unit::TestCase
 
   def try_remove_test_index(index_name = DEFAULT_INDEX_NAME)
     check_index_name!(index_name)
-    RestClient.delete "http://localhost:9200/#{CGI.escape(index_name)}"
-  rescue RestClient::ResourceNotFound
-    # Index doesn't exist: that's fine
-    true
+    if client.indices.exists?(index: index_name)
+      client.indices.delete(index: index_name)
+    end
   end
 
   def clean_index_group(group_name = DEFAULT_INDEX_NAME)
@@ -188,8 +200,11 @@ private
   end
 
   def fetch_document_from_rummager(link:)
-    elasticsearch_url = "http://localhost:9200/mainstream_test/_all/#{CGI.escape(link)}"
-    raw_response = RestClient.get(elasticsearch_url)
-    JSON.parse(raw_response)['_source']
+    response = client.get(
+      index: 'mainstream_test',
+      type: '_all',
+      id: link
+    )
+    response['_source']
   end
 end
