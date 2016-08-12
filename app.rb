@@ -89,6 +89,7 @@ class Rummager < Sinatra::Application
     content_type :json
   end
 
+  # FIXME: Eliminate RestClient
   error RestClient::RequestTimeout do
     halt(503, "Elasticsearch timed out")
   end

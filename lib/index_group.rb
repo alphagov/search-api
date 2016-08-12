@@ -2,6 +2,7 @@ require "time"
 require "securerandom"
 require "cgi"
 require "index"
+require "transport/client"
 
 module SearchIndices
   # A group of related indexes.
@@ -15,7 +16,8 @@ module SearchIndices
   class IndexGroup
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
-      @client = LegacyClient::Client.new(base_uri)
+      #@client = LegacyClient::Client.new(base_uri)
+      @client = Transport::Client.new(base_uri)
       @name = name
       @schema = schema
       @search_config = search_config
@@ -47,7 +49,7 @@ module SearchIndices
     def switch_to(index)
       # Loading this manually rather than using `index_map` because we may have
       # unaliased indices, which won't match the new naming convention.
-      indices = JSON.parse(@client.get("_aliases"))
+      indices = @client.get("_aliases")
 
       # Bail if there is an existing index with this name.
       # elasticsearch won't allow us to add an alias with the same name as an
@@ -134,7 +136,7 @@ module SearchIndices
     def alias_map
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
-      indices = JSON.parse(@client.get("_aliases"))
+      indices = @client.get("_aliases")
       indices.select { |name| name_pattern.match name }
     end
 

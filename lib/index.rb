@@ -2,7 +2,7 @@ require "logging"
 require "cgi"
 require "json"
 require "rest-client"
-require "legacy_client/client"
+require "transport/client"
 require "legacy_client/multivalue_converter"
 require "legacy_client/scroll_enumerator"
 require "legacy_search/advanced_search"
@@ -59,13 +59,15 @@ module SearchIndices
       # { real_name => { "aliases" => { alias => {} } } }
       # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
       begin
-        alias_info = JSON.parse(@client.get("_aliases"))
-      rescue RestClient::ResourceNotFound => e
-        response_body = JSON.parse(e.http_body)
-        if response_body['error'].start_with?("IndexMissingException")
-          return nil
-        end
-        raise
+        alias_info = @client.get("_aliases")
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
+        # FIXME: is this logic required?
+        # response_body = JSON.parse(e.http_body)
+        # if response_body['error'].start_with?("IndexMissingException")
+        #   return nil
+        # end
+        # raise
+        return nil
       end
 
       alias_info.keys.first
@@ -116,7 +118,7 @@ module SearchIndices
       client = build_client(options)
       payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
       response = client.post("_bulk", payload_generator.bulk_payload(document_hashes_or_payload), content_type: :json)
-      items = JSON.parse(response.body)["items"]
+      items = response["items"]
       failed_items = items.select do |item|
         data = item["index"] || item["create"]
         data.has_key?("error")
@@ -147,8 +149,8 @@ module SearchIndices
     def get_document_by_id(document_id)
       begin
         response = @client.get("_all/#{CGI.escape(document_id)}")
-        document_from_hash(JSON.parse(response.body)["_source"])
-      rescue RestClient::ResourceNotFound
+        document_from_hash(response["_source"])
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
         nil
       end
     end
@@ -212,7 +214,7 @@ module SearchIndices
       else
         path = "#{type}/_search"
       end
-      JSON.parse(@client.get_with_payload(path, json_payload))
+      @client.get_with_payload(path, json_payload)
     end
 
     # Convert a best bet query to a string formed by joining the normalised
@@ -220,9 +222,7 @@ module SearchIndices
     #
     # duplicated in document_preparer.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = JSON.parse(
-        @client.get_with_payload("_analyze?analyzer=best_bet_stemmed_match", query)
-      )
+      analyzed_query = @client.get_with_payload("_analyze?analyzer=best_bet_stemmed_match", query)
 
       analyzed_query["tokens"].map { |token_info|
         token_info["token"]
@@ -232,11 +232,12 @@ module SearchIndices
     def delete(type, id)
       begin
         @client.delete("#{CGI.escape(type)}/#{CGI.escape(id)}")
-      rescue RestClient::ResourceNotFound
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true
-      rescue RestClient::Forbidden => e
-        response_body = JSON.parse(e.http_body)
+      rescue Elasticsearch::Transport::Transport::Errors::Forbidden => e
+        # FIXME: this is error-prone as it parses the response body out of the error message
+        response_body = parse_body_from_elasticsearch_exception(e)
         if locked_index_error?(response_body["error"])
           raise IndexLocked
         else
@@ -286,11 +287,15 @@ module SearchIndices
     end
 
     def build_client(options = {})
-      LegacyClient::Client.new(
+      Transport::Client.new(
         @index_uri,
         timeout: options[:timeout] || TIMEOUT_SECONDS,
         open_timeout: options[:open_timeout] || OPEN_TIMEOUT_SECONDS
       )
+    end
+
+    def parse_body_from_elasticsearch_exception(e)
+      JSON.parse(e.message.gsub(/^\[\d+\] /, ""))
     end
   end
 end

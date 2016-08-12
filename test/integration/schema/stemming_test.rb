@@ -70,7 +70,7 @@ private
 
   def fetch_tokens_for_analyzer(query, analyzer)
     result = client.post('government-test/_analyze?analyzer=' + analyzer.to_s, query)
-    mappings = JSON.parse(result)['tokens']
+    mappings = result['tokens']
     mappings.map { |mapping| mapping['token'] }
   end
 
@@ -81,6 +81,6 @@ private
   end
 
   def client
-    @client ||= LegacyClient::Client.new('http://localhost:9200/')
+    @client ||= Transport::Client.new('http://localhost:9200/')
   end
 end

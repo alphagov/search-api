@@ -43,7 +43,7 @@ module LegacySearch
   private
 
     def raw_search(payload)
-      JSON.parse(@client.get_with_payload("_search", payload.to_json))
+      @client.get_with_payload("_search", payload.to_json)
     end
 
     def logger

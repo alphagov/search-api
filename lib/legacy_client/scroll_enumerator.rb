@@ -78,17 +78,15 @@ module LegacyClient
     end
 
     def next_page(scroll_id)
-      response = @client.get(scroll_page_uri(scroll_id))
-      JSON.parse(response)
+      @client.get(scroll_page_uri(scroll_id))
     end
 
     def initial_scroll_result(batch_size, search_body)
       # Set off a scan query to get back a scroll ID and result count
-      scroll_response = @client.get_with_payload(
+      @client.get_with_payload(
         search_uri(batch_size),
         search_body.to_json
       )
-      JSON.parse(scroll_response)
     end
 
     def logger

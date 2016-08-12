@@ -1,5 +1,5 @@
 require "json"
-require_relative "client"
+require "transport/client"
 require_relative "multivalue_converter"
 
 module LegacyClient
@@ -28,7 +28,7 @@ module LegacyClient
       else
         path = "#{type}/_search"
       end
-      JSON.parse(@client.get_with_payload(path, json_payload))
+      @client.get_with_payload(path, json_payload)
     end
 
     def get_document_by_link(link)
@@ -49,7 +49,7 @@ module LegacyClient
       }.join("")
       logger.debug "Request payload: #{payload}"
       path = "_msearch"
-      JSON.parse(@client.get_with_payload(path, payload))
+      @client.get_with_payload(path, payload)
     end
 
     def documents_by_format(format, field_definitions)
@@ -71,7 +71,7 @@ module LegacyClient
     end
 
     def build_client(options = {})
-      Client.new(
+      Transport::Client.new(
         @index_uri,
         timeout: options[:timeout] || TIMEOUT_SECONDS,
         open_timeout: options[:open_timeout] || OPEN_TIMEOUT_SECONDS
