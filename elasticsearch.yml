@@ -7,5 +7,4 @@ popularity_rank_offset: 10
 
 # When doing spell checking, which indices to use?
 spelling_index_names:
-  - mainstream
   - government
