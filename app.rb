@@ -108,22 +108,24 @@ class Rummager < Sinatra::Application
   # Return results for the GOV.UK site search
   #
   # For details, see docs/unified-search-api.md
-  get "/unified_search.?:request_format?" do
-    json_only
+  ["/unified_search.?:request_format?", "/search.?:request_format?"].each do |path|
+    get path do
+      json_only
 
-    parser = SearchParameterParser.new(
-      parse_query_string(request.query_string),
-      unified_index_schema,
-    )
+      parser = SearchParameterParser.new(
+        parse_query_string(request.query_string),
+        unified_index_schema,
+      )
 
-    unless parser.valid?
-      status 422
-      return { error: parser.error }.to_json
+      unless parser.valid?
+        status 422
+        return { error: parser.error }.to_json
+      end
+
+      search_params = Search::QueryParameters.new(parser.parsed_params)
+      searcher = Search::Query.new(unified_index, registries)
+      searcher.run(search_params).to_json
     end
-
-    search_params = Search::QueryParameters.new(parser.parsed_params)
-    searcher = Search::Query.new(unified_index, registries)
-    searcher.run(search_params).to_json
   end
 
   # Perform an advanced search. Supports filters and pagination.
