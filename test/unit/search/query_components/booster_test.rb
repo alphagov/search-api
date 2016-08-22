@@ -31,8 +31,9 @@ class BoosterTest < ShouldaUnitTestCase
             { filter: { term: { format: "document_collection" } },    boost_factor: 1.3 },
             { filter: { term: { format: "operational_field" } },      boost_factor: 1.5 },
             { filter: { term: { format: "contact" } },                boost_factor: 0.3 },
-            { filter: { term: { format: "hmrc_manual_section" } },    boost_factor: 0.2 },
             { filter: { term: { format: "aaib_report" } },            boost_factor: 0.2 },
+            { filter: { term: { format: "dfid_research_output" } },   boost_factor: 0.2 },
+            { filter: { term: { format: "hmrc_manual_section" } },    boost_factor: 0.2 },
             { filter: { term: { format: "mainstream_browse_page" } }, boost_factor: 0 },
             { filter: { term: { search_format_types: "announcement" } },
               script_score: {
