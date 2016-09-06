@@ -8,8 +8,8 @@ module Indexer
     end
 
     # Payload to index documents using the `_bulk` endpoint
-    #
-    # The format is as follows:
+    # Takes an array of document hashes and returns a string to send to
+    # elasticsearch, for example:
     #
     #   {"index": {"_type": "edition", "_id": "/bank-holidays"}}
     #   { <document source> }
@@ -17,16 +17,51 @@ module Indexer
     #   { <document source> }
     #
     # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
-    def bulk_payload(document_hashes_or_payload)
-      if document_hashes_or_payload.is_a?(Array)
-        index_items = index_items_from_document_hashes(document_hashes_or_payload)
-      else
-        index_items = index_items_from_raw_string(document_hashes_or_payload)
-      end
+    def bulk_payload(document_hashes)
+      index_items = index_items_from_document_hashes(document_hashes)
 
       # Make sure the payload ends with a newline character: elasticsearch
       # requires this.
       index_items.flatten.join("\n") + "\n"
+    end
+
+    # Construct arbitrary payloads for the `_bulk` endpoint
+    # Takes an array of hashes representing elasticsearch commands and
+    # document hashes, for example:
+    #
+    #   {"index": {"_type": "edition", "_id": "/bank-holidays"}}
+    #   { <document source> }
+    #   {"index": {"_type": "edition", "_id": "/something-else"}}
+    #   { <document source> }
+    #
+    # Adds in popularity information and returns a string to return to
+    # elasticsearch.
+    # See <http://www.elasticsearch.org/guide/reference/api/bulk/> for more
+    # on the format.
+    def bulk_command_payload(command_and_document_hashes)
+      actions = []
+      links = []
+      command_and_document_hashes.each_slice(2).map do |command_hash, doc_hash|
+        actions << [command_hash, doc_hash]
+        links << doc_hash["link"]
+      end
+      popularities = lookup_popularities(links.compact)
+      payload = actions.flat_map { |command_hash, doc_hash|
+        if command_hash.keys == ["index"]
+          doc_hash["_type"] = command_hash["index"]["_type"]
+          [
+            command_hash.to_json,
+            index_doc(doc_hash, popularities).to_json
+          ]
+        else
+          [
+            command_hash.to_json,
+            doc_hash.to_json
+          ]
+        end
+      }
+
+      payload.join("\n") + "\n"
     end
 
   private
@@ -60,32 +95,6 @@ module Indexer
         popularities,
         @is_content_index
       )
-    end
-
-    def index_items_from_raw_string(payload)
-      actions = []
-      links = []
-      payload.each_line.each_slice(2).map do |command, doc|
-        command_hash = JSON.parse(command)
-        doc_hash = JSON.parse(doc)
-        actions << [command_hash, doc_hash]
-        links << doc_hash["link"]
-      end
-      popularities = lookup_popularities(links.compact)
-      actions.map { |command_hash, doc_hash|
-        if command_hash.keys == ["index"]
-          doc_hash["_type"] = command_hash["index"]["_type"]
-          [
-            command_hash.to_json,
-            index_doc(doc_hash, popularities).to_json
-          ]
-        else
-          [
-            command_hash.to_json,
-            doc_hash.to_json
-          ]
-        end
-      }
     end
   end
 end
