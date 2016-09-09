@@ -18,10 +18,11 @@ module LegacyClient
 
     attr_reader :size
 
-    def initialize(client, search_body, batch_size = DEFAULT_BATCH_SIZE, &block)
+    def initialize(client:, index_names:, search_body:, batch_size: DEFAULT_BATCH_SIZE, &block)
       raise ArgumentError, "Result processing block is required" unless block
 
       @client = client
+      @index_names = index_names
       scroll_result = initial_scroll_result(batch_size, search_body)
       @size = scroll_result["hits"]["total"]
 
@@ -55,40 +56,21 @@ module LegacyClient
 
   private
 
-    def search_uri(batch_size)
-      URI::Generic.build(
-        path: "_search",
-        query: URI.encode_www_form(
-          search_type: "scan",
-          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
-          size: batch_size
-        )
-      )
-    end
-
-    def scroll_page_uri(scroll_id)
-      URI::Generic.build(
-        # Scrolling is accessed from the server root, not an index
-        path: "/_search/scroll",
-        query: URI.encode_www_form(
-          scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
-          scroll_id: scroll_id
-        )
-      )
-    end
+    attr_reader :client
 
     def next_page(scroll_id)
-      response = @client.get(scroll_page_uri(scroll_id))
-      JSON.parse(response)
+      client.scroll(scroll_id: scroll_id, scroll: "#{SCROLL_TIMEOUT_MINUTES}m")
     end
 
     def initial_scroll_result(batch_size, search_body)
       # Set off a scan query to get back a scroll ID and result count
-      scroll_response = @client.get_with_payload(
-        search_uri(batch_size),
-        search_body.to_json
+      client.search(
+        index: @index_names,
+        search_type: "scan",
+        scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
+        size: batch_size,
+        body: search_body
       )
-      JSON.parse(scroll_response)
     end
 
     def logger

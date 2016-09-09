@@ -90,7 +90,12 @@ private
       "rank_14" => 10,
     }
 
-    RestClient.post "http://localhost:9200/page-traffic_test/page-traffic/#{CGI.escape(path)}", document_atts.to_json
-    RestClient.post "http://localhost:9200/page-traffic_test/_refresh", nil
+    client.create(
+      index: 'page-traffic_test',
+      type: 'page-traffic',
+      id: path,
+      body: document_atts
+    )
+    client.indices.refresh(index: 'page-traffic_test')
   end
 end

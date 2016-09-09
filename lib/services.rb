@@ -1,3 +1,4 @@
+require "elasticsearch"
 require 'gds_api/publishing_api_v2'
 
 module Services
@@ -13,6 +14,18 @@ module Services
       # content. This is required for indexing, so it's better to wait for this
       # to complete than abort the request.
       timeout: 20
+    )
+  end
+
+  # Build a client to connect to one or more elasticsearch nodes.
+  # hosts should be a comma separated string. Valid formats
+  # are documented at http://www.rubydoc.info/gems/elasticsearch-transport#Setting_Hosts
+  def self.elasticsearch(hosts: ENV['ELASTICSEARCH_HOSTS'] || 'http://localhost:9200', timeout: 5)
+    Elasticsearch::Client.new(
+      hosts: hosts,
+      request_timeout: timeout,
+      logger: Logging.logger[self],
+      transport_options: { headers: { "Content-Type" => "application/json" } }
     )
   end
 end

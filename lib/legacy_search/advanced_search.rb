@@ -5,10 +5,11 @@ module LegacySearch
   end
 
   class AdvancedSearch
-    def initialize(mappings, document_types, client)
+    def initialize(mappings, document_types, client, index_name)
       @mappings = mappings
       @document_types = document_types
       @client = client
+      @index_name = index_name
     end
 
     def result_set(params)
@@ -43,7 +44,7 @@ module LegacySearch
   private
 
     def raw_search(payload)
-      JSON.parse(@client.get_with_payload("_search", payload.to_json))
+      @client.search(index: @index_name, body: payload)
     end
 
     def logger

@@ -19,14 +19,10 @@ module Indexer
     # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
     def bulk_payload(document_hashes_or_payload)
       if document_hashes_or_payload.is_a?(Array)
-        index_items = index_items_from_document_hashes(document_hashes_or_payload)
+        index_items_from_document_hashes(document_hashes_or_payload)
       else
-        index_items = index_items_from_raw_string(document_hashes_or_payload)
+        index_items_from_raw_string(document_hashes_or_payload)
       end
-
-      # Make sure the payload ends with a newline character: elasticsearch
-      # requires this.
-      index_items.flatten.join("\n") + "\n"
     end
 
   private
@@ -36,8 +32,8 @@ module Indexer
         doc_hash["link"]
       }.compact
       popularities = lookup_popularities(links)
-      document_hashes.map { |doc_hash|
-        [index_action(doc_hash).to_json, index_doc(doc_hash, popularities).to_json]
+      document_hashes.flat_map { |doc_hash|
+        [index_action(doc_hash), index_doc(doc_hash, popularities)]
       }
     end
 
@@ -55,7 +51,7 @@ module Indexer
     end
 
     def index_doc(doc_hash, popularities)
-      DocumentPreparer.new(@client).prepared(
+      DocumentPreparer.new(@client, @index_name).prepared(
         doc_hash,
         popularities,
         @is_content_index
@@ -72,17 +68,17 @@ module Indexer
         links << doc_hash["link"]
       end
       popularities = lookup_popularities(links.compact)
-      actions.map { |command_hash, doc_hash|
+      actions.flat_map { |command_hash, doc_hash|
         if command_hash.keys == ["index"]
           doc_hash["_type"] = command_hash["index"]["_type"]
           [
-            command_hash.to_json,
-            index_doc(doc_hash, popularities).to_json
+            command_hash,
+            index_doc(doc_hash, popularities),
           ]
         else
           [
-            command_hash.to_json,
-            doc_hash.to_json
+            command_hash,
+            doc_hash,
           ]
         end
       }

@@ -69,8 +69,8 @@ private
   end
 
   def fetch_tokens_for_analyzer(query, analyzer)
-    result = client.post('government-test/_analyze?analyzer=' + analyzer.to_s, query)
-    mappings = JSON.parse(result)['tokens']
+    result = client.indices.analyze(index: 'government-test', analyzer: analyzer.to_s, body: query)
+    mappings = result['tokens']
     mappings.map { |mapping| mapping['token'] }
   end
 
@@ -81,6 +81,6 @@ private
   end
 
   def client
-    @client ||= LegacyClient::Client.new('http://localhost:9200/')
+    @client ||= Services::elasticsearch(hosts: 'http://localhost:9200')
   end
 end

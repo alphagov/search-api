@@ -8,7 +8,7 @@ class BestBetsTest < IntegrationTest
   end
 
   def teardown
-    clean_test_indexes
+    clean_meta_indexes
   end
 
   def test_exact_best_bet

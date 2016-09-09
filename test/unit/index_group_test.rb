@@ -13,7 +13,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
   def setup
     @schema = Rummager.settings.search_config.search_server.schema
     @server = SearchIndices::SearchServer.new(
-      "http://localhost:9200/",
+      "http://localhost:9200",
       @schema,
       %w(mainstream custom),
       ["mainstream"],
@@ -26,10 +26,11 @@ class IndexGroupTest < MiniTest::Unit::TestCase
       "settings" => @schema.elasticsearch_settings("mainstream"),
       "mappings" => @schema.elasticsearch_mappings("mainstream"),
     }.to_json
-    stub = stub_request(:put, %r(http://localhost:9200/mainstream-.*/))
+    stub = stub_request(:put, %r(http://localhost:9200/mainstream-.*))
       .with(body: expected_body)
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: '{"ok": true, "acknowledged": true}'
       )
     index = @server.index_group("mainstream").create_index
@@ -44,6 +45,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     get_stub = stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           "test-new" => { "aliases" => {} }
         }.to_json
@@ -54,7 +56,10 @@ class IndexGroupTest < MiniTest::Unit::TestCase
       ]
     }.to_json
     post_stub = stub_request(:post, "http://localhost:9200/_aliases")
-      .with(body: expected_body)
+      .with(
+        body: expected_body,
+        headers: { 'Content-Type' => 'application/json' }
+      )
       .to_return(ELASTICSEARCH_OK)
 
     @server.index_group("test").switch_to(new_index)
@@ -68,6 +73,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     get_stub = stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-new" => { "aliases" => {} }
@@ -96,6 +102,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     get_stub = stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-old2" => { "aliases" => { "test" => {} } },
@@ -125,6 +132,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           "test" => { "aliases" => {} }
         }.to_json
@@ -139,6 +147,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {}.to_json
       )
 
@@ -150,6 +159,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           index_name => { "aliases" => { "test" => {} } }
         }.to_json
@@ -165,6 +175,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           this_name => { "aliases" => {} },
           other_name => { "aliases" => {} }
@@ -178,6 +189,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {}.to_json
       )
 
@@ -189,6 +201,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           index_name => { "aliases" => {} }
         }.to_json
@@ -207,6 +220,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           index_name => { "aliases" => { "test" => {} } }
         }.to_json
@@ -223,6 +237,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           index_names[0] => { "aliases" => {} },
           index_names[1] => { "aliases" => {} }
@@ -246,6 +261,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           live_name => { "aliases" => { "test" => {} } },
           dead_name => { "aliases" => {} }
@@ -266,6 +282,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           index_name => { "aliases" => { "something_else" => {} } }
         }.to_json
@@ -282,6 +299,7 @@ class IndexGroupTest < MiniTest::Unit::TestCase
     stub_request(:get, "http://localhost:9200/_aliases")
       .to_return(
         status: 200,
+        headers: { 'Content-Type' => 'application/json' },
         body: {
           this_name => { "aliases" => {} },
           other_name => { "aliases" => {} }
