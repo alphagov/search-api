@@ -14,7 +14,7 @@ module Indexer
     def load_from(iostream)
       build_and_switch_index do |queue|
         in_even_sized_batches(iostream) do |lines|
-          queue.push(lines.join(""))
+          queue.push(commands: lines.map { |line| JSON.parse(line) })
         end
       end
     end
@@ -24,7 +24,7 @@ module Indexer
         current_index = index_group.current_real
         if current_index
           current_index.all_documents(timeout_options).each_slice(@document_batch_size) do |documents|
-            queue.push(documents.map(&:elasticsearch_export))
+            queue.push(index: documents.map(&:elasticsearch_export))
           end
         end
       end
@@ -44,7 +44,7 @@ module Indexer
       @logger.info "Populating new #{@index_name} index..."
       populate_index(new_index) do |queue|
         old_index.all_documents(timeout_options).each_slice(@document_batch_size) do |documents|
-          queue.push(documents.map(&:elasticsearch_export))
+          queue.push(index: documents.map(&:elasticsearch_export))
         end
       end
       @logger.info "...index populated."
@@ -91,14 +91,20 @@ module Indexer
         th = Thread.new do
           loop do
             begin
-              documents = q.pop(true)
+              action, values = q.pop(true)
             rescue ThreadError => e
               raise unless e.message == "queue empty"
               break if producer_complete
               sleep 0.1
               retry
             end
-            new_index.bulk_index(documents, timeout_options)
+
+            case action
+            when :index
+              new_index.bulk_index(values, timeout_options)
+            when :commands
+              new_index.bulk_commands(values, timeout_options)
+            end
           end
         end
         threads << th
