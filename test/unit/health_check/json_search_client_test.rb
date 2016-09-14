@@ -27,7 +27,7 @@ B)
         to_return(status: 200, body: search_response_body.to_json)
     end
 
-    should "support the unified search format" do
+    should "support the search format" do
       stub_search("cheese")
       expected = { results: ["/a", "/b"], suggested_queries: %w[A B] }
       base_url = URI.parse("http://www.gov.uk/api/search.json")
