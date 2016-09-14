@@ -29,7 +29,7 @@ class BoosterTest < IntegrationTest
       link: "/can-we-be-agile",
     )
 
-    get "/unified_search?q=agile"
+    get "/search?q=agile"
 
     assert_equal ["Can we be agile?", "Agile is good", "Being agile is good"],
       result_titles

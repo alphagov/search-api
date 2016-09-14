@@ -110,8 +110,8 @@ class Rummager < Sinatra::Application
 
   # Return results for the GOV.UK site search
   #
-  # For details, see docs/unified-search-api.md
-  ["/unified_search.?:request_format?", "/search.?:request_format?"].each do |path|
+  # For details, see docs/search-api.md
+  ["/search.?:request_format?"].each do |path|
     get path do
       json_only
 
