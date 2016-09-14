@@ -29,7 +29,7 @@ class BestBetsTest < IntegrationTest
       position: 1,
     )
 
-    links = get_links "/unified_search?q=a+forced+best+bet"
+    links = get_links "/search?q=a+forced+best+bet"
 
     assert_equal ["/the-link-that-should-surface", "/an-organic-result"], links
   end
@@ -47,7 +47,7 @@ class BestBetsTest < IntegrationTest
       position: 1,
     )
 
-    links = get_links "/unified_search?q=shown"
+    links = get_links "/search?q=shown"
 
     refute links.include?("/we-never-show-this")
   end
@@ -64,7 +64,7 @@ class BestBetsTest < IntegrationTest
       position: 1,
     )
 
-    links = get_links "/unified_search?q=best+bet+and+such"
+    links = get_links "/search?q=best+bet+and+such"
 
     assert_equal ["/the-link-that-should-surface"], links
   end
@@ -82,7 +82,7 @@ class BestBetsTest < IntegrationTest
     )
 
     # note that we're searching for "bests bet", not "best bet" here.
-    links = get_links "/unified_search?q=bests+bet"
+    links = get_links "/search?q=bests+bet"
 
     assert_equal ["/the-link-that-should-surface"], links
   end
@@ -100,7 +100,7 @@ class BestBetsTest < IntegrationTest
     )
 
     # note that we're searching for "bet best", not "best bet" here.
-    links = get_links "/unified_search?q=bet+best"
+    links = get_links "/search?q=bet+best"
 
     refute links.include?("/only-shown-for-exact-matches")
   end

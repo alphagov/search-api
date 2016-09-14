@@ -17,7 +17,7 @@ class SearchTest < IntegrationTest
   def test_returns_success
     reset_content_indexes
 
-    get "/unified_search?q=important"
+    get "/search?q=important"
 
     assert last_response.ok?
   end
@@ -36,12 +36,12 @@ class SearchTest < IntegrationTest
 
     )
 
-    get "/unified_search?q=p+60&debug=use_id_codes"
+    get "/search?q=p+60&debug=use_id_codes"
 
     assert_equal(parsed_response['results'].size, 1)
     assert_equal(parsed_response["results"][0]["link"], "/get-paye-forms-p45-p60")
 
-    get "/unified_search?q=p+60"
+    get "/search?q=p+60"
     assert_equal(parsed_response['results'].size, 0)
   end
 
@@ -54,7 +54,7 @@ class SearchTest < IntegrationTest
       link: "/some-nice-link"
     )
 
-    get "/unified_search?q=serch&suggest=spelling"
+    get "/search?q=serch&suggest=spelling"
 
     assert_equal ['search'], parsed_response['suggested_queries']
   end
@@ -62,7 +62,7 @@ class SearchTest < IntegrationTest
   def test_spell_checking_without_typo
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?q=milliband"
+    get "/search?q=milliband"
 
     assert_equal [], parsed_response['suggested_queries']
   end
@@ -70,7 +70,7 @@ class SearchTest < IntegrationTest
   def test_returns_docs_from_all_indexes
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?q=important"
+    get "/search?q=important"
 
     assert result_links.include? "/government-1"
     assert result_links.include? "/mainstream-1"
@@ -79,7 +79,7 @@ class SearchTest < IntegrationTest
   def test_sort_by_date_ascending
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&order=public_timestamp"
+    get "/search?q=important&order=public_timestamp"
 
     assert_equal ["/government-1", "/government-2"],
       result_links.take(2)
@@ -88,7 +88,7 @@ class SearchTest < IntegrationTest
   def test_sort_by_date_descending
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&order=-public_timestamp"
+    get "/search?q=important&order=-public_timestamp"
 
     # The government links have dates, so appear before all the other links.
     # The other documents have no dates, so appear in an undefined order
@@ -99,7 +99,7 @@ class SearchTest < IntegrationTest
   def test_sort_by_title_ascending
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?order=title"
+    get "/search?order=title"
     lowercase_titles = result_titles.map(&:downcase)
 
     assert_equal lowercase_titles, lowercase_titles.sort
@@ -108,7 +108,7 @@ class SearchTest < IntegrationTest
   def test_filter_by_field
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?filter_mainstream_browse_pages=1"
+    get "/search?filter_mainstream_browse_pages=1"
 
     assert_equal ["/government-1", "/mainstream-1"],
       result_links.sort
@@ -117,7 +117,7 @@ class SearchTest < IntegrationTest
   def test_reject_by_field
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?reject_mainstream_browse_pages=1"
+    get "/search?reject_mainstream_browse_pages=1"
 
     assert_equal ["/government-2", "/mainstream-2"],
       result_links.sort
@@ -126,7 +126,7 @@ class SearchTest < IntegrationTest
   def test_can_filter_for_missing_field
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?filter_specialist_sectors=_MISSING"
+    get "/search?filter_specialist_sectors=_MISSING"
 
     assert_equal ["/government-1", "/mainstream-1"],
       result_links.sort
@@ -135,7 +135,7 @@ class SearchTest < IntegrationTest
   def test_can_filter_for_missing_or_specific_value_in_field
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
+    get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
     assert_equal ["/government-1", "/mainstream-1"],
       result_links.sort
@@ -144,7 +144,7 @@ class SearchTest < IntegrationTest
   def test_can_filter_and_reject
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
+    get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
     assert_equal [
       "/government-2",
@@ -155,7 +155,7 @@ class SearchTest < IntegrationTest
   def test_only_contains_fields_which_are_present
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&order=public_timestamp"
+    get "/search?q=important&order=public_timestamp"
 
     results = parsed_response["results"]
     refute_includes results[0].keys, "specialist_sectors"
@@ -165,7 +165,7 @@ class SearchTest < IntegrationTest
   def test_facet_counting
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_mainstream_browse_pages=2"
+    get "/search?q=important&facet_mainstream_browse_pages=2"
 
     assert_equal 4, parsed_response["total"]
 
@@ -190,12 +190,12 @@ class SearchTest < IntegrationTest
   def test_facet_counting_with_filter_on_field_and_exclude_field_filter_scope
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_mainstream_browse_pages=2"
+    get "/search?q=important&facet_mainstream_browse_pages=2"
 
     assert_equal 4, parsed_response["total"]
     facets_without_filter = parsed_response["facets"]
 
-    get "/unified_search?q=important&facet_mainstream_browse_pages=2&filter_mainstream_browse_pages=1"
+    get "/search?q=important&facet_mainstream_browse_pages=2&filter_mainstream_browse_pages=1"
     assert_equal 2, parsed_response["total"]
 
     facets_with_filter = parsed_response["facets"]
@@ -207,7 +207,7 @@ class SearchTest < IntegrationTest
   def test_facet_counting_missing_options
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_mainstream_browse_pages=1"
+    get "/search?q=important&facet_mainstream_browse_pages=1"
 
     assert_equal 4, parsed_response["total"]
     facets = parsed_response["facets"]
@@ -227,7 +227,7 @@ class SearchTest < IntegrationTest
   def test_facet_counting_with_filter_on_field_and_all_filters_scope
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=1"
+    get "/search?q=important&facet_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=1"
 
     assert_equal 2, parsed_response["total"]
     facets = parsed_response["facets"]
@@ -248,7 +248,7 @@ class SearchTest < IntegrationTest
   def test_facet_examples
     reset_content_indexes_with_content(section_count: 2)
 
-    get "/unified_search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
+    get "/search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
     assert_equal(
       ["/government-1", "/mainstream-1"],
@@ -259,7 +259,7 @@ class SearchTest < IntegrationTest
   def test_validates_integer_params
     reset_content_indexes
 
-    get "/unified_search?start=a"
+    get "/search?start=a"
 
     assert_equal last_response.status, 422
     assert_equal parsed_response, { "error" => "Invalid value \"a\" for parameter \"start\" (expected positive integer)" }
@@ -268,7 +268,7 @@ class SearchTest < IntegrationTest
   def test_allows_integer_params_leading_zeros
     reset_content_indexes
 
-    get "/unified_search?start=09"
+    get "/search?start=09"
 
     assert last_response.ok?
   end
@@ -276,7 +276,7 @@ class SearchTest < IntegrationTest
   def test_validates_unknown_params
     reset_content_indexes
 
-    get "/unified_search?foo&bar=1"
+    get "/search?foo&bar=1"
 
     assert_equal last_response.status, 422
     assert_equal parsed_response, { "error" => "Unexpected parameters: foo, bar" }
@@ -285,7 +285,7 @@ class SearchTest < IntegrationTest
   def test_debug_explain_returns_explanations
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?debug=explain"
+    get "/search?debug=explain"
 
     first_hit_explain = parsed_response["results"].first["_explanation"]
     refute_nil first_hit_explain
@@ -298,7 +298,7 @@ class SearchTest < IntegrationTest
     reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
-    get "/unified_search?filter_document_type=cma_case"
+    get "/search?filter_document_type=cma_case"
 
     assert last_response.ok?
     assert_equal 1, parsed_response.fetch("total")
@@ -316,7 +316,7 @@ class SearchTest < IntegrationTest
     reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
-    get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
+    get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
 
     assert last_response.ok?
     assert_equal 1, parsed_response.fetch("total")
@@ -333,7 +333,7 @@ class SearchTest < IntegrationTest
     reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
-    get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
+    get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
 
     assert last_response.ok?
     assert_equal 1, parsed_response.fetch("total")
@@ -350,7 +350,7 @@ class SearchTest < IntegrationTest
     reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
-    get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
+    get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
 
     assert last_response.ok?
     assert_equal 1, parsed_response.fetch("total")
@@ -367,7 +367,7 @@ class SearchTest < IntegrationTest
     reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
-    get "/unified_search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
+    get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
 
     assert last_response.ok?
     assert_equal 1, parsed_response.fetch("total")
@@ -383,7 +383,7 @@ class SearchTest < IntegrationTest
   def test_cannot_provide_date_filter_key_multiple_times
     reset_content_indexes
 
-    get "/unified_search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
+    get "/search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
 
     assert_equal 422, last_response.status
     assert_equal(
@@ -395,7 +395,7 @@ class SearchTest < IntegrationTest
   def test_cannot_provide_invalid_dates_for_date_filter
     reset_content_indexes
 
-    get "/unified_search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
+    get "/search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
 
     assert_equal 422, last_response.status
     assert_equal(
@@ -420,7 +420,7 @@ class SearchTest < IntegrationTest
       format: 'organisation'
     )
 
-    get "/unified_search.json?q=dragons"
+    get "/search.json?q=dragons"
 
     assert_equal first_result['organisations'],
       [{ "slug" => "/ministry-of-magic",
@@ -431,7 +431,7 @@ class SearchTest < IntegrationTest
   def test_id_search
     reset_content_indexes_with_content(section_count: 1)
 
-    get "/unified_search?q=id1&debug=new_weighting"
+    get "/search?q=id1&debug=new_weighting"
 
     assert result_links.include? "/mainstream-1"
   end
@@ -446,7 +446,7 @@ class SearchTest < IntegrationTest
       is_withdrawn: true
     )
 
-    get "/unified_search?q=test"
+    get "/search?q=test"
     assert_equal 0, parsed_response.fetch("total")
   end
 
@@ -460,7 +460,7 @@ class SearchTest < IntegrationTest
       is_withdrawn: true
     )
 
-    get "/unified_search?q=test&debug=include_withdrawn&fields[]=is_withdrawn"
+    get "/search?q=test&debug=include_withdrawn&fields[]=is_withdrawn"
     assert_equal 1, parsed_response.fetch("total")
     assert_equal true, parsed_response.dig("results", 0, "is_withdrawn")
   end
@@ -468,7 +468,7 @@ class SearchTest < IntegrationTest
   def test_show_the_query
     reset_content_indexes
 
-    get "/unified_search?q=test&debug=show_query"
+    get "/search?q=test&debug=show_query"
 
     assert parsed_response.fetch("elasticsearch_query")
   end
@@ -483,7 +483,7 @@ class SearchTest < IntegrationTest
     )
 
     facet_queries.each do |filter_query|
-      get "/unified_search?filter_document_type=dfid_research_output&#{filter_query}"
+      get "/search?filter_document_type=dfid_research_output&#{filter_query}"
 
       assert last_response.ok?
       assert_equal 1, parsed_response.fetch("total"), "Failure to search by #{filter_query}"
@@ -508,7 +508,7 @@ class SearchTest < IntegrationTest
       taxons: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
     )
 
-    get "/unified_search?q=test&fields[]=taxons"
+    get "/search?q=test&fields[]=taxons"
     assert_equal 1, parsed_response.fetch("total")
 
     taxons = parsed_response.dig("results", 0, "taxons")
@@ -525,7 +525,7 @@ class SearchTest < IntegrationTest
       taxons: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
     )
 
-    get "/unified_search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
+    get "/search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
     assert last_response.ok?
     assert_equal 1, parsed_response.fetch("total")

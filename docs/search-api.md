@@ -1,16 +1,16 @@
-# Unified Search API
+# Search API
 
 This API is the main endpoint for performing searches on GOV.UK.  It supports
 keyword searching, ordering by relevance or date fields, filtering and
 faceting.
 
 At the time of writing, there is one other endpoint, the `advanced_search`
-endpoint, which is slowly being replaced by the `unified_search` endpoint.  The
+endpoint, which is slowly being replaced by the `search` endpoint.  The
 `advanced_search` endpoint shouldn't be used by new code.
 
 ## Parameters
 
-The unified search API supports many query string parameters.  It validates
+The search API supports many query string parameters.  It validates
 parameters strictly - any unknown parameters, or parameters with invalid
 options, will cause an HTTP 422 error.  This makes it likely that typos do not
 result in silently returning the wrong results, and also makes it easier to
@@ -172,7 +172,7 @@ The parameters supported are:
 
 For example:
 
-    /unified_search.json?
+    /search.json?
      q=foo&
      start=0&
      count=20&

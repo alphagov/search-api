@@ -17,7 +17,7 @@ class ExpandsValuesFromSchemaTest < IntegrationTest
       "_type" => "cma_case",
     })
 
-    get "/unified_search?filter_document_type=cma_case&fields=case_type,description,title"
+    get "/search?filter_document_type=cma_case&fields=case_type,description,title"
     first_result = parsed_response["results"].first
 
     assert_equal [{ "label" => "Mergers", "value" => "mergers" }], first_result["case_type"]

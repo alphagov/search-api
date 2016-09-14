@@ -21,7 +21,7 @@ You can read how to use the API in the blog post: ["Use the search API to get us
 
 Rummager is a Sinatra application that interfaces with Elasticsearch.
 
-It provides a [search API](docs/unified-search-api.md) that is used by multiple
+It provides a [search API](docs/search-api.md) that is used by multiple
 applications, and is publicly available at
 [gov.uk/api/search.json](https://www.gov.uk/api/search.json?q=taxes).
 
@@ -85,7 +85,7 @@ If you're not running the GDS development VM:
     ./startup.sh
 
 Rummager should then be available at
-[rummager.dev.gov.uk](http://rummager.dev.gov.uk/unified_search.json?q=taxes).
+[rummager.dev.gov.uk](http://rummager.dev.gov.uk/search.json?q=taxes).
 
 Rummager uses Sidekiq to manage index workers in a separate process. To run
 this in the development VM, you need to run both of these commands:
@@ -116,8 +116,8 @@ After changing the schema, you'll need to migrate the index.
 
 For the most up to date query syntax and API output:
 
-- [docs/unified-search-api.md](docs/unified-search-api.md) for the unified
-	search endpoint (`/unified-search.json`).
+- [docs/search-api.md](docs/search-api.md) for the search
+	endpoint (`/search.json`).
 - [docs/content-api.md](docs/content-api.md) for the `/content/*` endpoint.
 - [docs/documents.md](docs/documents.md) for the `*/documents/` endpoint.
 

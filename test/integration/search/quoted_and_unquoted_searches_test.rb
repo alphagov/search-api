@@ -20,56 +20,56 @@ class QuotedAndUnquotedSearchTest < IntegrationTest
   #
   def test_new_weighting_three_matches_found_for_london
     commit_london_transport_docs
-    get "/unified_search?q=london&debug=new_weighting"
+    get "/search?q=london&debug=new_weighting"
     assert_equal 200, last_response.status
     assert_equal 3, parsed_response["results"].size
   end
 
   def test_new_weighting_three_matches_found_for_transport
     commit_london_transport_docs
-    get "/unified_search?q=transport&debug=new_weighting"
+    get "/search?q=transport&debug=new_weighting"
     assert_equal 200, last_response.status
     assert_equal 3, parsed_response["results"].size
   end
 
   def test_new_weighting_three_matches_found_for_unquoted_london_transport
     commit_london_transport_docs
-    get "/unified_search?q=london+transport&debug=new_weighting"
+    get "/search?q=london+transport&debug=new_weighting"
     assert_equal 200, last_response.status
     assert_equal 3, parsed_response["results"].size
   end
 
   def test_new_weighting_one_match_found_for_quoted_london_transport
     commit_london_transport_docs
-    get "/unified_search?q=%22london+transport%22&debug=new_weighting"
+    get "/search?q=%22london+transport%22&debug=new_weighting"
     assert_equal 200, last_response.status
     assert_equal 1, parsed_response["results"].size
   end
 
   def test_new_weighting_synonyms_are_returned_with_unquoted_phrases
     commit_synonym_documents
-    get "/unified_search?q=driving+abroad&debug=new_weighting"
+    get "/search?q=driving+abroad&debug=new_weighting"
     assert_equal 200, last_response.status
     assert_equal 2, parsed_response["results"].size
   end
 
   def test_new_weighting_synonyms_are_not_returned_with_quoted_phrases
     commit_synonym_documents
-    get "/unified_search?q=%22driving+abroad%22&debug=new_weighting"
+    get "/search?q=%22driving+abroad%22&debug=new_weighting"
     assert_equal 200, last_response.status
     assert_equal 1, parsed_response["results"].size
   end
 
   def test_new_weighting_stemming_is_in_place_for_unquoted_phrases
     commit_stemming_documents
-    get "/unified_search?q=dog&debug=new_weighting"
+    get "/search?q=dog&debug=new_weighting"
     assert_equal 200, last_response.status
     assert_equal 2, parsed_response["results"].size
   end
 
   def test_new_weighting_stemming_is_still_in_place_even_for_quoted_phrases
     commit_stemming_documents
-    get "/unified_search?q=%22dog%22&debug=new_weighting"
+    get "/search?q=%22dog%22&debug=new_weighting"
     assert_equal 200, last_response.status
     assert_equal 2, parsed_response["results"].size
   end
@@ -79,49 +79,49 @@ class QuotedAndUnquotedSearchTest < IntegrationTest
   #
   def test_old_weighting_three_matches_found_for_london
     commit_london_transport_docs
-    get "/unified_search?q=london"
+    get "/search?q=london"
     assert_equal 200, last_response.status
     assert_equal 3, parsed_response["results"].size
   end
 
   def test_old_weighting_three_matches_found_for_transport
     commit_london_transport_docs
-    get "/unified_search?q=transport"
+    get "/search?q=transport"
     assert_equal 200, last_response.status
     assert_equal 3, parsed_response["results"].size
   end
 
   def test_old_weighting_three_matches_found_for_unquoted_london_transport
     commit_london_transport_docs
-    get "/unified_search?q=london+transport"
+    get "/search?q=london+transport"
     assert_equal 200, last_response.status
     assert_equal 3, parsed_response["results"].size
   end
 
   def test_old_weighting_one_match_found_for_quoted_london_transport
     commit_london_transport_docs
-    get "/unified_search?q=%22london+transport%22"
+    get "/search?q=%22london+transport%22"
     assert_equal 200, last_response.status
     assert_equal 1, parsed_response["results"].size
   end
 
   def test_old_weighting_synonyms_are_returned_with_unquoted_phrases
     commit_synonym_documents
-    get "/unified_search?q=driving+abroad"
+    get "/search?q=driving+abroad"
     assert_equal 200, last_response.status
     assert_equal 2, parsed_response["results"].size
   end
 
   def test_old_weighting_stemming_is_in_place_for_unquoted_phrases
     commit_stemming_documents
-    get "/unified_search?q=dog"
+    get "/search?q=dog"
     assert_equal 200, last_response.status
     assert_equal 2, parsed_response["results"].size
   end
 
   def test_old_weighting_stemming_is_still_in_place_even_for_quoted_phrases
     commit_stemming_documents
-    get "/unified_search?q=%22dog%22"
+    get "/search?q=%22dog%22"
     assert_equal 200, last_response.status
     assert_equal 2, parsed_response["results"].size
   end

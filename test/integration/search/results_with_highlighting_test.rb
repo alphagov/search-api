@@ -17,7 +17,7 @@ class ResultsWithHighlightingTest < IntegrationTest
       link: "/some-nice-link",
     )
 
-    get "/unified_search?q=result&fields[]=title_with_highlighting"
+    get "/search?q=result&fields[]=title_with_highlighting"
 
     refute first_search_result.key?('title')
     assert_equal "I am the <mark>result</mark>",
@@ -31,7 +31,7 @@ class ResultsWithHighlightingTest < IntegrationTest
       link: "/some-nice-link",
     )
 
-    get "/unified_search?q=result&fields[]=title_with_highlighting"
+    get "/search?q=result&fields[]=title_with_highlighting"
 
     refute first_search_result.key?('title')
     assert_equal "Thing without",
@@ -44,7 +44,7 @@ class ResultsWithHighlightingTest < IntegrationTest
       description: "This is a test search result of many results."
     )
 
-    get "/unified_search?q=result&fields[]=description_with_highlighting"
+    get "/search?q=result&fields[]=description_with_highlighting"
 
     refute first_search_result.key?('description')
     assert_equal "This is a test search <mark>result</mark> of many <mark>results</mark>.",
@@ -58,7 +58,7 @@ class ResultsWithHighlightingTest < IntegrationTest
       description: "Escape & highlight the description as well."
     )
 
-    get "/unified_search?q=highlight&fields[]=title_with_highlighting,description_with_highlighting"
+    get "/search?q=highlight&fields[]=title_with_highlighting,description_with_highlighting"
 
     assert_equal "Escape &amp; <mark>highlight</mark> the description as well.",
       first_search_result['description_with_highlighting']
@@ -72,7 +72,7 @@ class ResultsWithHighlightingTest < IntegrationTest
       description: "word " + ("something " * 200)
     )
 
-    get "/unified_search?q=word&fields[]=description_with_highlighting"
+    get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result['description_with_highlighting']
 
     assert description.starts_with?("<mark>word</mark>")
@@ -85,7 +85,7 @@ class ResultsWithHighlightingTest < IntegrationTest
       description: ("something " * 200) + " word"
     )
 
-    get "/unified_search?q=word&fields[]=description_with_highlighting"
+    get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result['description_with_highlighting']
 
     assert description.starts_with?("…")
@@ -98,7 +98,7 @@ class ResultsWithHighlightingTest < IntegrationTest
       description: ("something " * 200) + " word " + ("something " * 200)
     )
 
-    get "/unified_search?q=word&fields[]=description_with_highlighting"
+    get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result['description_with_highlighting']
 
     assert description.ends_with?("…")

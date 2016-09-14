@@ -51,7 +51,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     # Test that a reindex re-adds all the documents with new
     # stemming settings
 
-    get "/unified_search?q=directive"
+    get "/search?q=directive"
     assert_equal 2, parsed_response["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
@@ -64,10 +64,10 @@ class ElasticsearchMigrationTest < IntegrationTest
     # Ensure the indexes have actually been switched.
     refute_equal original_index_name, index_group.current_real.real_name
 
-    get "/unified_search?q=directive"
+    get "/search?q=directive"
     assert_result_links "/important"
 
-    get "/unified_search?q=direct"
+    get "/search?q=direct"
     assert_result_links "/aliens"
   end
 
@@ -85,7 +85,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     index_group.current_real.bulk_index(extra_documents)
     commit_index
 
-    get "/unified_search?q=directive"
+    get "/search?q=directive"
     assert_equal 2, parsed_response["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
@@ -98,13 +98,13 @@ class ElasticsearchMigrationTest < IntegrationTest
     # Ensure the indexes have actually been switched.
     refute_equal original_index_name, index_group.current_real.real_name
 
-    get "/unified_search?q=directive"
+    get "/search?q=directive"
     assert_result_links "/important"
 
-    get "/unified_search?q=direct"
+    get "/search?q=direct"
     assert_result_links "/aliens"
 
-    get "/unified_search?q=Document&count=100"
+    get "/search?q=Document&count=100"
     assert_equal test_batch_size + 5, parsed_response["results"].length
   end
 
@@ -113,7 +113,7 @@ class ElasticsearchMigrationTest < IntegrationTest
 
     SearchIndices::Index.any_instance.stubs(:bulk_index).raises(SearchIndices::IndexLocked)
 
-    get "/unified_search?q=directive"
+    get "/search?q=directive"
     assert_equal 2, parsed_response["results"].length
 
     @stemmer["rules"] = ["directive => directive"]
@@ -128,7 +128,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     # Ensure the the indexes haven't been swapped
     assert_equal original_index_name, index_group.current_real.real_name
 
-    get "/unified_search?q=directive"
+    get "/search?q=directive"
     assert_equal 2, parsed_response["results"].length
   end
 
