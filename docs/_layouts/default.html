@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <title>
+      {% if page.title == null %}
+        {{ site.name }}
+      {% else %}
+        {{ page.title }} - {{ site.name }}
+      {% endif %}
+    </title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://alphagov.github.io/govuk-developers/css/fonts.css">
+    <link rel="stylesheet" href="https://alphagov.github.io/govuk-developers/css/govuk-template.css">
+    <link rel="stylesheet" href="https://alphagov.github.io/govuk-developers/css/main.css">
+  </head>
+  <body>
+    <div class="container">
+      <main id="page-container" role="main">
+        <div class="column-full-width">
+          <h1 class="page-title">GOV.UK: {{ page.title }}</h1>
+
+          <ul class='navigation'>
+            {% for p in site.pages %}
+              <li>
+                <a {% if p.url == page.url %}class="active"{% endif %} href="{{ p.url | prepend:site.baseurl }}">
+                  {{ p.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+
+          {{ content }}
+        </div>
+      </main>
+    </div>
+    </body>
+</html>
