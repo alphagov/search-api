@@ -1,4 +1,6 @@
-### Popularity information
+---
+title: Popularity information
+---
 
 The gov.uk search uses page popularity information extracted from Google
 Analytics as one of the factors in weighting search results.  This is extracted
