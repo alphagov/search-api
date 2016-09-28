@@ -1,4 +1,6 @@
-## Adding new fields to rummager
+---
+title: Adding new fields to rummager
+---
 
 ### The schema
 
