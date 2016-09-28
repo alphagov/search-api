@@ -1,5 +1,6 @@
 ---
 title: Rummager Documents API
+layout: default
 ---
 
 ### `POST /:index/documents`

@@ -1,5 +1,6 @@
 ---
 title: Search API
+layout: default
 ---
 
 This API is the main endpoint for performing searches on GOV.UK.  It supports
