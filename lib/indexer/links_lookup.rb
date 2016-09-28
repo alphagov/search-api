@@ -70,7 +70,7 @@ module Indexer
       end
 
       links_with_slugs["organisations"] = links["organisations"].to_a.map do |content_item|
-        content_item['base_path'].sub('/government/organisations/', '')
+        content_item['base_path'].sub('/government/organisations/', '').sub('/courts-tribunals/', '')
       end
 
       links_with_slugs["taxons"] = links["taxons"].to_a.map do |content_item|
