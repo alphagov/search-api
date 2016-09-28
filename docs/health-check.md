@@ -1,5 +1,6 @@
 ---
 title: Health check
+layout: default
 ---
 
 As we work on rummager we want some objective metrics of the performance of search. That's what the health check is for.

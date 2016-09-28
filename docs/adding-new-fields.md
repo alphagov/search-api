@@ -1,5 +1,6 @@
 ---
 title: Adding new fields to rummager
+layout: default
 ---
 
 ### The schema

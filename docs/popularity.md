@@ -1,5 +1,6 @@
 ---
 title: Popularity information
+layout: default
 ---
 
 The gov.uk search uses page popularity information extracted from Google
