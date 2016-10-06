@@ -25,7 +25,8 @@ module Indexer
       links = find_links(content_id)
       return doc_hash unless links
 
-      doc_hash.merge(taggings_with_slugs(links))
+      doc_hash = doc_hash.merge(taggings_with_slugs(links))
+      doc_hash.merge(taggings_with_content_ids(links))
     end
 
   private
@@ -73,11 +74,23 @@ module Indexer
         content_item['base_path'].sub('/government/organisations/', '').sub('/courts-tribunals/', '')
       end
 
-      links_with_slugs["taxons"] = links["taxons"].to_a.map do |content_item|
-        content_item['content_id']
-      end
+      links_with_slugs["taxons"] = content_ids_for(links, 'taxons')
 
       links_with_slugs
+    end
+
+    def taggings_with_content_ids(links)
+      {
+        'topic_content_ids' => content_ids_for(links, 'topics'),
+        'mainstream_browse_page_content_ids' => content_ids_for(links, 'mainstream_browse_pages'),
+        'organisation_content_ids' => content_ids_for(links, 'organisations')
+      }
+    end
+
+    def content_ids_for(links, link_type)
+      links[link_type].to_a.map do |content_item|
+        content_item['content_id']
+      end
     end
   end
 end
