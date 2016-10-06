@@ -428,6 +428,84 @@ class SearchTest < IntegrationTest
          "title" => "Ministry of Magic" }]
   end
 
+  def test_expandinging_of_organisations_via_content_id
+    reset_content_indexes
+
+    commit_document(
+      "mainstream_test",
+      title: 'Advice on Treatment of Dragons',
+      link: '/dragon-guide',
+      organisation_content_ids: ['organisation-content-id']
+    )
+
+    commit_document(
+      "government_test",
+      content_id: 'organisation-content-id',
+      slug: '/ministry-of-magic',
+      title: 'Ministry of Magic',
+      link: '/ministry-of-magic-site',
+      format: 'organisation'
+    )
+
+    get "/search.json?q=dragons"
+
+    # Adds a new key with the expanded organisations
+    assert_equal(
+      first_result['expanded_organisations'],
+      [
+        {
+          "content_id" => 'organisation-content-id',
+          "slug" => '/ministry-of-magic',
+          "link" => '/ministry-of-magic-site',
+          "title" => 'Ministry of Magic',
+        }
+      ]
+    )
+
+    # Keeps the organisation content ids
+    assert_equal(
+      first_result['organisation_content_ids'],
+      ['organisation-content-id']
+    )
+  end
+
+  def test_expandinging_of_topics
+    reset_content_indexes
+
+    commit_document("mainstream_test",
+      title: 'Advice on Treatment of Dragons',
+      link: '/dragon-guide',
+      topic_content_ids: ['topic-content-id']
+    )
+
+    commit_document("government_test",
+      content_id: 'topic-content-id',
+      slug: 'topic-magic',
+      title: 'Magic topic',
+      link: '/magic-topic-site',
+      # TODO: we should rename this format to `topic` and update all apps
+      format: 'specialist_sector'
+    )
+
+    get "/search.json?q=dragons"
+
+    # Adds a new key with the expanded topics
+    assert_equal(
+      first_result['expanded_topics'],
+      [
+        {
+          "content_id" => 'topic-content-id',
+          "slug" => "topic-magic",
+          "link" => "/magic-topic-site",
+          "title" => "Magic topic"
+        }
+      ]
+    )
+
+    # Keeps the topic content ids
+    assert_equal(first_result['topic_content_ids'], ['topic-content-id'])
+  end
+
   def test_id_search
     reset_content_indexes_with_content(section_count: 1)
 
