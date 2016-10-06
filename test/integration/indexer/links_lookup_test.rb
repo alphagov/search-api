@@ -91,6 +91,9 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "mainstream_browse_pages" => ["my-browse/1"],
       "organisations" => ["my-org/1", "my-court"],
       "taxons" => ["TAXON-1"],
+      "topic_content_ids" => ["TOPIC-CONTENT-ID-1", "TOPIC-CONTENT-ID-2"],
+      "mainstream_browse_page_content_ids" => ["BROWSE-1"],
+      "organisation_content_ids" => ["ORG-1", "ORG-2"],
     )
   end
 
@@ -116,6 +119,7 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "link" => "/my-base-path",
       "content_id" => "CONTENT-ID-OF-DOCUMENT",
       "specialist_sectors" => ["my-topic/a"],
+      "topic_content_ids" => ["TOPIC-CONTENT-ID-1"],
     )
   end
 end
