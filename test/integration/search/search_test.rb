@@ -493,6 +493,30 @@ class SearchTest < IntegrationTest
     assert(first_result['expanded_organisations'])
   end
 
+  def test_filter_by_organisation_content_ids_works
+    reset_content_indexes
+
+    commit_document(
+      "mainstream_test",
+      title: 'Advice on Treatment of Dragons',
+      link: '/dragon-guide',
+      organisation_content_ids: ['organisation-content-id']
+    )
+
+    commit_document(
+      "government_test",
+      content_id: 'organisation-content-id',
+      slug: '/ministry-of-magic',
+      title: 'Ministry of Magic',
+      link: '/ministry-of-magic-site',
+      format: 'organisation'
+    )
+
+    get "/search.json?filter_organisation_content_ids[]=organisation-content-id"
+
+    assert(first_result['expanded_organisations'])
+  end
+
   def test_expandinging_of_topics
     reset_content_indexes
 
@@ -528,6 +552,28 @@ class SearchTest < IntegrationTest
 
     # Keeps the topic content ids
     assert_equal(first_result['topic_content_ids'], ['topic-content-id'])
+  end
+
+  def test_filter_by_topic_content_ids_works
+    reset_content_indexes
+
+    commit_document("mainstream_test",
+      title: 'Advice on Treatment of Dragons',
+      link: '/dragon-guide',
+      topic_content_ids: ['topic-content-id']
+    )
+
+    commit_document("government_test",
+      content_id: 'topic-content-id',
+      slug: 'topic-magic',
+      title: 'Magic topic',
+      link: '/magic-topic-site',
+      # TODO: we should rename this format to `topic` and update all apps
+      format: 'specialist_sector'
+    )
+    get "/search.json?filter_topic_content_ids[]=topic-content-id"
+
+    assert(first_result['expanded_topics'])
   end
 
   def test_id_search
