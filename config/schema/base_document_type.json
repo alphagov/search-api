@@ -11,8 +11,10 @@
     "link",
     "mainstream_browse_pages",
     "mainstream_browse_page_content_ids",
+    "expanded_mainstream_browse_pages",
     "organisations",
     "organisation_content_ids",
+    "expanded_organisations",
     "policies",
     "popularity",
     "public_timestamp",
@@ -20,6 +22,7 @@
     "rendering_app",
     "specialist_sectors",
     "topic_content_ids",
+    "expanded_topics",
     "spelling_text",
     "title",
     "updated_at"
