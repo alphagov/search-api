@@ -446,13 +446,13 @@
     "type": "searchable_identifiers"
   },
   "tribunal_decision_category": {
-    "type": "identifiers"
+    "type": "identifier"
   },
   "tribunal_decision_category_name": {
     "type": "searchable_identifier"
   },
   "tribunal_decision_sub_category": {
-    "type": "identifiers"
+    "type": "identifier"
   },
   "tribunal_decision_sub_category_name": {
     "type": "searchable_identifier"
