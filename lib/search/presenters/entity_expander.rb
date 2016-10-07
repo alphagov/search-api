@@ -11,6 +11,7 @@
 #
 #  { "organisations": [{ "title": "Ministry of Defence", "slug": "/mod" }] }
 #
+
 module Search
   class EntityExpander
     attr_reader :registries
@@ -19,26 +20,43 @@ module Search
       @registries = registries
     end
 
-    # Field name to Registry name.
-    MAPPING = {
-      'document_series' => :document_series,
-      'document_collections' => :document_collections,
-      'organisations' => :organisations,
-      'policy_areas' => :policy_areas,
-      'world_locations' => :world_locations,
-      'specialist_sectors' => :specialist_sectors,
-      'people' => :people,
-    }.freeze
+    class Mapping
+      attr_reader :registry_name, :field_name, :new_field_name
+
+      def initialize(registry_name, new_field_name: nil)
+        @registry_name = registry_name
+        @field_name = registry_name.to_s
+        @new_field_name = new_field_name.nil? ? @field_name : new_field_name.to_s
+      end
+    end
+
+    MAPPINGS = [
+      Mapping.new(:document_series),
+      Mapping.new(:document_collections),
+      Mapping.new(:organisations),
+      Mapping.new(:policy_areas),
+      Mapping.new(:world_locations),
+      Mapping.new(:specialist_sectors),
+      Mapping.new(:people),
+      Mapping.new(
+        :topic_content_ids,
+        new_field_name: :expanded_topics
+      ),
+      Mapping.new(
+        :organisation_content_ids,
+        new_field_name: :expanded_organisations
+      ),
+    ].freeze
 
     def new_result(result)
-      MAPPING.each do |field_name, registry_name|
-        next unless result[field_name]
+      MAPPINGS.each do |mapping|
+        next unless result[mapping.field_name]
 
-        registry = registries[registry_name]
+        registry = registries[mapping.registry_name]
         next unless registry
 
-        result[field_name] = result[field_name].map do |slug|
-          item_from_registry_by_slug(registry, slug)
+        result[mapping.new_field_name] = result[mapping.field_name].map do |field|
+          fetch_expanded_version_by(field, registry, mapping)
         end
       end
 
@@ -47,14 +65,24 @@ module Search
 
   private
 
-    def item_from_registry_by_slug(registry, slug)
-      expanded_item = registry[slug]
-
-      if expanded_item
-        expanded_item.merge("slug" => slug)
+    def fetch_expanded_version_by(field, registry, mapping)
+      if [:topic_content_ids, :organisation_content_ids].include?(mapping.registry_name)
+        item_from_registry_by_content_id(registry, field)
       else
-        { "slug" => slug }
+        item_from_registry_by_slug(registry, field)
       end
+    end
+
+    def item_from_registry_by_slug(registry, slug)
+      expanded_item = registry[slug] || {}
+
+      expanded_item.merge("slug" => slug)
+    end
+
+    def item_from_registry_by_content_id(registry, content_id)
+      expanded_item = registry.by_content_id(content_id) || {}
+
+      expanded_item.merge("content_id" => content_id)
     end
   end
 end

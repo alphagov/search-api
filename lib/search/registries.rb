@@ -9,7 +9,9 @@ module Search
     def as_hash
       @registries ||= {
         organisations: organisations,
+        organisation_content_ids: organisations,
         specialist_sectors: specialist_sectors,
+        topic_content_ids: specialist_sectors,
 
         # Whitehall has a thing called `topic`, which is being renamed to "policy
         # area", because there already are seven things called "topic". Until

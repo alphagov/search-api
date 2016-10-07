@@ -20,6 +20,10 @@ module Search
       @cache.get
     end
 
+    def by_content_id(content_id)
+      all.find { |o| o['content_id'] == content_id }
+    end
+
     def [](slug)
       all.find { |o| o['slug'] == slug }
     end

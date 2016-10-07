@@ -11,6 +11,7 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
 
   def example_document
     {
+      "content_id" => "example-content-id",
       "slug" => "example-document",
       "link" => "/government/example-document",
       "title" => "Example document"
@@ -63,5 +64,16 @@ class BaseRegistryTest < MiniTest::Unit::TestCase
     # we don't need to worry about cache expiry tests here.
     Search::TimedCache.any_instance.expects(:get).with.returns([example_document])
     assert @base_registry["example-document"]
+  end
+
+  def test_find_by_content_id
+    @index.stubs(:documents_by_format)
+      .with("example-format", anything)
+      .returns([example_document])
+
+    assert_equal(
+      @base_registry.by_content_id("example-content-id"),
+      example_document
+    )
   end
 end
