@@ -469,6 +469,30 @@ class SearchTest < IntegrationTest
     )
   end
 
+  def test_search_for_expanded_organisations_works
+    reset_content_indexes
+
+    commit_document(
+      "mainstream_test",
+      title: 'Advice on Treatment of Dragons',
+      link: '/dragon-guide',
+      organisation_content_ids: ['organisation-content-id']
+    )
+
+    commit_document(
+      "government_test",
+      content_id: 'organisation-content-id',
+      slug: '/ministry-of-magic',
+      title: 'Ministry of Magic',
+      link: '/ministry-of-magic-site',
+      format: 'organisation'
+    )
+
+    get "/search.json?q=dragons&fields[]=expanded_organisations"
+
+    assert(first_result['expanded_organisations'])
+  end
+
   def test_expandinging_of_topics
     reset_content_indexes
 
