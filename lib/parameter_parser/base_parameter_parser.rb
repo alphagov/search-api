@@ -21,6 +21,12 @@ class BaseParameterParser
   # Incoming filter fields will have their names transformed according to the
   # following mapping. Fields not listed here will be passed through unchanged.
   FILTER_NAME_MAPPING = {
+    # The term `document_type` is also used by the publishing-api, but they are
+    # not the same. To prevent confusion, we're renaming it here in Rummager.
+    # https://trello.com/c/KlVeVW91.
+    "rummager_document_type" => "_type",
+
+    # DEPRECATED. Use `rummager_document_type`.
     "document_type" => "_type",
   }.freeze
 

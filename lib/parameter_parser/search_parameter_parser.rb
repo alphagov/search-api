@@ -163,9 +163,9 @@ private
   end
 
   def allowed_filter_fields
-    # document_type is a special case, because it's an alias for the internal
-    # "_type" field.
-    ["document_type"] + @schema.allowed_filter_fields
+    # rummager_document_type is a special case, because it's an alias for the
+    # internal "_type" field.
+    %w[rummager_document_type document_type] + @schema.allowed_filter_fields
   end
 
   def allowed_return_fields
