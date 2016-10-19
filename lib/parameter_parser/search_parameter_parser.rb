@@ -102,18 +102,10 @@ private
     [SORT_MAPPINGS.fetch(field, field), dir]
   end
 
-  # Get a list of the fields to request in results from elasticsearch
   def return_fields
     fields = character_separated_param("fields")
-    if fields.empty?
-      return DEFAULT_RETURN_FIELDS
-    end
-    disallowed_fields = fields - allowed_return_fields
-    fields = fields - disallowed_fields
+    return [] if fields.empty?
 
-    if disallowed_fields.any?
-      @errors << "Some requested fields are not valid return fields: #{disallowed_fields}"
-    end
     fields
   end
 

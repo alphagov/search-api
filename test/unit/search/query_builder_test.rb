@@ -14,7 +14,7 @@ class QueryBuilderTest < ShouldaUnitTestCase
 
       assert_equal 11, result[:from]
       assert_equal 34, result[:size]
-      assert result[:fields].include?('a_field')
+      assert_nil result[:fields]
       assert result.key?(:query)
     end
   end

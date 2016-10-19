@@ -9,7 +9,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       count: 10,
       query: nil,
       order: nil,
-      return_fields: BaseParameterParser::DEFAULT_RETURN_FIELDS,
+      return_fields: [],
       filters: [],
       facets: {},
       debug: {},
@@ -704,14 +704,6 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params({ return_fields: %w(title description) }), p.parsed_params)
-  end
-
-  should "complain about invalid fields parameters" do
-    p = SearchParameterParser.new({ "fields" => %w(title waffle) }, @schema)
-
-    assert_equal("Some requested fields are not valid return fields: [\"waffle\"]", p.error)
-    assert !p.valid?
-    assert_equal(expected_params({ return_fields: ["title"] }), p.parsed_params)
   end
 
   should "understand the debug parameter" do

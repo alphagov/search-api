@@ -56,7 +56,15 @@ module Search
 
     def presented_results
       es_response["hits"]["hits"].map do |raw_result|
-        ResultPresenter.new(raw_result.to_hash, @registries, @schema, search_params).present
+        results_hash = raw_result.to_hash
+        results_hash['fields'] ||= results_hash.delete('_source')
+
+        ResultPresenter.new(
+          results_hash,
+          @registries,
+          @schema,
+          search_params
+        ).present
       end
     end
 
