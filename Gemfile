@@ -34,7 +34,7 @@ else
   gem "govuk_message_queue_consumer", "~> 3.0.1"
 end
 
-gem "govuk-lint", "~> 1.0.0"
+gem "govuk-lint", "~> 1.2.1"
 
 group :test do
   gem "test-unit-minitest", "~> 0.9.1"
