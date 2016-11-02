@@ -247,8 +247,8 @@
     "type": "date"
   },
 
-  "contact_group": {
-    "type": "identifier"
+  "contact_groups": {
+    "type": "identifiers"
   },
 
   "grant_type": {
