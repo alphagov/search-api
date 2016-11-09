@@ -35,8 +35,11 @@ class BaseParameterParser
     organisations
     people
     policies
+    policy_areas
     search_format_types
     specialist_sectors
+    taxons
+    world_locations
   ).freeze
 
   # The fields for which facet examples are allowed to be requested.
