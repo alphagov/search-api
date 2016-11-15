@@ -63,6 +63,27 @@ class ElasticsearchIndexingTest < IntegrationTest
     })
   end
 
+  def test_start_and_end_dates
+    stub_tagging_lookup
+    post "/documents", {
+      "title" => "TITLE",
+      "format" => "topical_event",
+      "slug" => "/government/topical-events/foo",
+      "link" => "/government/topical-events/foo",
+      "start_date" => "2016-01-01T00:00:00Z",
+      "end_date" => "2017-01-01T00:00:00Z"
+    }.to_json
+
+    assert_document_is_in_rummager({
+      "title" => "TITLE",
+      "format" => "topical_event",
+      "slug" => "/government/topical-events/foo",
+      "link" => "/government/topical-events/foo",
+      "start_date" => "2016-01-01T00:00:00Z",
+      "end_date" => "2017-01-01T00:00:00Z"
+    })
+  end
+
   def test_adding_a_document_to_the_search_index_with_organisation_self_tagging
     stub_tagging_lookup
 

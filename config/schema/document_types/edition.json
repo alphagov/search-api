@@ -6,6 +6,7 @@
     "display_type",
     "document_collections",
     "document_series",
+    "end_date",
     "government_name",
     "has_act_paper",
     "has_command_paper",
@@ -28,6 +29,7 @@
     "search_format_types",
     "slug",
     "specialist_sectors",
+    "start_date",
     "statistics_announcement_state",
     "world_locations"
   ]

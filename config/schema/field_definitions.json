@@ -93,6 +93,16 @@
     "type": "date"
   },
 
+  "start_date": {
+    "type": "date",
+    "description": "Start date for topical content."
+  },
+
+  "end_date": {
+    "type": "date",
+    "description": "End date for topical content. Assume null means in the past for topical event pages."
+  },
+
   "latest_change_note": {
     "type": "unsearchable_text"
   },
