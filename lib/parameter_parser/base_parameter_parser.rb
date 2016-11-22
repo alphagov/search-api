@@ -12,6 +12,7 @@ class BaseParameterParser
     closing_date
     title
     tribunal_decision_decision_date
+    start_date
   ).freeze
 
   SORT_MAPPINGS = {
