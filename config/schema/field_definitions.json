@@ -162,6 +162,7 @@
   },
 
   "organisation_type": {
+    "description": "The organisation type identifier, like 'ministerial_department' or 'public_corporation'. Only applies to organisations. Expected value is the `organisation_type_key` from Whitehall, enumerated in https://github.com/alphagov/whitehall/blob/master/app/models/organisation_type.rb.",
     "type": "identifier"
   },
 
