@@ -14,11 +14,11 @@ class ResultSetTest < ShouldaUnitTestCase
     end
 
     should "report zero results" do
-      assert_equal 0, Search::ResultSet.from_elasticsearch(sample_document_types, @response).total
+      assert_equal 0, Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response).total
     end
 
     should "have an empty result set" do
-      result_set = Search::ResultSet.from_elasticsearch(sample_document_types, @response)
+      result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
       assert_equal 0, result_set.results.size
     end
   end
@@ -39,21 +39,21 @@ class ResultSetTest < ShouldaUnitTestCase
     end
 
     should "report one result" do
-      assert_equal 1, Search::ResultSet.from_elasticsearch(sample_document_types, @response).total
+      assert_equal 1, Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response).total
     end
 
     should "pass the fields to Document.from_hash" do
       expected_hash = has_entry("foo", "bar")
-      Document.expects(:from_hash).with(expected_hash, sample_document_types, anything).returns(:doc)
+      Document.expects(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).returns(:doc)
 
-      result_set = Search::ResultSet.from_elasticsearch(sample_document_types, @response)
+      result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
       assert_equal [:doc], result_set.results
     end
 
     should "pass the result score to Document.from_hash" do
-      Document.expects(:from_hash).with(is_a(Hash), sample_document_types, 12).returns(:doc)
+      Document.expects(:from_hash).with(is_a(Hash), sample_elasticsearch_types, 12).returns(:doc)
 
-      result_set = Search::ResultSet.from_elasticsearch(sample_document_types, @response)
+      result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
       assert_equal [:doc], result_set.results
     end
   end

@@ -14,7 +14,7 @@ The type you use affects whether the field is [analysed](https://www.elastic.co/
 
 Add your new field to `field_definitions.json`.
 
-If your field should be valid for any kind of document, you can add it to `base_document_type.json`. Otherwise, add it to the appropriate JSON file under `document_types`.
+If your field should be valid for any kind of document, you can add it to `base_elasticsearch_type.json`. Otherwise, add it to the appropriate JSON file under `elasticsearch_types`.
 
 ### Integration testing
 

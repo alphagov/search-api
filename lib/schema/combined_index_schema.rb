@@ -4,13 +4,13 @@ class CombinedIndexSchema
     @schema = schema
   end
 
-  def document_type(document_type_name)
-    document_types[document_type_name]
+  def elasticsearch_type(elasticsearch_type_name)
+    elasticsearch_types[elasticsearch_type_name]
   end
 
-  def document_types
-    @document_types ||= @index_names.inject({}) { |results, index_name|
-      results.merge(@schema.document_types(index_name))
+  def elasticsearch_types
+    @elasticsearch_types ||= @index_names.inject({}) { |results, index_name|
+      results.merge(@schema.elasticsearch_types(index_name))
     }
   end
 
@@ -45,8 +45,8 @@ private
   # called.
   # Returns obj.
   def each_field_with_object(obj, &_block)
-    document_types.values.each do |document_type|
-      document_type.fields.each do |field_name, field_definition|
+    elasticsearch_types.values.each do |elasticsearch_type|
+      elasticsearch_type.fields.each do |field_name, field_definition|
         yield field_name, field_definition, obj
       end
     end

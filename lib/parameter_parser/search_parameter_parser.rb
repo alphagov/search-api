@@ -163,6 +163,8 @@ private
   end
 
   def allowed_filter_fields
+    # TODO: Clients should not use this `document_type`
+
     # document_type is a special case, because it's an alias for the internal
     # "_type" field.
     ["document_type"] + @schema.allowed_filter_fields

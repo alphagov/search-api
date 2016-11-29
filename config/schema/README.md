@@ -67,19 +67,21 @@ value has the following properties:
    the same format as the top-level field definitions in the file (and could
    even be recursive).
 
-## Document types
+## Elasticsearch document types
 
 Documents in an elasticsearch index have a type, and each type may have very
-different configuration.  We define a basic configuration which is used across
-all document types, and additional configuration for each document type is then
-merged with this.
+different configuration. We call this type "elasticsearch type" to differentiate
+with the `document_type` used by GOV.UK to describe types of pages.
 
-The basic configuration is defined in a `base_document_type.json` file.
-Document types are defined in the `document_types` directory, with the
+We define a  basic configuration which is used across all document types, and
+additional configuration for each document type is then merged with this.
+
+The basic configuration is defined in a `base_elasticsearch_type.json` file.
+Document types are defined in the `elasticsearch_types` directory, with the
 additional configuration for each type being defined by a JSON file in that
 directory.
 
-The document type files contain JSON object with the following keys:
+The files contain JSON object with the following keys:
 
  - `fields`: An array of field names which are allowed in documents of this
    type.  The field names must be defined in the `field_definitions.json` file.
@@ -112,7 +114,7 @@ The document type files contain JSON object with the following keys:
 Indexes in elasticsearch are defined by files in the `indexes` directory.
 These files contain a JSON object with the following keys:
 
- - `document_types`: An array of the names of the document types allowed in this index.
+ - `elasticsearch_types`: An array of the names of the document types allowed in this index.
 
 ## Synonyms
 

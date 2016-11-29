@@ -1,50 +1,50 @@
 require "json"
 
 class IndexSchema
-  attr_reader :name, :document_types
+  attr_reader :name, :elasticsearch_types
 
-  def initialize(name, document_types)
+  def initialize(name, elasticsearch_types)
     @name = name
-    @document_types = Hash[document_types.map { |document_type|
-      [document_type.name, document_type]
+    @elasticsearch_types = Hash[elasticsearch_types.map { |elasticsearch_type|
+      [elasticsearch_type.name, elasticsearch_type]
     }]
   end
 
   def es_mappings
-    @document_types.reduce({}) { |mappings, (type_name, document_type)|
+    @elasticsearch_types.reduce({}) { |mappings, (type_name, elasticsearch_type)|
       mappings[type_name] = {
-        "properties" => document_type.es_config
+        "properties" => elasticsearch_type.es_config
       }
       mappings
     }
   end
 
-  def document_type(document_type_name)
-    @document_types[document_type_name]
+  def elasticsearch_type(elasticsearch_type_name)
+    @elasticsearch_types[elasticsearch_type_name]
   end
 end
 
 class IndexSchemaParser
-  def initialize(index_name, schema_file_path, known_document_types)
+  def initialize(index_name, schema_file_path, known_elasticsearch_types)
     @index_name = index_name
     @schema_file_path = schema_file_path
-    @known_document_types = known_document_types
+    @known_elasticsearch_types = known_elasticsearch_types
   end
 
   def parse
-    document_type_names = parse_file
+    elasticsearch_type_names = parse_file
 
     IndexSchema.new(
       @index_name,
-      lookup_document_types(document_type_names),
+      lookup_elasticsearch_types(elasticsearch_type_names),
     )
   end
 
-  def self.parse_all(config_path, known_document_types)
+  def self.parse_all(config_path, known_elasticsearch_types)
     Hash[IndexSchemaParser::index_schema_paths(config_path).map { |index_name, schema_file_path|
       [
         index_name,
-        IndexSchemaParser.new(index_name, schema_file_path, known_document_types).parse
+        IndexSchemaParser.new(index_name, schema_file_path, known_elasticsearch_types).parse
       ]
     }]
   end
@@ -64,29 +64,29 @@ class IndexSchemaParser
 
 private
 
-  def lookup_document_types(document_type_names)
-    document_type_names.map { |document_type_name|
-      document_type = @known_document_types[document_type_name]
-      if document_type.nil?
-        raise_error %{Unknown document type "#{document_type_name}"}
+  def lookup_elasticsearch_types(elasticsearch_type_names)
+    elasticsearch_type_names.map { |elasticsearch_type_name|
+      elasticsearch_type = @known_elasticsearch_types[elasticsearch_type_name]
+      if elasticsearch_type.nil?
+        raise_error %{Unknown document type "#{elasticsearch_type_name}"}
       end
-      document_type
+      elasticsearch_type
     }
   end
 
   def parse_file
     raw = load_json
 
-    document_type_names = raw.delete("document_types")
-    if document_type_names.nil?
-      raise_error %{Missing "document_types"}
+    elasticsearch_type_names = raw.delete("elasticsearch_types")
+    if elasticsearch_type_names.nil?
+      raise_error %{Missing "elasticsearch_types"}
     end
 
     unless raw.empty?
       raise_error %{Unknown keys (#{raw.keys.join(", ")})}
     end
 
-    document_type_names
+    elasticsearch_type_names
   end
 
   def raise_error(message)

@@ -294,7 +294,7 @@ class SearchTest < IntegrationTest
     assert first_hit_explain.keys.include?("details")
   end
 
-  def test_can_scope_by_document_type
+  def test_can_scope_by_elasticsearch_type
     reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 

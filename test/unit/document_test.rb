@@ -11,7 +11,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "indexable_content" => "HERE IS SOME CONTENT",
     }
 
-    document = Document.from_hash(hash, sample_document_types)
+    document = Document.from_hash(hash, sample_elasticsearch_types)
 
     assert_equal "TITLE", document.title
     assert_equal "DESCRIPTION", document.description
@@ -27,7 +27,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "stemmed_query" => "jobs"
     }
 
-    document = Document.from_hash(hash, sample_document_types)
+    document = Document.from_hash(hash, sample_elasticsearch_types)
 
     assert_equal "jobs", document.to_hash["stemmed_query"]
     assert_equal "jobs", document.stemmed_query
@@ -46,7 +46,7 @@ class DocumentTest < MiniTest::Unit::TestCase
     }
 
     assert_raises RuntimeError do
-      Document.from_hash(hash, sample_document_types)
+      Document.from_hash(hash, sample_elasticsearch_types)
     end
   end
 
@@ -59,7 +59,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "some_other_field" => "test"
     }
 
-    document = Document.from_hash(hash, sample_document_types)
+    document = Document.from_hash(hash, sample_elasticsearch_types)
 
     refute_includes document.to_hash.keys, "some_other_field"
     refute document.respond_to?("some_other_field")
@@ -74,7 +74,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       indexable_content: "HERE IS SOME CONTENT"
     }
 
-    document = Document.from_hash(hash, sample_document_types)
+    document = Document.from_hash(hash, sample_elasticsearch_types)
 
     assert_equal "TITLE", document.title
   end
@@ -88,7 +88,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "indexable_content" => "HERE IS SOME CONTENT"
     }
 
-    document = Document.from_hash(hash, sample_document_types)
+    document = Document.from_hash(hash, sample_elasticsearch_types)
     assert_equal hash, document.to_hash
   end
 
@@ -100,7 +100,7 @@ class DocumentTest < MiniTest::Unit::TestCase
       "link" => "/an-example-guide"
     }
 
-    document = Document.from_hash(hash, sample_document_types)
+    document = Document.from_hash(hash, sample_elasticsearch_types)
     assert_equal hash.keys.sort, document.to_hash.keys.sort
   end
 
@@ -112,7 +112,7 @@ class DocumentTest < MiniTest::Unit::TestCase
         "format" => "guide",
         "link" => "/an-example-guide",
     }
-    document = Document.from_hash(hash, sample_document_types)
+    document = Document.from_hash(hash, sample_elasticsearch_types)
 
     assert_equal hash.keys.sort, document.elasticsearch_export.keys.sort
   end

@@ -48,7 +48,7 @@ rebuild the index nightly to incorporate the latest analytics.
 	type](https://www.elastic.co/guide/en/elasticsearch/guide/current/mapping.html)
 	specifies the fields for a particular type of document. All our document
 	types are defined in
-	[config/schema/document_types](config/schema/document_types)
+	[config/schema/elasticsearch_types](config/schema/elasticsearch_types)
 - **Index**: An [elasticsearch search
 	index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Rummager
 	maintains several separate indices (`mainstream`, `details`, `government`,

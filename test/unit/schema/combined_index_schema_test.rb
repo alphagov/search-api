@@ -12,7 +12,7 @@ class CombinedIndexSchemaTest < MiniTest::Unit::TestCase
 
   def test_basic_field_definitions
     # The title and public_timestamp fields are defined in the
-    # base_document_type, so are available in all documents holding content.
+    # base_elasticsearch_type, so are available in all documents holding content.
     assert_equal "searchable_sortable_text", @combined_schema.field_definitions["title"].type.name
     assert_equal "searchable_text", @combined_schema.field_definitions["description"].type.name
     assert_equal "date", @combined_schema.field_definitions["public_timestamp"].type.name
