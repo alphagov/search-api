@@ -8,17 +8,17 @@ module Search
       @total = total
     end
 
-    def self.from_elasticsearch(document_types, elasticsearch_response)
+    def self.from_elasticsearch(elasticsearch_types, elasticsearch_response)
       total = elasticsearch_response["hits"]["total"]
       results = elasticsearch_response["hits"]["hits"].map { |hit|
-        document_from_hit(hit, document_types)
+        document_from_hit(hit, elasticsearch_types)
       }.freeze
 
       ResultSet.new(results, total)
     end
 
-    def self.document_from_hit(hit, document_types)
-      Document.from_hash(hit["_source"], document_types, hit["_score"])
+    def self.document_from_hit(hit, elasticsearch_types)
+      Document.from_hash(hit["_source"], elasticsearch_types, hit["_score"])
     end
   end
 end

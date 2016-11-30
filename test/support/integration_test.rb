@@ -14,7 +14,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
 
   def sample_document
-    Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_document_types)
+    Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_elasticsearch_types)
   end
 
   def insert_document(index_name, attributes)

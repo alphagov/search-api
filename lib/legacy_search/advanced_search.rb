@@ -5,9 +5,9 @@ module LegacySearch
   end
 
   class AdvancedSearch
-    def initialize(mappings, document_types, client, index_name)
+    def initialize(mappings, elasticsearch_types, client, index_name)
       @mappings = mappings
-      @document_types = document_types
+      @elasticsearch_types = elasticsearch_types
       @client = client
       @index_name = index_name
     end
@@ -38,7 +38,7 @@ module LegacySearch
 
       payload.merge!(query_builder.query_hash)
 
-      Search::ResultSet.from_elasticsearch(@document_types, raw_search(payload))
+      Search::ResultSet.from_elasticsearch(@elasticsearch_types, raw_search(payload))
     end
 
   private

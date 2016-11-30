@@ -1,6 +1,6 @@
 require "json"
 require "yaml"
-require_relative "document_types"
+require_relative "elasticsearch_type"
 require_relative "field_definitions"
 require_relative "index_schema"
 require_relative "synonyms"
@@ -11,8 +11,8 @@ class SchemaConfig
   def initialize(config_path)
     @config_path = config_path
     @field_definitions = FieldDefinitionParser.new(config_path).parse
-    @document_types = DocumentTypesParser.new(config_path, @field_definitions).parse
-    @index_schemas = IndexSchemaParser.parse_all(config_path, @document_types)
+    @elasticsearch_types = ElasticsearchTypesParser.new(config_path, @field_definitions).parse
+    @index_schemas = IndexSchemaParser.parse_all(config_path, @elasticsearch_types)
     @index_synonyms, @search_synonyms = SynonymParser.new(config_path).parse
   end
 
@@ -29,9 +29,9 @@ class SchemaConfig
     @settings ||= elasticsearch_index["settings"]
   end
 
-  def document_types(index_name)
+  def elasticsearch_types(index_name)
     index_name = index_name.sub(/[-_]test$/, '')
-    @index_schemas.fetch(index_name).document_types
+    @index_schemas.fetch(index_name).elasticsearch_types
   end
 
   def elasticsearch_mappings(index_name)

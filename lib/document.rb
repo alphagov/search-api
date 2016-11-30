@@ -10,11 +10,11 @@ class Document
     @type = attributes["_type"]
   end
 
-  def self.from_hash(hash, document_types, es_score = nil)
+  def self.from_hash(hash, elasticsearch_types, es_score = nil)
     type = hash["_type"] || "edition"
-    doc_type = document_types[type]
+    doc_type = elasticsearch_types[type]
     if doc_type.nil?
-      raise "Unexpected document type '#{type}'. Document types must be configured"
+      raise "Unexpected elasticsearch type '#{type}'. Document types must be configured"
     end
     self.new(doc_type.fields, hash, es_score)
   end

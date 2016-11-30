@@ -22,6 +22,7 @@ class BaseParameterParser
   # Incoming filter fields will have their names transformed according to the
   # following mapping. Fields not listed here will be passed through unchanged.
   FILTER_NAME_MAPPING = {
+    # TODO: clients should not use `document_type` to search for documents.
     "document_type" => "_type",
   }.freeze
 

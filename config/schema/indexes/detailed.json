@@ -1,5 +1,5 @@
 {
-  "document_types": [
+  "elasticsearch_types": [
     "edition"
   ]
 }

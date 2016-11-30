@@ -1,5 +1,5 @@
 {
-  "document_types": [
+  "elasticsearch_types": [
     "aaib_report",
     "asylum_support_decision",
     "cma_case",

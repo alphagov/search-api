@@ -1,5 +1,5 @@
 require "schema/field_definitions"
-require "schema/document_types"
+require "schema/elasticsearch_type"
 
 module SchemaHelpers
   SCHEMA_DIR = File.expand_path('../../config/schema', File.dirname(__FILE__))
@@ -16,8 +16,8 @@ module SchemaHelpers
     end
   end
 
-  def sample_document_types
-    @sample_document_types ||= DocumentTypesParser.new(SCHEMA_DIR, sample_field_definitions).parse
+  def sample_elasticsearch_types
+    @sample_elasticsearch_types ||= ElasticsearchTypesParser.new(SCHEMA_DIR, sample_field_definitions).parse
   end
 
   def sample_schema

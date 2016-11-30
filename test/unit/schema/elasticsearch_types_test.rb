@@ -1,7 +1,7 @@
 require "test_helper"
-require "schema/document_types"
+require "schema/elasticsearch_type"
 
-class DocumentTypesTest < ShouldaUnitTestCase
+class ElasticsearchTypesTest < ShouldaUnitTestCase
   def assert_raises_message(message)
     exc = assert_raises(RuntimeError) { yield }
     assert_equal message, exc.message
@@ -27,7 +27,7 @@ class DocumentTypesTest < ShouldaUnitTestCase
   context "after loading standard types" do
     setup do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
-      @types = DocumentTypesParser.new(schema_dir, field_definitions).parse
+      @types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
       @identifier_es_config = { "type" => "string", "index" => "not_analyzed", "include_in_all" => false }
     end
 
@@ -82,23 +82,23 @@ class DocumentTypesTest < ShouldaUnitTestCase
   context "when configuration is invalid" do
     setup do
       @definitions = FieldDefinitionParser.new(schema_dir).parse
-      @parser = DocumentTypeParser.new("/config/path/doc_type.json", nil, @definitions)
+      @parser = ElasticsearchTypeParser.new("/config/path/doc_type.json", nil, @definitions)
     end
 
     should "fail if document type doesn't specify `fields`" do
-      DocumentTypeParser.any_instance.stubs(:load_json).returns({})
+      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({})
       assert_raises_message(%{Missing "fields", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
     end
 
     should "fail if document type specifies unknown entries in `fields`" do
-      DocumentTypeParser.any_instance.stubs(:load_json).returns({
+      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({
         "fields" => ["unknown_field"],
       })
       assert_raises_message(%{Undefined field \"unknown_field\", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
     end
 
     should "fail if document type has an unknown property" do
-      DocumentTypeParser.any_instance.stubs(:load_json).returns({
+      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({
         "fields" => [],
         "unknown" => [],
       })
@@ -106,7 +106,7 @@ class DocumentTypesTest < ShouldaUnitTestCase
     end
 
     should "fail if `expanded_search_result_fields` are specified in base type" do
-      DocumentTypeParser.any_instance.stubs(:load_json).returns({
+      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({
         "fields" => ["case_state"],
         "expanded_search_result_fields" => {
           "case_state" => cma_case_expanded_search_result_fields,
@@ -114,14 +114,14 @@ class DocumentTypesTest < ShouldaUnitTestCase
       })
       base_type = @parser.parse
 
-      subtype_parser = DocumentTypeParser.new("/config/path/subtype.json", base_type, @definitions)
-      DocumentTypeParser.any_instance.stubs(:load_json).returns({ "fields" => [] })
+      subtype_parser = ElasticsearchTypeParser.new("/config/path/subtype.json", base_type, @definitions)
+      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({ "fields" => [] })
 
       assert_raises_message(%{Specifying `expanded_search_result_fields` in base document type is not supported, in document type definition in "/config/path/subtype.json"}) { subtype_parser.parse }
     end
 
     should "fail if expanded_search_result_fields are set for fields which aren't known" do
-      DocumentTypeParser.any_instance.stubs(:load_json).returns({
+      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({
         "fields" => ["case_state"],
         "expanded_search_result_fields" => {
           "unknown_field" => cma_case_expanded_search_result_fields,

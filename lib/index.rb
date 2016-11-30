@@ -34,7 +34,7 @@ module SearchIndices
       raise ArgumentError, "Missing index_name parameter" unless @index_name
       @mappings = mappings
       @search_config = search_config
-      @document_types = @search_config.schema_config.document_types(base_index_name)
+      @elasticsearch_types = @search_config.schema_config.elasticsearch_types(base_index_name)
       @is_content_index = !(@search_config.auxiliary_index_names.include? base_index_name)
     end
 
@@ -143,7 +143,7 @@ module SearchIndices
     end
 
     def document_from_hash(hash)
-      Document.from_hash(hash, @document_types)
+      Document.from_hash(hash, @elasticsearch_types)
     end
 
     def all_documents(options = nil)
@@ -190,7 +190,7 @@ module SearchIndices
     end
 
     def advanced_search(params)
-      LegacySearch::AdvancedSearch.new(@mappings, @document_types, @client, @index_name).result_set(params)
+      LegacySearch::AdvancedSearch.new(@mappings, @elasticsearch_types, @client, @index_name).result_set(params)
     end
 
     def raw_search(payload, type = nil)

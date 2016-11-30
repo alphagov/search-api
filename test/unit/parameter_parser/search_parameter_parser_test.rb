@@ -338,6 +338,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     )
   end
 
+  # TODO: this is deprecated behaviour
   should "rewrite document_type filter to _type filter" do
     parser = SearchParameterParser.new(
       { "filter_document_type" => ["cma_case"] },

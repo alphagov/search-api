@@ -1,6 +1,6 @@
 require "json"
 
-class DocumentType
+class ElasticsearchType
   attr_reader :name, :fields, :expanded_search_result_fields
 
   def initialize(name, fields, expanded_search_result_fields)
@@ -16,7 +16,7 @@ class DocumentType
   end
 end
 
-class DocumentTypeParser
+class ElasticsearchTypeParser
   attr_reader :file_path, :base_type, :field_definitions
 
   def initialize(file_path, base_type, field_definitions)
@@ -44,7 +44,7 @@ class DocumentTypeParser
 
     add_expanded_search_result_fields_to_field_definitions(fields, expanded_search_result_fields)
 
-    DocumentType.new(type_name, fields, expanded_search_result_fields)
+    ElasticsearchType.new(type_name, fields, expanded_search_result_fields)
   end
 
 private
@@ -99,7 +99,7 @@ private
   end
 end
 
-class DocumentTypesParser
+class ElasticsearchTypesParser
   attr_reader :config_path
 
   def initialize(config_path, field_definitions)
@@ -108,10 +108,10 @@ class DocumentTypesParser
   end
 
   def parse
-    Hash[document_type_paths.map { |document_type, file_path|
+    Hash[elasticsearch_type_paths.map { |elasticsearch_type, file_path|
       [
-        document_type,
-        DocumentTypeParser.new(file_path, base_type, @field_definitions).parse,
+        elasticsearch_type,
+        ElasticsearchTypeParser.new(file_path, base_type, @field_definitions).parse,
       ]
     }]
   end
@@ -119,15 +119,15 @@ class DocumentTypesParser
 private
 
   def base_type
-    @base_type ||= DocumentTypeParser.new(
-      File.join(config_path, "base_document_type.json"),
+    @base_type ||= ElasticsearchTypeParser.new(
+      File.join(config_path, "base_elasticsearch_type.json"),
       nil,
       @field_definitions,
     ).parse
   end
 
-  def document_type_paths
-    files = Dir.new(File.join(config_path, "document_types"))
+  def elasticsearch_type_paths
+    files = Dir.new(File.join(config_path, "elasticsearch_types"))
 
     json_files = files.select do |filename|
       filename =~ /\A[a-z][-_a-z]*\.json\z/
@@ -136,12 +136,12 @@ private
     json_files.map do |filename|
       [
         filename.sub(/.json$/, ''),
-        File.join(config_path, "document_types", filename),
+        File.join(config_path, "elasticsearch_types", filename),
       ]
     end
   end
 
-  def document_type_raw
+  def elasticsearch_type_raw
     files.each.with_object({}) do |filename, doctypes|
       doctype = filename.split(".").first
       doctypes[doctype] = load_doctype(filename)

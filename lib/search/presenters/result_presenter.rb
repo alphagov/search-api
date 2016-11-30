@@ -72,7 +72,7 @@ module Search
     def document_schema
       @document_schema ||= begin
         index_schema = schema.schema_for_alias_name(raw_result["_index"])
-        index_schema.document_type(raw_result["_type"])
+        index_schema.elasticsearch_type(raw_result["_type"])
       end
     end
 
@@ -92,7 +92,9 @@ module Search
         result[:_explanation] = raw_result["_explanation"]
       end
 
+      # TODO: clients should not use this.
       result[:document_type] = raw_result["_type"]
+
       result
     end
 

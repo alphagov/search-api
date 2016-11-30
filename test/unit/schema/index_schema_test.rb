@@ -14,8 +14,8 @@ class IndexSchemaTest < ShouldaUnitTestCase
   context "after loading standard index schemas" do
     setup do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
-      document_types = DocumentTypesParser.new(schema_dir, field_definitions).parse
-      @index_schemas = IndexSchemaParser.parse_all(schema_dir, document_types)
+      elasticsearch_types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
+      @index_schemas = IndexSchemaParser.parse_all(schema_dir, elasticsearch_types)
       @identifier_es_config = { "type" => "string", "index" => "not_analyzed", "include_in_all" => false }
     end
 
@@ -39,25 +39,25 @@ class IndexSchemaTest < ShouldaUnitTestCase
   context "when configuration is invalid" do
     setup do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
-      document_types = DocumentTypesParser.new(schema_dir, field_definitions).parse
-      @parser = IndexSchemaParser.new("index", "index.json", document_types)
+      elasticsearch_types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
+      @parser = IndexSchemaParser.new("index", "index.json", elasticsearch_types)
     end
 
     should "fail if index schema specifies an unknown document type" do
       IndexSchemaParser.any_instance.stubs(:load_json).returns({
-        "document_types" => ["unknown_doc_type"],
+        "elasticsearch_types" => ["unknown_doc_type"],
       })
       assert_raises_message(%{Unknown document type "unknown_doc_type", in index definition in "index.json"}) { @parser.parse }
     end
 
-    should "fail if index schema doesn't specify `document_types`" do
+    should "fail if index schema doesn't specify `elasticsearch_types`" do
       IndexSchemaParser.any_instance.stubs(:load_json).returns({})
-      assert_raises_message(%{Missing "document_types", in index definition in "index.json"}) { @parser.parse }
+      assert_raises_message(%{Missing "elasticsearch_types", in index definition in "index.json"}) { @parser.parse }
     end
 
     should "fail if index schema includes unknown keys" do
       IndexSchemaParser.any_instance.stubs(:load_json).returns({
-        "document_types" => [],
+        "elasticsearch_types" => [],
         "foo" => "bar",
       })
       assert_raises_message(%{Unknown keys (foo), in index definition in "index.json"}) { @parser.parse }
