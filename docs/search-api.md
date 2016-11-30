@@ -1,7 +1,4 @@
----
-title: Search API
-layout: default
----
+# Search API
 
 This API is the main endpoint for performing searches on GOV.UK.  It supports
 keyword searching, ordering by relevance or date fields, filtering and

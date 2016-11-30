@@ -1,7 +1,4 @@
----
-title: Rummager Content API
-layout: default
----
+# Rummager Content API
 
 ### `GET /content/?link=/a-link`
 
