@@ -30,6 +30,7 @@ class BaseParameterParser
   ALLOWED_FACET_FIELDS = %w(
     detailed_format
     document_collections
+    document_series
     format
     mainstream_browse_pages
     manual
