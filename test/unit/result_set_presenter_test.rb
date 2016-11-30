@@ -219,7 +219,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
     end
 
     should 'return only basic metadata of fields' do
-      expected_keys = [:index, :es_score, :_id, :document_type]
+      expected_keys = [:index, :es_score, :_id, :elasticsearch_type, :document_type]
 
       assert_equal expected_keys, @output[:results].first.keys
     end

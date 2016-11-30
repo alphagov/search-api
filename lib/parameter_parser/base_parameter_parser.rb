@@ -24,6 +24,7 @@ class BaseParameterParser
   FILTER_NAME_MAPPING = {
     # TODO: clients should not use `document_type` to search for documents.
     "document_type" => "_type",
+    "elasticsearch_type" => "_type",
   }.freeze
 
   # The fields listed here are the only ones which can be used to calculated

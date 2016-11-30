@@ -163,11 +163,10 @@ private
   end
 
   def allowed_filter_fields
-    # TODO: Clients should not use this `document_type`
-
-    # document_type is a special case, because it's an alias for the internal
+    # `document_type` & `elasticsearch_type` are aliases for the internal
     # "_type" field.
-    ["document_type"] + @schema.allowed_filter_fields
+    # TODO: Clients should not use this `document_type`.
+    %w[document_type elasticsearch_type] + @schema.allowed_filter_fields
   end
 
   def allowed_return_fields

@@ -92,7 +92,10 @@ module Search
         result[:_explanation] = raw_result["_explanation"]
       end
 
-      # TODO: clients should not use this.
+      result[:elasticsearch_type] = raw_result["_type"]
+
+      # TODO: clients should not use this. It's probably only used in the
+      # search results in the `frontend` application.
       result[:document_type] = raw_result["_type"]
 
       result
