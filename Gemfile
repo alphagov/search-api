@@ -22,7 +22,7 @@ gem "redis-namespace", "~> 1.5.2"
 gem "statsd-ruby", "~> 1.3.0"
 
 gem "plek", "~> 1.12"
-gem "gds-api-adapters", "~> 31.0"
+gem "gds-api-adapters", "~> 37.5"
 gem "rack-logstasher", "~> 0.0.3"
 gem "airbrake", "~> 4.3.6"
 gem "unf", "~> 0.1.4"
