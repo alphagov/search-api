@@ -195,4 +195,10 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     assert_result_total 5
     assert_result_links "/yet-another-example-answer", "/another-example-answer", "/pork-pies", "/an-example-answer"
   end
+
+  def test_does_not_allow_page_to_be_super_high
+    get "/#{@index_name}/advanced_search.json?per_page=4&page=500001&order[updated_at]=desc"
+
+    assert_equal 422, last_response.status
+  end
 end

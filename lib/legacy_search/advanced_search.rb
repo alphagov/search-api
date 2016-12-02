@@ -24,6 +24,10 @@ module LegacySearch
       per_page  = params.delete("per_page").to_i
       page      = params.delete("page").to_i
 
+      if page > 500_000
+        raise LegacySearch::InvalidQuery, "The maximum for `page` parameter is 500000."
+      end
+
       query_builder = AdvancedSearchQueryBuilder.new(keywords, params, order, @mappings)
 
       unless query_builder.valid?
