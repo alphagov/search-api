@@ -123,6 +123,7 @@ For the most up to date query syntax and API output:
 
 ### Additional Docs
 
+- [Schemas](docs/schemas.md): how to work with schemas and the document types 
 - [Health Check](docs/health-check.md): usage instructions for the Health Check
 	functionality.
 - [Popularity information](docs/popularity.md): Rummager uses Google Analytics
