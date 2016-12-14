@@ -36,6 +36,7 @@ class BaseParameterParser
     format
     mainstream_browse_pages
     manual
+    organisation_type
     organisations
     people
     policies
