@@ -498,5 +498,10 @@
   "dfid_document_type": {
     "description": "The document type of the output (e.g. Book Chapter, Conference Paper)",
     "type": "searchable_identifier"
+  },
+
+  "assessment_date": {
+    "description": "The date when the assessment was held.",
+    "type": "date"
   }
 }
