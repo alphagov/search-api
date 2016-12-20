@@ -29,7 +29,7 @@ def words_without_punctuation(copy)
   copy.split(/\s+/) # this will include lots of things not wordy, and include variations that have eg punctuation
 end
 
-# The indexes which make up GOV.UK. Excludes the Service Manual
+# The indexes which make up GOV.UK.
 index_names = %w(mainstream detailed government)
 search_server = SearchConfig.new.search_server
 indices = index_names.map { |name| search_server.index(name) }

@@ -1,14 +1,13 @@
 require_relative 'query_components/suggest'
 require_relative 'suggestion_blacklist'
 
-# Elasticsearch tries to find spelling suggestions for words that don't occur
-# in our content, as they are probably mispelled. However, currently it is
+# Elasticsearch tries to find spelling suggestions for words that don't occur in
+# our content, as they are probably mispelled. However, currently it is
 # returning suggestions for words that do not occur in *every* index. Because
-# the `service-manual` index contains very few words, elasticsearch returns
-# too many spelling suggestions for common terms. For example, using the
-# suggester on all four indices will yield a suggestion for "PAYE", because
-# it's mentioned only in the `government` index, and not the `service-manual`
-# index.
+# some indexes contain very few words, Elasticsearch returns too many spelling
+# suggestions for common terms. For example, using the suggester on all indices
+# will yield a suggestion for "PAYE", because it's mentioned only in the
+# `government` index, and not in other indexes.
 #
 # This issue is mentioned in
 # https://github.com/elastic/elasticsearch/issues/7472.

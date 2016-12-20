@@ -4,7 +4,6 @@ require_relative "text_query"
 module QueryComponents
   class Query < BaseComponent
     GOVERNMENT_BOOST_FACTOR = 0.4
-    SERVICE_MANUAL_BOOST_FACTOR = 0.1
 
     def payload
       QueryComponents::BestBets.new(search_params).wrap(query_hash)
@@ -22,18 +21,7 @@ module QueryComponents
               boost_factor: GOVERNMENT_BOOST_FACTOR
             }
           },
-          no_match_query: {
-            indices: {
-              index: :"service-manual",
-              query: {
-                function_score: {
-                  query: base_query,
-                  boost_factor: SERVICE_MANUAL_BOOST_FACTOR
-                }
-              },
-              no_match_query: base_query
-            }
-          }
+          no_match_query: base_query
         }
       }
     end
