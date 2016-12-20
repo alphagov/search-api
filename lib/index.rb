@@ -38,8 +38,8 @@ module SearchIndices
       @is_content_index = !(@search_config.auxiliary_index_names.include? base_index_name)
     end
 
-    # Translate index names like `mainstream-2015-05-06t09..` into its
-    # proper name, eg. "mainstream", "government" or "service-manual".
+    # Translate index names like `mainstream-2015-05-06t09..` into its proper
+    # name, eg. "mainstream" or "government".
     # The regex takes the string until the first digit. After that, strip any
     # trailing dash from the string.
     def self.strip_alias_from_index_name(aliased_index_name)

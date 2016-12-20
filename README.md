@@ -51,8 +51,8 @@ rebuild the index nightly to incorporate the latest analytics.
 	[config/schema/elasticsearch_types](config/schema/elasticsearch_types)
 - **Index**: An [elasticsearch search
 	index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Rummager
-	maintains several separate indices (`mainstream`, `details`, `government`,
-	and `service-manual`), but searches return documents from all of them.
+	maintains several separate indices (`mainstream`, `details` and `government`),
+	but searches return documents from all of them.
 - **Index Group**: An alias in elasticsearch that points to one index at a
 	time. This allows us to rebuild indexes without downtime.
 

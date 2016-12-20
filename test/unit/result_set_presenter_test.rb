@@ -182,7 +182,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
 
     should "have short index names" do
       @output[:results].each do |result|
-        assert_contains %w[mainstream government service-manual], result[:index]
+        assert_contains %w[mainstream government], result[:index]
       end
     end
 
@@ -251,7 +251,7 @@ class ResultSetPresenterTest < ShouldaUnitTestCase
 
     should "have short index names" do
       @output[:results].each do |result|
-        assert_contains %w[mainstream government service-manual], result[:index]
+        assert_contains %w[mainstream government], result[:index]
       end
     end
 
