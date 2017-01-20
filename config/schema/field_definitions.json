@@ -503,5 +503,10 @@
   "assessment_date": {
     "description": "The date when the assessment was held.",
     "type": "date"
+  },
+
+  "content_store_document_type": {
+    "description": "The document type as stored in the Content Store",
+    "type": "identifier"
   }
 }
