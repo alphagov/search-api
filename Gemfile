@@ -25,6 +25,7 @@ gem "plek", "~> 1.12"
 gem "gds-api-adapters", "~> 37.5"
 gem "rack-logstasher", "~> 0.0.3"
 gem "airbrake", "~> 4.3.6"
+gem 'appsignal', '~> 2.0'
 gem "unf", "~> 0.1.4"
 gem "elasticsearch", "~> 1.0.15"
 
