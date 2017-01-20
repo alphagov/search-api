@@ -3,6 +3,7 @@
     "all_searchable_text",
     "taxons",
     "content_id",
+    "content_store_document_type",
     "description",
     "format",
     "indexable_content",
