@@ -1,14 +1,22 @@
 require "gds_api/rummager"
-require "json"
-require_relative "../parameter_parser/base_parameter_parser"
 
 class DataInconsistencyError < StandardError
 end
 
 desc "Check for and report any non-expanded facet values"
 task :report_inconsistent_facet_values do
-  # List of facets to check
-  facets = BaseParameterParser::ALLOWED_FACET_FIELDS
+  # List of expandable facets
+  # Same as in `lib/search/presenters/entity_expander.rb` minus
+  # the content_id mappings which are not valid facet fields.
+  facets = %w(
+    document_series
+    document_collections
+    organisations
+    policy_areas
+    world_locations
+    specialist_sectors
+    people
+  )
 
   rummager = GdsApi::Rummager.new(Plek.new.find("rummager"))
   facet_values_to_report = {}
