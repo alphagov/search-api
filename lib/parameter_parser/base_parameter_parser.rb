@@ -46,6 +46,7 @@ class BaseParameterParser
     specialist_sectors
     taxons
     world_locations
+    content_store_document_type
   ).freeze
 
   # The fields for which facet examples are allowed to be requested.
