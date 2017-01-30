@@ -483,6 +483,9 @@
   "tribunal_decision_reference_number": {
     "type": "identifier"
   },
+  "hidden_indexable_content": {
+    "type": "searchable_text"
+  },
   "dfid_authors": {
     "description": "A set of author names, which aren't selected from a predefined list and don't repeat",
     "type": "searchable_identifiers"
