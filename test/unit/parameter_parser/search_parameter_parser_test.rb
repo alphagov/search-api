@@ -8,6 +8,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       start: 0,
       count: 10,
       query: nil,
+      similar_to: nil,
       order: nil,
       return_fields: BaseParameterParser::DEFAULT_RETURN_FIELDS,
       filters: [],
@@ -214,6 +215,62 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal("Invalid unicode in query", p.error)
     assert !p.valid?
     assert_equal(expected_params(query: nil), p.parsed_params)
+  end
+
+  should "understand the similar_to parameter" do
+    p = SearchParameterParser.new({ "similar_to" => ["/search-term"] }, @schema)
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params(similar_to: "/search-term"), p.parsed_params)
+  end
+
+  should "complain about a repeated similar_to parameter" do
+    p = SearchParameterParser.new({ "similar_to" => %w(/hello /world) }, @schema)
+
+    assert_equal(%{Too many values (2) for parameter "similar_to" (must occur at most once)}, p.error)
+    assert !p.valid?
+    assert_equal(expected_params(similar_to: "/hello"), p.parsed_params)
+  end
+
+  should "strip whitespace from similar_to parameter" do
+    p = SearchParameterParser.new({ "similar_to" => ["/cheese "] }, @schema)
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params(similar_to: "/cheese"), p.parsed_params)
+  end
+
+  should "put the similar_to parameter in normalized form" do
+    p = SearchParameterParser.new({ "similar_to" => ["/cafe\u0300 "] }, @schema)
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params(similar_to: "/caf\u00e8"), p.parsed_params)
+  end
+
+  should "complain about invalid unicode in the similar_to parameter" do
+    p = SearchParameterParser.new({ "similar_to" => ["\xff"] }, @schema)
+
+    assert_equal("Invalid unicode in similar_to", p.error)
+    assert !p.valid?
+    assert_equal(expected_params(similar_to: nil), p.parsed_params)
+  end
+
+  should "complain when both q and similar_to parameters are provided" do
+    p = SearchParameterParser.new({ "q" => ["hello"], "similar_to" => ["/world"] }, @schema)
+
+    assert_equal("Parameters 'q' and 'similar_to' cannot be used together", p.error)
+    assert !p.valid?
+    assert_equal(expected_params(query: "hello", similar_to: "/world"), p.parsed_params)
+  end
+
+  should "set the order parameter to nil when the similar_to parameter is provided" do
+    p = SearchParameterParser.new({ "similar_to" => ["/hello"], "order" => ["title"] }, @schema)
+
+    assert_equal("", p.error)
+    assert p.valid?
+    assert_equal(expected_params(similar_to: "/hello"), p.parsed_params)
   end
 
   should "understand filter paramers" do
