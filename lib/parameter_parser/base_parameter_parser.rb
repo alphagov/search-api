@@ -31,6 +31,7 @@ class BaseParameterParser
   # The fields listed here are the only ones which can be used to calculated
   # facets for.  This should be a subset of allowed_filter_fields
   ALLOWED_FACET_FIELDS = %w(
+    content_store_document_type
     detailed_format
     document_collections
     document_series
@@ -42,11 +43,12 @@ class BaseParameterParser
     people
     policies
     policy_areas
+    publishing_app
+    rendering_app
     search_format_types
     specialist_sectors
     taxons
     world_locations
-    content_store_document_type
   ).freeze
 
   # The fields for which facet examples are allowed to be requested.
@@ -57,10 +59,13 @@ class BaseParameterParser
   # calculated with the top-documents aggregator in elasticsearch 1.3, so this
   # restriction could be relaxed in future.
   ALLOWED_FACET_EXAMPLE_FIELDS = %w(
+    content_store_document_type
     format
     mainstream_browse_pages
     manual
     organisations
+    publishing_app
+    rendering_app
     specialist_sectors
   ).freeze
 
