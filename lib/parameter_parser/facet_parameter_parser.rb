@@ -17,6 +17,9 @@ private
   end
 
   def process(value)
+    # Prevent exceptions later on by turning a nil value into an empty string
+    value = "" if value.nil?
+
     options = value.split(",")
 
     @errors = []
