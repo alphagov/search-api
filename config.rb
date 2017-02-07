@@ -27,5 +27,11 @@ configure do
   # parameters for debugging. Ignore it here so that we don't send them twice.
   Airbrake.configuration.ignore << "Indexer::BulkIndexFailure"
 
+  # We manually send `GdsApi` exceptions to Airbrake with normalised
+  # messages for publishing-api errors, and then raise an Indexer::PublishingApiError
+  # exception to ensure the execution flow stops. Ignore it here so that we
+  # don't send this dummy exception.
+  Airbrake.configuration.ignore << "Indexer::PublishingApiError"
+
   use Airbrake::Sinatra
 end
