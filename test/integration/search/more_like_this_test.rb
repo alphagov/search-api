@@ -5,18 +5,10 @@ class MoreLikeThisTest < IntegrationTest
     # `@@registries` are set in Rummager and is *not* reset between tests. To
     # prevent caching issues we manually clear them here to make a "new" app.
     Rummager.class_variable_set(:'@@registries', nil)
-
-    stub_elasticsearch_settings
-    create_meta_indexes
-  end
-
-  def teardown
-    clean_meta_indexes
+    super
   end
 
   def test_returns_success
-    reset_content_indexes
-
     get "/search?similar_to=/mainstream-1"
 
     assert last_response.ok?
@@ -25,9 +17,9 @@ class MoreLikeThisTest < IntegrationTest
   def test_returns_similar_docs
     # We need at least 5 documents in the index for "more like this"
     # queries to work (default value of `min_doc_freq` in Elasticsearch)
-    reset_content_indexes_with_content(section_count: 5)
+    populate_content_indexes(section_count: 15)
 
-    get "/search?similar_to=/mainstream-1"
+    get "/search?similar_to=/mainstream-1&count=15&start=0"
 
     # All mainstream documents (excluding the one we're using for comparison)
     # should be returned, but none of the government ones, since they're not
