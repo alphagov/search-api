@@ -12,16 +12,12 @@ class ElasticsearchIndexingTest < IntegrationTest
   }.freeze
 
   def setup
-    stub_elasticsearch_settings
-    create_test_indexes
-  end
+    super
 
-  def teardown
-    clean_test_indexes
+    stub_tagging_lookup
   end
 
   def test_adding_a_document_to_the_search_index
-    stub_tagging_lookup
     publishing_api_has_expanded_links(
       content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
       expanded_links: {},
@@ -45,8 +41,6 @@ class ElasticsearchIndexingTest < IntegrationTest
   end
 
   def test_tagging_organisations_to_self
-    stub_tagging_lookup
-
     post "/documents", {
       "title" => "TITLE",
       "format" => "organisation",
@@ -64,7 +58,6 @@ class ElasticsearchIndexingTest < IntegrationTest
   end
 
   def test_start_and_end_dates
-    stub_tagging_lookup
     post "/documents", {
       "title" => "TITLE",
       "format" => "topical_event",
@@ -85,8 +78,6 @@ class ElasticsearchIndexingTest < IntegrationTest
   end
 
   def test_adding_a_document_to_the_search_index_with_organisation_self_tagging
-    stub_tagging_lookup
-
     post "/documents", {
       'title' => 'HMRC',
       'link' => '/government/organisations/hmrc',
@@ -102,8 +93,6 @@ class ElasticsearchIndexingTest < IntegrationTest
   end
 
   def test_adding_a_document_to_the_search_index_with_queue
-    stub_tagging_lookup
-
     post "/documents", SAMPLE_DOCUMENT.to_json
 
     assert_equal 202, last_response.status

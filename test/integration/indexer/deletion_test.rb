@@ -2,15 +2,6 @@ require "integration_test_helper"
 require "app"
 
 class ElasticsearchDeletionTest < IntegrationTest
-  def setup
-    stub_elasticsearch_settings
-    create_test_indexes
-  end
-
-  def teardown
-    clean_test_indexes
-  end
-
   def test_removes_a_document_from_the_index
     commit_document("mainstream_test", {
       "link" => "/an-example-page"

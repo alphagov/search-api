@@ -6,15 +6,8 @@ class QuotedAndUnquotedSearchTest < IntegrationTest
     # prevent caching issues we manually clear them here to make a "new" app.
     Rummager.class_variable_set(:'@@registries', nil)
 
-    stub_elasticsearch_settings
-    create_meta_indexes
-    reset_content_indexes
+    super
   end
-
-  def teardown
-    clean_meta_indexes
-  end
-
 
   # NEW WEIGHTING TESTS
   #

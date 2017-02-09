@@ -2,15 +2,6 @@ require "integration_test_helper"
 require "indexer/change_notification_processor"
 
 class ChangeNotificationProcessorTest < IntegrationTest
-  def setup
-    stub_elasticsearch_settings
-    create_test_indexes
-  end
-
-  def teardown
-    clean_test_indexes
-  end
-
   def test_triggering_a_reindex
     publishing_api_has_lookups(
       "/foo" => "DOCUMENT-CONTENT-ID"

@@ -3,13 +3,8 @@ require "app"
 
 class ElasticsearchAmendmentTest < IntegrationTest
   def setup
-    stub_elasticsearch_settings
-    create_test_indexes
+    super
     stub_tagging_lookup
-  end
-
-  def teardown
-    clean_test_indexes
   end
 
   def test_should_amend_a_document

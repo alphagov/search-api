@@ -1,15 +1,6 @@
 require "integration_test_helper"
 
 class ExpandsValuesFromSchemaTest < IntegrationTest
-  def setup
-    stub_elasticsearch_settings
-    reset_content_indexes
-  end
-
-  def teardown
-    clean_test_indexes
-  end
-
   def test_extra_fields_decorated_by_schema
     commit_document("mainstream_test", {
       "link" => "/cma-cases/sample-cma-case",

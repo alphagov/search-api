@@ -3,14 +3,15 @@ require "integration_test_helper"
 class ElasticsearchIndexGroupTest < IntegrationTest
   def setup
     @group_name = "mainstream_test"
-    stub_elasticsearch_settings
-    try_remove_test_index
+    TestIndexHelpers.stub_elasticsearch_settings
+    TestIndexHelpers.clean_index_group(@group_name)
 
     @index_group = search_server.index_group(@group_name)
   end
 
   def teardown
-    clean_index_group @group_name
+    # Making sure we keep the index after the tests run
+    @index_group.create_index
   end
 
   def test_should_create_index

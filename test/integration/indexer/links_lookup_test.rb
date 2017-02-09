@@ -4,16 +4,6 @@ require "gds_api/test_helpers/publishing_api_v2"
 class TaglookupDuringIndexingTest < IntegrationTest
   include GdsApi::TestHelpers::PublishingApiV2
 
-  def setup
-    stub_elasticsearch_settings
-    create_test_indexes
-    reset_content_indexes
-  end
-
-  def teardown
-    clean_test_indexes
-  end
-
   def test_indexes_document_without_publishing_api_content_unchanged
     publishing_api_has_lookups({})
 

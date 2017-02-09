@@ -1,16 +1,6 @@
 require "integration_test_helper"
 
 class BestBetsTest < IntegrationTest
-  def setup
-    stub_elasticsearch_settings
-    reset_content_indexes
-    create_meta_indexes
-  end
-
-  def teardown
-    clean_meta_indexes
-  end
-
   def test_exact_best_bet
     commit_document("mainstream_test",
       link: '/an-organic-result',
