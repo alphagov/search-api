@@ -31,7 +31,8 @@ private
     @parsed_params = {
       start: single_integer_param("start", 0),
       count: capped_count,
-      query: normalize_query(single_param("q")),
+      query: normalize_query(single_param("q"), "query"),
+      similar_to: normalize_query(single_param("similar_to"), "similar_to"),
       order: order,
       return_fields: return_fields,
       filters: filters,
@@ -39,6 +40,12 @@ private
       debug: debug_options,
       suggest: character_separated_param("suggest"),
     }
+
+    # Search can be run either with a text query or a base_path to find
+    # similar documents, but not both at the same time.
+    if @parsed_params[:query] && @parsed_params[:similar_to]
+      @errors << "Parameters 'q' and 'similar_to' cannot be used together"
+    end
 
     unused_params = @params.keys - @used_params
     unless unused_params.empty?
@@ -56,9 +63,9 @@ private
     end
   end
 
-  def normalize_query(query)
+  def normalize_query(query, description)
     unless query.nil?
-      query = normalize_unicode(query, "query")
+      query = normalize_unicode(query, description)
     end
     unless query.nil?
       query = query.strip
@@ -85,7 +92,11 @@ private
   # Get the order for search results to be returned in.
   def order
     order = single_param("order")
-    if order.nil?
+    similar_to = @params["similar_to"]
+    if order.nil? || !similar_to.nil?
+      # If "similar_to" is defined then "order" is always nil, since
+      # searches for "similar" documents are already sorted by "similarity" by
+      # elasticsearch.
       return nil
     end
     if order.start_with?('-')

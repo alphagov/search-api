@@ -47,4 +47,14 @@ class SortTest < ShouldaUnitTestCase
       )
     end
   end
+
+  context "more like this query" do
+    should "not explicitly order" do
+      builder = QueryComponents::Sort.new(Search::QueryParameters.new(similar_to: ["/hello-world"]))
+
+      result = builder.payload
+
+      assert_nil result
+    end
+  end
 end
