@@ -1,15 +1,6 @@
 require "integration_test_helper"
 
 class ContentEndpointsTest < IntegrationTest
-  def setup
-    stub_elasticsearch_settings
-    create_test_indexes
-  end
-
-  def teardown
-    clean_test_indexes
-  end
-
   def test_content_document_not_found
     get "/content?link=/a-document/that-does-not-exist"
 

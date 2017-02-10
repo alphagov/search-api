@@ -3,18 +3,11 @@ require "app"
 
 class ElasticsearchAdvancedSearchTest < IntegrationTest
   def setup
+    super
     @index_name = "mainstream_test"
 
-    stub_elasticsearch_settings
-    try_remove_test_index
-
-    create_test_indexes
     add_sample_documents
     commit_index
-  end
-
-  def teardown
-    clean_test_indexes
   end
 
   def sample_document_attributes

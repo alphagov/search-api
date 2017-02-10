@@ -5,18 +5,10 @@ class SearchTest < IntegrationTest
     # `@@registries` are set in Rummager and is *not* reset between tests. To
     # prevent caching issues we manually clear them here to make a "new" app.
     Rummager.class_variable_set(:'@@registries', nil)
-
-    stub_elasticsearch_settings
-    create_meta_indexes
-  end
-
-  def teardown
-    clean_meta_indexes
+    super
   end
 
   def test_returns_success
-    reset_content_indexes
-
     get "/search?q=important"
 
     assert last_response.ok?
@@ -25,8 +17,6 @@ class SearchTest < IntegrationTest
   def test_id_code_with_space
     # when debug mode includes "use_id_codes" and it searches for
     # "P 60" instead of "P60" a P60 document should be found!
-
-    reset_content_indexes
 
     commit_document(
       "mainstream_test",
@@ -46,8 +36,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_spell_checking_with_typo
-    reset_content_indexes
-
     commit_document("mainstream_test",
       title: "I am the result",
       description: "This is a test search result",
@@ -60,7 +48,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_spell_checking_without_typo
-    reset_content_indexes_with_content(section_count: 1)
+    populate_content_indexes(section_count: 1)
 
     get "/search?q=milliband"
 
@@ -68,7 +56,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_returns_docs_from_all_indexes
-    reset_content_indexes_with_content(section_count: 1)
+    populate_content_indexes(section_count: 1)
 
     get "/search?q=important"
 
@@ -77,7 +65,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_sort_by_date_ascending
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?q=important&order=public_timestamp"
 
@@ -86,7 +74,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_sort_by_date_descending
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?q=important&order=-public_timestamp"
 
@@ -97,7 +85,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_sort_by_title_ascending
-    reset_content_indexes_with_content(section_count: 1)
+    populate_content_indexes(section_count: 1)
 
     get "/search?order=title"
     lowercase_titles = result_titles.map(&:downcase)
@@ -106,7 +94,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_filter_by_field
-    reset_content_indexes_with_content(section_count: 1)
+    populate_content_indexes(section_count: 1)
 
     get "/search?filter_mainstream_browse_pages=1"
 
@@ -115,7 +103,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_reject_by_field
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?reject_mainstream_browse_pages=1"
 
@@ -124,7 +112,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_for_missing_field
-    reset_content_indexes_with_content(section_count: 1)
+    populate_content_indexes(section_count: 1)
 
     get "/search?filter_specialist_sectors=_MISSING"
 
@@ -133,7 +121,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_for_missing_or_specific_value_in_field
-    reset_content_indexes_with_content(section_count: 1)
+    populate_content_indexes(section_count: 1)
 
     get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
@@ -142,7 +130,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_and_reject
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
@@ -153,7 +141,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_only_contains_fields_which_are_present
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?q=important&order=public_timestamp"
 
@@ -163,7 +151,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_facet_counting
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?q=important&facet_mainstream_browse_pages=2"
 
@@ -188,7 +176,7 @@ class SearchTest < IntegrationTest
   # TODO: The `mainstream_browse_pages` fields are populated with a number, 1
   # or 2. This should be made more explicit.
   def test_facet_counting_with_filter_on_field_and_exclude_field_filter_scope
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?q=important&facet_mainstream_browse_pages=2"
 
@@ -205,7 +193,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_facet_counting_missing_options
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?q=important&facet_mainstream_browse_pages=1"
 
@@ -225,7 +213,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_facet_counting_with_filter_on_field_and_all_filters_scope
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?q=important&facet_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=1"
 
@@ -246,7 +234,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_facet_examples
-    reset_content_indexes_with_content(section_count: 2)
+    populate_content_indexes(section_count: 2)
 
     get "/search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
@@ -257,8 +245,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_validates_integer_params
-    reset_content_indexes
-
     get "/search?start=a"
 
     assert_equal last_response.status, 422
@@ -266,16 +252,12 @@ class SearchTest < IntegrationTest
   end
 
   def test_allows_integer_params_leading_zeros
-    reset_content_indexes
-
     get "/search?start=09"
 
     assert last_response.ok?
   end
 
   def test_validates_unknown_params
-    reset_content_indexes
-
     get "/search?foo&bar=1"
 
     assert_equal last_response.status, 422
@@ -283,7 +265,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_debug_explain_returns_explanations
-    reset_content_indexes_with_content(section_count: 1)
+    populate_content_indexes(section_count: 1)
 
     get "/search?debug=explain"
 
@@ -295,7 +277,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_scope_by_elasticsearch_type
-    reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
     get "/search?filter_document_type=cma_case"
@@ -313,7 +294,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_between_dates
-    reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
@@ -330,7 +310,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_between_dates_with_reversed_parameter_order
-    reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
@@ -347,7 +326,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_from_date
-    reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
@@ -364,7 +342,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_to_date
-    reset_content_indexes
     commit_document("mainstream_test", cma_case_attributes)
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
@@ -381,8 +358,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_cannot_provide_date_filter_key_multiple_times
-    reset_content_indexes
-
     get "/search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
 
     assert_equal 422, last_response.status
@@ -393,8 +368,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_cannot_provide_invalid_dates_for_date_filter
-    reset_content_indexes
-
     get "/search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
 
     assert_equal 422, last_response.status
@@ -405,8 +378,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_expandinging_of_organisations
-    reset_content_indexes
-
     commit_document("mainstream_test",
       title: 'Advice on Treatment of Dragons',
       link: '/dragon-guide',
@@ -429,8 +400,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_expandinging_of_organisations_via_content_id
-    reset_content_indexes
-
     commit_document(
       "mainstream_test",
       title: 'Advice on Treatment of Dragons',
@@ -470,8 +439,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_search_for_expanded_organisations_works
-    reset_content_indexes
-
     commit_document(
       "mainstream_test",
       title: 'Advice on Treatment of Dragons',
@@ -494,8 +461,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_filter_by_organisation_content_ids_works
-    reset_content_indexes
-
     commit_document(
       "mainstream_test",
       title: 'Advice on Treatment of Dragons',
@@ -518,8 +483,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_expandinging_of_topics
-    reset_content_indexes
-
     commit_document("mainstream_test",
       title: 'Advice on Treatment of Dragons',
       link: '/dragon-guide',
@@ -555,8 +518,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_filter_by_topic_content_ids_works
-    reset_content_indexes
-
     commit_document("mainstream_test",
       title: 'Advice on Treatment of Dragons',
       link: '/dragon-guide',
@@ -577,7 +538,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_id_search
-    reset_content_indexes_with_content(section_count: 1)
+    populate_content_indexes(section_count: 1)
 
     get "/search?q=id1&debug=new_weighting"
 
@@ -585,8 +546,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_withdrawn_content
-    reset_content_indexes
-
     commit_document("mainstream_test",
       title: "I am the result",
       description: "This is a test search result",
@@ -599,8 +558,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_withdrawn_content_with_flag
-    reset_content_indexes
-
     commit_document("mainstream_test",
       title: "I am the result",
       description: "This is a test search result",
@@ -614,15 +571,12 @@ class SearchTest < IntegrationTest
   end
 
   def test_show_the_query
-    reset_content_indexes
-
     get "/search?q=test&debug=show_query"
 
     assert parsed_response.fetch("elasticsearch_query")
   end
 
   def test_dfid_can_search_by_every_facet
-    reset_content_indexes
     commit_document("mainstream_test", dfid_research_output_attributes)
 
     facet_queries = %w(
@@ -647,8 +601,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_taxonomy_can_be_returned
-    reset_content_indexes
-
     commit_document("mainstream_test",
       title: "I am the result",
       description: "This is a test search result",
@@ -664,8 +616,6 @@ class SearchTest < IntegrationTest
   end
 
   def test_taxonomy_can_be_filtered
-    reset_content_indexes
-
     commit_document("mainstream_test",
       title: "I am the result",
       description: "This is a test search result",

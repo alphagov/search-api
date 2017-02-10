@@ -1,16 +1,6 @@
 require "integration_test_helper"
 
 class ResultsWithHighlightingTest < IntegrationTest
-  def setup
-    stub_elasticsearch_settings
-    create_meta_indexes
-    reset_content_indexes
-  end
-
-  def teardown
-    clean_meta_indexes
-  end
-
   def test_returns_highlighted_title
     commit_document("mainstream_test",
       title: "I am the result",

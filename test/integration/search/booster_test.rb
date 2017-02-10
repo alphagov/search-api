@@ -1,16 +1,6 @@
 require "integration_test_helper"
 
 class BoosterTest < IntegrationTest
-  def setup
-    stub_elasticsearch_settings
-    reset_content_indexes
-    create_meta_indexes
-  end
-
-  def teardown
-    clean_meta_indexes
-  end
-
   def test_service_manual_formats_are_weighted_down
     commit_document("mainstream_test",
       title: "Agile is good",

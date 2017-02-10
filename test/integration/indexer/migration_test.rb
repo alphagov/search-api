@@ -4,7 +4,8 @@ require "indexer/bulk_loader"
 
 class ElasticsearchMigrationTest < IntegrationTest
   def setup
-    stub_elasticsearch_settings
+    stub_tagging_lookup
+    TestIndexHelpers.stub_elasticsearch_settings
     try_remove_test_index
 
     schema = app.settings.search_config.schema_config
@@ -13,13 +14,9 @@ class ElasticsearchMigrationTest < IntegrationTest
     @stemmer = settings["analysis"]["filter"]["stemmer_override"]
     @stemmer["rules"] = ["fish => fish"]
 
-    create_test_indexes
+    TestIndexHelpers.create_all
     add_documents(sample_document_attributes)
     commit_index
-  end
-
-  def teardown
-    clean_test_indexes
   end
 
   def sample_document_attributes

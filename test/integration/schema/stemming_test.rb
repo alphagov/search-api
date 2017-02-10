@@ -60,8 +60,6 @@ private
   # Verifies that certain input will be tokenised as expected by the specified
   # analyzer.
   def assert_tokenisation(analyzer, assertions)
-    refresh_test_index
-
     assertions.each do |query, expected_output|
       tokens = fetch_tokens_for_analyzer(query, analyzer)
       assert_equal expected_output, tokens
@@ -69,18 +67,8 @@ private
   end
 
   def fetch_tokens_for_analyzer(query, analyzer)
-    result = client.indices.analyze(index: 'government-test', analyzer: analyzer.to_s, body: query)
+    result = client.indices.analyze(index: 'government_test', analyzer: analyzer.to_s, body: query)
     mappings = result['tokens']
     mappings.map { |mapping| mapping['token'] }
-  end
-
-  def refresh_test_index
-    index_name = 'government-test'
-    try_remove_test_index(index_name)
-    create_test_index(index_name)
-  end
-
-  def client
-    @client ||= Services::elasticsearch(hosts: 'http://localhost:9200')
   end
 end

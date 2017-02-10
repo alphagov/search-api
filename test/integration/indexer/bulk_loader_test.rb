@@ -4,13 +4,8 @@ require "cgi"
 
 class BulkLoaderTest < IntegrationTest
   def setup
+    super
     stub_tagging_lookup
-    stub_elasticsearch_settings
-    create_test_indexes
-  end
-
-  def teardown
-    clean_test_indexes
   end
 
   def test_indexes_documents
@@ -69,7 +64,10 @@ class BulkLoaderTest < IntegrationTest
 private
 
   def bulk_load!(document)
-    bulk_loader = Indexer::BulkLoader.new(app.settings.search_config, DEFAULT_INDEX_NAME)
+    bulk_loader = Indexer::BulkLoader.new(
+      app.settings.search_config,
+      TestIndexHelpers::DEFAULT_INDEX_NAME
+    )
     bulk_loader.load_from(StringIO.new(index_payload(document)))
   end
 

@@ -56,13 +56,8 @@ class SitemapTest < IntegrationTest
   ].freeze
 
   def setup
-    stub_elasticsearch_settings
-    reset_content_indexes
+    super
     add_sample_documents
-  end
-
-  def teardown
-    clean_test_indexes
   end
 
   def test_should_generate_multiple_sitemaps
