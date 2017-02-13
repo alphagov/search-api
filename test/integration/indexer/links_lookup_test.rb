@@ -80,6 +80,7 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "specialist_sectors" => ["my-topic/a", "my-topic/b"],
       "mainstream_browse_pages" => ["my-browse/1"],
       "organisations" => ["my-org/1", "my-court"],
+      "part_of_taxonomy" => ["TAXON-1"],
       "taxons" => ["TAXON-1"],
       "topic_content_ids" => ["TOPIC-CONTENT-ID-1", "TOPIC-CONTENT-ID-2"],
       "mainstream_browse_page_content_ids" => ["BROWSE-1"],

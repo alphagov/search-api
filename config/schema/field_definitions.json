@@ -85,6 +85,11 @@
     "type": "identifiers"
   },
 
+  "part_of_taxonomy": {
+    "description": "Any taxon tagged to the document and any of their ancestor taxons",
+    "type": "identifiers"
+  },
+
   "updated_at": {
     "type": "date"
   },

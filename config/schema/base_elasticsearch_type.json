@@ -1,7 +1,6 @@
 {
   "fields": [
     "all_searchable_text",
-    "taxons",
     "content_id",
     "content_store_document_type",
     "description",
@@ -14,15 +13,17 @@
     "mainstream_browse_page_content_ids",
     "organisations",
     "organisation_content_ids",
+    "part_of_taxonomy",
     "policies",
     "popularity",
     "public_timestamp",
     "publishing_app",
     "rendering_app",
     "specialist_sectors",
-    "topic_content_ids",
     "spelling_text",
+    "taxons",
     "title",
+    "topic_content_ids",
     "updated_at"
   ]
 }
