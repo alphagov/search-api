@@ -515,6 +515,11 @@
     "type": "searchable_text"
   },
 
+  "business_sizes": {
+    "description": "The sizes of business served by a business finance support scheme",
+    "type": "searchable_identifier"
+  },
+
   "continuation_link": {
     "description": "Link to more information about a business finance support scheme",
     "type": "identifier"
@@ -547,6 +552,21 @@
 
   "organiser": {
     "description": "The name of the organiser of a business finance support scheme",
+    "type": "searchable_identifier"
+  },
+
+  "sectors": {
+    "description": "The sectors served by a business finance support scheme",
+    "type": "searchable_identifier"
+  },
+
+  "stages": {
+    "description": "The stages of business served by a business finance support scheme",
+    "type": "searchable_identifier"
+  },
+
+  "support_types": {
+    "description": "The types of support provided by a business finance support scheme",
     "type": "searchable_identifier"
   },
 
