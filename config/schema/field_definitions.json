@@ -508,5 +508,50 @@
   "content_store_document_type": {
     "description": "The document type as stored in the Content Store",
     "type": "identifier"
+  },
+
+  "additional_information": {
+    "description": "Additional information about a business finance support scheme",
+    "type": "searchable_text"
+  },
+
+  "continuation_link": {
+    "description": "Link to more information about a business finance support scheme",
+    "type": "identifier"
+  },
+
+  "eligibility": {
+    "description": "Eligibility information for a business finance support scheme",
+    "type": "searchable_text"
+  },
+
+  "evaluation": {
+    "description": "Evaluation criteria for a business finance support scheme",
+    "type": "searchable_text"
+  },
+
+  "max_employees": {
+    "description": "The maximum number of employees allowed to be eligible for a business finance support scheme",
+    "type": "identifier"
+  },
+
+  "max_value": {
+    "description": "The maximum amount of funding available for a business finance support scheme",
+    "type": "identifier"
+  },
+
+  "min_value": {
+    "description": "The minimum amount of funding available for a business finance support scheme",
+    "type": "identifier"
+  },
+
+  "organiser": {
+    "description": "The name of the organiser of a business finance support scheme",
+    "type": "searchable_identifier"
+  },
+
+  "will_continue_on": {
+    "description": "Human-readable name of the link to more information about a business finance support scheme",
+    "type": "identifier"
   }
 }
