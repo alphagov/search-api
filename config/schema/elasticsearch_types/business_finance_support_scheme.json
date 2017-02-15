@@ -1,0 +1,13 @@
+{
+  "fields": [
+    "additional_information",
+    "continuation_link",
+    "eligibility",
+    "evaluation",
+    "max_employees",
+    "max_value",
+    "min_value",
+    "organiser",
+    "will_continue_on"
+  ]
+}
