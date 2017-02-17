@@ -132,8 +132,30 @@ module Indexer
       {
         'topic_content_ids' => content_ids_for(links, 'topics'),
         'mainstream_browse_page_content_ids' => content_ids_for(links, 'mainstream_browse_pages'),
-        'organisation_content_ids' => content_ids_for(links, 'organisations')
+        'organisation_content_ids' => content_ids_for(links, 'organisations'),
+        'part_of_taxonomy_tree' => parts_of_taxonomy_for_all_taxons(links)
       }
+    end
+
+    def parts_of_taxonomy_for_all_taxons(links)
+      links.fetch("taxons", []).flat_map { |taxon_hash| parts_of_taxonomy(taxon_hash) }
+    end
+
+    def parts_of_taxonomy(taxon_hash)
+      parents = [taxon_hash["content_id"]]
+
+      direct_parents = taxon_hash.dig("links", "parent_taxons")
+      while direct_parents
+        # There should not be more than one parent for a taxon. If there is,
+        # make an arbitrary choice.
+        direct_parent = direct_parents.first
+
+        parents << direct_parent["content_id"]
+
+        direct_parents = direct_parent["links"]["parent_taxons"]
+      end
+
+      parents.reverse
     end
 
     def content_ids_for(links, link_type)
