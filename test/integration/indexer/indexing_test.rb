@@ -57,25 +57,6 @@ class ElasticsearchIndexingTest < IntegrationTest
     })
   end
 
-  def test_parts_of_taxonomy
-    post "/documents", {
-      "title" => "TITLE",
-      "format" => "organisation",
-      "slug" => "my-organisation",
-      "link" => "/an-example-organisation",
-      "part_of_taxonomy" => ["6b965b82-2e33-4587-a70c-60204cbb3e29", "4b965b82-2e33-4587-a70c-60204cbb3e29"],
-    }.to_json
-
-    assert_document_is_in_rummager({
-      "title" => "TITLE",
-      "format" => "organisation",
-      "slug" => "my-organisation",
-      "link" => "/an-example-organisation",
-      "organisations" => ["my-organisation"],
-      "part_of_taxonomy" => ["6b965b82-2e33-4587-a70c-60204cbb3e29", "4b965b82-2e33-4587-a70c-60204cbb3e29"],
-    })
-  end
-
   def test_start_and_end_dates
     post "/documents", {
       "title" => "TITLE",
