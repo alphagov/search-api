@@ -642,15 +642,15 @@ class SearchTest < IntegrationTest
       description: "This is a test search result",
       link: "/some-nice-link",
       taxons: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
-      part_of_taxonomy: %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
+      part_of_taxonomy_tree: %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
     )
 
-    get "/search?filter_part_of_taxonomy=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
+    get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
     assert last_response.ok?
     assert_equal 1, parsed_response.fetch("total")
 
-    get "/search?filter_part_of_taxonomy=aa2093ef-778c-4105-9f33-9aa03d14bc5c"
+    get "/search?filter_part_of_taxonomy_tree=aa2093ef-778c-4105-9f33-9aa03d14bc5c"
 
     assert last_response.ok?
     assert_equal 1, parsed_response.fetch("total")

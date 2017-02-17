@@ -80,7 +80,7 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "specialist_sectors" => ["my-topic/a", "my-topic/b"],
       "mainstream_browse_pages" => ["my-browse/1"],
       "organisations" => ["my-org/1", "my-court"],
-      "part_of_taxonomy" => ["TAXON-1"],
+      "part_of_taxonomy_tree" => ["TAXON-1"],
       "taxons" => ["TAXON-1"],
       "topic_content_ids" => ["TOPIC-CONTENT-ID-1", "TOPIC-CONTENT-ID-2"],
       "mainstream_browse_page_content_ids" => ["BROWSE-1"],
@@ -188,7 +188,7 @@ class TaglookupDuringIndexingTest < IntegrationTest
 
     assert_document_is_in_rummager(
       "link" => "/foo/bar",
-      "part_of_taxonomy" => [
+      "part_of_taxonomy_tree" => [
         grandparent_1_content_id, parent_1_content_id, taxon_1_content_id,
         grandparent_2_content_id, parent_2_content_id, taxon_2_content_id,
       ],

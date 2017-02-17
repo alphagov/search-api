@@ -85,7 +85,7 @@
     "type": "identifiers"
   },
 
-  "part_of_taxonomy": {
+  "part_of_taxonomy_tree": {
     "description": "Any taxon tagged to the document and any of their ancestor taxons",
     "type": "identifiers"
   },

@@ -133,7 +133,7 @@ module Indexer
         'topic_content_ids' => content_ids_for(links, 'topics'),
         'mainstream_browse_page_content_ids' => content_ids_for(links, 'mainstream_browse_pages'),
         'organisation_content_ids' => content_ids_for(links, 'organisations'),
-        'part_of_taxonomy' => parts_of_taxonomy_for_all_taxons(links)
+        'part_of_taxonomy_tree' => parts_of_taxonomy_for_all_taxons(links)
       }
     end
 
