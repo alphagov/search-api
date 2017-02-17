@@ -1,6 +1,7 @@
 {
   "fields": [
     "additional_information",
+    "business_sizes",
     "continuation_link",
     "eligibility",
     "evaluation",
@@ -8,6 +9,9 @@
     "max_value",
     "min_value",
     "organiser",
+    "sectors",
+    "stages",
+    "support_types",
     "will_continue_on"
   ]
 }
