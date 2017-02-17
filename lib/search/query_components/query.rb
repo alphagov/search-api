@@ -44,15 +44,18 @@ module QueryComponents
     end
 
     def more_like_this_query_hash
-      {
-        more_like_this: {
-          docs: [
-            {
-              _type: "edition",
-              _id: search_params.similar_to
-            }
-          ]
+      content_indices = Rummager.search_config.content_index_names
+
+      docs = content_indices.reduce([]) do |documents, index_name|
+        documents << {
+          _type: 'edition',
+          _id: search_params.similar_to,
+          _index: index_name
         }
+      end
+
+      {
+        more_like_this: { docs: docs }
       }
     end
   end
