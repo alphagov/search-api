@@ -515,44 +515,24 @@
     "type": "identifier"
   },
 
-  "additional_information": {
-    "description": "Additional information about a business finance support scheme",
-    "type": "searchable_text"
-  },
-
   "business_sizes": {
     "description": "The sizes of business served by a business finance support scheme",
     "type": "searchable_identifier"
   },
 
-  "continuation_link": {
-    "description": "Link to more information about a business finance support scheme",
-    "type": "identifier"
+  "business_stages": {
+    "description": "The stages of business served by a business finance support scheme",
+    "type": "searchable_identifier"
   },
 
-  "eligibility": {
-    "description": "Eligibility information for a business finance support scheme",
+  "how_to_apply": {
+    "description": "Details of how to apply for a business finance support scheme",
     "type": "searchable_text"
   },
 
-  "evaluation": {
-    "description": "Evaluation criteria for a business finance support scheme",
-    "type": "searchable_text"
-  },
-
-  "max_employees": {
-    "description": "The maximum number of employees allowed to be eligible for a business finance support scheme",
-    "type": "identifier"
-  },
-
-  "max_value": {
-    "description": "The maximum amount of funding available for a business finance support scheme",
-    "type": "identifier"
-  },
-
-  "min_value": {
-    "description": "The minimum amount of funding available for a business finance support scheme",
-    "type": "identifier"
+  "industries": {
+    "description": "The industries served by a business finance support scheme",
+    "type": "searchable_identifier"
   },
 
   "organiser": {
@@ -560,23 +540,18 @@
     "type": "searchable_identifier"
   },
 
-  "sectors": {
-    "description": "The sectors served by a business finance support scheme",
-    "type": "searchable_identifier"
-  },
-
-  "stages": {
-    "description": "The stages of business served by a business finance support scheme",
-    "type": "searchable_identifier"
-  },
-
-  "support_types": {
+  "types_of_support": {
     "description": "The types of support provided by a business finance support scheme",
     "type": "searchable_identifier"
   },
 
-  "will_continue_on": {
-    "description": "Human-readable name of the link to more information about a business finance support scheme",
-    "type": "identifier"
+  "what_you_can_get": {
+    "description": "Details of assistance available for a business finance support scheme",
+    "type": "searchable_text"
+  },
+
+  "who_it_is_for": {
+    "description": "Eligibility information for a business finance support scheme",
+    "type": "searchable_text"
   }
 }
