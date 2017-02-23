@@ -525,33 +525,13 @@
     "type": "searchable_identifier"
   },
 
-  "how_to_apply": {
-    "description": "Details of how to apply for a business finance support scheme",
-    "type": "searchable_text"
-  },
-
   "industries": {
     "description": "The industries served by a business finance support scheme",
-    "type": "searchable_identifier"
-  },
-
-  "organiser": {
-    "description": "The name of the organiser of a business finance support scheme",
     "type": "searchable_identifier"
   },
 
   "types_of_support": {
     "description": "The types of support provided by a business finance support scheme",
     "type": "searchable_identifier"
-  },
-
-  "what_you_can_get": {
-    "description": "Details of assistance available for a business finance support scheme",
-    "type": "searchable_text"
-  },
-
-  "who_it_is_for": {
-    "description": "Eligibility information for a business finance support scheme",
-    "type": "searchable_text"
   }
 }

@@ -2,11 +2,7 @@
   "fields": [
     "business_sizes",
     "business_stages",
-    "how_to_apply",
     "industries",
-    "organiser",
-    "types_of_support",
-    "what_you_can_get",
-    "who_it_is_for"
+    "types_of_support"
   ]
 }
