@@ -87,28 +87,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_should_bulk_update_documents_with_raw_command_stream
-    stub_tagging_lookup
-    stub_traffic_index
-    stub_popularity_index_requests(["/foo/bar"], 1.0)
-
-    # Note that this comes with a trailing newline, which elasticsearch needs
-    payload = <<-eos
-{"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"format":"edition"}
-    eos
-    request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
-      body: payload,
-    ).to_return(
-      body: '{"items":[]}',
-      headers: { 'Content-Type' => 'application/json' }
-    )
-
-    @index.bulk_index(payload)
-
-    assert_requested(request)
-  end
-
   def test_raw_search
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},
