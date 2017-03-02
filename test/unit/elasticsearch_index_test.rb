@@ -54,56 +54,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     assert @index.exists?
   end
 
-  def test_add_sends_updates_to_the_bulk_index_endpoint
-    stub_tagging_lookup
-    stub_traffic_index
-    stub_popularity_index_requests(["/foo/bar"], 1.0)
-
-    document = stub(
-      "document",
-      elasticsearch_export: {
-        "_type" => "edition",
-        "link" => "/foo/bar",
-        "title" => "TITLE ONE",
-    })
-
-    payload = [
-      {
-        "_type" => "edition",
-        "link" => "/foo/bar",
-        "title" => "TITLE ONE",
-        "popularity" => 0.09090909090909091,
-        "format" => "edition"
-      }
-    ]
-
-    expected_body = [
-      {
-        "index" => {
-          "_type" => "edition",
-          "_id" => "/foo/bar"
-        }
-      },
-    ] + payload
-
-    response = <<-eos
-{"took":5,"items":[
-  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } }
-]}
-    eos
-
-    request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
-      body: expected_body.map(&:to_json).join("\n") + "\n",
-    ).to_return(
-      body: response,
-      headers: { 'Content-Type' => 'application/json' },
-    )
-
-    @index.add([document])
-
-    assert_requested(request)
-  end
-
   def test_should_raise_error_for_failures_in_bulk_update
     stub_tagging_lookup
     stub_traffic_index
@@ -135,63 +85,6 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     rescue Indexer::BulkIndexFailure => e
       assert_equal "Indexer::BulkIndexFailure", e.message
     end
-  end
-
-  def test_should_bulk_update_documents_with_raw_command_stream
-    stub_tagging_lookup
-    stub_traffic_index
-    stub_popularity_index_requests(["/foo/bar"], 1.0)
-
-    # Note that this comes with a trailing newline, which elasticsearch needs
-    payload = <<-eos
-{"index":{"_type":"edition","_id":"/foo/bar"}}
-{"_type":"edition","link":"/foo/bar","title":"TITLE ONE","popularity":0.09090909090909091,"format":"edition"}
-    eos
-    request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
-      body: payload,
-    ).to_return(
-      body: '{"items":[]}',
-      headers: { 'Content-Type' => 'application/json' }
-    )
-
-    @index.bulk_index(payload)
-
-    assert_requested(request)
-  end
-
-  def test_should_bulk_index_documents
-    stub_tagging_lookup
-    stub_traffic_index
-    stub_popularity_index_requests(["/foo/bar"], 1.0)
-
-    payload = [
-      {
-        "_type" => "edition",
-        "link" => "/foo/bar",
-        "title" => "TITLE ONE",
-        "popularity" => 0.09090909090909091,
-        "format" => "edition"
-      }
-    ]
-
-    expected_body = [
-      {
-        "index" => {
-          "_type" => "edition",
-          "_id" => "/foo/bar"
-        }
-      },
-    ] + payload
-
-    request = stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").with(
-      body: expected_body.map(&:to_json).join("\n") + "\n",
-    ).to_return(
-      body: '{"items":[]}',
-      headers: { 'Content-Type' => 'application/json' },
-    )
-    @index.bulk_index(payload)
-
-    assert_requested(request)
   end
 
   def test_raw_search

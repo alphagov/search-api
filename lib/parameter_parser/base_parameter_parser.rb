@@ -38,6 +38,7 @@ class BaseParameterParser
     format
     mainstream_browse_pages
     manual
+    navigation_document_supertype
     organisation_type
     organisations
     people
@@ -48,6 +49,7 @@ class BaseParameterParser
     search_format_types
     specialist_sectors
     taxons
+    whitehall_document_supertype
     world_locations
   ).freeze
 
@@ -63,10 +65,12 @@ class BaseParameterParser
     format
     mainstream_browse_pages
     manual
+    navigation_document_supertype
     organisations
     publishing_app
     rendering_app
     specialist_sectors
+    whitehall_document_supertype
   ).freeze
 
   # The keys by which facet values can be sorted (using the "order" option).

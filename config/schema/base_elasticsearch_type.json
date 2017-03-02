@@ -6,6 +6,7 @@
     "description",
     "format",
     "indexable_content",
+    "navigation_document_supertype",
     "is_withdrawn",
     "latest_change_note",
     "link",
@@ -24,6 +25,7 @@
     "taxons",
     "title",
     "topic_content_ids",
+    "whitehall_document_supertype",
     "updated_at"
   ]
 }

@@ -27,6 +27,7 @@ class ElasticsearchIndexingTest < IntegrationTest
       "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
       "format" => "answer",
+      "content_store_document_type" => "answer",
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT",
     }.to_json
@@ -37,6 +38,7 @@ class ElasticsearchIndexingTest < IntegrationTest
       "format" => "answer",
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT",
+      "navigation_document_supertype" => "guidance",
     })
   end
 

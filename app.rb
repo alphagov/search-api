@@ -5,6 +5,7 @@ require "appsignal/integrations/sinatra"
 require "json"
 require "csv"
 require "redis"
+require "govuk_document_types"
 
 %w[ . lib ].each do |path|
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)

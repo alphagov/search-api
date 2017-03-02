@@ -35,6 +35,7 @@ else
   gem "govuk_message_queue_consumer", "~> 3.0.1"
 end
 
+gem "govuk_document_types", "0.1.1"
 gem "govuk-lint", "~> 1.2.1"
 
 group :test do
