@@ -10,7 +10,6 @@ module Indexer
       if is_content_index
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)
-        doc_hash = prepare_missing_fields_hack(doc_hash)
         doc_hash = prepare_tags_field(doc_hash)
         doc_hash = add_self_to_organisations_links(doc_hash)
         doc_hash = prepare_document_supertypes(doc_hash)
@@ -47,32 +46,6 @@ module Indexer
     def prepare_format_field(doc_hash)
       if doc_hash["format"].nil?
         doc_hash.merge("format" => doc_hash["_type"])
-      else
-        doc_hash
-      end
-    end
-
-    # This is a temporary hack. hmrc-manuals-api is already sending this data,
-    # but there's no way to republish HMRC manuals since they're published by
-    # HMRC with a custom application. This will add the fields whenever the
-    # documents are indexed (every night). After this has run once we can remove
-    # this method, since publishings from now on will include publishing_app,
-    # rendering_app and content_store_document_type.
-    #
-    # https://github.com/alphagov/hmrc-manuals-api/blob/master/app/models/rummager_manual.rb#L13-L25
-    def prepare_missing_fields_hack(doc_hash)
-      if doc_hash["format"] == "hmrc_manual_section"
-        doc_hash.merge(
-          "publishing_app" => "hmrc-manuals-api",
-          "rendering_app" => "manuals-frontend",
-          "content_store_document_type" => "hmrc_manual_section",
-        )
-      elsif doc_hash["format"] == "hmrc_manual"
-        doc_hash.merge(
-          "publishing_app" => "hmrc-manuals-api",
-          "rendering_app" => "manuals-frontend",
-          "content_store_document_type" => "hmrc_manual",
-        )
       else
         doc_hash
       end
