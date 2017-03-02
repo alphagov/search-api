@@ -8,6 +8,14 @@
     "type": "identifier"
   },
 
+  "navigation_document_supertype": {
+    "type": "identifier"
+  },
+
+  "whitehall_document_supertype": {
+    "type": "identifier"
+  },
+
   "content_id": {
     "description": "The content_id of the item. This will not be present for all items, as most application do not send it.",
     "type": "identifier"

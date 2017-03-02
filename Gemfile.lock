@@ -50,6 +50,7 @@ GEM
     govuk-lint (1.2.1)
       rubocop (~> 0.39.0)
       scss_lint
+    govuk_document_types (0.1.1)
     govuk_message_queue_consumer (3.0.1)
       bunny (~> 2.2.0)
     hashdiff (0.3.0)
@@ -195,6 +196,7 @@ DEPENDENCIES
   elasticsearch (~> 1.0.15)
   gds-api-adapters (~> 37.5)
   govuk-lint (~> 1.2.1)
+  govuk_document_types (= 0.1.1)
   govuk_message_queue_consumer (~> 3.0.1)
   logging (~> 2.1.0)
   minitest-colorize (~> 0.0.5)

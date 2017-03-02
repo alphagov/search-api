@@ -13,6 +13,7 @@ module Indexer
         doc_hash = prepare_missing_fields_hack(doc_hash)
         doc_hash = prepare_tags_field(doc_hash)
         doc_hash = add_self_to_organisations_links(doc_hash)
+        doc_hash = prepare_document_supertypes(doc_hash)
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
@@ -125,6 +126,12 @@ module Indexer
       end
 
       doc_hash
+    end
+
+    def prepare_document_supertypes(doc_hash)
+      doc_hash.merge(
+        GovukDocumentTypes.supertypes(document_type: doc_hash["content_store_document_type"])
+      )
     end
   end
 end
