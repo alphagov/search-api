@@ -32,7 +32,7 @@ gem "elasticsearch", "~> 1.0.15"
 if ENV["MESSAGE_QUEUE_CONSUMER_DEV"]
   gem "govuk_message_queue_consumer", path: "../govuk_message_queue_consumer"
 else
-  gem "govuk_message_queue_consumer", "~> 3.0.1"
+  gem "govuk_message_queue_consumer", "~> 3.0.2"
 end
 
 gem "govuk_document_types", "0.1.1"

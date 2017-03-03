@@ -9,7 +9,7 @@ GEM
     airbrake (4.3.8)
       builder
       multi_json
-    amq-protocol (2.0.1)
+    amq-protocol (2.1.0)
     appsignal (2.0.5)
       rack
       thread_safe
@@ -51,7 +51,7 @@ GEM
       rubocop (~> 0.39.0)
       scss_lint
     govuk_document_types (0.1.1)
-    govuk_message_queue_consumer (3.0.1)
+    govuk_message_queue_consumer (3.0.2)
       bunny (~> 2.2.0)
     hashdiff (0.3.0)
     http-cookie (1.0.3)
@@ -197,7 +197,7 @@ DEPENDENCIES
   gds-api-adapters (~> 37.5)
   govuk-lint (~> 1.2.1)
   govuk_document_types (= 0.1.1)
-  govuk_message_queue_consumer (~> 3.0.1)
+  govuk_message_queue_consumer (~> 3.0.2)
   logging (~> 2.1.0)
   minitest-colorize (~> 0.0.5)
   mocha (~> 1.1.0)
