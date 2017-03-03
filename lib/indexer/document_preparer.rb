@@ -1,3 +1,5 @@
+require "govuk_document_types"
+
 module Indexer
   class DocumentPreparer
     def initialize(client, index_name)
@@ -35,9 +37,10 @@ module Indexer
 
     def prepare_tags_field(doc_hash)
       Indexer::LinksLookup.prepare_tags(doc_hash)
-    rescue GdsApi::TimedOutException => e
+    rescue Indexer::PublishingApiError => e
       if ENV['LOG_FAILED_LINKS_LOOKUP_AND_CONTINUE'] == '1'
         puts "Unable to lookup links for link: #{doc_hash['link']}"
+        doc_hash
       else
         raise e
       end
