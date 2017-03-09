@@ -11,16 +11,21 @@ require "logger"
 require "app"
 
 in_development = ENV['RACK_ENV'] == 'development'
+log_path = ENV.fetch("LOG_PATH", in_development ? nil : "log/production.log")
 
 if in_development
   set :logging, $DEBUG ? Logger::DEBUG : Logger::INFO
-else
+end
+
+if log_path
   enable :logging
-  log = File.new("log/production.log", "a")
+  log = File.new(log_path, "a")
   log.sync = true
   STDOUT.reopen(log)
   STDERR.reopen(log)
+end
 
+unless in_development
   use Rack::Logstasher::Logger,
     Logger.new("log/production.json.log"),
     extra_request_headers: { "GOVUK-Request-Id" => "govuk_request_id", "x-varnish" => "varnish_id" }

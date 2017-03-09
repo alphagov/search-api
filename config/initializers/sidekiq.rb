@@ -1,7 +1,7 @@
 require "sidekiq"
 require "sidekiq-statsd"
 
-redis_config_hash = YAML.load_file("config/redis.yml").symbolize_keys
+redis_config_hash = YAML.load(ERB.new(File.read("config/redis.yml")).result).symbolize_keys
 
 if ENV["RACK_ENV"] == "test"
   namespace = "#{redis_config_hash[:namespace]}-#{ENV['RACK_ENV']}"
