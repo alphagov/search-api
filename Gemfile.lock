@@ -53,6 +53,7 @@ GEM
     govuk_document_types (0.1.1)
     govuk_message_queue_consumer (3.0.2)
       bunny (~> 2.2.0)
+    govuk_taxonomy_helpers (0.1.0)
     hashdiff (0.3.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -198,6 +199,7 @@ DEPENDENCIES
   govuk-lint (~> 1.2.1)
   govuk_document_types (= 0.1.1)
   govuk_message_queue_consumer (~> 3.0.2)
+  govuk_taxonomy_helpers (~> 0.1.0)
   logging (~> 2.1.0)
   minitest-colorize (~> 0.0.5)
   mocha (~> 1.1.0)
@@ -226,4 +228,4 @@ DEPENDENCIES
   whenever (~> 0.9.4)
 
 BUNDLED WITH
-   1.11.2
+   1.14.5
