@@ -46,7 +46,11 @@ private
     File.expand_path("../config/schema", File.dirname(__FILE__))
   end
 
+  def config_path_for(kind)
+    File.expand_path("../#{kind}.yml", File.dirname(__FILE__))
+  end
+
   def config_for(kind)
-    YAML.load_file(File.expand_path("../#{kind}.yml", File.dirname(__FILE__)))
+    YAML.load(ERB.new(File.read(config_path_for(kind))).result)
   end
 end

@@ -1,4 +1,4 @@
-base_uri: "http://localhost:9200"
+base_uri: <%= ENV["ELASTICSEARCH_URI"] || "http://localhost:9200" %> 
 content_index_names: ["mainstream", "detailed", "government"]
 auxiliary_index_names: ["page-traffic", "metasearch"]
 registry_index: "government"
