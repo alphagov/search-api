@@ -1,7 +1,6 @@
 require "sinatra"
 set :root, File.dirname(__FILE__)
 
-require "appsignal/integrations/sinatra"
 require "json"
 require "csv"
 require "redis"
