@@ -8,11 +8,15 @@
     "type": "identifier"
   },
 
-  "navigation_document_supertype": {
+  "email_document_supertype": {
     "type": "identifier"
   },
 
-  "whitehall_document_supertype": {
+  "government_document_supertype": {
+    "type": "identifier"
+  },
+
+  "navigation_document_supertype": {
     "type": "identifier"
   },
 

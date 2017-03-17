@@ -39,6 +39,8 @@ class ElasticsearchIndexingTest < IntegrationTest
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT",
       "navigation_document_supertype" => "guidance",
+      "email_document_supertype" => "other",
+      "government_document_supertype" => "other",
     })
   end
 

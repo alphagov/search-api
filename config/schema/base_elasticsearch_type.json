@@ -4,7 +4,9 @@
     "content_id",
     "content_store_document_type",
     "description",
+    "email_document_supertype",
     "format",
+    "government_document_supertype",
     "indexable_content",
     "navigation_document_supertype",
     "is_withdrawn",
@@ -25,7 +27,6 @@
     "taxons",
     "title",
     "topic_content_ids",
-    "whitehall_document_supertype",
     "updated_at"
   ]
 }
