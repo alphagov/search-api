@@ -35,7 +35,9 @@ class BaseParameterParser
     detailed_format
     document_collections
     document_series
+    email_document_supertype
     format
+    government_document_supertype
     mainstream_browse_pages
     manual
     navigation_document_supertype
@@ -49,7 +51,6 @@ class BaseParameterParser
     search_format_types
     specialist_sectors
     taxons
-    whitehall_document_supertype
     world_locations
   ).freeze
 
@@ -62,7 +63,9 @@ class BaseParameterParser
   # restriction could be relaxed in future.
   ALLOWED_FACET_EXAMPLE_FIELDS = %w(
     content_store_document_type
+    email_document_supertype
     format
+    government_document_supertype
     mainstream_browse_pages
     manual
     navigation_document_supertype
@@ -70,7 +73,6 @@ class BaseParameterParser
     publishing_app
     rendering_app
     specialist_sectors
-    whitehall_document_supertype
   ).freeze
 
   # The keys by which facet values can be sorted (using the "order" option).
