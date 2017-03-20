@@ -529,21 +529,21 @@
 
   "business_sizes": {
     "description": "The sizes of business served by a business finance support scheme",
-    "type": "searchable_identifier"
+    "type": "searchable_identifiers"
   },
 
   "business_stages": {
     "description": "The stages of business served by a business finance support scheme",
-    "type": "searchable_identifier"
+    "type": "searchable_identifiers"
   },
 
   "industries": {
     "description": "The industries served by a business finance support scheme",
-    "type": "searchable_identifier"
+    "type": "searchable_identifiers"
   },
 
   "types_of_support": {
     "description": "The types of support provided by a business finance support scheme",
-    "type": "searchable_identifier"
+    "type": "searchable_identifiers"
   }
 }
