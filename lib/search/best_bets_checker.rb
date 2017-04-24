@@ -9,16 +9,12 @@ module Search
     end
 
     def best_bets
-      unless @fetched
-        fetch
-      end
+      fetch
       @best_bets
     end
 
     def worst_bets
-      unless @fetched
-        fetch
-      end
+      fetch
       @worst_bets
     end
 
@@ -30,14 +26,15 @@ module Search
 
     # Fetch the best bets, and populate @best_bets and @worst_bets
     def fetch
+      return if @fetched
       if @query.nil?
-        best = []
-        worst = []
+        @best_bets = {}
+        @worst_bets = []
       else
         best, worst = select_bets(fetch_bets)
+        @best_bets = combine_best_bets(best)
+        @worst_bets = combine_worst_bets(worst)
       end
-      @best_bets = combine_best_bets(best)
-      @worst_bets = combine_worst_bets(worst)
       @fetched = true
     end
 
@@ -47,52 +44,35 @@ module Search
     #
     # If a link occurs at multiple positions, it will only occur in the group for
     # the highest position it occurred at.
+    # Where high means the smallest positional value.
     def combine_best_bets(bets)
-      by_position = bets.map do |bet|
-        [bet["position"], bet["link"]]
+      bets
+      .map { |bet| [bet['position'], bet['link']] }
+      .sort
+      .uniq { |_, link| link }
+      .each_with_object(Hash.new) do |(position, link), result|
+        result[position] ||= []
+        result[position] << link
       end
-      by_position.sort!
-
-      combined = Hash.new
-      seen = Set.new
-      by_position.each do |bet|
-        position = bet[0]
-        link = bet[1]
-        if seen.include? link
-          next
-        end
-        seen.add link
-        (combined[position] ||= []) << link
-      end
-      combined
     end
 
     def combine_worst_bets(bets)
-      combined = Set.new
-      bets.each do |bet|
-        combined.add bet["link"]
-      end
-      combined.to_a
+      bets.map { |bet| bet['link'] }.uniq
     end
 
     # Select the bet entries to use.
     #
     # Returns two arrays, one of best bets and one of worst bets.
     def select_bets(bets)
-      exact_bet = bets.find do |_bet_query, bet_type, _best, _worst|
+      exact_bet = bets.find do |bet_type, _best, _worst|
         bet_type == "exact"
       end
-      unless exact_bet.nil?
-        return [exact_bet[2], exact_bet[3]]
-      end
+      return [exact_bet[1], exact_bet[2]] if exact_bet
 
-      best_bets = []
-      worst_bets = []
-      bets.each do |_bet_query, _bet_type, best, worst|
-        best_bets.concat best
-        worst_bets.concat worst
-      end
-      [best_bets, worst_bets]
+      [
+        bets.flat_map { |_, best, _| best },
+        bets.flat_map { |_, _, worst| worst }
+      ]
     end
 
     # Fetch bet information from elasticsearch
@@ -109,23 +89,22 @@ module Search
     def fetch_bets
       analyzed_users_query = " #{@index.analyzed_best_bet_query(@query)} "
       es_response = @index.raw_search(lookup_payload, "best_bet")
-      result = []
+
       es_response["hits"]["hits"].map do |hit|
         details = JSON.parse(Array(hit["fields"]["details"]).first)
-        bet_query, _, bet_type = hit["_id"].rpartition('-')
+        _bet_query, _, bet_type = hit["_id"].rpartition('-')
         stemmed_query_as_term = Array(hit["fields"]["stemmed_query_as_term"]).first
 
         # The search on the stemmed_query field is overly broad, so here we need
         # to filter out such matches where the query in the bet is not a
         # substring (modulo stemming) of the user's query.
-        unless stemmed_query_as_term.nil?
-          unless analyzed_users_query.include? stemmed_query_as_term
-            next
-          end
+        if stemmed_query_as_term && !analyzed_users_query.include?(stemmed_query_as_term)
+          nil
+        else
+          [bet_type, details["best_bets"], details["worst_bets"]]
         end
-        result << [bet_query, bet_type, details["best_bets"], details["worst_bets"]]
       end
-      result
+      .compact
     end
 
     # Return a payload for a query across the best_bets type in the metasearch
