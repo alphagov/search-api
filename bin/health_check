@@ -39,6 +39,7 @@ class HealthCheckCLI
       on 'h', 'help', "Show this message"
       on 'limit=', "Limit to the first n tests", as: Integer
       on 'a', 'auth=', "Basic auth credentials (of the form 'user:pass'", as: HealthCheck::BasicAuthCredentials
+      on 'rate_limit_token=', "Token to bypass rate limiting"
       on 'j', 'json=', "Connect to a Rummager search endpoint at the the given url (default) (eg. #{DEFAULT_JSON_URL})", default: DEFAULT_JSON_URL
       on 'v', 'verbose', "Show verbose logging output"
       on 'type=', "Which tests to run. 'suggestions' or 'results' (default)"
@@ -99,7 +100,8 @@ private
   def search_client
     HealthCheck::JsonSearchClient.new(
       base_url: URI.parse(opts["json"]),
-      authentication: opts[:auth]
+      authentication: opts[:auth],
+      rate_limit_token: opts[:rate_limit_token],
     )
   end
 

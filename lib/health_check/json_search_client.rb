@@ -8,6 +8,7 @@ module HealthCheck
     def initialize(options = {})
       @base_url       = options[:base_url] || URI.parse("https://www.gov.uk/api/search.json")
       @authentication = options[:authentication] || nil
+      @rate_limit_token = options[:rate_limit_token] || nil
     end
 
     def search(term, params = {})
@@ -25,6 +26,8 @@ module HealthCheck
 
       request = Net::HTTP::Get.new(url)
       request.basic_auth(*@authentication) if @authentication
+      request["Rate-Limit-Token"] = @rate_limit_token if @rate_limit_token
+
       response = http_client.request(request)
       case response
       when Net::HTTPSuccess # 2xx
