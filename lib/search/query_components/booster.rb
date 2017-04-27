@@ -43,6 +43,7 @@ module QueryComponents
         "aaib_report" => 0.2,
         "dfid_research_output" => 0.2,
         "hmrc_manual_section" => 0.2,
+        "service_standard_report" => 0.2,
 
         # Hide mainstream browse pages for now.
         "mainstream_browse_page" => 0,
