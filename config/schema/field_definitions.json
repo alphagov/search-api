@@ -103,10 +103,17 @@
   },
 
   "updated_at": {
+    "description": "TODO: find out where this is used.",
     "type": "date"
   },
 
   "public_timestamp": {
+    "description": "Time of the last update. Used for 1) weighting more recent editions (mainly whitehall content) more highly, 2) the default sort in finders, 3) showing a date in the search results. Should be the same as `public_updated_at` in the publishing-api.",
+    "type": "date"
+  },
+
+  "first_published_at": {
+    "description": "The date the content was first published. Should be the same as `first_published_at` in the publishing-api.",
     "type": "date"
   },
 
@@ -232,6 +239,7 @@
   },
 
   "date_of_occurrence": {
+    "description": "Date of the event described in the document. Only applies to MAIB, RAIB, AAIB reports.",
     "type": "date"
   },
 
@@ -298,10 +306,6 @@
 
   "therapeutic_area": {
     "type": "identifiers"
-  },
-
-  "first_published_at": {
-    "type": "date"
   },
 
   "fund_state": {
