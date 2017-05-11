@@ -2,12 +2,13 @@ require "health_check/suggestion_check_result"
 
 module HealthCheck
   class SuggestionCheck
-    attr_reader :search_term, :expected_result, :suggested_query
+    attr_reader :search_term, :expected_result, :suggested_query, :tags
 
-    def initialize(args = {})
-      @search_term = args[:search_term]
-      @expected_result = args[:expected_result]
-      @suggested_query = args[:suggested_query]
+    def initialize(search_term: nil, expected_result: nil, suggested_query: nil, tags: [])
+      @search_term = search_term
+      @expected_result = expected_result
+      @suggested_query = suggested_query
+      @tags = tags
     end
 
     def log_result
@@ -24,7 +25,7 @@ module HealthCheck
     def result
       score = success? ? 1 : 0
       possible_score = 1
-      SuggestionCheckResult.new(success?, score, possible_score)
+      SuggestionCheckResult.new(success?, score, possible_score, tags)
     end
 
     # Compare the expected result and suggested query. When the expected result

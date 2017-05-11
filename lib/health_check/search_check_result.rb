@@ -6,7 +6,7 @@ module HealthCheck
     end
 
     def write_to_log
-      logging_output = [path, search_term, position_found, expectation].join(',')
+      logging_output = [path, search_term, position_found, expectation, tags.join('|')].join(',')
       if success
         logger.pass logging_output
       else
@@ -50,15 +50,11 @@ module HealthCheck
       end
     end
 
-    def possible_score
-      @check.weight
-    end
-
-    def score
-      success ? possible_score : 0
-    end
-
   private
+
+    def tags
+      @check.tags
+    end
 
     def logger
       Logging.logger[self]

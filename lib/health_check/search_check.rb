@@ -1,7 +1,7 @@
 require "health_check/search_check_result"
 
 module HealthCheck
-  SearchCheck = Struct.new(:search_term, :imperative, :path, :minimum_rank, :weight) do
+  SearchCheck = Struct.new(:search_term, :imperative, :path, :minimum_rank, :weight, :tags) do
     def valid_imperative?
       ["should", "should not"].include?(imperative)
     end
@@ -28,6 +28,10 @@ module HealthCheck
 
     def result(search_results)
       SearchCheckResult.new(check: self, search_results: search_results)
+    end
+
+    def uid
+      [search_term, path]
     end
   end
 end

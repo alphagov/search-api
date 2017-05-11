@@ -8,78 +8,54 @@ module HealthCheck
     end
 
     should "read the supplied file and return a list of checks" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-600,a,should,https://www.gov.uk/a,1
-500,b,should,https://www.gov.uk/b,1
-"
-      expected = [SearchCheck.new("a", "should", "/a", 1, 600), SearchCheck.new("b", "should", "/b", 1, 500)]
+      data = <<~END
+        Tags,When I search for...,Then I...,see...,in the top ... results,Current position,Link,Last reviewed (Ctrl ;),Word count,Source,Duplicates?
+        test,a,should,https://www.gov.uk/a,1
+        test,b,should,https://www.gov.uk/b,1
+      END
+
+      expected = [SearchCheck.new("a", "should", "/a", 1, 1, %w(test)), SearchCheck.new("b", "should", "/b", 1, 1, %w(test))]
       assert_equal expected, checks(data)
     end
 
     should "skip rows that don't have an integer for the top N number" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-500,b,should,https://www.gov.uk/b,mistake
-"
+      data = <<~END
+        Tags,When I search for...,Then I...,see...,in the top ... results,Current position,Link,Last reviewed (Ctrl ;),Word count,Source,Duplicates?
+        test,b,should,https://www.gov.uk/b,mistake
+      END
+
       expected = []
-      assert_equal expected, checks(data)
-    end
-
-    should "accept Monthly searches values containing commas" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-\"6,000\",a,should,https://www.gov.uk/a,1
-"
-      expected = [SearchCheck.new("a", "should", "/a", 1, 6_000)]
-      assert_equal expected, checks(data)
-    end
-
-    should "skip rows that don't have an integer for Monthly searches" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-mistake,a,should,https://www.gov.uk/a,1
-"
-      expected = []
-      assert_equal expected, checks(data)
-    end
-
-    should "default weight to 1 for rows with blank Monthly searches" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-,a,should,https://www.gov.uk/a,1
-"
-      expected = [SearchCheck.new("a", "should", "/a", 1, 1)]
       assert_equal expected, checks(data)
     end
 
     should "skip rows that don't have a URL" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-600,a,should,mistake,1
-"
+      data = <<~END
+        Tags,When I search for...,Then I...,see...,in the top ... results,Current position,Link,Last reviewed (Ctrl ;),Word count,Source,Duplicates?
+        test,a,should,mistake,1
+      END
+
       expected = []
       assert_equal expected, checks(data)
     end
 
     should "skip rows that don't have a imperative" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-600,a,,https://www.gov.uk/a,1
-"
+      data = <<~END
+        Tags,When I search for...,Then I...,see...,in the top ... results,Current position,Link,Last reviewed (Ctrl ;),Word count,Source,Duplicates?
+        test,a,,https://www.gov.uk/a,1
+      END
+
       expected = []
       assert_equal expected, checks(data)
     end
 
     should "skip rows that don't have a search term" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-600,,should,https://www.gov.uk/a,1
-"
+      data = <<~END
+        Tags,When I search for...,Then I...,see...,in the top ... results,Current position,Link,Last reviewed (Ctrl ;),Word count,Source,Duplicates?
+        test,,should,https://www.gov.uk/a,1
+      END
+
       expected = []
       assert_equal expected, checks(data)
     end
-
-    should "skip checks with a Monthly searches of zero" do
-      data = "Monthly searches,When I search for...,Then I...,see...,in the top ... results
-0,a,should,https://www.gov.uk/a,1
-"
-      expected = []
-      assert_equal expected, checks(data)
-    end
-
-    should_eventually "allow non www.gov.uk URLS"
   end
 end

@@ -71,18 +71,16 @@ class HealthCheckCLI
 private
 
   def run_search_result_tests
-    scores = run_search_result_test_on_index
-    scores.summarise("Overall score")
-  end
-
-  def run_search_result_test_on_index
     check_file_path = DATA_DIR + "search-results.csv"
     check_file = open_file(check_file_path)
 
-    HealthCheck::SearchChecker.new(
+    health_check = HealthCheck::SearchChecker.new(
       search_client: search_client,
       test_data: check_file
-    ).run!
+    )
+
+    health_check.run!
+    health_check.print_summary
   end
 
   # Run a health-check on the suggestions in suggestions.csv
