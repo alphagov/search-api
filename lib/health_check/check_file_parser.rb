@@ -8,10 +8,12 @@ module HealthCheck
     end
 
     def checks
-      checks = []
+      checks = {}
+
       CSV.parse(@file, headers: true).each do |row|
         begin
           check = SearchCheck.new
+          check.tags             = row.fetch("Tags", []).split(",").map(&:strip)
           check.search_term      = row["When I search for..."]
           check.imperative       = row["Then I..."]
           check.path             = row["see..."].sub(%r{https://www.gov.uk}, "")
@@ -19,7 +21,11 @@ module HealthCheck
           check.weight = parse_integer_with_comma(row["Monthly searches"]) || 1
 
           if check.valid?
-            checks << check
+            if checks.include?(check.uid)
+              logger.error("Overwriting duplicate check #{check.uid}")
+            end
+
+            checks[check.uid] = check
           else
             logger.error("Skipping invalid or incomplete row: #{row.to_s.chomp}")
           end
@@ -27,7 +33,7 @@ module HealthCheck
           logger.error("Skipping invalid or incomplete row: #{row.to_s.chomp} because: #{e.message}")
         end
       end
-      checks
+      checks.values
     end
 
   private

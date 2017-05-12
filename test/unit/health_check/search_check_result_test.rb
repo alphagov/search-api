@@ -22,8 +22,6 @@ module HealthCheck
             build_result
 
             assert_equal true, @result.success
-            assert_equal 200, @result.score
-            assert_equal 200, @result.possible_score
             assert_equal "FOUND", @result.found_label
             assert_equal "PASS", @result.success_label
           end
@@ -37,8 +35,6 @@ module HealthCheck
             build_result
 
             refute @result.success
-            assert_equal 0, @result.score
-            assert_equal 200, @result.possible_score
             assert_equal "FOUND", @result.found_label
             assert_equal "FAIL", @result.success_label
           end
@@ -52,8 +48,6 @@ module HealthCheck
             build_result
 
             refute @result.success
-            assert_equal 0, @result.score
-            assert_equal 200, @result.possible_score
             assert_equal "NOT FOUND", @result.found_label
             assert_equal "FAIL", @result.success_label
           end

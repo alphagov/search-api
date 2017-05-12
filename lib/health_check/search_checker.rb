@@ -10,6 +10,8 @@ module HealthCheck
     def initialize(search_client:, test_data:, produce_report: true)
       @test_data_file = test_data
       @search_client = search_client
+      @overall_calculator = Calculator.new
+      @tag_calculators = {}
       @file_output = produce_report ? SearchCheckReport.new : File.open(File::NULL, 'w')
     end
 
@@ -21,20 +23,28 @@ module HealthCheck
         check_result = check.result(search_results)
         check_result.write_to_log
         @file_output << check_result
-        calculator.add(check_result)
+        overall_calculator.add(check_result)
+
+        check.tags.each do |tag|
+          tag_calculators[tag] ||= Calculator.new
+          tag_calculators[tag].add(check_result)
+        end
+      end
+    end
+
+    def print_summary
+      tag_calculators.sort.each do |tag, tag_calculator|
+        tag_calculator.summarise("#{tag} score")
       end
 
-      calculator
+      overall_calculator.summarise
     end
 
   private
+    attr_reader :overall_calculator, :tag_calculators
 
     def checks
       CheckFileParser.new(@test_data_file).checks.sort { |a, b| b.weight <=> a.weight }
-    end
-
-    def calculator
-      @_calculator ||= Calculator.new
     end
   end
 end
