@@ -15,6 +15,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       facets: {},
       debug: {},
       suggest: [],
+      ab_tests: {},
     }.merge(params)
   end
 
@@ -808,5 +809,26 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
     assert p.valid?
     assert_equal expected_params({ debug: { disable_synonyms: true } }), p.parsed_params
+  end
+
+  should "understand the test_variant parameter" do
+    p = SearchParameterParser.new({ "ab_tests" => ["min_should_match_length:A"] }, @schema)
+
+    assert p.valid?
+    assert_equal expected_params({ ab_tests: { min_should_match_length: 'A' } }), p.parsed_params
+  end
+
+  should "understand multiple test_variant parameters" do
+    p = SearchParameterParser.new({ "ab_tests" => ["min_should_match_length:A,other_test_case:B"] }, @schema)
+
+    assert p.valid?
+    assert_equal expected_params({ ab_tests: { min_should_match_length: 'A', other_test_case: 'B' } }), p.parsed_params
+  end
+
+  should "complain about invalid test_variant where no variant_type is provided" do
+    p = SearchParameterParser.new({ "ab_tests" => ["min_should_match_length"] }, @schema)
+
+    assert !p.valid?
+    assert_equal("Invalid ab_tests, missing type \"min_should_match_length\"", p.error)
   end
 end

@@ -168,6 +168,15 @@ The parameters supported are:
    but it is good practice to set this to only the fields you actually want
    information on (doing this will normally increase performance).
 
+ - ab_tests: a/b test with selected variant type. This allows test to be configured
+   from upstream apps.
+
+   Each a/b test name should be followed by a ':' and then the variant type to
+   be used. If multiple a/b test setting are being passed in they should be
+   comma separated.
+
+   No validation is done to ensure the a/b test name provided is current implemented.
+
 ## Examples
 
 For example:
@@ -180,7 +189,8 @@ For example:
      filter_organisations[]=cabinet-office&
      filter_organisations[]=driver-vehicle-licensing-agency&
      filter_section[]=driving
-     facet_organisations=10
+     facet_organisations=10&
+     ab_test=test1:B,test2:A
 
 Returns something like:
 

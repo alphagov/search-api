@@ -39,6 +39,7 @@ private
       facets: facets,
       debug: debug_options,
       suggest: character_separated_param("suggest"),
+      ab_tests: ab_tests,
     }
 
     # Search can be run either with a text query or a base_path to find
@@ -345,5 +346,17 @@ private
     end
 
     options
+  end
+
+  def ab_tests
+    variants = character_separated_param("ab_tests")
+    variants = variants.map { |variant| variant.split(':', 2) }
+
+    variants.each_with_object({}) do |(variant_name, variant_code), variants_hash|
+      if variant_code.blank?
+        @errors << %{Invalid ab_tests, missing type "#{variant_name}"}
+      end
+      variants_hash[variant_name.to_sym] = variant_code
+    end
   end
 end
