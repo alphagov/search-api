@@ -2,7 +2,7 @@ module Search
   # Value object that holds the parsed parameters for a search.
   class QueryParameters
     attr_accessor :query, :similar_to, :order, :start, :count, :return_fields,
-                  :facets, :filters, :debug, :suggest, :is_quoted_phrase
+                  :facets, :filters, :debug, :suggest, :is_quoted_phrase, :ab_tests
 
     # starts and ends with quotes with no quotes in between, with or without
     # leading or trailing whitespace
