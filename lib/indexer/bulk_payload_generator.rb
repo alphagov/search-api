@@ -78,7 +78,7 @@ module Indexer
         else
           [
             command_hash,
-            doc_hash,
+            doc_hash.tap { |h| h.delete('_type'); h.delete('_id') },
           ]
         end
       }
