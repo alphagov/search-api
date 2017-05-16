@@ -1,6 +1,6 @@
 {
   "identifier": {
-    "description": "An identifier, can be used for exact (case and whitespace sensitive) lookup and facetting",
+    "description": "An identifier, can be used for exact (case and whitespace sensitive) lookup and aggregating",
     "filter_type": "text",
     "es_config": {
       "type": "string",
@@ -194,7 +194,7 @@
   },
 
   "boolean": {
-    "description": "A boolean value which can be returned and used for filtering and facetting",
+    "description": "A boolean value which can be returned and used for filtering and aggregating",
     "es_config": {
       "type": "boolean",
       "include_in_all": false
@@ -202,7 +202,7 @@
   },
 
   "date": {
-    "description": "A date which can be returned and used for ordering, filtering and facetting",
+    "description": "A date which can be returned and used for ordering, filtering and aggregating",
     "filter_type": "date",
     "es_config": {
       "type": "date",

@@ -1,6 +1,6 @@
 # Performs a search across all indices used for the GOV.UK site search
 
-require_relative "facet_example_fetcher"
+require_relative "aggregate_example_fetcher"
 require_relative "query_builder"
 require_relative "presenters/result_set_presenter"
 require_relative "spell_check_fetcher"
@@ -26,8 +26,8 @@ module Search
       payload = builder.payload
       es_response = index.raw_search(payload)
 
-      example_fetcher = FacetExampleFetcher.new(index, es_response, search_params, builder)
-      facet_examples = example_fetcher.fetch
+      example_fetcher = AggregateExampleFetcher.new(index, es_response, search_params, builder)
+      aggregate_examples = example_fetcher.fetch
 
       # Augment the response with the suggest result from a separate query.
       if search_params.suggest_spelling?
@@ -38,7 +38,7 @@ module Search
         search_params: search_params,
         es_response: es_response,
         registries: registries,
-        facet_examples: facet_examples,
+        aggregate_examples: aggregate_examples,
         schema: index.schema,
         query_payload: payload
       ).present

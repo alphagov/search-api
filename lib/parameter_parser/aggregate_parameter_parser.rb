@@ -1,6 +1,6 @@
 require_relative "base_parameter_parser"
 
-class FacetParameterParser < BaseParameterParser
+class AggregateParameterParser < BaseParameterParser
   attr_reader :parsed_params, :errors, :allowed_return_fields
 
   def initialize(field, value, allowed_return_fields)
@@ -12,8 +12,8 @@ class FacetParameterParser < BaseParameterParser
 private
 
   # Return a string to be used in error messages
-  def facet_description
-    %{ in facet "#{@field}"}
+  def aggregate_description
+    %{ in aggregate "#{@field}"}
   end
 
   def process(value)
@@ -29,7 +29,7 @@ private
     @used_params = []
 
     # First parameter is just an integer; subsequent ones are key:value
-    requested = parse_positive_integer(options.shift, %{first parameter for facet "#{@field}"})
+    requested = parse_positive_integer(options.shift, %{first parameter for aggregate "#{@field}"})
     @params = parse_options_into_hash(options)
 
     @parsed_params = {
@@ -42,7 +42,7 @@ private
     }
 
     if @parsed_params[:examples] > 0 && !ALLOWED_EXAMPLE_SCOPES.include?(@parsed_params[:example_scope])
-      # global scope means that examples are looked up for each facet value
+      # global scope means that examples are looked up for each aggregate value
       # across the whole collection, not just for documents matching the query.
       # This is likely to be a surprising default, so we require that callers
       # explicitly ask for it.
@@ -52,7 +52,7 @@ private
 
     unused_params = @params.keys - @used_params
     unless unused_params.empty?
-      @errors << %{Unexpected options#{facet_description}: #{unused_params.join(', ')}}
+      @errors << %{Unexpected options#{aggregate_description}: #{unused_params.join(', ')}}
     end
   end
 
@@ -64,14 +64,14 @@ private
         params[k_v[0]] ||= []
         params[k_v[0]] << k_v[1]
       else
-        @errors << %{Invalid parameter "#{value}"#{facet_description}; must be of form "key:value"}
+        @errors << %{Invalid parameter "#{value}"#{aggregate_description}; must be of form "key:value"}
       end
     end
     params
   end
 
   def scope
-    value = single_param("scope", facet_description)
+    value = single_param("scope", aggregate_description)
     if value.nil?
       :exclude_field_filter
     elsif value == "all_filters"
@@ -79,7 +79,7 @@ private
     elsif value == "exclude_field_filter"
       :exclude_field_filter
     else
-      @errors << %{"#{value}" is not a valid scope option#{facet_description}}
+      @errors << %{"#{value}" is not a valid scope option#{aggregate_description}}
       nil
     end
   end
@@ -94,11 +94,11 @@ private
     }
 
     valid_orders, invalid_orders = orders.partition { |option, _|
-      ALLOWED_FACET_SORT_OPTIONS.include?(option)
+      ALLOWED_AGGREGATE_SORT_OPTIONS.include?(option)
     }
 
     invalid_orders.each do |option, _|
-      @errors << %{"#{option}" is not a valid sort option#{facet_description}}
+      @errors << %{"#{option}" is not a valid sort option#{aggregate_description}}
     end
 
     result = valid_orders.map { |option, direction|
@@ -106,17 +106,17 @@ private
     }
 
     if result.empty?
-      DEFAULT_FACET_SORT
+      DEFAULT_AGGREGATE_SORT
     else
       result
     end
   end
 
   def examples
-    value = single_integer_param("examples", 0, facet_description)
+    value = single_integer_param("examples", 0, aggregate_description)
     if value != 0
-      unless ALLOWED_FACET_EXAMPLE_FIELDS.include? @field
-        @errors << %{Facet examples are not supported#{facet_description}}
+      unless ALLOWED_AGGREGATE_EXAMPLE_FIELDS.include? @field
+        @errors << %{Aggregate examples are not supported#{aggregate_description}}
         value = 0
       end
     end
@@ -126,19 +126,19 @@ private
   def example_fields
     fields = character_separated_param("example_fields", ":")
     if fields.empty?
-      return DEFAULT_FACET_EXAMPLE_FIELDS
+      return DEFAULT_AGGREGATE_EXAMPLE_FIELDS
     end
     disallowed_fields = fields - allowed_return_fields
     fields = fields - disallowed_fields
 
     if disallowed_fields.any?
-      @errors << %{Some requested fields are not valid return fields: #{disallowed_fields} in parameter "example_fields" in facet "#{@field}"}
+      @errors << %{Some requested fields are not valid return fields: #{disallowed_fields} in parameter "example_fields" in aggregate "#{@field}"}
     end
     fields
   end
 
   def example_scope
-    scope = single_param("example_scope", facet_description)
+    scope = single_param("example_scope", aggregate_description)
     if scope == "global"
       :global
     elsif scope == "query"

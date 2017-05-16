@@ -1,31 +1,32 @@
-require "search/facet_option"
+require "search/aggregate_option"
 require_relative "field_presenter"
 
 module Search
-  class FacetResultPresenter
-    attr_reader :facets, :facet_examples, :search_params, :registries
+  class AggregateResultPresenter
+    attr_reader :aggregates, :aggregate_examples, :search_params, :registries
 
-    def initialize(facets, facet_examples, search_params, registries)
-      @facets = facets
-      @facet_examples = facet_examples
+    def initialize(aggregates, aggregate_examples, search_params, registries)
+      @aggregates = aggregates
+      @aggregate_examples = aggregate_examples
       @search_params = search_params
       @registries = registries
     end
 
-    def presented_facets
-      return {} if facets.nil?
+    def presented_aggregates
+      return {} if aggregates.nil?
 
       result = {}
-      facets.each do |field, facet_info|
-        facet_parameters = search_params.facets[field]
+      aggregates.each do |field, aggregate_info|
+        next if field =~ /_with_missing_value$/
+        aggregate_parameters = search_params.aggregates[field]
 
-        options = facet_info["terms"]
+        options = aggregate_info['filtered_aggregations']["buckets"]
         result[field] = {
-          options: facet_options(field, options, facet_parameters),
-          documents_with_no_value: facet_info["missing"],
+          options: aggregate_options(field, options, aggregate_parameters),
+          documents_with_no_value: aggregates["#{field}_with_missing_value"]['filtered_aggregations']["doc_count"],
           total_options: options.length,
-          missing_options: [options.length - facet_parameters[:requested], 0].max,
-          scope: facet_parameters[:scope],
+          missing_options: [options.length - aggregate_parameters[:requested], 0].max,
+          scope: aggregate_parameters[:scope],
         }
       end
 
@@ -34,15 +35,15 @@ module Search
 
   private
 
-    # Get the facet options, sorted according to the "order" option.
+    # Get the aggregate options, sorted according to the "order" option.
     #
     # Returns the requested number of options, but will additionally return any
     # options which are part of a filter.
-    def facet_options(field, calculated_options, facet_parameters)
+    def aggregate_options(field, calculated_options, aggregate_parameters)
       applied_options = filter_values_for_field(field)
 
       all_options = calculated_options.map { |option|
-        [option["term"], option["count"]]
+        [option["key"], option["doc_count"]]
       } + applied_options.map { |term|
         [term, 0]
       }
@@ -52,13 +53,13 @@ module Search
       }
 
       option_objects = unique_options.map { |term, count|
-        make_facet_option(field, term, count,
+        make_aggregate_option(field, term, count,
           applied_options.include?(term),
-          facet_parameters[:order],
+          aggregate_parameters[:order],
         )
       }
 
-      top_facet_options(option_objects, facet_parameters[:requested])
+      top_aggregate_options(option_objects, aggregate_parameters[:requested])
     end
 
     def filter_values_for_field(field)
@@ -66,22 +67,22 @@ module Search
       filter ? filter.values : []
     end
 
-    def make_facet_option(field, term, count, applied, orderings)
-      FacetOption.new(
-        facet_option_fields(field, term),
+    def make_aggregate_option(field, term, count, applied, orderings)
+      AggregateOption.new(
+        aggregate_option_fields(field, term),
         count,
         applied,
         orderings,
       )
     end
 
-    def facet_option_fields(field, slug)
+    def aggregate_option_fields(field, slug)
       result = field_presenter.expand(field, slug)
       unless result.is_a?(Hash)
         result = { "slug" => result }
       end
 
-      field_examples = facet_examples[field]
+      field_examples = aggregate_examples[field]
 
       unless field_examples.nil?
         result["example_info"] = field_examples.fetch(slug, [])
@@ -89,9 +90,9 @@ module Search
       result
     end
 
-    # Pick the top facet options, but include all applied facet options.
+    # Pick the top aggregate options, but include all applied aggregate options.
     #
-    # Also, when picking the top facet options, don't count facet options which
+    # Also, when picking the top aggregate options, don't count aggregate options which
     # have a count of 0 documents (these happen when a filter is applied, but the
     # filter doesn't match any documents for the current query).  This means that
     # if a load of filters are applied, and the query is then changed while
@@ -99,7 +100,7 @@ module Search
     # filters are still returned in the response (so get shown in the UI such
     # that the user can remove them), but a new set of filters are also suggested
     # which might actually be useful.
-    def top_facet_options(options, requested_count)
+    def top_aggregate_options(options, requested_count)
       suggested_options = options.sort.select { |option|
         option.count > 0
       }.take(requested_count)

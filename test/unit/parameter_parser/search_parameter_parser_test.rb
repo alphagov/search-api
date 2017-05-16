@@ -1,6 +1,6 @@
 require "test_helper"
 require "parameter_parser/search_parameter_parser"
-require "parameter_parser/facet_parameter_parser"
+require "parameter_parser/aggregate_parameter_parser"
 
 class SearchParameterParserTest < ShouldaUnitTestCase
   def expected_params(params)
@@ -12,20 +12,21 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       order: nil,
       return_fields: BaseParameterParser::DEFAULT_RETURN_FIELDS,
       filters: [],
-      facets: {},
+      aggregates: {},
+      aggregate_name: :aggregates,
       debug: {},
       suggest: [],
       ab_tests: {},
     }.merge(params)
   end
 
-  def expected_facet_params(params)
+  def expected_aggregate_params(params)
     {
       requested: 0,
       scope: :exclude_field_filter,
-      order: BaseParameterParser::DEFAULT_FACET_SORT,
+      order: BaseParameterParser::DEFAULT_AGGREGATE_SORT,
       examples: 0,
-      example_fields: BaseParameterParser::DEFAULT_FACET_EXAMPLE_FIELDS,
+      example_fields: BaseParameterParser::DEFAULT_AGGREGATE_EXAMPLE_FIELDS,
       example_scope: nil,
     }.merge(params)
   end
@@ -517,82 +518,82 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal(expected_params(order: %w(public_timestamp asc)), p.parsed_params)
   end
 
-  should "understand a facet field" do
-    p = SearchParameterParser.new({ "facet_organisations" => ["10"] }, @schema)
+  should "understand a aggregate field" do
+    p = SearchParameterParser.new({ "aggregate_organisations" => ["10"] }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params({ facets: {
-      "organisations" => expected_facet_params({ requested: 10 })
+    assert_equal(expected_params({ aggregates: {
+      "organisations" => expected_aggregate_params({ requested: 10 })
     } }), p.parsed_params)
   end
 
-  should "understand multiple facet fields" do
+  should "understand multiple aggregate fields" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10"],
-      "facet_mainstream_browse_pages" => ["5"],
+      "aggregate_organisations" => ["10"],
+      "aggregate_mainstream_browse_pages" => ["5"],
     }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
-    assert_equal(expected_params({ facets: {
-      "organisations" => expected_facet_params({ requested: 10 }),
-      "mainstream_browse_pages" => expected_facet_params({ requested: 5 })
+    assert_equal(expected_params({ aggregates: {
+      "organisations" => expected_aggregate_params({ requested: 10 }),
+      "mainstream_browse_pages" => expected_aggregate_params({ requested: 5 })
     } }), p.parsed_params)
   end
 
-  should "complain about disallowed facet fields" do
+  should "complain about disallowed aggregates fields" do
     p = SearchParameterParser.new({
-      "facet_spells" => ["10"],
-      "facet_organisations" => ["10"],
+      "aggregate_spells" => ["10"],
+      "aggregate_organisations" => ["10"],
     }, @schema)
 
-    assert_equal(%{"spells" is not a valid facet field}, p.error)
+    assert_equal(%{"spells" is not a valid aggregate field}, p.error)
     assert !p.valid?
-    assert_equal(expected_params({ facets: {
-      "organisations" => expected_facet_params({ requested: 10 })
+    assert_equal(expected_params({ aggregates: {
+      "organisations" => expected_aggregate_params({ requested: 10 })
     } }), p.parsed_params)
   end
 
-  should "complain about invalid values for facet parameter" do
+  should "complain about invalid values for aggregate parameter" do
     p = SearchParameterParser.new({
-      "facet_spells" => ["levitation"],
-      "facet_organisations" => ["magic"],
+      "aggregate_spells" => ["levitation"],
+      "aggregate_organisations" => ["magic"],
     }, @schema)
 
-    assert_equal(%{"spells" is not a valid facet field. Invalid value "magic" for first parameter for facet "organisations" (expected positive integer)}, p.error)
+    assert_equal(%{"spells" is not a valid aggregate field. Invalid value "magic" for first parameter for aggregate "organisations" (expected positive integer)}, p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end
 
-  should "complain about empty values for facet parameter" do
-    p = SearchParameterParser.new({ "facet_organisations" => [""] }, @schema)
+  should "complain about empty values for aggregate parameter" do
+    p = SearchParameterParser.new({ "aggregate_organisations" => [""] }, @schema)
 
-    assert_equal(%{Invalid value "" for first parameter for facet "organisations" (expected positive integer)}, p.error)
+    assert_equal(%{Invalid value "" for first parameter for aggregate "organisations" (expected positive integer)}, p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end
 
-  should "complain about a repeated facet parameter" do
-    p = SearchParameterParser.new({ "facet_organisations" => %w(5 6) }, @schema)
+  should "complain about a repeated aggregate parameter" do
+    p = SearchParameterParser.new({ "aggregate_organisations" => %w(5 6) }, @schema)
 
-    assert_equal(%{Too many values (2) for parameter "facet_organisations" (must occur at most once)}, p.error)
+    assert_equal(%{Too many values (2) for parameter "aggregate_organisations" (must occur at most once)}, p.error)
     assert !p.valid?
-    assert_equal(expected_params(facets: {
-      "organisations" => expected_facet_params(requested: 5)
+    assert_equal(expected_params(aggregates: {
+      "organisations" => expected_aggregate_params(requested: 5)
     }), p.parsed_params)
   end
 
-  should "allow options in the values for the facet parameter" do
+  should "allow options in the values for the aggregate parameter" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:global"],
+      "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:global"],
     }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params({
-      facets: {
-        "organisations" => expected_facet_params({
+      aggregates: {
+        "organisations" => expected_aggregate_params({
           requested: 10,
           examples: 5,
           example_fields: %w(slug title),
@@ -600,57 +601,57 @@ class SearchParameterParserTest < ShouldaUnitTestCase
       }) } }), p.parsed_params)
   end
 
-  should "understand the order option in facet parameters" do
+  should "understand the order option in aggregate parameters" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,order:filtered:value.link:-count"],
+      "aggregate_organisations" => ["10,order:filtered:value.link:-count"],
     }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params({
-      facets: {
-        "organisations" => expected_facet_params({
+      aggregates: {
+        "organisations" => expected_aggregate_params({
           requested: 10,
           order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
       }) } }), p.parsed_params)
   end
 
-  should "complain about invalid order options in facet parameters" do
+  should "complain about invalid order options in aggregate parameters" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,order:filt:value.unknown"],
+      "aggregate_organisations" => ["10,order:filt:value.unknown"],
     }, @schema)
 
-    assert_equal(%{"filt" is not a valid sort option in facet "organisations". "value.unknown" is not a valid sort option in facet "organisations"}, p.error)
+    assert_equal(%{"filt" is not a valid sort option in aggregate "organisations". "value.unknown" is not a valid sort option in aggregate "organisations"}, p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end
 
 
-  should "handle repeated order options in facet parameters" do
+  should "handle repeated order options in aggregate parameters" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,order:filtered,order:value.link:-count"],
+      "aggregate_organisations" => ["10,order:filtered,order:value.link:-count"],
     }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params({
-      facets: {
-        "organisations" => expected_facet_params({
+      aggregates: {
+        "organisations" => expected_aggregate_params({
           requested: 10,
           order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
       }) } }), p.parsed_params)
   end
 
-  should "understand the scope option in facet parameters" do
+  should "understand the scope option in aggregate parameters" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,scope:all_filters"],
+      "aggregate_organisations" => ["10,scope:all_filters"],
     }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params({
-      facets: {
-        "organisations" => expected_facet_params({
+      aggregates: {
+        "organisations" => expected_aggregate_params({
           requested: 10,
           scope: :all_filters,
         })
@@ -658,36 +659,36 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     }), p.parsed_params)
   end
 
-  should "complain about invalid scope options in facet parameters" do
+  should "complain about invalid scope options in aggregate parameters" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,scope:unknown"],
+      "aggregate_organisations" => ["10,scope:unknown"],
     }, @schema)
 
-    assert_equal(%{"unknown" is not a valid scope option in facet "organisations"}, p.error)
+    assert_equal(%{"unknown" is not a valid scope option in aggregate "organisations"}, p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end
 
   should "complain about a repeated examples option" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,examples:5,examples:6,example_scope:global"],
+      "aggregate_organisations" => ["10,examples:5,examples:6,example_scope:global"],
     }, @schema)
 
-    assert_equal(%{Too many values (2) for parameter "examples" in facet "organisations" (must occur at most once)}, p.error)
+    assert_equal(%{Too many values (2) for parameter "examples" in aggregate "organisations" (must occur at most once)}, p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end
 
   should "merge fields from repeated example_fields options" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,examples:5,example_fields:slug,example_fields:title:link,example_scope:global"],
+      "aggregate_organisations" => ["10,examples:5,example_fields:slug,example_fields:title:link,example_scope:global"],
     }, @schema)
 
     assert_equal("", p.error)
     assert p.valid?
     assert_equal(expected_params({
-      facets: {
-        "organisations" => expected_facet_params({
+      aggregates: {
+        "organisations" => expected_aggregate_params({
           requested: 10,
           examples: 5,
           example_fields: %w(slug title link),
@@ -697,23 +698,23 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
   should "require the example_scope to be set" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,examples:5,example_fields:slug:title"],
+      "aggregate_organisations" => ["10,examples:5,example_fields:slug:title"],
     }, @schema)
 
     assert_equal("example_scope parameter must be set to 'query' or 'global' when requesting examples", p.error)
     assert !p.valid?
-    assert_equal(expected_params({ facets: {} }), p.parsed_params)
+    assert_equal(expected_params({ aggregates: {} }), p.parsed_params)
   end
 
   should "allow example_scope to be set to 'query'" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
+      "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
     }, @schema)
 
     assert p.valid?
     assert_equal(expected_params({
-      facets: {
-        "organisations" => expected_facet_params({
+      aggregates: {
+        "organisations" => expected_aggregate_params({
           requested: 10,
           examples: 5,
           example_fields: %w(slug title),
@@ -725,7 +726,7 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
   should "complain about an invalid example_scope option" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,examples:5,example_scope:invalid"],
+      "aggregate_organisations" => ["10,examples:5,example_scope:invalid"],
     }, @schema)
 
     assert_equal("example_scope parameter must be set to 'query' or 'global' when requesting examples", p.error)
@@ -735,26 +736,49 @@ class SearchParameterParserTest < ShouldaUnitTestCase
 
   should "complain about a repeated example_scope option" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,examples:5,example_scope:global,example_scope:global"],
+      "aggregate_organisations" => ["10,examples:5,example_scope:global,example_scope:global"],
     }, @schema)
 
-    assert_equal(%{Too many values (2) for parameter "example_scope" in facet "organisations" (must occur at most once)}, p.error)
+    assert_equal(%{Too many values (2) for parameter "example_scope" in aggregate "organisations" (must occur at most once)}, p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
   end
 
-  should "validate options in the values for the facet parameter" do
+  should "validate options in the values for the aggregate parameter" do
     p = SearchParameterParser.new({
-      "facet_organisations" => ["10,example:5,examples:lots,example_fields:unknown:title"],
+      "aggregate_organisations" => ["10,example:5,examples:lots,example_fields:unknown:title"],
     }, @schema)
 
     assert_equal([
-      %{Invalid value "lots" for parameter "examples" in facet "organisations" (expected positive integer)},
-      %{Some requested fields are not valid return fields: ["unknown"] in parameter "example_fields" in facet "organisations"},
-      %{Unexpected options in facet "organisations": example},
+      %{Invalid value "lots" for parameter "examples" in aggregate "organisations" (expected positive integer)},
+      %{Some requested fields are not valid return fields: ["unknown"] in parameter "example_fields" in aggregate "organisations"},
+      %{Unexpected options in aggregate "organisations": example},
     ].join(". "), p.error)
     assert !p.valid?
     assert_equal(expected_params({}), p.parsed_params)
+  end
+
+  should "accept facets as a alias for aggregates" do
+    aggregate_p = SearchParameterParser.new({
+      "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
+    }, @schema)
+    facet_p = SearchParameterParser.new({
+      "facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
+    }, @schema)
+
+    assert aggregate_p.valid?
+    assert facet_p.valid?
+    assert_equal(aggregate_p.parsed_params['aggregates'], facet_p.parsed_params['facets'])
+  end
+
+  should "compalin with facets are used in combination with aggregates" do
+    p = SearchParameterParser.new({
+      "aggregate_organisations" => ["10"],
+      "facet_mainstream_browse_pages" => ["10"],
+    }, @schema)
+
+    assert_equal("aggregates can not be used in conjuction with facets, please switch to using aggregates as facets are deprecated.", p.error)
+    assert !p.valid?
   end
 
   should "understand the fields parameter" do

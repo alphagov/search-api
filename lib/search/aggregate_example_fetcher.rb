@@ -1,25 +1,24 @@
 module Search
-  # Fetch example values for facets
-  class FacetExampleFetcher
+  class AggregateExampleFetcher
     attr_reader :search_params
 
     def initialize(index, es_response, search_params, query_builder)
       @index = index
-      @response_facets = es_response["facets"]
+      @response_aggregates = es_response["aggregations"]
       @search_params = search_params
       @query_builder = query_builder
     end
 
-    # Fetch all requested example facet values
-    # Returns {field_name => {facet_value => {total: count, examples: [{field: value}, ...]}}}
-    # ie: a hash keyed by field name, containing hashes keyed by facet value with
+    # Fetch all requested example aggregate values
+    # Returns {field_name => {aggregate_value => {total: count, examples: [{field: value}, ...]}}}
+    # ie: a hash keyed by field name, containing hashes keyed by aggregate value with
     # values containing example information for the value.
     def fetch
-      return {} if @response_facets.nil?
+      return {} if @response_aggregates.nil?
 
-      search_params.facets.reduce({}) do |result, (field_name, facet_params)|
-        if facet_params[:examples] > 0
-          result[field_name] = fetch_for_field(field_name, facet_params)
+      search_params.aggregates.reduce({}) do |result, (field_name, aggregate_params)|
+        if aggregate_params[:examples] > 0
+          result[field_name] = fetch_for_field(field_name, aggregate_params)
         end
         result
       end
@@ -31,10 +30,10 @@ module Search
       @index.schema.field_definitions
     end
 
-    def fetch_for_field(field_name, facet_params)
-      example_count = facet_params[:examples]
-      example_fields = facet_params[:example_fields]
-      scope = facet_params[:example_scope]
+    def fetch_for_field(field_name, aggregate_params)
+      example_count = aggregate_params[:examples]
+      example_fields = aggregate_params[:example_fields]
+      scope = aggregate_params[:example_scope]
 
       if scope == :query
         query = @query_builder.query
@@ -44,10 +43,10 @@ module Search
         filter = nil
       end
 
-      facet_options = @response_facets.fetch(field_name, {}).fetch("terms", [])
+      aggregate_options = @response_aggregates.dig(field_name, 'filtered_aggregations', "buckets") || []
 
-      slugs = facet_options.map { |option|
-        option["term"]
+      slugs = aggregate_options.map { |option|
+        option["key"]
       }
 
       if slugs.empty?
@@ -57,7 +56,7 @@ module Search
       end
     end
 
-    def facet_example_searches(field_name, slugs, example_count, example_fields, query, query_filter)
+    def aggregate_example_searches(field_name, slugs, example_count, example_fields, query, query_filter)
       slugs.map { |slug|
         if query_filter.nil?
           filter = { term: { field_name => slug } }
@@ -94,9 +93,9 @@ module Search
       some_results.reduce(&:merge)
     end
 
-    # Fetch facet examples for a set of slugs
+    # Fetch aggregate examples for a set of slugs
     def fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
-      searches = facet_example_searches(field_name, slugs, example_count,
+      searches = aggregate_example_searches(field_name, slugs, example_count,
                                         example_fields, query, filter)
       responses = @index.msearch(searches)
       response_list = responses["responses"]

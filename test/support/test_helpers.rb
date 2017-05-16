@@ -15,7 +15,7 @@ module TestHelpers
       order: nil,
       filters: {},
       return_fields: nil,
-      facets: nil,
+      aggregates: nil,
       debug: {},
       ab_tests: {},
     }.merge(options))

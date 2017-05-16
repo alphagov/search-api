@@ -96,7 +96,7 @@ class SearchTest < IntegrationTest
   def test_filter_by_field
     populate_content_indexes(section_count: 1)
 
-    get "/search?filter_mainstream_browse_pages=1"
+    get "/search?filter_mainstream_browse_pages=browse/page/1"
 
     assert_equal ["/government-1", "/mainstream-1"],
       result_links.sort
@@ -105,7 +105,7 @@ class SearchTest < IntegrationTest
   def test_reject_by_field
     populate_content_indexes(section_count: 2)
 
-    get "/search?reject_mainstream_browse_pages=1"
+    get "/search?reject_mainstream_browse_pages=browse/page/1"
 
     assert_equal ["/government-2", "/mainstream-2"],
       result_links.sort
@@ -150,7 +150,32 @@ class SearchTest < IntegrationTest
     assert_equal [{ "slug" => "farming" }], results[1]["specialist_sectors"]
   end
 
-  def test_facet_counting
+  def test_aggregate_counting
+    populate_content_indexes(section_count: 2)
+
+    get "/search?q=important&aggregate_mainstream_browse_pages=2"
+
+    assert_equal 4, parsed_response["total"]
+
+    aggregate = parsed_response["aggregates"]
+
+    assert_equal({
+      "mainstream_browse_pages" => {
+        "options" => [
+          { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
+          { "value" => { "slug" => "browse/page/2" }, "documents" => 2 },
+        ],
+        "documents_with_no_value" => 0,
+        "total_options" => 2,
+        "missing_options" => 0,
+        "scope" => "exclude_field_filter",
+      }
+    }, aggregate)
+  end
+
+  # we changed facet -> aggregate but still support both
+  # the result set should match the naming used in the request
+  def test_aggregate_counting_using_facets
     populate_content_indexes(section_count: 2)
 
     get "/search?q=important&facet_mainstream_browse_pages=2"
@@ -162,8 +187,8 @@ class SearchTest < IntegrationTest
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          { "value" => { "slug" => "1" }, "documents" => 2 },
-          { "value" => { "slug" => "2" }, "documents" => 2 },
+          { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
+          { "value" => { "slug" => "browse/page/2" }, "documents" => 2 },
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
@@ -171,76 +196,77 @@ class SearchTest < IntegrationTest
         "scope" => "exclude_field_filter",
       }
     }, facets)
+    assert_nil(parsed_response['aggregates'])
   end
 
   # TODO: The `mainstream_browse_pages` fields are populated with a number, 1
   # or 2. This should be made more explicit.
-  def test_facet_counting_with_filter_on_field_and_exclude_field_filter_scope
+  def test_aggregate_counting_with_filter_on_field_and_exclude_field_filter_scope
     populate_content_indexes(section_count: 2)
 
-    get "/search?q=important&facet_mainstream_browse_pages=2"
+    get "/search?q=important&aggregate_mainstream_browse_pages=2"
 
     assert_equal 4, parsed_response["total"]
-    facets_without_filter = parsed_response["facets"]
+    aggregates_without_filter = parsed_response["aggregates"]
 
-    get "/search?q=important&facet_mainstream_browse_pages=2&filter_mainstream_browse_pages=1"
+    get "/search?q=important&aggregate_mainstream_browse_pages=2&filter_mainstream_browse_pages=browse/page/1"
     assert_equal 2, parsed_response["total"]
 
-    facets_with_filter = parsed_response["facets"]
+    aggregates_with_filter = parsed_response["aggregates"]
 
-    assert_equal(facets_with_filter, facets_without_filter)
-    assert_equal(2, facets_without_filter["mainstream_browse_pages"]["options"].size)
+    assert_equal(aggregates_with_filter, aggregates_without_filter)
+    assert_equal(2, aggregates_without_filter["mainstream_browse_pages"]["options"].size)
   end
 
-  def test_facet_counting_missing_options
+  def test_aggregate_counting_missing_options
     populate_content_indexes(section_count: 2)
 
-    get "/search?q=important&facet_mainstream_browse_pages=1"
+    get "/search?q=important&aggregate_mainstream_browse_pages=1"
 
     assert_equal 4, parsed_response["total"]
-    facets = parsed_response["facets"]
+    aggregates = parsed_response["aggregates"]
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          { "value" => { "slug" => "1" }, "documents" => 2 },
+          { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
         ],
         "documents_with_no_value" => 0,
         "total_options" => 2,
         "missing_options" => 1,
         "scope" => "exclude_field_filter",
       }
-    }, facets)
+    }, aggregates)
   end
 
-  def test_facet_counting_with_filter_on_field_and_all_filters_scope
+  def test_aggregate_counting_with_filter_on_field_and_all_filters_scope
     populate_content_indexes(section_count: 2)
 
-    get "/search?q=important&facet_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=1"
+    get "/search?q=important&aggregate_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=browse/page/1"
 
     assert_equal 2, parsed_response["total"]
-    facets = parsed_response["facets"]
+    aggregates = parsed_response["aggregates"]
 
     assert_equal({
       "mainstream_browse_pages" => {
         "options" => [
-          { "value" => { "slug" => "1" }, "documents" => 2 },
+          { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
         ],
         "documents_with_no_value" => 0,
         "total_options" => 1,
         "missing_options" => 0,
         "scope" => "all_filters",
       }
-    }, facets)
+    }, aggregates)
   end
 
-  def test_facet_examples
+  def test_aggregate_examples
     populate_content_indexes(section_count: 2)
 
-    get "/search?q=important&facet_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
+    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
     assert_equal(
       ["/government-1", "/mainstream-1"],
-      parsed_response["facets"]["mainstream_browse_pages"]["options"].first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
+      parsed_response["aggregates"]["mainstream_browse_pages"]["options"].first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
     )
   end
 
@@ -576,15 +602,15 @@ class SearchTest < IntegrationTest
     assert parsed_response.fetch("elasticsearch_query")
   end
 
-  def test_dfid_can_search_by_every_facet
+  def test_dfid_can_search_by_every_aggregate
     commit_document("mainstream_test", dfid_research_output_attributes)
 
-    facet_queries = %w(
+    aggregate_queries = %w(
       filter_dfid_review_status[]=peer_reviewed
       filter_country[]=TZ&filter_country[]=AL
     )
 
-    facet_queries.each do |filter_query|
+    aggregate_queries.each do |filter_query|
       get "/search?filter_document_type=dfid_research_output&#{filter_query}"
 
       assert last_response.ok?

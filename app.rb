@@ -15,7 +15,6 @@ require "search/registries"
 require "search/query"
 
 require "parameter_parser/search_parameter_parser"
-require "parameter_parser/facet_parameter_parser"
 require "schema/combined_index_schema"
 
 require_relative "config"

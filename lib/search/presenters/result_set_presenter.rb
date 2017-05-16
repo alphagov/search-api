@@ -1,6 +1,6 @@
 require "search/result_set"
 require_relative "result_presenter"
-require_relative "facet_result_presenter"
+require_relative "aggregate_result_presenter"
 require_relative "spell_check_presenter"
 
 module Search
@@ -13,21 +13,21 @@ module Search
     #
     #     { organisations: OrganisationRegistry.new(...) }
     #
-    # `facet_examples` is {field_name => {facet_value => {total: count, examples: [{field: value}, ...]}}}
-    # ie: a hash keyed by field name, containing hashes keyed by facet value with
+    # `aggregate_examples` is {field_name => {aggregate_value => {total: count, examples: [{field: value}, ...]}}}
+    # ie: a hash keyed by field name, containing hashes keyed by aggregates value with
     # values containing example information for the value.
     def initialize(search_params:,
                    es_response:,
                    registries: {},
-                   facet_examples: {},
+                   aggregate_examples: {},
                    schema: nil,
                    query_payload: {})
 
       @es_response = es_response
-      @facets = es_response["facets"]
+      @aggregates = es_response["aggregations"]
       @search_params = search_params
       @registries = registries
-      @facet_examples = facet_examples
+      @aggregate_examples = aggregate_examples
       @schema = schema
       @query_payload = query_payload
     end
@@ -37,7 +37,7 @@ module Search
         results: presented_results,
         total: es_response["hits"]["total"],
         start: search_params.start,
-        facets: presented_facets,
+        search_params.aggregate_name => presented_aggregates,
         suggested_queries: suggested_queries
       }
 
@@ -60,8 +60,8 @@ module Search
       end
     end
 
-    def presented_facets
-      FacetResultPresenter.new(@facets, @facet_examples, @search_params, @registries).presented_facets
+    def presented_aggregates
+      AggregateResultPresenter.new(@aggregates, @aggregate_examples, @search_params, @registries).presented_aggregates
     end
   end
 end
