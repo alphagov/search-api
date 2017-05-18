@@ -11,7 +11,7 @@ gem "sinatra", "1.4.7"
 gem "rake", "~> 10.5"
 gem "rack", "~> 1.6"
 gem "logging", "~> 2.1.0"
-gem "nokogiri", "~> 1.6.7"
+gem "nokogiri", "~> 1.7.2"
 gem "whenever", "~> 0.9.4"
 gem "slop", "~> 3.4.5"
 
