@@ -52,9 +52,13 @@ module QueryComponents
       {
         bool: {
           must: must_conditions,
-          should: should_conditions
+          should: should_conditions,
         }
       }
+    end
+
+    def b_variant?
+      @search_params.ab_tests[:search_match_length] == 'B'
     end
 
     def payload_for_quoted_phrase
@@ -66,12 +70,14 @@ module QueryComponents
       if @search_params.enable_id_codes?
         [all_searchable_text_query]
       else
-        [query_string_query]
+        b_variant? ? [] : [query_string_query]
       end
     end
 
     def should_conditions
-      exact_field_boosts + [exact_match_boost, shingle_token_filter_boost]
+      fields = exact_field_boosts + [exact_match_boost, shingle_token_filter_boost]
+      fields = (fields + [query_string_query]) if b_variant?
+      fields
     end
 
     def all_searchable_text_query
