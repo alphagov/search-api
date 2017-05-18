@@ -11,6 +11,8 @@
     "navigation_document_supertype",
     "is_withdrawn",
     "latest_change_note",
+    "licence_identifier",
+    "licence_short_description",
     "link",
     "mainstream_browse_pages",
     "mainstream_browse_page_content_ids",

@@ -30,6 +30,8 @@ class ElasticsearchIndexingTest < IntegrationTest
       "content_store_document_type" => "answer",
       "link" => "/an-example-answer",
       "indexable_content" => "HERE IS SOME CONTENT",
+      "licence_identifier" => "1201-5-1",
+      "licence_short_description" => "A short description of a licence",
     }.to_json
 
     assert_document_is_in_rummager({
@@ -41,6 +43,8 @@ class ElasticsearchIndexingTest < IntegrationTest
       "navigation_document_supertype" => "guidance",
       "email_document_supertype" => "other",
       "government_document_supertype" => "other",
+      "licence_identifier" => "1201-5-1",
+      "licence_short_description" => "A short description of a licence",
     })
   end
 

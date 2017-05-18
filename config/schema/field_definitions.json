@@ -549,5 +549,14 @@
   "types_of_support": {
     "description": "The types of support provided by a business finance support scheme",
     "type": "searchable_identifiers"
+  },
+
+  "licence_identifier": {
+    "description": "The licence ID associated with a content item of type licence",
+    "type": "identifier"
+  },
+
+  "licence_short_description": {
+    "type": "searchable_text"
   }
 }
