@@ -37,6 +37,7 @@ module QueryComponents
     # N clauses then M clauses should match. So, 2<2 means when there are
     # MORE than 2 clauses then 2 should match.
     MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%".freeze
+    MINIMUM_SHOULD_MATCH_VARIANT_B = "2<2".freeze
 
     def payload
       if @search_params.quoted_search_phrase?
@@ -92,10 +93,18 @@ module QueryComponents
           _all: {
             query: escape(search_term),
             analyzer: query_analyzer,
-            minimum_should_match: MINIMUM_SHOULD_MATCH,
+            minimum_should_match: minimum_should_match,
           }
         }
       }
+    end
+
+    def minimum_should_match
+      if @search_params.ab_tests[:search_match_length] == 'B'
+        MINIMUM_SHOULD_MATCH_VARIANT_B
+      else
+        MINIMUM_SHOULD_MATCH
+      end
     end
 
     def exact_field_boosts
