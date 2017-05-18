@@ -12,7 +12,7 @@ class FacetsTest < ShouldaUnitTestCase
     should "have correct facet in payload" do
       builder = QueryComponents::Facets.new(
         make_search_params(
-          facets: { "organisations" => { requested: 10, scope: :exclude_field_filter } },
+          facets: { "specialist_sectors" => { requested: 10, scope: :exclude_field_filter } },
         )
       )
 
@@ -20,9 +20,9 @@ class FacetsTest < ShouldaUnitTestCase
 
       assert_equal(
         {
-          "organisations" => {
+          "specialist_sectors" => {
             terms: {
-              field: "organisations",
+              field: "specialist_sectors",
               order: "count",
               size: 100000,
             },
@@ -37,8 +37,8 @@ class FacetsTest < ShouldaUnitTestCase
     setup do
       @builder = QueryComponents::Facets.new(
         make_search_params(
-          filters: [text_filter("organisations", ["hm-magic"])],
-          facets: { "organisations" => { requested: 10, scope: :exclude_field_filter } },
+          filters: [text_filter("specialist_sectors", ["magic"])],
+          facets: { "specialist_sectors" => { requested: 10, scope: :exclude_field_filter } },
         )
       )
     end
@@ -46,9 +46,9 @@ class FacetsTest < ShouldaUnitTestCase
     should "have correct facet in payload" do
       assert_equal(
         {
-          "organisations" => {
+          "specialist_sectors" => {
             terms: {
-              field: "organisations",
+              field: "specialist_sectors",
               order: "count",
               size: 100000,
             },
@@ -62,8 +62,8 @@ class FacetsTest < ShouldaUnitTestCase
     setup do
       @builder = QueryComponents::Facets.new(
         make_search_params(
-          filters: [text_filter("organisations", ["hm-magic"])],
-          facets: { "organisations" => { requested: 10, scope: :all_filters } },
+          filters: [text_filter("specialist_sectors", ["magic"])],
+          facets: { "specialist_sectors" => { requested: 10, scope: :all_filters } },
         )
       )
     end
@@ -71,14 +71,14 @@ class FacetsTest < ShouldaUnitTestCase
     should "have correct facet in payload" do
       assert_equal(
         {
-          "organisations" => {
+          "specialist_sectors" => {
             terms: {
-              field: "organisations",
+              field: "specialist_sectors",
               order: "count",
               size: 100000,
             },
             facet_filter: {
-              "terms" => { "organisations" => ["hm-magic"] }
+              "terms" => { "specialist_sectors" => ["magic"] }
             },
           },
         },
@@ -91,7 +91,7 @@ class FacetsTest < ShouldaUnitTestCase
       @builder = QueryComponents::Facets.new(
         make_search_params(
           filters: [text_filter("mainstream_browse_pages", "levitation")],
-          facets: { "organisations" => { requested: 10, scope: :exclude_field_filter } },
+          facets: { "specialist_sectors" => { requested: 10, scope: :exclude_field_filter } },
         )
       )
     end
@@ -99,9 +99,9 @@ class FacetsTest < ShouldaUnitTestCase
     should "have facet with facet_filter in payload" do
       assert_equal(
         {
-          "organisations" => {
+          "specialist_sectors" => {
             terms: {
-              field: "organisations",
+              field: "specialist_sectors",
               order: "count",
               size: 100000,
             },

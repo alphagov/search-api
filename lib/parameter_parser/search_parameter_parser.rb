@@ -233,6 +233,13 @@ private
     def valid?
       errors.empty?
     end
+
+    def associated_document_type
+      case field_name
+      when "organisations"
+        "organisation"
+      end
+    end
   end
 
   class DateFieldFilter < Filter

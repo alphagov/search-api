@@ -21,14 +21,14 @@ class FilterTest < ShouldaUnitTestCase
   context "search with one filter" do
     should "append the correct text filters" do
       builder = QueryComponents::Filter.new(
-        make_search_params([text_filter("organisations", ["hm-magic"])])
+        make_search_params([text_filter("specialist_sectors", ["magic"])])
       )
 
       result = builder.payload
 
       assert_equal(
         result,
-        { "terms" => { "organisations" => ["hm-magic"] } }
+        { "terms" => { "specialist_sectors" => ["magic"] } }
       )
     end
 
@@ -49,14 +49,14 @@ class FilterTest < ShouldaUnitTestCase
   context "search with a filter with multiple options" do
     should "have correct filter" do
       builder = QueryComponents::Filter.new(
-        make_search_params([text_filter("organisations", ["hm-magic", "hmrc"])])
+        make_search_params([text_filter("specialist_sectors", ["magic", "air-travel"])])
       )
 
       result = builder.payload
 
       assert_equal(
         result,
-        { "terms" => { "organisations" => ["hm-magic", "hmrc"] } }
+        { "terms" => { "specialist_sectors" => ["magic", "air-travel"] } }
       )
     end
   end
@@ -66,7 +66,7 @@ class FilterTest < ShouldaUnitTestCase
       builder = QueryComponents::Filter.new(
         make_search_params(
           [
-            text_filter("organisations", ["hm-magic", "hmrc"]),
+            text_filter("specialist_sectors", ["magic", "air-travel"]),
             reject_filter("mainstream_browse_pages", ["benefits"]),
           ]
         )
@@ -77,7 +77,7 @@ class FilterTest < ShouldaUnitTestCase
       assert_equal(
         result,
         { bool: {
-          must: { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
+          must: { "terms" => { "specialist_sectors" => ["magic", "air-travel"] } },
           must_not: { "terms" => { "mainstream_browse_pages" => ["benefits"] } },
         } }
       )
@@ -89,7 +89,7 @@ class FilterTest < ShouldaUnitTestCase
       builder = QueryComponents::Filter.new(
         make_search_params(
           [
-            text_filter("organisations", ["hm-magic", "hmrc"]),
+            text_filter("specialist_sectors", ["magic", "air-travel"]),
             text_filter("mainstream_browse_pages", ["levitation"]),
           ],
         )
@@ -101,8 +101,38 @@ class FilterTest < ShouldaUnitTestCase
         result,
         {
           and: [
-            { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
+            { "terms" => { "specialist_sectors" => ["magic", "air-travel"] } },
             { "terms" => { "mainstream_browse_pages" => ["levitation"] } },
+          ].compact
+        }
+      )
+    end
+  end
+
+  context "search with tag filter" do
+    should "include the topic itself" do
+      builder = QueryComponents::Filter.new(
+        make_search_params(
+          [
+            text_filter("organisations", ["hmrc"]),
+          ],
+        )
+      )
+
+      result = builder.payload
+
+      assert_equal(
+        result,
+        {
+          or: [
+            { "terms" => { "organisations" => ["hmrc"] } },
+
+            {
+              and: [
+                { "terms" => { "slug" => ["hmrc"] } },
+                { "term" => { "format" => "organisation" } },
+              ]
+            }
           ].compact
         }
       )
