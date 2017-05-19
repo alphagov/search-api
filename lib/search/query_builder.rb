@@ -21,28 +21,17 @@ module Search
     end
 
     def payload
-      hash_without_blank_values(
+      hash_without_blank_values({
         from: search_params.start,
         size: search_params.count,
-        fields: fields.uniq,
         query: query,
         filter: filter,
         sort: sort,
         facets: facets,
         highlight: highlight,
         explain: search_params.debug[:explain],
+      }
       )
-    end
-
-    # `title`, `description` always needed to potentially populate virtual
-    # fields. If not explicitly requested they will not be sent to the user.
-    # The same applies to all `*_content_ids` in order to be able to expand
-    # their corresponding fields without having to request both fields
-    # explicitly.
-    def fields
-      search_params.return_fields +
-        %w[title description organisation_content_ids topic_content_ids
-           mainstream_browse_page_content_ids]
     end
 
     def query

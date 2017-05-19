@@ -101,26 +101,6 @@ class BaseParameterParser
   #            the query and filters
   ALLOWED_EXAMPLE_SCOPES = [:global, :query].freeze
 
-  # The fields which are returned by default for search results.
-  DEFAULT_RETURN_FIELDS = %w(
-    description
-    display_type
-    document_series
-    format
-    link
-    organisations
-    public_timestamp
-    slug
-    specialist_sectors
-    title
-    policy_areas
-    world_locations
-    topic_content_ids
-    expanded_topics
-    organisation_content_ids
-    expanded_organisations
-  ).freeze
-
   # Default order in which facet results are sorted
   DEFAULT_FACET_SORT = [
     [:filtered, 1],

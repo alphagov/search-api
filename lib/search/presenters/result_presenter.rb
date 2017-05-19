@@ -17,7 +17,7 @@ module Search
     end
 
     def present
-      result = raw_result['fields'] || {}
+      result = raw_result['fields'] || raw_result['_source'] || {}
 
       if schema
         result = convert_elasticsearch_array_fields(result)
@@ -64,7 +64,7 @@ module Search
       result.each do |field_name, values|
         next if field_name[0] == '_'
         next if document_schema.fields.fetch(field_name).type.multivalued
-        result[field_name] = values.first
+        result[field_name] = values.is_a?(Array) ? values.first : values
       end
       result
     end
@@ -114,6 +114,8 @@ module Search
     end
 
     def only_return_explicitely_requested_values(result)
+      return result if search_params.return_fields.empty?
+
       result.slice(*search_params.return_fields)
     end
 
