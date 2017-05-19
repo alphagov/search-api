@@ -64,6 +64,7 @@ module Indexer
       payload.each_line.each_slice(2).map do |command, doc|
         command_hash = JSON.parse(command)
         doc_hash = JSON.parse(doc)
+        doc_hash['index_name'] = @index_name
         actions << [command_hash, doc_hash]
         links << doc_hash["link"]
       end

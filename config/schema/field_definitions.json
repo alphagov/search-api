@@ -549,5 +549,10 @@
   "types_of_support": {
     "description": "The types of support provided by a business finance support scheme",
     "type": "searchable_identifiers"
+  },
+
+  "index_name": {
+    "description": "Historical index name, used to allow government (whitehall) results to have a boost applied",
+    "type": "identifier"
   }
 }
