@@ -18,8 +18,6 @@ module Indexer
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
-      doc_hash.delete('_type')
-      doc_hash.delete('_id')
       doc_hash
     end
 
