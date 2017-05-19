@@ -7,6 +7,8 @@ module Search
     LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/
 
     def escape(s)
+      s = s.to_s
+
       # 6 slashes =>
       #  ruby reads it as 3 backslashes =>
       #    the first 2 =>

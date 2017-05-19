@@ -92,6 +92,13 @@ class ElasticsearchAdvancedSearchTest < IntegrationTest
     assert_result_links "/an-example-answer"
   end
 
+  def test_should_treat_keywords_as_string
+    get "/#{@index_name}/advanced_search.json?per_page=1&page=1&keywords[something]=1"
+    assert last_response.ok?
+    assert_result_total 2
+    assert_result_links "/an-example-answer"
+  end
+
   def test_should_search_by_nested_data
     get "/#{@index_name}/advanced_search.json?per_page=1&page=1&keywords=#{CGI.escape('Special thing')}"
 
