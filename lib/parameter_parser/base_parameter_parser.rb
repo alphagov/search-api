@@ -14,6 +14,7 @@ class BaseParameterParser
     tribunal_decision_decision_date
     start_date
     assessment_date
+    popularity
   ).freeze
 
   SORT_MAPPINGS = {
