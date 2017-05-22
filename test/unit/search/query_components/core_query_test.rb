@@ -19,4 +19,28 @@ class CoreQueryTest < ShouldaUnitTestCase
       refute_match(/query_with_old_synonyms/, query.to_s)
     end
   end
+
+  context "when ab testing minimum should match" do
+    should "use the default value when no variant is passed in" do
+      builder = QueryComponents::CoreQuery.new(search_query_params)
+
+      query = builder.payload
+      assert_match(/"2<2 3<3 7<50%"/, query[:bool][:must].to_s)
+    end
+
+    should "use variant b when it is passed in" do
+      builder = QueryComponents::CoreQuery.new(search_query_params(ab_tests: { search_match_length: 'B' }))
+
+      query = builder.payload
+      refute_match(/"2<2 3<3 7<50%"/, query[:bool][:must].to_s)
+      assert_match(/"2<2 3<3 7<50%"/, query[:bool][:should].to_s)
+    end
+
+    should "use variant a when it is passed in" do
+      builder = QueryComponents::CoreQuery.new(search_query_params(ab_tests: { search_match_length: 'A' }))
+
+      query = builder.payload
+      assert_match(/"2<2 3<3 7<50%"/, query[:bool][:must].to_s)
+    end
+  end
 end
