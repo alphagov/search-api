@@ -17,6 +17,7 @@ module TestHelpers
       return_fields: nil,
       facets: nil,
       debug: {},
+      ab_tests: {},
     }.merge(options))
   end
 

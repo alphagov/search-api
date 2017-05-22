@@ -100,7 +100,7 @@ private
       base_url: URI.parse(opts["json"]),
       authentication: opts[:auth],
       rate_limit_token: opts[:rate_limit_token],
-    )
+   )
   end
 
   def open_file(filename)
