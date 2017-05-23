@@ -33,7 +33,11 @@ class IntegrationTest < MiniTest::Unit::TestCase
   end
 
   def sample_document
-    Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_elasticsearch_types)
+    Document.new(
+      field_definitions: sample_elasticsearch_types,
+      type: 'edition',
+      source_attributes: SAMPLE_DOCUMENT_ATTRIBUTES,
+    )
   end
 
   def insert_document(index_name, attributes)

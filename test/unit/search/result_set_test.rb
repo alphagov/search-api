@@ -31,7 +31,9 @@ class ResultSetTest < ShouldaUnitTestCase
           "hits" => [
             {
               "_score" => 12,
-              "_source" => { "foo" => "bar" }
+              "_id" => "/foo",
+              "_type" => "edition",
+              "_source" => { "title" => "hello" }
             }
           ]
         }
@@ -42,19 +44,11 @@ class ResultSetTest < ShouldaUnitTestCase
       assert_equal 1, Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response).total
     end
 
-    should "pass the fields to Document.from_hash" do
-      expected_hash = has_entry("foo", "bar")
-      Document.expects(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).returns(:doc)
-
+    should "return attributes from source fields and the score" do
       result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
-      assert_equal [:doc], result_set.results
-    end
 
-    should "pass the result score to Document.from_hash" do
-      Document.expects(:from_hash).with(is_a(Hash), sample_elasticsearch_types, 12).returns(:doc)
-
-      result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
-      assert_equal [:doc], result_set.results
+      document = result_set.results.first
+      assert_equal document.to_hash, {"title" => "hello", "es_score" => 12}
     end
   end
 end
