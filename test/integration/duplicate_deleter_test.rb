@@ -79,7 +79,68 @@ class DuplicateDeleterTest < IntegrationTest
     assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
   end
 
-  private
+  def test_can_delete_duplicate_documents_on_different_types_using_link
+    commit_document(
+      "mainstream_test",
+      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+      "link" => "/an-example-page",
+      "_type" => "edition",
+    )
+    commit_document(
+      "mainstream_test",
+      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+      "link" => "/an-example-page",
+      "_type" => "cma_case",
+    )
+
+    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+
+    assert_message(msg: "Deleted duplicate for link")
+    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
+    assert_document_missing_in_rummager(link: "/an-example-page", type: "edition")
+  end
+
+  def test_cant_delete_duplicate_documents_using_link_with_different_content_ids
+    commit_document(
+      "mainstream_test",
+      "content_id" => "aaaaaaaa-d982-4426-9a7d-43f2b865e77c",
+      "link" => "/an-example-page",
+      "_type" => "edition",
+    )
+    commit_document(
+      "mainstream_test",
+      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+      "link" => "/an-example-page",
+      "_type" => "cma_case",
+    )
+
+    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+
+    assert_message(msg: "as multiple content_id's detected")
+    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
+    assert_document_present_in_rummager(link: "/an-example-page", type: "edition")
+  end
+
+  def test_can_delete_duplicate_documents_on_different_types_using_link_when_content_id_is_missing
+    commit_document(
+      "mainstream_test",
+      "link" => "/an-example-page",
+      "_type" => "edition",
+    )
+    commit_document(
+      "mainstream_test",
+      "link" => "/an-example-page",
+      "_type" => "cma_case",
+    )
+
+    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+
+    assert_message(msg: "Deleted duplicate for link")
+    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
+    assert_document_missing_in_rummager(link: "/an-example-page", type: "edition")
+  end
+
+private
 
   def assert_document_present_in_rummager(link:, type:, index: "mainstream_test")
     doc = fetch_document_from_rummager(link: link, type: type, index: index)
