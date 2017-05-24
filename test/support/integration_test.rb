@@ -136,10 +136,10 @@ private
     end
   end
 
-  def fetch_document_from_rummager(link:)
+  def fetch_document_from_rummager(link:, index: 'mainstream_test', type: '_all')
     response = client.get(
-      index: 'mainstream_test',
-      type: '_all',
+      index: index,
+      type: type,
       id: link
     )
     response['_source']
