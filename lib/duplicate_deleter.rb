@@ -68,7 +68,7 @@ class DuplicateDeleter
 
       index_names = results[:results].map { |a| a[:index] }
       if index_names.uniq.count != 1
-        io.puts "Skipping #{id_type} #{id} as multiple indicies detected #{index_names.uniq.join(', ')}"
+        io.puts "Skipping #{id_type} #{id} as multiple indices detected #{index_names.uniq.join(', ')}"
         next
       end
 
