@@ -62,8 +62,13 @@ class DuplicateDeleter
 
       content_ids = results[:results].map { |a| a['content_id'] }
       if content_ids.uniq.count != 1
-        io.puts "Skipping #{id_type} #{id} as multiple content_id's detected #{content_ids.uniq.join(', ')}"
-        next
+        if results[:results].any? { |a| a[:elasticsearch_type] != type_to_delete && a['content_id'].nil? }
+          io.puts "Skipping #{id_type} #{id} as there is another document indexed with a valid '_type' but a missing content ID"
+          next
+        elsif results[:results].any? { |a| a[:elasticsearch_type] == type_to_delete && !a['content_id'].nil? }
+          io.puts "Skipping #{id_type} #{id} as multiple non-null content_id's detected #{content_ids.uniq.join(', ')}"
+          next
+        end
       end
 
       index_names = results[:results].map { |a| a[:index] }
