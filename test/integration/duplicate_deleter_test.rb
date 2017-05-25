@@ -116,12 +116,52 @@ class DuplicateDeleterTest < IntegrationTest
 
     DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
 
-    assert_message(msg: "as multiple content_id's detected")
+    assert_message(msg: "as multiple non-null content_id's detected")
     assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
     assert_document_present_in_rummager(link: "/an-example-page", type: "edition")
   end
 
-  def test_can_delete_duplicate_documents_on_different_types_using_link_when_content_id_is_missing
+  def test_can_delete_duplicate_documents_if_bad_item_has_nil_content_id
+    commit_document(
+      "mainstream_test",
+      "link" => "/an-example-page",
+      "_type" => "edition",
+    )
+    commit_document(
+      "mainstream_test",
+      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+      "link" => "/an-example-page",
+      "_type" => "cma_case",
+    )
+
+    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+
+    assert_message(msg: "Deleted duplicate for link")
+    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
+    assert_document_missing_in_rummager(link: "/an-example-page", type: "edition")
+  end
+
+  def test_cant_delete_duplicate_documents_if_good_item_has_nil_content_id
+    commit_document(
+      "mainstream_test",
+      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+      "link" => "/an-example-page",
+      "_type" => "edition",
+    )
+    commit_document(
+      "mainstream_test",
+      "link" => "/an-example-page",
+      "_type" => "cma_case",
+    )
+
+    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+
+    assert_message(msg: "indexed with a valid '_type' but a missing content ID")
+    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
+    assert_document_present_in_rummager(link: "/an-example-page", type: "edition")
+  end
+
+  def test_can_delete_duplicate_documents_on_different_types_using_link_when_both_content_ids_are_missing
     commit_document(
       "mainstream_test",
       "link" => "/an-example-page",
