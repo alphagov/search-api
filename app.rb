@@ -176,7 +176,7 @@ class Rummager < Sinatra::Application
   post "/?:index?/documents" do
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
-      current_index.document_from_hash(hash)
+      current_index.document_from_original_hash(hash)
     }
 
     document_hashes = documents.map(&:elasticsearch_export)

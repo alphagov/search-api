@@ -11,7 +11,11 @@ class DocumentTest < MiniTest::Unit::TestCase
       "indexable_content" => "HERE IS SOME CONTENT",
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+    )
 
     assert_equal "TITLE", document.title
     assert_equal "DESCRIPTION", document.description
@@ -20,14 +24,18 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "HERE IS SOME CONTENT", document.indexable_content
   end
 
+  # TODO: what functionality is this testing?
   def test_should_permit_nonedition_documents
     hash = {
-      "_id" => "jobs_exact",
-      "_type" => "best_bet",
       "stemmed_query" => "jobs"
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = Document.new(
+      id: "jobs_exact",
+      field_definitions: sample_field_definitions,
+      type: 'best_bet',
+      source_attributes: hash,
+    )
 
     assert_equal "jobs", document.to_hash["stemmed_query"]
     assert_equal "jobs", document.stemmed_query
@@ -35,19 +43,9 @@ class DocumentTest < MiniTest::Unit::TestCase
 
     refute document.to_hash.has_key?("_type")
     refute document.to_hash.has_key?("_id")
+
     assert_equal "jobs_exact", document.elasticsearch_export["_id"]
     assert_equal "best_bet", document.elasticsearch_export["_type"]
-  end
-
-  def test_should_raise_helpful_error_for_unconfigured_types
-    hash = {
-      "_id" => "jobs_exact",
-      "_type" => "cheese"
-    }
-
-    assert_raises RuntimeError do
-      Document.from_hash(hash, sample_elasticsearch_types)
-    end
   end
 
   def test_should_ignore_fields_not_in_mappings
@@ -59,7 +57,11 @@ class DocumentTest < MiniTest::Unit::TestCase
       "some_other_field" => "test"
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+    )
 
     refute_includes document.to_hash.keys, "some_other_field"
     refute document.respond_to?("some_other_field")
@@ -74,7 +76,11 @@ class DocumentTest < MiniTest::Unit::TestCase
       indexable_content: "HERE IS SOME CONTENT"
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+    )
 
     assert_equal "TITLE", document.title
   end
@@ -88,7 +94,12 @@ class DocumentTest < MiniTest::Unit::TestCase
       "indexable_content" => "HERE IS SOME CONTENT"
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+    )
+
     assert_equal hash, document.to_hash
   end
 
@@ -100,42 +111,76 @@ class DocumentTest < MiniTest::Unit::TestCase
       "link" => "/an-example-guide"
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+    )
+
     assert_equal hash.keys.sort, document.to_hash.keys.sort
   end
 
-  def test_should_skip_missing_fields_in_elasticsearch_export
+  # Every document exported from elasticsearch has an ID and Type.
+  # These get merged into the export so that we know what type
+  # to use when bulk importing them again.
+  def test_should_set_meta_fields_in_elasticsearch_export
     hash = {
-        "_type" => "edition",
         "title" => "TITLE",
         "description" => "DESCRIPTION",
         "format" => "guide",
         "link" => "/an-example-guide",
     }
-    document = Document.from_hash(hash, sample_elasticsearch_types)
 
-    assert_equal hash.keys.sort, document.elasticsearch_export.keys.sort
+    expected_keys = %w(title description format link _id _type)
+
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+    )
+
+    assert_equal expected_keys.sort, document.elasticsearch_export.keys.sort
   end
 
   def test_should_include_result_score
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    assert_equal 5.2, Document.new(sample_field_definitions(field_names), hash, 5.2).es_score
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+      score: 5.2
+    )
+
+    assert_equal 5.2, document.es_score
   end
 
   def test_includes_elasticsearch_score_in_hash
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    assert_equal 5.2, Document.new(sample_field_definitions(field_names), hash, 5.2).to_hash["es_score"]
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+      score: 5.2
+    )
+
+    assert_equal 5.2, document.to_hash["es_score"]
   end
 
   def test_leaves_out_blank_score
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    refute_includes Document.new(sample_field_definitions(field_names), hash).to_hash, "es_score"
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: hash,
+    )
+
+    refute_includes document.to_hash, "es_score"
   end
 
   def test_should_handle_opaque_object_fields
@@ -143,8 +188,13 @@ class DocumentTest < MiniTest::Unit::TestCase
     document_hash = {
       "metadata" => metadata
     }
-    doc = Document.new(sample_field_definitions(%w(metadata)), document_hash)
 
-    assert_equal metadata, doc.metadata
+    document = Document.new(
+      field_definitions: sample_field_definitions,
+      type: 'edition',
+      source_attributes: document_hash,
+    )
+
+    assert_equal metadata, document.metadata
   end
 end

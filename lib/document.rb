@@ -1,23 +1,25 @@
 class Document
   attr_reader :es_score
+  attr_reader :type
+  attr_reader :id
 
-  def initialize(field_definitions, attributes = {}, es_score = nil)
+  def initialize(field_definitions:, type:, source_attributes:, id: nil, score: nil)
     @field_definitions = field_definitions
     @attributes = {}
-    @es_score = es_score
-    update_attributes!(attributes)
-    @id = attributes["_id"]
-    @type = attributes["_type"]
+    @es_score = score
+    update_attributes!(source_attributes)
+    @id = id
+    @type = type
   end
 
-  def self.from_hash(hash, elasticsearch_types, es_score = nil)
-    type = hash["_type"] || "edition"
-    doc_type = elasticsearch_types[type]
-    if doc_type.nil?
-      raise "Unexpected elasticsearch type '#{type}'. Document types must be configured"
-    end
-    self.new(doc_type.fields, hash, es_score)
-  end
+  # def self.from_hash(hash, elasticsearch_types, es_score = nil)
+  #   type = hash["_type"] || "edition"
+  #   doc_type = elasticsearch_types[type]
+  #   if doc_type.nil?
+  #     raise "Unexpected elasticsearch type '#{type}'. Document types must be configured"
+  #   end
+  #   self.new(doc_type.fields, hash, es_score)
+  # end
 
   def update_attributes!(attributes)
     attributes.each do |key, value|
@@ -32,6 +34,7 @@ class Document
   def get(field_name)
     field_name = field_name.to_s
     values = @attributes[field_name]
+    # FIXME: Remove this check.
     # Convert to array for consistency between elasticsearch 0.90 and 1.0.
     # When we no longer support elasticsearch <1.0, values in @attributes will
     # always be arrays.
@@ -62,21 +65,25 @@ class Document
       @field_definitions.keys.each do |key|
         value = get(key)
         if value.is_a?(Array)
+          # FIXME: Why can Documents contain other Documents? Is this used?
           value = value.map { |v| v.is_a?(Document) ? v.elasticsearch_export : v }
         end
         unless value.nil? || (value.respond_to?(:empty?) && value.empty?)
           doc[key] = value
         end
       end
-      doc["_type"] = @type || "edition"
-      doc["_id"] = @id if @id
+
+      doc["_type"] = self.type
+      doc["_id"] = self.id
     end
   end
 
+  # FIXME: do we expect _id and _type to appear here?
   def to_hash
     definitions_and_values = @field_definitions.keys.map do |field_name|
       value = get(field_name)
 
+      # FIXME: Why can Documents contain other Documents? Is this used?
       if value.is_a?(Array)
         value = value.map { |v| v.is_a?(Document) ? v.to_hash : v }
       else

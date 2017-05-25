@@ -136,14 +136,43 @@ module SearchIndices
     def get_document_by_id(document_id)
       begin
         response = @client.get(index: @index_name, type: "_all", id: document_id)
-        document_from_hash(response["_source"])
+        document_from_response(response)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         nil
       end
     end
 
-    def document_from_hash(hash)
-      Document.from_hash(hash, @elasticsearch_types)
+    def document_from_original_hash(hash)
+      # FIXME: validate this and fail the request if missing
+      type = hash.delete('_type') || "edition"
+      id = hash.delete('_id')
+
+      doc_type = elasticsearch_types[type]
+      if doc_type.nil?
+        raise "Unexpected elasticsearch type '#{type}'. Document types must be configured"
+      end
+
+      Document.new(
+        field_definitions: doc_type.fields,
+        id: id,
+        type: type,
+        source_attributes: hash
+      )
+    end
+
+    def document_from_response(response)
+      type = response['_type']
+      doc_type = elasticsearch_types[type]
+      if doc_type.nil?
+        raise "Unexpected elasticsearch type '#{type}'. Document types must be configured"
+      end
+
+      Document.new(
+        field_definitions: doc_type.fields,
+        id: response['_id'],
+        type: type,
+        source_attributes: response['_source']
+      )
     end
 
     def all_documents(options = nil)
@@ -153,7 +182,7 @@ module SearchIndices
       search_body = { query: { match_all: {} } }
       batch_size = self.class.scroll_batch_size
       LegacyClient::ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
+        document_from_response(hit)
       end
     end
 
@@ -252,6 +281,8 @@ module SearchIndices
     end
 
   private
+
+    attr_reader :elasticsearch_types
 
     # Parse an elasticsearch error message to determine whether it's caused by
     # a write-locked index. An example write-lock error message:

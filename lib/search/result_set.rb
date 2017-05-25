@@ -1,4 +1,6 @@
 module Search
+  # FIXME: This is for advanced_search (legacy)
+  # it should be separate
   class ResultSet
     attr_reader :total, :results
 
@@ -18,7 +20,25 @@ module Search
     end
 
     def self.document_from_hit(hit, elasticsearch_types)
-      Document.from_hash(hit["_source"], elasticsearch_types, hit["_score"])
+      # Default to edition if a result doesn't have a type.
+      # This should not happen if we are using the elasticsearch API
+      # properly. However this class should only be used by the "advanced search" (deprecated)
+      # and our tests for that are not very realistic.
+      type = hit['_type'] || "edition"
+
+
+      doc_type = elasticsearch_types[type]
+      if doc_type.nil?
+        raise "Unexpected elasticsearch type '#{type}'. Document types must be configured"
+      end
+
+      Document.new(
+        field_definitions: doc_type.fields,
+        id: hit['_id'],
+        type: type,
+        source_attributes: hit['_source'],
+        score: hit['_score']
+      )
     end
   end
 end

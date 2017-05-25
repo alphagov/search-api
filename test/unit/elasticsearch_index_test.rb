@@ -201,7 +201,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       headers: { 'Content-Type' => 'application/json' },
     )
     hits = (1..100).map { |i|
-      { "_source" => { "link" => "/foo-#{i}" } }
+      { "_type" => "edition", "_id" => "/foo-#{i}", "_source" => { "link" => "/foo-#{i}" } }
     }
     stub_request(:get, scroll_uri).with(
       body: "abcdefgh"
@@ -234,7 +234,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
       headers: { 'Content-Type' => 'application/json' },
     )
     hits = (1..3).map { |i|
-      { "_source" => { "link" => "/foo-#{i}" } }
+      { "_type" => "edition", "_id" => "/foo-#{i}", "_source" => { "link" => "/foo-#{i}" } }
     }
     total = hits.size
 
