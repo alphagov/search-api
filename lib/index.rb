@@ -136,7 +136,7 @@ module SearchIndices
     def get_document_by_id(document_id)
       begin
         response = @client.get(index: @index_name, type: "_all", id: document_id)
-        document_from_hash(response["_source"])
+        response
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         nil
       end

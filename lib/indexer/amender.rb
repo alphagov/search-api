@@ -11,9 +11,16 @@ module Indexer
         raise ArgumentError, "Cannot change the `link` attribute of a document."
       end
 
-      document = index.get_document_by_id(document_id)
+      raw_document = index.get_document_by_id(document_id)
+      return unless raw_document
 
-      return unless document
+      document_source = raw_document["_source"]
+      # For backwards-compatibility, ensure that the source _type and _id are
+      # the same as the main Elasticsearch _type and _id
+      document_source["_type"] = raw_document["_type"]
+      document_source["_id"] = raw_document["_id"]
+
+      document = index.document_from_hash(document_source)
 
       updates.each do |key, value|
         if document.has_field?(key)
