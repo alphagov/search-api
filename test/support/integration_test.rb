@@ -36,9 +36,9 @@ class IntegrationTest < MiniTest::Unit::TestCase
     Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_elasticsearch_types)
   end
 
-  def insert_document(index_name, attributes)
+  def insert_document(index_name, attributes, type: "edition")
     attributes.stringify_keys!
-    type = attributes["_type"] || "edition"
+    type = attributes["_type"] || type
     client.create(
       index: index_name,
       type: type,
@@ -58,8 +58,8 @@ class IntegrationTest < MiniTest::Unit::TestCase
     )
   end
 
-  def commit_document(index_name, attributes)
-    insert_document(index_name, attributes)
+  def commit_document(index_name, attributes, type: "edition")
+    insert_document(index_name, attributes, type: type)
     commit_index(index_name)
   end
 
@@ -134,6 +134,14 @@ private
     TestIndexHelpers::INDEX_NAMES.each do |index_name|
       add_sample_documents(index_name, params[:section_count])
     end
+  end
+
+  def fetch_raw_document_from_rummager(link:, index: 'mainstream_test', type: '_all')
+    client.get(
+      index: index,
+      type: type,
+      id: link
+    )
   end
 
   def fetch_document_from_rummager(link:, index: 'mainstream_test', type: '_all')

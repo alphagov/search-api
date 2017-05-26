@@ -36,6 +36,20 @@ class ElasticsearchAmendmentTest < IntegrationTest
     })
   end
 
+  def test_should_preserve_meta_fields
+    commit_document("mainstream_test", {
+      "title" => "The old title",
+      "link" => "/an-example-answer",
+    }, type: "aaib_report")
+
+    post "/documents/%2Fan-example-answer", "title=A+new+title"
+
+    retrieved = fetch_raw_document_from_rummager(link: "/an-example-answer")
+
+    assert_equal "aaib_report", retrieved["_type"]
+    assert_equal "aaib_report", retrieved["_source"]["_type"]
+  end
+
   def test_should_amend_a_document_queued
     commit_document("mainstream_test", {
       "title" => "The old title",
