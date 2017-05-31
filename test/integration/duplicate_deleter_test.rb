@@ -37,7 +37,7 @@ class DuplicateDeleterTest < IntegrationTest
     assert_document_missing_in_rummager(id: "/an-example-page", type: "edition")
   end
 
-  def test_cant_delete_a_type_that_dosent_exist
+  def test_cant_delete_a_type_that_doesnt_exist
     commit_document(
       "mainstream_test",
       "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
@@ -83,23 +83,23 @@ class DuplicateDeleterTest < IntegrationTest
     commit_document(
       "mainstream_test",
       "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
-      "link" => "/some-contact-page",
+      "link" => "/contact-page",
       "_type" => "edition",
-      "_id" => "/some-contact-page",
+      "_id" => "/contact-page",
     )
     commit_document(
       "mainstream_test",
       "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
-      "link" => "/some-contact-page",
+      "link" => "/contact-page",
       "_type" => "contact",
-      "_id" => "some-contact-page",
+      "_id" => "contact-page",
     )
 
     DuplicateDeleter.new('edition', io).call(["e3eaa461-3a85-4881-b412-9c58e7ea4ebd"])
 
     assert_message(msg: "Deleted duplicate for content_id")
-    assert_document_present_in_rummager(id: "some-contact-page", type: "contact")
-    assert_document_missing_in_rummager(id: "/some-contact-page", type: "edition")
+    assert_document_present_in_rummager(id: "contact-page", type: "contact")
+    assert_document_missing_in_rummager(id: "/contact-page", type: "edition")
   end
 
   def test_can_delete_duplicate_documents_on_different_types_using_link
