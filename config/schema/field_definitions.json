@@ -56,6 +56,11 @@
     "type": "identifiers"
   },
 
+  "primary_publishing_organisation": {
+    "description": "The organisation that published this page. This field is copied from the publishing-api. It is only populated by Whitehall.",
+    "type": "identifiers"
+  },
+
   "specialist_sectors": {
     "description": "The navigation \"topics\" that the document is assigned to.  Nothing to do with \"policy areas\"",
     "type": "identifiers"
