@@ -39,10 +39,11 @@ class IntegrationTest < MiniTest::Unit::TestCase
   def insert_document(index_name, attributes, type: "edition")
     attributes.stringify_keys!
     type = attributes["_type"] || type
+    id = attributes["_id"] || attributes['link']
     client.create(
       index: index_name,
       type: type,
-      id: attributes['link'],
+      id: id,
       body: attributes
     )
   end

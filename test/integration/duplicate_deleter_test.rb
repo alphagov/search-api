@@ -79,6 +79,29 @@ class DuplicateDeleterTest < IntegrationTest
     assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
   end
 
+  def test_can_delete_duplicate_content_ids_when_contact_id_is_wrong
+    commit_document(
+      "mainstream_test",
+      "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
+      "link" => "/some-contact-page",
+      "_type" => "edition",
+      "_id" => "/some-contact-page",
+    )
+    commit_document(
+      "mainstream_test",
+      "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
+      "link" => "/some-contact-page",
+      "_type" => "contact",
+      "_id" => "some-contact-page",
+    )
+
+    DuplicateDeleter.new('edition', io).call(["e3eaa461-3a85-4881-b412-9c58e7ea4ebd"])
+
+    assert_message(msg: "Deleted duplicate for content_id")
+    assert_document_present_in_rummager(id: "some-contact-page", type: "contact")
+    assert_document_missing_in_rummager(id: "/some-contact-page", type: "edition")
+  end
+
   def test_can_delete_duplicate_documents_on_different_types_using_link
     commit_document(
       "mainstream_test",

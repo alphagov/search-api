@@ -55,7 +55,7 @@ class DuplicateDeleter
       end
 
       ids = results[:results].map { |a| a[:_id] }
-      if ids.uniq.count != 1
+      if ids.uniq.count != 1 && !results_contain_duplicate_contacts(results[:results], type_to_delete)
         io.puts "Skipping #{id_type} #{id} as multiple _id's detected #{ids.uniq.join(', ')}"
         next
       end
@@ -80,5 +80,17 @@ class DuplicateDeleter
       Indexer::DeleteWorker.new.perform(index_names.first, type_to_delete, ids.first)
       io.puts "Deleted duplicate for #{id_type} #{id}"
     end
+  end
+
+private
+
+  def results_contain_duplicate_contacts(results, type_to_delete)
+    contact_results = results.select { |a| a[:elasticsearch_type] == "contact" }
+
+    # The _id field for most content is the same as the link (including the leading `/`), but contacts have an _id
+    # without a leading slash. It's possible for duplicate contacts to be created *with* a leading slash, so the
+    # _id's do not match exactly.
+    contact_results.size == 1 &&
+      results.any? { |a| a[:elasticsearch_type] == type_to_delete && a[:_id] == "/" + contact_results.first[:_id] }
   end
 end
