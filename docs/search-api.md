@@ -190,7 +190,7 @@ For example:
      filter_organisations[]=driver-vehicle-licensing-agency&
      filter_section[]=driving
      facet_organisations=10&
-     ab_test=test1:B,test2:A
+     ab_tests=test1:B,test2:A
 
 Returns something like:
 
