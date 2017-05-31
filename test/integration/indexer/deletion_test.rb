@@ -9,7 +9,7 @@ class ElasticsearchDeletionTest < IntegrationTest
 
     delete "/documents/%2Fan-example-page"
 
-    assert_document_missing_in_rummager(link: "/an-example-page")
+    assert_document_missing_in_rummager(id: "/an-example-page")
   end
 
   def test_removes_a_document_from_the_index_queued
@@ -29,7 +29,7 @@ class ElasticsearchDeletionTest < IntegrationTest
 
     delete "/documents/edition/http:%2F%2Fexample.com%2F"
 
-    assert_document_missing_in_rummager(link: "http://example.com/")
+    assert_document_missing_in_rummager(id: "http://example.com/")
   end
 
   def test_should_delete_a_best_bet_by_type_and_id
@@ -54,9 +54,9 @@ class ElasticsearchDeletionTest < IntegrationTest
 
 private
 
-  def assert_document_missing_in_rummager(link:)
+  def assert_document_missing_in_rummager(id:)
     assert_raises Elasticsearch::Transport::Transport::Errors::NotFound do
-      fetch_document_from_rummager(link: link)
+      fetch_document_from_rummager(id: id)
     end
   end
 end

@@ -13,7 +13,7 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('edition', io).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
 
     assert_message(msg: "as less than 2 results found")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "edition")
   end
 
   def test_can_delete_duplicate_documents_on_different_types
@@ -33,8 +33,8 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('edition', io).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
 
     assert_message(msg: "Deleted duplicate for content_id")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
-    assert_document_missing_in_rummager(link: "/an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
+    assert_document_missing_in_rummager(id: "/an-example-page", type: "edition")
   end
 
   def test_cant_delete_a_type_that_dosent_exist
@@ -54,8 +54,8 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('ab_case', io).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
 
     assert_message(msg: "as type to delete ab_case not present in")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "edition")
   end
 
   def test_cant_delete_duplicate_content_ids_when_id_doesnt_match
@@ -75,8 +75,8 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('edition', io).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
 
     assert_message(msg: "as multiple _id's detected")
-    assert_document_present_in_rummager(link: "/not-an-example-page", type: "edition")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
+    assert_document_present_in_rummager(id: "/not-an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
   end
 
   def test_can_delete_duplicate_documents_on_different_types_using_link
@@ -96,8 +96,8 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "Deleted duplicate for link")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
-    assert_document_missing_in_rummager(link: "/an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
+    assert_document_missing_in_rummager(id: "/an-example-page", type: "edition")
   end
 
   def test_cant_delete_duplicate_documents_using_link_with_different_content_ids
@@ -117,8 +117,8 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "as multiple non-null content_id's detected")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "edition")
   end
 
   def test_can_delete_duplicate_documents_if_bad_item_has_nil_content_id
@@ -137,8 +137,8 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "Deleted duplicate for link")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
-    assert_document_missing_in_rummager(link: "/an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
+    assert_document_missing_in_rummager(id: "/an-example-page", type: "edition")
   end
 
   def test_cant_delete_duplicate_documents_if_good_item_has_nil_content_id
@@ -157,8 +157,8 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "indexed with a valid '_type' but a missing content ID")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "edition")
   end
 
   def test_can_delete_duplicate_documents_on_different_types_using_link_when_both_content_ids_are_missing
@@ -176,20 +176,20 @@ class DuplicateDeleterTest < IntegrationTest
     DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "Deleted duplicate for link")
-    assert_document_present_in_rummager(link: "/an-example-page", type: "cma_case")
-    assert_document_missing_in_rummager(link: "/an-example-page", type: "edition")
+    assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
+    assert_document_missing_in_rummager(id: "/an-example-page", type: "edition")
   end
 
 private
 
-  def assert_document_present_in_rummager(link:, type:, index: "mainstream_test")
-    doc = fetch_document_from_rummager(link: link, type: type, index: index)
+  def assert_document_present_in_rummager(id:, type:, index: "mainstream_test")
+    doc = fetch_document_from_rummager(id: id, type: type, index: index)
     assert doc
   end
 
-  def assert_document_missing_in_rummager(link:, type:)
+  def assert_document_missing_in_rummager(id:, type:)
     assert_raises Elasticsearch::Transport::Transport::Errors::NotFound do
-      fetch_document_from_rummager(link: link, type: type)
+      fetch_document_from_rummager(id: id, type: type)
     end
   end
 

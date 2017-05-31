@@ -80,7 +80,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
   end
 
   def assert_document_is_in_rummager(document)
-    retrieved = fetch_document_from_rummager(link: document['link'])
+    retrieved = fetch_document_from_rummager(id: document['link'])
 
     document.each do |key, value|
       assert_equal value, retrieved[key],
@@ -136,19 +136,19 @@ private
     end
   end
 
-  def fetch_raw_document_from_rummager(link:, index: 'mainstream_test', type: '_all')
+  def fetch_raw_document_from_rummager(id:, index: 'mainstream_test', type: '_all')
     client.get(
       index: index,
       type: type,
-      id: link
+      id: id
     )
   end
 
-  def fetch_document_from_rummager(link:, index: 'mainstream_test', type: '_all')
+  def fetch_document_from_rummager(id:, index: 'mainstream_test', type: '_all')
     response = client.get(
       index: index,
       type: type,
-      id: link
+      id: id
     )
     response['_source']
   end
