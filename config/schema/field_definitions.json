@@ -47,11 +47,17 @@
   },
 
   "organisations": {
+    "description": "The organisations related to this page. This field is copied from the publishing-api. Note that means different things for different formats.",
     "type": "identifiers"
   },
 
   "organisation_content_ids": {
     "description": "As opposed to \"organisations\", this will include the \"content_ids\" of each organisation rather than the slug. It will eventually replace \"organisations\".",
+    "type": "identifiers"
+  },
+
+  "primary_publishing_organisation": {
+    "description": "The organisation that published this page. This field is copied from the publishing-api. It is only populated by Whitehall.",
     "type": "identifiers"
   },
 

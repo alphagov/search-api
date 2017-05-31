@@ -21,6 +21,7 @@
     "part_of_taxonomy_tree",
     "policies",
     "popularity",
+    "primary_publishing_organisation",
     "public_timestamp",
     "publishing_app",
     "rendering_app",

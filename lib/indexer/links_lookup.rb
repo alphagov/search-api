@@ -123,6 +123,10 @@ module Indexer
         content_item['base_path'].sub('/government/organisations/', '').sub('/courts-tribunals/', '')
       end
 
+      links_with_slugs["primary_publishing_organisation"] = links["primary_publishing_organisation"].to_a.map do |content_item|
+        content_item['base_path'].sub('/government/organisations/', '').sub('/courts-tribunals/', '')
+      end
+
       links_with_slugs["taxons"] = content_ids_for(links, 'taxons')
 
       links_with_slugs
