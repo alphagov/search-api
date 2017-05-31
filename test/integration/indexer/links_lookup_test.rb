@@ -62,6 +62,12 @@ class TaglookupDuringIndexingTest < IntegrationTest
             "base_path" => "/courts-tribunals/my-court",
           }
         ],
+        primary_publishing_organisation: [
+          {
+            "content_id" => "ORG-1",
+            "base_path" => "/government/organisations/my-org/1",
+          },
+        ],
         taxons: [
           {
             "content_id" => "TAXON-1",
@@ -80,6 +86,7 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "specialist_sectors" => ["my-topic/a", "my-topic/b"],
       "mainstream_browse_pages" => ["my-browse/1"],
       "organisations" => ["my-org/1", "my-court"],
+      "primary_publishing_organisation" => ["my-org/1"],
       "part_of_taxonomy_tree" => ["TAXON-1"],
       "taxons" => ["TAXON-1"],
       "topic_content_ids" => ["TOPIC-CONTENT-ID-1", "TOPIC-CONTENT-ID-2"],
