@@ -84,15 +84,15 @@ class DuplicateDeleterTest < IntegrationTest
       "mainstream_test",
       "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
       "link" => "/contact-page",
-      "_type" => "edition",
-      "_id" => "/contact-page",
+      "_type" => "contact",
+      "_id" => "contact-page",
     )
     commit_document(
       "mainstream_test",
       "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
       "link" => "/contact-page",
-      "_type" => "contact",
-      "_id" => "contact-page",
+      "_type" => "edition",
+      "_id" => "/contact-page",
     )
 
     DuplicateDeleter.new('edition', io).call(["e3eaa461-3a85-4881-b412-9c58e7ea4ebd"])
