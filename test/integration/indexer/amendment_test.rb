@@ -44,7 +44,7 @@ class ElasticsearchAmendmentTest < IntegrationTest
 
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 
-    retrieved = fetch_raw_document_from_rummager(link: "/an-example-answer")
+    retrieved = fetch_raw_document_from_rummager(id: "/an-example-answer")
 
     assert_equal "aaib_report", retrieved["_type"]
     assert_equal "aaib_report", retrieved["_source"]["_type"]
