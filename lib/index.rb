@@ -152,7 +152,7 @@ module SearchIndices
       search_body = { query: { match_all: {} } }
       batch_size = self.class.scroll_batch_size
       LegacyClient::ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
+        document_from_hash(hit["_source"].merge("_id" => hit["_id"], "_type" => hit["_type"]))
       end
     end
 
