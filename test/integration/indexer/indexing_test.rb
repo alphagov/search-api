@@ -24,6 +24,7 @@ class ElasticsearchIndexingTest < IntegrationTest
     )
 
     post "/documents", {
+      "_type" => "manual",
       "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
       "format" => "answer",
@@ -35,6 +36,7 @@ class ElasticsearchIndexingTest < IntegrationTest
     }.to_json
 
     assert_document_is_in_rummager({
+      "_type" => "manual",
       "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
       "format" => "answer",
@@ -45,6 +47,24 @@ class ElasticsearchIndexingTest < IntegrationTest
       "government_document_supertype" => "other",
       "licence_identifier" => "1201-5-1",
       "licence_short_description" => "A short description of a licence",
+    })
+  end
+
+  def test_document_type_defaults_to_edition
+    publishing_api_has_expanded_links(
+      content_id: "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
+      expanded_links: {},
+    )
+
+    post "/documents", {
+      "content_id" => "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
+      "link" => "/an-example-answer",
+    }.to_json
+
+    assert_document_is_in_rummager({
+      "_type" => "edition",
+      "content_id" => "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
+      "link" => "/an-example-answer",
     })
   end
 

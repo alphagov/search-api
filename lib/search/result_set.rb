@@ -1,4 +1,5 @@
 module Search
+  # This is only used by Advanced Search
   class ResultSet
     attr_reader :total, :results
 
@@ -18,7 +19,10 @@ module Search
     end
 
     def self.document_from_hit(hit, elasticsearch_types)
-      Document.from_hash(hit["_source"], elasticsearch_types, hit["_score"])
+      Document.from_hash(
+        hit["_source"].merge("_type" => hit["_type"], "_id" => hit["_id"]),
+        elasticsearch_types,
+        hit["_score"])
     end
   end
 end

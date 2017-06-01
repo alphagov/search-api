@@ -7,7 +7,8 @@ class IntegrationTest < MiniTest::Unit::TestCase
     "title" => "TITLE1",
     "description" => "DESCRIPTION",
     "format" => "local_transaction",
-    "link" => "/URL"
+    "link" => "/URL",
+    "_type" => "edition",
   }.freeze
 
   def initialize(args)
