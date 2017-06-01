@@ -77,8 +77,15 @@ class DuplicateDeleter
         next
       end
 
-      Indexer::DeleteWorker.new.perform(index_names.first, type_to_delete, ids.first)
-      io.puts "Deleted duplicate for #{id_type} #{id}"
+      item_to_delete = results[:results].detect { |a| a[:elasticsearch_type] == type_to_delete }
+      if item_to_delete
+        Indexer::DeleteWorker.new.perform(index_names.first, type_to_delete, item_to_delete[:_id])
+        io.puts "Deleted duplicate for #{id_type} #{id}"
+      else
+        puts "Skipping #{id_type} #{id} as no duplicate with #{type_to_delete} can be found. This should " +
+          "not happen, and might indicate a bug in the duplicate deleter, or a race condition, where some " +
+          "other process has already deleted this item."
+      end
     end
   end
 
