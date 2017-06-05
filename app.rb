@@ -176,6 +176,7 @@ class Rummager < Sinatra::Application
   post "/?:index?/documents" do
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
+      hash["_type"] ||= "edition"
       current_index.document_from_hash(hash)
     }
 

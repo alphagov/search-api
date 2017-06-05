@@ -31,7 +31,9 @@ class ResultSetTest < ShouldaUnitTestCase
           "hits" => [
             {
               "_score" => 12,
-              "_source" => { "foo" => "bar" }
+              "_type" => "contact",
+              "_id" => "some_id",
+              "_source" => { "foo" => "bar" },
             }
           ]
         }
@@ -52,6 +54,14 @@ class ResultSetTest < ShouldaUnitTestCase
 
     should "pass the result score to Document.from_hash" do
       Document.expects(:from_hash).with(is_a(Hash), sample_elasticsearch_types, 12).returns(:doc)
+
+      result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
+      assert_equal [:doc], result_set.results
+    end
+
+    should "populate the document id and type from the metafields" do
+      expected_hash = has_entries("_type" => "contact", "_id" => "some_id")
+      Document.expects(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).returns(:doc)
 
       result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
       assert_equal [:doc], result_set.results

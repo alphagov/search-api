@@ -135,8 +135,7 @@ module SearchIndices
 
     def get_document_by_id(document_id)
       begin
-        response = @client.get(index: @index_name, type: "_all", id: document_id)
-        response
+        @client.get(index: @index_name, type: "_all", id: document_id)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         nil
       end
@@ -153,7 +152,7 @@ module SearchIndices
       search_body = { query: { match_all: {} } }
       batch_size = self.class.scroll_batch_size
       LegacyClient::ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
+        document_from_hash(hit["_source"].merge("_id" => hit["_id"], "_type" => hit["_type"]))
       end
     end
 

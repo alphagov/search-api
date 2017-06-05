@@ -4,6 +4,7 @@ require "document"
 class DocumentTest < MiniTest::Unit::TestCase
   def test_should_turn_hash_into_document
     hash = {
+      "_type" => "edition",
       "title" => "TITLE",
       "description" => "DESCRIPTION",
       "format" => "answer",
@@ -39,6 +40,17 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "best_bet", document.elasticsearch_export["_type"]
   end
 
+  def test_should_reject_document_with_no_type
+    hash = {
+      "_id" => "some_id",
+    }
+
+    error = assert_raises RuntimeError do
+      Document.from_hash(hash, sample_elasticsearch_types)
+    end
+    assert_match(/missing/i, error.message)
+  end
+
   def test_should_raise_helpful_error_for_unconfigured_types
     hash = {
       "_id" => "jobs_exact",
@@ -52,6 +64,7 @@ class DocumentTest < MiniTest::Unit::TestCase
 
   def test_should_ignore_fields_not_in_mappings
     hash = {
+      "_type" => "edition",
       "title" => "TITLE",
       "description" => "DESCRIPTION",
       "format" => "guide",
@@ -67,6 +80,7 @@ class DocumentTest < MiniTest::Unit::TestCase
 
   def test_should_recognise_symbol_keys_in_hash
     hash = {
+      "_type" => "edition",
       title: "TITLE",
       description: "DESCRIPTION",
       format: "guide",
@@ -79,29 +93,23 @@ class DocumentTest < MiniTest::Unit::TestCase
     assert_equal "TITLE", document.title
   end
 
-  def test_should_round_trip_document_from_hash_and_back_into_hash
-    hash = {
+  def test_should_skip_metadata_fields_in_to_hash
+    expected_hash = {
       "title" => "TITLE",
       "description" => "DESCRIPTION",
       "format" => "guide",
       "link" => "/an-example-guide",
-      "indexable_content" => "HERE IS SOME CONTENT"
+      "indexable_content" => "HERE IS SOME CONTENT",
     }
+    input_hash = expected_hash.merge("_type" => "edition")
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
-    assert_equal hash, document.to_hash
+    document = Document.from_hash(input_hash, sample_elasticsearch_types)
+    assert_equal expected_hash, document.to_hash
   end
 
   def test_should_skip_missing_fields_in_to_hash
-    hash = {
-      "title" => "TITLE",
-      "description" => "DESCRIPTION",
-      "format" => "guide",
-      "link" => "/an-example-guide"
-    }
-
-    document = Document.from_hash(hash, sample_elasticsearch_types)
-    assert_equal hash.keys.sort, document.to_hash.keys.sort
+    document = Document.from_hash({ "_type" => "edition" }, sample_elasticsearch_types)
+    assert_equal [], document.to_hash.keys
   end
 
   def test_should_skip_missing_fields_in_elasticsearch_export

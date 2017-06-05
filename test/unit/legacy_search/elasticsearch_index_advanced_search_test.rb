@@ -184,16 +184,16 @@ class IndexerIndexAdvancedSearchTest < MiniTest::Unit::TestCase
   end
 
   def test_returns_the_hits_converted_into_documents
-    Document.expects(:from_hash).with({ "woo" => "hoo" }, anything, nil).returns :woo_hoo
     stub_request(:get, "http://example.com:9200/mainstream_test/_search")
       .to_return(
         status: 200,
-        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"woo\": \"hoo\"}}]}}",
+        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"indexable_content\": \"some_content\"}, \"_type\": \"contact\"}]}}",
         headers: { "Content-Type" => "application/json" }
       )
     result_set = @wrapper.advanced_search(default_params)
     assert_equal 10, result_set.total
-    assert_equal [:woo_hoo], result_set.results
+    assert_equal 1, result_set.results.size
+    assert_equal "some_content", result_set.results.first.get("indexable_content")
   end
 
   def default_params

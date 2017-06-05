@@ -11,11 +11,16 @@ class Document
   end
 
   def self.from_hash(hash, elasticsearch_types, es_score = nil)
-    type = hash["_type"] || "edition"
+    type = hash["_type"]
+    if type.nil?
+      raise "Missing elasticsearch type"
+    end
+
     doc_type = elasticsearch_types[type]
     if doc_type.nil?
       raise "Unexpected elasticsearch type '#{type}'. Document types must be configured"
     end
+
     self.new(doc_type.fields, hash, es_score)
   end
 
@@ -68,7 +73,7 @@ class Document
           doc[key] = value
         end
       end
-      doc["_type"] = @type || "edition"
+      doc["_type"] = @type
       doc["_id"] = @id if @id
     end
   end
