@@ -1,0 +1,133 @@
+#!/usr/bin/ruby
+
+# A tool to compare two `object` files produced by the Elasticsearch dump tool
+# `es_dump`. This may be useful to compare the state of the search index before
+# and after reindexing.
+
+# Usage: bin/compare_es_dumps <old-objects-file> <new-objects-file>
+
+require "json"
+
+old_file = ARGV[0]
+new_file = ARGV[1]
+# Source fields to ignore when comparing old and new objects for equality.
+# These are ones which we know have changed for most documents.
+FIELDS_TO_IGNORE = ["_id", "_type", "popularity", "primary_publishing_organisation"]
+
+def read_object_file(filename)
+  documents = {}
+
+  # Object files consist of alternating lines of JSON: one line identifying the
+  # document using its ID and type followed by one line with the source data for
+  # that document
+  id = ""
+  File.foreach(filename) do |line|
+    data = JSON.parse(line)
+
+    if data["index"]
+      id = data["index"]
+    else
+      documents[id] = data
+    end
+  end
+
+  documents
+end
+
+def reject_fields(hash)
+  hash.reject{ |k, _| FIELDS_TO_IGNORE.include?(k) }
+end
+
+puts "Reading old data from '#{old_file}'"
+old_data = read_object_file(old_file)
+puts "Items in old data: #{old_data.length}"
+
+puts "Reading new data from '#{new_file}'"
+new_data = read_object_file(new_file)
+puts "Items in new data: #{new_data.length}"
+
+added_items = []
+removed_items = []
+
+items_with_missing_id = []
+items_with_missing_type = []
+items_with_inconsistent_ids = []
+items_with_inconsistent_types = []
+
+items_with_added_id = []
+items_with_updated_id = []
+items_with_added_type = []
+items_with_updated_type = []
+
+items_with_differences = []
+
+puts "Ignoring fields when comparing files: #{FIELDS_TO_IGNORE}"
+
+old_data.each do |key, old_item|
+  new_item = new_data[key]
+
+  if new_item.nil?
+    removed_items << key
+  end
+end
+
+new_data.each do |key, new_item|
+  id = key["_id"]
+  type = key["_type"]
+
+  old_item = old_data[key]
+
+  if old_item.nil?
+    added_items << key
+  elsif reject_fields(new_item) != reject_fields(old_item)
+    items_with_differences << key
+  end
+
+  if new_item["_id"] != id
+    if new_item["_id"].nil?
+      items_with_missing_id << key
+    else
+      items_with_inconsistent_ids << key
+    end
+  end
+
+  if !old_item.nil? && new_item["_id"] != old_item["_id"]
+    if old_item["_id"].nil?
+      items_with_added_id << key
+    else
+      items_with_updated_id << key
+    end
+  end
+
+  if new_item["_type"] != type
+    if new_item["_type"].nil?
+      items_with_missing_type << key
+    else
+      items_with_inconsistent_types << key
+    end
+  end
+
+  if !old_item.nil? && new_item["_type"] != old_item["_type"]
+    if old_item["_type"].nil?
+      items_with_added_type << key
+    else
+      items_with_updated_type << key
+    end
+  end
+end
+
+puts "Added items: #{added_items}"
+puts "Removed items: #{removed_items}"
+
+puts "Items with missing source _id: #{items_with_missing_id}"
+puts "Items with document _id that does not match source _id: #{items_with_inconsistent_ids}"
+puts "Items with updated _id: #{items_with_updated_id}"
+
+puts "Items with missing source _type: #{items_with_missing_type}"
+puts "Items with document _type that does not match source _type: #{items_with_inconsistent_types}"
+puts "Items with updated _type: #{items_with_updated_type}"
+
+puts "Items with differences: #{items_with_differences}"
+
+puts "#{items_with_added_id.size} items with added _id"
+puts "#{items_with_added_type.size} items with added _type"
