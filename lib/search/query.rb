@@ -18,7 +18,9 @@ module Search
     def run(search_params)
       builder = QueryBuilder.new(search_params)
       payload = builder.payload
-      es_response = index.raw_search(payload)
+      search_type = search_params.debug[:dfs_query_then_fetch] ? "dfs_query_then_fetch" : "query_then_fetch"
+
+      es_response = index.raw_search(payload, search_type: search_type)
 
       example_fetcher = FacetExampleFetcher.new(index, es_response, search_params, builder)
       facet_examples = example_fetcher.fetch

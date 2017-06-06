@@ -8,7 +8,7 @@ class QueryTest < ShouldaUnitTestCase
 
       search_payload = stub('payload')
       Search::QueryBuilder.any_instance.expects(:payload).returns(search_payload)
-      index.expects(:raw_search).with(search_payload).returns({})
+      index.expects(:raw_search).with(search_payload, search_type: "query_then_fetch").returns({})
 
       Search::FacetExampleFetcher.any_instance.expects(:fetch).returns(stub('fetch'))
       Search::ResultSetPresenter.any_instance.expects(:present).returns(stub('presenter'))

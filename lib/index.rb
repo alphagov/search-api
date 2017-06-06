@@ -193,9 +193,10 @@ module SearchIndices
       LegacySearch::AdvancedSearch.new(@mappings, @elasticsearch_types, @client, @index_name).result_set(params)
     end
 
-    def raw_search(payload, type = nil)
+    def raw_search(payload, type = nil, search_type: "query_then_fetch")
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_name, type: type, body: payload)
+
+      @client.search(index: @index_name, type: type, body: payload, search_type: search_type)
     end
 
     # Convert a best bet query to a string formed by joining the normalised
