@@ -4,9 +4,8 @@ This API is the main endpoint for performing searches on GOV.UK.  It supports
 keyword searching, ordering by relevance or date fields, filtering and
 faceting.
 
-At the time of writing, there is one other endpoint, the `advanced_search`
-endpoint, which is slowly being replaced by the `search` endpoint.  The
-`advanced_search` endpoint shouldn't be used by new code.
+The search endpoint is `/search.json`.
+The `advanced_search` endpoint shouldn't be used by new code.
 
 ## Parameters
 
@@ -179,7 +178,7 @@ The parameters supported are:
 
 ## Examples
 
-For example:
+### Ordered search with filters and facets
 
     /search.json?
      q=foo&
@@ -219,3 +218,7 @@ Returns something like:
   }
 }
 ```
+
+### Tagged content
+
+See [searching using the subject taxonomy](searching-the-taxonomy).
