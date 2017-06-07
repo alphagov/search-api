@@ -2,6 +2,7 @@ require "yaml"
 require "search_server"
 require "schema/schema_config"
 require "plek"
+require "erb"
 
 class SearchConfig
   %w[
