@@ -30,7 +30,7 @@ module Search
         sort: sort,
         facets: facets,
         highlight: highlight,
-        explain: search_params.debug[:explain],
+        explain: search_params.debug[:explain]
       )
     end
 

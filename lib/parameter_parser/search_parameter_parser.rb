@@ -338,6 +338,9 @@ private
         options[:include_withdrawn] = true
       when "use_id_codes"
         options[:use_id_codes] = true
+      when "dfs_query_then_fetch"
+        # DO NOT DEPLOY TO PRODUCTION
+        options[:dfs_query_then_fetch] = true
       when "show_query"
         options[:show_query] = true
       else
