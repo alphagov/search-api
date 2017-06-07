@@ -1,4 +1,5 @@
 require 'services'
+require 'govuk_taxonomy_helpers'
 
 # LinksLookup finds the tags (links) from the publishing-api and merges them into
 # the document. If there aren't any links, the payload will be returned unchanged.
@@ -23,12 +24,19 @@ module Indexer
       content_id = find_content_id(doc_hash)
       return doc_hash unless content_id
 
-      # Bail out if the base_path doesn't exist in publishing-api
-      links = find_links(content_id)
-      return doc_hash unless links
+      content_item = {
+        "content_id" => content_id,
+        "base_path" => doc_hash["link"],
+        "title" => doc_hash["title"],
+        "details" => {},
+      }
 
-      doc_hash = doc_hash.merge(taggings_with_slugs(links))
-      doc_hash.merge(taggings_with_content_ids(links))
+      # Bail out if the base_path doesn't exist in publishing-api
+      expanded_links_response = find_links(content_id)
+      return doc_hash unless expanded_links_response
+
+      doc_hash = doc_hash.merge(taggings_with_slugs(expanded_links_response))
+      doc_hash.merge(taggings_with_content_ids(expanded_links_response, content_item))
     end
 
   private
@@ -74,7 +82,7 @@ module Indexer
     def find_links(content_id)
       begin
         GdsApi.with_retries(maximum_number_of_attempts: 5) do
-          Services.publishing_api.get_expanded_links(content_id)['expanded_links']
+          Services.publishing_api.get_expanded_links(content_id)
         end
       rescue GdsApi::TimedOutException => e
         @logger.error("Timeout fetching expanded links for #{content_id}")
@@ -107,7 +115,8 @@ module Indexer
     # organisations by "slug", a concept that exists in Publisher and Whitehall.
     # It does not exist in the publishing-api, so we need to infer the slug
     # from the base path.
-    def taggings_with_slugs(links)
+    def taggings_with_slugs(expanded_links_response)
+      links = expanded_links_response['expanded_links']
       links_with_slugs = {}
 
       # We still call topics "specialist sectors" in rummager.
@@ -132,34 +141,23 @@ module Indexer
       links_with_slugs
     end
 
-    def taggings_with_content_ids(links)
+    def taggings_with_content_ids(expanded_links_response, content_item)
+      links = expanded_links_response['expanded_links']
+
       {
         'topic_content_ids' => content_ids_for(links, 'topics'),
         'mainstream_browse_page_content_ids' => content_ids_for(links, 'mainstream_browse_pages'),
         'organisation_content_ids' => content_ids_for(links, 'organisations'),
-        'part_of_taxonomy_tree' => parts_of_taxonomy_for_all_taxons(links)
+        'part_of_taxonomy_tree' => parts_of_taxonomy(expanded_links_response, content_item)
       }
     end
 
-    def parts_of_taxonomy_for_all_taxons(links)
-      links.fetch("taxons", []).flat_map { |taxon_hash| parts_of_taxonomy(taxon_hash) }
-    end
-
-    def parts_of_taxonomy(taxon_hash)
-      parents = [taxon_hash["content_id"]]
-
-      direct_parents = taxon_hash.dig("links", "parent_taxons")
-      while direct_parents
-        # There should not be more than one parent for a taxon. If there is,
-        # make an arbitrary choice.
-        direct_parent = direct_parents.first
-
-        parents << direct_parent["content_id"]
-
-        direct_parents = direct_parent["links"]["parent_taxons"]
-      end
-
-      parents.reverse
+    def parts_of_taxonomy(expanded_links, content_item)
+      linked_content_item = GovukTaxonomyHelpers::LinkedContentItem.from_publishing_api(
+        content_item: content_item,
+        expanded_links: expanded_links
+      )
+      linked_content_item.taxons_with_ancestors.map(&:content_id)
     end
 
     def content_ids_for(links, link_type)

@@ -71,7 +71,12 @@ class TaglookupDuringIndexingTest < IntegrationTest
         taxons: [
           {
             "content_id" => "TAXON-1",
-            "base_path" => "/alpha-taxonomy/my-taxon-1"
+            "base_path" => "/alpha-taxonomy/my-taxon-1",
+            "title" => "Taxon 1",
+            "details" => {
+              "internal_name" => "Taxon 1"
+            },
+            "links" => {}
           }
         ],
       }
@@ -127,6 +132,9 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "content_id" => grandparent_1_content_id,
       "base_path" => "/grandparent-1",
       "title" => "Grandparent 1",
+      "details" => {
+        "internal_name" => "Grandparent 1",
+      },
       "links" => {}
     }
 
@@ -135,6 +143,9 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "content_id" => parent_1_content_id,
       "base_path" => "/parent-1",
       "title" => "Parent 1",
+      "details" => {
+        "internal_name" => "Parent 1",
+      },
       "links" => {
         "parent_taxons" => [grandparent_1]
       }
@@ -145,6 +156,9 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "content_id" => taxon_1_content_id,
       "base_path" => "/this-is-a-taxon",
       "title" => "Taxon 1",
+      "details" => {
+        "internal_name" => "Taxon 1",
+      },
       "links" => {
         "parent_taxons" => [parent_1]
       }
@@ -155,6 +169,9 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "content_id" => grandparent_2_content_id,
       "base_path" => "/grandparent-2",
       "title" => "Grandparent 2",
+      "details" => {
+        "internal_name" => "Grandparent 2",
+      },
       "links" => {}
     }
 
@@ -163,6 +180,9 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "content_id" => parent_2_content_id,
       "base_path" => "/parent-2",
       "title" => "Parent 2",
+      "details" => {
+        "internal_name" => "Parent 2",
+      },
       "links" => {
         "parent_taxons" => [grandparent_2]
       }
@@ -173,6 +193,9 @@ class TaglookupDuringIndexingTest < IntegrationTest
       "content_id" => taxon_2_content_id,
       "base_path" => "/this-is-also-a-taxon",
       "title" => "Taxon 2",
+      "details" => {
+        "internal_name" => "Taxon 2",
+      },
       "links" => {
         "parent_taxons" => [parent_2]
       }
