@@ -1,5 +1,9 @@
+require "yaml"
+
 module QueryComponents
   class Booster < BaseComponent
+    FORMAT_BOOST_CONFIG = YAML.load_file('config/query/format_boosting.yml')
+
     def wrap(core_query)
       {
         function_score: {
@@ -21,37 +25,8 @@ module QueryComponents
       format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]
     end
 
-    def boosted_formats
-      {
-        # Mainstream formats
-        "service_manual_guide" => 0.3,
-        "service_manual_topic" => 0.3,
-        "smart-answer" => 1.5,
-        "transaction" => 1.5,
-
-        # Inside Gov formats
-        "topical_event" => 1.5,
-        "minister" => 1.7,
-        "organisation" => 2.5,
-        "topic" => 1.5,
-        "document_series" => 1.3,
-        "document_collection" => 1.3,
-        "operational_field" => 1.5,
-        "contact" => 0.3,
-
-        # Should appear below mainstream content
-        "aaib_report" => 0.2,
-        "dfid_research_output" => 0.2,
-        "hmrc_manual_section" => 0.2,
-        "service_standard_report" => 0.2,
-
-        # Hide mainstream browse pages for now.
-        "mainstream_browse_page" => 0,
-      }
-    end
-
     def format_boosts
-      boosted_formats.map do |format, boost|
+      FORMAT_BOOST_CONFIG["format_boosts"].map do |format, boost|
         {
           filter: { term: { format: format } },
           boost_factor: boost
