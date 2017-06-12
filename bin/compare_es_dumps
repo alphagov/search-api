@@ -12,7 +12,7 @@ old_file = ARGV[0]
 new_file = ARGV[1]
 # Source fields to ignore when comparing old and new objects for equality.
 # These are ones which we know have changed for most documents.
-FIELDS_TO_IGNORE = ["_id", "_type", "popularity", "primary_publishing_organisation"]
+FIELDS_TO_IGNORE = ["_id", "_type", "popularity"]
 
 def read_object_file(filename)
   documents = {}
