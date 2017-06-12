@@ -4,13 +4,13 @@ module QueryComponents
       {
         function_score: {
           boost_mode: :multiply,
+          score_mode: :multiply,
           query: {
             bool: {
               should: [core_query]
             }
           },
           functions: boost_filters,
-          score_mode: "multiply",
         }
       }
     end

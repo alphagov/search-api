@@ -7,7 +7,7 @@ class BoosterTest < ShouldaUnitTestCase
     result = builder.wrap({ some: 'query' })
 
     assert_equal :multiply, result[:function_score][:boost_mode]
-    assert_equal "multiply", result[:function_score][:score_mode]
+    assert_equal :multiply, result[:function_score][:score_mode]
   end
 
   should "boost results by format" do
