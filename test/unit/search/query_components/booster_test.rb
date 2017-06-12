@@ -10,13 +10,39 @@ class BoosterTest < ShouldaUnitTestCase
     assert_equal :multiply, result[:function_score][:score_mode]
   end
 
-  should "boost results by format" do
+  should "boost results by individual format weightings" do
     builder = QueryComponents::Booster.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
-    assert_format_boost(result, "organisation", 2.5)
+    assert_format_boost(result, "contact", 0.3)
     assert_format_boost(result, "service_manual_guide", 0.3)
-    assert_format_boost(result, "mainstream_browse_page", 0)
+    assert_format_boost(result, "smart-answer", 1.5)
+  end
+
+  should "boost government index results" do
+    builder = QueryComponents::Booster.new(search_query_params)
+    result = builder.wrap({ some: 'query' })
+
+    assert_format_boost(result, "case_study", 0.4)
+    assert_format_boost(result, "take_part", 0.4)
+    assert_format_boost(result, "worldwide_organisation", 0.4)
+  end
+
+  should "combine government index and individual format weightings" do
+    builder = QueryComponents::Booster.new(search_query_params)
+    result = builder.wrap({ some: 'query' })
+
+    assert_format_boost(result, "minister", 0.68)
+    assert_format_boost(result, "organisation", 1.0)
+    assert_format_boost(result, "topic", 0.6)
+  end
+
+  should "not apply a boost to unspecified formats" do
+    builder = QueryComponents::Booster.new(search_query_params)
+    result = builder.wrap({ some: 'query' })
+
+    assert_no_format_boost(result, "guide")
+    assert_no_format_boost(result, "some_other_format")
   end
 
   should "downweight old organisations" do
@@ -55,7 +81,12 @@ class BoosterTest < ShouldaUnitTestCase
   def assert_format_boost(result, content_format, expected_boost_factor)
     format_boost = result[:function_score][:functions].detect { |f| f[:filter][:term][:format] == content_format }
     refute_nil format_boost, "Could not find boost for format '#{content_format}'"
-    assert_equal expected_boost_factor, format_boost[:boost_factor]
+    assert_in_delta expected_boost_factor, format_boost[:boost_factor], 0.001
+  end
+
+  def assert_no_format_boost(result, content_format)
+    format_boosts = result[:function_score][:functions].select { |f| f[:filter][:term][:format] == content_format }
+    assert_empty format_boosts, "Found unexpected boost for format #{content_format}"
   end
 
   def assert_organisation_state_boost(result, state, expected_boost_factor)

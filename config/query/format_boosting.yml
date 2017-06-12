@@ -1,3 +1,37 @@
+government_index:
+  boost: 0.4
+  # Search formats used in the government index. These are defined by the
+  # publishing apps which push pages to the search API, and are different to the
+  # `format` field used in the content store.
+  #
+  # Any new formats used in search should be added to this list. Once all pages
+  # in search have a document_type, the document supertype should be used for
+  # boosting instead of formats, which will remove the need for this list.
+  formats:
+    - case_study
+    - consultation
+    - corporate_information_page
+    - document_collection
+    - edition
+    - fatality_notice
+    - finder
+    - inside-government-link
+    - minister
+    - news_article
+    - operational_field
+    - organisation
+    - person
+    - policy_group
+    - publication
+    - speech
+    - statistical_data_set
+    - statistics_announcement
+    - take_part
+    - topic
+    - topical_event
+    - world_location
+    - world_location_news_article
+    - worldwide_organisation
 format_boosts:
   # Mainstream formats
   service_manual_guide: 0.3

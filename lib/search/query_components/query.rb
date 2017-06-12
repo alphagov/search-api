@@ -3,11 +3,9 @@ require_relative "text_query"
 
 module QueryComponents
   class Query < BaseComponent
-    GOVERNMENT_BOOST_FACTOR = 0.4
-
     def payload
       if search_params.similar_to.nil?
-        QueryComponents::BestBets.new(search_params).wrap(search_query_hash)
+        QueryComponents::BestBets.new(search_params).wrap(base_query)
       else
         more_like_this_query_hash
       end
@@ -26,21 +24,6 @@ module QueryComponents
 
       boosted_query = QueryComponents::Booster.new(search_params).wrap(core_query)
       QueryComponents::Popularity.new(search_params).wrap(boosted_query)
-    end
-
-    def search_query_hash
-      {
-        indices: {
-          index: :government,
-          query: {
-            function_score: {
-              query: base_query,
-              boost_factor: GOVERNMENT_BOOST_FACTOR
-            }
-          },
-          no_match_query: base_query
-        }
-      }
     end
 
     def more_like_this_query_hash
