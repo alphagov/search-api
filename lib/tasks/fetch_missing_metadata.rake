@@ -11,7 +11,11 @@ task :populate_metadata do
   publishing_api = GdsApi::PublishingApiV2.new(Plek.new.find("publishing-api"))
   fetcher = MissingMetadataFetcher.new(publishing_api)
 
+  results = []
+
   0.upto MAX_PAGES do |page|
+    puts "Fetching page #{page + 1}"
+
     response = rummager.search({
       "filter_content_store_document_type" => "_MISSING",
       "count" => PAGE_SIZE,
@@ -19,23 +23,29 @@ task :populate_metadata do
       "fields" => "content_id"
     })
 
-    puts "page #{page + 1} (#{response["total"]} total results)"
-
-    response["results"].each_with_index do |result, _i|
+    response["results"].each do |result|
       if result["_id"].start_with?("https://", "http://")
         puts "Skipping #{result["elasticsearch_type"]}/#{result["_id"]}"
         next
       end
 
-      begin
-        fetcher.add_metadata(result)
-      rescue GdsApi::TimedOutException
-        puts "Publishing API timed out... retrying"
-        sleep(1)
-        redo
-      rescue StandardError => e
-        puts "Skipped result #{result["elasticsearch_type"]}/#{result["_id"]}: #{$!}\n#{e.backtrace.join("\n")}"
-      end
+      results << result.slice("_id", "content_id", "index")
+    end
+  end
+
+  total = results.size
+
+  results.each_with_index do |result, i|
+    puts "Updating #{i}/#{total}"
+
+    begin
+      fetcher.add_metadata(result)
+    rescue GdsApi::TimedOutException
+      puts "Publishing API timed out... retrying"
+      sleep(1)
+      redo
+    rescue StandardError
+      puts "Skipped result #{result["elasticsearch_type"]}/#{result["_id"]}: #{$!}"
     end
   end
 end

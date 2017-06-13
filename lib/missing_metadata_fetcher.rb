@@ -26,21 +26,21 @@ class MissingMetadataFetcher
 
     elsif index_name.nil? || document_id.nil?
       raise MissingDocumentError.new("Missing index name or id in search results")
-    else
-      response = publishing_api.get_content(content_id)
-      document_type = response["document_type"]
-      publishing_app = response["publishing_app"]
-      rendering_app = response["rendering_app"]
-
-      updates = {
-        content_store_document_type: document_type,
-        publishing_app: publishing_app,
-        rendering_app: rendering_app,
-        content_id: content_id,
-      }
-
-      Indexer::AmendWorker.perform_async(index_name, document_id, updates)
     end
+
+    response = publishing_api.get_content(content_id)
+    document_type = response["document_type"]
+    publishing_app = response["publishing_app"]
+    rendering_app = response["rendering_app"]
+
+    updates = {
+      content_store_document_type: document_type,
+      publishing_app: publishing_app,
+      rendering_app: rendering_app,
+      content_id: content_id,
+    }
+
+    Indexer::AmendWorker.perform_async(index_name, document_id, updates)
   end
 
 private
