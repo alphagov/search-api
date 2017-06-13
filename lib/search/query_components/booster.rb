@@ -1,16 +1,21 @@
+require "yaml"
+
 module QueryComponents
   class Booster < BaseComponent
+    FORMAT_BOOST_CONFIG = YAML.load_file('config/query/format_boosting.yml')
+    DEFAULT_BOOST = 1
+
     def wrap(core_query)
       {
         function_score: {
           boost_mode: :multiply,
+          score_mode: :multiply,
           query: {
             bool: {
               should: [core_query]
             }
           },
           functions: boost_filters,
-          score_mode: "multiply",
         }
       }
     end
@@ -22,32 +27,20 @@ module QueryComponents
     end
 
     def boosted_formats
-      {
-        # Mainstream formats
-        "service_manual_guide" => 0.3,
-        "service_manual_topic" => 0.3,
-        "smart-answer" => 1.5,
-        "transaction" => 1.5,
+      government_index_config = FORMAT_BOOST_CONFIG["government_index"]
+      government_index_boost = government_index_config["boost"]
+      government_formats = government_index_config["formats"]
 
-        # Inside Gov formats
-        "topical_event" => 1.5,
-        "minister" => 1.7,
-        "organisation" => 2.5,
-        "topic" => 1.5,
-        "document_series" => 1.3,
-        "document_collection" => 1.3,
-        "operational_field" => 1.5,
-        "contact" => 0.3,
+      individual_format_boosts = FORMAT_BOOST_CONFIG["format_boosts"]
 
-        # Should appear below mainstream content
-        "aaib_report" => 0.2,
-        "dfid_research_output" => 0.2,
-        "hmrc_manual_section" => 0.2,
-        "service_standard_report" => 0.2,
+      boosted_formats = (government_formats + individual_format_boosts.keys).uniq
 
-        # Hide mainstream browse pages for now.
-        "mainstream_browse_page" => 0,
-      }
+      boosted_formats.each_with_object({}) do |format_name, boosts|
+        format_index_boost = government_formats.include?(format_name) ? government_index_boost : DEFAULT_BOOST
+        individual_format_boost = individual_format_boosts.fetch(format_name, DEFAULT_BOOST)
+
+        boosts[format_name] = format_index_boost * individual_format_boost
+      end
     end
 
     def format_boosts
