@@ -22,11 +22,29 @@ module QueryComponents
 
   private
 
+    def format_boost_b_variant?
+      @search_params.ab_tests[:format_boosting] == 'B'
+    end
+
     def boost_filters
-      format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]
+      boosts = format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]
+
+      if format_boost_b_variant?
+        boosts + [guidance_boost]
+      else
+        boosts
+      end
     end
 
     def boosted_formats
+      if format_boost_b_variant?
+        FORMAT_BOOST_CONFIG["format_boosts"]
+      else
+        formats_boosted_by_index
+      end
+    end
+
+    def formats_boosted_by_index
       government_index_config = FORMAT_BOOST_CONFIG["government_index"]
       government_index_boost = government_index_config["boost"]
       government_formats = government_index_config["formats"]
@@ -50,6 +68,13 @@ module QueryComponents
           boost_factor: boost
         }
       end
+    end
+
+    def guidance_boost
+      {
+        filter: { term: { navigation_document_supertype: "guidance" } },
+        boost_factor: 2.5
+      }
     end
 
     # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
