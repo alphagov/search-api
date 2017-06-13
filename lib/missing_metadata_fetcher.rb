@@ -10,40 +10,46 @@ class MissingMetadataFetcher
   end
 
   def add_metadata(result)
-    content_id = result["content_id"]
     index_name = result["index"]
     document_id = result["_id"]
+    raise MissingDocumentError.new("Missing index name or id in search results") if index_name.nil? || document_id.nil?
 
-    if content_id.nil?
-      base_path = document_id
-      base_path = "/" + base_path unless base_path.start_with?("/")
+    content_id = result["content_id"] || lookup_content_id(document_id)
 
-      content_id = publishing_api.lookup_content_id(base_path: base_path)
-
-      if content_id.nil?
-        raise MissingDocumentError.new("Failed to look up base path")
-      end
-
-    elsif index_name.nil? || document_id.nil?
-      raise MissingDocumentError.new("Missing index name or id in search results")
-    end
-
-    response = publishing_api.get_content(content_id)
-    document_type = response["document_type"]
-    publishing_app = response["publishing_app"]
-    rendering_app = response["rendering_app"]
-
-    updates = {
-      content_store_document_type: document_type,
-      publishing_app: publishing_app,
-      rendering_app: rendering_app,
-      content_id: content_id,
-    }
-
-    Indexer::AmendWorker.perform_async(index_name, document_id, updates)
+    update_metadata(content_id, index_name, document_id)
   end
 
 private
-
   attr_reader :publishing_api
+
+  def lookup_content_id(document_id)
+    base_path = document_id
+    base_path = "/" + base_path unless base_path.start_with?("/")
+
+    content_id = publishing_api.lookup_content_id(base_path: base_path)
+
+    content_id || raise(MissingDocumentError.new("Failed to look up base path"))
+  rescue GdsApi::TimedOutException
+    puts "Publishing API timed out getting content_id... retrying"
+    sleep(1)
+    retry
+  end
+
+
+  def update_metadata(content_id, index_name, document_id)
+    response = publishing_api.get_content(content_id)
+
+    Indexer::AmendWorker.perform_async(
+      index_name,
+      document_id,
+      content_store_document_type: response["document_type"],
+      publishing_app: response["publishing_app"],
+      rendering_app: response["rendering_app"],
+      content_id: content_id,
+    )
+  rescue GdsApi::TimedOutException
+    puts "Publishing API timed out getting content... retrying"
+    sleep(1)
+    retry
+  end
 end
