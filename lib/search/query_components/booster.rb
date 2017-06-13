@@ -23,23 +23,33 @@ module QueryComponents
   private
 
     def boost_filters
-      format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]
+      boosts = format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]
+
+      if @search_params.format_boosting_b_variant?
+        boosts + [guidance_boost]
+      else
+        boosts
+      end
     end
 
     def boosted_formats
-      government_index_config = FORMAT_BOOST_CONFIG["government_index"]
-      government_index_boost = government_index_config["boost"]
-      government_formats = government_index_config["formats"]
-
       individual_format_boosts = FORMAT_BOOST_CONFIG["format_boosts"]
 
-      boosted_formats = (government_formats + individual_format_boosts.keys).uniq
+      if @search_params.format_boosting_b_variant?
+        individual_format_boosts
+      else
+        government_index_config = FORMAT_BOOST_CONFIG["government_index"]
+        government_index_boost = government_index_config["boost"]
+        government_formats = government_index_config["formats"]
 
-      boosted_formats.each_with_object({}) do |format_name, boosts|
-        format_index_boost = government_formats.include?(format_name) ? government_index_boost : DEFAULT_BOOST
-        individual_format_boost = individual_format_boosts.fetch(format_name, DEFAULT_BOOST)
+        boosted_formats = (government_formats + individual_format_boosts.keys).uniq
 
-        boosts[format_name] = format_index_boost * individual_format_boost
+        boosted_formats.each_with_object({}) do |format_name, boosts|
+          format_index_boost = government_formats.include?(format_name) ? government_index_boost : DEFAULT_BOOST
+          individual_format_boost = individual_format_boosts.fetch(format_name, DEFAULT_BOOST)
+
+          boosts[format_name] = format_index_boost * individual_format_boost
+        end
       end
     end
 
@@ -50,6 +60,13 @@ module QueryComponents
           boost_factor: boost
         }
       end
+    end
+
+    def guidance_boost
+      {
+        filter: { term: { navigation_document_supertype: "guidance" } },
+        boost_factor: 2.5
+      }
     end
 
     # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
