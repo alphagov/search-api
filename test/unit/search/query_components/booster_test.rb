@@ -87,6 +87,14 @@ class BoosterTest < ShouldaUnitTestCase
 
         assert_no_boost_for_field(result, :navigation_document_supertype, "guidance")
       end
+
+      should "downweight service assessments by small amount" do
+        params = search_query_params(ab_tests: { format_boosting: "A" })
+        builder = QueryComponents::Booster.new(params)
+        result = builder.wrap({ some: 'query' })
+
+        assert_format_boost(result, "service_standard_report", 0.2)
+      end
     end
 
     context "in the B variant" do
@@ -116,6 +124,14 @@ class BoosterTest < ShouldaUnitTestCase
         result = builder.wrap({ some: 'query' })
 
         assert_boost_for_field(result, :navigation_document_supertype, "guidance", 2.5)
+      end
+
+      should "downweight service assessments by large amount" do
+        params = search_query_params(ab_tests: { format_boosting: "B" })
+        builder = QueryComponents::Booster.new(params)
+        result = builder.wrap({ some: 'query' })
+
+        assert_format_boost(result, "service_standard_report", 0.05)
       end
     end
   end

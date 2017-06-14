@@ -26,9 +26,9 @@ module QueryComponents
       boosts = format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]
 
       if @search_params.format_boosting_b_variant?
-        boosts + [guidance_boost]
+        boosts + [guidance_boost, service_standard_report_boost(0.05)]
       else
-        boosts
+        boosts + [service_standard_report_boost(0.2)]
       end
     end
 
@@ -55,11 +55,21 @@ module QueryComponents
 
     def format_boosts
       boosted_formats.map do |format, boost|
-        {
-          filter: { term: { format: format } },
-          boost_factor: boost
-        }
+        format_boost(format, boost)
       end
+    end
+
+    # TODO: This should be merged with the other format boosts after the format
+    # boosting A/B test is complete
+    def service_standard_report_boost(boost)
+      format_boost("service_standard_report", boost)
+    end
+
+    def format_boost(format, boost)
+      {
+        filter: { term: { format: format } },
+        boost_factor: boost
+      }
     end
 
     def guidance_boost
