@@ -57,10 +57,6 @@ module QueryComponents
       }
     end
 
-    def b_variant?
-      @search_params.ab_tests[:search_match_length] == 'B'
-    end
-
     def payload_for_quoted_phrase
       groups = [field_boosts_phrase]
       groups.map { |queries| dis_max_query(queries) }
@@ -70,14 +66,12 @@ module QueryComponents
       if @search_params.enable_id_codes?
         [all_searchable_text_query]
       else
-        b_variant? ? [] : [query_string_query]
+        []
       end
     end
 
     def should_conditions
-      fields = exact_field_boosts + [exact_match_boost, shingle_token_filter_boost]
-      fields = (fields + [query_string_query]) if b_variant?
-      fields
+      exact_field_boosts + [exact_match_boost, shingle_token_filter_boost, query_string_query]
     end
 
     def all_searchable_text_query
