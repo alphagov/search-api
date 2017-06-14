@@ -26,7 +26,7 @@ module QueryComponents
       boosts = format_boosts + [time_boost, closed_org_boost, devolved_org_boost, historic_edition_boost]
 
       if @search_params.format_boosting_b_variant?
-        boosts + [guidance_boost, service_standard_report_boost(0.05)]
+        boosts + [guidance_boost, foi_boost, service_standard_report_boost(0.05)]
       else
         boosts + [service_standard_report_boost(0.2)]
       end
@@ -76,6 +76,13 @@ module QueryComponents
       {
         filter: { term: { navigation_document_supertype: "guidance" } },
         boost_factor: 2.5
+      }
+    end
+
+    def foi_boost
+      {
+        filter: { term: { content_store_document_type: "foi_release" } },
+        boost_factor: 0.2
       }
     end
 

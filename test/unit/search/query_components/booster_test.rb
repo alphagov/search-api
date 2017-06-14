@@ -95,6 +95,14 @@ class BoosterTest < ShouldaUnitTestCase
 
         assert_format_boost(result, "service_standard_report", 0.2)
       end
+
+      should "not downweight FOI requests" do
+        params = search_query_params(ab_tests: { format_boosting: "A" })
+        builder = QueryComponents::Booster.new(params)
+        result = builder.wrap({ some: 'query' })
+
+        assert_no_boost_for_field(result, :content_store_document_type, "foi_release")
+      end
     end
 
     context "in the B variant" do
@@ -132,6 +140,15 @@ class BoosterTest < ShouldaUnitTestCase
         result = builder.wrap({ some: 'query' })
 
         assert_format_boost(result, "service_standard_report", 0.05)
+      end
+
+
+      should "downweight FOI requests" do
+        params = search_query_params(ab_tests: { format_boosting: "B" })
+        builder = QueryComponents::Booster.new(params)
+        result = builder.wrap({ some: 'query' })
+
+        assert_boost_for_field(result, :content_store_document_type, "foi_release", 0.2)
       end
     end
   end
