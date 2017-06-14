@@ -9,7 +9,7 @@ module Search
     QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/
 
     def initialize(params = {})
-      params = { facets: [], filters: {}, debug: {}, return_fields: [] }.merge(params)
+      params = { facets: [], filters: {}, debug: {}, return_fields: [], ab_tests: {} }.merge(params)
       params.each do |k, v|
         public_send("#{k}=", v)
       end
@@ -50,6 +50,10 @@ module Search
 
     def suggest_spelling?
       query && suggest.include?('spelling')
+    end
+
+    def format_boosting_b_variant?
+      ab_tests[:format_boosting] == 'B'
     end
 
   private

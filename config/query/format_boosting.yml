@@ -42,7 +42,6 @@ format_boosts:
   aaib_report: 0.2
   dfid_research_output: 0.2
   hmrc_manual_section: 0.2
-  service_standard_report: 0.2
   # Inside Gov formats
   contact: 0.3
   document_collection: 1.3
