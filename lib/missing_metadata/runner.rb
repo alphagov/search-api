@@ -7,11 +7,12 @@ module MissingMetadata
     PAGE_SIZE = 200
     MAX_PAGES = 52
 
-    def initialize(missing_field_name, search_config: SearchConfig.new)
+    def initialize(missing_field_name, search_config: SearchConfig.new, logger: STDOUT)
       @missing_field_name = missing_field_name
       @search_config = search_config
       publishing_api = GdsApi::PublishingApiV2.new(Plek.new.find("publishing-api"))
       @fetcher = MissingMetadata::Fetcher.new(publishing_api)
+      @logger = logger
     end
 
     def update
@@ -20,7 +21,7 @@ module MissingMetadata
       total = records.size
 
       records.each_with_index do |result, i|
-        puts "Updating #{i}/#{total}: #{result['_id']}"
+        logger.puts "Updating #{i}/#{total}: #{result['_id']}"
 
         begin
           @fetcher.add_metadata(result)
@@ -34,7 +35,7 @@ module MissingMetadata
       results = []
 
       (0..Float::INFINITY).lazy.each do |page|
-        puts "Fetching page #{page + 1}"
+        logger.puts "Fetching page #{page + 1}"
 
         response = search_config.run_search(
           "filter_#{@missing_field_name}" => %w(_MISSING),
@@ -44,15 +45,14 @@ module MissingMetadata
         )
 
         break if response[:results].empty?
-        puts response[:results]
 
         response[:results].each do |result|
           if result[:_id].start_with?("https://", "http://")
-            puts "Skipping #{result[:elasticsearch_type]}/#{result[:_id]}"
+            logger.puts "Skipping #{result[:elasticsearch_type]}/#{result[:_id]}"
             next
           end
 
-          results << result.slice(:_id, :content_id, :index)
+          results << result.symbolize_keys.slice(:_id, :index, :content_id)
         end
       end
 
@@ -62,5 +62,6 @@ module MissingMetadata
   private
 
     attr_reader :search_config
+    attr_reader :logger
   end
 end

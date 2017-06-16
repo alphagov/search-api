@@ -11,11 +11,11 @@ module MissingMetadata
     end
 
     def add_metadata(result)
-      index_name = result["index"]
-      document_id = result["_id"]
+      index_name = result[:index]
+      document_id = result[:_id]
       raise MissingDocumentError.new("Missing index name or id in search results") if index_name.nil? || document_id.nil?
 
-      content_id = result["content_id"] || lookup_content_id(document_id)
+      content_id = result[:content_id] || lookup_content_id(document_id)
 
       update_metadata(content_id, index_name, document_id)
     end

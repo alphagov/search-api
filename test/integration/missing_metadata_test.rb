@@ -10,7 +10,7 @@ class MissingMetadataTest < IntegrationTest
       '_type' => 'edition',
     )
 
-    runner = MissingMetadata::Runner.new('content_id', search_config: stubbed_search_config)
+    runner = MissingMetadata::Runner.new('content_id', search_config: stubbed_search_config, logger: io)
     results = runner.retrieve_records_with_missing_value
 
     assert_equal [{_id: '/path/to_page', index: 'mainstream_test'}], results
@@ -24,7 +24,7 @@ class MissingMetadataTest < IntegrationTest
       '_type' => 'edition',
     )
 
-    runner = MissingMetadata::Runner.new('content_id', search_config: stubbed_search_config)
+    runner = MissingMetadata::Runner.new('content_id', search_config: stubbed_search_config, logger: io)
     results = runner.retrieve_records_with_missing_value
 
     assert_empty results
@@ -38,7 +38,7 @@ class MissingMetadataTest < IntegrationTest
       '_type' => 'edition',
     )
 
-    runner = MissingMetadata::Runner.new('content_store_document_type', search_config: stubbed_search_config)
+    runner = MissingMetadata::Runner.new('content_store_document_type', search_config: stubbed_search_config, logger: io)
     results = runner.retrieve_records_with_missing_value
 
     assert_equal [{_id: '/path/to_page', index: 'mainstream_test', content_id: '8aea1742-9cc6-4dfb-a63b-12c3e66a601f'}], results
@@ -53,9 +53,13 @@ class MissingMetadataTest < IntegrationTest
       '_type' => 'edition',
     )
 
-    runner = MissingMetadata::Runner.new('content_store_document_type', search_config: stubbed_search_config)
+    runner = MissingMetadata::Runner.new('content_store_document_type', search_config: stubbed_search_config, logger: io)
     results = runner.retrieve_records_with_missing_value
 
     assert_empty results
+  end
+
+  def io
+    @io ||= StringIO.new
   end
 end
