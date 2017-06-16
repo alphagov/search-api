@@ -10,7 +10,7 @@ module MissingMetadata
     def initialize(missing_field_name, search_config: SearchConfig.new, logger: STDOUT)
       @missing_field_name = missing_field_name
       @search_config = search_config
-      publishing_api = GdsApi::PublishingApiV2.new(Plek.new.find("publishing-api"))
+      publishing_api = Services.publishing_api
       @fetcher = MissingMetadata::Fetcher.new(publishing_api)
       @logger = logger
     end
