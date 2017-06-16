@@ -1,6 +1,11 @@
 require "yaml"
 require "search_server"
 require "schema/schema_config"
+require "parameter_parser/search_parameter_parser"
+require "schema/combined_index_schema"
+require "search/query_parameters"
+require "search/registries"
+require "search/query"
 require "plek"
 require "erb"
 
@@ -40,8 +45,42 @@ class SearchConfig
     @elasticsearch ||= config_for("elasticsearch")
   end
 
+  def run_search(raw_parameters)
+    parser = SearchParameterParser.new(raw_parameters, combined_index_schema)
+    parser.validate!
+
+    search_params = Search::QueryParameters.new(parser.parsed_params)
+
+    searcher.run(search_params)
+  end
+
+  def metasearch_index
+    search_server.index(metasearch_index_name)
+  end
 
 private
+
+  def searcher
+    @searcher ||= begin
+      unified_index = search_server.index_for_search(
+        content_index_names
+      )
+
+      registries = Search::Registries.new(
+        search_server,
+        self
+      )
+
+      Search::Query.new(unified_index, registries, metasearch_index: metasearch_index)
+    end
+  end
+
+  def combined_index_schema
+    @combined_index_schema ||= CombinedIndexSchema.new(
+      content_index_names,
+      schema_config
+    )
+  end
 
   def config_path
     File.expand_path("../config/schema", File.dirname(__FILE__))

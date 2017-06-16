@@ -2,6 +2,14 @@ require "ostruct"
 require "unf"
 
 class BaseParameterParser
+  class ParseError < StandardError
+    attr_reader :errors
+
+    def initialize(errors)
+      @errors = errors
+    end
+  end
+
   # The fields listed here are the only ones which the search results can be
   # ordered by.  These are listed and validated explicitly because
   # sorting by arbitrary fields can be expensive in terms of memory usage in
@@ -141,7 +149,12 @@ class BaseParameterParser
   attr_reader :parsed_params, :errors
 
   def valid?
-    @errors.empty?
+    errors.empty?
+  end
+
+  def validate!
+    puts errors
+    raise ParseError.new(errors) if !valid?
   end
 
 protected

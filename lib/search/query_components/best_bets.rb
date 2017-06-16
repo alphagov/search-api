@@ -1,5 +1,13 @@
+require "search/best_bets_checker"
+
 module QueryComponents
   class BestBets < BaseComponent
+    def initialize(metasearch_index:, search_params: Search::QueryParameters.new)
+      @metasearch_index = metasearch_index
+
+      super(search_params)
+    end
+
     def wrap(original_query)
       return original_query if search_params.disable_best_bets? || no_bets?
 
@@ -17,6 +25,8 @@ module QueryComponents
     end
 
   private
+
+    attr_reader :metasearch_index
 
     # `best_bet_queries` make sure documents with the specified IDs are returned
     # by elasticsearch. It also adds a huge boost factor for these results, to
@@ -51,7 +61,7 @@ module QueryComponents
     end
 
     def best_bets_checker
-      @best_bets_checker ||= Search::BestBetsChecker.new(search_term)
+      @best_bets_checker ||= Search::BestBetsChecker.new(search_term, metasearch_index)
     end
   end
 end

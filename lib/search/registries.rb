@@ -39,7 +39,7 @@ module Search
 
     def specialist_sectors
       BaseRegistry.new(
-        search_server.index_for_search(Rummager.settings.search_config.content_index_names),
+        search_server.index_for_search(search_config.content_index_names),
         field_definitions,
         "specialist_sector"
       )
@@ -50,7 +50,7 @@ module Search
     end
 
     def index
-      search_server.index_for_search([Rummager.settings.search_config.registry_index])
+      search_server.index_for_search([search_config.registry_index])
     end
 
     def field_definitions

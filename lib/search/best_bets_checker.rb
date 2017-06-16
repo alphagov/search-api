@@ -2,10 +2,10 @@ require "set"
 
 module Search
   class BestBetsChecker
-    def initialize(query, index = nil)
+    def initialize(query, metasearch_index)
       @query = query
       @fetched = false
-      @index = index || metasearch_index
+      @metasearch_index = metasearch_index
     end
 
     def best_bets
@@ -19,10 +19,6 @@ module Search
     end
 
   private
-
-    def metasearch_index
-      Rummager.search_config.search_server.index(Rummager.search_config.metasearch_index_name)
-    end
 
     # Fetch the best bets, and populate @best_bets and @worst_bets
     def fetch
@@ -87,8 +83,8 @@ module Search
     # the bet, and for best bets also a "position" key containing the position
     # the best bet should appear at.
     def fetch_bets
-      analyzed_users_query = " #{@index.analyzed_best_bet_query(@query)} "
-      es_response = @index.raw_search(lookup_payload, "best_bet")
+      analyzed_users_query = " #{@metasearch_index.analyzed_best_bet_query(@query)} "
+      es_response = @metasearch_index.raw_search(lookup_payload, "best_bet")
 
       es_response["hits"]["hits"].map do |hit|
         details = JSON.parse(Array(hit["fields"]["details"]).first)

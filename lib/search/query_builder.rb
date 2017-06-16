@@ -16,8 +16,10 @@ module Search
   class QueryBuilder
     attr_reader :search_params
 
-    def initialize(search_params)
+    def initialize(search_params:, content_index_names:, metasearch_index:)
       @search_params = search_params
+      @content_index_names = content_index_names
+      @metasearch_index = metasearch_index
     end
 
     def payload
@@ -46,7 +48,11 @@ module Search
     end
 
     def query
-      QueryComponents::Query.new(search_params).payload
+      QueryComponents::Query.new(
+        content_index_names: content_index_names,
+        metasearch_index: metasearch_index,
+        search_params: search_params
+      ).payload
     end
 
     def filter
@@ -54,6 +60,9 @@ module Search
     end
 
   private
+
+    attr_reader :content_index_names
+    attr_reader :metasearch_index
 
     def sort
       QueryComponents::Sort.new(search_params).payload

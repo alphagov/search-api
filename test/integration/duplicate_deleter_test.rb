@@ -10,7 +10,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "edition",
     )
 
-    DuplicateDeleter.new('edition', io).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
 
     assert_message(msg: "as less than 2 results found")
     assert_document_present_in_rummager(id: "/an-example-page", type: "edition")
@@ -30,7 +30,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "cma_case",
     )
 
-    DuplicateDeleter.new('edition', io).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
 
     assert_message(msg: "Deleted duplicate for content_id")
     assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
@@ -51,7 +51,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "cma_case",
     )
 
-    DuplicateDeleter.new('ab_case', io).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
+    DuplicateDeleter.new('ab_case', io, search_config: stubbed_search_config).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
 
     assert_message(msg: "as type to delete ab_case not present in")
     assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
@@ -72,7 +72,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "cma_case",
     )
 
-    DuplicateDeleter.new('edition', io).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
 
     assert_message(msg: "as multiple _id's detected")
     assert_document_present_in_rummager(id: "/not-an-example-page", type: "edition")
@@ -95,7 +95,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_id" => "/contact-page",
     )
 
-    DuplicateDeleter.new('edition', io).call(["e3eaa461-3a85-4881-b412-9c58e7ea4ebd"])
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["e3eaa461-3a85-4881-b412-9c58e7ea4ebd"])
 
     assert_message(msg: "Deleted duplicate for content_id")
     assert_document_present_in_rummager(id: "contact-page", type: "contact")
@@ -116,7 +116,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "cma_case",
     )
 
-    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "Deleted duplicate for link")
     assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
@@ -137,7 +137,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "cma_case",
     )
 
-    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "as multiple non-null content_id's detected")
     assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
@@ -157,7 +157,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "cma_case",
     )
 
-    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "Deleted duplicate for link")
     assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
@@ -177,7 +177,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "cma_case",
     )
 
-    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "indexed with a valid '_type' but a missing content ID")
     assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
@@ -196,7 +196,7 @@ class DuplicateDeleterTest < IntegrationTest
       "_type" => "cma_case",
     )
 
-    DuplicateDeleter.new('edition', io).call(["/an-example-page"], id_type: "link")
+    DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
 
     assert_message(msg: "Deleted duplicate for link")
     assert_document_present_in_rummager(id: "/an-example-page", type: "cma_case")

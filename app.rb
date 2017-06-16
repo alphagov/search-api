@@ -128,7 +128,7 @@ class Rummager < Sinatra::Application
       end
 
       search_params = Search::QueryParameters.new(parser.parsed_params)
-      searcher = Search::Query.new(unified_index, registries)
+      searcher = Search::Query.new(unified_index, registries, metasearch_index: Rummager.search_config.metasearch_index)
       searcher.run(search_params).to_json
     end
   end
