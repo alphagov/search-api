@@ -1,42 +1,18 @@
-require_relative "../app"
+require_relative "search_config"
 
 class DuplicateDeleter
   attr_reader :type_to_delete, :io
-  def initialize(type_to_delete, io = STDOUT)
+
+  def initialize(type_to_delete, io = STDOUT, search_config: SearchConfig.new)
     @type_to_delete = type_to_delete
     @io = io
-  end
-
-  def search_config
-    Rummager.settings.search_config
-  end
-
-  def searcher
-    @searcher ||= begin
-      unified_index = search_config.search_server.index_for_search(
-        search_config.content_index_names
-      )
-
-      registries = Search::Registries.new(
-        search_config.search_server,
-        search_config
-      )
-      Search::Query.new(unified_index, registries)
-    end
-  end
-
-  def schema
-    @schema ||= CombinedIndexSchema.new(
-      search_config.content_index_names,
-      search_config.schema_config
-    )
+    @search_config = search_config
   end
 
   def call(ids, id_type: 'content_id')
+
     ids.each do |id|
-      parser = SearchParameterParser.new({ "filter_#{id_type}" => id, 'fields' => ['content_id'] }, schema)
-      search_params = Search::QueryParameters.new(parser.parsed_params)
-      results = searcher.run(search_params)
+      results = search_config.run_search("filter_#{id_type}" => id, 'fields' => ['content_id'])
 
       if results[:results].count < 2
         io.puts "Skipping #{id_type} #{id} as less than 2 results found"
@@ -90,6 +66,8 @@ class DuplicateDeleter
   end
 
 private
+
+  attr_reader :search_config
 
   def results_contain_duplicate_contacts(results, type_to_delete)
     contact_results = results.select { |a| a[:elasticsearch_type] == "contact" }
