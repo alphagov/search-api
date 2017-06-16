@@ -37,7 +37,6 @@ class SearchConfig
     @schema ||= SchemaConfig.new(config_path)
   end
 
-
   def index_names
     content_index_names + auxiliary_index_names
   end
