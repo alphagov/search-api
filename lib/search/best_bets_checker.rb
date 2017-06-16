@@ -2,10 +2,10 @@ require "set"
 
 module Search
   class BestBetsChecker
-    def initialize(query, index = nil)
+    def initialize(query, index)
       @query = query
       @fetched = false
-      @index = index || metasearch_index
+      @index = index
     end
 
     def best_bets
@@ -19,10 +19,6 @@ module Search
     end
 
   private
-
-    def metasearch_index
-      Rummager.search_config.search_server.index(Rummager.search_config.metasearch_index_name)
-    end
 
     # Fetch the best bets, and populate @best_bets and @worst_bets
     def fetch

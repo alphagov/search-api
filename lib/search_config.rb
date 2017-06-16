@@ -1,6 +1,11 @@
 require "yaml"
 require "search_server"
 require "schema/schema_config"
+require "parameter_parser/search_parameter_parser"
+require "schema/combined_index_schema"
+require "search/query_parameters"
+require "search/registries"
+require "search/query"
 require "plek"
 require "erb"
 
@@ -50,6 +55,10 @@ class SearchConfig
     searcher.run(search_params)
   end
 
+  def metasearch_index
+    search_server.index(metasearch_index_name)
+  end
+
 private
 
   def searcher
@@ -63,7 +72,7 @@ private
         self
       )
 
-      Search::Query.new(unified_index, registries)
+      Search::Query.new(unified_index, registries, metasearch_index: metasearch_index)
     end
   end
 

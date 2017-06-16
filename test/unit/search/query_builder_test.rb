@@ -11,7 +11,6 @@ class QueryBuilderTest < ShouldaUnitTestCase
       builder = builder_with_params(start: 11, count: 34, return_fields: ['a_field'])
 
       result = builder.payload
-
       assert_equal 11, result[:from]
       assert_equal 34, result[:size]
       assert result[:fields].include?('a_field')
@@ -21,7 +20,9 @@ class QueryBuilderTest < ShouldaUnitTestCase
 
   def builder_with_params(params)
     Search::QueryBuilder.new(
-      Search::QueryParameters.new({ filters: [] }.merge(params))
+      search_params: Search::QueryParameters.new({ filters: [] }.merge(params)),
+      content_index_names: Rummager.search_config.content_index_names,
+      metasearch_index: Rummager.search_config.metasearch_index
     )
   end
 end

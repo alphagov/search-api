@@ -1,4 +1,4 @@
-require 'missing_metadata/fetcher'
+require 'missing_metadata/runner'
 
 desc "Fetch missing document metadata from the publishing api"
 task :populate_metadata do

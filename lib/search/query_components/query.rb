@@ -3,15 +3,26 @@ require_relative "text_query"
 
 module QueryComponents
   class Query < BaseComponent
+    def initialize(content_index_names:, metasearch_index:, search_params: Search::QueryParameters.new)
+      @content_index_names = content_index_names
+      @metasearch_index = metasearch_index
+
+      super(search_params)
+    end
+
+
     def payload
       if search_params.similar_to.nil?
-        QueryComponents::BestBets.new(search_params).wrap(base_query)
+        QueryComponents::BestBets.new(metasearch_index: metasearch_index, search_params: search_params).wrap(base_query)
       else
         more_like_this_query_hash
       end
     end
 
   private
+
+    attr_reader :content_index_names
+    attr_reader :metasearch_index
 
     def base_query
       return { match_all: {} } if search_term.nil?
@@ -27,9 +38,7 @@ module QueryComponents
     end
 
     def more_like_this_query_hash
-      content_indices = Rummager.search_config.content_index_names
-
-      docs = content_indices.reduce([]) do |documents, index_name|
+      docs = content_index_names.reduce([]) do |documents, index_name|
         documents << {
           _type: 'edition',
           _id: search_params.similar_to,

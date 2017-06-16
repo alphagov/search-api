@@ -226,11 +226,4 @@ private
   def io
     @io ||= StringIO.new
   end
-
-  def stubbed_search_config
-    search_config = SearchConfig.new
-    TestIndexHelpers.stub_elasticsearch_settings(search_config)
-
-    search_config
-  end
 end

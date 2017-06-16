@@ -153,6 +153,7 @@ class BaseParameterParser
   end
 
   def validate!
+    puts errors
     raise ParseError.new(errors) if !valid?
   end
 

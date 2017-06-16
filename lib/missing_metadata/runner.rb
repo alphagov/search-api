@@ -1,15 +1,15 @@
-require "gds_api/rummager"
-require "gds_api/publishing_api_v2"
+require 'gds_api/publishing_api_v2'
 require 'missing_metadata/fetcher'
+require 'search_config'
 
 module MissingMetadata
   class Runner
     PAGE_SIZE = 200
     MAX_PAGES = 52
 
-    def initialize(missing_field_name)
+    def initialize(missing_field_name, search_config: SearchConfig.new)
       @missing_field_name = missing_field_name
-      @rummager = GdsApi::Rummager.new(Plek.new.find("rummager"))
+      @search_config = search_config
       publishing_api = GdsApi::PublishingApiV2.new(Plek.new.find("publishing-api"))
       @fetcher = MissingMetadata::Fetcher.new(publishing_api)
     end
@@ -36,26 +36,31 @@ module MissingMetadata
       (0..Float::INFINITY).lazy.each do |page|
         puts "Fetching page #{page + 1}"
 
-        response = @rummager.search({
-          "filter_#{@missing_field_name}" => "_MISSING",
-          "count" => PAGE_SIZE,
-          "start" => page * PAGE_SIZE,
-          "fields" => "content_id"
-        })
+        response = search_config.run_search(
+          "filter_#{@missing_field_name}" => %w(_MISSING),
+          "count" => [PAGE_SIZE.to_s],
+          "start" => [(page * PAGE_SIZE).to_s],
+          "fields" => %w(content_id)
+        )
 
-        break if response["results"].empty?
+        break if response[:results].empty?
+        puts response[:results]
 
-        response["results"].each do |result|
-          if result["_id"].start_with?("https://", "http://")
-            puts "Skipping #{result["elasticsearch_type"]}/#{result["_id"]}"
+        response[:results].each do |result|
+          if result[:_id].start_with?("https://", "http://")
+            puts "Skipping #{result[:elasticsearch_type]}/#{result[:_id]}"
             next
           end
 
-          results << result.slice("_id", "content_id", "index")
+          results << result.slice(:_id, :content_id, :index)
         end
       end
 
       results
     end
+
+  private
+
+    attr_reader :search_config
   end
 end
