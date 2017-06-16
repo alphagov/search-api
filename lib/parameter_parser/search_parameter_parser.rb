@@ -28,6 +28,9 @@ private
     # up the hash of parsed params.
     @used_params = []
 
+    # Dummy field that can be used to bypass caching when testing/debugging
+    @used_params << "c"
+
     @parsed_params = {
       start: single_integer_param("start", 0),
       count: capped_count,

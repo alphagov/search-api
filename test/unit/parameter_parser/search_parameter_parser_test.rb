@@ -83,6 +83,13 @@ class SearchParameterParserTest < ShouldaUnitTestCase
     assert_equal(expected_params({}), p.parsed_params)
   end
 
+  should "allow the c parameter to be anything" do
+    p = SearchParameterParser.new({ "c" => ["1234567890"] }, @schema)
+
+    assert p.valid?
+    assert_equal(expected_params({}), p.parsed_params)
+  end
+
   should "complain about multiple unknown parameters" do
     p = SearchParameterParser.new({ "p" => ["extra"], "boo" => ["goose"] }, @schema)
 
