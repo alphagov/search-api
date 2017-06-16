@@ -10,7 +10,6 @@ class DuplicateDeleter
   end
 
   def call(ids, id_type: 'content_id')
-
     ids.each do |id|
       results = search_config.run_search("filter_#{id_type}" => id, 'fields' => ['content_id'])
 

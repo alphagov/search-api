@@ -10,7 +10,7 @@ class MoreLikeThisQueryTest < ShouldaUnitTestCase
         metasearch_index: Rummager.search_config.metasearch_index,
         content_index_names: Rummager.search_config.content_index_names
       )
-      
+
       builder.expects(:more_like_this_query_hash).once
 
       builder.payload
