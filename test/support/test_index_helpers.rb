@@ -54,12 +54,12 @@ class TestIndexHelpers
     index_group.switch_to(index)
   end
 
-  def self.stub_elasticsearch_settings
+  def self.stub_elasticsearch_settings(search_config = Rummager.settings.search_config)
     ALL_TEST_INDEXES.each do |index_name|
       check_index_name!(index_name)
     end
 
-    Rummager.settings.search_config.stubs(:elasticsearch).returns({
+    search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
       "content_index_names" => INDEX_NAMES,
       "auxiliary_index_names" => AUXILIARY_INDEX_NAMES,
