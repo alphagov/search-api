@@ -21,12 +21,12 @@ module MissingMetadata
       total = records.size
 
       records.each_with_index do |result, i|
-        logger.puts "Updating #{i}/#{total}: #{result['_id']}"
+        logger.puts "Updating #{i}/#{total}: #{result[:_id]}"
 
         begin
           @fetcher.add_metadata(result)
         rescue StandardError
-          puts "Skipped result #{result["elasticsearch_type"]}/#{result["_id"]}: #{$!}"
+          puts "Skipped result #{result[:elasticsearch_type]}/#{result[:_id]}: #{$!}"
         end
       end
     end
