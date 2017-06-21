@@ -34,7 +34,7 @@ private
       "ga:productName" => lambda { |item| item["link"] },
       "ga:productBrand" => lambda { |item| item["primary_publishing_organisation"]&.first },
       "ga:productCategoryHierarchy" => lambda { |_| nil }, # Placeholder: taxonomy
-      "ga:dimension72" => lambda { |item| item["title"] },
+      "ga:dimension72" => lambda { |item| sanitise_for_google_analytics(item["title"]) },
       "ga:dimension73" => lambda { |item| item["content_store_document_type"] || item["format"] },
       "ga:dimension74" => lambda { |item| item["navigation_document_supertype"] },
       "ga:dimension75" => lambda { |_| nil }, # Placeholder: mainstream/specialist supertype
@@ -44,5 +44,11 @@ private
       "ga:dimension79" => lambda { |_| nil }, # Placeholder: purpose not yet decided
       "ga:dimension80" => lambda { |_| nil }, # Placeholder: is page a best bet?
     }
+  end
+
+  def sanitise_for_google_analytics(data)
+    data
+      &.gsub(/\r?\n/, " ")
+      &.strip
   end
 end

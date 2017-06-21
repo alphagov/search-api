@@ -99,6 +99,32 @@ class AnalyticsDataTest < IntegrationTest
     assert_equal "some_format", rows.first[5]
   end
 
+  def test_sanitises_unix_line_breaks_in_titles
+    document = {
+      "title" => <<~HEREDOC
+        A page title
+        with some
+        line breaks
+        HEREDOC
+    }
+    commit_document("mainstream_test", document)
+
+    rows = @analytics_data_fetcher.rows
+
+    assert_equal "A page title with some line breaks", rows.first[4]
+  end
+
+  def test_sanitises_windows_line_breaks_in_titles
+    document = {
+      "title" => "A page title\r\nwith some\r\nline breaks"
+    }
+    commit_document("mainstream_test", document)
+
+    rows = @analytics_data_fetcher.rows
+
+    assert_equal "A page title with some line breaks", rows.first[4]
+  end
+
   def test_fetches_all_rows
     fixture_file = File.expand_path("../fixtures/content_for_analytics.json", __FILE__)
     documents = JSON.parse(File.read(fixture_file))
