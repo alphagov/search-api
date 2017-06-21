@@ -9,9 +9,10 @@ require "redis"
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
+require "search_config"
+
 require "search/presenters/result_presenter"
 require "search/query_parameters"
-require "search/query"
 
 require "parameter_parser/search_parameter_parser"
 
