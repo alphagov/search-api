@@ -11,11 +11,9 @@ end
 
 require "search/presenters/result_presenter"
 require "search/query_parameters"
-require "search/registries"
 require "search/query"
 
 require "parameter_parser/search_parameter_parser"
-require "schema/combined_index_schema"
 
 require_relative "config"
 require_relative "helpers"
@@ -50,24 +48,6 @@ class Rummager < Sinatra::Application
 
   def index_name
     @index_name ||= params["index"] || settings.default_index_name
-  end
-
-  def registries
-    @@registries ||= Search::Registries.new(
-      search_server,
-      settings.search_config
-    )
-  end
-
-  def unified_index_schema
-    @unified_index_schema ||= CombinedIndexSchema.new(
-      settings.search_config.content_index_names,
-      settings.search_config.schema_config
-    )
-  end
-
-  def unified_index
-    search_server.index_for_search(settings.search_config.content_index_names)
   end
 
   def text_error(content)
@@ -116,19 +96,16 @@ class Rummager < Sinatra::Application
     get path do
       json_only
 
-      parser = SearchParameterParser.new(
-        parse_query_string(request.query_string),
-        unified_index_schema,
-      )
+      query_params = parse_query_string(request.query_string)
 
-      unless parser.valid?
+      begin
+        results = settings.search_config.run_search(query_params)
+      rescue BaseParameterParser::ParseError => e
         status 422
-        return { error: parser.error }.to_json
+        return { error: e.error }.to_json
       end
 
-      search_params = Search::QueryParameters.new(parser.parsed_params)
-      searcher = Search::Query.new(unified_index, registries, metasearch_index: Rummager.search_config.metasearch_index)
-      searcher.run(search_params).to_json
+      results.to_json
     end
   end
 

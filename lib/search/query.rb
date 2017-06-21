@@ -10,8 +10,8 @@ module Search
   class Query
     attr_reader :index, :registries, :spelling_index, :suggestion_blacklist
 
-    def initialize(index, registries, metasearch_index:, spelling_index:)
-      @index = index
+    def initialize(registries:, content_index:, metasearch_index:, spelling_index:)
+      @index = content_index
       @registries = registries
       @metasearch_index = metasearch_index
       @spelling_index = spelling_index

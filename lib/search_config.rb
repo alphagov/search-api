@@ -62,20 +62,25 @@ class SearchConfig
     search_server.index_for_search(spelling_index_names)
   end
 
+  def content_index
+    search_server.index_for_search(content_index_names)
+  end
+
 private
 
   def searcher
     @searcher ||= begin
-      unified_index = search_server.index_for_search(
-        content_index_names
-      )
-
       registries = Search::Registries.new(
         search_server,
         self
       )
 
-      Search::Query.new(unified_index, registries, metasearch_index: metasearch_index)
+      Search::Query.new(
+        content_index: content_index,
+        registries: registries,
+        metasearch_index: metasearch_index,
+        spelling_index: spelling_index
+      )
     end
   end
 
