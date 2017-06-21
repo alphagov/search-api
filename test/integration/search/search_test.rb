@@ -47,6 +47,17 @@ class SearchTest < IntegrationTest
     assert_equal ['search'], parsed_response['suggested_queries']
   end
 
+  def test_spell_checking_with_blacklisted_typo
+    commit_document("mainstream_test",
+      title: "Brexitt",
+      description: "Brexitt",
+      link: "/brexitt")
+
+    get "/search?q=brexit&suggest=spelling"
+
+    assert_equal [], parsed_response['suggested_queries']
+  end
+
   def test_spell_checking_without_typo
     populate_content_indexes(section_count: 1)
 

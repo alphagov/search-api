@@ -58,6 +58,10 @@ class SearchConfig
     search_server.index(metasearch_index_name)
   end
 
+  def spelling_index
+    search_server.index_for_search(spelling_index_names)
+  end
+
 private
 
   def searcher
