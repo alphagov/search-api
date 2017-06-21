@@ -8,7 +8,7 @@ class ScrollEnumerator < Enumerator
   # the time since the scan operation started, not the time since the last
   # activity happened in the scan, so until we upgrade to elasticsearch
   # 0.90.12+, we should set this high.
-  SCROLL_TIMEOUT_MINUTES = 60
+  SCROLL_TIMEOUT_MINUTES = 1
 
   # The number of documents to retrieve at once.
   # Gotcha: this is actually the number of documents per shard, so there will
