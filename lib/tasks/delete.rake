@@ -30,7 +30,7 @@ namespace :delete do
 
     type_to_delete = ENV.fetch("TYPE_TO_DELETE")
 
-    elasticsearch_config = YAML.load("../../elasticsearch.yml")
+    elasticsearch_config = SearchConfig.new.elasticsearch
 
     links = DuplicateLinksFinder.new(elasticsearch_config["base_uri"], CONTENT_SEARCH_INDICES).find
 
