@@ -53,6 +53,52 @@ class AnalyticsDataTest < IntegrationTest
     assert_equal [expected_row], rows.to_a
   end
 
+  def test_content_id_is_preferred_to_link_for_product_id
+    document = {
+      "content_id" => "some_content_id",
+      "link" => "/some/page/path",
+    }
+    commit_document("mainstream_test", document)
+
+    rows = @analytics_data_fetcher.rows
+
+    assert_equal "some_content_id", rows.first[0]
+  end
+
+  def test_product_id_falls_back_to_link_if_content_id_is_missing
+    document = {
+      "link" => "/some/page/path",
+    }
+    commit_document("mainstream_test", document)
+
+    rows = @analytics_data_fetcher.rows
+
+    assert_equal "/some/page/path", rows.first[0]
+  end
+
+  def test_document_type_is_preferred_to_format
+    document = {
+      "format" => "some_format",
+      "content_store_document_type" => "some_document_type",
+    }
+    commit_document("mainstream_test", document)
+
+    rows = @analytics_data_fetcher.rows
+
+    assert_equal "some_document_type", rows.first[5]
+  end
+
+  def test_document_type_falls_back_to_format_if_not_present
+    document = {
+      "format" => "some_format",
+    }
+    commit_document("mainstream_test", document)
+
+    rows = @analytics_data_fetcher.rows
+
+    assert_equal "some_format", rows.first[5]
+  end
+
   def test_fetches_all_rows
     fixture_file = File.expand_path("../fixtures/content_for_analytics.json", __FILE__)
     documents = JSON.parse(File.read(fixture_file))
