@@ -126,7 +126,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_can_fetch_documents_by_format
-    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
+    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=500"
     stub_request(:get, search_pattern).with(
       body: { query: { term: { format: "organisation" } }, fields: %w{title link} }
     ).to_return(
@@ -152,7 +152,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_can_fetch_documents_by_format_with_certain_fields
-    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=500"
+    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=500"
 
     stub_request(:get, search_pattern).with(
       body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"fields\":[\"title\",\"link\"]}"
@@ -181,7 +181,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 
   def test_all_documents_size
     # Test that we can count the documents without retrieving them all
-    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=50"
+    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=50"
     stub_request(:get, search_pattern).with(
       body: { query: { match_all: {} } }.to_json
     ).to_return(
@@ -192,7 +192,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_all_documents
-    search_uri = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=50"
+    search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=50"
 
     stub_request(:get, search_uri).with(
       body: { query: { match_all: {} } }.to_json
@@ -222,7 +222,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
   end
 
   def test_changing_scroll_id
-    search_uri = "http://example.com:9200/mainstream_test/_search?scroll=60m&search_type=scan&size=2"
+    search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=2"
 
     SearchIndices::Index.stubs(:scroll_batch_size).returns(2)
 
@@ -269,7 +269,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
 private
 
   def scroll_uri
-    "http://example.com:9200/_search/scroll?scroll=60m"
+    "http://example.com:9200/_search/scroll?scroll=1m"
   end
 
   def scroll_response_body(scroll_id, total_results, results)

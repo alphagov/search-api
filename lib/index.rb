@@ -1,10 +1,10 @@
 require "logging"
 require "json"
 require "legacy_client/multivalue_converter"
-require "legacy_client/scroll_enumerator"
 require "legacy_search/advanced_search"
 require "search/escaping"
 require "search/result_set"
+require "scroll_enumerator"
 require "indexer"
 require "indexer/amender"
 require "document"
@@ -151,7 +151,7 @@ module SearchIndices
       # Set off a scan query to get back a scroll ID and result count
       search_body = { query: { match_all: {} } }
       batch_size = self.class.scroll_batch_size
-      LegacyClient::ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
+      ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
         document_from_hash(hit["_source"].merge("_id" => hit["_id"], "_type" => hit["_type"]))
       end
     end
@@ -171,7 +171,7 @@ module SearchIndices
       }
 
       batch_size = self.class.scroll_batch_size
-      LegacyClient::ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
+      ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
         hit.fetch("fields", {})["link"]
       end
     end
@@ -183,7 +183,7 @@ module SearchIndices
         fields: field_definitions.keys,
       }
 
-      LegacyClient::ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
+      ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
         LegacyClient::MultivalueConverter.new(hit["fields"], field_definitions).converted_hash
       end
     end
