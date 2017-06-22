@@ -46,18 +46,22 @@ module QueryComponents
       # after applying all filters - ie, just on the documents which will be
       # included in the result set.
       if options[:scope] == :exclude_field_filter
-        aggregates_filter = filters_hash([field_name])
+        applied_query_filters = filters_hash([field_name])
       elsif options[:scope] == :all_filters
-        aggregates_filter = filters_hash([])
+        applied_query_filters = filters_hash([])
       end
 
-      if aggregates_filter && aggregates_filter.count > 0
-        {
-          filter: aggregates_filter,
-          aggs: { 'filtered_aggregations' => query }
-        }
+      {
+        filter: applied_filter(applied_query_filters),
+        aggs: { 'filtered_aggregations' => query }
+      }
+    end
+
+    def applied_filter(applied_query_filters)
+      if applied_query_filters && applied_query_filters.count > 0
+        applied_query_filters
       else
-        query
+        { match_all: {} }
       end
     end
 

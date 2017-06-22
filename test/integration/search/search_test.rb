@@ -596,6 +596,19 @@ class SearchTest < IntegrationTest
     assert_equal true, parsed_response.dig("results", 0, "is_withdrawn")
   end
 
+  def test_withdrawn_content_with_flag_with_aggregations
+    commit_document("mainstream_test",
+      title: "I am the result",
+      organisation: "Test Org",
+      description: "This is a test search result",
+      link: "/some-nice-link",
+      is_withdrawn: true
+    )
+
+    get "/search?q=test&debug=include_withdrawn&aggregate_mainstream_browse_pages=2"
+    assert_equal 1, parsed_response.fetch("total")
+  end
+
   def test_show_the_query
     get "/search?q=test&debug=show_query"
 
