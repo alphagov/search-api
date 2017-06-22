@@ -7,7 +7,7 @@
 First you need to decide which field type to use.
 `field_types.json` defines common elasticsearch configuration that we reuse for multiple fields having the same type.
 
-The type you use affects whether the field is [analysed](https://www.elastic.co/guide/en/elasticsearch/guide/current/mapping-analysis.html) by elasticsearch and whether you can use it in [filters](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html) and [facets](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets.html).
+The type you use affects whether the field is [analysed](https://www.elastic.co/guide/en/elasticsearch/guide/current/mapping-analysis.html) by elasticsearch and whether you can use it in [filters](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html) and [aggregates](https://www.elastic.co/guide/en/elasticsearch/reference/1.4/search-aggregations.html).
 
 Add your new field to `field_definitions.json`.
 

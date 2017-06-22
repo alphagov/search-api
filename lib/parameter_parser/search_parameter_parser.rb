@@ -1,4 +1,6 @@
 require_relative "base_parameter_parser"
+require_relative "aggregate_parameter_parser"
+require_relative "aggregates_parameter_parser"
 
 class SearchParameterParser < BaseParameterParser
   VIRTUAL_FIELDS = %w[
@@ -36,7 +38,8 @@ private
       order: order,
       return_fields: return_fields,
       filters: filters,
-      facets: facets,
+      aggregates: aggregates,
+      aggregate_name: @aggregate_name,
       debug: debug_options,
       suggest: character_separated_param("suggest"),
       ab_tests: ab_tests,
@@ -289,26 +292,14 @@ private
     FILTER_NAME_MAPPING.fetch(name, name)
   end
 
-  def facets
-    facets = {}
-    @params.each do |key, _values|
-      if (m = key.match(/\Afacet_(.*)/))
-        field = m[1]
-        value = single_param(key)
-        if ALLOWED_FACET_FIELDS.include? field
-          facet_parser = FacetParameterParser.new(field, value, allowed_return_fields)
-          if facet_parser.valid?
-            facets[field] = facet_parser.parsed_params
-          else
-            @errors.concat(facet_parser.errors)
-          end
-        else
-          @errors << %{"#{field}" is not a valid facet field}
-        end
-        @used_params << key
-      end
-    end
-    facets
+  def aggregates
+    parser = AggregatesParameterParser.new(@params, allowed_return_fields)
+    parser.call
+
+    @errors += parser.errors
+    @used_params += parser.used_params
+    @aggregate_name = (parser.aggregate_name || "aggregates").pluralize.to_sym
+    parser.aggregates
   end
 
   def debug_options

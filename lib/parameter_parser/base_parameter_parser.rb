@@ -38,8 +38,8 @@ class BaseParameterParser
   }.freeze
 
   # The fields listed here are the only ones which can be used to calculated
-  # facets for.  This should be a subset of allowed_filter_fields
-  ALLOWED_FACET_FIELDS = %w(
+  # aggregates for.  This should be a subset of allowed_filter_fields
+  ALLOWED_AGGREGATE_FIELDS = %w(
     content_store_document_type
     detailed_format
     document_collections
@@ -63,14 +63,14 @@ class BaseParameterParser
     world_locations
   ).freeze
 
-  # The fields for which facet examples are allowed to be requested.
+  # The fields for which aggregates examples are allowed to be requested.
   # This is locked down because these can only be requested with the current
-  # version of elasticsearch by performing a separate query for each facet
+  # version of elasticsearch by performing a separate query for each aggregates
   # option.  This is done using the msearch API to perform many queries
   # together, but is still potentially expensive.  They could be efficiently
   # calculated with the top-documents aggregator in elasticsearch 1.3, so this
   # restriction could be relaxed in future.
-  ALLOWED_FACET_EXAMPLE_FIELDS = %w(
+  ALLOWED_AGGREGATE_EXAMPLE_FIELDS = %w(
     content_store_document_type
     email_document_supertype
     format
@@ -84,7 +84,7 @@ class BaseParameterParser
     specialist_sectors
   ).freeze
 
-  # The keys by which facet values can be sorted (using the "order" option).
+  # The keys by which aggregates values can be sorted (using the "order" option).
   # Multiple can be supplied, separated by colons - items which are equal
   # according to the first option are sorted by the next key, etc.  keys can be
   # preceded with a "-" to sort in descending order.
@@ -95,7 +95,7 @@ class BaseParameterParser
   #  - value.title: sort values by the title of the value.
   #  - value.link: sort values by the link of the value.
   # 
-  ALLOWED_FACET_SORT_OPTIONS = %w(
+  ALLOWED_AGGREGATE_SORT_OPTIONS = %w(
     filtered
     count
     value
@@ -104,9 +104,9 @@ class BaseParameterParser
     value.link
   ).freeze
 
-  # Scopes that are allowed when requesting examples for facets
+  # Scopes that are allowed when requesting examples for aggregatess
   #  - query: Return only examples that match the query and filters
-  #  - global: Return examples for the facet regardless of whether they match
+  #  - global: Return examples for the aggregates regardless of whether they match
   #            the query and filters
   ALLOWED_EXAMPLE_SCOPES = [:global, :query].freeze
 
@@ -130,15 +130,15 @@ class BaseParameterParser
     expanded_organisations
   ).freeze
 
-  # Default order in which facet results are sorted
-  DEFAULT_FACET_SORT = [
+  # Default order in which aggregates results are sorted
+  DEFAULT_AGGREGATE_SORT = [
     [:filtered, 1],
     [:count, -1],
     [:slug, 1],
   ].freeze
 
-  # The fields which are returned by default for facet examples.
-  DEFAULT_FACET_EXAMPLE_FIELDS = %w(
+  # The fields which are returned by default for aggregates examples.
+  DEFAULT_AGGREGATE_EXAMPLE_FIELDS = %w(
     link
     title
   ).freeze

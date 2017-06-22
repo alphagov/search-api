@@ -1,4 +1,5 @@
 ENV['RACK_ENV'] = 'test'
+require 'pry'
 
 # Simplecov should be required before any other code is loaded statement to prevent
 # false negatives.

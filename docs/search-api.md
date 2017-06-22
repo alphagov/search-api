@@ -2,7 +2,7 @@
 
 This API is the main endpoint for performing searches on GOV.UK.  It supports
 keyword searching, ordering by relevance or date fields, filtering and
-faceting.
+aggregating.
 
 At the time of writing, there is one other endpoint, the `advanced_search`
 endpoint, which is slowly being replaced by the `search` endpoint.  The
@@ -104,11 +104,11 @@ The parameters supported are:
 
    - `scope`: One of `all_filters` and `exclude_field_filter` (the default).
 
-     If set to `all_filters`, the facet counts are made after applying all the
-     filters.  If set to `exclude_field_filter`, the facet counts are made
+     If set to `all_filters`, the aggregate counts are made after applying all the
+     filters.  If set to `exclude_field_filter`, the aggregate counts are made
      after applying all filters _except_ for those applied to the field that
-     the facets are being counted for.  This is a convenient option for
-     calculating values to show in common interfaces which use facets for
+     the aggregates are being counted for.  This is a convenient option for
+     calculating values to show in common interfaces which use aggregate for
      narrowing down search results.
 
    - `order`: Colon separated list of ordering types.

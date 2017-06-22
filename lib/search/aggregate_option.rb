@@ -1,7 +1,7 @@
 module Search
-  # An option in a list of facets
+  # An option in a list of aggregates
   # Knows how to compare itself to other options, for sorting.
-  class FacetOption
+  class AggregateOption
     attr_reader :value, :count, :applied
     include Comparable
 

@@ -26,7 +26,6 @@ module QueryComponents
       # *any* rejects can be true to *exclude* from the result
       rejected = combine_filters(all_rejected_queries, :or)
 
-
       if selected
         if rejected
           {
@@ -39,9 +38,7 @@ module QueryComponents
           selected
         end
       elsif rejected
-        {
-          not: rejected
-        }
+        { not: rejected }
       end
     end
   end

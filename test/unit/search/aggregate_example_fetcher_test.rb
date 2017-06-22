@@ -1,7 +1,7 @@
 require "test_helper"
-require "search/facet_example_fetcher"
+require "search/aggregate_example_fetcher"
 
-class FacetExampleFetcherTest < ShouldaUnitTestCase
+class AggregateExampleFetcherTest < ShouldaUnitTestCase
   def query_for_example_global(field, value, return_fields)
     {
       query: { filtered: { query: nil, filter: { term: { field => value } } } },
@@ -44,15 +44,15 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
 
   context "#prepare_response" do
     should "map an empty response" do
-      fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
+      fetcher = Search::AggregateExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
 
       response = fetcher.send(:prepare_response, [], [])
 
       assert_equal response, {}
     end
 
-    should "map a response to facets without fields" do
-      fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
+    should "map a response to aggregates without fields" do
+      fetcher = Search::AggregateExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
       slugs = ['a-slug-name']
       response_list = [{ 'hits' => { 'total' => 1, 'hits' => [{ '_id' => 'a-slug-name' }] } }]
 
@@ -62,11 +62,11 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
   end
 
-  context "no facet" do
+  context "no aggregate" do
     setup do
       @index = stub_index("content index")
       @builder = stub("builder")
-      @fetcher = Search::FacetExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
+      @fetcher = Search::AggregateExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
     end
 
     should "get an empty hash of examples" do
@@ -74,20 +74,22 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
   end
 
-  context "one facet with global scope" do
+  context "one aggregate with global scope" do
     setup do
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
-      main_query_response = { "facets" => {
+      main_query_response = { "aggregations" => {
         "sector" => {
-          "terms" => [
-            { "term" => "sector_1" },
-            { "term" => "sector_2" },
-          ]
+          'filtered_aggregations' => {
+            "buckets" => [
+              { "key" => "sector_1" },
+              { "key" => "sector_2" },
+            ]
+          }
         }
       } }
       params = Search::QueryParameters.new(
-        facets: {
+        aggregates: {
           "sector" => {
             requested: 10,
             examples: 2,
@@ -97,10 +99,10 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
         }
       )
       @builder = stub("builder")
-      @fetcher = Search::FacetExampleFetcher.new(@index, main_query_response, params, @builder)
+      @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
-    should "request and return facet examples" do
+    should "request and return aggregate examples" do
       @index.expects(:msearch)
         .with([
           query_for_example_global("sector", "sector_1", @example_fields),
@@ -124,22 +126,24 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
   end
 
-  context "one facet with query scope" do
+  context "one aggregate with query scope" do
     setup do
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
 
-      main_query_response = { "facets" => {
+      main_query_response = { "aggregations" => {
         "sector" => {
-          "terms" => [
-            { "term" => "sector_1" },
-            { "term" => "sector_2" },
-          ]
+          'filtered_aggregations' => {
+            "buckets" => [
+              { "key" => "sector_1" },
+              { "key" => "sector_2" },
+            ]
+          }
         }
       } }
 
       params = Search::QueryParameters.new(
-        facets: {
+        aggregates: {
           "sector" => {
             requested: 10,
             examples: 2,
@@ -150,10 +154,10 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
       )
 
       @builder = stub("builder")
-      @fetcher = Search::FacetExampleFetcher.new(@index, main_query_response, params, @builder)
+      @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
-    should "request and return facet examples with query scope" do
+    should "request and return aggregate examples with query scope" do
       query = { match: { _all: { query: "hello" } } }
       filter = { terms: { organisations: ["hm-magic"] } }
       @builder.expects(:query).returns(query)
@@ -182,18 +186,20 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
     end
   end
 
-  context "one facet but no documents match query" do
+  context "one aggregate but no documents match query" do
     setup do
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
-      main_query_response = { "facets" => {
+      main_query_response = { "aggregations" => {
         "sector" => {
-          "terms" => [
-          ]
+          'filtered_aggregations' => {
+            "buckets" => [
+            ]
+          }
         }
       } }
       params = Search::QueryParameters.new(
-        facets: {
+        aggregates: {
           "sector" => {
             requested: 10,
             examples: 2,
@@ -203,29 +209,31 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
         }
       )
       @builder = stub("builder")
-      @fetcher = Search::FacetExampleFetcher.new(@index, main_query_response, params, @builder)
+      @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
-    should "request and return facet examples" do
+    should "request and return aggregate examples" do
       assert_equal({ "sector" => {} }, @fetcher.fetch)
     end
   end
 
-  context "one facet with 1000 matches" do
+  context "one aggregate with 1000 matches" do
     setup do
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
 
-      main_query_response = { "facets" => {
+      main_query_response = { "aggregations" => {
         "sector" => {
-          "terms" => Array((0..999).map { |i|
-            { "term" => "sector_#{i}" }
-          })
+          'filtered_aggregations' => {
+            "buckets" => Array((0..999).map { |i|
+              { "key" => "sector_#{i}" }
+            })
+          }
         }
       } }
 
       params = Search::QueryParameters.new(
-        facets: {
+        aggregates: {
           "sector" => {
             requested: 10,
             examples: 2,
@@ -236,10 +244,10 @@ class FacetExampleFetcherTest < ShouldaUnitTestCase
       )
 
       @builder = stub("builder")
-      @fetcher = Search::FacetExampleFetcher.new(@index, main_query_response, params, @builder)
+      @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
-    should "request and return facet examples with query scope" do
+    should "request and return aggregate examples with query scope" do
       query = { match: { _all: { query: "hello" } } }
       filter = { terms: { organisations: ["hm-magic"] } }
       @builder.expects(:query).returns(query)
