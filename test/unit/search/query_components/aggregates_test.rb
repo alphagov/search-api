@@ -21,14 +21,24 @@ class AggregatesTest < ShouldaUnitTestCase
       assert_equal(
         {
           "organisations" => {
-            terms: {
-              field: "organisations",
-              order: { _count: "desc" },
-              size: 100000,
-            },
+            filter: { match_all: {} },
+            aggs: {
+              "filtered_aggregations" => {
+                terms: {
+                  field: "organisations",
+                  order: { _count: "desc" },
+                  size: 100000,
+                }
+              }
+            }
           },
           "organisations_with_missing_value" => {
-            missing: { field: "organisations" }
+            filter: { match_all: {} },
+            aggs: {
+              "filtered_aggregations" => {
+                missing: { field: "organisations" }
+              }
+            }
           },
         },
         result
@@ -50,14 +60,24 @@ class AggregatesTest < ShouldaUnitTestCase
       assert_equal(
         {
           "organisations" => {
-            terms: {
-              field: "organisations",
-              order: { _count: "desc" },
-              size: 100000,
-            },
+            filter: { match_all: {} },
+            aggs: {
+              "filtered_aggregations" => {
+                terms: {
+                  field: "organisations",
+                  order: { _count: "desc" },
+                  size: 100000,
+                }
+              }
+            }
           },
           "organisations_with_missing_value" => {
-            missing: { field: "organisations" }
+            filter: { match_all: {} },
+            aggs: {
+              "filtered_aggregations" => {
+                missing: { field: "organisations" }
+              }
+            }
           },
         },
         @builder.payload)
