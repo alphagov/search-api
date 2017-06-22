@@ -39,4 +39,32 @@ namespace :delete do
     deleter = DuplicateDeleter.new(type_to_delete)
     deleter.call(links, id_type: 'link')
   end
+
+  # Can be removed once run in production
+  desc "Delete old business support scheme items"
+  task :old_business_support do
+    require "indexer/workers/delete_worker"
+    elasticsearch_host = SearchConfig.new.elasticsearch["base_uri"]
+
+    params = {
+      query: { match_all: {} },
+      filter: {
+        bool: {
+          must: {
+            terms: { format: ["business_support"] }
+          }
+        }
+      },
+      size: 10_000
+    }
+
+    client = Elasticsearch::Client.new(host: elasticsearch_host)
+    results = client.search(index: 'mainstream', body: params)
+
+    puts "About to delete #{results['hits']['hits'].count} items"
+    results['hits']['hits'].each_with_index do |item, i|
+      puts "Deleting #{item['_id']} - (#{i + 1}/#{results['hits']['hits'].count}}"
+      Indexer::DeleteWorker.perform_async('mainstream', item['_type'], item['_id'])
+    end
+  end
 end
