@@ -13,7 +13,12 @@ namespace :analytics do
 
     analytics_data = AnalyticsData.new(elasticsearch_config["base_uri"], CONTENT_SEARCH_INDICES)
 
-    CSV.open("data/analytics_data_import.csv", "wb") do |csv|
+    path = ENV['EXPORT_PATH'] || 'data'
+    FileUtils.mkdir_p(path)
+    file_name = "#{path}/analytics_data_import_#{Date.today.strftime('%Y%m%d')}.csv"
+    puts "Exporting to: #{file_name}"
+
+    CSV.open(file_name, "wb") do |csv|
       csv << analytics_data.headers
 
       analytics_data.rows.each do |row|
