@@ -32,7 +32,7 @@ namespace :delete do
 
     elasticsearch_config = SearchConfig.new.elasticsearch
 
-    links = DuplicateLinksFinder.new(elasticsearch_config["base_uri"], CONTENT_SEARCH_INDICES).find
+    links = DuplicateLinksFinder.new(elasticsearch_config["base_uri"], CONTENT_SEARCH_INDICES).find_exact_duplicates
 
     puts "Found #{links.size} duplicate links to delete"
 
@@ -64,6 +64,31 @@ namespace :delete do
       else
         puts "Skipping #{base_path} because it is not present in the search index"
       end
+    end
+  end
+
+  desc "Delete duplicate inside-government-link results"
+  task :duplicate_inside_government_links do
+    require 'duplicate_links_finder'
+    require "indexer/workers/delete_worker"
+    elasticsearch_url = SearchConfig.new.elasticsearch['base_uri']
+
+    params = {
+      filter: {
+        term: {
+          format: "inside-government-link"
+        }
+      },
+      size: 10_000
+    }
+
+    duplicates = DuplicateLinksFinder.new(elasticsearch_url, CONTENT_SEARCH_INDICES)
+      .find_full_url_duplicates(params)
+
+    duplicates.each do |item|
+      puts "Deleting #{item['_source']['link']}"
+      index = SearchIndices::Index.strip_alias_from_index_name(item['_index'])
+      Indexer::DeleteWorker.perform_async(index, item['_type'], item['_id'])
     end
   end
 end
