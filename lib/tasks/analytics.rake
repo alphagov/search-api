@@ -26,4 +26,16 @@ namespace :analytics do
       end
     end
   end
+
+  desc "Delete old export files (specify the number to keep with EXPORT_FILE_LIMIT)"
+  task :delete_old_files do
+    path = ENV['EXPORT_PATH'] || 'data'
+    export_file_limit = ENV.fetch('EXPORT_FILE_LIMIT').to_i + 1
+    files = Dir["#{path}/analytics_data_import_*.csv"]
+    files = files.sort
+    files[0..-export_file_limit].each do |file|
+      puts "Removing file: #{file}"
+      File.delete(file)
+    end
+  end
 end
