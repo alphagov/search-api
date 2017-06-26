@@ -76,26 +76,4 @@ class QueryParameterTest < ShouldaUnitTestCase
       assert_equal %{  \t"Enclosing quotes but with "embedded" quotes"  }, params.query
     end
   end
-
-  context "format_boosting_b_variant?" do
-    should "return false if no variant is specified" do
-      params = Search::QueryParameters.new
-      refute params.format_boosting_b_variant?
-    end
-
-    should "return false if unknown variant is specified" do
-      params = Search::QueryParameters.new(ab_tests: { format_boosting: "some_other_variant" })
-      refute params.format_boosting_b_variant?
-    end
-
-    should "return false if A variant is specified" do
-      params = Search::QueryParameters.new(ab_tests: { format_boosting: "A" })
-      refute params.format_boosting_b_variant?
-    end
-
-    should "return true if B variant is specified" do
-      params = Search::QueryParameters.new(ab_tests: { format_boosting: "B" })
-      assert params.format_boosting_b_variant?
-    end
-  end
 end

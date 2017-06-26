@@ -52,10 +52,6 @@ module Search
       query && suggest.include?('spelling')
     end
 
-    def format_boosting_b_variant?
-      ab_tests[:format_boosting] == 'B'
-    end
-
   private
 
     def determine_if_quoted_phrase
