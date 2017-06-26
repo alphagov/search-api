@@ -188,7 +188,7 @@ For example:
      order=-public_timestamp&
      filter_organisations[]=cabinet-office&
      filter_organisations[]=driver-vehicle-licensing-agency&
-     filter_section[]=driving
+     filter_section[]=driving&
      facet_organisations=10&
      ab_tests=test1:B,test2:A
 

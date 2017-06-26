@@ -58,99 +58,43 @@ class BoosterTest < ShouldaUnitTestCase
     end
   end
 
-  context "when A/B testing format boosting" do
-    context "in the A variant" do
-      should "boost government index results" do
-        params = search_query_params(ab_tests: { format_boosting: "A" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
+  should "not boost government index results" do
+    builder = QueryComponents::Booster.new(search_query_params)
+    result = builder.wrap({ some: 'query' })
 
-        assert_format_boost(result, "case_study", 0.4)
-        assert_format_boost(result, "take_part", 0.4)
-        assert_format_boost(result, "worldwide_organisation", 0.4)
-      end
+    assert_no_format_boost(result, "case_study")
+    assert_no_format_boost(result, "take_part")
+    assert_no_format_boost(result, "worldwide_organisation")
+  end
 
-      should "combine government index and individual format weightings" do
-        params = search_query_params(ab_tests: { format_boosting: "A" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
+  should "apply only individual format weightings for government formats" do
+    builder = QueryComponents::Booster.new(search_query_params)
+    result = builder.wrap({ some: 'query' })
 
-        assert_format_boost(result, "minister", 0.68)
-        assert_format_boost(result, "organisation", 1.0)
-        assert_format_boost(result, "topic", 0.6)
-      end
+    assert_format_boost(result, "minister", 1.7)
+    assert_format_boost(result, "organisation", 2.5)
+    assert_format_boost(result, "topic", 1.5)
+  end
 
-      should "not boost guidance content" do
-        params = search_query_params(ab_tests: { format_boosting: "A" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
+  should "boost guidance content" do
+    builder = QueryComponents::Booster.new(search_query_params)
+    result = builder.wrap({ some: 'query' })
 
-        assert_no_boost_for_field(result, :navigation_document_supertype, "guidance")
-      end
+    assert_boost_for_field(result, :navigation_document_supertype, "guidance", 2.5)
+  end
 
-      should "downweight service assessments by small amount" do
-        params = search_query_params(ab_tests: { format_boosting: "A" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
+  should "downweight service assessments by large amount" do
+    builder = QueryComponents::Booster.new(search_query_params)
+    result = builder.wrap({ some: 'query' })
 
-        assert_format_boost(result, "service_standard_report", 0.2)
-      end
+    assert_format_boost(result, "service_standard_report", 0.05)
+  end
 
-      should "not downweight FOI requests" do
-        params = search_query_params(ab_tests: { format_boosting: "A" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
+  should "downweight FOI requests" do
+    builder = QueryComponents::Booster.new(search_query_params)
+    result = builder.wrap({ some: 'query' })
 
-        assert_no_boost_for_field(result, :content_store_document_type, "foi_release")
-      end
-    end
-
-    context "in the B variant" do
-      should "not boost government index results" do
-        params = search_query_params(ab_tests: { format_boosting: "B" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
-
-        assert_no_format_boost(result, "case_study")
-        assert_no_format_boost(result, "take_part")
-        assert_no_format_boost(result, "worldwide_organisation")
-      end
-
-      should "apply only individual format weightings for government formats" do
-        params = search_query_params(ab_tests: { format_boosting: "B" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
-
-        assert_format_boost(result, "minister", 1.7)
-        assert_format_boost(result, "organisation", 2.5)
-        assert_format_boost(result, "topic", 1.5)
-      end
-
-      should "boost guidance content" do
-        params = search_query_params(ab_tests: { format_boosting: "B" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
-
-        assert_boost_for_field(result, :navigation_document_supertype, "guidance", 2.5)
-      end
-
-      should "downweight service assessments by large amount" do
-        params = search_query_params(ab_tests: { format_boosting: "B" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
-
-        assert_format_boost(result, "service_standard_report", 0.05)
-      end
-
-
-      should "downweight FOI requests" do
-        params = search_query_params(ab_tests: { format_boosting: "B" })
-        builder = QueryComponents::Booster.new(params)
-        result = builder.wrap({ some: 'query' })
-
-        assert_boost_for_field(result, :content_store_document_type, "foi_release", 0.2)
-      end
-    end
+    assert_boost_for_field(result, :content_store_document_type, "foi_release", 0.2)
   end
 
   def assert_format_boost(result, content_format, expected_boost_factor)
