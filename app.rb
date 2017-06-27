@@ -90,6 +90,10 @@ class Rummager < Sinatra::Application
     halt(500, env['sinatra.error'].message)
   end
 
+  error Search::Query::Error do
+    halt(400, env['sinatra.error'].message)
+  end
+
   # Return results for the GOV.UK site search
   #
   # For details, see docs/search-api.md
