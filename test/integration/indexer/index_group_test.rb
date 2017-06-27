@@ -2,8 +2,9 @@ require "integration_test_helper"
 
 class ElasticsearchIndexGroupTest < IntegrationTest
   def setup
+    super
+
     @group_name = "mainstream_test"
-    TestIndexHelpers.stub_elasticsearch_settings
     TestIndexHelpers.clean_index_group(@group_name)
 
     @index_group = search_server.index_group(@group_name)

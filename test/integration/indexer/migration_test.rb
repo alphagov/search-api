@@ -4,8 +4,9 @@ require "indexer/bulk_loader"
 
 class ElasticsearchMigrationTest < IntegrationTest
   def setup
+    super
+
     stub_tagging_lookup
-    TestIndexHelpers.stub_elasticsearch_settings
     try_remove_test_index
 
     schema = app.settings.search_config.schema_config
