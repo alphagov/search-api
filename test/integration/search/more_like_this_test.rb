@@ -1,13 +1,6 @@
 require "integration_test_helper"
 
 class MoreLikeThisTest < IntegrationTest
-  def setup
-    # `@@registries` are set in Rummager and is *not* reset between tests. To
-    # prevent caching issues we manually clear them here to make a "new" app.
-    Rummager.class_variable_set(:'@@registries', nil)
-    super
-  end
-
   def test_returns_success
     get "/search?similar_to=/mainstream-1"
 

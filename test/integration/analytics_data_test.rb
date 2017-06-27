@@ -4,6 +4,7 @@ require "json"
 
 class AnalyticsDataTest < IntegrationTest
   def setup
+    super
     @analytics_data_fetcher = AnalyticsData.new(stubbed_search_config.elasticsearch["base_uri"], ["mainstream_test"])
   end
 

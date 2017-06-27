@@ -8,6 +8,10 @@ class BaseParameterParser
     def initialize(errors)
       @errors = errors
     end
+
+    def error
+      errors.join(". ")
+    end
   end
 
   # The fields listed here are the only ones which the search results can be
@@ -153,7 +157,6 @@ class BaseParameterParser
   end
 
   def validate!
-    puts errors
     raise ParseError.new(errors) if !valid?
   end
 

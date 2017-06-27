@@ -1,13 +1,6 @@
 require "integration_test_helper"
 
 class SearchTest < IntegrationTest
-  def setup
-    # `@@registries` are set in Rummager and is *not* reset between tests. To
-    # prevent caching issues we manually clear them here to make a "new" app.
-    Rummager.class_variable_set(:'@@registries', nil)
-    super
-  end
-
   def test_returns_success
     get "/search?q=important"
 
@@ -45,6 +38,17 @@ class SearchTest < IntegrationTest
     get "/search?q=serch&suggest=spelling"
 
     assert_equal ['search'], parsed_response['suggested_queries']
+  end
+
+  def test_spell_checking_with_blacklisted_typo
+    commit_document("mainstream_test",
+      title: "Brexitt",
+      description: "Brexitt",
+      link: "/brexitt")
+
+    get "/search?q=brexit&suggest=spelling"
+
+    assert_equal [], parsed_response['suggested_queries']
   end
 
   def test_spell_checking_without_typo

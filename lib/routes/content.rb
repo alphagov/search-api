@@ -21,8 +21,12 @@ class Rummager < Sinatra::Application
 
 private
 
+  def index
+    settings.search_config.content_index
+  end
+
   def find_result_by_link(link)
-    raw_result = unified_index.get_document_by_link(link)
+    raw_result = index.get_document_by_link(link)
 
     unless raw_result
       halt 404, "No document found with link #{link}."
