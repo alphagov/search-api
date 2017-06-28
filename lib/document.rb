@@ -73,8 +73,8 @@ class Document
           doc[key] = value
         end
       end
-      doc["_type"] = @type
-      doc["_id"] = @id if @id
+      doc["__type"] = @type
+      doc["__id"] = @id if @id
     end
   end
 
