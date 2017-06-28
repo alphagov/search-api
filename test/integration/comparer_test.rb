@@ -14,10 +14,20 @@ class SearchTest < IntegrationTest
 
     results = Indexer::CompareEnumerator.new('mainstream_test', 'government_test')
 
+    # ordered by type and the ID
     assert_equal [
-      [{ some: 'data', id: 'ABC', type: "edition" }, { some: 'data', id: 'ABC', type: "edition" }],
-      [{ some: 'data', id: 'DEF', type: "other" }, { some: 'data', id: 'DEF', type: "other" }],
-      [{ some: 'data', id: 'GHI', type: "edition" }, { some: 'data', id: 'GHI', type: "edition" }],
+      [
+        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => "edition" },
+        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => "edition" },
+      ],
+      [
+        { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => "edition" },
+        { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => "edition" },
+      ],
+      [
+        { 'some' => 'data', '_root_id' => 'DEF', '_root_type' => "other" },
+        { 'some' => 'data', '_root_id' => 'DEF', '_root_type' => "other" },
+      ],
     ], results.to_a
   end
 end
