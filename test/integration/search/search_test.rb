@@ -699,6 +699,21 @@ class SearchTest < IntegrationTest
     assert_equal 1, parsed_response.fetch("total")
   end
 
+  def test_return_400_response_for_integers_out_of_range
+    get '/search.json?count=50&start=7599999900'
+
+    assert last_response.bad_request?
+    assert_equal('Integer value of 7599999900 exceeds maximum allowed', last_response.body)
+  end
+
+  def test_return_400_response_for_query_term_length_too_long
+    terms = 1025.times.map { ('a'..'z').to_a.sample(5).join }.join(' ')
+    get "/search.json?q=#{terms}"
+
+    assert last_response.bad_request?
+    assert_equal('Query must be less than 1024 words', last_response.body)
+  end
+
 private
 
   def first_result
