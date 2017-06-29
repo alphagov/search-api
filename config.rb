@@ -33,5 +33,11 @@ configure do
   # don't send this dummy exception.
   Airbrake.configuration.ignore << "Indexer::PublishingApiError"
 
+  # We catch this error and return a 400 response, however as a result of enabling
+  # `raise_error` in the sinatra config this still tries to report to airbrake which
+  # we don't want. This is a short term fix until we have a chance to make the config
+  # more standard (disabling `raise_error` which is the default for production)
+  Airbrake.configuration.ignore << "Search::Query::Error"
+
   use Airbrake::Sinatra
 end
