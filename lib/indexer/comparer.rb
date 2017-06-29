@@ -11,11 +11,11 @@ module Indexer
     DEFAULT_FIELDS_TO_IGNORE = ["popularity"]
     BATCH_SIZE = 50
 
-    def initialize(base_name, old_index_name, new_index_name, rejected_fields = DEFAULT_FIELDS_TO_IGNORE)
-      @base_name = base_name
+    def initialize(old_index_name, new_index_name, rejected_fields: DEFAULT_FIELDS_TO_IGNORE, max_keys_to_report: 100)
       @old_index_name = old_index_name
       @new_index_name = new_index_name
       @rejected_fields = rejected_fields
+      @max_keys_to_report = max_keys_to_report
     end
 
     def log(msg)
@@ -44,13 +44,9 @@ module Indexer
         search_body: search_body,
         batch_size: BATCH_SIZE
       ) do |document|
-        result = document['_source']
-        root_elements = document.each_with_object({}) do |(k, v), h|
-          h["_root#{k}"] = v unless k == '_source'
-        end
-        result.merge(root_elements)
+        document.clone.merge('_source' => consistent_hash(reject_fields(document['_source'])))
       end.each do |d|
-        key = [d['_root_id'], d['_root_type']]
+        key = [d['_id'], d['_type']]
         documents[key] = d
       end
 
@@ -63,8 +59,27 @@ module Indexer
       hash.reject{ |k, _| @rejected_fields.include?(k) }
     end
 
+    def consistent_hash(hash)
+      # sort the object as reasonible then convert to a string and final hash teh result
+      # this allow us to check if to objects match with needing to store the full object
+      hash_str = consistentify(hash).inspect
+      Digest::SHA1.hexdigest(hash_str)
+    end
+
+    def consistentify(obj)
+      case obj
+      when Hash
+        obj.to_a.sort_by(&:first).map { |a, b| [a, consistentify(b)]}
+      when Array
+        obj.map { |a| consistentify(a) }.sort_by(&:inspect)
+      else
+        obj
+      end
+    end
+
     def run
       outcomes = Hash.new { |h, k| h[k] = 0 }
+      outcomes[:changed_key] = []
 
       filters.each do |filter|
         old_data = read_index(@old_index_name, filter)
@@ -72,7 +87,6 @@ module Indexer
 
         removed_keys = old_data.keys - new_data.keys
         outcomes[:removed_items] = removed_keys.count
-
         new_data.each do |key, new_item|
           old_item = old_data[key]
 
@@ -81,6 +95,7 @@ module Indexer
           else
             fields = changed_fields(old_item, new_item)
             if fields.any?
+              outcomes[:changed_key] << key if outcomes[:changed_key].count < @max_keys_to_report
               outcomes[:changed] += 1
               outcomes[:"changes: #{fields.join(',')}"] += 1
             else
