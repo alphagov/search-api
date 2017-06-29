@@ -8,38 +8,41 @@
 
 module Indexer
   class Comparer
-    # Source fields to ignore when comparing old and new objects for equality.
-    # These are ones which we know have changed for most documents.
-    FIELDS_TO_IGNORE = ["_id", "_type", "popularity"]
+    DEFAULT_FIELDS_TO_IGNORE = ["popularity"]
+    BATCH_SIZE = 50
 
-    def initialize(base_name, old_index_name, new_index_name, rejected_fields = nil)
+    def initialize(base_name, old_index_name, new_index_name, rejected_fields = DEFAULT_FIELDS_TO_IGNORE)
       @base_name = base_name
       @old_index_name = old_index_name
       @new_index_name = new_index_name
-      @rejected_fields = rejected_fields || ['popularity']
+      @rejected_fields = rejected_fields
     end
 
     def log(msg)
       puts "#{Time.now}: #{msg}"
     end
 
+    def client
+      Services.elasticsearch(
+        hosts: search_config.elasticsearch["base_uri"],
+        timeout: 30.0
+      )
+    end
+
     def read_index(index_name, filter = nil)
       log "Access index: #{index_name}"
-      index = search_config.search_server.index_group(@base_name).index_for_name(index_name)
 
       documents = {}
 
-
       search_body = filter || { query: { match_all: {} } }
-      batch_size = index.class.scroll_batch_size
 
       log "Starting to load index: #{index_name} - #{search_body.inspect}"
 
       ScrollEnumerator.new(
-        client: index.send(:build_client, timeout_options),
+        client: client,
         index_names: index_name,
         search_body: search_body,
-        batch_size: batch_size
+        batch_size: BATCH_SIZE
       ) do |document|
         result = document['_source']
         root_elements = document.each_with_object({}) do |(k, v), h|
@@ -54,12 +57,6 @@ module Indexer
       log "Finished loading index: #{index_name}"
 
       documents
-    end
-
-    def timeout_options
-      {
-        timeout: 30.0
-      }
     end
 
     def reject_fields(hash)
@@ -90,9 +87,6 @@ module Indexer
               outcomes[:unchanged] += 1
             end
           end
-
-          outcomes[:inconsistent_id] += 1 if new_item['_id'] != new_item['_root_id']
-          outcomes[:inconsistent_type] += 1 if new_item['_type'] != new_item['_root_type']
         end
       end
 
