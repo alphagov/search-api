@@ -12,10 +12,11 @@ module Indexer
     # These are ones which we know have changed for most documents.
     FIELDS_TO_IGNORE = ["_id", "_type", "popularity"]
 
-    def initialize(base_name, old_index_name, new_index_name)
+    def initialize(base_name, old_index_name, new_index_name, rejected_fields = nil)
       @base_name = base_name
       @old_index_name = old_index_name
       @new_index_name = new_index_name
+      @rejected_fields = rejected_fields || ['popularity']
     end
 
     def log(msg)
@@ -33,29 +34,20 @@ module Indexer
       batch_size = index.class.scroll_batch_size
 
       log "Starting to load index: #{index_name} - #{search_body.inspect}"
-      i = 0
+
       ScrollEnumerator.new(
         client: index.send(:build_client, timeout_options),
         index_names: index_name,
         search_body: search_body,
         batch_size: batch_size
       ) do |document|
-        # it would be nice to flatten or tidy up this hash before it is returned
-        # however everything I tried resulted in memory bloat. I am not 100% sure
-        # why this was the case.
-        result = document.delete('_source')
-        result.merge!(
-          '_root_id' => document['_id'],
-          '_root_type' => document['_type'],
-        )
-        i += 1
-        if i > 1000
-          GC.start
-          i = 0
+        result = document['_source']
+        root_elements = document.each_with_object({}) do |(k, v), h|
+          h["_root#{k}"] = v unless k == '_source'
         end
-        result
+        result.merge(root_elements)
       end.each do |d|
-        key = [d['_id'], d['_type']]
+        key = [d['_root_id'], d['_root_type']]
         documents[key] = d
       end
 
@@ -71,7 +63,7 @@ module Indexer
     end
 
     def reject_fields(hash)
-      hash.reject{ |k, _| FIELDS_TO_IGNORE.include?(k) }
+      hash.reject{ |k, _| @rejected_fields.include?(k) }
     end
 
     def run
@@ -107,6 +99,7 @@ module Indexer
       outcomes
     end
 
+    # break the index down into managable chunks to reduce memory overhead
     def filters
       results = search_config.run_search('aggregate_format' => ['1000'], 'count' => ['0'])
 
@@ -120,15 +113,10 @@ module Indexer
     end
 
     def changed_fields(old_item, new_item)
-      return [] if old_item == new_item
+      return [] if reject_fields(old_item) == reject_fields(new_item)
 
-      keys = (old_item.keys | new_item.keys) - ['_source']
-      changed_root_keys = keys.select { |key| old_item[key] != new_item[key] }
-
-      keys = old_item['_source'].keys | new_item['_source'].keys
-      changed_source_keys = keys.select { |key| old_item['_source'][key] != new_item['_source'][key] }.map {|a| "_source.#{a}"}
-
-      (changed_root_keys + changed_source_keys).sort
+      keys = (old_item.keys | new_item.keys) - @rejected_fields
+      keys.select { |key| old_item[key] != new_item[key] }.sort
     end
   end
 end
