@@ -32,7 +32,6 @@ class ElasticsearchAmendmentTest < IntegrationTest
     assert_document_is_in_rummager({
       "title" => "A new title",
       "link" => "/an-example-answer",
-      "_type" => "aaib_report",
     }, type: "aaib_report")
   end
 

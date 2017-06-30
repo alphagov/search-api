@@ -18,6 +18,11 @@ module Indexer
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
+
+      # These fields should be part of the action hash, not the document hash.
+      doc_hash.delete('_type')
+      doc_hash.delete('_id')
+
       doc_hash
     end
 
