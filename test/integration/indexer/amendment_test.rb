@@ -23,10 +23,9 @@ class ElasticsearchAmendmentTest < IntegrationTest
 
   def test_should_amend_a_document_from_non_edition_docs
     commit_document("mainstream_test", {
-      "_type" => "aaib_report",
       "title" => "The old title",
       "link" => "/an-example-answer",
-    })
+    }, type: "aaib_report")
 
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 

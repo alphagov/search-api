@@ -7,7 +7,6 @@ class MissingMetadataTest < IntegrationTest
     commit_document(
       'mainstream_test',
       'link' => '/path/to_page',
-      '_type' => 'edition',
     )
 
     runner = MissingMetadata::Runner.new('content_id', search_config: stubbed_search_config, logger: io)
@@ -21,7 +20,6 @@ class MissingMetadataTest < IntegrationTest
       'mainstream_test',
       'link' => '/path/to_page',
       'content_id' => '8aea1742-9cc6-4dfb-a63b-12c3e66a601f',
-      '_type' => 'edition',
     )
 
     runner = MissingMetadata::Runner.new('content_id', search_config: stubbed_search_config, logger: io)
@@ -35,7 +33,6 @@ class MissingMetadataTest < IntegrationTest
       'mainstream_test',
       'link' => '/path/to_page',
       'content_id' => '8aea1742-9cc6-4dfb-a63b-12c3e66a601f',
-      '_type' => 'edition',
     )
 
     runner = MissingMetadata::Runner.new('content_store_document_type', search_config: stubbed_search_config, logger: io)
@@ -50,7 +47,6 @@ class MissingMetadataTest < IntegrationTest
       'link' => '/path/to_page',
       'content_id' => '8aea1742-9cc6-4dfb-a63b-12c3e66a601f',
       'content_store_document_type' => 'guide',
-      '_type' => 'edition',
     )
 
     runner = MissingMetadata::Runner.new('content_store_document_type', search_config: stubbed_search_config, logger: io)

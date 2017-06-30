@@ -307,7 +307,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_scope_by_elasticsearch_type
-    commit_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
 
     get "/search?filter_document_type=cma_case"
 
@@ -315,7 +315,7 @@ class SearchTest < IntegrationTest
     assert_equal 1, parsed_response.fetch("total")
     assert_equal(
       hash_including(
-        "document_type" => cma_case_attributes.fetch("_type"),
+        "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
       ),
@@ -324,7 +324,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_between_dates
-    commit_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
 
@@ -340,7 +340,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_between_dates_with_reversed_parameter_order
-    commit_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
 
@@ -356,7 +356,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_from_date
-    commit_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
 
@@ -372,7 +372,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_can_filter_to_date
-    commit_document("mainstream_test", cma_case_attributes)
+    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
 
@@ -620,7 +620,7 @@ class SearchTest < IntegrationTest
   end
 
   def test_dfid_can_search_by_every_aggregate
-    commit_document("mainstream_test", dfid_research_output_attributes)
+    commit_document("mainstream_test", dfid_research_output_attributes, type: "dfid_research_output")
 
     aggregate_queries = %w(
       filter_dfid_review_status[]=peer_reviewed
@@ -634,7 +634,7 @@ class SearchTest < IntegrationTest
       assert_equal 1, parsed_response.fetch("total"), "Failure to search by #{filter_query}"
       assert_equal(
         hash_including(
-          "document_type" => dfid_research_output_attributes.fetch("_type"),
+          "document_type" => "dfid_research_output",
           "title" => dfid_research_output_attributes.fetch("title"),
           "link" => dfid_research_output_attributes.fetch("link"),
         ),
@@ -737,7 +737,6 @@ private
       "title" => "Somewhat Unique CMA Case",
       "link" => "/cma-cases/somewhat-unique-cma-case",
       "indexable_content" => "Mergers of cheeses and faces",
-      "_type" => "cma_case",
       "specialist_sectors" => ["farming"],
       "opened_date" => "2014-04-01",
     }
@@ -748,7 +747,6 @@ private
       "title" => "Somewhat Unique DFID Research Output",
       "link" => "/dfid-research-outputs/somewhat-unique-dfid-research-output",
       "indexable_content" => "Use of calcrete in gender roles in Tanzania",
-      "_type" => "dfid_research_output",
       "country" => %w(TZ AL),
       "dfid_review_status" => "peer_reviewed",
       "first_published_at" => "2014-04-02",

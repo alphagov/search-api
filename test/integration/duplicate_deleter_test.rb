@@ -5,9 +5,11 @@ class DuplicateDeleterTest < IntegrationTest
   def test_can_not_delete_when_only_a_single_document
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "edition",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "edition",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
@@ -19,15 +21,20 @@ class DuplicateDeleterTest < IntegrationTest
   def test_can_delete_duplicate_documents_on_different_types
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "edition",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "edition",
     )
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "cma_case",
+
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "cma_case",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
@@ -40,15 +47,19 @@ class DuplicateDeleterTest < IntegrationTest
   def test_cant_delete_a_type_that_doesnt_exist
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "edition",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "edition",
     )
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "cma_case",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "cma_case",
     )
 
     DuplicateDeleter.new('ab_case', io, search_config: stubbed_search_config).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
@@ -61,15 +72,19 @@ class DuplicateDeleterTest < IntegrationTest
   def test_cant_delete_duplicate_content_ids_when_id_doesnt_match
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/not-an-example-page",
-      "_type" => "edition",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/not-an-example-page",
+      },
+      type: "edition",
     )
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "cma_case",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "cma_case",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["3c824d6b-d982-4426-9a7d-43f2b865e77c"])
@@ -82,17 +97,21 @@ class DuplicateDeleterTest < IntegrationTest
   def test_can_delete_duplicate_content_ids_when_contact_id_is_wrong
     commit_document(
       "mainstream_test",
-      "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
-      "link" => "/contact-page",
-      "_type" => "contact",
-      "_id" => "contact-page",
+      {
+        "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
+        "link" => "/contact-page",
+        "_id" => "contact-page",
+      },
+      type: "contact",
     )
     commit_document(
       "mainstream_test",
-      "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
-      "link" => "/contact-page",
-      "_type" => "edition",
-      "_id" => "/contact-page",
+      {
+        "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
+        "link" => "/contact-page",
+        "_id" => "/contact-page",
+      },
+      type: "edition",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["e3eaa461-3a85-4881-b412-9c58e7ea4ebd"])
@@ -105,15 +124,19 @@ class DuplicateDeleterTest < IntegrationTest
   def test_can_delete_duplicate_documents_on_different_types_using_link
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "edition",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "edition",
     )
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "cma_case",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "cma_case",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
@@ -126,15 +149,19 @@ class DuplicateDeleterTest < IntegrationTest
   def test_cant_delete_duplicate_documents_using_link_with_different_content_ids
     commit_document(
       "mainstream_test",
-      "content_id" => "aaaaaaaa-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "edition",
+      {
+        "content_id" => "aaaaaaaa-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "edition",
     )
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "cma_case",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "cma_case",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
@@ -147,14 +174,16 @@ class DuplicateDeleterTest < IntegrationTest
   def test_can_delete_duplicate_documents_if_bad_item_has_nil_content_id
     commit_document(
       "mainstream_test",
-      "link" => "/an-example-page",
-      "_type" => "edition",
+      { "link" => "/an-example-page" },
+      type: "edition",
     )
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "cma_case",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "cma_case",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
@@ -167,14 +196,16 @@ class DuplicateDeleterTest < IntegrationTest
   def test_cant_delete_duplicate_documents_if_good_item_has_nil_content_id
     commit_document(
       "mainstream_test",
-      "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
-      "link" => "/an-example-page",
-      "_type" => "edition",
+      {
+        "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
+        "link" => "/an-example-page",
+      },
+      type: "edition",
     )
     commit_document(
       "mainstream_test",
-      "link" => "/an-example-page",
-      "_type" => "cma_case",
+      { "link" => "/an-example-page" },
+      type: "cma_case",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
@@ -187,13 +218,13 @@ class DuplicateDeleterTest < IntegrationTest
   def test_can_delete_duplicate_documents_on_different_types_using_link_when_both_content_ids_are_missing
     commit_document(
       "mainstream_test",
-      "link" => "/an-example-page",
-      "_type" => "edition",
+      { "link" => "/an-example-page" },
+      type: "edition",
     )
     commit_document(
       "mainstream_test",
-      "link" => "/an-example-page",
-      "_type" => "cma_case",
+      { "link" => "/an-example-page" },
+      type: "cma_case",
     )
 
     DuplicateDeleter.new('edition', io, search_config: stubbed_search_config).call(["/an-example-page"], id_type: "link")
