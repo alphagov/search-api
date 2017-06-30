@@ -47,7 +47,7 @@ class ElasticsearchIndexingTest < IntegrationTest
       "government_document_supertype" => "other",
       "licence_identifier" => "1201-5-1",
       "licence_short_description" => "A short description of a licence",
-    })
+    }, type: "manual")
   end
 
   def test_document_type_defaults_to_edition
@@ -65,7 +65,7 @@ class ElasticsearchIndexingTest < IntegrationTest
       "_type" => "edition",
       "content_id" => "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
       "link" => "/an-example-answer",
-    })
+    }, type: "edition")
   end
 
   def test_tagging_organisations_to_self

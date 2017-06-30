@@ -84,12 +84,15 @@ class IntegrationTest < MiniTest::Unit::TestCase
     JSON.parse(last_response.body)
   end
 
-  def assert_document_is_in_rummager(document)
+  def assert_document_is_in_rummager(document, type: "edition")
     retrieved = fetch_document_from_rummager(id: document['link'])
 
+    assert_equal type, retrieved["_type"]
+
+    retrieved_source = retrieved["_source"]
     document.each do |key, value|
-      assert_equal value, retrieved[key],
-        "Field #{key} should be '#{value}' but was '#{retrieved[key]}'"
+      assert_equal value, retrieved_source[key],
+        "Field #{key} should be '#{value}' but was '#{retrieved_source[key]}'"
     end
   end
 
@@ -141,21 +144,12 @@ private
     end
   end
 
-  def fetch_raw_document_from_rummager(id:, index: 'mainstream_test', type: '_all')
+  def fetch_document_from_rummager(id:, index: 'mainstream_test', type: '_all')
     client.get(
       index: index,
       type: type,
       id: id
     )
-  end
-
-  def fetch_document_from_rummager(id:, index: 'mainstream_test', type: '_all')
-    response = client.get(
-      index: index,
-      type: type,
-      id: id
-    )
-    response['_source']
   end
 
   def stubbed_search_config
