@@ -1,7 +1,7 @@
 require "test_helper"
 require "document"
 
-class DocumentTest < MiniTest::Unit::test_includes_elasticsearch_score_in_hash
+class DocumentTest < MiniTest::Unit::TestCase
   def test_should_turn_hash_into_document
     hash = {
       "_type" => "edition",
