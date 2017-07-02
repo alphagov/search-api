@@ -33,7 +33,7 @@ require "logging"
 require "timecop"
 
 # require "webmock/minitest"
-require "webmock"
+# require "webmock"
 
 # Silence log output
 Logging.logger.root.appenders = nil

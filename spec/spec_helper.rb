@@ -2,6 +2,8 @@ $LOAD_PATH << './lib' << './'
 require 'rspec'
 require 'pry'
 
+require 'webmock/rspec'
+
 class TestUnitLoader
   def initialize(path)
     $LOAD_PATH << path
@@ -23,7 +25,6 @@ class TestUnitLoader
     ObjectSpace.each_object(::Class).select do |klass|
       klass < MiniTest::Unit::TestCase
     end.each do |klass|
-      # binding.pry
       RSpec.describe klass.to_s do
         i = klass.new
         klass.public_instance_methods.grep(/^test_/).map do |method_name|
@@ -38,40 +39,58 @@ class TestUnitLoader
   end
 end
 
+module UnitTestAssertMap
+  def spec
+    @spec || self
+  end
+
+  def assert_equal(a, b)
+    spec.expect(a).to spec.eq(b)
+  end
+
+  def assert_match(p, a)
+    spec.expect(a).to spec.match(p)
+  end
+
+  def assert_raises(error, &proc)
+    error_instance = nil
+    spec.expect do
+      begin
+        proc.call
+      rescue Exception => e
+        error_instance = e
+        raise
+      end
+    end.to spec.raise_error(error)
+    error_instance
+  end
+
+  def refute(a)
+    spec.expect(a).to spec.be_falsey
+  end
+
+  def refute_includes(a, b)
+    spec.expect(a).not_to spec.includes(b)
+  end
+end
+
 module MiniTest
   module Unit
     class TestCase
-      attr_accessor :spec
+      class << self
+        def included_modules
+          @included_modules ||= []
+        end
 
-      def assert_equal(a, b)
-        spec.expect(a).to spec.eq(b)
+        def include(a)
+          included_modules << a
+          super
+        end
       end
 
-      def assert_match(p, a)
-        spec.expect(a).to spec.match(p)
-      end
+      attr_writer :spec
 
-      def assert_raises(error, &proc)
-        error_instance = nil
-        spec.expect do
-          begin
-            proc.call
-          rescue Exception => e
-            error_instance = e
-            raise
-          end
-        end.to spec.raise_error(error)
-        error_instance
-      end
-
-      def refute(a)
-        spec.expect(a).to spec.be_falsey
-      end
-
-      def refute_includes(a, b)
-        spec.expect(a).not_to spec.includes(b)
-      end
-
+      include UnitTestAssertMap
     end
   end
 end
@@ -79,7 +98,7 @@ end
 # shoulda-context helpers
 module ShouldaForRspec
   def self.included(base)
-    base.extend ClassMethods
+    base.extend *ClassMethods
   end
 
   module ClassMethods
@@ -90,11 +109,11 @@ end
 RSpec.configure do |c|
   c.mock_with :mocha
 
-  # c.before(:all) do
-  #   binding.pry
-  #   TestUnitLoader.build_spec
-  # end
+  c.before(:all) do
+    MiniTest::Unit::TestCase.included_modules.each do |mod|
+      c.include(mod)
+    end
+  end
 end
 
-puts 'starting...'
 TestUnitLoader.new(File.join(__dir__, 'unit_test_migration'))
