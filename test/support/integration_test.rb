@@ -41,9 +41,7 @@ class IntegrationTest < MiniTest::Unit::TestCase
     Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_elasticsearch_types)
   end
 
-  def insert_document(index_name, attributes, type: "edition")
-    attributes.stringify_keys!
-    id = attributes["_id"] || attributes['link']
+  def insert_document(index_name, attributes, id: attributes["link"], type: "edition")
     client.create(
       index: index_name,
       type: type,
@@ -63,8 +61,8 @@ class IntegrationTest < MiniTest::Unit::TestCase
     )
   end
 
-  def commit_document(index_name, attributes, type: "edition")
-    insert_document(index_name, attributes, type: type)
+  def commit_document(index_name, attributes, id: attributes["link"], type: "edition")
+    insert_document(index_name, attributes, id: id, type: type)
     commit_index(index_name)
   end
 

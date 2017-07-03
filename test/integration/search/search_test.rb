@@ -13,9 +13,9 @@ class SearchTest < IntegrationTest
 
     commit_document(
       "mainstream_test",
-      title: "Get P45, P60 and other forms for your employees",
-      description: "Get PAYE forms from HMRC including P45, P60, starter checklist (which replaced the P46), P11D(b)",
-      link: "/get-paye-forms-p45-p60"
+      "title" => "Get P45, P60 and other forms for your employees",
+      "description" => "Get PAYE forms from HMRC including P45, P60, starter checklist (which replaced the P46), P11D(b)",
+      "link" => "/get-paye-forms-p45-p60"
 
     )
 
@@ -30,9 +30,9 @@ class SearchTest < IntegrationTest
 
   def test_spell_checking_with_typo
     commit_document("mainstream_test",
-      title: "I am the result",
-      description: "This is a test search result",
-      link: "/some-nice-link"
+      "title" => "I am the result",
+      "description" => "This is a test search result",
+      "link" => "/some-nice-link"
     )
 
     get "/search?q=serch&suggest=spelling"
@@ -42,9 +42,9 @@ class SearchTest < IntegrationTest
 
   def test_spell_checking_with_blacklisted_typo
     commit_document("mainstream_test",
-      title: "Brexitt",
-      description: "Brexitt",
-      link: "/brexitt")
+      "title" => "Brexitt",
+      "description" => "Brexitt",
+      "link" => "/brexitt")
 
     get "/search?q=brexit&suggest=spelling"
 
@@ -409,16 +409,16 @@ class SearchTest < IntegrationTest
 
   def test_expandinging_of_organisations
     commit_document("mainstream_test",
-      title: 'Advice on Treatment of Dragons',
-      link: '/dragon-guide',
-      organisations: ['/ministry-of-magic']
+      "title" => 'Advice on Treatment of Dragons',
+      "link" => '/dragon-guide',
+      "organisations" => ['/ministry-of-magic']
     )
 
     commit_document("government_test",
-      slug: '/ministry-of-magic',
-      title: 'Ministry of Magic',
-      link: '/ministry-of-magic-site',
-      format: 'organisation'
+      "slug" => '/ministry-of-magic',
+      "title" => 'Ministry of Magic',
+      "link" => '/ministry-of-magic-site',
+      "format" => 'organisation'
     )
 
     get "/search.json?q=dragons"
@@ -432,18 +432,18 @@ class SearchTest < IntegrationTest
   def test_expandinging_of_organisations_via_content_id
     commit_document(
       "mainstream_test",
-      title: 'Advice on Treatment of Dragons',
-      link: '/dragon-guide',
-      organisation_content_ids: ['organisation-content-id']
+      "title" => 'Advice on Treatment of Dragons',
+      "link" => '/dragon-guide',
+      "organisation_content_ids" => ['organisation-content-id']
     )
 
     commit_document(
       "government_test",
-      content_id: 'organisation-content-id',
-      slug: '/ministry-of-magic',
-      title: 'Ministry of Magic',
-      link: '/ministry-of-magic-site',
-      format: 'organisation'
+      "content_id" => 'organisation-content-id',
+      "slug" => '/ministry-of-magic',
+      "title" => 'Ministry of Magic',
+      "link" => '/ministry-of-magic-site',
+      "format" => 'organisation'
     )
 
     get "/search.json?q=dragons"
@@ -471,18 +471,18 @@ class SearchTest < IntegrationTest
   def test_search_for_expanded_organisations_works
     commit_document(
       "mainstream_test",
-      title: 'Advice on Treatment of Dragons',
-      link: '/dragon-guide',
-      organisation_content_ids: ['organisation-content-id']
+      "title" => 'Advice on Treatment of Dragons',
+      "link" => '/dragon-guide',
+      "organisation_content_ids" => ['organisation-content-id']
     )
 
     commit_document(
       "government_test",
-      content_id: 'organisation-content-id',
-      slug: '/ministry-of-magic',
-      title: 'Ministry of Magic',
-      link: '/ministry-of-magic-site',
-      format: 'organisation'
+      "content_id" => 'organisation-content-id',
+      "slug" => '/ministry-of-magic',
+      "title" => 'Ministry of Magic',
+      "link" => '/ministry-of-magic-site',
+      "format" => 'organisation'
     )
 
     get "/search.json?q=dragons&fields[]=expanded_organisations"
@@ -493,18 +493,18 @@ class SearchTest < IntegrationTest
   def test_filter_by_organisation_content_ids_works
     commit_document(
       "mainstream_test",
-      title: 'Advice on Treatment of Dragons',
-      link: '/dragon-guide',
-      organisation_content_ids: ['organisation-content-id']
+      "title" => 'Advice on Treatment of Dragons',
+      "link" => '/dragon-guide',
+      "organisation_content_ids" => ['organisation-content-id']
     )
 
     commit_document(
       "government_test",
-      content_id: 'organisation-content-id',
-      slug: '/ministry-of-magic',
-      title: 'Ministry of Magic',
-      link: '/ministry-of-magic-site',
-      format: 'organisation'
+      "content_id" => 'organisation-content-id',
+      "slug" => '/ministry-of-magic',
+      "title" => 'Ministry of Magic',
+      "link" => '/ministry-of-magic-site',
+      "format" => 'organisation'
     )
 
     get "/search.json?filter_organisation_content_ids[]=organisation-content-id"
@@ -514,18 +514,18 @@ class SearchTest < IntegrationTest
 
   def test_expandinging_of_topics
     commit_document("mainstream_test",
-      title: 'Advice on Treatment of Dragons',
-      link: '/dragon-guide',
-      topic_content_ids: ['topic-content-id']
+      "title" => 'Advice on Treatment of Dragons',
+      "link" => '/dragon-guide',
+      "topic_content_ids" => ['topic-content-id']
     )
 
     commit_document("government_test",
-      content_id: 'topic-content-id',
-      slug: 'topic-magic',
-      title: 'Magic topic',
-      link: '/magic-topic-site',
+      "content_id" => 'topic-content-id',
+      "slug" => 'topic-magic',
+      "title" => 'Magic topic',
+      "link" => '/magic-topic-site',
       # TODO: we should rename this format to `topic` and update all apps
-      format: 'specialist_sector'
+      "format" => 'specialist_sector'
     )
 
     get "/search.json?q=dragons"
@@ -549,18 +549,18 @@ class SearchTest < IntegrationTest
 
   def test_filter_by_topic_content_ids_works
     commit_document("mainstream_test",
-      title: 'Advice on Treatment of Dragons',
-      link: '/dragon-guide',
-      topic_content_ids: ['topic-content-id']
+      "title" => 'Advice on Treatment of Dragons',
+      "link" => '/dragon-guide',
+      "topic_content_ids" => ['topic-content-id']
     )
 
     commit_document("government_test",
-      content_id: 'topic-content-id',
-      slug: 'topic-magic',
-      title: 'Magic topic',
-      link: '/magic-topic-site',
+      "content_id" => 'topic-content-id',
+      "slug" => 'topic-magic',
+      "title" => 'Magic topic',
+      "link" => '/magic-topic-site',
       # TODO: we should rename this format to `topic` and update all apps
-      format: 'specialist_sector'
+      "format" => 'specialist_sector'
     )
     get "/search.json?filter_topic_content_ids[]=topic-content-id"
 
@@ -577,10 +577,10 @@ class SearchTest < IntegrationTest
 
   def test_withdrawn_content
     commit_document("mainstream_test",
-      title: "I am the result",
-      description: "This is a test search result",
-      link: "/some-nice-link",
-      is_withdrawn: true
+      "title" => "I am the result",
+      "description" => "This is a test search result",
+      "link" => "/some-nice-link",
+      "is_withdrawn" => true
     )
 
     get "/search?q=test"
@@ -589,10 +589,10 @@ class SearchTest < IntegrationTest
 
   def test_withdrawn_content_with_flag
     commit_document("mainstream_test",
-      title: "I am the result",
-      description: "This is a test search result",
-      link: "/some-nice-link",
-      is_withdrawn: true
+      "title" => "I am the result",
+      "description" => "This is a test search result",
+      "link" => "/some-nice-link",
+      "is_withdrawn" => true
     )
 
     get "/search?q=test&debug=include_withdrawn&fields[]=is_withdrawn"
@@ -602,11 +602,11 @@ class SearchTest < IntegrationTest
 
   def test_withdrawn_content_with_flag_with_aggregations
     commit_document("mainstream_test",
-      title: "I am the result",
-      organisation: "Test Org",
-      description: "This is a test search result",
-      link: "/some-nice-link",
-      is_withdrawn: true
+      "title" => "I am the result",
+      "organisation" => "Test Org",
+      "description" => "This is a test search result",
+      "link" => "/some-nice-link",
+      "is_withdrawn" => true
     )
 
     get "/search?q=test&debug=include_withdrawn&aggregate_mainstream_browse_pages=2"
@@ -645,10 +645,10 @@ class SearchTest < IntegrationTest
 
   def test_taxonomy_can_be_returned
     commit_document("mainstream_test",
-      title: "I am the result",
-      description: "This is a test search result",
-      link: "/some-nice-link",
-      taxons: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
+      "title" => "I am the result",
+      "description" => "This is a test search result",
+      "link" => "/some-nice-link",
+      "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
     )
 
     get "/search?q=test&fields[]=taxons"
@@ -660,10 +660,10 @@ class SearchTest < IntegrationTest
 
   def test_taxonomy_can_be_filtered
     commit_document("mainstream_test",
-      title: "I am the result",
-      description: "This is a test search result",
-      link: "/some-nice-link",
-      taxons: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
+      "title" => "I am the result",
+      "description" => "This is a test search result",
+      "link" => "/some-nice-link",
+      "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
     )
 
     get "/search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
@@ -681,11 +681,11 @@ class SearchTest < IntegrationTest
 
   def test_taxonomy_can_be_filtered_by_part
     commit_document("mainstream_test",
-      title: "I am the result",
-      description: "This is a test search result",
-      link: "/some-nice-link",
-      taxons: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
-      part_of_taxonomy_tree: %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
+      "title" => "I am the result",
+      "description" => "This is a test search result",
+      "link" => "/some-nice-link",
+      "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
+      "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
     )
 
     get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"

@@ -3,20 +3,20 @@ require "integration_test_helper"
 class BoosterTest < IntegrationTest
   def test_service_manual_formats_are_weighted_down
     commit_document("mainstream_test",
-      title: "Agile is good",
-      link: "/agile-is-good",
-      format: "service_manual_guide",
+      "title" => "Agile is good",
+      "link" => "/agile-is-good",
+      "format" => "service_manual_guide",
     )
 
     commit_document("mainstream_test",
-      title: "Being agile is good",
-      link: "/being-agile-is-good",
-      format: "service_manual_topic",
+      "title" => "Being agile is good",
+      "link" => "/being-agile-is-good",
+      "format" => "service_manual_topic",
     )
 
     commit_document("mainstream_test",
-      title: "Can we be agile?",
-      link: "/can-we-be-agile",
+      "title" => "Can we be agile?",
+      "link" => "/can-we-be-agile",
     )
 
     get "/search?q=agile"

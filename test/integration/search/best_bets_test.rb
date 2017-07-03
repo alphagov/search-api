@@ -3,13 +3,13 @@ require "integration_test_helper"
 class BestBetsTest < IntegrationTest
   def test_exact_best_bet
     commit_document("mainstream_test",
-      link: '/an-organic-result',
-      indexable_content: 'I will turn up in searches for "a forced best bet"',
+      "link" => '/an-organic-result',
+      "indexable_content" => 'I will turn up in searches for "a forced best bet"',
     )
 
     commit_document("mainstream_test",
-      link: '/the-link-that-should-surface',
-      indexable_content: 'Empty.',
+      "link" => '/the-link-that-should-surface',
+      "indexable_content" => 'Empty.',
     )
 
     add_best_bet(
@@ -26,8 +26,8 @@ class BestBetsTest < IntegrationTest
 
   def test_exact_worst_bet
     commit_document("mainstream_test",
-      indexable_content: 'I should not be shown.',
-      link: '/we-never-show-this',
+      "indexable_content" => 'I should not be shown.',
+      "link" => '/we-never-show-this',
     )
 
     add_worst_bet(
@@ -44,7 +44,7 @@ class BestBetsTest < IntegrationTest
 
   def test_stemmed_best_bet
     commit_document("mainstream_test",
-      link: '/the-link-that-should-surface',
+      "link" => '/the-link-that-should-surface',
     )
 
     add_best_bet(
@@ -61,7 +61,7 @@ class BestBetsTest < IntegrationTest
 
   def test_stemmed_best_bet_variant
     commit_document("mainstream_test",
-      link: '/the-link-that-should-surface',
+      "link" => '/the-link-that-should-surface',
     )
 
     add_best_bet(
@@ -79,7 +79,7 @@ class BestBetsTest < IntegrationTest
 
   def test_stemmed_best_bet_words_not_in_phrase_order
     commit_document("mainstream_test",
-      link: '/only-shown-for-exact-matches',
+      "link" => '/only-shown-for-exact-matches',
     )
 
     add_best_bet(

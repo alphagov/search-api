@@ -100,8 +100,8 @@ class DuplicateDeleterTest < IntegrationTest
       {
         "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
         "link" => "/contact-page",
-        "_id" => "contact-page",
       },
+      id: "contact-page",
       type: "contact",
     )
     commit_document(
@@ -109,8 +109,8 @@ class DuplicateDeleterTest < IntegrationTest
       {
         "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
         "link" => "/contact-page",
-        "_id" => "/contact-page",
       },
+      id: "/contact-page",
       type: "edition",
     )
 
