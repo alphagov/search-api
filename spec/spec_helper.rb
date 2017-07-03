@@ -7,34 +7,39 @@ require 'webmock/rspec'
 class TestUnitLoader
   def initialize(path)
     $LOAD_PATH << path
+    setup_top_level_describe_call
 
     if ARGV[0] =~ /_test.rb$/
-
-      top_level = ::RSpec::Core::DSL.top_level
-      called_by = []
-      changes = Proc.new do
-        define_method(:describe) do |*a, &b|
-          unless called_by.include?([a, caller.first])
-            RSpec.describe(*a, &b)
-            called_by << [a, caller.first]
-          end
-        end
-      end
-      (class << top_level; self; end).class_exec(&changes)
-      Module.class_exec(&changes)
-
-      load ARGV[0]
+      require ARGV[0]
     elsif ARGV[0] && File.directory?(ARGV[0])
       Dir["#{ARGV[0]}/**/*_test.rb"].each do |path|
-        load path
+        require path
       end
     else
       Dir["#{path}/**/*_test.rb"].each do |path|
-        load path
+        require path
       end
     end
 
     build_specs
+  end
+
+  def setup_top_level_describe_call
+    top_level = ::RSpec::Core::DSL.top_level
+    called_by = []
+    changes = Proc.new do
+      define_method(:describe) do |*a, &b|
+        unless called_by.include?([a, caller.first])
+          puts "[DEPRECATED] calling top level describe from #{caller.first}"
+          # stop double calls to the load when running a single file
+          # load both here and but the rspec code loader
+          RSpec.describe(*a, &b)
+          called_by << [a, caller.first]
+        end
+      end
+    end
+    (class << top_level; self; end).class_exec(&changes)
+    Module.class_exec(&changes)
   end
 
   def build_specs
