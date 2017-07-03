@@ -38,8 +38,9 @@ gem "govuk_document_types", "0.1.4"
 gem "govuk-lint", "~> 1.2.1"
 
 group :test do
-  gem "test-unit-minitest", "~> 0.9.1"
-  gem "minitest-colorize", "~> 0.0.5"
+  gem 'rspec'
+  # gem "test-unit-minitest", "~> 0.9.1"
+  # gem "minitest-colorize", "~> 0.0.5"
   gem "shoulda-context", "~> 1.2.1"
   gem "simplecov", "~> 0.10.0"
   gem "simplecov-rcov", "~> 0.2.3"

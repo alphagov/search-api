@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 ENV['RACK_ENV'] = 'test'
 require 'pry'
 
@@ -18,18 +20,20 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
 require 'app'
 
-require "minitest/autorun"
-require "minitest/colorize"
+# require "minitest/autorun"
+# require "minitest/colorize"
 
 require "bundler/setup"
 require "rack/test"
-require "mocha/setup"
+# require "mocha/setup"
+require "mocha/api"
 require "pp"
-require "shoulda-context"
+# require "shoulda-context"
 require "logging"
 require "timecop"
 
-require "webmock/minitest"
+# require "webmock/minitest"
+# require "webmock"
 
 # Silence log output
 Logging.logger.root.appenders = nil
@@ -50,7 +54,8 @@ class MiniTest::Unit::TestCase
 end
 
 class ShouldaUnitTestCase < MiniTest::Unit::TestCase
-  include Shoulda::Context::Assertions
-  include Shoulda::Context::InstanceMethods
-  extend Shoulda::Context::ClassMethods
+  include ShouldaForRspec
+  # include Shoulda::Context::Assertions
+  # include Shoulda::Context::InstanceMethods
+  # extend Shoulda::Context::ClassMethods
 end

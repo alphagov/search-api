@@ -1,4 +1,5 @@
-require 'test/support/test_index_helpers'
+require 'support/test_index_helpers'
+require 'rack/test/methods'
 
 class IntegrationTest < MiniTest::Unit::TestCase
   include Rack::Test::Methods

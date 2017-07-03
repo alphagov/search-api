@@ -12,38 +12,38 @@ require "config"
 
 Dir[File.join(PROJECT_ROOT, 'lib/tasks/**/*.rake')].each { |file| load file }
 
-desc "Run all the tests"
-task "test" => [
-  "test:units",
-  "test:integration",
-  'test:clean_test_indexes'
-]
+# desc "Run all the tests"
+# task "test" => [
+#   "test:units",
+#   "test:integration",
+#   'test:clean_test_indexes'
+# ]
 
-namespace "test" do
-  desc "Run the unit tests"
-  Rake::TestTask.new("units") do |t|
-    t.libs << "test"
-    t.test_files = FileList["test/unit/**/*_test.rb"]
-    t.verbose = true
-  end
+# namespace "test" do
+#   desc "Run the unit tests"
+#   Rake::TestTask.new("units") do |t|
+#     t.libs << "test"
+#     t.test_files = FileList["test/unit/**/*_test.rb"]
+#     t.verbose = true
+#   end
 
-  desc "Run the integration tests"
-  Rake::TestTask.new("integration") do |t|
-    t.libs << "test"
-    t.test_files = FileList["test/integration/**/*_test.rb"]
-    t.verbose = true
-  end
+#   desc "Run the integration tests"
+#   Rake::TestTask.new("integration") do |t|
+#     t.libs << "test"
+#     t.test_files = FileList["test/integration/**/*_test.rb"]
+#     t.verbose = true
+#   end
 
-  desc 'Clean all test indexes'
-  task :clean_test_indexes do
-    require 'app'
-    require 'test/support/test_index_helpers'
+#   desc 'Clean all test indexes'
+#   task :clean_test_indexes do
+#     require 'app'
+#     require 'test/support/test_index_helpers'
 
-    TestIndexHelpers.clean_all
-  end
-end
+#     TestIndexHelpers.clean_all
+#   end
+# end
 
-require "ci/reporter/rake/minitest" if ENV["RACK_ENV"] == "test"
+# require "ci/reporter/rake/minitest" if ENV["RACK_ENV"] == "test"
 
 task default: :test
 
