@@ -6,6 +6,9 @@ class BulkLoaderTest < IntegrationTest
   def setup
     super
     stub_tagging_lookup
+    comparer = stub(:comparer)
+    comparer.stubs(:run).returns('results' => 'hash')
+    Indexer::Comparer.stubs(:new).returns(comparer)
   end
 
   def test_indexes_documents
