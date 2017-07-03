@@ -69,6 +69,10 @@ module Indexer
         old_index.with_lock do
           populate_index(new_index, &producer_block)
 
+          comparer = Indexer::Comparer.new(old_index.real_name, new_index.real_name)
+          @logger.info "Starting comparer run.."
+          @logger.info "Comparer results:"
+          @logger.info comparer.run.inspect
           # Switch aliases inside the lock so we avoid a race condition where a
           # new index exists, but the old index is available for writes
           index_group.switch_to(new_index)
