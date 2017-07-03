@@ -8,12 +8,28 @@ class TestUnitLoader
   def initialize(path)
     $LOAD_PATH << path
 
-    if ARGV[0] =~ /_(spec|test).rb/
+    if ARGV[0] =~ /_test.rb$/
+
+      top_level = ::RSpec::Core::DSL.top_level
+      called_by = []
+      changes = Proc.new do
+        define_method(:describe) do |*a, &b|
+          unless called_by.include?([a, caller.first])
+            RSpec.describe(*a, &b)
+            called_by << [a, caller.first]
+          end
+        end
+      end
+      (class << top_level; self; end).class_exec(&changes)
+      Module.class_exec(&changes)
+
       load ARGV[0]
+    elsif ARGV[0] && File.directory?(ARGV[0])
+      Dir["#{ARGV[0]}/**/*_test.rb"].each do |path|
+        load path
+      end
     else
-      # puts path
       Dir["#{path}/**/*_test.rb"].each do |path|
-        puts "loading: #{path}"
         load path
       end
     end
@@ -41,7 +57,7 @@ end
 
 module UnitTestAssertMap
   def spec
-    @spec || self
+    @spec || self # to handle the case for shoulda context.. :)
   end
 
   def assert_equal(a, b)
@@ -105,15 +121,17 @@ module ShouldaForRspec
   end
 end
 
-
 RSpec.configure do |c|
   c.mock_with :mocha
 
   c.before(:all) do
+    # should really only do this the first time rather than for each test...
     MiniTest::Unit::TestCase.included_modules.each do |mod|
       c.include(mod)
     end
   end
+
+  c.disable_monkey_patching!
 end
 
 TestUnitLoader.new(File.join(__dir__, 'unit_test_migration'))
