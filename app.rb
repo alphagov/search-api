@@ -24,6 +24,7 @@ require "routes/content"
 require "indexer/workers/bulk_index_worker"
 require "indexer/workers/delete_worker"
 require "indexer/workers/amend_worker"
+require "indexer/comparer"
 
 class Rummager < Sinatra::Application
   # - Stop double slashes in URLs (even escaped ones) being flattened to single ones
