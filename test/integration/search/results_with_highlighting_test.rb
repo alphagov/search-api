@@ -3,8 +3,8 @@ require "integration_test_helper"
 class ResultsWithHighlightingTest < IntegrationTest
   def test_returns_highlighted_title
     commit_document("mainstream_test",
-      title: "I am the result",
-      link: "/some-nice-link",
+      "title" => "I am the result",
+      "link" => "/some-nice-link",
     )
 
     get "/search?q=result&fields[]=title_with_highlighting"
@@ -16,9 +16,9 @@ class ResultsWithHighlightingTest < IntegrationTest
 
   def test_returns_highlighted_title_fallback
     commit_document("mainstream_test",
-      title: "Thing without",
-      description: "I am the result",
-      link: "/some-nice-link",
+      "title" => "Thing without",
+      "description" => "I am the result",
+      "link" => "/some-nice-link",
     )
 
     get "/search?q=result&fields[]=title_with_highlighting"
@@ -30,8 +30,8 @@ class ResultsWithHighlightingTest < IntegrationTest
 
   def test_returns_highlighted_description
     commit_document("mainstream_test",
-      link: "/some-nice-link",
-      description: "This is a test search result of many results."
+      "link" => "/some-nice-link",
+      "description" => "This is a test search result of many results."
     )
 
     get "/search?q=result&fields[]=description_with_highlighting"
@@ -43,9 +43,9 @@ class ResultsWithHighlightingTest < IntegrationTest
 
   def test_returns_documents_html_escaped
     commit_document("mainstream_test",
-      title: "Escape & highlight my title",
-      link: "/some-nice-link",
-      description: "Escape & highlight the description as well."
+      "title" => "Escape & highlight my title",
+      "link" => "/some-nice-link",
+      "description" => "Escape & highlight the description as well."
     )
 
     get "/search?q=highlight&fields[]=title_with_highlighting,description_with_highlighting"
@@ -58,8 +58,8 @@ class ResultsWithHighlightingTest < IntegrationTest
 
   def test_returns_truncated_correctly_where_result_at_start_of_description
     commit_document("mainstream_test",
-      link: "/some-nice-link",
-      description: "word " + ("something " * 200)
+      "link" => "/some-nice-link",
+      "description" => "word " + ("something " * 200)
     )
 
     get "/search?q=word&fields[]=description_with_highlighting"
@@ -71,8 +71,8 @@ class ResultsWithHighlightingTest < IntegrationTest
 
   def test_returns_truncated_correctly_where_result_at_end_of_description
     commit_document("mainstream_test",
-      link: "/some-nice-link",
-      description: ("something " * 200) + " word"
+      "link" => "/some-nice-link",
+      "description" => ("something " * 200) + " word"
     )
 
     get "/search?q=word&fields[]=description_with_highlighting"
@@ -84,8 +84,8 @@ class ResultsWithHighlightingTest < IntegrationTest
 
   def test_returns_truncated_correctly_where_result_in_middle_of_description
     commit_document("mainstream_test",
-      link: "/some-nice-link",
-      description: ("something " * 200) + " word " + ("something " * 200)
+      "link" => "/some-nice-link",
+      "description" => ("something " * 200) + " word " + ("something " * 200)
     )
 
     get "/search?q=word&fields[]=description_with_highlighting"
