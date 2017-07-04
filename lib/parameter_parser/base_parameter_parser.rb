@@ -64,6 +64,7 @@ class BaseParameterParser
     search_format_types
     specialist_sectors
     taxons
+    user_journey_document_supertype
     world_locations
   ).freeze
 
