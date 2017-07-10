@@ -22,23 +22,23 @@ class ScrollEnumerator < Enumerator
 
     @client = client
     @index_names = index_names
-    scroll_result = initial_scroll_result(batch_size, search_body)
-    @size = scroll_result["hits"]["total"]
+    page = initial_scroll_result(batch_size, search_body)
+    @size = page["hits"]["total"]
 
     # Pull out the results as they are needed
     super() do |yielder|
       # Get the initial scroll ID from the response to the initial request
-      scroll_id = scroll_result["_scroll_id"]
+      scroll_id = page["_scroll_id"]
 
+      # the first page does not contain hits when using `scan`search_type but
+      # does when using `query_then_fetch` search_type.
+      first_page = true
       loop do
-        # Get the next page and extract the next scroll ID from it
-        page = next_page(scroll_id)
-        scroll_id = page.fetch("_scroll_id") # Error if scroll ID absent
-
         # The way we tell we've got through all the results is when
         # elasticsearch gives us an empty array of hits. This means all the
         # shards have run out of results.
-        if page["hits"]["hits"].any?
+        if page["hits"]["hits"].any? || first_page
+          first_page = false
           logger.debug do
             hits_on_page = page["hits"]["hits"].size
             "Retrieved #{hits_on_page} of #{size} documents"
@@ -49,6 +49,10 @@ class ScrollEnumerator < Enumerator
         else
           break
         end
+
+        # Get the next page and extract the next scroll ID from it
+        page = next_page(scroll_id)
+        scroll_id = page.fetch("_scroll_id") # Error if scroll ID absent
       end
     end
   end
