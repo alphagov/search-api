@@ -43,6 +43,7 @@ class ElasticsearchIndexingTest < IntegrationTest
       "indexable_content" => "HERE IS SOME CONTENT",
       "navigation_document_supertype" => "guidance",
       "email_document_supertype" => "other",
+      "user_journey_document_supertype" => "thing",
       "government_document_supertype" => "other",
       "licence_identifier" => "1201-5-1",
       "licence_short_description" => "A short description of a licence",
