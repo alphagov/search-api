@@ -130,7 +130,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_request(:get, search_pattern).with(
       body: { query: { term: { format: "organisation" } }, fields: %w{title link} }
     ).to_return(
-      body: { _scroll_id: "abcdefgh", hits: { total: 10 } }.to_json,
+      body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
     )
 
@@ -157,7 +157,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_request(:get, search_pattern).with(
       body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"fields\":[\"title\",\"link\"]}"
     ).to_return(
-      body: { _scroll_id: "abcdefgh", hits: { total: 10 } }.to_json,
+      body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
     )
 
@@ -197,7 +197,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_request(:get, search_uri).with(
       body: { query: { match_all: {} } }.to_json
     ).to_return(
-      body: { _scroll_id: "abcdefgh", hits: { total: 100 } }.to_json,
+      body: { _scroll_id: "abcdefgh", hits: { total: 100, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
     )
     hits = (1..100).map { |i|
@@ -229,7 +229,7 @@ class ElasticsearchIndexTest < MiniTest::Unit::TestCase
     stub_request(:get, search_uri).with(
       body: { query: { match_all: {} } }.to_json
     ).to_return(
-      body: { _scroll_id: "abcdefgh", hits: { total: 3 } }.to_json,
+      body: { _scroll_id: "abcdefgh", hits: { total: 3, hits: [] } }.to_json,
 
       headers: { 'Content-Type' => 'application/json' },
     )

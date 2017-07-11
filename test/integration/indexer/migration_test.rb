@@ -18,6 +18,12 @@ class ElasticsearchMigrationTest < IntegrationTest
     TestIndexHelpers.create_all
     add_documents(sample_document_attributes)
     commit_index
+
+    # stub out the comparer for the time being as we are not using the results
+    # just outputing them for review
+    comparer = stub(:comparer)
+    comparer.stubs(:run).returns('results' => 'hash')
+    Indexer::Comparer.stubs(:new).returns(comparer)
   end
 
   def sample_document_attributes
