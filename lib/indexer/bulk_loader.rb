@@ -10,6 +10,7 @@ module Indexer
       @document_batch_size = options.fetch(:document_batch_size, 50)
       @batch_concurrency = options.fetch(:batch_concurrency, 12)
       @logger = Logging.logger[self]
+      @logger.level = :info
     end
 
     def load_from(iostream)
