@@ -22,6 +22,13 @@ namespace :rummager do
     end
   end
 
+  desc "Create a brand new index and assign an alias if no alias currently exists"
+  task :create_index, :index_name do |_, args|
+    index_group = search_config.search_server.index_group(args[:index_name])
+    index = index_group.create_index
+    index_group.switch_to(index) unless index_group.current_real
+  end
+
   desc "Migrates an index group to a new index.
 
 Seamlessly creates a new index in the same index_group using the latest
