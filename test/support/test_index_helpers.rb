@@ -1,8 +1,9 @@
 class TestIndexHelpers
   AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"].freeze
   INDEX_NAMES = %w(mainstream_test government_test).freeze
+  GOVUK_INDEX_NAME = "govuk_test".freeze
   DEFAULT_INDEX_NAME = INDEX_NAMES.first
-  ALL_TEST_INDEXES = (AUXILIARY_INDEX_NAMES + INDEX_NAMES).freeze
+  ALL_TEST_INDEXES = ([GOVUK_INDEX_NAME] + AUXILIARY_INDEX_NAMES + INDEX_NAMES).freeze
 
   def self.setup_test_indexes
     puts 'Setting up test indexes...'
@@ -62,6 +63,7 @@ class TestIndexHelpers
     search_config.stubs(:elasticsearch).returns({
       "base_uri" => "http://localhost:9200",
       "content_index_names" => INDEX_NAMES,
+      "govuk_index_name" => GOVUK_INDEX_NAME,
       "auxiliary_index_names" => AUXILIARY_INDEX_NAMES,
       "metasearch_index_name" => "metasearch_test",
       "registry_index" => "government_test",

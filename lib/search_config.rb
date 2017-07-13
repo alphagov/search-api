@@ -17,6 +17,8 @@ class SearchConfig
     auxiliary_index_names
     content_index_names
     spelling_index_names
+    base_uri
+    govuk_index_name
   ].each do |config_method|
     define_method config_method do
       elasticsearch.fetch(config_method)

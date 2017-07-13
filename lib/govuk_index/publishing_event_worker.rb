@@ -1,0 +1,19 @@
+require "indexer/workers/base_worker"
+require 'govuk_index/elasticsearch_presenter'
+require 'govuk_index/elasticsearch_saver'
+
+module GovukIndex
+  class ValidationError < StandardError; end
+
+  class PublishingEventWorker < Indexer::BaseWorker
+    notify_of_failures
+
+    def perform(payload)
+      presenter = ElasticsearchPresenter.new(payload)
+      presenter.valid!
+      ElasticsearchSaver.new.save(presenter)
+    rescue ValidationError => e
+      Airbrake.notify_or_ignore(e) # Rescuing as we don't want to retry
+    end
+  end
+end

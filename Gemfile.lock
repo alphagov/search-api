@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/alphagov/bunny-mock.git
+  revision: f5ffb9d1a7794064dcc4a170292baf92cf89e93e
+  branch: add-tracking-for-channel-reject-method
+  specs:
+    bunny-mock (1.6.0)
+      bunny (>= 1.7)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -188,6 +196,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (= 3.2.22.2)
   airbrake (~> 4.3.6)
+  bunny-mock!
   ci_reporter (~> 1.7.1)
   elasticsearch (~> 1.0.15)
   gds-api-adapters (~> 41.2)

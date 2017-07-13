@@ -1,5 +1,6 @@
-base_uri: <%= ENV["ELASTICSEARCH_URI"] || "http://localhost:9200" %> 
+base_uri: <%= ENV["ELASTICSEARCH_URI"] || "http://localhost:9200" %>
 content_index_names: ["mainstream", "detailed", "government"]
+govuk_index_name: "govuk"
 auxiliary_index_names: ["page-traffic", "metasearch"]
 registry_index: "government"
 metasearch_index_name: "metasearch"
