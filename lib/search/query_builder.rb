@@ -126,7 +126,10 @@ module Search
       end
 
       {
-        more_like_this: { docs: docs }
+        more_like_this: {
+          docs: docs,
+          min_doc_freq: 0, # This overrides the new ES 2.4 default with the ES 1.7 default so that we can complete the migration
+        }
       }
     end
   end

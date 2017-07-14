@@ -85,11 +85,11 @@ module Search
 
     def process_elasticsearch_errors
       yield
-    rescue Elasticsearch::Transport::Transport::Errors::BadRequest => e
+    rescue Elasticsearch::Transport::Transport::Errors::InternalServerError => e
       case e.message
       when /Numeric value \(([0-9]*)\) out of range of/
         raise(NumberOutOfRange, "Integer value of #{$1} exceeds maximum allowed")
-      when /TooManyClauses\[maxClauseCount is set to/
+      when /maxClauseCount is set to/
         raise(QueryTooLong, 'Query must be less than 1024 words')
       else
         raise

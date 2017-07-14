@@ -62,7 +62,7 @@ class TestIndexHelpers
     end
 
     search_config.stubs(:elasticsearch).returns({
-      "base_uri" => "http://localhost:9200",
+      "base_uri" => ELASTICSEARCH_TESTING_HOST,
       "content_index_names" => INDEX_NAMES,
       "govuk_index_name" => GOVUK_INDEX_NAME,
       "auxiliary_index_names" => AUXILIARY_INDEX_NAMES,
