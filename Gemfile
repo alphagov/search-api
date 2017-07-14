@@ -4,8 +4,8 @@ source "https://rubygems.org"
 # when deploying versions of this app with activesupport 4.0.13. Pin to this
 # version for now until we've upgraded other apps and fixed the issue.
 gem "activesupport", "3.2.22.2"
-gem "elasticsearch", "~> 1.0.15"
-gem "gds-api-adapters", "~> 47.9.1"
+gem "elasticsearch", "~> 2"
+gem "gds-api-adapters", "~> 47.9"
 gem "govuk_app_config", "~> 0.2.0"
 gem "govuk_document_types", "~> 0.1"
 gem "govuk-lint", "~> 1.2.1"

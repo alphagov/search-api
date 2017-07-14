@@ -34,7 +34,11 @@ module QueryComponents
           selected
         end
       elsif rejected
-        { not: rejected }
+        {
+          bool: {
+            must_not: rejected,
+          }
+        }
       end
     end
   end
