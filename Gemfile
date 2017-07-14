@@ -5,7 +5,7 @@ source "https://rubygems.org"
 # version for now until we've upgraded other apps and fixed the issue.
 gem "activesupport", "3.2.22.2"
 gem "airbrake", "~> 4.3.6"
-gem "elasticsearch", "~> 1.0.15"
+gem "elasticsearch", "~> 2"
 gem "gds-api-adapters", "~> 41.2"
 gem "govuk_document_types", "~> 0.1"
 gem "govuk-lint", "~> 1.2.1"

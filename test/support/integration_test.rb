@@ -63,14 +63,13 @@ class IntegrationTest < Minitest::Test
   end
 
   def clean_index_content(index)
-    client.delete_by_query(
-      index: index,
-      body: {
-        query: {
-          match_all: {}
-        }
-      }
-    )
+    commit_index index
+
+    hits = client.search(index: index, size: 1000)['hits']['hits']
+    return if hits.empty?
+
+    client.bulk body: (hits.map { |hit| { delete: { _index: index, _type: hit['_type'], _id: hit['_id'] } } })
+    commit_index index
   end
 
   def commit_document(index_name, attributes, id: attributes["link"], type: "edition")
@@ -89,7 +88,7 @@ class IntegrationTest < Minitest::Test
   def client
     # Set a fairly long timeout to avoid timeouts on index creation on the CI
     # servers
-    @client ||= Services::elasticsearch(hosts: 'http://localhost:9200', timeout: 10)
+    @client ||= Services::elasticsearch(hosts: ELASTICSEARCH_TESTING_HOST, timeout: 10)
   end
 
   def parsed_response
@@ -133,10 +132,14 @@ class IntegrationTest < Minitest::Test
 
   def add_sample_documents(index_name, count)
     attributes = sample_document_attributes(index_name, count)
-    attributes.each do |sample_document|
-      insert_document(index_name, sample_document)
+    data = attributes.flat_map do |sample_document|
+      [
+        { index: { _id: sample_document['link'], _type: 'edition' } },
+        sample_document,
+      ]
     end
 
+    client.bulk(index: index_name, body: data)
     commit_index(index_name)
   end
 

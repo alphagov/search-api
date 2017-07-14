@@ -9,7 +9,7 @@ class IndexGroupTest < Minitest::Test
   def setup
     @schema = SearchConfig.instance.search_server.schema
     @server = SearchIndices::SearchServer.new(
-      "http://localhost:9200",
+      ELASTICSEARCH_TESTING_HOST,
       @schema,
       %w(mainstream custom),
       'govuk',
@@ -23,7 +23,7 @@ class IndexGroupTest < Minitest::Test
       "settings" => @schema.elasticsearch_settings("mainstream"),
       "mappings" => @schema.elasticsearch_mappings("mainstream"),
     }.to_json
-    stub = stub_request(:put, %r(http://localhost:9200/mainstream-.*))
+    stub = stub_request(:put, %r(#{ELASTICSEARCH_TESTING_HOST}/mainstream-.*))
       .with(body: expected_body)
       .to_return(
         status: 200,
@@ -39,7 +39,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_switch_index_with_no_existing_alias
     new_index = stub("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "http://localhost:9200/_aliases")
+    get_stub = stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -52,7 +52,7 @@ class IndexGroupTest < Minitest::Test
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
     }.to_json
-    post_stub = stub_request(:post, "http://localhost:9200/_aliases")
+    post_stub = stub_request(:post, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .with(
         body: expected_body,
         headers: { 'Content-Type' => 'application/json' }
@@ -67,7 +67,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_switch_index_with_existing_alias
     new_index = stub("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "http://localhost:9200/_aliases")
+    get_stub = stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -83,7 +83,7 @@ class IndexGroupTest < Minitest::Test
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
     }.to_json
-    post_stub = stub_request(:post, "http://localhost:9200/_aliases")
+    post_stub = stub_request(:post, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
 
@@ -96,7 +96,7 @@ class IndexGroupTest < Minitest::Test
   def test_switch_index_with_multiple_existing_aliases
     # Not expecting the system to get into this state, but it should cope
     new_index = stub("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "http://localhost:9200/_aliases")
+    get_stub = stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -114,7 +114,7 @@ class IndexGroupTest < Minitest::Test
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
     }.to_json
-    post_stub = stub_request(:post, "http://localhost:9200/_aliases")
+    post_stub = stub_request(:post, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
 
@@ -126,7 +126,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_switch_index_with_existing_real_index
     new_index = stub("New index", index_name: "test-new")
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -141,7 +141,7 @@ class IndexGroupTest < Minitest::Test
   end
 
   def test_index_names_with_no_indices
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -153,7 +153,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_index_names_with_index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -169,7 +169,7 @@ class IndexGroupTest < Minitest::Test
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -183,7 +183,7 @@ class IndexGroupTest < Minitest::Test
   end
 
   def test_clean_with_no_indices
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -195,7 +195,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_clean_with_dead_index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -204,7 +204,7 @@ class IndexGroupTest < Minitest::Test
         }.to_json
       )
 
-    delete_stub = stub_request(:delete, "http://localhost:9200/#{index_name}")
+    delete_stub = stub_request(:delete, "#{ELASTICSEARCH_TESTING_HOST}/#{index_name}")
       .to_return(ELASTICSEARCH_OK)
 
     @server.index_group("test").clean
@@ -214,7 +214,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_clean_with_live_index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -231,7 +231,7 @@ class IndexGroupTest < Minitest::Test
       "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012",
       "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef"
     ]
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -242,7 +242,7 @@ class IndexGroupTest < Minitest::Test
       )
 
     delete_stubs = index_names.map { |index_name|
-      stub_request(:delete, "http://localhost:9200/#{index_name}")
+      stub_request(:delete, "#{ELASTICSEARCH_TESTING_HOST}/#{index_name}")
         .to_return(ELASTICSEARCH_OK)
     }
 
@@ -255,7 +255,7 @@ class IndexGroupTest < Minitest::Test
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     dead_name = "test-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -265,7 +265,7 @@ class IndexGroupTest < Minitest::Test
         }.to_json
       )
 
-    delete_stub = stub_request(:delete, "http://localhost:9200/#{dead_name}")
+    delete_stub = stub_request(:delete, "#{ELASTICSEARCH_TESTING_HOST}/#{dead_name}")
       .to_return(ELASTICSEARCH_OK)
 
     @server.index_group("test").clean
@@ -276,7 +276,7 @@ class IndexGroupTest < Minitest::Test
   def test_clean_with_other_alias
     # If there's an alias we don't know about, that should save the index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -293,7 +293,7 @@ class IndexGroupTest < Minitest::Test
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, "http://localhost:9200/_aliases")
+    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -303,7 +303,7 @@ class IndexGroupTest < Minitest::Test
         }.to_json
       )
 
-    delete_stub = stub_request(:delete, "http://localhost:9200/#{this_name}")
+    delete_stub = stub_request(:delete, "#{ELASTICSEARCH_TESTING_HOST}/#{this_name}")
       .to_return(ELASTICSEARCH_OK)
 
     @server.index_group("test").clean
