@@ -1,16 +1,17 @@
 require "test_helper"
 require "govuk_message_queue_consumer"
-require "./lib/indexer/index_documents"
-load "./lib/tasks/message_queue.rake"
+require "rake"
+require "indexer/message_processor"
+load "tasks/message_queue.rake"
 
 class MessageProcessorRakeTest < Test::Unit::TestCase
   context "when indexing published documents to publishing-api" do
     should "use GovukMessageQueueConsumer::Consumer" do
-      indexer = Indexer::MessageProcessor.new
-      Indexer::MessageProcessor.expects(:new).returns(indexer)
-
       statsd_client = Statsd.new
       Statsd.expects(:new).returns(statsd_client)
+
+      indexer = Indexer::MessageProcessor.new(statsd_client)
+      Indexer::MessageProcessor.expects(:new).returns(indexer)
 
       consumer = mock('consumer')
       consumer.expects(:run).returns(true)
