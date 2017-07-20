@@ -1,7 +1,7 @@
 require "test_helper"
 require "search/presenters/result_presenter"
 
-class TemporaryLinkFixTest < MiniTest::Unit::TestCase
+class TemporaryLinkFixTest < Minitest::Test
   def test_appending_a_slash_to_the_link_field
     document = {
       '_type' => 'raib_report',

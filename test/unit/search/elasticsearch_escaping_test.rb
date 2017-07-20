@@ -1,7 +1,7 @@
 require "test_helper"
 require "search/escaping"
 
-class SearchEscapingTest < MiniTest::Unit::TestCase
+class SearchEscapingTest < Minitest::Test
   class Dummy
     include Search::Escaping
   end

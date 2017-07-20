@@ -3,7 +3,7 @@ require "indexer/workers/base_worker"
 require "indexer/workers/delete_worker"
 require "index"
 
-class DeleteWorkerTest < MiniTest::Unit::TestCase
+class DeleteWorkerTest < Minitest::Test
   def test_deletes_documents
     mock_index = mock("index")
     mock_index.expects(:delete).with("edition", "/foobang")

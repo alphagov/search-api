@@ -1,6 +1,6 @@
 require 'test/support/test_index_helpers'
 
-class IntegrationTest < MiniTest::Unit::TestCase
+class IntegrationTest < Minitest::Test
   include Rack::Test::Methods
 
   SAMPLE_DOCUMENT_ATTRIBUTES = {

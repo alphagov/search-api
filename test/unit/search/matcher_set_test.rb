@@ -1,7 +1,7 @@
 require "test_helper"
 require "search/matcher_set"
 
-class MatcherSetTest < MiniTest::Unit::TestCase
+class MatcherSetTest < Minitest::Test
   def test_should_match_strings
     matcher_set = Search::MatcherSet.new(%w(foo bang))
     assert matcher_set.include?("foo")

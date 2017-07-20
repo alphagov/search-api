@@ -1,7 +1,7 @@
 require "test_helper"
 require "legacy_search/advanced_search_query_builder"
 
-class AdvancedSearchQueryBuilderTest < MiniTest::Unit::TestCase
+class AdvancedSearchQueryBuilderTest < Minitest::Test
   include Fixtures::DefaultMappings
 
   def build_builder(keywords = "", filter_params = {}, sort_order = {}, mappings = default_mappings)

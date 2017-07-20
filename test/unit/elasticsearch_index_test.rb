@@ -4,7 +4,7 @@ require "search_config"
 require "webmock"
 require "sidekiq/testing"
 
-class ElasticsearchIndexTest < MiniTest::Unit::TestCase
+class ElasticsearchIndexTest < Minitest::Test
   include Fixtures::DefaultMappings
 
   def setup

@@ -3,7 +3,7 @@ require "index"
 require "search_config"
 require "webmock"
 
-class IndexerIndexAdvancedSearchTest < MiniTest::Unit::TestCase
+class IndexerIndexAdvancedSearchTest < Minitest::Test
   include Fixtures::DefaultMappings
 
   def setup

@@ -1,7 +1,7 @@
 require "test_helper"
 require 'indexer/comparer'
 
-class ComparerTest < MiniTest::Unit::TestCase
+class ComparerTest < Minitest::Test
   def test_can_detect_when_a_record_is_added
     setup_enumerator_response(Indexer::CompareEnumerator::NO_VALUE, { some: 'data' })
 

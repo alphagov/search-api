@@ -2,7 +2,7 @@ require "test_helper"
 require "search_server"
 require "search_config"
 
-class SearchServerTest < MiniTest::Unit::TestCase
+class SearchServerTest < Minitest::Test
   def schema_config
     schema = stub("schema config")
     schema.stubs(:elasticsearch_mappings).returns({})

@@ -1,7 +1,7 @@
 require "test_helper"
 require "search/aggregate_option"
 
-class AggregateOptionTest < MiniTest::Unit::TestCase
+class AggregateOptionTest < Minitest::Test
   def test_convert_to_hash
     assert_equal(
       { value: { "title" => "Hello" }, documents: 1 },

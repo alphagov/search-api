@@ -2,7 +2,7 @@ require "test_helper"
 require 'indexer/compare_enumerator'
 require "support/integration_test"
 
-class CompareEnumeratorTest < MiniTest::Unit::TestCase
+class CompareEnumeratorTest < Minitest::Test
   def test_when_matching_keys_exist
     data_left = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_left' }
     data_right = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_right' }

@@ -3,7 +3,7 @@ require "document"
 require "search/registry"
 require "schema/field_definitions"
 
-class BaseRegistryTest < MiniTest::Unit::TestCase
+class BaseRegistryTest < Minitest::Test
   def setup
     @index = stub("elasticsearch index")
     @base_registry = Search::BaseRegistry.new(@index, sample_field_definitions, "example-format")

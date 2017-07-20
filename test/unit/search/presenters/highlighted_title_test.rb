@@ -1,7 +1,7 @@
 require "test_helper"
 require "search/presenters/highlighted_title"
 
-class HighlightedTitleTest < MiniTest::Unit::TestCase
+class HighlightedTitleTest < Minitest::Test
   def test_title_highlighted
     title = Search::HighlightedTitle.new({
       "fields" => { "title" => "A Title" },

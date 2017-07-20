@@ -39,7 +39,7 @@ gem "govuk-lint", "~> 1.2.1"
 
 group :test do
   gem "test-unit", "~> 3.0"
-  gem "minitest", "~> 4.7.5"
+  gem "minitest", "~> 5.6.0"
   gem "shoulda-context", "~> 1.2.1"
   gem "simplecov", "~> 0.10.0"
   gem "simplecov-rcov", "~> 0.2.3"

@@ -1,7 +1,7 @@
 require "test_helper"
 require "search/presenters/highlighted_description"
 
-class HighlightedDescriptionTest < MiniTest::Unit::TestCase
+class HighlightedDescriptionTest < Minitest::Test
   def test_adds_highlighting_if_present
     raw_result = {
       "fields" => { "description" => "I will be hightlighted." },

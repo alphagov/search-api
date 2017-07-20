@@ -4,7 +4,7 @@ require "rake"
 require "indexer/message_processor"
 load "tasks/message_queue.rake"
 
-class MessageProcessorRakeTest < MiniTest::Unit::TestCase
+class MessageProcessorRakeTest < Minitest::Test
   context "when indexing published documents to publishing-api" do
     should "use GovukMessageQueueConsumer::Consumer" do
       statsd_client = Statsd.new

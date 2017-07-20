@@ -3,7 +3,7 @@ require "indexer/bulk_loader"
 require "stringio"
 require "logger"
 
-class BulkLoaderTest < MiniTest::Unit::TestCase
+class BulkLoaderTest < Minitest::Test
   def test_can_break_iostream_into_batches_of_lines_of_specified_byte_size
     input = StringIO.new(%w{a b c d}.join("\n") + "\n")
     loader = Indexer::BulkLoader.new(stub("search config"), stub("index name"))

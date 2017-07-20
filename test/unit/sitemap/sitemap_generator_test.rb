@@ -1,7 +1,7 @@
 require "test_helper"
 require "sitemap/sitemap"
 
-class SitemapGeneratorTest < MiniTest::Unit::TestCase
+class SitemapGeneratorTest < Minitest::Test
   def test_should_generate_sitemap
     sitemap = SitemapGenerator.new('')
 

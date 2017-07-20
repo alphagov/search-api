@@ -1,7 +1,7 @@
 require "test_helper"
 require "search/presenters/entity_expander"
 
-class EntityExpanderTest < MiniTest::Unit::TestCase
+class EntityExpanderTest < Minitest::Test
   # Since expanding is being done in the same way we only have to test one
   # case (organisations). Integration tests cover the rest.
   def test_expands_elements_in_document
