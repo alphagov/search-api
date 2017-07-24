@@ -19,7 +19,7 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require 'app'
 
 require "minitest/autorun"
-require "minitest/colorize"
+require "minitest/pride"
 
 require "bundler/setup"
 require "rack/test"
@@ -43,13 +43,13 @@ require "support/test_helpers"
 require "support/hash_including_helpers"
 require "support/schema_helpers"
 
-class MiniTest::Unit::TestCase
+class Minitest::Test
   include TestHelpers
   include HashIncludingHelpers
   include SchemaHelpers
 end
 
-class ShouldaUnitTestCase < MiniTest::Unit::TestCase
+class ShouldaUnitTestCase < Minitest::Test
   include Shoulda::Context::Assertions
   include Shoulda::Context::InstanceMethods
   extend Shoulda::Context::ClassMethods

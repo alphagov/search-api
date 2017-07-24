@@ -1,7 +1,7 @@
 require "test_helper"
 require "helpers"
 
-class HelpersTest < MiniTest::Unit::TestCase
+class HelpersTest < Minitest::Test
   include Helpers
 
   def test_simple_json_result_ok

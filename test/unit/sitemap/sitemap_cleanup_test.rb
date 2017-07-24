@@ -1,7 +1,7 @@
 require "test_helper"
 require "sitemap/sitemap"
 
-class SitemapCleanupTest < MiniTest::Unit::TestCase
+class SitemapCleanupTest < Minitest::Test
   def test_should_delete_old_sitemaps
     Dir.stubs(:glob).returns(%w{
       sitemap_2015-03-05T01.xml

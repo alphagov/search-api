@@ -3,7 +3,7 @@ require "indexer/workers/amend_worker"
 require "indexer/workers/base_worker"
 require "index"
 
-class AmendWorkerTest < MiniTest::Unit::TestCase
+class AmendWorkerTest < Minitest::Test
   def test_amends_documents
     mock_index = mock("index")
     mock_index.expects(:amend).with("/foobang", "title" => "New title")

@@ -2,7 +2,7 @@ require "test_helper"
 require "legacy_client/index_for_search"
 require "search_config"
 
-class CombinedIndexSchemaTest < MiniTest::Unit::TestCase
+class CombinedIndexSchemaTest < Minitest::Test
   def setup
     @base_uri = URI.parse("http://example.com:9200")
     @search_config = SearchConfig.new

@@ -1,7 +1,7 @@
 require "test_helper"
 require "document"
 
-class DocumentTest < MiniTest::Unit::TestCase
+class DocumentTest < Minitest::Test
   def test_should_turn_hash_into_document
     hash = {
       "_type" => "edition",

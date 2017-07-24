@@ -2,7 +2,7 @@ require "test_helper"
 require "indexer/links_lookup"
 require "gds_api/test_helpers/publishing_api_v2"
 
-class LinksLookupTest < MiniTest::Unit::TestCase
+class LinksLookupTest < Minitest::Test
   include GdsApi::TestHelpers::PublishingApiV2
 
   def test_retry_links_on_timeout

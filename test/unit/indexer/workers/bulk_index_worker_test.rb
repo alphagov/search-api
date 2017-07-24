@@ -3,7 +3,7 @@ require "indexer/workers/base_worker"
 require "indexer/workers/bulk_index_worker"
 require "index"
 
-class BulkIndexWorkerTest < MiniTest::Unit::TestCase
+class BulkIndexWorkerTest < Minitest::Test
   SAMPLE_DOCUMENT_HASHES = %w(foo bar baz).map do |slug|
     { link: "/#{slug}", title: slug.capitalize }
   end

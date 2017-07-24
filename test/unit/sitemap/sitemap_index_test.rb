@@ -1,7 +1,7 @@
 require "test_helper"
 require "sitemap/sitemap"
 
-class SitemapIndexTest < MiniTest::Unit::TestCase
+class SitemapIndexTest < Minitest::Test
   def test_should_generate_index_sitemap
     index_file = StringIO.new
     File.stubs(:open).yields(index_file)

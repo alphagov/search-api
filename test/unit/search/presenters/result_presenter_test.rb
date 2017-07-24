@@ -1,7 +1,7 @@
 require "test_helper"
 require "search/presenters/result_presenter"
 
-class ResultPresenterTest < MiniTest::Unit::TestCase
+class ResultPresenterTest < Minitest::Test
   def test_conversion_values_to_single_objects
     document = {
       '_type' => 'raib_report',
