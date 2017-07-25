@@ -9,7 +9,7 @@ class ElasticsearchMigrationTest < IntegrationTest
     stub_tagging_lookup
     try_remove_test_index
 
-    schema = app.settings.search_config.schema_config
+    schema = SearchConfig.instance.schema_config
     settings = schema.elasticsearch_settings("mainstream_test")
     schema.stubs(:elasticsearch_settings).returns(settings)
     @stemmer = settings["analysis"]["filter"]["stemmer_override"]

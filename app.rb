@@ -40,7 +40,7 @@ class Rummager < Sinatra::Application
   set :protection, except: [:path_traversal, :escaped_params, :frame_options, :json_csrf]
 
   def search_server
-    settings.search_config.search_server
+    SearchConfig.instance.search_server
   end
 
   def current_index
@@ -106,7 +106,7 @@ class Rummager < Sinatra::Application
       query_params = parse_query_string(request.query_string)
 
       begin
-        results = settings.search_config.run_search(query_params)
+        results = SearchConfig.instance.run_search(query_params)
       rescue BaseParameterParser::ParseError => e
         status 422
         return { error: e.error }.to_json

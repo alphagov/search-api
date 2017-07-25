@@ -25,6 +25,14 @@ class SearchConfig
     end
   end
 
+  class << self
+    attr_writer :instance
+
+    def instance
+      @instance ||= new
+    end
+  end
+
   def search_server
     @server ||= SearchIndices::SearchServer.new(
       elasticsearch["base_uri"],

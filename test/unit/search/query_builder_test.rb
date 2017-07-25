@@ -21,8 +21,8 @@ class QueryBuilderTest < ShouldaUnitTestCase
   def builder_with_params(params)
     Search::QueryBuilder.new(
       search_params: Search::QueryParameters.new({ filters: [] }.merge(params)),
-      content_index_names: Rummager.search_config.content_index_names,
-      metasearch_index: Rummager.search_config.metasearch_index
+      content_index_names: SearchConfig.instance.content_index_names,
+      metasearch_index: SearchConfig.instance.metasearch_index
     )
   end
 end

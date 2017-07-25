@@ -4,7 +4,6 @@ require "search_config"
 require "config/logging_setup"
 require "airbrake"
 
-set :search_config, SearchConfig.new
 set :default_index_name, "mainstream"
 
 configure :development do

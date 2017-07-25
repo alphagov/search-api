@@ -25,7 +25,7 @@ class ElasticsearchIndexGroupTest < IntegrationTest
     assert_equal 1, @index_group.index_names.count
     assert_equal index.index_name, @index_group.index_names[0]
     assert_equal(
-      app.settings.search_config.search_server.schema.elasticsearch_mappings("mainstream"),
+      SearchConfig.instance.search_server.schema.elasticsearch_mappings("mainstream"),
       index.mappings
     )
   end

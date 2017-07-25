@@ -22,7 +22,7 @@ class Rummager < Sinatra::Application
 private
 
   def index
-    settings.search_config.content_index
+    SearchConfig.instance.content_index
   end
 
   def find_result_by_link(link)

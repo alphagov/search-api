@@ -30,7 +30,7 @@ class TestIndexHelpers
   def self.clean_index_group(index_name)
     check_index_name!(index_name)
 
-    search_server = Rummager.settings.search_config.search_server
+    search_server = SearchConfig.instance.search_server
     index_group = search_server.index_group(index_name)
 
     # Delete any indices left over
@@ -49,13 +49,13 @@ class TestIndexHelpers
   end
 
   def self.create_test_index(group_name = DEFAULT_INDEX_NAME)
-    search_server = Rummager.settings.search_config.search_server
+    search_server = SearchConfig.instance.search_server
     index_group = search_server.index_group(group_name)
     index = index_group.create_index
     index_group.switch_to(index)
   end
 
-  def self.stub_elasticsearch_settings(search_config = Rummager.settings.search_config)
+  def self.stub_elasticsearch_settings(search_config = SearchConfig.instance)
     ALL_TEST_INDEXES.each do |index_name|
       check_index_name!(index_name)
     end

@@ -1,3 +1,6 @@
+require 'services'
+require 'search_config'
+
 module GovukIndex
   class ElasticsearchSaver
     TIMEOUT_SECONDS = 5.0
@@ -22,7 +25,7 @@ module GovukIndex
     end
 
     def search_config
-      @_config ||= Rummager.search_config
+      @_config ||= SearchConfig.instance
     end
 
     def index_name

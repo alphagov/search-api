@@ -68,7 +68,7 @@ private
 
   def bulk_load!(document)
     bulk_loader = Indexer::BulkLoader.new(
-      app.settings.search_config,
+      SearchConfig.instance,
       TestIndexHelpers::DEFAULT_INDEX_NAME
     )
     bulk_loader.load_from(StringIO.new(index_payload(document)))

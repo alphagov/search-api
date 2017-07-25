@@ -5,7 +5,7 @@ class BestBetsTest < ShouldaUnitTestCase
   context "when best bets is disabled in debug" do
     should "return the query without modification" do
       builder = QueryComponents::BestBets.new(
-        metasearch_index: Rummager.search_config.metasearch_index,
+        metasearch_index: SearchConfig.instance.metasearch_index,
         search_params: Search::QueryParameters.new(debug: { disable_best_bets: true })
       )
 
@@ -17,7 +17,7 @@ class BestBetsTest < ShouldaUnitTestCase
 
   context "with a single best bet url" do
     should "include the ID of the document in the results" do
-      builder = QueryComponents::BestBets.new(metasearch_index: Rummager.search_config.metasearch_index)
+      builder = QueryComponents::BestBets.new(metasearch_index: SearchConfig.instance.metasearch_index)
       builder.stubs best_bets: { 1 => ['/best-bet'] }
 
       result = builder.wrap('QUERY')
@@ -29,7 +29,7 @@ class BestBetsTest < ShouldaUnitTestCase
 
   context "with two best bet urls on different positions" do
     should "include IDs of the documents in the results" do
-      builder = QueryComponents::BestBets.new(metasearch_index: Rummager.search_config.metasearch_index)
+      builder = QueryComponents::BestBets.new(metasearch_index: SearchConfig.instance.metasearch_index)
       builder.stubs best_bets: { 1 => ['/best-bet'], 2 => ['/other-best-bet'] }
 
       result = builder.wrap('QUERY')
@@ -49,7 +49,7 @@ class BestBetsTest < ShouldaUnitTestCase
 
   context "with two best bet urls on the same position" do
     should "include IDs of the documents in the results" do
-      builder = QueryComponents::BestBets.new(metasearch_index: Rummager.search_config.metasearch_index)
+      builder = QueryComponents::BestBets.new(metasearch_index: SearchConfig.instance.metasearch_index)
       builder.stubs best_bets: { 1 => ['/best-bet', '/other-best-bet'] }
 
       result = builder.wrap('QUERY')
@@ -61,7 +61,7 @@ class BestBetsTest < ShouldaUnitTestCase
 
   context "with a 'worst bet'" do
     should "completely exclude the documents from the results" do
-      builder = QueryComponents::BestBets.new(metasearch_index: Rummager.search_config.metasearch_index)
+      builder = QueryComponents::BestBets.new(metasearch_index: SearchConfig.instance.metasearch_index)
       builder.stubs worst_bets: ['/worst-bet', '/other-worst-bet']
 
       result = builder.wrap({})

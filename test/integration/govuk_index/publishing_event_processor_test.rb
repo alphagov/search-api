@@ -50,6 +50,6 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
   end
 
   def client
-    @client ||= Services::elasticsearch(hosts: Rummager.search_config.base_uri)
+    @client ||= Services::elasticsearch(hosts: SearchConfig.instance.base_uri)
   end
 end
