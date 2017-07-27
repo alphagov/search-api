@@ -13,7 +13,7 @@ Rummager is the internal GOV.UK API for search.
 This API is publicly accessible:
 
 https://www.gov.uk/api/search.json?q=taxes
-![Screenshot of API Response](docs/api-screenshot.png)
+![Screenshot of API Response](doc/api-screenshot.png)
 
 You can read how to use the API in the blog post: ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
 
@@ -21,23 +21,23 @@ You can read how to use the API in the blog post: ["Use the search API to get us
 
 Rummager is a Sinatra application that interfaces with Elasticsearch.
 
-It provides a [search API](docs/search-api.md) that is used by multiple
+It provides a [search API](doc/search-api.md) that is used by multiple
 applications, and is publicly available at
 [gov.uk/api/search.json](https://www.gov.uk/api/search.json?q=taxes).
 
 There are two ways documents get added to the search index:
 
-1. Post to the [Documents API](docs/documents.md)
+1. Post to the [Documents API](doc/documents.md)
 2. Via the RabbitMQ consumer worker, which responds to notifications from the
 	 [Publishing API](https://github.com/alphagov/publishing-api).
 
 In future the documents API will be deprecated and rummager will consume only
 from the publishing API.
 
-There is also a separate [API for retrieving documents](docs/content-api.md)
+There is also a separate [API for retrieving documents](doc/content-api.md)
 from the search index by their links.
 
-Rummager search results are weighted by [popularity](docs/popularity.md). We
+Rummager search results are weighted by [popularity](doc/popularity.md). We
 rebuild the index nightly to incorporate the latest analytics.
 
 ## Nomenclature
@@ -116,17 +116,17 @@ After changing the schema, you'll need to migrate the index.
 
 For the most up to date query syntax and API output:
 
-- [docs/search-api.md](docs/search-api.md) for the search
+- [doc/search-api.md](doc/search-api.md) for the search
 	endpoint (`/search.json`).
-- [docs/content-api.md](docs/content-api.md) for the `/content/*` endpoint.
-- [docs/documents.md](docs/documents.md) for the `*/documents/` endpoint.
+- [doc/content-api.md](doc/content-api.md) for the `/content/*` endpoint.
+- [doc/documents.md](doc/documents.md) for the `*/documents/` endpoint.
 
 ### Additional Docs
 
-- [Schemas](docs/schemas.md): how to work with schemas and the document types 
-- [Health Check](docs/health-check.md): usage instructions for the Health Check
+- [Schemas](doc/schemas.md): how to work with schemas and the document types
+- [Health Check](doc/health-check.md): usage instructions for the Health Check
 	functionality.
-- [Popularity information](docs/popularity.md): Rummager uses Google Analytics
+- [Popularity information](doc/popularity.md): Rummager uses Google Analytics
 	data to improve search results.
 
 ## Licence
