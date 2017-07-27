@@ -11,7 +11,7 @@ class IndexGroupTest < Minitest::Test
   }.freeze
 
   def setup
-    @schema = Rummager.settings.search_config.search_server.schema
+    @schema = SearchConfig.instance.search_server.schema
     @server = SearchIndices::SearchServer.new(
       "http://localhost:9200",
       @schema,

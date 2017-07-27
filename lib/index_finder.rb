@@ -10,7 +10,7 @@ class IndexFinder
     end
 
     def search_config
-      @search_config ||= Rummager.settings.search_config
+      @search_config ||= SearchConfig.instance
     end
 
     def search_server

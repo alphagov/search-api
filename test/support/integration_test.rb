@@ -18,7 +18,7 @@ class IntegrationTest < Minitest::Test
   def setup
     # search_config is a global object that has state, so make sure it's reset
     # between tests.
-    Rummager.settings.search_config = SearchConfig.new
+    SearchConfig.instance = SearchConfig.new
 
     TestIndexHelpers.stub_elasticsearch_settings
   end
@@ -30,7 +30,7 @@ class IntegrationTest < Minitest::Test
   end
 
   def search_config
-    app.settings.search_config
+    SearchConfig.instance
   end
 
   def search_server

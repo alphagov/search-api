@@ -52,7 +52,7 @@ def logger
 end
 
 def search_config
-  settings.search_config
+  SearchConfig.instance
 end
 
 def search_server

@@ -38,6 +38,7 @@ gem "govuk_document_types", "0.1.4"
 gem "govuk-lint", "~> 1.2.1"
 
 group :test do
+  gem "bunny-mock", git: "https://github.com/alphagov/bunny-mock.git", branch: "add-tracking-for-channel-reject-method"
   gem "test-unit", "~> 3.0"
   gem "minitest", "~> 5.6.0"
   gem "shoulda-context", "~> 1.2.1"
@@ -48,6 +49,7 @@ group :test do
   gem "mocha", "~> 1.1.0"
   gem "webmock", "~> 1.24"
   gem "timecop", "~> 0.8.0"
+  gem 'govuk_schemas', '~> 2.1'
 end
 
 group :development do
