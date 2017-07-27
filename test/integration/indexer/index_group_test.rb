@@ -11,8 +11,11 @@ class ElasticsearchIndexGroupTest < IntegrationTest
   end
 
   def teardown
-    # Making sure we keep the index after the tests run
-    @index_group.create_index
+    # Recreate index deleted by tests.
+    # Other integration tests rely on all the test indexes being present.
+    # Also ensures there are no missing aliases in the test indexes.
+    index = @index_group.create_index
+    @index_group.switch_to(index)
   end
 
   def test_should_create_index
