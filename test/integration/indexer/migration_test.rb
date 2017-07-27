@@ -26,6 +26,11 @@ class ElasticsearchMigrationTest < IntegrationTest
     Indexer::Comparer.stubs(:new).returns(comparer)
   end
 
+  def teardown
+    super
+    search_server.index_group("mainstream_test").clean
+  end
+
   def sample_document_attributes
     [
       {
