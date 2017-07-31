@@ -13,13 +13,11 @@ class SitemapGenerator
   def get_all_documents
     Enumerator.new do |yielder|
       # Hard-code the site root, as it isn't listed in any search index
-      yielder << "/"
+      yielder << homepage_document
 
       @sitemap_indices.each do |index|
-        index.all_document_links(EXCLUDED_FORMATS).each do |document|
-          if document
-            yielder << document
-          end
+        index.all_documents(exclude_formats: EXCLUDED_FORMATS).each do |document|
+          yielder << document
         end
       end
     end
@@ -34,8 +32,9 @@ class SitemapGenerator
   def generate_xml(chunk)
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
-        chunk.each do |url|
-          url = Array(url).first
+        chunk.each do |document|
+          url = document.link
+
           url = URI.join(base_url, url) unless url.start_with?("http")
           xml.url {
             xml.loc url
@@ -50,5 +49,11 @@ private
 
   def base_url
     Plek.current.website_root
+  end
+
+  StaticDocument = Struct.new(:link, :public_timestamp)
+
+  def homepage_document
+    StaticDocument.new("/", nil)
   end
 end

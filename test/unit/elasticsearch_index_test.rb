@@ -183,7 +183,7 @@ class ElasticsearchIndexTest < Minitest::Test
     # Test that we can count the documents without retrieving them all
     search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=50"
     stub_request(:get, search_pattern).with(
-      body: { query: { match_all: {} } }.to_json
+      body: { query: expected_all_documents_query }.to_json
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 100 } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
@@ -195,7 +195,7 @@ class ElasticsearchIndexTest < Minitest::Test
     search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=50"
 
     stub_request(:get, search_uri).with(
-      body: { query: { match_all: {} } }.to_json
+      body: { query: expected_all_documents_query }.to_json
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 100, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
@@ -227,7 +227,7 @@ class ElasticsearchIndexTest < Minitest::Test
     SearchIndices::Index.stubs(:scroll_batch_size).returns(2)
 
     stub_request(:get, search_uri).with(
-      body: { query: { match_all: {} } }.to_json
+      body: { query: expected_all_documents_query }.to_json
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 3, hits: [] } }.to_json,
 
@@ -336,5 +336,17 @@ private
     traffic_index = SearchIndices::Index.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
     Indexer::PopularityLookup.any_instance.stubs(:traffic_index).returns(traffic_index)
     traffic_index.stubs(:real_name).returns("page-traffic_test")
+  end
+
+  def expected_all_documents_query
+    {
+      "bool" => {
+        "must_not" => {
+          "terms" => {
+            "format" => []
+          }
+        }
+      }
+    }
   end
 end
