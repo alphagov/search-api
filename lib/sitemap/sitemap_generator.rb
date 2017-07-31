@@ -43,6 +43,7 @@ class SitemapGenerator
           xml.url {
             xml.loc url
             xml.lastmod timestamp if timestamp
+            xml.priority priority(document)
           }
         end
       end
@@ -69,9 +70,13 @@ private
     nil
   end
 
-  StaticDocument = Struct.new(:link, :public_timestamp)
+  StaticDocument = Struct.new(:link, :public_timestamp, :is_withdrawn)
 
   def homepage_document
-    StaticDocument.new("/", nil)
+    StaticDocument.new("/", nil, false)
+  end
+
+  def priority(document)
+    document.is_withdrawn ? 0.25 : 1
   end
 end

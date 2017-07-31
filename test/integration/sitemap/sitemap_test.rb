@@ -101,6 +101,17 @@ class SitemapTest < IntegrationTest
     assert_equal "2017-07-01T12:41:34+00:00", pages[0].css("lastmod").text
   end
 
+  def test_links_should_include_priorities
+    generator = SitemapGenerator.new(search_server.content_indices)
+
+    sitemap_xml = generator.sitemaps
+
+    priorities = Nokogiri::XML(sitemap_xml[0])
+      .css("url > priority")
+
+    assert_equal 6, priorities.count
+  end
+
 private
 
   def add_sample_documents

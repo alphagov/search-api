@@ -22,8 +22,8 @@ class SitemapGeneratorTest < Minitest::Test
     sitemap = SitemapGenerator.new('')
 
     sitemap_xml = sitemap.generate_xml([
-      build_document('/page-with-datetime', "2014-01-28T14:41:50+00:00"),
-      build_document('/page-with-date', "2017-07-12"),
+      build_document('/page-with-datetime', timestamp: "2014-01-28T14:41:50+00:00"),
+      build_document('/page-with-date', timestamp: "2017-07-12"),
     ])
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
@@ -48,9 +48,9 @@ class SitemapGeneratorTest < Minitest::Test
     sitemap = SitemapGenerator.new('')
 
     sitemap_xml = sitemap.generate_xml([
-      build_document('/page-1', ""),
-      build_document('/page-2', "not-a-date"),
-      build_document('/page-3', "01-01-2017"),
+      build_document('/page-1', timestamp: ""),
+      build_document('/page-2', timestamp: "not-a-date"),
+      build_document('/page-3', timestamp: "01-01-2017"),
     ])
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
@@ -60,12 +60,49 @@ class SitemapGeneratorTest < Minitest::Test
     assert_page_has_no_lastmod(pages[2])
   end
 
-  def build_document(url, timestamp = nil)
+  def test_default_page_priority_is_maximum_value
+    sitemap = SitemapGenerator.new('')
+
+    sitemap_xml = sitemap.generate_xml([
+      build_document('/some-path', is_withdrawn: false),
+    ])
+
+    pages = Nokogiri::XML(sitemap_xml).css("url")
+
+    assert_equal("1", pages[0].css("priority").text)
+  end
+
+  def test_withdrawn_pages_have_lower_priority
+    sitemap = SitemapGenerator.new('')
+
+    sitemap_xml = sitemap.generate_xml([
+      build_document('/some-path', is_withdrawn: true),
+    ])
+
+    pages = Nokogiri::XML(sitemap_xml).css("url")
+
+    assert_equal("0.25", pages[0].css("priority").text)
+  end
+
+  def test_pages_with_no_withdrawn_flag_have_maximum_priority
+    sitemap = SitemapGenerator.new('')
+
+    sitemap_xml = sitemap.generate_xml([
+      build_document('/some-path', is_withdrawn: nil),
+    ])
+
+    pages = Nokogiri::XML(sitemap_xml).css("url")
+
+    assert_equal("1", pages[0].css("priority").text)
+  end
+
+  def build_document(url, timestamp: nil, is_withdrawn: nil)
     attributes = {
       "link" => url,
       "_type" => "some_type",
     }
     attributes["public_timestamp"] = timestamp if timestamp
+    attributes["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?
 
     Document.new(sample_field_definitions, attributes)
   end
