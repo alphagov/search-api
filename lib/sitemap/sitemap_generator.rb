@@ -4,7 +4,6 @@ class SitemapGenerator
   def initialize(sitemap_indices)
     @sitemap_indices = sitemap_indices
     @all_documents = get_all_documents
-    @logger = Logging.logger[self]
   end
 
   def self.sitemap_limit
@@ -35,14 +34,12 @@ class SitemapGenerator
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
         chunk.each do |document|
-          url = document.link
-          url = URI.join(base_url, url) unless url.start_with?("http")
-
-          timestamp = validated_timestamp(document.public_timestamp)
+          sitemap_presenter = SitemapPresenter.new(document)
 
           xml.url {
-            xml.loc url
-            xml.lastmod timestamp if timestamp
+            xml.loc sitemap_presenter.url
+            xml.lastmod sitemap_presenter.last_updated if sitemap_presenter.last_updated
+            xml.priority sitemap_presenter.priority
           }
         end
       end
@@ -53,25 +50,9 @@ class SitemapGenerator
 
 private
 
-  def base_url
-    Plek.current.website_root
-  end
-
-  def validated_timestamp(timestamp)
-    return nil unless timestamp
-
-    # Attempt to parse timestamp to validate it
-    DateTime.iso8601(timestamp)
-    timestamp
-  rescue ArgumentError
-    @logger.warn("Invalid timestamp #{timestamp}")
-    # Ignore invalid or missing timestamps
-    nil
-  end
-
-  StaticDocument = Struct.new(:link, :public_timestamp)
+  StaticDocument = Struct.new(:link, :public_timestamp, :is_withdrawn)
 
   def homepage_document
-    StaticDocument.new("/", nil)
+    StaticDocument.new("/", nil, false)
   end
 end
