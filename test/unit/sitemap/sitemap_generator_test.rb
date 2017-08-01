@@ -13,9 +13,9 @@ class SitemapGeneratorTest < Minitest::Test
 
     doc = Nokogiri::XML(sitemap_xml)
     urls = doc.css('url > loc').map(&:inner_html)
-    assert_equal urls[0], 'https://www.gov.uk/page'
-    assert_equal urls[1], 'http://www.dev.gov.uk/another-page'
-    assert_equal urls[2], 'http://www.dev.gov.uk/yet-another-page'
+    assert_equal "https://www.gov.uk/page", urls[0]
+    assert_equal "http://www.dev.gov.uk/another-page", urls[1]
+    assert_equal "http://www.dev.gov.uk/yet-another-page", urls[2]
   end
 
   def test_links_should_include_timestamps
