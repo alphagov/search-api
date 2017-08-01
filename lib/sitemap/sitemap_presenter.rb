@@ -8,7 +8,7 @@ class SitemapPresenter
     if document.link.start_with?("http")
       document.link
     else
-      URI.join(base_url, document.link)
+      URI.join(base_url, document.link).to_s
     end
   end
 
