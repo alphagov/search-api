@@ -10,7 +10,8 @@ class SitemapTest < IntegrationTest
       "description" => "Hummus weevils",
       "format" => "answer",
       "link" => "/an-example-answer",
-      "indexable_content" => "I like my badger: he is tasty and delicious"
+      "indexable_content" => "I like my badger: he is tasty and delicious",
+      "public_timestamp" => "2017-07-01T12:41:34+00:00"
     },
     {
       "title" => "Cheese on Ruby's face",
@@ -85,6 +86,19 @@ class SitemapTest < IntegrationTest
 
     assert_equal 1, sitemap_xml.length
     refute_includes sitemap_xml[0], "/government/some-content"
+  end
+
+  def test_links_should_include_timestamps
+    generator = SitemapGenerator.new(search_server.content_indices)
+
+    sitemap_xml = generator.sitemaps
+
+    pages = Nokogiri::XML(sitemap_xml[0])
+      .css("url")
+      .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
+
+    assert_equal 1, pages.count
+    assert_equal "2017-07-01T12:41:34+00:00", pages[0].css("lastmod").text
   end
 
 private

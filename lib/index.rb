@@ -145,18 +145,9 @@ module SearchIndices
       Document.from_hash(hash, @elasticsearch_types)
     end
 
-    def all_documents(options = nil)
-      client = options ? build_client(options) : @client
+    def all_documents(exclude_formats: [], client_options: nil)
+      client = client_options ? build_client(client_options) : @client
 
-      # Set off a scan query to get back a scroll ID and result count
-      search_body = { query: { match_all: {} } }
-      batch_size = self.class.scroll_batch_size
-      ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        document_from_hash(hit["_source"].merge("_id" => hit["_id"], "_type" => hit["_type"]))
-      end
-    end
-
-    def all_document_links(exclude_formats = [])
       search_body = {
         "query" => {
           "bool" => {
@@ -166,13 +157,13 @@ module SearchIndices
               }
             }
           }
-        },
-        "fields" => ["link"]
+        }
       }
 
+      # Set off a scan query to get back a scroll ID and result count
       batch_size = self.class.scroll_batch_size
-      ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        hit.fetch("fields", {})["link"]
+      ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
+        document_from_hash(hit["_source"].merge("_id" => hit["_id"], "_type" => hit["_type"]))
       end
     end
 
