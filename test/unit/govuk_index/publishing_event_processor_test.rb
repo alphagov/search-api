@@ -9,10 +9,13 @@ class PublishingEventProcessorTest < Minitest::Test
         "base_path" => "/cheese",
         "document_type" => "cheddar",
         "title" => "We love cheese"
+      },
+      delivery_info: {
+        routing_key: 'routing.key'
       }
     )
 
-    GovukIndex::PublishingEventWorker.expects(:perform_async).with(message.payload)
+    GovukIndex::PublishingEventWorker.expects(:perform_async).with('routing.key', message.payload)
     message.expects(:ack)
 
     GovukIndex::PublishingEventProcessor.new.process(message)

@@ -2,16 +2,27 @@ require 'services'
 require 'search_config'
 
 module GovukIndex
-  class ElasticsearchSaver
+  class ElasticsearchProcessor
     TIMEOUT_SECONDS = 5.0
 
+    def initialize
+      @actions = []
+    end
+
     def save(presenter)
+      @actions << { index: presenter.identifier }
+      @actions << presenter.document
+    end
+
+    def delete(presenter)
+      @actions << { delete: presenter.identifier }
+    end
+
+    def commit
+      return if @actions.empty?
       client.bulk(
         index: index_name,
-        body: [
-          { index: presenter.identifier },
-          presenter.document
-        ]
+        body: @actions
       )
     end
 
