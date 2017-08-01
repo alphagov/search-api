@@ -33,4 +33,19 @@ class FormatBoostCalculatorTest < Minitest::Test
 
     assert_equal 0.25, calculator.boost("other_format")
   end
+
+  def test_boosts_are_rounded
+    boosts = {
+      "format_boosts" => {
+        "top_format" => 3,
+        "other_format" => 2,
+      },
+    }
+
+    YAML.stubs(:load_file).returns(boosts)
+
+    calculator = FormatBoostCalculator.new
+
+    assert_equal 0.67, calculator.boost("other_format")
+  end
 end

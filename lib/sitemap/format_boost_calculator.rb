@@ -8,7 +8,7 @@ class FormatBoostCalculator
     page_boost = @format_boosts[format] || 1
 
     # Normalise format boost to always give a value between 0 and 1
-    page_boost.to_f / max_boost
+    (page_boost.to_f / max_boost).round(2)
   end
 
 private
