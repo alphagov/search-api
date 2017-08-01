@@ -1,4 +1,5 @@
 require "elasticsearch"
+require 'statsd'
 require 'gds_api/publishing_api_v2'
 
 module Services
@@ -27,6 +28,10 @@ module Services
       logger: Logging.logger[self],
       transport_options: { headers: { "Content-Type" => "application/json" } }
     )
+  end
+
+  def self.statsd_client
+    @statsd_client ||= Statsd.new.tap { |sd| sd.namespace = "govuk.app.rummager" }
   end
 end
 
