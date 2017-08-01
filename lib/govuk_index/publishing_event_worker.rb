@@ -13,8 +13,14 @@ module GovukIndex
       presenter = ElasticsearchPresenter.new(payload)
       presenter.valid!
       ElasticsearchSaver.new.save(presenter)
+    # Rescuing as we don't want to retry this class of error
     rescue ValidationError => e
-      Airbrake.notify_or_ignore(e) # Rescuing as we don't want to retry
+      Airbrake.notify_or_ignore(
+        e,
+        parameters: {
+          message_body: payload,
+        }
+      )
     # Rescuing exception to guarantee we capture all Sidekiq retries
     rescue Exception # rubocop:disable Lint/RescueException
       Services.statsd_client.increment('govuk_index.sidekiq-retry')

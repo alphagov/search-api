@@ -24,7 +24,10 @@ class PublishingEventWorkerTest < MiniTest::Unit::TestCase
       "title" => "We love cheese"
     }
 
-    Airbrake.expects(:notify_or_ignore).with(instance_of(GovukIndex::ValidationError))
+    Airbrake.expects(:notify_or_ignore).with(
+      instance_of(GovukIndex::ValidationError),
+      parameters: { message_body: { 'document_type' => 'cheddar', 'title' => 'We love cheese' } }
+    )
 
     GovukIndex::PublishingEventWorker.new.perform(invalid_payload)
   end

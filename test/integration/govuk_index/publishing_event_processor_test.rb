@@ -43,7 +43,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
       "document_type" => "aaib_report"
     }
 
-    Airbrake.expects(:notify_or_ignore).with(instance_of(GovukIndex::ValidationError))
+    Airbrake.expects(:notify_or_ignore)
     @queue.publish(invalid_payload.to_json, content_type: "application/json")
 
     assert_equal 0, @queue.message_count
