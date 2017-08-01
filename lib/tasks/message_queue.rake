@@ -27,15 +27,12 @@ namespace :message_queue do
 
   desc "Gets data from RabbitMQ and insert into govuk index"
   task :insert_data_into_govuk do
-    statsd_client = Statsd.new
-    statsd_client.namespace = "govuk.app.rummager"
-
     puts "Starting message queue consumer"
 
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "rummager_govuk_index",
       processor: GovukIndex::PublishingEventProcessor.new,
-      statsd_client: statsd_client,
+      statsd_client: Services.statsd_client,
     ).run
   end
 end
