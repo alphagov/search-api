@@ -7,21 +7,17 @@
 require 'airbrake'
 require 'govuk_message_queue_consumer'
 require 'indexer/message_processor'
-require 'statsd'
 require 'govuk_index/publishing_event_processor.rb'
 
 namespace :message_queue do
   desc "Index documents that are published to the publishing-api"
   task :listen_to_publishing_queue do
-    statsd_client = Statsd.new
-    statsd_client.namespace = "govuk.app.rummager"
-
     puts "Starting message queue consumer"
 
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "rummager_to_be_indexed",
-      processor: Indexer::MessageProcessor.new(statsd_client),
-      statsd_client: statsd_client,
+      processor: Indexer::MessageProcessor.new,
+      statsd_client: Services.statsd_client,
     ).run
   end
 
