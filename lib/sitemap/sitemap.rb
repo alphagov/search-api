@@ -5,6 +5,7 @@ require_relative "sitemap_cleanup"
 require_relative "sitemap_generator"
 require_relative "sitemap_presenter"
 require_relative "sitemap_writer"
+require_relative "format_boost_calculator"
 
 class Sitemap
   def initialize(directory, timestamp = Time.now.utc)

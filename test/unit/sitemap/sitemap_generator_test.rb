@@ -63,7 +63,10 @@ class SitemapGeneratorTest < Minitest::Test
     attributes["public_timestamp"] = timestamp if timestamp
     attributes["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?
 
-    SitemapPresenter.new(Document.new(sample_field_definitions, attributes))
+    SitemapPresenter.new(
+      Document.new(sample_field_definitions, attributes),
+      FormatBoostCalculator.new
+    )
   end
 
   def assert_page_has_no_lastmod(page)
