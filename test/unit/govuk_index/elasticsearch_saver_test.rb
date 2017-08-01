@@ -2,7 +2,7 @@ require "test_helper"
 require 'govuk_index/elasticsearch_saver'
 require 'support/test_index_helpers'
 
-class ElasticsearchSaverTest < MiniTest::Unit::TestCase
+class ElasticsearchSaverTest < Minitest::Test
   def test_should_save_valid_document
     # TestIndexHelpers.setup_test_indexes
 

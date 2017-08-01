@@ -1,7 +1,7 @@
 require "test_helper"
 require "govuk_index/elasticsearch_presenter"
 
-class GovukIndex::ElasticsearchPresenterTest < MiniTest::Unit::TestCase
+class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
   def test_converts_message_payload_to_elasticsearch_format
     payload = {
       "base_path" => "/some/path",
