@@ -11,13 +11,15 @@ class SitemapGenerator
   end
 
   def get_all_documents
+    format_boost_calculator = FormatBoostCalculator.new
+
     Enumerator.new do |yielder|
       # Hard-code the site root, as it isn't listed in any search index
-      yielder << homepage_document
+      yielder << homepage
 
       @sitemap_indices.each do |index|
         index.all_documents(exclude_formats: EXCLUDED_FORMATS).each do |document|
-          yielder << document
+          yielder << SitemapPresenter.new(document, format_boost_calculator)
         end
       end
     end
@@ -34,12 +36,10 @@ class SitemapGenerator
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
         chunk.each do |document|
-          sitemap_presenter = SitemapPresenter.new(document)
-
           xml.url {
-            xml.loc sitemap_presenter.url
-            xml.lastmod sitemap_presenter.last_updated if sitemap_presenter.last_updated
-            xml.priority sitemap_presenter.priority
+            xml.loc document.url
+            xml.lastmod document.last_updated if document.last_updated
+            xml.priority document.priority
           }
         end
       end
@@ -50,9 +50,9 @@ class SitemapGenerator
 
 private
 
-  StaticDocument = Struct.new(:link, :public_timestamp, :is_withdrawn)
+  StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
 
-  def homepage_document
-    StaticDocument.new("/", nil, false)
+  def homepage
+    StaticDocumentPresenter.new("/", nil, 1)
   end
 end

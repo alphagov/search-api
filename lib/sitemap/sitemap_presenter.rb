@@ -1,6 +1,7 @@
 class SitemapPresenter
-  def initialize(document)
+  def initialize(document, format_boost_calculator)
     @document = document
+    @format_boost_calculator = format_boost_calculator
     @logger = Logging.logger[self]
   end
 
@@ -8,7 +9,7 @@ class SitemapPresenter
     if document.link.start_with?("http")
       document.link
     else
-      URI.join(base_url, document.link)
+      URI.join(base_url, document.link).to_s
     end
   end
 
@@ -25,14 +26,18 @@ class SitemapPresenter
   end
 
   def priority
-    document.is_withdrawn ? 0.25 : 1
+    withdrawn_status_boost * format_boost_calculator.boost(document.format)
   end
 
 private
 
-  attr_reader :document
+  attr_reader :document, :format_boost_calculator
 
   def base_url
     Plek.current.website_root
+  end
+
+  def withdrawn_status_boost
+    document.is_withdrawn ? 0.25 : 1
   end
 end

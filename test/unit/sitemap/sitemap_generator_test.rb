@@ -13,23 +13,21 @@ class SitemapGeneratorTest < Minitest::Test
 
     doc = Nokogiri::XML(sitemap_xml)
     urls = doc.css('url > loc').map(&:inner_html)
-    assert_equal urls[0], 'https://www.gov.uk/page'
-    assert_equal urls[1], 'http://www.dev.gov.uk/another-page'
-    assert_equal urls[2], 'http://www.dev.gov.uk/yet-another-page'
+    assert_equal "https://www.gov.uk/page", urls[0]
+    assert_equal "http://www.dev.gov.uk/another-page", urls[1]
+    assert_equal "http://www.dev.gov.uk/yet-another-page", urls[2]
   end
 
   def test_links_should_include_timestamps
     sitemap = SitemapGenerator.new('')
 
     sitemap_xml = sitemap.generate_xml([
-      build_document('/page-with-datetime', timestamp: "2014-01-28T14:41:50+00:00"),
-      build_document('/page-with-date', timestamp: "2017-07-12"),
+      build_document('/some-page', timestamp: "2014-01-28T14:41:50+00:00"),
     ])
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
 
     assert_equal "2014-01-28T14:41:50+00:00", pages[0].css("lastmod").text
-    assert_equal "2017-07-12", pages[1].css("lastmod").text
   end
 
   def test_missing_timestamps_are_ignored
@@ -44,56 +42,17 @@ class SitemapGeneratorTest < Minitest::Test
     assert_page_has_no_lastmod(pages[0])
   end
 
-  def test_invalid_timestamps_are_ignored
+  def test_page_priority_is_document_priority
     sitemap = SitemapGenerator.new('')
 
-    sitemap_xml = sitemap.generate_xml([
-      build_document('/page-1', timestamp: ""),
-      build_document('/page-2', timestamp: "not-a-date"),
-      build_document('/page-3', timestamp: "01-01-2017"),
-    ])
+    document = build_document('/some-path')
+    document.stubs(:priority).returns(0.48)
+
+    sitemap_xml = sitemap.generate_xml([document])
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
 
-    assert_page_has_no_lastmod(pages[0])
-    assert_page_has_no_lastmod(pages[1])
-    assert_page_has_no_lastmod(pages[2])
-  end
-
-  def test_default_page_priority_is_maximum_value
-    sitemap = SitemapGenerator.new('')
-
-    sitemap_xml = sitemap.generate_xml([
-      build_document('/some-path', is_withdrawn: false),
-    ])
-
-    pages = Nokogiri::XML(sitemap_xml).css("url")
-
-    assert_equal("1", pages[0].css("priority").text)
-  end
-
-  def test_withdrawn_pages_have_lower_priority
-    sitemap = SitemapGenerator.new('')
-
-    sitemap_xml = sitemap.generate_xml([
-      build_document('/some-path', is_withdrawn: true),
-    ])
-
-    pages = Nokogiri::XML(sitemap_xml).css("url")
-
-    assert_equal("0.25", pages[0].css("priority").text)
-  end
-
-  def test_pages_with_no_withdrawn_flag_have_maximum_priority
-    sitemap = SitemapGenerator.new('')
-
-    sitemap_xml = sitemap.generate_xml([
-      build_document('/some-path', is_withdrawn: nil),
-    ])
-
-    pages = Nokogiri::XML(sitemap_xml).css("url")
-
-    assert_equal("1", pages[0].css("priority").text)
+    assert_equal("0.48", pages[0].css("priority").text)
   end
 
   def build_document(url, timestamp: nil, is_withdrawn: nil)
@@ -104,7 +63,10 @@ class SitemapGeneratorTest < Minitest::Test
     attributes["public_timestamp"] = timestamp if timestamp
     attributes["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?
 
-    Document.new(sample_field_definitions, attributes)
+    SitemapPresenter.new(
+      Document.new(sample_field_definitions, attributes),
+      FormatBoostCalculator.new
+    )
   end
 
   def assert_page_has_no_lastmod(page)
