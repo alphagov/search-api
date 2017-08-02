@@ -14,6 +14,11 @@ class PropertyBoostCalculator
 private
 
   def max_boost
-    @_max_boost ||= @format_boosts.values.max
+    @_max_boost ||= calculate_max_boost
+  end
+
+  def calculate_max_boost
+    max_configured_boost = @format_boosts.values.max
+    max_configured_boost >= 1 ? max_configured_boost : 1
   end
 end

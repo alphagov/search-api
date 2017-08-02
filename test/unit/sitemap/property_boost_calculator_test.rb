@@ -40,6 +40,21 @@ class PropertyBoostCalculatorTest < Minitest::Test
     assert_equal expected_default_boost, calculator.boost(build_document(format: nil))
   end
 
+  def test_default_is_1_if_configured_properties_are_all_downweighted
+    stub_boost_config({
+      "format" => {
+        "organisation" => 0.2,
+        "service_manual_guide" => 0.3,
+        "mainstream_browse_page" => 0,
+      }
+    })
+
+    calculator = PropertyBoostCalculator.new
+
+    assert_equal 0.2, calculator.boost(build_document(format: "organisation"))
+    assert_equal 1, calculator.boost(build_document(format: "other_format"))
+  end
+
   def test_boosts_are_not_rounded_by_integer_division
     stub_boost_config({
       "format" => {
