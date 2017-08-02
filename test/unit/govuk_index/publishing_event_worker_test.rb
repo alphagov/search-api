@@ -3,7 +3,7 @@ require 'support/test_index_helpers'
 require 'govuk_index/elasticsearch_presenter'
 require 'govuk_index/publishing_event_worker'
 
-class PublishingEventWorkerTest < MiniTest::Unit::TestCase
+class PublishingEventWorkerTest < Minitest::Test
   def test_should_save_valid_message
     payload = {
       "base_path" => "/cheese",

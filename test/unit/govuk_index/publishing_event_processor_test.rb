@@ -2,7 +2,7 @@ require "test_helper"
 require 'govuk_index/publishing_event_processor'
 require 'govuk_index/publishing_event_worker'
 
-class PublishingEventProcessorTest < MiniTest::Unit::TestCase
+class PublishingEventProcessorTest < Minitest::Test
   def test_should_process_and_acknowledge_a_message
     message = OpenStruct.new(
       payload: {
