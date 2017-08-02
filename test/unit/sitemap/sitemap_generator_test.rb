@@ -65,7 +65,7 @@ class SitemapGeneratorTest < Minitest::Test
 
     SitemapPresenter.new(
       Document.new(sample_field_definitions, attributes),
-      FormatBoostCalculator.new
+      PropertyBoostCalculator.new
     )
   end
 

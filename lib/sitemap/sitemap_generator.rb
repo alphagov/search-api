@@ -11,7 +11,7 @@ class SitemapGenerator
   end
 
   def get_all_documents
-    format_boost_calculator = FormatBoostCalculator.new
+    property_boost_calculator = PropertyBoostCalculator.new
 
     Enumerator.new do |yielder|
       # Hard-code the site root, as it isn't listed in any search index
@@ -19,7 +19,7 @@ class SitemapGenerator
 
       @sitemap_indices.each do |index|
         index.all_documents(exclude_formats: EXCLUDED_FORMATS).each do |document|
-          yielder << SitemapPresenter.new(document, format_boost_calculator)
+          yielder << SitemapPresenter.new(document, property_boost_calculator)
         end
       end
     end

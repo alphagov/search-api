@@ -5,25 +5,25 @@ class SitemapPresenterTest < Minitest::Test
   def setup
     Plek.any_instance.stubs(:website_root).returns("https://website_root")
 
-    @format_boost_calculator = FormatBoostCalculator.new
-    @format_boost_calculator.stubs(:boost).returns(1)
+    @boost_calculator = PropertyBoostCalculator.new
+    @boost_calculator.stubs(:boost).returns(1)
   end
 
   def test_url_is_document_link_if_link_is_http_url
     document = build_document(url: "http://some.url")
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_equal "http://some.url", presenter.url
   end
 
   def test_url_is_document_link_if_link_is_https_url
     document = build_document(url: "https://some.url")
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_equal "https://some.url", presenter.url
   end
 
   def test_url_appends_host_name_if_link_is_a_path
     document = build_document(url: "/some/path")
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_equal "https://website_root/some/path", presenter.url
   end
 
@@ -32,7 +32,7 @@ class SitemapPresenterTest < Minitest::Test
       url: "/some/path",
       timestamp: "2014-01-28T14:41:50+00:00"
     )
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_equal "2014-01-28T14:41:50+00:00", presenter.last_updated
   end
 
@@ -41,7 +41,7 @@ class SitemapPresenterTest < Minitest::Test
       url: "/some/path",
       timestamp: "2017-07-12"
     )
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_equal "2017-07-12", presenter.last_updated
   end
 
@@ -50,7 +50,7 @@ class SitemapPresenterTest < Minitest::Test
       url: "/some/path",
       timestamp: nil
     )
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_nil presenter.last_updated
   end
 
@@ -59,7 +59,7 @@ class SitemapPresenterTest < Minitest::Test
       url: "/some/path",
       timestamp: "not-a-date"
     )
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_nil presenter.last_updated
   end
 
@@ -68,7 +68,7 @@ class SitemapPresenterTest < Minitest::Test
       url: "/some/path",
       timestamp: "01-01-2017"
     )
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_nil presenter.last_updated
   end
 
@@ -77,7 +77,7 @@ class SitemapPresenterTest < Minitest::Test
       url: "/some/path",
       is_withdrawn: false
     )
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_equal 1, presenter.priority
   end
 
@@ -86,7 +86,7 @@ class SitemapPresenterTest < Minitest::Test
       url: "/some/path",
       is_withdrawn: true
     )
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_equal 0.25, presenter.priority
   end
 
@@ -94,7 +94,7 @@ class SitemapPresenterTest < Minitest::Test
     document = build_document(
       url: "/some/path"
     )
-    presenter = SitemapPresenter.new(document, @format_boost_calculator)
+    presenter = SitemapPresenter.new(document, @boost_calculator)
     assert_equal 1, presenter.priority
   end
 
@@ -103,10 +103,10 @@ class SitemapPresenterTest < Minitest::Test
       url: "/some/path",
       format: "aaib_report"
     )
-    format_boost_calculator = FormatBoostCalculator.new
-    format_boost_calculator.stubs(:boost).with("aaib_report").returns(0.72)
+    property_boost_calculator = PropertyBoostCalculator.new
+    property_boost_calculator.stubs(:boost).with(document).returns(0.72)
 
-    presenter = SitemapPresenter.new(document, format_boost_calculator)
+    presenter = SitemapPresenter.new(document, property_boost_calculator)
     assert_equal 0.72, presenter.priority
   end
 

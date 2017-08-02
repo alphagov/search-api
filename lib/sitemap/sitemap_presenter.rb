@@ -1,7 +1,7 @@
 class SitemapPresenter
-  def initialize(document, format_boost_calculator)
+  def initialize(document, property_boost_calculator)
     @document = document
-    @format_boost_calculator = format_boost_calculator
+    @property_boost_calculator = property_boost_calculator
     @logger = Logging.logger[self]
   end
 
@@ -26,12 +26,12 @@ class SitemapPresenter
   end
 
   def priority
-    withdrawn_status_boost * format_boost_calculator.boost(document.format)
+    withdrawn_status_boost * property_boost_calculator.boost(document)
   end
 
 private
 
-  attr_reader :document, :format_boost_calculator
+  attr_reader :document, :property_boost_calculator
 
   def base_url
     Plek.current.website_root
