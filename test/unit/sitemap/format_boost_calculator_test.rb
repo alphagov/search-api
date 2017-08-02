@@ -21,7 +21,7 @@ class FormatBoostCalculatorTest < Minitest::Test
 
   def test_boosts_are_not_rounded_by_integer_division
     boosts = {
-      "format_boosts" => {
+      "format" => {
         "top_format" => 4,
         "other_format" => 1,
       },
@@ -36,7 +36,7 @@ class FormatBoostCalculatorTest < Minitest::Test
 
   def test_boosts_are_rounded
     boosts = {
-      "format_boosts" => {
+      "format" => {
         "top_format" => 3,
         "other_format" => 2,
       },

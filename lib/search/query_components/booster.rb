@@ -2,7 +2,7 @@ require "yaml"
 
 module QueryComponents
   class Booster < BaseComponent
-    FORMAT_BOOST_CONFIG = YAML.load_file('config/query/format_boosting.yml')
+    BOOST_CONFIG = YAML.load_file('config/query/boosting.yml')
     DEFAULT_BOOST = 1
 
     def wrap(core_query)
@@ -23,37 +23,18 @@ module QueryComponents
   private
 
     def boost_filters
-      format_boosts + [
-        time_boost,
-        closed_org_boost,
-        devolved_org_boost,
-        historic_edition_boost,
-        guidance_boost,
-        foi_boost,
-      ]
+      property_boosts + [time_boost]
     end
 
-    def format_boosts
-      FORMAT_BOOST_CONFIG["format_boosts"].map do |format, boost|
-        {
-          filter: { term: { format: format } },
-          boost_factor: boost
-        }
+    def property_boosts
+      BOOST_CONFIG.flat_map do |property, boosts|
+        boosts.map do |value, boost|
+          {
+            filter: { term: { property.to_sym => value } },
+            boost_factor: boost
+          }
+        end
       end
-    end
-
-    def guidance_boost
-      {
-        filter: { term: { navigation_document_supertype: "guidance" } },
-        boost_factor: 2.5
-      }
-    end
-
-    def foi_boost
-      {
-        filter: { term: { content_store_document_type: "foi_release" } },
-        boost_factor: 0.2
-      }
     end
 
     # An implementation of http://wiki.apache.org/solr/FunctionQuery#recip
@@ -74,27 +55,6 @@ module QueryComponents
 
     def time_in_millis_to_nearest_minute
       (Time.now.to_i / 60) * 60000
-    end
-
-    def closed_org_boost
-      {
-        filter: { term: { organisation_state: "closed" } },
-        boost_factor: 0.2,
-      }
-    end
-
-    def devolved_org_boost
-      {
-        filter: { term: { organisation_state: "devolved" } },
-        boost_factor: 0.3,
-      }
-    end
-
-    def historic_edition_boost
-      {
-        filter: { term: { is_historic: true } },
-        boost_factor: 0.5,
-      }
     end
   end
 end

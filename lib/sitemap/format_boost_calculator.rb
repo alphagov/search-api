@@ -1,7 +1,7 @@
 class FormatBoostCalculator
   def initialize
-    format_boost_config = YAML.load_file('config/query/format_boosting.yml')
-    @format_boosts = format_boost_config["format_boosts"]
+    boost_config = YAML.load_file('config/query/boosting.yml')
+    @format_boosts = boost_config["format"]
   end
 
   def boost(format)
