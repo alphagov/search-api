@@ -75,7 +75,9 @@ class IntegrationTest < Minitest::Test
   end
 
   def client
-    @client ||= Services::elasticsearch(hosts: 'http://localhost:9200')
+    # Set a fairly long timeout to avoid timeouts on index creation on the CI
+    # servers
+    @client ||= Services::elasticsearch(hosts: 'http://localhost:9200', timeout: 10)
   end
 
   def parsed_response
