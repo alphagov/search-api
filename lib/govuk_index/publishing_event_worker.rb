@@ -36,7 +36,7 @@ module GovukIndex
       presenter = ElasticsearchPresenter.new(payload)
       presenter.valid!
 
-      if routing_key =~ /\.unpublish$/
+      if routing_key =~ /\.unpublish$/ && !presenter.withdrawn?
         actions.delete(presenter)
       else
         actions.save(presenter)
