@@ -1,8 +1,8 @@
 require "test_helper"
-require 'govuk_index/elasticsearch_saver'
+require 'govuk_index/elasticsearch_processor'
 require 'support/test_index_helpers'
 
-class ElasticsearchSaverTest < Minitest::Test
+class ElasticsearchProcessorTest < Minitest::Test
   def test_should_save_valid_document
     # TestIndexHelpers.setup_test_indexes
 
@@ -20,6 +20,8 @@ class ElasticsearchSaverTest < Minitest::Test
     Services.stubs('elasticsearch').returns(client)
     client.expects(:bulk).with(index: SearchConfig.instance.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
 
-    GovukIndex::ElasticsearchSaver.new.save(presenter)
+    actions = GovukIndex::ElasticsearchProcessor.new
+    actions.save(presenter)
+    actions.commit
   end
 end
