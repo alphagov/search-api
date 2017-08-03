@@ -4,8 +4,6 @@ require 'support/test_index_helpers'
 
 class ElasticsearchProcessorTest < Minitest::Test
   def test_should_save_valid_document
-    # TestIndexHelpers.setup_test_indexes
-
     presenter = stub(:presenter)
     presenter.stubs(:identifier).returns(
       _type: "cheddar",
