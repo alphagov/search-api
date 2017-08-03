@@ -38,6 +38,28 @@ class PublishingEventWorkerTest < Minitest::Test
     GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
   end
 
+  def test_should_not_delete_withdrawn
+    payload = {
+      "base_path" => "/cheese",
+      "document_type" => "cheddar",
+      "title" => "We love cheese",
+      "withdrawn_notice" => {
+        "explanation" => "<div class=\"govspeak\"><p>test 2</p>\n</div>",
+        "withdrawn_at" => "2017-08-03T14:02:18Z"
+      }
+    }
+
+    actions = stub('actions')
+    GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
+    actions.expects(:save)
+    actions.expects(:commit).returns('items' => [{ 'index' => { 'status' => 200 } }])
+
+    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-consumed')
+    Services.statsd_client.expects(:increment).with('govuk_index.elasticsearch.index')
+
+    GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
+  end
+
   def test_raise_error_when_elasticsearch_update_error
     payload = {
       "base_path" => "/cheese",
