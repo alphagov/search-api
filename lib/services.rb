@@ -21,6 +21,13 @@ module Services
   # Build a client to connect to one or more elasticsearch nodes.
   # hosts should be a comma separated string. Valid formats
   # are documented at http://www.rubydoc.info/gems/elasticsearch-transport#Setting_Hosts
+  #
+  # Be careful when setting a short timeout value. You may see confusing HTTP
+  # 4XX responses rather than timeout errors because the Elasticsearch client
+  # uses Faraday which uses Net::HTTP, and Net::HTTP retries idempotent requests
+  # which time out (including PUT and DELETE requests). So the first, slow,
+  # request succeeds (but times out) and the second retry request returns an
+  # error because the operation has already been run.
   def self.elasticsearch(hosts: ENV['ELASTICSEARCH_HOSTS'] || 'http://localhost:9200', timeout: 5)
     Elasticsearch::Client.new(
       hosts: hosts,
