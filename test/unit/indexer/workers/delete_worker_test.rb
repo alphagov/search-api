@@ -1,7 +1,4 @@
-require "test_helper"
-require "indexer/workers/base_worker"
-require "indexer/workers/delete_worker"
-require "index"
+require 'test_helper'
 
 class DeleteWorkerTest < Minitest::Test
   def test_deletes_documents

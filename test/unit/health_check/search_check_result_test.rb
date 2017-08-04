@@ -1,6 +1,4 @@
-require_relative "../../test_helper"
-require "health_check/search_check_result"
-require "health_check/search_check"
+require 'test_helper'
 
 module HealthCheck
   class SearchCheckResultTest < ShouldaUnitTestCase

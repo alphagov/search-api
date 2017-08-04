@@ -1,5 +1,4 @@
-require "test_helper"
-require "helpers"
+require 'test_helper'
 
 class HelpersTest < Minitest::Test
   include Helpers

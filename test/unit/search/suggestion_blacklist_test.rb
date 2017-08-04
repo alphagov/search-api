@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/suggestion_blacklist"
+require 'test_helper'
 
 class Search::SuggestionBlacklistTest < ShouldaUnitTestCase
   def blacklist

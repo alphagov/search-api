@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 require "gds_api/test_helpers/publishing_api_v2"
 
 class TaglookupDuringIndexingTest < IntegrationTest

@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class SearchTest < IntegrationTest
   def test_for_sort_ordering

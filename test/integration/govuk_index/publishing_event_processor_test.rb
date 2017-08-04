@@ -1,8 +1,4 @@
-require 'govuk_schemas'
 require 'integration_test_helper'
-require 'bunny-mock'
-require 'govuk_index/publishing_event_processor'
-require 'govuk_message_queue_consumer'
 
 class GovukIndex::PublishingEventProcessorTest < IntegrationTest
   def setup

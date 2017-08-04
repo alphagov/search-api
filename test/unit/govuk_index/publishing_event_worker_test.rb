@@ -1,7 +1,4 @@
-require "test_helper"
-require 'support/test_index_helpers'
-require 'govuk_index/elasticsearch_presenter'
-require 'govuk_index/publishing_event_worker'
+require 'test_helper'
 
 class PublishingEventWorkerTest < Minitest::Test
   def test_save_valid_message

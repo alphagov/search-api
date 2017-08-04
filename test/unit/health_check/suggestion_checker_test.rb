@@ -1,7 +1,4 @@
-require_relative "../../test_helper"
-require "health_check/suggestion_checker"
-require "health_check/json_search_client"
-require "health_check/logging_config"
+require 'test_helper'
 
 module HealthCheck
   class SuggestionCheckerTest < ShouldaUnitTestCase

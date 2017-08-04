@@ -1,6 +1,4 @@
-require_relative "../../test_helper"
-require "health_check/logging_config"
-require "health_check/suggestion_check"
+require 'test_helper'
 Logging.logger.root.appenders = nil
 
 module HealthCheck

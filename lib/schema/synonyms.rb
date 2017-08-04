@@ -1,5 +1,3 @@
-require "yaml"
-
 class SynonymParser
   def initialize(schema_path)
     @schema_path = schema_path

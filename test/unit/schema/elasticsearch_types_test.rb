@@ -1,5 +1,4 @@
-require "test_helper"
-require "schema/elasticsearch_type"
+require 'test_helper'
 
 class ElasticsearchTypesTest < ShouldaUnitTestCase
   def assert_raises_message(message)

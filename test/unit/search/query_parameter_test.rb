@@ -1,6 +1,4 @@
-require "test_helper"
-require "search/query_parameters"
-
+require 'test_helper'
 
 class QueryParameterTest < ShouldaUnitTestCase
   context "quoted_search_phrase?" do

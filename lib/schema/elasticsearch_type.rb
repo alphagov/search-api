@@ -1,5 +1,3 @@
-require "json"
-
 class ElasticsearchType
   attr_reader :name, :fields, :expanded_search_result_fields
 

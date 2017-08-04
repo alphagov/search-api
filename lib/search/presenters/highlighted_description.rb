@@ -1,5 +1,3 @@
-require "active_support/core_ext/string"
-
 module Search
   class HighlightedDescription
     ELLIPSIS = "…".freeze

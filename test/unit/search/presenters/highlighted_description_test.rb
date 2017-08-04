@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/presenters/highlighted_description"
+require 'test_helper'
 
 class HighlightedDescriptionTest < Minitest::Test
   def test_adds_highlighting_if_present

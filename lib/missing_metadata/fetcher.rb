@@ -1,5 +1,3 @@
-require "lib/indexer/workers/amend_worker"
-
 # Queries publishing api to fill in missing metadata for search results
 module MissingMetadata
   class Fetcher

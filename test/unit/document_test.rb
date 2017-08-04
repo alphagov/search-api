@@ -1,5 +1,4 @@
-require "test_helper"
-require "document"
+require 'test_helper'
 
 class DocumentTest < Minitest::Test
   def test_should_turn_hash_into_document

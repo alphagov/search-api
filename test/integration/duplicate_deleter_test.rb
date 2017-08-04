@@ -1,5 +1,4 @@
-require "integration_test_helper"
-require 'duplicate_deleter'
+require 'integration_test_helper'
 
 class DuplicateDeleterTest < IntegrationTest
   def test_can_not_delete_when_only_a_single_document

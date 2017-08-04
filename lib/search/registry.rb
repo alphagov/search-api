@@ -1,5 +1,3 @@
-require_relative "timed_cache"
-
 module Search
   class BaseRegistry
     CACHE_LIFETIME = 300 # 5 minutes

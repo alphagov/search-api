@@ -1,7 +1,4 @@
-require "test_helper"
-require "indexer/workers/base_worker"
-require "indexer/workers/bulk_index_worker"
-require "index"
+require 'test_helper'
 
 class BulkIndexWorkerTest < Minitest::Test
   SAMPLE_DOCUMENT_HASHES = %w(foo bar baz).map do |slug|

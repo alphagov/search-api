@@ -1,5 +1,4 @@
-require "test_helper"
-require "sitemap/sitemap"
+require 'test_helper'
 
 class SitemapCleanupTest < Minitest::Test
   def test_should_delete_old_sitemaps

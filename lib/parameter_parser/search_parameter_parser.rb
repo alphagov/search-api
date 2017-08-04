@@ -1,7 +1,3 @@
-require_relative "base_parameter_parser"
-require_relative "aggregate_parameter_parser"
-require_relative "aggregates_parameter_parser"
-
 class SearchParameterParser < BaseParameterParser
   VIRTUAL_FIELDS = %w[
     title_with_highlighting

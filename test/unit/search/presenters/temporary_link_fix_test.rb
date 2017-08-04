@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/presenters/result_presenter"
+require 'test_helper'
 
 class TemporaryLinkFixTest < Minitest::Test
   def test_appending_a_slash_to_the_link_field

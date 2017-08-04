@@ -1,5 +1,3 @@
-require_relative "base_worker"
-
 module Indexer
   class DeleteWorker < BaseWorker
     notify_of_failures

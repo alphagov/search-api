@@ -1,5 +1,3 @@
-require "yaml"
-
 module QueryComponents
   class Booster < BaseComponent
     FORMAT_BOOST_CONFIG = YAML.load_file('config/query/format_boosting.yml')

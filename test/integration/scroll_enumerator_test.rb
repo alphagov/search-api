@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class ScrollEnumeratorTest < IntegrationTest
   def test_returns_expected_results_for_unsorted_search

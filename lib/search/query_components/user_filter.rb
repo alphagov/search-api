@@ -1,5 +1,3 @@
-require 'search/query_helpers'
-
 module QueryComponents
   class UserFilter < BaseComponent
     include Search::QueryHelpers

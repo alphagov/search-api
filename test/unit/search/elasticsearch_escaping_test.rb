@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/escaping"
+require 'test_helper'
 
 class SearchEscapingTest < Minitest::Test
   class Dummy

@@ -1,6 +1,4 @@
-require "integration_test_helper"
-require "rack/logger"
-require "indexer/bulk_loader"
+require 'integration_test_helper'
 
 class ElasticsearchMigrationTest < IntegrationTest
   def setup

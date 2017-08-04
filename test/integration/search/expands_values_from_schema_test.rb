@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class ExpandsValuesFromSchemaTest < IntegrationTest
   def test_extra_fields_decorated_by_schema

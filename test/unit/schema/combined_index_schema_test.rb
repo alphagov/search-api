@@ -1,6 +1,4 @@
-require "test_helper"
-require "legacy_client/index_for_search"
-require "search_config"
+require 'test_helper'
 
 class CombinedIndexSchemaTest < Minitest::Test
   def setup

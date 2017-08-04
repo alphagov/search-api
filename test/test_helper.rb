@@ -16,7 +16,12 @@ end
 $LOAD_PATH << File.expand_path('../../', __FILE__)
 $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
-require 'app'
+# load this first to avoid duplicate constant declaration error
+require 'logging'
+require 'health_check/logging_config'
+
+require 'rummager'
+require 'rummager/app' # load the website
 
 require "minitest/autorun"
 # Add colourful test output. This works in development but not in CI.
@@ -27,8 +32,8 @@ require "rack/test"
 require "mocha/setup"
 require "pp"
 require "shoulda-context"
-require "logging"
 require "timecop"
+require "pry-byebug"
 
 require "webmock/minitest"
 
@@ -43,6 +48,8 @@ require "support/default_mappings"
 require "support/test_helpers"
 require "support/hash_including_helpers"
 require "support/schema_helpers"
+
+require "gds_api/test_helpers/publishing_api_v2"
 
 class Minitest::Test
   include TestHelpers

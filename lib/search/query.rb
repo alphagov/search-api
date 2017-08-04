@@ -1,11 +1,4 @@
 # Performs a search across all indices used for the GOV.UK site search
-
-require_relative "aggregate_example_fetcher"
-require_relative "query_builder"
-require_relative "presenters/result_set_presenter"
-require_relative 'query_components/suggest'
-require_relative 'suggestion_blacklist'
-
 module Search
   class Query
     class Error < StandardError; end

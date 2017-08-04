@@ -1,17 +1,3 @@
-require_relative "best_bets_checker"
-require_relative "escaping"
-
-require_relative "query_components/base_component"
-require_relative "query_components/booster"
-require_relative "query_components/sort"
-require_relative "query_components/popularity"
-require_relative "query_components/best_bets"
-require_relative "query_components/filter"
-require_relative "query_components/highlight"
-require_relative "query_components/aggregates"
-require_relative "query_components/core_query"
-require_relative "query_components/text_query"
-
 module Search
   # Builds a query for a search across all GOV.UK indices
   class QueryBuilder

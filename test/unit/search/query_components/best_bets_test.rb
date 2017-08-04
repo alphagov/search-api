@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/query_builder"
+require 'test_helper'
 
 class BestBetsTest < ShouldaUnitTestCase
   context "when best bets is disabled in debug" do

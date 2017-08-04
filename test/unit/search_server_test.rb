@@ -1,6 +1,4 @@
-require "test_helper"
-require "search_server"
-require "search_config"
+require 'test_helper'
 
 class SearchServerTest < Minitest::Test
   def schema_config

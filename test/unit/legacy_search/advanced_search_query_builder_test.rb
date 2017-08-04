@@ -1,5 +1,4 @@
-require "test_helper"
-require "legacy_search/advanced_search_query_builder"
+require 'test_helper'
 
 class AdvancedSearchQueryBuilderTest < Minitest::Test
   include Fixtures::DefaultMappings

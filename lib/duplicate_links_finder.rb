@@ -1,5 +1,3 @@
-require_relative "../app"
-
 class DuplicateLinksFinder
   def initialize(elasticsearch_url, indices)
     @client = Elasticsearch::Client.new(host: elasticsearch_url)

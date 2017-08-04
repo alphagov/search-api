@@ -1,6 +1,4 @@
-require "integration_test_helper"
-require 'missing_metadata/runner'
-require 'gds_api/test_helpers/publishing_api_v2'
+require 'integration_test_helper'
 
 class MissingMetadataTest < IntegrationTest
   def test_finds_missing_content_id

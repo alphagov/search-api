@@ -1,5 +1,4 @@
-require "integration_test_helper"
-require "indexer/change_notification_processor"
+require 'integration_test_helper'
 
 class ChangeNotificationProcessorTest < IntegrationTest
   def test_triggering_a_reindex

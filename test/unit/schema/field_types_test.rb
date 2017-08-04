@@ -1,5 +1,4 @@
-require "test_helper"
-require "schema/field_types"
+require 'test_helper'
 
 class FieldTypesTest < ShouldaUnitTestCase
   context "after loading standard types" do

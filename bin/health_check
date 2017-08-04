@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require "logging"
 require "slop"
 
 PROJECT_ROOT = File.dirname(__FILE__) + "/../"
@@ -12,13 +11,8 @@ LIBRARY_PATH = PROJECT_ROOT + "lib/"
 end
 
 DEFAULT_JSON_URL = "https://www.gov.uk/api/search.json".freeze
-require "search_config"
 require 'health_check/logging_config'
-require 'health_check/search_checker'
-require 'health_check/suggestion_checker'
-require 'health_check/json_search_client'
-require 'health_check/downloader'
-require 'health_check/basic_auth_credentials'
+require "rummager"
 
 class HealthCheckCLI
   attr_reader :opts, :args

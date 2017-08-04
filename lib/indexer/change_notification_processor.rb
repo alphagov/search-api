@@ -1,5 +1,3 @@
-require 'index_finder'
-
 # ChangeNotificationProcessor
 #
 # This is called by the message queue processor and is responsible

@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/matcher_set"
+require 'test_helper'
 
 class MatcherSetTest < Minitest::Test
   def test_should_match_strings

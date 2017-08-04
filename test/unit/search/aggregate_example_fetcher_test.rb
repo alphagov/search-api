@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/aggregate_example_fetcher"
+require 'test_helper'
 
 class AggregateExampleFetcherTest < ShouldaUnitTestCase
   def query_for_example_global(field, value, return_fields)

@@ -1,6 +1,3 @@
-require "json"
-require_relative "multivalue_converter"
-
 module LegacyClient
   class IndexForSearch
     attr_reader :index_names, :schema

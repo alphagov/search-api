@@ -1,5 +1,4 @@
-require "test_helper"
-require "indexer"
+require 'test_helper'
 
 describe Indexer::DocumentPreparer do
   describe "#prepared" do

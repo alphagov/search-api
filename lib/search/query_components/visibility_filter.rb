@@ -1,5 +1,3 @@
-require 'search/query_helpers'
-
 module QueryComponents
   class VisibilityFilter < BaseComponent
     include Search::QueryHelpers

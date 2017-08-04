@@ -1,10 +1,3 @@
-require "active_support/core_ext/string"
-require "active_support/core_ext/hash"
-
-require_relative "entity_expander"
-require_relative "highlighted_description"
-require_relative "highlighted_title"
-
 module Search
   class ResultPresenter
     attr_reader :raw_result, :registries, :schema, :search_params

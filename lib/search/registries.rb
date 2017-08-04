@@ -1,5 +1,3 @@
-require_relative "registry"
-
 module Search
   Registries = Struct.new(:search_server, :search_config) do
     def [](name)

@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/timed_cache"
+require 'test_helper'
 
 class TimedCacheTest < Minitest::Test
   def test_result_is_not_called_until_needed

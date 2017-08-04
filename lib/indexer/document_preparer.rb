@@ -1,5 +1,3 @@
-require "govuk_document_types"
-
 module Indexer
   class DocumentPreparer
     def initialize(client, index_name)

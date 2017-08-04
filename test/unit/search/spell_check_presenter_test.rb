@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/presenters/spell_check_presenter"
+require 'test_helper'
 
 class Search::SpellCheckPresenterTest < ShouldaUnitTestCase
   context "#present" do

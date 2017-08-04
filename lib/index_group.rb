@@ -1,7 +1,3 @@
-require "time"
-require "securerandom"
-require "index"
-
 module SearchIndices
   # A group of related indexes.
   #

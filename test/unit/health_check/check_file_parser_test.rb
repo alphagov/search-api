@@ -1,5 +1,4 @@
-require_relative "../../test_helper"
-require "health_check/check_file_parser"
+require 'test_helper'
 
 module HealthCheck
   class CheckFileParserTest < ShouldaUnitTestCase

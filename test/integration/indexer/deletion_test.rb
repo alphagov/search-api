@@ -1,5 +1,4 @@
-require "integration_test_helper"
-require "app"
+require 'integration_test_helper'
 
 class ElasticsearchDeletionTest < IntegrationTest
   def test_removes_a_document_from_the_index

@@ -1,14 +1,3 @@
-require "logging"
-require "json"
-require "legacy_client/multivalue_converter"
-require "legacy_search/advanced_search"
-require "search/escaping"
-require "search/result_set"
-require "scroll_enumerator"
-require "indexer"
-require "indexer/amender"
-require "document"
-
 module SearchIndices
   class IndexLocked < RuntimeError; end
 
