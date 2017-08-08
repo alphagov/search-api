@@ -89,8 +89,14 @@ You should run this task if the index schema has changed.
 
   desc "Cleans out old indices"
   task :clean do
-    index_names.each do |index_name|
-      search_server.index_group(index_name).clean
+    # as we only want to clean the indices for the versions that matches from the overnight copy task
+    # if we didn't check this we could potentially attempt to delete one of the new indices as we are importing
+    # data into it.
+    version = ENV.fetch('RUMMAGER_VERSION', '1.7')
+    if version == Rummager::ELASTICSEARCH_VERSION
+      index_names.each do |index_name|
+        search_server.index_group(index_name).clean
+      end
     end
   end
 
