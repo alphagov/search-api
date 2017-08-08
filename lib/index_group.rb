@@ -15,6 +15,9 @@ module SearchIndices
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
       @client = Services::elasticsearch(hosts: base_uri)
+      # Index creation can take longer than other requests, so create a separate
+      # client with a longer timeout
+      @index_creation_client = Services::elasticsearch(hosts: base_uri, timeout: 10)
       @name = name
       @schema = schema
       @search_config = search_config
@@ -32,7 +35,7 @@ module SearchIndices
         "settings" => settings,
         "mappings" => mappings,
       }
-      @client.indices.create(
+      @index_creation_client.indices.create(
         index: index_name,
         body: index_payload
       )

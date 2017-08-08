@@ -8,9 +8,9 @@ class MessageProcessorRakeTest < Minitest::Test
   context "when indexing published documents to publishing-api" do
     should "use GovukMessageQueueConsumer::Consumer" do
       statsd_client = Statsd.new
-      Statsd.expects(:new).returns(statsd_client)
+      Services.expects(:statsd_client).returns(statsd_client)
 
-      indexer = Indexer::MessageProcessor.new(statsd_client)
+      indexer = Indexer::MessageProcessor.new
       Indexer::MessageProcessor.expects(:new).returns(indexer)
 
       consumer = mock('consumer')

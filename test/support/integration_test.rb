@@ -75,15 +75,17 @@ class IntegrationTest < Minitest::Test
   end
 
   def client
-    @client ||= Services::elasticsearch(hosts: 'http://localhost:9200')
+    # Set a fairly long timeout to avoid timeouts on index creation on the CI
+    # servers
+    @client ||= Services::elasticsearch(hosts: 'http://localhost:9200', timeout: 10)
   end
 
   def parsed_response
     JSON.parse(last_response.body)
   end
 
-  def assert_document_is_in_rummager(document, type: "edition")
-    retrieved = fetch_document_from_rummager(id: document['link'])
+  def assert_document_is_in_rummager(document, type: "edition", index: 'mainstream_test')
+    retrieved = fetch_document_from_rummager(id: document['link'], index: index)
 
     assert_equal type, retrieved["_type"]
 
