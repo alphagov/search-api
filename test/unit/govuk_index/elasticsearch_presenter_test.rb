@@ -6,14 +6,18 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
     payload = {
       "base_path" => "/some/path",
       "document_type" => "aaib_report",
-      "title" => "A plane has had an issue"
+      "title" => "A plane has had an issue",
+      "payload_version" => 1,
+      "version_type" => "external"
     }
 
     presenter = GovukIndex::ElasticsearchPresenter.new(payload)
 
     expected_identifier = {
       _type: "aaib_report",
-      _id: "/some/path"
+      _id: "/some/path",
+      version: 1,
+      version_type: "external"
     }
 
     expected_document = {
@@ -31,6 +35,8 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       "base_path" => "/some/path",
       "document_type" => "aaib_report",
       "title" => "A plane has had an issue",
+      "payload_version" => 2,
+      "version_type" => "external",
       "withdrawn_notice" => {
         "explanation" => "<div class=\"govspeak\"><p>test 2</p>\n</div>",
         "withdrawn_at" => "2017-08-03T14:02:18Z"
@@ -41,7 +47,9 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
 
     expected_identifier = {
       _type: "aaib_report",
-      _id: "/some/path"
+      _id: "/some/path",
+      version: 2,
+      version_type: "external"
     }
 
     expected_document = {
