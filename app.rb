@@ -26,6 +26,7 @@ require "indexer/workers/delete_worker"
 require "indexer/workers/amend_worker"
 require "indexer/comparer"
 require "govuk_index/publishing_event_processor"
+require "govuk_index/publishing_event_worker"
 
 class Rummager < Sinatra::Application
   # this is needed to support the migration to ES 2.4
