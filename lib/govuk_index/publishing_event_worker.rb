@@ -57,6 +57,10 @@ module GovukIndex
         Services.statsd_client.increment("govuk_index.elasticsearch.#{action_type}")
       elsif action_type == 'delete' && details['status'] == 404 # failed while attempting to delete missing record so just ignore it
         Services.statsd_client.increment('govuk_index.elasticsearch.already_deleted')
+      elsif details['status'] == 409
+        # A version conflict indicates that messages were processed out of
+        # order. This is not expected to happen often but is safe to ignore.
+        Services.statsd_client.increment('govuk_index.elasticsearch.version_conflict')
       else
         Services.statsd_client.increment("govuk_index.elasticsearch.#{action_type}_error")
         raise ElasticsearchError, action_type: action_type, details: details
