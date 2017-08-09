@@ -4,7 +4,7 @@ require 'govuk_index/publishing_event_processor'
 
 class GovukIndex::UnpublishingMessageProcessing < IntegrationTest
   def test_unpublish_message_will_remove_record_from_elasticsearch
-    message = create_message('unpublishing', payload_version: 2)
+    message = unpublishing_event_message('unpublishing', { payload_version: 2 }, ['withdrawn_notice'])
     base_path = message.payload['base_path']
     type = message.payload['document_type']
 
@@ -21,7 +21,7 @@ class GovukIndex::UnpublishingMessageProcessing < IntegrationTest
   end
 
   def test_unpublish_withdrawn_messages_will_set_is_withdrawn_flag
-    message = create_message(
+    message = unpublishing_event_message(
       'help_page',
       payload_version: 2,
       withdrawn_notice: {
@@ -42,14 +42,10 @@ class GovukIndex::UnpublishingMessageProcessing < IntegrationTest
     assert_document_is_in_rummager({ 'link' => base_path, 'is_withdrawn' => true }, index: 'govuk_test', type: type)
   end
 
-  def create_message(schema_name, user_defined = {})
+  def unpublishing_event_message(schema_name, user_defined = {}, excluded_fields = [])
     payload = GovukSchemas::RandomExample
       .for_schema(notification_schema: schema_name)
-      .merge_and_validate(user_defined)
-    stubs(:message).tap do |message|
-      message.stubs(:ack)
-      message.stubs(:payload).returns(payload)
-      message.stubs(:delivery_info).returns(routing_key: 'test.unpublish')
-    end
+      .customise_and_validate(user_defined, excluded_fields)
+    stub_message_payload(payload, unpublishing: true)
   end
 end
