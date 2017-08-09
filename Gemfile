@@ -49,7 +49,7 @@ group :test do
   gem "mocha", "~> 1.1.0"
   gem "webmock", "~> 1.24"
   gem "timecop", "~> 0.8.0"
-  gem 'govuk_schemas', '~> 2.1'
+  gem 'govuk_schemas', '~> 2.2.0'
 end
 
 group :development do
