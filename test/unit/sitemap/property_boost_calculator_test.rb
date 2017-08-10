@@ -2,89 +2,102 @@ require "test_helper"
 require "sitemap/sitemap"
 
 class PropertyBoostCalculatorTest < Minitest::Test
-  def test_documents_are_boosted_relative_to_default_for_property
+  def test_boosts_are_between_0_and_1
     stub_boost_config({
       "format" => {
-        "organisation" => 2.5,
-        "service_manual_guide" => 0.3,
-        "mainstream_browse_page" => 0,
+        "format1" => 0,
+        "format2" => 1,
+        "format3" => 2,
+        "format4" => 3,
+        "format5" => 10,
       }
     })
 
     calculator = PropertyBoostCalculator.new
 
-    assert_equal 1, calculator.boost(build_document(format: "organisation"))
-    assert_equal 0.12, calculator.boost(build_document(format: "service_manual_guide"))
-    assert_equal 0, calculator.boost(build_document(format: "mainstream_browse_page"))
+    assert_equal 0, calculator.boost(build_document(format: "format1"))
+    assert_equal 0.5, calculator.boost(build_document(format: "format2"))
+    assert_equal 0.75, calculator.boost(build_document(format: "format3"))
+    assert_equal 0.88, calculator.boost(build_document(format: "format4"))
+    assert_equal 1, calculator.boost(build_document(format: "format5"))
+  end
+
+  def test_unboosted_format_has_default_boost
+    stub_boost_config({
+      "format" => {
+        "some_format" => 1,
+      }
+    })
+
+    calculator = PropertyBoostCalculator.new
+
+    assert_equal 0.5, calculator.boost(build_document(format: "some_format"))
+  end
+
+  def test_boosts_limit_is_1
+    stub_boost_config({
+      "format" => {
+        "format1" => 10,
+        "format2" => 100,
+        "format3" => 1000,
+      }
+    })
+
+    calculator = PropertyBoostCalculator.new
+
+    assert_equal 1, calculator.boost(build_document(format: "format1"))
+    assert_equal 1, calculator.boost(build_document(format: "format2"))
+    assert_equal 1, calculator.boost(build_document(format: "format3"))
   end
 
   def test_unconfigured_format_has_default_boost
-    max_boost = 2.5
-    stub_boost_config({ "format" => { "some_format" => max_boost } })
+    stub_boost_config({
+      "format" => {
+        "some_format" => 0.3,
+      }
+    })
 
     calculator = PropertyBoostCalculator.new
 
-    expected_default_boost = 1 / max_boost
-
-    assert_equal expected_default_boost, calculator.boost(build_document(format: "a_different_format"))
+    assert_equal 0.5, calculator.boost(build_document(format: "other_format"))
   end
 
   def test_unconfigured_property_has_default_boost
-    max_boost = 2.5
-    stub_boost_config({ "format" => { "some_format" => max_boost } })
-
-    calculator = PropertyBoostCalculator.new
-
-    expected_default_boost = 1 / max_boost
-
-    assert_equal expected_default_boost, calculator.boost(build_document(format: nil))
-  end
-
-  def test_document_without_property_has_default_boost
-    max_boost = 2.5
-
     stub_boost_config({
-      "some_property" => {
-        "some_value" => max_boost,
-      }
-    })
-
-    field_definitions = {}
-    attributes = {}
-    document_without_property = Document.new(field_definitions, attributes)
-
-    calculator = PropertyBoostCalculator.new
-
-    expected_default_boost = 1 / max_boost
-    assert_equal expected_default_boost, calculator.boost(document_without_property)
-  end
-
-  def test_default_is_1_if_configured_properties_are_all_downweighted
-    stub_boost_config({
-      "format" => {
-        "organisation" => 0.2,
-        "service_manual_guide" => 0.3,
-        "mainstream_browse_page" => 0,
+      "some_other_property" => {
+        "some_value" => 0.3,
       }
     })
 
     calculator = PropertyBoostCalculator.new
 
-    assert_equal 0.2, calculator.boost(build_document(format: "organisation"))
-    assert_equal 1, calculator.boost(build_document(format: "other_format"))
+    assert_equal 0.5, calculator.boost(build_document(document_type: "some_doc_type"))
   end
 
-  def test_boosts_for_different_fields_are_multiplied
+  def test_boosts_are_rounded
     stub_boost_config({
       "format" => {
-        "organisation" => 2,
-        "publication" => 1,
+        "format1" => 0.123,
+        "format2" => 0.456,
+      }
+    })
+
+    calculator = PropertyBoostCalculator.new
+
+    assert_equal 0.08, calculator.boost(build_document(format: "format1"))
+    assert_equal 0.27, calculator.boost(build_document(format: "format2"))
+  end
+
+  def test_boosts_for_different_fields_are_combined
+    stub_boost_config({
+      "format" => {
+        "publication" => 0.5,
       },
       "content_store_document_type" => {
-        "foi_release" => 0.2
+        "foi_release" => 0.2,
       },
       "navigation_document_supertype" => {
-        "guidance" => 2.5
+        "guidance" => 0.8
       }
     })
 
@@ -93,38 +106,13 @@ class PropertyBoostCalculatorTest < Minitest::Test
     document = Document.new(sample_field_definitions, {
       "format" => "publication",
       "content_store_document_type" => "foi_release",
-      "navigation_document_supertype" => "other"
+      "navigation_document_supertype" => "some_other_value"
     })
 
-    # format boost * document type boost * navigation supertype boost
-    # (1/2) * 0.2 * (1/2.5) = 0.04
-    assert_equal 0.04, calculator.boost(document)
-  end
-
-  def test_boosts_are_not_rounded_by_integer_division
-    stub_boost_config({
-      "format" => {
-        "top_format" => 4,
-        "other_format" => 1,
-      }
-    })
-
-    calculator = PropertyBoostCalculator.new
-
-    assert_equal 0.25, calculator.boost(build_document(format: "other_format"))
-  end
-
-  def test_boosts_are_rounded
-    stub_boost_config({
-      "format" => {
-        "top_format" => 3,
-        "other_format" => 2,
-      }
-    })
-
-    calculator = PropertyBoostCalculator.new
-
-    assert_equal 0.67, calculator.boost(build_document(format: "other_format"))
+    #   1 - 2^(-format boost * document type boost * navigation supertype boost)
+    # = 1 - 2^(-0.5 * 0.2 * 1)
+    # = 0.07
+    assert_equal 0.07, calculator.boost(document)
   end
 
   def stub_boost_config(boosts)
