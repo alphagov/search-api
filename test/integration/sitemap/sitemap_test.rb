@@ -70,6 +70,18 @@ class SitemapTest < IntegrationTest
     assert_equal 3, sitemap_xml.length
   end
 
+  def test_should_include_homepage
+    generator = SitemapGenerator.new(search_server.content_indices)
+    sitemap_xml = generator.sitemaps
+
+    pages = Nokogiri::XML(sitemap_xml[0])
+      .css("url")
+      .select { |item| item.css("loc").text == "http://www.dev.gov.uk/" }
+
+    assert_equal 1, pages.count
+    assert_equal "1", pages[0].css("priority").text
+  end
+
   def test_should_not_include_recommended_links
     generator = SitemapGenerator.new(search_server.content_indices)
     sitemap_xml = generator.sitemaps
