@@ -19,7 +19,8 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require 'app'
 
 require "minitest/autorun"
-require "minitest/pride"
+# Add colourful test output. This works in development but not in CI.
+require "minitest/pride" unless ENV["JENKINS_URL"]
 
 require "bundler/setup"
 require "rack/test"
