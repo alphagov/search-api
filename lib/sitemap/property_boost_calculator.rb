@@ -1,6 +1,8 @@
 class PropertyBoostCalculator
   def initialize
-    @boost_config = YAML.load_file('config/query/boosting.yml')
+    config = YAML.load_file('config/query/boosting.yml')
+    external_search_overrides = config.fetch("external_search", {})
+    @boost_config = config["base"].merge(external_search_overrides)
   end
 
   def boost(document)

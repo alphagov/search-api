@@ -115,8 +115,37 @@ class PropertyBoostCalculatorTest < Minitest::Test
     assert_equal 0.07, calculator.boost(document)
   end
 
+  def test_external_search_overrides_are_applied
+    config = {
+      "base" => {
+        "format" => {
+          "service_manual_guide" => 1,
+        }
+      },
+      "external_search" => {
+        "format" => {
+          "service_manual_guide" => 2
+        }
+      },
+    }
+    stub_full_config(config)
+
+    calculator = PropertyBoostCalculator.new
+
+    # 1 - 2^(-boost_override) = 1 - 2^(-2) = 0.75
+    expected_boost_override = 0.75
+    actual_boost = calculator.boost(build_document(format: "service_manual_guide"))
+    assert_equal expected_boost_override, actual_boost
+  end
+
   def stub_boost_config(boosts)
-    YAML.stubs(:load_file).returns(boosts)
+    stub_full_config({
+      "base" => boosts
+    })
+  end
+
+  def stub_full_config(config)
+    YAML.stubs(:load_file).returns(config)
   end
 
   def build_document(format: nil, document_type: nil)
