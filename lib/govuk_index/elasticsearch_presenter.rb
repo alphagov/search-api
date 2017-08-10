@@ -7,7 +7,9 @@ module GovukIndex
     def identifier
       {
         _type: payload["document_type"],
-        _id: payload["base_path"]
+        _id: payload["base_path"],
+        version: payload["payload_version"],
+        version_type: "external",
       }
     end
 
@@ -15,7 +17,7 @@ module GovukIndex
       {
         link: payload["base_path"],
         title: payload["title"],
-        is_withdrawn: withdrawn?
+        is_withdrawn: withdrawn?,
       }
     end
 

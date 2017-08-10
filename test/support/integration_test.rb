@@ -136,6 +136,15 @@ class IntegrationTest < Minitest::Test
     end
   end
 
+  def stub_message_payload(example_document, unpublishing: false)
+    routing_key = unpublishing ? 'test.unpublish' : 'test.a_routing_key'
+    stubs(:message).tap do |message|
+      message.stubs(:ack)
+      message.stubs(:payload).returns(example_document)
+      message.stubs(:delivery_info).returns(routing_key: routing_key)
+    end
+  end
+
 private
 
   def populate_content_indexes(params)

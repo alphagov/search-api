@@ -22,8 +22,9 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
   end
 
   def test_should_save_new_document_to_elasticsearch
-    schema = GovukSchemas::Schema.find(frontend_schema: "specialist_document")
-    random_example = GovukSchemas::RandomExample.new(schema: schema).payload
+    random_example = GovukSchemas::RandomExample
+      .for_schema(notification_schema: "specialist_document")
+      .merge_and_validate(payload_version: 123)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
