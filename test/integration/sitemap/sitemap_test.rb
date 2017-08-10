@@ -79,7 +79,7 @@ class SitemapTest < IntegrationTest
       .select { |item| item.css("loc").text == "http://www.dev.gov.uk/" }
 
     assert_equal 1, pages.count
-    assert_equal "1", pages[0].css("priority").text
+    assert_equal "0.5", pages[0].css("priority").text
   end
 
   def test_should_not_include_recommended_links
