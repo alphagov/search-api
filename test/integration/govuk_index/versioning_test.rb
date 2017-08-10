@@ -67,7 +67,14 @@ class GovukIndex::VersioningTest < IntegrationTest
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
     assert_equal 1, document["_version"]
 
-    version2 = version1.merge(payload_version: 2)
+    version2 = generate_random_example(
+      schema: 'gone',
+      payload: {
+        base_path: base_path,
+        payload_version: 2
+      },
+      excluded_fields: ["withdrawn_notice"]
+    )
     process_message(version2, unpublishing: true)
 
     assert_raises(Elasticsearch::Transport::Transport::Errors::NotFound) do
@@ -89,16 +96,25 @@ class GovukIndex::VersioningTest < IntegrationTest
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
     assert_equal 2, document["_version"]
 
-    version2 = version1.merge(payload_version: 1)
+    version2 = generate_random_example(
+      schema: 'gone',
+      payload: {
+        base_path: base_path,
+        payload_version: 1
+      },
+      excluded_fields: ["withdrawn_notice"]
+    )
     process_message(version2, unpublishing: true)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
     assert_equal 2, document["_version"]
   end
 
-  def generate_random_example(payload: {}, excluded_fields: [])
+  def generate_random_example(schema: "specialist_document", payload: {}, excluded_fields: [])
+    # just in case RandomExample does not generate a type field
+    payload[:document_type] = schema
     GovukSchemas::RandomExample
-      .for_schema(notification_schema: "specialist_document")
+      .for_schema(notification_schema: schema)
       .merge_and_validate(payload, excluded_fields)
   end
 
