@@ -41,5 +41,21 @@ module Search
         }
       }
     end
+
+    def dis_max_query(queries, tie_breaker: 0.0, boost: 1.0)
+      # Calculates a score by running all the queries, and taking the maximum.
+      # Adds in the scores for the other queries multiplied by `tie_breaker`.
+      if queries.size == 1
+        queries.first
+      else
+        {
+          dis_max: {
+            queries: queries,
+            tie_breaker: tie_breaker,
+            boost: boost,
+          }
+        }
+      end
+    end
   end
 end

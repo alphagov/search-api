@@ -18,6 +18,17 @@ class QueryBuilderTest < ShouldaUnitTestCase
     end
   end
 
+  context "more like this" do
+    should "call the payload for a more like this query" do
+      builder = builder_with_params(similar_to: %{"/hello-world"})
+
+      builder.expects(:more_like_this_query_hash).once
+
+      # TODO: assert what the payload looks like
+      builder.payload
+    end
+  end
+
   def builder_with_params(params)
     Search::QueryBuilder.new(
       search_params: Search::QueryParameters.new({ filters: [] }.merge(params)),

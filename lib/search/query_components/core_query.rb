@@ -1,15 +1,20 @@
+require "search/query_helpers"
+
 module QueryComponents
   class CoreQuery < BaseComponent
     DEFAULT_QUERY_ANALYZER = "query_with_old_synonyms".freeze
     DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = 'default'.freeze
 
-    # TODO: The `score` here doesn't actually do anything.
-    MATCH_FIELDS = {
-      "title" => 5,
-      "acronym" => 5, # Ensure that organisations rank brilliantly for their acronym
-      "description" => 2,
-      "indexable_content" => 1,
-    }.freeze
+    # If the search query is a single quoted phrase, we run a different query,
+    # which uses phrase matching across various fields.
+    # Boost title the most, but ensure that organisations rank brilliantly
+    # for their acronym.
+    PHRASE_MATCH_TITLE_BOOST = 5
+    PHRASE_MATCH_ACRONYM_BOOST = 5
+    PHRASE_MATCH_DESCRIPTION_BOOST = 2
+    PHRASE_MATCH_INDEXABLE_CONTENT_BOOST = 1
+
+    include Search::QueryHelpers
 
     # The following specification generates the following values for minimum_should_match
     #
@@ -38,58 +43,37 @@ module QueryComponents
     # MORE than 2 clauses then 2 should match.
     MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%".freeze
 
-    def payload
-      if @search_params.quoted_search_phrase?
-        payload_for_quoted_phrase
-      else
-        payload_for_unquoted_phrase
-      end
-    end
+    def optional_id_code_query
+      return nil unless search_params.enable_id_codes?
 
-  private
-
-    def payload_for_unquoted_phrase
-      {
-        bool: {
-          must: must_conditions,
-          should: should_conditions,
-        }
-      }
-    end
-
-    def payload_for_quoted_phrase
-      groups = [field_boosts_phrase]
-      groups.map { |queries| dis_max_query(queries) }
-    end
-
-    def must_conditions
-      if @search_params.enable_id_codes?
-        [all_searchable_text_query]
-      else
-        []
-      end
-    end
-
-    def should_conditions
-      exact_field_boosts + [exact_match_boost, shingle_token_filter_boost, query_string_query]
-    end
-
-    def all_searchable_text_query
       # Return the highest weight obtained by searching for the text when
       # analyzed in different ways (with a small bonus if it matches in
       # multiple of these ways).
       queries = []
-
-      queries << query_string_query
-      queries << match_query("all_searchable_text.id_codes", search_term, minimum_should_match: "1")
+      queries << minimum_should_match("_all")
+      queries << minimum_should_match_default_analyzer("all_searchable_text.id_codes", search_term, minimum_should_match: "1")
 
       dis_max_query(queries, tie_breaker: 0.1)
     end
 
-    def query_string_query
+    # FIXME: why is this wrapped in an array?
+    def quoted_phrase_query
+      # Return the highest weight found by looking for a phrase match in
+      # individual fields
+      [
+        dis_max_query([
+          minimum_should_match_default_analyzer("title.no_stop", search_params.query, type: :phrase, boost: PHRASE_MATCH_TITLE_BOOST),
+          minimum_should_match_default_analyzer("acronym.no_stop", search_params.query, type: :phrase, boost: PHRASE_MATCH_ACRONYM_BOOST),
+          minimum_should_match_default_analyzer("description.no_stop", search_params.query, type: :phrase, boost: PHRASE_MATCH_DESCRIPTION_BOOST),
+          minimum_should_match_default_analyzer("indexable_content.no_stop", search_params.query, type: :phrase, boost: PHRASE_MATCH_INDEXABLE_CONTENT_BOOST)
+        ])
+      ]
+    end
+
+    def minimum_should_match(field_name)
       {
         match: {
-          _all: {
+          field_name => {
             query: escape(search_term),
             analyzer: query_analyzer,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
@@ -98,48 +82,40 @@ module QueryComponents
       }
     end
 
-    def exact_field_boosts
-      MATCH_FIELDS.map do |field_name, _|
-        {
-          match_phrase: {
-            field_name => {
-              query: escape(search_term),
-              analyzer: query_analyzer,
-            }
+    def match_phrase(field_name)
+      {
+        match_phrase: {
+          field_name => {
+            query: escape(search_term),
+            analyzer: query_analyzer,
           }
         }
-      end
-    end
-
-    def field_boosts_phrase
-      # Return the highest weight found by looking for a phrase match in
-      # individual fields
-      MATCH_FIELDS.map { |field_name, boost|
-        match_query("#{field_name}.no_stop", search_term, type: :phrase, boost: boost)
       }
     end
 
-    def exact_match_boost
+    def match_all_terms(fields)
       {
         multi_match: {
           query: escape(search_term),
           operator: "and",
-          fields: MATCH_FIELDS.keys,
+          fields: fields,
           analyzer: query_analyzer
         }
       }
     end
 
-    def shingle_token_filter_boost
+    def match_bigrams(fields)
       {
         multi_match: {
           query: escape(search_term),
           operator: "or",
-          fields: MATCH_FIELDS.keys,
+          fields: fields,
           analyzer: "shingled_query_analyzer"
         }
       }
     end
+
+  private
 
     def query_analyzer
       if search_params.disable_synonyms?
@@ -149,7 +125,12 @@ module QueryComponents
       end
     end
 
-    def match_query(field_name, query, type: :boolean, boost: 1.0, minimum_should_match: MINIMUM_SHOULD_MATCH, operator: :or)
+    # FIXME: this method is basically the same as #minimum_should_match, but
+    # doesn't override the analyzer.
+    # Boost is only used for quoted phrase queries.
+    # Minimum should match is only used for the optional id code query
+    # Operator doesn't seem to be used.
+    def minimum_should_match_default_analyzer(field_name, query, type: :boolean, boost: 1.0, minimum_should_match: MINIMUM_SHOULD_MATCH, operator: :or)
       {
         match: {
           field_name => {
@@ -161,22 +142,6 @@ module QueryComponents
           }
         }
       }
-    end
-
-    def dis_max_query(queries, tie_breaker: 0.0, boost: 1.0)
-      # Calculates a score by running all the queries, and taking the maximum.
-      # Adds in the scores for the other queries multiplied by `tie_breaker`.
-      if queries.size == 1
-        queries.first
-      else
-        {
-          dis_max: {
-            queries: queries,
-            tie_breaker: tie_breaker,
-            boost: boost,
-          }
-        }
-      end
     end
   end
 end
