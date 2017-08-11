@@ -1,3 +1,5 @@
+require 'rummager'
+
 namespace :delete do
   CONTENT_SEARCH_INDICES = %w(mainstream detailed government).freeze
 
@@ -8,8 +10,6 @@ namespace :delete do
   TYPE_TO_DELETE=edition LINKS=/path/one,/path/two rake delete:duplicates
   "
   task :duplicates do
-    require 'duplicate_deleter'
-
     type_to_delete = ENV.fetch("TYPE_TO_DELETE")
     content_ids = ENV.fetch('CONTENT_IDS', '').split(',').map(&:strip).compact
     links = ENV.fetch('LINKS', '').split(',').map(&:strip).compact
@@ -25,9 +25,6 @@ namespace :delete do
   TYPE_TO_DELETE=edition rake delete:all_duplicates
   "
   task :all_duplicates do
-    require 'duplicate_deleter'
-    require 'duplicate_links_finder'
-
     type_to_delete = ENV.fetch("TYPE_TO_DELETE")
 
     elasticsearch_config = SearchConfig.new.elasticsearch
@@ -47,9 +44,6 @@ namespace :delete do
   rake 'delete:documents_from_file[/path/to/file, mainstream]'
   "
   task :documents_from_file, [:file_path, :index_name] do |_, args|
-    require "csv"
-    require "indexer/workers/delete_worker"
-
     search_config = SearchConfig.new
     index = search_config.search_server.index(args[:index_name])
 

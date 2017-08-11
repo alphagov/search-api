@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class StatusTest < IntegrationTest
   def test_shows_queue_job_count

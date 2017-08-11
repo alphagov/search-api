@@ -1,7 +1,4 @@
-require "test_helper"
-require "govuk_message_queue_consumer"
-require "rake"
-require "indexer/message_processor"
+require 'test_helper'
 load "tasks/message_queue.rake"
 
 class MessageProcessorRakeTest < Minitest::Test

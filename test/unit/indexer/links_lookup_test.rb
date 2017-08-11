@@ -1,6 +1,4 @@
-require "test_helper"
-require "indexer/links_lookup"
-require "gds_api/test_helpers/publishing_api_v2"
+require 'test_helper'
 
 class LinksLookupTest < Minitest::Test
   include GdsApi::TestHelpers::PublishingApiV2

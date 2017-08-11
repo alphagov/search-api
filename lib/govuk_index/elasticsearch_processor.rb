@@ -1,6 +1,3 @@
-require 'services'
-require 'search_config'
-
 module GovukIndex
   class ElasticsearchProcessor
     TIMEOUT_SECONDS = 5.0

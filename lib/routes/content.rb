@@ -1,5 +1,3 @@
-require "index"
-
 class Rummager < Sinatra::Application
   get '/content' do
     raw_result = find_result_by_link(params["link"])

@@ -1,6 +1,3 @@
-require "search/aggregate_option"
-require_relative "field_presenter"
-
 module Search
   class AggregateResultPresenter
     attr_reader :aggregates, :aggregate_examples, :search_params, :registries

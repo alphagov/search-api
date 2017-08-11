@@ -1,5 +1,4 @@
-require "test_helper"
-require "schema/index_schema"
+require 'test_helper'
 
 class IndexSchemaTest < ShouldaUnitTestCase
   def assert_raises_message(message)

@@ -1,5 +1,3 @@
-require_relative "search_config"
-
 class DuplicateDeleter
   attr_reader :type_to_delete, :io
 

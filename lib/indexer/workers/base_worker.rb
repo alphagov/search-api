@@ -1,6 +1,3 @@
-require "sidekiq"
-require "airbrake"
-
 module Indexer
   class BaseWorker
     include Sidekiq::Worker

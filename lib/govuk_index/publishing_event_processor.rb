@@ -1,5 +1,3 @@
-require 'govuk_index/publishing_event_worker'
-
 module GovukIndex
   class PublishingEventProcessor
     def process(message)

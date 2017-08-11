@@ -1,6 +1,3 @@
-require "csv"
-require "health_check/search_check"
-
 module HealthCheck
   class CheckFileParser
     def initialize(file)

@@ -1,5 +1,3 @@
-require "set"
-
 module Search
   class BestBetsChecker
     def initialize(query, metasearch_index)

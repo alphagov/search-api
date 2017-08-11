@@ -2,7 +2,7 @@
 :concurrency: 5
 production:
   :concurrency:  16
-:require: ./app.rb
+:require: ./lib/rummager.rb
 :logfile: ./log/sidekiq.log
 :queues:
   - default

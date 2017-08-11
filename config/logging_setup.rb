@@ -1,5 +1,3 @@
-require "logging"
-
 Logging.logger.root.add_appenders Logging.appenders.stdout
 
 if ENV['DEBUG'] || $DEBUG

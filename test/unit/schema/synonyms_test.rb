@@ -1,6 +1,4 @@
-require "test_helper"
-require "schema/synonyms"
-require "tempfile"
+require 'test_helper'
 
 class SynonymsTest < ShouldaUnitTestCase
   should "map a single word synonym to the same synonym group at index and search time" do

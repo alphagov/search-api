@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require "logging"
 require "slop"
 
 PROJECT_ROOT = File.dirname(__FILE__) + "/../"
@@ -10,8 +9,7 @@ $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 
 INDICES = %w{mainstream detailed government}.freeze
 
-require "search_config"
-require "indexer/bulk_loader"
+require "rummager"
 
 Slop.parse(help: true) do
   search_config = SearchConfig.new

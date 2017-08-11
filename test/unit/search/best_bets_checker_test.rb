@@ -1,6 +1,4 @@
-require "test_helper"
-require "json"
-require "search/best_bets_checker"
+require 'test_helper'
 
 class BestBetsCheckerTest < ShouldaUnitTestCase
   def best_bets_query(query)

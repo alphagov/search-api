@@ -1,6 +1,3 @@
-require_relative 'matcher_set'
-require_relative 'registry'
-
 module Search
   SuggestionBlacklist = Struct.new(:registries) do
     STRINGS_WITH_DIGITS = /\d/

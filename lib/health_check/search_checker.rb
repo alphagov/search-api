@@ -1,8 +1,3 @@
-require "uri"
-require "health_check/check_file_parser"
-require "health_check/calculator"
-require "health_check/search_check_report"
-
 module HealthCheck
   class SearchChecker
     attr_reader :search_client

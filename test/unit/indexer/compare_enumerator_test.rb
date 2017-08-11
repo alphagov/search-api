@@ -1,6 +1,4 @@
-require "test_helper"
-require 'indexer/compare_enumerator'
-require "support/integration_test"
+require 'test_helper'
 
 class CompareEnumeratorTest < Minitest::Test
   def test_when_matching_keys_exist

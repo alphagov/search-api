@@ -1,6 +1,4 @@
-require 'govuk_schemas'
 require 'integration_test_helper'
-require 'govuk_index/publishing_event_processor'
 
 class GovukIndex::UnpublishingMessageProcessing < IntegrationTest
   def test_unpublish_message_will_remove_record_from_elasticsearch

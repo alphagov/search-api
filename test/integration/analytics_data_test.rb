@@ -1,6 +1,4 @@
-require "analytics_data"
-require "integration_test_helper"
-require "json"
+require 'integration_test_helper'
 
 class AnalyticsDataTest < IntegrationTest
   def setup

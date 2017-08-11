@@ -1,5 +1,3 @@
-require "active_support/core_ext/array"
-
 module LegacyClient
   # Elasticsearch returns all fields as arrays by default. We convert those
   # arrays into a single value here, unless we've explicitly set the field to

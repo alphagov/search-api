@@ -1,7 +1,3 @@
-require 'indexer/workers/base_worker'
-require 'govuk_index/elasticsearch_presenter'
-require 'govuk_index/elasticsearch_processor'
-
 module GovukIndex
   class ValidationError < StandardError; end
   class ElasticsearchError < StandardError; end

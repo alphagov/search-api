@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class ContentEndpointsTest < IntegrationTest
   def test_content_document_not_found

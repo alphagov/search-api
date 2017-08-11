@@ -1,5 +1,4 @@
-require_relative "../../test_helper"
-require "health_check/basic_auth_credentials"
+require 'test_helper'
 
 module HealthCheck
   class BasicAuthCredentialsTest < ShouldaUnitTestCase

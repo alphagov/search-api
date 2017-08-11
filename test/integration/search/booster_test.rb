@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class BoosterTest < IntegrationTest
   def test_service_manual_formats_are_weighted_down

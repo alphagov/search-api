@@ -1,5 +1,3 @@
-require "search/best_bets_checker"
-
 module QueryComponents
   class BestBets < BaseComponent
     def initialize(metasearch_index:, search_params: Search::QueryParameters.new)

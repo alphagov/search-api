@@ -1,8 +1,4 @@
-require "test_helper"
-require "app"
-require "search_server"
-require "index_group"
-require "search_config"
+require 'test_helper'
 
 class IndexGroupTest < Minitest::Test
   ELASTICSEARCH_OK = {

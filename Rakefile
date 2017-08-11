@@ -1,5 +1,4 @@
 require "rake/testtask"
-require "logging"
 
 PROJECT_ROOT = File.dirname(__FILE__)
 LIBRARY_PATH = File.join(PROJECT_ROOT, "lib")
@@ -8,7 +7,8 @@ LIBRARY_PATH = File.join(PROJECT_ROOT, "lib")
   $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
 end
 
-require "config"
+require 'rummager'
+require "rummager/config"
 
 Dir[File.join(PROJECT_ROOT, 'lib/tasks/**/*.rake')].each { |file| load file }
 
@@ -36,7 +36,6 @@ namespace "test" do
 
   desc 'Clean all test indexes'
   task :clean_test_indexes do
-    require 'app'
     require 'test/support/test_index_helpers'
 
     TestIndexHelpers.clean_all

@@ -1,7 +1,4 @@
-require "test_helper"
-require "document"
-require "search/registry"
-require "schema/field_definitions"
+require 'test_helper'
 
 class SpecialistSectorRegistryTest < Minitest::Test
   def setup

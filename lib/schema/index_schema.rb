@@ -1,5 +1,3 @@
-require "json"
-
 class IndexSchema
   attr_reader :name, :elasticsearch_types
 

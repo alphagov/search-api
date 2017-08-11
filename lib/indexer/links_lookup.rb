@@ -1,5 +1,3 @@
-require 'services'
-
 # LinksLookup finds the tags (links) from the publishing-api and merges them into
 # the document. If there aren't any links, the payload will be returned unchanged.
 module Indexer

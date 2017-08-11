@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class ElasticsearchIndexingTest < IntegrationTest
   include GdsApi::TestHelpers::PublishingApiV2

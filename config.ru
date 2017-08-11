@@ -8,7 +8,8 @@ Bundler.require(:default, ENV['RACK_ENV'])
 
 require "logger"
 
-require "app"
+$LOAD_PATH << './lib'
+require "rummager/app"
 
 in_development = ENV['RACK_ENV'] == 'development'
 log_path = ENV.fetch("LOG_PATH", in_development ? nil : "log/production.log")

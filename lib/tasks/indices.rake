@@ -1,3 +1,5 @@
+require 'rummager'
+
 namespace :rummager do
   desc "Lists current Rummager indices, pass [all] to show inactive indices"
   task :list_indices, :all do |_, args|
@@ -40,8 +42,6 @@ You should run this task if the index schema has changed.
 
 "
   task :migrate_index do
-    require 'indexer/bulk_loader'
-
     index_names.each do |index_name|
       Indexer::BulkLoader.new(search_config, index_name).load_from_current_index
     end
@@ -79,9 +79,6 @@ You should run this task if the index schema has changed.
   task :migrate_from_unaliased_index do
     # WARNING: this is potentially dangerous, and will leave the search
     # unavailable for a very short (sub-second) period of time
-
-    require 'indexer/bulk_loader'
-
     index_names.each do |index_name|
       Indexer::BulkLoader.new(search_config, index_name).load_from_current_unaliased_index
     end
@@ -103,8 +100,6 @@ You should run this task if the index schema has changed.
   desc "Check whether a restored index has recovered"
   task :check_recovery, [:index_name] do |_, args|
     raise "An 'index_name' must be supplied" unless args.index_name
-
-    require 'index'
 
     puts SearchIndices::Index.index_recovered?(
       base_uri: elasticsearch_uri,
