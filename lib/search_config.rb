@@ -27,6 +27,7 @@ class SearchConfig
       elasticsearch["base_uri"],
       schema_config,
       index_names,
+      govuk_index_name,
       content_index_names,
       self,
     )
@@ -62,7 +63,7 @@ class SearchConfig
   end
 
   def content_index
-    search_server.index_for_search(content_index_names)
+    search_server.index_for_search(content_index_names + [govuk_index_name])
   end
 
 private
