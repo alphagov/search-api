@@ -11,6 +11,7 @@ LIBRARY_PATH = PROJECT_ROOT + "lib/"
 end
 
 DEFAULT_JSON_URL = "https://www.gov.uk/api/search.json".freeze
+require 'logging'
 require 'health_check/logging_config'
 require "rummager"
 
