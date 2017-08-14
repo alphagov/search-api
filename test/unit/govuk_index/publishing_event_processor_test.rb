@@ -5,7 +5,7 @@ class PublishingEventProcessorTest < Minitest::Test
     message = OpenStruct.new(
       payload: {
         "base_path" => "/cheese",
-        "document_type" => "cheddar",
+        "document_type" => "help_page",
         "title" => "We love cheese"
       },
       delivery_info: {

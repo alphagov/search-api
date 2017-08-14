@@ -39,7 +39,7 @@ class GovukIndex::UnpublishingMessageProcessing < IntegrationTest
       }
     )
     base_path = message.payload['base_path']
-    type = message.payload['document_type']
+    type = 'edition'
 
     commit_document('govuk_test', { 'link' => base_path }, id: base_path, type: type)
 

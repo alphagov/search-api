@@ -2,6 +2,7 @@ module GovukIndex
   class ElasticsearchError < StandardError; end
   class MultipleMessagesInElasticsearchResponse < StandardError; end
   class NotFoundError < StandardError; end
+  class UnknownDocumentTypeError < StandardError; end
   class ValidationError < StandardError; end
 
   class PublishingEventWorker < Indexer::BaseWorker
@@ -25,6 +26,8 @@ module GovukIndex
     # the process to continue
     rescue NotFoundError
       Services.statsd_client.increment('govuk_index.not-found-error')
+    rescue UnknownDocumentTypeError
+      Services.statsd_client.increment('govuk_index.unknown-document-type')
     # Rescuing exception to guarantee we capture all Sidekiq retries
     rescue Exception # rubocop:disable Lint/RescueException
       Services.statsd_client.increment('govuk_index.sidekiq-retry')

@@ -19,8 +19,8 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
 
   def test_should_save_new_document_to_elasticsearch
     random_example = GovukSchemas::RandomExample
-      .for_schema(notification_schema: "specialist_document")
-      .merge_and_validate(payload_version: 123)
+      .for_schema(notification_schema: "help_page")
+      .merge_and_validate({ document_type: "help_page", payload_version: 123 })
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -28,7 +28,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
 
     assert_equal random_example["base_path"], document["_source"]["link"]
     assert_equal random_example["base_path"], document["_id"]
-    assert_equal random_example["document_type"], document["_type"]
+    assert_equal "edition", document["_type"]
 
     assert_equal 0, @queue.message_count
     assert_equal 1, @channel.acknowledged_state[:acked].count
@@ -37,7 +37,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
   def test_should_discard_message_when_invalid
     invalid_payload = {
       "title" => "Pitts S-2B, G-SKYD, 21 June 1996",
-      "document_type" => "aaib_report"
+      "document_type" => "help_page"
     }
 
     Airbrake.expects(:notify_or_ignore)

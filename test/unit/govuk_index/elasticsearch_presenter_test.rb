@@ -23,6 +23,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       link: "/some/path",
       title: "A plane has had an issue",
       is_withdrawn: false,
+      content_store_document_type: "aaib_report"
     }
 
     assert_equal expected_identifier, presenter.identifier
@@ -75,6 +76,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       link: "/some/path",
       title: "A plane has had an issue",
       is_withdrawn: true,
+      content_store_document_type: "aaib_report"
     }
 
     assert_equal expected_identifier, presenter.identifier
