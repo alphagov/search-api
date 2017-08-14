@@ -53,6 +53,8 @@ require 'indexer/workers/amend_worker'
 require 'indexer/workers/bulk_index_worker'
 require 'indexer/workers/delete_worker'
 
+require 'govuk_index/client'
+require "govuk_index/document_type_inferer"
 require 'govuk_index/elasticsearch_presenter'
 require 'govuk_index/elasticsearch_processor'
 require 'govuk_index/publishing_event_processor'
