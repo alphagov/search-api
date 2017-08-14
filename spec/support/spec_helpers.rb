@@ -1,13 +1,13 @@
 require "gds_api/test_helpers/publishing_api_v2"
 
-module TestHelpers
-  class RandomExampleError < StandardError; end
-
+module SpecHelpers
   include GdsApi::TestHelpers::PublishingApiV2
   EXAMPLE_GENERATOR_RETRIES = 5
 
-  def teardown
-    Timecop.return
+  def self.included(base)
+    base.after do
+      Timecop.return
+    end
   end
 
   def search_query_params(options = {})

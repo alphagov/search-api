@@ -1,8 +1,6 @@
-require 'test/support/test_index_helpers'
+require 'spec/support/index_helpers'
 
-class IntegrationTest < Minitest::Test
-  include Rack::Test::Methods
-
+module IntegrationSpecHelper
   SAMPLE_DOCUMENT_ATTRIBUTES = {
     "title" => "TITLE1",
     "description" => "DESCRIPTION",
@@ -11,16 +9,33 @@ class IntegrationTest < Minitest::Test
     "_type" => "edition",
   }.freeze
 
-  def initialize(args)
-    super(args)
+  def setup
+    TestIndexHelpers.stub_elasticsearch_settings
   end
 
-  def setup
-    # search_config is a global object that has state, so make sure it's reset
-    # between tests.
-    SearchConfig.instance = SearchConfig.new
+  def self.included(base)
+    base.before do
+      setup
+    end
 
-    TestIndexHelpers.stub_elasticsearch_settings
+    base.after do
+      teardown
+    end
+
+    @before_suite_setup ||= setup_before_suite
+  end
+
+  def self.setup_before_suite
+    # we want this process to run before the suite when integration tests are run. :)
+    RSpec.configure do |config|
+      config.before(:suite) do
+        IndexHelpers.setup_test_indexes
+      end
+
+      config.after(:suite) do
+        IndexHelpers.clean_all
+      end
+    end
   end
 
   def teardown
@@ -78,9 +93,9 @@ class IntegrationTest < Minitest::Test
   end
 
   def commit_document(index_name, attributes, id: attributes["link"], type: "edition")
-    id = insert_document(index_name, attributes, id: id, type: type)
+    return_id = insert_document(index_name, attributes, id: id, type: type)
     commit_index(index_name)
-    id
+    return_id
   end
 
   def commit_index(index_name = "mainstream_test")
@@ -108,8 +123,11 @@ class IntegrationTest < Minitest::Test
 
     retrieved_source = retrieved["_source"]
     document.each do |key, value|
-      assert_equal value, retrieved_source[key],
+      assert_equal(
+        value,
+        retrieved_source[key],
         "Field #{key} should be '#{value}' but was '#{retrieved_source[key]}'"
+      )
     end
   end
 

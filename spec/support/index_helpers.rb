@@ -1,4 +1,4 @@
-class TestIndexHelpers
+class IndexHelpers
   AUXILIARY_INDEX_NAMES = ["page-traffic_test", "metasearch_test"].freeze
   INDEX_NAMES = %w(mainstream_test government_test).freeze
   GOVUK_INDEX_NAME = "govuk_test".freeze
@@ -22,7 +22,6 @@ class TestIndexHelpers
   end
 
   def self.clean_all
-    puts 'Cleaning up test indexes...'
     ALL_TEST_INDEXES.each do |index_name|
       clean_index_group(index_name)
     end

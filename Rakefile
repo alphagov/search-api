@@ -1,5 +1,3 @@
-require "rake/testtask"
-
 PROJECT_ROOT = File.dirname(__FILE__)
 LIBRARY_PATH = File.join(PROJECT_ROOT, "lib")
 
@@ -12,42 +10,13 @@ require "rummager/config"
 
 Dir[File.join(PROJECT_ROOT, 'lib/tasks/**/*.rake')].each { |file| load file }
 
-desc "Run all the tests"
-task "test" => [
-  "test:units",
-  "test:integration",
-  'test:clean_test_indexes'
-]
-
-namespace "test" do
-  desc "Run the unit tests"
-  Rake::TestTask.new("units") do |t|
-    t.libs << "test"
-    t.test_files = FileList["test/unit/**/*_test.rb"]
-    t.verbose = true
-  end
-
-  desc "Run the integration tests"
-  Rake::TestTask.new("integration") do |t|
-    t.libs << "test"
-    t.test_files = FileList["test/integration/**/*_test.rb"]
-    t.verbose = true
-  end
-
-  desc 'Clean all test indexes'
-  task :clean_test_indexes do
-    # Silence log output
-    Logging.logger.root.appenders = nil
-
-    require 'test/support/test_index_helpers'
-
-    TestIndexHelpers.clean_all
-  end
+begin
+  require 'rspec/core/rake_task'
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
 end
 
-require "ci/reporter/rake/minitest" if ENV["RACK_ENV"] == "test"
-
-task default: :test
+task default: :spec
 
 def logger
   Logging.logger.root
