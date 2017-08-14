@@ -1,6 +1,9 @@
 require 'rummager'
 
 namespace :rummager do
+  # this is needed to support the migration to ES 2.4
+  ELASTICSEARCH_VERSION = '1.7'.freeze
+
   desc "Lists current Rummager indices, pass [all] to show inactive indices"
   task :list_indices, :all do |_, args|
     show_all = args[:all] || false
@@ -90,7 +93,7 @@ You should run this task if the index schema has changed.
     # if we didn't check this we could potentially attempt to delete one of the new indices as we are importing
     # data into it.
     version = ENV.fetch('RUMMAGER_VERSION', '1.7')
-    if version == Rummager::ELASTICSEARCH_VERSION
+    if version == ELASTICSEARCH_VERSION
       index_names.each do |index_name|
         search_server.index_group(index_name).clean
       end
