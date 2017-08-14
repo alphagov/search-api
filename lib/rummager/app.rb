@@ -5,9 +5,6 @@ require 'rummager'
 require 'routes/content'
 
 class Rummager < Sinatra::Application
-  # this is needed to support the migration to ES 2.4
-  ELASTICSEARCH_VERSION = '1.7'.freeze
-
   # - Stop double slashes in URLs (even escaped ones) being flattened to single ones
   #
   # - Explicitly allow requests that are referred from other domains so we can link
