@@ -1,7 +1,4 @@
-require "test_helper"
-require 'support/test_index_helpers'
-require 'govuk_index/elasticsearch_presenter'
-require 'govuk_index/publishing_event_worker'
+require 'test_helper'
 
 class PublishingEventWorkerTest < Minitest::Test
   def test_save_valid_message
@@ -24,9 +21,10 @@ class PublishingEventWorkerTest < Minitest::Test
   def test_delete_record_when_unpublishing_message_received
     payload = {
       "base_path" => "/cheese",
-      "document_type" => "cheddar",
+      "document_type" => "redirect",
       "title" => "We love cheese"
     }
+    stub_document_type_inferer
 
     actions = stub('actions')
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
@@ -63,9 +61,10 @@ class PublishingEventWorkerTest < Minitest::Test
   def test_raise_error_when_elasticsearch_update_error
     payload = {
       "base_path" => "/cheese",
-      "document_type" => "cheddar",
+      "document_type" => "gone",
       "title" => "We love cheese"
     }
+    stub_document_type_inferer
 
     actions = stub('actions')
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
@@ -84,9 +83,10 @@ class PublishingEventWorkerTest < Minitest::Test
   def test_does_not_raise_error_when_document_not_found_while_attempting_to_delete
     payload = {
       "base_path" => "/cheese",
-      "document_type" => "cheddar",
+      "document_type" => "substitute",
       "title" => "We love cheese"
     }
+    stub_document_type_inferer
 
     actions = stub('actions')
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
@@ -101,9 +101,10 @@ class PublishingEventWorkerTest < Minitest::Test
   def test_raise_error_if_elasticsearch_returns_multiple_responses
     payload = {
       "base_path" => "/cheese",
-      "document_type" => "cheddar",
+      "document_type" => "vanish",
       "title" => "We love cheese"
     }
+    stub_document_type_inferer
 
     actions = stub('actions')
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
@@ -131,5 +132,10 @@ class PublishingEventWorkerTest < Minitest::Test
     )
 
     GovukIndex::PublishingEventWorker.new.perform('routing.key', invalid_payload)
+  end
+
+  def stub_document_type_inferer
+    GovukIndex::DocumentTypeInferer.any_instance.stubs(:unpublishing_type).returns(true)
+    GovukIndex::DocumentTypeInferer.any_instance.stubs(:type).returns('real_document_type')
   end
 end

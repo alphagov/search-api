@@ -1,5 +1,3 @@
-require_relative "base_worker"
-
 module Indexer
   class AmendWorker < BaseWorker
     notify_of_failures

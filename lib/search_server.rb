@@ -1,7 +1,3 @@
-require "uri"
-require "index_group"
-require "legacy_client/index_for_search"
-
 module SearchIndices
   class NoSuchIndex < ArgumentError; end
 

@@ -1,5 +1,3 @@
-require_relative "base_worker"
-
 module Indexer
   class BulkIndexWorker < BaseWorker
     notify_of_failures

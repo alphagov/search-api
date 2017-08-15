@@ -1,5 +1,3 @@
-require "json"
-
 FieldType = Struct.new("FieldType", :name, :filter_type, :description, :es_config, :multivalued, :children)
 
 class FieldTypes

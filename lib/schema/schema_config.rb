@@ -1,9 +1,3 @@
-require "json"
-require "yaml"
-require_relative "elasticsearch_type"
-require_relative "field_definitions"
-require_relative "index_schema"
-require_relative "synonyms"
 
 class SchemaConfig
   attr_reader :field_definitions

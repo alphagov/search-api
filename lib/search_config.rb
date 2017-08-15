@@ -1,14 +1,3 @@
-require "yaml"
-require "search_server"
-require "schema/schema_config"
-require "parameter_parser/search_parameter_parser"
-require "schema/combined_index_schema"
-require "search/query_parameters"
-require "search/registries"
-require "search/query"
-require "plek"
-require "erb"
-
 class SearchConfig
   %w[
     registry_index

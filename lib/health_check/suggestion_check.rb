@@ -1,5 +1,3 @@
-require "health_check/suggestion_check_result"
-
 module HealthCheck
   class SuggestionCheck
     attr_reader :search_term, :expected_result, :suggested_query, :tags

@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class BestBetsTest < IntegrationTest
   def test_exact_best_bet

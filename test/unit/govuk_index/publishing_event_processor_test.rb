@@ -1,6 +1,4 @@
-require "test_helper"
-require 'govuk_index/publishing_event_processor'
-require 'govuk_index/publishing_event_worker'
+require 'test_helper'
 
 class PublishingEventProcessorTest < Minitest::Test
   def test_should_process_and_acknowledge_a_message

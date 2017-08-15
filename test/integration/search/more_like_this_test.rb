@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class MoreLikeThisTest < IntegrationTest
   def test_returns_success

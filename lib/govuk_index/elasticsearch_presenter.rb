@@ -1,13 +1,14 @@
 module GovukIndex
   class ElasticsearchPresenter
-    def initialize(payload)
+    def initialize(payload, type)
       @payload = payload
+      @type = type
     end
 
     def identifier
       {
-        _type: payload["document_type"],
-        _id: payload["base_path"],
+        _type: type,
+        _id: id,
         version: payload["payload_version"],
         version_type: "external",
       }
@@ -21,17 +22,21 @@ module GovukIndex
       }
     end
 
+    def id
+      payload["base_path"]
+    end
+
     def valid!
       return if payload["base_path"]
       raise(ValidationError, "base_path missing from payload")
     end
 
+  private
+
+    attr_reader :payload, :type
+
     def withdrawn?
       !payload["withdrawn_notice"].nil?
     end
-
-  private
-
-    attr_reader :payload
   end
 end

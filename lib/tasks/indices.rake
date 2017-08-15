@@ -1,4 +1,9 @@
+require 'rummager'
+
 namespace :rummager do
+  # this is needed to support the migration to ES 2.4
+  ELASTICSEARCH_VERSION = '1.7'.freeze
+
   desc "Lists current Rummager indices, pass [all] to show inactive indices"
   task :list_indices, :all do |_, args|
     show_all = args[:all] || false
@@ -40,8 +45,6 @@ You should run this task if the index schema has changed.
 
 "
   task :migrate_index do
-    require 'indexer/bulk_loader'
-
     index_names.each do |index_name|
       Indexer::BulkLoader.new(search_config, index_name).load_from_current_index
     end
@@ -79,9 +82,6 @@ You should run this task if the index schema has changed.
   task :migrate_from_unaliased_index do
     # WARNING: this is potentially dangerous, and will leave the search
     # unavailable for a very short (sub-second) period of time
-
-    require 'indexer/bulk_loader'
-
     index_names.each do |index_name|
       Indexer::BulkLoader.new(search_config, index_name).load_from_current_unaliased_index
     end
@@ -93,7 +93,7 @@ You should run this task if the index schema has changed.
     # if we didn't check this we could potentially attempt to delete one of the new indices as we are importing
     # data into it.
     version = ENV.fetch('RUMMAGER_VERSION', '1.7')
-    if version == Rummager::ELASTICSEARCH_VERSION
+    if version == ELASTICSEARCH_VERSION
       index_names.each do |index_name|
         search_server.index_group(index_name).clean
       end
@@ -103,8 +103,6 @@ You should run this task if the index schema has changed.
   desc "Check whether a restored index has recovered"
   task :check_recovery, [:index_name] do |_, args|
     raise "An 'index_name' must be supplied" unless args.index_name
-
-    require 'index'
 
     puts SearchIndices::Index.index_recovered?(
       base_uri: elasticsearch_uri,

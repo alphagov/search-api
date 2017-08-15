@@ -1,5 +1,4 @@
-require "integration_test_helper"
-require "app"
+require 'integration_test_helper'
 
 class ElasticsearchAdvancedSearchTest < IntegrationTest
   def setup

@@ -1,5 +1,4 @@
-require "test_helper"
-require "sitemap/sitemap"
+require 'test_helper'
 
 class SitemapGeneratorTest < Minitest::Test
   def test_should_generate_sitemap

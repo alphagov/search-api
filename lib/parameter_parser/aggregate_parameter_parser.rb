@@ -1,5 +1,3 @@
-require_relative "base_parameter_parser"
-
 class AggregateParameterParser < BaseParameterParser
   attr_reader :parsed_params, :errors, :allowed_return_fields
 

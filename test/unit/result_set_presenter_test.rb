@@ -1,8 +1,4 @@
-require "test_helper"
-require "search/query"
-require "document"
-require "parameter_parser/search_parameter_parser"
-require "parameter_parser/aggregate_parameter_parser"
+require 'test_helper'
 
 class ResultSetPresenterTest < ShouldaUnitTestCase
   def sample_docs

@@ -1,6 +1,3 @@
-require 'time'
-require 'indexer/comparer'
-
 module Indexer
   class BulkLoader
     def initialize(search_config, index_name, options = {})

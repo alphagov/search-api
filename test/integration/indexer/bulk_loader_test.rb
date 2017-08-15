@@ -1,6 +1,4 @@
-require "integration_test_helper"
-require "indexer/bulk_loader"
-require "cgi"
+require 'integration_test_helper'
 
 class BulkLoaderTest < IntegrationTest
   def setup

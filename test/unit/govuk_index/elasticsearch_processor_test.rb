@@ -1,6 +1,4 @@
-require "test_helper"
-require 'govuk_index/elasticsearch_processor'
-require 'support/test_index_helpers'
+require 'test_helper'
 
 class ElasticsearchProcessorTest < Minitest::Test
   def test_should_save_valid_document

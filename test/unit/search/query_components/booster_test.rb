@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/query_builder"
+require 'test_helper'
 
 class BoosterTest < ShouldaUnitTestCase
   should "apply a multiplying factor" do

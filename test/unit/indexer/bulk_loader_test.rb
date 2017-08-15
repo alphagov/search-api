@@ -1,7 +1,4 @@
-require "test_helper"
-require "indexer/bulk_loader"
-require "stringio"
-require "logger"
+require 'test_helper'
 
 class BulkLoaderTest < Minitest::Test
   def test_can_break_iostream_into_batches_of_lines_of_specified_byte_size

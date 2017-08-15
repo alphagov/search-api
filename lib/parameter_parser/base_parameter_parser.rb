@@ -1,6 +1,3 @@
-require "ostruct"
-require "unf"
-
 class BaseParameterParser
   class ParseError < StandardError
     attr_reader :errors

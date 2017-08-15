@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class SettingsTest < IntegrationTest
   def test_default

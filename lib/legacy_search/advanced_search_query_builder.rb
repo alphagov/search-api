@@ -1,5 +1,3 @@
-require "search/escaping"
-
 module LegacySearch
   class AdvancedSearchQueryBuilder
     include Search::Escaping

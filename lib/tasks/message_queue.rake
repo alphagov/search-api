@@ -5,9 +5,7 @@
 # RABBITMQ_PASSWORD
 # Load Airbrake to make govuk_message_queue_consumer send error notifications.
 require 'airbrake'
-require 'govuk_message_queue_consumer'
-require 'indexer/message_processor'
-require 'govuk_index/publishing_event_processor.rb'
+require 'rummager'
 
 namespace :message_queue do
   desc "Index documents that are published to the publishing-api"

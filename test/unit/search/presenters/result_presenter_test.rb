@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/presenters/result_presenter"
+require 'test_helper'
 
 class ResultPresenterTest < Minitest::Test
   def test_conversion_values_to_single_objects

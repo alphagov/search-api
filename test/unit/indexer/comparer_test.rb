@@ -1,5 +1,4 @@
-require "test_helper"
-require 'indexer/comparer'
+require 'test_helper'
 
 class ComparerTest < Minitest::Test
   def test_can_detect_when_a_record_is_added

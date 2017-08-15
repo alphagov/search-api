@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/query_builder"
+require 'test_helper'
 
 class TextQueryTest < ShouldaUnitTestCase
   context "search with debug disabling use of synonyms" do

@@ -1,8 +1,4 @@
-require "test_helper"
-require "index"
-require "search_config"
-require "webmock"
-require "sidekiq/testing"
+require 'test_helper'
 
 class ElasticsearchIndexTest < Minitest::Test
   include Fixtures::DefaultMappings

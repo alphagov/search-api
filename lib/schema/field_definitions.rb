@@ -1,6 +1,3 @@
-require "json"
-require "schema/field_types"
-
 FieldDefinition = Struct.new("FieldDefinition", :name, :type, :es_config, :description, :children, :expanded_search_result_fields)
 
 class FieldDefinition

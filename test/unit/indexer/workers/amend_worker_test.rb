@@ -1,7 +1,4 @@
-require "test_helper"
-require "indexer/workers/amend_worker"
-require "indexer/workers/base_worker"
-require "index"
+require 'test_helper'
 
 class AmendWorkerTest < Minitest::Test
   def test_amends_documents

@@ -1,7 +1,4 @@
-require "test_helper"
-require "index"
-require "search_config"
-require "webmock"
+require 'test_helper'
 
 class IndexerIndexAdvancedSearchTest < Minitest::Test
   include Fixtures::DefaultMappings

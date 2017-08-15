@@ -1,5 +1,3 @@
-require "legacy_search/advanced_search_query_builder"
-
 module LegacySearch
   class InvalidQuery < ArgumentError
   end

@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/presenters/highlighted_title"
+require 'test_helper'
 
 class HighlightedTitleTest < Minitest::Test
   def test_title_highlighted

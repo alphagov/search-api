@@ -1,7 +1,4 @@
-require "integration_test_helper"
-require "app"
-require "nokogiri"
-require "sitemap/sitemap"
+require 'integration_test_helper'
 
 class SitemapTest < IntegrationTest
   SAMPLE_DATA = [

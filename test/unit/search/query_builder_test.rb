@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/query_builder"
+require 'test_helper'
 
 class QueryBuilderTest < ShouldaUnitTestCase
   def setup
@@ -15,6 +14,17 @@ class QueryBuilderTest < ShouldaUnitTestCase
       assert_equal 34, result[:size]
       assert result[:fields].include?('a_field')
       assert result.key?(:query)
+    end
+  end
+
+  context "more like this" do
+    should "call the payload for a more like this query" do
+      builder = builder_with_params(similar_to: %{"/hello-world"})
+
+      builder.expects(:more_like_this_query_hash).once
+
+      # TODO: assert what the payload looks like
+      builder.payload
     end
   end
 

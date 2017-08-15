@@ -1,11 +1,8 @@
-require 'indexer/workers/base_worker'
-require 'govuk_index/elasticsearch_presenter'
-require 'govuk_index/elasticsearch_processor'
-
 module GovukIndex
-  class ValidationError < StandardError; end
   class ElasticsearchError < StandardError; end
   class MultipleMessagesInElasticsearchResponse < StandardError; end
+  class NotFoundError < StandardError; end
+  class ValidationError < StandardError; end
 
   class PublishingEventWorker < Indexer::BaseWorker
     notify_of_failures
@@ -23,6 +20,11 @@ module GovukIndex
           message_body: payload,
         }
       )
+    # Unpublishing messages for something that does not exist may have been
+    # processed out of order so we don't want to notify errbit but just allow
+    # the process to continue
+    rescue NotFoundError
+      Services.statsd_client.increment('govuk_index.not-found-error')
     # Rescuing exception to guarantee we capture all Sidekiq retries
     rescue Exception # rubocop:disable Lint/RescueException
       Services.statsd_client.increment('govuk_index.sidekiq-retry')
@@ -33,10 +35,12 @@ module GovukIndex
 
     def process_action(actions, routing_key, payload)
       Services.statsd_client.increment('govuk_index.sidekiq-consumed')
-      presenter = ElasticsearchPresenter.new(payload)
+
+      document_type_inferer = DocumentTypeInferer.new(payload)
+      presenter = ElasticsearchPresenter.new(payload, document_type_inferer.type)
       presenter.valid!
 
-      if routing_key =~ /\.unpublish$/ && !presenter.withdrawn?
+      if document_type_inferer.unpublishing_type?
         actions.delete(presenter)
       else
         actions.save(presenter)

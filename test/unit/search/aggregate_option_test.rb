@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/aggregate_option"
+require 'test_helper'
 
 class AggregateOptionTest < Minitest::Test
   def test_convert_to_hash

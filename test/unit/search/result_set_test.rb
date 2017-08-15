@@ -1,6 +1,4 @@
-require "test_helper"
-require "document"
-require "search/result_set"
+require 'test_helper'
 
 class ResultSetTest < ShouldaUnitTestCase
   context "empty result set" do

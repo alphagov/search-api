@@ -1,6 +1,4 @@
-require "test_helper"
-require "parameter_parser/search_parameter_parser"
-require "parameter_parser/aggregate_parameter_parser"
+require 'test_helper'
 
 class SearchParameterParserTest < ShouldaUnitTestCase
   def expected_params(params)

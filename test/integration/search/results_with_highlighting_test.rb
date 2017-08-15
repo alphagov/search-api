@@ -1,4 +1,4 @@
-require "integration_test_helper"
+require 'integration_test_helper'
 
 class ResultsWithHighlightingTest < IntegrationTest
   def test_returns_highlighted_title

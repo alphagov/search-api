@@ -1,7 +1,3 @@
-require "csv"
-require "health_check/calculator"
-require "health_check/suggestion_check"
-
 module HealthCheck
   class SuggestionChecker
     def initialize(options = {})

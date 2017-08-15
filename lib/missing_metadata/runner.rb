@@ -1,7 +1,3 @@
-require 'gds_api/publishing_api_v2'
-require 'missing_metadata/fetcher'
-require 'search_config'
-
 module MissingMetadata
   class Runner
     PAGE_SIZE = 200

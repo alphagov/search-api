@@ -1,5 +1,4 @@
-require "test_helper"
-require "schema/field_definitions"
+require 'test_helper'
 
 class FieldDefinitionsTest < ShouldaUnitTestCase
   context "after loading definitions" do

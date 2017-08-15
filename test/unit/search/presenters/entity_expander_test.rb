@@ -1,5 +1,4 @@
-require "test_helper"
-require "search/presenters/entity_expander"
+require 'test_helper'
 
 class EntityExpanderTest < Minitest::Test
   # Since expanding is being done in the same way we only have to test one

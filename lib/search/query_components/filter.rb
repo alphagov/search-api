@@ -1,7 +1,3 @@
-require_relative "user_filter"
-require_relative "visibility_filter"
-require 'search/query_helpers'
-
 module QueryComponents
   class Filter < BaseComponent
     include Search::QueryHelpers

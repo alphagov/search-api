@@ -1,8 +1,3 @@
-require "search/result_set"
-require_relative "result_presenter"
-require_relative "aggregate_result_presenter"
-require_relative "spell_check_presenter"
-
 module Search
   # Presents a combined set of results for a GOV.UK site search
   class ResultSetPresenter

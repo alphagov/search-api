@@ -1,5 +1,4 @@
-require "test_helper"
-require "legacy_client/multivalue_converter"
+require 'test_helper'
 
 class MultivalueConverterTest < Minitest::Test
   def test_keeps_multivalue_fields_as_array

@@ -1,7 +1,3 @@
-require 'time'
-require 'open-uri'
-require 'fileutils'
-
 module HealthCheck
   class Downloader
     def initialize(options = {})

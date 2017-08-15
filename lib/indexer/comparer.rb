@@ -1,5 +1,3 @@
-require 'indexer/compare_enumerator'
-
 module Indexer
   class Comparer
     class MissingIdOrType < StandardError; end

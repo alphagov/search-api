@@ -1,8 +1,3 @@
-require "uri"
-require "net/http"
-require "json"
-require "cgi"
-
 module HealthCheck
   class JsonSearchClient
     def initialize(options = {})

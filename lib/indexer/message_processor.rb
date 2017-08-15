@@ -1,7 +1,3 @@
-require_relative "../../app"
-require_relative "exceptions"
-require_relative "change_notification_processor"
-
 # MessageProcessor
 #
 # This class is instantiated by the rake task and passed to the message queue

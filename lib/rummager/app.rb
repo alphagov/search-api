@@ -1,36 +1,10 @@
 require "sinatra"
 set :root, File.dirname(__FILE__)
 
-require "json"
-require "csv"
-require "redis"
-
-%w[ . lib ].each do |path|
-  $LOAD_PATH.unshift(path) unless $LOAD_PATH.include?(path)
-end
-
-require "search_config"
-
-require "search/presenters/result_presenter"
-require "search/query_parameters"
-
-require "parameter_parser/search_parameter_parser"
-
-require_relative "config"
-require_relative "helpers"
-
-require "routes/content"
-
-require "indexer/workers/bulk_index_worker"
-require "indexer/workers/delete_worker"
-require "indexer/workers/amend_worker"
-require "indexer/comparer"
-require "govuk_index/publishing_event_processor"
+require 'rummager'
+require 'routes/content'
 
 class Rummager < Sinatra::Application
-  # this is needed to support the migration to ES 2.4
-  ELASTICSEARCH_VERSION = '1.7'
-
   # - Stop double slashes in URLs (even escaped ones) being flattened to single ones
   #
   # - Explicitly allow requests that are referred from other domains so we can link
