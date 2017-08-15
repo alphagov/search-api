@@ -53,6 +53,6 @@ private
   StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
 
   def homepage
-    StaticDocumentPresenter.new("/", nil, 1)
+    StaticDocumentPresenter.new(Plek.current.website_root + "/", nil, 0.5)
   end
 end

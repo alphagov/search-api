@@ -1,34 +1,36 @@
 class PropertyBoostCalculator
   def initialize
-    @boost_config = YAML.load_file('config/query/boosting.yml')
-    @max_boosts = calculate_max_boosts
+    config = YAML.load_file('config/query/boosting.yml')
+    external_search_overrides = config.fetch("external_search", {})
+    @boost_config = config["base"].merge(external_search_overrides)
   end
 
   def boost(document)
-    boost_values = @boost_config.map do |property, boosts|
+    raw_boosts = @boost_config.map do |property, boosts|
       if document.has_field?(property) && boosts[document.get(property)]
-        page_boost = boosts[document.get(property)]
+        boosts[document.get(property)]
       else
-        page_boost = 1
+        1
       end
-
-      # Normalise format boost to always give a value between 0 and 1
-      page_boost.to_f / @max_boosts[property]
     end
 
-    boost_values.inject(:*).round(2)
+    overall_boost = raw_boosts.inject(:*)
+
+    map_boost_to_priority(overall_boost).round(2)
   end
 
 private
 
-  def calculate_max_boosts
-    @boost_config.keys.each_with_object({}) do |property, max_boosts|
-      boosts = @boost_config[property]
-
-      max_configured_boost = boosts.values.max
-      max_boost = max_configured_boost >= 1 ? max_configured_boost : 1
-
-      max_boosts[property] = max_boost
-    end
+  # Convert a boost (which may be any positive or zero value) to a sitemap
+  # priority.
+  #
+  # The conversion must produce a number between zero and one to match the
+  # sitemap format (https://www.sitemaps.org/protocol.html), and boost ordering
+  # must be preserved (i.e. if one page has a higher combined boost than
+  # another one, its priority must also be higher).
+  #
+  # https://www.wolframalpha.com/input/?i=plot+1+-+2%5E(-x),+x+%3D+0+to+5
+  def map_boost_to_priority(boost)
+    (1 - 2**-boost).to_f
   end
 end
