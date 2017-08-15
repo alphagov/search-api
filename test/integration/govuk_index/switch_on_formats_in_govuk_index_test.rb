@@ -1,6 +1,6 @@
 require 'integration_test_helper'
 
-class GovukIndex::PublishingEventProcessorTest < IntegrationTest
+class GovukIndex::SwitchOnFormatsInGovukIndexTest < IntegrationTest
   def setup
     super
 
