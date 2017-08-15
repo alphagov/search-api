@@ -25,8 +25,10 @@ module GovukIndex
     # processed out of order so we don't want to notify errbit but just allow
     # the process to continue
     rescue NotFoundError
+      logger.info("#{payload['base_path']} could not be found.")
       Services.statsd_client.increment('govuk_index.not-found-error')
     rescue UnknownDocumentTypeError
+      logger.info("#{payload['document_type']} document type is not known.")
       Services.statsd_client.increment('govuk_index.unknown-document-type')
     # Rescuing exception to guarantee we capture all Sidekiq retries
     rescue Exception # rubocop:disable Lint/RescueException
