@@ -10,7 +10,7 @@ module IntegrationSpecHelper
   }.freeze
 
   def setup
-    TestIndexHelpers.stub_elasticsearch_settings
+    IndexHelpers.stub_elasticsearch_settings
   end
 
   def self.included(base)
@@ -39,7 +39,7 @@ module IntegrationSpecHelper
   end
 
   def teardown
-    TestIndexHelpers::ALL_TEST_INDEXES.each do |index|
+    IndexHelpers::ALL_TEST_INDEXES.each do |index|
       clean_index_content(index)
     end
   end
@@ -168,8 +168,8 @@ module IntegrationSpecHelper
     commit_index(index_name)
   end
 
-  def try_remove_test_index(index_name = TestIndexHelpers::DEFAULT_INDEX_NAME)
-    TestIndexHelpers.check_index_name!(index_name)
+  def try_remove_test_index(index_name = IndexHelpers::DEFAULT_INDEX_NAME)
+    IndexHelpers.check_index_name!(index_name)
 
     if client.indices.exists?(index: index_name)
       client.indices.delete(index: index_name)
@@ -188,7 +188,7 @@ module IntegrationSpecHelper
 private
 
   def populate_content_indexes(params)
-    TestIndexHelpers::INDEX_NAMES.each do |index_name|
+    IndexHelpers::INDEX_NAMES.each do |index_name|
       add_sample_documents(index_name, params[:section_count])
     end
   end
@@ -203,7 +203,7 @@ private
 
   def stubbed_search_config
     search_config = SearchConfig.new
-    TestIndexHelpers.stub_elasticsearch_settings(search_config)
+    IndexHelpers.stub_elasticsearch_settings(search_config)
 
     search_config
   end

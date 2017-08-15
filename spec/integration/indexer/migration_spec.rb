@@ -17,7 +17,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     @stemmer = settings["analysis"]["filter"]["stemmer_override"]
     @stemmer["rules"] = ["fish => fish"]
 
-    TestIndexHelpers.create_all
+    IndexHelpers.create_all
     add_documents(sample_document_attributes)
     commit_index
 

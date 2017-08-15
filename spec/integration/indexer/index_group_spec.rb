@@ -2,9 +2,8 @@ require 'spec_helper'
 
 RSpec.describe 'ElasticsearchIndexGroupTest', tags: ['integration'] do
   before do
-
     @group_name = "mainstream_test"
-    TestIndexHelpers.clean_index_group(@group_name)
+    IndexHelpers.clean_index_group(@group_name)
 
     @index_group = search_server.index_group(@group_name)
   end

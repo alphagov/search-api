@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rake'
 load "tasks/message_queue.rake"
 
 RSpec.describe 'MessageProcessorRakeTest' do
