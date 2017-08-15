@@ -33,7 +33,12 @@ module GovukIndex
 
   private
 
+    def logger
+      @logger ||= Logging.logger[self]
+    end
+
     def process_action(actions, routing_key, payload)
+      logger.debug("Processing #{routing_key}: #{payload}")
       Services.statsd_client.increment('govuk_index.sidekiq-consumed')
 
       document_type_inferer = DocumentTypeInferer.new(payload)
@@ -41,8 +46,10 @@ module GovukIndex
       presenter.valid!
 
       if document_type_inferer.unpublishing_type?
+        logger.info("#{routing_key} -> DELETE #{presenter.id} #{document_type_inferer.type}")
         actions.delete(presenter)
       else
+        logger.info("#{routing_key} -> INDEX #{presenter.id} #{document_type_inferer.type}")
         actions.save(presenter)
       end
     end
@@ -56,16 +63,21 @@ module GovukIndex
 
       item = response['items'].first
       action_type, details = *item.first # item is a hash with a single key, value pair
+      status = details['status']
 
-      if (200..399).cover?(details['status'])
+      if (200..399).cover?(status)
+        logger.debug("Processed #{action_type} with status #{status}")
         Services.statsd_client.increment("govuk_index.elasticsearch.#{action_type}")
       elsif action_type == 'delete' && details['status'] == 404 # failed while attempting to delete missing record so just ignore it
+        logger.info("Tried to delete a document that wasn't there; ignoring.")
         Services.statsd_client.increment('govuk_index.elasticsearch.already_deleted')
       elsif details['status'] == 409
         # A version conflict indicates that messages were processed out of
         # order. This is not expected to happen often but is safe to ignore.
+        logger.info("#{action_type} version is outdated; ignoring.")
         Services.statsd_client.increment('govuk_index.elasticsearch.version_conflict')
       else
+        logger.error("#{action_type} not processed: status #{status}")
         Services.statsd_client.increment("govuk_index.elasticsearch.#{action_type}_error")
         raise ElasticsearchError, action_type: action_type, details: details
       end
