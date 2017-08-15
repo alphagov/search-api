@@ -12,6 +12,7 @@ class IndexGroupTest < Minitest::Test
       "http://localhost:9200",
       @schema,
       %w(mainstream custom),
+      'govuk',
       ["mainstream"],
       SearchConfig.new
     )

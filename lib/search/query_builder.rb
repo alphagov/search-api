@@ -17,7 +17,7 @@ module Search
         size: search_params.count,
         fields: fields.uniq,
         query: query,
-        filter: filter,
+        filter: Search::FormatMigrator.new(filter).call,
         sort: sort,
         aggs: aggregates,
         highlight: highlight,
