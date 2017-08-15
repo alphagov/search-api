@@ -15,7 +15,7 @@ in_development = ENV['RACK_ENV'] == 'development'
 log_path = ENV.fetch("LOG_PATH", in_development ? nil : "log/production.log")
 
 if in_development
-  set :logging, $DEBUG ? Logger::DEBUG : Logger::INFO
+  set :logging, Logger::DEBUG
 end
 
 if log_path
