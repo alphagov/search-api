@@ -36,6 +36,9 @@ namespace "test" do
 
   desc 'Clean all test indexes'
   task :clean_test_indexes do
+    # Silence log output
+    Logging.logger.root.appenders = nil
+
     require 'test/support/test_index_helpers'
 
     TestIndexHelpers.clean_all

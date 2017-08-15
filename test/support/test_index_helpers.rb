@@ -22,6 +22,7 @@ class TestIndexHelpers
   end
 
   def self.clean_all
+    puts 'Cleaning up test indexes...'
     ALL_TEST_INDEXES.each do |index_name|
       clean_index_group(index_name)
     end
