@@ -72,6 +72,8 @@ GEM
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
     logstash-event (1.2.02)
+    loofah (2.0.3)
+      nokogiri (>= 1.5.9)
     lrucache (0.1.4)
       PriorityQueue (~> 0.1.2)
     metaclass (0.0.4)
@@ -201,6 +203,7 @@ DEPENDENCIES
   govuk_message_queue_consumer (~> 3.0.2)
   govuk_schemas (~> 2.2.0)
   logging (~> 2.1.0)
+  loofah
   minitest (~> 5.6.0)
   mocha (~> 1.1.0)
   mr-sparkle (= 0.3.0)

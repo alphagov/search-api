@@ -27,6 +27,7 @@ gem "rack-logstasher", "~> 1.0.0"
 gem "airbrake", "~> 4.3.6"
 gem "unf", "~> 0.1.4"
 gem "elasticsearch", "~> 1.0.15"
+gem "loofah"
 
 if ENV["MESSAGE_QUEUE_CONSUMER_DEV"]
   gem "govuk_message_queue_consumer", path: "../govuk_message_queue_consumer"

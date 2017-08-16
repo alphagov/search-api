@@ -1,3 +1,5 @@
+require 'loofah'
+
 module GovukIndex
   class ElasticsearchPresenter
     def initialize(payload, type)
