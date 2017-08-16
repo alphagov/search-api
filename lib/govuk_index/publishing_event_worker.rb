@@ -1,5 +1,6 @@
 module GovukIndex
   class ElasticsearchError < StandardError; end
+  class MissingTextHtmlContentType < StandardError; end
   class MultipleMessagesInElasticsearchResponse < StandardError; end
   class NotFoundError < StandardError; end
   class UnknownDocumentTypeError < StandardError; end
@@ -47,7 +48,11 @@ module GovukIndex
       Services.statsd_client.increment('govuk_index.sidekiq-consumed')
 
       document_type_inferer = DocumentTypeInferer.new(payload)
-      presenter = ElasticsearchPresenter.new(payload, document_type_inferer.type)
+      presenter = ElasticsearchPresenter.new(
+        payload: payload,
+        type: document_type_inferer.type,
+        sanitiser: IndexableContentSanitiser.new
+      )
       presenter.valid!
 
       if document_type_inferer.unpublishing_type?

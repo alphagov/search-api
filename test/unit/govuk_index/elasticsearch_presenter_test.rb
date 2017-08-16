@@ -15,10 +15,11 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       "document_type" => "aaib_report",
       "title" => "A plane has had an issue",
       "payload_version" => 1,
-      "version_type" => "external"
+      "version_type" => "external",
+      "details" => { "body" => "We love cheese" }
     }
 
-    presenter = GovukIndex::ElasticsearchPresenter.new(payload, "aaib_report")
+    presenter = elasticsearch_presenter(payload)
 
     expected_identifier = {
       _type: "aaib_report",
@@ -33,6 +34,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       is_withdrawn: false,
       content_store_document_type: "aaib_report",
       popularity: nil,
+      indexable_content: "\nWe love cheese\n",
     }
 
     assert_equal expected_identifier, presenter.identifier
@@ -47,7 +49,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       "version_type" => "external"
     }
 
-    presenter = GovukIndex::ElasticsearchPresenter.new(payload, "aaib_report")
+    presenter = elasticsearch_presenter(payload)
 
     expected_identifier = {
       _type: "aaib_report",
@@ -72,7 +74,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       }
     }
 
-    presenter = GovukIndex::ElasticsearchPresenter.new(payload, "aaib_report")
+    presenter = elasticsearch_presenter(payload)
 
     expected_identifier = {
       _type: "aaib_report",
@@ -87,6 +89,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       is_withdrawn: true,
       content_store_document_type: "aaib_report",
       popularity: nil,
+      indexable_content: nil,
     }
 
     assert_equal expected_identifier, presenter.identifier
@@ -104,7 +107,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
     Indexer::PopularityLookup.expects(:new).with('govuk_index', SearchConfig.instance).returns(@popularity_lookup)
     @popularity_lookup.expects(:lookup_popularities).with([payload['base_path']]).returns(payload["base_path"] => popularity)
 
-    presenter = GovukIndex::ElasticsearchPresenter.new(payload, "aaib_report")
+    presenter = elasticsearch_presenter(payload)
 
     assert_equal popularity, presenter.document[:popularity]
   end
@@ -118,8 +121,16 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
     Indexer::PopularityLookup.expects(:new).with('govuk_index', SearchConfig.instance).returns(@popularity_lookup)
     @popularity_lookup.expects(:lookup_popularities).with([payload['base_path']]).returns({})
 
-    presenter = GovukIndex::ElasticsearchPresenter.new(payload, "aaib_report")
+    presenter = elasticsearch_presenter(payload)
 
     assert_equal nil, presenter.document['popularity']
+  end
+
+  def elasticsearch_presenter(payload)
+    GovukIndex::ElasticsearchPresenter.new(
+      payload: payload,
+      type: "aaib_report",
+      sanitiser: GovukIndex::IndexableContentSanitiser.new
+    )
   end
 end

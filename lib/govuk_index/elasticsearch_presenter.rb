@@ -1,10 +1,9 @@
-require 'loofah'
-
 module GovukIndex
   class ElasticsearchPresenter
-    def initialize(payload, type)
+    def initialize(payload:, type:, sanitiser:)
       @payload = payload
       @type = type
+      @sanitiser = sanitiser
     end
 
     def identifier
@@ -23,6 +22,7 @@ module GovukIndex
         is_withdrawn: withdrawn?,
         content_store_document_type: payload["document_type"],
         popularity: calculate_popularity(payload["base_path"]),
+        indexable_content: sanitiser.clean(payload),
       }
     end
 
@@ -37,7 +37,7 @@ module GovukIndex
 
   private
 
-    attr_reader :payload, :type
+    attr_reader :payload, :sanitiser, :type
 
     def withdrawn?
       !payload["withdrawn_notice"].nil?
