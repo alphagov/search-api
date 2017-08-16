@@ -19,6 +19,7 @@ module GovukIndex
         link: payload["base_path"],
         title: payload["title"],
         is_withdrawn: withdrawn?,
+        content_store_document_type: payload["document_type"],
       }
     end
 

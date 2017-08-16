@@ -110,7 +110,7 @@ class GovukIndex::VersioningTest < IntegrationTest
     assert_equal 2, document["_version"]
   end
 
-  def generate_random_example(schema: "specialist_document", payload: {}, excluded_fields: [])
+  def generate_random_example(schema: "help_page", payload: {}, excluded_fields: [])
     # just in case RandomExample does not generate a type field
     payload[:document_type] = schema
     GovukSchemas::RandomExample

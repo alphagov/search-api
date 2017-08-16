@@ -4,7 +4,7 @@ class PublishingEventWorkerTest < Minitest::Test
   def test_save_valid_message
     payload = {
       "base_path" => "/cheese",
-      "document_type" => "cheddar",
+      "document_type" => "help_page",
       "title" => "We love cheese"
     }
 
@@ -39,7 +39,7 @@ class PublishingEventWorkerTest < Minitest::Test
   def test_should_not_delete_withdrawn
     payload = {
       "base_path" => "/cheese",
-      "document_type" => "cheddar",
+      "document_type" => "help_page",
       "title" => "We love cheese",
       "withdrawn_notice" => {
         "explanation" => "<div class=\"govspeak\"><p>test 2</p>\n</div>",
@@ -122,13 +122,13 @@ class PublishingEventWorkerTest < Minitest::Test
 
   def test_notify_when_validation_error
     invalid_payload = {
-      "document_type" => "cheddar",
+      "document_type" => "help_page",
       "title" => "We love cheese"
     }
 
     Airbrake.expects(:notify_or_ignore).with(
       instance_of(GovukIndex::ValidationError),
-      parameters: { message_body: { 'document_type' => 'cheddar', 'title' => 'We love cheese' } }
+      parameters: { message_body: { 'document_type' => 'help_page', 'title' => 'We love cheese' } }
     )
 
     GovukIndex::PublishingEventWorker.new.perform('routing.key', invalid_payload)
