@@ -11,15 +11,15 @@ class SitemapGenerator
   end
 
   def get_all_documents
+    property_boost_calculator = PropertyBoostCalculator.new
+
     Enumerator.new do |yielder|
       # Hard-code the site root, as it isn't listed in any search index
-      yielder << "/"
+      yielder << homepage
 
       @sitemap_indices.each do |index|
-        index.all_document_links(EXCLUDED_FORMATS).each do |document|
-          if document
-            yielder << document
-          end
+        index.all_documents(exclude_formats: EXCLUDED_FORMATS).each do |document|
+          yielder << SitemapPresenter.new(document, property_boost_calculator)
         end
       end
     end
@@ -31,24 +31,28 @@ class SitemapGenerator
     end
   end
 
+  # Generate a sitemap which matches the format specified in https://www.sitemaps.org/protocol.html
   def generate_xml(chunk)
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
-        chunk.each do |url|
-          url = Array(url).first
-          url = URI.join(base_url, url) unless url.start_with?("http")
+        chunk.each do |document|
           xml.url {
-            xml.loc url
+            xml.loc document.url
+            xml.lastmod document.last_updated if document.last_updated
+            xml.priority document.priority
           }
         end
       end
     end
+
     builder.to_xml
   end
 
 private
 
-  def base_url
-    Plek.current.website_root
+  StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
+
+  def homepage
+    StaticDocumentPresenter.new(Plek.current.website_root + "/", nil, 0.5)
   end
 end

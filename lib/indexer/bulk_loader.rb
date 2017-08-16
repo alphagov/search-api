@@ -22,7 +22,7 @@ module Indexer
       build_and_switch_index do |queue|
         current_index = index_group.current_real
         if current_index
-          current_index.all_documents(timeout_options).each_slice(@document_batch_size) do |documents|
+          current_index.all_documents(client_options: timeout_options).each_slice(@document_batch_size) do |documents|
             queue.push(documents.map(&:elasticsearch_export))
           end
         end
@@ -42,7 +42,7 @@ module Indexer
 
       @logger.info "Populating new #{@index_name} index..."
       populate_index(new_index) do |queue|
-        old_index.all_documents(timeout_options).each_slice(@document_batch_size) do |documents|
+        old_index.all_documents(client_options: timeout_options).each_slice(@document_batch_size) do |documents|
           queue.push(documents.map(&:elasticsearch_export))
         end
       end

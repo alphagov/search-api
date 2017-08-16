@@ -13,7 +13,7 @@ EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"].freeze
 def all_documents(indices)
   Enumerator.new do |yielder|
     indices.each do |index|
-      index.all_documents.each do |document|
+      index.all_documents(exclude_formats: EXCLUDED_FORMATS).each do |document|
         yielder << document
       end
     end
@@ -37,8 +37,6 @@ document_count = 0
 word_count = 0
 all_words = Set.new
 all_documents(indices).each do |document|
-  next if EXCLUDED_FORMATS.include?(document.format)
-
   document_count += 1
   if document.indexable_content
     words = words_without_punctuation(document.indexable_content)
