@@ -20,6 +20,7 @@ module GovukIndex
         title: payload["title"],
         is_withdrawn: withdrawn?,
         content_store_document_type: payload["document_type"],
+        popularity: calculate_popularity(payload["base_path"]),
       }
     end
 
@@ -38,6 +39,11 @@ module GovukIndex
 
     def withdrawn?
       !payload["withdrawn_notice"].nil?
+    end
+
+    def calculate_popularity(base_path)
+      lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.instance)
+      lookup.lookup_popularities([base_path])[base_path]
     end
   end
 end
