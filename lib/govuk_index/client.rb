@@ -6,8 +6,13 @@ module GovukIndex
       delegate :get, :bulk, to: :instance
 
       def instance
-        @instance || new
+        @_instance || new
       end
+    end
+
+    def initialize(options = {})
+      @_index = options.delete(:index_name)
+      @_options = options
     end
 
     def get(params)
@@ -24,10 +29,10 @@ module GovukIndex
 
   private
 
-    def client(options = {})
+    def client
       @_client ||= Services.elasticsearch(
         hosts: search_config.base_uri,
-        timeout: options[:timeout] || TIMEOUT_SECONDS
+        timeout: @_options[:timeout] || TIMEOUT_SECONDS
       )
     end
 

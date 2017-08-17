@@ -59,6 +59,8 @@ require "govuk_index/document_type_inferer"
 require 'govuk_index/elasticsearch_presenter'
 require 'govuk_index/elasticsearch_processor'
 require 'govuk_index/indexable_content_sanitiser'
+require 'govuk_index/popularity_updater'
+require 'govuk_index/popularity_worker'
 require 'govuk_index/publishing_event_processor'
 require 'govuk_index/publishing_event_worker'
 require 'govuk_message_queue_consumer'

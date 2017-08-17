@@ -6,3 +6,4 @@ production:
 :logfile: ./log/sidekiq.log
 :queues:
   - default
+  - popularity
