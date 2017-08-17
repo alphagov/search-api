@@ -16,7 +16,7 @@ end
 $LOAD_PATH << File.expand_path('../../', __FILE__)
 $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
-ELASTICSEARCH_TESTING_HOST = ENV.fetch('ELASTICSEARCH_TESTING_HOST', 'http://localhost:9200')
+ELASTICSEARCH_TESTING_HOST = ENV.fetch('ELASTICSEARCH_TESTING_HOST', ENV["JENKINS_URL"] ? 'http://localhost:9200' : 'http://localhost:19200')
 
 # load this first to avoid duplicate constant declaration error
 require 'logging'
