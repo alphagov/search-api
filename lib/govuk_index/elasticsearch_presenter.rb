@@ -9,7 +9,7 @@ module GovukIndex
     def identifier
       {
         _type: type,
-        _id: id,
+        _id: base_path,
         version: payload["payload_version"],
         version_type: "external",
       }
@@ -17,21 +17,29 @@ module GovukIndex
 
     def document
       {
-        link: payload["base_path"],
-        title: payload["title"],
-        is_withdrawn: withdrawn?,
+        content_id: payload["content_id"],
         content_store_document_type: payload["document_type"],
-        popularity: calculate_popularity(payload["base_path"]),
+        description: payload["description"],
+        format: payload["document_type"],
         indexable_content: sanitiser.clean(payload),
+        is_withdrawn: withdrawn?,
+        link: base_path,
+        organisations: organisations_titles,
+        organisation_content_ids: organisation_content_ids,
+        popularity: calculate_popularity,
+        public_timestamp: payload["public_updated_at"],
+        publishing_app: payload["publishing_app"],
+        rendering_app: payload["rendering_app"],
+        title: payload["title"],
       }
     end
 
-    def id
-      payload["base_path"]
+    def base_path
+      @_base_path ||= payload["base_path"]
     end
 
     def valid!
-      return if payload["base_path"]
+      return if base_path
       raise(ValidationError, "base_path missing from payload")
     end
 
@@ -43,7 +51,23 @@ module GovukIndex
       !payload["withdrawn_notice"].nil?
     end
 
-    def calculate_popularity(base_path)
+    def expanded_links
+      payload["expanded_links"] || {}
+    end
+
+    def organisations
+      expanded_links["organisations"] || {}
+    end
+
+    def organisations_titles
+      organisations.map { |org| org["title"] }
+    end
+
+    def organisation_content_ids
+      organisations.map { |org| org["content_id"] }
+    end
+
+    def calculate_popularity
       lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.instance)
       lookup.lookup_popularities([base_path])[base_path]
     end

@@ -12,62 +12,59 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
   def test_converts_message_payload_to_elasticsearch_format
     payload = {
       "base_path" => "/some/path",
-      "document_type" => "aaib_report",
-      "title" => "A plane has had an issue",
+      "content_id" => "XXX-XXX-XXX-XXX",
+      "content_store_document_type" => "help_page",
+      "description" => "This page will help you love cheese too",
+      "details" => { "body" => "We love cheese" },
+      "document_type" => "help_page",
+      "expanded_links" => {
+        "organisations" => [
+          {
+            "content_id" => "YYY-YYY-YYY",
+            "title" => "The Great Cheese Organisation",
+          }
+        ]
+      },
       "payload_version" => 1,
-      "version_type" => "external",
-      "details" => { "body" => "We love cheese" }
+      "public_updated_at" => "2016-02-29T09:24:10Z",
+      "publishing_app" => "rails_for_the_win",
+      "rendering_app" => "react_rules_ok",
+      "title" => "This is a help page",
     }
 
-    presenter = elasticsearch_presenter(payload)
+    presenter = elasticsearch_presenter(payload, "help_page")
 
     expected_identifier = {
-      _type: "aaib_report",
+      _type: "help_page",
       _id: "/some/path",
       version: 1,
       version_type: "external"
     }
 
     expected_document = {
-      link: "/some/path",
-      title: "A plane has had an issue",
-      is_withdrawn: false,
-      content_store_document_type: "aaib_report",
-      popularity: nil,
+      content_id: "XXX-XXX-XXX-XXX",
+      content_store_document_type: "help_page",
+      description: "This page will help you love cheese too",
+      format: "help_page",
       indexable_content: "\nWe love cheese\n",
+      is_withdrawn: false,
+      link: "/some/path",
+      organisations: ["The Great Cheese Organisation"],
+      organisation_content_ids: ["YYY-YYY-YYY"],
+      popularity: nil,
+      public_timestamp: "2016-02-29T09:24:10Z",
+      publishing_app: "rails_for_the_win",
+      rendering_app: "react_rules_ok",
+      title: "This is a help page",
     }
 
     assert_equal expected_identifier, presenter.identifier
     assert_equal expected_document, presenter.document
   end
 
-  def test_converts_gone_message_payload_to_elasticsearch_format
-    payload = {
-      "base_path" => "/some/path",
-      "document_type" => "gone",
-      "payload_version" => 1,
-      "version_type" => "external"
-    }
-
-    presenter = elasticsearch_presenter(payload)
-
-    expected_identifier = {
-      _type: "aaib_report",
-      _id: "/some/path",
-      version: 1,
-      version_type: "external"
-    }
-
-    assert_equal expected_identifier, presenter.identifier
-  end
-
   def test_withdrawn_when_withdrawn_notice_present
     payload = {
       "base_path" => "/some/path",
-      "document_type" => "aaib_report",
-      "title" => "A plane has had an issue",
-      "payload_version" => 2,
-      "version_type" => "external",
       "withdrawn_notice" => {
         "explanation" => "<div class=\"govspeak\"><p>test 2</p>\n</div>",
         "withdrawn_at" => "2017-08-03T14:02:18Z"
@@ -76,31 +73,11 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
 
     presenter = elasticsearch_presenter(payload)
 
-    expected_identifier = {
-      _type: "aaib_report",
-      _id: "/some/path",
-      version: 2,
-      version_type: "external"
-    }
-
-    expected_document = {
-      link: "/some/path",
-      title: "A plane has had an issue",
-      is_withdrawn: true,
-      content_store_document_type: "aaib_report",
-      popularity: nil,
-      indexable_content: nil,
-    }
-
-    assert_equal expected_identifier, presenter.identifier
-    assert_equal expected_document, presenter.document
+    assert_equal presenter.document[:is_withdrawn], true
   end
 
   def test_popularity_when_value_is_returned_from_lookup
-    payload = {
-      "base_path" => "/some/path",
-      "document_type" => "aaib_report",
-    }
+    payload = { "base_path" => "/some/path" }
 
     popularity = 0.0125356
 
@@ -113,10 +90,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
   end
 
   def test_no_popularity_when_no_value_is_returned_from_lookup
-    payload = {
-      "base_path" => "/some/path",
-      "document_type" => "aaib_report",
-    }
+    payload = { "base_path" => "/some/path" }
 
     Indexer::PopularityLookup.expects(:new).with('govuk_index', SearchConfig.instance).returns(@popularity_lookup)
     @popularity_lookup.expects(:lookup_popularities).with([payload['base_path']]).returns({})
@@ -126,10 +100,10 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
     assert_equal nil, presenter.document['popularity']
   end
 
-  def elasticsearch_presenter(payload)
+  def elasticsearch_presenter(payload, type = "aaib_report")
     GovukIndex::ElasticsearchPresenter.new(
       payload: payload,
-      type: "aaib_report",
+      type: type,
       sanitiser: GovukIndex::IndexableContentSanitiser.new
     )
   end
