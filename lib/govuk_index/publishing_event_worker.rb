@@ -39,10 +39,6 @@ module GovukIndex
 
   private
 
-    def logger
-      @logger ||= Logging.logger[self]
-    end
-
     def process_action(actions, routing_key, payload)
       logger.debug("Processing #{routing_key}: #{payload}")
       Services.statsd_client.increment('govuk_index.sidekiq-consumed')
