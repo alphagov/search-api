@@ -45,6 +45,15 @@ class SitemapPresenterTest < Minitest::Test
     assert_equal "2017-07-12", presenter.last_updated
   end
 
+  def test_last_updated_is_limited_to_recent_date
+    document = build_document(
+      url: "/some/path",
+      timestamp: "1995-06-01"
+    )
+    presenter = SitemapPresenter.new(document, @boost_calculator)
+    assert_equal "2012-10-17T00:00:00+00:00", presenter.last_updated
+  end
+
   def test_last_updated_is_omitted_if_timestamp_is_missing
     document = build_document(
       url: "/some/path",
