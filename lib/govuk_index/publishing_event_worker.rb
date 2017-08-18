@@ -56,10 +56,10 @@ module GovukIndex
       presenter.valid!
 
       if document_type_inferer.unpublishing_type?
-        logger.info("#{routing_key} -> DELETE #{presenter.id} #{document_type_inferer.type}")
+        logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{document_type_inferer.type}")
         actions.delete(presenter)
       else
-        logger.info("#{routing_key} -> INDEX #{presenter.id} #{document_type_inferer.type}")
+        logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{document_type_inferer.type}")
         actions.save(presenter)
       end
     end
