@@ -39,6 +39,7 @@ require "webmock/minitest"
 
 # Silence log output
 Logging.logger.root.appenders = nil
+Sidekiq::Logging.logger = nil
 
 # Prevent tests from messing with development/production data.
 only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)}
