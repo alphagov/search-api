@@ -34,6 +34,7 @@ require "pp"
 require "shoulda-context"
 require "timecop"
 require "pry-byebug"
+require "govuk_schemas"
 
 require "webmock/minitest"
 

@@ -110,14 +110,6 @@ class GovukIndex::VersioningTest < IntegrationTest
     assert_equal 2, document["_version"]
   end
 
-  def generate_random_example(schema: "help_page", payload: {}, excluded_fields: [])
-    # just in case RandomExample does not generate a type field
-    payload[:document_type] = schema
-    GovukSchemas::RandomExample
-      .for_schema(notification_schema: schema)
-      .merge_and_validate(payload, excluded_fields)
-  end
-
   def process_message(example_document, unpublishing: false)
     @processor.process(stub_message_payload(example_document, unpublishing: unpublishing))
   end

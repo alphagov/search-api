@@ -33,4 +33,12 @@ module TestHelpers
     end
     commit_index("page-traffic_test")
   end
+
+  def generate_random_example(schema: "help_page", payload: {}, excluded_fields: [])
+    # just in case RandomExample does not generate a type field
+    payload[:document_type] = schema
+    GovukSchemas::RandomExample
+      .for_schema(notification_schema: schema)
+      .merge_and_validate(payload, excluded_fields)
+  end
 end

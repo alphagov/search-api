@@ -9,72 +9,210 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
     @popularity_lookup.stubs(:lookup_popularities).returns({})
   end
 
-  def test_converts_message_payload_to_elasticsearch_format
-    payload = {
-      "base_path" => "/some/path",
-      "content_id" => "XXX-XXX-XXX-XXX",
-      "content_store_document_type" => "help_page",
-      "description" => "This page will help you love cheese too",
-      "details" => { "body" => "We love cheese" },
-      "document_type" => "help_page",
-      "email_document_supertype" => "super_email_document",
-      "expanded_links" => {
-        "organisations" => [
-          {
-            "content_id" => "YYY-YYY-YYY",
-            "title" => "The Great Cheese Organisation",
-          }
-        ]
-      },
-      "government_document_supertype" => "super_government_document",
-      "navigation_document_supertype" => "super_nav",
-      "payload_version" => 1,
-      "public_updated_at" => "2016-02-29T09:24:10Z",
-      "publishing_app" => "rails_for_the_win",
-      "rendering_app" => "react_rules_ok",
-      "title" => "This is a help page",
-      "user_journey_document_supertype" => "super_user_journey_document",
-    }
-
-    presenter = elasticsearch_presenter(payload, "help_page")
+  def test_identifier
+    payload = generate_random_example(payload: { payload_version: 1 })
 
     expected_identifier = {
-      _type: "help_page",
-      _id: "/some/path",
+      _type: payload["document_type"],
+      _id: payload["base_path"],
       version: 1,
       version_type: "external"
     }
 
+    presenter = elasticsearch_presenter(payload, "help_page")
+
+    assert_equal expected_identifier, presenter.identifier
+  end
+
+  def test_common_fields
+    defined_fields = {
+      base_path: "/some/path",
+      details: { body: "We love cheese" },
+      expanded_links: {},
+    }
+
+    payload = generate_random_example(
+      payload: defined_fields,
+      excluded_fields: ["withdrawn_notice"]
+    )
+
+    presenter = elasticsearch_presenter(payload, "help_page")
+
     expected_document = {
-      content_id: "XXX-XXX-XXX-XXX",
-      content_store_document_type: "help_page",
-      description: "This page will help you love cheese too",
-      email_document_supertype: "super_email_document",
-      format: "help_page",
-      government_document_supertype: "super_government_document",
+      content_id: payload["content_id"],
+      content_store_document_type: payload["document_type"],
+      description: payload["description"],
+      email_document_supertype: payload["email_document_supertype"],
+      format: payload["document_type"],
+      government_document_supertype: payload["government_document_supertype"],
       indexable_content: "\nWe love cheese\n",
       is_withdrawn: false,
       link: "/some/path",
       mainstream_browse_pages: [],
       mainstream_browse_page_content_ids: [],
-      navigation_document_supertype: "super_nav",
-      organisations: ["The Great Cheese Organisation"],
-      organisation_content_ids: ["YYY-YYY-YYY"],
+      navigation_document_supertype: payload["navigation_document_supertype"],
+      organisations: [],
+      organisation_content_ids: [],
       part_of_taxonomy_tree: [],
       primary_publishing_organisation: [],
       popularity: nil,
-      public_timestamp: "2016-02-29T09:24:10Z",
-      publishing_app: "rails_for_the_win",
-      rendering_app: "react_rules_ok",
+      public_timestamp: payload["public_updated_at"],
+      publishing_app: payload["publishing_app"],
+      rendering_app: payload["rendering_app"],
       specialist_sectors: [],
       taxons: [],
       topic_content_ids: [],
-      title: "This is a help page",
-      user_journey_document_supertype: "super_user_journey_document",
+      title: payload["title"],
+      user_journey_document_supertype: payload["user_journey_document_supertype"],
     }
 
-    assert_equal expected_identifier, presenter.identifier
     assert_equal expected_document, presenter.document
+  end
+
+  def test_mainstream_browse_pages
+    expanded_links = {
+      "expanded_links" => {
+        "mainstream_browse_pages" => [
+           {
+              "base_path" => "/browse/visas-immigration/eu-eea-commonwealth",
+              "content_id" => "5f42c670-5b82-4f1f-ab52-0e100428d430",
+              "locale" => "en",
+              "title" => "EU, EEA and Commonwealth"
+           },
+           {
+              "base_path" => "/browse/visas-immigration/work-visas",
+              "content_id" => "4ab4764d-d9ce-425f-a8cc-aaba4a38be09",
+              "locale" => "en",
+              "title" => "Work visas"
+          }
+        ]
+      }
+    }
+
+    payload = generate_random_example(payload: expanded_links)
+
+    presenter = elasticsearch_presenter(payload, "help_page")
+
+    expected_mainstream_browse_pages = [
+      "visas-immigration/eu-eea-commonwealth", "visas-immigration/work-visas"
+    ]
+
+    expected_mainstream_browse_page_content_ids = [
+      "5f42c670-5b82-4f1f-ab52-0e100428d430", "4ab4764d-d9ce-425f-a8cc-aaba4a38be09"
+    ]
+
+    assert_equal presenter.document[:mainstream_browse_pages], expected_mainstream_browse_pages
+    assert_equal presenter.document[:mainstream_browse_page_content_ids], expected_mainstream_browse_page_content_ids
+  end
+
+  def test_organisations
+    expanded_links = {
+      "expanded_links" => {
+        "organisations" => [
+          {
+             "base_path" => "/government/organisations/uk-visas-and-immigration",
+             "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
+             "locale" => "en",
+             "title" => "UK Visas and Immigration"
+          },
+        ],
+        "primary_publishing_organisation" => [
+          {
+            "base_path" => "/government/organisations/uk-visas-and-immigration",
+            "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
+            "locale" => "en",
+            "title" => "UK Visas and Immigration"
+          }
+        ]
+      }
+    }
+
+    payload = generate_random_example(payload: expanded_links)
+
+    presenter = elasticsearch_presenter(payload, "help_page")
+
+    expected_organisations = ["uk-visas-and-immigration"]
+    expected_organisation_content_ids = ["04148522-b0c1-4137-b687-5f3c3bdd561a"]
+    expected_primary_publishing_organisation = ["uk-visas-and-immigration"]
+
+    assert_equal presenter.document[:organisations], expected_organisations
+    assert_equal presenter.document[:organisation_content_ids], expected_organisation_content_ids
+    assert_equal presenter.document[:primary_publishing_organisation], expected_primary_publishing_organisation
+  end
+
+  def test_taxons
+    expanded_links = {
+      "expanded_links" => {
+        "taxons" => [
+          {
+            "base_path" => "/childcare-parenting/adoption",
+            "content_id" => "13bba81c-b2b1-4b13-a3de-b24748977198",
+            "locale" => "en",
+            "title" => "Adoption",
+            "links" => {
+              "parent_taxons" => [
+                {
+                  "base_path" => "/childcare-parenting/adoption-fostering-and-surrogacy",
+                  "content_id" => "5a9e6b26-ae64-4129-93ee-968028381e83",
+                  "locale" => "en",
+                  "title" => "Adoption, fostering and surrogacy",
+                  "links" => {
+                    "parent_taxons" => [
+                      {
+                        "base_path" => "/childcare-parenting",
+                        "content_id" => "206b7f3a-49b5-476f-af0f-fd27e2a68473",
+                        "locale" => "en",
+                        "title" => "Parenting, childcare and children's services ",
+                        "links" => {}
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+
+    payload = generate_random_example(payload: expanded_links)
+
+    presenter = elasticsearch_presenter(payload, "help_page")
+
+    expected_taxonomy_tree = [
+      "206b7f3a-49b5-476f-af0f-fd27e2a68473",
+      "5a9e6b26-ae64-4129-93ee-968028381e83",
+      "13bba81c-b2b1-4b13-a3de-b24748977198"
+    ]
+    expected_taxons = ["13bba81c-b2b1-4b13-a3de-b24748977198"]
+
+    assert_equal presenter.document[:part_of_taxonomy_tree], expected_taxonomy_tree
+    assert_equal presenter.document[:taxons], expected_taxons
+  end
+
+  def test_topics
+    expanded_links = {
+      "expanded_links" => {
+        "topics" => [
+           {
+              "base_path" => "/topic/benefits-credits/tax-credits",
+              "content_id" => "f881f972-6094-4c7d-849c-9143461a9307",
+              "locale" => "en",
+              "title" => "Tax credits"
+           }
+        ]
+      }
+    }
+
+    payload = generate_random_example(payload: expanded_links)
+
+    presenter = elasticsearch_presenter(payload, "help_page")
+
+    expected_specialist_sectors = ["benefits-credits/tax-credits"]
+    expected_topic_content_ids = ["f881f972-6094-4c7d-849c-9143461a9307"]
+
+    assert_equal presenter.document[:specialist_sectors], expected_specialist_sectors
+    assert_equal presenter.document[:topic_content_ids], expected_topic_content_ids
   end
 
   def test_withdrawn_when_withdrawn_notice_present
