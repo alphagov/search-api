@@ -24,12 +24,19 @@ module GovukIndex
         indexable_content: sanitiser.clean(payload),
         is_withdrawn: withdrawn?,
         link: base_path,
+        mainstream_browse_pages: [],
+        mainstream_browse_page_content_ids: [],
         organisations: organisations_titles,
         organisation_content_ids: organisation_content_ids,
+        part_of_taxonomy_tree: [],
         popularity: calculate_popularity,
+        primary_publishing_organisation: [],
         public_timestamp: payload["public_updated_at"],
         publishing_app: payload["publishing_app"],
         rendering_app: payload["rendering_app"],
+        specialist_sectors: topics,
+        taxons: [],
+        topic_content_ids: [],
         title: payload["title"],
       }
     end
@@ -65,6 +72,10 @@ module GovukIndex
 
     def organisation_content_ids
       organisations.map { |org| org["content_id"] }
+    end
+
+    def topics
+      []
     end
 
     def calculate_popularity
