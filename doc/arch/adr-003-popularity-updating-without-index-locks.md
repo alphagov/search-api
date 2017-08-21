@@ -26,14 +26,13 @@ The code is quite complicated as it has to manage a threaded workload, which
 is difficult to test and reason about.
 
 As part of building the new `govuk` index, we want to simplify this process and 
-ideally avoid the index locking.
+ideally avoid the index locking. This means we can use sidekiq's concurrency
+implementation instead of having our own, as we no longer need to be able to 
+unlock the index at the end of the process.
 
-## Decision
+## Options
 
-### Leverage external versioning to avoid locking
-
-We have previously documented the decision to implement external versioning. As 
-a result of this functionality, we can rethink how we do our overnight processing.
+#### Using external versioning
 
 If we don't use index locking and switching and instead just overwrite the existing
 document with a copy of itself with the updated popularity figure, the following 
@@ -55,3 +54,31 @@ today, let's call this `pop-today`.
 > the search index
 > * `job-A` occurs before `update-A` - in this case both updates will occur, 
 > leaving the values from `update-A` in the search index
+
+This process would fail with version_type set to `external` but would succeed with
+version_type set to `external_gte`. The elasticsearch documentation does state that
+when using `external_gte`:
+ 
+> "If used incorrectly, it can result in loss of data."
+
+#### External versioning with multiplier
+
+By multiplying the external version fields by a multiplier when it is inserted into
+elasticsearch, it is then possible to increment the version field each time you
+do a transient data update. This can then be used as normal with the version_type
+of `external`, and would skip the transient data update if the content had been 
+updated. 
+
+This would mean that with a multiplier of 10,000 we could do a daily update for approx 
+27 years and with a multiplier of 100,000 we could do a daily update for approx 273 years.
+
+## Decision
+
+The two options have similar implementation with only minor differences, as a result we
+will be going with the easier of the two (using `external_gte`), as we will only be
+updating a single field (popularity) the risk of data loss is quite low.
+
+An additional advantage of choosing this approach is that we can use it with indices
+that aren't currently using `external` versioning, as the inplace edit with the current
+version - taken at the start of the reindex process - will be ignored if the content 
+has changed and the version has been automatically incremented.
