@@ -1,4 +1,6 @@
 class SitemapPresenter
+  GOVUK_LAUNCH_DATE = DateTime.new(2012, 10, 17).freeze
+
   def initialize(document, property_boost_calculator)
     @document = document
     @property_boost_calculator = property_boost_calculator
@@ -17,7 +19,11 @@ class SitemapPresenter
     return nil unless document.public_timestamp
 
     # Attempt to parse timestamp to validate it
-    DateTime.iso8601(document.public_timestamp)
+    parsed_date = DateTime.iso8601(document.public_timestamp)
+
+    # Limit timestamps for old documents to GOV.UK was launch date
+    return GOVUK_LAUNCH_DATE.iso8601 if parsed_date < GOVUK_LAUNCH_DATE
+
     document.public_timestamp
   rescue ArgumentError
     @logger.warn("Invalid timestamp '#{document.public_timestamp}' for page '#{document.link}'")
