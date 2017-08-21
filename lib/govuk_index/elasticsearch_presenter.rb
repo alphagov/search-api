@@ -20,12 +20,15 @@ module GovukIndex
         content_id: payload["content_id"],
         content_store_document_type: payload["document_type"],
         description: payload["description"],
+        email_document_supertype: payload["email_document_supertype"],
         format: payload["document_type"],
+        government_document_supertype: payload["government_document_supertype"],
         indexable_content: sanitiser.clean(payload),
         is_withdrawn: withdrawn?,
         link: base_path,
         mainstream_browse_pages: [],
         mainstream_browse_page_content_ids: [],
+        navigation_document_supertype: payload["navigation_document_supertype"],
         organisations: organisations_titles,
         organisation_content_ids: organisation_content_ids,
         part_of_taxonomy_tree: [],
@@ -38,6 +41,7 @@ module GovukIndex
         taxons: [],
         topic_content_ids: [],
         title: payload["title"],
+        user_journey_document_supertype: payload["user_journey_document_supertype"],
       }
     end
 

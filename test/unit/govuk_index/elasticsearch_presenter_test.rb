@@ -17,6 +17,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       "description" => "This page will help you love cheese too",
       "details" => { "body" => "We love cheese" },
       "document_type" => "help_page",
+      "email_document_supertype" => "super_email_document",
       "expanded_links" => {
         "organisations" => [
           {
@@ -25,11 +26,14 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
           }
         ]
       },
+      "government_document_supertype" => "super_government_document",
+      "navigation_document_supertype" => "super_nav",
       "payload_version" => 1,
       "public_updated_at" => "2016-02-29T09:24:10Z",
       "publishing_app" => "rails_for_the_win",
       "rendering_app" => "react_rules_ok",
       "title" => "This is a help page",
+      "user_journey_document_supertype" => "super_user_journey_document",
     }
 
     presenter = elasticsearch_presenter(payload, "help_page")
@@ -45,12 +49,15 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       content_id: "XXX-XXX-XXX-XXX",
       content_store_document_type: "help_page",
       description: "This page will help you love cheese too",
+      email_document_supertype: "super_email_document",
       format: "help_page",
+      government_document_supertype: "super_government_document",
       indexable_content: "\nWe love cheese\n",
       is_withdrawn: false,
       link: "/some/path",
       mainstream_browse_pages: [],
       mainstream_browse_page_content_ids: [],
+      navigation_document_supertype: "super_nav",
       organisations: ["The Great Cheese Organisation"],
       organisation_content_ids: ["YYY-YYY-YYY"],
       part_of_taxonomy_tree: [],
@@ -63,6 +70,7 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       taxons: [],
       topic_content_ids: [],
       title: "This is a help page",
+      user_journey_document_supertype: "super_user_journey_document",
     }
 
     assert_equal expected_identifier, presenter.identifier
