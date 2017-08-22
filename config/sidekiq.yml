@@ -7,3 +7,5 @@ production:
 :queues:
   - default
   - popularity
+:limits:
+  popularity: 12
