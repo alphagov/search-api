@@ -16,7 +16,7 @@ module GovukIndex
       process_response(response)
     # Rescuing as we don't want to retry this class of error
     rescue ValidationError => e
-      Airbrake.notify_or_ignore(
+      GOVUK::Error.notify(
         e,
         parameters: {
           message_body: payload,

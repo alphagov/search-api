@@ -126,7 +126,7 @@ class PublishingEventWorkerTest < Minitest::Test
       "title" => "We love cheese"
     }
 
-    Airbrake.expects(:notify_or_ignore).with(
+    GOVUK::Error.expects(:notify).with(
       instance_of(GovukIndex::ValidationError),
       parameters: { message_body: { 'document_type' => 'help_page', 'title' => 'We love cheese' } }
     )
