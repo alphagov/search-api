@@ -30,12 +30,14 @@ require 'yaml'
 initializers_path = File.expand_path("../config/initializers/*.rb", __dir__)
 Dir[initializers_path].each { |f| require f }
 
+require 'govuk_message_queue_consumer'
 require 'analytics_data'
 require File.expand_path('../config/logging_setup', __dir__)
 require 'document'
 require 'duplicate_deleter'
 require 'duplicate_links_finder'
 require 'govuk_document_types'
+require 'bulk_consumer'
 
 require 'indexer'
 require 'indexer/amender'
@@ -61,7 +63,6 @@ require 'govuk_index/elasticsearch_processor'
 require 'govuk_index/indexable_content_sanitiser'
 require 'govuk_index/publishing_event_processor'
 require 'govuk_index/publishing_event_worker'
-require 'govuk_message_queue_consumer'
 require 'health_check/basic_auth_credentials'
 require 'health_check/calculator'
 require 'health_check/calculator'
