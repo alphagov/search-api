@@ -47,7 +47,6 @@ module GovukIndex
       presenter = ElasticsearchPresenter.new(
         payload: payload,
         type: document_type_inferer.type,
-        sanitiser: IndexableContentSanitiser.new
       )
       presenter.valid!
 
