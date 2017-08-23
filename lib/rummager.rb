@@ -57,8 +57,10 @@ require 'indexer/workers/delete_worker'
 
 require 'govuk_index/client'
 require "govuk_index/document_type_inferer"
-require 'govuk_index/elasticsearch_presenter'
 require 'govuk_index/elasticsearch_processor'
+require 'govuk_index/presenters/common_fields_presenter'
+require 'govuk_index/presenters/elasticsearch_presenter'
+require 'govuk_index/presenters/expanded_links_presenter'
 require 'govuk_index/indexable_content_sanitiser'
 require 'govuk_index/popularity_updater'
 require 'govuk_index/popularity_worker'
