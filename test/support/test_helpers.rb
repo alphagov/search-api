@@ -25,4 +25,12 @@ module TestHelpers
   def stub_tagging_lookup
     publishing_api_has_lookups({})
   end
+
+  # need to add additional page_traffic data in order to set maximum allowed ranking value
+  def setup_page_traffic_data(document_count:)
+    document_count.times.each do |i|
+      insert_document("page-traffic_test", { rank_14: i }, id: "/path/#{i}", type: "page-traffic")
+    end
+    commit_index("page-traffic_test")
+  end
 end

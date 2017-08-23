@@ -152,6 +152,8 @@ GEM
       connection_pool (~> 2.2, >= 2.2.0)
       redis (~> 3.2, >= 3.2.1)
       sinatra (>= 1.4.7)
+    sidekiq-limit_fetch (3.4.0)
+      sidekiq (>= 4)
     sidekiq-statsd (0.1.5)
       activesupport
       sidekiq (>= 2.6)
@@ -217,6 +219,7 @@ DEPENDENCIES
   redis-namespace (~> 1.5.2)
   shoulda-context (~> 1.2.1)
   sidekiq (~> 4.1.2)
+  sidekiq-limit_fetch
   sidekiq-statsd (= 0.1.5)
   simplecov (~> 0.10.0)
   simplecov-rcov (~> 0.2.3)

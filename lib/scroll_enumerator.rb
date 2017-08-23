@@ -72,6 +72,7 @@ private
       size: batch_size,
       body: search_body,
       search_type: search_body[:sort] ? "query_then_fetch" : "scan",
+      version: true,
     )
   end
 

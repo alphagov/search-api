@@ -39,19 +39,12 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
       .for_schema(notification_schema: "help_page")
       .merge_and_validate({ document_type: "help_page", payload_version: 123 })
 
-    # need to add additional page_traffic data in order to set maximum allowed ranking value
-    4.times.each do |i|
-      insert_document(
-        "page-traffic_test",
-        { rank_14: i },
-        id: "/path/#{i}",
-        type: "page-traffic"
-      )
-    end
-    insert_document("page-traffic_test", { rank_14: 5, path_components: [random_example["base_path"]] }, id: random_example["base_path"], type: "page-traffic")
-    commit_index("page-traffic_test")
+    document_count = 4
+    document_rank = 2
+    insert_document("page-traffic_test", { rank_14: document_rank, path_components: [random_example["base_path"]] }, id: random_example["base_path"], type: "page-traffic")
+    setup_page_traffic_data(document_count: document_count)
 
-    popularity = 1.0 / (5 + SearchConfig.instance.popularity_rank_offset)
+    popularity = 1.0 / ([document_count, document_rank].min + SearchConfig.instance.popularity_rank_offset)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

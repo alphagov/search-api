@@ -1,6 +1,7 @@
 module GovukIndex
   class ElasticsearchProcessor
-    def initialize
+    def initialize(client: GovukIndex::Client)
+      @client = client
       @actions = []
     end
 
@@ -15,7 +16,7 @@ module GovukIndex
 
     def commit
       return if @actions.empty?
-      GovukIndex::Client.bulk(
+      @client.bulk(
         body: @actions
       )
     end

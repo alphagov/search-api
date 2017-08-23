@@ -18,6 +18,7 @@ gem "rack-logstasher", "~> 1.0.0"
 gem "rake", "~> 10.5"
 gem "redis-namespace", "~> 1.5.2"
 gem "sidekiq", "~> 4.1.2"
+gem 'sidekiq-limit_fetch'
 gem "sidekiq-statsd", "0.1.5"
 gem "sinatra", "~> 2.0.0"
 gem "slop", "~> 3.4.5"

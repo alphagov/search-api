@@ -34,6 +34,35 @@ namespace :rummager do
     index_group.switch_to(index) unless index_group.current_real
   end
 
+  desc "Update popularity data in indices.
+
+Update all data in the index inplace (without locks) with the new popularity
+data using sidekiq workers.
+
+This does not update the schema.
+"
+  task :update_popularity do
+    index_names.each do |index_name|
+      GovukIndex::PopularityUpdater.update(index_name)
+    end
+  end
+
+  desc "(deprecated) Migrate the data to a new schema definition
+
+Lock the current index, migrate all the data to a new index,
+wait for the process to complete, switch to the new index and
+release the lock.
+
+You should run this task if the index schema has changed.
+"
+  task :migrate_schema do
+    raise('Please set `CONFIRM_INDEX_MIGRATION_START` to run this task') unless ENV['CONFIRM_INDEX_MIGRATION_START']
+
+    index_names.each do |index_name|
+      GovukIndex::PopularityUpdater.migrate(index_name)
+    end
+  end
+
   desc "Migrates an index group to a new index.
 
 Seamlessly creates a new index in the same index_group using the latest
@@ -42,7 +71,6 @@ to the new index on success. For safety it verifies that the new index
 contains exactly the same number of documents as the original index.
 
 You should run this task if the index schema has changed.
-
 "
   task :migrate_index do
     index_names.each do |index_name|

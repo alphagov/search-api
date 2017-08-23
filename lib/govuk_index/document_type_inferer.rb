@@ -31,7 +31,12 @@ module GovukIndex
     end
 
     def existing_document
-      @_existing_document ||= Client.get(type: '_all', id: payload['base_path'])
+      @_existing_document ||=
+        begin
+          Client.get(type: '_all', id: payload['base_path'])
+        rescue Elasticsearch::Transport::Transport::Errors::NotFound
+          nil
+        end
     end
 
     def elasticsearch_document_type

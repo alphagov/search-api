@@ -41,12 +41,24 @@ class IntegrationTest < Minitest::Test
     Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_elasticsearch_types)
   end
 
-  def insert_document(index_name, attributes, id: attributes["link"], type: "edition")
+  def insert_document(index_name, attributes, id: attributes["link"], type: "edition", version: nil)
+    version_details =
+      if version
+        {
+          version: version,
+          version_type: 'external',
+        }
+      else
+        {}
+      end
+
     client.create(
-      index: index_name,
-      type: type,
-      id: id,
-      body: attributes
+      {
+        index: index_name,
+        type: type,
+        id: id,
+        body: attributes,
+      }.merge(version_details)
     )
   end
 

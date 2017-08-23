@@ -1,5 +1,7 @@
 module Indexer
   class BulkLoader
+    class ImUsed < StandardError; end
+
     def initialize(search_config, index_name, options = {})
       @search_config = search_config
       @index_name = index_name
@@ -11,6 +13,10 @@ module Indexer
     end
 
     def load_from(iostream)
+      # We think this code is no longer used now that the PR in search admin has been merged
+      # https://github.com/alphagov/search-admin/pull/59/files
+      Airbrake.notify(ImUsed.new("IMPORTANT!!! Indexer::BulkLoader.load_from is actually used"))
+
       build_and_switch_index do |queue|
         in_even_sized_batches(iostream) do |lines|
           queue.push(lines.join(""))
