@@ -4,7 +4,7 @@ source "https://rubygems.org"
 # when deploying versions of this app with activesupport 4.0.13. Pin to this
 # version for now until we've upgraded other apps and fixed the issue.
 gem "activesupport", "3.2.22.2"
-gem "airbrake", "~> 4.3.6"
+gem "govuk_app_config", github: "alphagov/govuk_app_config", branch: "add-sentry"
 gem "elasticsearch", "~> 1.0.15"
 gem "gds-api-adapters", "~> 41.2"
 gem "govuk_document_types", "0.1.4"
@@ -22,7 +22,7 @@ gem 'sidekiq-limit_fetch'
 gem "sidekiq-statsd", "0.1.5"
 gem "sinatra", "~> 2.0.0"
 gem "slop", "~> 3.4.5"
-gem "statsd-ruby", "~> 1.3.0"
+gem "statsd-ruby", "~> 1.4.0"
 gem "unf", "~> 0.1.4"
 gem "unicorn", "5.1.0"
 gem "whenever", "~> 0.9.4"

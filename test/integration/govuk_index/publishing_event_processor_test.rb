@@ -59,7 +59,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
       "document_type" => "help_page"
     }
 
-    Airbrake.expects(:notify_or_ignore)
+    GOVUK::Error.expects(:notify)
     @queue.publish(invalid_payload.to_json, content_type: "application/json")
 
     assert_equal 0, @queue.message_count

@@ -3,8 +3,6 @@
 # RABBITMQ_VHOST
 # RABBITMQ_USER
 # RABBITMQ_PASSWORD
-# Load Airbrake to make govuk_message_queue_consumer send error notifications.
-require 'airbrake'
 require 'rummager'
 
 namespace :message_queue do

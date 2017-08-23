@@ -10,7 +10,7 @@ module Indexer
 
     def self.notify_of_failures
       sidekiq_retries_exhausted do |msg|
-        Airbrake.notify_or_ignore(Indexer::FailedJobException.new, parameters: msg)
+        GOVUK::Error.notify(Indexer::FailedJobException.new, parameters: msg)
       end
     end
 

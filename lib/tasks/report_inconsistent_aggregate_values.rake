@@ -48,10 +48,10 @@ task :report_inconsistent_aggregate_values do
     puts
 
     if !aggregate_values_to_report[aggregate].empty?
-      # Send the errors to Airbrake
-      Airbrake.notify(DataInconsistencyError.new,
-        error_message: "Some aggregate values for \"#{aggregate}\" are not expanded",
+      # Send the errors to Sentry
+      GOVUK::Error.notify(DataInconsistencyError.new,
         parameters: {
+          error_message: "Some aggregate values for \"#{aggregate}\" are not expanded",
           aggregate: aggregate,
           aggregate_values: aggregate_values_to_report[aggregate]
         }

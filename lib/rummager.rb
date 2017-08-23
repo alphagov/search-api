@@ -3,7 +3,7 @@ $LOAD_PATH << __dir__ unless $LOAD_PATH.include?(__dir__)
 require 'active_support/core_ext/array'
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/string'
-require 'airbrake'
+require 'govuk_app_config'
 require 'cgi'
 require 'csv'
 require 'elasticsearch'
