@@ -2,7 +2,7 @@ require 'test_helper'
 
 class FormatMigratorTest < Minitest::Test
   def test_when_base_query_without_migrated_formats
-    Search::FormatMigrator.stubs(:migrated_formats).returns([])
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns([])
     base_query = { filter: 'component' }
     expected = {
       indices: {
@@ -17,7 +17,7 @@ class FormatMigratorTest < Minitest::Test
   end
 
   def test_when_base_query_with_migrated_formats
-    Search::FormatMigrator.stubs(:migrated_formats).returns(['help_page'])
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns(['help_page'])
     base_query = { filter: 'component' }
     expected = {
       indices: {
@@ -40,7 +40,7 @@ class FormatMigratorTest < Minitest::Test
   end
 
   def test_when_no_base_query_without_migrated_formats
-    Search::FormatMigrator.stubs(:migrated_formats).returns([])
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns([])
     expected = {
       indices: {
         indices: %w(mainstream detailed government),
@@ -52,7 +52,7 @@ class FormatMigratorTest < Minitest::Test
   end
 
   def test_when_no_base_query_with_migrated_formats
-    Search::FormatMigrator.stubs(:migrated_formats).returns(['help_page'])
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns(['help_page'])
     expected = {
       indices: {
         indices: %w(mainstream detailed government),

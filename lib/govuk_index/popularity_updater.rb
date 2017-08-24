@@ -18,6 +18,11 @@ module GovukIndex
           source_index: index_group.current.real_name,
           destination_index: new_index.real_name,
         ).run
+        # need to do this to ensure the new index is fully populated
+        SyncUpdater.new(
+          source_index: 'mainstream',
+          destination_index: new_index.real_name,
+        ).run
         # wait for queued tasks to be started
         sleep 1 while(Sidekiq::Queue.new(GovukIndex::PopularityWorker::QUEUE_NAME).size > 0) # rubocop: disable Style/ZeroLengthPredicate
         # wait for started tasks to be finished
@@ -26,12 +31,22 @@ module GovukIndex
       end
     end
 
+  private
+
+
     def worker
       PopularityWorker
     end
 
     def search_body
-      { query: { match_all: {} } }
+      # only sync migrated formats as the rest will be updated via the sync job.
+      {
+        query: {
+          terms: {
+            format: MigratedFormats.indexable_formats
+          }
+        }
+      }
     end
   end
 end

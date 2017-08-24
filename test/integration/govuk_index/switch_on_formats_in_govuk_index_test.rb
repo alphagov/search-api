@@ -13,7 +13,7 @@ class GovukIndex::SwitchOnFormatsInGovukIndexTest < IntegrationTest
   end
 
   def test_defaults_to_excluding_govuk_index_records
-    Search::FormatMigrator.stubs(:migrated_formats).returns([])
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns([])
 
     get "/search"
 
@@ -21,7 +21,7 @@ class GovukIndex::SwitchOnFormatsInGovukIndexTest < IntegrationTest
   end
 
   def test_can_enable_format_to_use_govuk_index
-    Search::FormatMigrator.stubs(:migrated_formats).returns(['help_page'])
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns(['help_page'])
 
     get "/search"
 
@@ -29,7 +29,7 @@ class GovukIndex::SwitchOnFormatsInGovukIndexTest < IntegrationTest
   end
 
   def test_can_enable_multiple_formats_to_use_govuk_index
-    Search::FormatMigrator.stubs(:migrated_formats).returns(%w(help_page answer))
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns(%w(help_page answer))
 
     get "/search"
 

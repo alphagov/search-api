@@ -26,7 +26,7 @@ module GovukIndex
       raise ImplementationRequired
     end
 
-    private
+  private
 
     def scroll_enumerator
       ScrollEnumerator.new(

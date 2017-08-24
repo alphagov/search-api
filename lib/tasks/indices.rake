@@ -34,6 +34,16 @@ namespace :rummager do
     index_group.switch_to(index) unless index_group.current_real
   end
 
+  desc "Sync unmigrated data from mainstream into govuk
+
+While we are migrating data to govuk, it is important that govuk has
+all the data from mainstream in order for soring to be calculated
+correctly
+"
+  task :sync_govuk do
+    GovukIndex::SyncUpdater.update
+  end
+
   desc "Update popularity data in indices.
 
 Update all data in the index inplace (without locks) with the new popularity

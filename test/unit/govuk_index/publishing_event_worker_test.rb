@@ -9,6 +9,7 @@ class PublishingEventWorkerTest < Minitest::Test
     }
 
     actions = stub('actions')
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
     actions.expects(:save)
     actions.expects(:commit).returns('items' => [{ 'index' => { 'status' => 200 } }])
@@ -27,6 +28,7 @@ class PublishingEventWorkerTest < Minitest::Test
     stub_document_type_inferer
 
     actions = stub('actions')
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
     actions.expects(:delete)
     actions.expects(:commit).returns('items' => [{ 'delete' => { 'status' => 200 } }])
@@ -48,6 +50,7 @@ class PublishingEventWorkerTest < Minitest::Test
     }
 
     actions = stub('actions')
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
     actions.expects(:save)
     actions.expects(:commit).returns('items' => [{ 'index' => { 'status' => 200 } }])
@@ -67,6 +70,7 @@ class PublishingEventWorkerTest < Minitest::Test
     stub_document_type_inferer
 
     actions = stub('actions')
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
     actions.expects(:delete)
     actions.expects(:commit).returns('items' => [{ 'delete' => { 'status' => 500 } }])
@@ -89,6 +93,7 @@ class PublishingEventWorkerTest < Minitest::Test
     stub_document_type_inferer
 
     actions = stub('actions')
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
     actions.expects(:delete)
     actions.expects(:commit).returns('items' => [{ 'delete' => { 'status' => 404 } }])
@@ -107,6 +112,7 @@ class PublishingEventWorkerTest < Minitest::Test
     stub_document_type_inferer
 
     actions = stub('actions')
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
     actions.expects(:delete)
     actions.expects(:commit).returns('items' => [{ 'index' => { 'status' => 200 } }, { 'delete' => { 'status' => 200 } }])

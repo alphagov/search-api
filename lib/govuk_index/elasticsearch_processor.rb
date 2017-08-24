@@ -15,7 +15,7 @@ module GovukIndex
     end
 
     def commit
-      return if @actions.empty?
+      return nil if @actions.empty?
       @client.bulk(
         body: @actions
       )
