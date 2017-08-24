@@ -1,7 +1,7 @@
 module GovukIndex
   class PopularityWorker < Indexer::BaseWorker
     BULK_INDEX_TIMEOUT = 60
-    QUEUE_NAME = 'popularity'.freeze
+    QUEUE_NAME = 'bulk'.freeze
     sidekiq_options queue: QUEUE_NAME
 
     def perform(records, destination_index)
