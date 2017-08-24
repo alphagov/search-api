@@ -27,10 +27,10 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       excluded_fields: ["withdrawn_notice"]
     )
 
-    presented_fields = common_fields_presenter(payload).present
+    presenter = common_fields_presenter(payload)
 
     @directly_mapped_fields.each do |field|
-      assert_equal presented_fields[field.to_sym], payload[field]
+      assert_equal presenter.public_send(field), payload[field]
     end
   end
 
@@ -46,12 +46,11 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       excluded_fields: ["withdrawn_notice"]
     )
 
-    presented_fields = common_fields_presenter(payload).present
+    presenter = common_fields_presenter(payload)
 
-    assert_equal presented_fields[:format], payload["document_type"]
-    assert_equal presented_fields[:indexable_content], "\nWe love cheese\n"
-    assert_equal presented_fields[:is_withdrawn], false
-    assert_equal presented_fields[:link], payload["base_path"]
+    assert_equal presenter.format, payload["document_type"]
+    assert_equal presenter.is_withdrawn, false
+    assert_equal presenter.link, payload["base_path"]
   end
 
   def test_withdrawn_when_withdrawn_notice_present
@@ -63,9 +62,9 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
       }
     }
 
-    presented_fields = common_fields_presenter(payload).present
+    presenter = common_fields_presenter(payload)
 
-    assert_equal presented_fields[:is_withdrawn], true
+    assert_equal presenter.is_withdrawn, true
   end
 
   def test_popularity_when_value_is_returned_from_lookup
@@ -76,9 +75,9 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
     Indexer::PopularityLookup.expects(:new).with('govuk_index', SearchConfig.instance).returns(@popularity_lookup)
     @popularity_lookup.expects(:lookup_popularities).with([payload['base_path']]).returns(payload["base_path"] => popularity)
 
-    presented_fields = common_fields_presenter(payload).present
+    presenter = common_fields_presenter(payload)
 
-    assert_equal popularity, presented_fields[:popularity]
+    assert_equal popularity, presenter.popularity
   end
 
   def test_no_popularity_when_no_value_is_returned_from_lookup
@@ -87,15 +86,12 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
     Indexer::PopularityLookup.expects(:new).with('govuk_index', SearchConfig.instance).returns(@popularity_lookup)
     @popularity_lookup.expects(:lookup_popularities).with([payload['base_path']]).returns({})
 
-    presented_fields = common_fields_presenter(payload).present
+    presenter = common_fields_presenter(payload)
 
-    assert_equal nil, presented_fields['popularity']
+    assert_equal nil, presenter.popularity
   end
 
   def common_fields_presenter(payload)
-    GovukIndex::CommonFieldsPresenter.new(
-      payload,
-      GovukIndex::IndexableContentSanitiser.new
-    )
+    GovukIndex::CommonFieldsPresenter.new(payload)
   end
 end

@@ -1,14 +1,12 @@
 module GovukIndex
   class IndexableContentSanitiser
-    def clean(payload)
-      return nil if payload['details'].nil?
-
-      cleaned_content = payload['details'].values.map { |item|
+    def clean(items)
+      cleaned_content = items.map { |item|
         strip_html_tags(indexable_content(item))
       }.compact
 
       return nil if cleaned_content.empty?
-      cleaned_content.join("\n")
+      cleaned_content.join("\n").strip
     end
 
   private

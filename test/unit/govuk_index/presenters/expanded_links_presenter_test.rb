@@ -19,7 +19,7 @@ class GovukIndex::ExpandedLinksPresenterTest < Minitest::Test
       ]
     }
 
-    presented_fields = expanded_links_presenter(expanded_links).present
+    presenter = expanded_links_presenter(expanded_links)
 
     expected_mainstream_browse_pages = [
       "visas-immigration/eu-eea-commonwealth", "visas-immigration/work-visas"
@@ -29,8 +29,8 @@ class GovukIndex::ExpandedLinksPresenterTest < Minitest::Test
       "5f42c670-5b82-4f1f-ab52-0e100428d430", "4ab4764d-d9ce-425f-a8cc-aaba4a38be09"
     ]
 
-    assert_equal presented_fields[:mainstream_browse_pages], expected_mainstream_browse_pages
-    assert_equal presented_fields[:mainstream_browse_page_content_ids], expected_mainstream_browse_page_content_ids
+    assert_equal presenter.mainstream_browse_pages, expected_mainstream_browse_pages
+    assert_equal presenter.mainstream_browse_page_content_ids, expected_mainstream_browse_page_content_ids
   end
 
   def test_organisations
@@ -53,15 +53,15 @@ class GovukIndex::ExpandedLinksPresenterTest < Minitest::Test
       ]
     }
 
-    presented_fields = expanded_links_presenter(expanded_links).present
+    presenter = expanded_links_presenter(expanded_links)
 
     expected_organisations = ["uk-visas-and-immigration"]
     expected_organisation_content_ids = ["04148522-b0c1-4137-b687-5f3c3bdd561a"]
     expected_primary_publishing_organisation = ["uk-visas-and-immigration"]
 
-    assert_equal presented_fields[:organisations], expected_organisations
-    assert_equal presented_fields[:organisation_content_ids], expected_organisation_content_ids
-    assert_equal presented_fields[:primary_publishing_organisation], expected_primary_publishing_organisation
+    assert_equal presenter.organisations, expected_organisations
+    assert_equal presenter.organisation_content_ids, expected_organisation_content_ids
+    assert_equal presenter.primary_publishing_organisation, expected_primary_publishing_organisation
   end
 
   def test_taxons
@@ -97,7 +97,7 @@ class GovukIndex::ExpandedLinksPresenterTest < Minitest::Test
       ]
     }
 
-    presented_fields = expanded_links_presenter(expanded_links).present
+    presenter = expanded_links_presenter(expanded_links)
 
     expected_taxonomy_tree = [
       "206b7f3a-49b5-476f-af0f-fd27e2a68473",
@@ -106,8 +106,8 @@ class GovukIndex::ExpandedLinksPresenterTest < Minitest::Test
     ]
     expected_taxons = ["13bba81c-b2b1-4b13-a3de-b24748977198"]
 
-    assert_equal presented_fields[:part_of_taxonomy_tree], expected_taxonomy_tree
-    assert_equal presented_fields[:taxons], expected_taxons
+    assert_equal presenter.part_of_taxonomy_tree, expected_taxonomy_tree
+    assert_equal presenter.taxons, expected_taxons
   end
 
   def test_topics
@@ -122,13 +122,13 @@ class GovukIndex::ExpandedLinksPresenterTest < Minitest::Test
       ]
     }
 
-    presented_fields = expanded_links_presenter(expanded_links).present
+    presenter = expanded_links_presenter(expanded_links)
 
     expected_specialist_sectors = ["benefits-credits/tax-credits"]
     expected_topic_content_ids = ["f881f972-6094-4c7d-849c-9143461a9307"]
 
-    assert_equal presented_fields[:specialist_sectors], expected_specialist_sectors
-    assert_equal presented_fields[:topic_content_ids], expected_topic_content_ids
+    assert_equal presenter.specialist_sectors, expected_specialist_sectors
+    assert_equal presenter.topic_content_ids, expected_topic_content_ids
   end
 
   def expanded_links_presenter(expanded_links)
