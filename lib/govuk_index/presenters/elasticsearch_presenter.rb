@@ -64,7 +64,12 @@ module GovukIndex
     end
 
     def details
-      @_details ||= DetailsPresenter.new(payload["details"])
+      @_details ||=
+        DetailsPresenter.new(
+          details: payload["details"],
+          format: common_fields.format,
+          sanitiser: IndexableContentSanitiser.new
+        )
     end
 
     def expanded_links

@@ -50,7 +50,9 @@ class GovukIndex::DetailsPresenterTest < Minitest::Test
       "will_continue_on" => "on and on",
     }
 
-    assert_equal "short description\n\noverview", details_presenter(details).indexable_content
+    presenter = details_presenter(details, "licence")
+
+    assert_equal "short description\n\noverview", presenter.indexable_content
   end
 
   def test_mapped_licence_fields
@@ -66,13 +68,31 @@ class GovukIndex::DetailsPresenterTest < Minitest::Test
       "will_continue_on" => "on and on",
     }
 
-    presenter = details_presenter(details)
+    presenter = details_presenter(details, "licence")
 
     assert_equal presenter.licence_identifier, details["licence_identifier"]
     assert_equal presenter.licence_short_description, details["licence_short_description"]
   end
 
-  def details_presenter(details)
-    GovukIndex::DetailsPresenter.new(details)
+  def test_transaction_indexable_content
+    details = {
+      "external_related_links" => [],
+      "introductory_paragraph" => [
+        { "content_type" => "text/govspeak", "content" => "**introductory paragraph**" },
+        { "content_type" => "text/html", "content" => "<strong>introductory paragraph</strong>" }
+      ],
+      "more_information" => "more information",
+      "start_button_text" => "Start now",
+    }
+
+    assert_equal "introductory paragraph\n\nmore information", details_presenter(details, "transaction").indexable_content
+  end
+
+  def details_presenter(details, format = "help_page")
+    GovukIndex::DetailsPresenter.new(
+      details: details,
+      format: format,
+      sanitiser: GovukIndex::IndexableContentSanitiser.new
+    )
   end
 end
