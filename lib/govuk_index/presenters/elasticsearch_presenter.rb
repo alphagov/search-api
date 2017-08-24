@@ -40,7 +40,9 @@ module GovukIndex
         specialist_sectors:                 expanded_links.specialist_sectors,
         taxons:                             expanded_links.taxons,
         topic_content_ids:                  expanded_links.topic_content_ids,
-        indexable_content:                  indexable_content.indexable_content
+        indexable_content:                  indexable_content.indexable_content,
+        licence_identifier:                 licences.identifier,
+        licence_short_description:          licences.short_description,
       }
     end
 
@@ -67,6 +69,10 @@ module GovukIndex
 
     def indexable_content
       @_indexable_content ||= IndexableContentPresenter.new(payload["details"])
+    end
+
+    def licences
+      @_licences ||= LicencePresenter.new(payload["details"])
     end
   end
 end
