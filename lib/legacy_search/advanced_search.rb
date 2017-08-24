@@ -38,9 +38,32 @@ module LegacySearch
         "size" => per_page
       }
 
-      payload.merge!(query_builder.query_hash)
+      if page > 250
+        # we need to use the scroll API
+        batch_size = per_page * 15
+        batch_page = starting_index / batch_size - 1
+        data = ScrollEnumerator.new(
+          client: @client,
+          index_names: @index_name,
+          search_body: query_builder.query_hash,
+          batch_size: batch_size,
+          process_in_batch: true
+        )
+        batch_page.times { data.next }
 
-      Search::ResultSet.from_elasticsearch(@elasticsearch_types, raw_search(payload))
+        batch_results = data.next
+        start_pos = (starting_index % batch_size)
+        end_pos = (starting_index % batch_size + per_page - 1)
+        puts "page: #{page}, per_page: #{per_page}"
+        puts "start_index: #{starting_index}, batch_size: #{batch_size}, batch_page: #{batch_page}, start_pos: #{start_pos}, end_pos: #{end_pos}"
+        results = batch_results[start_pos..end_pos]
+
+        Search::ResultSet.from_elasticsearch(@elasticsearch_types, 'hits' => { 'total' => data.size, 'hits' => results})
+      else
+        payload.merge!(query_builder.query_hash)
+
+        Search::ResultSet.from_elasticsearch(@elasticsearch_types, raw_search(payload))
+      end
     end
 
   private

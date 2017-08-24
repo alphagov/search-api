@@ -11,8 +11,8 @@ class ScrollEnumerator < Enumerator
 
   attr_reader :size
 
-  def initialize(client:, index_names:, search_body:, batch_size: DEFAULT_BATCH_SIZE, &block)
-    raise ArgumentError, "Result processing block is required" unless block
+  def initialize(client:, index_names:, search_body:, batch_size: DEFAULT_BATCH_SIZE, process_in_batch: false, &block)
+    raise ArgumentError, "Result processing block is required" unless block || process_in_batch
 
     @client = client
     @index_names = index_names
@@ -37,8 +37,12 @@ class ScrollEnumerator < Enumerator
             hits_on_page = page["hits"]["hits"].size
             "Retrieved #{hits_on_page} of #{size} documents"
           end
-          page["hits"]["hits"].each do |hit|
-            yielder << yield(hit)
+          if block_given?
+            page["hits"]["hits"].each do |hit|
+              yielder << yield(hit)
+            end
+          else
+            yielder << page["hits"]["hits"]
           end
         else
           break
