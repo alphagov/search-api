@@ -1,9 +1,5 @@
 module GovukIndex
-  class PopularityUpdater
-    SCROLL_BATCH_SIZE = 500
-    PROCESSOR_BATCH_SIZE = 25
-    TIMEOUT_SECONDS = 30
-
+  class PopularityUpdater < Updater
     def self.update(index_name)
       new(
         source_index: index_name,
@@ -30,31 +26,12 @@ module GovukIndex
       end
     end
 
-    def initialize(source_index:, destination_index:)
-      @source_index = source_index
-      @destination_index = destination_index
+    def worker
+      PopularityWorker
     end
 
-    def run
-      scroll_enumerator.each_slice(PROCESSOR_BATCH_SIZE) do |documents|
-        PopularityWorker.perform_async(documents, @destination_index)
-      end
-    end
-
-  private
-
-    def scroll_enumerator
-      ScrollEnumerator.new(
-        client: Services.elasticsearch(hosts: SearchConfig.instance.base_uri, timeout: TIMEOUT_SECONDS),
-        index_names: @source_index,
-        search_body: { query: { match_all: {} } },
-        batch_size: SCROLL_BATCH_SIZE
-      ) do |record|
-        {
-          identifier: record.slice(*%w{_id _type _version}),
-          document: record.fetch('_source'),
-        }
-      end
+    def search_body
+      { query: { match_all: {} } }
     end
   end
 end
