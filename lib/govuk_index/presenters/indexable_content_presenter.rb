@@ -1,5 +1,12 @@
 module GovukIndex
   class IndexableContentPresenter
+    EXCLUDED_FIELDS = %w(
+      continuation_link
+      external_related_links
+      licence_identifier
+      will_continue_on
+    ).freeze
+
     def initialize(details)
       @details = details
       @sanitiser = IndexableContentSanitiser.new
@@ -15,9 +22,10 @@ module GovukIndex
     attr_reader :details, :sanitiser
 
     def elements
-      details.flat_map do |key, value|
+      details.flat_map { |key, value|
+        next if EXCLUDED_FIELDS.include?(key)
         key == 'parts' ? parts(value) : [value]
-      end
+      }.compact
     end
 
     def parts(items)
