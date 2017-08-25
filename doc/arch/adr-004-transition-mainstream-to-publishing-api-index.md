@@ -76,7 +76,7 @@ At search time, Rummager reads untransitioned formats from the old indexes. Docu
 
 At index time, Rummager will ignore publishing API messages affecting untransitioned formats.
 
-The nightly update job will update the popularity field of untransitioned formats in the `mainstream` index. Then it will copy untransitioned format documents from the `mainstream` index into the `govuk` index.
+The nightly update job will update the popularity field of untransitioned formats in the `mainstream` index. It will also copy untransitioned format documents from the `mainstream` index into the `govuk` index (it doesn't matter which order these two things happen).
 
 Net effect: untransitioned formats are considered in the TF-IDF statistics of transitioned formats, but are not ready to be returned from the `govuk` index themselves.
 
