@@ -31,6 +31,9 @@ module GovukIndex
         rendering_app:                      common_fields.rendering_app,
         title:                              common_fields.title,
         user_journey_document_supertype:    common_fields.user_journey_document_supertype,
+        indexable_content:                  details.indexable_content,
+        licence_identifier:                 details.licence_identifier,
+        licence_short_description:          details.licence_short_description,
         mainstream_browse_pages:            expanded_links.mainstream_browse_pages,
         mainstream_browse_page_content_ids: expanded_links.mainstream_browse_page_content_ids,
         organisations:                      expanded_links.organisations,
@@ -40,7 +43,6 @@ module GovukIndex
         specialist_sectors:                 expanded_links.specialist_sectors,
         taxons:                             expanded_links.taxons,
         topic_content_ids:                  expanded_links.topic_content_ids,
-        indexable_content:                  indexable_content.indexable_content
       }
     end
 
@@ -61,12 +63,12 @@ module GovukIndex
       @_common_fields ||= CommonFieldsPresenter.new(payload)
     end
 
-    def expanded_links
-      @_expanded_links ||= ExpandedLinksPresenter.new(payload["expanded_links"])
+    def details
+      @_details ||= DetailsPresenter.new(payload["details"])
     end
 
-    def indexable_content
-      @_indexable_content ||= IndexableContentPresenter.new(payload["details"])
+    def expanded_links
+      @_expanded_links ||= ExpandedLinksPresenter.new(payload["expanded_links"])
     end
   end
 end

@@ -1,5 +1,7 @@
 module GovukIndex
-  class IndexableContentPresenter
+  class DetailsPresenter
+    ALLOWED_FIELDS = %w(body licence_overview licence_short_description parts).freeze
+
     def initialize(details)
       @details = details
       @sanitiser = IndexableContentSanitiser.new
@@ -10,14 +12,24 @@ module GovukIndex
       sanitiser.clean(elements)
     end
 
+    def licence_identifier
+      details['licence_identifier']
+    end
+
+    def licence_short_description
+      details['licence_short_description']
+    end
+
   private
 
     attr_reader :details, :sanitiser
 
     def elements
-      details.flat_map do |key, value|
+      content = details.flat_map do |key, value|
+        next unless ALLOWED_FIELDS.include?(key)
         key == 'parts' ? parts(value) : [value]
       end
+      content.compact
     end
 
     def parts(items)
