@@ -1,3 +1,4 @@
 migrated:
 - help_page
-indexable: []
+indexable:
+- answer
