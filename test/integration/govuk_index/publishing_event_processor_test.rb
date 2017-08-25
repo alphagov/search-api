@@ -18,6 +18,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
   end
 
   def test_should_save_new_document_to_elasticsearch
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     random_example = GovukSchemas::RandomExample
       .for_schema(notification_schema: "help_page")
       .merge_and_validate({ document_type: "help_page", payload_version: 123 })
@@ -35,6 +36,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
   end
 
   def test_should_include_popularity_when_available
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     random_example = GovukSchemas::RandomExample
       .for_schema(notification_schema: "help_page")
       .merge_and_validate({ document_type: "help_page", payload_version: 123 })

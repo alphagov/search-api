@@ -13,7 +13,7 @@ module GovukIndex
       actions = ElasticsearchProcessor.new
       process_action(actions, routing_key, payload)
       response = actions.commit
-      process_response(response)
+      process_response(response) if response
     # Rescuing as we don't want to retry this class of error
     rescue ValidationError => e
       Airbrake.notify_or_ignore(
@@ -50,12 +50,16 @@ module GovukIndex
       )
       presenter.valid!
 
-      if document_type_inferer.unpublishing_type?
-        logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{document_type_inferer.type}")
-        actions.delete(presenter)
+      if MigratedFormats.indexable?(presenter.format)
+        if document_type_inferer.unpublishing_type?
+          logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{document_type_inferer.type}")
+          actions.delete(presenter)
+        else
+          logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{document_type_inferer.type}")
+          actions.save(presenter)
+        end
       else
-        logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{document_type_inferer.type}")
-        actions.save(presenter)
+        logger.info("#{routing_key} -> SKIPPED #{presenter.base_path} #{document_type_inferer.type}")
       end
     end
 

@@ -6,6 +6,6 @@ production:
 :logfile: ./log/sidekiq.log
 :queues:
   - default
-  - popularity
+  - bulk
 :limits:
-  popularity: 12
+  bulk: 12

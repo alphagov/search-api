@@ -46,6 +46,10 @@ module GovukIndex
       }
     end
 
+    def format
+      common_fields.format
+    end
+
     def base_path
       @_base_path ||= payload["base_path"]
     end
