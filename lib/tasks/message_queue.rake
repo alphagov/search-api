@@ -25,4 +25,13 @@ namespace :message_queue do
       statsd_client: Services.statsd_client,
     ).run
   end
+
+  desc "Subscribe to reindexed messages"
+  task :listen_to_reindexing_messages do
+    GovukMessageQueueConsumer::Consumer.new(
+      queue_name: "rummager_govuk_index_reindexing",
+      processor: GovukIndex::PublishingEventProcessor.new,
+      statsd_client: Services.statsd_client,
+    ).run
+  end
 end
