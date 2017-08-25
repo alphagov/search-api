@@ -32,14 +32,15 @@ There is a separate task in place to reindex the content currently in the search
 This is something we need to do after adding new fields or otherwise changing
 the Elasticsearch mappings, for those fields to work properly.
 
-Note that neither of these mechanisms add or remove documents from the search index.
+### Problems we're not addressing now
 
-- If an edition is ever published, and the search index doesn't get updated, it stays out of date until the next time the document is updated
+Neither of the above mechanisms add or remove documents from the search index, which means that:
 
-- If an edition is unpublished without Rummager being notified, it stays in the search index forever
+- if an edition is ever published, and the search index doesn't get updated, it stays out of date until the next time the document is updated
 
-Long term, we'd like to be able to easily rebuild the whole `govuk` index
-from publishing API, to avoid these kind of problems, but we aren't planning to do this right now.
+- if an edition is unpublished without Rummager being notified, it stays in the search index forever
+
+Long term, we'd like to be able to easily rebuild the whole `govuk` index from scratch, to avoid these kind of problems, but we aren't aiming to do this right now.
 
 ### Immediate needs
 
