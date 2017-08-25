@@ -1,10 +1,15 @@
 module GovukIndex
   class DetailsPresenter
-    ALLOWED_FIELDS = %w(body licence_overview licence_short_description parts).freeze
+    DEFAULT_FIELDS = %w(body parts).freeze
+    FIELDS_BY_FORMAT = {
+      'licence'     => %w(licence_short_description licence_overview),
+      'transaction' => %w(introductory_paragraph more_information)
+    }.freeze
 
-    def initialize(details)
+    def initialize(details:, format:, sanitiser:)
       @details = details
-      @sanitiser = IndexableContentSanitiser.new
+      @format = format
+      @sanitiser = sanitiser
     end
 
     def indexable_content
@@ -22,14 +27,22 @@ module GovukIndex
 
   private
 
-    attr_reader :details, :sanitiser
+    attr_reader :details, :format, :sanitiser
 
     def elements
-      content = details.flat_map do |key, value|
-        next unless ALLOWED_FIELDS.include?(key)
-        key == 'parts' ? parts(value) : [value]
+      content = allowed_fields.flat_map do |field|
+        indexable_values = details[field] || []
+        field == 'parts' ? parts(indexable_values) : [indexable_values]
       end
       content.compact
+    end
+
+    def allowed_fields
+      DEFAULT_FIELDS + fields_by_format
+    end
+
+    def fields_by_format
+      FIELDS_BY_FORMAT[format] || []
     end
 
     def parts(items)
