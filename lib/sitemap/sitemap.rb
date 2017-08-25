@@ -1,16 +1,35 @@
 class Sitemap
+  SUB_DIRECTORY = "sitemaps".freeze
+
   def initialize(directory, timestamp = Time.now.utc)
     raise 'Sitemap directory is required' unless directory
-    @subdirectory = "sitemaps"
-    @output_path = File.join(directory, @subdirectory)
+    @output_path = File.join(directory, SUB_DIRECTORY)
+    @directory = directory
     @timestamp = timestamp
   end
 
   def generate(content_indices)
     FileUtils.mkdir_p(@output_path)
+
+    # generate and link the sitemap data files
     sitemap_writer = SitemapWriter.new(@output_path, @timestamp)
-    sitemap_filenames = sitemap_writer.write_sitemaps(content_indices)
-    write_index(sitemap_filenames)
+    sitemap_filenames_with_linkname = sitemap_writer.write_sitemaps(content_indices)
+    update_links(sitemap_filenames_with_linkname)
+
+    # generate and link the sitemap index file
+    sitemap_link_names = sitemap_filenames_with_linkname.map(&:last)
+    index_filename = write_index(sitemap_link_names)
+    update_sitemap_link(index_filename)
+  end
+
+  def update_links(sitemap_filenames)
+    sitemap_filenames.each do |filename, link_filename|
+      File.symlink("#{@output_path}/#{filename}", "#{@output_path}/#{link_filename}")
+    end
+  end
+
+  def update_sitemap_link(sitemap_filename)
+    File.symlink("#{@output_path}/#{sitemap_filename}", "#{@directory}/sitemap.xml")
   end
 
   def write_index(sitemap_filenames)
@@ -21,7 +40,7 @@ class Sitemap
         xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           sitemap_filenames.each do |sitemap_filename|
             xml.sitemap {
-              xml.loc "#{base_url}/#{@subdirectory}/#{sitemap_filename}"
+              xml.loc "#{base_url}/#{SUB_DIRECTORY}/#{sitemap_filename}"
               xml.lastmod @timestamp.strftime("%FT%T%:z")
             }
           end
@@ -29,7 +48,7 @@ class Sitemap
       end
       sitemap_index_file.write(builder.to_xml)
     end
-    index_full_path
+    index_filename
   end
 
   def cleanup

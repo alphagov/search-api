@@ -1,132 +1,79 @@
 require 'integration_test_helper'
 
 class SitemapTest < IntegrationTest
-  SAMPLE_DATA = [
-    {
-      "title" => "Cheese in my face",
-      "description" => "Hummus weevils",
-      "format" => "answer",
-      "link" => "/an-example-answer",
-      "indexable_content" => "I like my badger: he is tasty and delicious",
-      "public_timestamp" => "2017-07-01T12:41:34+00:00"
-    },
-    {
-      "title" => "Cheese on Ruby's face",
-      "description" => "Ruby weevils",
-      "format" => "answer",
-      "link" => "/an-example-answer-rubylol",
-      "indexable_content" => "I like my rubby badger: he is tasty and delicious"
-    },
-    {
-      "title" => "Cheese on Python's face",
-      "description" => "Python weevils",
-      "format" => "answer",
-      "link" => "/an-example-answer-pythonwin",
-      "indexable_content" => "I like my badger: he is pythonic and delicious"
-    },
-    {
-      "title" => "Cheese in my ears",
-      "description" => "Wordpress weevils",
-      "format" => "answer",
-      "link" => "/an-example-answer-stuff",
-      "indexable_content" => "I like my wordpress: says Joshua who is win"
-    },
-    {
-      "title" => "Useful government information",
-      "description" => "Government, government, government. Developers.",
-      "format" => "answer",
-      "link" => "/another-example-answer",
-      "indexable_content" => "Tax, benefits, roads and stuff"
-    },
-    {
-      "title" => "External government information",
-      "description" => "Government, government, government. Developers.",
-      "format" => "recommended-link",
-      "link" => "http://www.example.com/external-example-answer",
-      "indexable_content" => "Tax, benefits, roads and stuff"
-    },
-    {
-      "title" => "Some content from Inside Gov",
-      "description" => "We list some inside gov results in the mainstream index.",
-      "format" => "inside-government-link",
-      "link" => "https://www.gov.uk/government/some-content",
-    }
-  ].freeze
-
   def setup
     super
-    add_sample_documents
+    @path = "/tmp/#{SecureRandom.uuid}"
+    FileUtils.mkdir_p("#{@path}/sitemaps")
   end
 
-  def test_should_generate_multiple_sitemaps
-    SitemapGenerator.stubs(:sitemap_limit).returns(2)
-    generator = SitemapGenerator.new(search_server.content_indices)
-
-    sitemap_xml = generator.sitemaps
-
-    assert_equal 3, sitemap_xml.length
+  def teardown
+    super
+    FileUtils.rm_rf(@path)
   end
 
-  def test_should_include_homepage
-    generator = SitemapGenerator.new(search_server.content_indices)
-    sitemap_xml = generator.sitemaps
+  def test_it_creates_symbolic_links_to_the_sitemap_files
+    filename = create_test_file
+    link_name = "sitemap_1.xml"
+    link_full_name = "#{@path}/sitemaps/sitemap_1.xml"
+    SitemapWriter.any_instance.stubs(:write_sitemaps).returns([[filename, link_name]])
 
-    pages = Nokogiri::XML(sitemap_xml[0])
-      .css("url")
-      .select { |item| item.css("loc").text == "http://www.dev.gov.uk/" }
+    assert_equal File.exist?(link_name), false
 
-    assert_equal 1, pages.count
-    assert_equal "0.5", pages[0].css("priority").text
+    Sitemap.new(@path).generate(stub(:content_indices))
+
+    assert_equal File.symlink?(link_full_name), true
+    assert_equal File.readlink(link_full_name), "#{@path}/sitemaps/#{filename}"
   end
 
-  def test_should_not_include_recommended_links
-    generator = SitemapGenerator.new(search_server.content_indices)
-    sitemap_xml = generator.sitemaps
+  def test_it_creates_an_index_pointing_to_the_symbolic_links
+    filename = create_test_file
+    link_name = "sitemap_1.xml"
+    SitemapWriter.any_instance.stubs(:write_sitemaps).returns([[filename, link_name]])
 
-    assert_equal 1, sitemap_xml.length
+    time = Time.now.utc
+    Sitemap.new(@path, time).generate(stub(:content_indices))
 
-    refute_includes sitemap_xml[0], "/external-example-answer"
+    index_filename = "#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml"
+    index_linkname = "#{@path}/sitemap.xml"
+
+    expected_xml = <<~XML
+      <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+      <sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">
+        <sitemap>
+          <loc>http://www.dev.gov.uk/sitemaps/sitemap_1.xml</loc>
+          <lastmod>#{time.strftime("%FT%T%:z")}</lastmod>
+        </sitemap>
+      </sitemapindex>
+    XML
+
+    assert_equal File.read(index_filename), expected_xml
+    assert_equal File.readlink(index_linkname), index_filename
   end
 
-  def test_should_not_include_inside_government_links
-    generator = SitemapGenerator.new(search_server.content_indices)
+  def test_it_does_not_cleanup_the_symbolic_link_files_or_linked_files
+    create_test_file("sitemap_1_2017-01-01T06.xml")
+    create_test_file("sitemap_1_2017-01-02T06.xml")
+    create_test_file("sitemap_1_2017-01-03T06.xml")
+    create_test_file("sitemap_1_2017-01-04T06.xml")
+    create_test_file("sitemap_1_2017-01-05T06.xml")
+    create_test_file("sitemap_1_2017-01-06T06.xml")
+    create_test_file("sitemap_2017-01-01T06.xml")
+    File.symlink("#{@path}/sitemaps/sitemap_1_2017-01-06T06.xml", "#{@path}/sitemaps/sitemap_1.xml")
+    File.symlink("#{@path}/sitemaps/sitemap_2017-01-01T06.xml", "#{@path}/sitemaps/sitemap.xml")
 
-    sitemap_xml = generator.sitemaps
+    Sitemap.new(@path).cleanup
 
-    assert_equal 1, sitemap_xml.length
-    refute_includes sitemap_xml[0], "/government/some-content"
+    assert_equal File.exist?("#{@path}/sitemaps/sitemap_1_2017-01-01T06.xml"), false
+    assert_equal File.exist?("#{@path}/sitemaps/sitemap_1_2017-01-06T06.xml"), true
+    assert_equal File.exist?("#{@path}/sitemaps/sitemap_1.xml"), true
+
+    assert_equal File.exist?("#{@path}/sitemaps/sitemap_2017-01-01T06.xml"), true
+    assert_equal File.exist?("#{@path}/sitemaps/sitemap.xml"), true
   end
 
-  def test_links_should_include_timestamps
-    generator = SitemapGenerator.new(search_server.content_indices)
-
-    sitemap_xml = generator.sitemaps
-
-    pages = Nokogiri::XML(sitemap_xml[0])
-      .css("url")
-      .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
-
-    assert_equal 1, pages.count
-    assert_equal "2017-07-01T12:41:34+00:00", pages[0].css("lastmod").text
-  end
-
-  def test_links_should_include_priorities
-    generator = SitemapGenerator.new(search_server.content_indices)
-
-    sitemap_xml = generator.sitemaps
-
-    priorities = Nokogiri::XML(sitemap_xml[0])
-      .css("url > priority")
-
-    assert_equal 6, priorities.count
-  end
-
-private
-
-  def add_sample_documents
-    SAMPLE_DATA.each do |sample_document|
-      insert_document("mainstream_test", sample_document)
-    end
-    commit_index
+  def create_test_file(name = "#{SecureRandom.uuid}.xml")
+    File.open("#{@path}/sitemaps/#{name}", 'w+') { |f| f.puts 'test' }
+    name
   end
 end

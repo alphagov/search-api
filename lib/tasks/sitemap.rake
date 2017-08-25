@@ -10,11 +10,6 @@ namespace :sitemap do
     sitemap = Sitemap.new(output_directory)
     sitemap_index_path = sitemap.generate(search_server.content_indices)
 
-    sitemap_link_path = File.join(output_directory, "sitemap.xml")
-
-    `ln -sf #{sitemap_index_path} #{sitemap_link_path}`
-    fail("Symlinking failed") unless $?.success?
-
     sitemap.cleanup
   end
 end
