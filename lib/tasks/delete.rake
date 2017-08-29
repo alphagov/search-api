@@ -67,21 +67,39 @@ namespace :delete do
   rake 'delete:by_format[format_name, elasticsearch_index]'
   "
   task :by_format, [:format, :index_name] do |_, args|
-    if args[:format].nil?
-      puts 'Specify format for deletion'
-    else
-      client = Services.elasticsearch(
-        hosts: SearchConfig.new.base_uri,
-        timeout: 5.0
-      )
+    format = args[:format]
+    index  = args[:index_name]
 
-      puts "Deleting all #{args[:format]} documents from #{args[:index_name]} index"
-      client.delete_by_query(
-        index: args[:index_name],
-        body: {
-          query: { match: { format: args[:format] } }
+    if format.nil?
+      puts 'Specify format for deletion'
+    elsif index.nil?
+      puts 'Specify an index'
+    else
+      client = Services.elasticsearch(hosts: SearchConfig.new.base_uri, timeout: 5.0)
+
+      delete_commands = ScrollEnumerator.new(
+        client: client,
+        search_body: { query: { term: { format: format } } },
+        batch_size: 500,
+        index_names: index
+      ) { |hit| hit }.map do |hit|
+        {
+          delete: {
+            _index: index,
+            _type: hit['_type'],
+            _id: hit['_id']
+          }
         }
-      )
+      end
+
+      if delete_commands.empty?
+        puts "No #{format} documents to delete"
+      else
+        puts "Deleting #{delete_commands.count} #{format} documents from #{index} index"
+        client.bulk(body: delete_commands)
+
+        client.indices.refresh(index: index)
+      end
     end
   end
 end
