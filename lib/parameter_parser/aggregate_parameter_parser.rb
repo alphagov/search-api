@@ -34,7 +34,7 @@ private
       requested: requested,
       scope: scope,
       order: order,
-      examples: examples,
+      examples: [examples, 10_000].min,
       example_fields: example_fields,
       example_scope: example_scope,
     }
