@@ -88,6 +88,30 @@ class GovukIndex::DetailsPresenterTest < Minitest::Test
     assert_equal "introductory paragraph\n\nmore information", details_presenter(details, "transaction").indexable_content
   end
 
+  def test_formats_with_no_indexable_content
+    formats = %w(local_transaction place)
+    details = {
+      "external_related_links" => [],
+      "introduction" => [
+        { "content_type" => "text/govspeak", "content" => "**introductory paragraph**" },
+        { "content_type" => "text/html", "content" => "<strong>introductory paragraph</strong>" }
+      ],
+      "need_to_know" => [
+        { "content_type" => "text/govspeak", "content" => "**need to know**" },
+        { "content_type" => "text/html", "content" => "<strong>need to know</strong>" }
+      ],
+      "more_information" => [
+        { "content_type" => "text/govspeak", "content" => "**some more information**" },
+        { "content_type" => "text/html", "content" => "<strong>some more information</strong>" }
+      ],
+      "start_button_text" => "Start now",
+    }
+
+    formats.each do |format|
+      assert_nil details_presenter(details, format).indexable_content
+    end
+  end
+
   def details_presenter(details, format = "help_page")
     GovukIndex::DetailsPresenter.new(
       details: details,
