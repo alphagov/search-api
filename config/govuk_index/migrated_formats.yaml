@@ -4,5 +4,6 @@ indexable:
 - answer
 - guide
 - licence
+- local_transaction
 - transaction
 - simple_smart_answer
