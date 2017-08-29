@@ -24,18 +24,28 @@ private
   end
 
   def sorted_unique_sitemap_dates
-    all_sitemaps.map { |sitemap|
-      parse_sitemap_date(sitemap)
-    }.uniq.sort
+    all_sitemaps
+      .reject { |sitemap| File.symlink?(sitemap) }
+      .map { |sitemap| parse_sitemap_date(sitemap) }
+      .uniq
+      .sort
   end
 
   def sitemap_dates_to_delete
     @sitemap_dates_to_delete ||= sorted_unique_sitemap_dates[0...-days_to_keep]
   end
 
+  def sitemap_linked_files
+    @sitemap_linked_files ||=
+      all_sitemaps
+        .select { |sitemap| File.symlink?(sitemap) }
+        .map { |sitemap| File.readlink(sitemap) }
+  end
+
   def sitemap_files_to_delete
-    all_sitemaps.select do |sitemap|
-      sitemap_dates_to_delete.include?(parse_sitemap_date(sitemap))
-    end
+    all_sitemaps
+      .reject { |sitemap| File.symlink?(sitemap) }
+      .select { |sitemap| sitemap_dates_to_delete.include?(parse_sitemap_date(sitemap)) }
+      .reject { |sitemap| sitemap_linked_files.include?(sitemap) }
   end
 end

@@ -9,11 +9,11 @@ class SitemapWriter
     sitemap_generator = SitemapGenerator.new(content_indices)
     # write our sitemap files and return an array of filenames
     sitemap_generator.sitemaps.map do |sitemap_xml|
-      filename = next_filename
+      filename, link_filename = next_filename
       File.open(File.join(@directory, filename), "w") do |file|
         file.write(sitemap_xml)
       end
-      filename
+      [filename, link_filename]
     end
   end
 
@@ -21,6 +21,9 @@ private
 
   def next_filename
     @sitemap_file_count += 1
-    "sitemap_#{@sitemap_file_count}_#{@timestamp.strftime('%FT%H')}.xml"
+    [
+      "sitemap_#{@sitemap_file_count}_#{@timestamp.strftime('%FT%H')}.xml",
+      "sitemap_#{@sitemap_file_count}.xml",
+    ]
   end
 end
