@@ -60,4 +60,28 @@ namespace :delete do
       end
     end
   end
+
+  desc "
+  Delete all documents by format from an index.
+  Usage
+  rake 'delete:by_format[format_name, elasticsearch_index]'
+  "
+  task :by_format, [:format, :index_name] do |_, args|
+    if args[:format].nil?
+      puts 'Specify format for deletion'
+    else
+      client = Services.elasticsearch(
+        hosts: SearchConfig.new.base_uri,
+        timeout: 5.0
+      )
+
+      puts "Deleting all #{args[:format]} documents from #{args[:index_name]} index"
+      client.delete_by_query(
+        index: args[:index_name],
+        body: {
+          query: { match: { format: args[:format] } }
+        }
+      )
+    end
+  end
 end
