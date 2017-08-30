@@ -24,12 +24,18 @@ class Sitemap
 
   def update_links(sitemap_filenames)
     sitemap_filenames.each do |filename, link_filename|
-      File.symlink("#{@output_path}/#{filename}", "#{@output_path}/#{link_filename}")
+      # symlink creation is a create then move to ensure a symlink always exists:
+      # http://blog.moertel.com/posts/2005-08-22-how-to-change-symlinks-atomically.html
+      File.symlink("#{@output_path}/#{filename}", "#{@output_path}/#{link_filename}_tmp")
+      FileUtils.mv("#{@output_path}/#{link_filename}_tmp", "#{@output_path}/#{link_filename}")
     end
   end
 
   def update_sitemap_link(sitemap_filename)
-    File.symlink("#{@output_path}/#{sitemap_filename}", "#{@directory}/sitemap.xml")
+    # symlink creation is a create then move to ensure a symlink always exists:
+    # http://blog.moertel.com/posts/2005-08-22-how-to-change-symlinks-atomically.html
+    File.symlink("#{@output_path}/#{sitemap_filename}", "#{@directory}/sitemap_tmp.xml")
+    FileUtils.mv("#{@directory}/sitemap_tmp.xml", "#{@directory}/sitemap.xml")
   end
 
   def write_index(sitemap_filenames)
