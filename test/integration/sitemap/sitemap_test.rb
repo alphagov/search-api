@@ -72,6 +72,21 @@ class SitemapTest < IntegrationTest
     assert_equal File.exist?("#{@path}/sitemaps/sitemap.xml"), true
   end
 
+  def test_it_can_overwrite_existing_links
+    create_test_file("sitemap_1_2017-01-01T06.xml")
+    filename =  create_test_file("sitemap_1_2017-01-02T06.xml")
+
+    link_name = "sitemap_1.xml"
+    SitemapWriter.any_instance.stubs(:write_sitemaps).returns([[filename, link_name]])
+
+    time = Time.now.utc
+    File.symlink("#{@path}/sitemaps/sitemap_1_2017-01-01T06.xml", "#{@path}/sitemap.xml")
+
+    Sitemap.new(@path, time).generate(stub)
+
+    assert_equal File.readlink("#{@path}/sitemap.xml"), "#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml"
+  end
+
   def create_test_file(name = "#{SecureRandom.uuid}.xml")
     File.open("#{@path}/sitemaps/#{name}", 'w+') { |f| f.puts 'test' }
     name
