@@ -33,12 +33,12 @@ class ElasticsearchMigrationTest < IntegrationTest
     [
       {
         "title" => "Important government directive",
-        "format" => "answer",
+        "format" => "transaction",
         "link" => "/important",
       },
       {
         "title" => "Direct contact with aliens",
-        "format" => "answer",
+        "format" => "transaction",
         "link" => "/aliens",
       }
     ]
@@ -85,7 +85,7 @@ class ElasticsearchMigrationTest < IntegrationTest
       {
         "_type" => "edition",
         "title" => "Document #{n}",
-        "format" => "answer",
+        "format" => "transaction",
         "link" => "/doc-#{n}",
       }
     end
