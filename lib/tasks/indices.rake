@@ -34,6 +34,20 @@ namespace :rummager do
     index_group.switch_to(index) unless index_group.current_real
   end
 
+  desc "Lock the index for writes"
+  task :lock do
+    index_names.each do |index_name|
+      SearchConfig.instance.search_server.index(index_name).lock
+    end
+  end
+
+  desc "Unlock the index for writes"
+  task :unlock do
+    index_names.each do |index_name|
+      SearchConfig.instance.search_server.index(index_name).unlock
+    end
+  end
+
   desc "Sync unmigrated data from mainstream into govuk
 
 While we are migrating data to govuk, it is important that govuk has
