@@ -102,4 +102,46 @@ namespace :delete do
       end
     end
   end
+
+  desc "
+  Delete all documents by content_store_document_type from an index.
+  Usage
+  rake 'delete:by_content_store_document_type[content_store_document_type, elasticsearch_index]'
+  "
+  task :by_content_store_document_type, [:format, :index_name] do |_, args|
+    format = args[:format]
+    index  = args[:index_name]
+
+    if format.nil?
+      puts 'Specify format for deletion'
+    elsif index.nil?
+      puts 'Specify an index'
+    else
+      client = Services.elasticsearch(hosts: SearchConfig.new.base_uri, timeout: 5.0)
+
+      delete_commands = ScrollEnumerator.new(
+        client: client,
+        search_body: { query: { term: { content_store_document_type: format } } },
+        batch_size: 500,
+        index_names: index
+      ) { |hit| hit }.map do |hit|
+        {
+          delete: {
+            _index: index,
+            _type: hit['_type'],
+            _id: hit['_id']
+          }
+        }
+      end
+
+      if delete_commands.empty?
+        puts "No #{format} documents to delete"
+      else
+        puts "Deleting #{delete_commands.count} #{format} documents from #{index} index"
+        client.bulk(body: delete_commands)
+
+        client.indices.refresh(index: index)
+      end
+    end
+  end
 end
