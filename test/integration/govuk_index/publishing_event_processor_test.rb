@@ -58,7 +58,19 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
   def test_should_discard_message_when_invalid
     invalid_payload = {
       "title" => "Pitts S-2B, G-SKYD, 21 June 1996",
-      "document_type" => "help_page"
+      "document_type" => "help_page",
+    }
+
+    Airbrake.expects(:notify_or_ignore)
+    @queue.publish(invalid_payload.to_json, content_type: "application/json")
+
+    assert_equal 0, @queue.message_count
+  end
+
+  def test_should_discard_message_when_withdrawn_and_invalid
+    invalid_payload = {
+      "title" => "Pitts S-2B, G-SKYD, 21 June 1996",
+      "document_type" => "gone",
     }
 
     Airbrake.expects(:notify_or_ignore)
