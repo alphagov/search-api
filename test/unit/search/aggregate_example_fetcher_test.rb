@@ -3,7 +3,21 @@ require 'test_helper'
 class AggregateExampleFetcherTest < ShouldaUnitTestCase
   def query_for_example_global(field, value, return_fields)
     {
-      query: { filtered: { query: nil, filter: { term: { field => value } } } },
+      query: {
+        filtered: {
+          query: nil,
+          filter: {
+            and: [
+              { term: { field => value } },
+              { indices: {
+                indices: SearchConfig.instance.elasticsearch['content_index_names'],
+                filter: {},
+                no_match_filter: 'none'
+              } }
+            ]
+          },
+        },
+      },
       size: 2,
       fields: return_fields,
       sort: [{ popularity: { order: :desc } }]
@@ -75,6 +89,7 @@ class AggregateExampleFetcherTest < ShouldaUnitTestCase
 
   context "one aggregate with global scope" do
     setup do
+      GovukIndex::MigratedFormats.stubs(:migrated_formats).returns([])
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
       main_query_response = { "aggregations" => {

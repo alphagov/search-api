@@ -1,6 +1,6 @@
 module Search
   class FormatMigrator
-    def initialize(base)
+    def initialize(base = nil)
       @base = base
     end
 

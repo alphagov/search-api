@@ -274,6 +274,70 @@ class SearchTest < IntegrationTest
     )
   end
 
+  def test_aggregate_examples_before_migration
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns([])
+
+    add_sample_documents('mainstream_test', 2)
+    add_sample_documents('govuk_test', 2)
+
+    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
+
+    expected_results = %w(/mainstream-1)
+
+    options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
+    actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
+
+    assert_equal expected_results, actual_results
+  end
+
+  def test_aggregate_examples_after_migration
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns(['answers'])
+
+    add_sample_documents('mainstream_test', 2)
+    add_sample_documents('govuk_test', 2)
+
+    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
+
+    expected_results = %w(/govuk-1)
+
+    options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
+    actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
+
+    assert_equal expected_results, actual_results
+  end
+
+  def test_aggregate_examples_before_migration_with_query_scope
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns([])
+
+    add_sample_documents('mainstream_test', 2)
+    add_sample_documents('govuk_test', 2)
+
+    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
+
+    expected_results = %w(/mainstream-1)
+
+    options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
+    actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
+
+    assert_equal expected_results, actual_results
+  end
+
+  def test_aggregate_examples_after_migration_with_query_scope
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns(['answers'])
+
+    add_sample_documents('mainstream_test', 2)
+    add_sample_documents('govuk_test', 2)
+
+    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
+
+    expected_results = %w(/govuk-1)
+
+    options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
+    actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
+
+    assert_equal expected_results, actual_results
+  end
+
   def test_validates_integer_params
     get "/search?start=a"
 
