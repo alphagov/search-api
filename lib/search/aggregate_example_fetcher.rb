@@ -40,7 +40,7 @@ module Search
         filter = @query_builder.filter
       else
         query = nil
-        filter = nil
+        filter = Search::FormatMigrator.new.call
       end
 
       aggregate_options = @response_aggregates.dig(field_name, 'filtered_aggregations', "buckets") || []

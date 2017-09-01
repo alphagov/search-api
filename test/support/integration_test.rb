@@ -120,6 +120,7 @@ class IntegrationTest < Minitest::Test
         "link" => "/#{short_index_name}-#{i}",
         "indexable_content" => "Something something important content id #{i}",
         "mainstream_browse_pages" => "browse/page/#{i}",
+        "format" => "answers"
       }
       if i % 2 == 0
         fields["specialist_sectors"] = ["farming"]
