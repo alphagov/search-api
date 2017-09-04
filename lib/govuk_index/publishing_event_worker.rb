@@ -43,23 +43,22 @@ module GovukIndex
       logger.debug("Processing #{routing_key}: #{payload}")
       Services.statsd_client.increment('govuk_index.sidekiq-consumed')
 
-      document_type_inferer = DocumentTypeInferer.new(payload)
       presenter = ElasticsearchPresenter.new(
         payload: payload,
-        type: document_type_inferer.type,
+        type_inferer: DocumentTypeInferer,
       )
       presenter.valid!
 
       if MigratedFormats.indexable?(presenter.format)
-        if document_type_inferer.unpublishing_type?
-          logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{document_type_inferer.type}")
+        if presenter.unpublishing_type?
+          logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{presenter.type}")
           actions.delete(presenter)
         else
-          logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{document_type_inferer.type}")
+          logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{presenter.type}")
           actions.save(presenter)
         end
       else
-        logger.info("#{routing_key} -> SKIPPED #{presenter.base_path} #{document_type_inferer.type}")
+        logger.info("#{routing_key} -> SKIPPED #{presenter.base_path} #{presenter.type}")
       end
     end
 

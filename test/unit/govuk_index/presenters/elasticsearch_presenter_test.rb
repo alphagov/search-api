@@ -27,9 +27,10 @@ class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
   end
 
   def elasticsearch_presenter(payload, type = "aaib_report")
+    GovukIndex::DocumentTypeInferer.any_instance.stubs(:type).returns(type)
     GovukIndex::ElasticsearchPresenter.new(
       payload: payload,
-      type: type
+      type_inferer: GovukIndex::DocumentTypeInferer
     )
   end
 end

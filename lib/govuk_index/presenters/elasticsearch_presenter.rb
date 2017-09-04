@@ -1,8 +1,14 @@
 module GovukIndex
   class ElasticsearchPresenter
-    def initialize(payload:, type:)
+    delegate :unpublishing_type?, to: :@infered_type
+
+    def initialize(payload:, type_inferer:)
       @payload = payload
-      @type = type
+      @infered_type ||= type_inferer.new(payload)
+    end
+
+    def type
+      @type ||= @infered_type.type
     end
 
     def identifier
@@ -61,7 +67,7 @@ module GovukIndex
 
   private
 
-    attr_reader :payload, :type
+    attr_reader :payload
 
     def common_fields
       @_common_fields ||= CommonFieldsPresenter.new(payload)
