@@ -1,10 +1,11 @@
 migrated:
 - answer
 - help_page
-indexable:
 - guide
 - licence
 - local_transaction
 - place
 - transaction
 - simple_smart_answer
+
+indexable: []
