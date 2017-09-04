@@ -1,8 +1,14 @@
 require 'integration_test_helper'
 
+# FIXME: this tests the BulkLoader. We don't think we need this anymore.
+# The "Migration" in the name means creating new indexes and copying data from
+# the existing ones.
 class ElasticsearchMigrationTest < IntegrationTest
   def setup
     super
+
+    # MigratedFormats are the formats using the `govuk` index.
+    GovukIndex::MigratedFormats.stubs(:migrated_formats).returns([])
 
     stub_tagging_lookup
     try_remove_test_index
