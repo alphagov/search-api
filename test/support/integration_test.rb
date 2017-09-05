@@ -52,6 +52,9 @@ class IntegrationTest < Minitest::Test
         {}
       end
 
+    id ||= "/test/#{SecureRandom.uuid}"
+    attributes['link'] ||= id
+
     client.create(
       {
         index: index_name,
@@ -60,6 +63,8 @@ class IntegrationTest < Minitest::Test
         body: attributes,
       }.merge(version_details)
     )
+
+    id
   end
 
   def clean_index_content(index)
@@ -73,8 +78,9 @@ class IntegrationTest < Minitest::Test
   end
 
   def commit_document(index_name, attributes, id: attributes["link"], type: "edition")
-    insert_document(index_name, attributes, id: id, type: type)
-    commit_index(index_name)
+    insert_document(index_name, attributes, id: id, type: type).tap do
+      commit_index(index_name)
+    end
   end
 
   def commit_index(index_name = "mainstream_test")
