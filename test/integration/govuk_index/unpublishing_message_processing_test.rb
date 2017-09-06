@@ -2,7 +2,8 @@ require 'integration_test_helper'
 
 class GovukIndex::UnpublishingMessageProcessing < IntegrationTest
   def test_unpublish_message_will_remove_record_from_elasticsearch
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stubs(:migrated_formats?).returns(%w(answer))
+
     message = unpublishing_event_message(
       "gone",
       user_defined: {
@@ -28,7 +29,8 @@ class GovukIndex::UnpublishingMessageProcessing < IntegrationTest
   end
 
   def test_unpublish_withdrawn_messages_will_set_is_withdrawn_flag
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stubs(:migrated_formats?).returns(%w(help_page))
+
     message = unpublishing_event_message(
       "help_page",
       user_defined: {
