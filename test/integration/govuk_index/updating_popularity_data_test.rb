@@ -5,6 +5,7 @@ class GovukIndex::UpdatingPopularityDataTest < IntegrationTest
     super
     GovukIndex::MigratedFormats.stubs(:indexable_formats).returns(['help_page'])
   end
+
   def test_updates_the_popularity_when_it_exists
     insert_document('govuk_test', { link: '/test', popularity: 0.3, format: 'help_page' }, id: '/test', type: 'edition')
     commit_index('govuk_test')

@@ -52,7 +52,7 @@ module GovukIndex
       if presenter.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{presenter.type}")
         actions.delete(presenter)
-      elsif MigratedFormats.indexable?(presenter.format)
+      elsif MigratedFormats.indexable?(presenter.format) && payload['publishing_app'] != 'smartanswers'
         logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{presenter.type}")
         actions.save(presenter)
       else
