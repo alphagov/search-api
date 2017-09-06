@@ -49,14 +49,12 @@ module GovukIndex
       )
       presenter.valid!
 
-      if MigratedFormats.indexable?(presenter.format)
-        if presenter.unpublishing_type?
-          logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{presenter.type}")
-          actions.delete(presenter)
-        else
-          logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{presenter.type}")
-          actions.save(presenter)
-        end
+      if presenter.unpublishing_type?
+        logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{presenter.type}")
+        actions.delete(presenter)
+      elsif MigratedFormats.indexable?(presenter.format)
+        logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{presenter.type}")
+        actions.save(presenter)
       else
         logger.info("#{routing_key} -> SKIPPED #{presenter.base_path} #{presenter.type}")
       end
