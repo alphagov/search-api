@@ -67,7 +67,7 @@ This does not update the schema.
 "
   task :update_popularity do
     index_names.each do |index_name|
-      GovukIndex::PopularityUpdater.update(index_name)
+      GovukIndex::PopularityUpdater.update(index_name, process_all: ENV.key?('PROCESS_ALL_DATA'))
     end
   end
 
