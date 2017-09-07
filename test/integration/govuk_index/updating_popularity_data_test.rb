@@ -5,8 +5,9 @@ class GovukIndex::UpdatingPopularityDataTest < IntegrationTest
     super
     GovukIndex::MigratedFormats.stubs(:indexable_formats).returns(['help_page'])
   end
+
   def test_updates_the_popularity_when_it_exists
-    insert_document('govuk_test', { link: '/test', popularity: 0.3, format: 'help_page' }, id: '/test', type: 'edition')
+    insert_document('govuk_test', { link: '/test', popularity: 0.222, format: 'help_page' }, id: '/test', type: 'edition')
     commit_index('govuk_test')
 
     document_count = 4
@@ -22,7 +23,7 @@ class GovukIndex::UpdatingPopularityDataTest < IntegrationTest
   end
 
   def test_set_the_popularity_to_the_lowest_popularity_when_it_doesnt_exist
-    insert_document('govuk_test', { link: '/test', popularity: 0.3, format: 'help_page' }, id: '/test', type: 'edition')
+    insert_document('govuk_test', { link: '/test', popularity: 0.222, format: 'help_page' }, id: '/test', type: 'edition')
     commit_index('govuk_test')
 
     document_count = 4
@@ -36,7 +37,7 @@ class GovukIndex::UpdatingPopularityDataTest < IntegrationTest
   end
 
   def test_ignores_popularity_update_if_version_has_moved_on
-    insert_document('govuk_test', { link: '/test', popularity: 0.3, format: 'help_page' }, id: '/test', type: 'edition', version: 2)
+    insert_document('govuk_test', { link: '/test', popularity: 0.222, format: 'help_page' }, id: '/test', type: 'edition', version: 2)
     commit_index('govuk_test')
 
     document_count = 4
@@ -45,17 +46,17 @@ class GovukIndex::UpdatingPopularityDataTest < IntegrationTest
     ScrollEnumerator.stubs(:new).returns([
       {
         identifier: { '_id' => '/test', '_type' => 'edition', '_version' => 1 },
-        document: { link: '/test', popularity: 0.3 },
+        document: { link: '/test', popularity: 0.222 },
       }
     ])
 
     GovukIndex::PopularityUpdater.update('govuk_test')
 
-    assert_document_is_in_rummager({ 'link' => '/test', 'popularity' => 0.3 }, type: 'edition', index: 'govuk_test')
+    assert_document_is_in_rummager({ 'link' => '/test', 'popularity' => 0.222 }, type: 'edition', index: 'govuk_test')
   end
 
   def test_copies_version_information
-    insert_document('govuk_test', { link: '/test', popularity: 0.3, format: 'help_page' }, id: '/test', type: 'edition', version: 3)
+    insert_document('govuk_test', { link: '/test', popularity: 0.222, format: 'help_page' }, id: '/test', type: 'edition', version: 3)
     commit_index('govuk_test')
     GovukIndex::PopularityUpdater.update('govuk_test')
 
@@ -64,11 +65,25 @@ class GovukIndex::UpdatingPopularityDataTest < IntegrationTest
   end
 
   def test_skips_non_indexable_formats
-    insert_document('govuk_test', { link: '/test', popularity: 0.3, format: 'edition' }, id: '/test', type: 'edition', version: 3)
+    insert_document('govuk_test', { link: '/test', popularity: 0.222, format: 'edition' }, id: '/test', type: 'edition', version: 3)
     commit_index('govuk_test')
     GovukIndex::PopularityUpdater.update('govuk_test')
 
     document = fetch_document_from_rummager(id: '/test', index: 'govuk_test')
-    assert_equal 0.3, document['_source']['popularity']
+    assert_equal 0.222, document['_source']['popularity']
+  end
+
+  def test_does_not_skips_non_indexable_formats_if_process_all_flag_is_set
+    insert_document('govuk_test', { link: '/test', popularity: 0.222, format: 'edition' }, id: '/test', type: 'edition', version: 3)
+    commit_index('govuk_test')
+
+    document_count = 4
+    setup_page_traffic_data(document_count: document_count)
+
+    GovukIndex::PopularityUpdater.update('govuk_test', process_all: true)
+    popularity = 1.0 / (document_count + SearchConfig.instance.popularity_rank_offset)
+
+    document = fetch_document_from_rummager(id: '/test', index: 'govuk_test')
+    assert_equal popularity, document['_source']['popularity']
   end
 end
