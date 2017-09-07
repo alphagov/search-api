@@ -35,6 +35,19 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
     assert_equal 1, @channel.acknowledged_state[:acked].count
   end
 
+  def test_not_indexing_when_publishing_app_is_smart_answers
+    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    random_example = GovukSchemas::RandomExample
+      .for_schema(notification_schema: "transaction")
+      .merge_and_validate({ document_type: "transaction", payload_version: 123, publishing_app: "smartanswers" })
+
+    @queue.publish(random_example.to_json, content_type: "application/json")
+
+    assert_raises(Elasticsearch::Transport::Transport::Errors::NotFound) do
+      fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test", type: 'edition')
+    end
+  end
+
   def test_should_include_popularity_when_available
     GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
     random_example = GovukSchemas::RandomExample

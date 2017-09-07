@@ -45,6 +45,7 @@ module HealthCheck
     end
 
   private
+
     attr_reader :overall_calculator, :tag_calculators, :word_count_calculators
 
     def checks
