@@ -16,14 +16,14 @@ module Indexer
         message.ack
       end
     rescue ProcessingError => e
-      Airbrake.notify_or_ignore(e, parameters: message.payload)
+      GovukError.notify(e, extra: message.payload)
       message.discard
     rescue StandardError => e
       # This is rescue of last resort. If anything goes wrong during the payload
       # processing, we don't want to retry the message really quickly because
       # that might overload elasticsearch or other components. This should be
       # replaced by a retry mechanism with exponential back-off.
-      Airbrake.notify_or_ignore(e, parameters: message.payload)
+      GovukError.notify(e, extra: message.payload)
       sleep 1
       message.retry
     end

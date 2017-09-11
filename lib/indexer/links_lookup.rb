@@ -43,9 +43,9 @@ module Indexer
           end
         rescue GdsApi::TimedOutException => e
           @logger.error("Timeout looking up content ID for #{doc_hash['link']}")
-          Airbrake.notify_or_ignore(e,
-            error_message: "Timeout looking up content ID",
-            parameters: {
+          GovukError.notify(e,
+            extra: {
+              error_message: "Timeout looking up content ID",
               base_path: doc_hash["link"]
             }
           )
@@ -53,11 +53,11 @@ module Indexer
         rescue GdsApi::HTTPErrorResponse => e
           @logger.error("HTTP error looking up content ID for #{doc_hash['link']}: #{e.message}")
           # We capture all GdsApi HTTP exceptions here so that we can send them
-          # manually to Airbrake. This allows us to control the message and parameters
+          # manually to Sentry. This allows us to control the message and parameters
           # such that errors are grouped in a sane manner.
-          Airbrake.notify_or_ignore(e,
-            error_message: "HTTP error looking up content ID",
-            parameters: {
+          GovukError.notify(e,
+            extra: {
+              message: "HTTP error looking up content ID",
               base_path: doc_hash["link"],
               error_code: e.code,
               error_message: e.message,
@@ -76,9 +76,9 @@ module Indexer
         end
       rescue GdsApi::TimedOutException => e
         @logger.error("Timeout fetching expanded links for #{content_id}")
-        Airbrake.notify_or_ignore(e,
-          error_message: "Timeout fetching expanded links",
-          parameters: {
+        GovukError.notify(e,
+          extra: {
+            error_message: "Timeout fetching expanded links",
             content_id: content_id
           }
         )
@@ -86,11 +86,11 @@ module Indexer
       rescue GdsApi::HTTPErrorResponse => e
         @logger.error("HTTP error fetching expanded links for #{content_id}: #{e.message}")
         # We capture all GdsApi HTTP exceptions here so that we can send them
-        # manually to Airbrake. This allows us to control the message and parameters
+        # manually to Sentry. This allows us to control the message and parameters
         # such that errors are grouped in a sane manner.
-        Airbrake.notify_or_ignore(e,
-          error_message: "HTTP error fetching expanded links",
-          parameters: {
+        GovukError.notify(e,
+          extra: {
+            message: "HTTP error fetching expanded links",
             content_id: content_id,
             error_code: e.code,
             error_message: e.message,

@@ -15,7 +15,7 @@ module Indexer
     def load_from(iostream)
       # We think this code is no longer used now that the PR in search admin has been merged
       # https://github.com/alphagov/search-admin/pull/59/files
-      Airbrake.notify(ImUsed.new("IMPORTANT!!! Indexer::BulkLoader.load_from is actually used"))
+      GovukError.notify(ImUsed.new("IMPORTANT!!! Indexer::BulkLoader.load_from is actually used"))
 
       build_and_switch_index do |queue|
         in_even_sized_batches(iostream) do |lines|
