@@ -199,13 +199,8 @@ DEPENDENCIES
   activesupport (= 3.2.22.2)
   bunny-mock (~> 1.7)
   ci_reporter (~> 1.7.1)
-<<<<<<< HEAD
-  elasticsearch (~> 1.0.15)
-  gds-api-adapters (~> 47.9.1)
-=======
   elasticsearch (~> 2)
   gds-api-adapters (~> 47.9)
->>>>>>> allow ES host and port to be passed into tests
   govuk-lint (~> 1.2.1)
   govuk_app_config (~> 0.2.0)
   govuk_document_types (~> 0.1)

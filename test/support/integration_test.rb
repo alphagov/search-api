@@ -78,9 +78,9 @@ class IntegrationTest < Minitest::Test
   end
 
   def commit_document(index_name, attributes, id: attributes["link"], type: "edition")
-    insert_document(index_name, attributes, id: id, type: type).tap do
-      commit_index(index_name)
-    end
+    id = insert_document(index_name, attributes, id: id, type: type)
+    commit_index(index_name)
+    id
   end
 
   def commit_index(index_name = "mainstream_test")

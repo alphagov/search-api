@@ -1,6 +1,5 @@
 class SearchConfig
   %w[
-    base_uri
     registry_index
     metasearch_index_name
     popularity_rank_offset
