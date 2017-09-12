@@ -4,9 +4,10 @@ module Indexer
 
     DEFAULT_FIELDS_TO_IGNORE = ["popularity"].freeze
 
-    def initialize(old_index_name, new_index_name, ignore: DEFAULT_FIELDS_TO_IGNORE, io: STDOUT)
+    def initialize(old_index_name, new_index_name, filtered_format: nil, ignore: DEFAULT_FIELDS_TO_IGNORE, io: STDOUT)
       @old_index_name = old_index_name
       @new_index_name = new_index_name
+      @filtered_format = filtered_format
       @field_to_ignore = ignore
       @io = io
     end
@@ -16,7 +17,10 @@ module Indexer
 
       log "processing: #{@old_index_name}/#{@new_index_name}"
 
-      CompareEnumerator.new(@old_index_name, @new_index_name).each do |old_item, new_item|
+      search_body = {}
+      search_body[:filter] = { term: { format: @filtered_format } } if @filtered_format
+
+      CompareEnumerator.new(@old_index_name, @new_index_name, search_body).each do |old_item, new_item|
         if old_item == CompareEnumerator::NO_VALUE
           outcomes[:added_items] += 1
         elsif new_item == CompareEnumerator::NO_VALUE
