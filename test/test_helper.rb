@@ -16,6 +16,8 @@ end
 $LOAD_PATH << File.expand_path('../../', __FILE__)
 $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
+ELASTICSEARCH_TESTING_HOST = ENV.fetch('ELASTICSEARCH_TESTING_HOST', ENV["JENKINS_URL"] ? 'http://localhost:9200' : 'http://localhost:19200')
+
 # load this first to avoid duplicate constant declaration error
 require 'logging'
 require 'health_check/logging_config'
@@ -43,7 +45,7 @@ Logging.logger.root.appenders = nil
 Sidekiq::Logging.logger = nil
 
 # Prevent tests from messing with development/production data.
-only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|[a-z_-]+(_|-)test.*)}
+only_test_databases = %r{#{ELASTICSEARCH_TESTING_HOST}/(_search/scroll|_aliases|_bulk|[a-z_-]+(_|-)test.*)}
 WebMock.disable_net_connect!(allow: only_test_databases)
 
 require "support/default_mappings"

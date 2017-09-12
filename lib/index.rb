@@ -105,7 +105,8 @@ module SearchIndices
         # parse through the errors to detect responses that indicate a locked
         # index
         blocked_items = failed_items.select { |item|
-          locked_index_error?(item["index"]["error"])
+          error = (item["index"] || item["create"])["error"]
+          locked_index_error?(error["reason"])
         }
         if blocked_items.any?
           raise IndexLocked

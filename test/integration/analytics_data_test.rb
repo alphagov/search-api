@@ -43,11 +43,11 @@ class AnalyticsDataTest < IntegrationTest
 
   def test_missing_data_is_nil
     document = {}
-    commit_document("mainstream_test", document)
+    id = commit_document("mainstream_test", document)
 
     rows = @analytics_data_fetcher.rows
 
-    expected_row = [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
+    expected_row = [id, id, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
 
     assert_equal [expected_row], rows.to_a
   end

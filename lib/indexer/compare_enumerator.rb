@@ -74,7 +74,7 @@ module Indexer
     end
 
     def search_config
-      @search_config ||= SearchConfig.new
+      @search_config ||= SearchConfig.instance
     end
   end
 end

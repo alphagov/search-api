@@ -128,7 +128,10 @@ module Search
       end
 
       {
-        more_like_this: { docs: docs }
+        more_like_this: {
+          docs: docs,
+          min_doc_freq: 0, # Revert to the ES 1.7 default
+        }
       }
     end
   end
