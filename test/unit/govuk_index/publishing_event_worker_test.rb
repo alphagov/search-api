@@ -127,9 +127,9 @@ class PublishingEventWorkerTest < Minitest::Test
       "title" => "We love cheese"
     }
 
-    Airbrake.expects(:notify_or_ignore).with(
+    GovukError.expects(:notify).with(
       instance_of(GovukIndex::ValidationError),
-      parameters: { message_body: { 'document_type' => 'help_page', 'title' => 'We love cheese' } }
+      extra: { message_body: { 'document_type' => 'help_page', 'title' => 'We love cheese' } }
     )
 
     GovukIndex::PublishingEventWorker.new.perform('routing.key', invalid_payload)

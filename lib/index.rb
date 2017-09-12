@@ -110,7 +110,7 @@ module SearchIndices
         if blocked_items.any?
           raise IndexLocked
         else
-          Airbrake.notify(Indexer::BulkIndexFailure.new, parameters: { failed_items: failed_items })
+          GovukError.notify(Indexer::BulkIndexFailure.new, extra: { failed_items: failed_items })
           raise Indexer::BulkIndexFailure
         end
       end

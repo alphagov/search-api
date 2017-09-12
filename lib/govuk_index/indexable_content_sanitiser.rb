@@ -20,9 +20,9 @@ module GovukIndex
       return row['content'] if row
 
       if item.count > 0
-        Airbrake.notify_or_ignore(
+        GovukError.notify(
           GovukIndex::MissingTextHtmlContentType.new,
-          content_types: item.map { |r| r['content_type'] }
+          extra: { content_types: item.map { |r| r['content_type'] } }
         )
       end
       nil

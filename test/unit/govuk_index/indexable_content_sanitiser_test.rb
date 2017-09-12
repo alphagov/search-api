@@ -56,9 +56,9 @@ class GovukIndex::IndexableContentSanitiserTest < Minitest::Test
       ]
     ]
 
-    Airbrake.expects(:notify_or_ignore).with(
+    GovukError.expects(:notify).with(
       GovukIndex::MissingTextHtmlContentType.new,
-      content_types: ["text/govspeak"]
+      extra: { content_types: ["text/govspeak"] }
     )
 
     assert_equal nil, content_sanitiser.clean(payload)
