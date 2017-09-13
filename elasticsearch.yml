@@ -1,4 +1,4 @@
-base_uri: <%= ENV["ELASTICSEARCH_URI"] || (ENV["JENKINS_URL"] ? 'http://localhost:9200' : 'http://localhost:19200') %>
+base_uri: <%= ENV["ELASTICSEARCH_URI"] || 'http://localhost:9200' %>
 content_index_names: ["mainstream", "detailed", "government"]
 govuk_index_name: "govuk"
 auxiliary_index_names: ["page-traffic", "metasearch"]
