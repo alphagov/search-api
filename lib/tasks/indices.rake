@@ -27,6 +27,15 @@ namespace :rummager do
     end
   end
 
+  desc "Compare two indices with an option format filter"
+  task :compare_govuk, :format do |_, args|
+    if ['all', '', nil].include?(args[:format])
+      pp Indexer::Comparer.new('mainstream', 'govuk').run
+    else
+      pp Indexer::Comparer.new('mainstream', 'govuk', filtered_format: args[:format]).run
+    end
+  end
+
   desc "Create a brand new index and assign an alias if no alias currently exists"
   task :create_index, :index_name do |_, args|
     index_group = search_config.search_server.index_group(args[:index_name])
