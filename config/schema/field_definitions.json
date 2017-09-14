@@ -5,22 +5,27 @@
   },
 
   "format": {
+    "description": "This field is less specific than content_store_document_type but is mandatory for every document. May be deprecated in future.",
     "type": "identifier"
   },
 
   "email_document_supertype": {
+    "description": "High level group for email subscriptions use to identify publications and announcement. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"
   },
 
   "government_document_supertype": {
+    "description": "Grouping for email subscriptions. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"
   },
 
   "navigation_document_supertype": {
+    "description": "Navigation document type. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"
   },
 
   "user_journey_document_supertype": {
+    "description": "Used to distinguish pages used mainly for navigation (finding) from content pages (thing). See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"
   },
 
@@ -30,10 +35,12 @@
   },
 
   "title": {
+    "description": "The page title, as diplayed in internal search results. May differ from the page title tag or top level heading.",
     "type": "searchable_sortable_text"
   },
 
   "description": {
+    "description": "A descrition or summary of the page that can be displayed to users in search results.",
     "type": "searchable_text"
   },
 
@@ -43,10 +50,12 @@
   },
 
   "indexable_content": {
+    "description": "The main chunk of text that is indexed for the page. This varies by document type/publishing app, and may not be suitable for users to read. HTML tags are stripped out.",
     "type": "searchable_text"
   },
 
   "popularity": {
+    "description": "Popularity indicator used to bias search results. A higher number indicates more pageviews. Updated nightly.",
     "type": "float"
   },
 
@@ -76,6 +85,7 @@
   },
 
   "policies": {
+    "description": "Policy content related to the page (https://www.gov.uk/government/policies).",
     "type": "identifiers"
   },
 
@@ -95,6 +105,7 @@
   },
 
   "mainstream_browse_pages": {
+    "description": "Mainstream browse pages the page can appear in (https://www.gov.uk/browse).",
     "type": "identifiers"
   },
 
@@ -104,6 +115,7 @@
   },
 
   "taxons": {
+    "description": "Topics associated with the page. Used for topic pages (e.g. https://www.gov.uk/education).",
     "type": "identifiers"
   },
 
@@ -113,7 +125,7 @@
   },
 
   "updated_at": {
-    "description": "TODO: find out where this is used.",
+    "description": "When the page was last updated. This field is unreliable and may be deprecated in a future version.",
     "type": "date"
   },
 
@@ -138,18 +150,22 @@
   },
 
   "latest_change_note": {
+    "description": "Note indicating what changed in the last major revision.",
     "type": "unsearchable_text"
   },
 
   "id": {
+    "description": "This field will be deprecated in a future version. Do not use.",
     "type": "identifier"
   },
 
   "acronym": {
+    "description": "Acronym associated with the page title. Used for organisation pages.",
     "type": "searchable_text"
   },
 
   "attachments": {
+    "description": "Metadata associated with any attachments linked to this page.",
     "type": "objects",
     "children": {
       "content": { "type": "searchable_text" },
@@ -167,18 +183,22 @@
   },
 
   "display_type": {
+    "description": "Different way of describing content_store_document_type, for some formats. May be deprecated in a future version.",
     "type": "identifier"
   },
 
   "document_collections": {
+    "description": "Document collections this page belongs to (https://docs.publishing.service.gov.uk/document-types/document_collection.html).",
     "type": "identifiers"
   },
 
   "document_series": {
+    "description": "",
     "type": "identifiers"
   },
 
   "release_timestamp": {
+    "description": "When statistics will be released, for statistics announcement pages.",
     "type": "date"
   },
 
@@ -188,10 +208,12 @@
   },
 
   "operational_field": {
+    "description": "The place a fatality notice applies to.",
     "type": "identifier"
   },
 
   "organisation_state": {
+    "description": "Status of an organisation page on GOV.UK: {live, joining, exempt, transitioning, closed, devolved}",
     "type": "identifier"
   },
 
@@ -201,50 +223,62 @@
   },
 
   "people": {
+    "description": "Links to people associated with this page (https://www.gov.uk/government/people).",
     "type": "identifiers"
   },
 
   "policy_groups": {
+    "description": "Links to policy groups (working groups) associated with this page (https://www.gov.uk/government/groups).",
     "type": "identifiers"
   },
 
   "relevant_to_local_government": {
+    "description": "No longer used. Will be removed in a future version.",
     "type": "boolean"
   },
 
   "search_format_types": {
+    "description": "Filters used by publications/announcement pages (https://www.gov.uk/government/publications/). May be deprecated in a future version.",
     "type": "identifiers"
   },
 
   "slug": {
+    "description": "The trailing part of the link. Two slugs belonging to the same format must be unique.",
     "type": "identifier"
   },
 
   "statistics_announcement_state": {
+    "description": "State of a statistical announcement page; one of {cancelled, confirmed, provisional}",
     "type": "identifier"
   },
 
   "world_locations": {
+    "description": "World location associated with this page (https://www.gov.uk/world).",
     "type": "identifiers"
   },
 
   "has_official_document": {
+    "description": "Used for official document status filter on publication page (publication formats only).",
     "type": "boolean"
   },
 
   "has_command_paper": {
+    "description": "Used for official document status filter on publication page (publication formats only).",
     "type": "boolean"
   },
 
   "has_act_paper": {
+    "description": "Used for official document status filter on publication page (publication formats only).",
     "type": "boolean"
   },
 
   "aircraft_category": {
+    "description": "Used for official document status filter on publication page (publication formats only).",
     "type": "identifiers"
   },
 
   "report_type": {
+    "description": "Report type for MAIB, RAIB, AAIB reports. Possible values vary by format.",
     "type": "identifiers"
   },
 
@@ -254,58 +288,72 @@
   },
 
   "registration": {
+    "description": "Metadata associated with an AAIB report (https://www.gov.uk/aaib-reports/)",
     "type": "searchable_text"
   },
 
   "aircraft_type": {
+    "description": "Metadata associated with an AAIB report (https://www.gov.uk/aaib-reports/)",
     "type": "searchable_text"
   },
 
   "location": {
+    "description": "Location metadata. Not comparable between different formats.",
     "type": "identifiers"
   },
 
   "case_type": {
+    "description": "Similar to report_type: applies to CMA cases.",
     "type": "identifiers"
   },
 
   "case_state": {
+    "description": "Whether a case is open or closed. Applies to CMA cases.",
     "type": "identifiers"
   },
 
   "country": {
+    "description": "Country associated with the page. Does not link to a page on GOV.UK. See also 'world_locations'.",
     "type": "identifiers"
   },
 
   "market_sector": {
+    "description": "Market sector a CMA case relates to.",
     "type": "identifiers"
   },
 
   "outcome_type": {
+    "description": "Outcome of a CMA case.",
     "type": "identifier"
   },
 
   "opened_date": {
+    "description": "Open date of a CMA case",
     "type": "date"
   },
 
   "closed_date": {
+    "description": "Close date of a CMA case",
     "type": "date"
   },
 
   "contact_groups": {
+    "description": "Contact groups a 'contact' page belongs to.",
     "type": "identifiers"
   },
 
   "grant_type": {
+    "description": "Countryside stewardship grant type (https://www.gov.uk/countryside-stewardship-grants).",
     "type": "identifiers"
   },
 
   "land_use": {
+    "description": "Countryside stewardship grant land use type (https://www.gov.uk/countryside-stewardship-grants).",
     "type": "identifiers"
   },
 
   "tiers_or_standalone_items": {
+    "description": "Countryside stewardship grant land tiers or standalone items (https://www.gov.uk/countryside-stewardship-grants).",
     "type": "identifiers"
   },
 
@@ -315,6 +363,7 @@
   },
 
   "therapeutic_area": {
+    "description": "Therapeutic area (https://www.gov.uk/drug-safety-update).",
     "type": "identifiers"
   },
 
