@@ -80,6 +80,7 @@ private
     Indexer::CompareEnumerator.stubs(:new).with(
       'index_a',
       'index_b',
+      {},
     ).returns([[left, right]].to_enum)
   end
 end
