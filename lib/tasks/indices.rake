@@ -30,9 +30,9 @@ namespace :rummager do
   desc "Compare two indices with an option format filter"
   task :compare_govuk, :format do |_, args|
     if ['all', '', nil].include?(args[:format])
-      pp Indexer::Comparer.new('mainstream', 'govuk').run
+      puts Indexer::Comparer.new('mainstream', 'govuk').run
     else
-      pp Indexer::Comparer.new('mainstream', 'govuk', filtered_format: args[:format]).run
+      puts Indexer::Comparer.new('mainstream', 'govuk', filtered_format: args[:format]).run
     end
   end
 
