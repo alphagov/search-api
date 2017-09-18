@@ -1,5 +1,7 @@
 ---
 :concurrency: 5
+staging:
+  :concurrency:  16
 production:
   :concurrency:  16
 :require: ./lib/rummager.rb
