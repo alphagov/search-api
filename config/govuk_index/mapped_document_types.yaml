@@ -1,8 +1,27 @@
+aaib_report: aaib_report # Specialist Publisher
 answer: edition
+asylum_support_decision: asylum_support_decision # Specialist Publisher
+business_finance_support_scheme: business_finance_support_scheme # Specialist Publisher
+cma_case: cma_case # Specialist Publisher
+countryside_stewardship_grant: countryside_stewardship_grant # Specialist Publisher
+dfid_research_output: dfid_research_output # Specialist Publisher
+drug_safety_update: drug_safety_update # Specialist Publisher
+employment_appeal_tribunal_decision: employment_appeal_tribunal_decision # Specialist Publisher
+employment_tribunal_decision: employment_tribunal_decision # Specialist Publisher
+esi_fund: european_structural_investment_fund # Specialist Publisher
+finder: edition # Specialist Publisher
 guide: edition
 help_page: edition
+international_development_fund: international_development_fund # Specialist Publisher
 licence: edition
 local_transaction: edition
+maib_report: maib_report # Specialist Publisher
+medical_safety_alert: medical_safety_alert # Specialist Publisher
 place: edition
+raib_report: raib_report # Specialist Publisher
+service_standard_report: service_standard_report # Specialist Publisher
 simple_smart_answer: edition
+tax_tribunal_decision: tax_tribunal_decision # Specialist Publisher
 transaction: edition
+utaac_decision: utaac_decision # Specialist Publisher
+vehicle_recalls_and_faults_alert: vehicle_recalls_and_faults_alert # Specialist Publisher

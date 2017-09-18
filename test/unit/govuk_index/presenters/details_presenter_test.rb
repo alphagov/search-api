@@ -37,24 +37,6 @@ class GovukIndex::DetailsPresenterTest < Minitest::Test
     assert_equal "title 1\n\nhello\n\ntitle 2\n\ngoodbye", details_presenter(details).indexable_content
   end
 
-  def test_licence_indexable_content
-    details = {
-      "continuation_link" => "http://www.on-and-on.com",
-      "external_related_links" => [],
-      "licence_identifier" => "1234-5-6",
-      "licence_short_description" => "short description",
-      "licence_overview" => [
-        { "content_type" => "text/govspeak", "content" => "**overview**" },
-        { "content_type" => "text/html", "content" => "<strong>overview</strong>" }
-      ],
-      "will_continue_on" => "on and on",
-    }
-
-    presenter = details_presenter(details, "licence")
-
-    assert_equal "short description\n\noverview", presenter.indexable_content
-  end
-
   def test_mapped_licence_fields
     details = {
       "continuation_link" => "http://www.on-and-on.com",
@@ -74,7 +56,7 @@ class GovukIndex::DetailsPresenterTest < Minitest::Test
     assert_equal presenter.licence_short_description, details["licence_short_description"]
   end
 
-  def test_transaction_indexable_content
+  def test_when_additional_indexable_content_keys_are_specified
     details = {
       "external_related_links" => [],
       "introductory_paragraph" => [
@@ -85,37 +67,13 @@ class GovukIndex::DetailsPresenterTest < Minitest::Test
       "start_button_text" => "Start now",
     }
 
-    assert_equal "introductory paragraph\n\nmore information", details_presenter(details, "transaction").indexable_content
+    assert_equal "introductory paragraph\n\nmore information", details_presenter(details, %w(introductory_paragraph more_information)).indexable_content
   end
 
-  def test_formats_with_no_indexable_content
-    formats = %w(local_transaction place)
-    details = {
-      "external_related_links" => [],
-      "introduction" => [
-        { "content_type" => "text/govspeak", "content" => "**introductory paragraph**" },
-        { "content_type" => "text/html", "content" => "<strong>introductory paragraph</strong>" }
-      ],
-      "need_to_know" => [
-        { "content_type" => "text/govspeak", "content" => "**need to know**" },
-        { "content_type" => "text/html", "content" => "<strong>need to know</strong>" }
-      ],
-      "more_information" => [
-        { "content_type" => "text/govspeak", "content" => "**some more information**" },
-        { "content_type" => "text/html", "content" => "<strong>some more information</strong>" }
-      ],
-      "start_button_text" => "Start now",
-    }
-
-    formats.each do |format|
-      assert_nil details_presenter(details, format).indexable_content
-    end
-  end
-
-  def details_presenter(details, format = "help_page")
+  def details_presenter(details, indexable_content_keys = %w(body parts))
     GovukIndex::DetailsPresenter.new(
       details: details,
-      format: format,
+      indexable_content_keys: indexable_content_keys,
       sanitiser: GovukIndex::IndexableContentSanitiser.new
     )
   end

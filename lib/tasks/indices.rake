@@ -29,11 +29,16 @@ namespace :rummager do
 
   desc "Compare two indices with an option format filter"
   task :compare_govuk, :format do |_, args|
-    if ['all', '', nil].include?(args[:format])
-      puts Indexer::Comparer.new('mainstream', 'govuk').run
-    else
-      puts Indexer::Comparer.new('mainstream', 'govuk', filtered_format: args[:format]).run
-    end
+    filtered_format = args[:format]
+    filtered_format = nil if filtered_format == 'all'
+
+    puts Indexer::Comparer.new(
+      'mainstream',
+      'govuk',
+      field_comparer: Indexer::GovukIndexFieldComparer.new,
+      ignore: %w(popularity is_withdrawn),
+      filtered_format: filtered_format
+    ).run
   end
 
   desc "Create a brand new index and assign an alias if no alias currently exists"
