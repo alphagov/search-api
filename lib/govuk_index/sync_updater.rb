@@ -7,11 +7,11 @@ module GovukIndex
       ).run
     end
 
-  private
-
-    def worker
+    def self.worker
       SyncWorker
     end
+
+  private
 
     def search_body
       {
