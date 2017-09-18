@@ -1,7 +1,10 @@
 require "gds_api/test_helpers/publishing_api_v2"
 
 module TestHelpers
+  class RandomExampleError < StandardError; end
+
   include GdsApi::TestHelpers::PublishingApiV2
+  EXAMPLE_GENERATOR_RETRIES = 5
 
   def teardown
     Timecop.return
@@ -34,11 +37,17 @@ module TestHelpers
     commit_index("page-traffic_test")
   end
 
-  def generate_random_example(schema: "help_page", payload: {}, excluded_fields: [])
+  def generate_random_example(schema: "help_page", payload: {}, excluded_fields: [], regenerate_if: ->(_example) { false }, retry_attempts: EXAMPLE_GENERATOR_RETRIES)
     # just in case RandomExample does not generate a type field
+
     payload[:document_type] = schema
-    GovukSchemas::RandomExample
-      .for_schema(notification_schema: schema)
-      .merge_and_validate(payload, excluded_fields)
+    retry_attempts.times do
+      random_example = GovukSchemas::RandomExample
+        .for_schema(notification_schema: schema)
+        .merge_and_validate(payload, excluded_fields)
+
+      return random_example unless regenerate_if.call(random_example)
+    end
+    raise RandomExampleError, "Could not generate example"
   end
 end

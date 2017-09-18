@@ -2,7 +2,8 @@ require 'test_helper'
 
 class GovukIndex::ElasticsearchPresenterTest < Minitest::Test
   def test_identifier
-    payload = generate_random_example(payload: { payload_version: 1 })
+    payload = generate_random_example(payload: { payload_version: 1 },
+    regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" })
 
     expected_identifier = {
       _type: payload["document_type"],
