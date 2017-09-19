@@ -24,6 +24,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
       .merge_and_validate({ document_type: "help_page", payload_version: 123 })
 
     @queue.publish(random_example.to_json, content_type: "application/json")
+    commit_index 'govuk_test'
 
     document = fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
 
@@ -42,6 +43,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
       .merge_and_validate({ document_type: "transaction", payload_version: 123, publishing_app: "smartanswers" })
 
     @queue.publish(random_example.to_json, content_type: "application/json")
+    commit_index 'govuk_test'
 
     assert_raises(Elasticsearch::Transport::Transport::Errors::NotFound) do
       fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test", type: 'edition')
@@ -62,6 +64,7 @@ class GovukIndex::PublishingEventProcessorTest < IntegrationTest
     popularity = 1.0 / ([document_count, document_rank].min + SearchConfig.instance.popularity_rank_offset)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
+    commit_index 'govuk_test'
 
     document = fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
 
