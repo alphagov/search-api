@@ -68,7 +68,7 @@ end
 def index_names
   case ENV["RUMMAGER_INDEX"]
   when "all"
-    search_config.index_names
+    search_config.all_index_names
   when String
     [ENV["RUMMAGER_INDEX"]]
   else
