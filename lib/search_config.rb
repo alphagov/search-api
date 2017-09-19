@@ -41,6 +41,12 @@ class SearchConfig
     content_index_names + auxiliary_index_names
   end
 
+  def all_index_names
+    # this is used to process data in the rake file when `all` is passed in as previous we skipped `govuk`
+    # we can't update index_names at this stage as it is used in multiple spots including the index filtering
+    content_index_names + auxiliary_index_names + [govuk_index_name]
+  end
+
   def elasticsearch
     @elasticsearch ||= config_for("elasticsearch")
   end

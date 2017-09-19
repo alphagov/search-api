@@ -99,7 +99,7 @@ module SearchIndices
     end
 
     def clean
-      alias_map.each do |name, details|
+      alias_map(include_closed: true).each do |name, details|
         delete(name) if details.fetch("aliases", {}).empty?
       end
     end
@@ -124,10 +124,12 @@ module SearchIndices
       "#{@name}-#{Time.now.utc.iso8601}-#{SecureRandom.uuid}".downcase
     end
 
-    def alias_map
+    def alias_map(include_closed: false)
+      expand_wildcards = ['open']
+      expand_wildcards << 'closed' if include_closed
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
-      indices = @client.indices.get_aliases
+      indices = @client.indices.get(index: "#{@name}*", expand_wildcards: expand_wildcards)
       indices.select { |name| name_pattern.match name }
     end
 

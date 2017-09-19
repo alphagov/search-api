@@ -141,7 +141,7 @@ class IndexGroupTest < Minitest::Test
   end
 
   def test_index_names_with_no_indices
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -153,7 +153,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_index_names_with_index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -169,7 +169,7 @@ class IndexGroupTest < Minitest::Test
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -183,7 +183,7 @@ class IndexGroupTest < Minitest::Test
   end
 
   def test_clean_with_no_indices
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -195,7 +195,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_clean_with_dead_index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -214,7 +214,7 @@ class IndexGroupTest < Minitest::Test
 
   def test_clean_with_live_index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -231,7 +231,7 @@ class IndexGroupTest < Minitest::Test
       "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012",
       "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef"
     ]
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -255,7 +255,7 @@ class IndexGroupTest < Minitest::Test
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     dead_name = "test-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -276,7 +276,7 @@ class IndexGroupTest < Minitest::Test
   def test_clean_with_other_alias
     # If there's an alias we don't know about, that should save the index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -293,7 +293,7 @@ class IndexGroupTest < Minitest::Test
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
+    stub_request(:get, %r{#{ELASTICSEARCH_TESTING_HOST}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
