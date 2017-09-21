@@ -5,8 +5,8 @@ class SitemapWriter
     @sitemap_file_count = 0
   end
 
-  def write_sitemaps(content_indices)
-    sitemap_generator = SitemapGenerator.new(content_indices)
+  def write_sitemaps(search_config)
+    sitemap_generator = SitemapGenerator.new(search_config)
     # write our sitemap files and return an array of filenames
     sitemap_generator.sitemaps.map do |sitemap_xml|
       filename, link_filename = next_filename

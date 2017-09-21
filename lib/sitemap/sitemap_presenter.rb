@@ -8,25 +8,25 @@ class SitemapPresenter
   end
 
   def url
-    if document.link.start_with?("http")
-      document.link
+    if document['link'].start_with?("http")
+      document['link']
     else
-      URI.join(base_url, document.link).to_s
+      URI.join(base_url, document['link']).to_s
     end
   end
 
   def last_updated
-    return nil unless document.public_timestamp
+    return nil unless document['public_timestamp']
 
     # Attempt to parse timestamp to validate it
-    parsed_date = DateTime.iso8601(document.public_timestamp)
+    parsed_date = DateTime.iso8601(document['public_timestamp'])
 
     # Limit timestamps for old documents to GOV.UK was launch date
     return GOVUK_LAUNCH_DATE.iso8601 if parsed_date < GOVUK_LAUNCH_DATE
 
-    document.public_timestamp
+    document['public_timestamp']
   rescue ArgumentError
-    @logger.warn("Invalid timestamp '#{document.public_timestamp}' for page '#{document.link}'")
+    @logger.warn("Invalid timestamp '#{document['public_timestamp']}' for page '#{document['link']}'")
     # Ignore invalid or missing timestamps
     nil
   end
@@ -44,6 +44,6 @@ private
   end
 
   def withdrawn_status_boost
-    document.is_withdrawn ? 0.25 : 1
+    document['is_withdrawn'] ? 0.25 : 1
   end
 end

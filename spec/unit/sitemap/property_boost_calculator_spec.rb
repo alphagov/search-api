@@ -103,11 +103,11 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
 
     calculator = PropertyBoostCalculator.new
 
-    document = Document.new(sample_field_definitions, {
+    document = {
       "format" => "publication",
       "content_store_document_type" => "foi_release",
       "navigation_document_supertype" => "some_other_value"
-    })
+    }
 
     #   1 - 2^(-format boost * document type boost * navigation supertype boost)
     # = 1 - 2^(-0.5 * 0.2 * 1)
@@ -149,12 +149,10 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
   end
 
   def build_document(format: nil, document_type: nil)
-    attributes = {
-      "_type" => "some_type",
-    }
+    attributes = {}
     attributes["format"] = format if format
     attributes["content_store_document_type"] = document_type if document_type
 
-    Document.new(sample_field_definitions, attributes)
+    attributes
   end
 end

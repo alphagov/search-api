@@ -1,8 +1,8 @@
 class SitemapGenerator
   EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"].freeze
 
-  def initialize(sitemap_indices)
-    @sitemap_indices = sitemap_indices
+  def initialize(search_config)
+    @search_config = search_config
     @all_documents = get_all_documents
   end
 
@@ -11,17 +11,31 @@ class SitemapGenerator
   end
 
   def get_all_documents
+    search_body = {
+      query: {
+        bool: {
+          must_not: { terms: { format: EXCLUDED_FORMATS } }
+        }
+      },
+      filter: Search::FormatMigrator.new.call
+    }
     property_boost_calculator = PropertyBoostCalculator.new
 
+    # We need the extra enumerator here so that we can inject the homepage
+    # as the first item to be processed.
     Enumerator.new do |yielder|
-      # Hard-code the site root, as it isn't listed in any search index
       yielder << homepage
 
-      @sitemap_indices.each do |index|
-        index.all_documents(exclude_formats: EXCLUDED_FORMATS).each do |document|
-          yielder << SitemapPresenter.new(document, property_boost_calculator)
-        end
+      enum = ScrollEnumerator.new(
+        client: Services.elasticsearch(hosts: @search_config.base_uri, timeout: SearchIndices::Index::TIMEOUT_SECONDS),
+        search_body: search_body,
+        index_names: index_names,
+        batch_size: SearchIndices::Index.scroll_batch_size
+      ) do |hit|
+        SitemapPresenter.new(hit["_source"], property_boost_calculator)
       end
+
+      enum.each { |doc| yielder << doc }
     end
   end
 
@@ -51,6 +65,10 @@ class SitemapGenerator
 private
 
   StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
+
+  def index_names
+    @search_config.content_index_names + [@search_config.govuk_index_name]
+  end
 
   def homepage
     StaticDocumentPresenter.new(Plek.current.website_root + "/", nil, 0.5)

@@ -1,73 +1,68 @@
 require 'spec_helper'
 
 RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
-  SAMPLE_DATA = [
-    {
-      "title" => "Cheese in my face",
-      "description" => "Hummus weevils",
-      "format" => "answer",
-      "link" => "/an-example-answer",
-      "indexable_content" => "I like my badger: he is tasty and delicious",
-      "public_timestamp" => "2017-07-01T12:41:34+00:00"
-    },
-    {
-      "title" => "Cheese on Ruby's face",
-      "description" => "Ruby weevils",
-      "format" => "answer",
-      "link" => "/an-example-answer-rubylol",
-      "indexable_content" => "I like my rubby badger: he is tasty and delicious"
-    },
-    {
-      "title" => "Cheese on Python's face",
-      "description" => "Python weevils",
-      "format" => "answer",
-      "link" => "/an-example-answer-pythonwin",
-      "indexable_content" => "I like my badger: he is pythonic and delicious"
-    },
-    {
-      "title" => "Cheese in my ears",
-      "description" => "Wordpress weevils",
-      "format" => "answer",
-      "link" => "/an-example-answer-stuff",
-      "indexable_content" => "I like my wordpress: says Joshua who is win"
-    },
-    {
-      "title" => "Useful government information",
-      "description" => "Government, government, government. Developers.",
-      "format" => "answer",
-      "link" => "/another-example-answer",
-      "indexable_content" => "Tax, benefits, roads and stuff"
-    },
-    {
-      "title" => "External government information",
-      "description" => "Government, government, government. Developers.",
-      "format" => "recommended-link",
-      "link" => "http://www.example.com/external-example-answer",
-      "indexable_content" => "Tax, benefits, roads and stuff"
-    },
-    {
-      "title" => "Some content from Inside Gov",
-      "description" => "We list some inside gov results in the mainstream index.",
-      "format" => "inside-government-link",
-      "link" => "https://www.gov.uk/government/some-content",
-    }
-  ].freeze
-
-  before do
-    add_sample_documents
-  end
 
   it "should_generate_multiple_sitemaps" do
     SitemapGenerator.stub(:sitemap_limit).and_return(2)
-    generator = SitemapGenerator.new(search_server.content_indices)
+    add_sample_documents(
+      [
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+        },
+        {
+          "title" => "Cheese on Ruby's face",
+          "description" => "Ruby weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer-rubylol",
+          "indexable_content" => "I like my ruby badger: he is tasty and delicious"
+        },
+        {
+          "title" => "Cheese on Python's face",
+          "description" => "Python weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer-pythonwin",
+          "indexable_content" => "I like my badger: he is pythonic and delicious"
+        },
+      ],
+      index_name: "govuk_test"
+    )
 
+    generator = SitemapGenerator.new(stubbed_search_config)
     sitemap_xml = generator.sitemaps
 
-    assert_equal 3, sitemap_xml.length
+    expected_sitemap_count = 2 # sample_document.count + homepage / sitemap_limit rounded up
+    assert_equal expected_sitemap_count, sitemap_xml.length
+  end
+
+  it "does_not_include_migrated_formats_from_mainstream" do
+    SitemapGenerator.stub(:sitemap_limit).and_return(2)
+    add_sample_documents(
+      [
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+        },
+      ],
+      index_name: "mainstream_test"
+    )
+    generator = SitemapGenerator.new(stubbed_search_config)
+    sitemap_xml = generator.sitemaps
+    assert_equal 1, sitemap_xml.length
+
+    refute_includes sitemap_xml[0], "/an-example-answer"
   end
 
   it "should_include_homepage" do
-    generator = SitemapGenerator.new(search_server.content_indices)
+    generator = SitemapGenerator.new(stubbed_search_config)
     sitemap_xml = generator.sitemaps
 
     pages = Nokogiri::XML(sitemap_xml[0])
@@ -79,7 +74,20 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "should_not_include_recommended_links" do
-    generator = SitemapGenerator.new(search_server.content_indices)
+    generator = SitemapGenerator.new(stubbed_search_config)
+    add_sample_documents(
+      [
+        {
+          "title" => "External government information",
+          "description" => "Government, government, government. Developers.",
+          "format" => "recommended-link",
+          "link" => "http://www.example.com/external-example-answer",
+          "indexable_content" => "Tax, benefits, roads and stuff"
+        },
+      ],
+      index_name: 'government_test'
+    )
+
     sitemap_xml = generator.sitemaps
 
     assert_equal 1, sitemap_xml.length
@@ -88,7 +96,18 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "should_not_include_inside_government_links" do
-    generator = SitemapGenerator.new(search_server.content_indices)
+    generator = SitemapGenerator.new(stubbed_search_config)
+    add_sample_documents(
+      [
+        {
+          "title" => "Some content from Inside Gov",
+          "description" => "We list some inside gov results in the mainstream index.",
+          "format" => "inside-government-link",
+          "link" => "https://www.gov.uk/government/some-content",
+        },
+      ],
+      index_name: 'government_test'
+    )
 
     sitemap_xml = generator.sitemaps
 
@@ -97,7 +116,20 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "links_should_include_timestamps" do
-    generator = SitemapGenerator.new(search_server.content_indices)
+    generator = SitemapGenerator.new(stubbed_search_config)
+    add_sample_documents(
+      [
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+        },
+      ],
+      index_name: 'govuk_test'
+    )
 
     sitemap_xml = generator.sitemaps
 
@@ -110,22 +142,37 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "links_should_include_priorities" do
-    generator = SitemapGenerator.new(search_server.content_indices)
+    generator = SitemapGenerator.new(stubbed_search_config)
+    add_sample_documents(
+      [
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+        },
+      ],
+      index_name: 'govuk_test'
+    )
 
     sitemap_xml = generator.sitemaps
 
-    priorities = Nokogiri::XML(sitemap_xml[0])
-      .css("url > priority")
+    pages = Nokogiri::XML(sitemap_xml[0])
+      .css("url")
+      .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
 
-    assert_equal 6, priorities.count
+    assert_equal 1, pages.count
+    assert_includes 0..10, pages[0].css("priority").text.to_i
   end
 
 private
 
-  def add_sample_documents
-    SAMPLE_DATA.each do |sample_document|
-      insert_document("mainstream_test", sample_document)
+  def add_sample_documents(docs, index_name: 'mainstream_test')
+    docs.each do |sample_document|
+      insert_document(index_name, sample_document)
     end
-    commit_index
+    commit_index index_name
   end
 end
