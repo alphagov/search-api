@@ -54,9 +54,14 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
     }
 
     index_mock = mock
-    index_mock.stubs(:get_document_by_link).with("/does-exist").returns({ "link" => "/does-exist" })
+    index_mock.stubs(:get_document_by_link).with("/does-exist").returns(
+      "link" => "/does-exist",
+      "real_index_name" => "index_name-123",
+      "_id" => "document_id_345"
+    )
     IndexFinder.expects(:content_index).returns(index_mock)
 
+    Indexer::AmendWorker.expects(:perform_async).with("index_name-123", "document_id_345", {})
     result = Indexer::ChangeNotificationProcessor.trigger(message_payload)
 
     assert_equal(:accepted, result)
