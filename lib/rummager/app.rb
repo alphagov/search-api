@@ -27,7 +27,7 @@ class Rummager < Sinatra::Application
   end
 
   def index_name
-    @index_name ||= params["index"] || settings.default_index_name
+    @index_name ||= params["index"] || SearchConfig.instance.default_index_name
   end
 
   def text_error(content)
