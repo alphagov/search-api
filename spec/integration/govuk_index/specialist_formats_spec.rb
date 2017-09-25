@@ -16,10 +16,13 @@ RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
   end
 
   it "specialist_publisher_finders_are_correctly_indexed" do
-    random_example = GovukSchemas::RandomExample
-                       .for_schema(notification_schema: "finder")
-                       .merge_and_validate(document_type: "finder")
-    GovukIndex::MigratedFormats.stubs(:indexable_formats).returns(["finder"])
+    random_example = generate_random_example(
+      schema: "finder",
+      payload: { document_type: "finder" },
+      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
+    )
+
+    GovukIndex::MigratedFormats.stub(:indexable_formats).and_return(["finder"])
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -50,10 +53,12 @@ RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
     # ideally we would run a test for all document types, but this takes 3 seconds so I have limited
     # it to a random subset
     document_types.sample(3).each do |specialist_document_type|
-      random_example = GovukSchemas::RandomExample
-                         .for_schema(notification_schema: "specialist_document")
-                         .merge_and_validate(document_type: specialist_document_type)
-      GovukIndex::MigratedFormats.stubs(:indexable_formats).returns([specialist_document_type])
+      random_example = generate_random_example(
+        schema: "specialist_document",
+        payload: { document_type: specialist_document_type },
+        regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
+      )
+      GovukIndex::MigratedFormats.stub(:indexable_formats).and_return([specialist_document_type])
 
       @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -65,10 +70,12 @@ RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
     publisher_document_type = 'esi_fund'
     search_document_type = 'european_structural_investment_fund'
 
-    random_example = GovukSchemas::RandomExample
-                       .for_schema(notification_schema: "specialist_document")
-                       .merge_and_validate(document_type: publisher_document_type)
-    GovukIndex::MigratedFormats.stubs(:indexable_formats).returns([publisher_document_type])
+    random_example = generate_random_example(
+      schema: "specialist_document",
+      payload: { document_type: publisher_document_type },
+      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
+    )
+    GovukIndex::MigratedFormats.stub(:indexable_formats).and_return([publisher_document_type])
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -76,9 +83,12 @@ RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
   end
 
   it "finders_email_signup_are_never_indexed" do
-    random_example = GovukSchemas::RandomExample
-                       .for_schema(notification_schema: "finder_email_signup")
-                       .merge_and_validate(document_type: "finder_email_signup")
+    random_example = generate_random_example(
+      schema: "finder_email_signup",
+      payload: { document_type: "finder_email_signup" },
+      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
+    )
+
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     assert_raises(Elasticsearch::Transport::Transport::Errors::NotFound) do

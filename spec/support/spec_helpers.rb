@@ -40,7 +40,7 @@ module SpecHelpers
   def generate_random_example(schema: "help_page", payload: {}, excluded_fields: [], regenerate_if: ->(_example) { false }, retry_attempts: EXAMPLE_GENERATOR_RETRIES)
     # just in case RandomExample does not generate a type field
 
-    payload[:document_type] = schema
+    payload[:document_type] ||= schema
     retry_attempts.times do
       random_example = GovukSchemas::RandomExample
         .for_schema(notification_schema: schema)
