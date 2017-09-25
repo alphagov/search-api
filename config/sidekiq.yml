@@ -10,4 +10,5 @@ production:
   - default
   - bulk
 :limits:
-  bulk: 12
+  bulk: 4
+  default: 4
