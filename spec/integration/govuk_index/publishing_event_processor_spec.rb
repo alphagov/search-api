@@ -2,7 +2,6 @@ require 'spec_helper'
 
 RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration'] do
   before do
-
     bunny_mock = BunnyMock.new
     @channel = bunny_mock.start.channel
 
@@ -18,9 +17,10 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
 
   it "should_save_new_document_to_elasticsearch" do
     GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
-    random_example = GovukSchemas::RandomExample
-      .for_schema(notification_schema: "help_page")
-      .merge_and_validate({ document_type: "help_page", payload_version: 123 })
+    random_example = generate_random_example(
+      payload: { document_type: "help_page", payload_version: 123 },
+      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
+    )
 
     @queue.publish(random_example.to_json, content_type: "application/json")
     commit_index 'govuk_test'
@@ -37,9 +37,9 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
 
   it "not_indexing_when_publishing_app_is_smart_answers" do
     GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
-    random_example = GovukSchemas::RandomExample
-      .for_schema(notification_schema: "transaction")
-      .merge_and_validate({ document_type: "transaction", payload_version: 123, publishing_app: "smartanswers" })
+    random_example = generate_random_example(
+      payload: { document_type: "transaction", payload_version: 123, publishing_app: "smartanswers" },
+    )
 
     @queue.publish(random_example.to_json, content_type: "application/json")
     commit_index 'govuk_test'
@@ -51,9 +51,10 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
 
   it "should_include_popularity_when_available" do
     GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
-    random_example = GovukSchemas::RandomExample
-      .for_schema(notification_schema: "help_page")
-      .merge_and_validate({ document_type: "help_page", payload_version: 123 })
+    random_example = generate_random_example(
+      payload: { document_type: "help_page", payload_version: 123 },
+      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
+    )
 
     document_count = 4
     document_rank = 2
