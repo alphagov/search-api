@@ -49,7 +49,7 @@ GEM
     govuk_app_config (0.2.0)
       sentry-raven (~> 2.6.3)
       statsd-ruby (~> 1.4.0)
-    govuk_document_types (0.1.7)
+    govuk_document_types (0.1.8)
     govuk_message_queue_consumer (3.0.2)
       bunny (~> 2.2.0)
     govuk_schemas (2.2.0)
