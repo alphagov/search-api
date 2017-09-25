@@ -46,6 +46,7 @@ group :test do
   gem "test-unit", "~> 3.0"
   gem "timecop", "~> 0.8.0"
   gem "webmock", "~> 1.24"
+  gem 'rspec'
 end
 
 group :development do
