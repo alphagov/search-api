@@ -43,23 +43,23 @@ RSpec.describe 'ResultSetTest', tags: ['shoulda'] do
     end
 
     it "pass the fields to Document.from_hash" do
-      expected_hash = has_entry("foo", "bar")
-      Document.expects(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).returns(:doc)
+      expected_hash = hash_including("foo" => "bar")
+      expect(Document).to receive(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).and_return(:doc)
 
       result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
       assert_equal [:doc], result_set.results
     end
 
     it "pass the result score to Document.from_hash" do
-      Document.expects(:from_hash).with(is_a(Hash), sample_elasticsearch_types, 12).returns(:doc)
+      expect(Document).to receive(:from_hash).with(an_instance_of(Hash), sample_elasticsearch_types, 12).and_return(:doc)
 
       result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
       assert_equal [:doc], result_set.results
     end
 
     it "populate the document id and type from the metafields" do
-      expected_hash = has_entries("_type" => "contact", "_id" => "some_id")
-      Document.expects(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).returns(:doc)
+      expected_hash = hash_including("_type" => "contact", "_id" => "some_id")
+      expect(Document).to receive(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).and_return(:doc)
 
       result_set = Search::ResultSet.from_elasticsearch(sample_elasticsearch_types, @response)
       assert_equal [:doc], result_set.results

@@ -14,11 +14,11 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
     filename = create_test_file
     link_name = "sitemap_1.xml"
     link_full_name = "#{@path}/sitemaps/sitemap_1.xml"
-    SitemapWriter.any_instance.stubs(:write_sitemaps).returns([[filename, link_name]])
+    SitemapWriter.any_instance.stub(:write_sitemaps).and_return([[filename, link_name]])
 
     assert_equal File.exist?(link_name), false
 
-    Sitemap.new(@path).generate(stub(:content_indices))
+    Sitemap.new(@path).generate(double(:content_indices))
 
     assert_equal File.symlink?(link_full_name), true
     assert_equal File.readlink(link_full_name), "#{@path}/sitemaps/#{filename}"
@@ -27,10 +27,10 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
   it "it_creates_an_index_pointing_to_the_symbolic_links" do
     filename = create_test_file
     link_name = "sitemap_1.xml"
-    SitemapWriter.any_instance.stubs(:write_sitemaps).returns([[filename, link_name]])
+    SitemapWriter.any_instance.stub(:write_sitemaps).and_return([[filename, link_name]])
 
     time = Time.now.utc
-    Sitemap.new(@path, time).generate(stub(:content_indices))
+    Sitemap.new(@path, time).generate(double(:content_indices))
 
     index_filename = "#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml"
     index_linkname = "#{@path}/sitemap.xml"
@@ -75,12 +75,12 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
     filename =  create_test_file("sitemap_1_2017-01-02T06.xml")
 
     link_name = "sitemap_1.xml"
-    SitemapWriter.any_instance.stubs(:write_sitemaps).returns([[filename, link_name]])
+    SitemapWriter.any_instance.stub(:write_sitemaps).and_return([[filename, link_name]])
 
     time = Time.now.utc
     File.symlink("#{@path}/sitemaps/sitemap_1_2017-01-01T06.xml", "#{@path}/sitemap.xml")
 
-    Sitemap.new(@path, time).generate(stub)
+    Sitemap.new(@path, time).generate(double)
 
     assert_equal File.readlink("#{@path}/sitemap.xml"), "#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml"
   end

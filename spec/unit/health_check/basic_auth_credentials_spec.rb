@@ -21,9 +21,9 @@ module HealthCheck
     end
 
     it "be splattable" do
-      stub_receiver = stub("receiver") do
-        expects(:call).with("bob", "horseradish")
-      end
+      stub_receiver = double("receiver")
+      expect(stub_receiver).to receive(:call).with("bob", "horseradish")
+
       creds = BasicAuthCredentials.call "bob:horseradish"
       stub_receiver.call(*creds)
     end

@@ -3,10 +3,10 @@ require "sitemap/sitemap"
 
 RSpec.describe 'SitemapPresenterTest' do
   before do
-    Plek.any_instance.stubs(:website_root).returns("https://website_root")
+    Plek.any_instance.stub(:website_root).and_return("https://website_root")
 
     @boost_calculator = PropertyBoostCalculator.new
-    @boost_calculator.stubs(:boost).returns(1)
+    @boost_calculator.stub(:boost).and_return(1)
   end
 
   it "url_is_document_link_if_link_is_http_url" do
@@ -113,7 +113,7 @@ RSpec.describe 'SitemapPresenterTest' do
       format: "aaib_report"
     )
     property_boost_calculator = PropertyBoostCalculator.new
-    property_boost_calculator.stubs(:boost).with(document).returns(0.72)
+    property_boost_calculator.stub(:boost).with(document).and_return(0.72)
 
     presenter = SitemapPresenter.new(document, property_boost_calculator)
     assert_equal 0.72, presenter.priority

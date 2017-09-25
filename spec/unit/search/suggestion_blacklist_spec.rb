@@ -15,7 +15,7 @@ RSpec.describe 'Search::SuggestionBlacklistTest', tags: ['shoulda'] do
       "organisation_type" => "Ministerial department"
     }
 
-    stub('organisation_registry', all: [mod_organisation])
+    double('organisation_registry', all: [mod_organisation])
   end
 
   context "#should_correct?" do

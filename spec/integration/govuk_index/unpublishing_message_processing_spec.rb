@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'GovukIndex::UnpublishingMessageProcessing', tags: ['integration'] do
   it "unpublish_message_will_remove_record_from_elasticsearch" do
-    GovukIndex::MigratedFormats.stubs(:migrated_formats?).returns(%w(answer))
+    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(%w(answer))
 
     message = unpublishing_event_message(
       "gone",
@@ -29,7 +29,7 @@ RSpec.describe 'GovukIndex::UnpublishingMessageProcessing', tags: ['integration'
   end
 
   it "unpublish_withdrawn_messages_will_set_is_withdrawn_flag" do
-    GovukIndex::MigratedFormats.stubs(:migrated_formats?).returns(%w(help_page))
+    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(%w(help_page))
 
     message = unpublishing_event_message(
       "help_page",

@@ -58,7 +58,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "should_generate_multiple_sitemaps" do
-    SitemapGenerator.stubs(:sitemap_limit).returns(2)
+    SitemapGenerator.stub(:sitemap_limit).and_return(2)
     generator = SitemapGenerator.new(search_server.content_indices)
 
     sitemap_xml = generator.sitemaps

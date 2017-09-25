@@ -56,7 +56,7 @@ RSpec.describe 'GovukIndex::IndexableContentSanitiserTest' do
       ]
     ]
 
-    GovukError.expects(:notify).with(
+    expect(GovukError).to receive(:notify).with(
       GovukIndex::MissingTextHtmlContentType.new,
       extra: { content_types: ["text/govspeak"] }
     )

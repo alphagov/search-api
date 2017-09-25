@@ -77,10 +77,10 @@ RSpec.describe 'ComparerTest' do
 private
 
   def setup_enumerator_response(left, right)
-    Indexer::CompareEnumerator.stubs(:new).with(
+    Indexer::CompareEnumerator.stub(:new).with(
       'index_a',
       'index_b',
       {},
-    ).returns([[left, right]].to_enum)
+    ).and_return([[left, right]].to_enum)
   end
 end

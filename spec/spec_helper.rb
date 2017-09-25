@@ -26,7 +26,6 @@ require 'rummager/app' # load the website
 
 require "bundler/setup"
 require "rack/test"
-require "mocha/api"
 require "pp"
 require "shoulda-context"
 require "timecop"
@@ -81,7 +80,6 @@ RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
   end
-  config.mock_with :mocha
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
 

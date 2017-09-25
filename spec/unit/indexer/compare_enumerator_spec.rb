@@ -119,18 +119,18 @@ private
   end
 
   def stub_scroll_enumerator(left_request:, right_request:)
-    ScrollEnumerator.stubs(:new).returns(
+    ScrollEnumerator.stub(:new).and_return(
       left_request.to_enum,
       right_request.to_enum,
     )
   end
 
   def stub_client_for_scroll_enumerator(return_values:, search_body: nil, search_type: "query_then_fetch")
-    client = stub(:client)
-    Services.stubs(:elasticsearch).returns(client)
+    client = double(:client)
+    Services.stub(:elasticsearch).and_return(client)
 
-    client.expects(:search).with(
-      has_entries(
+    expect(client).to receive(:search).with(
+      hash_including(
         index: 'index_name',
         search_type: search_type,
         body: search_body || {
@@ -138,15 +138,15 @@ private
           sort: Indexer::CompareEnumerator::DEFAULT_SORT,
         }
       )
-    ).returns(
+    ).and_return(
       { '_scroll_id' => 'scroll_ID_0', 'hits' => { 'total' => 1, 'hits' => return_values[0] } }
     )
 
 
     return_values[1..-1].each_with_index do |return_value, i|
-      client.expects(:scroll).with(
+      expect(client).to receive(:scroll).with(
         scroll_id: "scroll_ID_#{i}", scroll: "1m"
-      ).returns(
+      ).and_return(
         { '_scroll_id' => "scroll_ID_#{i + 1}", 'hits' => { 'hits' => return_value } }
       )
     end

@@ -34,9 +34,9 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
       "publishing_app" => "whitehall"
     }
 
-    index_mock = mock
-    index_mock.stubs(:get_document_by_link).with("/does-not-exist").returns(nil)
-    IndexFinder.expects(:content_index).returns(index_mock)
+    index_mock = double
+    index_mock.stub(:get_document_by_link).with("/does-not-exist").and_return(nil)
+    expect(IndexFinder).to receive(:content_index).and_return(index_mock)
 
     result = Indexer::ChangeNotificationProcessor.trigger(message_payload)
 
@@ -53,15 +53,15 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
       "publishing_app" => "whitehall"
     }
 
-    index_mock = mock
-    index_mock.stubs(:get_document_by_link).with("/does-exist").returns(
+    index_mock = double
+    index_mock.stub(:get_document_by_link).with("/does-exist").and_return(
       "link" => "/does-exist",
       "real_index_name" => "index_name-123",
       "_id" => "document_id_345"
     )
-    IndexFinder.expects(:content_index).returns(index_mock)
+    expect(IndexFinder).to receive(:content_index).and_return(index_mock)
 
-    Indexer::AmendWorker.expects(:perform_async).with("index_name-123", "document_id_345", {})
+    expect(Indexer::AmendWorker).to receive(:perform_async).with("index_name-123", "document_id_345", {})
     result = Indexer::ChangeNotificationProcessor.trigger(message_payload)
 
     assert_equal(:accepted, result)

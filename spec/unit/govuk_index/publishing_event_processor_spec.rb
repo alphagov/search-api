@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'PublishingEventProcessorTest' do
   it "should_process_and_acknowledge_a_message" do
-    message = OpenStruct.new(
+    message = double(
       payload: {
         "base_path" => "/cheese",
         "document_type" => "help_page",
@@ -13,8 +13,8 @@ RSpec.describe 'PublishingEventProcessorTest' do
       }
     )
 
-    GovukIndex::PublishingEventWorker.expects(:perform_async).with('routing.key', message.payload)
-    message.expects(:ack)
+    expect(GovukIndex::PublishingEventWorker).to receive(:perform_async).with('routing.key', message.payload)
+    expect(message).to receive(:ack)
 
     GovukIndex::PublishingEventProcessor.new.process(message)
   end

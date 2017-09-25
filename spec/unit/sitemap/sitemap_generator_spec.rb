@@ -45,7 +45,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     sitemap = SitemapGenerator.new('')
 
     document = build_document('/some-path')
-    document.stubs(:priority).returns(0.48)
+    document.stub(:priority).and_return(0.48)
 
     sitemap_xml = sitemap.generate_xml([document])
 

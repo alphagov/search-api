@@ -15,7 +15,7 @@ RSpec.describe 'GovukIndex::DocumentTypeInfererTest' do
   it "should_raise_not_found_error" do
     payload = { "document_type" => "gone" }
 
-    GovukIndex::DocumentTypeInferer.any_instance.stubs(:existing_document).returns(nil)
+    GovukIndex::DocumentTypeInferer.any_instance.stub(:existing_document).and_return(nil)
 
     assert_raises(GovukIndex::NotFoundError) do
       GovukIndex::DocumentTypeInferer.new(payload).type
@@ -25,7 +25,7 @@ RSpec.describe 'GovukIndex::DocumentTypeInfererTest' do
   it "should_raise_unknown_document_type_error" do
     payload = { "document_type" => "unknown" }
 
-    GovukIndex::DocumentTypeInferer.any_instance.stubs(:elasticsearch_document_type).returns(nil)
+    GovukIndex::DocumentTypeInferer.any_instance.stub(:elasticsearch_document_type).and_return(nil)
 
     assert_raises(GovukIndex::UnknownDocumentTypeError) do
       GovukIndex::DocumentTypeInferer.new(payload).type
@@ -43,7 +43,7 @@ RSpec.describe 'GovukIndex::DocumentTypeInfererTest' do
       "_id" => "/cheese"
     }
 
-    GovukIndex::DocumentTypeInferer.any_instance.stubs(:existing_document).returns(existing_document)
+    GovukIndex::DocumentTypeInferer.any_instance.stub(:existing_document).and_return(existing_document)
 
     document_type_inferer = GovukIndex::DocumentTypeInferer.new(payload)
 

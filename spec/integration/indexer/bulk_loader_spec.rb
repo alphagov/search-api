@@ -3,9 +3,9 @@ require 'spec_helper'
 RSpec.describe 'BulkLoaderTest', tags: ['integration'] do
   before do
     stub_tagging_lookup
-    comparer = stub(:comparer)
-    comparer.stubs(:run).returns('results' => 'hash')
-    Indexer::Comparer.stubs(:new).returns(comparer)
+    comparer = double(:comparer)
+    comparer.stub(:run).and_return('results' => 'hash')
+    Indexer::Comparer.stub(:new).and_return(comparer)
   end
 
   it "indexes_documents" do

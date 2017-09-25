@@ -48,10 +48,10 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
   end
 
   def stub_index(_name)
-    schema = stub("schema")
-    schema.stubs(:field_definitions).returns(sample_field_definitions)
-    index = stub("content index")
-    index.stubs(:schema).returns(schema)
+    schema = double("schema")
+    schema.stub(:field_definitions).and_return(sample_field_definitions)
+    index = double("content index")
+    index.stub(:schema).and_return(schema)
     index
   end
 
@@ -78,7 +78,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
   context "no aggregate" do
     before do
       @index = stub_index("content index")
-      @builder = stub("builder")
+      @builder = double("builder")
       @fetcher = Search::AggregateExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
     end
 
@@ -89,7 +89,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
 
   context "one aggregate with global scope" do
     before do
-      GovukIndex::MigratedFormats.stubs(:migrated_formats).returns([])
+      GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
       main_query_response = { "aggregations" => {
@@ -112,16 +112,16 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
           }
         }
       )
-      @builder = stub("builder")
+      @builder = double("builder")
       @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
     it "request and return aggregate examples" do
-      @index.expects(:msearch)
+      expect(@index).to receive(:msearch)
         .with([
           query_for_example_global("sector", "sector_1", @example_fields),
           query_for_example_global("sector", "sector_2", @example_fields),
-        ]).returns({ "responses" => [
+        ]).and_return({ "responses" => [
           response_for_example(3, %w(example_1 example_2)),
           response_for_example(1, ["example_3"]),
         ] })
@@ -167,21 +167,21 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
         }
       )
 
-      @builder = stub("builder")
+      @builder = double("builder")
       @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
     it "request and return aggregate examples with query scope" do
       query = { match: { _all: { query: "hello" } } }
       filter = { terms: { organisations: ["hm-magic"] } }
-      @builder.expects(:query).returns(query)
-      @builder.expects(:filter).returns(filter)
+      expect(@builder).to receive(:query).and_return(query)
+      expect(@builder).to receive(:filter).and_return(filter)
 
-      @index.expects(:msearch)
+      expect(@index).to receive(:msearch)
         .with([
           query_for_example_query("sector", "sector_1", @example_fields, query, filter),
           query_for_example_query("sector", "sector_2", @example_fields, query, filter),
-        ]).returns({ "responses" => [
+        ]).and_return({ "responses" => [
           response_for_example(3, %w(example_1 example_2)),
           response_for_example(1, ["example_3"]),
         ] })
@@ -222,7 +222,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
           }
         }
       )
-      @builder = stub("builder")
+      @builder = double("builder")
       @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
@@ -257,15 +257,15 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
         }
       )
 
-      @builder = stub("builder")
+      @builder = double("builder")
       @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
     end
 
     it "request and return aggregate examples with query scope" do
       query = { match: { _all: { query: "hello" } } }
       filter = { terms: { organisations: ["hm-magic"] } }
-      @builder.expects(:query).returns(query)
-      @builder.expects(:filter).returns(filter)
+      expect(@builder).to receive(:query).and_return(query)
+      expect(@builder).to receive(:filter).and_return(filter)
 
       (0..19).each do |group_num|
         sector_numbers = (group_num * 50..group_num * 50 + 49)
@@ -277,8 +277,8 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
           sector_numbers.map { |sector_num|
             response_for_example(sector_num, ["example_#{sector_num}"])
           })
-        @index.expects(:msearch)
-          .with(expected_queries).returns({ "responses" => stub_responses })
+        expect(@index).to receive(:msearch)
+          .with(expected_queries).and_return({ "responses" => stub_responses })
       end
 
       assert_equal({

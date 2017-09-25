@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'SpecialistFormatTest' do
   before do
-    Indexer::PopularityLookup.any_instance.stubs(:lookup_popularities).returns({})
+    Indexer::PopularityLookup.any_instance.stub(:lookup_popularities).and_return({})
   end
 
   it "aaib_report" do

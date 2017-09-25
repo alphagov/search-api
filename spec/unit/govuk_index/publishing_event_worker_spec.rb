@@ -8,13 +8,13 @@ RSpec.describe 'PublishingEventWorkerTest' do
       "title" => "We love cheese"
     }
 
-    actions = stub('actions')
-    GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
-    actions.expects(:save)
-    actions.expects(:commit).returns('items' => [{ 'index' => { 'status' => 200 } }])
+    actions = double('actions')
+    expect(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    expect(actions).to receive(:save)
+    expect(actions).to receive(:commit).and_return('items' => [{ 'index' => { 'status' => 200 } }])
 
-    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-consumed')
-    Services.statsd_client.expects(:increment).with('govuk_index.elasticsearch.index')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
     GovukIndex::PublishingEventWorker.new.perform('routing.key', payload)
   end
 
@@ -26,14 +26,14 @@ RSpec.describe 'PublishingEventWorkerTest' do
     }
     stub_document_type_inferer
 
-    actions = stub('actions')
+    actions = double('actions')
 
-    GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
-    actions.expects(:delete)
-    actions.expects(:commit).returns('items' => [{ 'delete' => { 'status' => 200 } }])
+    expect(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    expect(actions).to receive(:delete)
+    expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 200 } }])
 
-    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-consumed')
-    Services.statsd_client.expects(:increment).with('govuk_index.elasticsearch.delete')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.delete')
     GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
   end
 
@@ -48,13 +48,13 @@ RSpec.describe 'PublishingEventWorkerTest' do
       }
     }
 
-    actions = stub('actions')
-    GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
-    actions.expects(:save)
-    actions.expects(:commit).returns('items' => [{ 'index' => { 'status' => 200 } }])
+    actions = double('actions')
+    expect(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    expect(actions).to receive(:save)
+    expect(actions).to receive(:commit).and_return('items' => [{ 'index' => { 'status' => 200 } }])
 
-    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-consumed')
-    Services.statsd_client.expects(:increment).with('govuk_index.elasticsearch.index')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
 
     GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
   end
@@ -67,14 +67,14 @@ RSpec.describe 'PublishingEventWorkerTest' do
     }
     stub_document_type_inferer
 
-    actions = stub('actions')
-    GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
-    actions.expects(:delete)
-    actions.expects(:commit).returns('items' => [{ 'delete' => { 'status' => 500 } }])
+    actions = double('actions')
+    expect(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    expect(actions).to receive(:delete)
+    expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 500 } }])
 
-    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-consumed')
-    Services.statsd_client.expects(:increment).with('govuk_index.elasticsearch.delete_error')
-    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-retry')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.delete_error')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
 
     assert_raises(GovukIndex::ElasticsearchError) do
       GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
@@ -89,13 +89,13 @@ RSpec.describe 'PublishingEventWorkerTest' do
     }
     stub_document_type_inferer
 
-    actions = stub('actions')
-    GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
-    actions.expects(:delete)
-    actions.expects(:commit).returns('items' => [{ 'delete' => { 'status' => 404 } }])
+    actions = double('actions')
+    expect(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    expect(actions).to receive(:delete)
+    expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 404 } }])
 
-    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-consumed')
-    Services.statsd_client.expects(:increment).with('govuk_index.elasticsearch.already_deleted')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.already_deleted')
     GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
   end
 
@@ -107,14 +107,14 @@ RSpec.describe 'PublishingEventWorkerTest' do
     }
     stub_document_type_inferer
 
-    actions = stub('actions')
-    GovukIndex::ElasticsearchProcessor.expects(:new).returns(actions)
-    actions.expects(:delete)
-    actions.expects(:commit).returns('items' => [{ 'index' => { 'status' => 200 } }, { 'delete' => { 'status' => 200 } }])
+    actions = double('actions')
+    expect(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    expect(actions).to receive(:delete)
+    expect(actions).to receive(:commit).and_return('items' => [{ 'index' => { 'status' => 200 } }, { 'delete' => { 'status' => 200 } }])
 
-    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-consumed')
-    Services.statsd_client.expects(:increment).with('govuk_index.elasticsearch.multiple_responses')
-    Services.statsd_client.expects(:increment).with('govuk_index.sidekiq-retry')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.multiple_responses')
+    expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
 
     assert_raises(GovukIndex::MultipleMessagesInElasticsearchResponse) do
       GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
@@ -127,7 +127,7 @@ RSpec.describe 'PublishingEventWorkerTest' do
       "title" => "We love cheese"
     }
 
-    GovukError.expects(:notify).with(
+    expect(GovukError).to receive(:notify).with(
       instance_of(GovukIndex::ValidationError),
       extra: { message_body: { 'document_type' => 'help_page', 'title' => 'We love cheese' } }
     )
@@ -136,8 +136,8 @@ RSpec.describe 'PublishingEventWorkerTest' do
   end
 
   def stub_document_type_inferer
-    GovukIndex::DocumentTypeInferer.any_instance.stubs(:unpublishing_type).returns(true)
-    GovukIndex::DocumentTypeInferer.any_instance.stubs(:type).returns('real_document_type')
-    GovukIndex::MigratedFormats.stubs(:migrated_formats?).returns(%w(real_document_type))
+    GovukIndex::DocumentTypeInferer.any_instance.stub(:unpublishing_type?).and_return(true)
+    GovukIndex::DocumentTypeInferer.any_instance.stub(:type).and_return('real_document_type')
+    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(%w(real_document_type))
   end
 end

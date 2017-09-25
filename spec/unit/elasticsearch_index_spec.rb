@@ -61,7 +61,7 @@ RSpec.describe 'ElasticsearchIndexTest' do
     ]
 
     documents = json_documents.map do |json_document|
-      stub("document", elasticsearch_export: json_document)
+      double("document", elasticsearch_export: json_document)
     end
 
     response = <<-eos
@@ -220,7 +220,7 @@ RSpec.describe 'ElasticsearchIndexTest' do
   it "changing_scroll_id" do
     search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=2&version=true"
 
-    SearchIndices::Index.stubs(:scroll_batch_size).returns(2)
+    SearchIndices::Index.stub(:scroll_batch_size).and_return(2)
 
     stub_request(:get, search_uri).with(
       body: { query: expected_all_documents_query }.to_json
@@ -330,8 +330,8 @@ private
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
     traffic_index = SearchIndices::Index.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
-    Indexer::PopularityLookup.any_instance.stubs(:traffic_index).returns(traffic_index)
-    traffic_index.stubs(:real_name).returns("page-traffic_test")
+    Indexer::PopularityLookup.any_instance.stub(:traffic_index).and_return(traffic_index)
+    traffic_index.stub(:real_name).and_return("page-traffic_test")
   end
 
   def expected_all_documents_query
