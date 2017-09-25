@@ -3,7 +3,6 @@ require 'spec_helper'
 RSpec.describe 'QueryBuilderTest', tags: ['shoulda'] do
   before do
     Search::BestBetsChecker.any_instance.stubs best_bets: [], worst_bets: []
-    IndexHelpers.stub_elasticsearch_settings
   end
 
   context "with a simple search query" do

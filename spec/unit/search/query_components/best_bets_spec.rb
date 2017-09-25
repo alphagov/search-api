@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe 'BestBetsTest', tags: ['shoulda'] do
-  before do
-    IndexHelpers.stub_elasticsearch_settings
-  end
-
   context "when best bets is disabled in debug" do
     it "return the query without modification" do
       builder = QueryComponents::BestBets.new(

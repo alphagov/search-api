@@ -1,0 +1,59 @@
+require 'spec_helper'
+
+RSpec.describe 'AdvancedSearchQueryBuilderTest' do
+  include Fixtures::DefaultMappings
+
+  def build_builder(keywords = "", filter_params = {}, sort_order = {}, mappings = default_mappings)
+    LegacySearch::AdvancedSearchQueryBuilder.new(keywords, filter_params, sort_order, mappings)
+  end
+
+  it "builder_excludes_withdrawn" do
+    builder = build_builder
+    query_hash = builder.filter_query_hash
+
+    assert_equal(
+      query_hash,
+      {
+        "filter" => {
+          "not" => { "term" => { "is_withdrawn" => true } }
+        }
+      }
+    )
+  end
+
+
+  it "builder_single_filters" do
+    builder = build_builder("how to drive", { "format" => "organisation" })
+    query_hash = builder.filter_query_hash
+
+    assert_equal(
+      query_hash,
+      {
+        "filter" => {
+          "and" => [
+            { "term" => { "format" => "organisation" } },
+            { "not" => { "term" => { "is_withdrawn" => true } } }
+          ]
+        }
+      }
+    )
+  end
+
+  it "builder_multiple_filters" do
+    builder = build_builder("how to drive", { "format" => "organisation", "specialist_sectors" => "driving" })
+    query_hash = builder.filter_query_hash
+
+    assert_equal(
+      query_hash,
+      {
+        "filter" => {
+          "and" => [
+            { "term" => { "format" => "organisation" } },
+            { "term" => { "specialist_sectors" => "driving" } },
+            { "not" => { "term" => { "is_withdrawn" => true } } }
+          ]
+        }
+      }
+    )
+  end
+end
