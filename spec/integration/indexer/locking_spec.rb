@@ -6,7 +6,7 @@ RSpec.describe 'ElasticsearchLockingTest', tags: ['integration'] do
   end
 
   it "should_fail_to_insert_when_index_locked" do
-    index = search_server.index_group(IndexHelpers::DEFAULT_INDEX_NAME).current
+    index = search_server.index_group(SearchConfig.instance.default_index_name).current
     with_lock(index) do
       assert_raises SearchIndices::IndexLocked do
         index.add([sample_document])
@@ -15,7 +15,7 @@ RSpec.describe 'ElasticsearchLockingTest', tags: ['integration'] do
   end
 
   it "should_fail_to_amend_when_index_locked" do
-    index = search_server.index_group(IndexHelpers::DEFAULT_INDEX_NAME).current
+    index = search_server.index_group(SearchConfig.instance.default_index_name).current
     index.add([sample_document])
 
     with_lock(index) do
@@ -26,7 +26,7 @@ RSpec.describe 'ElasticsearchLockingTest', tags: ['integration'] do
   end
 
   it "should_fail_to_delete_when_index_locked" do
-    index = search_server.index_group(IndexHelpers::DEFAULT_INDEX_NAME).current
+    index = search_server.index_group(SearchConfig.instance.default_index_name).current
     index.add([sample_document])
 
     with_lock(index) do
@@ -37,7 +37,7 @@ RSpec.describe 'ElasticsearchLockingTest', tags: ['integration'] do
   end
 
   it "should_unlock_index" do
-    index = search_server.index_group(IndexHelpers::DEFAULT_INDEX_NAME).current
+    index = search_server.index_group(SearchConfig.instance.default_index_name).current
     with_lock(index) do
       # Nothing to do here
     end

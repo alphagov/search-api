@@ -9,15 +9,7 @@ module IntegrationSpecHelper
     "_type" => "edition",
   }.freeze
 
-  def setup
-    IndexHelpers.stub_elasticsearch_settings
-  end
-
   def self.included(base)
-    base.before do
-      setup
-    end
-
     base.after do
       teardown
     end
@@ -39,7 +31,7 @@ module IntegrationSpecHelper
   end
 
   def teardown
-    IndexHelpers::ALL_TEST_INDEXES.each do |index|
+    IndexHelpers.all_index_names.each do |index|
       clean_index_content(index)
     end
   end
@@ -109,7 +101,7 @@ module IntegrationSpecHelper
   def client
     # Set a fairly long timeout to avoid timeouts on index creation on the CI
     # servers
-    @client ||= Services::elasticsearch(hosts: ELASTICSEARCH_TESTING_HOST, timeout: 10)
+    @client ||= Services::elasticsearch(hosts: SearchConfig.instance.base_uri, timeout: 10)
   end
 
   def parsed_response
@@ -168,8 +160,9 @@ module IntegrationSpecHelper
     commit_index(index_name)
   end
 
-  def try_remove_test_index(index_name = IndexHelpers::DEFAULT_INDEX_NAME)
-    IndexHelpers.check_index_name!(index_name)
+  def try_remove_test_index(index_name = nil)
+    index_name ||= SearchConfig.instance.default_index_name
+    raise "Attempting to delete non-test index: #{index_name}" unless index_name =~ /test/
 
     if client.indices.exists?(index: index_name)
       client.indices.delete(index: index_name)
@@ -184,7 +177,7 @@ module IntegrationSpecHelper
 private
 
   def populate_content_indexes(params)
-    IndexHelpers::INDEX_NAMES.each do |index_name|
+    SearchConfig.instance.content_index_names.each do |index_name|
       add_sample_documents(index_name, params[:section_count])
     end
   end
@@ -195,9 +188,5 @@ private
       type: type,
       id: id
     )
-  end
-
-  def stubbed_search_config
-    IndexHelpers.stub_elasticsearch_settings
   end
 end

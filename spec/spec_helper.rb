@@ -15,8 +15,6 @@ end
 $LOAD_PATH << File.expand_path('../../', __FILE__)
 $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
-ELASTICSEARCH_TESTING_HOST = ENV.fetch('ELASTICSEARCH_TESTING_HOST', 'http://localhost:9200')
-
 # load this first to avoid duplicate constant declaration error
 require 'logging'
 require 'health_check/logging_config'

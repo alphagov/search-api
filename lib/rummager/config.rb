@@ -1,5 +1,4 @@
 require "sinatra"
-require_relative "../../env"
 require "rummager"
 
 configure :development do

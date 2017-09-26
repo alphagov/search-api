@@ -32,7 +32,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
       index_name: "govuk_test"
     )
 
-    generator = SitemapGenerator.new(stubbed_search_config)
+    generator = SitemapGenerator.new(SearchConfig.instance)
     sitemap_xml = generator.sitemaps
 
     expected_sitemap_count = 2 # sample_document.count + homepage / sitemap_limit rounded up
@@ -54,7 +54,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
       ],
       index_name: "mainstream_test"
     )
-    generator = SitemapGenerator.new(stubbed_search_config)
+    generator = SitemapGenerator.new(SearchConfig.instance)
     sitemap_xml = generator.sitemaps
     assert_equal 1, sitemap_xml.length
 
@@ -62,7 +62,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "should_include_homepage" do
-    generator = SitemapGenerator.new(stubbed_search_config)
+    generator = SitemapGenerator.new(SearchConfig.instance)
     sitemap_xml = generator.sitemaps
 
     pages = Nokogiri::XML(sitemap_xml[0])
@@ -74,7 +74,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "should_not_include_recommended_links" do
-    generator = SitemapGenerator.new(stubbed_search_config)
+    generator = SitemapGenerator.new(SearchConfig.instance)
     add_sample_documents(
       [
         {
@@ -96,7 +96,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "should_not_include_inside_government_links" do
-    generator = SitemapGenerator.new(stubbed_search_config)
+    generator = SitemapGenerator.new(SearchConfig.instance)
     add_sample_documents(
       [
         {
@@ -116,7 +116,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "links_should_include_timestamps" do
-    generator = SitemapGenerator.new(stubbed_search_config)
+    generator = SitemapGenerator.new(SearchConfig.instance)
     add_sample_documents(
       [
         {
@@ -142,7 +142,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "links_should_include_priorities" do
-    generator = SitemapGenerator.new(stubbed_search_config)
+    generator = SitemapGenerator.new(SearchConfig.instance)
     add_sample_documents(
       [
         {

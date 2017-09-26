@@ -6,7 +6,7 @@ RSpec.describe 'ElasticsearchClosingTest', tags: ['integration'] do
   end
 
   it "should_fail_to_insert_or_get_when_index_closed" do
-    index = search_server.index_group(IndexHelpers::DEFAULT_INDEX_NAME).current
+    index = search_server.index_group(SearchConfig.instance.default_index_name).current
     index.close
 
     assert_raises Indexer::BulkIndexFailure do
@@ -15,6 +15,6 @@ RSpec.describe 'ElasticsearchClosingTest', tags: ['integration'] do
 
     # Re-opening the index again, as they are not recreated on each test run
     # anymore.
-    client.indices.open(index: IndexHelpers::DEFAULT_INDEX_NAME)
+    client.indices.open(index: SearchConfig.instance.default_index_name)
   end
 end
