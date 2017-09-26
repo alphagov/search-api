@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'PublishingEventProcessorTest' do
+RSpec.describe GovukIndex::PublishingEventProcessor do
   it "should_process_and_acknowledge_a_message" do
     message = double(
       payload: {
@@ -16,6 +16,6 @@ RSpec.describe 'PublishingEventProcessorTest' do
     expect(GovukIndex::PublishingEventWorker).to receive(:perform_async).with('routing.key', message.payload)
     expect(message).to receive(:ack)
 
-    GovukIndex::PublishingEventProcessor.new.process(message)
+    subject.process(message)
   end
 end

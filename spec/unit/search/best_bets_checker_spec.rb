@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'BestBetsCheckerTest', tags: ['shoulda'] do
+RSpec.describe Search::BestBetsChecker, tags: ['shoulda'] do
   def best_bets_query(query)
     {
       query: {
@@ -41,7 +41,7 @@ RSpec.describe 'BestBetsCheckerTest', tags: ['shoulda'] do
 
   def setup_checker(query, hits)
     @index = double("metasearch index")
-    @checker = Search::BestBetsChecker.new(query, @index)
+    @checker = described_class.new(query, @index)
     expect(@index).to receive(:raw_search).with(
       best_bets_query(query), "best_bet"
     ).and_return(

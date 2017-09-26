@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Search::SpellCheckPresenterTest', tags: ['shoulda'] do
+RSpec.describe Search::SpellCheckPresenter, tags: ['shoulda'] do
   context "#present" do
     it "parse the elasticsearch response and return suggestions" do
       es_response = {
@@ -18,7 +18,7 @@ RSpec.describe 'Search::SpellCheckPresenterTest', tags: ['shoulda'] do
         }
       }
 
-      presenter = Search::SpellCheckPresenter.new(es_response)
+      presenter = described_class.new(es_response)
 
       assert_equal presenter.present, ["the first suggestion", "the second suggestion"]
     end

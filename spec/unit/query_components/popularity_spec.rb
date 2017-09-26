@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe 'PopularityTest', tags: ['shoulda'] do
+RSpec.describe QueryComponents::Popularity, tags: ['shoulda'] do
   it "add popularity to a query" do
-    builder = QueryComponents::Popularity.new(search_query_params)
+    builder = described_class.new(search_query_params)
 
     result = builder.wrap({ some: 'query' })
 
@@ -11,7 +11,7 @@ RSpec.describe 'PopularityTest', tags: ['shoulda'] do
 
   context "with disabling of popularity" do
     it "disable popularity" do
-      builder = QueryComponents::Popularity.new(
+      builder = described_class.new(
         search_query_params(debug: { disable_popularity: true })
       )
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ChangeNotificationProcessorTest' do
+RSpec.describe Indexer::ChangeNotificationProcessor do
   it "rejects_base_pathless_documents" do
     message_payload = {
       "content_id" => "4711fc53-673a-4211-bae6-e0a3d3afd82f",
@@ -11,7 +11,7 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
       "publishing_app" => "whitehall"
     }
 
-    result = Indexer::ChangeNotificationProcessor.trigger(message_payload)
+    result = described_class.trigger(message_payload)
 
     assert_equal(:rejected, result)
   end
@@ -19,7 +19,7 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
   it "rejects_invalid_documents" do
     message_payload = {}
 
-    result = Indexer::ChangeNotificationProcessor.trigger(message_payload)
+    result = described_class.trigger(message_payload)
 
     assert_equal(:rejected, result)
   end
@@ -38,7 +38,7 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
     index_mock.stub(:get_document_by_link).with("/does-not-exist").and_return(nil)
     expect(IndexFinder).to receive(:content_index).and_return(index_mock)
 
-    result = Indexer::ChangeNotificationProcessor.trigger(message_payload)
+    result = described_class.trigger(message_payload)
 
     assert_equal(:rejected, result)
   end
@@ -62,7 +62,7 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
     expect(IndexFinder).to receive(:content_index).and_return(index_mock)
 
     expect(Indexer::AmendWorker).to receive(:perform_async).with("index_name-123", "document_id_345", {})
-    result = Indexer::ChangeNotificationProcessor.trigger(message_payload)
+    result = described_class.trigger(message_payload)
 
     assert_equal(:accepted, result)
   end

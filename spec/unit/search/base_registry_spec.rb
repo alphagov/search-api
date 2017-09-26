@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe 'BaseRegistryTest' do
+RSpec.describe Search::BaseRegistry do
   before do
     @index = double("elasticsearch index")
-    @base_registry = Search::BaseRegistry.new(@index, sample_field_definitions, "example-format")
+    @base_registry = described_class.new(@index, sample_field_definitions, "example-format")
   end
 
   def example_document
@@ -19,7 +19,7 @@ RSpec.describe 'BaseRegistryTest' do
     # This is to make sure the cache expiry is expressed in seconds; DateTime,
     # for example, treats number addition as a number of days.
     expect(Search::TimedCache).to receive(:new).with(an_instance_of(Fixnum), Time)
-    Search::BaseRegistry.new(@index, sample_field_definitions, "example-format")
+    described_class.new(@index, sample_field_definitions, "example-format")
   end
 
   it "can_fetch_document_series_by_slug" do

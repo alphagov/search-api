@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ElasticsearchProcessorTest' do
+RSpec.describe GovukIndex::ElasticsearchProcessor do
   it "should_save_valid_document" do
     presenter = double(:presenter)
     presenter.stub(:identifier).and_return(
@@ -16,9 +16,8 @@ RSpec.describe 'ElasticsearchProcessorTest' do
     Services.stub('elasticsearch').and_return(client)
     expect(client).to receive(:bulk).with(index: SearchConfig.instance.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
 
-    actions = GovukIndex::ElasticsearchProcessor.new
-    actions.save(presenter)
-    actions.commit
+    subject.save(presenter)
+    subject.commit
   end
 
   it "should_delete_valid_document" do
@@ -43,8 +42,7 @@ RSpec.describe 'ElasticsearchProcessorTest' do
       ]
     )
 
-    actions = GovukIndex::ElasticsearchProcessor.new
-    actions.delete(presenter)
-    actions.commit
+    subject.delete(presenter)
+    subject.commit
   end
 end

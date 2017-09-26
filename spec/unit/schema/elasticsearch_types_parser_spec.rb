@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ElasticsearchTypesTest', tags: ['shoulda'] do
+RSpec.describe ElasticsearchTypesParser, tags: ['shoulda'] do
   def assert_raises_message(message)
     exc = assert_raises(RuntimeError) { yield }
     assert_equal message, exc.message
@@ -26,7 +26,7 @@ RSpec.describe 'ElasticsearchTypesTest', tags: ['shoulda'] do
   context "after loading standard types" do
     before do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
-      @types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
+      @types = described_class.new(schema_dir, field_definitions).parse
       @identifier_es_config = { "type" => "string", "index" => "not_analyzed", "include_in_all" => false }
     end
 

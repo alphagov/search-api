@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'DocumentTest' do
+RSpec.describe Document do
   it "should_turn_hash_into_document" do
     hash = {
       "_type" => "edition",
@@ -11,7 +11,7 @@ RSpec.describe 'DocumentTest' do
       "indexable_content" => "HERE IS SOME CONTENT",
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = described_class.from_hash(hash, sample_elasticsearch_types)
 
     assert_equal "TITLE", document.title
     assert_equal "DESCRIPTION", document.description
@@ -27,7 +27,7 @@ RSpec.describe 'DocumentTest' do
       "stemmed_query" => "jobs"
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = described_class.from_hash(hash, sample_elasticsearch_types)
 
     assert_equal "jobs", document.to_hash["stemmed_query"]
     assert_equal "jobs", document.stemmed_query
@@ -45,7 +45,7 @@ RSpec.describe 'DocumentTest' do
     }
 
     error = assert_raises RuntimeError do
-      Document.from_hash(hash, sample_elasticsearch_types)
+      described_class.from_hash(hash, sample_elasticsearch_types)
     end
     assert_match(/missing/i, error.message)
   end
@@ -57,7 +57,7 @@ RSpec.describe 'DocumentTest' do
     }
 
     assert_raises RuntimeError do
-      Document.from_hash(hash, sample_elasticsearch_types)
+      described_class.from_hash(hash, sample_elasticsearch_types)
     end
   end
 
@@ -71,7 +71,7 @@ RSpec.describe 'DocumentTest' do
       "some_other_field" => "test"
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = described_class.from_hash(hash, sample_elasticsearch_types)
 
     refute_includes document.to_hash.keys, "some_other_field"
     refute document.respond_to?("some_other_field")
@@ -87,7 +87,7 @@ RSpec.describe 'DocumentTest' do
       indexable_content: "HERE IS SOME CONTENT"
     }
 
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = described_class.from_hash(hash, sample_elasticsearch_types)
 
     assert_equal "TITLE", document.title
   end
@@ -102,12 +102,12 @@ RSpec.describe 'DocumentTest' do
     }
     input_hash = expected_hash.merge("_type" => "edition")
 
-    document = Document.from_hash(input_hash, sample_elasticsearch_types)
+    document = described_class.from_hash(input_hash, sample_elasticsearch_types)
     assert_equal expected_hash, document.to_hash
   end
 
   it "should_skip_missing_fields_in_to_hash" do
-    document = Document.from_hash({ "_type" => "edition" }, sample_elasticsearch_types)
+    document = described_class.from_hash({ "_type" => "edition" }, sample_elasticsearch_types)
     assert_equal [], document.to_hash.keys
   end
 
@@ -119,7 +119,7 @@ RSpec.describe 'DocumentTest' do
         "format" => "guide",
         "link" => "/an-example-guide",
     }
-    document = Document.from_hash(hash, sample_elasticsearch_types)
+    document = described_class.from_hash(hash, sample_elasticsearch_types)
 
     assert_equal hash.keys.sort, document.elasticsearch_export.keys.sort
   end
@@ -128,21 +128,21 @@ RSpec.describe 'DocumentTest' do
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    assert_equal 5.2, Document.new(sample_field_definitions(field_names), hash, 5.2).es_score
+    assert_equal 5.2, described_class.new(sample_field_definitions(field_names), hash, 5.2).es_score
   end
 
   it "includes_elasticsearch_score_in_hash" do
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    assert_equal 5.2, Document.new(sample_field_definitions(field_names), hash, 5.2).to_hash["es_score"]
+    assert_equal 5.2, described_class.new(sample_field_definitions(field_names), hash, 5.2).to_hash["es_score"]
   end
 
   it "leaves_out_blank_score" do
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    refute_includes Document.new(sample_field_definitions(field_names), hash).to_hash, "es_score"
+    refute_includes described_class.new(sample_field_definitions(field_names), hash).to_hash, "es_score"
   end
 
   it "should_handle_opaque_object_fields" do
@@ -150,7 +150,7 @@ RSpec.describe 'DocumentTest' do
     document_hash = {
       "metadata" => metadata
     }
-    doc = Document.new(sample_field_definitions(%w(metadata)), document_hash)
+    doc = described_class.new(sample_field_definitions(%w(metadata)), document_hash)
 
     assert_equal metadata, doc.metadata
   end

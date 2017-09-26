@@ -1,7 +1,7 @@
 require 'spec_helper'
 require "sitemap/sitemap"
 
-RSpec.describe 'PropertyBoostCalculatorTest' do
+RSpec.describe PropertyBoostCalculator do
   it "boosts_are_between_0_and_1" do
     stub_boost_config({
       "format" => {
@@ -13,7 +13,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
       }
     })
 
-    calculator = PropertyBoostCalculator.new
+    calculator = subject
 
     assert_equal 0, calculator.boost(build_document(format: "format1"))
     assert_equal 0.5, calculator.boost(build_document(format: "format2"))
@@ -29,7 +29,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
       }
     })
 
-    calculator = PropertyBoostCalculator.new
+    calculator = subject
 
     assert_equal 0.5, calculator.boost(build_document(format: "some_format"))
   end
@@ -43,7 +43,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
       }
     })
 
-    calculator = PropertyBoostCalculator.new
+    calculator = subject
 
     assert_equal 1, calculator.boost(build_document(format: "format1"))
     assert_equal 1, calculator.boost(build_document(format: "format2"))
@@ -57,7 +57,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
       }
     })
 
-    calculator = PropertyBoostCalculator.new
+    calculator = subject
 
     assert_equal 0.5, calculator.boost(build_document(format: "other_format"))
   end
@@ -69,7 +69,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
       }
     })
 
-    calculator = PropertyBoostCalculator.new
+    calculator = subject
 
     assert_equal 0.5, calculator.boost(build_document(document_type: "some_doc_type"))
   end
@@ -82,7 +82,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
       }
     })
 
-    calculator = PropertyBoostCalculator.new
+    calculator = subject
 
     assert_equal 0.08, calculator.boost(build_document(format: "format1"))
     assert_equal 0.27, calculator.boost(build_document(format: "format2"))
@@ -101,7 +101,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
       }
     })
 
-    calculator = PropertyBoostCalculator.new
+    calculator = subject
 
     document = {
       "format" => "publication",
@@ -130,7 +130,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
     }
     stub_full_config(config)
 
-    calculator = PropertyBoostCalculator.new
+    calculator = subject
 
     # 1 - 2^(-boost_override) = 1 - 2^(-2) = 0.75
     expected_boost_override = 0.75

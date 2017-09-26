@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-RSpec.describe 'CombinedIndexSchemaTest' do
+RSpec.describe CombinedIndexSchema do
   before do
     @base_uri = URI.parse("http://example.com:9200")
     @search_config = SearchConfig.new
     @index_names = @search_config.content_index_names
-    @combined_schema = CombinedIndexSchema.new(@index_names, @search_config.schema_config)
+    @combined_schema = described_class.new(@index_names, @search_config.schema_config)
   end
 
   it "basic_field_definitions" do

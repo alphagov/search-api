@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe 'HighlightedTitleTest' do
+RSpec.describe Search::HighlightedTitle do
   it "title_highlighted" do
-    title = Search::HighlightedTitle.new({
+    title = described_class.new({
       "fields" => { "title" => "A Title" },
       "highlight" => { "title" => ["A Highlighted Title"] }
     })
@@ -11,7 +11,7 @@ RSpec.describe 'HighlightedTitleTest' do
   end
 
   it "fallback_title_is_escaped" do
-    title = Search::HighlightedTitle.new({
+    title = described_class.new({
       "fields" => { "title" => "A & Title" },
     })
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'LinksLookupTest' do
+RSpec.describe Indexer::LinksLookup do
   include GdsApi::TestHelpers::PublishingApiV2
 
   it "retry_links_on_timeout" do
@@ -10,7 +10,7 @@ RSpec.describe 'LinksLookupTest' do
     stub_request(:get, expanded_links_url).to_timeout
 
     assert_raises(Indexer::PublishingApiError) do
-      Indexer::LinksLookup.prepare_tags({
+      described_class.prepare_tags({
         "content_id" => content_id,
         "link" => "/my-base-path",
       })

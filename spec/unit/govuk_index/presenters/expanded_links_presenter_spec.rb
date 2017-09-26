@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'GovukIndex::ExpandedLinksPresenterTest' do
+RSpec.describe GovukIndex::ExpandedLinksPresenter do
   it "mainstream_browse_pages" do
     expanded_links = {
       "mainstream_browse_pages" => [
@@ -132,6 +132,6 @@ RSpec.describe 'GovukIndex::ExpandedLinksPresenterTest' do
   end
 
   def expanded_links_presenter(expanded_links)
-    GovukIndex::ExpandedLinksPresenter.new(expanded_links)
+    described_class.new(expanded_links)
   end
 end

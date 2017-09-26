@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'PublishingEventWorkerTest' do
+RSpec.describe GovukIndex::PublishingEventWorker do
   it "save_valid_message" do
     payload = {
       "base_path" => "/cheese",
@@ -15,7 +15,7 @@ RSpec.describe 'PublishingEventWorkerTest' do
 
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
-    GovukIndex::PublishingEventWorker.new.perform('routing.key', payload)
+    subject.perform('routing.key', payload)
   end
 
   it "delete_record_when_unpublishing_message_received" do
@@ -34,7 +34,7 @@ RSpec.describe 'PublishingEventWorkerTest' do
 
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.delete')
-    GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
+    subject.perform('routing.unpublish', payload)
   end
 
   it "should_not_delete_withdrawn" do
@@ -56,7 +56,7 @@ RSpec.describe 'PublishingEventWorkerTest' do
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
 
-    GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
+    subject.perform('routing.unpublish', payload)
   end
 
   it "raise_error_when_elasticsearch_update_error" do
@@ -77,7 +77,7 @@ RSpec.describe 'PublishingEventWorkerTest' do
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
 
     assert_raises(GovukIndex::ElasticsearchError) do
-      GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
+      subject.perform('routing.unpublish', payload)
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe 'PublishingEventWorkerTest' do
 
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.already_deleted')
-    GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
+    subject.perform('routing.unpublish', payload)
   end
 
   it "raise_error_if_elasticsearch_returns_multiple_responses" do
@@ -117,7 +117,7 @@ RSpec.describe 'PublishingEventWorkerTest' do
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
 
     assert_raises(GovukIndex::MultipleMessagesInElasticsearchResponse) do
-      GovukIndex::PublishingEventWorker.new.perform('routing.unpublish', payload)
+      subject.perform('routing.unpublish', payload)
     end
   end
 
@@ -132,7 +132,7 @@ RSpec.describe 'PublishingEventWorkerTest' do
       extra: { message_body: { 'document_type' => 'help_page', 'title' => 'We love cheese' } }
     )
 
-    GovukIndex::PublishingEventWorker.new.perform('routing.key', invalid_payload)
+    subject.perform('routing.key', invalid_payload)
   end
 
   def stub_document_type_inferer

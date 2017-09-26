@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ElasticsearchIndexTest' do
+RSpec.describe SearchIndices::Index do
   include Fixtures::DefaultMappings
 
   before do
@@ -278,7 +278,7 @@ private
   def build_mainstream_index
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
-    SearchIndices::Index.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
+    described_class.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
   end
 
   def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)
@@ -329,7 +329,7 @@ private
   def stub_traffic_index
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
-    traffic_index = SearchIndices::Index.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
+    traffic_index = described_class.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
     Indexer::PopularityLookup.any_instance.stub(:traffic_index).and_return(traffic_index)
     traffic_index.stub(:real_name).and_return("page-traffic_test")
   end

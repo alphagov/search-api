@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'AggregatesTest', tags: ['shoulda'] do
+RSpec.describe QueryComponents::Aggregates, tags: ['shoulda'] do
   def make_search_params(aggregates:, filters: [])
     Search::QueryParameters.new(
       filters: filters, aggregates: aggregates, debug: { include_withdrawn: true }
@@ -9,7 +9,7 @@ RSpec.describe 'AggregatesTest', tags: ['shoulda'] do
 
   context "search with aggregate" do
     it "have correct aggregate in payload" do
-      builder = QueryComponents::Aggregates.new(
+      builder = described_class.new(
         make_search_params(
           aggregates: { "organisations" => { requested: 10, scope: :exclude_field_filter } },
         )
@@ -47,7 +47,7 @@ RSpec.describe 'AggregatesTest', tags: ['shoulda'] do
 
   context "search with aggregate and filter on same field" do
     before do
-      @builder = QueryComponents::Aggregates.new(
+      @builder = described_class.new(
         make_search_params(
           filters: [text_filter("organisations", ["hm-magic"])],
           aggregates: { "organisations" => { requested: 10, scope: :exclude_field_filter } },
@@ -85,7 +85,7 @@ RSpec.describe 'AggregatesTest', tags: ['shoulda'] do
 
   context "search with aggregate and filter on same field, and scope set to all_filters" do
     before do
-      @builder = QueryComponents::Aggregates.new(
+      @builder = described_class.new(
         make_search_params(
           filters: [text_filter("organisations", ["hm-magic"])],
           aggregates: { "organisations" => { requested: 10, scope: :all_filters } },
@@ -127,7 +127,7 @@ RSpec.describe 'AggregatesTest', tags: ['shoulda'] do
 
   context "search with aggregate and filter on different field" do
     before do
-      @builder = QueryComponents::Aggregates.new(
+      @builder = described_class.new(
         make_search_params(
           filters: [text_filter("mainstream_browse_pages", "levitation")],
           aggregates: { "organisations" => { requested: 10, scope: :exclude_field_filter } },

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe 'TextQueryTest', tags: ['shoulda'] do
+RSpec.describe QueryComponents::TextQuery, tags: ['shoulda'] do
   context "search with debug disabling use of synonyms" do
     it "use the all_searchable_text.synonym field" do
-      builder = QueryComponents::TextQuery.new(search_query_params)
+      builder = described_class.new(search_query_params)
 
       query = builder.payload
 
@@ -11,7 +11,7 @@ RSpec.describe 'TextQueryTest', tags: ['shoulda'] do
     end
 
     it "not use the all_searchable_text.synonym field" do
-      builder = QueryComponents::TextQuery.new(search_query_params(debug: { disable_synonyms: true }))
+      builder = described_class.new(search_query_params(debug: { disable_synonyms: true }))
 
       query = builder.payload
 
@@ -22,7 +22,7 @@ RSpec.describe 'TextQueryTest', tags: ['shoulda'] do
   context "quoted strings" do
     it "call the payload for quoted strings" do
       params = search_query_params(query: %{"all sorts of stuff"})
-      builder = QueryComponents::TextQuery.new(params)
+      builder = described_class.new(params)
       expect(builder).to receive(:payload_for_quoted_phrase).once
 
       builder.payload
@@ -32,7 +32,7 @@ RSpec.describe 'TextQueryTest', tags: ['shoulda'] do
   context "unquoted strings" do
     it "call the payload for unquoted strings" do
       params = search_query_params(query: %{all sorts of stuff})
-      builder = QueryComponents::TextQuery.new(params)
+      builder = described_class.new(params)
       expect(builder).to receive(:payload_for_unquoted_phrase).once
 
       builder.payload

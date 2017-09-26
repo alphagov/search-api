@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe 'SpecialistSectorRegistryTest' do
+RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
   before do
     @index = double("elasticsearch index")
-    @specialist_sector_registry = Search::BaseRegistry.new(@index, sample_field_definitions, "specialist_sector")
+    @specialist_sector_registry = described_class.new(@index, sample_field_definitions, "specialist_sector")
   end
 
   def oil_and_gas
@@ -40,6 +40,6 @@ RSpec.describe 'SpecialistSectorRegistryTest' do
   it "uses_300_second_cache_lifetime" do
     expect(Search::TimedCache).to receive(:new).with(300, anything)
 
-    Search::BaseRegistry.new(@index, sample_field_definitions, "specialist_sector")
+    described_class.new(@index, sample_field_definitions, "specialist_sector")
   end
 end

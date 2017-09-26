@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'PopularityWorkerTest' do
+RSpec.describe GovukIndex::PopularityWorker do
   it "should_save_all_records" do
     stub_popularity_data
     processor = double(:processor)
@@ -13,7 +13,7 @@ RSpec.describe 'PopularityWorkerTest' do
     expect(processor).to receive(:save).twice
     expect(processor).to receive(:commit)
 
-    GovukIndex::PopularityWorker.new.perform(records, "govuk_test")
+    subject.perform(records, "govuk_test")
   end
 
   it "should_update_popularity_field" do
@@ -31,7 +31,7 @@ RSpec.describe 'PopularityWorkerTest' do
     )
     expect(processor).to receive(:commit)
 
-    GovukIndex::PopularityWorker.new.perform([record], "govuk_test")
+    subject.perform([record], "govuk_test")
   end
 
   def stub_popularity_data(data = Hash.new(0.5))

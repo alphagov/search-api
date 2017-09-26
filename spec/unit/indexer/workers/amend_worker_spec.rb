@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'AmendWorkerTest' do
+RSpec.describe Indexer::AmendWorker do
   it "amends_documents" do
     mock_index = double("index")
     expect(mock_index).to receive(:amend).with("/foobang", "title" => "New title")
@@ -8,7 +8,7 @@ RSpec.describe 'AmendWorkerTest' do
       .with("test-index")
       .and_return(mock_index)
 
-    worker = Indexer::AmendWorker.new
+    worker = described_class.new
     worker.perform("test-index", "/foobang", "title" => "New title")
   end
 
@@ -20,17 +20,17 @@ RSpec.describe 'AmendWorkerTest' do
       .with("test-index")
       .and_return(mock_index)
 
-    expect(Indexer::AmendWorker).to receive(:perform_in)
+    expect(described_class).to receive(:perform_in)
       .with(lock_delay, "test-index", "/foobang", "title" => "New title")
 
-    worker = Indexer::AmendWorker.new
+    worker = described_class.new
     worker.perform("test-index", "/foobang", "title" => "New title")
   end
 
   it "forwards_to_failure_queue" do
     stub_message = {}
     expect(GovukError).to receive(:notify).with(Indexer::FailedJobException.new, extra: stub_message)
-    fail_block = Indexer::AmendWorker.sidekiq_retries_exhausted_block
+    fail_block = described_class.sidekiq_retries_exhausted_block
     fail_block.call(stub_message)
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'GovukIndex::ElasticsearchPresenterTest' do
+RSpec.describe GovukIndex::CommonFieldsPresenter do
   before do
     @popularity_lookup = double(:popularity_lookup)
     Indexer::PopularityLookup.stub(:new).and_return(@popularity_lookup)
@@ -92,6 +92,6 @@ RSpec.describe 'GovukIndex::ElasticsearchPresenterTest' do
   end
 
   def common_fields_presenter(payload)
-    GovukIndex::CommonFieldsPresenter.new(payload)
+    described_class.new(payload)
   end
 end

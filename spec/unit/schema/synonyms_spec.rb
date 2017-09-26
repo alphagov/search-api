@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'SynonymsTest', tags: ['shoulda'] do
+RSpec.describe SynonymParser, tags: ['shoulda'] do
   it "map a single word synonym to the same synonym group at index and search time" do
     parse_synonyms(["one"])
 
@@ -57,7 +57,7 @@ RSpec.describe 'SynonymsTest', tags: ['shoulda'] do
         file.write(file_contents)
       end
 
-      @index_synonyms, @search_synonyms = SynonymParser.new(dir).parse
+      @index_synonyms, @search_synonyms = described_class.new(dir).parse
     end
   end
 

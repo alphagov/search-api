@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-RSpec.describe 'HighlightedDescriptionTest' do
+RSpec.describe Search::HighlightedDescription do
   it "adds_highlighting_if_present" do
     raw_result = {
       "fields" => { "description" => "I will be hightlighted." },
       "highlight" => { "description" => ["I will be <mark>hightlighted</mark>."] }
     }
 
-    highlighted_description = Search::HighlightedDescription.new(raw_result).text
+    highlighted_description = described_class.new(raw_result).text
 
     assert_equal "I will be <mark>hightlighted</mark>.", highlighted_description
   end
@@ -17,7 +17,7 @@ RSpec.describe 'HighlightedDescriptionTest' do
       "fields" => { "description" => "I will not be hightlighted & escaped." }
     }
 
-    highlighted_description = Search::HighlightedDescription.new(raw_result).text
+    highlighted_description = described_class.new(raw_result).text
 
     assert_equal "I will not be hightlighted &amp; escaped.", highlighted_description
   end
@@ -27,7 +27,7 @@ RSpec.describe 'HighlightedDescriptionTest' do
       "fields" => { "description" => ("This is a sentence that is too long." * 10) }
     }
 
-    highlighted_description = Search::HighlightedDescription.new(raw_result).text
+    highlighted_description = described_class.new(raw_result).text
 
     assert_equal 225, highlighted_description.size
     assert highlighted_description.ends_with?('…')
@@ -38,7 +38,7 @@ RSpec.describe 'HighlightedDescriptionTest' do
       "fields" => { "description" => nil }
     }
 
-    highlighted_description = Search::HighlightedDescription.new(raw_result).text
+    highlighted_description = described_class.new(raw_result).text
 
     assert_equal "", highlighted_description
   end

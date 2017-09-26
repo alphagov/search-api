@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe 'BoosterTest', tags: ['shoulda'] do
+RSpec.describe QueryComponents::Booster, tags: ['shoulda'] do
   it "apply a multiplying factor" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_equal :multiply, result[:function_score][:boost_mode]
@@ -10,7 +10,7 @@ RSpec.describe 'BoosterTest', tags: ['shoulda'] do
   end
 
   it "boost results by individual format weightings" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_format_boost(result, "contact", 0.3)
@@ -19,7 +19,7 @@ RSpec.describe 'BoosterTest', tags: ['shoulda'] do
   end
 
   it "not apply a boost to unspecified formats" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_no_format_boost(result, "guide")
@@ -27,7 +27,7 @@ RSpec.describe 'BoosterTest', tags: ['shoulda'] do
   end
 
   it "downweight old organisations" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_organisation_state_boost(result, "closed", 0.2)
@@ -35,7 +35,7 @@ RSpec.describe 'BoosterTest', tags: ['shoulda'] do
   end
 
   it "downweight historic pages" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_boost_for_field(result, :is_historic, true, 0.5)
@@ -43,7 +43,7 @@ RSpec.describe 'BoosterTest', tags: ['shoulda'] do
 
   it "boost announcements by date" do
     Timecop.freeze("2016-03-11 16:00".to_time) do
-      builder = QueryComponents::Booster.new(search_query_params)
+      builder = described_class.new(search_query_params)
       result = builder.wrap({ some: 'query' })
 
       announcement_boost = result[:function_score][:functions].detect { |f| f[:filter][:term][:search_format_types] == "announcement" }
@@ -58,7 +58,7 @@ RSpec.describe 'BoosterTest', tags: ['shoulda'] do
   end
 
   it "not boost government index results" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_no_format_boost(result, "case_study")
@@ -67,7 +67,7 @@ RSpec.describe 'BoosterTest', tags: ['shoulda'] do
   end
 
   it "apply only individual format weightings for government formats" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_format_boost(result, "minister", 1.7)
@@ -76,21 +76,21 @@ RSpec.describe 'BoosterTest', tags: ['shoulda'] do
   end
 
   it "boost guidance content" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_boost_for_field(result, :navigation_document_supertype, "guidance", 2.5)
   end
 
   it "downweight service assessments by large amount" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_format_boost(result, "service_standard_report", 0.05)
   end
 
   it "downweight FOI requests" do
-    builder = QueryComponents::Booster.new(search_query_params)
+    builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })
 
     assert_boost_for_field(result, :content_store_document_type, "foi_release", 0.2)

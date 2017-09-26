@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'IndexGroupTest' do
+RSpec.describe SearchIndices::IndexGroup do
   ELASTICSEARCH_OK = {
     status: 200,
     body: { "ok" => true, "acknowledged" => true }.to_json
