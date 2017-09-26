@@ -28,7 +28,7 @@ RSpec.describe 'GovukIndex::ElasticsearchPresenterTest' do
   end
 
   def elasticsearch_presenter(payload, type = "aaib_report")
-    GovukIndex::DocumentTypeInferer.any_instance.stubs(:type).returns(type)
+    GovukIndex::DocumentTypeInferer.any_instance.stub(:type).and_return(type)
     GovukIndex::ElasticsearchPresenter.new(
       payload: payload,
       type_inferer: GovukIndex::DocumentTypeInferer

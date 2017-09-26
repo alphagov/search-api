@@ -145,7 +145,7 @@ RSpec.describe 'PropertyBoostCalculatorTest' do
   end
 
   def stub_full_config(config)
-    YAML.stubs(:load_file).returns(config)
+    YAML.stub(:load_file).and_return(config)
   end
 
   def build_document(format: nil, document_type: nil)

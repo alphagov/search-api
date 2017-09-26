@@ -38,7 +38,7 @@ RSpec.describe 'IndexGroupTest' do
   end
 
   it "switch_index_with_no_existing_alias" do
-    new_index = stub("New index", index_name: "test-new")
+    new_index = double("New index", index_name: "test-new")
     get_stub = stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
@@ -66,7 +66,7 @@ RSpec.describe 'IndexGroupTest' do
   end
 
   it "switch_index_with_existing_alias" do
-    new_index = stub("New index", index_name: "test-new")
+    new_index = double("New index", index_name: "test-new")
     get_stub = stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
@@ -95,7 +95,7 @@ RSpec.describe 'IndexGroupTest' do
 
   it "switch_index_with_multiple_existing_aliases" do
     # Not expecting the system to get into this state, but it should cope
-    new_index = stub("New index", index_name: "test-new")
+    new_index = double("New index", index_name: "test-new")
     get_stub = stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,
@@ -125,7 +125,7 @@ RSpec.describe 'IndexGroupTest' do
   end
 
   it "switch_index_with_existing_real_index" do
-    new_index = stub("New index", index_name: "test-new")
+    new_index = double("New index", index_name: "test-new")
     stub_request(:get, "#{ELASTICSEARCH_TESTING_HOST}/_aliases")
       .to_return(
         status: 200,

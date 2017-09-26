@@ -40,14 +40,14 @@ RSpec.describe 'BestBetsCheckerTest', tags: ['shoulda'] do
   end
 
   def setup_checker(query, hits)
-    @index = stub("metasearch index")
+    @index = double("metasearch index")
     @checker = Search::BestBetsChecker.new(query, @index)
-    @index.expects(:raw_search).with(
+    expect(@index).to receive(:raw_search).with(
       best_bets_query(query), "best_bet"
-    ).returns(
+    ).and_return(
       bb_hits(hits)
     )
-    @index.expects(:analyzed_best_bet_query).with(query).returns(query)
+    expect(@index).to receive(:analyzed_best_bet_query).with(query).and_return(query)
   end
 
   context "without best bets" do

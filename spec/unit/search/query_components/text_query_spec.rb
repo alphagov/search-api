@@ -23,7 +23,7 @@ RSpec.describe 'TextQueryTest', tags: ['shoulda'] do
     it "call the payload for quoted strings" do
       params = search_query_params(query: %{"all sorts of stuff"})
       builder = QueryComponents::TextQuery.new(params)
-      builder.expects(:payload_for_quoted_phrase).once
+      expect(builder).to receive(:payload_for_quoted_phrase).once
 
       builder.payload
     end
@@ -33,7 +33,7 @@ RSpec.describe 'TextQueryTest', tags: ['shoulda'] do
     it "call the payload for unquoted strings" do
       params = search_query_params(query: %{all sorts of stuff})
       builder = QueryComponents::TextQuery.new(params)
-      builder.expects(:payload_for_unquoted_phrase).once
+      expect(builder).to receive(:payload_for_unquoted_phrase).once
 
       builder.payload
     end

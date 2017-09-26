@@ -60,7 +60,7 @@ class IndexHelpers
       check_index_name!(index_name)
     end
 
-    search_config.stubs(:elasticsearch).returns({
+    search_config.elasticsearch = {
       "base_uri" => ELASTICSEARCH_TESTING_HOST,
       "content_index_names" => INDEX_NAMES,
       "govuk_index_name" => GOVUK_INDEX_NAME,
@@ -69,7 +69,9 @@ class IndexHelpers
       "registry_index" => "government_test",
       "spelling_index_names" => INDEX_NAMES,
       "popularity_rank_offset" => 10,
-    })
-    Rummager.settings.stubs(:default_index_name).returns(DEFAULT_INDEX_NAME)
+      "default_index_name" => DEFAULT_INDEX_NAME
+    }
+
+    search_config
   end
 end

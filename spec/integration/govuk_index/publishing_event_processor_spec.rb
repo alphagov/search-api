@@ -16,7 +16,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
   end
 
   it "should_save_new_document_to_elasticsearch" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
     random_example = generate_random_example(
       payload: { document_type: "help_page", payload_version: 123 },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
@@ -36,7 +36,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
   end
 
   it "not_indexing_when_publishing_app_is_smart_answers" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
     random_example = generate_random_example(
       payload: { document_type: "transaction", payload_version: 123, publishing_app: "smartanswers" },
     )
@@ -50,7 +50,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
   end
 
   it "should_include_popularity_when_available" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
     random_example = generate_random_example(
       payload: { document_type: "help_page", payload_version: 123 },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
@@ -77,7 +77,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
       "document_type" => "help_page",
     }
 
-    GovukError.expects(:notify)
+    expect(GovukError).to receive(:notify)
     @queue.publish(invalid_payload.to_json, extra: { content_type: "application/json" })
 
     assert_equal 0, @queue.message_count
@@ -89,7 +89,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
       "document_type" => "gone",
     }
 
-    GovukError.expects(:notify)
+    expect(GovukError).to receive(:notify)
     @queue.publish(invalid_payload.to_json, extra: { content_type: "application/json" })
 
     assert_equal 0, @queue.message_count

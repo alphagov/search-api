@@ -45,7 +45,7 @@ RSpec.describe 'ContentEndpointsTest', tags: ['integration'] do
       "link" => "a-document/in-search",
     })
 
-    SearchIndices::Index.any_instance.expects(:delete).raises(SearchIndices::IndexLocked)
+    expect_any_instance_of(SearchIndices::Index).to receive(:delete).and_raise(SearchIndices::IndexLocked)
 
     delete "/content?link=a-document/in-search"
 

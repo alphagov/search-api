@@ -2,9 +2,9 @@ require 'spec_helper'
 
 RSpec.describe 'SearchServerTest' do
   def schema_config
-    schema = stub("schema config")
-    schema.stubs(:elasticsearch_mappings).returns({})
-    schema.stubs(:elasticsearch_settings).returns({})
+    schema = double("schema config")
+    schema.stub(:elasticsearch_mappings).and_return({})
+    schema.stub(:elasticsearch_settings).and_return({})
     schema
   end
 

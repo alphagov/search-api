@@ -2,19 +2,19 @@ require 'spec_helper'
 
 RSpec.describe 'ElasticsearchProcessorTest' do
   it "should_save_valid_document" do
-    presenter = stub(:presenter)
-    presenter.stubs(:identifier).returns(
+    presenter = double(:presenter)
+    presenter.stub(:identifier).and_return(
       _type: "help_page",
       _id: "/cheese"
     )
-    presenter.stubs(:document).returns(
+    presenter.stub(:document).and_return(
       link: "/cheese",
       title: "We love cheese"
     )
 
-    client = stub('client')
-    Services.stubs('elasticsearch').returns(client)
-    client.expects(:bulk).with(index: SearchConfig.instance.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
+    client = double('client')
+    Services.stub('elasticsearch').and_return(client)
+    expect(client).to receive(:bulk).with(index: SearchConfig.instance.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
 
     actions = GovukIndex::ElasticsearchProcessor.new
     actions.save(presenter)
@@ -22,19 +22,19 @@ RSpec.describe 'ElasticsearchProcessorTest' do
   end
 
   it "should_delete_valid_document" do
-    presenter = stub(:presenter)
-    presenter.stubs(:identifier).returns(
+    presenter = double(:presenter)
+    presenter.stub(:identifier).and_return(
       _type: "help_page",
       _id: "/cheese"
     )
-    presenter.stubs(:document).returns(
+    presenter.stub(:document).and_return(
       link: "/cheese",
       title: "We love cheese"
     )
 
-    client = stub('client')
-    Services.stubs('elasticsearch').returns(client)
-    client.expects(:bulk).with(
+    client = double('client')
+    Services.stub('elasticsearch').and_return(client)
+    expect(client).to receive(:bulk).with(
       index: SearchConfig.instance.govuk_index_name,
       body: [
         {

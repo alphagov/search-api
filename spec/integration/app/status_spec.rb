@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'StatusTest', tags: ['integration'] do
   it "shows_queue_job_count" do
-    Sidekiq::Stats.any_instance.expects(:queues).returns(
+    expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }
     )
 
@@ -14,10 +14,10 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
   end
 
   it "shows_per_queue_retry_count" do
-    retries = %w(bulk bulk something-else).map { |q| stub(queue: q) }
+    retries = %w(bulk bulk something-else).map { |q| double(queue: q) }
 
-    Sidekiq::RetrySet.expects(:new).returns(retries)
-    Sidekiq::Stats.any_instance.expects(:queues).returns(
+    expect(Sidekiq::RetrySet).to receive(:new).and_return(retries)
+    expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }
     )
 
@@ -28,8 +28,8 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
   end
 
   it "shows_zero_retry_count" do
-    Sidekiq::RetrySet.expects(:new).returns([])
-    Sidekiq::Stats.any_instance.expects(:queues).returns(
+    expect(Sidekiq::RetrySet).to receive(:new).and_return([])
+    expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }
     )
 
@@ -40,10 +40,10 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
   end
 
   it "shows_per_queue_scheduled_count" do
-    scheduled = %w(bulk bulk something-else).map { |q| stub(queue: q) }
+    scheduled = %w(bulk bulk something-else).map { |q| double(queue: q) }
 
-    Sidekiq::ScheduledSet.expects(:new).returns(scheduled)
-    Sidekiq::Stats.any_instance.expects(:queues).returns(
+    expect(Sidekiq::ScheduledSet).to receive(:new).and_return(scheduled)
+    expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }
     )
 
@@ -54,8 +54,8 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
   end
 
   it "shows_zero_retry_count_scheduled" do
-    Sidekiq::ScheduledSet.expects(:new).returns([])
-    Sidekiq::Stats.any_instance.expects(:queues).returns(
+    expect(Sidekiq::ScheduledSet).to receive(:new).and_return([])
+    expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }
     )
 

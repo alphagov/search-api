@@ -8,11 +8,14 @@ class SearchConfig
     spelling_index_names
     base_uri
     govuk_index_name
+    default_index_name
   ].each do |config_method|
     define_method config_method do
       elasticsearch.fetch(config_method)
     end
   end
+
+  attr_writer :elasticsearch # this is used by integration testing to override the default
 
   class << self
     attr_writer :instance

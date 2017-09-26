@@ -9,7 +9,7 @@ module HealthCheck
 
     context "#result" do
       it "delegate to it's corresponding results class" do
-        SearchCheckResult.expects(:new).with({ check: @subject, search_results:  @search_results })
+        expect(SearchCheckResult).to receive(:new).with({ check: @subject, search_results:  @search_results })
         @subject.result(@search_results)
       end
     end

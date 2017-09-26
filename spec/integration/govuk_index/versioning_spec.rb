@@ -8,7 +8,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
   end
 
   it "should_successfully_index_increasing_version_numbers" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
 
     version1 = generate_random_example(
       payload: { payload_version: 123 },
@@ -30,7 +30,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
   end
 
   it "should_discard_message_with_same_version_as_existing_document" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
     version1 = generate_random_example(
       payload: { payload_version: 123 },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
@@ -51,7 +51,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
   end
 
   it "should_discard_message_with_earlier_version_than_existing_document" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
 
     version1 = generate_random_example(
       payload: { payload_version: 123 },
@@ -73,7 +73,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
   end
 
   it "should_delete_and_recreate_document_when_unpublished_and_republished" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
     version1 = generate_random_example(
       payload: { payload_version: 1 },
       excluded_fields: ["withdrawn_notice"],
@@ -109,7 +109,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
   end
 
   it "should_discard_unpublishing_message_with_earlier_version" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
     version1 = generate_random_example(
       payload: { payload_version: 2 },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
@@ -137,7 +137,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
   end
 
   it "should_ignore_event_for_non_indexable_formats" do
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(true)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
 
     version1 = generate_random_example(
       payload: { payload_version: 123 },
@@ -151,7 +151,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
 
     assert_equal 123, document["_version"]
 
-    GovukIndex::MigratedFormats.stubs(:indexable?).returns(false)
+    GovukIndex::MigratedFormats.stub(:indexable?).and_return(false)
 
     version2 = version1.merge(title: "new title", payload_version: 124)
     process_message(version2)

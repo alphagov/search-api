@@ -2,9 +2,9 @@ require 'spec_helper'
 
 RSpec.describe 'GovukIndex::ElasticsearchPresenterTest' do
   before do
-    @popularity_lookup = stub(:popularity_lookup)
-    Indexer::PopularityLookup.stubs(:new).returns(@popularity_lookup)
-    @popularity_lookup.stubs(:lookup_popularities).returns({})
+    @popularity_lookup = double(:popularity_lookup)
+    Indexer::PopularityLookup.stub(:new).and_return(@popularity_lookup)
+    @popularity_lookup.stub(:lookup_popularities).and_return({})
 
     @directly_mapped_fields = %w(
       content_id
@@ -72,8 +72,8 @@ RSpec.describe 'GovukIndex::ElasticsearchPresenterTest' do
 
     popularity = 0.0125356
 
-    Indexer::PopularityLookup.expects(:new).with('govuk_index', SearchConfig.instance).returns(@popularity_lookup)
-    @popularity_lookup.expects(:lookup_popularities).with([payload['base_path']]).returns(payload["base_path"] => popularity)
+    expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', SearchConfig.instance).and_return(@popularity_lookup)
+    expect(@popularity_lookup).to receive(:lookup_popularities).with([payload['base_path']]).and_return(payload["base_path"] => popularity)
 
     presenter = common_fields_presenter(payload)
 
@@ -83,8 +83,8 @@ RSpec.describe 'GovukIndex::ElasticsearchPresenterTest' do
   it "no_popularity_when_no_value_is_returned_from_lookup" do
     payload = { "base_path" => "/some/path" }
 
-    Indexer::PopularityLookup.expects(:new).with('govuk_index', SearchConfig.instance).returns(@popularity_lookup)
-    @popularity_lookup.expects(:lookup_popularities).with([payload['base_path']]).returns({})
+    expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', SearchConfig.instance).and_return(@popularity_lookup)
+    expect(@popularity_lookup).to receive(:lookup_popularities).with([payload['base_path']]).and_return({})
 
     presenter = common_fields_presenter(payload)
 

@@ -178,11 +178,7 @@ module IntegrationSpecHelper
 
   def stub_message_payload(example_document, unpublishing: false)
     routing_key = unpublishing ? 'test.unpublish' : 'test.a_routing_key'
-    stubs(:message).tap do |message|
-      message.stubs(:ack)
-      message.stubs(:payload).returns(example_document)
-      message.stubs(:delivery_info).returns(routing_key: routing_key)
-    end
+    double(:message, ack: true, payload: example_document, delivery_info: { routing_key: routing_key })
   end
 
 private
@@ -202,9 +198,6 @@ private
   end
 
   def stubbed_search_config
-    search_config = SearchConfig.new
-    IndexHelpers.stub_elasticsearch_settings(search_config)
-
-    search_config
+    IndexHelpers.stub_elasticsearch_settings
   end
 end

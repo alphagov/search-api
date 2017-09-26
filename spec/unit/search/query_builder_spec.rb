@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'QueryBuilderTest', tags: ['shoulda'] do
   before do
-    Search::BestBetsChecker.any_instance.stubs best_bets: [], worst_bets: []
+    Search::BestBetsChecker.any_instance.stub best_bets: [], worst_bets: []
   end
 
   context "with a simple search query" do
@@ -21,7 +21,7 @@ RSpec.describe 'QueryBuilderTest', tags: ['shoulda'] do
     it "call the payload for a more like this query" do
       builder = builder_with_params(similar_to: %{"/hello-world"})
 
-      builder.expects(:more_like_this_query_hash).once
+      expect(builder).to receive(:more_like_this_query_hash).once
 
       # TODO: assert what the payload looks like
       builder.payload

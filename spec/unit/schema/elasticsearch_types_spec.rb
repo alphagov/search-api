@@ -85,19 +85,19 @@ RSpec.describe 'ElasticsearchTypesTest', tags: ['shoulda'] do
     end
 
     it "fail if document type doesn't specify `fields`" do
-      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({})
+      ElasticsearchTypeParser.any_instance.stub(:load_json).and_return({})
       assert_raises_message(%{Missing "fields", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
     end
 
     it "fail if document type specifies unknown entries in `fields`" do
-      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({
+      ElasticsearchTypeParser.any_instance.stub(:load_json).and_return({
         "fields" => ["unknown_field"],
       })
       assert_raises_message(%{Undefined field \"unknown_field\", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
     end
 
     it "fail if document type has an unknown property" do
-      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({
+      ElasticsearchTypeParser.any_instance.stub(:load_json).and_return({
         "fields" => [],
         "unknown" => [],
       })
@@ -105,7 +105,7 @@ RSpec.describe 'ElasticsearchTypesTest', tags: ['shoulda'] do
     end
 
     it "fail if `expanded_search_result_fields` are specified in base type" do
-      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({
+      ElasticsearchTypeParser.any_instance.stub(:load_json).and_return({
         "fields" => ["case_state"],
         "expanded_search_result_fields" => {
           "case_state" => cma_case_expanded_search_result_fields,
@@ -114,13 +114,13 @@ RSpec.describe 'ElasticsearchTypesTest', tags: ['shoulda'] do
       base_type = @parser.parse
 
       subtype_parser = ElasticsearchTypeParser.new("/config/path/subtype.json", base_type, @definitions)
-      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({ "fields" => [] })
+      ElasticsearchTypeParser.any_instance.stub(:load_json).and_return({ "fields" => [] })
 
       assert_raises_message(%{Specifying `expanded_search_result_fields` in base document type is not supported, in document type definition in "/config/path/subtype.json"}) { subtype_parser.parse }
     end
 
     it "fail if expanded_search_result_fields are set for fields which aren't known" do
-      ElasticsearchTypeParser.any_instance.stubs(:load_json).returns({
+      ElasticsearchTypeParser.any_instance.stub(:load_json).and_return({
         "fields" => ["case_state"],
         "expanded_search_result_fields" => {
           "unknown_field" => cma_case_expanded_search_result_fields,

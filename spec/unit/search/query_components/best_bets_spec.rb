@@ -17,7 +17,7 @@ RSpec.describe 'BestBetsTest', tags: ['shoulda'] do
   context "with a single best bet url" do
     it "include the ID of the document in the results" do
       builder = QueryComponents::BestBets.new(metasearch_index: SearchConfig.instance.metasearch_index)
-      builder.stubs best_bets: { 1 => ['/best-bet'] }
+      builder.stub best_bets: { 1 => ['/best-bet'] }
 
       result = builder.wrap('QUERY')
 
@@ -29,7 +29,7 @@ RSpec.describe 'BestBetsTest', tags: ['shoulda'] do
   context "with two best bet urls on different positions" do
     it "include IDs of the documents in the results" do
       builder = QueryComponents::BestBets.new(metasearch_index: SearchConfig.instance.metasearch_index)
-      builder.stubs best_bets: { 1 => ['/best-bet'], 2 => ['/other-best-bet'] }
+      builder.stub best_bets: { 1 => ['/best-bet'], 2 => ['/other-best-bet'] }
 
       result = builder.wrap('QUERY')
 
@@ -49,7 +49,7 @@ RSpec.describe 'BestBetsTest', tags: ['shoulda'] do
   context "with two best bet urls on the same position" do
     it "include IDs of the documents in the results" do
       builder = QueryComponents::BestBets.new(metasearch_index: SearchConfig.instance.metasearch_index)
-      builder.stubs best_bets: { 1 => ['/best-bet', '/other-best-bet'] }
+      builder.stub best_bets: { 1 => ['/best-bet', '/other-best-bet'] }
 
       result = builder.wrap('QUERY')
 
@@ -61,7 +61,7 @@ RSpec.describe 'BestBetsTest', tags: ['shoulda'] do
   context "with a 'worst bet'" do
     it "completely exclude the documents from the results" do
       builder = QueryComponents::BestBets.new(metasearch_index: SearchConfig.instance.metasearch_index)
-      builder.stubs worst_bets: ['/worst-bet', '/other-worst-bet']
+      builder.stub worst_bets: ['/worst-bet', '/other-worst-bet']
 
       result = builder.wrap({})
 

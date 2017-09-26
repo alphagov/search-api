@@ -2,8 +2,6 @@ require "sinatra"
 require_relative "../../env"
 require "rummager"
 
-set :default_index_name, "mainstream"
-
 configure :development do
   set :protection, false
 end
