@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'SortTest', tags: ['shoulda'] do
+RSpec.describe 'SortTest' do
   context "without explicit ordering" do
     it "order by popularity" do
       builder = QueryComponents::Sort.new(Search::QueryParameters.new)

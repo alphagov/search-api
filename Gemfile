@@ -39,13 +39,11 @@ group :test do
   gem 'govuk_schemas', '~> 2.2.0'
   gem "minitest", "~> 5.6.0"
   gem "rack-test", "~> 0.6.3"
-  gem "shoulda-context", "~> 1.2.1"
+  gem 'rspec'
   gem "simplecov", "~> 0.10.0"
   gem "simplecov-rcov", "~> 0.2.3"
-  gem "test-unit", "~> 3.0"
   gem "timecop", "~> 0.8.0"
   gem "webmock", "~> 1.24"
-  gem 'rspec'
 end
 
 group :development do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe QueryComponents::Popularity, tags: ['shoulda'] do
+RSpec.describe QueryComponents::Popularity do
   it "add popularity to a query" do
     builder = described_class.new(search_query_params)
 

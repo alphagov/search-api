@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe FieldDefinitionParser, tags: ['shoulda'] do
+RSpec.describe FieldDefinitionParser do
   context "after loading definitions" do
     before do
       @definitions = described_class.new(File.expand_path('../../../config/schema', File.dirname(__FILE__))).parse

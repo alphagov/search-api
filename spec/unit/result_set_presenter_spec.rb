@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
+RSpec.describe Search::ResultSetPresenter do
   def sample_docs
     [{
       "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",
@@ -203,13 +203,13 @@ RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
 
     it "have short index names" do
       @output[:results].each do |result|
-        assert_contains %w[mainstream government], result[:index]
+        expect(%w[mainstream government]).to include(result[:index])
       end
     end
 
     it "have the score in es_score" do
       @output[:results].zip(sample_docs).each do |result, doc|
-        assert_does_not_contain "_score", result.keys
+        expect(result.keys).not_to include("_score")
         assert result[:es_score] != nil
         assert_equal doc["_score"], result[:es_score]
       end
@@ -279,13 +279,13 @@ RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
 
     it "have short index names" do
       @output[:results].each do |result|
-        assert_contains %w[mainstream government], result[:index]
+        expect(%w[mainstream government]).to include(result[:index])
       end
     end
 
     it "have the score in es_score" do
       @output[:results].zip(sample_docs).each do |result, doc|
-        assert_does_not_contain "_score", result.keys
+        expect(result.keys).not_to include("_score")
         assert result[:es_score] != nil
         assert_equal doc["_score"], result[:es_score]
       end
@@ -322,7 +322,7 @@ RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
     end
 
     it "have aggregates" do
-      assert_contains @output.keys, :aggregates
+      expect(@output.keys).to include(:aggregates)
     end
 
     it "have correct number of aggregates" do
@@ -372,7 +372,7 @@ RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
     end
 
     it "have aggregates" do
-      assert_contains @output.keys, :aggregates
+      expect(@output.keys).to include(:aggregates)
     end
 
     it "have correct number of aggregates" do
@@ -424,7 +424,7 @@ RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
     end
 
     it "have aggregates" do
-      assert_contains @output.keys, :aggregates
+      expect(@output.keys).to include(:aggregates)
     end
 
     it "have correct number of aggregates" do
@@ -602,7 +602,7 @@ RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
     end
 
     it "have aggregates" do
-      assert_contains @output.keys, :aggregates
+      expect(@output.keys).to include(:aggregates)
     end
 
     it "have correct number of aggregates" do
@@ -670,7 +670,7 @@ RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
     end
 
     it "have aggregates" do
-      assert_contains @output.keys, :aggregates
+      expect(@output.keys).to include(:aggregates)
     end
 
     it "have correct number of aggregates" do

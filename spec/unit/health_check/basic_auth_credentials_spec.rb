@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe HealthCheck::BasicAuthCredentials, tags: ['shoulda'] do
+RSpec.describe HealthCheck::BasicAuthCredentials do
   it "be callable with a user:password string" do
     creds = HealthCheck::BasicAuthCredentials.call "bob:horseradish"
     assert_equal "bob", creds.user

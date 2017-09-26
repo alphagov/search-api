@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe FieldTypes, tags: ['shoulda'] do
+RSpec.describe FieldTypes do
   context "after loading standard types" do
     before do
       @types = described_class.new(File.expand_path('../../../config/schema', File.dirname(__FILE__)))

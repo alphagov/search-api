@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Indexer::DocumentPreparer, tags: ['shoulda'] do
+RSpec.describe Indexer::DocumentPreparer do
   describe "#prepared" do
     it "populates popularities" do
       stub_tagging_lookup

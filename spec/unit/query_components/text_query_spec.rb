@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe QueryComponents::TextQuery, tags: ['shoulda'] do
+RSpec.describe QueryComponents::TextQuery do
   context "search with debug disabling use of synonyms" do
     it "use the all_searchable_text.synonym field" do
       builder = described_class.new(search_query_params)

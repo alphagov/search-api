@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe QueryComponents::BestBets, tags: ['shoulda'] do
+RSpec.describe QueryComponents::BestBets do
   context "when best bets is disabled in debug" do
     it "return the query without modification" do
       builder = described_class.new(

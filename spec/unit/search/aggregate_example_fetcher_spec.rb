@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Search::AggregateExampleFetcher, tags: ['shoulda'] do
+RSpec.describe Search::AggregateExampleFetcher do
   def query_for_example_global(field, value, return_fields)
     {
       query: {

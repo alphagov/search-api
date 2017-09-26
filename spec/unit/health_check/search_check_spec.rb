@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 
-RSpec.describe HealthCheck::SearchCheck, tags: ['shoulda'] do
+RSpec.describe HealthCheck::SearchCheck do
   before do
     @search_results = ["any-old-thing"]
   end

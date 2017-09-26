@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe QueryComponents::Aggregates, tags: ['shoulda'] do
+RSpec.describe QueryComponents::Aggregates do
   def make_search_params(aggregates:, filters: [])
     Search::QueryParameters.new(
       filters: filters, aggregates: aggregates, debug: { include_withdrawn: true }

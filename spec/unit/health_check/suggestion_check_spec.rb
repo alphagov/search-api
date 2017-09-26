@@ -1,7 +1,7 @@
 require 'spec_helper'
 Logging.logger.root.appenders = nil
 
-RSpec.describe HealthCheck::SuggestionCheck, tags: ['shoulda'] do
+RSpec.describe HealthCheck::SuggestionCheck do
   context "#success?" do
     it "be true when the result and query match" do
       check = described_class.new(expected_result: 'x', suggested_query: 'x')

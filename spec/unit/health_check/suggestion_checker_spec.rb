@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe HealthCheck::SuggestionChecker, tags: ['shoulda'] do
+RSpec.describe HealthCheck::SuggestionChecker do
   context "result" do
     it "returns the correct calculator" do
       data = <<~DOC

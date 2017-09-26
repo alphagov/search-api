@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SynonymParser, tags: ['shoulda'] do
+RSpec.describe SynonymParser do
   it "map a single word synonym to the same synonym group at index and search time" do
     parse_synonyms(["one"])
 
@@ -62,10 +62,10 @@ RSpec.describe SynonymParser, tags: ['shoulda'] do
   end
 
   def assert_search_synonyms_contain(expected)
-    assert_contains @search_synonyms.es_config[:synonyms], expected
+    expect(@search_synonyms.es_config[:synonyms]).to include(expected)
   end
 
   def assert_index_synonyms_contain(expected)
-    assert_contains @index_synonyms.es_config[:synonyms], expected
+    expect(@index_synonyms.es_config[:synonyms]).to include(expected)
   end
 end
