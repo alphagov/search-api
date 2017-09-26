@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe 'FieldTypesTest', tags: ['shoulda'] do
+RSpec.describe FieldTypes, tags: ['shoulda'] do
   context "after loading standard types" do
     before do
-      @types = FieldTypes.new(File.expand_path('../../../config/schema', File.dirname(__FILE__)))
+      @types = described_class.new(File.expand_path('../../../config/schema', File.dirname(__FILE__)))
     end
 
     it "recognise the `identifier` type" do
@@ -44,11 +44,11 @@ RSpec.describe 'FieldTypesTest', tags: ['shoulda'] do
 
   context "loading raises an exception if configuration is invalid" do
     before do
-      @types = FieldTypes.new("/config/path")
+      @types = described_class.new("/config/path")
     end
 
     it "fail if a field type has no es_config property" do
-      FieldTypes.any_instance.stub(:load_json).and_return({ "identifier" => {} })
+      described_class.any_instance.stub(:load_json).and_return({ "identifier" => {} })
       exc = assert_raises(RuntimeError) do
         @types.get("identifier")
       end
@@ -56,7 +56,7 @@ RSpec.describe 'FieldTypesTest', tags: ['shoulda'] do
     end
 
     it "fail if a field type has an invalid `filter_type` property" do
-      FieldTypes.any_instance.stub(:load_json).and_return(
+      described_class.any_instance.stub(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "filter_type" => "bad value" } }
       )
       exc = assert_raises(RuntimeError) do
@@ -66,7 +66,7 @@ RSpec.describe 'FieldTypesTest', tags: ['shoulda'] do
     end
 
     it "fail if a field type has an invalid `children` property" do
-      FieldTypes.any_instance.stub(:load_json).and_return(
+      described_class.any_instance.stub(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "children" => "bad value" } }
       )
       exc = assert_raises(RuntimeError) do
@@ -76,7 +76,7 @@ RSpec.describe 'FieldTypesTest', tags: ['shoulda'] do
     end
 
     it "fail if a field type has an unknown property" do
-      FieldTypes.any_instance.stub(:load_json).and_return(
+      described_class.any_instance.stub(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "foo" => true } }
       )
       exc = assert_raises(RuntimeError) do

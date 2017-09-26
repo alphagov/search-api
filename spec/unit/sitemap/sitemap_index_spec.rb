@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-RSpec.describe 'SitemapIndexTest' do
+RSpec.describe Sitemap, 'Index' do
   it "should_generate_index_sitemap" do
     index_file = StringIO.new
     File.stub(:open).and_yield(index_file)
-    sitemap = Sitemap.new('/foo')
+    sitemap = described_class.new('/foo')
     sitemaps = ['sitemap_test_1.xml', 'sitemap_test_2.xml']
     sitemap.write_index(sitemaps)
     doc = Nokogiri::XML(index_file.string)

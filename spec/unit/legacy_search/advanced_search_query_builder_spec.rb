@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-RSpec.describe 'AdvancedSearchQueryBuilderTest' do
+RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
   include Fixtures::DefaultMappings
 
   def build_builder(keywords = "", filter_params = {}, sort_order = {}, mappings = default_mappings)
-    LegacySearch::AdvancedSearchQueryBuilder.new(keywords, filter_params, sort_order, mappings)
+    described_class.new(keywords, filter_params, sort_order, mappings)
   end
 
   it "builder_excludes_withdrawn" do

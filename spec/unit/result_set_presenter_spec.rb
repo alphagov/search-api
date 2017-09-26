@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
+RSpec.describe Search::ResultSetPresenter, tags: ['shoulda'] do
   def sample_docs
     [{
       "_index" => "government-2014-03-19t14:35:28z-a05cfc73-933a-41c7-adc0-309a715baf09",
@@ -138,7 +138,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
 
   def search_presenter(options)
     org_registry = options[:org_registry]
-    Search::ResultSetPresenter.new(
+    described_class.new(
       search_params: Search::QueryParameters.new(
         start: options.fetch(:start, 0),
         filters: options.fetch(:filters, []),
@@ -160,7 +160,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
           "total" => 0
         }
       }
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           aggregate_name: :aggregates,
@@ -184,7 +184,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
 
   context "results with no registries" do
     before do
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           aggregate_name: :aggregates,
@@ -233,7 +233,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
         es_response['hits']['hits'] = [@empty_result]
       }
 
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           aggregate_name: :aggregates,
@@ -258,7 +258,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
         }
       }
 
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           return_fields: %w[policy_areas],
@@ -311,7 +311,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
 
   context "results with aggregates" do
     before do
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           aggregates: { "organisations" => aggregate_params(1) },
@@ -360,7 +360,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
 
   context "results with aggregates and a filter applied" do
     before do
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hmrc"])],
@@ -412,7 +412,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
 
   context "results with aggregates and a filter which matches nothing applied" do
     before do
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           filters: [text_filter("organisations", ["hm-cheesemakers"])],
@@ -464,7 +464,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
 
   context "results with aggregate counting only" do
     before do
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           aggregates: { "organisations" => aggregate_params(0) },
@@ -590,7 +590,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
     before do
       org_registry = sample_org_registry
 
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           aggregates: { "organisations" => aggregate_params(1), "policy_areas" => aggregate_params(1) },
@@ -652,7 +652,7 @@ RSpec.describe 'ResultSetPresenterTest', tags: ['shoulda'] do
     before do
       org_registry = sample_org_registry
 
-      @output = Search::ResultSetPresenter.new(
+      @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
           aggregates: { "organisations" => aggregate_params(1) },

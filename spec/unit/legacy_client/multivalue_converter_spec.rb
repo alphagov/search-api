@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-RSpec.describe 'MultivalueConverterTest' do
+RSpec.describe LegacyClient::MultivalueConverter do
   it "keeps_multivalue_fields_as_array" do
     fields = {
       "title" => ["the title"],
       "organisations" => %w(hmrc dvla),
     }
 
-    converted_hash = LegacyClient::MultivalueConverter.new(fields, sample_field_definitions).converted_hash
+    converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
     assert_equal %w(hmrc dvla), converted_hash["organisations"]
   end
@@ -18,7 +18,7 @@ RSpec.describe 'MultivalueConverterTest' do
       "organisations" => %w(hmrc dvla),
     }
 
-    converted_hash = LegacyClient::MultivalueConverter.new(fields, sample_field_definitions).converted_hash
+    converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
     assert_equal "the title", converted_hash["title"]
   end
@@ -30,7 +30,7 @@ RSpec.describe 'MultivalueConverterTest' do
       "organisations" => %w(hmrc dvla),
     }
 
-    converted_hash = LegacyClient::MultivalueConverter.new(fields, sample_field_definitions).converted_hash
+    converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
     assert_equal "the title", converted_hash["title"]
   end

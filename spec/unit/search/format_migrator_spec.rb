@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'FormatMigratorTest' do
+RSpec.describe Search::FormatMigrator do
   it "when_base_query_without_migrated_formats" do
     GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])
     base_query = { filter: 'component' }
@@ -13,7 +13,7 @@ RSpec.describe 'FormatMigratorTest' do
         no_match_filter: 'none'
       }
     }
-    assert_equal expected, Search::FormatMigrator.new(base_query).call
+    assert_equal expected, described_class.new(base_query).call
   end
 
   it "when_base_query_with_migrated_formats" do
@@ -36,7 +36,7 @@ RSpec.describe 'FormatMigratorTest' do
         }
       }
     }
-    assert_equal expected, Search::FormatMigrator.new(base_query).call
+    assert_equal expected, described_class.new(base_query).call
   end
 
   it "when_no_base_query_without_migrated_formats" do
@@ -48,7 +48,7 @@ RSpec.describe 'FormatMigratorTest' do
         no_match_filter: 'none'
       }
     }
-    assert_equal expected, Search::FormatMigrator.new(nil).call
+    assert_equal expected, described_class.new(nil).call
   end
 
   it "when_no_base_query_with_migrated_formats" do
@@ -68,6 +68,6 @@ RSpec.describe 'FormatMigratorTest' do
         }
       }
     }
-    assert_equal expected, Search::FormatMigrator.new(nil).call
+    assert_equal expected, described_class.new(nil).call
   end
 end

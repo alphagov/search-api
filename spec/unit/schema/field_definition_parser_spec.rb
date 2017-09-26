@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe 'FieldDefinitionsTest', tags: ['shoulda'] do
+RSpec.describe FieldDefinitionParser, tags: ['shoulda'] do
   context "after loading definitions" do
     before do
-      @definitions = FieldDefinitionParser.new(File.expand_path('../../../config/schema', File.dirname(__FILE__))).parse
+      @definitions = described_class.new(File.expand_path('../../../config/schema', File.dirname(__FILE__))).parse
     end
 
     it "recognise the `link` field definition" do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
+RSpec.describe Search::AggregateExampleFetcher, tags: ['shoulda'] do
   def query_for_example_global(field, value, return_fields)
     {
       query: {
@@ -57,7 +57,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
 
   context "#prepare_response" do
     it "map an empty response" do
-      fetcher = Search::AggregateExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
+      fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)
 
       response = fetcher.send(:prepare_response, [], [])
 
@@ -65,7 +65,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
     end
 
     it "map a response to aggregates without fields" do
-      fetcher = Search::AggregateExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
+      fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)
       slugs = ['a-slug-name']
       response_list = [{ 'hits' => { 'total' => 1, 'hits' => [{ '_id' => 'a-slug-name' }] } }]
 
@@ -79,7 +79,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
     before do
       @index = stub_index("content index")
       @builder = double("builder")
-      @fetcher = Search::AggregateExampleFetcher.new(@index, {}, Search::QueryParameters.new, @builder)
+      @fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)
     end
 
     it "get an empty hash of examples" do
@@ -113,7 +113,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
         }
       )
       @builder = double("builder")
-      @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
+      @fetcher = described_class.new(@index, main_query_response, params, @builder)
     end
 
     it "request and return aggregate examples" do
@@ -168,7 +168,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
       )
 
       @builder = double("builder")
-      @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
+      @fetcher = described_class.new(@index, main_query_response, params, @builder)
     end
 
     it "request and return aggregate examples with query scope" do
@@ -223,7 +223,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
         }
       )
       @builder = double("builder")
-      @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
+      @fetcher = described_class.new(@index, main_query_response, params, @builder)
     end
 
     it "request and return aggregate examples" do
@@ -258,7 +258,7 @@ RSpec.describe 'AggregateExampleFetcherTest', tags: ['shoulda'] do
       )
 
       @builder = double("builder")
-      @fetcher = Search::AggregateExampleFetcher.new(@index, main_query_response, params, @builder)
+      @fetcher = described_class.new(@index, main_query_response, params, @builder)
     end
 
     it "request and return aggregate examples with query scope" do

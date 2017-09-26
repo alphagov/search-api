@@ -1,16 +1,10 @@
 require 'spec_helper'
 
-RSpec.describe 'HelpersTest' do
+RSpec.describe Helpers do
   subject do
-    klass = Class.new do
-      include Helpers
-
-      def content_type(*); end
-
-      def status(*); end
-    end
-
-    klass.new
+    instance = double
+    instance.extend(Helpers)
+    instance
   end
 
   it "simple_json_result_ok" do

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-RSpec.describe 'ComparerTest' do
+RSpec.describe Indexer::Comparer do
   it "can_detect_when_a_record_is_added" do
     setup_enumerator_response(Indexer::CompareEnumerator::NO_VALUE, { some: 'data' })
 
-    comparer = Indexer::Comparer.new(
+    comparer = described_class.new(
       'index_a',
       'index_b',
       io: StringIO.new
@@ -16,7 +16,7 @@ RSpec.describe 'ComparerTest' do
   it "can_detect_when_a_record_is_removed" do
     setup_enumerator_response({ some: 'data' }, Indexer::CompareEnumerator::NO_VALUE)
 
-    comparer = Indexer::Comparer.new(
+    comparer = described_class.new(
       'index_a',
       'index_b',
       io: StringIO.new
@@ -28,7 +28,7 @@ RSpec.describe 'ComparerTest' do
   it "can_detect_when_a_record_has_changed" do
     setup_enumerator_response({ data: 'old' }, { data: 'new' })
 
-    comparer = Indexer::Comparer.new(
+    comparer = described_class.new(
       'index_a',
       'index_b',
       io: StringIO.new
@@ -40,7 +40,7 @@ RSpec.describe 'ComparerTest' do
   it "can_detect_when_a_record_is_unchanged" do
     setup_enumerator_response({ data: 'some' }, { data: 'some' })
 
-    comparer = Indexer::Comparer.new(
+    comparer = described_class.new(
       'index_a',
       'index_b',
       io: StringIO.new
@@ -52,7 +52,7 @@ RSpec.describe 'ComparerTest' do
   it "can_detect_when_a_record_is_unchanged_apart_from_ignored_fields" do
     setup_enumerator_response({ data: 'some', ignore: 'me' }, { data: 'some' })
 
-    comparer = Indexer::Comparer.new(
+    comparer = described_class.new(
       'index_a',
       'index_b',
       ignore: [:ignore],
@@ -65,7 +65,7 @@ RSpec.describe 'ComparerTest' do
   it "can_detect_when_a_record_is_unchanged_apart_from_default_ignored_fields" do
     setup_enumerator_response({ data: 'some', 'popularity' => '100' }, { data: 'some' })
 
-    comparer = Indexer::Comparer.new(
+    comparer = described_class.new(
       'index_a',
       'index_b',
       io: StringIO.new

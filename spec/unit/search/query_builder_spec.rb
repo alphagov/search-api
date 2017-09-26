@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'QueryBuilderTest', tags: ['shoulda'] do
+RSpec.describe Search::QueryBuilder, tags: ['shoulda'] do
   before do
     Search::BestBetsChecker.any_instance.stub best_bets: [], worst_bets: []
   end
@@ -29,7 +29,7 @@ RSpec.describe 'QueryBuilderTest', tags: ['shoulda'] do
   end
 
   def builder_with_params(params)
-    Search::QueryBuilder.new(
+    described_class.new(
       search_params: Search::QueryParameters.new({ filters: [] }.merge(params)),
       content_index_names: SearchConfig.instance.content_index_names,
       metasearch_index: SearchConfig.instance.metasearch_index

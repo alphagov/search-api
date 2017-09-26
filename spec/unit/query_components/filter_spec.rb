@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'FilterTest', tags: ['shoulda'] do
+RSpec.describe QueryComponents::Filter, tags: ['shoulda'] do
   def make_search_params(filters, include_withdrawn: true)
     Search::QueryParameters.new(filters: filters, debug: { include_withdrawn: include_withdrawn })
   end
@@ -19,7 +19,7 @@ RSpec.describe 'FilterTest', tags: ['shoulda'] do
 
   context "search with one filter" do
     it "append the correct text filters" do
-      builder = QueryComponents::Filter.new(
+      builder = described_class.new(
         make_search_params([text_filter("organisations", ["hm-magic"])])
       )
 
@@ -32,7 +32,7 @@ RSpec.describe 'FilterTest', tags: ['shoulda'] do
     end
 
     it "append the correct date filters" do
-      builder = QueryComponents::Filter.new(
+      builder = described_class.new(
         make_search_params([make_date_filter_param("field_with_date", ["from:2014-04-01 00:00,to:2014-04-02 00:00"])])
       )
 
@@ -47,7 +47,7 @@ RSpec.describe 'FilterTest', tags: ['shoulda'] do
 
   context "search with a filter with multiple options" do
     it "have correct filter" do
-      builder = QueryComponents::Filter.new(
+      builder = described_class.new(
         make_search_params([text_filter("organisations", ["hm-magic", "hmrc"])])
       )
 
@@ -62,7 +62,7 @@ RSpec.describe 'FilterTest', tags: ['shoulda'] do
 
   context "search with a filter and rejects" do
     it "have correct filter" do
-      builder = QueryComponents::Filter.new(
+      builder = described_class.new(
         make_search_params(
           [
             text_filter("organisations", ["hm-magic", "hmrc"]),
@@ -85,7 +85,7 @@ RSpec.describe 'FilterTest', tags: ['shoulda'] do
 
   context "search with multiple filters" do
     it "have correct filter" do
-      builder = QueryComponents::Filter.new(
+      builder = described_class.new(
         make_search_params(
           [
             text_filter("organisations", ["hm-magic", "hmrc"]),

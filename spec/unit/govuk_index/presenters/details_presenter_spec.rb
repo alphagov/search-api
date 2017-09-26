@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'GovukIndex::DetailsPresenterTest' do
+RSpec.describe GovukIndex::DetailsPresenter do
   it "details_with_govspeak_and_text_html" do
     details = {
       "body" => [
@@ -71,7 +71,7 @@ RSpec.describe 'GovukIndex::DetailsPresenterTest' do
   end
 
   def details_presenter(details, indexable_content_keys = %w(body parts))
-    GovukIndex::DetailsPresenter.new(
+    described_class.new(
       details: details,
       indexable_content_keys: indexable_content_keys,
       sanitiser: GovukIndex::IndexableContentSanitiser.new

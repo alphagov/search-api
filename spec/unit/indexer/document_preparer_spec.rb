@@ -9,7 +9,7 @@ RSpec.describe Indexer::DocumentPreparer, tags: ['shoulda'] do
         "link" => "/some-link",
       }
 
-      updated_doc_hash = Indexer::DocumentPreparer.new("fake_client", "fake_index").prepared(
+      updated_doc_hash = described_class.new("fake_client", "fake_index").prepared(
         doc_hash,
         { "/some-link" => 0.5 }, true
       )
@@ -25,7 +25,7 @@ RSpec.describe Indexer::DocumentPreparer, tags: ['shoulda'] do
         "content_store_document_type" => "detailed_guide",
       }
 
-      updated_doc_hash = Indexer::DocumentPreparer.new("fake_client", "fake_index").prepared(
+      updated_doc_hash = described_class.new("fake_client", "fake_index").prepared(
         doc_hash,
         {},
         true

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'SpecialistFormatTest' do
+RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
   before do
     Indexer::PopularityLookup.any_instance.stub(:lookup_popularities).and_return({})
   end
@@ -244,8 +244,9 @@ private
                     'metadata' => metadata,
                   }
                 )
-    GovukIndex::ElasticsearchPresenter.new(payload: example).document
+    described_class.new(payload: example).document
   end
+
 
   def assert_document_include_hash(document, hash)
     hash.each do |key, value|

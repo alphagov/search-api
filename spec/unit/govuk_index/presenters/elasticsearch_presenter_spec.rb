@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'GovukIndex::ElasticsearchPresenterTest' do
+RSpec.describe GovukIndex::ElasticsearchPresenter do
   it "identifier" do
     payload = generate_random_example(payload: { payload_version: 1 },
     regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" })
@@ -29,7 +29,7 @@ RSpec.describe 'GovukIndex::ElasticsearchPresenterTest' do
 
   def elasticsearch_presenter(payload, type = "aaib_report")
     GovukIndex::DocumentTypeInferer.any_instance.stub(:type).and_return(type)
-    GovukIndex::ElasticsearchPresenter.new(
+    described_class.new(
       payload: payload,
       type_inferer: GovukIndex::DocumentTypeInferer
     )

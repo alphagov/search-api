@@ -1,7 +1,7 @@
 require 'spec_helper'
 require "sitemap/sitemap"
 
-RSpec.describe 'SitemapPresenterTest' do
+RSpec.describe SitemapPresenter do
   before do
     Plek.any_instance.stub(:website_root).and_return("https://website_root")
 
@@ -11,19 +11,19 @@ RSpec.describe 'SitemapPresenterTest' do
 
   it "url_is_document_link_if_link_is_http_url" do
     document = build_document(url: "http://some.url")
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal "http://some.url", presenter.url
   end
 
   it "url_is_document_link_if_link_is_https_url" do
     document = build_document(url: "https://some.url")
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal "https://some.url", presenter.url
   end
 
   it "url_appends_host_name_if_link_is_a_path" do
     document = build_document(url: "/some/path")
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal "https://website_root/some/path", presenter.url
   end
 
@@ -32,7 +32,7 @@ RSpec.describe 'SitemapPresenterTest' do
       url: "/some/path",
       timestamp: "2014-01-28T14:41:50+00:00"
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal "2014-01-28T14:41:50+00:00", presenter.last_updated
   end
 
@@ -41,7 +41,7 @@ RSpec.describe 'SitemapPresenterTest' do
       url: "/some/path",
       timestamp: "2017-07-12"
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal "2017-07-12", presenter.last_updated
   end
 
@@ -50,7 +50,7 @@ RSpec.describe 'SitemapPresenterTest' do
       url: "/some/path",
       timestamp: "1995-06-01"
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal "2012-10-17T00:00:00+00:00", presenter.last_updated
   end
 
@@ -59,7 +59,7 @@ RSpec.describe 'SitemapPresenterTest' do
       url: "/some/path",
       timestamp: nil
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_nil presenter.last_updated
   end
 
@@ -68,7 +68,7 @@ RSpec.describe 'SitemapPresenterTest' do
       url: "/some/path",
       timestamp: "not-a-date"
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_nil presenter.last_updated
   end
 
@@ -77,7 +77,7 @@ RSpec.describe 'SitemapPresenterTest' do
       url: "/some/path",
       timestamp: "01-01-2017"
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_nil presenter.last_updated
   end
 
@@ -86,7 +86,7 @@ RSpec.describe 'SitemapPresenterTest' do
       url: "/some/path",
       is_withdrawn: false
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal 1, presenter.priority
   end
 
@@ -95,7 +95,7 @@ RSpec.describe 'SitemapPresenterTest' do
       url: "/some/path",
       is_withdrawn: true
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal 0.25, presenter.priority
   end
 
@@ -103,7 +103,7 @@ RSpec.describe 'SitemapPresenterTest' do
     document = build_document(
       url: "/some/path"
     )
-    presenter = SitemapPresenter.new(document, @boost_calculator)
+    presenter = described_class.new(document, @boost_calculator)
     assert_equal 1, presenter.priority
   end
 
@@ -115,7 +115,7 @@ RSpec.describe 'SitemapPresenterTest' do
     property_boost_calculator = PropertyBoostCalculator.new
     property_boost_calculator.stub(:boost).with(document).and_return(0.72)
 
-    presenter = SitemapPresenter.new(document, property_boost_calculator)
+    presenter = described_class.new(document, property_boost_calculator)
     assert_equal 0.72, presenter.priority
   end
 

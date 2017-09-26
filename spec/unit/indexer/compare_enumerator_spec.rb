@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-RSpec.describe 'CompareEnumeratorTest' do
+RSpec.describe Indexer::CompareEnumerator do
   it "when_matching_keys_exist" do
     data_left = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_left' }
     data_right = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_right' }
 
     stub_scroll_enumerator(left_request: [data_left], right_request: [data_right])
 
-    results = Indexer::CompareEnumerator.new('index_a', 'index_b').to_a
+    results = described_class.new('index_a', 'index_b').to_a
     assert_equal results, [[data_left, data_right]]
   end
 
@@ -16,8 +16,8 @@ RSpec.describe 'CompareEnumeratorTest' do
 
     stub_scroll_enumerator(left_request: [data], right_request: [])
 
-    results = Indexer::CompareEnumerator.new('index_a', 'index_b').to_a
-    assert_equal results, [[data, Indexer::CompareEnumerator::NO_VALUE]]
+    results = described_class.new('index_a', 'index_b').to_a
+    assert_equal results, [[data, described_class::NO_VALUE]]
   end
 
 
@@ -26,8 +26,8 @@ RSpec.describe 'CompareEnumeratorTest' do
 
     stub_scroll_enumerator(left_request: [], right_request: [data])
 
-    results = Indexer::CompareEnumerator.new('index_a', 'index_b').to_a
-    assert_equal results, [[Indexer::CompareEnumerator::NO_VALUE, data]]
+    results = described_class.new('index_a', 'index_b').to_a
+    assert_equal results, [[described_class::NO_VALUE, data]]
   end
 
   it "with_matching_ids_but_different_types" do
@@ -36,10 +36,10 @@ RSpec.describe 'CompareEnumeratorTest' do
 
     stub_scroll_enumerator(left_request: [data_left], right_request: [data_right])
 
-    results = Indexer::CompareEnumerator.new('index_a', 'index_b').to_a
+    results = described_class.new('index_a', 'index_b').to_a
     assert_equal results, [
-      [Indexer::CompareEnumerator::NO_VALUE, data_right],
-      [data_left, Indexer::CompareEnumerator::NO_VALUE],
+      [described_class::NO_VALUE, data_right],
+      [data_left, described_class::NO_VALUE],
     ]
   end
 
@@ -49,10 +49,10 @@ RSpec.describe 'CompareEnumeratorTest' do
 
     stub_scroll_enumerator(left_request: [data_left], right_request: [data_right])
 
-    results = Indexer::CompareEnumerator.new('index_a', 'index_b').to_a
+    results = described_class.new('index_a', 'index_b').to_a
     assert_equal results, [
-      [data_left, Indexer::CompareEnumerator::NO_VALUE],
-      [Indexer::CompareEnumerator::NO_VALUE, data_right],
+      [data_left, described_class::NO_VALUE],
+      [described_class::NO_VALUE, data_right],
     ]
   end
 
@@ -65,12 +65,12 @@ RSpec.describe 'CompareEnumeratorTest' do
 
     stub_scroll_enumerator(left_request: [key1, key3, key5], right_request: [key2, key3, key4, key5])
 
-    results = Indexer::CompareEnumerator.new('index_a', 'index_b').to_a
+    results = described_class.new('index_a', 'index_b').to_a
     assert_equal results, [
-      [key1, Indexer::CompareEnumerator::NO_VALUE],
-      [Indexer::CompareEnumerator::NO_VALUE, key2],
+      [key1, described_class::NO_VALUE],
+      [described_class::NO_VALUE, key2],
       [key3, key3],
-      [Indexer::CompareEnumerator::NO_VALUE, key4],
+      [described_class::NO_VALUE, key4],
       [key5, key5],
     ]
   end
@@ -79,7 +79,7 @@ RSpec.describe 'CompareEnumeratorTest' do
     data = { '_id' => 'abc', '_type' => 'stuff', '_source' => { 'custom' => 'data' } }
     stub_client_for_scroll_enumerator(return_values: [[data], []])
 
-    enum = Indexer::CompareEnumerator.new('index_a', 'index_b').get_enum('index_name')
+    enum = described_class.new('index_a', 'index_b').get_enum('index_name')
 
     assert_equal enum.to_a, [
       { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
@@ -92,7 +92,7 @@ RSpec.describe 'CompareEnumeratorTest' do
 
     stub_client_for_scroll_enumerator(return_values: [[data], []], search_body: search_body)
 
-    enum = Indexer::CompareEnumerator.new('index_a', 'index_b').get_enum('index_name', search_body)
+    enum = described_class.new('index_a', 'index_b').get_enum('index_name', search_body)
 
     assert_equal enum.to_a, [
       { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
@@ -103,9 +103,9 @@ RSpec.describe 'CompareEnumeratorTest' do
     data = { '_id' => 'abc', '_type' => 'stuff', '_source' => { 'custom' => 'data' } }
     search_body = { query: 'custom_filter' }
 
-    stub_client_for_scroll_enumerator(return_values: [[data], []], search_body: search_body.merge(sort: Indexer::CompareEnumerator::DEFAULT_SORT))
+    stub_client_for_scroll_enumerator(return_values: [[data], []], search_body: search_body.merge(sort: described_class::DEFAULT_SORT))
 
-    enum = Indexer::CompareEnumerator.new('index_a', 'index_b').get_enum('index_name', search_body)
+    enum = described_class.new('index_a', 'index_b').get_enum('index_name', search_body)
 
     assert_equal enum.to_a, [
       { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
@@ -134,8 +134,8 @@ private
         index: 'index_name',
         search_type: search_type,
         body: search_body || {
-          query: Indexer::CompareEnumerator::DEFAULT_QUERY,
-          sort: Indexer::CompareEnumerator::DEFAULT_SORT,
+          query: described_class::DEFAULT_QUERY,
+          sort: described_class::DEFAULT_SORT,
         }
       )
     ).and_return(
