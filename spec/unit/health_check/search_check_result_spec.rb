@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe HealthCheck::SearchCheckResult, tags: ['shoulda'] do
+RSpec.describe HealthCheck::SearchCheckResult do
   subject { described_class.new(check: check, search_results: search_results) }
 
   context ".build" do

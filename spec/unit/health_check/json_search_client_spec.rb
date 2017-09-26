@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe HealthCheck::JsonSearchClient, tags: ['shoulda'] do
+RSpec.describe HealthCheck::JsonSearchClient do
   def search_response_body
     {
       "results" => [

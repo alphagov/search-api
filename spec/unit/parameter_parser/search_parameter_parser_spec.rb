@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SearchParameterParser, tags: ['shoulda'] do
+RSpec.describe SearchParameterParser do
   def expected_params(params)
     {
       start: 0,

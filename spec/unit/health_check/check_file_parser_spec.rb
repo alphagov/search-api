@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 
-RSpec.describe HealthCheck::CheckFileParser, tags: ['shoulda'] do
+RSpec.describe HealthCheck::CheckFileParser do
   def checks(data)
     described_class.new(StringIO.new(data)).checks
   end

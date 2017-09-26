@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Search::BestBetsChecker, tags: ['shoulda'] do
+RSpec.describe Search::BestBetsChecker do
   def best_bets_query(query)
     {
       query: {

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe QueryComponents::CoreQuery, tags: ['shoulda'] do
+RSpec.describe QueryComponents::CoreQuery do
   context "search with debug disabling use of synonyms" do
     it "use the query_with_old_synonyms analyzer" do
       builder = described_class.new(search_query_params)

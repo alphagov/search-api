@@ -27,7 +27,6 @@ require 'rummager/app' # load the website
 require "bundler/setup"
 require "rack/test"
 require "pp"
-require "shoulda-context"
 require "timecop"
 require "pry-byebug"
 
@@ -41,10 +40,6 @@ Logging.logger.root.appenders = nil
 Sidekiq::Logging.logger = nil
 
 require 'webmock/rspec'
-
-# test-unit is loaded to support should, this stops the autorun from running which
-# remove once we can remove shoulda.
-Test::Unit::AutoRunner.need_auto_run = false
 
 # Prevent tests from messing with development/production data.
 only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|_bulk|[a-z_-]+(_|-)test.*)}
@@ -64,10 +59,6 @@ RSpec.configure do |config|
   config.include SpecHelpers
   config.include HashIncludingHelpers
   config.include SchemaHelpers
-
-  config.include Shoulda::Context::Assertions, tags: 'shoulda'
-  # config.include Shoulda::Context::InstanceMethods, tags: 'shoulda'
-  # config.extend Shoulda::Context::ClassMethods, tags: 'shoulda'
 
   config.include IntegrationSpecHelper, tags: 'integration'
   config.include Rack::Test::Methods, tags: 'integration'

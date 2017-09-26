@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe QueryComponents::Highlight, tags: ['shoulda'] do
+RSpec.describe QueryComponents::Highlight do
   describe '#payload' do
     it 'enables highlighting on title' do
       parameters = Search::QueryParameters.new(return_fields: %w[title_with_highlighting])

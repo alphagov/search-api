@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Search::QueryParameters, tags: ['shoulda'] do
+RSpec.describe Search::QueryParameters do
   context "quoted_search_phrase?" do
     it "return false if query isn't quote enclosed" do
       params = described_class.new(query: "my query")

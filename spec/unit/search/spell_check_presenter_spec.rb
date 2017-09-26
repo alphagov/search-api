@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Search::SpellCheckPresenter, tags: ['shoulda'] do
+RSpec.describe Search::SpellCheckPresenter do
   context "#present" do
     it "parse the elasticsearch response and return suggestions" do
       es_response = {

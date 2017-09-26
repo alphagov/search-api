@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Search::SuggestionBlacklist, tags: ['shoulda'] do
+RSpec.describe Search::SuggestionBlacklist do
   def blacklist
     described_class.new(
       { organisations: stubbed_organisation_registry }

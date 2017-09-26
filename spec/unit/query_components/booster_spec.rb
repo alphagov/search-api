@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe QueryComponents::Booster, tags: ['shoulda'] do
+RSpec.describe QueryComponents::Booster do
   it "apply a multiplying factor" do
     builder = described_class.new(search_query_params)
     result = builder.wrap({ some: 'query' })

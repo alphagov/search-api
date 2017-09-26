@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe IndexSchemaParser, tags: ['shoulda'] do
+RSpec.describe IndexSchemaParser do
   def assert_raises_message(message)
     exc = assert_raises(RuntimeError) { yield }
     assert_equal message, exc.message

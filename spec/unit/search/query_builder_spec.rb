@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Search::QueryBuilder, tags: ['shoulda'] do
+RSpec.describe Search::QueryBuilder do
   before do
     Search::BestBetsChecker.any_instance.stub best_bets: [], worst_bets: []
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Search::ResultSet, tags: ['shoulda'] do
+RSpec.describe Search::ResultSet do
   context "empty result set" do
     before do
       @response = {

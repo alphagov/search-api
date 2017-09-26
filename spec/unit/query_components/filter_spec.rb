@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe QueryComponents::Filter, tags: ['shoulda'] do
+RSpec.describe QueryComponents::Filter do
   def make_search_params(filters, include_withdrawn: true)
     Search::QueryParameters.new(filters: filters, debug: { include_withdrawn: include_withdrawn })
   end
