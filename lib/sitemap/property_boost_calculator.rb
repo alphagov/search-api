@@ -7,8 +7,8 @@ class PropertyBoostCalculator
 
   def boost(document)
     raw_boosts = @boost_config.map do |property, boosts|
-      if document.has_field?(property) && boosts[document.get(property)]
-        boosts[document.get(property)]
+      if document[property] && boosts[document[property]]
+        boosts[document[property]]
       else
         1
       end

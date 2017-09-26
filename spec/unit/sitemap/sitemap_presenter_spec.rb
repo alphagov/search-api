@@ -120,14 +120,14 @@ RSpec.describe 'SitemapPresenterTest' do
   end
 
   def build_document(url:, timestamp: nil, format: nil, is_withdrawn: nil)
-    attributes = {
+    document = {
       "link" => url,
       "_type" => "some_type",
     }
-    attributes["public_timestamp"] = timestamp if timestamp
-    attributes["format"] = format if format
-    attributes["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?
+    document["public_timestamp"] = timestamp if timestamp
+    document["format"] = format if format
+    document["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?
 
-    Document.new(sample_field_definitions, attributes)
+    document
   end
 end

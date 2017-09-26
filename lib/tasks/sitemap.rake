@@ -8,7 +8,7 @@ namespace :sitemap do
 
     output_directory = File.join(PROJECT_ROOT, "public")
     sitemap = Sitemap.new(output_directory)
-    sitemap_index_path = sitemap.generate(search_server.content_indices)
+    sitemap.generate(SearchConfig.instance)
 
     sitemap.cleanup
   end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'SitemapGeneratorTest' do
   it "should_generate_sitemap" do
-    sitemap = SitemapGenerator.new('')
+    sitemap = SitemapGenerator.new(index_names: '')
 
     sitemap_xml = sitemap.generate_xml([
       build_document('https://www.gov.uk/page'),
@@ -18,7 +18,7 @@ RSpec.describe 'SitemapGeneratorTest' do
   end
 
   it "links_should_include_timestamps" do
-    sitemap = SitemapGenerator.new('')
+    sitemap = SitemapGenerator.new(index_names: '')
 
     sitemap_xml = sitemap.generate_xml([
       build_document('/some-page', timestamp: "2014-01-28T14:41:50+00:00"),
@@ -30,7 +30,7 @@ RSpec.describe 'SitemapGeneratorTest' do
   end
 
   it "missing_timestamps_are_ignored" do
-    sitemap = SitemapGenerator.new('')
+    sitemap = SitemapGenerator.new(index_names: '')
 
     sitemap_xml = sitemap.generate_xml([
       build_document('/page-without-date'),
@@ -42,7 +42,7 @@ RSpec.describe 'SitemapGeneratorTest' do
   end
 
   it "page_priority_is_document_priority" do
-    sitemap = SitemapGenerator.new('')
+    sitemap = SitemapGenerator.new(index_names: '')
 
     document = build_document('/some-path')
     document.stub(:priority).and_return(0.48)
@@ -63,7 +63,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     attributes["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?
 
     SitemapPresenter.new(
-      Document.new(sample_field_definitions, attributes),
+      attributes,
       PropertyBoostCalculator.new
     )
   end

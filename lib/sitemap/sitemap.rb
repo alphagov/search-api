@@ -8,12 +8,12 @@ class Sitemap
     @timestamp = timestamp
   end
 
-  def generate(content_indices)
+  def generate(search_config)
     FileUtils.mkdir_p(@output_path)
 
     # generate and link the sitemap data files
     sitemap_writer = SitemapWriter.new(@output_path, @timestamp)
-    sitemap_filenames_with_linkname = sitemap_writer.write_sitemaps(content_indices)
+    sitemap_filenames_with_linkname = sitemap_writer.write_sitemaps(search_config)
     update_links(sitemap_filenames_with_linkname)
 
     # generate and link the sitemap index file
