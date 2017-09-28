@@ -38,10 +38,6 @@ Sidekiq::Logging.logger = nil
 
 require 'webmock/rspec'
 
-# Prevent tests from messing with development/production data.
-only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|_bulk|[a-z_-]+(_|-)test.*)}
-WebMock.disable_net_connect!(allow: only_test_databases)
-
 require "#{__dir__}/support/default_mappings"
 require "#{__dir__}/support/spec_helpers"
 require "#{__dir__}/support/hash_including_helpers"
