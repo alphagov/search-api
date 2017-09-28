@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   before do
     insert_document('mainstream_test', title: 'mainstream answer', link: '/mainstream/answer', format: 'answer')
     insert_document('mainstream_test', title: 'mainstream help', link: '/mainstream/help', format: 'help_page')

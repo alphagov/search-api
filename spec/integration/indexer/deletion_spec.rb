@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'ElasticsearchDeletionTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   it "removes_a_document_from_the_index" do
     commit_document("mainstream_test", {
       "link" => "/an-example-page"

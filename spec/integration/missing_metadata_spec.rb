@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'MissingMetadataTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   it "finds_missing_content_id" do
     commit_document(
       'mainstream_test',

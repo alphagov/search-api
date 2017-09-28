@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'BoosterTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   it "service_manual_formats_are_weighted_down" do
     commit_document("mainstream_test",
       "title" => "Agile is good",

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'GovukIndex::SyncDataTest', tags: ['integration'] do
+  allow_elasticsearch_connection(scroll: true)
+
   before do
     GovukIndex::MigratedFormats.stub(:indexable_formats).and_return(['help_page'])
   end

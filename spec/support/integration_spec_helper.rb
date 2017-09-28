@@ -9,16 +9,22 @@ module IntegrationSpecHelper
     "_type" => "edition",
   }.freeze
 
-  def self.included(base)
-    base.after do
-      teardown
-    end
+  module ClassMethods
+    def allow_elasticsearch_connection(aliases: false, bulk: false, scroll: false)
+      self.before do
+        IntegrationSpecHelper.allow_elasticsearch_connection(aliases: aliases, bulk: bulk, scroll: scroll)
+      end
 
-    base.around do |example|
-      IntegrationSpecHelper.with_real_elasticsearch_connection(aliases: true, bulk: true, scroll: true) do
-        example.run
+      self.after do
+        IntegrationSpecHelper.allow_elasticsearch_connection(bulk: true)
+        teardown
+        IntegrationSpecHelper.disallow_elasticsearch_connection
       end
     end
+  end
+
+  def self.included(base)
+    base.extend ClassMethods
 
     @before_suite_setup ||= setup_before_suite
   end
@@ -27,31 +33,30 @@ module IntegrationSpecHelper
     # we want this process to run before the suite when integration tests are run. :)
     RSpec.configure do |config|
       config.before(:suite) do
-        IntegrationSpecHelper.with_real_elasticsearch_connection(aliases: true) do
-          IndexHelpers.setup_test_indexes
-        end
+        IntegrationSpecHelper.allow_elasticsearch_connection(aliases: true)
+        IndexHelpers.setup_test_indexes
+        IntegrationSpecHelper.disallow_elasticsearch_connection
       end
 
       config.after(:suite) do
-        IntegrationSpecHelper.with_real_elasticsearch_connection do
-          IndexHelpers.clean_all
-        end
+        IntegrationSpecHelper.allow_elasticsearch_connection
+        IndexHelpers.clean_all
+        IntegrationSpecHelper.disallow_elasticsearch_connection
       end
     end
   end
 
-  def self.with_real_elasticsearch_connection(aliases: false, bulk: false, scroll: false)
+  def self.allow_elasticsearch_connection(aliases: false, bulk: false, scroll: false)
     parts = ['[a-z_-]+[_-]test.*']
     parts << '_aliases' if aliases
     parts << '_bulk' if bulk
     parts << '_search/scroll' if scroll
 
-    # Prevent tests from messing with development/production data.
-    # only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|_bulk|[a-z_-]+(_|-)test.*)}
     only_test_databases = %r{http://localhost:9200/(#{parts.join('|')})}
-    # puts only_test_databases
     WebMock.disable_net_connect!(allow: only_test_databases)
-    yield
+  end
+
+  def self.disallow_elasticsearch_connection
     WebMock.disable_net_connect!(allow: nil)
   end
 

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'ComparerTest', tags: ['integration'] do
+  allow_elasticsearch_connection(scroll: true)
+
   it "for_sort_ordering" do
     insert_document('mainstream_test', { some: 'data' }, id: 'ABC', type: 'edition')
     insert_document('mainstream_test', { some: 'data' }, id: 'DEF', type: 'hmrc_manual')

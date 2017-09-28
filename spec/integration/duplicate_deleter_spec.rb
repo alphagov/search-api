@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'DuplicateDeleterTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   it "can_not_delete_when_only_a_single_document" do
     commit_document(
       "mainstream_test",

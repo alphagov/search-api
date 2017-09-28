@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'ElasticsearchClosingTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   before do
     stub_tagging_lookup
   end

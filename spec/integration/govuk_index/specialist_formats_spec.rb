@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   before do
     bunny_mock = BunnyMock.new
     @channel = bunny_mock.start.channel

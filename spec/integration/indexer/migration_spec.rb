@@ -4,6 +4,8 @@ require 'spec_helper'
 # The "Migration" in the name means creating new indexes and copying data from
 # the existing ones.
 RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
+  allow_elasticsearch_connection(aliases: true, scroll: true)
+
   before do
     # MigratedFormats are the formats using the `govuk` index.
     GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])

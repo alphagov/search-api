@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
+  allow_elasticsearch_connection(scroll: true)
+
   before do
     @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, ["mainstream_test"])
   end
