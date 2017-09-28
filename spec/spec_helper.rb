@@ -39,10 +39,6 @@ Sidekiq::Logging.logger = nil
 
 require 'webmock/rspec'
 
-# Prevent tests from messing with development/production data.
-only_test_databases = %r{http://localhost:9200/(_search/scroll|_aliases|_bulk|[a-z_-]+(_|-)test.*)}
-WebMock.disable_net_connect!(allow: only_test_databases)
-
 require "#{__dir__}/support/default_mappings"
 require "#{__dir__}/support/spec_helpers"
 require "#{__dir__}/support/hash_including_helpers"
@@ -82,6 +78,11 @@ RSpec.configure do |config|
     # is automatically reset, the index_names or passed into children object and
     # cached there.
     SearchConfig.instance = SearchConfig.new
+  end
+
+  config.after do
+    # reset allowed connections to ES so that we avoid global stubbing
+    WebMock.disable_net_connect!(allow: nil)
   end
 
   if config.files_to_run.one?
