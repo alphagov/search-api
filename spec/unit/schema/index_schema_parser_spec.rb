@@ -43,19 +43,19 @@ RSpec.describe IndexSchemaParser do
     end
 
     it "fail if index schema specifies an unknown document type" do
-      described_class.any_instance.stub(:load_json).and_return({
+      allow_any_instance_of(described_class).to receive(:load_json).and_return({
         "elasticsearch_types" => ["unknown_doc_type"],
       })
       assert_raises_message(%{Unknown document type "unknown_doc_type", in index definition in "index.json"}) { @parser.parse }
     end
 
     it "fail if index schema doesn't specify `elasticsearch_types`" do
-      described_class.any_instance.stub(:load_json).and_return({})
+      allow_any_instance_of(described_class).to receive(:load_json).and_return({})
       assert_raises_message(%{Missing "elasticsearch_types", in index definition in "index.json"}) { @parser.parse }
     end
 
     it "fail if index schema includes unknown keys" do
-      described_class.any_instance.stub(:load_json).and_return({
+      allow_any_instance_of(described_class).to receive(:load_json).and_return({
         "elasticsearch_types" => [],
         "foo" => "bar",
       })

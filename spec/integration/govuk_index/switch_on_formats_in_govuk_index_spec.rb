@@ -11,7 +11,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest', tags: ['integratio
   end
 
   it "defaults_to_excluding_govuk_index_records" do
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
 
     get "/search"
 
@@ -19,7 +19,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest', tags: ['integratio
   end
 
   it "can_enable_format_to_use_govuk_index" do
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(['help_page'])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(['help_page'])
 
     get "/search"
 
@@ -27,7 +27,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest', tags: ['integratio
   end
 
   it "can_enable_multiple_formats_to_use_govuk_index" do
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(%w(help_page answer))
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(%w(help_page answer))
 
     get "/search"
 

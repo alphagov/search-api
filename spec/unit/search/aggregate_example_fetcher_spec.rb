@@ -49,9 +49,9 @@ RSpec.describe Search::AggregateExampleFetcher do
 
   def stub_index(_name)
     schema = double("schema")
-    schema.stub(:field_definitions).and_return(sample_field_definitions)
+    allow(schema).to receive(:field_definitions).and_return(sample_field_definitions)
     index = double("content index")
-    index.stub(:schema).and_return(schema)
+    allow(index).to receive(:schema).and_return(schema)
     index
   end
 
@@ -89,7 +89,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
   context "one aggregate with global scope" do
     before do
-      GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
       @index = stub_index("content index")
       @example_fields = %w{link title other_field}
       main_query_response = { "aggregations" => {

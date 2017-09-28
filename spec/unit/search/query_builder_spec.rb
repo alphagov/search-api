@@ -2,7 +2,8 @@ require 'spec_helper'
 
 RSpec.describe Search::QueryBuilder do
   before do
-    Search::BestBetsChecker.any_instance.stub best_bets: [], worst_bets: []
+    allow_any_instance_of(Search::BestBetsChecker).to receive(:best_bets).and_return([])
+    allow_any_instance_of(Search::BestBetsChecker).to receive(:worst_bets).and_return([])
   end
 
   context "with a simple search query" do

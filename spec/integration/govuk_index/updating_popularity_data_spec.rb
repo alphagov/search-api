@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] do
   before do
-    GovukIndex::MigratedFormats.stub(:indexable_formats).and_return(['help_page'])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(['help_page'])
   end
 
   it "updates_the_popularity_when_it_exists" do
@@ -42,7 +42,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] d
     document_count = 4
     setup_page_traffic_data(document_count: document_count)
 
-    ScrollEnumerator.stub(:new).and_return([
+    allow(ScrollEnumerator).to receive(:new).and_return([
       {
         identifier: { '_id' => id, '_type' => 'edition', '_version' => 1 },
         document: { link: id, popularity: 0.222 },

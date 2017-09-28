@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe SitemapCleanup do
   it "should_delete_old_sitemaps" do
-    Dir.stub(:glob).and_return(%w{
+    allow(Dir).to receive(:glob).and_return(%w{
       sitemap_2015-03-05T01.xml
       sitemap_1_2015-03-05T01.xml
 
@@ -27,7 +27,7 @@ RSpec.describe SitemapCleanup do
   end
 
   it "should_delete_old_sitemaps_with_a_gap_in_days" do
-    Dir.stub(:glob).and_return(%w{
+    allow(Dir).to receive(:glob).and_return(%w{
       sitemap_2015-03-05T01.xml
       sitemap_1_2015-03-05T01.xml
 

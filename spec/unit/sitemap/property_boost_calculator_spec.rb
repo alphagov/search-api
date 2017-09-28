@@ -145,7 +145,7 @@ RSpec.describe PropertyBoostCalculator do
   end
 
   def stub_full_config(config)
-    YAML.stub(:load_file).and_return(config)
+    allow(YAML).to receive(:load_file).and_return(config)
   end
 
   def build_document(format: nil, document_type: nil)

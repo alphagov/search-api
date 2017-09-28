@@ -48,7 +48,7 @@ RSpec.describe FieldTypes do
     end
 
     it "fail if a field type has no es_config property" do
-      described_class.any_instance.stub(:load_json).and_return({ "identifier" => {} })
+      allow_any_instance_of(described_class).to receive(:load_json).and_return({ "identifier" => {} })
       exc = assert_raises(RuntimeError) do
         @types.get("identifier")
       end
@@ -56,7 +56,7 @@ RSpec.describe FieldTypes do
     end
 
     it "fail if a field type has an invalid `filter_type` property" do
-      described_class.any_instance.stub(:load_json).and_return(
+      allow_any_instance_of(described_class).to receive(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "filter_type" => "bad value" } }
       )
       exc = assert_raises(RuntimeError) do
@@ -66,7 +66,7 @@ RSpec.describe FieldTypes do
     end
 
     it "fail if a field type has an invalid `children` property" do
-      described_class.any_instance.stub(:load_json).and_return(
+      allow_any_instance_of(described_class).to receive(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "children" => "bad value" } }
       )
       exc = assert_raises(RuntimeError) do
@@ -76,7 +76,7 @@ RSpec.describe FieldTypes do
     end
 
     it "fail if a field type has an unknown property" do
-      described_class.any_instance.stub(:load_json).and_return(
+      allow_any_instance_of(described_class).to receive(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "foo" => true } }
       )
       exc = assert_raises(RuntimeError) do

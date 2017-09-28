@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
   before do
-    Indexer::PopularityLookup.any_instance.stub(:lookup_popularities).and_return({})
+    allow_any_instance_of(Indexer::PopularityLookup).to receive(:lookup_popularities).and_return({})
   end
 
   it "aaib_report" do

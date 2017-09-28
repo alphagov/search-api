@@ -14,7 +14,7 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
     filename = create_test_file
     link_name = "sitemap_1.xml"
     link_full_name = "#{@path}/sitemaps/sitemap_1.xml"
-    SitemapWriter.any_instance.stub(:write_sitemaps).and_return([[filename, link_name]])
+    allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
 
     assert_equal File.exist?(link_name), false
 
@@ -27,7 +27,7 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
   it "it_creates_an_index_pointing_to_the_symbolic_links" do
     filename = create_test_file
     link_name = "sitemap_1.xml"
-    SitemapWriter.any_instance.stub(:write_sitemaps).and_return([[filename, link_name]])
+    allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
 
     time = Time.now.utc
     Sitemap.new(@path, time).generate(double(:content_indices))
@@ -75,7 +75,7 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
     filename =  create_test_file("sitemap_1_2017-01-02T06.xml")
 
     link_name = "sitemap_1.xml"
-    SitemapWriter.any_instance.stub(:write_sitemaps).and_return([[filename, link_name]])
+    allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
 
     time = Time.now.utc
     File.symlink("#{@path}/sitemaps/sitemap_1_2017-01-01T06.xml", "#{@path}/sitemap.xml")
