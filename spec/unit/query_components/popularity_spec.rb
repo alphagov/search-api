@@ -6,7 +6,7 @@ RSpec.describe QueryComponents::Popularity do
 
     result = builder.wrap({ some: 'query' })
 
-    assert result.key?(:function_score)
+    expect(result.key?(:function_score)).to be_truthy
   end
 
   context "with disabling of popularity" do
@@ -17,7 +17,7 @@ RSpec.describe QueryComponents::Popularity do
 
       result = builder.wrap({ some: 'query' })
 
-      refute result.key?(:function_score)
+      expect(result.key?(:function_score)).to be_falsey
     end
   end
 end

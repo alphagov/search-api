@@ -9,7 +9,7 @@ RSpec.describe LegacyClient::MultivalueConverter do
 
     converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
-    assert_equal %w(hmrc dvla), converted_hash["organisations"]
+    expect(%w(hmrc dvla)).to eq(converted_hash["organisations"])
   end
 
   it "converts_single_value_fields_as_single_value" do
@@ -20,7 +20,7 @@ RSpec.describe LegacyClient::MultivalueConverter do
 
     converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
-    assert_equal "the title", converted_hash["title"]
+    expect("the title").to eq(converted_hash["title"])
   end
 
   # This might not be necessary since the new ES.
@@ -32,6 +32,6 @@ RSpec.describe LegacyClient::MultivalueConverter do
 
     converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
-    assert_equal "the title", converted_hash["title"]
+    expect("the title").to eq(converted_hash["title"])
   end
 end

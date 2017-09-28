@@ -10,6 +10,6 @@ RSpec.describe 'ExpandsValuesFromSchemaTest', tags: ['integration'] do
     get "/search?filter_document_type=cma_case&fields=case_type,description,title"
     first_result = parsed_response["results"].first
 
-    assert_equal [{ "label" => "Mergers", "value" => "mergers" }], first_result["case_type"]
+    expect([{ "label" => "Mergers", "value" => "mergers" }]).to eq(first_result["case_type"])
   end
 end

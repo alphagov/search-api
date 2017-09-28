@@ -10,7 +10,7 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
 
-    assert_equal "/some/link", result["link"]
+    expect("/some/link").to eq(result["link"])
   end
 
   it "keep_http_links_intact" do
@@ -22,7 +22,7 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
 
-    assert_equal "http://example.org/some-link", result["link"]
+    expect("http://example.org/some-link").to eq(result["link"])
   end
 
   it "keep_correct_links_intact" do
@@ -34,6 +34,6 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
 
-    assert_equal "/some-link", result["link"]
+    expect("/some-link").to eq(result["link"])
   end
 end

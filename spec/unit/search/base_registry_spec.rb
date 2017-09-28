@@ -28,7 +28,7 @@ RSpec.describe Search::BaseRegistry do
       .and_return([example_document])
 
     fetched_document = @base_registry["example-document"]
-    assert_equal example_document, fetched_document
+    expect(example_document).to eq(fetched_document)
   end
 
   it "only_required_fields_are_requested_from_index" do
@@ -42,7 +42,7 @@ RSpec.describe Search::BaseRegistry do
     allow(@index).to receive(:documents_by_format)
       .with("example-format", anything)
       .and_return([example_document])
-    assert_nil @base_registry["non-existent-document"]
+    expect(@base_registry["non-existent-document"]).to be_nil
   end
 
   it "document_enumerator_is_traversed_only_once" do
@@ -52,15 +52,15 @@ RSpec.describe Search::BaseRegistry do
       .with("example-format", anything)
       .once
       .and_return(document_enumerator)
-    assert @base_registry["example-document"]
-    assert @base_registry["example-document"]
+    expect(@base_registry["example-document"]).to be_truthy
+    expect(@base_registry["example-document"]).to be_truthy
   end
 
   it "uses_cache" do
     # Make sure we're using TimedCache#get; TimedCache is tested elsewhere, so
     # we don't need to worry about cache expiry tests here.
     expect_any_instance_of(Search::TimedCache).to receive(:get).with(no_args).and_return([example_document])
-    assert @base_registry["example-document"]
+    expect(@base_registry["example-document"]).to be_truthy
   end
 
   it "find_by_content_id" do
@@ -68,9 +68,8 @@ RSpec.describe Search::BaseRegistry do
       .with("example-format", anything)
       .and_return([example_document])
 
-    assert_equal(
-      @base_registry.by_content_id("example-content-id"),
-      example_document
-    )
+    expect(
+      @base_registry.by_content_id("example-content-id")
+    ).to eq(example_document)
   end
 end

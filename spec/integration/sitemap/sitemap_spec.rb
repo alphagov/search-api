@@ -16,12 +16,12 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
     link_full_name = "#{@path}/sitemaps/sitemap_1.xml"
     allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
 
-    assert_equal File.exist?(link_name), false
+    expect(File.exist?(link_name)).to eq(false)
 
     Sitemap.new(@path).generate(double(:content_indices))
 
-    assert_equal File.symlink?(link_full_name), true
-    assert_equal File.readlink(link_full_name), "#{@path}/sitemaps/#{filename}"
+    expect(File.symlink?(link_full_name)).to eq(true)
+    expect(File.readlink(link_full_name)).to eq("#{@path}/sitemaps/#{filename}")
   end
 
   it "it_creates_an_index_pointing_to_the_symbolic_links" do
@@ -45,8 +45,8 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
       </sitemapindex>
     XML
 
-    assert_equal File.read(index_filename), expected_xml
-    assert_equal File.readlink(index_linkname), index_filename
+    expect(File.read(index_filename)).to eq(expected_xml)
+    expect(File.readlink(index_linkname)).to eq(index_filename)
   end
 
   it "it_does_not_cleanup_the_symbolic_link_files_or_linked_files" do
@@ -62,12 +62,12 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
 
     Sitemap.new(@path).cleanup
 
-    assert_equal File.exist?("#{@path}/sitemaps/sitemap_1_2017-01-01T06.xml"), false
-    assert_equal File.exist?("#{@path}/sitemaps/sitemap_1_2017-01-06T06.xml"), true
-    assert_equal File.exist?("#{@path}/sitemaps/sitemap_1.xml"), true
+    expect(File.exist?("#{@path}/sitemaps/sitemap_1_2017-01-01T06.xml")).to eq(false)
+    expect(File.exist?("#{@path}/sitemaps/sitemap_1_2017-01-06T06.xml")).to eq(true)
+    expect(File.exist?("#{@path}/sitemaps/sitemap_1.xml")).to eq(true)
 
-    assert_equal File.exist?("#{@path}/sitemaps/sitemap_2017-01-01T06.xml"), true
-    assert_equal File.exist?("#{@path}/sitemaps/sitemap.xml"), true
+    expect(File.exist?("#{@path}/sitemaps/sitemap_2017-01-01T06.xml")).to eq(true)
+    expect(File.exist?("#{@path}/sitemaps/sitemap.xml")).to eq(true)
   end
 
   it "it_can_overwrite_existing_links" do
@@ -82,7 +82,7 @@ RSpec.describe 'SitemapTest', tags: ['integration'] do
 
     Sitemap.new(@path, time).generate(double)
 
-    assert_equal File.readlink("#{@path}/sitemap.xml"), "#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml"
+    expect(File.readlink("#{@path}/sitemap.xml")).to eq("#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml")
   end
 
   def create_test_file(name = "#{SecureRandom.uuid}.xml")

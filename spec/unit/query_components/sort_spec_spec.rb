@@ -7,7 +7,7 @@ RSpec.describe 'SortTest' do
 
       result = builder.payload
 
-      assert_equal result, [{ "popularity" => { order: "desc" } }]
+      expect(result).to eq([{ "popularity" => { order: "desc" } }])
     end
   end
 
@@ -17,7 +17,7 @@ RSpec.describe 'SortTest' do
 
       result = builder.payload
 
-      assert_nil result
+      expect(result).to be_nil
     end
   end
 
@@ -27,10 +27,7 @@ RSpec.describe 'SortTest' do
 
       result = builder.payload
 
-      assert_equal(
-        [{ "public_timestamp" => { order: "asc", missing: "_last" } }],
-        result
-      )
+      expect([{ "public_timestamp" => { order: "asc", missing: "_last" } }]).to eq(result)
     end
   end
 
@@ -40,10 +37,7 @@ RSpec.describe 'SortTest' do
 
       result = builder.payload
 
-      assert_equal(
-        [{ "public_timestamp" => { order: "desc", missing: "_last" } }],
-        result
-      )
+      expect([{ "public_timestamp" => { order: "desc", missing: "_last" } }]).to eq(result)
     end
   end
 
@@ -53,7 +47,7 @@ RSpec.describe 'SortTest' do
 
       result = builder.payload
 
-      assert_nil result
+      expect(result).to be_nil
     end
   end
 end

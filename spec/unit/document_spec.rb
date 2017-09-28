@@ -13,11 +13,11 @@ RSpec.describe Document do
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
-    assert_equal "TITLE", document.title
-    assert_equal "DESCRIPTION", document.description
-    assert_equal "answer", document.format
-    assert_equal "/an-example-answer", document.link
-    assert_equal "HERE IS SOME CONTENT", document.indexable_content
+    expect("TITLE").to eq(document.title)
+    expect("DESCRIPTION").to eq(document.description)
+    expect("answer").to eq(document.format)
+    expect("/an-example-answer").to eq(document.link)
+    expect("HERE IS SOME CONTENT").to eq(document.indexable_content)
   end
 
   it "should_permit_nonedition_documents" do
@@ -29,14 +29,14 @@ RSpec.describe Document do
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
-    assert_equal "jobs", document.to_hash["stemmed_query"]
-    assert_equal "jobs", document.stemmed_query
-    assert_equal "jobs", document.elasticsearch_export["stemmed_query"]
+    expect("jobs").to eq(document.to_hash["stemmed_query"])
+    expect("jobs").to eq(document.stemmed_query)
+    expect("jobs").to eq(document.elasticsearch_export["stemmed_query"])
 
-    refute document.to_hash.has_key?("_type")
-    refute document.to_hash.has_key?("_id")
-    assert_equal "jobs_exact", document.elasticsearch_export["_id"]
-    assert_equal "best_bet", document.elasticsearch_export["_type"]
+    expect(document.to_hash.has_key?("_type")).to be_falsey
+    expect(document.to_hash.has_key?("_id")).to be_falsey
+    expect("jobs_exact").to eq(document.elasticsearch_export["_id"])
+    expect("best_bet").to eq(document.elasticsearch_export["_type"])
   end
 
   it "should_reject_document_with_no_type" do
@@ -44,10 +44,9 @@ RSpec.describe Document do
       "_id" => "some_id",
     }
 
-    error = assert_raises RuntimeError do
+    expect {
       described_class.from_hash(hash, sample_elasticsearch_types)
-    end
-    assert_match(/missing/i, error.message)
+    }.to raise_error(/missing/i)
   end
 
   it "should_raise_helpful_error_for_unconfigured_types" do
@@ -56,9 +55,9 @@ RSpec.describe Document do
       "_type" => "cheese"
     }
 
-    assert_raises RuntimeError do
+    expect {
       described_class.from_hash(hash, sample_elasticsearch_types)
-    end
+    }.to raise_error(RuntimeError)
   end
 
   it "should_ignore_fields_not_in_mappings" do
@@ -73,8 +72,8 @@ RSpec.describe Document do
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
-    refute_includes document.to_hash.keys, "some_other_field"
-    refute document.respond_to?("some_other_field")
+    expect(document.to_hash.keys).not_to include("some_other_field")
+    expect(document.respond_to?("some_other_field")).to be_falsey
   end
 
   it "should_recognise_symbol_keys_in_hash" do
@@ -89,7 +88,7 @@ RSpec.describe Document do
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
-    assert_equal "TITLE", document.title
+    expect("TITLE").to eq(document.title)
   end
 
   it "should_skip_metadata_fields_in_to_hash" do
@@ -103,12 +102,12 @@ RSpec.describe Document do
     input_hash = expected_hash.merge("_type" => "edition")
 
     document = described_class.from_hash(input_hash, sample_elasticsearch_types)
-    assert_equal expected_hash, document.to_hash
+    expect(expected_hash).to eq(document.to_hash)
   end
 
   it "should_skip_missing_fields_in_to_hash" do
     document = described_class.from_hash({ "_type" => "edition" }, sample_elasticsearch_types)
-    assert_equal [], document.to_hash.keys
+    expect([]).to eq(document.to_hash.keys)
   end
 
   it "should_skip_missing_fields_in_elasticsearch_export" do
@@ -121,28 +120,28 @@ RSpec.describe Document do
     }
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
-    assert_equal hash.keys.sort, document.elasticsearch_export.keys.sort
+    expect(hash.keys.sort).to eq(document.elasticsearch_export.keys.sort)
   end
 
   it "should_include_result_score" do
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    assert_equal 5.2, described_class.new(sample_field_definitions(field_names), hash, 5.2).es_score
+    expect(5.2).to eq(described_class.new(sample_field_definitions(field_names), hash, 5.2).es_score)
   end
 
   it "includes_elasticsearch_score_in_hash" do
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    assert_equal 5.2, described_class.new(sample_field_definitions(field_names), hash, 5.2).to_hash["es_score"]
+    expect(5.2).to eq(described_class.new(sample_field_definitions(field_names), hash, 5.2).to_hash["es_score"])
   end
 
   it "leaves_out_blank_score" do
     hash = { "link" => "/batman" }
     field_names = ["link"]
 
-    refute_includes described_class.new(sample_field_definitions(field_names), hash).to_hash, "es_score"
+    expect(described_class.new(sample_field_definitions(field_names), hash).to_hash).not_to include("es_score")
   end
 
   it "should_handle_opaque_object_fields" do
@@ -152,6 +151,6 @@ RSpec.describe Document do
     }
     doc = described_class.new(sample_field_definitions(%w(metadata)), document_hash)
 
-    assert_equal metadata, doc.metadata
+    expect(metadata).to eq(doc.metadata)
   end
 end

@@ -33,7 +33,7 @@ RSpec.describe 'ElasticsearchIndexingTest', tags: ['integration'] do
       "licence_short_description" => "A short description of a licence",
     }.to_json
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
       "format" => "answer",
@@ -59,7 +59,7 @@ RSpec.describe 'ElasticsearchIndexingTest', tags: ['integration'] do
       "link" => "/an-example-answer",
     }.to_json
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "content_id" => "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
       "link" => "/an-example-answer",
     }, type: "edition")
@@ -73,7 +73,7 @@ RSpec.describe 'ElasticsearchIndexingTest', tags: ['integration'] do
       "link" => "/an-example-organisation",
     }.to_json
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "title" => "TITLE",
       "format" => "organisation",
       "slug" => "my-organisation",
@@ -92,7 +92,7 @@ RSpec.describe 'ElasticsearchIndexingTest', tags: ['integration'] do
       "end_date" => "2017-01-01T00:00:00Z"
     }.to_json
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "title" => "TITLE",
       "format" => "topical_event",
       "slug" => "/government/topical-events/foo",
@@ -111,7 +111,7 @@ RSpec.describe 'ElasticsearchIndexingTest', tags: ['integration'] do
       'organisations' => [],
     }.to_json
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "link" => "/government/organisations/hmrc",
       "organisations" => ["hmrc"],
     })
@@ -120,7 +120,7 @@ RSpec.describe 'ElasticsearchIndexingTest', tags: ['integration'] do
   it "adding_a_document_to_the_search_index_with_queue" do
     post "/documents", SAMPLE_DOCUMENT.to_json
 
-    assert_equal 202, last_response.status
-    assert_document_is_in_rummager(SAMPLE_DOCUMENT)
+    expect(202).to eq(last_response.status)
+    expect_document_is_in_rummager(SAMPLE_DOCUMENT)
   end
 end

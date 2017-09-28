@@ -9,7 +9,7 @@ RSpec.describe Search::HighlightedDescription do
 
     highlighted_description = described_class.new(raw_result).text
 
-    assert_equal "I will be <mark>hightlighted</mark>.", highlighted_description
+    expect("I will be <mark>hightlighted</mark>.").to eq(highlighted_description)
   end
 
   it "uses_default_description_if_hightlight_not_found" do
@@ -19,7 +19,7 @@ RSpec.describe Search::HighlightedDescription do
 
     highlighted_description = described_class.new(raw_result).text
 
-    assert_equal "I will not be hightlighted &amp; escaped.", highlighted_description
+    expect("I will not be hightlighted &amp; escaped.").to eq(highlighted_description)
   end
 
   it "truncates_default_description_if_hightlight_not_found" do
@@ -29,8 +29,8 @@ RSpec.describe Search::HighlightedDescription do
 
     highlighted_description = described_class.new(raw_result).text
 
-    assert_equal 225, highlighted_description.size
-    assert highlighted_description.ends_with?('…')
+    expect(225).to eq(highlighted_description.size)
+    expect(highlighted_description.ends_with?('…')).to be_truthy
   end
 
   it "returns_empty_string_if_theres_no_description" do
@@ -40,6 +40,6 @@ RSpec.describe Search::HighlightedDescription do
 
     highlighted_description = described_class.new(raw_result).text
 
-    assert_equal "", highlighted_description
+    expect("").to eq(highlighted_description)
   end
 end

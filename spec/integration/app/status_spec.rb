@@ -8,9 +8,9 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
 
     get "/_status"
 
-    assert last_response.ok?
-    assert_equal ["bulk"], parsed_response["queues"].keys
-    assert_equal 12, parsed_response["queues"]["bulk"]["jobs"]
+    expect(last_response).to be_ok
+    expect(["bulk"]).to eq(parsed_response["queues"].keys)
+    expect(12).to eq(parsed_response["queues"]["bulk"]["jobs"])
   end
 
   it "shows_per_queue_retry_count" do
@@ -23,8 +23,8 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
 
     get "/_status"
 
-    assert last_response.ok?
-    assert_equal 2, parsed_response["queues"]["bulk"]["retries"]
+    expect(last_response).to be_ok
+    expect(2).to eq(parsed_response["queues"]["bulk"]["retries"])
   end
 
   it "shows_zero_retry_count" do
@@ -35,8 +35,8 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
 
     get "/_status"
 
-    assert last_response.ok?
-    assert_equal 0, parsed_response["queues"]["bulk"]["retries"]
+    expect(last_response).to be_ok
+    expect(0).to eq(parsed_response["queues"]["bulk"]["retries"])
   end
 
   it "shows_per_queue_scheduled_count" do
@@ -49,8 +49,8 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
 
     get "/_status"
 
-    assert last_response.ok?
-    assert_equal 2, parsed_response["queues"]["bulk"]["scheduled"]
+    expect(last_response).to be_ok
+    expect(2).to eq(parsed_response["queues"]["bulk"]["scheduled"])
   end
 
   it "shows_zero_retry_count_scheduled" do
@@ -61,7 +61,7 @@ RSpec.describe 'StatusTest', tags: ['integration'] do
 
     get "/_status"
 
-    assert last_response.ok?
-    assert_equal 0, parsed_response["queues"]["bulk"]["scheduled"]
+    expect(last_response).to be_ok
+    expect(0).to eq(parsed_response["queues"]["bulk"]["scheduled"])
   end
 end

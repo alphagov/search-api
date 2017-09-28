@@ -14,7 +14,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
 
     presenter = elasticsearch_presenter(payload, "help_page")
 
-    assert_equal expected_identifier, presenter.identifier
+    expect(expected_identifier).to eq(presenter.identifier)
   end
 
   it "raise_validation_error" do
@@ -22,9 +22,9 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
 
     presenter = elasticsearch_presenter(payload)
 
-    assert_raises GovukIndex::ValidationError do
+    expect {
       presenter.valid!
-    end
+    }.to raise_error(GovukIndex::ValidationError)
   end
 
   def elasticsearch_presenter(payload, type = "aaib_report")

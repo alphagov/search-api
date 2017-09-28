@@ -9,9 +9,9 @@ RSpec.describe 'ElasticsearchClosingTest', tags: ['integration'] do
     index = search_server.index_group(SearchConfig.instance.default_index_name).current
     index.close
 
-    assert_raises Indexer::BulkIndexFailure do
+    expect {
       index.add([sample_document])
-    end
+    }.to raise_error(Indexer::BulkIndexFailure)
 
     # Re-opening the index again, as they are not recreated on each test run
     # anymore.

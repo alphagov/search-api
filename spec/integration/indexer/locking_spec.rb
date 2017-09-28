@@ -8,9 +8,9 @@ RSpec.describe 'ElasticsearchLockingTest', tags: ['integration'] do
   it "should_fail_to_insert_when_index_locked" do
     index = search_server.index_group(SearchConfig.instance.default_index_name).current
     with_lock(index) do
-      assert_raises SearchIndices::IndexLocked do
+      expect {
         index.add([sample_document])
-      end
+      }.to raise_error(SearchIndices::IndexLocked)
     end
   end
 
@@ -19,9 +19,9 @@ RSpec.describe 'ElasticsearchLockingTest', tags: ['integration'] do
     index.add([sample_document])
 
     with_lock(index) do
-      assert_raises SearchIndices::IndexLocked do
+      expect {
         index.amend(sample_document.link, "title" => "New title")
-      end
+      }.to raise_error(SearchIndices::IndexLocked)
     end
   end
 
@@ -30,9 +30,9 @@ RSpec.describe 'ElasticsearchLockingTest', tags: ['integration'] do
     index.add([sample_document])
 
     with_lock(index) do
-      assert_raises SearchIndices::IndexLocked do
+      expect {
         index.delete("edition", sample_document.link)
-      end
+      }.to raise_error(SearchIndices::IndexLocked)
     end
   end
 

@@ -14,7 +14,7 @@ RSpec.describe 'BulkLoaderTest', tags: ['integration'] do
       "link" => "/some-link",
     )
 
-    assert_document_is_in_rummager(
+    expect_document_is_in_rummager(
       "title" => "The old title",
       "link" => "/some-link",
     )
@@ -31,7 +31,7 @@ RSpec.describe 'BulkLoaderTest', tags: ['integration'] do
       "link" => "/some-link",
     )
 
-    assert_document_is_in_rummager(
+    expect_document_is_in_rummager(
       "title" => "The new title",
       "link" => "/some-link",
     )
@@ -54,7 +54,7 @@ RSpec.describe 'BulkLoaderTest', tags: ['integration'] do
       "link" => "/some-popular-link",
     )
 
-    assert_document_is_in_rummager(
+    expect_document_is_in_rummager(
       "title" => "The new title",
       "link" => "/some-popular-link",
       "popularity" => 1.0 / 12,

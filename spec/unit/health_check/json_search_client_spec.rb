@@ -28,7 +28,7 @@ B)
     expected = { results: ["/a", "/b"], suggested_queries: %w[A B] }
     base_url = URI.parse("http://www.gov.uk/api/search.json")
 
-    assert_equal expected, described_class.new(base_url: base_url).search("cheese")
+    expect(expected).to eq(described_class.new(base_url: base_url).search("cheese"))
   end
 
   it "call the search API with a rate limit token if provided" do
@@ -39,6 +39,6 @@ B)
 
     response = described_class.new(base_url: base_url, rate_limit_token: "some_token").search("cheese")
 
-    assert_equal expected, response
+    expect(expected).to eq(response)
   end
 end

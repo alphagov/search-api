@@ -29,7 +29,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     presenter = common_fields_presenter(payload)
 
     @directly_mapped_fields.each do |field|
-      assert_equal presenter.public_send(field), payload[field]
+      expect(presenter.public_send(field)).to eq(payload[field])
     end
   end
 
@@ -48,9 +48,9 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     presenter = common_fields_presenter(payload)
 
-    assert_equal presenter.format, payload["document_type"]
-    assert_equal presenter.is_withdrawn, false
-    assert_equal presenter.link, payload["base_path"]
+    expect(presenter.format).to eq(payload["document_type"])
+    expect(presenter.is_withdrawn).to eq(false)
+    expect(presenter.link).to eq(payload["base_path"])
   end
 
   it "withdrawn_when_withdrawn_notice_present" do
@@ -64,7 +64,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     presenter = common_fields_presenter(payload)
 
-    assert_equal presenter.is_withdrawn, true
+    expect(presenter.is_withdrawn).to eq(true)
   end
 
   it "popularity_when_value_is_returned_from_lookup" do
@@ -77,7 +77,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     presenter = common_fields_presenter(payload)
 
-    assert_equal popularity, presenter.popularity
+    expect(popularity).to eq(presenter.popularity)
   end
 
   it "no_popularity_when_no_value_is_returned_from_lookup" do
@@ -88,7 +88,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     presenter = common_fields_presenter(payload)
 
-    assert_equal nil, presenter.popularity
+    expect(nil).to eq(presenter.popularity)
   end
 
   def common_fields_presenter(payload)

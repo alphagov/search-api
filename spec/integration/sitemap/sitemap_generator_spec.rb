@@ -36,7 +36,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
     sitemap_xml = generator.sitemaps
 
     expected_sitemap_count = 2 # sample_document.count + homepage / sitemap_limit rounded up
-    assert_equal expected_sitemap_count, sitemap_xml.length
+    expect(expected_sitemap_count).to eq(sitemap_xml.length)
   end
 
   it "does_not_include_migrated_formats_from_mainstream" do
@@ -56,9 +56,9 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
     )
     generator = SitemapGenerator.new(SearchConfig.instance)
     sitemap_xml = generator.sitemaps
-    assert_equal 1, sitemap_xml.length
+    expect(1).to eq(sitemap_xml.length)
 
-    refute_includes sitemap_xml[0], "/an-example-answer"
+    expect(sitemap_xml[0]).not_to include("/an-example-answer")
   end
 
   it "should_include_homepage" do
@@ -69,8 +69,8 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
       .css("url")
       .select { |item| item.css("loc").text == "http://www.dev.gov.uk/" }
 
-    assert_equal 1, pages.count
-    assert_equal "0.5", pages[0].css("priority").text
+    expect(1).to eq(pages.count)
+    expect("0.5").to eq(pages[0].css("priority").text)
   end
 
   it "should_not_include_recommended_links" do
@@ -90,9 +90,9 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
 
     sitemap_xml = generator.sitemaps
 
-    assert_equal 1, sitemap_xml.length
+    expect(1).to eq(sitemap_xml.length)
 
-    refute_includes sitemap_xml[0], "/external-example-answer"
+    expect(sitemap_xml[0]).not_to include("/external-example-answer")
   end
 
   it "should_not_include_inside_government_links" do
@@ -111,8 +111,8 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
 
     sitemap_xml = generator.sitemaps
 
-    assert_equal 1, sitemap_xml.length
-    refute_includes sitemap_xml[0], "/government/some-content"
+    expect(1).to eq(sitemap_xml.length)
+    expect(sitemap_xml[0]).not_to include("/government/some-content")
   end
 
   it "links_should_include_timestamps" do
@@ -137,8 +137,8 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
       .css("url")
       .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
 
-    assert_equal 1, pages.count
-    assert_equal "2017-07-01T12:41:34+00:00", pages[0].css("lastmod").text
+    expect(1).to eq(pages.count)
+    expect("2017-07-01T12:41:34+00:00").to eq(pages[0].css("lastmod").text)
   end
 
   it "links_should_include_priorities" do
@@ -163,8 +163,8 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
       .css("url")
       .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
 
-    assert_equal 1, pages.count
-    assert_includes 0..10, pages[0].css("priority").text.to_i
+    expect(1).to eq(pages.count)
+    expect(0..10).to include(pages[0].css("priority").text.to_i)
   end
 
 private

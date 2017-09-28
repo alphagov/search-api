@@ -20,7 +20,7 @@ RSpec.describe Search::SpellCheckPresenter do
 
       presenter = described_class.new(es_response)
 
-      assert_equal presenter.present, ["the first suggestion", "the second suggestion"]
+      expect(presenter.present).to eq(["the first suggestion", "the second suggestion"])
     end
   end
 end

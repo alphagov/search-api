@@ -15,34 +15,34 @@ RSpec.describe HealthCheck::SearchCheck do
 
   context "#valid_imperative?" do
     it "be true only for valid imperatives" do
-      assert subject.tap { |c| c.imperative = "should" }.valid_imperative?
-      assert subject.tap { |c| c.imperative = "should not" }.valid_imperative?
-      refute subject.tap { |c| c.imperative = "anything else" }.valid_imperative?
+      expect(subject.tap { |c| c.imperative = "should" }).to be_valid_imperative
+      expect(subject.tap { |c| c.imperative = "should not" }).to be_valid_imperative
+      expect(subject.tap { |c| c.imperative = "anything else" }).not_to be_valid_imperative
     end
   end
 
   context "#valid_path?" do
     it "be true only for valid paths" do
-      assert subject.tap { |c| c.path = "/" }.valid_path?
-      refute subject.tap { |c| c.path = "foo" }.valid_path?
-      refute subject.tap { |c| c.path = "" }.valid_path?
-      refute subject.tap { |c| c.path = nil }.valid_path?
+      expect(subject.tap { |c| c.path = "/" }).to be_valid_path
+      expect(subject.tap { |c| c.path = "foo" }).not_to be_valid_path
+      expect(subject.tap { |c| c.path = "" }).not_to be_valid_path
+      expect(subject.tap { |c| c.path = nil }).not_to be_valid_path
     end
   end
 
   context "#valid_search_term?" do
     it "be true only for non-blank search terms" do
-      assert subject.tap { |c| c.search_term = "foo" }.valid_search_term?
-      refute subject.tap { |c| c.search_term = "" }.valid_search_term?
-      refute subject.tap { |c| c.search_term = nil }.valid_search_term?
+      expect(subject.tap { |c| c.search_term = "foo" }).to be_valid_search_term
+      expect(subject.tap { |c| c.search_term = "" }).not_to be_valid_search_term
+      expect(subject.tap { |c| c.search_term = nil }).not_to be_valid_search_term
     end
   end
 
   context "valid_weight?" do
     it "be true only for weights greater than 0" do
-      refute subject.tap { |c| c.weight = -1 }.valid_weight?
-      refute subject.tap { |c| c.weight = 0 }.valid_weight?
-      assert subject.tap { |c| c.weight = 1 }.valid_weight?
+      expect(subject.tap { |c| c.weight = -1 }).not_to be_valid_weight
+      expect(subject.tap { |c| c.weight = 0 }).not_to be_valid_weight
+      expect(subject.tap { |c| c.weight = 1 }).to be_valid_weight
     end
   end
 end

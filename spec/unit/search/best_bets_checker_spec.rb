@@ -56,11 +56,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "not find any best bets" do
-      assert_equal({}, @checker.best_bets)
+      expect({}).to eq(@checker.best_bets)
     end
 
     it "not find any worst bets" do
-      assert_equal([], @checker.worst_bets)
+      expect([]).to eq(@checker.worst_bets)
     end
   end
 
@@ -72,11 +72,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "find one best bet" do
-      assert_equal({ 1 => ["/jobsearch"] }, @checker.best_bets)
+      expect({ 1 => ["/jobsearch"] }).to eq(@checker.best_bets)
     end
 
     it "not find any worst bets" do
-      assert_equal([], @checker.worst_bets)
+      expect([]).to eq(@checker.worst_bets)
     end
   end
 
@@ -88,11 +88,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "not find any best bets" do
-      assert_equal({}, @checker.best_bets)
+      expect({}).to eq(@checker.best_bets)
     end
 
     it "find one worst bet" do
-      assert_equal(["/jobsearch"], @checker.worst_bets)
+      expect(["/jobsearch"]).to eq(@checker.worst_bets)
     end
   end
 
@@ -105,11 +105,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "find just the exact best bet" do
-      assert_equal({ 1 => ["/jobsearch"] }, @checker.best_bets)
+      expect({ 1 => ["/jobsearch"] }).to eq(@checker.best_bets)
     end
 
     it "not find any worst bets" do
-      assert_equal([], @checker.worst_bets)
+      expect([]).to eq(@checker.worst_bets)
     end
   end
 
@@ -122,11 +122,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "find both best bets" do
-      assert_equal({ 1 => ["/jobs", "/jobsearch"] }, @checker.best_bets)
+      expect(1 => ["/jobs", "/jobsearch"]).to eq(@checker.best_bets)
     end
 
     it "not find any worst bets" do
-      assert_equal([], @checker.worst_bets)
+      expect([]).to eq(@checker.worst_bets)
     end
   end
 
@@ -139,14 +139,14 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "use highest position for all best bets" do
-      assert_equal({
+      expect(
         1 => ["/jobs", "/jobsearch"],
         4 => ["/working"],
-      }, @checker.best_bets)
+      ).to eq(@checker.best_bets)
     end
 
     it "not find any worst bets" do
-      assert_equal([], @checker.worst_bets)
+      expect([]).to eq(@checker.worst_bets)
     end
   end
 
@@ -160,13 +160,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "use just the positions from the exact bet" do
-      assert_equal({
-        4 => ["/jobs"],
-      }, @checker.best_bets)
+      expect(4 => ["/jobs"]).to eq(@checker.best_bets)
     end
 
     it "find worst bets only from the exact bet" do
-      assert_equal(["/jobsearch"], @checker.worst_bets)
+      expect(["/jobsearch"]).to eq(@checker.worst_bets)
     end
   end
 end

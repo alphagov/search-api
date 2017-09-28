@@ -13,7 +13,7 @@ RSpec.describe 'ScrollEnumeratorTest', tags: ['integration'] do
       batch_size: 4
     ) { |d| d }
 
-    assert_equal results.count, 10
+    expect(results.count).to eq(10)
   end
 
   it "returns_expected_results_for_sorted_search" do
@@ -28,7 +28,7 @@ RSpec.describe 'ScrollEnumeratorTest', tags: ['integration'] do
       batch_size: 4
     ) { |d| d }
 
-    assert_equal results.count, 10
+    expect(results.count).to eq(10)
   end
 
   it "returns_expected_results_when_empty_result_set" do
@@ -39,6 +39,6 @@ RSpec.describe 'ScrollEnumeratorTest', tags: ['integration'] do
       batch_size: 4
     ) { |d| d }
 
-    assert_equal results.count, 0
+    expect(results.count).to eq(0)
   end
 end

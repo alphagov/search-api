@@ -26,7 +26,7 @@ RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
-    assert_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: 'edition')
+    expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: 'edition')
   end
 
   it "specialist_documents_are_correctly_indexed" do
@@ -62,7 +62,7 @@ RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
 
       @queue.publish(random_example.to_json, content_type: "application/json")
 
-      assert_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: specialist_document_type)
+      expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: specialist_document_type)
     end
   end
 
@@ -79,7 +79,7 @@ RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
-    assert_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: search_document_type)
+    expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: search_document_type)
   end
 
   it "finders_email_signup_are_never_indexed" do
@@ -91,8 +91,8 @@ RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
-    assert_raises(Elasticsearch::Transport::Transport::Errors::NotFound) do
+    expect {
       fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
-    end
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 end

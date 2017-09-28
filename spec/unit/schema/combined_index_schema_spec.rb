@@ -11,9 +11,9 @@ RSpec.describe CombinedIndexSchema do
   it "basic_field_definitions" do
     # The title and public_timestamp fields are defined in the
     # base_elasticsearch_type, so are available in all documents holding content.
-    assert_equal "searchable_sortable_text", @combined_schema.field_definitions["title"].type.name
-    assert_equal "searchable_text", @combined_schema.field_definitions["description"].type.name
-    assert_equal "date", @combined_schema.field_definitions["public_timestamp"].type.name
+    expect("searchable_sortable_text").to eq(@combined_schema.field_definitions["title"].type.name)
+    expect("searchable_text").to eq(@combined_schema.field_definitions["description"].type.name)
+    expect("date").to eq(@combined_schema.field_definitions["public_timestamp"].type.name)
   end
 
   it "merged_field_definitions" do
@@ -22,12 +22,12 @@ RSpec.describe CombinedIndexSchema do
     # european_structural_investment_fund document type, with different
     # expanded_search_result_fields.  Check that expansion values from both lists are present.
     locations = @combined_schema.field_definitions["location"].expanded_search_result_fields
-    assert locations.include?({ "label" => "Afghanistan", "value" => "afghanistan" })
-    assert locations.include?({ "label" => "North East", "value" => "north-east" })
+    expect(locations).to include({ "label" => "Afghanistan", "value" => "afghanistan" })
+    expect(locations).to include({ "label" => "North East", "value" => "north-east" })
   end
 
   it "allowed_filter_fields" do
-    refute @combined_schema.allowed_filter_fields.include? "title"
-    assert @combined_schema.allowed_filter_fields.include? "organisations"
+    expect(@combined_schema.allowed_filter_fields).not_to include "title"
+    expect(@combined_schema.allowed_filter_fields).to include "organisations"
   end
 end

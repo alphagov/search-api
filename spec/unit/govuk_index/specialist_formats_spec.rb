@@ -19,7 +19,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "location" => ["Near Popham Airfield, Hampshire"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata.merge(special_formated_output))
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
   it "asylum_support_decision" do
@@ -38,8 +38,8 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     # * tribunal_decision_sub_category
 
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
-    assert_equal document[:indexable_content], "Test body\n\n\nsome hidden content"
+    expect_document_include_hash(document, custom_metadata)
+    expect(document[:indexable_content]).to eq("Test body\n\n\nsome hidden content")
   end
 
   it "business_finance_support_scheme" do
@@ -52,7 +52,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "will_continue_on" => "on GOV.UK",
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
   it "cma_case" do
@@ -65,7 +65,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "outcome_type" => "ca98-no-grounds-for-action-non-infringement",
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
   it "countryside_stewardship_grant" do
@@ -76,7 +76,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "funding_amount" => ["201-to-300"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
   it "dfid_research_output" do
@@ -88,7 +88,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "first_published_at" => "2016-04-28",
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
   it "drug_safety_update" do
@@ -96,7 +96,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "therapeutic_area" => ["cancer", "haematology", "immunosuppression-transplantation"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
   it "employment_appeal_tribunal_decision" do
@@ -108,8 +108,8 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "tribunal_decision_sub_categories" => ["contract-of-employment-apprenticeship"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
-    assert_equal document[:indexable_content], "Test body\n\n\nhidden content"
+    expect_document_include_hash(document, custom_metadata)
+    expect(document[:indexable_content]).to eq("Test body\n\n\nhidden content")
   end
 
   it "employment_tribunal_decision" do
@@ -120,8 +120,8 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "tribunal_decision_decision_date" => "2015-07-30",
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
-    assert_equal document[:indexable_content], "Test body\n\n\nhidden etd content"
+    expect_document_include_hash(document, custom_metadata)
+    expect(document[:indexable_content]).to eq("Test body\n\n\nhidden etd content")
   end
 
   it "european_structural_investment_fund" do
@@ -133,7 +133,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "funding_source" => ["european-regional-development-fund"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
   it "international_development_fund" do
@@ -145,7 +145,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "funding_source" => ["european-regional-development-fund"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
   it "maib_report" do
@@ -158,7 +158,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "report_type" => ["investigation-report"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata.merge(special_formated_output))
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
   it "medical_safety_alert" do
@@ -168,7 +168,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "medical_specialism" => %w(anaesthetics cardiology),
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
   it "raib_report" do
@@ -181,7 +181,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "report_type" => ["investigation-report"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata.merge(special_formated_output))
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
   it "service_standard_report" do
@@ -189,7 +189,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "assessment_date" => "2016-10-10"
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
 
@@ -200,8 +200,8 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "tribunal_decision_decision_date" => "2015-07-30",
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
-    assert_equal document[:indexable_content], "Test body\n\n\nhidden ttd content"
+    expect_document_include_hash(document, custom_metadata)
+    expect(document[:indexable_content]).to eq("Test body\n\n\nhidden ttd content")
   end
 
   it "utaac_decision" do
@@ -213,8 +213,8 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "tribunal_decision_sub_categories" => ["benefits-for-children-benefit-increases-for-children"],
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
-    assert_equal document[:indexable_content], "Test body\n\n\nhidden utaac content"
+    expect_document_include_hash(document, custom_metadata)
+    expect(document[:indexable_content]).to eq("Test body\n\n\nhidden utaac content")
   end
 
   it "vehicle_recalls_and_faults_alert" do
@@ -229,7 +229,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "serial_number" => "SN123",
     }
     document = build_example_with_metadata(custom_metadata)
-    assert_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
   end
 
 private
@@ -248,13 +248,10 @@ private
   end
 
 
-  def assert_document_include_hash(document, hash)
+  def expect_document_include_hash(document, hash)
     hash.each do |key, value|
-      assert_equal(
-        document[key.to_sym],
-        value,
+      expect(document[key.to_sym]).to eq(value),
         "Value for #{key}: `#{document[key.to_sym]}` did not match expected value `#{value}`"
-      )
     end
   end
 end

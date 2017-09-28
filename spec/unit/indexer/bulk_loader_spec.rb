@@ -9,7 +9,7 @@ RSpec.describe Indexer::BulkLoader do
       batches << batch
     end
 
-    assert_equal [%W(a\n b\n), %W(c\n d\n)], batches
+    expect([%W(a\n b\n), %W(c\n d\n)]).to eq(batches)
   end
 
   it "line_pairs_are_not_split_if_batch_size_too_small_to_fit_first_pair_of_lines" do
@@ -20,7 +20,7 @@ RSpec.describe Indexer::BulkLoader do
       batches << batch
     end
 
-    assert_equal [%W(a\n b\n), %W(c\n d\n)], batches
+    expect([%W(a\n b\n), %W(c\n d\n)]).to eq(batches)
   end
 
   it "line_pairs_are_not_split_if_batch_boundary_falls_in_second_pair_of_lines" do
@@ -31,6 +31,6 @@ RSpec.describe Indexer::BulkLoader do
       batches << batch
     end
 
-    assert_equal [%W(a\n b\n c\n d\n), %W(e\n f\n)], batches
+    expect([%W(a\n b\n c\n d\n), %W(e\n f\n)]).to eq(batches)
   end
 end

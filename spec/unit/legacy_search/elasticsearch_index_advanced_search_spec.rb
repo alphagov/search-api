@@ -12,8 +12,8 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   it "pagination_params_are_required" do
     stub_empty_search
 
-    assert_rejected_search("Pagination params are required.", {})
-    assert @wrapper.advanced_search({ 'page' => '1', 'per_page' => '1' })
+    expect_rejected_search("Pagination params are required.", {})
+    expect(@wrapper.advanced_search({ 'page' => '1', 'per_page' => '1' })).to be_truthy
   end
 
   it "pagination_params_are_converted_to_from_and_to_correctly" do
@@ -112,11 +112,11 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search
 
-    assert_rejected_search('Invalid value "falsey" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'falsey'))
-    assert_rejected_search('Invalid value "truey" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'truey'))
-    assert_rejected_search('Invalid value "true facts" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'true facts'))
-    assert_rejected_search('Invalid value "101" for boolean property "boolean_property"', default_params.merge('boolean_property' => '101'))
-    assert_rejected_search('Invalid value "cheese" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'cheese'))
+    expect_rejected_search('Invalid value "falsey" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'falsey'))
+    expect_rejected_search('Invalid value "truey" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'truey'))
+    expect_rejected_search('Invalid value "true facts" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'true facts'))
+    expect_rejected_search('Invalid value "101" for boolean property "boolean_property"', default_params.merge('boolean_property' => '101'))
+    expect_rejected_search('Invalid value "cheese" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'cheese'))
   end
 
   it "filter_params_on_a_date_mapping_property_are_turned_into_a_range_filter_with_order_based_on_the_key_in_the_value" do
@@ -143,25 +143,25 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
     stub_empty_search
 
-    assert_rejected_search('Invalid value {} for date property "date_property"', default_params.merge('date_property' => {}))
-    assert_rejected_search('Invalid value "2013-02-02" for date property "date_property"', default_params.merge('date_property' => '2013-02-02'))
-    assert_rejected_search('Invalid value ["2013-02-02"] for date property "date_property"', default_params.merge('date_property' => ['2013-02-02']))
-    assert_rejected_search('Invalid value {"between"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => { 'between' => '2013-02-02' }))
-    assert_rejected_search('Invalid value {"before"=>"2013-02-02", "up-to"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2013-02-02', 'up-to' => '2013-02-02' }))
+    expect_rejected_search('Invalid value {} for date property "date_property"', default_params.merge('date_property' => {}))
+    expect_rejected_search('Invalid value "2013-02-02" for date property "date_property"', default_params.merge('date_property' => '2013-02-02'))
+    expect_rejected_search('Invalid value ["2013-02-02"] for date property "date_property"', default_params.merge('date_property' => ['2013-02-02']))
+    expect_rejected_search('Invalid value {"between"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => { 'between' => '2013-02-02' }))
+    expect_rejected_search('Invalid value {"before"=>"2013-02-02", "up-to"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2013-02-02', 'up-to' => '2013-02-02' }))
   end
 
   it "filter_params_on_a_date_mapping_property_without_a_incorrectly_formatted_date_are_rejected" do
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
     stub_empty_search
 
-    assert_rejected_search('Invalid value {"before"=>"2 Feb 2013"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2 Feb 2013' }))
-    assert_rejected_search('Invalid value {"before"=>"2/2/2013"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2/2/2013' }))
-    assert_rejected_search('Invalid value {"before"=>"2013/2/2"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2013/2/2' }))
-    assert_rejected_search('Invalid value {"before"=>"2013-2-2"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2013-2-2' }))
+    expect_rejected_search('Invalid value {"before"=>"2 Feb 2013"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2 Feb 2013' }))
+    expect_rejected_search('Invalid value {"before"=>"2/2/2013"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2/2/2013' }))
+    expect_rejected_search('Invalid value {"before"=>"2013/2/2"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2013/2/2' }))
+    expect_rejected_search('Invalid value {"before"=>"2013-2-2"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2013-2-2' }))
   end
 
   it "filter_params_that_are_not_index_properties_are_not_allowed" do
-    assert_rejected_search('Querying unknown properties ["brian", "keith"]', default_params.merge('brian' => 'jones', 'keith' => 'richards'))
+    expect_rejected_search('Querying unknown properties ["brian", "keith"]', default_params.merge('brian' => 'jones', 'keith' => 'richards'))
   end
 
   it "order_params_are_turned_into_a_sort_query" do
@@ -170,14 +170,14 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "order_params_on_properties_not_in_the_mappings_are_not_allowed" do
-    assert_rejected_search('Sorting on unknown property ["brian"]', default_params.merge('order' => { 'brian' => 'asc' }))
+    expect_rejected_search('Sorting on unknown property ["brian"]', default_params.merge('order' => { 'brian' => 'asc' }))
   end
 
   it "returns_the_total_and_the_hits" do
     stub_empty_search
     result_set = @wrapper.advanced_search(default_params)
-    assert_equal 0, result_set.total
-    assert_equal [], result_set.results
+    expect(0).to eq(result_set.total)
+    expect([]).to eq(result_set.results)
   end
 
   it "returns_the_hits_converted_into_documents" do
@@ -188,9 +188,9 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
         headers: { "Content-Type" => "application/json" }
       )
     result_set = @wrapper.advanced_search(default_params)
-    assert_equal 10, result_set.total
-    assert_equal 1, result_set.results.size
-    assert_equal "some_content", result_set.results.first.get("indexable_content")
+    expect(10).to eq(result_set.total)
+    expect(1).to eq(result_set.results.size)
+    expect("some_content").to eq(result_set.results.first.get("indexable_content"))
   end
 
   def default_params
@@ -207,10 +207,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     )
   end
 
-  def assert_rejected_search(expected_error, search_args)
-    e = assert_raises(LegacySearch::InvalidQuery) do
-      @wrapper.advanced_search(search_args)
-    end
-    assert_equal expected_error, e.message
+  def expect_rejected_search(expected_error, search_args)
+    expect { @wrapper.advanced_search(search_args) }.to raise_error(expected_error)
   end
 end

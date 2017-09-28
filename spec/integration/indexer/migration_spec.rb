@@ -52,8 +52,8 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     end
   end
 
-  def assert_result_links(*links)
-    assert_equal links, parsed_response["results"].map { |r| r["link"] }
+  def expect_result_links(*links)
+    expect(links).to eq(parsed_response["results"].map { |r| r["link"] })
   end
 
   it "full_reindex" do
@@ -61,7 +61,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     # stemming settings
 
     get "/search?q=directive"
-    assert_equal 2, parsed_response["results"].length
+    expect(2).to eq(parsed_response["results"].length)
 
     @stemmer["rules"] = ["directive => directive"]
 
@@ -71,13 +71,13 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     Indexer::BulkLoader.new(search_config, "mainstream_test").load_from_current_index
 
     # Ensure the indexes have actually been switched.
-    refute_equal original_index_name, index_group.current_real.real_name
+    expect(original_index_name).not_to eq(index_group.current_real.real_name)
 
     get "/search?q=directive"
-    assert_result_links "/important"
+    expect_result_links "/important"
 
     get "/search?q=direct"
-    assert_result_links "/aliens"
+    expect_result_links "/aliens"
   end
 
   it "full_reindex_multiple_batches" do
@@ -95,7 +95,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     commit_index
 
     get "/search?q=directive"
-    assert_equal 2, parsed_response["results"].length
+    expect(2).to eq(parsed_response["results"].length)
 
     @stemmer["rules"] = ["directive => directive"]
 
@@ -105,16 +105,16 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     Indexer::BulkLoader.new(search_config, "mainstream_test", document_batch_size: test_batch_size).load_from_current_index
 
     # Ensure the indexes have actually been switched.
-    refute_equal original_index_name, index_group.current_real.real_name
+    expect(original_index_name).not_to eq(index_group.current_real.real_name)
 
     get "/search?q=directive"
-    assert_result_links "/important"
+    expect_result_links "/important"
 
     get "/search?q=direct"
-    assert_result_links "/aliens"
+    expect_result_links "/aliens"
 
     get "/search?q=Document&count=100"
-    assert_equal test_batch_size + 5, parsed_response["results"].length
+    expect(test_batch_size + 5).to eq(parsed_response["results"].length)
   end
 
   it "handles_errors_correctly" do
@@ -123,22 +123,22 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     allow_any_instance_of(SearchIndices::Index).to receive(:bulk_index).and_raise(SearchIndices::IndexLocked)
 
     get "/search?q=directive"
-    assert_equal 2, parsed_response["results"].length
+    expect(2).to eq(parsed_response["results"].length)
 
     @stemmer["rules"] = ["directive => directive"]
 
     index_group = search_server.index_group("mainstream_test")
     original_index_name = index_group.current_real.real_name
 
-    assert_raises SearchIndices::IndexLocked do
+    expect {
       Indexer::BulkLoader.new(search_config, "mainstream_test").load_from_current_index
-    end
+    }.to raise_error(SearchIndices::IndexLocked)
 
     # Ensure the the indexes haven't been swapped
-    assert_equal original_index_name, index_group.current_real.real_name
+    expect(original_index_name).to eq(index_group.current_real.real_name)
 
     get "/search?q=directive"
-    assert_equal 2, parsed_response["results"].length
+    expect(2).to eq(parsed_response["results"].length)
   end
 
   it "reindex_with_no_existing_index" do
@@ -151,9 +151,9 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
 
     index_group = search_server.index_group("mainstream_test")
     new_index = index_group.current_real
-    refute_nil new_index
+    expect(new_index).not_to be_nil
 
     # Ensure it's an aliased index
-    refute_equal "mainstream_test", new_index.real_name
+    expect("mainstream_test").not_to eq(new_index.real_name)
   end
 end

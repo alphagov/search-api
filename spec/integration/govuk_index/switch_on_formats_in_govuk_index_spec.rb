@@ -15,7 +15,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest', tags: ['integratio
 
     get "/search"
 
-    assert_equal(['mainstream answer', 'mainstream help'], parsed_response['results'].map { |r| r['title'] }.sort)
+    expect(['mainstream answer', 'mainstream help']).to eq(parsed_response['results'].map { |r| r['title'] }.sort)
   end
 
   it "can_enable_format_to_use_govuk_index" do
@@ -23,7 +23,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest', tags: ['integratio
 
     get "/search"
 
-    assert_equal(['govuk help', 'mainstream answer'], parsed_response['results'].map { |r| r['title'] }.sort)
+    expect(['govuk help', 'mainstream answer']).to eq(parsed_response['results'].map { |r| r['title'] }.sort)
   end
 
   it "can_enable_multiple_formats_to_use_govuk_index" do
@@ -31,6 +31,6 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest', tags: ['integratio
 
     get "/search"
 
-    assert_equal(['govuk answer', 'govuk help'], parsed_response['results'].map { |r| r['title'] }.sort)
+    expect(['govuk answer', 'govuk help']).to eq(parsed_response['results'].map { |r| r['title'] }.sort)
   end
 end

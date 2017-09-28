@@ -11,7 +11,7 @@ RSpec.describe 'TaglookupDuringIndexingTest', tags: ['integration'] do
       "link" => "/something-not-in-publishing-api",
     }.to_json
 
-    assert_document_is_in_rummager(
+    expect_document_is_in_rummager(
       "link" => "/something-not-in-publishing-api",
     )
   end
@@ -23,7 +23,7 @@ RSpec.describe 'TaglookupDuringIndexingTest', tags: ['integration'] do
       "link" => "http://example.com/some-link",
     }.to_json
 
-    assert_document_is_in_rummager(
+    expect_document_is_in_rummager(
       "link" => "http://example.com/some-link",
     )
   end
@@ -81,7 +81,7 @@ RSpec.describe 'TaglookupDuringIndexingTest', tags: ['integration'] do
       "link" => "/foo/bar",
     }.to_json
 
-    assert_document_is_in_rummager(
+    expect_document_is_in_rummager(
       "link" => "/foo/bar",
       "specialist_sectors" => ["my-topic/a", "my-topic/b"],
       "mainstream_browse_pages" => ["my-browse/1"],
@@ -113,7 +113,7 @@ RSpec.describe 'TaglookupDuringIndexingTest', tags: ['integration'] do
       "content_id" => "CONTENT-ID-OF-DOCUMENT",
     }.to_json
 
-    assert_document_is_in_rummager(
+    expect_document_is_in_rummager(
       "link" => "/my-base-path",
       "content_id" => "CONTENT-ID-OF-DOCUMENT",
       "specialist_sectors" => ["my-topic/a"],
@@ -193,7 +193,7 @@ RSpec.describe 'TaglookupDuringIndexingTest', tags: ['integration'] do
       "link" => "/foo/bar",
     }.to_json
 
-    assert_document_is_in_rummager(
+    expect_document_is_in_rummager(
       "link" => "/foo/bar",
       "part_of_taxonomy_tree" => [
         grandparent_1_content_id, parent_1_content_id, taxon_1_content_id,

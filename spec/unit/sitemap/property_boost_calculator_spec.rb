@@ -15,11 +15,11 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    assert_equal 0, calculator.boost(build_document(format: "format1"))
-    assert_equal 0.5, calculator.boost(build_document(format: "format2"))
-    assert_equal 0.75, calculator.boost(build_document(format: "format3"))
-    assert_equal 0.88, calculator.boost(build_document(format: "format4"))
-    assert_equal 1, calculator.boost(build_document(format: "format5"))
+    expect(0).to eq(calculator.boost(build_document(format: "format1")))
+    expect(0.5).to eq(calculator.boost(build_document(format: "format2")))
+    expect(0.75).to eq(calculator.boost(build_document(format: "format3")))
+    expect(0.88).to eq(calculator.boost(build_document(format: "format4")))
+    expect(1).to eq(calculator.boost(build_document(format: "format5")))
   end
 
   it "unboosted_format_has_default_boost" do
@@ -31,7 +31,7 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    assert_equal 0.5, calculator.boost(build_document(format: "some_format"))
+    expect(0.5).to eq(calculator.boost(build_document(format: "some_format")))
   end
 
   it "boosts_limit_is_1" do
@@ -45,9 +45,9 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    assert_equal 1, calculator.boost(build_document(format: "format1"))
-    assert_equal 1, calculator.boost(build_document(format: "format2"))
-    assert_equal 1, calculator.boost(build_document(format: "format3"))
+    expect(1).to eq(calculator.boost(build_document(format: "format1")))
+    expect(1).to eq(calculator.boost(build_document(format: "format2")))
+    expect(1).to eq(calculator.boost(build_document(format: "format3")))
   end
 
   it "unconfigured_format_has_default_boost" do
@@ -59,7 +59,7 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    assert_equal 0.5, calculator.boost(build_document(format: "other_format"))
+    expect(0.5).to eq(calculator.boost(build_document(format: "other_format")))
   end
 
   it "unconfigured_property_has_default_boost" do
@@ -71,7 +71,7 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    assert_equal 0.5, calculator.boost(build_document(document_type: "some_doc_type"))
+    expect(0.5).to eq(calculator.boost(build_document(document_type: "some_doc_type")))
   end
 
   it "boosts_are_rounded" do
@@ -84,8 +84,8 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    assert_equal 0.08, calculator.boost(build_document(format: "format1"))
-    assert_equal 0.27, calculator.boost(build_document(format: "format2"))
+    expect(0.08).to eq(calculator.boost(build_document(format: "format1")))
+    expect(0.27).to eq(calculator.boost(build_document(format: "format2")))
   end
 
   it "boosts_for_different_fields_are_combined" do
@@ -112,7 +112,7 @@ RSpec.describe PropertyBoostCalculator do
     #   1 - 2^(-format boost * document type boost * navigation supertype boost)
     # = 1 - 2^(-0.5 * 0.2 * 1)
     # = 0.07
-    assert_equal 0.07, calculator.boost(document)
+    expect(0.07).to eq(calculator.boost(document))
   end
 
   it "external_search_overrides_are_applied" do
@@ -135,7 +135,7 @@ RSpec.describe PropertyBoostCalculator do
     # 1 - 2^(-boost_override) = 1 - 2^(-2) = 0.75
     expected_boost_override = 0.75
     actual_boost = calculator.boost(build_document(format: "service_manual_guide"))
-    assert_equal expected_boost_override, actual_boost
+    expect(expected_boost_override).to eq(actual_boost)
   end
 
   def stub_boost_config(boosts)

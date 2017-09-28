@@ -13,7 +13,7 @@ RSpec.describe 'ElasticsearchAmendmentTest', tags: ['integration'] do
 
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "title" => "A new title",
       "link" => "/an-example-answer",
     }, type: "edition")
@@ -27,7 +27,7 @@ RSpec.describe 'ElasticsearchAmendmentTest', tags: ['integration'] do
 
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "title" => "A new title",
       "link" => "/an-example-answer",
     }, type: "aaib_report")
@@ -41,6 +41,6 @@ RSpec.describe 'ElasticsearchAmendmentTest', tags: ['integration'] do
 
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 
-    assert_equal 202, last_response.status
+    expect(202).to eq(last_response.status)
   end
 end

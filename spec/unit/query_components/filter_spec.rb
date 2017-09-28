@@ -25,10 +25,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      assert_equal(
-        result,
-        { "terms" => { "organisations" => ["hm-magic"] } }
-      )
+      expect(result).to eq("terms" => { "organisations" => ["hm-magic"] })
     end
 
     it "append the correct date filters" do
@@ -38,10 +35,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      assert_equal(
-        result,
-        { "range" => { "field_with_date" => { "from" => "2014-04-01", "to" => "2014-04-02" } } }
-      )
+      expect(result).to eq("range" => { "field_with_date" => { "from" => "2014-04-01", "to" => "2014-04-02" } })
     end
   end
 
@@ -53,10 +47,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      assert_equal(
-        result,
-        { "terms" => { "organisations" => ["hm-magic", "hmrc"] } }
-      )
+      expect(result).to eq("terms" => { "organisations" => ["hm-magic", "hmrc"] })
     end
   end
 
@@ -73,12 +64,11 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      assert_equal(
-        result,
-        { bool: {
+      expect(result).to eq(
+        bool: {
           must: { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
           must_not: { "terms" => { "mainstream_browse_pages" => ["benefits"] } },
-        } }
+        }
       )
     end
   end
@@ -96,14 +86,11 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      assert_equal(
-        result,
-        {
-          and: [
-            { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
-            { "terms" => { "mainstream_browse_pages" => ["levitation"] } },
-          ].compact
-        }
+      expect(result).to eq(
+        and: [
+          { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
+          { "terms" => { "mainstream_browse_pages" => ["levitation"] } },
+        ].compact
       )
     end
   end

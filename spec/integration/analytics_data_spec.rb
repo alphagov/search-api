@@ -37,7 +37,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
         nil,
       ]
 
-    assert_equal [expected_row], rows.to_a
+    expect([expected_row]).to eq(rows.to_a)
   end
 
   it "missing_data_is_nil" do
@@ -48,7 +48,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
 
     expected_row = [id, id, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
 
-    assert_equal [expected_row], rows.to_a
+    expect([expected_row]).to eq(rows.to_a)
   end
 
   it "content_id_is_preferred_to_link_for_product_id" do
@@ -60,7 +60,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
 
     rows = @analytics_data_fetcher.rows
 
-    assert_equal "some_content_id", rows.first[0]
+    expect("some_content_id").to eq(rows.first[0])
   end
 
   it "product_id_falls_back_to_link_if_content_id_is_missing" do
@@ -71,7 +71,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
 
     rows = @analytics_data_fetcher.rows
 
-    assert_equal "/some/page/path", rows.first[0]
+    expect("/some/page/path").to eq(rows.first[0])
   end
 
   it "document_type_is_preferred_to_format" do
@@ -83,7 +83,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
 
     rows = @analytics_data_fetcher.rows
 
-    assert_equal "some_document_type", rows.first[5]
+    expect("some_document_type").to eq(rows.first[5])
   end
 
   it "document_type_falls_back_to_format_if_not_present" do
@@ -94,7 +94,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
 
     rows = @analytics_data_fetcher.rows
 
-    assert_equal "some_format", rows.first[5]
+    expect("some_format").to eq(rows.first[5])
   end
 
   it "sanitises_unix_line_breaks_in_titles" do
@@ -109,7 +109,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
 
     rows = @analytics_data_fetcher.rows
 
-    assert_equal "A page title with some line breaks", rows.first[4]
+    expect("A page title with some line breaks").to eq(rows.first[4])
   end
 
   it "sanitises_windows_line_breaks_in_titles" do
@@ -120,7 +120,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
 
     rows = @analytics_data_fetcher.rows
 
-    assert_equal "A page title with some line breaks", rows.first[4]
+    expect("A page title with some line breaks").to eq(rows.first[4])
   end
 
   it "fetches_all_rows" do
@@ -132,7 +132,7 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
 
     analytics_data = @analytics_data_fetcher.rows.to_a
 
-    assert_equal 30, analytics_data.size
+    expect(30).to eq(analytics_data.size)
   end
 
   it "headers_and_rows_are_consisent" do
@@ -146,6 +146,6 @@ RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
     rows = @analytics_data_fetcher.rows
     headers = @analytics_data_fetcher.headers
 
-    assert_equal headers.size, rows.first.size
+    expect(headers.size).to eq(rows.first.size)
   end
 end

@@ -18,7 +18,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] d
 
     GovukIndex::PopularityUpdater.update('govuk_test')
 
-    assert_document_is_in_rummager({ 'link' => id, 'popularity' => popularity }, type: 'edition', index: 'govuk_test')
+    expect_document_is_in_rummager({ 'link' => id, 'popularity' => popularity }, type: 'edition', index: 'govuk_test')
   end
 
   it "set_the_popularity_to_the_lowest_popularity_when_it_doesnt_exist" do
@@ -32,7 +32,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] d
 
     GovukIndex::PopularityUpdater.update('govuk_test')
 
-    assert_document_is_in_rummager({ 'link' => id, 'popularity' => popularity }, type: 'edition', index: 'govuk_test')
+    expect_document_is_in_rummager({ 'link' => id, 'popularity' => popularity }, type: 'edition', index: 'govuk_test')
   end
 
   it "ignores_popularity_update_if_version_has_moved_on" do
@@ -51,7 +51,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] d
 
     GovukIndex::PopularityUpdater.update('govuk_test')
 
-    assert_document_is_in_rummager({ 'link' => id, 'popularity' => 0.222 }, type: 'edition', index: 'govuk_test')
+    expect_document_is_in_rummager({ 'link' => id, 'popularity' => 0.222 }, type: 'edition', index: 'govuk_test')
   end
 
   it "copies_version_information" do
@@ -60,7 +60,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] d
     GovukIndex::PopularityUpdater.update('govuk_test')
 
     document = fetch_document_from_rummager(id: id, index: 'govuk_test')
-    assert_equal 3, document['_version']
+    expect(3).to eq(document['_version'])
   end
 
   it "skips_non_indexable_formats" do
@@ -69,7 +69,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] d
     GovukIndex::PopularityUpdater.update('govuk_test')
 
     document = fetch_document_from_rummager(id: id, index: 'govuk_test')
-    assert_equal 0.222, document['_source']['popularity']
+    expect(0.222).to eq(document['_source']['popularity'])
   end
 
   it "does_not_skips_non_indexable_formats_if_process_all_flag_is_set" do
@@ -83,6 +83,6 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] d
     popularity = 1.0 / (document_count + SearchConfig.instance.popularity_rank_offset)
 
     document = fetch_document_from_rummager(id: id, index: 'govuk_test')
-    assert_equal popularity, document['_source']['popularity']
+    expect(popularity).to eq(document['_source']['popularity'])
   end
 end

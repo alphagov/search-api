@@ -7,38 +7,37 @@ RSpec.describe FieldTypes do
     end
 
     it "recognise the `identifier` type" do
-      assert_equal "identifier", @types.get("identifier").name
+      expect("identifier").to eq(@types.get("identifier").name)
     end
 
     it "know that the `identifier` type is single-valued" do
-      refute @types.get("identifier").multivalued
+      expect(@types.get("identifier").multivalued).to be_falsey
     end
 
     it "know that the `identifiers` type is multi-valued" do
-      assert @types.get("identifiers").multivalued
+      expect(@types.get("identifiers").multivalued).to be_truthy
     end
 
     it "know that the `identifiers` type has a `text` filter type" do
-      assert_equal "text", @types.get("identifiers").filter_type
+      expect("text").to eq(@types.get("identifiers").filter_type)
     end
 
     it "know that the `identifiers` type does not have children" do
-      assert_nil @types.get("identifiers").children
+      expect(@types.get("identifiers").children).to be_nil
     end
 
     it "know that the `objects` type has named children" do
-      assert_equal "named", @types.get("objects").children
+      expect("named").to eq(@types.get("objects").children)
     end
 
     it "know that the `opaque_object` type has dynamic children" do
-      assert_equal "dynamic", @types.get("opaque_object").children
+      expect("dynamic").to eq(@types.get("opaque_object").children)
     end
 
     it "raise an error for unknown types" do
-      exc = assert_raises(RuntimeError) do
+      expect_raises_message(%{Unknown field type "unknown"}) do
         @types.get("unknown")
       end
-      assert_equal %{Unknown field type "unknown"}, exc.message
     end
   end
 
@@ -49,40 +48,40 @@ RSpec.describe FieldTypes do
 
     it "fail if a field type has no es_config property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({ "identifier" => {} })
-      exc = assert_raises(RuntimeError) do
+      expect_raises_message(%{Missing "es_config" in field type "identifier" in "/config/path/field_types.json"}) do
         @types.get("identifier")
       end
-      assert_equal %{Missing "es_config" in field type "identifier" in "/config/path/field_types.json"}, exc.message
     end
 
     it "fail if a field type has an invalid `filter_type` property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "filter_type" => "bad value" } }
       )
-      exc = assert_raises(RuntimeError) do
+      expect_raises_message(%{Invalid value for "filter_type" ("bad value") in field type "identifier" in "/config/path/field_types.json"}) do
         @types.get("identifier")
       end
-      assert_equal %{Invalid value for "filter_type" ("bad value") in field type "identifier" in "/config/path/field_types.json"}, exc.message
     end
 
     it "fail if a field type has an invalid `children` property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "children" => "bad value" } }
       )
-      exc = assert_raises(RuntimeError) do
+      expect_raises_message(%{Invalid value for "children" ("bad value") in field type "identifier" in "/config/path/field_types.json"}) do
         @types.get("identifier")
       end
-      assert_equal %{Invalid value for "children" ("bad value") in field type "identifier" in "/config/path/field_types.json"}, exc.message
     end
 
     it "fail if a field type has an unknown property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "foo" => true } }
       )
-      exc = assert_raises(RuntimeError) do
+      expect_raises_message(%{Unknown keys (foo) in field type "identifier" in "/config/path/field_types.json"}) do
         @types.get("identifier")
       end
-      assert_equal %{Unknown keys (foo) in field type "identifier" in "/config/path/field_types.json"}, exc.message
     end
+  end
+
+  def expect_raises_message(message)
+    expect { yield }.to raise_error(message)
   end
 end

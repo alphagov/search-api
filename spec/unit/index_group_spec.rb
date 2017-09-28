@@ -33,8 +33,8 @@ RSpec.describe SearchIndices::IndexGroup do
     index = @server.index_group("mainstream").create_index
 
     assert_requested(stub)
-    assert index.is_a? SearchIndices::Index
-    assert_match(/^mainstream-/, index.index_name)
+    expect(index).to be_a SearchIndices::Index
+    expect(index.index_name).to match(/^mainstream-/)
   end
 
   it "switch_index_with_no_existing_alias" do
@@ -135,9 +135,9 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json
       )
 
-    assert_raises RuntimeError do
+    expect {
       @server.index_group("test").switch_to(new_index)
-    end
+    }.to raise_error(RuntimeError)
   end
 
   it "index_names_with_no_indices" do
@@ -148,7 +148,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: {}.to_json
       )
 
-    assert_equal [], @server.index_group("test").index_names
+    expect([]).to eq(@server.index_group("test").index_names)
   end
 
   it "index_names_with_index" do
@@ -162,7 +162,7 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json
       )
 
-    assert_equal [index_name], @server.index_group("test").index_names
+    expect([index_name]).to eq(@server.index_group("test").index_names)
   end
 
   it "index_names_with_other_groups" do
@@ -179,7 +179,7 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json
       )
 
-    assert_equal [this_name], @server.index_group("test").index_names
+    expect([this_name]).to eq(@server.index_group("test").index_names)
   end
 
   it "clean_with_no_indices" do

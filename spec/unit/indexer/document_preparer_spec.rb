@@ -14,7 +14,7 @@ RSpec.describe Indexer::DocumentPreparer do
         { "/some-link" => 0.5 }, true
       )
 
-      assert_equal 0.5, updated_doc_hash["popularity"]
+      expect(0.5).to eq(updated_doc_hash["popularity"])
     end
 
     it "adds document type groupings" do
@@ -31,7 +31,7 @@ RSpec.describe Indexer::DocumentPreparer do
         true
       )
 
-      assert_equal "guidance", updated_doc_hash["navigation_document_supertype"]
+      expect("guidance").to eq(updated_doc_hash["navigation_document_supertype"])
     end
   end
 end

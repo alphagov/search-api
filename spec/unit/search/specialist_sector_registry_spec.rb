@@ -19,7 +19,7 @@ RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
       .with("specialist_sector", anything)
       .and_return([oil_and_gas])
     sector = @specialist_sector_registry["oil-and-gas/licensing"]
-    assert_equal oil_and_gas, sector
+    expect(oil_and_gas).to eq(sector)
   end
 
   it "only_required_fields_are_requested_from_index" do
@@ -34,7 +34,7 @@ RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
       .with("specialist_sector", anything)
       .and_return([oil_and_gas])
     sector = @specialist_sector_registry["foo"]
-    assert_nil sector
+    expect(sector).to be_nil
   end
 
   it "uses_300_second_cache_lifetime" do
