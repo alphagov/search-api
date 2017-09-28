@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
   before do
-    @analytics_data_fetcher = AnalyticsData.new(stubbed_search_config.elasticsearch["base_uri"], ["mainstream_test"])
+    @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, ["mainstream_test"])
   end
 
   it "fetches_rows_of_analytics_dimensions" do

@@ -10,7 +10,7 @@ RSpec.describe Search::AggregateExampleFetcher do
             and: [
               { term: { field => value } },
               { indices: {
-                indices: SearchConfig.instance.elasticsearch['content_index_names'],
+                indices: SearchConfig.instance.content_index_names,
                 filter: {},
                 no_match_filter: 'none'
               } }

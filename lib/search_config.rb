@@ -15,8 +15,6 @@ class SearchConfig
     end
   end
 
-  attr_writer :elasticsearch # this is used by integration testing to override the default
-
   class << self
     attr_writer :instance
 
@@ -51,7 +49,7 @@ class SearchConfig
   end
 
   def elasticsearch
-    @elasticsearch ||= config_for("elasticsearch")
+    @elasticsearch ||= config_for("elasticsearch")[ENV['RACK_ENV']]
   end
 
   def run_search(raw_parameters)

@@ -6,7 +6,7 @@ RSpec.describe Search::FormatMigrator do
     base_query = { filter: 'component' }
     expected = {
       indices: {
-        indices: %w(mainstream detailed government),
+        indices: %w(mainstream_test government_test),
         filter: {
           bool: { should: [base_query] }
         },
@@ -21,7 +21,7 @@ RSpec.describe Search::FormatMigrator do
     base_query = { filter: 'component' }
     expected = {
       indices: {
-        indices: %w(mainstream detailed government),
+        indices: %w(mainstream_test government_test),
         filter: {
           bool: {
             should: [base_query],
@@ -43,7 +43,7 @@ RSpec.describe Search::FormatMigrator do
     GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])
     expected = {
       indices: {
-        indices: %w(mainstream detailed government),
+        indices: %w(mainstream_test government_test),
         filter: {},
         no_match_filter: 'none'
       }
@@ -55,7 +55,7 @@ RSpec.describe Search::FormatMigrator do
     GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(['help_page'])
     expected = {
       indices: {
-        indices: %w(mainstream detailed government),
+        indices: %w(mainstream_test government_test),
         filter: {
           bool: {
             must_not: { terms: { format: ['help_page'] } },

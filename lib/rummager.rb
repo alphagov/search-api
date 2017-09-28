@@ -1,5 +1,6 @@
 $LOAD_PATH << __dir__ unless $LOAD_PATH.include?(__dir__)
 
+require_relative '../env'
 require 'active_support/core_ext/array'
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/string'

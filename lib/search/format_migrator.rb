@@ -7,7 +7,7 @@ module Search
     def call
       {
         indices: {
-          indices: SearchConfig.instance.elasticsearch['content_index_names'],
+          indices: SearchConfig.instance.content_index_names,
           filter: excluding_formats,
           no_match_filter: only_formats
         }
