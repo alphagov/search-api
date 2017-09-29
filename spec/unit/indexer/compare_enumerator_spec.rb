@@ -119,7 +119,7 @@ private
   end
 
   def stub_scroll_enumerator(left_request:, right_request:)
-    ScrollEnumerator.stub(:new).and_return(
+    allow(ScrollEnumerator).to receive(:new).and_return(
       left_request.to_enum,
       right_request.to_enum,
     )
@@ -127,7 +127,7 @@ private
 
   def stub_client_for_scroll_enumerator(return_values:, search_body: nil, search_type: "query_then_fetch")
     client = double(:client)
-    Services.stub(:elasticsearch).and_return(client)
+    allow(Services).to receive(:elasticsearch).and_return(client)
 
     expect(client).to receive(:search).with(
       hash_including(

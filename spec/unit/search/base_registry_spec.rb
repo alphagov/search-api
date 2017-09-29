@@ -23,7 +23,7 @@ RSpec.describe Search::BaseRegistry do
   end
 
   it "can_fetch_document_series_by_slug" do
-    @index.stub(:documents_by_format)
+    allow(@index).to receive(:documents_by_format)
       .with("example-format", anything)
       .and_return([example_document])
 
@@ -39,7 +39,7 @@ RSpec.describe Search::BaseRegistry do
   end
 
   it "returns_nil_if_document_collection_not_found" do
-    @index.stub(:documents_by_format)
+    allow(@index).to receive(:documents_by_format)
       .with("example-format", anything)
       .and_return([example_document])
     assert_nil @base_registry["non-existent-document"]
@@ -48,7 +48,7 @@ RSpec.describe Search::BaseRegistry do
   it "document_enumerator_is_traversed_only_once" do
     document_enumerator = double("enumerator")
     expect(document_enumerator).to receive(:to_a).once.and_return([example_document])
-    @index.stub(:documents_by_format)
+    allow(@index).to receive(:documents_by_format)
       .with("example-format", anything)
       .once
       .and_return(document_enumerator)
@@ -64,7 +64,7 @@ RSpec.describe Search::BaseRegistry do
   end
 
   it "find_by_content_id" do
-    @index.stub(:documents_by_format)
+    allow(@index).to receive(:documents_by_format)
       .with("example-format", anything)
       .and_return([example_document])
 

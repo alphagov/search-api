@@ -15,7 +15,7 @@ RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
   end
 
   it "can_fetch_sector_by_slug" do
-    @index.stub(:documents_by_format)
+    allow(@index).to receive(:documents_by_format)
       .with("specialist_sector", anything)
       .and_return([oil_and_gas])
     sector = @specialist_sector_registry["oil-and-gas/licensing"]
@@ -30,7 +30,7 @@ RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
   end
 
   it "returns_nil_if_sector_not_found" do
-    @index.stub(:documents_by_format)
+    allow(@index).to receive(:documents_by_format)
       .with("specialist_sector", anything)
       .and_return([oil_and_gas])
     sector = @specialist_sector_registry["foo"]

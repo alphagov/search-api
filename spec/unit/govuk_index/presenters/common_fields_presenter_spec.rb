@@ -3,8 +3,8 @@ require 'spec_helper'
 RSpec.describe GovukIndex::CommonFieldsPresenter do
   before do
     @popularity_lookup = double(:popularity_lookup)
-    Indexer::PopularityLookup.stub(:new).and_return(@popularity_lookup)
-    @popularity_lookup.stub(:lookup_popularities).and_return({})
+    allow(Indexer::PopularityLookup).to receive(:new).and_return(@popularity_lookup)
+    allow(@popularity_lookup).to receive(:lookup_popularities).and_return({})
 
     @directly_mapped_fields = %w(
       content_id

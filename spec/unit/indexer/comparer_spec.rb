@@ -77,7 +77,7 @@ RSpec.describe Indexer::Comparer do
 private
 
   def setup_enumerator_response(left, right)
-    Indexer::CompareEnumerator.stub(:new).with(
+    allow(Indexer::CompareEnumerator).to receive(:new).with(
       'index_a',
       'index_b',
       {},

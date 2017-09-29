@@ -4,7 +4,7 @@ RSpec.describe GovukIndex::PopularityWorker do
   it "should_save_all_records" do
     stub_popularity_data
     processor = double(:processor)
-    GovukIndex::ElasticsearchProcessor.stub(:new).and_return(processor)
+    allow(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(processor)
     records = [
       { 'identifier' => { '_id' => 'record_1' }, 'document' => {} },
       { 'identifier' => { '_id' => 'record_2' }, 'document' => {} },
@@ -20,7 +20,7 @@ RSpec.describe GovukIndex::PopularityWorker do
     stub_popularity_data('record_1' => 0.7)
 
     processor = double(:processor)
-    GovukIndex::ElasticsearchProcessor.stub(:new).and_return(processor)
+    allow(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(processor)
     record = { 'identifier' => { '_id' => 'record_1' }, 'document' => { 'title' => 'test_doc' } }
 
     expect(processor).to receive(:save).with(
@@ -36,7 +36,7 @@ RSpec.describe GovukIndex::PopularityWorker do
 
   def stub_popularity_data(data = Hash.new(0.5))
     popularity_lookup = double(:popularity_lookup)
-    Indexer::PopularityLookup.stub(:new).and_return(popularity_lookup)
-    popularity_lookup.stub(:lookup_popularities).and_return(data)
+    allow(Indexer::PopularityLookup).to receive(:new).and_return(popularity_lookup)
+    allow(popularity_lookup).to receive(:lookup_popularities).and_return(data)
   end
 end

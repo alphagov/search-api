@@ -16,7 +16,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
   end
 
   it "should_save_new_document_to_elasticsearch" do
-    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
+    allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
     random_example = generate_random_example(
       payload: { document_type: "help_page", payload_version: 123 },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
@@ -36,7 +36,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
   end
 
   it "not_indexing_when_publishing_app_is_smart_answers" do
-    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
+    allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
     random_example = generate_random_example(
       payload: { document_type: "transaction", payload_version: 123, publishing_app: "smartanswers" },
     )
@@ -50,7 +50,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
   end
 
   it "should_include_popularity_when_available" do
-    GovukIndex::MigratedFormats.stub(:indexable?).and_return(true)
+    allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
     random_example = generate_random_example(
       payload: { document_type: "help_page", payload_version: 123 },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }

@@ -275,7 +275,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   end
 
   it "aggregate_examples_before_migration" do
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
 
     add_sample_documents('mainstream_test', 2)
     add_sample_documents('govuk_test', 2)
@@ -291,7 +291,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   end
 
   it "aggregate_examples_after_migration" do
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(['answers'])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(['answers'])
 
     add_sample_documents('mainstream_test', 2)
     add_sample_documents('govuk_test', 2)
@@ -307,7 +307,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   end
 
   it "aggregate_examples_before_migration_with_query_scope" do
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
 
     add_sample_documents('mainstream_test', 2)
     add_sample_documents('govuk_test', 2)
@@ -323,7 +323,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   end
 
   it "aggregate_examples_after_migration_with_query_scope" do
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(['answers'])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(['answers'])
 
     add_sample_documents('mainstream_test', 2)
     add_sample_documents('govuk_test', 2)

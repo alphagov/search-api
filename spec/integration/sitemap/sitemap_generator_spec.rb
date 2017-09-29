@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
 
   it "should_generate_multiple_sitemaps" do
-    SitemapGenerator.stub(:sitemap_limit).and_return(2)
+    allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
     add_sample_documents(
       [
         {
@@ -40,7 +40,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
   end
 
   it "does_not_include_migrated_formats_from_mainstream" do
-    SitemapGenerator.stub(:sitemap_limit).and_return(2)
+    allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
     add_sample_documents(
       [
         {

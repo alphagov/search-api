@@ -220,7 +220,7 @@ RSpec.describe SearchIndices::Index do
   it "changing_scroll_id" do
     search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=2&version=true"
 
-    SearchIndices::Index.stub(:scroll_batch_size).and_return(2)
+    allow(SearchIndices::Index).to receive(:scroll_batch_size).and_return(2)
 
     stub_request(:get, search_uri).with(
       body: { query: expected_all_documents_query }.to_json
@@ -330,8 +330,8 @@ private
     base_uri = URI.parse("http://example.com:9200")
     search_config = SearchConfig.new
     traffic_index = described_class.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
-    Indexer::PopularityLookup.any_instance.stub(:traffic_index).and_return(traffic_index)
-    traffic_index.stub(:real_name).and_return("page-traffic_test")
+    allow_any_instance_of(Indexer::PopularityLookup).to receive(:traffic_index).and_return(traffic_index)
+    allow(traffic_index).to receive(:real_name).and_return("page-traffic_test")
   end
 
   def expected_all_documents_query

@@ -8,7 +8,7 @@ RSpec.describe Indexer::BulkIndexWorker do
   it "indexes_documents" do
     mock_index = double("index")
     expect(mock_index).to receive(:bulk_index).with(SAMPLE_DOCUMENT_HASHES)
-    SearchIndices::SearchServer.any_instance.stub(:index)
+    allow_any_instance_of(SearchIndices::SearchServer).to receive(:index)
       .with("test-index")
       .and_return(mock_index)
 
@@ -21,7 +21,7 @@ RSpec.describe Indexer::BulkIndexWorker do
 
     mock_index = double("index")
     expect(mock_index).to receive(:bulk_index).and_raise(SearchIndices::IndexLocked)
-    SearchIndices::SearchServer.any_instance.stub(:index)
+    allow_any_instance_of(SearchIndices::SearchServer).to receive(:index)
       .with("test-index")
       .and_return(mock_index)
 

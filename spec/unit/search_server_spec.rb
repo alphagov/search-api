@@ -3,8 +3,8 @@ require 'spec_helper'
 RSpec.describe SearchIndices::SearchServer do
   def schema_config
     schema = double("schema config")
-    schema.stub(:elasticsearch_mappings).and_return({})
-    schema.stub(:elasticsearch_settings).and_return({})
+    allow(schema).to receive(:elasticsearch_mappings).and_return({})
+    allow(schema).to receive(:elasticsearch_settings).and_return({})
     schema
   end
 

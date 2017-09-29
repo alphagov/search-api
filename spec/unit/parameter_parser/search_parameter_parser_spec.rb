@@ -36,11 +36,11 @@ RSpec.describe SearchParameterParser do
   before do
     @schema = double("combined index schema")
     date_type = double("date type")
-    date_type.stub(:filter_type).and_return("date")
+    allow(date_type).to receive(:filter_type).and_return("date")
     identifier_type = double("identifier type")
-    identifier_type.stub(:filter_type).and_return("text")
+    allow(identifier_type).to receive(:filter_type).and_return("text")
     string_type = double("string type")
-    string_type.stub(:filter_type).and_return(nil)
+    allow(string_type).to receive(:filter_type).and_return(nil)
     field_definitions = {}
     allowed_filter_fields = []
     [
@@ -56,14 +56,14 @@ RSpec.describe SearchParameterParser do
       ["opened_date", date_type],
     ].each { |field, type|
       definition = double("#{field} definition")
-      definition.stub(:type).and_return(type)
+      allow(definition).to receive(:type).and_return(type)
       field_definitions[field] = definition
       if type.filter_type
         allowed_filter_fields << field
       end
     }
-    @schema.stub(:field_definitions).and_return(field_definitions)
-    @schema.stub(:allowed_filter_fields).and_return(allowed_filter_fields)
+    allow(@schema).to receive(:field_definitions).and_return(field_definitions)
+    allow(@schema).to receive(:allowed_filter_fields).and_return(allowed_filter_fields)
   end
 
   it "return valid params given nothing" do

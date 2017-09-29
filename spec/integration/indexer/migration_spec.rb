@@ -6,14 +6,14 @@ require 'spec_helper'
 RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
   before do
     # MigratedFormats are the formats using the `govuk` index.
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return([])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
 
     stub_tagging_lookup
     try_remove_test_index
 
     schema = SearchConfig.instance.schema_config
     settings = schema.elasticsearch_settings("mainstream_test")
-    schema.stub(:elasticsearch_settings).and_return(settings)
+    allow(schema).to receive(:elasticsearch_settings).and_return(settings)
     @stemmer = settings["analysis"]["filter"]["stemmer_override"]
     @stemmer["rules"] = ["fish => fish"]
 
@@ -24,7 +24,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     # stub out the comparer for the time being as we are not using the results
     # just outputing them for review
     comparer = double(:comparer, run: { 'results' => 'hash' })
-    Indexer::Comparer.stub(:new).and_return(comparer)
+    allow(Indexer::Comparer).to receive(:new).and_return(comparer)
   end
 
   after do
@@ -120,7 +120,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
   it "handles_errors_correctly" do
     # Test that an error while re-indexing is reported, and aborts the whole process.
 
-    SearchIndices::Index.any_instance.stub(:bulk_index).and_raise(SearchIndices::IndexLocked)
+    allow_any_instance_of(SearchIndices::Index).to receive(:bulk_index).and_raise(SearchIndices::IndexLocked)
 
     get "/search?q=directive"
     assert_equal 2, parsed_response["results"].length

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'GovukIndex::SyncDataTest', tags: ['integration'] do
   before do
-    GovukIndex::MigratedFormats.stub(:indexable_formats).and_return(['help_page'])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(['help_page'])
   end
 
   it "syncs_records_for_non_indexable_formats" do

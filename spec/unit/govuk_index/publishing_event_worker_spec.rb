@@ -136,8 +136,8 @@ RSpec.describe GovukIndex::PublishingEventWorker do
   end
 
   def stub_document_type_inferer
-    GovukIndex::DocumentTypeInferer.any_instance.stub(:unpublishing_type?).and_return(true)
-    GovukIndex::DocumentTypeInferer.any_instance.stub(:type).and_return('real_document_type')
-    GovukIndex::MigratedFormats.stub(:migrated_formats).and_return(%w(real_document_type))
+    allow_any_instance_of(GovukIndex::DocumentTypeInferer).to receive(:unpublishing_type?).and_return(true)
+    allow_any_instance_of(GovukIndex::DocumentTypeInferer).to receive(:type).and_return('real_document_type')
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(%w(real_document_type))
   end
 end
