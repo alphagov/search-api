@@ -40,6 +40,9 @@ class HealthCheckCLI
       on 'type=', "Which tests to run. 'suggestions' or 'results' (default)"
       run(health_checker)
     end
+  rescue Net::HTTPServerError => e
+    $stderr.puts "Unable to continue: bad response from search API:"
+    $sterr.puts e.backtrace
   end
 
   def call(opts, args)
