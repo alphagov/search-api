@@ -13,7 +13,7 @@ RSpec.describe Search::TimedCache do
     expect(fetch).to receive(:call).and_return("foo").once
 
     cache = described_class.new(5) { fetch.call }
-    2.times { assert_equal "foo", cache.get }
+    2.times { expect("foo").to eq(cache.get) }
   end
 
   it "cache_does_not_expire_within_lifetime" do

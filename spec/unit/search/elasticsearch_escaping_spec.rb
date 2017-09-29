@@ -8,10 +8,10 @@ RSpec.describe Search::Escaping do
   end
 
   it "escapes_the_query_for_lucene_chars" do
-    assert_equal "how\\?", subject.escape("how?")
+    expect("how\\?").to eq(subject.escape("how?"))
   end
 
   it "escapes_the_query_for_lucene_booleans" do
-    assert_equal 'fish "AND" chips', subject.escape("fish AND chips")
+    expect('fish "AND" chips').to eq(subject.escape("fish AND chips"))
   end
 end

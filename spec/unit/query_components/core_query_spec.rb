@@ -7,7 +7,7 @@ RSpec.describe QueryComponents::CoreQuery do
 
       query = builder.minimum_should_match("_all")
 
-      assert_match(/query_with_old_synonyms/, query.to_s)
+      expect(query.to_s).to match(/query_with_old_synonyms/)
     end
 
     it "not use the query_with_old_synonyms analyzer" do
@@ -15,7 +15,7 @@ RSpec.describe QueryComponents::CoreQuery do
 
       query = builder.minimum_should_match("_all")
 
-      refute_match(/query_with_old_synonyms/, query.to_s)
+      expect(query.to_s).not_to match(/query_with_old_synonyms/)
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe QueryComponents::CoreQuery do
       builder = described_class.new(search_query_params)
 
       query = builder.minimum_should_match("_all")
-      assert_match(/"2<2 3<3 7<50%"/, query.to_s)
+      expect(query.to_s).to match(/"2<2 3<3 7<50%"/)
     end
   end
 end

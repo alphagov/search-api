@@ -30,8 +30,8 @@ RSpec.describe HealthCheck::SuggestionChecker do
         test_data: StringIO.new(data)
       ).run!
 
-      assert result.success_count == 3
-      assert result.total_count == 5
+      expect(result.success_count).to eq 3
+      expect(result.total_count).to eq 5
     end
   end
 end

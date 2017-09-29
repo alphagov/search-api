@@ -21,7 +21,7 @@ RSpec.describe 'BestBetsTest', tags: ['integration'] do
 
     links = get_links "/search?q=a+forced+best+bet"
 
-    assert_equal ["/the-link-that-should-surface", "/an-organic-result"], links
+    expect(["/the-link-that-should-surface", "/an-organic-result"]).to eq(links)
   end
 
   it "exact_worst_bet" do
@@ -39,7 +39,7 @@ RSpec.describe 'BestBetsTest', tags: ['integration'] do
 
     links = get_links "/search?q=shown"
 
-    refute links.include?("/we-never-show-this")
+    expect(links).not_to include("/we-never-show-this")
   end
 
   it "stemmed_best_bet" do
@@ -56,7 +56,7 @@ RSpec.describe 'BestBetsTest', tags: ['integration'] do
 
     links = get_links "/search?q=best+bet+and+such"
 
-    assert_equal ["/the-link-that-should-surface"], links
+    expect(["/the-link-that-should-surface"]).to eq(links)
   end
 
   it "stemmed_best_bet_variant" do
@@ -74,7 +74,7 @@ RSpec.describe 'BestBetsTest', tags: ['integration'] do
     # note that we're searching for "bests bet", not "best bet" here.
     links = get_links "/search?q=bests+bet"
 
-    assert_equal ["/the-link-that-should-surface"], links
+    expect(["/the-link-that-should-surface"]).to eq(links)
   end
 
   it "stemmed_best_bet_words_not_in_phrase_order" do
@@ -92,7 +92,7 @@ RSpec.describe 'BestBetsTest', tags: ['integration'] do
     # note that we're searching for "bet best", not "best bet" here.
     links = get_links "/search?q=bet+best"
 
-    refute links.include?("/only-shown-for-exact-matches")
+    expect(links).not_to include("/only-shown-for-exact-matches")
   end
 
 private

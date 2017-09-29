@@ -7,23 +7,23 @@ RSpec.describe FieldDefinitionParser do
     end
 
     it "recognise the `link` field definition" do
-      assert_equal "link", @definitions["link"].name
+      expect("link").to eq(@definitions["link"].name)
     end
 
     it "know that the `link` field has type `identifier`" do
-      assert_equal "identifier", @definitions["link"].type.name
+      expect("identifier").to eq(@definitions["link"].type.name)
     end
 
     it "know that the `link` field has a description" do
-      refute @definitions["link"].description.empty?
+      expect(@definitions["link"].description).not_to be_empty
     end
 
     it "know that the `link` field has no children" do
-      assert @definitions["link"].children.nil?
+      expect(@definitions["link"].children).to be_nil
     end
 
     it "know that the `attachments` field has a child of `title` of type searchable_text" do
-      assert_equal "searchable_text", @definitions["attachments"].children["title"].type.name
+      expect("searchable_text").to eq(@definitions["attachments"].children["title"].type.name)
     end
 
     it "be able to merge two field definitions" do
@@ -34,9 +34,9 @@ RSpec.describe FieldDefinitionParser do
       definition2 = FieldDefinition.new("foo", "string", {}, "", nil, [value2, value3])
       merged = definition2.merge(definition1)
 
-      assert_equal "foo", merged.name
-      assert_equal "string", merged.type
-      assert_equal [value1, value2, value3], merged.expanded_search_result_fields.sort_by { |item| item["value"] }
+      expect("foo").to eq(merged.name)
+      expect("string").to eq(merged.type)
+      expect([value1, value2, value3]).to eq(merged.expanded_search_result_fields.sort_by { |item| item["value"] })
     end
   end
 end

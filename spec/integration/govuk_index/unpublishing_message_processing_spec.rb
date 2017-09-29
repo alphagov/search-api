@@ -16,16 +16,16 @@ RSpec.describe 'GovukIndex::UnpublishingMessageProcessing', tags: ['integration'
     base_path = message.payload['base_path']
 
     commit_document('govuk_test', { 'link' => base_path }, id: base_path, type: 'answer')
-    assert_document_is_in_rummager({ 'link' => base_path }, index: 'govuk_test', type: 'answer')
+    expect_document_is_in_rummager({ 'link' => base_path }, index: 'govuk_test', type: 'answer')
 
     processor = GovukIndex::PublishingEventProcessor.new
 
     processor.process(message)
     commit_index('govuk_test')
 
-    assert_raises(Elasticsearch::Transport::Transport::Errors::NotFound) do
+    expect {
       fetch_document_from_rummager(id: base_path, index: 'govuk_test', type: 'answer')
-    end
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 
   it "unpublish_withdrawn_messages_will_set_is_withdrawn_flag" do
@@ -47,13 +47,13 @@ RSpec.describe 'GovukIndex::UnpublishingMessageProcessing', tags: ['integration'
 
     commit_document('govuk_test', { 'link' => base_path }, id: base_path, type: type)
 
-    assert_document_is_in_rummager({ 'link' => base_path, 'is_withdrawn' => nil }, index: 'govuk_test', type: type)
+    expect_document_is_in_rummager({ 'link' => base_path, 'is_withdrawn' => nil }, index: 'govuk_test', type: type)
     processor = GovukIndex::PublishingEventProcessor.new
 
     processor.process(message)
     commit_index('govuk_test')
 
-    assert_document_is_in_rummager({ 'link' => base_path, 'is_withdrawn' => true }, index: 'govuk_test', type: type)
+    expect_document_is_in_rummager({ 'link' => base_path, 'is_withdrawn' => true }, index: 'govuk_test', type: type)
   end
 
   def unpublishing_event_message(schema_name, user_defined: {}, excluded_fields: [])

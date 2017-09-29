@@ -37,7 +37,6 @@ group :test do
   gem 'bunny-mock', '~> 1.7'
   gem "ci_reporter", "~> 1.7.1"
   gem 'govuk_schemas', '~> 2.2.0'
-  gem "minitest", "~> 5.6.0"
   gem "rack-test", "~> 0.6.3"
   gem 'rspec'
   gem "simplecov", "~> 0.10.0"

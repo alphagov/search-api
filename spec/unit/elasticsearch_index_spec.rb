@@ -14,7 +14,7 @@ RSpec.describe SearchIndices::Index do
         headers: { 'Content-Type' => 'application/json' },
       )
 
-    assert_equal "real-name", @index.real_name
+    expect("real-name").to eq(@index.real_name)
   end
 
   it "real_name_when_no_index" do
@@ -25,7 +25,7 @@ RSpec.describe SearchIndices::Index do
         headers: { 'Content-Type' => 'application/json' },
       )
 
-    assert_nil @index.real_name
+    expect(@index.real_name).to be_nil
   end
 
   it "real_name_when_no_index_es0_20" do
@@ -37,7 +37,7 @@ RSpec.describe SearchIndices::Index do
         headers: { 'Content-Type' => 'application/json' },
       )
 
-    assert_nil @index.real_name
+    expect(@index.real_name).to be_nil
   end
 
   it "exists" do
@@ -47,7 +47,7 @@ RSpec.describe SearchIndices::Index do
         headers: { 'Content-Type' => 'application/json' },
       )
 
-    assert @index.exists?
+    expect(@index).to be_exists
   end
 
   it "should_raise_error_for_failures_in_bulk_update" do
@@ -79,7 +79,7 @@ RSpec.describe SearchIndices::Index do
       @index.add(documents)
       flunk("No exception raised")
     rescue Indexer::BulkIndexFailure => e
-      assert_equal "Indexer::BulkIndexFailure", e.message
+      expect("Indexer::BulkIndexFailure").to eq(e.message)
     end
   end
 
@@ -144,7 +144,7 @@ RSpec.describe SearchIndices::Index do
     ).then.to_raise("should never happen")
 
     result = @index.documents_by_format("organisation", sample_field_definitions(%w(link title)))
-    assert_equal (1..10).map { |i| "Organisation #{i}" }, result.map { |r| r['title'] }
+    expect((1..10).map { |i| "Organisation #{i}" }).to eq(result.map { |r| r['title'] })
   end
 
   it "can_fetch_documents_by_format_with_certain_fields" do
@@ -171,8 +171,8 @@ RSpec.describe SearchIndices::Index do
     ).then.to_raise("should never happen")
 
     result = @index.documents_by_format("organisation", sample_field_definitions(%w(link title))).to_a
-    assert_equal (1..10).map { |i| "Organisation #{i}" }, result.map { |r| r['title'] }
-    assert_equal (1..10).map { |i| "/organisation-#{i}" }, result.map { |r| r['link'] }
+    expect((1..10).map { |i| "Organisation #{i}" }).to eq(result.map { |r| r['title'] })
+    expect((1..10).map { |i| "/organisation-#{i}" }).to eq(result.map { |r| r['link'] })
   end
 
   it "all_documents_size" do
@@ -184,7 +184,7 @@ RSpec.describe SearchIndices::Index do
       body: { _scroll_id: "abcdefgh", hits: { total: 100 } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
     ).then.to_raise("should never happen")
-    assert_equal @index.all_documents.size, 100
+    expect(@index.all_documents.size).to eq(100)
   end
 
   it "all_documents" do
@@ -212,9 +212,9 @@ RSpec.describe SearchIndices::Index do
       headers: { 'Content-Type' => 'application/json' },
     ).then.to_raise("should never happen")
     all_documents = @index.all_documents.to_a
-    assert_equal 100, all_documents.size
-    assert_equal "/foo-1", all_documents.first.link
-    assert_equal "/foo-100", all_documents.last.link
+    expect(100).to eq(all_documents.size)
+    expect("/foo-1").to eq(all_documents.first.link)
+    expect("/foo-100").to eq(all_documents.last.link)
   end
 
   it "changing_scroll_id" do
@@ -259,7 +259,7 @@ RSpec.describe SearchIndices::Index do
     ).then.to_raise("should never happen")
 
     all_documents = @index.all_documents.to_a
-    assert_equal ["/foo-1", "/foo-2", "/foo-3"], all_documents.map(&:link)
+    expect(["/foo-1", "/foo-2", "/foo-3"]).to eq(all_documents.map(&:link))
   end
 
 private

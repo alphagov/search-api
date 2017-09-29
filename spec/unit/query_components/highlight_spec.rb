@@ -7,7 +7,7 @@ RSpec.describe QueryComponents::Highlight do
 
       payload = QueryComponents::Highlight.new(parameters).payload
 
-      assert payload[:fields].keys.include?(:title)
+      expect(payload[:fields].keys).to include(:title)
     end
 
     it 'enables highlighting on description' do
@@ -15,7 +15,7 @@ RSpec.describe QueryComponents::Highlight do
 
       payload = QueryComponents::Highlight.new(parameters).payload
 
-      assert payload[:fields].keys.include?(:description)
+      expect(payload[:fields].keys).to include(:description)
     end
 
     it 'does not enable highlighting when not requested' do
@@ -23,7 +23,7 @@ RSpec.describe QueryComponents::Highlight do
 
       payload = QueryComponents::Highlight.new(parameters).payload
 
-      assert payload.nil?
+      expect(payload).to be_nil
     end
   end
 end

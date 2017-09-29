@@ -76,9 +76,9 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.delete_error')
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
 
-    assert_raises(GovukIndex::ElasticsearchError) do
+    expect {
       subject.perform('routing.unpublish', payload)
-    end
+    }.to raise_error(GovukIndex::ElasticsearchError)
   end
 
   it "does_not_raise_error_when_document_not_found_while_attempting_to_delete" do
@@ -116,9 +116,9 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.multiple_responses')
     expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
 
-    assert_raises(GovukIndex::MultipleMessagesInElasticsearchResponse) do
+    expect {
       subject.perform('routing.unpublish', payload)
-    end
+    }.to raise_error(GovukIndex::MultipleMessagesInElasticsearchResponse)
   end
 
   it "notify_when_validation_error" do

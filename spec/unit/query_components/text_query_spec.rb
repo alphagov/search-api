@@ -7,7 +7,7 @@ RSpec.describe QueryComponents::TextQuery do
 
       query = builder.payload
 
-      assert_match(/all_searchable_text.synonym/, query.to_s)
+      expect(query.to_s).to match(/all_searchable_text.synonym/)
     end
 
     it "not use the all_searchable_text.synonym field" do
@@ -15,7 +15,7 @@ RSpec.describe QueryComponents::TextQuery do
 
       query = builder.payload
 
-      refute_match(/all_searchable_text.synonym/, query.to_s)
+      expect(query.to_s).not_to match(/all_searchable_text.synonym/)
     end
   end
 

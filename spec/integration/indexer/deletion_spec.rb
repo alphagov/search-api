@@ -8,7 +8,7 @@ RSpec.describe 'ElasticsearchDeletionTest', tags: ['integration'] do
 
     delete "/documents/%2Fan-example-page"
 
-    assert_document_missing_in_rummager(id: "/an-example-page")
+    expect_document_missing_in_rummager(id: "/an-example-page")
   end
 
   it "removes_a_document_from_the_index_queued" do
@@ -18,7 +18,7 @@ RSpec.describe 'ElasticsearchDeletionTest', tags: ['integration'] do
 
     delete "/documents/%2Fan-example-page"
 
-    assert_equal 202, last_response.status
+    expect(202).to eq(last_response.status)
   end
 
   it "removes_document_with_url" do
@@ -28,7 +28,7 @@ RSpec.describe 'ElasticsearchDeletionTest', tags: ['integration'] do
 
     delete "/documents/edition/http:%2F%2Fexample.com%2F"
 
-    assert_document_missing_in_rummager(id: "http://example.com/")
+    expect_document_missing_in_rummager(id: "http://example.com/")
   end
 
   it "should_delete_a_best_bet_by_type_and_id" do
@@ -42,20 +42,20 @@ RSpec.describe 'ElasticsearchDeletionTest', tags: ['integration'] do
 
     delete "/metasearch_test/documents/best_bet/jobs_exact"
 
-    assert_raises Elasticsearch::Transport::Transport::Errors::NotFound do
+    expect {
       client.get(
         index: 'metasearch_test',
         type: 'best_bet',
         id: 'jobs_exact'
       )
-    end
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 
 private
 
-  def assert_document_missing_in_rummager(id:)
-    assert_raises Elasticsearch::Transport::Transport::Errors::NotFound do
+  def expect_document_missing_in_rummager(id:)
+    expect {
       fetch_document_from_rummager(id: id)
-    end
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 end

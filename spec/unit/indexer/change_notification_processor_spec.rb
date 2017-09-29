@@ -13,7 +13,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
 
     result = described_class.trigger(message_payload)
 
-    assert_equal(:rejected, result)
+    expect(:rejected).to eq(result)
   end
 
   it "rejects_invalid_documents" do
@@ -21,7 +21,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
 
     result = described_class.trigger(message_payload)
 
-    assert_equal(:rejected, result)
+    expect(:rejected).to eq(result)
   end
 
   it "rejects_missing_documents" do
@@ -40,7 +40,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
 
     result = described_class.trigger(message_payload)
 
-    assert_equal(:rejected, result)
+    expect(:rejected).to eq(result)
   end
 
   it "accepts_existing_documents" do
@@ -64,6 +64,6 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
     expect(Indexer::AmendWorker).to receive(:perform_async).with("index_name-123", "document_id_345", {})
     result = described_class.trigger(message_payload)
 
-    assert_equal(:accepted, result)
+    expect(:accepted).to eq(result)
   end
 end

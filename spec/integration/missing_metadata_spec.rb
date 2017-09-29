@@ -10,7 +10,7 @@ RSpec.describe 'MissingMetadataTest', tags: ['integration'] do
     runner = MissingMetadata::Runner.new('content_id', search_config: SearchConfig.instance, logger: io)
     results = runner.retrieve_records_with_missing_value
 
-    assert_equal [{ _id: '/path/to_page', index: 'mainstream_test' }], results
+    expect([{ _id: '/path/to_page', index: 'mainstream_test' }]).to eq results
   end
 
   it "ignores_already_set_content_id" do
@@ -23,7 +23,7 @@ RSpec.describe 'MissingMetadataTest', tags: ['integration'] do
     runner = MissingMetadata::Runner.new('content_id', search_config: SearchConfig.instance, logger: io)
     results = runner.retrieve_records_with_missing_value
 
-    assert_empty results
+    expect(results).to be_empty
   end
 
   it "finds_missing_document_type" do
@@ -36,7 +36,7 @@ RSpec.describe 'MissingMetadataTest', tags: ['integration'] do
     runner = MissingMetadata::Runner.new('content_store_document_type', search_config: SearchConfig.instance, logger: io)
     results = runner.retrieve_records_with_missing_value
 
-    assert_equal [{ _id: '/path/to_page', index: 'mainstream_test', content_id: '8aea1742-9cc6-4dfb-a63b-12c3e66a601f' }], results
+    expect([{ _id: '/path/to_page', index: 'mainstream_test', content_id: '8aea1742-9cc6-4dfb-a63b-12c3e66a601f' }]).to eq results
   end
 
   it "ignores_already_set_document_type" do
@@ -50,7 +50,7 @@ RSpec.describe 'MissingMetadataTest', tags: ['integration'] do
     runner = MissingMetadata::Runner.new('content_store_document_type', search_config: SearchConfig.instance, logger: io)
     results = runner.retrieve_records_with_missing_value
 
-    assert_empty results
+    expect(results).to be_empty
   end
 
   def io

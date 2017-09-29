@@ -4,7 +4,7 @@ RSpec.describe 'ContentEndpointsTest', tags: ['integration'] do
   it "content_document_not_found" do
     get "/content?link=/a-document/that-does-not-exist"
 
-    assert last_response.not_found?
+    expect(last_response).to be_not_found
   end
 
   it "that_getting_a_document_returns_the_document" do
@@ -15,11 +15,8 @@ RSpec.describe 'ContentEndpointsTest', tags: ['integration'] do
 
     get "/content?link=a-document/in-search"
 
-    assert last_response.ok?
-    assert_equal(
-      { "title" => "A nice title", "link" => "a-document/in-search" },
-      parsed_response['raw_source']
-    )
+    expect(last_response).to be_ok
+    expect("title" => "A nice title", "link" => "a-document/in-search").to eq parsed_response['raw_source']
   end
 
   it "deleting_a_document" do
@@ -30,13 +27,13 @@ RSpec.describe 'ContentEndpointsTest', tags: ['integration'] do
 
     delete "/content?link=a-document/in-search"
 
-    assert_equal 204, last_response.status
+    expect(204).to eq(last_response.status)
   end
 
   it "deleting_a_document_that_doesnt_exist" do
     delete "/content?link=a-document/in-search"
 
-    assert last_response.not_found?
+    expect(last_response).to be_not_found
   end
 
   it "deleting_a_document_from_locked_index" do
@@ -49,6 +46,6 @@ RSpec.describe 'ContentEndpointsTest', tags: ['integration'] do
 
     delete "/content?link=a-document/in-search"
 
-    assert_equal 423, last_response.status
+    expect(423).to eq(last_response.status)
   end
 end

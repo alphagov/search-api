@@ -3,20 +3,20 @@ require 'spec_helper'
 RSpec.describe HealthCheck::BasicAuthCredentials do
   it "be callable with a user:password string" do
     creds = HealthCheck::BasicAuthCredentials.call "bob:horseradish"
-    assert_equal "bob", creds.user
-    assert_equal "horseradish", creds.password
+    expect("bob").to eq(creds.user)
+    expect("horseradish").to eq(creds.password)
   end
 
   it "fail on a malformed string" do
-    assert_raises ArgumentError do
+    expect {
       HealthCheck::BasicAuthCredentials.call "spoons"
-    end
+    }.to raise_error(ArgumentError)
   end
 
   it "fail on a nil value" do
-    assert_raises ArgumentError do
+    expect {
       HealthCheck::BasicAuthCredentials.call nil
-    end
+    }.to raise_error(ArgumentError)
   end
 
   it "be splattable" do

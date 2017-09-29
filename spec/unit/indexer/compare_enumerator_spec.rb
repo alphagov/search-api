@@ -8,7 +8,7 @@ RSpec.describe Indexer::CompareEnumerator do
     stub_scroll_enumerator(left_request: [data_left], right_request: [data_right])
 
     results = described_class.new('index_a', 'index_b').to_a
-    assert_equal results, [[data_left, data_right]]
+    expect(results).to eq([[data_left, data_right]])
   end
 
   it "when_key_only_exists_in_left_index" do
@@ -17,7 +17,7 @@ RSpec.describe Indexer::CompareEnumerator do
     stub_scroll_enumerator(left_request: [data], right_request: [])
 
     results = described_class.new('index_a', 'index_b').to_a
-    assert_equal results, [[data, described_class::NO_VALUE]]
+    expect(results).to eq([[data, described_class::NO_VALUE]])
   end
 
 
@@ -27,7 +27,7 @@ RSpec.describe Indexer::CompareEnumerator do
     stub_scroll_enumerator(left_request: [], right_request: [data])
 
     results = described_class.new('index_a', 'index_b').to_a
-    assert_equal results, [[described_class::NO_VALUE, data]]
+    expect(results).to eq([[described_class::NO_VALUE, data]])
   end
 
   it "with_matching_ids_but_different_types" do
@@ -37,10 +37,10 @@ RSpec.describe Indexer::CompareEnumerator do
     stub_scroll_enumerator(left_request: [data_left], right_request: [data_right])
 
     results = described_class.new('index_a', 'index_b').to_a
-    assert_equal results, [
+    expect(results).to eq([
       [described_class::NO_VALUE, data_right],
       [data_left, described_class::NO_VALUE],
-    ]
+    ])
   end
 
   it "with_different_ids" do
@@ -50,10 +50,10 @@ RSpec.describe Indexer::CompareEnumerator do
     stub_scroll_enumerator(left_request: [data_left], right_request: [data_right])
 
     results = described_class.new('index_a', 'index_b').to_a
-    assert_equal results, [
+    expect(results).to eq([
       [data_left, described_class::NO_VALUE],
       [described_class::NO_VALUE, data_right],
-    ]
+    ])
   end
 
   it "correct_aligns_records_with_matching_keys" do
@@ -66,13 +66,13 @@ RSpec.describe Indexer::CompareEnumerator do
     stub_scroll_enumerator(left_request: [key1, key3, key5], right_request: [key2, key3, key4, key5])
 
     results = described_class.new('index_a', 'index_b').to_a
-    assert_equal results, [
+    expect(results).to eq([
       [key1, described_class::NO_VALUE],
       [described_class::NO_VALUE, key2],
       [key3, key3],
       [described_class::NO_VALUE, key4],
       [key5, key5],
-    ]
+    ])
   end
 
   it "scroll_enumerator_mappings" do
@@ -81,9 +81,9 @@ RSpec.describe Indexer::CompareEnumerator do
 
     enum = described_class.new('index_a', 'index_b').get_enum('index_name')
 
-    assert_equal enum.to_a, [
+    expect(enum.to_a).to eq([
       { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
-    ]
+    ])
   end
 
   it "scroll_enumerator_mappings_when_filter_is_passed_in" do
@@ -94,9 +94,9 @@ RSpec.describe Indexer::CompareEnumerator do
 
     enum = described_class.new('index_a', 'index_b').get_enum('index_name', search_body)
 
-    assert_equal enum.to_a, [
+    expect(enum.to_a).to eq([
       { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
-    ]
+    ])
   end
 
   it "scroll_enumerator_mappings_without_sorting" do
@@ -107,9 +107,9 @@ RSpec.describe Indexer::CompareEnumerator do
 
     enum = described_class.new('index_a', 'index_b').get_enum('index_name', search_body)
 
-    assert_equal enum.to_a, [
+    expect(enum.to_a).to eq([
       { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
-    ]
+    ])
   end
 
 private

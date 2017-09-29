@@ -29,8 +29,8 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
       "5f42c670-5b82-4f1f-ab52-0e100428d430", "4ab4764d-d9ce-425f-a8cc-aaba4a38be09"
     ]
 
-    assert_equal presenter.mainstream_browse_pages, expected_mainstream_browse_pages
-    assert_equal presenter.mainstream_browse_page_content_ids, expected_mainstream_browse_page_content_ids
+    expect(presenter.mainstream_browse_pages).to eq(expected_mainstream_browse_pages)
+    expect(presenter.mainstream_browse_page_content_ids).to eq(expected_mainstream_browse_page_content_ids)
   end
 
   it "organisations" do
@@ -59,9 +59,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expected_organisation_content_ids = ["04148522-b0c1-4137-b687-5f3c3bdd561a"]
     expected_primary_publishing_organisation = ["uk-visas-and-immigration"]
 
-    assert_equal presenter.organisations, expected_organisations
-    assert_equal presenter.organisation_content_ids, expected_organisation_content_ids
-    assert_equal presenter.primary_publishing_organisation, expected_primary_publishing_organisation
+    expect(presenter.organisations).to eq(expected_organisations)
+    expect(presenter.organisation_content_ids).to eq(expected_organisation_content_ids)
+    expect(presenter.primary_publishing_organisation).to eq(expected_primary_publishing_organisation)
   end
 
   it "taxons" do
@@ -106,8 +106,8 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     ]
     expected_taxons = ["13bba81c-b2b1-4b13-a3de-b24748977198"]
 
-    assert_equal presenter.part_of_taxonomy_tree, expected_taxonomy_tree
-    assert_equal presenter.taxons, expected_taxons
+    expect(presenter.part_of_taxonomy_tree).to eq(expected_taxonomy_tree)
+    expect(presenter.taxons).to eq(expected_taxons)
   end
 
   it "topics" do
@@ -127,8 +127,8 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expected_specialist_sectors = ["benefits-credits/tax-credits"]
     expected_topic_content_ids = ["f881f972-6094-4c7d-849c-9143461a9307"]
 
-    assert_equal presenter.specialist_sectors, expected_specialist_sectors
-    assert_equal presenter.topic_content_ids, expected_topic_content_ids
+    expect(presenter.specialist_sectors).to eq(expected_specialist_sectors)
+    expect(presenter.topic_content_ids).to eq(expected_topic_content_ids)
   end
 
   def expanded_links_presenter(expanded_links)

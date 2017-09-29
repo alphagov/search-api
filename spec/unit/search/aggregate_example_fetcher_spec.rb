@@ -61,7 +61,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
       response = fetcher.send(:prepare_response, [], [])
 
-      assert_equal response, {}
+      expect(response).to eq({})
     end
 
     it "map a response to aggregates without fields" do
@@ -71,7 +71,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
       response = fetcher.send(:prepare_response, slugs, response_list)
 
-      assert_equal response, { "a-slug-name" => { total: 1, examples: [{}] } }
+      expect(response).to eq("a-slug-name" => { total: 1, examples: [{}] })
     end
   end
 
@@ -83,7 +83,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     end
 
     it "get an empty hash of examples" do
-      assert_equal({}, @fetcher.fetch)
+      expect({}).to eq(@fetcher.fetch)
     end
   end
 
@@ -126,7 +126,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           response_for_example(1, ["example_3"]),
         ] })
 
-      assert_equal({
+      expect(
         "sector" => {
           "sector_1" => { total: 3, examples: [
               { "title" => "example_1" },
@@ -136,7 +136,7 @@ RSpec.describe Search::AggregateExampleFetcher do
               { "title" => "example_3" }
             ] },
         }
-      }, @fetcher.fetch)
+      ).to eq(@fetcher.fetch)
     end
   end
 
@@ -186,7 +186,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           response_for_example(1, ["example_3"]),
         ] })
 
-      assert_equal({
+      expect(
         "sector" => {
           "sector_1" => { total: 3, examples: [
               { "title" => "example_1" },
@@ -196,7 +196,7 @@ RSpec.describe Search::AggregateExampleFetcher do
               { "title" => "example_3" }
             ] },
         }
-      }, @fetcher.fetch)
+      ).to eq(@fetcher.fetch)
     end
   end
 
@@ -227,7 +227,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     end
 
     it "request and return aggregate examples" do
-      assert_equal({ "sector" => {} }, @fetcher.fetch)
+      expect({ "sector" => {} }).to eq(@fetcher.fetch)
     end
   end
 
@@ -281,7 +281,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           .with(expected_queries).and_return({ "responses" => stub_responses })
       end
 
-      assert_equal({
+      expect(
         "sector" => Hash[
           (0..999).map { |sector_num|
             [
@@ -290,7 +290,7 @@ RSpec.describe Search::AggregateExampleFetcher do
             ]
           }
         ]
-      }, @fetcher.fetch)
+      ).to eq(@fetcher.fetch)
     end
   end
 end

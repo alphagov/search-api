@@ -9,7 +9,7 @@ RSpec.describe GovukIndex::DocumentTypeInferer do
 
     document_type_inferer = described_class.new(payload)
 
-    assert_equal "edition", document_type_inferer.type
+    expect("edition").to eq(document_type_inferer.type)
   end
 
   it "should_raise_not_found_error" do
@@ -17,9 +17,9 @@ RSpec.describe GovukIndex::DocumentTypeInferer do
 
     allow_any_instance_of(described_class).to receive(:existing_document).and_return(nil)
 
-    assert_raises(GovukIndex::NotFoundError) do
+    expect {
       described_class.new(payload).type
-    end
+    }.to raise_error(GovukIndex::NotFoundError)
   end
 
   it "should_raise_unknown_document_type_error" do
@@ -27,9 +27,9 @@ RSpec.describe GovukIndex::DocumentTypeInferer do
 
     allow_any_instance_of(described_class).to receive(:elasticsearch_document_type).and_return(nil)
 
-    assert_raises(GovukIndex::UnknownDocumentTypeError) do
+    expect {
       described_class.new(payload).type
-    end
+    }.to raise_error(GovukIndex::UnknownDocumentTypeError)
   end
 
   it "infer_existing_document_type" do
@@ -47,6 +47,6 @@ RSpec.describe GovukIndex::DocumentTypeInferer do
 
     document_type_inferer = described_class.new(payload)
 
-    assert_equal existing_document["_type"], document_type_inferer.type
+    expect(existing_document["_type"]).to eq(document_type_inferer.type)
   end
 end

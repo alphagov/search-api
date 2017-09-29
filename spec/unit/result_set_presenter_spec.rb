@@ -170,15 +170,15 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "present empty list of results" do
-      assert_equal [], @output[:results]
+      expect([]).to eq(@output[:results])
     end
 
     it "have total of 0" do
-      assert_equal 0, @output[:total]
+      expect(0).to eq(@output[:total])
     end
 
     it "have no aggregates" do
-      assert_equal({}, @output[:aggregates])
+      expect({}).to eq(@output[:aggregates])
     end
   end
 
@@ -194,11 +194,11 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct total" do
-      assert_equal 3, @output[:total]
+      expect(3).to eq(@output[:total])
     end
 
     it "have correct number of results" do
-      assert_equal 3, @output[:results].length
+      expect(3).to eq(@output[:results].length)
     end
 
     it "have short index names" do
@@ -210,8 +210,8 @@ RSpec.describe Search::ResultSetPresenter do
     it "have the score in es_score" do
       @output[:results].zip(sample_docs).each do |result, doc|
         expect(result.keys).not_to include("_score")
-        assert result[:es_score] != nil
-        assert_equal doc["_score"], result[:es_score]
+        expect(result[:es_score]).not_to be_nil
+        expect(doc["_score"]).to eq(result[:es_score])
       end
     end
 
@@ -219,7 +219,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output[:results].zip(sample_docs).each do |result, _doc|
         doc_fields = result.keys - [:_type, :_id]
         returned_fields = result.keys - [:esscore, :_type, :_id]
-        assert_equal doc_fields, returned_fields
+        expect(doc_fields).to eq(returned_fields)
       end
     end
   end
@@ -245,7 +245,7 @@ RSpec.describe Search::ResultSetPresenter do
     it "return only basic metadata of fields" do
       expected_keys = [:index, :es_score, :_id, :elasticsearch_type, :document_type]
 
-      assert_equal expected_keys, @output[:results].first.keys
+      expect(expected_keys).to eq(@output[:results].first.keys)
     end
   end
 
@@ -270,11 +270,11 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct total" do
-      assert_equal 3, @output[:total]
+      expect(3).to eq(@output[:total])
     end
 
     it "have correct number of results" do
-      assert_equal 3, @output[:results].length
+      expect(3).to eq(@output[:results].length)
     end
 
     it "have short index names" do
@@ -286,8 +286,8 @@ RSpec.describe Search::ResultSetPresenter do
     it "have the score in es_score" do
       @output[:results].zip(sample_docs).each do |result, doc|
         expect(result.keys).not_to include("_score")
-        assert result[:es_score] != nil
-        assert_equal doc["_score"], result[:es_score]
+        expect(result[:es_score]).not_to be_nil
+        expect(doc["_score"]).to eq(result[:es_score])
       end
     end
 
@@ -295,17 +295,17 @@ RSpec.describe Search::ResultSetPresenter do
       @output[:results].zip(sample_docs).each do |result, _doc|
         doc_fields = result.keys - [:_type, :_id]
         returned_fields = result.keys - [:esscore, :_type, :_id]
-        assert_equal doc_fields, returned_fields
+        expect(doc_fields).to eq(returned_fields)
       end
     end
 
     it "have the expanded topic" do
       result = @output[:results][2]
-      assert_equal([{
+      expect([{
         "link" => "/government/topics/farming",
         "title" => "Farming",
         "slug" => "farming",
-      }], result["policy_areas"])
+      }]).to eq result["policy_areas"]
     end
   end
 
@@ -326,35 +326,35 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      assert_equal 1, @output[:aggregates].length
+      expect(1).to eq(@output[:aggregates].length)
     end
 
     it "have correct number of aggregate values" do
-      assert_equal 1, @output[:aggregates]["organisations"][:options].length
+      expect(1).to eq(@output[:aggregates]["organisations"][:options].length)
     end
 
     it "include requested aggregate scope" do
       aggregate = @output[:aggregates]["organisations"]
-      assert_equal :exclude_field_filter, aggregate[:scope]
+      expect(:exclude_field_filter).to eq(aggregate[:scope])
     end
 
     it "have correct top aggregate value value" do
-      assert_equal({
+      expect(
         value: { "slug" => "hm-magic" },
         documents: 7,
-      }, @output[:aggregates]["organisations"][:options][0])
+      ).to eq @output[:aggregates]["organisations"][:options][0]
     end
 
     it "have correct number of documents with no value" do
-      assert_equal(8, @output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
     end
 
     it "have correct total number of options" do
-      assert_equal(2, @output[:aggregates]["organisations"][:total_options])
+      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
     end
 
     it "have correct number of missing options" do
-      assert_equal(1, @output[:aggregates]["organisations"][:missing_options])
+      expect(1).to eq(@output[:aggregates]["organisations"][:missing_options])
     end
   end
 
@@ -376,37 +376,37 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      assert_equal 1, @output[:aggregates].length
+      expect(1).to eq(@output[:aggregates].length)
     end
 
     it "have correct number of aggregate values" do
-      assert_equal 2, @output[:aggregates]["organisations"][:options].length
+      expect(2).to eq(@output[:aggregates]["organisations"][:options].length)
     end
 
     it "have selected aggregate first" do
-      assert_equal({
+      expect(
         value: { "slug" => "hmrc" },
         documents: 5,
-      }, @output[:aggregates]["organisations"][:options][0])
+      ).to eq @output[:aggregates]["organisations"][:options][0]
     end
 
     it "have unapplied aggregate value second" do
-      assert_equal({
+      expect(
         value: { "slug" => "hm-magic" },
         documents: 7,
-      }, @output[:aggregates]["organisations"][:options][1])
+      ).to eq @output[:aggregates]["organisations"][:options][1]
     end
 
     it "have correct number of documents with no value" do
-      assert_equal(8, @output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
     end
 
     it "have correct total number of options" do
-      assert_equal(2, @output[:aggregates]["organisations"][:total_options])
+      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
     end
 
     it "have correct number of missing options" do
-      assert_equal(0, @output[:aggregates]["organisations"][:missing_options])
+      expect(0).to eq(@output[:aggregates]["organisations"][:missing_options])
     end
   end
 
@@ -428,37 +428,37 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      assert_equal 1, @output[:aggregates].length
+      expect(1).to eq(@output[:aggregates].length)
     end
 
     it "have correct number of aggregate values" do
-      assert_equal 2, @output[:aggregates]["organisations"][:options].length
+      expect(2).to eq(@output[:aggregates]["organisations"][:options].length)
     end
 
     it "have selected aggregate first" do
-      assert_equal({
+      expect(
         value: { "slug" => "hm-cheesemakers" },
         documents: 0,
-      }, @output[:aggregates]["organisations"][:options][0])
+      ).to eq @output[:aggregates]["organisations"][:options][0]
     end
 
     it "have unapplied aggregate value second" do
-      assert_equal({
+      expect(
         value: { "slug" => "hm-magic" },
         documents: 7,
-      }, @output[:aggregates]["organisations"][:options][1])
+      ).to eq @output[:aggregates]["organisations"][:options][1]
     end
 
     it "have correct number of documents with no value" do
-      assert_equal(8, @output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
     end
 
     it "have correct total number of options" do
-      assert_equal(2, @output[:aggregates]["organisations"][:total_options])
+      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
     end
 
     it "have correct number of missing options" do
-      assert_equal(1, @output[:aggregates]["organisations"][:missing_options])
+      expect(1).to eq(@output[:aggregates]["organisations"][:missing_options])
     end
   end
 
@@ -475,23 +475,23 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      assert_equal 1, @output[:aggregates].length
+      expect(1).to eq(@output[:aggregates].length)
     end
 
     it "have no aggregate values" do
-      assert_equal 0, @output[:aggregates]["organisations"][:options].length
+      expect(0).to eq(@output[:aggregates]["organisations"][:options].length)
     end
 
     it "have correct number of documents with no value" do
-      assert_equal(8, @output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
     end
 
     it "have correct total number of options" do
-      assert_equal(2, @output[:aggregates]["organisations"][:total_options])
+      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
     end
 
     it "have correct number of missing options" do
-      assert_equal(2, @output[:aggregates]["organisations"][:missing_options])
+      expect(2).to eq(@output[:aggregates]["organisations"][:missing_options])
     end
   end
 
@@ -506,10 +506,10 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have aggregates sorted by ascending count" do
-      assert_equal [
+      expect([
         aggregate_response_hmrc,
         aggregate_response_magic,
-      ], @output[:aggregates]["organisations"][:options]
+      ]).to eq @output[:aggregates]["organisations"][:options]
     end
   end
 
@@ -524,10 +524,10 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have aggregates sorted by descending count" do
-      assert_equal [
+      expect([
         aggregate_response_magic,
         aggregate_response_hmrc,
-      ], @output[:aggregates]["organisations"][:options]
+      ]).to eq @output[:aggregates]["organisations"][:options]
     end
   end
 
@@ -543,10 +543,10 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have aggregates sorted by ascending slug" do
-      assert_equal [
+      expect([
         aggregate_response_magic,
         aggregate_response_hmrc,
-      ], @output[:aggregates]["organisations"][:options]
+      ]).to eq @output[:aggregates]["organisations"][:options]
     end
   end
 
@@ -561,10 +561,10 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have aggregates sorted by ascending link" do
-      assert_equal [
+      expect([
         aggregate_response_magic,
         aggregate_response_hmrc,
-      ], @output[:aggregates]["organisations"][:options]
+      ]).to eq @output[:aggregates]["organisations"][:options]
     end
   end
 
@@ -579,10 +579,10 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have aggregates sorted by ascending title" do
-      assert_equal [
+      expect([
         aggregate_response_hmrc,
         aggregate_response_magic,
-      ], @output[:aggregates]["organisations"][:options]
+      ]).to eq @output[:aggregates]["organisations"][:options]
     end
   end
 
@@ -606,45 +606,45 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      assert_equal 2, @output[:aggregates].length
+      expect(2).to eq(@output[:aggregates].length)
     end
 
     it "have correct number of aggregate values" do
-      assert_equal 1, @output[:aggregates]["organisations"][:options].length
-      assert_equal 1, @output[:aggregates]["policy_areas"][:options].length
+      expect(1).to eq(@output[:aggregates]["organisations"][:options].length)
+      expect(1).to eq(@output[:aggregates]["policy_areas"][:options].length)
     end
 
     it "have org aggregate value expanded" do
-      assert_equal({
+      expect(
         value: {
           "link" => "/government/departments/hm-magic",
           "title" => "Ministry of Magic",
           "slug" => "hm-magic",
         },
         documents: 7,
-      }, @output[:aggregates]["organisations"][:options][0])
+      ).to eq @output[:aggregates]["organisations"][:options][0]
     end
 
     it "have topic aggregate value un-expanded" do
-      assert_equal({
+      expect(
         value: { "slug" => "unknown_topic" },
         documents: 5,
-      }, @output[:aggregates]["policy_areas"][:options][0])
+      ).to eq @output[:aggregates]["policy_areas"][:options][0]
     end
 
     it "have correct number of documents with no value" do
-      assert_equal(8, @output[:aggregates]["organisations"][:documents_with_no_value])
-      assert_equal(3, @output[:aggregates]["policy_areas"][:documents_with_no_value])
+      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(3).to eq(@output[:aggregates]["policy_areas"][:documents_with_no_value])
     end
 
     it "have correct total number of options" do
-      assert_equal(2, @output[:aggregates]["organisations"][:total_options])
-      assert_equal(2, @output[:aggregates]["policy_areas"][:total_options])
+      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
+      expect(2).to eq(@output[:aggregates]["policy_areas"][:total_options])
     end
 
     it "have correct number of missing options" do
-      assert_equal(1, @output[:aggregates]["organisations"][:missing_options])
-      assert_equal(1, @output[:aggregates]["policy_areas"][:missing_options])
+      expect(1).to eq(@output[:aggregates]["organisations"][:missing_options])
+      expect(1).to eq(@output[:aggregates]["policy_areas"][:missing_options])
     end
   end
 
@@ -674,15 +674,15 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      assert_equal 1, @output[:aggregates].length
+      expect(1).to eq(@output[:aggregates].length)
     end
 
     it "have correct number of aggregate values" do
-      assert_equal 1, @output[:aggregates]["organisations"][:options].length
+      expect(1).to eq(@output[:aggregates]["organisations"][:options].length)
     end
 
     it "have org aggregate value expanded, and include examples" do
-      assert_equal({
+      expect(
         value: {
           "link" => "/government/departments/hm-magic",
           "title" => "Ministry of Magic",
@@ -695,19 +695,19 @@ RSpec.describe Search::ResultSetPresenter do
           },
         },
         documents: 7,
-      }, @output[:aggregates]["organisations"][:options][0])
+      ).to eq @output[:aggregates]["organisations"][:options][0]
     end
 
     it "have correct number of documents with no value" do
-      assert_equal(8, @output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
     end
 
     it "have correct total number of options" do
-      assert_equal(2, @output[:aggregates]["organisations"][:total_options])
+      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
     end
 
     it "have correct number of missing options" do
-      assert_equal(1, @output[:aggregates]["organisations"][:missing_options])
+      expect(1).to eq(@output[:aggregates]["organisations"][:missing_options])
     end
   end
 

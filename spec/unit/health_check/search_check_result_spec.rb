@@ -10,9 +10,9 @@ RSpec.describe HealthCheck::SearchCheckResult do
         let(:search_results) { ["https://www.gov.uk/a"] }
 
         it "return a successful Result" do
-          assert_equal true, subject.success
-          assert_equal "FOUND", subject.found_label
-          assert_equal "PASS", subject.success_label
+          expect(true).to eq(subject.success)
+          expect("FOUND").to eq(subject.found_label)
+          expect("PASS").to eq(subject.success_label)
         end
       end
 
@@ -21,9 +21,9 @@ RSpec.describe HealthCheck::SearchCheckResult do
         let(:search_results) { ["https://www.gov.uk/b", "https://www.gov.uk/a"] }
 
         it "return a failure Result" do
-          refute subject.success
-          assert_equal "FOUND", subject.found_label
-          assert_equal "FAIL", subject.success_label
+          expect(subject.success).to be_falsey
+          expect("FOUND").to eq(subject.found_label)
+          expect("FAIL").to eq(subject.success_label)
         end
       end
 
@@ -32,9 +32,9 @@ RSpec.describe HealthCheck::SearchCheckResult do
         let(:search_results) { ["https://www.gov.uk/b", "https://www.gov.uk/c"] }
 
         it "return a failure Result" do
-          refute subject.success
-          assert_equal "NOT FOUND", subject.found_label
-          assert_equal "FAIL", subject.success_label
+          expect(subject.success).to be_falsey
+          expect("NOT FOUND").to eq(subject.found_label)
+          expect("FAIL").to eq(subject.success_label)
         end
       end
     end
@@ -47,9 +47,9 @@ RSpec.describe HealthCheck::SearchCheckResult do
       let(:search_results) { ["https://www.gov.uk/a", "https://www.gov.uk/b"] }
 
       it "fail" do
-        refute subject.success
-        assert_equal "FOUND", subject.found_label
-        assert_equal "FAIL", subject.success_label
+        expect(subject.success).to be_falsey
+        expect("FOUND").to eq(subject.found_label)
+        expect("FAIL").to eq(subject.success_label)
       end
     end
 
@@ -58,9 +58,9 @@ RSpec.describe HealthCheck::SearchCheckResult do
       let(:search_results) { ["https://www.gov.uk/b", "https://www.gov.uk/a"] }
 
       it "pass" do
-        assert subject.success
-        assert_equal "FOUND", subject.found_label
-        assert_equal "PASS", subject.success_label
+        expect(subject.success).to be_truthy
+        expect("FOUND").to eq(subject.found_label)
+        expect("PASS").to eq(subject.success_label)
       end
     end
 
@@ -69,9 +69,9 @@ RSpec.describe HealthCheck::SearchCheckResult do
       let(:search_results) { ["https://www.gov.uk/a", "https://www.gov.uk/b"] }
 
       it "pass" do
-        assert subject.success
-        assert_equal "NOT FOUND", subject.found_label
-        assert_equal "PASS", subject.success_label
+        expect(subject.success).to be_truthy
+        expect("NOT FOUND").to eq(subject.found_label)
+        expect("PASS").to eq(subject.success_label)
       end
     end
   end

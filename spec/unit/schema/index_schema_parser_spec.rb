@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe IndexSchemaParser do
-  def assert_raises_message(message)
-    exc = assert_raises(RuntimeError) { yield }
-    assert_equal message, exc.message
+  def expect_raises_message(message)
+    expect { yield }.to raise_error(message)
   end
 
   def schema_dir
@@ -19,17 +18,18 @@ RSpec.describe IndexSchemaParser do
     end
 
     it "have a schema for the mainstream index" do
-      assert_equal "mainstream", @index_schemas["mainstream"].name
+      expect("mainstream").to eq(@index_schemas["mainstream"].name)
     end
 
     it "include configuration for the `manual_section` type in the `mainstream` index" do
       es_mappings = @index_schemas["mainstream"].es_mappings
-      assert es_mappings.keys.include?("manual_section")
-      assert_equal(
+      expect(es_mappings.keys).to include("manual_section")
+      expect(
         hash_including({
           "manual" => @identifier_es_config,
           "link" => @identifier_es_config,
-        }),
+        })
+      ).to eq(
         es_mappings["manual_section"]["properties"]
       )
     end
@@ -46,12 +46,12 @@ RSpec.describe IndexSchemaParser do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({
         "elasticsearch_types" => ["unknown_doc_type"],
       })
-      assert_raises_message(%{Unknown document type "unknown_doc_type", in index definition in "index.json"}) { @parser.parse }
+      expect_raises_message(%{Unknown document type "unknown_doc_type", in index definition in "index.json"}) { @parser.parse }
     end
 
     it "fail if index schema doesn't specify `elasticsearch_types`" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({})
-      assert_raises_message(%{Missing "elasticsearch_types", in index definition in "index.json"}) { @parser.parse }
+      expect_raises_message(%{Missing "elasticsearch_types", in index definition in "index.json"}) { @parser.parse }
     end
 
     it "fail if index schema includes unknown keys" do
@@ -59,7 +59,7 @@ RSpec.describe IndexSchemaParser do
         "elasticsearch_types" => [],
         "foo" => "bar",
       })
-      assert_raises_message(%{Unknown keys (foo), in index definition in "index.json"}) { @parser.parse }
+      expect_raises_message(%{Unknown keys (foo), in index definition in "index.json"}) { @parser.parse }
     end
   end
 end

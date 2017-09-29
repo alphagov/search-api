@@ -17,7 +17,7 @@ RSpec.describe HealthCheck::CheckFileParser do
       HealthCheck::SearchCheck.new("a", "should", "/a", 1, 1, %w(test)),
       HealthCheck::SearchCheck.new("b", "should", "/b", 1, 1, %w(test))
     ]
-    assert_equal expected, checks(data)
+    expect(expected).to eq(checks(data))
   end
 
   it "skip rows that don't have an integer for the top N number" do
@@ -27,7 +27,7 @@ RSpec.describe HealthCheck::CheckFileParser do
     END
 
     expected = []
-    assert_equal expected, checks(data)
+    expect(expected).to eq(checks(data))
   end
 
   it "skip rows that don't have a URL" do
@@ -37,7 +37,7 @@ RSpec.describe HealthCheck::CheckFileParser do
     END
 
     expected = []
-    assert_equal expected, checks(data)
+    expect(expected).to eq(checks(data))
   end
 
   it "skip rows that don't have a imperative" do
@@ -47,7 +47,7 @@ RSpec.describe HealthCheck::CheckFileParser do
     END
 
     expected = []
-    assert_equal expected, checks(data)
+    expect(expected).to eq(checks(data))
   end
 
   it "skip rows that don't have a search term" do
@@ -57,6 +57,6 @@ RSpec.describe HealthCheck::CheckFileParser do
     END
 
     expected = []
-    assert_equal expected, checks(data)
+    expect(expected).to eq(checks(data))
   end
 end

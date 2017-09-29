@@ -10,7 +10,7 @@ RSpec.describe Search::ResultPresenter do
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[format])).present
 
-    assert_equal "a-string", result["format"]
+    expect("a-string").to eq(result["format"])
   end
 
   it "conversion_values_to_labelled_objects" do
@@ -22,7 +22,11 @@ RSpec.describe Search::ResultPresenter do
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[railway_type])).present
 
-    assert_equal [{ "label" => "Heavy rail", "value" => "heavy-rail" },
-                  { "label" => "Light rail", "value" => "light-rail" }], result["railway_type"]
+    expect(
+      [
+        { "label" => "Heavy rail", "value" => "heavy-rail" },
+        { "label" => "Light rail", "value" => "light-rail" }
+      ]
+    ).to eq(result["railway_type"])
   end
 end

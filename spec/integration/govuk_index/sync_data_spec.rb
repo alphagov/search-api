@@ -11,7 +11,7 @@ RSpec.describe 'GovukIndex::SyncDataTest', tags: ['integration'] do
 
     GovukIndex::SyncUpdater.update(source_index: 'mainstream_test', destination_index: 'govuk_test')
 
-    assert_document_is_in_rummager({ 'link' => '/test' }, type: 'edition', index: 'govuk_test')
+    expect_document_is_in_rummager({ 'link' => '/test' }, type: 'edition', index: 'govuk_test')
   end
 
   it "syncs_will_overwrite_existing_data" do
@@ -22,7 +22,7 @@ RSpec.describe 'GovukIndex::SyncDataTest', tags: ['integration'] do
 
     GovukIndex::SyncUpdater.update(source_index: 'mainstream_test', destination_index: 'govuk_test')
 
-    assert_document_is_in_rummager({ 'link' => '/test', 'popularity' => 0.3 }, type: 'edition', index: 'govuk_test')
+    expect_document_is_in_rummager({ 'link' => '/test', 'popularity' => 0.3 }, type: 'edition', index: 'govuk_test')
   end
 
 
@@ -34,6 +34,6 @@ RSpec.describe 'GovukIndex::SyncDataTest', tags: ['integration'] do
 
     GovukIndex::SyncUpdater.update(source_index: 'mainstream_test', destination_index: 'govuk_test')
 
-    assert_document_is_in_rummager({ 'link' => '/test', 'popularity' => 0.4 }, type: 'edition', index: 'govuk_test')
+    expect_document_is_in_rummager({ 'link' => '/test', 'popularity' => 0.4 }, type: 'edition', index: 'govuk_test')
   end
 end

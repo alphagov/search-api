@@ -13,7 +13,7 @@ RSpec.describe Search::FormatMigrator do
         no_match_filter: 'none'
       }
     }
-    assert_equal expected, described_class.new(base_query).call
+    expect(expected).to eq(described_class.new(base_query).call)
   end
 
   it "when_base_query_with_migrated_formats" do
@@ -36,7 +36,7 @@ RSpec.describe Search::FormatMigrator do
         }
       }
     }
-    assert_equal expected, described_class.new(base_query).call
+    expect(expected).to eq(described_class.new(base_query).call)
   end
 
   it "when_no_base_query_without_migrated_formats" do
@@ -48,7 +48,7 @@ RSpec.describe Search::FormatMigrator do
         no_match_filter: 'none'
       }
     }
-    assert_equal expected, described_class.new(nil).call
+    expect(expected).to eq(described_class.new(nil).call)
   end
 
   it "when_no_base_query_with_migrated_formats" do
@@ -68,6 +68,6 @@ RSpec.describe Search::FormatMigrator do
         }
       }
     }
-    assert_equal expected, described_class.new(nil).call
+    expect(expected).to eq(described_class.new(nil).call)
   end
 end

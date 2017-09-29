@@ -18,7 +18,7 @@ RSpec.describe 'ChangeNotificationProcessorTest', tags: ['integration'] do
 
     commit_index
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "link" => "/foo",
       "mainstream_browse_pages" => [],
     })
@@ -39,7 +39,7 @@ RSpec.describe 'ChangeNotificationProcessorTest', tags: ['integration'] do
 
     commit_index
 
-    assert_document_is_in_rummager({
+    expect_document_is_in_rummager({
       "link" => "/foo",
       "mainstream_browse_pages" => ['my-browse'],
     })

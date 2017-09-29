@@ -17,31 +17,28 @@ RSpec.describe QueryComponents::Aggregates do
 
       result = builder.payload
 
-      assert_equal(
-        {
-          "organisations" => {
-            filter: { match_all: {} },
-            aggs: {
-              "filtered_aggregations" => {
-                terms: {
-                  field: "organisations",
-                  order: { _count: "desc" },
-                  size: 100000,
-                }
+      expect(
+        "organisations" => {
+          filter: { match_all: {} },
+          aggs: {
+            "filtered_aggregations" => {
+              terms: {
+                field: "organisations",
+                order: { _count: "desc" },
+                size: 100000,
               }
             }
-          },
-          "organisations_with_missing_value" => {
-            filter: { match_all: {} },
-            aggs: {
-              "filtered_aggregations" => {
-                missing: { field: "organisations" }
-              }
-            }
-          },
+          }
         },
-        result
-      )
+        "organisations_with_missing_value" => {
+          filter: { match_all: {} },
+          aggs: {
+            "filtered_aggregations" => {
+              missing: { field: "organisations" }
+            }
+          }
+        },
+      ).to eq(result)
     end
   end
 
@@ -56,30 +53,28 @@ RSpec.describe QueryComponents::Aggregates do
     end
 
     it "have correct aggregate in payload" do
-      assert_equal(
-        {
-          "organisations" => {
-            filter: { match_all: {} },
-            aggs: {
-              "filtered_aggregations" => {
-                terms: {
-                  field: "organisations",
-                  order: { _count: "desc" },
-                  size: 100000,
-                }
+      expect(
+        "organisations" => {
+          filter: { match_all: {} },
+          aggs: {
+            "filtered_aggregations" => {
+              terms: {
+                field: "organisations",
+                order: { _count: "desc" },
+                size: 100000,
               }
             }
-          },
-          "organisations_with_missing_value" => {
-            filter: { match_all: {} },
-            aggs: {
-              "filtered_aggregations" => {
-                missing: { field: "organisations" }
-              }
-            }
-          },
+          }
         },
-        @builder.payload)
+        "organisations_with_missing_value" => {
+          filter: { match_all: {} },
+          aggs: {
+            "filtered_aggregations" => {
+              missing: { field: "organisations" }
+            }
+          }
+        },
+      ).to eq(@builder.payload)
     end
   end
 
@@ -94,34 +89,32 @@ RSpec.describe QueryComponents::Aggregates do
     end
 
     it "have correct aggregate in payload" do
-      assert_equal(
-        {
-          "organisations" => {
-            filter: {
-              "terms" => { "organisations" => ["hm-magic"] },
-            },
-            aggs: {
-              'filtered_aggregations' => {
-                terms: {
-                  field: "organisations",
-                  order: { _count: "desc" },
-                  size: 100000,
-                }
-              }
-            },
+      expect(
+        "organisations" => {
+          filter: {
+            "terms" => { "organisations" => ["hm-magic"] },
           },
-          "organisations_with_missing_value" => {
-            filter: {
-              "terms" => { "organisations" => ["hm-magic"] }
-            },
-            aggs: {
-              'filtered_aggregations' => {
-                missing: { field: "organisations" }
+          aggs: {
+            'filtered_aggregations' => {
+              terms: {
+                field: "organisations",
+                order: { _count: "desc" },
+                size: 100000,
               }
             }
-          }
+          },
         },
-        @builder.payload)
+        "organisations_with_missing_value" => {
+          filter: {
+            "terms" => { "organisations" => ["hm-magic"] }
+          },
+          aggs: {
+            'filtered_aggregations' => {
+              missing: { field: "organisations" }
+            }
+          }
+        }
+      ).to eq(@builder.payload)
     end
   end
 
@@ -136,36 +129,34 @@ RSpec.describe QueryComponents::Aggregates do
     end
 
     it "have aggregate with aggregate_filter in payload" do
-      assert_equal(
-        {
-          "organisations" => {
-            filter: {
-              "terms" => { "mainstream_browse_pages" => ["levitation"] },
-            },
-            aggs: {
-              'filtered_aggregations' => {
-                terms: {
-                  field: "organisations",
-                  order: { _count: "desc" },
-                  size: 100000,
-                }
-              },
-            },
+      expect(
+        "organisations" => {
+          filter: {
+            "terms" => { "mainstream_browse_pages" => ["levitation"] },
           },
-          "organisations_with_missing_value" => {
-            filter: {
-              "terms" => {
-                "mainstream_browse_pages" => ["levitation"]
+          aggs: {
+            'filtered_aggregations' => {
+              terms: {
+                field: "organisations",
+                order: { _count: "desc" },
+                size: 100000,
               }
             },
-            aggs: {
-              'filtered_aggregations' => {
-                missing: { field: "organisations" }
-              }
-            }
           },
         },
-        @builder.payload)
+        "organisations_with_missing_value" => {
+          filter: {
+            "terms" => {
+              "mainstream_browse_pages" => ["levitation"]
+            }
+          },
+          aggs: {
+            'filtered_aggregations' => {
+              missing: { field: "organisations" }
+            }
+          }
+        },
+      ).to eq(@builder.payload)
     end
   end
 

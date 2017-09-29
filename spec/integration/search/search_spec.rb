@@ -4,7 +4,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   it "returns_success" do
     get "/search?q=important"
 
-    assert last_response.ok?
+    expect(last_response).to be_ok
   end
 
   it "id_code_with_space" do
@@ -21,11 +21,11 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=p+60&debug=use_id_codes"
 
-    assert_equal(parsed_response['results'].size, 1)
-    assert_equal(parsed_response["results"][0]["link"], "/get-paye-forms-p45-p60")
+    expect(parsed_response['results'].size).to eq(1)
+    expect(parsed_response["results"][0]["link"]).to eq("/get-paye-forms-p45-p60")
 
     get "/search?q=p+60"
-    assert_equal(parsed_response['results'].size, 0)
+    expect(parsed_response['results'].size).to eq(0)
   end
 
   it "spell_checking_with_typo" do
@@ -37,7 +37,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=serch&suggest=spelling"
 
-    assert_equal ['search'], parsed_response['suggested_queries']
+    expect(['search']).to eq(parsed_response['suggested_queries'])
   end
 
   it "spell_checking_with_blacklisted_typo" do
@@ -48,7 +48,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=brexit&suggest=spelling"
 
-    assert_equal [], parsed_response['suggested_queries']
+    expect([]).to eq(parsed_response['suggested_queries'])
   end
 
   it "spell_checking_without_typo" do
@@ -56,7 +56,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=milliband"
 
-    assert_equal [], parsed_response['suggested_queries']
+    expect([]).to eq(parsed_response['suggested_queries'])
   end
 
   it "returns_docs_from_all_indexes" do
@@ -64,8 +64,8 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important"
 
-    assert result_links.include? "/government-1"
-    assert result_links.include? "/mainstream-1"
+    expect(result_links).to include "/government-1"
+    expect(result_links).to include "/mainstream-1"
   end
 
   it "sort_by_date_ascending" do
@@ -73,8 +73,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&order=public_timestamp"
 
-    assert_equal ["/government-1", "/government-2"],
-      result_links.take(2)
+    expect(["/government-1", "/government-2"]).to eq(result_links.take(2))
   end
 
   it "sort_by_date_descending" do
@@ -84,8 +83,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     # The government links have dates, so appear before all the other links.
     # The other documents have no dates, so appear in an undefined order
-    assert_equal ["/government-2", "/government-1"],
-      result_links.take(2)
+    expect(["/government-2", "/government-1"]).to eq(result_links.take(2))
   end
 
   it "sort_by_title_ascending" do
@@ -94,7 +92,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?order=title"
     lowercase_titles = result_titles.map(&:downcase)
 
-    assert_equal lowercase_titles, lowercase_titles.sort
+    expect(lowercase_titles).to eq(lowercase_titles.sort)
   end
 
   it "filter_by_field" do
@@ -102,8 +100,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_mainstream_browse_pages=browse/page/1"
 
-    assert_equal ["/government-1", "/mainstream-1"],
-      result_links.sort
+    expect(["/government-1", "/mainstream-1"]).to eq(result_links.sort)
   end
 
   it "reject_by_field" do
@@ -111,8 +108,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?reject_mainstream_browse_pages=browse/page/1"
 
-    assert_equal ["/government-2", "/mainstream-2"],
-      result_links.sort
+    expect(["/government-2", "/mainstream-2"]).to eq(result_links.sort)
   end
 
   it "can_filter_for_missing_field" do
@@ -120,8 +116,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_specialist_sectors=_MISSING"
 
-    assert_equal ["/government-1", "/mainstream-1"],
-      result_links.sort
+    expect(["/government-1", "/mainstream-1"]).to eq(result_links.sort)
   end
 
   it "can_filter_for_missing_or_specific_value_in_field" do
@@ -129,8 +124,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
-    assert_equal ["/government-1", "/mainstream-1"],
-      result_links.sort
+    expect(["/government-1", "/mainstream-1"]).to eq(result_links.sort)
   end
 
   it "can_filter_and_reject" do
@@ -138,10 +132,10 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
-    assert_equal [
+    expect([
       "/government-2",
       "/mainstream-2",
-    ], result_links.sort
+    ]).to eq(result_links.sort)
   end
 
   it "only_contains_fields_which_are_present" do
@@ -150,8 +144,8 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?q=important&order=public_timestamp"
 
     results = parsed_response["results"]
-    refute_includes results[0].keys, "specialist_sectors"
-    assert_equal [{ "slug" => "farming" }], results[1]["specialist_sectors"]
+    expect(results[0].keys).not_to include("specialist_sectors")
+    expect([{ "slug" => "farming" }]).to eq(results[1]["specialist_sectors"])
   end
 
   it "aggregate_counting" do
@@ -159,11 +153,11 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2"
 
-    assert_equal 4, parsed_response["total"]
+    expect(4).to eq(parsed_response["total"])
 
     aggregate = parsed_response["aggregates"]
 
-    assert_equal({
+    expect(
       "mainstream_browse_pages" => {
         "options" => [
           { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
@@ -174,7 +168,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
         "missing_options" => 0,
         "scope" => "exclude_field_filter",
       }
-    }, aggregate)
+    ).to eq(aggregate)
   end
 
   # we changed facet -> aggregate but still support both
@@ -184,11 +178,11 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&facet_mainstream_browse_pages=2"
 
-    assert_equal 4, parsed_response["total"]
+    expect(4).to eq(parsed_response["total"])
 
     facets = parsed_response["facets"]
 
-    assert_equal({
+    expect(
       "mainstream_browse_pages" => {
         "options" => [
           { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
@@ -199,8 +193,8 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
         "missing_options" => 0,
         "scope" => "exclude_field_filter",
       }
-    }, facets)
-    assert_nil(parsed_response['aggregates'])
+    ).to eq(facets)
+    expect(parsed_response['aggregates']).to be_nil
   end
 
   # TODO: The `mainstream_browse_pages` fields are populated with a number, 1
@@ -210,16 +204,16 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2"
 
-    assert_equal 4, parsed_response["total"]
+    expect(4).to eq(parsed_response["total"])
     aggregates_without_filter = parsed_response["aggregates"]
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2&filter_mainstream_browse_pages=browse/page/1"
-    assert_equal 2, parsed_response["total"]
+    expect(2).to eq(parsed_response["total"])
 
     aggregates_with_filter = parsed_response["aggregates"]
 
-    assert_equal(aggregates_with_filter, aggregates_without_filter)
-    assert_equal(2, aggregates_without_filter["mainstream_browse_pages"]["options"].size)
+    expect(aggregates_with_filter).to eq(aggregates_without_filter)
+    expect(2).to eq(aggregates_without_filter["mainstream_browse_pages"]["options"].size)
   end
 
   it "aggregate_counting_missing_options" do
@@ -227,9 +221,9 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=1"
 
-    assert_equal 4, parsed_response["total"]
+    expect(4).to eq(parsed_response["total"])
     aggregates = parsed_response["aggregates"]
-    assert_equal({
+    expect(
       "mainstream_browse_pages" => {
         "options" => [
           { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
@@ -239,7 +233,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
         "missing_options" => 1,
         "scope" => "exclude_field_filter",
       }
-    }, aggregates)
+    ).to eq(aggregates)
   end
 
   it "aggregate_counting_with_filter_on_field_and_all_filters_scope" do
@@ -247,10 +241,10 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=browse/page/1"
 
-    assert_equal 2, parsed_response["total"]
+    expect(2).to eq(parsed_response["total"])
     aggregates = parsed_response["aggregates"]
 
-    assert_equal({
+    expect(
       "mainstream_browse_pages" => {
         "options" => [
           { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
@@ -260,7 +254,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
         "missing_options" => 0,
         "scope" => "all_filters",
       }
-    }, aggregates)
+    ).to eq(aggregates)
   end
 
   it "aggregate_examples" do
@@ -268,8 +262,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
-    assert_equal(
-      ["/government-1", "/mainstream-1"],
+    expect(["/government-1", "/mainstream-1"]).to eq(
       parsed_response["aggregates"]["mainstream_browse_pages"]["options"].first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
     )
   end
@@ -287,7 +280,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
     actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-    assert_equal expected_results, actual_results
+    expect(expected_results).to eq(actual_results)
   end
 
   it "aggregate_examples_after_migration" do
@@ -303,7 +296,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
     actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-    assert_equal expected_results, actual_results
+    expect(expected_results).to eq(actual_results)
   end
 
   it "aggregate_examples_before_migration_with_query_scope" do
@@ -319,7 +312,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
     actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-    assert_equal expected_results, actual_results
+    expect(expected_results).to eq(actual_results)
   end
 
   it "aggregate_examples_after_migration_with_query_scope" do
@@ -335,27 +328,27 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
     actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-    assert_equal expected_results, actual_results
+    expect(expected_results).to eq(actual_results)
   end
 
   it "validates_integer_params" do
     get "/search?start=a"
 
-    assert_equal last_response.status, 422
-    assert_equal parsed_response, { "error" => "Invalid value \"a\" for parameter \"start\" (expected positive integer)" }
+    expect(last_response.status).to eq(422)
+    expect(parsed_response).to eq({ "error" => "Invalid value \"a\" for parameter \"start\" (expected positive integer)" })
   end
 
   it "allows_integer_params_leading_zeros" do
     get "/search?start=09"
 
-    assert last_response.ok?
+    expect(last_response).to be_ok
   end
 
   it "validates_unknown_params" do
     get "/search?foo&bar=1"
 
-    assert_equal last_response.status, 422
-    assert_equal parsed_response, { "error" => "Unexpected parameters: foo, bar" }
+    expect(last_response.status).to eq(422)
+    expect(parsed_response).to eq("error" => "Unexpected parameters: foo, bar")
   end
 
   it "debug_explain_returns_explanations" do
@@ -364,10 +357,10 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?debug=explain"
 
     first_hit_explain = parsed_response["results"].first["_explanation"]
-    refute_nil first_hit_explain
-    assert first_hit_explain.keys.include?("value")
-    assert first_hit_explain.keys.include?("description")
-    assert first_hit_explain.keys.include?("details")
+    expect(first_hit_explain).not_to be_nil
+    expect(first_hit_explain.keys).to include("value")
+    expect(first_hit_explain.keys).to include("description")
+    expect(first_hit_explain.keys).to include("details")
   end
 
   it "can_scope_by_elasticsearch_type" do
@@ -375,14 +368,15 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_document_type=cma_case"
 
-    assert last_response.ok?
-    assert_equal 1, parsed_response.fetch("total")
-    assert_equal(
+    expect(last_response).to be_ok
+    expect(1).to eq(parsed_response.fetch("total"))
+    expect(
       hash_including(
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      ),
+      )
+    ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
   end
@@ -392,13 +386,14 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
 
-    assert last_response.ok?
-    assert_equal 1, parsed_response.fetch("total")
-    assert_equal(
+    expect(last_response).to be_ok
+    expect(1).to eq(parsed_response.fetch("total"))
+    expect(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      ),
+      )
+    ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
   end
@@ -408,13 +403,14 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
 
-    assert last_response.ok?
-    assert_equal 1, parsed_response.fetch("total")
-    assert_equal(
+    expect(last_response).to be_ok
+    expect(1).to eq(parsed_response.fetch("total"))
+    expect(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      ),
+      )
+    ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
   end
@@ -424,13 +420,14 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
 
-    assert last_response.ok?
-    assert_equal 1, parsed_response.fetch("total")
-    assert_equal(
+    expect(last_response).to be_ok
+    expect(1).to eq(parsed_response.fetch("total"))
+    expect(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      ),
+      )
+    ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
   end
@@ -440,13 +437,14 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
 
-    assert last_response.ok?
-    assert_equal 1, parsed_response.fetch("total")
-    assert_equal(
+    expect(last_response).to be_ok
+    expect(1).to eq(parsed_response.fetch("total"))
+    expect(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      ),
+      )
+    ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
   end
@@ -454,9 +452,10 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   it "cannot_provide_date_filter_key_multiple_times" do
     get "/search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
 
-    assert_equal 422, last_response.status
-    assert_equal(
-      { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} },
+    expect(422).to eq(last_response.status)
+    expect(
+      { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} }
+    ).to eq(
       parsed_response,
     )
   end
@@ -464,9 +463,10 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   it "cannot_provide_invalid_dates_for_date_filter" do
     get "/search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
 
-    assert_equal 422, last_response.status
-    assert_equal(
-      { "error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date} },
+    expect(422).to eq(last_response.status)
+    expect(
+      { "error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date} }
+    ).to eq(
       parsed_response,
     )
   end
@@ -487,10 +487,11 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search.json?q=dragons"
 
-    assert_equal first_result['organisations'],
+    expect(first_result['organisations']).to eq(
       [{ "slug" => "/ministry-of-magic",
          "link" => "/ministry-of-magic-site",
          "title" => "Ministry of Magic" }]
+    )
   end
 
   it "expandinging_of_organisations_via_content_id" do
@@ -513,8 +514,9 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search.json?q=dragons"
 
     # Adds a new key with the expanded organisations
-    assert_equal(
-      first_result['expanded_organisations'],
+    expect(
+      first_result['expanded_organisations']
+    ).to eq(
       [
         {
           "content_id" => 'organisation-content-id',
@@ -526,8 +528,9 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     # Keeps the organisation content ids
-    assert_equal(
-      first_result['organisation_content_ids'],
+    expect(
+      first_result['organisation_content_ids']
+    ).to eq(
       ['organisation-content-id']
     )
   end
@@ -551,7 +554,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search.json?q=dragons&fields[]=expanded_organisations"
 
-    assert(first_result['expanded_organisations'])
+    expect(first_result['expanded_organisations']).to be_truthy
   end
 
   it "filter_by_organisation_content_ids_works" do
@@ -573,7 +576,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search.json?filter_organisation_content_ids[]=organisation-content-id"
 
-    assert(first_result['expanded_organisations'])
+    expect(first_result['expanded_organisations']).to be_truthy
   end
 
   it "expandinging_of_topics" do
@@ -595,8 +598,9 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search.json?q=dragons"
 
     # Adds a new key with the expanded topics
-    assert_equal(
-      first_result['expanded_topics'],
+    expect(
+      first_result['expanded_topics']
+    ).to eq(
       [
         {
           "content_id" => 'topic-content-id',
@@ -608,7 +612,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     # Keeps the topic content ids
-    assert_equal(first_result['topic_content_ids'], ['topic-content-id'])
+    expect(first_result['topic_content_ids']).to eq(['topic-content-id'])
   end
 
   it "filter_by_topic_content_ids_works" do
@@ -628,7 +632,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
     get "/search.json?filter_topic_content_ids[]=topic-content-id"
 
-    assert(first_result['expanded_topics'])
+    expect(first_result['expanded_topics']).to be_truthy
   end
 
   it "id_search" do
@@ -636,7 +640,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=id1&debug=new_weighting"
 
-    assert result_links.include? "/mainstream-1"
+    expect(result_links).to include "/mainstream-1"
   end
 
   it "withdrawn_content" do
@@ -648,7 +652,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     get "/search?q=test"
-    assert_equal 0, parsed_response.fetch("total")
+    expect(0).to eq(parsed_response.fetch("total"))
   end
 
   it "withdrawn_content_with_flag" do
@@ -660,8 +664,8 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     get "/search?q=test&debug=include_withdrawn&fields[]=is_withdrawn"
-    assert_equal 1, parsed_response.fetch("total")
-    assert_equal true, parsed_response.dig("results", 0, "is_withdrawn")
+    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.dig("results", 0, "is_withdrawn")).to be true
   end
 
   it "withdrawn_content_with_flag_with_aggregations" do
@@ -674,13 +678,13 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     get "/search?q=test&debug=include_withdrawn&aggregate_mainstream_browse_pages=2"
-    assert_equal 1, parsed_response.fetch("total")
+    expect(1).to eq(parsed_response.fetch("total"))
   end
 
   it "show_the_query" do
     get "/search?q=test&debug=show_query"
 
-    assert parsed_response.fetch("elasticsearch_query")
+    expect(parsed_response.fetch("elasticsearch_query")).to be_truthy
   end
 
   it "dfid_can_search_by_every_aggregate" do
@@ -694,14 +698,15 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     aggregate_queries.each do |filter_query|
       get "/search?filter_document_type=dfid_research_output&#{filter_query}"
 
-      assert last_response.ok?
-      assert_equal 1, parsed_response.fetch("total"), "Failure to search by #{filter_query}"
-      assert_equal(
+      expect(last_response).to be_ok
+      expect(1).to eq(parsed_response.fetch("total")), "Failure to search by #{filter_query}"
+      expect(
         hash_including(
           "document_type" => "dfid_research_output",
           "title" => dfid_research_output_attributes.fetch("title"),
           "link" => dfid_research_output_attributes.fetch("link"),
-        ),
+        )
+      ).to eq(
         parsed_response.fetch("results").fetch(0),
       )
     end
@@ -716,10 +721,10 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     get "/search?q=test&fields[]=taxons"
-    assert_equal 1, parsed_response.fetch("total")
+    expect(1).to eq(parsed_response.fetch("total"))
 
     taxons = parsed_response.dig("results", 0, "taxons")
-    assert_equal ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"], taxons
+    expect(["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]).to eq(taxons)
   end
 
   it "taxonomy_can_be_filtered" do
@@ -732,13 +737,14 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
-    assert last_response.ok?
-    assert_equal 1, parsed_response.fetch("total")
-    assert_equal(
+    expect(last_response).to be_ok
+    expect(1).to eq(parsed_response.fetch("total"))
+    expect(
       hash_including(
         "title" => "I am the result",
         "link" => "/some-nice-link",
-      ),
+      )
+    ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
   end
@@ -754,28 +760,28 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
-    assert last_response.ok?
-    assert_equal 1, parsed_response.fetch("total")
+    expect(last_response).to be_ok
+    expect(1).to eq(parsed_response.fetch("total"))
 
     get "/search?filter_part_of_taxonomy_tree=aa2093ef-778c-4105-9f33-9aa03d14bc5c"
 
-    assert last_response.ok?
-    assert_equal 1, parsed_response.fetch("total")
+    expect(last_response).to be_ok
+    expect(1).to eq(parsed_response.fetch("total"))
   end
 
   it "return_400_response_for_integers_out_of_range" do
     get '/search.json?count=50&start=7599999900'
 
-    assert last_response.bad_request?
-    assert_equal('Integer value of 7599999900 exceeds maximum allowed', last_response.body)
+    expect(last_response).to be_bad_request
+    expect('Integer value of 7599999900 exceeds maximum allowed').to eq(last_response.body)
   end
 
   it "return_400_response_for_query_term_length_too_long" do
     terms = 1025.times.map { ('a'..'z').to_a.sample(5).join }.join(' ')
     get "/search.json?q=#{terms}"
 
-    assert last_response.bad_request?
-    assert_equal('Query must be less than 1024 words', last_response.body)
+    expect(last_response).to be_bad_request
+    expect('Query must be less than 1024 words').to eq(last_response.body)
   end
 
 private

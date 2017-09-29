@@ -9,7 +9,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       ]
     }
 
-    assert_equal "hello", details_presenter(details).indexable_content
+    expect("hello").to eq(details_presenter(details).indexable_content)
   end
 
   it "details_with_parts" do
@@ -34,7 +34,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       ]
     }
 
-    assert_equal "title 1\n\nhello\n\ntitle 2\n\ngoodbye", details_presenter(details).indexable_content
+    expect("title 1\n\nhello\n\ntitle 2\n\ngoodbye").to eq(details_presenter(details).indexable_content)
   end
 
   it "mapped_licence_fields" do
@@ -52,8 +52,8 @@ RSpec.describe GovukIndex::DetailsPresenter do
 
     presenter = details_presenter(details, "licence")
 
-    assert_equal presenter.licence_identifier, details["licence_identifier"]
-    assert_equal presenter.licence_short_description, details["licence_short_description"]
+    expect(presenter.licence_identifier).to eq(details["licence_identifier"])
+    expect(presenter.licence_short_description).to eq(details["licence_short_description"])
   end
 
   it "when_additional_indexable_content_keys_are_specified" do
@@ -67,7 +67,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       "start_button_text" => "Start now",
     }
 
-    assert_equal "introductory paragraph\n\nmore information", details_presenter(details, %w(introductory_paragraph more_information)).indexable_content
+    expect("introductory paragraph\n\nmore information").to eq(details_presenter(details, %w(introductory_paragraph more_information)).indexable_content)
   end
 
   def details_presenter(details, indexable_content_keys = %w(body parts))

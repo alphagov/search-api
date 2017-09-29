@@ -17,22 +17,21 @@ RSpec.describe 'ElasticsearchIndexGroupTest', tags: ['integration'] do
   end
 
   it "should_create_index" do
-    assert @index_group.index_names.empty?
+    expect(@index_group.index_names).to be_empty
     index = @index_group.create_index
 
-    assert_equal 1, @index_group.index_names.count
-    assert_equal index.index_name, @index_group.index_names[0]
-    assert_equal(
-      SearchConfig.instance.search_server.schema.elasticsearch_mappings("mainstream"),
-      index.mappings
-    )
+    expect(1).to eq(@index_group.index_names.count)
+    expect(index.index_name).to eq(@index_group.index_names[0])
+    expect(
+      SearchConfig.instance.search_server.schema.elasticsearch_mappings("mainstream")
+    ).to eq(index.mappings)
   end
 
   it "should_alias_index" do
     index = @index_group.create_index
     @index_group.switch_to(index)
 
-    assert_equal index.real_name, @index_group.current.real_name
+    expect(index.real_name).to eq(@index_group.current.real_name)
   end
 
   it "should_switch_index" do
@@ -42,15 +41,15 @@ RSpec.describe 'ElasticsearchIndexGroupTest', tags: ['integration'] do
     new_index = @index_group.create_index
     @index_group.switch_to(new_index)
 
-    assert_equal new_index.real_name, @index_group.current.real_name
+    expect(new_index.real_name).to eq(@index_group.current.real_name)
   end
 
   it "should_clean_indices" do
     @index_group.create_index
     @index_group.switch_to(@index_group.create_index)
 
-    assert_equal 2, @index_group.index_names.count
+    expect(2).to eq(@index_group.index_names.count)
     @index_group.clean
-    assert_equal 1, @index_group.index_names.count
+    expect(1).to eq(@index_group.index_names.count)
   end
 end

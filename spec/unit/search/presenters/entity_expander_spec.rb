@@ -16,6 +16,6 @@ RSpec.describe Search::EntityExpander do
       { "organisations" => ["rail-statistics"] }
     )
 
-    assert_equal result["organisations"].first, expandable_target
+    expect(result["organisations"].first).to eq(expandable_target)
   end
 end

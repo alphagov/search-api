@@ -11,12 +11,9 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
     builder = build_builder
     query_hash = builder.filter_query_hash
 
-    assert_equal(
-      query_hash,
-      {
-        "filter" => {
-          "not" => { "term" => { "is_withdrawn" => true } }
-        }
+    expect(query_hash).to eq(
+      "filter" => {
+        "not" => { "term" => { "is_withdrawn" => true } }
       }
     )
   end
@@ -26,15 +23,12 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
     builder = build_builder("how to drive", { "format" => "organisation" })
     query_hash = builder.filter_query_hash
 
-    assert_equal(
-      query_hash,
-      {
-        "filter" => {
-          "and" => [
-            { "term" => { "format" => "organisation" } },
-            { "not" => { "term" => { "is_withdrawn" => true } } }
-          ]
-        }
+    expect(query_hash).to eq(
+      "filter" => {
+        "and" => [
+          { "term" => { "format" => "organisation" } },
+          { "not" => { "term" => { "is_withdrawn" => true } } }
+        ]
       }
     )
   end
@@ -43,16 +37,13 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
     builder = build_builder("how to drive", { "format" => "organisation", "specialist_sectors" => "driving" })
     query_hash = builder.filter_query_hash
 
-    assert_equal(
-      query_hash,
-      {
-        "filter" => {
-          "and" => [
-            { "term" => { "format" => "organisation" } },
-            { "term" => { "specialist_sectors" => "driving" } },
-            { "not" => { "term" => { "is_withdrawn" => true } } }
-          ]
-        }
+    expect(query_hash).to eq(
+      "filter" => {
+        "and" => [
+          { "term" => { "format" => "organisation" } },
+          { "term" => { "specialist_sectors" => "driving" } },
+          { "not" => { "term" => { "is_withdrawn" => true } } }
+        ]
       }
     )
   end

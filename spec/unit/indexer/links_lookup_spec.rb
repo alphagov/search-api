@@ -9,12 +9,12 @@ RSpec.describe Indexer::LinksLookup do
     expanded_links_url = endpoint + "/expanded-links/" + content_id
     stub_request(:get, expanded_links_url).to_timeout
 
-    assert_raises(Indexer::PublishingApiError) do
+    expect {
       described_class.prepare_tags({
         "content_id" => content_id,
         "link" => "/my-base-path",
       })
-    end
+    }.to raise_error(Indexer::PublishingApiError)
 
     assert_requested :get, expanded_links_url, times: 5
   end

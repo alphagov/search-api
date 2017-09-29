@@ -20,23 +20,23 @@ RSpec.describe Search::SuggestionBlacklist do
 
   context "#should_correct?" do
     it "correct normal strings" do
-      assert blacklist.should_correct?("some test")
+      expect(blacklist.should_correct?("some test")).to be_truthy
     end
 
     it "not correct strings with numbers" do
-      refute blacklist.should_correct?("86asrdv")
+      expect(blacklist.should_correct?("86asrdv")).to be_falsey
     end
 
     it "not correct words added to ignore.yml" do
-      refute blacklist.should_correct?("bodrum")
+      expect(blacklist.should_correct?("bodrum")).to be_falsey
     end
 
     it "not correct names added to ignore.yml" do
-      refute blacklist.should_correct?("Alan Turing")
+      expect(blacklist.should_correct?("Alan Turing")).to be_falsey
     end
 
     it "correct words in the organization" do
-      refute blacklist.should_correct?("mod")
+      expect(blacklist.should_correct?("mod")).to be_falsey
     end
   end
 end

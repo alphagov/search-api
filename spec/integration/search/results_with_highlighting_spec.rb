@@ -9,9 +9,8 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
 
     get "/search?q=result&fields[]=title_with_highlighting"
 
-    refute first_search_result.key?('title')
-    assert_equal "I am the <mark>result</mark>",
-      first_search_result['title_with_highlighting']
+    expect(first_search_result.key?('title')).to be_falsey
+    expect("I am the <mark>result</mark>").to eq(first_search_result['title_with_highlighting'])
   end
 
   it "returns_highlighted_title_fallback" do
@@ -23,9 +22,8 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
 
     get "/search?q=result&fields[]=title_with_highlighting"
 
-    refute first_search_result.key?('title')
-    assert_equal "Thing without",
-      first_search_result['title_with_highlighting']
+    expect(first_search_result.key?('title')).to be_falsey
+    expect("Thing without").to eq(first_search_result['title_with_highlighting'])
   end
 
   it "returns_highlighted_description" do
@@ -36,9 +34,10 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
 
     get "/search?q=result&fields[]=description_with_highlighting"
 
-    refute first_search_result.key?('description')
-    assert_equal "This is a test search <mark>result</mark> of many <mark>results</mark>.",
+    expect(first_search_result.key?('description')).to be_falsey
+    expect("This is a test search <mark>result</mark> of many <mark>results</mark>.").to eq(
       first_search_result['description_with_highlighting']
+    )
   end
 
   it "returns_documents_html_escaped" do
@@ -50,10 +49,12 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
 
     get "/search?q=highlight&fields[]=title_with_highlighting,description_with_highlighting"
 
-    assert_equal "Escape &amp; <mark>highlight</mark> the description as well.",
+    expect("Escape &amp; <mark>highlight</mark> the description as well.").to eq(
       first_search_result['description_with_highlighting']
-    assert_equal "Escape &amp; <mark>highlight</mark> my title",
+    )
+    expect("Escape &amp; <mark>highlight</mark> my title").to eq(
       first_search_result['title_with_highlighting']
+    )
   end
 
   it "returns_truncated_correctly_where_result_at_start_of_description" do
@@ -65,8 +66,8 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
     get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result['description_with_highlighting']
 
-    assert description.starts_with?("<mark>word</mark>")
-    assert description.ends_with?("…")
+    expect(description.starts_with?("<mark>word</mark>")).to be_truthy
+    expect(description.ends_with?("…")).to be_truthy
   end
 
   it "returns_truncated_correctly_where_result_at_end_of_description" do
@@ -78,8 +79,8 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
     get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result['description_with_highlighting']
 
-    assert description.starts_with?("…")
-    assert description.size < 350
+    expect(description.starts_with?("…")).to be_truthy
+    expect(description.size < 350).to be_truthy
   end
 
   it "returns_truncated_correctly_where_result_in_middle_of_description" do
@@ -91,8 +92,8 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
     get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result['description_with_highlighting']
 
-    assert description.ends_with?("…")
-    assert description.starts_with?("…")
+    expect(description.ends_with?("…")).to be_truthy
+    expect(description.starts_with?("…")).to be_truthy
   end
 
 private

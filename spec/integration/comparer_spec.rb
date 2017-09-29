@@ -13,7 +13,7 @@ RSpec.describe 'ComparerTest', tags: ['integration'] do
     results = Indexer::CompareEnumerator.new('mainstream_test', 'government_test')
 
     # ordered by type and the ID
-    assert_equal [
+    expect([
       [
         { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'link' => 'ABC' },
         { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'link' => 'ABC' },
@@ -30,7 +30,7 @@ RSpec.describe 'ComparerTest', tags: ['integration'] do
         { 'some' => 'data', '_root_id' => 'DEF', '_root_type' => 'hmrc_manual', 'link' => 'DEF' },
         :__no_value_found__,
       ],
-    ], results.to_a
+    ]).to eq results.to_a
   end
 
   it "only_compares_filtered_formats" do
@@ -45,7 +45,7 @@ RSpec.describe 'ComparerTest', tags: ['integration'] do
     query = { filter: { term: { format: 'edition' } } }
     results = Indexer::CompareEnumerator.new('mainstream_test', 'government_test', query)
 
-    assert_equal [
+    expect([
       [
         { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'ABC' },
         { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'ABC' },
@@ -54,7 +54,7 @@ RSpec.describe 'ComparerTest', tags: ['integration'] do
         :__no_value_found__,
         { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'GHI' },
       ],
-    ], results.to_a
+    ]).to eq results.to_a
   end
 
   it "comparison_output_works" do
@@ -68,6 +68,6 @@ RSpec.describe 'ComparerTest', tags: ['integration'] do
 
     comparer = Indexer::Comparer.new('mainstream_test', 'government_test', filtered_format: 'edition', io: StringIO.new)
 
-    assert_equal comparer.run, { changed: 1, 'changes: field': 1, added_items: 1 }
+    expect(comparer.run).to eq(changed: 1, 'changes: field': 1, added_items: 1)
   end
 end

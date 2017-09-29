@@ -27,12 +27,12 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
 
     document = fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
 
-    assert_equal random_example["base_path"], document["_source"]["link"]
-    assert_equal random_example["base_path"], document["_id"]
-    assert_equal "edition", document["_type"]
+    expect(random_example["base_path"]).to eq(document["_source"]["link"])
+    expect(random_example["base_path"]).to eq(document["_id"])
+    expect("edition").to eq(document["_type"])
 
-    assert_equal 0, @queue.message_count
-    assert_equal 1, @channel.acknowledged_state[:acked].count
+    expect(0).to eq(@queue.message_count)
+    expect(1).to eq(@channel.acknowledged_state[:acked].count)
   end
 
   it "not_indexing_when_publishing_app_is_smart_answers" do
@@ -44,9 +44,9 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
     @queue.publish(random_example.to_json, content_type: "application/json")
     commit_index 'govuk_test'
 
-    assert_raises(Elasticsearch::Transport::Transport::Errors::NotFound) do
+    expect {
       fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test", type: 'edition')
-    end
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 
   it "should_include_popularity_when_available" do
@@ -68,7 +68,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
 
     document = fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
 
-    assert_equal popularity, document["_source"]["popularity"]
+    expect(popularity).to eq(document["_source"]["popularity"])
   end
 
   it "should_discard_message_when_invalid" do
@@ -80,7 +80,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
     expect(GovukError).to receive(:notify)
     @queue.publish(invalid_payload.to_json, extra: { content_type: "application/json" })
 
-    assert_equal 0, @queue.message_count
+    expect(0).to eq(@queue.message_count)
   end
 
   it "should_discard_message_when_withdrawn_and_invalid" do
@@ -92,7 +92,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
     expect(GovukError).to receive(:notify)
     @queue.publish(invalid_payload.to_json, extra: { content_type: "application/json" })
 
-    assert_equal 0, @queue.message_count
+    expect(0).to eq(@queue.message_count)
   end
 
   def client

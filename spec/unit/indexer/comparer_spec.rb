@@ -10,7 +10,7 @@ RSpec.describe Indexer::Comparer do
       io: StringIO.new
     )
     outcome = comparer.run
-    assert_equal outcome, { added_items: 1 }
+    expect(outcome).to eq({ added_items: 1 })
   end
 
   it "can_detect_when_a_record_is_removed" do
@@ -22,7 +22,7 @@ RSpec.describe Indexer::Comparer do
       io: StringIO.new
     )
     outcome = comparer.run
-    assert_equal outcome, { removed_items: 1 }
+    expect(outcome).to eq({ removed_items: 1 })
   end
 
   it "can_detect_when_a_record_has_changed" do
@@ -34,7 +34,7 @@ RSpec.describe Indexer::Comparer do
       io: StringIO.new
     )
     outcome = comparer.run
-    assert_equal outcome, { changed: 1, 'changes: data': 1 }
+    expect(outcome).to eq(changed: 1, 'changes: data': 1)
   end
 
   it "can_detect_when_a_record_is_unchanged" do
@@ -46,7 +46,7 @@ RSpec.describe Indexer::Comparer do
       io: StringIO.new
     )
     outcome = comparer.run
-    assert_equal outcome, { unchanged: 1 }
+    expect(outcome).to eq({ unchanged: 1 })
   end
 
   it "can_detect_when_a_record_is_unchanged_apart_from_ignored_fields" do
@@ -59,7 +59,7 @@ RSpec.describe Indexer::Comparer do
       io: StringIO.new
     )
     outcome = comparer.run
-    assert_equal outcome, { unchanged: 1 }
+    expect(outcome).to eq({ unchanged: 1 })
   end
 
   it "can_detect_when_a_record_is_unchanged_apart_from_default_ignored_fields" do
@@ -71,7 +71,7 @@ RSpec.describe Indexer::Comparer do
       io: StringIO.new
     )
     outcome = comparer.run
-    assert_equal outcome, { unchanged: 1 }
+    expect(outcome).to eq({ unchanged: 1 })
   end
 
 private

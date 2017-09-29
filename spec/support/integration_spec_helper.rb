@@ -108,18 +108,14 @@ module IntegrationSpecHelper
     JSON.parse(last_response.body)
   end
 
-  def assert_document_is_in_rummager(document, type: "edition", index: 'mainstream_test')
+  def expect_document_is_in_rummager(document, type: "edition", index: 'mainstream_test')
     retrieved = fetch_document_from_rummager(id: document['link'], index: index)
 
-    assert_equal type, retrieved["_type"]
+    expect(type).to eq(retrieved["_type"])
 
     retrieved_source = retrieved["_source"]
     document.each do |key, value|
-      assert_equal(
-        value,
-        retrieved_source[key],
-        "Field #{key} should be '#{value}' but was '#{retrieved_source[key]}'"
-      )
+      expect(value).to eq(retrieved_source[key]), "Field #{key} should be '#{value}' but was '#{retrieved_source[key]}'"
     end
   end
 
