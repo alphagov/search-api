@@ -3,8 +3,8 @@ require 'spec_helper'
 RSpec.describe HealthCheck::BasicAuthCredentials do
   it "be callable with a user:password string" do
     creds = HealthCheck::BasicAuthCredentials.call "bob:horseradish"
-    expect("bob").to eq(creds.user)
-    expect("horseradish").to eq(creds.password)
+    expect(creds.user).to eq("bob")
+    expect(creds.password).to eq("horseradish")
   end
 
   it "fail on a malformed string" do

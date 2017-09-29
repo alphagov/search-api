@@ -29,10 +29,10 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
 
     expect(random_example["base_path"]).to eq(document["_source"]["link"])
     expect(random_example["base_path"]).to eq(document["_id"])
-    expect("edition").to eq(document["_type"])
+    expect(document["_type"]).to eq("edition")
 
-    expect(0).to eq(@queue.message_count)
-    expect(1).to eq(@channel.acknowledged_state[:acked].count)
+    expect(@queue.message_count).to eq(0)
+    expect(@channel.acknowledged_state[:acked].count).to eq(1)
   end
 
   it "not_indexing_when_publishing_app_is_smart_answers" do
@@ -80,7 +80,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
     expect(GovukError).to receive(:notify)
     @queue.publish(invalid_payload.to_json, extra: { content_type: "application/json" })
 
-    expect(0).to eq(@queue.message_count)
+    expect(@queue.message_count).to eq(0)
   end
 
   it "should_discard_message_when_withdrawn_and_invalid" do
@@ -92,7 +92,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration']
     expect(GovukError).to receive(:notify)
     @queue.publish(invalid_payload.to_json, extra: { content_type: "application/json" })
 
-    expect(0).to eq(@queue.message_count)
+    expect(@queue.message_count).to eq(0)
   end
 
   def client

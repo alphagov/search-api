@@ -15,11 +15,11 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    expect(0).to eq(calculator.boost(build_document(format: "format1")))
+    expect(calculator.boost(build_document(format: "format1"))).to eq(0)
     expect(0.5).to eq(calculator.boost(build_document(format: "format2")))
     expect(0.75).to eq(calculator.boost(build_document(format: "format3")))
     expect(0.88).to eq(calculator.boost(build_document(format: "format4")))
-    expect(1).to eq(calculator.boost(build_document(format: "format5")))
+    expect(calculator.boost(build_document(format: "format5"))).to eq(1)
   end
 
   it "unboosted_format_has_default_boost" do
@@ -45,9 +45,9 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    expect(1).to eq(calculator.boost(build_document(format: "format1")))
-    expect(1).to eq(calculator.boost(build_document(format: "format2")))
-    expect(1).to eq(calculator.boost(build_document(format: "format3")))
+    expect(calculator.boost(build_document(format: "format1"))).to eq(1)
+    expect(calculator.boost(build_document(format: "format2"))).to eq(1)
+    expect(calculator.boost(build_document(format: "format3"))).to eq(1)
   end
 
   it "unconfigured_format_has_default_boost" do

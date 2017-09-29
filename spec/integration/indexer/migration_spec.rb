@@ -61,7 +61,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     # stemming settings
 
     get "/search?q=directive"
-    expect(2).to eq(parsed_response["results"].length)
+    expect(parsed_response["results"].length).to eq(2)
 
     @stemmer["rules"] = ["directive => directive"]
 
@@ -95,7 +95,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     commit_index
 
     get "/search?q=directive"
-    expect(2).to eq(parsed_response["results"].length)
+    expect(parsed_response["results"].length).to eq(2)
 
     @stemmer["rules"] = ["directive => directive"]
 
@@ -123,7 +123,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     allow_any_instance_of(SearchIndices::Index).to receive(:bulk_index).and_raise(SearchIndices::IndexLocked)
 
     get "/search?q=directive"
-    expect(2).to eq(parsed_response["results"].length)
+    expect(parsed_response["results"].length).to eq(2)
 
     @stemmer["rules"] = ["directive => directive"]
 
@@ -138,7 +138,7 @@ RSpec.describe 'ElasticsearchMigrationTest', tags: ['integration'] do
     expect(original_index_name).to eq(index_group.current_real.real_name)
 
     get "/search?q=directive"
-    expect(2).to eq(parsed_response["results"].length)
+    expect(parsed_response["results"].length).to eq(2)
   end
 
   it "reindex_with_no_existing_index" do

@@ -11,8 +11,8 @@ RSpec.describe HealthCheck::SearchCheckResult do
 
         it "return a successful Result" do
           expect(true).to eq(subject.success)
-          expect("FOUND").to eq(subject.found_label)
-          expect("PASS").to eq(subject.success_label)
+          expect(subject.found_label).to eq("FOUND")
+          expect(subject.success_label).to eq("PASS")
         end
       end
 
@@ -22,8 +22,8 @@ RSpec.describe HealthCheck::SearchCheckResult do
 
         it "return a failure Result" do
           expect(subject.success).to be_falsey
-          expect("FOUND").to eq(subject.found_label)
-          expect("FAIL").to eq(subject.success_label)
+          expect(subject.found_label).to eq("FOUND")
+          expect(subject.success_label).to eq("FAIL")
         end
       end
 
@@ -33,8 +33,8 @@ RSpec.describe HealthCheck::SearchCheckResult do
 
         it "return a failure Result" do
           expect(subject.success).to be_falsey
-          expect("NOT FOUND").to eq(subject.found_label)
-          expect("FAIL").to eq(subject.success_label)
+          expect(subject.found_label).to eq("NOT FOUND")
+          expect(subject.success_label).to eq("FAIL")
         end
       end
     end
@@ -48,8 +48,8 @@ RSpec.describe HealthCheck::SearchCheckResult do
 
       it "fail" do
         expect(subject.success).to be_falsey
-        expect("FOUND").to eq(subject.found_label)
-        expect("FAIL").to eq(subject.success_label)
+        expect(subject.found_label).to eq("FOUND")
+        expect(subject.success_label).to eq("FAIL")
       end
     end
 
@@ -59,8 +59,8 @@ RSpec.describe HealthCheck::SearchCheckResult do
 
       it "pass" do
         expect(subject.success).to be_truthy
-        expect("FOUND").to eq(subject.found_label)
-        expect("PASS").to eq(subject.success_label)
+        expect(subject.found_label).to eq("FOUND")
+        expect(subject.success_label).to eq("PASS")
       end
     end
 
@@ -70,8 +70,8 @@ RSpec.describe HealthCheck::SearchCheckResult do
 
       it "pass" do
         expect(subject.success).to be_truthy
-        expect("NOT FOUND").to eq(subject.found_label)
-        expect("PASS").to eq(subject.success_label)
+        expect(subject.found_label).to eq("NOT FOUND")
+        expect(subject.success_label).to eq("PASS")
       end
     end
   end

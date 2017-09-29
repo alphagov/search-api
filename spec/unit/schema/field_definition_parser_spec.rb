@@ -7,11 +7,11 @@ RSpec.describe FieldDefinitionParser do
     end
 
     it "recognise the `link` field definition" do
-      expect("link").to eq(@definitions["link"].name)
+      expect(@definitions["link"].name).to eq("link")
     end
 
     it "know that the `link` field has type `identifier`" do
-      expect("identifier").to eq(@definitions["link"].type.name)
+      expect(@definitions["link"].type.name).to eq("identifier")
     end
 
     it "know that the `link` field has a description" do
@@ -23,7 +23,7 @@ RSpec.describe FieldDefinitionParser do
     end
 
     it "know that the `attachments` field has a child of `title` of type searchable_text" do
-      expect("searchable_text").to eq(@definitions["attachments"].children["title"].type.name)
+      expect(@definitions["attachments"].children["title"].type.name).to eq("searchable_text")
     end
 
     it "be able to merge two field definitions" do
@@ -34,9 +34,9 @@ RSpec.describe FieldDefinitionParser do
       definition2 = FieldDefinition.new("foo", "string", {}, "", nil, [value2, value3])
       merged = definition2.merge(definition1)
 
-      expect("foo").to eq(merged.name)
-      expect("string").to eq(merged.type)
-      expect([value1, value2, value3]).to eq(merged.expanded_search_result_fields.sort_by { |item| item["value"] })
+      expect(merged.name).to eq("foo")
+      expect(merged.type).to eq("string")
+      expect(merged.expanded_search_result_fields.sort_by { |item| item["value"] }).to eq([value1, value2, value3])
     end
   end
 end

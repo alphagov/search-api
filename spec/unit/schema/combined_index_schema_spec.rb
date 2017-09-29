@@ -11,9 +11,9 @@ RSpec.describe CombinedIndexSchema do
   it "basic_field_definitions" do
     # The title and public_timestamp fields are defined in the
     # base_elasticsearch_type, so are available in all documents holding content.
-    expect("searchable_sortable_text").to eq(@combined_schema.field_definitions["title"].type.name)
-    expect("searchable_text").to eq(@combined_schema.field_definitions["description"].type.name)
-    expect("date").to eq(@combined_schema.field_definitions["public_timestamp"].type.name)
+    expect(@combined_schema.field_definitions["title"].type.name).to eq("searchable_sortable_text")
+    expect(@combined_schema.field_definitions["description"].type.name).to eq("searchable_text")
+    expect(@combined_schema.field_definitions["public_timestamp"].type.name).to eq("date")
   end
 
   it "merged_field_definitions" do

@@ -27,7 +27,7 @@ RSpec.describe 'ContentEndpointsTest', tags: ['integration'] do
 
     delete "/content?link=a-document/in-search"
 
-    expect(204).to eq(last_response.status)
+    expect(last_response.status).to eq(204)
   end
 
   it "deleting_a_document_that_doesnt_exist" do
@@ -46,6 +46,6 @@ RSpec.describe 'ContentEndpointsTest', tags: ['integration'] do
 
     delete "/content?link=a-document/in-search"
 
-    expect(423).to eq(last_response.status)
+    expect(last_response.status).to eq(423)
   end
 end

@@ -56,11 +56,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "not find any best bets" do
-      expect({}).to eq(@checker.best_bets)
+      expect(@checker.best_bets).to eq({})
     end
 
     it "not find any worst bets" do
-      expect([]).to eq(@checker.worst_bets)
+      expect(@checker.worst_bets).to eq([])
     end
   end
 
@@ -72,11 +72,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "find one best bet" do
-      expect({ 1 => ["/jobsearch"] }).to eq(@checker.best_bets)
+      expect(@checker.best_bets).to eq({ 1 => ["/jobsearch"] })
     end
 
     it "not find any worst bets" do
-      expect([]).to eq(@checker.worst_bets)
+      expect(@checker.worst_bets).to eq([])
     end
   end
 
@@ -88,11 +88,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "not find any best bets" do
-      expect({}).to eq(@checker.best_bets)
+      expect(@checker.best_bets).to eq({})
     end
 
     it "find one worst bet" do
-      expect(["/jobsearch"]).to eq(@checker.worst_bets)
+      expect(@checker.worst_bets).to eq(["/jobsearch"])
     end
   end
 
@@ -105,11 +105,11 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "find just the exact best bet" do
-      expect({ 1 => ["/jobsearch"] }).to eq(@checker.best_bets)
+      expect(@checker.best_bets).to eq({ 1 => ["/jobsearch"] })
     end
 
     it "not find any worst bets" do
-      expect([]).to eq(@checker.worst_bets)
+      expect(@checker.worst_bets).to eq([])
     end
   end
 
@@ -126,7 +126,7 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "not find any worst bets" do
-      expect([]).to eq(@checker.worst_bets)
+      expect(@checker.worst_bets).to eq([])
     end
   end
 
@@ -146,7 +146,7 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "not find any worst bets" do
-      expect([]).to eq(@checker.worst_bets)
+      expect(@checker.worst_bets).to eq([])
     end
   end
 
@@ -164,7 +164,7 @@ RSpec.describe Search::BestBetsChecker do
     end
 
     it "find worst bets only from the exact bet" do
-      expect(["/jobsearch"]).to eq(@checker.worst_bets)
+      expect(@checker.worst_bets).to eq(["/jobsearch"])
     end
   end
 end

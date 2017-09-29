@@ -176,8 +176,8 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   it "returns_the_total_and_the_hits" do
     stub_empty_search
     result_set = @wrapper.advanced_search(default_params)
-    expect(0).to eq(result_set.total)
-    expect([]).to eq(result_set.results)
+    expect(result_set.total).to eq(0)
+    expect(result_set.results).to eq([])
   end
 
   it "returns_the_hits_converted_into_documents" do
@@ -188,9 +188,9 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
         headers: { "Content-Type" => "application/json" }
       )
     result_set = @wrapper.advanced_search(default_params)
-    expect(10).to eq(result_set.total)
-    expect(1).to eq(result_set.results.size)
-    expect("some_content").to eq(result_set.results.first.get("indexable_content"))
+    expect(result_set.total).to eq(10)
+    expect(result_set.results.size).to eq(1)
+    expect(result_set.results.first.get("indexable_content")).to eq("some_content")
   end
 
   def default_params

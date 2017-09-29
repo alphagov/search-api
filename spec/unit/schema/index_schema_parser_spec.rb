@@ -18,7 +18,7 @@ RSpec.describe IndexSchemaParser do
     end
 
     it "have a schema for the mainstream index" do
-      expect("mainstream").to eq(@index_schemas["mainstream"].name)
+      expect(@index_schemas["mainstream"].name).to eq("mainstream")
     end
 
     it "include configuration for the `manual_section` type in the `mainstream` index" do

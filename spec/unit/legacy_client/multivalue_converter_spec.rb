@@ -20,7 +20,7 @@ RSpec.describe LegacyClient::MultivalueConverter do
 
     converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
-    expect("the title").to eq(converted_hash["title"])
+    expect(converted_hash["title"]).to eq("the title")
   end
 
   # This might not be necessary since the new ES.
@@ -32,6 +32,6 @@ RSpec.describe LegacyClient::MultivalueConverter do
 
     converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
-    expect("the title").to eq(converted_hash["title"])
+    expect(converted_hash["title"]).to eq("the title")
   end
 end

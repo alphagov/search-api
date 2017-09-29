@@ -12,12 +12,12 @@ RSpec.describe Search::ResultSet do
     end
 
     it "report zero results" do
-      expect(0).to eq(described_class.from_elasticsearch(sample_elasticsearch_types, @response).total)
+      expect(described_class.from_elasticsearch(sample_elasticsearch_types, @response).total).to eq(0)
     end
 
     it "have an empty result set" do
       result_set = described_class.from_elasticsearch(sample_elasticsearch_types, @response)
-      expect(0).to eq(result_set.results.size)
+      expect(result_set.results.size).to eq(0)
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe Search::ResultSet do
     end
 
     it "report one result" do
-      expect(1).to eq(described_class.from_elasticsearch(sample_elasticsearch_types, @response).total)
+      expect(described_class.from_elasticsearch(sample_elasticsearch_types, @response).total).to eq(1)
     end
 
     it "pass the fields to Document.from_hash" do
@@ -47,14 +47,14 @@ RSpec.describe Search::ResultSet do
       expect(Document).to receive(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).and_return(:doc)
 
       result_set = described_class.from_elasticsearch(sample_elasticsearch_types, @response)
-      expect([:doc]).to eq(result_set.results)
+      expect(result_set.results).to eq([:doc])
     end
 
     it "pass the result score to Document.from_hash" do
       expect(Document).to receive(:from_hash).with(an_instance_of(Hash), sample_elasticsearch_types, 12).and_return(:doc)
 
       result_set = described_class.from_elasticsearch(sample_elasticsearch_types, @response)
-      expect([:doc]).to eq(result_set.results)
+      expect(result_set.results).to eq([:doc])
     end
 
     it "populate the document id and type from the metafields" do
@@ -62,7 +62,7 @@ RSpec.describe Search::ResultSet do
       expect(Document).to receive(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).and_return(:doc)
 
       result_set = described_class.from_elasticsearch(sample_elasticsearch_types, @response)
-      expect([:doc]).to eq(result_set.results)
+      expect(result_set.results).to eq([:doc])
     end
   end
 end

@@ -30,21 +30,21 @@ RSpec.describe ElasticsearchTypesParser do
     end
 
     it "recognise the `manual_section` type" do
-      expect("manual_section").to eq(@types["manual_section"].name)
+      expect(@types["manual_section"].name).to eq("manual_section")
     end
 
     it "know that the `manual_section` type has a `manual` field" do
       manual_field = @types["manual_section"].fields["manual"]
       expect(manual_field).not_to be_nil
-      expect("manual").to eq(manual_field.name)
+      expect(manual_field.name).to eq("manual")
     end
 
     it "know that the `manual_section` type inherits the `link` field from the base type" do
       link_field = @types["manual_section"].fields["link"]
       expect(link_field).not_to be_nil
-      expect("link").to eq(link_field.name)
+      expect(link_field.name).to eq("link")
       expect(false).to eq(link_field.type.multivalued)
-      expect("identifier").to eq(link_field.type.name)
+      expect(link_field.type.name).to eq("identifier")
     end
 
     it "produce appropriate elasticsearch configuration for the `manual_section` type" do

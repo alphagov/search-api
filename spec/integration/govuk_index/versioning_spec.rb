@@ -19,14 +19,14 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
     process_message(version1)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(123).to eq(document["_version"])
+    expect(document["_version"]).to eq(123)
 
     version2 = version1.merge(title: "new title", payload_version: 124)
     process_message(version2)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(124).to eq(document["_version"])
-    expect("new title").to eq(document["_source"]["title"])
+    expect(document["_version"]).to eq(124)
+    expect(document["_source"]["title"]).to eq("new title")
   end
 
   it "should_discard_message_with_same_version_as_existing_document" do
@@ -40,13 +40,13 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
     process_message(version1)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(123).to eq(document["_version"])
+    expect(document["_version"]).to eq(123)
 
     version2 = version1.merge(title: "new title", payload_version: 123)
     process_message(version2)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(123).to eq(document["_version"])
+    expect(document["_version"]).to eq(123)
     expect(version1["title"]).to eq(document["_source"]["title"])
   end
 
@@ -62,13 +62,13 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
     process_message(version1)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(123).to eq(document["_version"])
+    expect(document["_version"]).to eq(123)
 
     version2 = version1.merge(title: "new title", payload_version: 122)
     process_message(version2)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(123).to eq(document["_version"])
+    expect(document["_version"]).to eq(123)
     expect(version1["title"]).to eq(document["_source"]["title"])
   end
 
@@ -84,7 +84,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
     process_message(version1)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(1).to eq(document["_version"])
+    expect(document["_version"]).to eq(1)
 
     version2 = generate_random_example(
       schema: 'gone',
@@ -105,7 +105,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
     process_message(version3)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(3).to eq(document["_version"])
+    expect(document["_version"]).to eq(3)
   end
 
   it "should_discard_unpublishing_message_with_earlier_version" do
@@ -119,7 +119,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
     process_message(version1)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(2).to eq(document["_version"])
+    expect(document["_version"]).to eq(2)
 
     version2 = generate_random_example(
       schema: 'gone',
@@ -133,7 +133,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
     process_message(version2, unpublishing: true)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(2).to eq(document["_version"])
+    expect(document["_version"]).to eq(2)
   end
 
   it "should_ignore_event_for_non_indexable_formats" do
@@ -149,7 +149,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
 
-    expect(123).to eq(document["_version"])
+    expect(document["_version"]).to eq(123)
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(false)
 
@@ -157,7 +157,7 @@ RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
     process_message(version2)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    expect(123).to eq(document["_version"])
+    expect(document["_version"]).to eq(123)
     expect(version1["title"]).to eq(document["_source"]["title"])
   end
 
