@@ -1,21 +1,25 @@
 # Rummager
 
-Rummager is the internal GOV.UK API for search.
+Rummager is the GOV.UK API for search.
 
 ## Live examples
 
-- [alphagov/frontend](https://github.com/alphagov/frontend) uses Rummager to
-	serve the GOV.UK search at [gov.uk/search](https://www.gov.uk/search).
-- [alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
-	Rummager to serve document finders like
-	[gov.uk/aaib-reports](https://www.gov.uk/aaib-reports).
-
-This API is publicly accessible:
-
+### The public search API
 https://www.gov.uk/api/search.json?q=taxes
 ![Screenshot of API Response](doc/api-screenshot.png)
 
-You can read how to use the API in the blog post: ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
+For the most up to date query syntax and API output see the [Search API documentation](https://docs.publishing.service.gov.uk/apis/search/search-api.html).
+
+You can also find some examples in the blog post: ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
+
+### GOV.UK site search
+
+[alphagov/frontend](https://github.com/alphagov/frontend) uses the search API
+to render search results.
+
+### Finders
+[alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
+the search API to serve document finders like [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports).
 
 ## Technical documentation
 
@@ -112,14 +116,13 @@ After changing the schema, you'll need to migrate the index.
 
     RUMMAGER_INDEX=all bundle exec rake rummager:migrate_index
 
-### API documentation
+#### Internal only APIs
 
-For the most up to date query syntax and API output:
+There are some other APIs that are only exposed internally:
 
-- [doc/search-api.md](doc/search-api.md) for the search
-	endpoint (`/search.json`).
 - [doc/content-api.md](doc/content-api.md) for the `/content/*` endpoint.
 - [doc/documents.md](doc/documents.md) for the `*/documents/` endpoint.
+
 
 ### Additional Docs
 
