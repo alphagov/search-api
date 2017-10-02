@@ -6,7 +6,6 @@ module GovukIndex
 
     class ImplementationRequired < StandardError; end
 
-
     def initialize(source_index:, destination_index:)
       @source_index = source_index
       @destination_index = destination_index
@@ -18,7 +17,7 @@ module GovukIndex
       end
     end
 
-    def worker
+    def self.worker
       raise ImplementationRequired
     end
 
@@ -27,6 +26,10 @@ module GovukIndex
     end
 
   private
+
+    def worker
+      self.class.worker
+    end
 
     def scroll_enumerator
       ScrollEnumerator.new(

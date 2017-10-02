@@ -5,6 +5,11 @@ module GovukIndex
       @actions = []
     end
 
+    def raw(identifier, document)
+      @actions << identifier
+      @actions << document
+    end
+
     def save(presenter)
       @actions << { index: presenter.identifier }
       @actions << presenter.document

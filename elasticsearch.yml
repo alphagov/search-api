@@ -5,9 +5,9 @@ production: &default
   auxiliary_index_names: ["page-traffic", "metasearch"]
   registry_index: "government"
   metasearch_index_name: "metasearch"
+  page_traffic_index_name: "page-traffic"
   popularity_rank_offset: 10
   default_index_name: "mainstream"
-
   # When doing spell checking, which indices to use?
   spelling_index_names:
     - government
@@ -22,6 +22,7 @@ test:
   auxiliary_index_names: ["page-traffic_test", "metasearch_test"]
   registry_index: "government_test"
   metasearch_index_name: "metasearch_test"
+  page_traffic_index_name: "page-traffic_test"
   popularity_rank_offset: 10
   default_index_name: "mainstream_test"
   spelling_index_names:
