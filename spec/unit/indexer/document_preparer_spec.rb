@@ -31,7 +31,7 @@ RSpec.describe Indexer::DocumentPreparer do
         true
       )
 
-      expect("guidance").to eq(updated_doc_hash["navigation_document_supertype"])
+      expect(updated_doc_hash["navigation_document_supertype"]).to eq("guidance")
     end
   end
 end

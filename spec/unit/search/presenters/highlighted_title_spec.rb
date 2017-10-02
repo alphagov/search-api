@@ -7,7 +7,7 @@ RSpec.describe Search::HighlightedTitle do
       "highlight" => { "title" => ["A Highlighted Title"] }
     })
 
-    expect("A Highlighted Title").to eq(title.text)
+    expect(title.text).to eq("A Highlighted Title")
   end
 
   it "fallback_title_is_escaped" do
@@ -15,6 +15,6 @@ RSpec.describe Search::HighlightedTitle do
       "fields" => { "title" => "A & Title" },
     })
 
-    expect("A &amp; Title").to eq(title.text)
+    expect(title.text).to eq("A &amp; Title")
   end
 end

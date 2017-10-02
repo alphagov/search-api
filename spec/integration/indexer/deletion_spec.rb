@@ -18,7 +18,7 @@ RSpec.describe 'ElasticsearchDeletionTest', tags: ['integration'] do
 
     delete "/documents/%2Fan-example-page"
 
-    expect(202).to eq(last_response.status)
+    expect(last_response.status).to eq(202)
   end
 
   it "removes_document_with_url" do

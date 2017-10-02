@@ -120,7 +120,7 @@ RSpec.describe 'ElasticsearchIndexingTest', tags: ['integration'] do
   it "adding_a_document_to_the_search_index_with_queue" do
     post "/documents", SAMPLE_DOCUMENT.to_json
 
-    expect(202).to eq(last_response.status)
+    expect(last_response.status).to eq(202)
     expect_document_is_in_rummager(SAMPLE_DOCUMENT)
   end
 end

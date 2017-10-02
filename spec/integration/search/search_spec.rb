@@ -37,7 +37,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=serch&suggest=spelling"
 
-    expect(['search']).to eq(parsed_response['suggested_queries'])
+    expect(parsed_response['suggested_queries']).to eq(['search'])
   end
 
   it "spell_checking_with_blacklisted_typo" do
@@ -48,7 +48,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=brexit&suggest=spelling"
 
-    expect([]).to eq(parsed_response['suggested_queries'])
+    expect(parsed_response['suggested_queries']).to eq([])
   end
 
   it "spell_checking_without_typo" do
@@ -56,7 +56,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=milliband"
 
-    expect([]).to eq(parsed_response['suggested_queries'])
+    expect(parsed_response['suggested_queries']).to eq([])
   end
 
   it "returns_docs_from_all_indexes" do
@@ -73,7 +73,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&order=public_timestamp"
 
-    expect(["/government-1", "/government-2"]).to eq(result_links.take(2))
+    expect(result_links.take(2)).to eq(["/government-1", "/government-2"])
   end
 
   it "sort_by_date_descending" do
@@ -83,7 +83,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     # The government links have dates, so appear before all the other links.
     # The other documents have no dates, so appear in an undefined order
-    expect(["/government-2", "/government-1"]).to eq(result_links.take(2))
+    expect(result_links.take(2)).to eq(["/government-2", "/government-1"])
   end
 
   it "sort_by_title_ascending" do
@@ -100,7 +100,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_mainstream_browse_pages=browse/page/1"
 
-    expect(["/government-1", "/mainstream-1"]).to eq(result_links.sort)
+    expect(result_links.sort).to eq(["/government-1", "/mainstream-1"])
   end
 
   it "reject_by_field" do
@@ -108,7 +108,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?reject_mainstream_browse_pages=browse/page/1"
 
-    expect(["/government-2", "/mainstream-2"]).to eq(result_links.sort)
+    expect(result_links.sort).to eq(["/government-2", "/mainstream-2"])
   end
 
   it "can_filter_for_missing_field" do
@@ -116,7 +116,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_specialist_sectors=_MISSING"
 
-    expect(["/government-1", "/mainstream-1"]).to eq(result_links.sort)
+    expect(result_links.sort).to eq(["/government-1", "/mainstream-1"])
   end
 
   it "can_filter_for_missing_or_specific_value_in_field" do
@@ -124,7 +124,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
-    expect(["/government-1", "/mainstream-1"]).to eq(result_links.sort)
+    expect(result_links.sort).to eq(["/government-1", "/mainstream-1"])
   end
 
   it "can_filter_and_reject" do
@@ -145,7 +145,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     results = parsed_response["results"]
     expect(results[0].keys).not_to include("specialist_sectors")
-    expect([{ "slug" => "farming" }]).to eq(results[1]["specialist_sectors"])
+    expect(results[1]["specialist_sectors"]).to eq([{ "slug" => "farming" }])
   end
 
   it "aggregate_counting" do
@@ -153,7 +153,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2"
 
-    expect(4).to eq(parsed_response["total"])
+    expect(parsed_response["total"]).to eq(4)
 
     aggregate = parsed_response["aggregates"]
 
@@ -178,7 +178,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&facet_mainstream_browse_pages=2"
 
-    expect(4).to eq(parsed_response["total"])
+    expect(parsed_response["total"]).to eq(4)
 
     facets = parsed_response["facets"]
 
@@ -204,16 +204,16 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2"
 
-    expect(4).to eq(parsed_response["total"])
+    expect(parsed_response["total"]).to eq(4)
     aggregates_without_filter = parsed_response["aggregates"]
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2&filter_mainstream_browse_pages=browse/page/1"
-    expect(2).to eq(parsed_response["total"])
+    expect(parsed_response["total"]).to eq(2)
 
     aggregates_with_filter = parsed_response["aggregates"]
 
     expect(aggregates_with_filter).to eq(aggregates_without_filter)
-    expect(2).to eq(aggregates_without_filter["mainstream_browse_pages"]["options"].size)
+    expect(aggregates_without_filter["mainstream_browse_pages"]["options"].size).to eq(2)
   end
 
   it "aggregate_counting_missing_options" do
@@ -221,7 +221,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=1"
 
-    expect(4).to eq(parsed_response["total"])
+    expect(parsed_response["total"]).to eq(4)
     aggregates = parsed_response["aggregates"]
     expect(
       "mainstream_browse_pages" => {
@@ -241,7 +241,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=browse/page/1"
 
-    expect(2).to eq(parsed_response["total"])
+    expect(parsed_response["total"]).to eq(2)
     aggregates = parsed_response["aggregates"]
 
     expect(
@@ -369,7 +369,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?filter_document_type=cma_case"
 
     expect(last_response).to be_ok
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
     expect(
       hash_including(
         "document_type" => "cma_case",
@@ -387,7 +387,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
 
     expect(last_response).to be_ok
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
     expect(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
@@ -404,7 +404,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
 
     expect(last_response).to be_ok
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
     expect(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
@@ -421,7 +421,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
 
     expect(last_response).to be_ok
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
     expect(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
@@ -438,7 +438,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
 
     expect(last_response).to be_ok
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
     expect(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
@@ -452,7 +452,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   it "cannot_provide_date_filter_key_multiple_times" do
     get "/search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
 
-    expect(422).to eq(last_response.status)
+    expect(last_response.status).to eq(422)
     expect(
       { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} }
     ).to eq(
@@ -463,7 +463,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
   it "cannot_provide_invalid_dates_for_date_filter" do
     get "/search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
 
-    expect(422).to eq(last_response.status)
+    expect(last_response.status).to eq(422)
     expect(
       { "error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date} }
     ).to eq(
@@ -652,7 +652,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     get "/search?q=test"
-    expect(0).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(0)
   end
 
   it "withdrawn_content_with_flag" do
@@ -664,7 +664,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     get "/search?q=test&debug=include_withdrawn&fields[]=is_withdrawn"
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
     expect(parsed_response.dig("results", 0, "is_withdrawn")).to be true
   end
 
@@ -678,7 +678,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     get "/search?q=test&debug=include_withdrawn&aggregate_mainstream_browse_pages=2"
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
   end
 
   it "show_the_query" do
@@ -699,7 +699,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
       get "/search?filter_document_type=dfid_research_output&#{filter_query}"
 
       expect(last_response).to be_ok
-      expect(1).to eq(parsed_response.fetch("total")), "Failure to search by #{filter_query}"
+      expect(parsed_response.fetch("total")).to eq(1), "Failure to search by #{filter_query}"
       expect(
         hash_including(
           "document_type" => "dfid_research_output",
@@ -721,10 +721,10 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     )
 
     get "/search?q=test&fields[]=taxons"
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
 
     taxons = parsed_response.dig("results", 0, "taxons")
-    expect(["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]).to eq(taxons)
+    expect(taxons).to eq(["eb2093ef-778c-4105-9f33-9aa03d14bc5c"])
   end
 
   it "taxonomy_can_be_filtered" do
@@ -738,7 +738,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
     expect(last_response).to be_ok
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
     expect(
       hash_including(
         "title" => "I am the result",
@@ -761,19 +761,19 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
     expect(last_response).to be_ok
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
 
     get "/search?filter_part_of_taxonomy_tree=aa2093ef-778c-4105-9f33-9aa03d14bc5c"
 
     expect(last_response).to be_ok
-    expect(1).to eq(parsed_response.fetch("total"))
+    expect(parsed_response.fetch("total")).to eq(1)
   end
 
   it "return_400_response_for_integers_out_of_range" do
     get '/search.json?count=50&start=7599999900'
 
     expect(last_response).to be_bad_request
-    expect('Integer value of 7599999900 exceeds maximum allowed').to eq(last_response.body)
+    expect(last_response.body).to eq('Integer value of 7599999900 exceeds maximum allowed')
   end
 
   it "return_400_response_for_query_term_length_too_long" do
@@ -781,7 +781,7 @@ RSpec.describe 'SearchTest', tags: ['integration'] do
     get "/search.json?q=#{terms}"
 
     expect(last_response).to be_bad_request
-    expect('Query must be less than 1024 words').to eq(last_response.body)
+    expect(last_response.body).to eq('Query must be less than 1024 words')
   end
 
 private

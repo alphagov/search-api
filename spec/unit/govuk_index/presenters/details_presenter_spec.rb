@@ -9,7 +9,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       ]
     }
 
-    expect("hello").to eq(details_presenter(details).indexable_content)
+    expect(details_presenter(details).indexable_content).to eq("hello")
   end
 
   it "details_with_parts" do
@@ -34,7 +34,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       ]
     }
 
-    expect("title 1\n\nhello\n\ntitle 2\n\ngoodbye").to eq(details_presenter(details).indexable_content)
+    expect(details_presenter(details).indexable_content).to eq("title 1\n\nhello\n\ntitle 2\n\ngoodbye")
   end
 
   it "mapped_licence_fields" do
@@ -67,7 +67,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       "start_button_text" => "Start now",
     }
 
-    expect("introductory paragraph\n\nmore information").to eq(details_presenter(details, %w(introductory_paragraph more_information)).indexable_content)
+    expect(details_presenter(details, %w(introductory_paragraph more_information)).indexable_content).to eq("introductory paragraph\n\nmore information")
   end
 
   def details_presenter(details, indexable_content_keys = %w(body parts))

@@ -148,7 +148,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: {}.to_json
       )
 
-    expect([]).to eq(@server.index_group("test").index_names)
+    expect(@server.index_group("test").index_names).to eq([])
   end
 
   it "index_names_with_index" do
@@ -162,7 +162,7 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json
       )
 
-    expect([index_name]).to eq(@server.index_group("test").index_names)
+    expect(@server.index_group("test").index_names).to eq([index_name])
   end
 
   it "index_names_with_other_groups" do
@@ -179,7 +179,7 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json
       )
 
-    expect([this_name]).to eq(@server.index_group("test").index_names)
+    expect(@server.index_group("test").index_names).to eq([this_name])
   end
 
   it "clean_with_no_indices" do

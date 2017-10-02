@@ -177,7 +177,7 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest', tags: ['integration'] do
 
     expect(last_response).to be_ok
     expect_result_total 1
-    expect(["ministry-of-cheese"]).to eq(parsed_response["results"][0]["organisations"])
+    expect(parsed_response["results"][0]["organisations"]).to eq(["ministry-of-cheese"])
   end
 
   it "should_allow_ordering_by_properties" do
@@ -190,6 +190,6 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest', tags: ['integration'] do
   it "does_not_allow_page_to_be_super_high" do
     get "/#{@index_name}/advanced_search.json?per_page=4&page=500001&order[updated_at]=desc"
 
-    expect(422).to eq(last_response.status)
+    expect(last_response.status).to eq(422)
   end
 end

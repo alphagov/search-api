@@ -12,9 +12,9 @@ RSpec.describe SitemapGenerator do
 
     doc = Nokogiri::XML(sitemap_xml)
     urls = doc.css('url > loc').map(&:inner_html)
-    expect("https://www.gov.uk/page").to eq(urls[0])
-    expect("http://www.dev.gov.uk/another-page").to eq(urls[1])
-    expect("http://www.dev.gov.uk/yet-another-page").to eq(urls[2])
+    expect(urls[0]).to eq("https://www.gov.uk/page")
+    expect(urls[1]).to eq("http://www.dev.gov.uk/another-page")
+    expect(urls[2]).to eq("http://www.dev.gov.uk/yet-another-page")
   end
 
   it "links_should_include_timestamps" do
@@ -26,7 +26,7 @@ RSpec.describe SitemapGenerator do
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
 
-    expect("2014-01-28T14:41:50+00:00").to eq(pages[0].css("lastmod").text)
+    expect(pages[0].css("lastmod").text).to eq("2014-01-28T14:41:50+00:00")
   end
 
   it "missing_timestamps_are_ignored" do
@@ -51,7 +51,7 @@ RSpec.describe SitemapGenerator do
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
 
-    expect("0.48").to eq(pages[0].css("priority").text)
+    expect(pages[0].css("priority").text).to eq("0.48")
   end
 
   def build_document(url, timestamp: nil, is_withdrawn: nil)

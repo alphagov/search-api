@@ -41,6 +41,6 @@ RSpec.describe 'ElasticsearchAmendmentTest', tags: ['integration'] do
 
     post "/documents/%2Fan-example-answer", "title=A+new+title"
 
-    expect(202).to eq(last_response.status)
+    expect(last_response.status).to eq(202)
   end
 end

@@ -20,7 +20,7 @@ RSpec.describe 'ElasticsearchIndexGroupTest', tags: ['integration'] do
     expect(@index_group.index_names).to be_empty
     index = @index_group.create_index
 
-    expect(1).to eq(@index_group.index_names.count)
+    expect(@index_group.index_names.count).to eq(1)
     expect(index.index_name).to eq(@index_group.index_names[0])
     expect(
       SearchConfig.instance.search_server.schema.elasticsearch_mappings("mainstream")
@@ -48,8 +48,8 @@ RSpec.describe 'ElasticsearchIndexGroupTest', tags: ['integration'] do
     @index_group.create_index
     @index_group.switch_to(@index_group.create_index)
 
-    expect(2).to eq(@index_group.index_names.count)
+    expect(@index_group.index_names.count).to eq(2)
     @index_group.clean
-    expect(1).to eq(@index_group.index_names.count)
+    expect(@index_group.index_names.count).to eq(1)
   end
 end

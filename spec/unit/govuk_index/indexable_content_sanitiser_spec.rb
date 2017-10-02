@@ -9,25 +9,25 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
       ]
     ]
 
-    expect("hello marmaduke").to eq(subject.clean(payload))
+    expect(subject.clean(payload)).to eq("hello marmaduke")
   end
 
   it "passes_single_string_content_unchanged" do
     payload = ["hello marmaduke"]
 
-    expect("hello marmaduke").to eq(subject.clean(payload))
+    expect(subject.clean(payload)).to eq("hello marmaduke")
   end
 
   it "passes_multiple_string_items_unchanged" do
     payload = ["hello marmaduke", "hello marley"]
 
-    expect("hello marmaduke\n\n\nhello marley").to eq(subject.clean(payload))
+    expect(subject.clean(payload)).to eq("hello marmaduke\n\n\nhello marley")
   end
 
   it "strips_html_tags_from_string_content" do
     payload = ["<h1>hello marmaduke</h1>"]
 
-    expect("hello marmaduke").to eq(subject.clean(payload))
+    expect(subject.clean(payload)).to eq("hello marmaduke")
   end
 
   it "multiple_html_text_payload_items" do
@@ -43,7 +43,7 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
     ]
 
 
-    expect("hello\ngoodbye").to eq(subject.clean(payload))
+    expect(subject.clean(payload)).to eq("hello\ngoodbye")
   end
 
   it "notifies_if_no_text_html_content" do

@@ -56,7 +56,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
     )
     generator = SitemapGenerator.new(SearchConfig.instance)
     sitemap_xml = generator.sitemaps
-    expect(1).to eq(sitemap_xml.length)
+    expect(sitemap_xml.length).to eq(1)
 
     expect(sitemap_xml[0]).not_to include("/an-example-answer")
   end
@@ -69,8 +69,8 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
       .css("url")
       .select { |item| item.css("loc").text == "http://www.dev.gov.uk/" }
 
-    expect(1).to eq(pages.count)
-    expect("0.5").to eq(pages[0].css("priority").text)
+    expect(pages.count).to eq(1)
+    expect(pages[0].css("priority").text).to eq("0.5")
   end
 
   it "should_not_include_recommended_links" do
@@ -90,7 +90,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
 
     sitemap_xml = generator.sitemaps
 
-    expect(1).to eq(sitemap_xml.length)
+    expect(sitemap_xml.length).to eq(1)
 
     expect(sitemap_xml[0]).not_to include("/external-example-answer")
   end
@@ -111,7 +111,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
 
     sitemap_xml = generator.sitemaps
 
-    expect(1).to eq(sitemap_xml.length)
+    expect(sitemap_xml.length).to eq(1)
     expect(sitemap_xml[0]).not_to include("/government/some-content")
   end
 
@@ -137,8 +137,8 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
       .css("url")
       .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
 
-    expect(1).to eq(pages.count)
-    expect("2017-07-01T12:41:34+00:00").to eq(pages[0].css("lastmod").text)
+    expect(pages.count).to eq(1)
+    expect(pages[0].css("lastmod").text).to eq("2017-07-01T12:41:34+00:00")
   end
 
   it "links_should_include_priorities" do
@@ -163,7 +163,7 @@ RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
       .css("url")
       .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
 
-    expect(1).to eq(pages.count)
+    expect(pages.count).to eq(1)
     expect(0..10).to include(pages[0].css("priority").text.to_i)
   end
 

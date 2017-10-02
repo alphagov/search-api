@@ -22,7 +22,7 @@ RSpec.describe QueryComponents::BestBets do
       result = builder.wrap('QUERY')
 
       expected = { bool: { should: ['QUERY', { function_score: { query: { ids: { values: ["/best-bet"] } }, boost_factor: 1000000 } }] } }
-      expect(expected).to eq(result)
+      expect(result).to eq(expected)
     end
   end
 
@@ -42,7 +42,7 @@ RSpec.describe QueryComponents::BestBets do
         }
       }
 
-      expect(expected).to eq(result)
+      expect(result).to eq(expected)
     end
   end
 
@@ -54,7 +54,7 @@ RSpec.describe QueryComponents::BestBets do
       result = builder.wrap('QUERY')
 
       expected = { bool: { should: ['QUERY', { function_score: { query: { ids: { values: ["/best-bet", "/other-best-bet"] } }, boost_factor: 1000000 } }] } }
-      expect(expected).to eq(result)
+      expect(result).to eq(expected)
     end
   end
 
@@ -66,7 +66,7 @@ RSpec.describe QueryComponents::BestBets do
       result = builder.wrap({})
 
       expected = { bool: { should: [{}], must_not: [{ ids: { values: ["/worst-bet", "/other-worst-bet"] } }] } }
-      expect(expected).to eq(result)
+      expect(result).to eq(expected)
     end
   end
 end

@@ -11,13 +11,13 @@ RSpec.describe Helpers do
     expect(subject).to receive(:content_type).with(:json)
     # 200 is the default status: whether it gets called or not, we don't mind
     expect(subject).to receive(:status).with(200).once
-    expect('{"result":"OK"}').to eq(subject.simple_json_result(true))
+    expect(subject.simple_json_result(true)).to eq('{"result":"OK"}')
   end
 
   it "simple_json_result_error" do
     expect(subject).to receive(:content_type).with(:json)
     expect(subject).to receive(:status).with(500)
-    expect('{"result":"error"}').to eq(subject.simple_json_result(false))
+    expect(subject.simple_json_result(false)).to eq('{"result":"error"}')
   end
 
   it "parse_query_string" do
@@ -31,7 +31,7 @@ RSpec.describe Helpers do
       ["foo=baz&&q=more", { "foo" => ["baz"], "q" => ["more"] }],
       ["foo=baz&boo&q=more", { "foo" => ["baz"], "boo" => [], "q" => ["more"] }],
     ].each do |qs, expected|
-      expect(expected).to eq(subject.parse_query_string(qs))
+      expect(subject.parse_query_string(qs)).to eq(expected)
     end
   end
 end

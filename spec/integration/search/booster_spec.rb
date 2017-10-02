@@ -21,7 +21,7 @@ RSpec.describe 'BoosterTest', tags: ['integration'] do
 
     get "/search?q=agile"
 
-    expect(["Can we be agile?", "Agile is good", "Being agile is good"]).to eq(result_titles)
+    expect(result_titles).to eq(["Can we be agile?", "Agile is good", "Being agile is good"])
   end
 
   def result_titles

@@ -12,19 +12,19 @@ RSpec.describe SitemapPresenter do
   it "url_is_document_link_if_link_is_http_url" do
     document = build_document(url: "http://some.url")
     presenter = described_class.new(document, @boost_calculator)
-    expect("http://some.url").to eq(presenter.url)
+    expect(presenter.url).to eq("http://some.url")
   end
 
   it "url_is_document_link_if_link_is_https_url" do
     document = build_document(url: "https://some.url")
     presenter = described_class.new(document, @boost_calculator)
-    expect("https://some.url").to eq(presenter.url)
+    expect(presenter.url).to eq("https://some.url")
   end
 
   it "url_appends_host_name_if_link_is_a_path" do
     document = build_document(url: "/some/path")
     presenter = described_class.new(document, @boost_calculator)
-    expect("https://website_root/some/path").to eq(presenter.url)
+    expect(presenter.url).to eq("https://website_root/some/path")
   end
 
   it "last_updated_is_timestamp_if_timestamp_is_date_time" do
@@ -33,7 +33,7 @@ RSpec.describe SitemapPresenter do
       timestamp: "2014-01-28T14:41:50+00:00"
     )
     presenter = described_class.new(document, @boost_calculator)
-    expect("2014-01-28T14:41:50+00:00").to eq(presenter.last_updated)
+    expect(presenter.last_updated).to eq("2014-01-28T14:41:50+00:00")
   end
 
   it "last_updated_is_timestamp_if_timestamp_is_date" do
@@ -42,7 +42,7 @@ RSpec.describe SitemapPresenter do
       timestamp: "2017-07-12"
     )
     presenter = described_class.new(document, @boost_calculator)
-    expect("2017-07-12").to eq(presenter.last_updated)
+    expect(presenter.last_updated).to eq("2017-07-12")
   end
 
   it "last_updated_is_limited_to_recent_date" do
@@ -51,7 +51,7 @@ RSpec.describe SitemapPresenter do
       timestamp: "1995-06-01"
     )
     presenter = described_class.new(document, @boost_calculator)
-    expect("2012-10-17T00:00:00+00:00").to eq(presenter.last_updated)
+    expect(presenter.last_updated).to eq("2012-10-17T00:00:00+00:00")
   end
 
   it "last_updated_is_omitted_if_timestamp_is_missing" do
@@ -87,7 +87,7 @@ RSpec.describe SitemapPresenter do
       is_withdrawn: false
     )
     presenter = described_class.new(document, @boost_calculator)
-    expect(1).to eq(presenter.priority)
+    expect(presenter.priority).to eq(1)
   end
 
   it "withdrawn_page_has_lower_priority" do
@@ -104,7 +104,7 @@ RSpec.describe SitemapPresenter do
       url: "/some/path"
     )
     presenter = described_class.new(document, @boost_calculator)
-    expect(1).to eq(presenter.priority)
+    expect(presenter.priority).to eq(1)
   end
 
   it "page_with_boosted_format_has_adjusted_priority" do

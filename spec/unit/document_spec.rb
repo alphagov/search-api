@@ -13,11 +13,11 @@ RSpec.describe Document do
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
-    expect("TITLE").to eq(document.title)
-    expect("DESCRIPTION").to eq(document.description)
-    expect("answer").to eq(document.format)
-    expect("/an-example-answer").to eq(document.link)
-    expect("HERE IS SOME CONTENT").to eq(document.indexable_content)
+    expect(document.title).to eq("TITLE")
+    expect(document.description).to eq("DESCRIPTION")
+    expect(document.format).to eq("answer")
+    expect(document.link).to eq("/an-example-answer")
+    expect(document.indexable_content).to eq("HERE IS SOME CONTENT")
   end
 
   it "should_permit_nonedition_documents" do
@@ -29,14 +29,14 @@ RSpec.describe Document do
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
-    expect("jobs").to eq(document.to_hash["stemmed_query"])
-    expect("jobs").to eq(document.stemmed_query)
-    expect("jobs").to eq(document.elasticsearch_export["stemmed_query"])
+    expect(document.to_hash["stemmed_query"]).to eq("jobs")
+    expect(document.stemmed_query).to eq("jobs")
+    expect(document.elasticsearch_export["stemmed_query"]).to eq("jobs")
 
     expect(document.to_hash.has_key?("_type")).to be_falsey
     expect(document.to_hash.has_key?("_id")).to be_falsey
-    expect("jobs_exact").to eq(document.elasticsearch_export["_id"])
-    expect("best_bet").to eq(document.elasticsearch_export["_type"])
+    expect(document.elasticsearch_export["_id"]).to eq("jobs_exact")
+    expect(document.elasticsearch_export["_type"]).to eq("best_bet")
   end
 
   it "should_reject_document_with_no_type" do
@@ -88,7 +88,7 @@ RSpec.describe Document do
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
-    expect("TITLE").to eq(document.title)
+    expect(document.title).to eq("TITLE")
   end
 
   it "should_skip_metadata_fields_in_to_hash" do
@@ -107,7 +107,7 @@ RSpec.describe Document do
 
   it "should_skip_missing_fields_in_to_hash" do
     document = described_class.from_hash({ "_type" => "edition" }, sample_elasticsearch_types)
-    expect([]).to eq(document.to_hash.keys)
+    expect(document.to_hash.keys).to eq([])
   end
 
   it "should_skip_missing_fields_in_elasticsearch_export" do

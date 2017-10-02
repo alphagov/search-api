@@ -10,7 +10,7 @@ RSpec.describe Search::ResultPresenter do
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[format])).present
 
-    expect("a-string").to eq(result["format"])
+    expect(result["format"]).to eq("a-string")
   end
 
   it "conversion_values_to_labelled_objects" do

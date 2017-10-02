@@ -170,15 +170,15 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "present empty list of results" do
-      expect([]).to eq(@output[:results])
+      expect(@output[:results]).to eq([])
     end
 
     it "have total of 0" do
-      expect(0).to eq(@output[:total])
+      expect(@output[:total]).to eq(0)
     end
 
     it "have no aggregates" do
-      expect({}).to eq(@output[:aggregates])
+      expect(@output[:aggregates]).to eq({})
     end
   end
 
@@ -194,11 +194,11 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct total" do
-      expect(3).to eq(@output[:total])
+      expect(@output[:total]).to eq(3)
     end
 
     it "have correct number of results" do
-      expect(3).to eq(@output[:results].length)
+      expect(@output[:results].length).to eq(3)
     end
 
     it "have short index names" do
@@ -270,11 +270,11 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct total" do
-      expect(3).to eq(@output[:total])
+      expect(@output[:total]).to eq(3)
     end
 
     it "have correct number of results" do
-      expect(3).to eq(@output[:results].length)
+      expect(@output[:results].length).to eq(3)
     end
 
     it "have short index names" do
@@ -326,11 +326,11 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      expect(1).to eq(@output[:aggregates].length)
+      expect(@output[:aggregates].length).to eq(1)
     end
 
     it "have correct number of aggregate values" do
-      expect(1).to eq(@output[:aggregates]["organisations"][:options].length)
+      expect(@output[:aggregates]["organisations"][:options].length).to eq(1)
     end
 
     it "include requested aggregate scope" do
@@ -346,15 +346,15 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of documents with no value" do
-      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(@output[:aggregates]["organisations"][:documents_with_no_value]).to eq(8)
     end
 
     it "have correct total number of options" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
+      expect(@output[:aggregates]["organisations"][:total_options]).to eq(2)
     end
 
     it "have correct number of missing options" do
-      expect(1).to eq(@output[:aggregates]["organisations"][:missing_options])
+      expect(@output[:aggregates]["organisations"][:missing_options]).to eq(1)
     end
   end
 
@@ -376,11 +376,11 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      expect(1).to eq(@output[:aggregates].length)
+      expect(@output[:aggregates].length).to eq(1)
     end
 
     it "have correct number of aggregate values" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:options].length)
+      expect(@output[:aggregates]["organisations"][:options].length).to eq(2)
     end
 
     it "have selected aggregate first" do
@@ -398,15 +398,15 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of documents with no value" do
-      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(@output[:aggregates]["organisations"][:documents_with_no_value]).to eq(8)
     end
 
     it "have correct total number of options" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
+      expect(@output[:aggregates]["organisations"][:total_options]).to eq(2)
     end
 
     it "have correct number of missing options" do
-      expect(0).to eq(@output[:aggregates]["organisations"][:missing_options])
+      expect(@output[:aggregates]["organisations"][:missing_options]).to eq(0)
     end
   end
 
@@ -428,11 +428,11 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      expect(1).to eq(@output[:aggregates].length)
+      expect(@output[:aggregates].length).to eq(1)
     end
 
     it "have correct number of aggregate values" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:options].length)
+      expect(@output[:aggregates]["organisations"][:options].length).to eq(2)
     end
 
     it "have selected aggregate first" do
@@ -450,15 +450,15 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of documents with no value" do
-      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(@output[:aggregates]["organisations"][:documents_with_no_value]).to eq(8)
     end
 
     it "have correct total number of options" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
+      expect(@output[:aggregates]["organisations"][:total_options]).to eq(2)
     end
 
     it "have correct number of missing options" do
-      expect(1).to eq(@output[:aggregates]["organisations"][:missing_options])
+      expect(@output[:aggregates]["organisations"][:missing_options]).to eq(1)
     end
   end
 
@@ -475,23 +475,23 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      expect(1).to eq(@output[:aggregates].length)
+      expect(@output[:aggregates].length).to eq(1)
     end
 
     it "have no aggregate values" do
-      expect(0).to eq(@output[:aggregates]["organisations"][:options].length)
+      expect(@output[:aggregates]["organisations"][:options].length).to eq(0)
     end
 
     it "have correct number of documents with no value" do
-      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(@output[:aggregates]["organisations"][:documents_with_no_value]).to eq(8)
     end
 
     it "have correct total number of options" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
+      expect(@output[:aggregates]["organisations"][:total_options]).to eq(2)
     end
 
     it "have correct number of missing options" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:missing_options])
+      expect(@output[:aggregates]["organisations"][:missing_options]).to eq(2)
     end
   end
 
@@ -606,12 +606,12 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      expect(2).to eq(@output[:aggregates].length)
+      expect(@output[:aggregates].length).to eq(2)
     end
 
     it "have correct number of aggregate values" do
-      expect(1).to eq(@output[:aggregates]["organisations"][:options].length)
-      expect(1).to eq(@output[:aggregates]["policy_areas"][:options].length)
+      expect(@output[:aggregates]["organisations"][:options].length).to eq(1)
+      expect(@output[:aggregates]["policy_areas"][:options].length).to eq(1)
     end
 
     it "have org aggregate value expanded" do
@@ -633,18 +633,18 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of documents with no value" do
-      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
-      expect(3).to eq(@output[:aggregates]["policy_areas"][:documents_with_no_value])
+      expect(@output[:aggregates]["organisations"][:documents_with_no_value]).to eq(8)
+      expect(@output[:aggregates]["policy_areas"][:documents_with_no_value]).to eq(3)
     end
 
     it "have correct total number of options" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
-      expect(2).to eq(@output[:aggregates]["policy_areas"][:total_options])
+      expect(@output[:aggregates]["organisations"][:total_options]).to eq(2)
+      expect(@output[:aggregates]["policy_areas"][:total_options]).to eq(2)
     end
 
     it "have correct number of missing options" do
-      expect(1).to eq(@output[:aggregates]["organisations"][:missing_options])
-      expect(1).to eq(@output[:aggregates]["policy_areas"][:missing_options])
+      expect(@output[:aggregates]["organisations"][:missing_options]).to eq(1)
+      expect(@output[:aggregates]["policy_areas"][:missing_options]).to eq(1)
     end
   end
 
@@ -674,11 +674,11 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of aggregates" do
-      expect(1).to eq(@output[:aggregates].length)
+      expect(@output[:aggregates].length).to eq(1)
     end
 
     it "have correct number of aggregate values" do
-      expect(1).to eq(@output[:aggregates]["organisations"][:options].length)
+      expect(@output[:aggregates]["organisations"][:options].length).to eq(1)
     end
 
     it "have org aggregate value expanded, and include examples" do
@@ -699,15 +699,15 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have correct number of documents with no value" do
-      expect(8).to eq(@output[:aggregates]["organisations"][:documents_with_no_value])
+      expect(@output[:aggregates]["organisations"][:documents_with_no_value]).to eq(8)
     end
 
     it "have correct total number of options" do
-      expect(2).to eq(@output[:aggregates]["organisations"][:total_options])
+      expect(@output[:aggregates]["organisations"][:total_options]).to eq(2)
     end
 
     it "have correct number of missing options" do
-      expect(1).to eq(@output[:aggregates]["organisations"][:missing_options])
+      expect(@output[:aggregates]["organisations"][:missing_options]).to eq(1)
     end
   end
 

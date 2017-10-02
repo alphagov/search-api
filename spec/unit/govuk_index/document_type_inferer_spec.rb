@@ -9,7 +9,7 @@ RSpec.describe GovukIndex::DocumentTypeInferer do
 
     document_type_inferer = described_class.new(payload)
 
-    expect("edition").to eq(document_type_inferer.type)
+    expect(document_type_inferer.type).to eq("edition")
   end
 
   it "should_raise_not_found_error" do

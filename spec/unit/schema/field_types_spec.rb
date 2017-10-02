@@ -7,7 +7,7 @@ RSpec.describe FieldTypes do
     end
 
     it "recognise the `identifier` type" do
-      expect("identifier").to eq(@types.get("identifier").name)
+      expect(@types.get("identifier").name).to eq("identifier")
     end
 
     it "know that the `identifier` type is single-valued" do
@@ -19,7 +19,7 @@ RSpec.describe FieldTypes do
     end
 
     it "know that the `identifiers` type has a `text` filter type" do
-      expect("text").to eq(@types.get("identifiers").filter_type)
+      expect(@types.get("identifiers").filter_type).to eq("text")
     end
 
     it "know that the `identifiers` type does not have children" do
@@ -27,11 +27,11 @@ RSpec.describe FieldTypes do
     end
 
     it "know that the `objects` type has named children" do
-      expect("named").to eq(@types.get("objects").children)
+      expect(@types.get("objects").children).to eq("named")
     end
 
     it "know that the `opaque_object` type has dynamic children" do
-      expect("dynamic").to eq(@types.get("opaque_object").children)
+      expect(@types.get("opaque_object").children).to eq("dynamic")
     end
 
     it "raise an error for unknown types" do

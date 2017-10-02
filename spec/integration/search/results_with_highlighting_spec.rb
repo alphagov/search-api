@@ -10,7 +10,7 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
     get "/search?q=result&fields[]=title_with_highlighting"
 
     expect(first_search_result.key?('title')).to be_falsey
-    expect("I am the <mark>result</mark>").to eq(first_search_result['title_with_highlighting'])
+    expect(first_search_result['title_with_highlighting']).to eq("I am the <mark>result</mark>")
   end
 
   it "returns_highlighted_title_fallback" do
@@ -23,7 +23,7 @@ RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
     get "/search?q=result&fields[]=title_with_highlighting"
 
     expect(first_search_result.key?('title')).to be_falsey
-    expect("Thing without").to eq(first_search_result['title_with_highlighting'])
+    expect(first_search_result['title_with_highlighting']).to eq("Thing without")
   end
 
   it "returns_highlighted_description" do

@@ -9,7 +9,7 @@ RSpec.describe Search::HighlightedDescription do
 
     highlighted_description = described_class.new(raw_result).text
 
-    expect("I will be <mark>hightlighted</mark>.").to eq(highlighted_description)
+    expect(highlighted_description).to eq("I will be <mark>hightlighted</mark>.")
   end
 
   it "uses_default_description_if_hightlight_not_found" do
@@ -19,7 +19,7 @@ RSpec.describe Search::HighlightedDescription do
 
     highlighted_description = described_class.new(raw_result).text
 
-    expect("I will not be hightlighted &amp; escaped.").to eq(highlighted_description)
+    expect(highlighted_description).to eq("I will not be hightlighted &amp; escaped.")
   end
 
   it "truncates_default_description_if_hightlight_not_found" do
@@ -29,7 +29,7 @@ RSpec.describe Search::HighlightedDescription do
 
     highlighted_description = described_class.new(raw_result).text
 
-    expect(225).to eq(highlighted_description.size)
+    expect(highlighted_description.size).to eq(225)
     expect(highlighted_description.ends_with?('…')).to be_truthy
   end
 
@@ -40,6 +40,6 @@ RSpec.describe Search::HighlightedDescription do
 
     highlighted_description = described_class.new(raw_result).text
 
-    expect("").to eq(highlighted_description)
+    expect(highlighted_description).to eq("")
   end
 end

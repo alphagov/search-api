@@ -83,7 +83,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     end
 
     it "get an empty hash of examples" do
-      expect({}).to eq(@fetcher.fetch)
+      expect(@fetcher.fetch).to eq({})
     end
   end
 
@@ -227,7 +227,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     end
 
     it "request and return aggregate examples" do
-      expect({ "sector" => {} }).to eq(@fetcher.fetch)
+      expect(@fetcher.fetch).to eq({ "sector" => {} })
     end
   end
 

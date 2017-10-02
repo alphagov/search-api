@@ -14,7 +14,7 @@ RSpec.describe SearchIndices::Index do
         headers: { 'Content-Type' => 'application/json' },
       )
 
-    expect("real-name").to eq(@index.real_name)
+    expect(@index.real_name).to eq("real-name")
   end
 
   it "real_name_when_no_index" do
@@ -79,7 +79,7 @@ RSpec.describe SearchIndices::Index do
       @index.add(documents)
       flunk("No exception raised")
     rescue Indexer::BulkIndexFailure => e
-      expect("Indexer::BulkIndexFailure").to eq(e.message)
+      expect(e.message).to eq("Indexer::BulkIndexFailure")
     end
   end
 
@@ -212,9 +212,9 @@ RSpec.describe SearchIndices::Index do
       headers: { 'Content-Type' => 'application/json' },
     ).then.to_raise("should never happen")
     all_documents = @index.all_documents.to_a
-    expect(100).to eq(all_documents.size)
-    expect("/foo-1").to eq(all_documents.first.link)
-    expect("/foo-100").to eq(all_documents.last.link)
+    expect(all_documents.size).to eq(100)
+    expect(all_documents.first.link).to eq("/foo-1")
+    expect(all_documents.last.link).to eq("/foo-100")
   end
 
   it "changing_scroll_id" do
@@ -259,7 +259,7 @@ RSpec.describe SearchIndices::Index do
     ).then.to_raise("should never happen")
 
     all_documents = @index.all_documents.to_a
-    expect(["/foo-1", "/foo-2", "/foo-3"]).to eq(all_documents.map(&:link))
+    expect(all_documents.map(&:link)).to eq(["/foo-1", "/foo-2", "/foo-3"])
   end
 
 private

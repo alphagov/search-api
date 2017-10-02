@@ -60,7 +60,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] d
     GovukIndex::PopularityUpdater.update('govuk_test')
 
     document = fetch_document_from_rummager(id: id, index: 'govuk_test')
-    expect(3).to eq(document['_version'])
+    expect(document['_version']).to eq(3)
   end
 
   it "skips_non_indexable_formats" do

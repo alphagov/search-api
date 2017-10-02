@@ -27,7 +27,7 @@ RSpec.describe 'SortTest' do
 
       result = builder.payload
 
-      expect([{ "public_timestamp" => { order: "asc", missing: "_last" } }]).to eq(result)
+      expect(result).to eq([{ "public_timestamp" => { order: "asc", missing: "_last" } }])
     end
   end
 
@@ -37,7 +37,7 @@ RSpec.describe 'SortTest' do
 
       result = builder.payload
 
-      expect([{ "public_timestamp" => { order: "desc", missing: "_last" } }]).to eq(result)
+      expect(result).to eq([{ "public_timestamp" => { order: "desc", missing: "_last" } }])
     end
   end
 
