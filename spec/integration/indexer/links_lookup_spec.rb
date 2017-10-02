@@ -2,6 +2,8 @@ require 'spec_helper'
 require "gds_api/test_helpers/publishing_api_v2"
 
 RSpec.describe 'TaglookupDuringIndexingTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   include GdsApi::TestHelpers::PublishingApiV2
 
   it "indexes_document_without_publishing_api_content_unchanged" do

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'ChangeNotificationProcessorTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   it "triggering_a_reindex" do
     publishing_api_has_lookups(
       "/foo" => "DOCUMENT-CONTENT-ID"

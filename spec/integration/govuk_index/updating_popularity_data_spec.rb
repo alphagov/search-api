@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] do
+  allow_elasticsearch_connection(scroll: true)
+
   before do
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(['help_page'])
   end

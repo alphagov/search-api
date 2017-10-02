@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'SettingsTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   it "default" do
     expect_tokenisation :default,
       "It's A Small’s World" => %w(it small world),

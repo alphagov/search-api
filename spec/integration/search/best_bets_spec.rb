@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'BestBetsTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   it "exact_best_bet" do
     commit_document("mainstream_test",
       "link" => '/an-organic-result',

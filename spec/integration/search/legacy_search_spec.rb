@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'ElasticsearchAdvancedSearchTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   before do
     @index_name = "mainstream_test"
 

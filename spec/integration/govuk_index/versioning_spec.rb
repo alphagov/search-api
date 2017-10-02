@@ -3,6 +3,8 @@ require 'spec_helper'
 require 'govuk_index/publishing_event_processor'
 
 RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   before do
     @processor = GovukIndex::PublishingEventProcessor.new
   end

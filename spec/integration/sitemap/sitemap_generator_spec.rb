@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'SitemapGeneratorTest', tags: ['integration'] do
+  allow_elasticsearch_connection(scroll: true)
 
   it "should_generate_multiple_sitemaps" do
     allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)

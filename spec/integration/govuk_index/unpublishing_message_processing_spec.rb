@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'GovukIndex::UnpublishingMessageProcessing', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   it "unpublish_message_will_remove_record_from_elasticsearch" do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(%w(answer))
 

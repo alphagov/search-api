@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'ElasticsearchIndexingTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   include GdsApi::TestHelpers::PublishingApiV2
 
   SAMPLE_DOCUMENT = {

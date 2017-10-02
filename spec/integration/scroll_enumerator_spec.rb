@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'ScrollEnumeratorTest', tags: ['integration'] do
+  allow_elasticsearch_connection(scroll: true)
+
   it "returns_expected_results_for_unsorted_search" do
     10.times.each do |id|
       commit_document("mainstream_test", { some: 'data' }, id: "id-#{id}", type: "edition")

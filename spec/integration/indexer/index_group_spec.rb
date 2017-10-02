@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'ElasticsearchIndexGroupTest', tags: ['integration'] do
+  allow_elasticsearch_connection(aliases: true)
+
   before do
     @group_name = "mainstream_test"
     IndexHelpers.clean_index_group(@group_name)

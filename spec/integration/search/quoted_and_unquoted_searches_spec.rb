@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'QuotedAndUnquotedSearchTest', tags: ['integration'] do
+  allow_elasticsearch_connection
+
   before do
     # `@@registries` are set in Rummager and is *not* reset between tests. To
     # prevent caching issues we manually clear them here to make a "new" app.

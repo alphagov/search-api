@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'SearchTest', tags: ['integration'] do
+  allow_elasticsearch_connection(scroll: true)
+
   it "returns_success" do
     get "/search?q=important"
 

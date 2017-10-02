@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe 'BulkLoaderTest', tags: ['integration'] do
+  allow_elasticsearch_connection(aliases: true)
+
   before do
     stub_tagging_lookup
     comparer = double(:comparer)
