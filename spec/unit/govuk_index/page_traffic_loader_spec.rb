@@ -10,7 +10,7 @@ RSpec.describe GovukIndex::PageTrafficLoader do
     allow_any_instance_of(SearchIndices::IndexGroup).to receive(:current_real).and_return(@current_index)
     allow_any_instance_of(SearchIndices::IndexGroup).to receive(:switch_to)
 
-    allow(GovukIndex::GooglePopularityWorker).to receive(:wait_until_processed)
+    allow(GovukIndex::PageTrafficWorker).to receive(:wait_until_processed)
   end
 
   it 'processes input data in batches of pairs based on the batch size' do
@@ -20,9 +20,9 @@ RSpec.describe GovukIndex::PageTrafficLoader do
     line2 = [{ "val" => "c" }, { "data" => 1 }, { "val" => "d" }, { "data" => 1 }]
     line3 = [{ "val" => "e" }, { "data" => 1 }]
 
-    expect(GovukIndex::GooglePopularityWorker).to receive(:perform_async).with(line1, 'new_index_name')
-    expect(GovukIndex::GooglePopularityWorker).to receive(:perform_async).with(line2, 'new_index_name')
-    expect(GovukIndex::GooglePopularityWorker).to receive(:perform_async).with(line3, 'new_index_name')
+    expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line1, 'new_index_name')
+    expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line2, 'new_index_name')
+    expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line3, 'new_index_name')
 
     loader = GovukIndex::PageTrafficLoader.new(iostream_batch_size: 2)
 

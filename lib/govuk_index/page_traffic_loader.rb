@@ -17,10 +17,10 @@ module GovukIndex
         @logger.info "Indexing to #{new_index.real_name}"
 
         in_even_sized_batches(iostream) do |lines|
-          GovukIndex::GooglePopularityWorker.perform_async(lines, new_index.real_name)
+          GovukIndex::PageTrafficWorker.perform_async(lines, new_index.real_name)
         end
 
-        GovukIndex::GooglePopularityWorker.wait_until_processed
+        GovukIndex::PageTrafficWorker.wait_until_processed
         new_index.commit
 
         # Switch aliases inside the lock so we avoid a race condition where a
