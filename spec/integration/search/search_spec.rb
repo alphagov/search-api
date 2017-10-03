@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'SearchTest', tags: ['integration'] do
+RSpec.describe 'SearchTest' do
   it "returns_success" do
     get "/search?q=important"
 

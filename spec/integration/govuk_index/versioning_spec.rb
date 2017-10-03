@@ -2,7 +2,7 @@ require 'govuk_schemas'
 require 'spec_helper'
 require 'govuk_index/publishing_event_processor'
 
-RSpec.describe 'GovukIndex::VersioningTest', tags: ['integration'] do
+RSpec.describe 'GovukIndex::VersioningTest' do
   before do
     @processor = GovukIndex::PublishingEventProcessor.new
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'SitemapTest', tags: ['integration'] do
+RSpec.describe 'SitemapTest' do
   before do
     @path = "/tmp/#{SecureRandom.uuid}"
     FileUtils.mkdir_p("#{@path}/sitemaps")

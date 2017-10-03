@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ElasticsearchAdvancedSearchTest', tags: ['integration'] do
+RSpec.describe 'ElasticsearchAdvancedSearchTest' do
   before do
     @index_name = "mainstream_test"
 

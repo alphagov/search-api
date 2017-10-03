@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'MoreLikeThisTest', tags: ['integration'] do
+RSpec.describe 'MoreLikeThisTest' do
   it "returns_success" do
     get "/search?similar_to=/mainstream-1"
 

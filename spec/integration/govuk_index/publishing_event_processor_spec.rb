@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'GovukIndex::PublishingEventProcessorTest', tags: ['integration'] do
+RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
   before do
     bunny_mock = BunnyMock.new
     @channel = bunny_mock.start.channel

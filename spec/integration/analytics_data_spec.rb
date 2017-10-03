@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'AnalyticsDataTest', tags: ['integration'] do
+RSpec.describe 'AnalyticsDataTest' do
   before do
     @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, ["mainstream_test"])
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'MissingMetadataTest', tags: ['integration'] do
+RSpec.describe 'MissingMetadataTest' do
   it "finds_missing_content_id" do
     commit_document(
       'mainstream_test',
