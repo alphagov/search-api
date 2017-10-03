@@ -29,6 +29,7 @@ module Services
       hosts: hosts,
       request_timeout: timeout,
       logger: Logging.logger[self],
+      retry_on_failure: hosts.split(',').count > 1,
       transport_options: { headers: { "Content-Type" => "application/json" } }
     )
   end
