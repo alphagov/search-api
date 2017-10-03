@@ -101,21 +101,6 @@ You should run this task if the index schema has changed.
     end
   end
 
-  desc "Migrates an index group to a new index.
-
-Seamlessly creates a new index in the same index_group using the latest
-schema, copies over all data and switches over the index_groups alias to point
-to the new index on success. For safety it verifies that the new index
-contains exactly the same number of documents as the original index.
-
-You should run this task if the index schema has changed.
-"
-  task :migrate_index do
-    index_names.each do |index_name|
-      Indexer::BulkLoader.new(search_config, index_name).load_from_current_index
-    end
-  end
-
   desc "Switches an index group to a new index WITHOUT transferring the data"
   task :switch_to_empty_index do
     # Note that this task will effectively clear out the index, so shouldn't be
@@ -141,15 +126,6 @@ You should run this task if the index schema has changed.
         index_group = search_server.index_group(index_name)
         index_group.switch_to(index_group.index_for_name(new_index_name))
       end
-    end
-  end
-
-  desc "Migrates from an index with the actual index name to an alias"
-  task :migrate_from_unaliased_index do
-    # WARNING: this is potentially dangerous, and will leave the search
-    # unavailable for a very short (sub-second) period of time
-    index_names.each do |index_name|
-      Indexer::BulkLoader.new(search_config, index_name).load_from_current_unaliased_index
     end
   end
 
