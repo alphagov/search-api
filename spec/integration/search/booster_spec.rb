@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'BoosterTest', tags: ['integration'] do
+RSpec.describe 'BoosterTest' do
   it "service_manual_formats_are_weighted_down" do
     commit_document("mainstream_test",
       "title" => "Agile is good",

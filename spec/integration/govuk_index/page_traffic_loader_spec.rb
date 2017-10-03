@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Loading page traffic data', tags: ['integration'] do
+RSpec.describe 'Loading page traffic data' do
   it 'adds data to the page traffic index' do
     id = "/test/page/#{SecureRandom.uuid}"
     data = [

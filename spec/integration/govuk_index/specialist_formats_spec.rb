@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'SpecialistFormatTest', tags: ['integration'] do
+RSpec.describe 'SpecialistFormatTest' do
   before do
     bunny_mock = BunnyMock.new
     @channel = bunny_mock.start.channel

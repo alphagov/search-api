@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ElasticsearchAmendmentTest', tags: ['integration'] do
+RSpec.describe 'ElasticsearchAmendmentTest' do
   before do
     stub_tagging_lookup
   end

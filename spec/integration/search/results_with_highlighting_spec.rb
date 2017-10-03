@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ResultsWithHighlightingTest', tags: ['integration'] do
+RSpec.describe 'ResultsWithHighlightingTest' do
   it "returns_highlighted_title" do
     commit_document("mainstream_test",
       "title" => "I am the result",

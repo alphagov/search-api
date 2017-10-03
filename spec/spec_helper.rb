@@ -53,12 +53,17 @@ require "gds_api/test_helpers/publishing_api_v2"
 
 
 RSpec.configure do |config|
+  config.define_derived_metadata(file_path: %r{/spec/integration/}) do |metadata|
+    metadata[:tags] ||= []
+    metadata[:tags] << :integration
+  end
+
   config.include SpecHelpers
   config.include HashIncludingHelpers
   config.include SchemaHelpers
 
-  config.include IntegrationSpecHelper, tags: 'integration'
-  config.include Rack::Test::Methods, tags: 'integration'
+  config.include IntegrationSpecHelper, tags: :integration
+  config.include Rack::Test::Methods, tags: :integration
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

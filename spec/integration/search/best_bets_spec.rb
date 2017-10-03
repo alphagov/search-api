@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'BestBetsTest', tags: ['integration'] do
+RSpec.describe 'BestBetsTest' do
   it "exact_best_bet" do
     commit_document("mainstream_test",
       "link" => '/an-organic-result',

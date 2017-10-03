@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'SettingsTest', tags: ['integration'] do
+RSpec.describe 'SettingsTest' do
   it "default" do
     expect_tokenisation :default,
       "It's A Small’s World" => %w(it small world),

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'ContentEndpointsTest', tags: ['integration'] do
+RSpec.describe 'ContentEndpointsTest' do
   it "content_document_not_found" do
     get "/content?link=/a-document/that-does-not-exist"
 

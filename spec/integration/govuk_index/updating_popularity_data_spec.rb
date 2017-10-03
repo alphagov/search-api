@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'GovukIndex::UpdatingPopularityDataTest', tags: ['integration'] do
+RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
   before do
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(['help_page'])
   end
