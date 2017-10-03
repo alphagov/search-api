@@ -67,16 +67,17 @@ rebuild the index nightly to incorporate the latest analytics.
 
 ### Setup
 
-To create indices, or to update them to the latest index settings, run:
+To create an empty index:
 
-    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_index
+    bundle exec rake rummager:create_index[<index_name>]
 
-If you have indices from a Rummager instance before aliased indices, run:
+To create an empty index for all rummager indices:
 
-    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_from_unaliased_index
+    RUMMAGER_INDEX=all bundle exec rake rummager:create_all_indices
 
-If you don't know which of these you need to run, try running the first one; it
-will fail safely with an error if you have an unmigrated index.
+To update an index to the latest index settings, run:
+
+    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_schema
 
 ### Running the application
 
