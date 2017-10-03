@@ -4,7 +4,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   include Fixtures::DefaultMappings
 
   before do
-    base_uri = URI.parse("http://example.com:9200")
+    base_uri = "http://example.com:9200"
     search_config = SearchConfig.new
     @wrapper = described_class.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
   end
