@@ -41,6 +41,15 @@ namespace :rummager do
     ).run
   end
 
+  desc "Create a brand new indices and assign an alias if no alias currently exists"
+  task :create_all_indices do
+    index_names.each do |index_name|
+      index_group = search_config.search_server.index_group(index_name)
+      index = index_group.create_index
+      index_group.switch_to(index) unless index_group.current_real
+    end
+  end
+
   desc "Create a brand new index and assign an alias if no alias currently exists"
   task :create_index, :index_name do |_, args|
     index_group = search_config.search_server.index_group(args[:index_name])
