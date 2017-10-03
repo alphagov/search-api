@@ -21,14 +21,17 @@ module GovukIndex
           destination_index: new_index.real_name,
         ).run
 
-        # need to do this to ensure the new index is fully populated
-        SyncUpdater.new(
-          source_index: 'mainstream',
-          destination_index: new_index.real_name,
-        ).run
-
         worker.wait_until_processed
-        SyncWorker.wait_until_processed
+
+        if index_name =~ 'govuk'
+          # need to do this to ensure the new govuk index is in sync while we migrate data
+          SyncUpdater.new(
+            source_index: 'mainstream',
+            destination_index: new_index.real_name,
+          ).run
+
+          SyncWorker.wait_until_processed
+        end
 
         index_group.switch_to(new_index)
       end
