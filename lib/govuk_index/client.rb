@@ -32,7 +32,8 @@ module GovukIndex
     def client
       @_client ||= Services.elasticsearch(
         hosts: search_config.base_uri,
-        timeout: @_options[:timeout] || TIMEOUT_SECONDS
+        timeout: @_options[:timeout] || TIMEOUT_SECONDS,
+        retry_on_failure: true,
       )
     end
 
