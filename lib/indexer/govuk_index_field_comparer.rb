@@ -5,17 +5,29 @@
 # * indexable content - markdown v's html
 module Indexer
   class GovukIndexFieldComparer
+    def stats
+      @stats ||= Hash.new(0)
+    end
+
     def call(key, old, new)
-      return compare_time(old, new) if key == 'public_timestamp'
+      return compare_time(key, old, new) if key == 'public_timestamp'
       return compare_content(old, new) if key == 'indexable_content'
       return true if %w(content_id publishing_app rendering_app content_store_document_type).include?(key) && old.nil?
       return true if old.nil? && new == ''
       return true if key == 'rendering_app' && old == 'specialist-frontend' && new == 'government-frontend'
+      if old.nil? && !new.nil?
+        stats["AddedValue: #{key}"] += 1
+        return true
+      end
+      require 'pry'
+      binding.pry if key == 'grant_type' && old != new
       old == new
     end
 
-    def compare_time(old, new)
-      Time.parse(old) == Time.parse(new)
+    def compare_time(key, old, new)
+      return true if Time.parse(old) == Time.parse(new)
+      stats["#{Time.parse(old) > Time.parse(new) ? "Older" : "Newer"} value for: #{key}"] += 1
+      false
     rescue TypeError
       false
     end
