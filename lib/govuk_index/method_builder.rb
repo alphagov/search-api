@@ -1,8 +1,14 @@
 module GovukIndex
   module MethodBuilder
-    def delegate_to_payload(name, hash_key: name)
+    def delegate_to_payload(name, hash_key: name, convert_to_array: false)
       define_method name do
-        payload[hash_key.to_s]
+        value = payload[hash_key.to_s]
+        return nil if value.nil?
+        if convert_to_array
+          Array(value)
+        else
+          value
+        end
       end
     end
 
