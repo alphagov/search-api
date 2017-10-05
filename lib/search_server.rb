@@ -6,7 +6,7 @@ module SearchIndices
 
     def initialize(base_uri, schema, index_names, govuk_index_name, content_index_names,
                    search_config)
-      @base_uri = URI.parse(base_uri)
+      @base_uri = base_uri
       @schema = schema
       @index_names = index_names
       @govuk_index_name = govuk_index_name
