@@ -2,6 +2,8 @@ require "analytics_data"
 require "csv"
 
 namespace :analytics do
+  ALL_CONTENT_SEARCH_INDICES = %w(mainstream detailed government govuk).freeze
+
   desc "
   Export all indexed pages to a CSV suitable for importing into Google Analytics.
 
@@ -11,7 +13,7 @@ namespace :analytics do
   task :create_data_import_csv do
     elasticsearch_config = SearchConfig.new.elasticsearch
 
-    analytics_data = AnalyticsData.new(elasticsearch_config["base_uri"], CONTENT_SEARCH_INDICES)
+    analytics_data = AnalyticsData.new(elasticsearch_config["base_uri"], ALL_CONTENT_SEARCH_INDICES)
 
     path = ENV['EXPORT_PATH'] || 'data'
     FileUtils.mkdir_p(path)

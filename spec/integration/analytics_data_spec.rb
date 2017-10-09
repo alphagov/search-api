@@ -2,7 +2,8 @@ require 'spec_helper'
 
 RSpec.describe 'AnalyticsDataTest' do
   before do
-    @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, ["mainstream_test"])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
+    @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, %w(mainstream_test govuk_test))
   end
 
   it "fetches_rows_of_analytics_dimensions" do
@@ -36,6 +37,44 @@ RSpec.describe 'AnalyticsDataTest' do
         nil,
         nil,
       ]
+
+    expect(rows.to_a).to eq([expected_row])
+  end
+
+  it "only includes migrated formats from the govuk index" do
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(["answers"])
+
+    document = {
+      "content_id" => "587b0635-2911-49e6-af68-3f0ea1b07cc5",
+      "link" => "/an-example-page",
+      "content_store_document_type" => "some_document_type",
+      "primary_publishing_organisation" => %w(some_publishing_org),
+      "organisations" => %w(some_org another_org yet_another_org),
+      "navigation_document_supertype" => "some_navigation_supertype",
+      "user_journey_document_supertype" => "some_user_journey_supertype",
+      "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
+      "format" => "answers",
+    }
+    commit_document("mainstream_test", document.merge("title" => "mainstream title",))
+    commit_document("govuk_test", document.merge("title" => "govuk title",))
+
+    rows = @analytics_data_fetcher.rows
+
+    expected_row = [
+      "587b0635-2911-49e6-af68-3f0ea1b07cc5",
+      "/an-example-page",
+      "some_publishing_org",
+      nil,
+      "govuk title",
+      "some_document_type",
+      "some_navigation_supertype",
+      nil,
+      "some_user_journey_supertype",
+      "some_org, another_org, yet_another_org",
+      "20170620",
+      nil,
+      nil,
+    ]
 
     expect(rows.to_a).to eq([expected_row])
   end
