@@ -10,17 +10,20 @@ module Indexer
     end
 
     def call(key, old, new)
-      return compare_time(key, old, new) if key == 'public_timestamp'
-      return compare_content(old, new) if key == 'indexable_content'
-      return true if %w(content_id publishing_app rendering_app content_store_document_type).include?(key) && old.nil?
-      return true if old.nil? && new == ''
-      return true if key == 'rendering_app' && old == 'specialist-frontend' && new == 'government-frontend'
       if old.nil? && !new.nil?
         stats["AddedValue: #{key}"] += 1
         return true
       end
+      if new.nil? && !old.nil?
+        stats["RemovedValue: #{key}"] += 1
+        return false
+      end
+      return compare_time(key, old, new) if %w(public_timestamp first_published_at).include?(key)
+      return compare_content(old, new) if key == 'indexable_content'
+      return true if old.nil? && new == ''
+      return true if key == 'rendering_app' && old == 'specialist-frontend' && new == 'government-frontend'
       require 'pry'
-      binding.pry if key == 'grant_type' && old != new
+      # binding.pry if key == 'alert_type' && old != new
       old == new
     end
 
@@ -42,9 +45,9 @@ module Indexer
         new_words = clean_new.split(' ').compact
 
         extra_old = old_words - new_words
+        extra_old.uniq!
         extra_old.reject! { |w| new_words.any? { |new| new.include?(w) } } # ignore words that have been trimmed
         extra_old.reject! { |w| w =~ /^\d+$/ } # ignore numbers
-
         diff_per = (200.0 * extra_old.count / (old_words.count + new_words.count))
         if extra_old.count == 0
           # we don't need to worry too much about additional words being added
@@ -54,6 +57,7 @@ module Indexer
           # This should be reviewed with the Product Manager
           return true
         else
+          stats["Indexable Content word diff: #{extra_old.count}"] += 1
           # These are the real difference as are printed to the screen so they can be review on an individual basis
           puts "Mismatch content: #{diff_per.round(2)} : #{extra_old.length} : #{extra_old.join(', ')}\n`#{clean_old}`\n!=\n`#{clean_new}`\n\n"
           false
@@ -71,7 +75,7 @@ module Indexer
       (str || '')
         .downcase # normalise case
         .gsub(/\.[a-z]{3}(\)| |$)/, '\1') # hash as sometimes the link will have the extension
-        .gsub(/[\s,\-_:\/–\[\]\(\)\.\*]+/, ' ') # remove all special characters
+        .gsub(/[\s,\-_:\/–\[\]\(\)\.\*\|]+/, ' ') # remove all special characters
         .gsub(/&amp;/, '&')
         .gsub(/[’'‘]/, "'")
     end

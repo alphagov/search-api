@@ -1,7 +1,7 @@
 module Indexer
   class CompareEnumerator < Enumerator
     NO_VALUE = :__no_value_found__
-    BATCH_SIZE = 50
+    BATCH_SIZE = 250
     DEFAULT_QUERY = { match_all: {} }.freeze
     # the `_uid` is a combination of the id and type (format: 'type#id') and is used
     # as sorting on the _id field does not return ordered results

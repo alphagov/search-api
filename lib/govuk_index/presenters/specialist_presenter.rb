@@ -7,7 +7,7 @@ module GovukIndex
     delegate_to_payload :aircraft_category
     delegate_to_payload :aircraft_type
     delegate_to_payload :alert_issue_date
-    delegate_to_payload :alert_type
+    delegate_to_payload :alert_type, convert_to_array: true
     delegate_to_payload :assessment_date
     delegate_to_payload :build_end_date
     delegate_to_payload :build_start_date
@@ -30,7 +30,7 @@ module GovukIndex
     delegate_to_payload :faulty_item_model
     delegate_to_payload :faulty_item_type
     delegate_to_payload :first_published_at
-    delegate_to_payload :fund_state
+    delegate_to_payload :fund_state, convert_to_array: true
     delegate_to_payload :fund_type
     delegate_to_payload :funding_amount
     delegate_to_payload :funding_source
