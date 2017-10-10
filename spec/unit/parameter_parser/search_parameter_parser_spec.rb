@@ -436,17 +436,10 @@ RSpec.describe SearchParameterParser do
       opened_date_filter = parser.parsed_params.fetch(:filters)
         .find { |filter| filter.field_name == "opened_date" }
 
-      expect(
-        Date.parse("2014-04-01 00:00")
-      ).to eq(
-        opened_date_filter.values.first.from,
-      )
-
-      expect(
-        Date.parse("2014-04-02 00:00")
-      ).to eq(
-        opened_date_filter.values.first.to,
-      )
+      expect(opened_date_filter.values.first.from)
+        .to eq(Date.parse("2014-04-01 00:00"))
+      expect(opened_date_filter.values.first.to)
+        .to eq(Date.parse("2014-04-02 00:00"))
     end
 
     it "understand date filter for missing field or specific value" do
@@ -464,17 +457,10 @@ RSpec.describe SearchParameterParser do
       expect(opened_date_filter.field_name).to eq("opened_date")
       expect(true).to eq(opened_date_filter.include_missing)
 
-      expect(
-        Date.parse("2014-04-01 00:00")
-      ).to eq(
-        opened_date_filter.values.first.from,
-      )
-
-      expect(
-        Date.parse("2014-04-02 00:00")
-      ).to eq(
-        opened_date_filter.values.first.to,
-      )
+      expect(opened_date_filter.values.first.from)
+        .to eq(Date.parse("2014-04-01 00:00"))
+      expect(opened_date_filter.values.first.to)
+        .to eq(Date.parse("2014-04-02 00:00"))
     end
   end
 
