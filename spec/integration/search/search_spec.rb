@@ -485,7 +485,7 @@ RSpec.describe 'SearchTest' do
 
     expect(last_response.status).to eq(422)
     expect(
-      { "error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date} }
+      { "error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date)} }
     ).to eq(
       parsed_response,
     )

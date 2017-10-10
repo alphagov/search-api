@@ -270,7 +270,7 @@ private
     def parse_date(string)
       Date.parse(string)
     rescue
-      @errors << %{Invalid value "#{string}" for parameter "#{field_name}" (expected ISO8601 date}
+      @errors << %{Invalid value "#{string}" for parameter "#{field_name}" (expected ISO8601 date)}
       null_date
     end
 
