@@ -464,11 +464,25 @@ RSpec.describe SearchParameterParser do
     end
   end
 
-  context "filtering a date field with an invalid date" do
-    it "does not filter on date" do
+  context "filtering a date field with invalid parameters" do
+    it "does not filter on date if date is invalid" do
       params = {
         "filter_document_type" => ["cma_case"],
         "filter_opened_date" => "from:2014-bananas-01 00:00,to:2014-04-02 00:00",
+      }
+
+      parser = described_class.new(params, @schema)
+
+      opened_date_filter = parser.parsed_params.fetch(:filters)
+        .find { |filter| filter.field_name == "opened_date" }
+
+      expect(opened_date_filter).to be_nil
+    end
+
+    it "does not filter on date if the filter parameter name is invalid" do
+      params = {
+        "filter_document_type" => ["cma_case"],
+        "filter_opened_date" => "some_invalid_parameter:2014-04-01",
       }
 
       parser = described_class.new(params, @schema)

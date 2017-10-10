@@ -257,6 +257,7 @@ private
       values.map { |combined_from_and_to|
         dates_hash = combined_from_and_to.split(",").reduce({}) { |dates, param|
           key, date = param.split(":")
+          validate_date_key(key)
           dates.merge(key => parse_date(date))
         }
 
@@ -265,6 +266,12 @@ private
           dates_hash.fetch("to", null_date),
         )
       }
+    end
+
+    def validate_date_key(key)
+      if !%w(from to).include?(key)
+        @errors << %{Invalid date filter parameter "#{key}:" (expected "from:" or "to:")}
+      end
     end
 
     def parse_date(string)
