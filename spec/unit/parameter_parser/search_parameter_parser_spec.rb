@@ -426,7 +426,7 @@ RSpec.describe SearchParameterParser do
     it "include the type in return value of #parsed_params" do
       params = {
         "filter_document_type" => ["cma_case"],
-        "filter_opened_date" => "from:2014-04-01 00:00,to:2014-04-02 00:00",
+        "filter_opened_date" => "from:2014-04-01 05:08,to:2014-04-02 17:43:12",
       }
 
       parser = described_class.new(params, @schema)
@@ -437,9 +437,9 @@ RSpec.describe SearchParameterParser do
         .find { |filter| filter.field_name == "opened_date" }
 
       expect(opened_date_filter.values.first.from)
-        .to eq(Date.parse("2014-04-01 00:00"))
+        .to eq(DateTime.new(2014, 4, 1, 5, 8))
       expect(opened_date_filter.values.first.to)
-        .to eq(Date.parse("2014-04-02 00:00"))
+        .to eq(DateTime.new(2014, 4, 2, 17, 43, 12))
     end
 
     it "understand date filter for missing field or specific value" do
@@ -458,9 +458,28 @@ RSpec.describe SearchParameterParser do
       expect(true).to eq(opened_date_filter.include_missing)
 
       expect(opened_date_filter.values.first.from)
-        .to eq(Date.parse("2014-04-01 00:00"))
+        .to eq(Date.new(2014, 4, 1))
       expect(opened_date_filter.values.first.to)
-        .to eq(Date.parse("2014-04-02 00:00"))
+        .to eq(Date.new(2014, 4, 2))
+    end
+
+    it "includes the whole day if time is omitted" do
+      params = {
+        "filter_document_type" => ["cma_case"],
+        "filter_public_timestamp" => "from:2017-06-05,to:2017-06-08",
+      }
+
+      parser = described_class.new(params, @schema)
+
+      expect(parser).to be_valid, "Parameters should be valid: #{parser.errors}"
+
+      opened_date_filter = parser.parsed_params.fetch(:filters)
+        .find { |filter| filter.field_name == "public_timestamp" }
+
+      expect(opened_date_filter.values.first.from)
+        .to eq(DateTime.new(2017, 6, 5, 0, 0, 0))
+      expect(opened_date_filter.values.first.to)
+        .to eq(DateTime.new(2017, 6, 8, 23, 59, 59))
     end
   end
 
