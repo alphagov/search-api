@@ -416,36 +416,56 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can_filter_from_date" do
-    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-30", "link" => "/old-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-30T23:00:00.000+00:00", "link" => "/old-cma-with-datetime"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-31", "link" => "/matching-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-31T00:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
+      type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
 
     expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect(
-      hash_including(
-        "title" => cma_case_attributes.fetch("title"),
-        "link" => cma_case_attributes.fetch("link"),
-      )
-    ).to eq(
-      parsed_response.fetch("results").fetch(0),
+    expect(parsed_response.fetch("results")).to contain_exactly(
+      hash_including("link" => "/matching-cma-with-date"),
+      hash_including("link" => "/matching-cma-with-datetime"),
     )
   end
 
   it "can_filter_to_date" do
-    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-02", "link" => "/matching-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-02T00:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-03", "link" => "/future-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-03T00:00:00.000+00:00", "link" => "/future-cma-with-datetime"),
+      type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
 
     expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect(
-      hash_including(
-        "title" => cma_case_attributes.fetch("title"),
-        "link" => cma_case_attributes.fetch("link"),
-      )
-    ).to eq(
-      parsed_response.fetch("results").fetch(0),
+    expect(parsed_response.fetch("results")).to contain_exactly(
+      hash_including("link" => "/matching-cma-with-date"),
+      hash_including("link" => "/matching-cma-with-datetime"),
     )
   end
 
@@ -802,14 +822,14 @@ private
     end
   end
 
-  def cma_case_attributes
+  def cma_case_attributes(attributes = {})
     {
       "title" => "Somewhat Unique CMA Case",
       "link" => "/cma-cases/somewhat-unique-cma-case",
       "indexable_content" => "Mergers of cheeses and faces",
       "specialist_sectors" => ["farming"],
       "opened_date" => "2014-04-01",
-    }
+    }.merge(attributes)
   end
 
   def dfid_research_output_attributes
