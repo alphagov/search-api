@@ -12,9 +12,10 @@ class AnalyticsData
     client = Elasticsearch::Client.new(host: @elasticsearch_url)
 
     query = {
-      "query": {
-        "match_all": {}
-      }
+      query: {
+        match_all: {}
+      },
+      filter: Search::FormatMigrator.new.call
     }
 
     ScrollEnumerator.new(client: client, index_names: @indices, search_body: query) do |hit|
