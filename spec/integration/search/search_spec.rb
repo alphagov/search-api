@@ -216,6 +216,34 @@ RSpec.describe 'SearchTest' do
     expect(aggregates_without_filter["mainstream_browse_pages"]["options"].size).to eq(2)
   end
 
+  it "aggregate_counting_with_filter_on_a_different_field" do
+    insert_document('mainstream_test', { organisations: ['org1'], mainstream_browse_pages: ["browse/page/1"] })
+    insert_document('mainstream_test', { organisations: ['org1'], mainstream_browse_pages: ["browse/page/2"] })
+    insert_document('mainstream_test', { organisations: ['org2'], mainstream_browse_pages: ["browse/page/1"] })
+    insert_document('mainstream_test', { organisations: ['org2'], mainstream_browse_pages: ["browse/page/2"] })
+    commit_index
+
+    get "/search?aggregate_mainstream_browse_pages=2&filter_organisations=org2"
+    expect(parsed_response["total"]).to eq(2)
+
+    expect(parsed_response["aggregates"]["mainstream_browse_pages"]["options"]).to eq([
+      { "value" => { "slug" => "browse/page/1" }, "documents" => 1 },
+      { "value" => { "slug" => "browse/page/2" }, "documents" => 1 }
+    ])
+  end
+
+  it "aggregate_counting_does_not_include_duplicate_documents_in_govuk_index" do
+    commit_document('govuk_test', { organisations: ['org1'] })
+    commit_document('mainstream_test', { organisations: ['org1'] })
+
+    get "/search?aggregate_organisations=10"
+    expect(parsed_response["total"]).to eq(1)
+
+    expect(parsed_response["aggregates"]["organisations"]["options"]).to eq([
+      { "value" => { "slug" => "org1" }, "documents" => 1 }
+    ])
+  end
+
   it "aggregate_counting_missing_options" do
     populate_content_indexes(section_count: 2)
 
