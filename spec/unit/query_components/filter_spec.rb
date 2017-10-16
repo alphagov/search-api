@@ -35,7 +35,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      expect(result).to eq("range" => { "field_with_date" => { "from" => "2014-04-01", "to" => "2014-04-02" } })
+      expect(result).to eq("range" => { "field_with_date" => { "from" => "2014-04-01T00:00:00+00:00", "to" => "2014-04-02T00:00:00+00:00" } })
     end
   end
 

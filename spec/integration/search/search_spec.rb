@@ -415,37 +415,130 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "can_filter_from_date" do
-    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
+  it "can filter from date" do
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-30", "link" => "/old-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-30T23:00:00.000+00:00", "link" => "/old-cma-with-datetime"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-31", "link" => "/matching-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-31T00:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
+      type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
 
     expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect(
-      hash_including(
-        "title" => cma_case_attributes.fetch("title"),
-        "link" => cma_case_attributes.fetch("link"),
-      )
-    ).to eq(
-      parsed_response.fetch("results").fetch(0),
+    expect(parsed_response.fetch("results")).to contain_exactly(
+      hash_including("link" => "/matching-cma-with-date"),
+      hash_including("link" => "/matching-cma-with-datetime"),
     )
   end
 
-  it "can_filter_to_date" do
-    commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
+  it "can filter from time" do
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-31", "link" => "/old-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-31T13:59:59.000+00:00", "link" => "/old-cma-with-datetime"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-01", "link" => "/matching-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-03-31T14:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
+      type: "cma_case")
+
+    get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31 14:00:00"
+
+    expect(last_response).to be_ok
+    expect(parsed_response.fetch("results")).to contain_exactly(
+      hash_including("link" => "/matching-cma-with-date"),
+      hash_including("link" => "/matching-cma-with-datetime"),
+    )
+  end
+
+  it "can filter to date" do
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-02", "link" => "/matching-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-02T05:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-03", "link" => "/future-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-03T00:00:00.000+00:00", "link" => "/future-cma-with-datetime"),
+      type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
 
     expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect(
-      hash_including(
-        "title" => cma_case_attributes.fetch("title"),
-        "link" => cma_case_attributes.fetch("link"),
-      )
-    ).to eq(
-      parsed_response.fetch("results").fetch(0),
+    expect(parsed_response.fetch("results")).to contain_exactly(
+      hash_including("link" => "/matching-cma-with-date"),
+      hash_including("link" => "/matching-cma-with-datetime"),
+    )
+  end
+
+  it "can filter to time" do
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-02", "link" => "/matching-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-02T11:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-03", "link" => "/future-cma-with-date"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2014-04-02T11:00:01.000+00:00", "link" => "/future-cma-with-datetime"),
+      type: "cma_case")
+
+    get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02 11:00:00"
+
+    expect(last_response).to be_ok
+    expect(parsed_response.fetch("results")).to contain_exactly(
+      hash_including("link" => "/matching-cma-with-date"),
+      hash_including("link" => "/matching-cma-with-datetime"),
+    )
+  end
+
+  it "can filter times in different time zones" do
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2017-07-01T11:20:00.000-03:00", "link" => "/cma-1"),
+      type: "cma_case")
+    commit_document(
+      "mainstream_test",
+      cma_case_attributes("opened_date" => "2017-07-02T00:15:00.000+01:00", "link" => "/cma-2"),
+      type: "cma_case")
+
+    get "/search?filter_document_type=cma_case&filter_opened_date=from:2017-07-01 12:00,to:2017-07-01 23:30:00"
+
+    expect(last_response).to be_ok
+    expect(parsed_response.fetch("results")).to contain_exactly(
+      hash_including("link" => "/cma-1"),
+      hash_including("link" => "/cma-2"),
     )
   end
 
@@ -465,7 +558,7 @@ RSpec.describe 'SearchTest' do
 
     expect(last_response.status).to eq(422)
     expect(
-      { "error" => %{Invalid value "not-a-date" for parameter "opened_date" (expected ISO8601 date} }
+      { "error" => %{Invalid "from" value "not-a-date" for parameter "opened_date" (expected ISO8601 date)} }
     ).to eq(
       parsed_response,
     )
@@ -802,14 +895,14 @@ private
     end
   end
 
-  def cma_case_attributes
+  def cma_case_attributes(attributes = {})
     {
       "title" => "Somewhat Unique CMA Case",
       "link" => "/cma-cases/somewhat-unique-cma-case",
       "indexable_content" => "Mergers of cheeses and faces",
       "specialist_sectors" => ["farming"],
       "opened_date" => "2014-04-01",
-    }
+    }.merge(attributes)
   end
 
   def dfid_research_output_attributes

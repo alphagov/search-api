@@ -238,6 +238,8 @@ private
   end
 
   class DateFieldFilter < Filter
+    DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
+
     def initialize(field_name, values, reject)
       super
       @values = parse_dates(@values)
@@ -256,8 +258,9 @@ private
 
       values.map { |combined_from_and_to|
         dates_hash = combined_from_and_to.split(",").reduce({}) { |dates, param|
-          key, date = param.split(":")
-          dates.merge(key => parse_date(date))
+          key, date = param.split(":", 2)
+          validate_date_key(key)
+          dates.merge(key => parse_date(key, date))
         }
 
         Value.new(
@@ -267,11 +270,27 @@ private
       }
     end
 
-    def parse_date(string)
-      Date.parse(string)
+    def validate_date_key(key)
+      if !%w(from to).include?(key)
+        @errors << %{Invalid date filter parameter "#{key}:" (expected "from:" or "to:")}
+      end
+    end
+
+    def parse_date(label, date_string)
+      date = DateTime.parse(date_string)
+
+      if DATE_PATTERN.match(date_string) && label == "to"
+        end_of_day(date)
+      else
+        date
+      end
     rescue
-      @errors << %{Invalid value "#{string}" for parameter "#{field_name}" (expected ISO8601 date}
+      @errors << %{Invalid "#{label}" value "#{date_string}" for parameter "#{field_name}" (expected ISO8601 date)}
       null_date
+    end
+
+    def end_of_day(date)
+      DateTime.new(date.year, date.month, date.day, 23, 59, 59)
     end
 
     def null_date
