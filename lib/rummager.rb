@@ -39,6 +39,7 @@ require 'document'
 require 'duplicate_deleter'
 require 'duplicate_links_finder'
 require 'govuk_document_types'
+require 'special_route_publisher'
 
 require 'indexer'
 require 'indexer/amender'
