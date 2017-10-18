@@ -172,9 +172,9 @@ module IntegrationSpecHelper
 
 private
 
-  def populate_content_indexes(params)
+  def build_sample_documents_on_content_indices(documents_per_index:)
     SearchConfig.instance.content_index_names.each do |index_name|
-      add_sample_documents(index_name, params[:section_count])
+      add_sample_documents(index_name, documents_per_index)
     end
   end
 

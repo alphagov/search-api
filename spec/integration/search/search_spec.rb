@@ -52,7 +52,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "spell_checking_without_typo" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?q=milliband"
 
@@ -60,7 +60,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "returns_docs_from_all_indexes" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?q=important"
 
@@ -69,7 +69,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "sort_by_date_ascending" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=public_timestamp"
 
@@ -77,7 +77,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "sort_by_date_descending" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=-public_timestamp"
 
@@ -87,7 +87,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "sort_by_title_ascending" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?order=title"
     lowercase_titles = result_titles.map(&:downcase)
@@ -96,7 +96,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "filter_by_field" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_mainstream_browse_pages=browse/page/1"
 
@@ -104,7 +104,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "reject_by_field" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?reject_mainstream_browse_pages=browse/page/1"
 
@@ -112,7 +112,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can_filter_for_missing_field" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_specialist_sectors=_MISSING"
 
@@ -120,7 +120,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can_filter_for_missing_or_specific_value_in_field" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
@@ -128,7 +128,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can_filter_and_reject" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
@@ -139,196 +139,13 @@ RSpec.describe 'SearchTest' do
   end
 
   it "only_contains_fields_which_are_present" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=public_timestamp"
 
     results = parsed_response["results"]
     expect(results[0].keys).not_to include("specialist_sectors")
     expect(results[1]["specialist_sectors"]).to eq([{ "slug" => "farming" }])
-  end
-
-  it "aggregate_counting" do
-    populate_content_indexes(section_count: 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=2"
-
-    expect(parsed_response["total"]).to eq(4)
-
-    aggregate = parsed_response["aggregates"]
-
-    expect(
-      "mainstream_browse_pages" => {
-        "options" => [
-          { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
-          { "value" => { "slug" => "browse/page/2" }, "documents" => 2 },
-        ],
-        "documents_with_no_value" => 0,
-        "total_options" => 2,
-        "missing_options" => 0,
-        "scope" => "exclude_field_filter",
-      }
-    ).to eq(aggregate)
-  end
-
-  # we changed facet -> aggregate but still support both
-  # the result set should match the naming used in the request
-  it "aggregate_counting_using_facets" do
-    populate_content_indexes(section_count: 2)
-
-    get "/search?q=important&facet_mainstream_browse_pages=2"
-
-    expect(parsed_response["total"]).to eq(4)
-
-    facets = parsed_response["facets"]
-
-    expect(
-      "mainstream_browse_pages" => {
-        "options" => [
-          { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
-          { "value" => { "slug" => "browse/page/2" }, "documents" => 2 },
-        ],
-        "documents_with_no_value" => 0,
-        "total_options" => 2,
-        "missing_options" => 0,
-        "scope" => "exclude_field_filter",
-      }
-    ).to eq(facets)
-    expect(parsed_response['aggregates']).to be_nil
-  end
-
-  # TODO: The `mainstream_browse_pages` fields are populated with a number, 1
-  # or 2. This should be made more explicit.
-  it "aggregate_counting_with_filter_on_field_and_exclude_field_filter_scope" do
-    populate_content_indexes(section_count: 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=2"
-
-    expect(parsed_response["total"]).to eq(4)
-    aggregates_without_filter = parsed_response["aggregates"]
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=2&filter_mainstream_browse_pages=browse/page/1"
-    expect(parsed_response["total"]).to eq(2)
-
-    aggregates_with_filter = parsed_response["aggregates"]
-
-    expect(aggregates_with_filter).to eq(aggregates_without_filter)
-    expect(aggregates_without_filter["mainstream_browse_pages"]["options"].size).to eq(2)
-  end
-
-  it "aggregate_counting_missing_options" do
-    populate_content_indexes(section_count: 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=1"
-
-    expect(parsed_response["total"]).to eq(4)
-    aggregates = parsed_response["aggregates"]
-    expect(
-      "mainstream_browse_pages" => {
-        "options" => [
-          { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
-        ],
-        "documents_with_no_value" => 0,
-        "total_options" => 2,
-        "missing_options" => 1,
-        "scope" => "exclude_field_filter",
-      }
-    ).to eq(aggregates)
-  end
-
-  it "aggregate_counting_with_filter_on_field_and_all_filters_scope" do
-    populate_content_indexes(section_count: 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=browse/page/1"
-
-    expect(parsed_response["total"]).to eq(2)
-    aggregates = parsed_response["aggregates"]
-
-    expect(
-      "mainstream_browse_pages" => {
-        "options" => [
-          { "value" => { "slug" => "browse/page/1" }, "documents" => 2 },
-        ],
-        "documents_with_no_value" => 0,
-        "total_options" => 1,
-        "missing_options" => 0,
-        "scope" => "all_filters",
-      }
-    ).to eq(aggregates)
-  end
-
-  it "aggregate_examples" do
-    populate_content_indexes(section_count: 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
-
-    expect(["/government-1", "/mainstream-1"]).to eq(
-      parsed_response["aggregates"]["mainstream_browse_pages"]["options"].first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
-    )
-  end
-
-  it "aggregate_examples_before_migration" do
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
-
-    add_sample_documents('mainstream_test', 2)
-    add_sample_documents('govuk_test', 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
-
-    expected_results = %w(/mainstream-1)
-
-    options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
-    actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
-
-    expect(expected_results).to eq(actual_results)
-  end
-
-  it "aggregate_examples_after_migration" do
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(['answers'])
-
-    add_sample_documents('mainstream_test', 2)
-    add_sample_documents('govuk_test', 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
-
-    expected_results = %w(/govuk-1)
-
-    options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
-    actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
-
-    expect(expected_results).to eq(actual_results)
-  end
-
-  it "aggregate_examples_before_migration_with_query_scope" do
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
-
-    add_sample_documents('mainstream_test', 2)
-    add_sample_documents('govuk_test', 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
-
-    expected_results = %w(/mainstream-1)
-
-    options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
-    actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
-
-    expect(expected_results).to eq(actual_results)
-  end
-
-  it "aggregate_examples_after_migration_with_query_scope" do
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(['answers'])
-
-    add_sample_documents('mainstream_test', 2)
-    add_sample_documents('govuk_test', 2)
-
-    get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
-
-    expected_results = %w(/govuk-1)
-
-    options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
-    actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
-
-    expect(expected_results).to eq(actual_results)
   end
 
   it "validates_integer_params" do
@@ -352,7 +169,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "debug_explain_returns_explanations" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?debug=explain"
 
@@ -729,7 +546,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "id_search" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?q=id1&debug=new_weighting"
 
@@ -778,31 +595,6 @@ RSpec.describe 'SearchTest' do
     get "/search?q=test&debug=show_query"
 
     expect(parsed_response.fetch("elasticsearch_query")).to be_truthy
-  end
-
-  it "dfid_can_search_by_every_aggregate" do
-    commit_document("mainstream_test", dfid_research_output_attributes, type: "dfid_research_output")
-
-    aggregate_queries = %w(
-      filter_dfid_review_status[]=peer_reviewed
-      filter_country[]=TZ&filter_country[]=AL
-    )
-
-    aggregate_queries.each do |filter_query|
-      get "/search?filter_document_type=dfid_research_output&#{filter_query}"
-
-      expect(last_response).to be_ok
-      expect(parsed_response.fetch("total")).to eq(1), "Failure to search by #{filter_query}"
-      expect(
-        hash_including(
-          "document_type" => "dfid_research_output",
-          "title" => dfid_research_output_attributes.fetch("title"),
-          "link" => dfid_research_output_attributes.fetch("link"),
-        )
-      ).to eq(
-        parsed_response.fetch("results").fetch(0),
-      )
-    end
   end
 
   it "taxonomy_can_be_returned" do
@@ -903,16 +695,5 @@ private
       "specialist_sectors" => ["farming"],
       "opened_date" => "2014-04-01",
     }.merge(attributes)
-  end
-
-  def dfid_research_output_attributes
-    {
-      "title" => "Somewhat Unique DFID Research Output",
-      "link" => "/dfid-research-outputs/somewhat-unique-dfid-research-output",
-      "indexable_content" => "Use of calcrete in gender roles in Tanzania",
-      "country" => %w(TZ AL),
-      "dfid_review_status" => "peer_reviewed",
-      "first_published_at" => "2014-04-02",
-    }
   end
 end
