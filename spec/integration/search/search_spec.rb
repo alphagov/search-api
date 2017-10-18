@@ -52,7 +52,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "spell_checking_without_typo" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?q=milliband"
 
@@ -60,7 +60,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "returns_docs_from_all_indexes" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?q=important"
 
@@ -69,7 +69,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "sort_by_date_ascending" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=public_timestamp"
 
@@ -77,7 +77,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "sort_by_date_descending" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=-public_timestamp"
 
@@ -87,7 +87,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "sort_by_title_ascending" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?order=title"
     lowercase_titles = result_titles.map(&:downcase)
@@ -96,7 +96,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "filter_by_field" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_mainstream_browse_pages=browse/page/1"
 
@@ -104,7 +104,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "reject_by_field" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?reject_mainstream_browse_pages=browse/page/1"
 
@@ -112,7 +112,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can_filter_for_missing_field" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_specialist_sectors=_MISSING"
 
@@ -120,7 +120,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can_filter_for_missing_or_specific_value_in_field" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
 
@@ -128,7 +128,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can_filter_and_reject" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
@@ -139,7 +139,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "only_contains_fields_which_are_present" do
-    populate_content_indexes(section_count: 2)
+    build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=public_timestamp"
 
@@ -169,7 +169,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "debug_explain_returns_explanations" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?debug=explain"
 
@@ -453,7 +453,7 @@ RSpec.describe 'SearchTest' do
   end
 
   it "id_search" do
-    populate_content_indexes(section_count: 1)
+    build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?q=id1&debug=new_weighting"
 
