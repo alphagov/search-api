@@ -10,30 +10,49 @@ module IntegrationSpecHelper
   }.freeze
 
   def self.included(base)
-    base.after do
-      teardown
+    base.around do |example|
+      IntegrationSpecHelper.allow_elasticsearch_connection_to_test do
+        example.run
+        # clean up after test run
+        IndexHelpers.all_index_names.each do |index|
+          clean_index_content(index)
+        end
+      end
     end
 
+    # we only want to setup the before suite code once, in addition this this we only want to
+    # set it up when we are running integration tests (hence the reason we do it here).
     @before_suite_setup ||= setup_before_suite
   end
 
   def self.setup_before_suite
-    # we want this process to run before the suite when integration tests are run. :)
     RSpec.configure do |config|
       config.before(:suite) do
-        IndexHelpers.setup_test_indexes
+        IntegrationSpecHelper.allow_elasticsearch_connection_to_test do
+          IndexHelpers.setup_test_indexes
+        end
       end
 
       config.after(:suite) do
-        IndexHelpers.clean_all
+        IntegrationSpecHelper.allow_elasticsearch_connection_to_test do
+          IndexHelpers.clean_all
+        end
       end
     end
   end
 
-  def teardown
-    IndexHelpers.all_index_names.each do |index|
-      clean_index_content(index)
-    end
+  def self.allow_elasticsearch_connection_to_test
+    allowed_paths = []
+    allowed_paths << '[a-z_-]+[_-]test.*'
+    allowed_paths << '_aliases'
+    allowed_paths << '_bulk'
+    allowed_paths << '_search/scroll'
+
+    allow_urls = %r{http://localhost:9200/(#{allowed_paths.join('|')})}
+    WebMock.disable_net_connect!(allow: allow_urls)
+    yield
+  ensure
+    WebMock.disable_net_connect!(allow: nil)
   end
 
   def search_config
