@@ -35,9 +35,12 @@ namespace :rummager do
     puts Indexer::Comparer.new(
       'mainstream',
       'govuk',
-      field_comparer: comparer,
-      ignore: %w(popularity is_withdrawn),
-      filtered_format: filtered_format
+      {
+        field_comparer: comparer,
+        ignore: %w(popularity is_withdrawn),
+        filtered_format: filtered_format,
+      },
+      include_version: true
     ).run
     puts comparer.stats
   end

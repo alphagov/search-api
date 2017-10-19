@@ -9,7 +9,7 @@ module Indexer
       @new_index_name = new_index_name
       @filtered_format = filtered_format
       @field_to_ignore = ignore
-      @field_comparer = field_comparer || ->(_key, old, new) { old == new }
+      @field_comparer = field_comparer || ->(_id, key, old, new) { key =~ /^_root/ || old == new }
       @io = io
     end
 
@@ -48,7 +48,7 @@ module Indexer
       return [] if reject_fields(old_item) == reject_fields(new_item)
 
       keys = (old_item.keys | new_item.keys) - @field_to_ignore
-      keys.reject { |key| @field_comparer.call(key, old_item[key], new_item[key]) }.sort
+      keys.reject { |key| @field_comparer.call(old_item["_root_id"], key, old_item[key], new_item[key]) }.sort
     end
 
     def reject_fields(hash)
