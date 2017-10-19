@@ -23,7 +23,7 @@ module GovukIndex
 
         worker.wait_until_processed
 
-        if index_name =~ 'govuk'
+        if index_name =~ /govuk/
           # need to do this to ensure the new govuk index is in sync while we migrate data
           SyncUpdater.new(
             source_index: 'mainstream',
