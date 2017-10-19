@@ -18,6 +18,12 @@ module GovukIndex
       @sanitiser.clean(indexable_content_parts + hidden_content)
     end
 
+    def contact_groups
+      details.fetch('contact_groups', []).map do |contact|
+        contact['slug']
+      end
+    end
+
   private
 
     attr_reader :details
