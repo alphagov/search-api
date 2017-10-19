@@ -30,11 +30,11 @@ module GovukIndex
   private
 
     def search_body
-      cause = @format_override ? :must : :must_not
+      clause = @format_override ? :must : :must_not
       {
         query: {
           bool: {
-            cause => {
+            clause => {
               terms: {
                 format: Array(@format_override || MigratedFormats.indexable_formats)
               }

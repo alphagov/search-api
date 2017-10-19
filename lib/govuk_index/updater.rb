@@ -44,7 +44,7 @@ module GovukIndex
       ) do |record|
         {
           'identifier' => record.slice(*%w{_id _type _version}),
-          'document'=> record.fetch('_source'),
+          'document' => record.fetch('_source'),
         }
       end
     end

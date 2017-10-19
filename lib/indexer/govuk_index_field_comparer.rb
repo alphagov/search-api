@@ -48,7 +48,7 @@ module Indexer
         extra_old = old_words - new_words
         extra_old.uniq!
         extra_old.reject! { |w| w =~ /^\d+$/ } # ignore numbers
-        extra_old.reject! { |w| new_words.any? { |new| new =~ /^#{w}/ } } # ignore words that have been trimmed
+        extra_old.reject! { |old_word| new_words.any? { |new_word| new_word =~ /^#{old_word}/ } } # ignore words that have been truncated
         diff_per = (200.0 * extra_old.count / (old_words.count + new_words.count))
         if extra_old.count == 0
           # we don't need to worry too much about additional words being added

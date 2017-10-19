@@ -95,8 +95,10 @@ namespace :delete do
       if delete_commands.empty?
         puts "No #{format} documents to delete"
       else
-        puts "Deleting #{delete_commands.count} #{format} documents from #{index} index"
-        client.bulk(body: delete_commands)
+        puts "Deleting #{delete_commands.count} #{format} documents from #{index} index (in batches of 1000)"
+        delete_commands.each_slice(1000) do |slice|
+          client.bulk(body: slice)
+        end
 
         client.indices.refresh(index: index)
       end
