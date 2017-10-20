@@ -5,6 +5,7 @@ migrated:
 - licence
 - local_transaction
 - place
+- task_list
 - transaction
 - simple_smart_answer
 
