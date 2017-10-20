@@ -21,6 +21,7 @@ place: edition
 raib_report: raib_report # Specialist Publisher
 service_standard_report: service_standard_report # Specialist Publisher
 simple_smart_answer: edition
+task_list: edition
 tax_tribunal_decision: tax_tribunal_decision # Specialist Publisher
 transaction: edition
 utaac_decision: utaac_decision # Specialist Publisher
