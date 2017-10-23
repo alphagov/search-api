@@ -102,4 +102,41 @@ namespace :delete do
       end
     end
   end
+
+  desc "
+  Delete contact documents in the govuk index with the old style '_id' which
+  do not start with a '/'.
+  "
+  task :old_contact_ids do
+    index = 'govuk'
+    client = Services.elasticsearch(hosts: SearchConfig.new.base_uri, timeout: 5.0)
+
+    delete_commands = ScrollEnumerator.new(
+      client: client,
+      search_body: { query: { term: { format: 'contact' } } },
+      batch_size: 500,
+      index_names: index
+    ) { |hit| hit }.map do |hit|
+      unless hit['_id'].start_with('/')
+        {
+          delete: {
+            _index: index,
+            _type: hit['_type'],
+            _id: hit['_id']
+          }
+        }
+      end
+    end
+
+    delete_commands.compact!
+
+    if delete_commands.empty?
+      puts "No #{format} documents to delete"
+    else
+      puts "Deleting #{delete_commands.count} #{format} documents from #{index} index"
+      client.bulk(body: delete_commands)
+
+      client.indices.refresh(index: index)
+    end
+  end
 end
