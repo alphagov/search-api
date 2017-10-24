@@ -35,6 +35,7 @@ module GovukIndex
         case_type:                          specialist.case_type,
         closed_date:                        specialist.closed_date,
         closing_date:                       specialist.closing_date,
+        contact_groups:                     details.contact_groups,
         content_id:                         common_fields.content_id,
         content_store_document_type:        common_fields.content_store_document_type,
         continuation_link:                  specialist.continuation_link,
@@ -60,7 +61,7 @@ module GovukIndex
         government_document_supertype:      common_fields.government_document_supertype,
         grant_type:                         specialist.grant_type,
         hidden_indexable_content:           specialist.hidden_indexable_content,
-        indexable_content:                  details.indexable_content,
+        indexable_content:                  indexable.indexable_content,
         industries:                         specialist.industries,
         is_withdrawn:                       common_fields.is_withdrawn,
         issued_date:                        specialist.issued_date,
@@ -133,13 +134,16 @@ module GovukIndex
       @_common_fields ||= CommonFieldsPresenter.new(payload)
     end
 
+    def indexable
+      IndexableContentPresenter.new(
+        format: common_fields.format,
+        details: payload["details"],
+        sanitiser: IndexableContentSanitiser.new,
+      )
+    end
+
     def details
-      @_details ||=
-        DetailsPresenter.new(
-          details: payload["details"],
-          indexable_content_keys: IndexableContentKeys.call(common_fields.format),
-          sanitiser: IndexableContentSanitiser.new,
-        )
+      @_details ||= DetailsPresenter.new(details: payload["details"], format: common_fields.format)
     end
 
     def expanded_links

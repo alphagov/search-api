@@ -9,7 +9,8 @@ migrated:
 - transaction
 - simple_smart_answer
 
-indexable: []
+indexable:
+- contact
 # We have not migrated the specialist formats as we encountered too many issues
 # to resolve in the allotted time when we ran the comparer.
 # The next step if to resolve the difference identified by the comparer task.
