@@ -56,6 +56,7 @@ class BaseParameterParser
     people
     policies
     policy_areas
+    primary_publishing_organisation
     publishing_app
     rendering_app
     search_format_types
