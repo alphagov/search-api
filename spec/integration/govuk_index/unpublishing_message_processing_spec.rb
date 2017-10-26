@@ -57,9 +57,11 @@ RSpec.describe 'GovukIndex::UnpublishingMessageProcessing' do
   end
 
   def unpublishing_event_message(schema_name, user_defined: {}, excluded_fields: [])
-    payload = GovukSchemas::RandomExample
-      .for_schema(notification_schema: schema_name)
-      .customise_and_validate(user_defined, excluded_fields)
+    payload = GovukSchemas::RandomExample.for_schema(notification_schema: schema_name) do |hash|
+      hash.merge!(user_defined.stringify_keys)
+      hash.delete_if { |k, _| excluded_fields.include?(k) }
+      hash
+    end
     stub_message_payload(payload, unpublishing: true)
   end
 end

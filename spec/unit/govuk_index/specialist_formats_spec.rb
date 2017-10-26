@@ -39,7 +39,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
 
     document = build_example_with_metadata(custom_metadata)
     expect_document_include_hash(document, custom_metadata)
-    expect(document[:indexable_content]).to eq("Test body\n\n\nsome hidden content")
+    expect(document[:indexable_content]).to eq("some hidden content")
   end
 
   it "business_finance_support_scheme" do
@@ -109,7 +109,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     }
     document = build_example_with_metadata(custom_metadata)
     expect_document_include_hash(document, custom_metadata)
-    expect(document[:indexable_content]).to eq("Test body\n\n\nhidden content")
+    expect(document[:indexable_content]).to eq("hidden content")
   end
 
   it "employment_tribunal_decision" do
@@ -121,7 +121,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     }
     document = build_example_with_metadata(custom_metadata)
     expect_document_include_hash(document, custom_metadata)
-    expect(document[:indexable_content]).to eq("Test body\n\n\nhidden etd content")
+    expect(document[:indexable_content]).to eq("hidden etd content")
   end
 
   it "european_structural_investment_fund" do
@@ -201,7 +201,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     }
     document = build_example_with_metadata(custom_metadata)
     expect_document_include_hash(document, custom_metadata)
-    expect(document[:indexable_content]).to eq("Test body\n\n\nhidden ttd content")
+    expect(document[:indexable_content]).to eq("hidden ttd content")
   end
 
   it "utaac_decision" do
@@ -214,7 +214,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     }
     document = build_example_with_metadata(custom_metadata)
     expect_document_include_hash(document, custom_metadata)
-    expect(document[:indexable_content]).to eq("Test body\n\n\nhidden utaac content")
+    expect(document[:indexable_content]).to eq("hidden utaac content")
   end
 
   it "vehicle_recalls_and_faults_alert" do
@@ -235,15 +235,11 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
 private
 
   def build_example_with_metadata(metadata)
-    example = GovukSchemas::RandomExample
-                .for_schema(notification_schema: 'specialist_document')
-                .customise_and_validate(
-                  'details' => {
-                    'body' => 'Test body',
-                    'change_history' => [],
-                    'metadata' => metadata,
-                  }
-                )
+    example = GovukSchemas::RandomExample.for_schema(notification_schema: 'specialist_document') do |payload|
+      payload['details']['metadata'] = metadata
+      payload
+    end
+
     described_class.new(payload: example).document
   end
 

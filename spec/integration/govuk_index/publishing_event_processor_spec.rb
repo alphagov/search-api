@@ -38,6 +38,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
   it "not_indexing_when_publishing_app_is_smart_answers" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
     random_example = generate_random_example(
+      schema: 'special_route',
       payload: { document_type: "transaction", payload_version: 123, publishing_app: "smartanswers" },
     )
 
