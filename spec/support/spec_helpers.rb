@@ -42,9 +42,11 @@ module SpecHelpers
 
     payload[:document_type] ||= schema
     retry_attempts.times do
-      random_example = GovukSchemas::RandomExample
-        .for_schema(notification_schema: schema)
-        .merge_and_validate(payload, excluded_fields)
+      random_example = GovukSchemas::RandomExample.for_schema(notification_schema: schema) do |hash|
+        hash.merge!(payload.stringify_keys)
+        hash.delete_if { |k, _| excluded_fields.include?(k) }
+        hash
+      end
 
       return random_example unless regenerate_if.call(random_example)
     end

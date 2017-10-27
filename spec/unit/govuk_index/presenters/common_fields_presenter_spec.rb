@@ -36,7 +36,6 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
   it "non_directly_mapped_fields" do
     defined_fields = {
       base_path: "/some/path",
-      details: { body: "We love cheese" },
       expanded_links: {},
     }
 

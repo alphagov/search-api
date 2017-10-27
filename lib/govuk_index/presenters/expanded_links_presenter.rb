@@ -72,7 +72,7 @@ module GovukIndex
       parents = [taxon_hash["content_id"]]
 
       direct_parents = taxon_hash.dig("links", "parent_taxons")
-      while !direct_parents.empty?
+      while direct_parents && !direct_parents.empty?
         # There should not be more than one parent for a taxon. If there is,
         # make an arbitrary choice.
         direct_parent = direct_parents.first
