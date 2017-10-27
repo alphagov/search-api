@@ -21,7 +21,16 @@ module QueryComponents
   private
 
     def boost_filters
-      property_boosts + [time_boost]
+      boosts = property_boosts + [time_boost]
+      boosts << specialist_sector_boost if @search_params.format_weighting_b_variant?
+      boosts
+    end
+
+    def specialist_sector_boost
+      {
+        filter: { term: { format: "specialist_sector" } },
+        boost_factor: 2.5
+      }
     end
 
     def property_boosts
