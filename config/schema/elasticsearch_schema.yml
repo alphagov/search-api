@@ -5,13 +5,13 @@ index:
         default:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stop, stemmer_override, stemmer_english]
+          filter: [standard, asciifolding, lowercase, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         searchable_text:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stemmer_override, stemmer_english]
+          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used at index time for the .synonym variants of searchable
@@ -19,7 +19,7 @@ index:
         with_index_synonyms:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, index_synonym, synonym_protwords, stemmer_override, stemmer_english]
+          filter: [standard, asciifolding, lowercase, index_synonym, synonym_protwords, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used at search time for the .synonym variants of searchable
@@ -27,14 +27,14 @@ index:
         with_search_synonyms:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, search_synonym, synonym_protwords, stemmer_override, stemmer_english]
+          filter: [standard, asciifolding, lowercase, search_synonym, synonym_protwords, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used to search across pairs of adjacent words.
         with_shingles:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stemmer_override, stemmer_english, text_shingles]
+          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english, text_shingles]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used to search for codes like "P46", allowing codes to be
@@ -71,34 +71,34 @@ index:
         query_with_old_synonyms:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, old_synonym, stop, stemmer_override, stemmer_english]
+          filter: [standard, asciifolding, lowercase, old_synonym, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used at query time for old-style shingle matching.
         shingled_query_analyzer:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stop, stemmer_override, stemmer_english, old_shingles]
+          filter: [standard, asciifolding, lowercase, stop, stemmer_override, stemmer_english, old_shingles]
 
         # An analyzer for doing "exact" word matching (but stripping wrapping whitespace, and case insensitive).
         exact_match:
           type: custom
           tokenizer: keyword
-          filter: [trim, lowercase]
+          filter: [asciifolding, trim, lowercase]
           char_filter: [normalize_quotes]
 
         # An analyzer for doing stemmed word matching for best bets.
         best_bet_stemmed_match:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, stemmer_override, stemmer_english]
+          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used to process text supplied to the field for use in spelling correction.
         spelling_analyzer:
           type: custom
           tokenizer: standard
-          filter: [standard, lowercase, shingle]
+          filter: [standard, asciifolding, lowercase, shingle]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used to process text fields for use for sorting.
