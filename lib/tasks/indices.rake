@@ -94,7 +94,7 @@ This does not update the schema.
     end
   end
 
-  desc "(deprecated) Migrate the data to a new schema definition
+  desc "Migrate the data to a new schema definition
 
 Lock the current index, migrate all the data to a new index,
 wait for the process to complete, switch to the new index and
