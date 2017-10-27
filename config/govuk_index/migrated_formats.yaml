@@ -1,17 +1,21 @@
 migrated:
-- answer
+# Contacts
 - contact
+# Publisher
+- answer
 - guide
 - help_page
 - licence
 - local_transaction
 - place
-- task_list
 - transaction
 - simple_smart_answer
-
-indexable:
+# Specialist Publisher
 - aaib_report
+# Other
+- task_list
+
+indexable: []
 #- asylum_support_decision
 #- business_finance_support_scheme
 #- cma_case
