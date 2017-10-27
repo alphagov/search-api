@@ -93,33 +93,6 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
   end
 
-  it "can_delete_duplicate_content_ids_when_contact_id_is_wrong" do
-    commit_document(
-      "mainstream_test",
-      {
-        "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
-        "link" => "/contact-page",
-      },
-      id: "contact-page",
-      type: "contact",
-    )
-    commit_document(
-      "mainstream_test",
-      {
-        "content_id" => "e3eaa461-3a85-4881-b412-9c58e7ea4ebd",
-        "link" => "/contact-page",
-      },
-      id: "/contact-page",
-      type: "edition",
-    )
-
-    DuplicateDeleter.new('edition', io, search_config: SearchConfig.instance).call(["e3eaa461-3a85-4881-b412-9c58e7ea4ebd"])
-
-    expect_log_message(msg: "Deleted duplicate for content_id")
-    expect_document_present_in_rummager(id: "contact-page", type: "contact")
-    expect_document_missing_in_rummager(id: "/contact-page", type: "edition")
-  end
-
   it "can_delete_duplicate_documents_on_different_types_using_link" do
     commit_document(
       "mainstream_test",
