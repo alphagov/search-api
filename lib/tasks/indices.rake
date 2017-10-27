@@ -31,14 +31,16 @@ namespace :rummager do
   task :compare_govuk, :format do |_, args|
     filtered_format = args[:format]
     filtered_format = nil if filtered_format == 'all'
-
+    comparer = Indexer::GovukIndexFieldComparer.new
     puts Indexer::Comparer.new(
       'mainstream',
       'govuk',
-      field_comparer: Indexer::GovukIndexFieldComparer.new,
+      field_comparer: comparer,
       ignore: %w(popularity is_withdrawn),
-      filtered_format: filtered_format
+      filtered_format: filtered_format,
+      enum_options: { include_version: true },
     ).run
+    puts comparer.stats
   end
 
   desc "Create a brand new indices and assign an alias if no alias currently exists"

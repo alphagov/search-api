@@ -64,8 +64,12 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "market_sector" => ["energy"],
       "outcome_type" => "ca98-no-grounds-for-action-non-infringement",
     }
+    special_formated_output = {
+      "case_type" => ["ca98-and-civil-cartels"],
+      "case_state" => ["closed"],
+    }
     document = build_example_with_metadata(custom_metadata)
-    expect_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
   it "countryside_stewardship_grant" do
@@ -75,8 +79,11 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "tiers_or_standalone_items" => ["higher-tier"],
       "funding_amount" => ["201-to-300"],
     }
+    special_formated_output = {
+      "grant_type" => ["option"],
+    }
     document = build_example_with_metadata(custom_metadata)
-    expect_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
   it "dfid_research_output" do
@@ -132,8 +139,11 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "location" => ["south-west"],
       "funding_source" => ["european-regional-development-fund"],
     }
+    special_formated_output = {
+      "fund_state" => ["open"],
+    }
     document = build_example_with_metadata(custom_metadata)
-    expect_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
   it "international_development_fund" do
@@ -144,8 +154,11 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "location" => ["south-west"],
       "funding_source" => ["european-regional-development-fund"],
     }
+    special_formated_output = {
+      "fund_state" => ["open"],
+    }
     document = build_example_with_metadata(custom_metadata)
-    expect_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
   it "maib_report" do
@@ -167,8 +180,11 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "issued_date" => "2016-02-01",
       "medical_specialism" => %w(anaesthetics cardiology),
     }
+    special_formated_output = {
+      "alert_type" => ["company-led-drugs"],
+    }
     document = build_example_with_metadata(custom_metadata)
-    expect_document_include_hash(document, custom_metadata)
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
   it "raib_report" do

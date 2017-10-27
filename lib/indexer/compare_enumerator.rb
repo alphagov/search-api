@@ -1,13 +1,14 @@
 module Indexer
   class CompareEnumerator < Enumerator
     NO_VALUE = :__no_value_found__
-    BATCH_SIZE = 50
+    BATCH_SIZE = 250
     DEFAULT_QUERY = { match_all: {} }.freeze
     # the `_uid` is a combination of the id and type (format: 'type#id') and is used
     # as sorting on the _id field does not return ordered results
     DEFAULT_SORT = [{ _uid: { order: 'asc' } }].freeze
 
-    def initialize(left_index_name, right_index_name, search_body = {})
+    def initialize(left_index_name, right_index_name, search_body = {}, options = {})
+      @options = options
       super() do |yielder|
         left_enum = get_enum(left_index_name, search_body)
         right_enum = get_enum(right_index_name, search_body)
@@ -46,11 +47,18 @@ module Indexer
         search_body: search_body,
         batch_size: BATCH_SIZE
       ) do |document|
-        {
-          "_root_id" => document["_id"],
-          "_root_type" => document["_type"],
-        }.merge(document['_source'])
+        flattened_document(document)
       end
+    end
+
+    def flattened_document(document)
+      result = {
+        "_root_id" => document["_id"],
+        "_root_type" => document["_type"],
+      }
+
+      result["_root_version"] = document["_version"] if @options[:include_version]
+      result.merge(document['_source'])
     end
 
   private

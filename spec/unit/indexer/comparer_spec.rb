@@ -81,6 +81,7 @@ private
       'index_a',
       'index_b',
       {},
+      {},
     ).and_return([[left, right]].to_enum)
   end
 end

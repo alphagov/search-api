@@ -1,7 +1,7 @@
 module GovukIndex
   class Updater
     SCROLL_BATCH_SIZE = 500
-    PROCESSOR_BATCH_SIZE = 25
+    PROCESSOR_BATCH_SIZE = 100
     TIMEOUT_SECONDS = 30
 
     class ImplementationRequired < StandardError; end
@@ -11,9 +11,13 @@ module GovukIndex
       @destination_index = destination_index
     end
 
-    def run
+    def run(async: true)
       scroll_enumerator.each_slice(PROCESSOR_BATCH_SIZE) do |documents|
-        worker.perform_async(documents, @destination_index)
+        if async
+          worker.perform_async(documents, @destination_index)
+        else
+          worker.new.perform(documents, @destination_index)
+        end
       end
     end
 
@@ -39,8 +43,8 @@ module GovukIndex
         batch_size: SCROLL_BATCH_SIZE
       ) do |record|
         {
-          identifier: record.slice(*%w{_id _type _version}),
-          document: record.fetch('_source'),
+          'identifier' => record.slice(*%w{_id _type _version}),
+          'document' => record.fetch('_source'),
         }
       end
     end
