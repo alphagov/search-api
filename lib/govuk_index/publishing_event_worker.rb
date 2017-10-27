@@ -15,7 +15,7 @@ module GovukIndex
       actions = ElasticsearchProcessor.new
       process_action(actions, routing_key, payload)
       response = actions.commit
-      process_response(response) if response
+      process_responses(routing_key, response, payload)
     # Rescuing as we don't want to retry this class of error
     rescue MissingBasePath => e
       return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
@@ -36,6 +36,16 @@ module GovukIndex
     end
 
   private
+
+    def process_actions(actions, routing_key, payload)
+      if payload.is_a?(Hash) && payload['multiple']
+        payload['batch'].each do |single_payload|
+          process_action(actions, routing_key, single_payload)
+        end
+      else
+        process_action(routing_key, actions, routing_key, payload)
+      end
+    end
 
     def process_action(actions, routing_key, payload)
       logger.debug("Processing #{routing_key}: #{payload}")
@@ -58,15 +68,33 @@ module GovukIndex
       end
     end
 
-    def process_response(response)
-      # we are only expecting to process a single message at a time
-      if response['items'].count > 1
-        Services.statsd_client.increment('govuk_index.elasticsearch.multiple_responses')
-        raise MultipleMessagesInElasticsearchResponse
+    def process_responses(routing_key, responses, payload)
+      requests_with_error = []
+
+      requests = payload['batch'] || [payload]
+      responses['items'].zip(requests).each do |response, request|
+        requests_with_error << request unless process_response(response)
       end
 
-      item = response['items'].first
-      action_type, details = *item.first # item is a hash with a single key, value pair
+      if requests_with_error.any?
+        if requests_with_error.count == requests.count
+          # automatically retry
+          raise(
+            ElasticsearchError,
+            reason: "All requests failed",
+            requests: requests.count,
+            first_request: requests.first,
+            first_error_details: responses['items'].first.first.last
+          )
+        else
+          PublishingEventWorker.perform_async(routing_key, batch: requests_with_error)
+        end
+      end
+    end
+
+
+    def valid_response?(response)
+      action_type, details = *responce.first # item is a hash with a single key, value pair
       status = details['status']
 
       if (200..399).cover?(status)
@@ -83,8 +111,15 @@ module GovukIndex
       else
         logger.error("#{action_type} not processed: status #{status}")
         Services.statsd_client.increment("govuk_index.elasticsearch.#{action_type}_error")
-        raise ElasticsearchError, action_type: action_type, details: details
+        # log something here
+        GovukError.notify(ElasticsearchError.new,
+          action_type: action_type,
+          details: details,
+        )
+        return false
       end
+
+      true
     end
   end
 end
