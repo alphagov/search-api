@@ -33,4 +33,4 @@ For the new elasticsearch configuration to take effect, you need to rebuild the 
 
 On production, this is done automatically every night by the [`search_fetch_analytics`](https://github.com/alphagov/search-analytics) jenkins job.
 
-For other environments, you can run `RUMMAGER_INDEX=all SKIP_LINKS_INDEXING_TO_PREVENT_TIMEOUTS=1 rummager:migrate_index`.
+For other environments, you can run `RUMMAGER_INDEX=all SKIP_LINKS_INDEXING_TO_PREVENT_TIMEOUTS=1 rummager:migrate_schema`.

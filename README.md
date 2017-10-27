@@ -115,7 +115,7 @@ You can start the message queue consumer process in development by running:
 
 After changing the schema, you'll need to migrate the index.
 
-    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_index
+    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_schema
 
 #### Internal only APIs
 
