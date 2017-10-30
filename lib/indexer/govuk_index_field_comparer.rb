@@ -42,12 +42,14 @@ module Indexer
       if clean_old == clean_new
         true
       else
-        old_words = clean_old.split(' ').compact
-        new_words = clean_new.split(' ').compact
+        old_words = clean_old.split(' ').compact.reject! { |w| w =~ /^\d+$/ }
+        new_words = clean_new.split(' ').compact.reject! { |w| w =~ /^\d+$/ }
 
         extra_old = old_words - new_words
+        extra_new = new_words - old_words
         extra_old.uniq!
-        extra_old.reject! { |w| w =~ /^\d+$/ } # ignore numbers
+        extra_new.uniq!
+
         extra_old.reject! { |old_word| new_words.any? { |new_word| new_word =~ /^#{old_word}/ } } # ignore words that have been truncated
         diff_per = (200.0 * extra_old.count / (old_words.count + new_words.count))
         if extra_old.count == 0
@@ -60,7 +62,7 @@ module Indexer
         else
           stats["Indexable Content word diff: #{extra_old.count}"] += 1
           # These are the real difference as are printed to the screen so they can be review on an individual basis
-          puts "Mismatch content [#{id}]: #{diff_per.round(2)} : #{extra_old.length} : #{extra_old.join(', ')}\n`#{clean_old}`\n!=\n`#{clean_new}`\n\n"
+          puts "Mismatch content [#{id}]: #{diff_per.round(2)}\nREMOVED: #{extra_old.join(', ')}\nADDED: #{extra_new.join(', ')}\n\n"
           false
         end
       end
