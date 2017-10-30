@@ -127,6 +127,7 @@ There are some other APIs that are only exposed internally:
 
 ### Additional Docs
 
+- [New indexing process](doc/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](doc/schemas.md): how to work with schemas and the document types
 - [Health Check](doc/health-check.md): usage instructions for the Health Check
 	functionality.

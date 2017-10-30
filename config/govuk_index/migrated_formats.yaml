@@ -27,7 +27,7 @@ indexable:
 - utaac_decision
 #- cma_case
 #- dfid_research_output
-#- drug_safety_update
+- drug_safety_update
 #- employment_tribunal_decision
 #- european_structural_investment_fund
 #- maib_report
