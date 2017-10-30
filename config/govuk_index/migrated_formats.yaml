@@ -19,6 +19,7 @@ indexable:
 - asylum_support_decision
 - business_finance_support_scheme
 - countryside_stewardship_grant
+- drug_safety_update
 - employment_appeal_tribunal_decision
 - international_development_fund
 - medical_safety_alert
@@ -27,7 +28,6 @@ indexable:
 - utaac_decision
 #- cma_case
 #- dfid_research_output
-- drug_safety_update
 #- employment_tribunal_decision
 #- european_structural_investment_fund
 #- maib_report
