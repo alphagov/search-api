@@ -74,6 +74,14 @@ class SearchConfig
     search_server.index_for_search(content_index_names + [govuk_index_name])
   end
 
+  def old_content_index
+    search_server.index_for_search(content_index_names)
+  end
+
+  def new_content_index
+    search_server.index_for_search([govuk_index_name])
+  end
+
 private
 
   def searcher
