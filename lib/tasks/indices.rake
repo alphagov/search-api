@@ -107,9 +107,23 @@ You should run this task if the index schema has changed.
   task :migrate_schema do
     raise('Please set `CONFIRM_INDEX_MIGRATION_START` to run this task') unless ENV['CONFIRM_INDEX_MIGRATION_START']
 
+    failed_indices = []
+
     index_names.each do |index_name|
-      GovukIndex::PopularityUpdater.migrate(index_name)
+      SchemaMigrator.new(index_name) do |migrator|
+        migrator.reindex
+
+        if migrator.changed?
+          puts "Difference during reindex for: #{index_name}"
+          puts migrator.comparison.inspect
+          failed_indices << index_name
+        else
+          migrator.switch_to_new_index
+        end
+      end
     end
+
+    raise "Failure during reindexing for: #{failed_indices.join(', ')}" if failed_indices.any?
   end
 
   desc "Switches an index group to a new index WITHOUT transferring the data"
