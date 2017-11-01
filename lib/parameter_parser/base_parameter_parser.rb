@@ -60,6 +60,7 @@ class BaseParameterParser
     publishing_app
     rendering_app
     search_format_types
+    search_user_need_document_supertype
     specialist_sectors
     taxons
     user_journey_document_supertype

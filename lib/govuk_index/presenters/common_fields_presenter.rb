@@ -13,6 +13,7 @@ module GovukIndex
     delegate_to_payload :public_timestamp, hash_key: "public_updated_at"
     delegate_to_payload :publishing_app
     delegate_to_payload :rendering_app
+    delegate_to_payload :search_user_need_document_supertype
     delegate_to_payload :title
     delegate_to_payload :user_journey_document_supertype
 

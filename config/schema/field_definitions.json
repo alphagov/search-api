@@ -24,6 +24,11 @@
     "type": "identifier"
   },
 
+  "search_user_need_document_supertype": {
+    "description": "Grouping for core or government documents. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
+    "type": "identifier"
+  },
+
   "user_journey_document_supertype": {
     "description": "Used to distinguish pages used mainly for navigation (finding) from content pages (thing). See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"

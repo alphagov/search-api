@@ -89,6 +89,7 @@ module GovukIndex
         registration:                       specialist.registration,
         rendering_app:                      common_fields.rendering_app,
         report_type:                        specialist.report_type,
+        search_user_need_document_supertype:common_fields.search_user_need_document_supertype,
         serial_number:                      specialist.serial_number,
         specialist_sectors:                 expanded_links.specialist_sectors,
         taxons:                             expanded_links.taxons,
