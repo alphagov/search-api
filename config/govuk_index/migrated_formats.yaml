@@ -26,7 +26,7 @@ migrated:
 
 indexable:
 - drug_safety_update
-#- cma_case
+- cma_case
 #- dfid_research_output
 #- employment_tribunal_decision
 #- european_structural_investment_fund

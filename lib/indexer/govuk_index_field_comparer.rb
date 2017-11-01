@@ -42,8 +42,8 @@ module Indexer
       if clean_old == clean_new
         true
       else
-        old_words = clean_old.split(' ').compact.reject! { |w| w =~ /^\d+$/ }
-        new_words = clean_new.split(' ').compact.reject! { |w| w =~ /^\d+$/ }
+        old_words = clean_old.split(' ').compact.reject { |w| w =~ /^\d+$/ }
+        new_words = clean_new.split(' ').compact.reject { |w| w =~ /^\d+$/ }
 
         extra_old = old_words - new_words
         extra_new = new_words - old_words
@@ -71,7 +71,7 @@ module Indexer
     def remove_links(str)
       str.gsub(/\[([^\]]*(?:\[[^\]]*\][^\]]*)?)\]\([^\)]*\)/, ' \1 ') # [name](link) => name
         .gsub(/#+\s*/, ' ')
-        .gsub(/\[InlineAttachment:([^\[\]]*(?:\[[^\]]*\][^\[\]]*|)*)\]/, '\1')
+        .gsub(/\[InlineAttachment:(?:.*\/)?([^\[\]\/]*(?:\[[^\]\/]*\][^\[\]\/]*|)*)\]/, '\1')
     end
 
     def clean_content(str)
@@ -81,6 +81,7 @@ module Indexer
         .gsub(/[\s,\-_:\/–\[\]\(\)\.\*\|\\\"“”]+/, ' ') # remove all special characters
         .gsub(/&amp;/, '&')
         .gsub(/[’'‘]/, "'")
+        .gsub(/ /, ' ') #nbsp
     end
   end
 end
