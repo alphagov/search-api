@@ -6,6 +6,8 @@ module GovukIndex
   class UnknownDocumentTypeError < StandardError; end
   class ValidationError < StandardError; end
 
+  DOCUMENT_TYPES_WITHOUT_BASE_PATH = %w(contact world_location).freeze
+
   class PublishingEventWorker < Indexer::BaseWorker
     notify_of_failures
 
@@ -16,6 +18,9 @@ module GovukIndex
       process_response(response) if response
     # Rescuing as we don't want to retry this class of error
     rescue ValidationError => e
+      return if e.message ==  "base_path missing from payload" &&
+          DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
+
       GovukError.notify(
         e,
         extra: {
