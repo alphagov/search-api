@@ -23,8 +23,6 @@ module Indexer
       return compare_content(id, old, new) if key == 'indexable_content'
       return true if old.nil? && new == ''
       return true if key == 'rendering_app' && old == 'specialist-frontend' && new == 'government-frontend'
-      require 'pry'
-      # binding.pry if key == 'alert_type' && old != new
       old == new
     end
 
