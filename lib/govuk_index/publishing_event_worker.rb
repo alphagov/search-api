@@ -11,9 +11,16 @@ module GovukIndex
   class PublishingEventWorker < Indexer::BaseWorker
     notify_of_failures
 
-    def perform(routing_key, payload)
+    def perform(routing_key_or_payload, payload=nil)
       actions = ElasticsearchProcessor.new
-      process_action(actions, routing_key, payload)
+      if routing_key_or_payload.is_a?(Hash) && routing_key_or_payload.key?('batch')
+        routing_key_or_payload['batch'].each do |routing_key, payload|
+          process_action(actions, routing_key_or_payload, payload)
+        end
+      else
+        process_action(actions, routing_key_or_payload, payload)
+      end
+
       response = actions.commit
       process_responses(routing_key, response, payload)
     # Rescuing as we don't want to retry this class of error
@@ -36,16 +43,6 @@ module GovukIndex
     end
 
   private
-
-    def process_actions(actions, routing_key, payload)
-      if payload.is_a?(Hash) && payload['multiple']
-        payload['batch'].each do |single_payload|
-          process_action(actions, routing_key, single_payload)
-        end
-      else
-        process_action(routing_key, actions, routing_key, payload)
-      end
-    end
 
     def process_action(actions, routing_key, payload)
       logger.debug("Processing #{routing_key}: #{payload}")
