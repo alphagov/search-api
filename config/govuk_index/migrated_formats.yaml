@@ -18,6 +18,7 @@ migrated:
 - countryside_stewardship_grant
 - drug_safety_update
 - employment_appeal_tribunal_decision
+- employment_tribunal_decision
 - international_development_fund
 - medical_safety_alert
 - raib_report
@@ -29,7 +30,6 @@ migrated:
 
 indexable:
 #- dfid_research_output
-- employment_tribunal_decision
 #- european_structural_investment_fund
 - maib_report
 #- vehicle_recalls_and_faults_alert
