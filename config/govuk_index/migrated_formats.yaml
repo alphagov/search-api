@@ -22,12 +22,12 @@ migrated:
 - medical_safety_alert
 - raib_report
 - service_standard_report
+- tax_tribunal_decision
 - utaac_decision
 # Other
 - task_list
 
 indexable:
-- tax_tribunal_decision
 #- dfid_research_output
 - employment_tribunal_decision
 #- european_structural_investment_fund
