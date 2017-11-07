@@ -2,11 +2,7 @@ module GovukIndex
   class IndexableContentSanitiser
     def clean(items)
       cleaned_content = items.map { |item|
-        strip_html_tags(
-          remove_encoded_characters(
-            indexable_content(item)
-          )
-        )
+        strip_html_tags(indexable_content(item))
       }.compact
 
       return nil if cleaned_content.empty?
@@ -32,14 +28,9 @@ module GovukIndex
       nil
     end
 
-    def remove_encoded_characters(content)
-      return nil unless content
-      content.gsub("\r", " ")
-    end
-
     def strip_html_tags(value)
       return nil unless value
-      Loofah.document(value).to_text
+      Loofah.document(value).to_text(encode_special_chars: false)
     end
   end
 end
