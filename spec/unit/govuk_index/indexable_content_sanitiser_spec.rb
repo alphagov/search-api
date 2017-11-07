@@ -82,4 +82,10 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
 
     expect(expected_content).to eq(subject.clean(payload))
   end
+
+  it 'does not encode \r characters' do
+    payload = ["line 1\r\nline 2"]
+    expected_content = "line 1 \nline 2"
+    expect(subject.clean(payload)).to eql(expected_content)
+  end
 end
