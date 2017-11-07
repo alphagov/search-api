@@ -1,70 +1,72 @@
 require 'spec_helper'
 
 RSpec.describe GovukIndex::IndexableContentSanitiser do
-  it "strips_html_tags_from_indexable_content" do
-    payload = [
-      [
-        { "content_type" => "text/govspeak", "content" => "**hello**" },
-        { "content_type" => "text/html", "content" => "<strong>hello</strong> <a href='www.gov.uk'>marmaduke</a>" }
-      ]
-    ]
-
-    expect(subject.clean(payload)).to eq("hello marmaduke")
-  end
-
-  it "passes_single_string_content_unchanged" do
+  it "passes content without html tags unchanged" do
     payload = ["hello marmaduke"]
 
     expect(subject.clean(payload)).to eq("hello marmaduke")
   end
 
-  it "passes_multiple_string_items_unchanged" do
+  it "can process multiple string items" do
     payload = ["hello marmaduke", "hello marley"]
 
     expect(subject.clean(payload)).to eq("hello marmaduke\n\n\nhello marley")
   end
 
-  it "strips_html_tags_from_string_content" do
+  it "strips html tags from string content" do
     payload = ["<h1>hello marmaduke</h1>"]
 
     expect(subject.clean(payload)).to eq("hello marmaduke")
   end
 
-  it "multiple_html_text_payload_items" do
-    payload = [
-      [
-        { "content_type" => "text/govspeak", "content" => "**hello**" },
-        { "content_type" => "text/html", "content" => "<strong>hello</strong>" }
-      ],
-      [
-        { "content_type" => "text/govspeak", "content" => "**goodbye**" },
-        { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" }
-      ],
-    ]
-
-
-    expect(subject.clean(payload)).to eq("hello\ngoodbye")
-  end
-
-  it "notifies_if_no_text_html_content" do
-    payload = [
-      [
-        {
-          "content" => "I love HTML Back end rules",
-          "content_type" => "text/govspeak",
-        }
+  context "when html test payloads exists" do
+    it "strips out html tags from to the html content" do
+      payload = [
+        [
+          { "content_type" => "text/govspeak", "content" => "**hello**" },
+          { "content_type" => "text/html", "content" => "<strong>hello</strong> <a href='www.gov.uk'>marmaduke</a>" }
+        ]
       ]
-    ]
 
-    expect(GovukError).to receive(:notify).with(
-      GovukIndex::MissingTextHtmlContentType.new,
-      extra: { content_types: ["text/govspeak"] }
-    )
+      expect(subject.clean(payload)).to eq("hello marmaduke")
+    end
 
-    expect(nil).to eq(subject.clean(payload))
+    it "correctly processes multiple payload items" do
+      payload = [
+        [
+          { "content_type" => "text/govspeak", "content" => "**hello**" },
+          { "content_type" => "text/html", "content" => "<strong>hello</strong>" }
+        ],
+        [
+          { "content_type" => "text/govspeak", "content" => "**goodbye**" },
+          { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" }
+        ],
+      ]
+
+
+      expect(subject.clean(payload)).to eq("hello\ngoodbye")
+    end
+
+    it "notifies if no text html content" do
+      payload = [
+        [
+          {
+            "content" => "I love HTML Back end rules",
+            "content_type" => "text/govspeak",
+          }
+        ]
+      ]
+
+      expect(GovukError).to receive(:notify).with(
+        GovukIndex::MissingTextHtmlContentType.new,
+        extra: { content_types: ["text/govspeak"] }
+      )
+
+      expect(subject.clean(payload)).to be_nil
+    end
   end
 
-  it "content_with_text_and_html_parts" do
+  it "can process both text and html parts" do
     payload = [
       "title 1",
       [
@@ -80,12 +82,14 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
 
     expected_content = "title 1\n\nhello\n\ntitle 2\n\ngoodbye"
 
-    expect(expected_content).to eq(subject.clean(payload))
+    expect(subject.clean(payload)).to eq(expected_content)
   end
 
-  it 'does not encode \r characters' do
-    payload = ["line 1\r\nline 2"]
-    expected_content = "line 1 \nline 2"
-    expect(subject.clean(payload)).to eql(expected_content)
+  context "Special character encoding" do
+    it 'does not encode \r characters' do
+      payload = ["line 1\r\nline 2"]
+      expected_content = "line 1 \nline 2"
+      expect(subject.clean(payload)).to eql(expected_content)
+    end
   end
 end
