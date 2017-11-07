@@ -30,7 +30,7 @@ module GovukIndex
 
     def strip_html_tags(value)
       return nil unless value
-      Loofah.document(value).to_text
+      Loofah.document(value).to_text(encode_special_chars: false)
     end
   end
 end
