@@ -20,6 +20,7 @@ migrated:
 - employment_appeal_tribunal_decision
 - employment_tribunal_decision
 - international_development_fund
+- maib_report
 - medical_safety_alert
 - raib_report
 - service_standard_report
@@ -31,5 +32,4 @@ migrated:
 indexable:
 #- dfid_research_output
 #- european_structural_investment_fund
-- maib_report
 #- vehicle_recalls_and_faults_alert
