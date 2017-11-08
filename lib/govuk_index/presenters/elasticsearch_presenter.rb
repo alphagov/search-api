@@ -123,8 +123,7 @@ module GovukIndex
     end
 
     def valid!
-      return if base_path
-      raise(ValidationError, "base_path missing from payload")
+      base_path || raise(MissingBasePath, "base_path missing from payload")
     end
 
   private

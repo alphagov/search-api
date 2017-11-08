@@ -24,7 +24,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
 
     expect {
       presenter.valid!
-    }.to raise_error(GovukIndex::ValidationError)
+    }.to raise_error(GovukIndex::MissingBasePath)
   end
 
   def elasticsearch_presenter(payload, type = "aaib_report")
