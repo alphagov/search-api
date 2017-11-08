@@ -4,7 +4,9 @@ module GovukIndex
   class MultipleMessagesInElasticsearchResponse < StandardError; end
   class NotFoundError < StandardError; end
   class UnknownDocumentTypeError < StandardError; end
-  class ValidationError < StandardError; end
+  class MissingBasePath < StandardError; end
+
+  DOCUMENT_TYPES_WITHOUT_BASE_PATH = %w(contact world_location).freeze
 
   class PublishingEventWorker < Indexer::BaseWorker
     notify_of_failures
@@ -15,13 +17,9 @@ module GovukIndex
       response = actions.commit
       process_response(response) if response
     # Rescuing as we don't want to retry this class of error
-    rescue ValidationError => e
-      GovukError.notify(
-        e,
-        extra: {
-          message_body: payload,
-        }
-      )
+    rescue MissingBasePath => e
+      return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
+      GovukError.notify(e, extra: { message_body: payload })
     # Unpublishing messages for something that does not exist may have been
     # processed out of order so we don't want to notify errbit but just allow
     # the process to continue

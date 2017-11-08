@@ -121,18 +121,42 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     }.to raise_error(GovukIndex::MultipleMessagesInElasticsearchResponse)
   end
 
-  it "notify_when_validation_error" do
-    invalid_payload = {
-      "document_type" => "help_page",
-      "title" => "We love cheese"
-    }
+  context "when document type requires a basepath" do
+    let(:payload) do
+      {
+        "document_type" => "help_page",
+        "title" => "We love cheese",
+      }
+    end
 
-    expect(GovukError).to receive(:notify).with(
-      instance_of(GovukIndex::ValidationError),
-      extra: { message_body: { 'document_type' => 'help_page', 'title' => 'We love cheese' } }
-    )
+    it "notify of a validation error for missing basepath" do
+      expect(GovukError).to receive(:notify).with(
+        instance_of(GovukIndex::MissingBasePath),
+        extra: {
+          message_body: {
+            'document_type' => 'help_page',
+            'title' => 'We love cheese',
+          }
+        }
+      )
 
-    subject.perform('routing.key', invalid_payload)
+      subject.perform('routing.key', payload)
+    end
+  end
+
+  context "when document type doesn't require a basepath" do
+    let(:payload) do
+      {
+        "document_type" => "contact",
+        "title" => "We love cheese",
+      }
+    end
+
+    it "don't notify of a validation error for missing basepath" do
+      expect(GovukError).not_to receive(:notify)
+
+      subject.perform('routing.key', payload)
+    end
   end
 
   def stub_document_type_inferer
