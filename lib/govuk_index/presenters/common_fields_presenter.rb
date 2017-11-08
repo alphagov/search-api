@@ -1,12 +1,14 @@
 module GovukIndex
   class CommonFieldsPresenter
+    CUSTOM_FORMAT_MAP = {
+      "esi_fund" => "european_structural_investment_fund",
+    }.freeze
     extend MethodBuilder
 
     delegate_to_payload :content_id
     delegate_to_payload :content_store_document_type, hash_key: "document_type"
     delegate_to_payload :description
     delegate_to_payload :email_document_supertype
-    delegate_to_payload :format, hash_key: "document_type"
     delegate_to_payload :government_document_supertype
     delegate_to_payload :link, hash_key: "base_path"
     delegate_to_payload :navigation_document_supertype
@@ -28,6 +30,11 @@ module GovukIndex
     def popularity
       lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.instance)
       lookup.lookup_popularities([payload["base_path"]])[payload["base_path"]]
+    end
+
+    def format
+      document_type = payload['document_type']
+      CUSTOM_FORMAT_MAP[document_type] || document_type
     end
 
   private

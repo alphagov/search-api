@@ -75,11 +75,15 @@ RSpec.describe 'SpecialistFormatTest' do
       payload: { document_type: publisher_document_type },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return([publisher_document_type])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return([search_document_type])
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
-    expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: search_document_type)
+    expect_document_is_in_rummager(
+      { "link" => random_example["base_path"], "format" => search_document_type },
+      index: "govuk_test",
+      type: search_document_type
+    )
   end
 
   it "finders_email_signup_are_never_indexed" do
