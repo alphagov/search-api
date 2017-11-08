@@ -29,7 +29,7 @@ migrated:
 - task_list
 
 indexable:
-#- dfid_research_output
+- dfid_research_output
 #- european_structural_investment_fund
 - maib_report
 #- vehicle_recalls_and_faults_alert
