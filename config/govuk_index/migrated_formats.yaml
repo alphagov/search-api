@@ -16,6 +16,7 @@ migrated:
 - business_finance_support_scheme
 - cma_case
 - countryside_stewardship_grant
+- dfid_research_output
 - drug_safety_update
 - employment_appeal_tribunal_decision
 - employment_tribunal_decision
@@ -30,6 +31,5 @@ migrated:
 - task_list
 
 indexable:
-- dfid_research_output
 #- european_structural_investment_fund
 #- vehicle_recalls_and_faults_alert
