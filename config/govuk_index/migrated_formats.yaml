@@ -31,5 +31,5 @@ migrated:
 - task_list
 
 indexable:
-#- european_structural_investment_fund
+- esi_fund # name differs between publishing API and rummager (european_structural_investment_fund)
 #- vehicle_recalls_and_faults_alert
