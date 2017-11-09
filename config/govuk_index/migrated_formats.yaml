@@ -31,5 +31,5 @@ migrated:
 - task_list
 
 indexable:
-#- european_structural_investment_fund
+- european_structural_investment_fund # use Rummager name as mapping occurs before validation check
 #- vehicle_recalls_and_faults_alert
