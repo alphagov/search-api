@@ -1,10 +1,6 @@
 class Batcher
-  QUEUES_NAME = 'batcher_queues_name'
-  MAX_QUEUE_LENGTH = 100
-
   def initialize(processor)
     @processor = processor
-    @uuid = SecureRandom.uuid
   end
 
   def process(message)
@@ -12,65 +8,143 @@ class Batcher
   end
 
   def perform_async(*args)
-    # store message on queue A
-    queue_name = current_queue_name
-    redis.rpush(current_queue_name, args.to_json)
+    queue = Queue.new(@procesor)
+    queue.add_job(args)
 
-    # check if count of message on the queue is greater than X
-    if redis.llen(queue_name) >= MAX_QUEUE_LENGTH || after_timeout?(queue_name)
-      process_queue(queue_name)
+    if queue.batch_ready_for_processing?
+      processed = false
+      begin
+        queue.close
+
+        wait_for_other_workers
+        processed = process(queue)
+      rescue Exception => e
+        queue.restore unless processed
+
+      end
+    end
+
+  end
+
+  def process(queue)
+    processed = false
+    entrant = Entrant.new(queue.queue_name)
+
+    if entrant.i_should_process_the_queue?
+      @processor.process(batch: queue.data)
+      processed = true
+
+      queue.delete
+      wait_for_other_workers
+      entrant.delete
+    end
+  ensure
+    processed
+  end
+
+private
+
+  def wait_for_other_workers
+    sleep 2
+  end
+
+
+  class Entrant
+    def initialize(queue_name)
+      @entrants_list = "#{queue_name}:entrant"
+      @uuid = SecureRandom.new
+      redis.rpush(entrants_list, @uuid)
+    end
+
+    def i_should_process_the_queue?
+      redis.lindex(@entrants_list, 0) == @uuid
+    end
+
+    def delete
+      redis.del(@entrants_list)
+    end
+
+    private
+
+    def redis
+      Sidekiq.redis
     end
   end
 
-  def process_queue(queue_name)
-    processed = false
-    entrants_list = "#{queue_name}-entrant"
+  class Queue
+    QUEUES_NAME = 'batcher_queues_name'
+    MAX_QUEUE_LENGTH = 100
 
-    # remove it from the queue_name list
-    redis.lrem(queue_name_list, 0, queue_name)
-    # add myself as an entrant
-    redis.rpush(entrants_list, @uuid)
+    attr_reader :queue_name
 
-    # check if I am the winner
-    if redis.lindex(entrants_list, 0) == @uuid
-      # process message on queue A in bulk to the processor
-      batched_data = redis.lrange(queue_name).map { |d| JSON.parse(d) }
+    # as everythig is async there is a possibility of stuff getting left on redis and
+    # not having been deleted this task is to do a cleanup and delete all items
+    def self.cleanup
 
-      @processor.process(batch: batched_data)
-      processed = true
+    end
 
-      # delete the queue so that it isn't left on redis
+    def initialize(processor)
+      @processor = processor
+      @queue_name = current_queue_name
+      # ensure_queue_timeout
+    end
+
+    def add_job(args)
+      redis.rpush(current_queue_name, args.to_json)
+    end
+
+    def batch_ready_for_processing?
+      redis.llen(queue_name) >= MAX_QUEUE_LENGTH || after_timeout?
+    end
+
+    def close
+      redis.lrem(queue_name_list, 0, @queue_name)
+    end
+
+    def data
+      redis.lrange(queue_name).map { |d| JSON.parse(d) }
+    end
+
+    def delete
       redis.del(queue_name)
     end
 
-    # remove self from the entrants - assuming the winner will be the last to be removed
-    redis.lrem(entrants_list, 0, @uuid)
-    # remove the entrants list
-    redis.del(entrants_list) if redis.llen(entrants_list) == 0
-  rescue Exception
-    # push the queue_name back onto the list of queue names so we can try and process it again
-    # in the event of any errors
-    redis.lpush(queue_name_list, queue_name) unless processed
-    raise
-  end
+    def restore
+      # TODO: check if queue_with name is in the list first
+      redis.lpush(queue_name_list, queue_name)
+    end
 
-  def current_queue_name
-    queue_name = redis.lget(queue_name_list, 0)
-    return queue_name if queue_name
-    redis.rpush(queue_name_list, "#{QUEUES_NAME}-#{processor.class}-#{SecureRandom.uuid}")
-    redis.lindex(queue_name_list, 0)
-  end
+    private
 
-  def queue_name_list
-    "#{QUEUES_NAME}-#{processor.class}"
-  end
+    def current_queue_name
+      queue_name = first_queue_name
+      return queue_name if queue_name
+      open_new_queue
+      first_queue_name
+    end
 
-  def after_timeout?(queue_name)
-    expiry = rdis.get("#{queue_name}-expiry")
-    if expiry && Time.at(expiry)
-  end
+    def redis
+      Sidekiq.redis
+    end
 
-  def redis
-    Sidekiq.redis
+
+    def first_queue_name
+      redis.lget(queue_name_list, 0)
+    end
+
+    def open_new_queue
+      redis.rpush(queue_name_list, "#{QUEUES_NAME}:#{processor.class}:#{SecureRandom.uuid}")
+    end
+
+
+    def queue_name_list
+      "#{QUEUES_NAME}:#{@processor.class}"
+    end
+
+    def after_timeout?
+      # expiry = rdis.get("#{queue_name}-expiry")
+      # expiry && Time.at(expiry) < Time.now.to_i
+      false
+    end
   end
 end
