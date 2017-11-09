@@ -31,6 +31,8 @@ require 'sidekiq/testing'
 require "sidekiq/testing/inline" # Make all queued jobs run immediately
 require 'bunny-mock'
 require 'govuk_schemas'
+require 'govuk-content-schema-test-helpers'
+require 'govuk-content-schema-test-helpers/validator'
 
 # Silence log output
 Logging.logger.root.appenders = nil
