@@ -221,6 +221,7 @@ DEPENDENCIES
   rack (~> 2.0)
   rack-logstasher (~> 1.0.0)
   rack-test (~> 0.6.3)
+  rainbow
   rake (~> 10.5)
   redis-namespace (~> 1.5.2)
   rspec

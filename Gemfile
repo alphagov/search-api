@@ -48,6 +48,7 @@ end
 group :development do
   # (Intelligent) reloading server in development
   gem "mr-sparkle", "0.3.0"
+  gem "rainbow"
 end
 
 gem "pry-byebug", group: [:development, :test]
