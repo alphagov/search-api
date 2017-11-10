@@ -20,6 +20,7 @@ migrated:
 - drug_safety_update
 - employment_appeal_tribunal_decision
 - employment_tribunal_decision
+- european_structural_investment_fund # use Rummager name as mapping occurs before validation check
 - international_development_fund
 - maib_report
 - medical_safety_alert
@@ -30,6 +31,4 @@ migrated:
 # Other
 - task_list
 
-indexable:
-- european_structural_investment_fund # use Rummager name as mapping occurs before validation check
-#- vehicle_recalls_and_faults_alert
+indexable: []
