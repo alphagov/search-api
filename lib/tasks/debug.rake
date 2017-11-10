@@ -3,6 +3,9 @@ require 'pp'
 require 'rainbow'
 require 'debug/synonyms'
 
+ANSI_GREEN = "\e[32m".freeze
+ANSI_RESET = "\e[0m".freeze
+
 namespace :debug do
   desc "Pretty print a document in the old content indexes"
   task :show_old_index_link, [:link] do |_, args|
@@ -22,8 +25,9 @@ namespace :debug do
   task :show_new_synonyms, [:query] do |_, args|
     model = Debug::Synonyms::NewModel.new
 
-    index_tokens, search_tokens = model.analyze(args.query)
-    search_results = model.search(args.query)
+    search_tokens = model.analyze_query(args.query)
+    index_tokens = model.analyze_index(args.query)
+    search_results = model.search(args.query, pre_tags: [ANSI_GREEN], post_tags: [ANSI_RESET])
 
     puts Rainbow("Query interpretation for '#{args.query}':").yellow
     puts search_tokens["tokens"]
@@ -52,8 +56,8 @@ namespace :debug do
   desc "Old synonyms test"
   task :show_old_synonyms, [:query] do |_, args|
     model = Debug::Synonyms::OldModel.new
-    search_tokens = model.analyze(args.query)
-    search_results = model.search(args.query)
+    search_tokens = model.analyze_query(args.query)
+    search_results = model.search(args.query, pre_tags: [ANSI_GREEN], post_tags: [ANSI_RESET])
 
     puts Rainbow("Query interpretation for '#{args.query}':").yellow
     puts search_tokens["tokens"]

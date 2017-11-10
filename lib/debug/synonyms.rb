@@ -9,25 +9,26 @@ module Debug
         @index = index
       end
 
-      def search(query)
+      def search(query, pre_tags:, post_tags:)
         search_query = {
           query: {
             multi_match: {
               "query" => query,
-              "fields" => %w(title^1000 description)
+              "fields" => %w(title^1000 description),
+              "analyzer" => 'query_with_old_synonyms',
             }
           },
           highlight: {
             "fields" => { "title" => {}, "description" => {} },
-            "pre_tags" => ["\e[32m"],
-            "post_tags" => ["\e[0m"]
+            "pre_tags" => pre_tags,
+            "post_tags" => post_tags
           }
         }
 
-        client.search(index: index, analyzer: 'query_with_old_synonyms', body: search_query)
+        client.search(index: index, body: search_query)
       end
 
-      def analyze(query)
+      def analyze_query(query)
         client.indices.analyze text: query, analyzer: 'query_with_old_synonyms', index: index
       end
     end
@@ -41,7 +42,7 @@ module Debug
         @index = index
       end
 
-      def search(query)
+      def search(query, pre_tags:, post_tags:)
         search_query = {
           query: {
             multi_match: {
@@ -51,18 +52,20 @@ module Debug
           },
           highlight: {
             "fields" => { "title.synonym" => {}, "description.synonym" => {} },
-            "pre_tags" => ["\e[32m"],
-            "post_tags" => ["\e[0m"]
+            "pre_tags" => pre_tags,
+            "post_tags" => post_tags
           }
         }
 
         client.search(index: index, analyzer: 'with_search_synonyms', body: search_query)
       end
 
-      def analyze(query)
-        index_tokens = client.indices.analyze text: query, analyzer: 'with_index_synonyms', index: index
-        search_tokens = client.indices.analyze text: query, analyzer: 'with_search_synonyms', index: index
-        [index_tokens, search_tokens]
+      def analyze_query(query)
+        client.indices.analyze text: query, analyzer: 'with_search_synonyms', index: index
+      end
+
+      def analyze_index(query)
+        client.indices.analyze text: query, analyzer: 'with_index_synonyms', index: index
       end
     end
   end
