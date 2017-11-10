@@ -7,6 +7,7 @@ module Indexer
     end
 
     def prepared(doc_hash, popularities, is_content_index)
+      doc_hash = doc_hash.dup
       if is_content_index
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)

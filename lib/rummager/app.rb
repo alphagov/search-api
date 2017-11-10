@@ -141,6 +141,7 @@ class Rummager < Sinatra::Application
     }
 
     document_hashes = documents.map(&:elasticsearch_export)
+
     Indexer::BulkIndexWorker.perform_async(index_name, document_hashes)
 
     json_result 202, "Queued"

@@ -125,4 +125,41 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     expect(last_response.status).to eq(202)
     expect_document_is_in_rummager(SAMPLE_DOCUMENT)
   end
+
+  it "rescheduling during locking does not corrupt the process" do
+    stubbed_client = client
+
+    locked_response = { "items" => [
+      { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index write" } } }
+    ] }
+
+    expect(stubbed_client).to receive(:bulk).and_return(locked_response)
+    expect(stubbed_client).to receive(:bulk).and_call_original
+    allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
+
+    details = <<~DETAILS
+      {\"best_bets\":[
+        {\"link\":\"/learn-to-drive-a-car\",\"position\":1},
+        {\"link\":\"/learn-to-drive-a-car\",\"position\":3},
+        {\"link\":\"/learn-to-drive-a-car\",\"position\":10}
+      ],\"worst_bets\":[]}", "stemmed_query_as_term"=>" learn to drive "}]
+    DETAILS
+
+    post "/metasearch_test/documents", {
+      "_id" => "learn+to+drive-exact",
+      "_type" => "best_bet",
+      "stemmed_query" => "learn to drive",
+      "details" => details
+    }.to_json
+
+    expect_document_is_in_rummager(
+      {
+        "stemmed_query" => "learn to drive",
+        "details" => details,
+      },
+      index: "metasearch_test",
+      type: "best_bet",
+      id: "learn+to+drive-exact",
+    )
+  end
 end
