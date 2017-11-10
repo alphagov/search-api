@@ -39,7 +39,7 @@ module QueryComponents
     def search_user_need_document_supertype_boost
       {
         filter: { term: { search_user_need_document_supertype: "core" } },
-        boost_factor: 2.5
+        boost_factor: 1.5
       }
     end
 
