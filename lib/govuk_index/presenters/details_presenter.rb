@@ -16,6 +16,16 @@ module GovukIndex
       details['contact_groups']&.map { |contact| contact['slug'] }
     end
 
+    def latest_change_note
+      return nil if details["change_notes"].nil? || details["change_notes"].empty?
+
+      note_info = details["change_notes"]
+        .sort_by { |note| DateTime.parse(note["published_at"]) }
+        .last
+
+      note_info["change_note"] + " in " + note_info["title"]
+    end
+
   private
 
     attr_reader :details, :format

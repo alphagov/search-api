@@ -66,6 +66,7 @@ module GovukIndex
         is_withdrawn:                        common_fields.is_withdrawn,
         issued_date:                         specialist.issued_date,
         land_use:                            specialist.land_use,
+        latest_change_note:                  details.latest_change_note,
         licence_identifier:                  details.licence_identifier,
         licence_short_description:           details.licence_short_description,
         link:                                common_fields.link,
