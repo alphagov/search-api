@@ -34,7 +34,7 @@ class SpecialRoutePublisher
   def routes
     [
       {
-        rendering_app: "finder-frontend",
+        rendering_app: "frontend",
         content_id: "84e0909c-f3e6-43ee-ba68-9e33213a3cdd",
         base_path: "/search",
         title: "GOV.UK search results",
@@ -43,7 +43,7 @@ class SpecialRoutePublisher
         type: "exact",
       },
       {
-        rendering_app: "finder-frontend",
+        rendering_app: "frontend",
         content_id: "9f306cd5-1842-43e9-8408-2c13116f4717",
         base_path: "/search.json",
         title: "GOV.UK search results API",
@@ -51,7 +51,7 @@ class SpecialRoutePublisher
         type: "exact",
       },
       {
-        rendering_app: "finder-frontend",
+        rendering_app: "frontend",
         content_id: "ba750368-8001-4d01-bd57-cec589153fdd",
         base_path: "/search/opensearch.xml",
         title: "GOV.UK opensearch descriptor",
