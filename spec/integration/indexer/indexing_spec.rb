@@ -126,40 +126,89 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     expect_document_is_in_rummager(SAMPLE_DOCUMENT)
   end
 
-  it "rescheduling during locking does not corrupt the process" do
-    stubbed_client = client
+  context "when processing metasearch data" do
+    it "rescheduling during locking does not corrupt the process" do
+      stubbed_client = client
 
-    locked_response = { "items" => [
-      { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index write" } } }
-    ] }
+      locked_response = { "items" => [
+        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index write" } } }
+      ] }
 
-    expect(stubbed_client).to receive(:bulk).and_return(locked_response)
-    expect(stubbed_client).to receive(:bulk).and_call_original
-    allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
+      expect(stubbed_client).to receive(:bulk).and_return(locked_response)
+      expect(stubbed_client).to receive(:bulk).and_call_original
+      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
 
-    details = <<~DETAILS
-      {\"best_bets\":[
-        {\"link\":\"/learn-to-drive-a-car\",\"position\":1},
-        {\"link\":\"/learn-to-drive-a-car\",\"position\":3},
-        {\"link\":\"/learn-to-drive-a-car\",\"position\":10}
-      ],\"worst_bets\":[]}", "stemmed_query_as_term"=>" learn to drive "}]
-    DETAILS
+      details = <<~DETAILS
+        {\"best_bets\":[
+          {\"link\":\"/learn-to-drive-a-car\",\"position\":1},
+          {\"link\":\"/learn-to-drive-a-car\",\"position\":3},
+          {\"link\":\"/learn-to-drive-a-car\",\"position\":10}
+        ],\"worst_bets\":[]}", "stemmed_query_as_term"=>" learn to drive "}]
+      DETAILS
 
-    post "/metasearch_test/documents", {
-      "_id" => "learn+to+drive-exact",
-      "_type" => "best_bet",
-      "stemmed_query" => "learn to drive",
-      "details" => details
-    }.to_json
-
-    expect_document_is_in_rummager(
-      {
+      post "/metasearch_test/documents", {
+        "_id" => "learn+to+drive-exact",
+        "_type" => "best_bet",
         "stemmed_query" => "learn to drive",
-        "details" => details,
-      },
-      index: "metasearch_test",
-      type: "best_bet",
-      id: "learn+to+drive-exact",
-    )
+        "details" => details
+      }.to_json
+
+      expect_document_is_in_rummager(
+        {
+          "stemmed_query" => "learn to drive",
+          "details" => details,
+        },
+        index: "metasearch_test",
+        type: "best_bet",
+        id: "learn+to+drive-exact",
+      )
+    end
+  end
+
+  context "when processing document POST" do
+    it "rescheduling during locking does not corrupt the process" do
+      stubbed_client = client
+
+      locked_response = { "items" => [
+        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index write" } } }
+      ] }
+
+      expect(stubbed_client).to receive(:bulk).and_return(locked_response)
+      expect(stubbed_client).to receive(:bulk).and_call_original
+      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
+
+      publishing_api_has_expanded_links(
+        content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
+        expanded_links: {},
+      )
+
+      post "/documents", {
+        "_type" => "manual",
+        "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
+        "title" => "TITLE",
+        "format" => "answer",
+        "content_store_document_type" => "answer",
+        "link" => "/an-example-answer",
+        "indexable_content" => "HERE IS SOME CONTENT",
+        "licence_identifier" => "1201-5-1",
+        "licence_short_description" => "A short description of a licence",
+        "search_user_need_document_supertype" => "core",
+      }.to_json
+
+      expect_document_is_in_rummager({
+        "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
+        "title" => "TITLE",
+        "format" => "answer",
+        "link" => "/an-example-answer",
+        "indexable_content" => "HERE IS SOME CONTENT",
+        "navigation_document_supertype" => "guidance",
+        "email_document_supertype" => "other",
+        "user_journey_document_supertype" => "thing",
+        "government_document_supertype" => "other",
+        "licence_identifier" => "1201-5-1",
+        "licence_short_description" => "A short description of a licence",
+        "search_user_need_document_supertype" => "core",
+      }, type: "manual")
+    end
   end
 end
