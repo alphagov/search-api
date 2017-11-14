@@ -2,6 +2,9 @@ index:
   settings:
     analysis:
       analyzer:
+        # At index time, elasticsearch will use an analyzer named default in the index settings
+        # if no analyzer is specified in the field mapping:
+        # https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
         default:
           type: custom
           tokenizer: standard
