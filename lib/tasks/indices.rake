@@ -173,4 +173,31 @@ You should run this task if the index schema has changed.
       index_name: args.index_name
     )
   end
+
+  desc "Monitor the search indices and send data to statsd"
+  task :monitor_indices do
+    client = Services.elasticsearch
+    statsd = Services.statsd_client
+    missing = []
+
+    SearchConfig.instance.all_index_names.each do |index|
+      begin
+        stats = client.indices.stats index: index, docs: true
+        docs = stats["_all"]["primaries"]["docs"]
+
+        count = docs["count"]
+        statsd.gauge("#{index}_index.docs.count", count)
+        puts "#{index}_index.docs.count=#{count}"
+
+        deleted = docs["deleted"]
+        statsd.gauge("#{index}_index.docs.deleted", deleted)
+        puts "#{index}_index.docs.deleted=#{deleted}"
+
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
+        missing << index
+      end
+    end
+
+    raise Exception.new("Missing index #{missing}!") unless missing.empty?
+  end
 end
