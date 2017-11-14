@@ -6,6 +6,7 @@ module GovukIndex
 
     delegate_to_payload :licence_identifier
     delegate_to_payload :licence_short_description
+    delegate_to_payload :section_id
 
     def initialize(details:, format:)
       @details = details
@@ -24,6 +25,10 @@ module GovukIndex
         .last
 
       note_info["change_note"] + " in " + note_info["title"]
+    end
+
+    def parent_manual
+      details.dig("manual", "base_path")
     end
 
   private

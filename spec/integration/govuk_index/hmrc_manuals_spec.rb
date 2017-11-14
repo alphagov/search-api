@@ -43,4 +43,29 @@ RSpec.describe "HMRC manual publishing" do
      }
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "hmrc_manual")
   end
+
+  it "indexes an HMRC manual section" do
+    random_example = generate_random_example(
+      schema: "hmrc_manual_section",
+      payload: { document_type: "hmrc_manual_section" },
+      details: {
+        section_id: "some_section_id",
+        manual: {
+          "base_path": "/parent/manual/path"
+        },
+      },
+      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
+    )
+
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["hmrc_manual_section"])
+
+    @queue.publish(random_example.to_json, content_type: "application/json")
+
+    expected_document = {
+       "link" => random_example["base_path"],
+       "hmrc_manual_section_id" => "some_section_id",
+       "manual" => "/parent/manual/path",
+     }
+    expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "hmrc_manual_section")
+  end
 end
