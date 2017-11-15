@@ -154,7 +154,7 @@ module LegacySearch
           date_property_filter(property, filter_value)
         elsif boolean_properties.include?(property)
           boolean_property_filter(property, filter_value)
-        else
+        elsif Array(filter_value).compact.any? # skip when only nil values are present
           standard_property_filter(property, filter_value)
         end
       end

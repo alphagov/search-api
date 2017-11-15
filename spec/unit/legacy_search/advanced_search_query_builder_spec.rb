@@ -47,4 +47,19 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
       }
     )
   end
+
+  it "ignores empty filters" do
+    builder = build_builder("how to drive", { "format" => "organisation", "specialist_sectors" => "driving", "people" => nil })
+    query_hash = builder.filter_query_hash
+
+    expect(query_hash).to eq(
+      "filter" => {
+        "and" => [
+          { "term" => { "format" => "organisation" } },
+          { "term" => { "specialist_sectors" => "driving" } },
+          { "not" => { "term" => { "is_withdrawn" => true } } }
+        ]
+      }
+    )
+  end
 end
