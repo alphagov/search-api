@@ -13,6 +13,8 @@ esi_fund: european_structural_investment_fund # Specialist Publisher
 finder: edition # Specialist Publisher
 guide: edition
 help_page: edition
+hmrc_manual: hmrc_manual
+hmrc_manual_section: hmrc_manual_section
 international_development_fund: international_development_fund # Specialist Publisher
 licence: edition
 local_transaction: edition
