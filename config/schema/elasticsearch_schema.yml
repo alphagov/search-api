@@ -22,7 +22,7 @@ index:
         with_index_synonyms:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, index_synonym, synonym_protwords, stemmer_override, stemmer_english]
+          filter: [standard, asciifolding, lowercase, index_synonym, synonym_protwords, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used at search time for the .synonym variants of searchable
@@ -30,7 +30,7 @@ index:
         with_search_synonyms:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, search_synonym, synonym_protwords, stemmer_override, stemmer_english]
+          filter: [standard, asciifolding, lowercase, search_synonym, synonym_protwords, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used to search across pairs of adjacent words.
