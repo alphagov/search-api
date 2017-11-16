@@ -127,8 +127,8 @@ module IntegrationSpecHelper
     JSON.parse(last_response.body)
   end
 
-  def expect_document_is_in_rummager(document, type: "edition", index: 'mainstream_test')
-    retrieved = fetch_document_from_rummager(id: document['link'], index: index)
+  def expect_document_is_in_rummager(document, type: "edition", index: 'mainstream_test', id: nil)
+    retrieved = fetch_document_from_rummager(id: id || document['link'], index: index)
 
     expect(type).to eq(retrieved["_type"])
 
