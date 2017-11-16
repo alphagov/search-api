@@ -16,11 +16,14 @@ module GovukIndex
     delegate_to_payload :publishing_app
     delegate_to_payload :rendering_app
     delegate_to_payload :search_user_need_document_supertype
-    delegate_to_payload :title
     delegate_to_payload :user_journey_document_supertype
 
     def initialize(payload)
       @payload = payload
+    end
+
+    def title
+      [section_id, payload["title"]].compact.join(" - ")
     end
 
     def is_withdrawn
@@ -35,6 +38,10 @@ module GovukIndex
     def format
       document_type = payload['document_type']
       CUSTOM_FORMAT_MAP[document_type] || document_type
+    end
+
+    def section_id
+      @_section_id ||= payload.dig("details", "section_id") if format == "hmrc_manual_section"
     end
 
   private

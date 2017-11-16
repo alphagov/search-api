@@ -63,6 +63,7 @@ RSpec.describe "HMRC manual publishing" do
 
     expected_document = {
        "link" => random_example["base_path"],
+       "title" => "some_section_id - #{random_example['title']}",
        "hmrc_manual_section_id" => "some_section_id",
        "manual" => "/parent/manual/path",
      }
