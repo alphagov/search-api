@@ -15,7 +15,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     stub_tagging_lookup
   end
 
-  it "adding_a_document_to_the_search_index" do
+  it "adds a document to the search index" do
     publishing_api_has_expanded_links(
       content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
       expanded_links: {},
@@ -50,7 +50,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     }, type: "manual")
   end
 
-  it "document_type_defaults_to_edition" do
+  it "defaults the type to 'edition' if not specified" do
     publishing_api_has_expanded_links(
       content_id: "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
       expanded_links: {},
@@ -67,24 +67,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     }, type: "edition")
   end
 
-  it "tagging_organisations_to_self" do
-    post "/documents", {
-      "title" => "TITLE",
-      "format" => "organisation",
-      "slug" => "my-organisation",
-      "link" => "/an-example-organisation",
-    }.to_json
-
-    expect_document_is_in_rummager({
-      "title" => "TITLE",
-      "format" => "organisation",
-      "slug" => "my-organisation",
-      "link" => "/an-example-organisation",
-      "organisations" => ["my-organisation"],
-    })
-  end
-
-  it "start_and_end_dates" do
+  it "indexes start and end dates" do
     post "/documents", {
       "title" => "TITLE",
       "format" => "topical_event",
@@ -104,7 +87,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     })
   end
 
-  it "adding_a_document_to_the_search_index_with_organisation_self_tagging" do
+  it "tags organisation pages to themselves, so that filtering on an organisation returns the homepage" do
     post "/documents", {
       'title' => 'HMRC',
       'link' => '/government/organisations/hmrc',
@@ -119,15 +102,15 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     })
   end
 
-  it "adding_a_document_to_the_search_index_with_queue" do
+  it "returns a 202 (queued) response" do
     post "/documents", SAMPLE_DOCUMENT.to_json
 
     expect(last_response.status).to eq(202)
     expect_document_is_in_rummager(SAMPLE_DOCUMENT)
   end
 
-  context "when processing metasearch data" do
-    it "rescheduling during locking does not corrupt the process" do
+  context "when indexing to the metasearch index" do
+    it "reschedules the job if the index has a write lock" do
       stubbed_client = client
 
       locked_response = { "items" => [
@@ -165,8 +148,8 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     end
   end
 
-  context "when processing document POST" do
-    it "rescheduling during locking does not corrupt the process" do
+  context "when indexing content" do
+    it "reschedules the job if the index has a write lock" do
       stubbed_client = client
 
       locked_response = { "items" => [
