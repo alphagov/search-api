@@ -1,9 +1,6 @@
 source "https://rubygems.org"
 
-# We have been experiencing `ActiveSupport::Deprecation::MethodWrapper` errors
-# when deploying versions of this app with activesupport 4.0.13. Pin to this
-# version for now until we've upgraded other apps and fixed the issue.
-gem "activesupport", "3.2.22.2"
+gem "activesupport", "~> 4.1.11"
 gem "elasticsearch", "~> 2"
 gem "gds-api-adapters", "~> 47.9"
 gem "govuk_app_config", "~> 0.2.0"
