@@ -6,7 +6,6 @@ module GovukIndex
 
     delegate_to_payload :licence_identifier
     delegate_to_payload :licence_short_description
-    delegate_to_payload :section_id
 
     def initialize(details:, format:)
       @details = details

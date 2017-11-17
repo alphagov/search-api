@@ -61,7 +61,7 @@ module GovukIndex
         government_document_supertype:       common_fields.government_document_supertype,
         grant_type:                          specialist.grant_type,
         hidden_indexable_content:            specialist.hidden_indexable_content,
-        hmrc_manual_section_id:              details.section_id,
+        hmrc_manual_section_id:              common_fields.section_id,
         indexable_content:                   indexable.indexable_content,
         industries:                          specialist.industries,
         is_withdrawn:                        common_fields.is_withdrawn,
