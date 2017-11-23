@@ -62,7 +62,7 @@ module GovukIndex
         grant_type:                          specialist.grant_type,
         hidden_indexable_content:            specialist.hidden_indexable_content,
         hmrc_manual_section_id:              common_fields.section_id,
-        indexable_content:                   indexable.indexable_content,
+        indexable_content:                   indexable.indexable_content || common_fields.description,
         industries:                          specialist.industries,
         is_withdrawn:                        common_fields.is_withdrawn,
         issued_date:                         specialist.issued_date,

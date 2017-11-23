@@ -34,3 +34,5 @@ migrated:
 indexable:
 - hmrc_manual
 - hmrc_manual_section
+- manual
+- manual_section

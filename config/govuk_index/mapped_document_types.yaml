@@ -19,6 +19,8 @@ international_development_fund: international_development_fund # Specialist Publ
 licence: edition
 local_transaction: edition
 maib_report: maib_report # Specialist Publisher
+manual: manual
+manual_section: manual_section
 medical_safety_alert: medical_safety_alert # Specialist Publisher
 place: edition
 raib_report: raib_report # Specialist Publisher

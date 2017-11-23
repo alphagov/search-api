@@ -14,7 +14,7 @@ module GovukIndex
     end
 
     def indexable_content
-      return nil if details.nil?
+      return nil if details.nil? || format == 'manual'
       sanitiser.clean(indexable)
     end
 
