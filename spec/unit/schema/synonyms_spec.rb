@@ -54,6 +54,110 @@ RSpec.describe SynonymParser do
       })
   end
 
+  it "rejects unknown synonym keys" do
+    config = [
+      { "other" => "pig, micropig" }
+    ]
+
+    expect {
+      described_class.new.parse(config)
+    }.to raise_error(SynonymParser::InvalidSynonymConfig)
+  end
+
+  context "duplicate validation" do
+    it "rejects duplicate terms with the 'search' key" do
+      config = [
+        { "search" => "mcrpig => pig" },
+        { "search" => "mcrpig => micropig" },
+      ]
+
+      expect {
+        described_class.new.parse(config)
+      }.to raise_error(SynonymParser::InvalidSynonymConfig)
+    end
+
+    it "rejects duplicate terms with the 'index' key" do
+      config = [
+        { "index" => "mcrpig => pig" },
+        { "index" => "mcrpig => micropig" },
+      ]
+
+      expect {
+        described_class.new.parse(config)
+      }.to raise_error(SynonymParser::InvalidSynonymConfig)
+    end
+
+    it "rejects duplicate terms with 'both' and 'search' key" do
+      config = [
+        { "both" => "mcrpig => pig" },
+        { "search" => "mcrpig => micropig" },
+      ]
+
+      expect {
+        described_class.new.parse(config)
+      }.to raise_error(SynonymParser::InvalidSynonymConfig)
+    end
+
+    it "rejects duplicate terms with 'both' and 'index' key" do
+      config = [
+        { "both" => "mcrpig => pig" },
+        { "index" => "mcrpig => micropig" },
+      ]
+
+      expect {
+        described_class.new.parse(config)
+      }.to raise_error(SynonymParser::InvalidSynonymConfig)
+    end
+
+    it "rejects duplicate terms when terms are grouped" do
+      config = [
+        { "index" => "mcrpig, mycropig => pig" },
+        { "index" => "mcrpig => micropig" },
+      ]
+
+      expect {
+        described_class.new.parse(config)
+      }.to raise_error(SynonymParser::InvalidSynonymConfig)
+    end
+
+    it "rejects duplicate synonyms defined using both arrow and comma syntax" do
+      config = [
+        { "index" => "pig, mcrpig" },
+        { "both" => "mcrpig => micropig" },
+      ]
+
+      expect {
+        described_class.new.parse(config)
+      }.to raise_error(SynonymParser::InvalidSynonymConfig)
+    end
+
+    it "allows duplicate synonym definitions" do
+      config = [
+        { "index" => "mcrpig => micropig" },
+        { "index" => "mycropig => micropig" },
+      ]
+
+      @index_synonyms, @search_synonyms = described_class.new.parse(config)
+
+      expect_index_synonyms_contain "mcrpig => micropig"
+      expect_index_synonyms_contain "mycropig => micropig"
+    end
+  end
+
+  it "rejects hashes with multiple synonyms" do
+    config = [
+      {
+        "index" => "mcrpig => micropig",
+        "both" => "mycropig => micropig",
+        "search" => "miicropig => micropig",
+      }
+    ]
+
+    expect {
+      described_class.new.parse(config)
+    }.to raise_error(SynonymParser::InvalidSynonymConfig)
+  end
+
   def expect_search_synonyms_contain(expected)
     expect(@search_synonyms.es_config[:synonyms]).to include(expected)
   end
