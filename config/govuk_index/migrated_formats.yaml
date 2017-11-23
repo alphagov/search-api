@@ -29,10 +29,10 @@ migrated:
 - tax_tribunal_decision
 - utaac_decision
 # Other
+- hmrc_manual
+- hmrc_manual_section
 - task_list
 
 indexable:
-- hmrc_manual
-- hmrc_manual_section
 - manual
 - manual_section
