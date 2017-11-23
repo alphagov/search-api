@@ -1,44 +1,77 @@
 class SynonymParser
-  def initialize(schema_path)
-    @schema_path = schema_path
-  end
+  class InvalidSynonymConfig < StandardError; end
 
-  def parse
-    # Synonyms are specified in "lucene" syntax, which is a set of lines, each
-    # of which holds comma separated lists of synonyms, and optionally a "=>"
-    # symbol.
-    #
-    # See config/schema/README.md for more details.
+  VALID_KEYS = %w(both search index).freeze
 
-    synonym_rows = load_synonyms_yaml["synonyms"]
-    index_synonyms = []
-    search_synonyms = []
+  def parse(config)
+    index_synonyms = Synonyms.new(:index)
+    search_synonyms = Synonyms.new(:search)
 
-    synonym_rows.each_with_index { |row, index|
-      if row.include? "=>"
-        search_group, index_group = row.split('=>', 2).map { |group|
-          group.split(',').map(&:strip)
-        }
-      else
-        search_group = index_group = row.split(',').map(&:strip)
+    config.each do |synonyms|
+      validate_synonym_count!(synonyms)
+
+      key, synonym = synonyms.first
+      validate_key!(key)
+
+      if %w(search both).include?(key)
+        search_synonyms << synonym
       end
-      synonym_term = "!S#{index}"
-      index_synonyms << [index_group, synonym_term]
-      search_synonyms << [search_group, synonym_term]
-    }
+      if %w(index both).include?(key)
+        index_synonyms << synonym
+      end
+    end
 
-    [Synonyms.new(index_synonyms), Synonyms.new(search_synonyms)]
+    [index_synonyms, search_synonyms]
   end
 
 private
 
-  def load_synonyms_yaml
-    YAML.load_file(File.join(@schema_path, "synonyms.yml"))
+  def validate_key!(key)
+    unless VALID_KEYS.include?(key)
+      raise InvalidSynonymConfig.new(
+        "Unknown synonym key '#{key}'. Expected one of: #{VALID_KEYS.join(', ')}"
+      )
+    end
+  end
+
+  def validate_synonym_count!(synonyms)
+    if synonyms.count > 1
+      raise InvalidSynonymConfig.new(
+        <<~MESSAGE
+          More than one term defined together: #{synonyms}. Each synonym should be defined as a separate item, e.g.
+          - search: 'foo => bar'
+          - index: 'baz, qux'
+        MESSAGE
+      )
+    end
+  end
+
+  def validate_term!(term, existing_terms, key)
+    if existing_terms.include?(term)
+      raise InvalidSynonymConfig.new("Synonym '#{term}' already defined for '#{key}'")
+    end
   end
 
   class Synonyms
-    def initialize(synonyms)
-      @synonyms = synonyms
+    def initialize(synonym_type)
+      @synonym_type = synonym_type
+      @synonyms = []
+      @unique_terms = []
+    end
+
+    def <<(synonym)
+      synonym_terms = synonym
+        .split("=>")
+        .first
+        .split(",")
+        .map(&:strip)
+
+      synonym_terms.each do |term|
+        validate_term!(term)
+        unique_terms << term
+      end
+
+      synonyms << synonym
     end
 
     def es_config
@@ -47,21 +80,18 @@ private
       # path `settings.analysis.filter.<filter_name>`.
       {
         type: :synonym,
-        synonyms: @synonyms.map { |group, term|
-          "#{group.join(",")}=>#{term}"
-        },
+        synonyms: synonyms
       }
     end
 
-    def protwords_config
-      # Returns the configuration to pass to elasticsearch to define a filter
-      # which marks the terms generated from the synonym matchine process as
-      # "keywords".  This prevents them being stemmed, and is required if there
-      # is a stemming filter following the synonym filter in the analysis chain.
-      {
-        type: :keyword_marker,
-        keywords: @synonyms.map { |_, term| term }
-      }
+  private
+
+    attr_reader :synonyms, :synonym_type, :unique_terms
+
+    def validate_term!(term)
+      if unique_terms.include?(term)
+        raise InvalidSynonymConfig.new("Synonym '#{term}' already defined for '#{synonym_type}'")
+      end
     end
   end
 end

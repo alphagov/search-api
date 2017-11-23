@@ -7,7 +7,7 @@ class SchemaConfig
     @field_definitions = FieldDefinitionParser.new(config_path).parse
     @elasticsearch_types = ElasticsearchTypesParser.new(config_path, @field_definitions).parse
     @index_schemas = IndexSchemaParser.parse_all(config_path, @elasticsearch_types)
-    @index_synonyms, @search_synonyms = SynonymParser.new(config_path).parse
+    @index_synonyms, @search_synonyms = SynonymParser.new.parse(synonym_config)
   end
 
   def schema_for_alias_name(alias_name)
@@ -37,6 +37,10 @@ private
 
   attr_reader :config_path
 
+  def synonym_config
+    YAML.load_file(File.join(config_path, "synonyms.yml"))
+  end
+
   def schema_yaml
     load_yaml("elasticsearch_schema.yml")
   end
@@ -48,7 +52,6 @@ private
         "stemmer_override" => stems_filter,
         "index_synonym" => @index_synonyms.es_config,
         "search_synonym" => @search_synonyms.es_config,
-        "synonym_protwords" => @index_synonyms.protwords_config,
       )
     end
   end
