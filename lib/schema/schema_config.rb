@@ -48,7 +48,6 @@ private
         "stemmer_override" => stems_filter,
         "index_synonym" => @index_synonyms.es_config,
         "search_synonym" => @search_synonyms.es_config,
-        "synonym_protwords" => @index_synonyms.protwords_config,
       )
     end
   end
