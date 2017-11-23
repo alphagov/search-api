@@ -25,7 +25,7 @@
 - both: bank holiday, bank holidays, public holiday, public holidays => bank_holiday
 - both: bankrupt => bankruptcy
 - both: car => vehicle
-- index: car tax bands, vehicle tax rates
+- index: car tax bands => car tax bands, vehicle tax rates
 - both: copyright, intellectual property => copyright
 - both: death => bereavement
 - both: emissions => pollution
@@ -39,7 +39,8 @@
 - index: provisional driving licence, provisional licence
 - both: reduction => discount
 - both: renew, expired, out of date => renew
-- index: self employed, self employment, sole trader, starting a business
+- index: self employed, self employment, sole trader => self employed, self employment, sole trader, starting a business
+- index: starting a business => starting a company, starting a business, self employed, self employment, sole trader
 - index: social fund, budgeting loans, crisis loans
 - index: tariff classification, trade tariff
 - index: tariff codes, commodity codes
@@ -50,25 +51,28 @@
 - index: carbon reduction commitment, crc energy efficiency scheme, crc scheme
 - index: death duty, death duties, inheritance tax
 - index: drivers licence, driving licence
-- index: dole, jobseeker's allowance
 - both: dss => dwp
 - both: dvlc => dvla
 - both: e111 => ehic
 - index: employer direct, universal jobmatch
 - search: family tax credit, family tax credits => tax credits
-- both: fired, dismissed, dismissal
-- both: firing, dismiss, dismissing, dismissal
-- index: heating allowance, winter fuel payment
-- index: independent safeguarding authority, disclosure and barring service
+- both: dismissal => dismissal, fired, dismissed, firing, dismiss, dismissing
+- both: fired, dismissed => fired, dismissed, dismissal
+- both: firing, dismiss, dismissing => firing, dismiss, dismissing, dismissal
+- index: heating allowance => heating allowance, winter fuel payment
+- index: winter fuel payment => winter fuel payment, heating allowance, winter fuel allowance, winter allowance, winter payment, winter payments
+- index: disclosure and barring service => disclosure and barring service, independent safeguarding authority, crb, criminal records bureau, dbs
+- index: independent safeguarding authority => independent safeguarding authority, disclosure and barring service
 - index: inland revenue, hmrc, hm revenue customs
 - index: nextstep, careers, national careers service => careers
 - index: old age pension, state pension
 - index: rfl refund, vehicle tax refunds
 - index: road tax, car tax
-- index: unemployment benefit, jobseeker's allowance
-- index: unsorn, un sorn, cancel sorn, sorn
-- index: winter fuel allowance, winter allowance, winter fuel payment
-- index: winter payment, winter payments, winter fuel payment
+- index: unemployment benefit, jobseeker's allowance, dole => unemployment benefit, jobseeker's allowance, dole jsa1, jsa1 ils, jsa1ils, jsa2, jsa3, jsa4, jsa5, jsa6, jsa7, jsa9, jsa10, jsa10jp, jsa11, jsa12, jsa13, jsa28, jsa31, jsa40, jsa69, jsa460, jsa esa10jp
+- index: sorn => sorn, v890, unsorn, un sorn, cancel sorn
+- index: unsorn, un sorn, cancel sorn => unsorn, un sorn, cancel sorn, sorn
+- index: winter fuel allowance, winter allowance => winter fuel allowance, winter allowance, winter fuel payment
+- index: winter payment, winter payments => winter payment, winter payments, winter fuel payment
 - both: xmas => christmas
 # Run-together terms
 - search: bluebadge => blue badge
@@ -93,7 +97,8 @@
 - search: incomesupport => income support
 - search: jcponline => jobcentre plus
 - search: jobgrant => job grant
-- index: jobsearch, job search, jobmatch
+- index: jobsearch, job search => jobsearch, job search, jobmatch
+- index: jobmatch => job match, jobmatch, jobsearch, job search
 - search: jobseekersallowance => jobseeker's allowance
 - search: journeyplanner => journey planner
 - index: jsaol, jsaonline, jsa online => jobseeker's allowance
@@ -141,15 +146,16 @@
 - index: sanctionsconlist, sanctionsconlist.csv, sanctionsconlist.txt, sanctionslist, financial sanctions consolidated list
 # Acronyms
 - index: aspp, additional paternity pay
-- index: crb, criminal records bureau, dbs, disclosure and barring service
+- index: crb, criminal records bureau, dbs => crb, criminal records bureau, dbs, disclosure and barring service
 - index: csco, carbon saving community obligation
-- index: cwp, cold weather
+- index: cwp => cwp, cold weather
 - index: dada, dance and drama awards
 - index: dda, disability discrimination act
 - index: dfe, department for education
 - index: dfid, department for international development
-- index: dh, department of health
-- index: doh, department of health
+- index: dh => dh, department of health
+- index: doh => doh, department of health
+- index: department of health => department of health, dh, doh
 - index: dhp, discretionary housing payment
 - index: dla, disability living allowance
 - index: ea, environment agency
@@ -157,7 +163,6 @@
 - index: eco, energy company obligation
 - index: ecs, employer checking service
 - index: eis, enterprise investment scheme
-- index: esa, employment and support allowance
 - index: fco, foreign commonwealth office
 - index: fcoc, future character of conflict
 - index: foi, freedom of information
@@ -192,7 +197,7 @@
 - index: sf => student finance
 - index: sfe => student finance england
 - index: slc, student loans company
-- index: sms, sponsorship management system
+- index: sms => sponsorship management system
 - index: spol => state pension online
 - index: spp, statutory paternity pay
 - index: twov => transit without visa
@@ -209,9 +214,9 @@
 - search: p i p => pip
 # Adding terms to return relevant content that doesn't mention the original search term
 - index: document legalised => apostille, document legalised
-- index: cold weather => cold weather, bad weather, winter weather
+- index: cold weather => cold weather, bad weather, winter weather, cwp
 - index: benefits adviser => benefits adviser, benefit checker, benefits checker
-- index: rubbish collection => bin collection, rubbish collection
+- index: rubbish collection => bin collection, rubbish collection, refuse collection
 - index: overseas british passport => overseas british passport, bno
 - index: stop child benefit => stop child benefit, cancel child benefit
 - index: curriculum vitae => cv, curriculum vitae
@@ -221,23 +226,18 @@
 - index: flood alerts, flood warnings => flood alert, flood alerts, flood warnings
 # "heating => heating, energy grants, energy saving, cold, warm, winter",
 - index: used car check => used car check, hpi check
-- index: wills => wills, intestacy
-- index: wills => wills, intestate
+- index: wills => wills_keyword, intestacy, intestate
 - both: kiev, kyiv, ukraine
 - index: mot check => mot check, mot checker
 # Student finance login
 - index: your account => your account, my account
-- index: contact dvla => not arrived, contact dvla
-- index: contact dvla => not received, contact dvla
-- index: rubbish collection => refuse collection, rubbish collection
+- index: contact dvla => not arrived, not received, contact dvla
 - index: self certification => self certification, self certificate
 - index: sign off => sign off, sign off, signing off, starting work
 # "snow, snow code => snow, ice, grit, winter, weather, closures",
-- index: spouse visa => spouse visa, soc code, soc codes
+- index: spouse visa => spouse visa, soc code, soc codes, spousal visa
 - index: benefits => social security, benefits
-- index: sponsorship management system => sponsorship management system, sponsor login
-- index: spouse visa => spouse visa, spouse visa, spousal visa
-- index: starting a business => starting a company, starting a business
+- index: sponsorship management system => sponsorship management system, sponsor login, sms
 - index: under occupancy => under occupancy, under occupancy, underoccupancy
 - index: uk visa => visa4uk, uk visa
 # Adding terms to raise the best results
@@ -261,13 +261,12 @@
 # 'D798' appears in content but returns no results
 - index: renewal reminder => renewal reminder, d798
 - index: statutory maternity pay guidance => statutory maternity pay guidance, e15
-- index: employment and support allowance => employment and support allowance, eesa
+- index: employment and support allowance => employment and support allowance, eesa, esa
+- index: esa => esa, employment and support allowance
 - index: esa 50 => esa 50, esa50
-- index: employment tribunal => employment tribunal, et1
-- index: employment tribunal => employment tribunal, et3
-- index: court fees => court fees, ex160, ex160a
+- index: employment tribunal => employment tribunal, et1, et3
+- index: court fees => court fees, ex160, ex160a, ex50
 - index: make a court claim for money => make a court claim for money, ex321
-- index: court fees => court fees, ex50
 - index: flr m => flr m, flrm
 - index: flr o => flr o, flro
 - index: gv262 => gv262, gv 262
@@ -278,9 +277,6 @@
 - index: non gb licence => non gb licence, inf38
 - index: vehicle registration certificate => vehicle registration certificate, ins160
 - index: ipc br1 => ipc br1, ipcbr1
-- index: jobseeker's allowance => jobseeker's allowance, jsa1, jsa1 ils, jsa1ils, jsa3, jsa4, jsa5, jsa6, jsa7, jsa9, jsa10, jsa10jp, jsa11, jsa12, jsa13, jsa28, jsa31, jsa40, jsa69, jsa460
-- index: jobseeker's allowance => jobseeker's allowance, jsa esa10jp
-- index: jobseeker's allowance => jobseeker's allowance, jsa2
 - index: ls01 => ls01, lso1
 - index: mortage interest => mortage interest, mi12
 - index: maternity benefits => maternity benefits, ni17a
@@ -294,11 +290,10 @@
 - index: set m form => set m form, set m, setm
 - index: set o form => set o form, set o, seto
 - index: vehicle registration => vehicle registration, v100
-- index: vehicle tax rates => vehicle tax rates, v149
+- index: vehicle tax rates => vehicle tax rates, car tax bands, v149
 - index: disability exemption => disability exemption, v188
 - index: v5c => v5c, v5
 - index: v888, vehicle information => v888, vehicle information, v888
-- index: sorn => sorn, v890
 - index: vaf4a => vaf4a, vaf4
 - index: vat registration => vat registration, vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b
 # Job searches
@@ -342,7 +337,6 @@
 - search: help line => helpline
 - search: jelly fish => jellyfish
 - search: job centre => jobcentre
-- index: jobmatch => job match, jobmatch
 - search: job seekers => jobseeker's
 - search: knot weed => knotweed
 - search: pot hole => pothole
@@ -534,9 +528,8 @@
 - search: travel advise => travel advice
 - search: univeral => universal
 - search: wearhouse => warehouse
-- search: whether => whether, wether
+- index: whether => whether, wether, wheather
 - search: wharehouse => warehouse
-- search: whether => whether, wheather
 # AAIB aircraft
 - search: b17, b 17 => b17, boeing b 17, boeing b17g
 - search: b727 => b727, boeing 727
@@ -576,7 +569,6 @@
 - search: u206, cessna u206 => u206, cessna u206, cessna u206a, cessna u206c, cessna u206d, cessna u206f, cessna u206g
 - search: piper j3 => piper j3, piper j3c, piper j3f, piper j3l
 - search: piper j4 => piper j4, piper j4a
-- search: piper j5 => piper j5, piper j5a
 - search: piper j5 => piper j5, piper j5a
 # "l4 => l4a, l4b, l4h, l4j", # affects other L4 content
 - search: l18 => l18, piper l18c
@@ -1051,12 +1043,13 @@
 - search: ra5725 => ra 5725
 # Override other synonyms
 # Stop word workarounds
-- index: immigration rules appendix a attributes =>immigration rules appendix a attributes, immigration_rules_appendix_a
-- search: appendix a =>immigration_rules_appendix_a
-- index: naturalisation booklet =>naturalisation booklet, naturalisation_booklet
-- search: booklet an, an booklet =>naturalisation_booklet
-- index: form an application for naturalisation as a british citizen =>form an application for naturalisation as a british citizen, form_an_naturalisation
-- search: form an, an form =>form_an_naturalisation
-- index: naturalisation guide =>naturalisation guide, naturalisation_guide
-- search: guide an, an guide =>naturalisation_guide
-- both: will, wills => wills_keyword
+- index: immigration rules appendix a attributes => immigration rules appendix a attributes, immigration_rules_appendix_a
+- search: appendix a => immigration_rules_appendix_a
+- index: naturalisation booklet => naturalisation booklet, naturalisation_booklet
+- search: booklet an, an booklet => naturalisation_booklet
+- index: form an application for naturalisation as a british citizen => form an application for naturalisation as a british citizen, form_an_naturalisation
+- search: form an, an form => form_an_naturalisation
+- index: naturalisation guide => naturalisation guide, naturalisation_guide
+- search: guide an, an guide => naturalisation_guide
+- index: will => wills_keyword
+- search: will, wills => wills_keyword
