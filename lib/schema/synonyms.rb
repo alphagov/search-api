@@ -1,7 +1,7 @@
 class SynonymParser
   def parse(config)
-    index_synonyms = []
-    search_synonyms = []
+    index_synonyms = Synonyms.new
+    search_synonyms = Synonyms.new
 
     config.each do |synonyms|
       synonyms.each do |k, v|
@@ -14,12 +14,16 @@ class SynonymParser
       end
     end
 
-    [Synonyms.new(index_synonyms), Synonyms.new(search_synonyms)]
+    [index_synonyms, search_synonyms]
   end
 
   class Synonyms
-    def initialize(synonyms)
-      @synonyms = synonyms
+    def initialize
+      @synonyms = []
+    end
+
+    def <<(synonym)
+      synonyms << synonym
     end
 
     def es_config
@@ -28,8 +32,12 @@ class SynonymParser
       # path `settings.analysis.filter.<filter_name>`.
       {
         type: :synonym,
-        synonyms: @synonyms
+        synonyms: synonyms
       }
     end
+
+  private
+
+    attr_reader :synonyms
   end
 end
