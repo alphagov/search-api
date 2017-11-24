@@ -24,6 +24,8 @@ manual_section: manual_section
 medical_safety_alert: medical_safety_alert # Specialist Publisher
 place: edition
 raib_report: raib_report # Specialist Publisher
+service_manual_guide: service_manual_guide
+service_manual_topic: service_manual_topic
 service_standard_report: service_standard_report # Specialist Publisher
 simple_smart_answer: edition
 task_list: edition

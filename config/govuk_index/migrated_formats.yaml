@@ -35,4 +35,6 @@ migrated:
 - manual_section
 - task_list
 
-indexable: []
+indexable:
+- service_manual_guide
+- service_manual_topic
