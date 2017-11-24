@@ -31,8 +31,8 @@ migrated:
 # Other
 - hmrc_manual
 - hmrc_manual_section
-- task_list
-
-indexable:
 - manual
 - manual_section
+- task_list
+
+indexable: []
