@@ -33,11 +33,11 @@ migrated:
 - hmrc_manual_section
 - manual
 - manual_section
-- task_list
-
-indexable:
 - service_manual_guide
 - service_manual_homepage
 - service_manual_service_standard
 - service_manual_topic
+- task_list
+
+indexable:
 - travel_advice
