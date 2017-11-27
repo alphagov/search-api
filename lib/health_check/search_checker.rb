@@ -2,6 +2,9 @@ module HealthCheck
   class SearchChecker
     attr_reader :search_client
 
+    # Default page size on GOV.UK search
+    RESULT_COUNT = 20
+
     def initialize(search_client:, test_data:, produce_report: true)
       @test_data_file = test_data
       @search_client = search_client
@@ -15,7 +18,7 @@ module HealthCheck
       Logging.logger[self].info("Connecting to #{@search_client}")
 
       checks.each do |check|
-        search_results = search_client.search(check.search_term)[:results]
+        search_results = search_client.search(check.search_term, count: RESULT_COUNT)[:results]
         check_result = check.result(search_results)
         check_result.write_to_log
         @file_output << check_result
