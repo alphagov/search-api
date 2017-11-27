@@ -7,114 +7,116 @@ RSpec.describe 'QuotedAndUnquotedSearchTest' do
     Rummager.class_variable_set(:'@@registries', nil)
   end
 
-  # NEW WEIGHTING TESTS
-  #
-  it "new_weighting_three_matches_found_for_london" do
-    commit_london_transport_docs
-    get "/search?q=london&debug=new_weighting"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(3)
-  end
+    with_ab_variants do
+    # NEW WEIGHTING TESTS
+    #
+    it "new_weighting_three_matches_found_for_london" do
+      commit_london_transport_docs
+      get_with_variant "/search?q=london&debug=new_weighting"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(3)
+    end
 
-  it "new_weighting_three_matches_found_for_transport" do
-    commit_london_transport_docs
-    get "/search?q=transport&debug=new_weighting"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(3)
-  end
+    it "new_weighting_three_matches_found_for_transport" do
+      commit_london_transport_docs
+      get_with_variant "/search?q=transport&debug=new_weighting"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(3)
+    end
 
-  it "new_weighting_three_matches_found_for_unquoted_london_transport" do
-    commit_london_transport_docs
-    get "/search?q=london+transport&debug=new_weighting"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(3)
-  end
+    it "new_weighting_three_matches_found_for_unquoted_london_transport" do
+      commit_london_transport_docs
+      get_with_variant "/search?q=london+transport&debug=new_weighting"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(3)
+    end
 
-  it "new_weighting_one_match_found_for_quoted_london_transport" do
-    commit_london_transport_docs
-    get "/search?q=%22london+transport%22&debug=new_weighting"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(1)
-  end
+    it "new_weighting_one_match_found_for_quoted_london_transport" do
+      commit_london_transport_docs
+      get_with_variant "/search?q=%22london+transport%22&debug=new_weighting"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(1)
+    end
 
-  it "new_weighting_synonyms_are_returned_with_unquoted_phrases" do
-    commit_synonym_documents
-    get "/search?q=driving+abroad&debug=new_weighting"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(2)
-  end
+    it "new_weighting_synonyms_are_returned_with_unquoted_phrases" do
+      commit_synonym_documents
+      get_with_variant "/search?q=driving+abroad&debug=new_weighting"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(2)
+    end
 
-  it "new_weighting_synonyms_are_not_returned_with_quoted_phrases" do
-    commit_synonym_documents
-    get "/search?q=%22driving+abroad%22&debug=new_weighting"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(1)
-  end
+    it "new_weighting_synonyms_are_not_returned_with_quoted_phrases" do
+      commit_synonym_documents
+      get_with_variant "/search?q=%22driving+abroad%22&debug=new_weighting"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(1)
+    end
 
-  it "new_weighting_stemming_is_in_place_for_unquoted_phrases" do
-    commit_stemming_documents
-    get "/search?q=dog&debug=new_weighting"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(2)
-  end
+    it "new_weighting_stemming_is_in_place_for_unquoted_phrases" do
+      commit_stemming_documents
+      get_with_variant "/search?q=dog&debug=new_weighting"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(2)
+    end
 
-  it "new_weighting_stemming_is_still_in_place_even_for_quoted_phrases" do
-    commit_stemming_documents
-    get "/search?q=%22dog%22&debug=new_weighting"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(2)
-  end
+    it "new_weighting_stemming_is_still_in_place_even_for_quoted_phrases" do
+      commit_stemming_documents
+      get_with_variant "/search?q=%22dog%22&debug=new_weighting"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(2)
+    end
 
 
-  # OLD WEIGHTING TESTS
-  #
-  it "old_weighting_three_matches_found_for_london" do
-    commit_london_transport_docs
-    get "/search?q=london"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(3)
-  end
+    # OLD WEIGHTING TESTS
+    #
+    it "old_weighting_three_matches_found_for_london" do
+      commit_london_transport_docs
+      get_with_variant "/search?q=london"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(3)
+    end
 
-  it "old_weighting_three_matches_found_for_transport" do
-    commit_london_transport_docs
-    get "/search?q=transport"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(3)
-  end
+    it "old_weighting_three_matches_found_for_transport" do
+      commit_london_transport_docs
+      get_with_variant "/search?q=transport"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(3)
+    end
 
-  it "old_weighting_three_matches_found_for_unquoted_london_transport" do
-    commit_london_transport_docs
-    get "/search?q=london+transport"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(3)
-  end
+    it "old_weighting_three_matches_found_for_unquoted_london_transport" do
+      commit_london_transport_docs
+      get_with_variant "/search?q=london+transport"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(3)
+    end
 
-  it "old_weighting_one_match_found_for_quoted_london_transport" do
-    commit_london_transport_docs
-    get "/search?q=%22london+transport%22"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(1)
-  end
+    it "old_weighting_one_match_found_for_quoted_london_transport" do
+      commit_london_transport_docs
+      get_with_variant "/search?q=%22london+transport%22"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(1)
+    end
 
-  it "old_weighting_synonyms_are_returned_with_unquoted_phrases" do
-    commit_synonym_documents
-    get "/search?q=driving+abroad"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(2)
-  end
+    it "old_weighting_synonyms_are_returned_with_unquoted_phrases" do
+      commit_synonym_documents
+      get_with_variant "/search?q=driving+abroad"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(2)
+    end
 
-  it "old_weighting_stemming_is_in_place_for_unquoted_phrases" do
-    commit_stemming_documents
-    get "/search?q=dog"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(2)
-  end
+    it "old_weighting_stemming_is_in_place_for_unquoted_phrases" do
+      commit_stemming_documents
+      get_with_variant "/search?q=dog"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(2)
+    end
 
-  it "old_weighting_stemming_is_still_in_place_even_for_quoted_phrases" do
-    commit_stemming_documents
-    get "/search?q=%22dog%22"
-    expect(last_response.status).to eq(200)
-    expect(parsed_response["results"].size).to eq(2)
+    it "old_weighting_stemming_is_still_in_place_even_for_quoted_phrases" do
+      commit_stemming_documents
+      get_with_variant "/search?q=%22dog%22"
+      expect(last_response.status).to eq(200)
+      expect(parsed_response["results"].size).to eq(2)
+    end
   end
 
 

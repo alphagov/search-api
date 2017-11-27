@@ -40,6 +40,7 @@ Sidekiq::Logging.logger = nil
 
 require 'webmock/rspec'
 
+require "#{__dir__}/support/ab_spec_helper"
 require "#{__dir__}/support/default_mappings"
 require "#{__dir__}/support/spec_helpers"
 require "#{__dir__}/support/hash_including_helpers"
