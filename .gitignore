@@ -10,3 +10,4 @@ tmp/*
 /public/sitemaps/
 /data
 /log
+search_check_results.csv
