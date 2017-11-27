@@ -3,12 +3,14 @@ require 'spec_helper'
 RSpec.describe 'BestBetsTest' do
   with_ab_variants do
     it "exact_best_bet" do
-      commit_document("mainstream_test",
+      commit_document(
+        "mainstream_test",
         "link" => '/an-organic-result',
         "indexable_content" => 'I will turn up in searches for "a forced best bet"',
       )
 
-      commit_document("mainstream_test",
+      commit_document(
+        "mainstream_test",
         "link" => '/the-link-that-should-surface',
         "indexable_content" => 'Empty.',
       )
@@ -26,7 +28,8 @@ RSpec.describe 'BestBetsTest' do
     end
 
     it "exact_worst_bet" do
-      commit_document("mainstream_test",
+      commit_document(
+        "mainstream_test",
         "indexable_content" => 'I should not be shown.',
         "link" => '/we-never-show-this',
       )
@@ -44,7 +47,8 @@ RSpec.describe 'BestBetsTest' do
     end
 
     it "stemmed_best_bet" do
-      commit_document("mainstream_test",
+      commit_document(
+        "mainstream_test",
         "link" => '/the-link-that-should-surface',
       )
 
@@ -61,7 +65,8 @@ RSpec.describe 'BestBetsTest' do
     end
 
     it "stemmed_best_bet_variant" do
-      commit_document("mainstream_test",
+      commit_document(
+        "mainstream_test",
         "link" => '/the-link-that-should-surface',
       )
 
@@ -79,7 +84,8 @@ RSpec.describe 'BestBetsTest' do
     end
 
     it "stemmed_best_bet_words_not_in_phrase_order" do
-      commit_document("mainstream_test",
+      commit_document(
+        "mainstream_test",
         "link" => '/only-shown-for-exact-matches',
       )
 

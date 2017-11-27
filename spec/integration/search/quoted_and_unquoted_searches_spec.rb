@@ -7,7 +7,7 @@ RSpec.describe 'QuotedAndUnquotedSearchTest' do
     Rummager.class_variable_set(:'@@registries', nil)
   end
 
-    with_ab_variants do
+  with_ab_variants do
     # NEW WEIGHTING TESTS
     #
     it "new_weighting_three_matches_found_for_london" do
