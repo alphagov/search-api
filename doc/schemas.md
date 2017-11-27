@@ -147,7 +147,7 @@ means "a search for 'foo' should return documents with 'bar' or 'baz' in them"
 is the same as `foo, bar, baz => foo, bar, baz` and means "a search for
 foo, bar or baz should return documents with any of them".
 
-## Additional configuration
+## Additional configuration
 
 Additional configuration is defined in the `elasticsearch_schema.yml` and
 `stems.yml` files.  This configuration is merged with the JSON configuration,
