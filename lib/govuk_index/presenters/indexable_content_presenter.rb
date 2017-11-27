@@ -2,9 +2,10 @@ module GovukIndex
   class IndexableContentPresenter
     DEFAULTS = %w(body parts).freeze
     BY_FORMAT = {
-      'contact'     => %w(title description),
-      'licence'     => %w(licence_short_description licence_overview),
-      'transaction' => %w(introductory_paragraph more_information),
+      'contact'       => %w(title description),
+      'licence'       => %w(licence_short_description licence_overview),
+      'transaction'   => %w(introductory_paragraph more_information),
+      'travel_advice' => %w(summary),
     }.freeze
     INDEX_DESCRIPTION_FIELD = %w(manual service_manual_topic).freeze
 
