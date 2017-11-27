@@ -2,6 +2,8 @@ module GovukIndex
   class DetailsPresenter
     extend MethodBuilder
 
+    SERVICE_MANUAL = %w(service_manual_guide service_manual_topic).freeze
+
     set_payload_method :details
 
     delegate_to_payload :licence_identifier
@@ -29,10 +31,14 @@ module GovukIndex
     end
 
     def parent_manual
-      details.dig("manual", "base_path")
+      service_manual || details.dig("manual", "base_path")
     end
 
   private
+
+    def service_manual
+      "/service-manual" if SERVICE_MANUAL.include?(format)
+    end
 
     attr_reader :details, :format
 

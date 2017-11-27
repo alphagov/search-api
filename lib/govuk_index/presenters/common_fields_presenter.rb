@@ -26,6 +26,10 @@ module GovukIndex
       [section_id, payload["title"]].compact.join(" - ")
     end
 
+    def indexable_description
+      format == "service_manual_topic" ? description.prepend("#{title} ") : description
+    end
+
     def is_withdrawn
       !payload["withdrawn_notice"].nil?
     end

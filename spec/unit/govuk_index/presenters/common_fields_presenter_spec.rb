@@ -15,7 +15,6 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       publishing_app
       rendering_app
       search_user_need_document_supertype
-      title
       user_journey_document_supertype
     )
   end
