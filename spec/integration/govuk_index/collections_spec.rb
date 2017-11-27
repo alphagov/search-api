@@ -20,7 +20,8 @@ RSpec.describe "Collections publishing" do
       schema: "mainstream_browse_page",
       payload: {
         document_type: "mainstream_browse_page",
-        description: "Mainstream browse page description"
+        description: "Mainstream browse page description",
+        base_path: "/browse/benefits",
       },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
@@ -43,7 +44,8 @@ RSpec.describe "Collections publishing" do
       schema: "topic",
       payload: {
         document_type: "topic",
-        description: "Specialist sector page description"
+        description: "Specialist sector page description",
+        base_path: "/topic/benefits-credits",
       },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
@@ -57,7 +59,6 @@ RSpec.describe "Collections publishing" do
        "indexable_content" => "Specialist sector page description",
        "slug" => "benefits-credits",
      }
-
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
   end
 end

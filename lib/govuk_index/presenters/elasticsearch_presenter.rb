@@ -94,6 +94,7 @@ module GovukIndex
         report_type:                         specialist.report_type,
         search_user_need_document_supertype: common_fields.search_user_need_document_supertype,
         serial_number:                       specialist.serial_number,
+        slug:                                slug,
         specialist_sectors:                  expanded_links.specialist_sectors,
         taxons:                              expanded_links.taxons,
         therapeutic_area:                    specialist.therapeutic_area,
@@ -133,16 +134,24 @@ module GovukIndex
 
     attr_reader :payload
 
-    def common_fields
-      @_common_fields ||= CommonFieldsPresenter.new(payload)
-    end
-
     def indexable
       IndexableContentPresenter.new(
         format: common_fields.format,
         details: payload["details"],
         sanitiser: IndexableContentSanitiser.new,
       )
+    end
+
+    def slug
+      if format == "topic"
+        base_path.gsub(%r{^/topic/}, '')
+      elsif format == "mainstream_browse_page"
+        base_path.gsub(%r{^/browse/}, '')
+      end
+    end
+
+    def common_fields
+      @_common_fields ||= CommonFieldsPresenter.new(payload)
     end
 
     def details
