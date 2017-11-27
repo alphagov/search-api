@@ -1,6 +1,8 @@
 require 'spec/support/index_helpers'
 
 module IntegrationSpecHelper
+  include ABVariants
+
   SAMPLE_DOCUMENT_ATTRIBUTES = {
     "title" => "TITLE1",
     "description" => "DESCRIPTION",
