@@ -2,7 +2,7 @@
 
 You can build [faceted search interfaces](https://alistapart.com/article/design-patterns-faceted-navigation) using the search API's `filter`/`reject` and `aggregate` parameters.
 
-## Example
+## Example
 
 Pass the `aggregate_organisations` parameter to the search API to get a list of organisations, and the number of documents published by each of them.
 
