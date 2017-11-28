@@ -203,7 +203,7 @@
 - index: twov => transit without visa
 - index: uj, ujm => universal jobmatch
 - index: ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration
-- index: utr, unique taxpayer reference =>
+- index: utr, unique taxpayer reference
 # Acronyms with spaces or punctuation
 - search: c v => cv
 - search: d l a => dla
