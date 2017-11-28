@@ -60,16 +60,7 @@ private
     end
 
     def <<(synonym)
-      synonym_terms = synonym
-        .split("=>")
-        .first
-        .split(",")
-        .map(&:strip)
-
-      synonym_terms.each do |term|
-        validate_term!(term)
-        unique_terms << term
-      end
+      validate_synonym!(synonym)
 
       synonyms << synonym
     end
@@ -88,9 +79,29 @@ private
 
     attr_reader :synonyms, :synonym_type, :unique_terms
 
-    def validate_term!(term)
-      if unique_terms.include?(term)
-        raise InvalidSynonymConfig.new("Synonym '#{term}' already defined for '#{synonym_type}'")
+    def validate_synonym!(synonym)
+      if synonym.include?("=>")
+        terms, values = synonym.split("=>")
+        validate_terms!(terms)
+        validate_values!(synonym, values)
+      else
+        validate_terms!(synonym)
+      end
+    end
+
+    def validate_values!(synonym, values)
+      if values.nil? || values.strip.empty?
+        raise InvalidSynonymConfig.new("Synonym '#{synonym}' has no definition")
+      end
+    end
+
+    def validate_terms!(terms)
+      terms.split(",").map(&:strip).each do |term|
+        if unique_terms.include?(term)
+          raise InvalidSynonymConfig.new("Synonym '#{term}' already defined for '#{synonym_type}'")
+        end
+
+        unique_terms << term
       end
     end
   end
