@@ -8,6 +8,7 @@ RSpec.describe QueryComponents::CoreQuery do
       query = builder.minimum_should_match_with_synonyms
 
       expect(query.to_s).to match(/all_searchable_text\.synonym/)
+      expect(query.to_s).not_to match(/query_with_old_synonyms/)
     end
   end
 
@@ -25,6 +26,17 @@ RSpec.describe QueryComponents::CoreQuery do
 
       query = builder.minimum_should_match("_all")
       expect(query.to_s).to match(/"2<2 3<3 7<50%"/)
+    end
+  end
+
+  context "the search query with synonyms disabled" do
+    it "uses the default analyzer" do
+      builder = described_class.new(search_query_params(debug: { disable_synonyms: true }))
+
+      query = builder.minimum_should_match("_all")
+
+      expect(query.to_s).to match(/default/)
+      expect(query.to_s).not_to match(/query_with_old_synonyms/)
     end
   end
 end

@@ -3,6 +3,7 @@ require "search/query_helpers"
 module QueryComponents
   class CoreQuery < BaseComponent
     DEFAULT_QUERY_ANALYZER = "query_with_old_synonyms".freeze
+    DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = "default".freeze
 
     # If the search query is a single quoted phrase, we run a different query,
     # which uses phrase matching across various fields.
@@ -85,7 +86,7 @@ module QueryComponents
         match: {
           field_name => {
             query: escape(search_term),
-            analyzer: DEFAULT_QUERY_ANALYZER,
+            analyzer: query_analyzer,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
           }
         }
@@ -97,7 +98,7 @@ module QueryComponents
         match_phrase: {
           field_name => {
             query: escape(search_term),
-            analyzer: DEFAULT_QUERY_ANALYZER,
+            analyzer: query_analyzer,
           }
         }
       }
@@ -109,7 +110,7 @@ module QueryComponents
           query: escape(search_term),
           operator: "and",
           fields: fields,
-          analyzer: DEFAULT_QUERY_ANALYZER
+          analyzer: query_analyzer
         }
       }
     end
@@ -126,6 +127,14 @@ module QueryComponents
     end
 
   private
+
+    def query_analyzer
+      if search_params.disable_synonyms?
+        DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS
+      else
+        DEFAULT_QUERY_ANALYZER
+      end
+    end
 
     # FIXME: this method is basically the same as #minimum_should_match, but
     # doesn't override the analyzer.
