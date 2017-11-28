@@ -2,6 +2,8 @@ module GovukIndex
   class CommonFieldsPresenter
     CUSTOM_FORMAT_MAP = {
       "esi_fund" => "european_structural_investment_fund",
+      "service_manual_homepage" => "service_manual_guide",
+      "service_manual_service_standard" => "service_manual_guide",
     }.freeze
     extend MethodBuilder
 
