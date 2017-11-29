@@ -32,7 +32,7 @@ RSpec.describe "Collections publishing" do
 
     expected_document = {
        "link" => random_example["base_path"],
-       "indexable_content" => "Mainstream browse page description",
+       "indexable_content" => nil,
        "slug" => "benefits",
      }
 
@@ -56,7 +56,7 @@ RSpec.describe "Collections publishing" do
 
     expected_document = {
        "link" => random_example["base_path"],
-       "indexable_content" => "Specialist sector page description",
+       "indexable_content" => nil,
        "slug" => "benefits-credits",
      }
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
