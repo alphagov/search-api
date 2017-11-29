@@ -143,7 +143,7 @@ module GovukIndex
     end
 
     def slug
-      if format == "topic"
+      if format == "specialist_sector"
         base_path.gsub(%r{^/topic/}, '')
       elsif format == "mainstream_browse_page"
         base_path.gsub(%r{^/browse/}, '')
