@@ -2,11 +2,10 @@ GEM
   remote: https://rubygems.org/
   specs:
     PriorityQueue (0.1.2)
-    activesupport (4.1.16)
-      i18n (~> 0.6, >= 0.6.9)
-      json (~> 1.7, >= 1.7.7)
+    activesupport (5.1.4)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (~> 0.7)
       minitest (~> 5.1)
-      thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.8)
     amq-protocol (2.1.0)
@@ -21,7 +20,7 @@ GEM
     ci_reporter (1.7.3)
       builder (>= 2.1.2)
     coderay (1.1.1)
-    concurrent-ruby (1.0.2)
+    concurrent-ruby (1.0.5)
     connection_pool (2.2.0)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -66,7 +65,7 @@ GEM
       domain_name (~> 0.5)
     i18n (0.9.1)
       concurrent-ruby (~> 1.0)
-    json (1.8.3)
+    json (1.8.6)
     json-schema (2.5.2)
       addressable (~> 2.3.8)
     kgio (2.10.0)
@@ -221,7 +220,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 4.1.11)
+  activesupport (~> 5.1.4)
   bunny-mock (~> 1.7)
   ci_reporter (~> 1.7.1)
   elasticsearch (~> 2)
@@ -260,4 +259,4 @@ DEPENDENCIES
   whenever (~> 0.9.4)
 
 BUNDLED WITH
-   1.15.3
+   1.16.0
