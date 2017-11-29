@@ -40,6 +40,7 @@ migrated:
 - task_list
 
 indexable:
+- finder # Specialist Publisher and Whitehall
 - mainstream_browse_page
 - specialist_sector
 - travel_advice
