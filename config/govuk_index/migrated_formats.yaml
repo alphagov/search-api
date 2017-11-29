@@ -1,4 +1,7 @@
 migrated:
+# Collections Publisher
+- mainstream_browse_page
+- specialist_sector # topic format is mapped to specialist_sector in Rummager.
 # Contacts
 - contact
 # Publisher
@@ -41,6 +44,4 @@ migrated:
 
 indexable:
 - finder # Specialist Publisher and Whitehall
-- mainstream_browse_page
-- specialist_sector
 - travel_advice
