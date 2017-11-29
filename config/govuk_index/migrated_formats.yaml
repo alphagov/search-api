@@ -40,4 +40,6 @@ migrated:
 - task_list
 
 indexable:
+- mainstream_browse_page
+- specialist_sector
 - travel_advice

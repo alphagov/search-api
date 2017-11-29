@@ -7,7 +7,6 @@ module GovukIndex
       'transaction'   => %w(introductory_paragraph more_information),
       'travel_advice' => %w(summary),
     }.freeze
-    INDEX_DESCRIPTION_FIELD = %w(manual service_manual_topic).freeze
 
     def initialize(format:, details:, sanitiser:)
       @format    = format
@@ -16,7 +15,7 @@ module GovukIndex
     end
 
     def indexable_content
-      return nil if details.nil? || INDEX_DESCRIPTION_FIELD.include?(format)
+      return nil if details.nil?
       sanitiser.clean(indexable)
     end
 

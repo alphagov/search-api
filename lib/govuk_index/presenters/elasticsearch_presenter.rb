@@ -62,7 +62,7 @@ module GovukIndex
         grant_type:                          specialist.grant_type,
         hidden_indexable_content:            specialist.hidden_indexable_content,
         hmrc_manual_section_id:              common_fields.section_id,
-        indexable_content:                   indexable.indexable_content || common_fields.indexable_description,
+        indexable_content:                   indexable_content,
         industries:                          specialist.industries,
         is_withdrawn:                        common_fields.is_withdrawn,
         issued_date:                         specialist.issued_date,
@@ -94,6 +94,7 @@ module GovukIndex
         report_type:                         specialist.report_type,
         search_user_need_document_supertype: common_fields.search_user_need_document_supertype,
         serial_number:                       specialist.serial_number,
+        slug:                                slug,
         specialist_sectors:                  expanded_links.specialist_sectors,
         taxons:                              expanded_links.taxons,
         therapeutic_area:                    specialist.therapeutic_area,
@@ -133,9 +134,7 @@ module GovukIndex
 
     attr_reader :payload
 
-    def common_fields
-      @_common_fields ||= CommonFieldsPresenter.new(payload)
-    end
+    INDEX_DESCRIPTION_FIELD = %w(manual service_manual_topic).freeze
 
     def indexable
       IndexableContentPresenter.new(
@@ -143,6 +142,26 @@ module GovukIndex
         details: payload["details"],
         sanitiser: IndexableContentSanitiser.new,
       )
+    end
+
+    def indexable_content
+      if INDEX_DESCRIPTION_FIELD.include?(format)
+        common_fields.indexable_description
+      else
+        indexable.indexable_content
+      end
+    end
+
+    def slug
+      if format == "specialist_sector"
+        base_path.gsub(%r{^/topic/}, '')
+      elsif format == "mainstream_browse_page"
+        base_path.gsub(%r{^/browse/}, '')
+      end
+    end
+
+    def common_fields
+      @_common_fields ||= CommonFieldsPresenter.new(payload)
     end
 
     def details

@@ -4,6 +4,7 @@ module GovukIndex
       "esi_fund" => "european_structural_investment_fund",
       "service_manual_homepage" => "service_manual_guide",
       "service_manual_service_standard" => "service_manual_guide",
+      "topic" => "specialist_sector",
     }.freeze
     extend MethodBuilder
 
