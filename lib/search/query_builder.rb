@@ -58,8 +58,16 @@ module Search
                     core_query.match_phrase("acronym"),
                     core_query.match_phrase("description"),
                     core_query.match_phrase("indexable_content"),
-                    core_query.match_all_terms(%w(title acronym description indexable_content)),
-                    core_query.match_bigrams(%w(title acronym description indexable_content)),
+                    core_query.match_all_terms(main_text_fields),
+
+                    if search_params.synonym_b_variant?
+                      core_query.match_any_terms(main_text_fields)
+                    else
+                      # The analyzer used by this subquery preserves the original terms
+                      # and adds bigrams. The bigram part doesn't actually match anything
+                      # so this part of the query should be removed/replaced.
+                      core_query.match_bigrams(main_text_fields)
+                    end,
 
                     if search_params.synonym_b_variant?
                       core_query.minimum_should_match_with_synonyms
@@ -118,6 +126,14 @@ module Search
 
     def new_weighting_query
       QueryComponents::TextQuery.new(search_params).payload
+    end
+
+    def main_text_fields
+      if search_params.synonym_b_variant?
+        %w(title.synonym acronym.synonym description.synonym indexable_content.synonym)
+      else
+        %w(title acronym description indexable_content)
+      end
     end
 
     # More like this is a separate function for returning similar documents,

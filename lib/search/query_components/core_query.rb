@@ -126,6 +126,16 @@ module QueryComponents
       }
     end
 
+    def match_any_terms(fields)
+      {
+        multi_match: {
+          query: escape(search_term),
+          operator: "or",
+          fields: fields,
+        }
+      }
+    end
+
   private
 
     def query_analyzer
