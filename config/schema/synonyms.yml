@@ -24,7 +24,7 @@
 - both: apply, applying, application, claim, claiming => apply
 - both: bank holiday, bank holidays, public holiday, public holidays => bank_holiday
 - both: bankrupt => bankruptcy
-- both: car => vehicle
+- index: car => vehicle, car
 - index: car tax bands => car tax bands, vehicle tax rates
 - both: copyright, intellectual property => copyright
 - both: death => bereavement
@@ -61,8 +61,6 @@
 - both: firing, dismiss, dismissing => firing, dismiss, dismissing, dismissal
 - index: heating allowance => heating allowance, winter fuel payment
 - index: winter fuel payment => winter fuel payment, heating allowance, winter fuel allowance, winter allowance, winter payment, winter payments
-- index: disclosure and barring service => disclosure and barring service, independent safeguarding authority, crb, criminal records bureau, dbs
-- index: independent safeguarding authority => independent safeguarding authority, disclosure and barring service
 - index: inland revenue, hmrc, hm revenue customs
 - index: nextstep, careers, national careers service => careers
 - index: old age pension, state pension
@@ -146,7 +144,12 @@
 - index: sanctionsconlist, sanctionsconlist.csv, sanctionsconlist.txt, sanctionslist, financial sanctions consolidated list
 # Acronyms
 - index: aspp, additional paternity pay
-- index: crb, criminal records bureau, dbs => crb, criminal records bureau, dbs, disclosure and barring service
+
+# DBS replaced CRB and ISA
+# so searches for the old organisations should return content from the new one
+- index: crb, criminal records bureau
+- index: dbs, disclosure and barring service => crb, dbs, disclosure and barring service, independent safeguarding authority, criminal records bureau
+
 - index: csco, carbon saving community obligation
 - index: cwp => cwp, cold weather
 - index: dada, dance and drama awards
@@ -166,44 +169,50 @@
 - index: fco, foreign commonwealth office
 - index: fcoc, future character of conflict
 - index: foi, freedom of information
-- index: gae => government authorised exchange
+- index: gae, government authorised exchange
 - index: gdhif, green deal home improvement fund
-- index: gsc => government security classifications
+- index: gsc, government security classifications
 - index: hmcs, hmcts, hm courts tribunals service
 - index: idi, immigration directorate instructions
-- index: iib => industrial injuries disablement benefit
-- index: ilr => indefinite leave, settle, individualised learner record
+- index: iib, industrial injuries disablement benefit
+- search: ilr => indefinite leave, settle, individualised learner record
 - index: jsa, jobseeker’s allowance
 - index: lha, local housing allowance
 - index: lpa, lasting power of attorney
-- index: nasm => noise amelioration scheme military
+- index: nasm, noise amelioration scheme military
 - index: nea, new enterprise allowance
-- index: ni => national insurance
-- index: nin, nino => national insurance number
-- index: nppg => national planning practice guidance
-- index: ntl, no time limit
+- both: el nino => el_nino
+- both: ni, nin, nino, national insurance, national insurance number => national_insurance_number
+- index: nppg, national planning practice guidance
+- both: ntl, no time limit => ntl
 - index: ogn, operational guidance note
 - index: ospp, ordinary statutory paternity pay
 - index: pcdl, professional and career development loan
 - index: pilon, payment in lieu of notice, pay in lieu of notice
-- index: ppg => pollution prevention guidance
-- index: psw => post study work
+- index: ppg, pollution prevention guidance
+- index: psw, post study work
 - index: rlmt, resident labour market test
 - index: rnps, register of number plate suppliers
 - index: rti, real time information
-- index: s2p => state second pension
+- index: s2p, state second pension
 - index: sap, statutory adoption pay
 - index: sar, subject access request
-- index: sf => student finance
-- index: sfe => student finance england
+- search: sf => student finance
+- index: sfe, student finance england
 - index: slc, student loans company
-- index: sms => sponsorship management system
-- index: spol => state pension online
+- index: sms, sponsorship management system => sponsorship management system, sponsor login, sms
+
+- index: spol, state pension online
 - index: spp, statutory paternity pay
-- index: twov => transit without visa
-- index: uj, ujm => universal jobmatch
+- index: twov, transit without visa
+
+# TODO: Suzanne is working on this
+#- index: uj, ujm, universal jobmatch
+
 - index: ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration
-- index: utr, unique taxpayer reference =>
+- search: uk ba => ukba
+- index: utr, unique taxpayer reference
+
 # Acronyms with spaces or punctuation
 - search: c v => cv
 - search: d l a => dla
@@ -212,6 +221,7 @@
 - search: m o t => mot
 - search: n i => ni
 - search: p i p => pip
+
 # Adding terms to return relevant content that doesn't mention the original search term
 - index: document legalised => apostille, document legalised
 - index: cold weather => cold weather, bad weather, winter weather, cwp
@@ -237,7 +247,6 @@
 # "snow, snow code => snow, ice, grit, winter, weather, closures",
 - index: spouse visa => spouse visa, soc code, soc codes, spousal visa
 - index: benefits => social security, benefits
-- index: sponsorship management system => sponsorship management system, sponsor login, sms
 - index: under occupancy => under occupancy, under occupancy, underoccupancy
 - index: uk visa => visa4uk, uk visa
 # Adding terms to raise the best results
