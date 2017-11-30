@@ -64,6 +64,16 @@ RSpec.describe SynonymParser do
     }.to raise_error(SynonymParser::InvalidSynonymConfig)
   end
 
+  it "rejects missing synonym definitions" do
+    config = [
+      { "search" => "micropig =>" }
+    ]
+
+    expect {
+      described_class.new.parse(config)
+    }.to raise_error(SynonymParser::InvalidSynonymConfig)
+  end
+
   context "duplicate validation" do
     it "rejects duplicate terms with the 'search' key" do
       config = [
