@@ -32,6 +32,7 @@ migrated:
 - tax_tribunal_decision
 - utaac_decision
 # Other
+- finder # Specialist Publisher and Whitehall
 - hmrc_manual
 - hmrc_manual_section
 - manual
@@ -43,5 +44,4 @@ migrated:
 - task_list
 
 indexable:
-- finder # Specialist Publisher and Whitehall
 - travel_advice
