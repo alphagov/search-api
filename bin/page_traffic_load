@@ -23,10 +23,11 @@ Slop.parse(help: true) do
   DOC
 
   run do |_opts, args|
-    if args.size == 1
+    if args.empty?
       GovukIndex::PageTrafficLoader.new.load_from($stdin)
     else
       puts self
+      exit 1
     end
   end
 end
