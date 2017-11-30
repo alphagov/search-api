@@ -2,6 +2,7 @@ require 'rummager'
 require 'pp'
 require 'rainbow'
 require 'debug/synonyms'
+require 'debug/explainotron'
 
 ANSI_GREEN = "\e[32m".freeze
 ANSI_RESET = "\e[0m".freeze
@@ -77,5 +78,10 @@ namespace :debug do
         puts ""
       end
     end
+  end
+
+  desc "Run the core of the search query with explain plans enabled and special boosting disabled"
+  task :explain, [:query] do |_, args|
+    Debug::Explainotron.explain!(args.query)
   end
 end
