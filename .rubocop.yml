@@ -7,6 +7,10 @@ Performance/TimesMap:
 AllCops:
   TargetRubyVersion: 2.3
 
+Metrics/BlockLength:
+  Exclude:
+    - 'lib/tasks/*.rake'
+
 # Don't care about single/double quotes inside interpolation
 Style/StringLiteralsInInterpolation:
   Enabled: false
@@ -27,3 +31,8 @@ Style/ClassVars:
   Exclude:
     - 'app.rb'
     - 'lib/search/suggestion_blacklist.rb'
+
+# Cannot use %i arrays as rake task arguments
+Style/SymbolArray:
+  Exclude:
+    - 'lib/tasks/*.rake'
