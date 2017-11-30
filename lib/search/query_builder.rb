@@ -70,7 +70,7 @@ module Search
                     end,
 
                     if search_params.synonym_b_variant?
-                      core_query.minimum_should_match_with_synonyms
+                      core_query.minimum_should_match("all_searchable_text")
                     else
                       core_query.minimum_should_match("_all")
                     end
@@ -129,11 +129,7 @@ module Search
     end
 
     def main_text_fields
-      if search_params.synonym_b_variant?
-        %w(title.synonym acronym.synonym description.synonym indexable_content.synonym)
-      else
-        %w(title acronym description indexable_content)
-      end
+      %w(title acronym description indexable_content)
     end
 
     # More like this is a separate function for returning similar documents,
