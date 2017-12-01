@@ -82,6 +82,6 @@ namespace :debug do
 
   desc "Run the core of the search query with explain plans enabled and special boosting disabled"
   task :explain, [:query] do |_, args|
-    Debug::Explainotron.explain!(args.query)
+    Debug::Explainotron.explain!(args.query, ab_tests: { synonyms: 'A' })
   end
 end

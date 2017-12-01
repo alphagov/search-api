@@ -18,7 +18,7 @@ module Debug
         metasearch_index: SearchConfig.instance.metasearch_index
       )
       search_query = query_builder.payload
-      puts search_query.inspect
+      pp search_query[:query]
 
       results = client.search(
         index: "govuk,mainstream,detailed,government",
