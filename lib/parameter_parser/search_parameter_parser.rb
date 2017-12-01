@@ -337,6 +337,8 @@ private
         options[:disable_popularity] = true
       when "disable_synonyms"
         options[:disable_synonyms] = true
+      when "disable_boosting"
+        options[:disable_boosting] = true
       when "new_weighting"
         options[:new_weighting] = true
       when "explain"
