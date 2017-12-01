@@ -1060,5 +1060,4 @@
 - search: form an, an form => form_an_naturalisation
 - index: naturalisation guide => naturalisation guide, naturalisation_guide
 - search: guide an, an guide => naturalisation_guide
-- index: will => wills_keyword
-- search: will, wills => wills_keyword
+- search: will, wills
