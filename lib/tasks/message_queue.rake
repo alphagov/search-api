@@ -19,7 +19,7 @@ namespace :message_queue do
   task :insert_data_into_govuk do
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "rummager_govuk_index",
-      processor: Batcher.new(GovukIndex::PublishingEventProcessor.new),
+      processor: Batcher.new(processor: GovukIndex::PublishingEventProcessor.new, worker: PublishingEventWorker),
       statsd_client: Services.statsd_client,
     ).run
   end

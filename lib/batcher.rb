@@ -1,10 +1,25 @@
+# Due to the initial setup for the rabbit processing library we
+# have to do a couple of small hack so that we can overwrite the
+# calls to make everything work.
+#
+# first we want to override the worker that is used by the processor
+# but this is only set when the process method is called. To get around
+# this we use the Batcher class to wrap the `processor` object, this
+# allows us to rewite the process method and pass the worker class
+# we want to use. Which is in this instance is the Batcher class again.
+#
+# We then want to use the Batcher class as a wrapper around the sidekiq
+# processor, so here we implement the `perform_async` method. This is
+# responsible for batching up the jobs and then calling the actual
+# worker with jobs once it is ready.
 class Batcher
-  def initialize(processor)
+  def initialize(processor:, worker:)
     @processor = processor
+    @worker = worker
   end
 
   def process(message)
-    @process.process(message, worker: self)
+    @processer.process(message, worker: self)
   end
 
   def perform_async(*args)
@@ -17,21 +32,20 @@ class Batcher
         queue.close
 
         wait_for_other_workers
-        processed = process(queue)
+        processed = process_queue(queue)
       rescue Exception => e
         queue.restore unless processed
 
       end
     end
-
   end
 
-  def process(queue)
+  def process_queue(queue)
     processed = false
     entrant = Entrant.new(queue.queue_name)
 
     if entrant.i_should_process_the_queue?
-      @processor.process(batch: queue.data)
+      @worker.perform_async(batch: queue.data)
       processed = true
 
       queue.delete
@@ -48,7 +62,9 @@ private
     sleep 2
   end
 
-
+  # This class is used to determine if this worker instance should
+  # be responsible for processing the batched data. This is important
+  # as we only want to process each batch once.
   class Entrant
     def initialize(queue_name)
       @entrants_list = "#{queue_name}:entrant"
@@ -71,6 +87,8 @@ private
     end
   end
 
+  # Just a wrapper to help do all the queue related functionality and
+  # hide the redis implementation as much as possible.
   class Queue
     QUEUES_NAME = 'batcher_queues_name'
     MAX_QUEUE_LENGTH = 100
@@ -110,7 +128,10 @@ private
     end
 
     def restore
-      # TODO: check if queue_with name is in the list first
+      # TODO: check if queue_with name is in the list first? as otherwise this
+      # could result in a queue being processed twice.
+      # also what happens if the redis connection is down while trying to perform
+      # this task. Would that result in the queue being orphaned?
       redis.lpush(queue_name_list, queue_name)
     end
 
@@ -141,6 +162,13 @@ private
       "#{QUEUES_NAME}:#{@processor.class}"
     end
 
+    # This is here to avoid an extensive delay before data is written due to low volumes
+    # however this is a less than idea approach as it would still be possible for the
+    # last processing of the night to be left waiting for the first edit of the following
+    # day.
+    #
+    # This may be better solved by have a separate scheduled task that does a force check/write
+    # of any data that has been sitting for longer than X.
     def after_timeout?
       # expiry = rdis.get("#{queue_name}-expiry")
       # expiry && Time.at(expiry) < Time.now.to_i
