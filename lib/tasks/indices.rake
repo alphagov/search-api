@@ -200,4 +200,47 @@ You should run this task if the index schema has changed.
 
     raise Exception.new("Missing index #{missing}!") unless missing.empty?
   end
+
+  desc "
+  Check for any taxons that are not in a draft state for a particular format.
+  Usage
+  rake 'rummager:check_for_non_draft_taxons[format_name, elasticsearch_index]'
+  "
+  task :check_for_non_draft_taxons, [:format, :index_name] do |_, args|
+    format = args[:format]
+    index  = args[:index_name]
+
+    if format.nil?
+      puts 'Specify format'
+    elsif index.nil?
+      puts 'Specify an index'
+    else
+      client = Services.elasticsearch(hosts: SearchConfig.new.base_uri, timeout: 5.0)
+      publishing_api = Services.publishing_api
+
+      taxons = {}
+      ScrollEnumerator.new(
+        client: client,
+        search_body: { query: { term: { format: format } } },
+        batch_size: 500,
+        index_names: index
+      ) { |hit| hit }.map do |hit|
+        taxons[hit['_id']] = hit['_source']['taxons']
+      end
+
+      ids_to_check = []
+      taxons.each do |id, content_ids|
+        ids_to_check << id if content_ids.any? do |content_id|
+          content_item = publishing_api.get_content(content_id).to_hash
+          content_item['publication_state'] != 'draft'
+        end
+      end
+
+      if ids_to_check.empty?
+        puts 'All taxons in draft state'
+      else
+        puts ids_to_check
+      end
+    end
+  end
 end
