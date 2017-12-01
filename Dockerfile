@@ -1,4 +1,4 @@
-FROM ruby:2.3.1
+FROM ruby:2.4.2
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y build-essential && apt-get clean
 
 ENV GOVUK_APP_NAME rummager
