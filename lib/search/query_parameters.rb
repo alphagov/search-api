@@ -40,6 +40,10 @@ module Search
       debug[:disable_best_bets]
     end
 
+    def disable_boosting?
+      debug[:disable_boosting]
+    end
+
     def enable_id_codes?
       debug[:use_id_codes]
     end

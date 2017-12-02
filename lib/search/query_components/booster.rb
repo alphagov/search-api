@@ -4,6 +4,8 @@ module QueryComponents
     DEFAULT_BOOST = 1
 
     def wrap(core_query)
+      return core_query if search_params.disable_boosting?
+
       {
         function_score: {
           boost_mode: :multiply,
