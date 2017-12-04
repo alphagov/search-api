@@ -104,6 +104,7 @@ module GovukIndex
         tribunal_decision_sub_category:      specialist.tribunal_decision_sub_category,
         types_of_support:                    specialist.types_of_support,
         user_journey_document_supertype:     common_fields.user_journey_document_supertype,
+        user_need_document_supertype:        common_fields.user_need_document_supertype,
         value_of_funding:                    specialist.value_of_funding,
         vessel_type:                         specialist.vessel_type,
         will_continue_on:                    specialist.will_continue_on,
