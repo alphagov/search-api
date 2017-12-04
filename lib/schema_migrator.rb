@@ -31,7 +31,9 @@ class SchemaMigrator
   end
 
   def changed?
-    comparison[:changed] != 0
+    comparison[:changed] != 0 ||
+      comparison[:removed_items] != 0 ||
+      comparison[:added_items] != 0
   end
 
   def switch_to_new_index

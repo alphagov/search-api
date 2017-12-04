@@ -111,6 +111,11 @@ module IntegrationSpecHelper
     return_id
   end
 
+  def update_document(index_name, attributes, id: attributes["link"], type: "edition")
+    client.update(index: index_name, id: id, type: type, body: { doc: attributes })
+    commit_index(index_name)
+  end
+
   def commit_index(index_name = "mainstream_test")
     client.indices.refresh(index: index_name)
   end

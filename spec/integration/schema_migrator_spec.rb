@@ -32,5 +32,61 @@ RSpec.describe SchemaMigrator do
     expect_document_is_in_rummager(document, index: original_index.real_name, id: "/a-page-to-be-reindexed")
   end
 
-  # TODO: Test missing content
+  context "index comparison" do
+    it "identifies when content has not changed" do
+      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" })
+
+      SchemaMigrator.new("govuk_test", search_config) do |migrator|
+        migrator.reindex
+
+        expect(migrator).not_to be_changed
+      end
+    end
+
+    it "finds added content" do
+      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" })
+
+      SchemaMigrator.new("govuk_test", search_config) do |migrator|
+        migrator.reindex
+
+        search_server.index_group("govuk_test").current_real.unlock
+        commit_document("govuk_test", { "link" => "/another-page" })
+
+        expect(migrator).to be_changed
+      end
+    end
+
+    it "finds removed content" do
+      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" }, type: "edition")
+
+      SchemaMigrator.new("govuk_test", search_config) do |migrator|
+        migrator.reindex
+
+        search_server.index_group("govuk_test").current_real.unlock
+        client.delete(index: "govuk_test", id: "/a-page-to-be-reindexed", type: "edition" )
+        commit_index("govuk_test")
+
+        expect(migrator).to be_changed
+      end
+    end
+
+    it "finds updated content" do
+      commit_document(
+        "govuk_test",
+        { "link" => "/some-page", "title" => "Original title" }
+      )
+
+      SchemaMigrator.new("govuk_test", search_config) do |migrator|
+        migrator.reindex
+
+        search_server.index_group("govuk_test").current_real.unlock
+        update_document(
+          "govuk_test",
+          { "link" => "/some-page", "title" => "New title" }
+        )
+
+        expect(migrator).to be_changed
+      end
+    end
+  end
 end
