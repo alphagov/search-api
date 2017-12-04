@@ -42,7 +42,7 @@ migrated:
 - service_manual_service_standard
 - service_manual_topic
 - task_list
-
-indexable:
 - travel_advice
 - travel_advice_index
+
+indexable: []
