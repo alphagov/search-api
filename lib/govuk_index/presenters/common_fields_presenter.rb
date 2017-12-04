@@ -9,6 +9,7 @@ module GovukIndex
     extend MethodBuilder
 
     delegate_to_payload :content_id
+    delegate_to_payload :content_purpose_document_supertype
     delegate_to_payload :content_store_document_type, hash_key: "document_type"
     delegate_to_payload :description
     delegate_to_payload :email_document_supertype
@@ -20,7 +21,6 @@ module GovukIndex
     delegate_to_payload :rendering_app
     delegate_to_payload :search_user_need_document_supertype
     delegate_to_payload :user_journey_document_supertype
-    delegate_to_payload :user_need_document_supertype
 
     def initialize(payload)
       @payload = payload
