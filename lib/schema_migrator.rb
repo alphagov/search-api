@@ -1,6 +1,7 @@
 class SchemaMigrator
-  def initialize(index_name, wait_between_task_list_check: 5)
+  def initialize(index_name, config, wait_between_task_list_check: 5)
     @index_name = index_name
+    @config = config
     @wait_between_task_list_check = wait_between_task_list_check
 
     index_group.current.with_lock do
@@ -53,7 +54,7 @@ private
   end
 
   def index_group
-    @index_group ||= search_config.search_server.index_group(@index_name)
+    @index_group ||= @config.search_server.index_group(@index_name)
   end
 
   def index
