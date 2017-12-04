@@ -134,7 +134,7 @@ module GovukIndex
 
     attr_reader :payload
 
-    INDEX_DESCRIPTION_FIELD = %w(manual service_manual_topic).freeze
+    INDEX_DESCRIPTION_FIELD = %w(manual service_manual_topic travel_advice_index).freeze
 
     def indexable
       IndexableContentPresenter.new(
