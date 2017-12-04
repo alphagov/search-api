@@ -46,7 +46,9 @@ module IntegrationSpecHelper
     allowed_paths << '[a-z_-]+[_-]test.*'
     allowed_paths << '_aliases'
     allowed_paths << '_bulk'
+    allowed_paths << '_reindex'
     allowed_paths << '_search/scroll'
+    allowed_paths << '_tasks'
 
     allow_urls = %r{http://localhost:9200/(#{allowed_paths.join('|')})}
     WebMock.disable_net_connect!(allow: allow_urls)
