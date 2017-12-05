@@ -20,7 +20,8 @@ class SchemaMigrator
           index: index.real_name,
           version_type: "external",
         }
-      }
+      },
+      refresh: true
     )
 
     task_id = response.fetch('task')
