@@ -1,7 +1,4 @@
 ---
-# Placeholder until we have real index time synonyms
-- index: searchotron => search
-
 # Multiple spellings
 - search: one, 1
 - search: two, 2
@@ -30,24 +27,24 @@
 - search: bank holiday, bank holidays, public holiday, public holidays
 - search: bankrupt, bankruptcy
 - search: car, vehicle
-- search: car tax bands, vehicle tax rates
+- index: car tax bands, vehicle tax rates
 - search: copyright, intellectual property
 - search: death, bereavement
 - search: emissions, pollution
 - search: fees, costs, prices
-- search: hazardous substances, dangerous substances
-- search: holiday pay, holiday entitlement
+- index: hazardous substances, dangerous substances
+- index: holiday pay, holiday entitlement
 - search: how much => how much, fees, rates
 - search: my => my, your
-- search: pension forecast, pension statement
-- search: practical driving test, practical test
-- search: provisional driving licence, provisional licence
+- index: pension forecast, pension statement
+- index: practical driving test, practical test
+- index: provisional driving licence, provisional licence
 - search: reduction, discount
 - search: renew, expired, out of date
 - search: self employed, self employment, sole trader, starting a business
-- search: social fund, budgeting loans, crisis loans
-- search: tariff classification, trade tariff
-- search: tariff codes, commodity codes
+- index: social fund, budgeting loans, crisis loans
+- index: tariff classification, trade tariff
+- index: tariff codes, commodity codes
 - search: work experience, internship, interns
 
 # Unofficial or deprecated terms
