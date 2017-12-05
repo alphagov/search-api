@@ -110,7 +110,7 @@ You should run this task if the index schema has changed.
     failed_indices = []
 
     index_names.each do |index_name|
-      SchemaMigrator.new(index_name) do |migrator|
+      SchemaMigrator.new(index_name, search_config) do |migrator|
         migrator.reindex
 
         if migrator.changed?

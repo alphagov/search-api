@@ -1,6 +1,7 @@
 class SchemaMigrator
-  def initialize(index_name, wait_between_task_list_check: 5)
+  def initialize(index_name, config, wait_between_task_list_check: 5)
     @index_name = index_name
+    @config = config
     @wait_between_task_list_check = wait_between_task_list_check
 
     index_group.current.with_lock do
@@ -19,7 +20,8 @@ class SchemaMigrator
           index: index.real_name,
           version_type: "external",
         }
-      }
+      },
+      refresh: true
     )
 
     task_id = response.fetch('task')
@@ -30,7 +32,9 @@ class SchemaMigrator
   end
 
   def changed?
-    comparison[:changed] != 0
+    comparison[:changed] != 0 ||
+      comparison[:removed_items] != 0 ||
+      comparison[:added_items] != 0
   end
 
   def switch_to_new_index
@@ -53,7 +57,7 @@ private
   end
 
   def index_group
-    @index_group ||= search_config.search_server.index_group(@index_name)
+    @index_group ||= @config.search_server.index_group(@index_name)
   end
 
   def index
