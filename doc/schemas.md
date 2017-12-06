@@ -93,20 +93,20 @@ The files contain JSON object with the following keys:
 
     ```
     "expanded_search_result_fields": {
-      "fault_type": [
+      "foo": [
         {
-          "label": "Recall",
-          "value": "recall"
+          "label": "Bar the bar",
+          "value": "bar"
         },
         {
-          "label": "Non-urgent fault",
-          "value": "non_urgent_fault"
+          "label": "Baz the baz",
+          "value": "baz"
         }
       ],
     ```
 
-    Will return make the presenter replace the `fault_type` with value `recall`
-    with the hash `{ "label": "Recall", "value": "recall" }`. This can be used
+    Will return make the presenter replace the `foo` with value `bar`
+    with the hash `{ "label": "Bar the bar", "value": "bar" }`. This can be used
     when displaying the search results.
 
 ## Indexes
