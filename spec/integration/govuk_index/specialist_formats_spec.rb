@@ -47,7 +47,6 @@ RSpec.describe 'SpecialistFormatTest' do
       service_standard_report
       tax_tribunal_decision
       utaac_decision
-      vehicle_recalls_and_faults_alert
     )
 
     # ideally we would run a test for all document types, but this takes 3 seconds so I have limited

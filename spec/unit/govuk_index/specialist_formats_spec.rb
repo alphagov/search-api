@@ -233,21 +233,6 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect(document[:indexable_content]).to eq("hidden utaac content")
   end
 
-  it "vehicle_recalls_and_faults_alert" do
-    custom_metadata = {
-      "alert_issue_date" => "2015-04-28",
-      "build_start_date" => "2015-04-28",
-      "build_end_date" => "2015-06-28",
-      "fault_type" => "recall",
-      "faulty_item_type" => "other-accessories",
-      "manufacturer" => "nim-engineering-ltd",
-      "faulty_item_model" => "Cable Recovery Winch",
-      "serial_number" => "SN123",
-    }
-    document = build_example_with_metadata(custom_metadata)
-    expect_document_include_hash(document, custom_metadata)
-  end
-
 private
 
   def build_example_with_metadata(metadata)
