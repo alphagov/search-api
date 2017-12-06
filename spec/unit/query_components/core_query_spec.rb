@@ -5,7 +5,7 @@ RSpec.describe QueryComponents::CoreQuery do
     it "uses the new synonyms field" do
       builder = described_class.new(search_query_params(ab_tests: { synonyms: 'B' }))
 
-      query = builder.minimum_should_match_with_synonyms
+      query = builder.minimum_should_match("all_searchable_text")
 
       expect(query.to_s).to match(/all_searchable_text\.synonym/)
       expect(query.to_s).not_to match(/query_with_old_synonyms/)
