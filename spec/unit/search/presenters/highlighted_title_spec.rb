@@ -10,6 +10,15 @@ RSpec.describe Search::HighlightedTitle do
     expect(title.text).to eq("A Highlighted Title")
   end
 
+  it "highlights the title with synonyms" do
+    title = described_class.new({
+      "fields" => { "title.synonym" => "A Title" },
+      "highlight" => { "title.synonym" => ["A Highlighted Title"] }
+    })
+
+    expect(title.text).to eq("A Highlighted Title")
+  end
+
   it "escapes the title when it falls back to the unhighlighted title" do
     title = described_class.new({
       "fields" => { "title" => "A & Title" },

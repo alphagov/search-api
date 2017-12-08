@@ -16,7 +16,7 @@ module Search
       # `highlight` will be missing if none of the search terms match what's in
       # the title, eg. when displaying best bets.
       raw_result['highlight'] &&
-        raw_result['highlight']['title'].to_a.first
+        (raw_result['highlight']['title'].to_a.first || raw_result['highlight']['title.synonym'].to_a.first)
     end
 
     def original_title
