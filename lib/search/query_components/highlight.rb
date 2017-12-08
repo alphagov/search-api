@@ -11,7 +11,14 @@ module QueryComponents
           title: {
             number_of_fragments: 0,
           },
+          "title.synonym".to_sym => {
+            number_of_fragments: 0,
+          },
           description: {
+            number_of_fragments: 1,
+            fragment_size: 285,
+          },
+          "description.synonym".to_sym => {
             number_of_fragments: 1,
             fragment_size: 285,
           },

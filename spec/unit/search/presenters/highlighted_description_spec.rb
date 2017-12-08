@@ -12,9 +12,30 @@ RSpec.describe Search::HighlightedDescription do
     expect(highlighted_description).to eq("I will be <mark>highlighted</mark>.")
   end
 
+  it "highlights description with synonyms if present" do
+    raw_result = {
+      "fields" => { "description.synonym" => "I will be highlighted." },
+      "highlight" => { "description.synonym" => ["I will be <mark>highlighted</mark>."] }
+    }
+
+    highlighted_description = described_class.new(raw_result).text
+
+    expect(highlighted_description).to eq("I will be <mark>highlighted</mark>.")
+  end
+
   it "uses default description if highlight not found" do
     raw_result = {
       "fields" => { "description" => "I will not be highlighted & escaped." }
+    }
+
+    highlighted_description = described_class.new(raw_result).text
+
+    expect(highlighted_description).to eq("I will not be highlighted &amp; escaped.")
+  end
+
+  it "uses description with synonyms if highlight not found" do
+    raw_result = {
+      "fields" => { "description.synonym" => "I will not be highlighted & escaped." }
     }
 
     highlighted_description = described_class.new(raw_result).text
