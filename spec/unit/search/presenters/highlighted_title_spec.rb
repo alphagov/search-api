@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Search::HighlightedTitle do
-  it "title_highlighted" do
+  it "highlights the title" do
     title = described_class.new({
       "fields" => { "title" => "A Title" },
       "highlight" => { "title" => ["A Highlighted Title"] }
@@ -10,7 +10,7 @@ RSpec.describe Search::HighlightedTitle do
     expect(title.text).to eq("A Highlighted Title")
   end
 
-  it "fallback_title_is_escaped" do
+  it "escapes the title when it falls back to the unhighlighted title" do
     title = described_class.new({
       "fields" => { "title" => "A & Title" },
     })
