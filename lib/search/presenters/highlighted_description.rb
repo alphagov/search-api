@@ -22,7 +22,7 @@ module Search
       # `highlight` will be missing if none of the search terms match what's in
       # the title, eg. when displaying best bets.
       raw_result['highlight'] &&
-        raw_result['highlight']['description'].to_a.first
+        (raw_result['highlight']['description'].to_a.first || raw_result['highlight']['description.synonym'].to_a.first)
     end
 
     # The highlighting will return a truncated version of the description. It
@@ -57,7 +57,7 @@ module Search
 
     def original_description
       # `fields.description` is nil if the document doesn't have a description set.
-      raw_result['fields']['description'] || ""
+      raw_result['fields']['description'] || raw_result['fields']['description.synonym'] || ""
     end
   end
 end

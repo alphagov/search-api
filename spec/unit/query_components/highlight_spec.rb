@@ -10,12 +10,28 @@ RSpec.describe QueryComponents::Highlight do
       expect(payload[:fields].keys).to include(:title)
     end
 
+    it 'enables highlighting on title with synonyms' do
+      parameters = Search::QueryParameters.new(return_fields: %w[title_with_highlighting])
+
+      payload = QueryComponents::Highlight.new(parameters).payload
+
+      expect(payload[:fields].keys).to include(:"title.synonym")
+    end
+
     it 'enables highlighting on description' do
       parameters = Search::QueryParameters.new(return_fields: %w[description_with_highlighting])
 
       payload = QueryComponents::Highlight.new(parameters).payload
 
       expect(payload[:fields].keys).to include(:description)
+    end
+
+    it 'enables highlighting on description with synonyms' do
+      parameters = Search::QueryParameters.new(return_fields: %w[description_with_highlighting])
+
+      payload = QueryComponents::Highlight.new(parameters).payload
+
+      expect(payload[:fields].keys).to include(:"description.synonym")
     end
 
     it 'does not enable highlighting when not requested' do

@@ -1,28 +1,49 @@
 require 'spec_helper'
 
 RSpec.describe Search::HighlightedDescription do
-  it "adds_highlighting_if_present" do
+  it "adds highlighting if present" do
     raw_result = {
-      "fields" => { "description" => "I will be hightlighted." },
-      "highlight" => { "description" => ["I will be <mark>hightlighted</mark>."] }
+      "fields" => { "description" => "I will be highlighted." },
+      "highlight" => { "description" => ["I will be <mark>highlighted</mark>."] }
     }
 
     highlighted_description = described_class.new(raw_result).text
 
-    expect(highlighted_description).to eq("I will be <mark>hightlighted</mark>.")
+    expect(highlighted_description).to eq("I will be <mark>highlighted</mark>.")
   end
 
-  it "uses_default_description_if_hightlight_not_found" do
+  it "highlights description with synonyms if present" do
     raw_result = {
-      "fields" => { "description" => "I will not be hightlighted & escaped." }
+      "fields" => { "description.synonym" => "I will be highlighted." },
+      "highlight" => { "description.synonym" => ["I will be <mark>highlighted</mark>."] }
     }
 
     highlighted_description = described_class.new(raw_result).text
 
-    expect(highlighted_description).to eq("I will not be hightlighted &amp; escaped.")
+    expect(highlighted_description).to eq("I will be <mark>highlighted</mark>.")
   end
 
-  it "truncates_default_description_if_hightlight_not_found" do
+  it "uses default description if highlight not found" do
+    raw_result = {
+      "fields" => { "description" => "I will not be highlighted & escaped." }
+    }
+
+    highlighted_description = described_class.new(raw_result).text
+
+    expect(highlighted_description).to eq("I will not be highlighted &amp; escaped.")
+  end
+
+  it "uses description with synonyms if highlight not found" do
+    raw_result = {
+      "fields" => { "description.synonym" => "I will not be highlighted & escaped." }
+    }
+
+    highlighted_description = described_class.new(raw_result).text
+
+    expect(highlighted_description).to eq("I will not be highlighted &amp; escaped.")
+  end
+
+  it "truncates default description if highlight not found" do
     raw_result = {
       "fields" => { "description" => ("This is a sentence that is too long." * 10) }
     }
@@ -33,7 +54,7 @@ RSpec.describe Search::HighlightedDescription do
     expect(highlighted_description.ends_with?('…')).to be_truthy
   end
 
-  it "returns_empty_string_if_theres_no_description" do
+  it "returns empty string if theres no description" do
     raw_result = {
       "fields" => { "description" => nil }
     }
