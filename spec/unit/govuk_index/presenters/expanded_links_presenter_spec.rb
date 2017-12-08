@@ -131,6 +131,40 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expect(presenter.topic_content_ids).to eq(expected_topic_content_ids)
   end
 
+  it "people" do
+    expanded_links = {
+      "people" => [
+          {
+            "base_path" => "/government/people/badger-of-deploy",
+            "content_id" => "dbce902f-36d1-471e-a79a-8934aee7c34c",
+            "locale" => "en",
+            "title" => "Badger of Deploy"
+          }
+      ]
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+
+    expect(presenter.people).to eq(["badger-of-deploy"])
+  end
+
+  it "policy groups" do
+    expanded_links = {
+      "working_groups" => [
+          {
+            "base_path" => "/government/groups/micropig-advisory-group",
+            "content_id" => "33848853-6411-4e36-b72b-afe50aff1b93",
+            "locale" => "en",
+            "title" => "Micropig advisory group"
+          }
+      ]
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+
+    expect(presenter.policy_groups).to eq(["micropig-advisory-group"])
+  end
+
   def expanded_links_presenter(expanded_links)
     described_class.new(expanded_links)
   end
