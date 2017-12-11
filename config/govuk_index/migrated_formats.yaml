@@ -45,4 +45,5 @@ migrated:
 - travel_advice
 - travel_advice_index
 
-indexable: []
+indexable:
+- calendar
