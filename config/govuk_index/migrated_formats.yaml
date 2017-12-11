@@ -32,6 +32,7 @@ migrated:
 - tax_tribunal_decision
 - utaac_decision
 # Other
+- calendar
 - finder # Specialist Publisher and Whitehall
 - hmrc_manual
 - hmrc_manual_section
@@ -45,5 +46,4 @@ migrated:
 - travel_advice
 - travel_advice_index
 
-indexable:
-- calendar
+indexable: []
