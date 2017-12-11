@@ -41,6 +41,7 @@ class BaseParameterParser
   # The fields listed here are the only ones which can be used to calculated
   # aggregates for.  This should be a subset of allowed_filter_fields
   ALLOWED_AGGREGATE_FIELDS = %w(
+    content_purpose_document_supertype
     content_store_document_type
     detailed_format
     document_collections
