@@ -1,9 +1,10 @@
 module GovukIndex
   class IndexableContentSanitiser
     def clean(items)
-      cleaned_content = items.map { |item|
-        strip_html_tags(indexable_content(item))
-      }.compact
+      cleaned_content = items.
+        flat_map { |item| indexable_content(item) }.
+        map { |item| strip_html_tags(item) }.
+        compact
 
       return nil if cleaned_content.empty?
       cleaned_content.join("\n").strip
@@ -12,7 +13,9 @@ module GovukIndex
   private
 
     def indexable_content(item)
-      item.instance_of?(String) ? item : html_content(item)
+      return [item] if item.instance_of?(String)
+      return item if item.all? { |row| row.instance_of?(String) }
+      [html_content(item)]
     end
 
     def html_content(item)

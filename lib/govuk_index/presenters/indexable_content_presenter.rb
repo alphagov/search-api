@@ -4,7 +4,7 @@ module GovukIndex
     BY_FORMAT = {
       'contact'       => %w(title description),
       'licence'       => %w(licence_short_description licence_overview),
-      'smart-answer'  => %w(introductory_paragraph),
+      'smart-answer'  => %w(introductory_paragraph more_information),
       'transaction'   => %w(introductory_paragraph more_information),
       'travel_advice' => %w(summary),
     }.freeze
