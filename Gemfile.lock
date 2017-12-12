@@ -54,7 +54,7 @@ GEM
       rubocop (~> 0.51.0)
       rubocop-rspec (~> 1.19.0)
       scss_lint
-    govuk_app_config (0.2.0)
+    govuk_app_config (0.3.0)
       sentry-raven (~> 2.6.3)
       statsd-ruby (~> 1.4.0)
     govuk_document_types (0.2.0)
@@ -231,7 +231,7 @@ DEPENDENCIES
   gds-api-adapters (~> 50.5)
   govuk-content-schema-test-helpers (~> 1.6.0)
   govuk-lint (~> 3.4.0)
-  govuk_app_config (~> 0.2.0)
+  govuk_app_config (~> 0.3.0)
   govuk_document_types (~> 0.2.0)
   govuk_message_queue_consumer (~> 3.0.2)
   govuk_schemas (~> 3.1.0)
