@@ -23,7 +23,8 @@ module Indexer
       return compare_content(id, old, new) if key == 'indexable_content'
       return true if old.nil? && new == ''
       return true if key == 'rendering_app' && old == 'specialist-frontend' && new == 'government-frontend'
-      old == new
+      return compare_arrays(old, new) if old.is_a?(Array) && new.is_a?(Array)
+      clean_field(old) == clean_field(new)
     end
 
     def compare_time(key, old, new)
@@ -66,10 +67,18 @@ module Indexer
       end
     end
 
+    def compare_arrays(old, new)
+      old.map { |i| clean_field(i) } == new.map { |i| clean_field(i) }
+    end
+
     def remove_links(str)
       str.gsub(/\[([^\]]*(?:\[[^\]]*\][^\]]*)?)\]\([^\)]*\)/, ' \1 ') # [name](link) => name
         .gsub(/#+\s*/, ' ')
         .gsub(/\[InlineAttachment:(?:.*\/)?([^\[\]\/]*(?:\[[^\]\/]*\][^\[\]\/]*|)*)\]/, '\1')
+    end
+
+    def clean_field(str)
+      str.gsub(/[’'‘]/, "'")
     end
 
     def clean_content(str)

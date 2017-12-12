@@ -59,4 +59,14 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
     is_same = described_class.new.call("/some/id", "title", nil, "some text")
     expect(is_same).to be true
   end
+
+  it "ignores differences in apostrophes" do
+    is_same = described_class.new.call(
+      "/some/id",
+      "title",
+      "What the government's doing about pigs' and micropigs' welfare",
+      "What the government‘s doing about pigs' and micropigs’ welfare"
+    )
+    expect(is_same).to be true
+  end
 end
