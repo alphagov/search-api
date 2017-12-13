@@ -78,6 +78,8 @@ module GovukIndex
         organisations:                       expanded_links.organisations,
         outcome_type:                        specialist.outcome_type,
         part_of_taxonomy_tree:               expanded_links.part_of_taxonomy_tree,
+        people:                              expanded_links.people,
+        policy_groups:                       expanded_links.policy_groups,
         popularity:                          common_fields.popularity,
         primary_publishing_organisation:     expanded_links.primary_publishing_organisation,
         public_timestamp:                    common_fields.public_timestamp,
@@ -150,6 +152,8 @@ module GovukIndex
         base_path.gsub(%r{^/topic/}, '')
       elsif format == "mainstream_browse_page"
         base_path.gsub(%r{^/browse/}, '')
+      elsif format == "policy"
+        base_path.gsub(%r{^/government/policies/}, '')
       end
     end
 

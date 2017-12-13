@@ -16,6 +16,14 @@ module GovukIndex
       content_ids("organisations")
     end
 
+    def people
+      slugs("people", "/government/people/")
+    end
+
+    def policy_groups
+      slugs("working_groups", "/government/groups/")
+    end
+
     def primary_publishing_organisation
       organisation_slugs("primary_publishing_organisation")
     end
@@ -29,15 +37,11 @@ module GovukIndex
     end
 
     def specialist_sectors
-      expanded_links_item("topics").map do |content_item|
-        content_item["base_path"].sub("/topic/", "")
-      end
+      slugs("topics", "/topic/")
     end
 
     def mainstream_browse_pages
-      expanded_links_item("mainstream_browse_pages").map do |content_item|
-        content_item["base_path"].sub("/browse/", "")
-      end
+      slugs("mainstream_browse_pages", "/browse/")
     end
 
     def part_of_taxonomy_tree
@@ -60,6 +64,12 @@ module GovukIndex
 
     def content_ids(collection)
       values_from_collection(expanded_links_item(collection), "content_id")
+    end
+
+    def slugs(type, path_prefix)
+      expanded_links_item(type).map do |content_item|
+        content_item["base_path"].gsub(%r{^#{path_prefix}}, "")
+      end
     end
 
     def organisation_slugs(type)
