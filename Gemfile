@@ -34,7 +34,7 @@ group :test do
   gem 'bunny-mock', '~> 1.7'
   gem 'govuk_schemas', '~> 3.1.0'
   gem 'govuk-content-schema-test-helpers', '~> 1.6.0'
-  gem "rack-test", "~> 0.6.3"
+  gem "rack-test", "~> 0.8.2"
   gem 'rspec'
   gem "simplecov", "~> 0.15.1"
   gem "simplecov-rcov", "~> 0.2.3"
