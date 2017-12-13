@@ -38,6 +38,7 @@ migrated:
 - hmrc_manual_section
 - manual
 - manual_section
+- policy
 - service_manual_guide
 - service_manual_homepage
 - service_manual_service_standard
@@ -46,5 +47,4 @@ migrated:
 - travel_advice
 - travel_advice_index
 
-indexable:
-- policy
+indexable: []
