@@ -36,7 +36,7 @@ group :test do
   gem 'govuk-content-schema-test-helpers', '~> 1.6.0'
   gem "rack-test", "~> 0.6.3"
   gem 'rspec'
-  gem "simplecov", "~> 0.10.0"
+  gem "simplecov", "~> 0.15.1"
   gem "simplecov-rcov", "~> 0.2.3"
   gem "timecop", "~> 0.8.0"
   gem "webmock", "~> 2.3.0"
