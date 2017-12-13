@@ -12,7 +12,7 @@ gem "nokogiri", "~> 1.7.2"
 gem "plek", "~> 1.12"
 gem "rack", "~> 2.0"
 gem "rack-logstasher", "~> 1.0.0"
-gem "rake", "~> 10.5"
+gem "rake", "~> 12.3"
 gem "redis-namespace", "~> 1.5.2"
 gem "sidekiq", "~> 4.1.2"
 gem 'sidekiq-limit_fetch'
