@@ -18,7 +18,7 @@ GEM
       bunny (>= 1.7)
     byebug (9.1.0)
     chronic (0.10.2)
-    ci_reporter (1.7.3)
+    ci_reporter (2.0.0)
       builder (>= 2.1.2)
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
@@ -226,7 +226,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (~> 5.1.4)
   bunny-mock (~> 1.7)
-  ci_reporter (~> 1.7.1)
+  ci_reporter (~> 2.0.0)
   elasticsearch (~> 2)
   gds-api-adapters (~> 50.5)
   govuk-content-schema-test-helpers (~> 1.6.0)
