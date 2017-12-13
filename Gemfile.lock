@@ -217,7 +217,7 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
-    whenever (0.9.7)
+    whenever (0.10.0)
       chronic (>= 0.6.3)
 
 PLATFORMS
@@ -260,7 +260,7 @@ DEPENDENCIES
   unf (~> 0.1.4)
   unicorn (= 5.1.0)
   webmock (~> 2.3.0)
-  whenever (~> 0.9.4)
+  whenever (~> 0.10.0)
 
 BUNDLED WITH
    1.16.0
