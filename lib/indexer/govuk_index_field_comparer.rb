@@ -11,6 +11,7 @@ module Indexer
 
     def call(id, key, old, new)
       return true if key =~ /^_root/
+      return true if old.nil? && new == []
       if old.nil? && !new.nil?
         stats["AddedValue: #{key}"] += 1
         return true

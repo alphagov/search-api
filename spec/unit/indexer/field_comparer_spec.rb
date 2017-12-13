@@ -69,4 +69,13 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
     )
     expect(is_same).to be true
   end
+
+  it "treats new empty arrays like missing values in old content" do
+    comparer = described_class.new
+
+    is_same = comparer.call("/some/id", "organisations", nil, [])
+
+    expect(is_same).to be true
+    expect(comparer.stats["AddedValue: organisations"]).to eq 0
+  end
 end
