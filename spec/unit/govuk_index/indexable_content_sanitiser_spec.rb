@@ -19,6 +19,30 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
     expect(subject.clean(payload)).to eq("hello marmaduke")
   end
 
+  context "when an array of strings is passed in" do
+    it "treats each element of the array as a valid element" do
+      payload = [
+        [
+          "line 1",
+          "line 2"
+        ]
+      ]
+
+      expect(subject.clean(payload)).to eq("line 1\n\n\nline 2")
+    end
+
+    it "strips html tags from each element in the array" do
+      payload = [
+        [
+          "<p>line 1<\p>",
+          "<div>line<\div> 2"
+        ]
+      ]
+
+      expect(subject.clean(payload)).to eq("line 1\n\n\n\nline\n 2")
+    end
+  end
+
   context "when html test payloads exists" do
     it "strips out html tags from to the html content" do
       payload = [

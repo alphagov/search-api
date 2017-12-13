@@ -47,4 +47,5 @@ migrated:
 - travel_advice
 - travel_advice_index
 
-indexable: []
+indexable:
+- smart-answer # transaction document type from the smart-answers publishing app
