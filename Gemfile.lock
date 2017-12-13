@@ -210,7 +210,7 @@ GEM
     unicorn (5.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    webmock (2.3.2)
+    webmock (3.1.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -255,7 +255,7 @@ DEPENDENCIES
   timecop (~> 0.8.0)
   unf (~> 0.1.4)
   unicorn (= 5.1.0)
-  webmock (~> 2.3.0)
+  webmock (~> 3.1.1)
   whenever (~> 0.10.0)
 
 BUNDLED WITH
