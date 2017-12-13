@@ -32,7 +32,7 @@ end
 
 group :test do
   gem 'bunny-mock', '~> 1.7'
-  gem "ci_reporter", "~> 1.7.1"
+  gem "ci_reporter", "~> 2.0.0"
   gem 'govuk_schemas', '~> 3.1.0'
   gem 'govuk-content-schema-test-helpers', '~> 1.6.0'
   gem "rack-test", "~> 0.6.3"
