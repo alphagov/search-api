@@ -21,7 +21,7 @@ gem "sinatra", "~> 2.0.0"
 gem "slop", "~> 3.4.5"
 gem "statsd-ruby", "~> 1.4.0"
 gem "unf", "~> 0.1.4"
-gem "unicorn", "5.1.0"
+gem "unicorn", "5.3.1"
 gem "whenever", "~> 0.10.0"
 
 if ENV["MESSAGE_QUEUE_CONSUMER_DEV"]
