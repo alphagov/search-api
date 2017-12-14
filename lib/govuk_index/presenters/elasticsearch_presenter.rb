@@ -11,9 +11,14 @@ module GovukIndex
       @type ||= @infered_type.type
     end
 
+    def _type
+      # raise the error at the last possible moment to avoid requiring declaration for unused value
+      type || raise(UnknownDocumentTypeError)
+    end
+
     def identifier
       {
-        _type: type,
+        _type: _type,
         _id: base_path,
         version: payload["payload_version"],
         version_type: "external",
@@ -129,7 +134,13 @@ module GovukIndex
 
     attr_reader :payload
 
-    INDEX_DESCRIPTION_FIELD = %w(finder manual service_manual_topic travel_advice_index).freeze
+    INDEX_DESCRIPTION_FIELD = %w(
+      finder
+      manual
+      service_manual_topic
+      special_route
+      travel_advice_index
+    ).freeze
 
     def indexable
       IndexableContentPresenter.new(

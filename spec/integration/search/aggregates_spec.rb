@@ -97,7 +97,7 @@ RSpec.describe 'search queries' do
     end
 
     it "returns examples before migration" do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
 
       add_sample_documents('mainstream_test', 2)
       add_sample_documents('govuk_test', 2)
@@ -111,7 +111,7 @@ RSpec.describe 'search queries' do
     end
 
     it "returns examples after migration" do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(['answers'])
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('answers' => :all)
 
       add_sample_documents('mainstream_test', 2)
       add_sample_documents('govuk_test', 2)
@@ -125,7 +125,7 @@ RSpec.describe 'search queries' do
     end
 
     it "returns examples before migration within query scope" do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
 
       add_sample_documents('mainstream_test', 2)
       add_sample_documents('govuk_test', 2)
@@ -139,7 +139,7 @@ RSpec.describe 'search queries' do
     end
 
     it "returns examples after migration within query scope" do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(['answers'])
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('answers' => :all)
 
       add_sample_documents('mainstream_test', 2)
       add_sample_documents('govuk_test', 2)

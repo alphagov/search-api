@@ -22,7 +22,7 @@ RSpec.describe 'SpecialistFormatTest' do
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["finder"])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("finder" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -57,7 +57,7 @@ RSpec.describe 'SpecialistFormatTest' do
         payload: { document_type: specialist_document_type },
         regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
       )
-      allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return([specialist_document_type])
+      allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(specialist_document_type => :all)
 
       @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -74,7 +74,7 @@ RSpec.describe 'SpecialistFormatTest' do
       payload: { document_type: publisher_document_type },
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return([search_document_type])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(search_document_type => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

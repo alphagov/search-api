@@ -47,14 +47,17 @@ module GovukIndex
       )
       presenter.valid!
 
+      identifier = "#{presenter.base_path} #{presenter.type || "'unmapped type'"}"
       if presenter.unpublishing_type?
-        logger.info("#{routing_key} -> DELETE #{presenter.base_path} #{presenter.type}")
+        logger.info("#{routing_key} -> DELETE #{identifier}")
         actions.delete(presenter)
-      elsif MigratedFormats.indexable?(presenter.format)
-        logger.info("#{routing_key} -> INDEX #{presenter.base_path} #{presenter.type}")
+      elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path)
+        logger.info("#{routing_key} -> BLACKLISTED #{identifier}")
+      elsif MigratedFormats.indexable?(presenter.format, presenter.base_path)
+        logger.info("#{routing_key} -> INDEX #{identifier}")
         actions.save(presenter)
       else
-        logger.info("#{routing_key} -> SKIPPED #{presenter.base_path} #{presenter.type}")
+        logger.info("#{routing_key} -> UNKNOWN #{identifier}")
       end
     end
 

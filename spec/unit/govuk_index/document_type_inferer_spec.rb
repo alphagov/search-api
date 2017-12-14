@@ -22,16 +22,6 @@ RSpec.describe GovukIndex::DocumentTypeInferer do
     }.to raise_error(GovukIndex::NotFoundError)
   end
 
-  it "should_raise_unknown_document_type_error" do
-    payload = { "document_type" => "unknown" }
-
-    allow_any_instance_of(described_class).to receive(:elasticsearch_document_type).and_return(nil)
-
-    expect {
-      described_class.new(payload).type
-    }.to raise_error(GovukIndex::UnknownDocumentTypeError)
-  end
-
   it "infer_existing_document_type" do
     payload = {
       "base_path" => "/cheese",

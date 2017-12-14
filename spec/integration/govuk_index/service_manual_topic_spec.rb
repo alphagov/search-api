@@ -26,7 +26,7 @@ RSpec.describe "Service Manual Topic publishing" do
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["service_manual_topic"])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("service_manual_topic" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
