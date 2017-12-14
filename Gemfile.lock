@@ -38,7 +38,7 @@ GEM
     faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
-    gds-api-adapters (50.5.0)
+    gds-api-adapters (50.6.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -224,7 +224,7 @@ DEPENDENCIES
   activesupport (~> 5.1.4)
   bunny-mock (~> 1.7)
   elasticsearch (~> 2)
-  gds-api-adapters (~> 50.5)
+  gds-api-adapters (~> 50.6)
   govuk-content-schema-test-helpers (~> 1.6.0)
   govuk-lint (~> 3.4.0)
   govuk_app_config (~> 0.3.0)
