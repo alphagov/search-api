@@ -23,7 +23,6 @@ RSpec.describe "Collections publishing" do
         description: "Mainstream browse page description",
         base_path: "/browse/benefits",
       },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("mainstream_browse_page" => :all)
@@ -47,7 +46,6 @@ RSpec.describe "Collections publishing" do
         description: "Specialist sector page description",
         base_path: "/topic/benefits-credits",
       },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("specialist_sector" => :all)

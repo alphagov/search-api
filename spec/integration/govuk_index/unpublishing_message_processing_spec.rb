@@ -61,7 +61,6 @@ RSpec.describe 'GovukIndex::UnpublishingMessageProcessing' do
       schema: schema_name,
       payload: user_defined,
       excluded_fields: excluded_fields,
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
     stub_message_payload(payload, unpublishing: true)
   end

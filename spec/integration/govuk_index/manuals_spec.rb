@@ -32,7 +32,6 @@ RSpec.describe "Manual publishing" do
           }
         ]
       },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("manual" => :all)
@@ -57,7 +56,6 @@ RSpec.describe "Manual publishing" do
           "base_path": "/parent/manual/path"
         },
       },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("manual_section" => :all)

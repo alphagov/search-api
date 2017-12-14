@@ -61,7 +61,6 @@ RSpec.describe "Policy publishing" do
         }
       },
       details: { summary: "<p>Description about policy.</p>\n" },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("policy" => :all)

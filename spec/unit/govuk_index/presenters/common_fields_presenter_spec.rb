@@ -23,8 +23,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       payload: { expanded_links: {} },
       excluded_fields: ["withdrawn_notice"],
       regenerate_if: ->(example) {
-        example["publishing_app"] == "smartanswers" ||
-          @directly_mapped_fields.any? { |field| example[field] == '' }
+        @directly_mapped_fields.any? { |field| example[field] == '' }
       },
     )
 
@@ -44,7 +43,6 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = generate_random_example(
       payload: defined_fields,
       excluded_fields: ["withdrawn_notice"],
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
     presenter = common_fields_presenter(payload)

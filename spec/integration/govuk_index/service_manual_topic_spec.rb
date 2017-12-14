@@ -23,7 +23,6 @@ RSpec.describe "Service Manual Topic publishing" do
         title: "Service Manual title",
         description: "Service Manual description"
       },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("service_manual_topic" => :all)

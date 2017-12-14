@@ -12,7 +12,6 @@ RSpec.describe 'GovukIndex::VersioningTest' do
 
     version1 = generate_random_example(
       payload: { payload_version: 123 },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
 
     base_path = version1["base_path"]
@@ -31,10 +30,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
 
   it "should_discard_message_with_same_version_as_existing_document" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
-    version1 = generate_random_example(
-      payload: { payload_version: 123 },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
-    )
+    version1 = generate_random_example(payload: { payload_version: 123 })
 
     base_path = version1["base_path"]
     process_message(version1)
@@ -53,10 +49,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
   it "should_discard_message_with_earlier_version_than_existing_document" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
 
-    version1 = generate_random_example(
-      payload: { payload_version: 123 },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
-    )
+    version1 = generate_random_example(payload: { payload_version: 123 })
 
     base_path = version1["base_path"]
     process_message(version1)
@@ -77,7 +70,6 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     version1 = generate_random_example(
       payload: { payload_version: 1 },
       excluded_fields: ["withdrawn_notice"],
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
 
     base_path = version1["base_path"]
@@ -93,7 +85,6 @@ RSpec.describe 'GovukIndex::VersioningTest' do
         payload_version: 2
       },
       excluded_fields: ["withdrawn_notice"],
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
     process_message(version2, unpublishing: true)
 
@@ -110,10 +101,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
 
   it "should_discard_unpublishing_message_with_earlier_version" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
-    version1 = generate_random_example(
-      payload: { payload_version: 2 },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
-    )
+    version1 = generate_random_example(payload: { payload_version: 2 })
 
     base_path = version1["base_path"]
     process_message(version1)
@@ -128,7 +116,6 @@ RSpec.describe 'GovukIndex::VersioningTest' do
         payload_version: 1
       },
       excluded_fields: ["withdrawn_notice"],
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
     process_message(version2, unpublishing: true)
 
@@ -139,10 +126,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
   it "should_ignore_event_for_non_indexable_formats" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
 
-    version1 = generate_random_example(
-      payload: { payload_version: 123 },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
-    )
+    version1 = generate_random_example(payload: { payload_version: 123 })
 
     base_path = version1["base_path"]
     process_message(version1)
