@@ -24,13 +24,18 @@ class Sitemap
 
   def update_links(sitemap_filenames)
     sitemap_filenames.each do |filename, link_filename|
-      tmpfile_name = "#{@output_path}/#{link_filename}_tmp"
-      # ensure the file has been deleted before starting as otherwise the process will crash
+      # use the absolute path here and not the linked path as the linked path
+      # uses the release directory which is updated if more than 5 deployments
+      # happen in a day
+      output_path = File.symlink?(@output_path) ? File.readlink(@output_path) : @output_path
+
+      tmpfile_name = "#{output_path}/#{link_filename}_tmp"
+        # ensure the file has been deleted before starting as otherwise the process will crash
       File.delete(tmpfile_name) if File.exist?(tmpfile_name)
       # symlink creation is a create then move to ensure a symlink always exists:
       # http://blog.moertel.com/posts/2005-08-22-how-to-change-symlinks-atomically.html
-      File.symlink("#{@output_path}/#{filename}", tmpfile_name)
-      FileUtils.mv(tmpfile_name, "#{@output_path}/#{link_filename}")
+      File.symlink("#{output_path}/#{filename}", tmpfile_name)
+      FileUtils.mv(tmpfile_name, "#{output_path}/#{link_filename}")
     end
   end
 
