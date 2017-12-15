@@ -30,9 +30,11 @@ RSpec.describe "Service Manual Topic publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "indexable_content" => "#{random_example["title"]} #{random_example["description"]}",
-       "manual" => "/service-manual"
+      "link" => random_example["base_path"],
+      "indexable_content" => nil,
+      "title" => random_example["title"],
+      "description" => random_example["description"],
+      "manual" => "/service-manual"
     }
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "service_manual_topic")
