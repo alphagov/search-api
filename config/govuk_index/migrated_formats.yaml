@@ -43,7 +43,6 @@ migrated:
 - service_manual_homepage
 - service_manual_service_standard
 - service_manual_topic
-- smart-answer # transaction document type from the smart-answers publishing app
 - task_list
 - travel_advice
 - travel_advice_index

@@ -98,8 +98,8 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
     end
   end
 
-  context "smart-answers" do
-    let(:format) { 'smart-answer' }
+  context "transaction with hidden_search_terms (smart answer start page)" do
+    let(:format) { 'transaction' }
     let(:details) do
       {
         "introductory_paragraph" =>  [
