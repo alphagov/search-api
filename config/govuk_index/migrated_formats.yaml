@@ -54,6 +54,8 @@ indexable:
   - '/find-local-council'
 
 non_indexable:
+- calculator
+- license_finder
 - smart_answer # this is the format for the `/<path>/y` flow landing page for smart answers
 - special_route:
   - '/homepage'
