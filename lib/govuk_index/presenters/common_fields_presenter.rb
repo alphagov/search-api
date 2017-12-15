@@ -53,9 +53,6 @@ module GovukIndex
     end
 
     def format
-      # TODO: remove the special case for smart answers once it is fully migrated to
-      #   govuk as it's fallback `transaction` has the same implementation.
-      return 'smart-answer' if payload['publishing_app'] == 'smartanswers' && payload['document_type'] == 'transaction'
       document_type = payload['document_type']
       CUSTOM_FORMAT_MAP[document_type] || document_type
     end

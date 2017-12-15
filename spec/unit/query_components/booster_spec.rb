@@ -15,7 +15,7 @@ RSpec.describe QueryComponents::Booster do
 
     expect_format_boost(result, "contact", 0.3)
     expect_format_boost(result, "service_manual_guide", 0.3)
-    expect_format_boost(result, "smart-answer", 1.5)
+    expect_format_boost(result, "transaction", 1.5)
   end
 
   it "not apply a boost to unspecified formats" do

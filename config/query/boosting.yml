@@ -3,7 +3,6 @@ base:
     # Mainstream formats
     service_manual_guide: 0.3
     service_manual_topic: 0.3
-    smart-answer: 1.5
     transaction: 1.5
     # Should appear below mainstream content
     aaib_report: 0.2
