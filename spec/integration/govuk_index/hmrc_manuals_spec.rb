@@ -30,7 +30,6 @@ RSpec.describe "HMRC manual publishing" do
           }
         ]
       },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("hmrc_manual" => :all)
@@ -54,7 +53,6 @@ RSpec.describe "HMRC manual publishing" do
           "base_path": "/parent/manual/path"
         },
       },
-      regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("hmrc_manual_section" => :all)

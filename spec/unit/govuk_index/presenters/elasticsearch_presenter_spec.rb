@@ -2,8 +2,7 @@ require 'spec_helper'
 
 RSpec.describe GovukIndex::ElasticsearchPresenter do
   it "identifier" do
-    payload = generate_random_example(payload: { payload_version: 1 },
-    regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" })
+    payload = generate_random_example(payload: { payload_version: 1 })
 
     expected_identifier = {
       _type: payload["document_type"],
