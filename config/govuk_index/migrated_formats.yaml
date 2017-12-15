@@ -46,11 +46,11 @@ migrated:
 - task_list
 - travel_advice
 - travel_advice_index
-
-indexable:
 - special_route:
   - '/help'
   - '/find-local-council'
+
+indexable: []
 
 non_indexable:
 - calculator
@@ -62,6 +62,48 @@ non_indexable:
   - '/help/ab-testing'
   - '/help.json'
   - '/random'
+  # from whitehall
+  - "/BingSiteAuth.xml"
+  - "/api"
+  - "/apple-touch-icon-114x114.png"
+  - "/apple-touch-icon-144x144.png"
+  - "/apple-touch-icon-57x57.png"
+  - "/apple-touch-icon-72x72.png"
+  - "/apple-touch-icon-precomposed.png"
+  - "/apple-touch-icon.png"
+  - "/contact"
+  - "/courts-tribunals"
+  - "/email-signup"
+  - "/email-signup/confirm"
+  - "/email/subscriptions"
+  - "/email/unsubscribe"
+  - "/favicon.ico"
+  - "/google6db9c061ce178960.html"
+  - "/google991dec8b62e37cfb.html"
+  - "/googlef35857dca8b812e7.html"
+  - "/government"
+  - "/government/get-involved"
+  - "/government/history"
+  - "/government/history/1-horse-guards-road"
+  - "/government/history/10-downing-street"
+  - "/government/history/11-downing-street"
+  - "/government/history/king-charles-street"
+  - "/government/history/lancaster-house"
+  - "/government/how-government-works"
+  - "/humans.txt"
+  - "/info"
+  - "/lloyds-share-offer-further-details"
+  - "/lloydsfactsheet"
+  - "/performance"
+  - "/performance/big-screen"
+  - "/robots.txt"
+  - "/search.json"
+  - "/search/opensearch.xml"
+  - "/sitemap.xml"
+  - "/sitemaps"
+  - "/tour"
+  - "/ukwelcomes"
+  
 # detailed formats
 - detailed_guide
 # whitehall formats
