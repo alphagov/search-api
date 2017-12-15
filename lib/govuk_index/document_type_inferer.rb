@@ -11,7 +11,6 @@ module GovukIndex
         raise NotFoundError if existing_document.nil?
         existing_document['_type']
       else
-        raise UnknownDocumentTypeError if elasticsearch_document_type.nil?
         elasticsearch_document_type
       end
     end

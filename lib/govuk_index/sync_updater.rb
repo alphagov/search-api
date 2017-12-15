@@ -36,7 +36,7 @@ module GovukIndex
           bool: {
             clause => {
               terms: {
-                format: Array(@format_override || MigratedFormats.indexable_formats)
+                format: Array(@format_override || MigratedFormats.indexable_formats.keys)
               }
             }
           }

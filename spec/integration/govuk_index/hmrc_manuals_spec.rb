@@ -33,7 +33,7 @@ RSpec.describe "HMRC manual publishing" do
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["hmrc_manual"])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("hmrc_manual" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -57,7 +57,7 @@ RSpec.describe "HMRC manual publishing" do
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["hmrc_manual_section"])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("hmrc_manual_section" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

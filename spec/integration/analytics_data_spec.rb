@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'AnalyticsDataTest' do
   before do
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return([])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
     @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, %w(mainstream_test govuk_test))
   end
 
@@ -42,7 +42,7 @@ RSpec.describe 'AnalyticsDataTest' do
   end
 
   it "only includes migrated formats from the govuk index" do
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return(["answers"])
+    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("answers" => :all)
 
     document = {
       "content_id" => "587b0635-2911-49e6-af68-3f0ea1b07cc5",

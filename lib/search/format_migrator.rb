@@ -15,7 +15,7 @@ module Search
     end
 
     def migrated_formats
-      GovukIndex::MigratedFormats.migrated_formats
+      GovukIndex::MigratedFormats.migrated_formats.keys
     end
 
   private

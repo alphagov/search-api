@@ -48,4 +48,89 @@ migrated:
 - travel_advice
 - travel_advice_index
 
-indexable: []
+indexable:
+- special_route:
+  - '/help'
+  - '/find-local-council'
+
+non_indexable:
+- smart_answer # this is the format for the `/<path>/y` flow landing page for smart answers
+- special_route:
+  - '/homepage'
+  - '/tour'
+  - '/help/ab-testing'
+  - '/help.json'
+  - '/random'
+# detailed formats
+- detailed_guide
+# whitehall formats
+- about
+- about_our_services
+- access_and_opening
+- authored_article
+- case_study
+- complaints_procedure
+- consultation
+#- contact # migrated
+- corporate_report
+- correspondence
+- decision
+- document_collection
+- equality_and_diversity
+- fatality_notice
+- field_of_operation
+#- finder # migrated
+- foi_release
+- form
+- government_response
+- guidance
+- html_publication
+- impact_assessment
+- imported
+- independent_report
+- international_treaty
+- map
+- media_enquiries
+- membership
+- ministerial_role
+- national_statistics
+- national_statistics_announcement
+- news_story
+- notice
+- official_statistics
+- official_statistics_announcement
+- oral_statement
+- organisation
+- our_energy_use
+- our_governance
+- person
+- personal_information_charter
+- petitions_and_campaigns
+- policy_area
+- policy_paper
+- press_release
+- procurement
+- promotional
+- publication
+- publication_scheme
+- recruitment
+- regulation
+- research
+- services_and_information
+- social_media_use
+- speech
+- staff_update
+- statistical_data_set
+- statistics
+- statutory_guidance
+- take_part
+- terms_of_reference
+- topical_event
+- topical_event_about_page
+- transparency
+- welsh_language_scheme
+- working_group
+- world_location
+- world_news_story
+- worldwide_organisation
+- written_statement

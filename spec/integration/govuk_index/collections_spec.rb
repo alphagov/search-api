@@ -26,7 +26,7 @@ RSpec.describe "Collections publishing" do
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["mainstream_browse_page"])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("mainstream_browse_page" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -50,7 +50,7 @@ RSpec.describe "Collections publishing" do
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["specialist_sector"])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("specialist_sector" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

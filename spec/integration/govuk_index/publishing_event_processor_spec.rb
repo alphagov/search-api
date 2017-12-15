@@ -95,6 +95,77 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
     expect(@queue.message_count).to eq(0)
   end
 
+  it "skips blacklisted formats" do
+    logger = double(info: true, debug: true)
+    worker = GovukIndex::PublishingEventWorker.new
+    allow(worker).to receive(:logger).and_return(logger)
+
+    random_example = generate_random_example(
+      schema: 'generic_with_external_related_links',
+      payload: { document_type: "smart_answer", payload_version: 123 },
+    )
+
+    expect(logger).to receive(:info).with("test.route -> BLACKLISTED #{random_example['base_path']} 'unmapped type'")
+    worker.perform('test.route', random_example)
+    commit_index 'govuk_test'
+
+    expect {
+      fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+  end
+
+  it "alerts on unknown formats - neither white or black listed" do
+    allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(false)
+    allow(GovukIndex::MigratedFormats).to receive(:non_indexable?).and_return(false)
+
+    logger = double(info: true, debug: true)
+    worker = GovukIndex::PublishingEventWorker.new
+    allow(worker).to receive(:logger).and_return(logger)
+
+    random_example = generate_random_example(
+      payload: { document_type: "help_page", payload_version: 123 },
+    )
+
+    expect(logger).to receive(:info).with("test.route -> UNKNOWN #{random_example['base_path']} edition")
+    worker.perform('test.route', random_example)
+  end
+
+  it "will consider a format that is both white and black listed to be blacklisted" do
+    allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
+    allow(GovukIndex::MigratedFormats).to receive(:non_indexable?).and_return(true)
+
+    logger = double(info: true, debug: true)
+    worker = GovukIndex::PublishingEventWorker.new
+    allow(worker).to receive(:logger).and_return(logger)
+
+    random_example = generate_random_example(
+      payload: { document_type: "help_page", payload_version: 123 },
+    )
+
+    expect(logger).to receive(:info).with("test.route -> BLACKLISTED #{random_example['base_path']} edition")
+    worker.perform('test.route', random_example)
+  end
+
+  it "can black/white list specific base_paths within a format" do
+    logger = double(info: true, debug: true)
+    worker = GovukIndex::PublishingEventWorker.new
+    allow(worker).to receive(:logger).and_return(logger)
+
+    homepage_example = generate_random_example(
+      schema: 'special_route',
+      payload: { document_type: "special_route", base_path: '/homepage', payload_version: 123 },
+    )
+    help_example = generate_random_example(
+      schema: 'special_route',
+      payload: { document_type: "special_route", base_path: '/help', payload_version: 123 },
+    )
+
+    expect(logger).to receive(:info).with("test.route -> BLACKLISTED #{homepage_example['base_path']} edition")
+    expect(logger).to receive(:info).with("test.route -> INDEX #{help_example['base_path']} edition")
+    worker.perform('test.route', homepage_example)
+    worker.perform('test.route', help_example)
+  end
+
   def client
     @client ||= Services::elasticsearch(hosts: SearchConfig.instance.base_uri)
   end

@@ -35,7 +35,7 @@ RSpec.describe "Manual publishing" do
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" }
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["manual"])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("manual" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -60,7 +60,7 @@ RSpec.describe "Manual publishing" do
       regenerate_if: ->(example) { example["publishing_app"] == "smartanswers" },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(["manual_section"])
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("manual_section" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
