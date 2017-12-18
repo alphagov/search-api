@@ -7,27 +7,6 @@ RSpec.describe 'SearchTest' do
     expect(last_response).to be_ok
   end
 
-  it "id_code_with_space" do
-    # when debug mode includes "use_id_codes" and it searches for
-    # "P 60" instead of "P60" a P60 document should be found!
-
-    commit_document(
-      "mainstream_test",
-      "title" => "Get P45, P60 and other forms for your employees",
-      "description" => "Get PAYE forms from HMRC including P45, P60, starter checklist (which replaced the P46), P11D(b)",
-      "link" => "/get-paye-forms-p45-p60"
-
-    )
-
-    get "/search?q=p+60&debug=use_id_codes"
-
-    expect(parsed_response['results'].size).to eq(1)
-    expect(parsed_response["results"][0]["link"]).to eq("/get-paye-forms-p45-p60")
-
-    get "/search?q=p+60"
-    expect(parsed_response['results'].size).to eq(0)
-  end
-
   it "spell_checking_with_typo" do
     commit_document("mainstream_test",
       "title" => "I am the result",

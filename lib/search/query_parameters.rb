@@ -40,10 +40,6 @@ module Search
       debug[:disable_boosting]
     end
 
-    def enable_id_codes?
-      debug[:use_id_codes]
-    end
-
     def show_query?
       debug[:show_query]
     end

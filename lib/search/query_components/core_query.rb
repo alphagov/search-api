@@ -48,19 +48,6 @@ module QueryComponents
     # MORE than 2 clauses then 2 should match.
     MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%".freeze
 
-    def optional_id_code_query
-      return nil unless search_params.enable_id_codes?
-
-      # Return the highest weight obtained by searching for the text when
-      # analyzed in different ways (with a small bonus if it matches in
-      # multiple of these ways).
-      queries = []
-      queries << minimum_should_match("_all")
-      queries << minimum_should_match_default_analyzer("all_searchable_text.id_codes", search_term, minimum_should_match: "1")
-
-      dis_max_query(queries, tie_breaker: 0.1)
-    end
-
     # FIXME: why is this wrapped in an array?
     def quoted_phrase_query
       # Return the highest weight found by looking for a phrase match in

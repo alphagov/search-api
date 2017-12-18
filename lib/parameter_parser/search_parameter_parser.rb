@@ -345,8 +345,6 @@ private
         # Withdrawn content is excluded from regular searches but is useful for
         # content audits
         options[:include_withdrawn] = true
-      when "use_id_codes"
-        options[:use_id_codes] = true
       when "show_query"
         options[:show_query] = true
       else

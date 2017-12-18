@@ -50,7 +50,6 @@ module Search
             else
               {
                 bool: {
-                  must: [core_query.optional_id_code_query].compact,
                   should: [
                     core_query.match_phrase("title"),
                     core_query.match_phrase("acronym"),
