@@ -32,10 +32,6 @@ module Search
       debug[:disable_synonyms]
     end
 
-    def enable_new_weighting?
-      debug[:new_weighting]
-    end
-
     def disable_best_bets?
       debug[:disable_best_bets]
     end

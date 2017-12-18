@@ -545,14 +545,6 @@ RSpec.describe 'SearchTest' do
     expect(first_result['expanded_topics']).to be_truthy
   end
 
-  it "id_search" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
-
-    get "/search?q=id1&debug=new_weighting"
-
-    expect(result_links).to include "/mainstream-1"
-  end
-
   it "withdrawn_content" do
     commit_document("mainstream_test",
       "title" => "I am the result",
