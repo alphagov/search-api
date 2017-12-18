@@ -243,4 +243,72 @@ You should run this task if the index schema has changed.
       end
     end
   end
+
+  desc "
+    Check to see what's in mainstream that isn't in govuk
+  "
+  task :compare_govuk_and_mainstream_yo do
+    # Arguments to run the publishing_api queue:requeue_document_type task with (aka all the migrated formats): mainstream_browse_page,topic,contact,answer,guide,help_page,licence,local_transaction,place,transaction,simple_smart_answer,aaib_report,asylum_support_decision,business_finance_support_scheme,cma_case,countryside_stewardship_grant,dfid_research_output,drug_safety_update,employment_appeal_tribunal_decision,employment_tribunal_decision,esi_fund,international_development_fund,maib_report,medical_safety_alert,raib_report,service_standard_report,tax_tribunal_decision,utaac_decision,calendar,finder,hmrc_manual,hmrc_manual_section,manual,manual_section,policy,service_manual_guide,service_manual_homepage,service_manual_service_standard,service_manual_topic,task_list,travel_advice,travel_advice_index,special_route,recommended-link
+
+    client = Services.elasticsearch(hosts: SearchConfig.new.base_uri, timeout: 5.0)
+
+    indices = {
+      mainstream: [],
+      govuk: []
+    }
+
+    indices.each do |index, ids|
+      ScrollEnumerator.new(
+        client: client,
+        search_body: {
+          fields: ["_id"],
+          query: { match_all: {} }
+        },
+        batch_size: 500,
+        index_names: index.to_s
+      ) { |hit| hit }.map do |hit|
+        id = hit['_id']
+        id.prepend('/') unless id[0] == '/'
+        ids << id
+      end
+    end
+
+    not_in_govuk = indices[:mainstream] - indices[:govuk]
+
+    redirects = 0
+    gones = 0
+    external = 0
+
+    actual_missing = not_in_govuk
+
+    puts "*************************************************************"
+    puts "Checking #{actual_missing.count} pieces of non unpublishing type content"
+    # puts actual_missing
+    puts "*************************************************************"
+
+    actual_missing.reject! do |base_path|
+      if base_path.include?("http")
+        external += 1
+      else
+        begin
+          content_item = JSON.parse(`curl https://www.gov.uk/api/content#{base_path}`)
+          redirects += 1 if content_item["document_type"] == 'redirect'
+          content_item["document_type"] == 'redirect'
+        rescue JSON::ParserError => e
+          gones += 1 if e.message.include?('Page no longer here - 410')
+          e.message.include?('Page no longer here - 410')
+        end
+      end
+    end
+
+    puts "*************************************************************"
+    puts "#{redirects} redirects"
+    puts "#{gones} gones"
+    puts "#{external} external links"
+    puts "#{actual_missing.count} are actually actually actually missing"
+    actual_missing.each do |path|
+      puts path
+    end
+    puts "*************************************************************"
+  end
 end
