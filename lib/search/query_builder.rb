@@ -45,9 +45,7 @@ module Search
       best_bets.wrap(
         popularity_boost.wrap(
           format_boost.wrap(
-            if search_params.enable_new_weighting?
-              new_weighting_query
-            elsif search_params.quoted_search_phrase?
+            if search_params.quoted_search_phrase?
               core_query.quoted_phrase_query
             else
               {
@@ -114,10 +112,6 @@ module Search
       Hash[hash.reject { |_key, value|
         [nil, [], {}].include?(value)
       }]
-    end
-
-    def new_weighting_query
-      QueryComponents::TextQuery.new(search_params).payload
     end
 
     # More like this is a separate function for returning similar documents,
