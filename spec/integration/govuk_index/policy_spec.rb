@@ -53,12 +53,13 @@ RSpec.describe "Policy publishing" do
     random_example = generate_random_example(
       schema: "policy",
       payload: {
+        description: "Description about policy.",
         document_type: "policy",
         base_path: "/government/policies/hs2-high-speed-rail",
         expanded_links: {
           working_groups: working_groups,
           people: people
-        }
+        },
       },
       details: { summary: "<p>Description about policy.</p>\n" },
     )
@@ -68,11 +69,12 @@ RSpec.describe "Policy publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "people" => ["person-1", "person-2"],
-       "policy_groups" => ["working-group-1", "working-group-2"],
-       "description" => "Description about policy.",
-       "slug" => "hs2-high-speed-rail",
+      "link" => random_example["base_path"],
+      "people" => ["person-1", "person-2"],
+      "policy_groups" => ["working-group-1", "working-group-2"],
+      "description" => "Description about policy.",
+      "indexable_content" => nil,
+      "slug" => "hs2-high-speed-rail",
      }
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "policy")

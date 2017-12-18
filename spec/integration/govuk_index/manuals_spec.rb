@@ -39,10 +39,11 @@ RSpec.describe "Manual publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "indexable_content" => "Manual description",
-       "latest_change_note" => nil
-     }
+      "link" => random_example["base_path"],
+      "indexable_content" => nil,
+      "description" => "Manual description",
+      "latest_change_note" => nil
+    }
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "manual")
   end
