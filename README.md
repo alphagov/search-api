@@ -35,16 +35,13 @@ There are two ways documents get added to the search index:
 2. Via the RabbitMQ consumer worker, which responds to notifications from the
 	 [Publishing API](https://github.com/alphagov/publishing-api).
 
-In future the documents API will be deprecated and rummager will consume only
-from the publishing API.
-
-There is also a separate [API for retrieving documents](doc/content-api.md)
-from the search index by their links.
+*Note: Once whitehall documents are using the new indexing process, the documents API will be deprecated and rummager will consume only
+from the publishing API.*
 
 Rummager search results are weighted by [popularity](doc/popularity.md). We
 rebuild the index nightly to incorporate the latest analytics.
 
-## Nomenclature
+### Nomenclature
 
 - **Link**: Either the base path for a content item, or an external link.
 - **Document**: An elasticsearch document, something we can search for.
@@ -65,7 +62,8 @@ rebuild the index nightly to incorporate the latest analytics.
 - [elasticsearch](https://github.com/elastic/elasticsearch) - "You Know, for Search...".
 - [redis](https://github.com/redis/redis) - used by indexing workers.
 
-### Setup
+### Creating search indexes from scratch
+(This is not necessary when restoring from a backup or replicating data into the development VM)
 
 To create an empty index:
 
@@ -75,9 +73,9 @@ To create an empty index for all rummager indices:
 
     RUMMAGER_INDEX=all bundle exec rake rummager:create_all_indices
 
-To update an index to the latest index settings, run:
+### Running the test suite
 
-    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_schema
+    bundle exec rake
 
 ### Running the application
 
@@ -85,45 +83,58 @@ If you're running the GDS development VM:
 
     cd /var/govuk/development && bundle exec bowl rummager
 
+Rummager should then be available at
+[rummager.dev.gov.uk](http://rummager.dev.gov.uk/search.json?q=taxes).
+
 If you're not running the GDS development VM:
 
     ./startup.sh
 
-Rummager should then be available at
-[rummager.dev.gov.uk](http://rummager.dev.gov.uk/search.json?q=taxes).
-
-Rummager uses Sidekiq to manage index workers in a separate process. To run
+#### Workers
+Rummager uses Sidekiq to manage its indexing workload. To run
 this in the development VM, you need to run both of these commands:
 
-    # to start the sidekiq process
+    # to start the Sidekiq process
     bundle exec rake jobs:work
 
     # to start the rummager webapp
     bundle exec mr-sparkle --force-polling -- -p 3009
 
-Rummager can subscribe to a queue of updates from publishing-api, backed by
-rabbitmq.  At present Rummager is only interested in updates to the links hash.
-You can start the message queue consumer process in development by running:
+#### Publishing API integration
+Rummager subscribes to a RabbitMQ queue of updates from publishing-api. This still requires Sidekiq to be running.
 
-    govuk_setenv rummager bundle exec rake message_queue:listen_to_publishing_queue
+		bundle exec rake message_queue:insert_data_into_govuk
 
-### Running the test suite
+There is also a separate process that listens to only 'links' updates from the publishing API. This is used for updating old indexes that are populated through the '/documents' API (`government`, `detailed`) and can be removed once those indexes no longer exist.
 
-    bundle exec rake
+    bundle exec rake message_queue:listen_to_publishing_queue
 
-### Indexing & Reindexing
 
-After changing the schema, you'll need to migrate the index.
+### Evaluating search results
+The `ab_tests` parameter can be used to distinguish between two versions of
+the search query.
+
+Using [search-performance-explorer](https://github.com/alphagov/search-performance-explorer),
+you can compare the results side by side.
+
+The [health check script](https://github.com/alphagov/search-performance-explorer/blob/master/health-check.md)
+can be used to evaluate Rummager using a set of judgments about which documents
+are 'good' results for some sample queries.
+
+### Changing the schema/Reindexing
+
+After changing the schema, you'll need to recreate the index. This reindexes documents from the existing index.
 
     RUMMAGER_INDEX=all bundle exec rake rummager:migrate_schema
 
-#### Internal only APIs
+### Internal only APIs
 
 There are some other APIs that are only exposed internally:
 
 - [doc/content-api.md](doc/content-api.md) for the `/content/*` endpoint.
 - [doc/documents.md](doc/documents.md) for the `*/documents/` endpoint.
 
+These are used by [search admin](https://github.com/alphagov/search-admin/).
 
 ### Additional Docs
 
