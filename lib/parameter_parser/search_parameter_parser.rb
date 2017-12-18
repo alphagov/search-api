@@ -339,16 +339,12 @@ private
         options[:disable_synonyms] = true
       when "disable_boosting"
         options[:disable_boosting] = true
-      when "new_weighting"
-        options[:new_weighting] = true
       when "explain"
         options[:explain] = true
       when "include_withdrawn"
         # Withdrawn content is excluded from regular searches but is useful for
         # content audits
         options[:include_withdrawn] = true
-      when "use_id_codes"
-        options[:use_id_codes] = true
       when "show_query"
         options[:show_query] = true
       else

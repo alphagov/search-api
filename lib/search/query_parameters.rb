@@ -32,20 +32,12 @@ module Search
       debug[:disable_synonyms]
     end
 
-    def enable_new_weighting?
-      debug[:new_weighting]
-    end
-
     def disable_best_bets?
       debug[:disable_best_bets]
     end
 
     def disable_boosting?
       debug[:disable_boosting]
-    end
-
-    def enable_id_codes?
-      debug[:use_id_codes]
     end
 
     def show_query?
