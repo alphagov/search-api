@@ -1,5 +1,7 @@
 module GovukIndex
+  class ElasticsearchRetryError < StandardError; end
   class ElasticsearchError < StandardError; end
+  class ElasticsearchInvalidResponseItemCount < StandardError; end
   class MissingTextHtmlContentType < StandardError; end
   class MultipleMessagesInElasticsearchResponse < StandardError; end
   class NotFoundError < StandardError; end
@@ -11,24 +13,16 @@ module GovukIndex
   class PublishingEventWorker < Indexer::BaseWorker
     notify_of_failures
 
-    def perform(routing_key, payload)
-      actions = ElasticsearchProcessor.new
-      process_action(actions, routing_key, payload)
-      response = actions.commit
-      process_response(response) if response
-    # Rescuing as we don't want to retry this class of error
-    rescue MissingBasePath => e
-      return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
-      GovukError.notify(e, extra: { message_body: payload })
-    # Unpublishing messages for something that does not exist may have been
-    # processed out of order so we don't want to notify errbit but just allow
-    # the process to continue
-    rescue NotFoundError
-      logger.info("#{payload['base_path']} could not be found.")
-      Services.statsd_client.increment('govuk_index.not-found-error')
-    rescue UnknownDocumentTypeError
-      logger.info("#{payload['document_type']} document type is not known.")
-      Services.statsd_client.increment('govuk_index.unknown-document-type')
+    def perform(messages)
+      processor = ElasticsearchProcessor.new
+
+      messages.each do |routing_key, payload|
+        process_action(processor, routing_key, payload)
+      end
+
+      response = processor.commit
+      process_response(response, messages) if response
+
     # Rescuing exception to guarantee we capture all Sidekiq retries
     rescue Exception # rubocop:disable Lint/RescueException
       Services.statsd_client.increment('govuk_index.sidekiq-retry')
@@ -37,7 +31,7 @@ module GovukIndex
 
   private
 
-    def process_action(actions, routing_key, payload)
+    def process_action(processor, routing_key, payload)
       logger.debug("Processing #{routing_key}: #{payload}")
       Services.statsd_client.increment('govuk_index.sidekiq-consumed')
 
@@ -50,26 +44,56 @@ module GovukIndex
       identifier = "#{presenter.base_path} #{presenter.type || "'unmapped type'"}"
       if presenter.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{identifier}")
-        actions.delete(presenter)
+        processor.delete(presenter)
       elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path)
         logger.info("#{routing_key} -> BLACKLISTED #{identifier}")
       elsif MigratedFormats.indexable?(presenter.format, presenter.base_path)
         logger.info("#{routing_key} -> INDEX #{identifier}")
-        actions.save(presenter)
+        processor.save(presenter)
       else
         logger.info("#{routing_key} -> UNKNOWN #{identifier}")
       end
+
+    # Rescuing as we don't want to retry this class of error
+    rescue MissingBasePath => e
+      return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
+      GovukError.notify(e, extra: { message_body: payload })
+      # Unpublishing messages for something that does not exist may have been
+      # processed out of order so we don't want to notify errbit but just allow
+      # the process to continue
+    rescue NotFoundError
+      logger.info("#{payload['base_path']} could not be found.")
+      Services.statsd_client.increment('govuk_index.not-found-error')
+    rescue UnknownDocumentTypeError
+      logger.info("#{payload['document_type']} document type is not known.")
+      Services.statsd_client.increment('govuk_index.unknown-document-type')
     end
 
-    def process_response(response)
-      # we are only expecting to process a single message at a time
+    def process_response(response, messages)
+      messages_with_error = []
       if response['items'].count > 1
         Services.statsd_client.increment('govuk_index.elasticsearch.multiple_responses')
-        raise MultipleMessagesInElasticsearchResponse
       end
 
-      item = response['items'].first
-      action_type, details = *item.first # item is a hash with a single key, value pair
+      if response['items'].count != messages.count
+        raise ElasticsearchInvalidResponseItemCount, "received #{response['items'].count} expected #{messages.count}"
+      end
+      response['items'].zip(messages).each do |response_for_message, message|
+        messages_with_error << message unless valid_response?(response_for_message)
+      end
+
+      if messages_with_error.any?
+        # raise an error so that all messages are retried.
+        # NOTE: versioned ES actions can be performed multiple with a consistent result.
+        raise ElasticsearchRetryError.new(
+          reason: "Elasticsearch failures",
+          messages: "#{messages_with_error.count} of #{messages.count} failed - see ElasticsearchError's for details",
+        )
+      end
+    end
+
+    def valid_response?(response)
+      action_type, details = response.first # response is a hash with a single [key, value] pair
       status = details['status']
 
       if (200..399).cover?(status)
@@ -86,8 +110,16 @@ module GovukIndex
       else
         logger.error("#{action_type} not processed: status #{status}")
         Services.statsd_client.increment("govuk_index.elasticsearch.#{action_type}_error")
-        raise ElasticsearchError, action_type: action_type, details: details
+
+        GovukError.notify(
+          ElasticsearchError.new,
+          action_type: action_type,
+          details: details,
+        )
+        return false
       end
+
+      true
     end
   end
 end

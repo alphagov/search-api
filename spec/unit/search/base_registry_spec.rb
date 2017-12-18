@@ -18,7 +18,7 @@ RSpec.describe Search::BaseRegistry do
   it "uses_time_as_default_clock" do
     # This is to make sure the cache expiry is expressed in seconds; DateTime,
     # for example, treats number addition as a number of days.
-    expect(Search::TimedCache).to receive(:new).with(an_instance_of(Fixnum), Time)
+    expect(Search::TimedCache).to receive(:new).with(an_instance_of(Integer), Time)
     described_class.new(@index, sample_field_definitions, "example-format")
   end
 
