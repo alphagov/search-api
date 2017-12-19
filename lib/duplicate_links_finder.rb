@@ -1,30 +1,36 @@
 class DuplicateLinksFinder
-  def initialize(elasticsearch_url, indices)
-    @client = Elasticsearch::Client.new(host: elasticsearch_url)
+  DEFAULT_INDICES_TO_SEARCH = %w(mainstream detailed government govuk).freeze
+
+  def initialize(elasticsearch_url: nil, indices: DEFAULT_INDICES_TO_SEARCH)
+    @client = Elasticsearch::Client.new(host: elasticsearch_url || SearchConfig.new.elasticsearch["base_uri"])
     @indices = indices
   end
 
   def find_exact_duplicates
     body = {
-      "query": {
-        "match_all": {}
+      query: {
+        match_all: {}
       },
-      "aggs": {
-        "duplicates": {
-          "terms": {
-            "field": "link",
-            "order": {
-              "_count": "desc"
-            },
-            "size": 100000,
-            "min_doc_count": 2
+      aggs: {
+        dups: {
+          filter: Search::FormatMigrator.new.call,
+          aggs: {
+            duplicates: {
+              terms: {
+                field: "link",
+                order: { _count: "desc" },
+                size: 100000,
+                min_doc_count: 2
+              }
+            }
           }
         }
-      }
+      },
+      filter: Search::FormatMigrator.new.call,
+      size: 0,
     }
-
     results = client.search(index: indices, body: body)
-    results["aggregations"]["duplicates"]["buckets"].map { |duplicate| duplicate["key"] }
+    results["aggregations"]["dups"]["duplicates"]["buckets"].map { |duplicate| duplicate["key"] }
   end
 
   # Find items whose link is a full URL which duplicate items whose links are just the path

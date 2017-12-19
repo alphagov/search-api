@@ -1,8 +1,6 @@
 require 'rummager'
 
 namespace :delete do
-  CONTENT_SEARCH_INDICES = %w(mainstream detailed government).freeze
-
   desc "
   Delete duplicates with the content IDs and/or links provided
   Usage
@@ -29,7 +27,7 @@ namespace :delete do
 
     elasticsearch_config = SearchConfig.new.elasticsearch
 
-    links = DuplicateLinksFinder.new(elasticsearch_config["base_uri"], CONTENT_SEARCH_INDICES).find_exact_duplicates
+    links = DuplicateLinksFinder.new.find_exact_duplicates
 
     puts "Found #{links.size} duplicate links to delete"
 
