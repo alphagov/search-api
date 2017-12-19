@@ -113,8 +113,10 @@ module GovukIndex
 
         GovukError.notify(
           ElasticsearchError.new,
-          action_type: action_type,
-          details: details,
+          extra: {
+            action_type: action_type,
+            details: details,
+          },
         )
         return false
       end
