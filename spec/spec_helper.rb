@@ -16,7 +16,6 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 
 # load this first to avoid duplicate constant declaration error
 require 'logging'
-require 'health_check/logging_config'
 
 require 'rummager'
 require 'rummager/app' # load the website
