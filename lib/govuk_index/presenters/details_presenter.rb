@@ -8,6 +8,7 @@ module GovukIndex
 
     delegate_to_payload :licence_identifier
     delegate_to_payload :licence_short_description
+    delegate_to_payload :url
 
     def initialize(details:, format:)
       @details = details

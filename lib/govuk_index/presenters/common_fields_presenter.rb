@@ -2,6 +2,7 @@ module GovukIndex
   class CommonFieldsPresenter
     CUSTOM_FORMAT_MAP = {
       "esi_fund" => "european_structural_investment_fund",
+      "external_content" => "recommended-link",
       "service_manual_homepage" => "service_manual_guide",
       "service_manual_service_standard" => "service_manual_guide",
       "topic" => "specialist_sector",
@@ -14,7 +15,6 @@ module GovukIndex
     delegate_to_payload :description
     delegate_to_payload :email_document_supertype
     delegate_to_payload :government_document_supertype
-    delegate_to_payload :link, hash_key: "base_path"
     delegate_to_payload :navigation_document_supertype
     delegate_to_payload :public_timestamp, hash_key: "public_updated_at"
     delegate_to_payload :publishing_app
@@ -24,6 +24,18 @@ module GovukIndex
 
     def initialize(payload)
       @payload = payload
+    end
+
+    def link
+      if format == "recommended-link"
+        payload["details"]["url"]
+      else
+        base_path
+      end
+    end
+
+    def base_path
+      payload["base_path"]
     end
 
     def title
@@ -36,7 +48,7 @@ module GovukIndex
 
     def popularity
       lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.instance)
-      lookup.lookup_popularities([payload["base_path"]])[payload["base_path"]]
+      lookup.lookup_popularities([link])[link]
     end
 
     def format

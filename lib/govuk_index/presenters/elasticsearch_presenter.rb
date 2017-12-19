@@ -19,7 +19,7 @@ module GovukIndex
     def identifier
       {
         _type: _type,
-        _id: base_path,
+        _id: link,
         version: payload["payload_version"],
         version_type: "external",
       }
@@ -123,11 +123,19 @@ module GovukIndex
     end
 
     def base_path
-      @_base_path ||= payload["base_path"]
+      common_fields.base_path
+    end
+
+    def link
+      common_fields.link
     end
 
     def valid!
-      base_path || raise(MissingBasePath, "base_path missing from payload")
+      if format == "recommended-link"
+        details.url || raise(MissingExternalUrl, "url missing from details section")
+      else
+        base_path || raise(MissingBasePath, "base_path missing from payload")
+      end
     end
 
   private

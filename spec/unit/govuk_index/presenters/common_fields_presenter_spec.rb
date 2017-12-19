@@ -52,6 +52,19 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     expect(presenter.link).to eq(payload["base_path"])
   end
 
+  it "uses the URL as the link for external content" do
+    payload = {
+      "document_type" => "external_content",
+      "details" => {
+        "url" => "some_url"
+      }
+    }
+
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.link).to eq("some_url")
+  end
+
   it "withdrawn_when_withdrawn_notice_present" do
     payload = {
       "base_path" => "/some/path",
