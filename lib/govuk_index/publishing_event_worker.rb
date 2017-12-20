@@ -7,6 +7,7 @@ module GovukIndex
   class NotFoundError < StandardError; end
   class UnknownDocumentTypeError < StandardError; end
   class MissingBasePath < StandardError; end
+  class MissingExternalUrl < StandardError; end
 
   DOCUMENT_TYPES_WITHOUT_BASE_PATH = %w(contact world_location).freeze
 
@@ -41,7 +42,7 @@ module GovukIndex
       )
       presenter.valid!
 
-      identifier = "#{presenter.base_path} #{presenter.type || "'unmapped type'"}"
+      identifier = "#{presenter.link} #{presenter.type || "'unmapped type'"}"
       if presenter.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{identifier}")
         processor.delete(presenter)

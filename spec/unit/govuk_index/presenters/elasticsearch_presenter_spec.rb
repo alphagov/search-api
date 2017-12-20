@@ -25,8 +25,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     }.to raise_error(GovukIndex::UnknownDocumentTypeError)
   end
 
-
-  it "raise_validation_error" do
+  it "is invalid if the base path is missing" do
     payload = {}
 
     presenter = elasticsearch_presenter(payload)
@@ -34,6 +33,34 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     expect {
       presenter.valid!
     }.to raise_error(GovukIndex::MissingBasePath)
+  end
+
+  context "external content" do
+    it "is valid if it has a URL" do
+      payload = {
+        "document_type" => "external_content",
+        "details" => {
+          "url" => "some URL"
+        },
+      }
+
+      presenter = elasticsearch_presenter(payload)
+
+      presenter.valid!
+    end
+
+    it "is invalid if the URL is missing" do
+      payload = {
+        "document_type" => "external_content",
+        "details" => {},
+      }
+
+      presenter = elasticsearch_presenter(payload)
+
+      expect {
+        presenter.valid!
+      }.to raise_error(GovukIndex::MissingExternalUrl)
+    end
   end
 
   def elasticsearch_presenter(payload, type = "aaib_report")
