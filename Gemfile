@@ -18,7 +18,6 @@ gem "sidekiq", "~> 4.1.2"
 gem 'sidekiq-limit_fetch'
 gem "sidekiq-statsd", "0.1.5"
 gem "sinatra", "~> 2.0.0"
-gem "slop", "~> 3.4.5"
 gem "statsd-ruby", "~> 1.4.0"
 gem "unf", "~> 0.1.4"
 gem "whenever", "~> 0.10.0"
