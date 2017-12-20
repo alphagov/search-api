@@ -73,7 +73,17 @@ class Rummager < Sinatra::Application
     halt(400, env['sinatra.error'].message)
   end
 
-  # Return results for the GOV.UK site search
+  error MetasearchIndex::Deleter::V2::UnknownError, MetasearchIndex::Deleter::V2::MissingArgument,
+    MetasearchIndex::Inserter::V2::UnknownError, MetasearchIndex::Inserter::V2::MissingArgument do
+    halt(500, env['sinatra.error'].message)
+  end
+
+  error MetasearchIndex::Deleter::V2::NotFound do
+    halt(404, env['sinatra.error'].message)
+  end
+
+
+# Return results for the GOV.UK site search
   #
   # For details, see doc/search-api.md
   ["/search.?:request_format?"].each do |path|
@@ -147,6 +157,15 @@ class Rummager < Sinatra::Application
     json_result 202, "Queued"
   end
 
+  post "/v2/metasearch/documents" do
+    document = JSON.parse(request.body)
+
+    inserter = MetasearchIndex::Inserter::V2.new(document)
+    inserter.insert
+
+    json_result 200, "Success"
+  end
+
   post "/?:index?/commit" do
     simple_json_result(current_index.commit)
   end
@@ -163,6 +182,15 @@ class Rummager < Sinatra::Application
     Indexer::DeleteWorker.perform_async(index_name, type, id)
 
     json_result 202, "Queued"
+  end
+
+  delete "/v2/metasearch/documents/*" do
+    id = params["splat"].first
+
+    deleter = MetasearchIndex::Deleter::V2.new(id: id)
+    deleter.delete
+
+    json_result 200, "Success"
   end
 
   def get_type_from_request_body(request_body)
