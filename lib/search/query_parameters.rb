@@ -48,10 +48,6 @@ module Search
       query && suggest.include?('spelling')
     end
 
-    def synonym_b_variant?
-      ab_tests[:synonyms] == 'B'
-    end
-
   private
 
     def determine_if_quoted_phrase

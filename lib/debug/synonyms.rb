@@ -1,39 +1,6 @@
 module Debug
   module Synonyms
-    class OldModel
-      attr_reader :client
-      attr_reader :index
-
-      def initialize(index: "govuk", client: Services.elasticsearch)
-        @client = client
-        @index = index
-      end
-
-      def search(query, pre_tags:, post_tags:)
-        search_query = {
-          query: {
-            multi_match: {
-              "query" => query,
-              "fields" => %w(title^1000 description),
-              "analyzer" => 'query_with_old_synonyms',
-            }
-          },
-          highlight: {
-            "fields" => { "title" => {}, "description" => {} },
-            "pre_tags" => pre_tags,
-            "post_tags" => post_tags
-          }
-        }
-
-        client.search(index: index, body: search_query)
-      end
-
-      def analyze_query(query)
-        client.indices.analyze text: query, analyzer: 'query_with_old_synonyms', index: index
-      end
-    end
-
-    class NewModel
+    class Analyzer
       attr_reader :client
       attr_reader :index
 

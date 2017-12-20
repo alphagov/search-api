@@ -2,7 +2,6 @@ require "search/query_helpers"
 
 module QueryComponents
   class CoreQuery < BaseComponent
-    DEFAULT_QUERY_ANALYZER = "query_with_old_synonyms".freeze
     DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS = "default".freeze
 
     # Used with foo.synonym fields. Passing this is not necessary because
@@ -114,7 +113,7 @@ module QueryComponents
     # Use the synonym variant of the field unless we're disabling synonyms
     def synonym_field(field_name)
       return field_name if search_params.disable_synonyms?
-      return field_name if !search_params.synonym_b_variant?
+
       raise ValueError if field_name.include?(".")
 
       field_name + ".synonym"
@@ -126,12 +125,9 @@ module QueryComponents
       if search_params.disable_synonyms?
         # this is the default defined in the mapping for regular fields
         DEFAULT_QUERY_ANALYZER_WITHOUT_SYNONYMS
-      elsif search_params.synonym_b_variant?
+      else
         # this is the default defined in the mapping for *.synonym fields
         QUERY_TIME_SYNONYMS_ANALYZER
-      else
-        # this includes the old synonym filter
-        DEFAULT_QUERY_ANALYZER
       end
     end
 
