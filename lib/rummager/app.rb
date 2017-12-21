@@ -73,12 +73,16 @@ class Rummager < Sinatra::Application
     halt(400, env['sinatra.error'].message)
   end
 
-  error MetasearchIndex::Deleter::V2::UnknownError, MetasearchIndex::Deleter::V2::MissingArgument,
-    MetasearchIndex::Inserter::V2::UnknownError, MetasearchIndex::Inserter::V2::MissingArgument do
+  error Index::ResponseValidator::ElasticsearchError do
+    # TODO: we want to one to be reported to sentry - check this is the case.
     halt(500, env['sinatra.error'].message)
   end
 
-  error MetasearchIndex::Deleter::V2::NotFound do
+  error ArgumentError do
+    halt(400, env['sinatra.error'].message)
+  end
+
+  error Index::ResponseValidator::NotFound do
     halt(404, env['sinatra.error'].message)
   end
 
@@ -158,9 +162,9 @@ class Rummager < Sinatra::Application
   end
 
   post "/v2/metasearch/documents" do
-    document = JSON.parse(request.body)
+    document = JSON.parse(request.body.read)
 
-    inserter = MetasearchIndex::Inserter::V2.new(document)
+    inserter = MetasearchIndex::Inserter::V2.new(id: document['_id'], document: document)
     inserter.insert
 
     json_result 200, "Success"

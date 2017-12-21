@@ -5,7 +5,7 @@ module GovukIndex
     sidekiq_options queue: QUEUE_NAME
 
     def perform(records, destination_index)
-      actions = ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index))
+      actions = Index::ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index))
 
       popularities = retrieve_popularities_for(destination_index, records)
       records.each do |record|

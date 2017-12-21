@@ -1,6 +1,5 @@
 module MetasearchIndex
-  class Client < GovukIndex::Client
-
+  class Client < Index::Client
   private
 
     def index_name

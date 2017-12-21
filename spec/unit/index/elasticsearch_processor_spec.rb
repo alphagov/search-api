@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe GovukIndex::ElasticsearchProcessor do
+RSpec.describe Index::ElasticsearchProcessor do
+  subject { described_class.govuk }
+
   it "should_save_valid_document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(

@@ -5,7 +5,7 @@ module GovukIndex
     sidekiq_options queue: QUEUE_NAME
 
     def perform(records, destination_index)
-      actions = ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index))
+      actions = Index::ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index))
 
       records.each_slice(2) do |identifier, document|
         actions.raw(identifier, document)

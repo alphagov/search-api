@@ -5,11 +5,11 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
     it "raises an error when a blank id is passed in" do
       expect do
         described_class.new(id: nil)
-      end.to raise_error(described_class::MissingArgument)
+      end.to raise_error(ArgumentError)
 
       expect do
         described_class.new(id: "")
-      end.to raise_error(described_class::MissingArgument)
+      end.to raise_error(ArgumentError)
     end
 
     it "does not raise an error when all fields are present" do
@@ -18,7 +18,7 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
       end.not_to raise_error
     end
   end
-  
+
   it "can delete an existing document" do
     document = {
       "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
@@ -37,16 +37,16 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
   it "will raise an error when trying to delete a non-existant document" do
     expect do
       described_class.new(id: "ca3916-exact").delete
-    end.to raise_error(described_class::NotFound)
+    end.to raise_error(Index::ResponseValidator::NotFound)
   end
 
   it "raises an error if the process fails to delete in elasticsearch" do
     failure_reponse = {
       "items" => [{ "insert" => { "status" => 500 } }]
     }
-    expect_any_instance_of(GovukIndex::ElasticsearchProcessor).to receive(:commit).and_return(failure_reponse)
+    expect_any_instance_of(Index::ElasticsearchProcessor).to receive(:commit).and_return(failure_reponse)
     expect do
       described_class.new(id: "ca3916-exact").delete
-    end.to raise_error(described_class::UnknownError)
+    end.to raise_error(Index::ResponseValidator::ElasticsearchError)
   end
 end
