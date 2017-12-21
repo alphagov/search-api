@@ -97,7 +97,7 @@ module QueryComponents
       }
     end
 
-    def match_bigrams(fields)
+    def match_any_terms(fields)
       fields = fields.map { |f| synonym_field(f) }
 
       {
@@ -105,7 +105,7 @@ module QueryComponents
           query: escape(search_term),
           operator: "or",
           fields: fields,
-          analyzer: "shingled_query_analyzer"
+          analyzer: query_analyzer
         }
       }
     end

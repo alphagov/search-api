@@ -18,12 +18,6 @@ RSpec.describe 'SettingsTest' do
       "It's, It’s Mr. O'Neill" => %w(it it mr oneil)
   end
 
-  it "shingled query analyzer" do
-    expect_tokenisation :shingled_query_analyzer,
-      "Hello Hallo" => ["hello", "hello hallo", "hallo"],
-      "H'lo ’Hallo" => ["h'lo", "h'lo hallo", "hallo"]
-  end
-
   it "exact match" do
     expect_tokenisation :exact_match,
       "It’s A Small W'rld" => ["it's a small w'rld"]
