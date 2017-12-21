@@ -7,12 +7,7 @@ module GovukIndex
     end
 
     def type
-      if unpublishing_type?
-        raise NotFoundError if existing_document.nil?
-        existing_document['_type']
-      else
-        elasticsearch_document_type
-      end
+      elasticsearch_document_type
     end
 
     def unpublishing_type?
@@ -27,15 +22,6 @@ module GovukIndex
       @_document_types ||= begin
         YAML.load_file(File.join(__dir__, '../../config/govuk_index/mapped_document_types.yaml'))
       end
-    end
-
-    def existing_document
-      @_existing_document ||=
-        begin
-          Client.get(type: '_all', id: payload['base_path'])
-        rescue Elasticsearch::Transport::Transport::Errors::NotFound
-          nil
-        end
     end
 
     def elasticsearch_document_type

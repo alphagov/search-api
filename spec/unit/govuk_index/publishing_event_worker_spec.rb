@@ -270,7 +270,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
   end
 
   def stub_document_type_inferrer
-    allow_any_instance_of(GovukIndex::DocumentTypeInferrer).to receive(:type).and_return('real_document_type')
+    allow_any_instance_of(GovukIndex::ElasticsearchDeletePresenter).to receive(:type).and_return('real_document_type')
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("real_document_type" => :all)
   end
 end
