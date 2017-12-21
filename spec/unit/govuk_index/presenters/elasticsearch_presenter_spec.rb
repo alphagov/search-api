@@ -64,10 +64,10 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
   end
 
   def elasticsearch_presenter(payload, type = "aaib_report")
-    allow_any_instance_of(GovukIndex::DocumentTypeInferer).to receive(:type).and_return(type)
+    allow_any_instance_of(GovukIndex::DocumentTypeInferrer).to receive(:type).and_return(type)
     described_class.new(
       payload: payload,
-      type_inferer: GovukIndex::DocumentTypeInferer
+      type_inferrer: GovukIndex::DocumentTypeInferrer
     )
   end
 end

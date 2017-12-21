@@ -1,14 +1,14 @@
 module GovukIndex
   class ElasticsearchPresenter
-    delegate :unpublishing_type?, to: :@infered_type
+    delegate :unpublishing_type?, to: :@inferred_type
 
-    def initialize(payload:, type_inferer: GovukIndex::DocumentTypeInferer)
+    def initialize(payload:, type_inferrer: GovukIndex::DocumentTypeInferrer)
       @payload = payload
-      @infered_type ||= type_inferer.new(payload)
+      @inferred_type ||= type_inferrer.new(payload)
     end
 
     def type
-      @type ||= @infered_type.type
+      @type ||= @inferred_type.type
     end
 
     def _type

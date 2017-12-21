@@ -64,7 +64,7 @@ require 'index/response_validator'
 
 require 'govuk_index/updater'
 require 'govuk_index/client'
-require 'govuk_index/document_type_inferer'
+require 'govuk_index/document_type_inferrer'
 require 'govuk_index/page_traffic_worker'
 require 'govuk_index/method_builder'
 require 'govuk_index/indexable_content_sanitiser'
