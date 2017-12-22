@@ -74,7 +74,13 @@ class Rummager < Sinatra::Application
   end
 
   error Index::ResponseValidator::ElasticsearchError do
-    # TODO: we want to one to be reported to sentry - check this is the case.
+    GovukError.notify(
+      env['sinatra.error'],
+      extra: {
+        params: params,
+      },
+    )
+
     halt(500, env['sinatra.error'].message)
   end
 
