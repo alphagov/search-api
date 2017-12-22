@@ -137,7 +137,7 @@ module IntegrationSpecHelper
   def expect_document_is_in_rummager(document, type: "edition", index: 'mainstream_test', id: nil)
     retrieved = fetch_document_from_rummager(id: id || document['link'], index: index)
 
-    expect(type).to eq(retrieved["_type"])
+    expect(retrieved["_type"]).to eq(type)
 
     retrieved_source = retrieved["_source"]
     document.each do |key, value|

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe GovukIndex::PublishingEventWorker do
   before do
-    allow(GovukIndex::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
   end
   let(:actions) { double('actions') }
 
@@ -98,7 +98,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     end
 
     context "when document type requires a basepath" do
-      let(:actions) { GovukIndex::ElasticsearchProcessor.new }
+      let(:actions) { Index::ElasticsearchProcessor.govuk }
       let(:payload) do
         {
           "document_type" => "help_page",
@@ -122,7 +122,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     end
 
     context "when document type doesn't require a basepath" do
-      let(:actions) { GovukIndex::ElasticsearchProcessor.new }
+      let(:actions) { Index::ElasticsearchProcessor.govuk }
       let(:payload) do
         {
           "document_type" => "contact",

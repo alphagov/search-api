@@ -1,6 +1,5 @@
 module GovukIndex
   class ElasticsearchRetryError < StandardError; end
-  class ElasticsearchError < StandardError; end
   class ElasticsearchInvalidResponseItemCount < StandardError; end
   class MissingTextHtmlContentType < StandardError; end
   class MultipleMessagesInElasticsearchResponse < StandardError; end
@@ -15,7 +14,7 @@ module GovukIndex
     notify_of_failures
 
     def perform(messages)
-      processor = ElasticsearchProcessor.new
+      processor = Index::ElasticsearchProcessor.govuk
 
       messages.each do |routing_key, payload|
         process_action(processor, routing_key, payload)
@@ -80,7 +79,7 @@ module GovukIndex
         raise ElasticsearchInvalidResponseItemCount, "received #{response['items'].count} expected #{messages.count}"
       end
       response['items'].zip(messages).each do |response_for_message, message|
-        messages_with_error << message unless valid_response?(response_for_message)
+        messages_with_error << message unless Index::ResponseValidator.new(namespace: 'govuk_index').valid?(response_for_message)
       end
 
       if messages_with_error.any?
@@ -91,38 +90,6 @@ module GovukIndex
           messages: "#{messages_with_error.count} of #{messages.count} failed - see ElasticsearchError's for details",
         )
       end
-    end
-
-    def valid_response?(response)
-      action_type, details = response.first # response is a hash with a single [key, value] pair
-      status = details['status']
-
-      if (200..399).cover?(status)
-        logger.debug("Processed #{action_type} with status #{status}")
-        Services.statsd_client.increment("govuk_index.elasticsearch.#{action_type}")
-      elsif action_type == 'delete' && details['status'] == 404 # failed while attempting to delete missing record so just ignore it
-        logger.info("Tried to delete a document that wasn't there; ignoring.")
-        Services.statsd_client.increment('govuk_index.elasticsearch.already_deleted')
-      elsif details['status'] == 409
-        # A version conflict indicates that messages were processed out of
-        # order. This is not expected to happen often but is safe to ignore.
-        logger.info("#{action_type} version is outdated; ignoring.")
-        Services.statsd_client.increment('govuk_index.elasticsearch.version_conflict')
-      else
-        logger.error("#{action_type} not processed: status #{status}")
-        Services.statsd_client.increment("govuk_index.elasticsearch.#{action_type}_error")
-
-        GovukError.notify(
-          ElasticsearchError.new,
-          extra: {
-            action_type: action_type,
-            details: details,
-          },
-        )
-        return false
-      end
-
-      true
     end
   end
 end

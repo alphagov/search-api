@@ -1,6 +1,14 @@
-module GovukIndex
+module Index
   class ElasticsearchProcessor
-    def initialize(client: GovukIndex::Client)
+    def self.metasearch
+      new(client: MetasearchIndex::Client)
+    end
+
+    def self.govuk
+      new(client: GovukIndex::Client)
+    end
+
+    def initialize(client:)
       @client = client
       @actions = []
     end

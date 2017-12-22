@@ -37,3 +37,7 @@ Style/ClassVars:
 Style/SymbolArray:
   Exclude:
     - 'lib/tasks/*.rake'
+
+Style/MethodCalledOnDoEndBlock:
+  Exclude:
+    - 'spec/**/*'
