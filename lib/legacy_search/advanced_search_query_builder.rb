@@ -98,7 +98,7 @@ module LegacySearch
                     {
                       query_string: {
                         query: escape(@keywords),
-                        analyzer: "query_with_old_synonyms"
+                        analyzer: "with_search_synonyms"
                       }
                     }
                   ]

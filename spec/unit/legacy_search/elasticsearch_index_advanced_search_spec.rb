@@ -45,7 +45,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
                   "query_string" =>
                   {
                     "query" => "happy fun time",
-                    "analyzer" => "query_with_old_synonyms"
+                    "analyzer" => "with_search_synonyms"
                   }
                 }
               ]

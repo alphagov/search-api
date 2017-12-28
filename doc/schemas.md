@@ -152,10 +152,3 @@ foo, bar or baz should return documents with any of them".
 Additional configuration is defined in the `elasticsearch_schema.yml` and
 `stems.yml` files.  This configuration is merged with the JSON configuration,
 and then passed to elasticsearch directly.
-
-The `old_synonyms.yml` contains a set of synonyms which were applied in an old,
-and moderately broken, way.  This is kept separate from the `synonyms.yml` file
-so that we can support and modify the lists for the new synonym approach
-without changing things for the old approach.  Once we're happy with the new
-approach, we'll delete the `old_synonyms.yml` file, and remove support for
-using it.

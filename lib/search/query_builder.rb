@@ -57,12 +57,7 @@ module Search
                     core_query.match_phrase("indexable_content"),
                     core_query.match_all_terms(%w(title acronym description indexable_content)),
                     core_query.match_bigrams(%w(title acronym description indexable_content)),
-
-                    if search_params.synonym_b_variant?
-                      core_query.minimum_should_match("all_searchable_text")
-                    else
-                      core_query.minimum_should_match("_all")
-                    end
+                    core_query.minimum_should_match("all_searchable_text")
                   ],
                 }
               }

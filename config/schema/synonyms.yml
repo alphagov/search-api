@@ -22,31 +22,75 @@
 - search: opening times, opening hours
 - search: sickness, illness
 
-# Similar meanings
+# Expanding document text to capture similar meanings.
+
+# This can affect any searches containing any of these words,
+# rather than just these whole phrases, so we need to watch out for any
+# unexpected effects.
+- index: car tax bands, vehicle tax rates
+- index: hazardous substances, dangerous substances
+- index: holiday pay, holiday entitlement
+- index: pension forecast, pension statement
+- index: practical driving test, practical test
+- index: provisional driving licence, provisional licence
+- index: tariff classification, trade tariff
+- index: tariff codes, commodity codes
+
+# Expanding queries to capture similar meanings.
+
+# These terms are not interchangable, but they are closely related.
+# This will artificially increase the size of the user's query, so "minimum
+# should match" requirements can be easily met even if only part of the phrase
+# matches.
+- search: social fund, budgeting loans, crisis loans
+- search: work experience, internship, interns
 - search: apply, applying, application, claim, claiming
 - search: bank holiday, bank holidays, public holiday, public holidays
 - search: bankrupt, bankruptcy
 - search: car, vehicle
-- index: car tax bands, vehicle tax rates
 - search: copyright, intellectual property
 - search: death, bereavement
 - search: emissions, pollution
 - search: fees, costs, prices
-- index: hazardous substances, dangerous substances
-- index: holiday pay, holiday entitlement
-- search: how much => how much, fees, rates
-- index: pension forecast, pension statement
-- index: practical driving test, practical test
-- index: provisional driving licence, provisional licence
 - search: reduction, discount
 - search: renew, expired, out of date
 - search: self employed, self employment, sole trader, starting a business
-- index: social fund, budgeting loans, crisis loans
-- index: tariff classification, trade tariff
-- index: tariff codes, commodity codes
-- search: work experience, internship, interns
 
-# Unofficial or deprecated terms
+# Adding terms to return relevant content that doesn't mention the original search term
+- search: how much => how much, fees, rates
+- search: apostille => apostille, document legalised
+- search: bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating
+- search: benefit checker, benefits checker => benefits adviser
+- search: bin collection => bin collection, rubbish collection
+- search: bno => overseas british passport
+- search: cancel child benefit => stop child benefit
+- search: curriculum vitae => cv, curriculum vitae
+# Seasonal need - also for Christmas and New Year payments
+- search: easter => easter, paid early
+- search: fiance, fiancee, fiancé, fiancée => partner, family, visa
+- search: flood alert, flood alerts => flood alerts, flood warnings
+- search: hpi check => used car check
+- search: intestacy => intestacy, wills, inherits
+- search: intestate => intestate, wills, inherits
+- search: kiev => kiev, kyiv, ukraine
+- search: mot checker => mot check
+# Student finance login
+- search: my account => your account, online account
+- search: not arrived => not arrived, contact dvla
+- search: not received => not received, contact dvla
+- search: refuse collection => refuse collection, rubbish collection
+- search: self certificate => self certification
+- search: sign off, signing off, starting work => sign off, signing off, starting work, from benefits to work, return to work, adviser
+- search: soc code, soc codes => soc code, sponsorship, skilled worker
+- search: social security => social security, benefits
+- search: sponsor login => sponsorship management system
+- search: spouse visa, spousal visa => spouse visa, partner visa, family
+- search: starting a company => starting a company, starting a business
+- search: under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room
+- search: visa4uk => visa4uk, uk visa
+- search: waste carriers licence, waste carriers license => register as a waste carrier, licence
+
+# Unofficial or deprecated terms should expand to the preferred term
 - search: ancestral visa => ancestry visa
 - search: bedroom tax => spare bedroom, spare room
 - search: death duty => death duty, death duties, inheritance tax
@@ -72,7 +116,7 @@
 - search: winter payment, winter payments => winter fuel payment
 - search: xmas => christmas
 
-# Run-together terms
+# Separate run-together terms
 - search: bluebadge => blue badge
 - search: bonavacantia => bona vacantia
 - search: carersallowance => carer's allowance
@@ -213,68 +257,10 @@
 - search: n i => ni
 - search: p i p => pip
 
-# Adding terms to return relevant content that doesn't mention the original search term
-- search: apostille => apostille, document legalised
-- search: bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating
-
-
-
-
-- search: benefit checker, benefits checker => benefits adviser
-- search: bin collection => bin collection, rubbish collection
-- search: bno => overseas british passport
-- search: cancel child benefit => stop child benefit
-- search: curriculum vitae => cv, curriculum vitae
-# Seasonal need - also for Christmas and New Year payments
-- search: easter => easter, paid early
-- search: fiance, fiancee, fiancé, fiancée => partner, family, visa
-
-
-- search: flood alert, flood alerts => flood alerts, flood warnings
-# heating => heating, energy grants, energy saving, cold, warm, winter
-- search: hpi check => used car check
-- search: intestacy => intestacy, wills, inherits
-
-- search: intestate => intestate, wills, inherits
-
-- search: kiev => kiev, kyiv, ukraine
-- search: mot checker => mot check
-# Student finance login
-- search: my account => your account, online account
-
-- search: not arrived => not arrived, contact dvla
-- search: not received => not received, contact dvla
-- search: refuse collection => refuse collection, rubbish collection
-- search: self certificate => self certification
-- search: sign off, signing off, starting work => sign off, signing off, starting work, from benefits to work, return to work, adviser
-
-
-
-
-
-# snow, snow code => snow, ice, grit, winter, weather, closures
-- search: soc code, soc codes => soc code, sponsorship, skilled worker
-
-
-- search: social security => social security, benefits
-- search: sponsor login => sponsorship management system
-- search: spouse visa, spousal visa => spouse visa, partner visa, family
-
-
-- search: starting a company => starting a company, starting a business
-- search: under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room
-
-
-
-- search: visa4uk => visa4uk, uk visa
-- search: waste carriers licence, waste carriers license => register as a waste carrier, licence
-
 # Adding terms to raise the best results
 - search: british citizenship => british citizenship, british citizen
 - search: health check, health checks => nhs health check
 - search: job share, job sharing => job share, job sharing, flexible working
-
-
 
 # Removing terms to return relevant content
 - search: flood areas => flood
@@ -283,19 +269,14 @@
 
 # Forms and leaflets
 - search: adif => birth or adoption certificate form, student finance forms
-
 - search: br1, br 1 => br1, state pension claim form
-
 - search: br19, br 19 => br19, state pension statement
-
 - search: cwf1 => register for self assessment
 - search: d184 => divorce
 # 'D46P' appears in content but returns no results
 - search: d46p => d46p, renew 70
 - search: d777, d786b => d777b, digital tachograph driver card
-
 - search: d796 => d888, driver entitlement
-
 # 'D798' appears in content but returns no results
 - search: d798 => d798, renewal reminder
 - search: e15 => statutory maternity pay guidance
@@ -305,12 +286,10 @@
 - search: et3 => et3, employment tribunal
 - search: ex160, ex160a => court fees
 - search: ex321 => make a court claim for money, enforce a judgment
-
 - search: ex50 => court fees
 - search: flrm => flr m
 - search: flro => flr o
 - search: gv 262 => gv262, drivers hours
-
 - search: inf1d => driving licence application
 - search: inf2d => driving licence lorry or bus
 - search: inf4d => inf4d, medical condition
@@ -320,9 +299,7 @@
 - search: ipcbr1 => ipcbr1, ipc br1
 - search: jsa1, jsa1 ils, jsa1ils, jsa3, jsa4, jsa5, jsa6, jsa7, jsa9, jsa10, jsa10jp, jsa11, jsa12, jsa13, jsa28, jsa31, jsa40, jsa69, jsa460 => jobseeker's allowance
 - search: jsa esa10jp => jobseeker's allowance, employment support allowance
-
 - search: jsa2 => jobseeker's allowance, benefit integrity centre
-
 - search: lso1 => ls01
 - search: mi12 => mi12, mortgage interest
 - search: ni17a => maternity benefits
@@ -332,7 +309,6 @@
 - search: pr2 => pr2, student finance forms
 - search: r27 => after someone dies
 - search: sc1 => sc1, incapacity benefit
-
 - search: set m, setm => set m form
 - search: set o, seto => set o form
 - search: v100 => vehicle registration
@@ -363,7 +339,6 @@
 - search: unique tax => unique taxpayer
 
 # Correcting mistakes
-# advise => advise, advice
 - search: cy1 => cyi
 - search: dlva => dvla
 - search: e11 => e11, ehic
@@ -664,7 +639,7 @@
 - search: s76 => s76, sikorsky 76, sikorsky 76a, sikorsky 76b, sikorsky 76c
 - search: s92 => s92, sikorsky 92, sikorsky 92a
 
-# Temporary fix for MAA regulatory articles
+# 'Temporary' fix for MAA regulatory articles
 - search: ra1002 => ra 1002
 - search: ra1003 => ra 1003
 - search: ra1005 => ra 1005
