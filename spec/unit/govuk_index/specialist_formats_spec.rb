@@ -241,7 +241,8 @@ private
       payload
     end
 
-    described_class.new(payload: example).document
+    type_inferrer = GovukIndex::DocumentTypeInferrer.new(example)
+    described_class.new(payload: example, type_inferrer: type_inferrer).document
   end
 
 

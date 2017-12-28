@@ -30,7 +30,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "document_type" => "redirect",
           "title" => "We love cheese"
         }
-        stub_document_type_inferer
+        stub_document_type_inferrer
 
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 200 } }])
@@ -66,7 +66,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "document_type" => "gone",
           "title" => "We love cheese"
         }
-        stub_document_type_inferer
+        stub_document_type_inferrer
 
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 500 } }])
@@ -86,7 +86,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "document_type" => "substitute",
           "title" => "We love cheese"
         }
-        stub_document_type_inferer
+        stub_document_type_inferrer
 
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 404 } }])
@@ -181,7 +181,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     end
 
     it 'can save and delete documents in the same batch' do
-      stub_document_type_inferer
+      stub_document_type_inferrer
 
       expect(actions).to receive(:save)
       expect(actions).to receive(:delete)
@@ -269,8 +269,8 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     end
   end
 
-  def stub_document_type_inferer
-    allow_any_instance_of(GovukIndex::DocumentTypeInferer).to receive(:type).and_return('real_document_type')
+  def stub_document_type_inferrer
+    allow_any_instance_of(GovukIndex::ElasticsearchDeletePresenter).to receive(:type).and_return('real_document_type')
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("real_document_type" => :all)
   end
 end
