@@ -1,6 +1,5 @@
 module GovukIndex
   class Client < Index::Client
-
   private
 
     def index_name
