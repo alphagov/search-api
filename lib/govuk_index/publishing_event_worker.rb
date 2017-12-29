@@ -35,14 +35,14 @@ module GovukIndex
       logger.debug("Processing #{routing_key}: #{payload}")
       Services.statsd_client.increment('govuk_index.sidekiq-consumed')
 
-      type_inferrer = DocumentTypeInferrer.new(payload)
+      type_mapper = DocumentTypeMapper.new(payload)
 
-      if type_inferrer.unpublishing_type?
+      if type_mapper.unpublishing_type?
         presenter = ElasticsearchDeletePresenter.new(payload: payload)
       else
         presenter = ElasticsearchPresenter.new(
           payload: payload,
-          type_inferrer: type_inferrer,
+          type_mapper: type_mapper,
         )
       end
 
@@ -50,7 +50,7 @@ module GovukIndex
 
       identifier = "#{presenter.link} #{presenter.type || "'unmapped type'"}"
 
-      if type_inferrer.unpublishing_type?
+      if type_mapper.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{identifier}")
         processor.delete(presenter)
       elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path)

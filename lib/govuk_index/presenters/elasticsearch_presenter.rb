@@ -1,8 +1,8 @@
 module GovukIndex
   class ElasticsearchPresenter
-    def initialize(payload:, type_inferrer:)
+    def initialize(payload:, type_mapper:)
       @payload = payload
-      @inferred_type = type_inferrer
+      @inferred_type = type_mapper
     end
 
     def type
