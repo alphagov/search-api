@@ -30,6 +30,7 @@ RSpec.describe "external content publishing" do
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
+    content_id = random_example["content_id"]
     expected_document = {
        "link" => random_example["details"]["url"],
        "format" => "recommended-link",
@@ -38,7 +39,7 @@ RSpec.describe "external content publishing" do
        "indexable_content" => "some, search, keywords",
      }
 
-    expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
+    expect_document_is_in_rummager(expected_document, id: content_id, index: "govuk_test", type: "edition")
   end
 
   it "removes a page of external content" do

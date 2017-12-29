@@ -1,5 +1,7 @@
 module GovukIndex
   class ElasticsearchPresenter
+    include ElasticsearchIdentity
+
     def initialize(payload:, type_mapper:)
       @payload = payload
       @inferred_type = type_mapper
@@ -7,20 +9,6 @@ module GovukIndex
 
     def type
       @type ||= @inferred_type.type
-    end
-
-    def _type
-      # raise the error at the last possible moment to avoid requiring declaration for unused value
-      type || raise(UnknownDocumentTypeError)
-    end
-
-    def identifier
-      {
-        _type: _type,
-        _id: link,
-        version: payload["payload_version"],
-        version_type: "external",
-      }
     end
 
     def document
