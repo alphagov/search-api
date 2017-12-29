@@ -1,27 +1,23 @@
-require "sidekiq"
-require "sidekiq-statsd"
-
-redis_config_hash = YAML.load(ERB.new(File.read("config/redis.yml")).result).symbolize_keys
+require "govuk_sidekiq/sidekiq_initializer"
 
 if ENV["RACK_ENV"] == "test"
-  namespace = "#{redis_config_hash[:namespace]}-#{ENV['RACK_ENV']}"
-else
-  namespace = redis_config_hash[:namespace]
-end
+  redis_config = {
+    url: "redis://127.0.0.1:6379/0",
+    namespace: "rummager-test"
+  }
 
-redis_config = {
-  url: "redis://#{redis_config_hash[:host]}:#{redis_config_hash[:port]}/0",
-  namespace: namespace
-}
-
-Sidekiq.configure_server do |config|
-  config.redis = redis_config
-
-  config.server_middleware do |chain|
-    chain.add Sidekiq::Statsd::ServerMiddleware, env: 'govuk.app.rummager', prefix: 'workers'
+  Sidekiq.configure_server do |config|
+    config.redis = redis_config
   end
-end
 
-Sidekiq.configure_client do |config|
-  config.redis = redis_config
+  Sidekiq.configure_client do |config|
+    config.redis = redis_config
+  end
+else
+  redis_config = {
+    host: ENV.fetch("REDIS_HOST", "127.0.0.1"),
+    port: ENV.fetch("REDIS_PORT", 6379)
+  }
+
+  GovukSidekiq::SidekiqInitializer.setup_sidekiq('rummager', redis_config)
 end
