@@ -108,7 +108,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
 
       it "notify of a validation error for missing basepath" do
         expect(GovukError).to receive(:notify).with(
-          instance_of(GovukIndex::MissingBasePath),
+          instance_of(GovukIndex::NotIdentifiable),
           extra: {
             message_body: {
               'document_type' => 'help_page',

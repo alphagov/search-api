@@ -32,7 +32,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
 
     expect {
       presenter.valid!
-    }.to raise_error(GovukIndex::MissingBasePath)
+    }.to raise_error(GovukIndex::NotIdentifiable)
   end
 
   context "external content" do

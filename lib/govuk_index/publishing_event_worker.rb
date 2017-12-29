@@ -5,7 +5,7 @@ module GovukIndex
   class MultipleMessagesInElasticsearchResponse < StandardError; end
   class NotFoundError < StandardError; end
   class UnknownDocumentTypeError < StandardError; end
-  class MissingBasePath < StandardError; end
+  class NotIdentifiable < StandardError; end
   class MissingExternalUrl < StandardError; end
 
   DOCUMENT_TYPES_WITHOUT_BASE_PATH = %w(contact world_location).freeze
@@ -63,7 +63,7 @@ module GovukIndex
       end
 
     # Rescuing as we don't want to retry this class of error
-    rescue MissingBasePath => e
+    rescue NotIdentifiable => e
       return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
       GovukError.notify(e, extra: { message_body: payload })
       # Unpublishing messages for something that does not exist may have been

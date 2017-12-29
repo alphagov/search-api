@@ -7,7 +7,7 @@ module GovukIndex
     def identifier
       {
         _type: type,
-        _id: base_path,
+        _id: id,
         version: payload["payload_version"],
         version_type: "external",
       }
@@ -22,12 +22,18 @@ module GovukIndex
       payload["base_path"]
     end
 
+    def id
+      base_path || payload["content_id"]
+    end
+
     def link
       base_path
     end
 
     def valid!
-      link || raise(MissingBasePath, "base_path missing from payload")
+      unless payload["base_path"] || payload["content_id"]
+        raise(NotIdentifiable, "base_path and content_id missing from payload")
+      end
     end
 
   private
@@ -37,7 +43,7 @@ module GovukIndex
     def existing_document
       @_existing_document ||=
         begin
-          Client.get(type: '_all', id: payload['base_path'])
+          Client.get(type: '_all', id: id)
         rescue Elasticsearch::Transport::Transport::Errors::NotFound
           nil
         end

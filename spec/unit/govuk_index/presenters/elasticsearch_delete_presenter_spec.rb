@@ -49,6 +49,6 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
 
     expect {
       presenter.valid!
-    }.to raise_error(GovukIndex::MissingBasePath)
+    }.to raise_error(GovukIndex::NotIdentifiable)
   end
 end
