@@ -27,7 +27,7 @@ module GovukIndex
     end
 
     def valid!
-      base_path || raise(MissingBasePath, "base_path missing from payload")
+      link || raise(MissingBasePath, "base_path missing from payload")
     end
 
   private

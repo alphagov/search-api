@@ -40,4 +40,23 @@ RSpec.describe "external content publishing" do
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
   end
+
+  it "removes a page of external content" do
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("recommended-link" => :all)
+
+    url = "https://www.nhs.uk"
+    content_id = "b7e993e1-9afa-4235-99a4-479caa240267"
+    document = { 'link' => url, 'content_id' => content_id }
+    commit_document('govuk_test', document, id: content_id, type: 'recommended-link')
+    expect_document_is_in_rummager(document, id: content_id, index: "govuk_test", type: "recommended-link")
+
+    payload = {
+      "document_type" => "gone",
+      "payload_version" => 15,
+      "content_id" => content_id,
+    }
+    @queue.publish(payload.to_json, content_type: "application/json")
+
+    expect_document_missing_in_rummager(id: content_id, index: "govuk_test")
+  end
 end
