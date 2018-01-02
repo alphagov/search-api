@@ -1,5 +1,5 @@
 class SitemapGenerator
-  EXCLUDED_FORMATS = ["recommended-link"].freeze
+  EXCLUDED_FORMATS = ["recommended-link", "inside-government-link"].freeze
 
   def initialize(search_config)
     @search_config = search_config
