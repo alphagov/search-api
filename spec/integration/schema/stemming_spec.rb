@@ -12,12 +12,6 @@ RSpec.describe 'SettingsTest' do
       "news" => ["news"]
   end
 
-  it "query default" do
-    expect_tokenisation :query_default,
-      "It's A Small World" => %w(it small world),
-      "It's, It’s Mr. O'Neill" => %w(it it mr oneil)
-  end
-
   it "exact match" do
     expect_tokenisation :exact_match,
       "It’s A Small W'rld" => ["it's a small w'rld"]
@@ -36,11 +30,6 @@ RSpec.describe 'SettingsTest' do
   it "string for sorting" do
     expect_tokenisation :string_for_sorting,
       "It's A Small W’rld" => ["its a small wrld"]
-  end
-
-  it "with shingles analyzer" do
-    expect_tokenisation :with_shingles,
-      "The small brown dog" => ["the small", "small brown", "brown dog"]
   end
 
 private
