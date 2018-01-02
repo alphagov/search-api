@@ -1,8 +1,12 @@
 # Rummager
 
-Rummager is the GOV.UK API for search.
+Rummager indexes content into [elasticsearch](https://www.elastic.co/products/elasticsearch) and serves the GOV.UK search API.
 
 ## Live examples
+
+### GOV.UK search
+[alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
+the search API to render [site search](https://www.gov.uk/search) and finder pages (such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
 
 ### The public search API
 https://www.gov.uk/api/search.json?q=taxes
@@ -12,30 +16,17 @@ For the most up to date query syntax and API output see the [Search API document
 
 You can also find some examples in the blog post: ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
 
-### GOV.UK site search
-
-[alphagov/frontend](https://github.com/alphagov/frontend) uses the search API
-to render search results.
-
-### Finders
-[alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
-the search API to serve document finders like [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports).
-
 ## Technical documentation
 
 Rummager is a Sinatra application that interfaces with Elasticsearch.
 
-It provides a [search API](doc/search-api.md) that is used by multiple
-applications, and is publicly available at
-[gov.uk/api/search.json](https://www.gov.uk/api/search.json?q=taxes).
+There are two ways documents get added to a search index:
 
-There are two ways documents get added to the search index:
-
-1. Post to the [Documents API](doc/documents.md)
-2. Via the RabbitMQ consumer worker, which responds to notifications from the
+1. HTTP requests to Rummager's [Documents API](doc/documents.md) (deprecated)
+2. Rummager subscribes to RabbitMQ messages from the
 	 [Publishing API](https://github.com/alphagov/publishing-api).
 
-*Note: Once whitehall documents are using the new indexing process, the documents API will be deprecated and rummager will consume only
+*Note: Once whitehall documents are using the new indexing process, the documents API will be removed and rummager will consume only
 from the publishing API.*
 
 Rummager search results are weighted by [popularity](doc/popularity.md). We
