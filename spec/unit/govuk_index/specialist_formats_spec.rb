@@ -241,8 +241,8 @@ private
       payload
     end
 
-    type_inferrer = GovukIndex::DocumentTypeInferrer.new(example)
-    described_class.new(payload: example, type_inferrer: type_inferrer).document
+    type_mapper = GovukIndex::DocumentTypeMapper.new(example)
+    described_class.new(payload: example, type_mapper: type_mapper).document
   end
 
 

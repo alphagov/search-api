@@ -30,7 +30,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "document_type" => "redirect",
           "title" => "We love cheese"
         }
-        stub_document_type_inferrer
+        stub_document_type_mapper
 
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 200 } }])
@@ -66,7 +66,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "document_type" => "gone",
           "title" => "We love cheese"
         }
-        stub_document_type_inferrer
+        stub_document_type_mapper
 
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 500 } }])
@@ -86,7 +86,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "document_type" => "substitute",
           "title" => "We love cheese"
         }
-        stub_document_type_inferrer
+        stub_document_type_mapper
 
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 404 } }])
@@ -108,7 +108,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
 
       it "notify of a validation error for missing basepath" do
         expect(GovukError).to receive(:notify).with(
-          instance_of(GovukIndex::MissingBasePath),
+          instance_of(GovukIndex::NotIdentifiable),
           extra: {
             message_body: {
               'document_type' => 'help_page',
@@ -181,7 +181,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     end
 
     it 'can save and delete documents in the same batch' do
-      stub_document_type_inferrer
+      stub_document_type_mapper
 
       expect(actions).to receive(:save)
       expect(actions).to receive(:delete)
@@ -269,7 +269,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     end
   end
 
-  def stub_document_type_inferrer
+  def stub_document_type_mapper
     allow_any_instance_of(GovukIndex::ElasticsearchDeletePresenter).to receive(:type).and_return('real_document_type')
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("real_document_type" => :all)
   end

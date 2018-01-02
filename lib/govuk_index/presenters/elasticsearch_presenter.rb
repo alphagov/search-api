@@ -1,26 +1,14 @@
 module GovukIndex
   class ElasticsearchPresenter
-    def initialize(payload:, type_inferrer:)
+    include ElasticsearchIdentity
+
+    def initialize(payload:, type_mapper:)
       @payload = payload
-      @inferred_type = type_inferrer
+      @inferred_type = type_mapper
     end
 
     def type
       @type ||= @inferred_type.type
-    end
-
-    def _type
-      # raise the error at the last possible moment to avoid requiring declaration for unused value
-      type || raise(UnknownDocumentTypeError)
-    end
-
-    def identifier
-      {
-        _type: _type,
-        _id: link,
-        version: payload["payload_version"],
-        version_type: "external",
-      }
     end
 
     def document
@@ -132,7 +120,7 @@ module GovukIndex
       if format == "recommended-link"
         details.url || raise(MissingExternalUrl, "url missing from details section")
       else
-        base_path || raise(MissingBasePath, "base_path missing from payload")
+        base_path || raise(NotIdentifiable, "base_path missing from payload")
       end
     end
 

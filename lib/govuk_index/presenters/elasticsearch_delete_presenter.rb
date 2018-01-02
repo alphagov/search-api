@@ -1,21 +1,9 @@
 module GovukIndex
   class ElasticsearchDeletePresenter
+    include ElasticsearchIdentity
+
     def initialize(payload:)
       @payload = payload
-    end
-
-    def identifier
-      {
-        _type: type,
-        _id: base_path,
-        version: payload["payload_version"],
-        version_type: "external",
-      }
-    end
-
-    def type
-      raise NotFoundError if existing_document.nil?
-      existing_document['_type']
     end
 
     def base_path
@@ -27,7 +15,14 @@ module GovukIndex
     end
 
     def valid!
-      base_path || raise(MissingBasePath, "base_path missing from payload")
+      unless payload["base_path"] || payload["content_id"]
+        raise(NotIdentifiable, "base_path and content_id missing from payload")
+      end
+    end
+
+    def type
+      raise NotFoundError if existing_document.nil?
+      existing_document['_type']
     end
 
   private
@@ -37,7 +32,7 @@ module GovukIndex
     def existing_document
       @_existing_document ||=
         begin
-          Client.get(type: '_all', id: payload['base_path'])
+          Client.get(type: '_all', id: id)
         rescue Elasticsearch::Transport::Transport::Errors::NotFound
           nil
         end

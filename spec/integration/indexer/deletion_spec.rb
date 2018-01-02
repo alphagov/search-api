@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 RSpec.describe 'ElasticsearchDeletionTest' do
-  it "removes_a_document_from_the_index" do
+  it "removes a document from the index" do
     commit_document("mainstream_test", {
       "link" => "/an-example-page"
     })
 
     delete "/documents/%2Fan-example-page"
 
-    expect_document_missing_in_rummager(id: "/an-example-page")
+    expect_document_missing_in_rummager(id: "/an-example-page", index: "mainstream_test")
   end
 
-  it "removes_a_document_from_the_index_queued" do
+  it "removes a document from the index_queued" do
     commit_document("mainstream_test", {
       "link" => "/an-example-page"
     })
@@ -21,17 +21,17 @@ RSpec.describe 'ElasticsearchDeletionTest' do
     expect(last_response.status).to eq(202)
   end
 
-  it "removes_document_with_url" do
+  it "removes document with url" do
     commit_document("mainstream_test", {
       "link" => "http://example.com/",
     })
 
     delete "/documents/edition/http:%2F%2Fexample.com%2F"
 
-    expect_document_missing_in_rummager(id: "http://example.com/")
+    expect_document_missing_in_rummager(id: "http://example.com/", index: "mainstream_test")
   end
 
-  it "should_delete_a_best_bet_by_type_and_id" do
+  it "should delete a best bet by type and id" do
     post "/metasearch_test/documents", {
       "_id" => "jobs_exact",
       "_type" => "best_bet",
@@ -48,14 +48,6 @@ RSpec.describe 'ElasticsearchDeletionTest' do
         type: 'best_bet',
         id: 'jobs_exact'
       )
-    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
-  end
-
-private
-
-  def expect_document_missing_in_rummager(id:)
-    expect {
-      fetch_document_from_rummager(id: id)
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 end

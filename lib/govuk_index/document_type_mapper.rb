@@ -1,5 +1,5 @@
 module GovukIndex
-  class DocumentTypeInferrer
+  class DocumentTypeMapper
     UNPUBLISHING_TYPES = %w(gone redirect substitute vanish).freeze
 
     def initialize(payload)

@@ -145,6 +145,12 @@ module IntegrationSpecHelper
     end
   end
 
+  def expect_document_missing_in_rummager(id:, index:)
+    expect {
+      fetch_document_from_rummager(id: id, index: index)
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+  end
+
   def sample_document_attributes(index_name, section_count)
     short_index_name = index_name.sub("_test", "")
     (1..section_count).map do |i|

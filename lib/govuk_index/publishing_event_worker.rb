@@ -5,7 +5,7 @@ module GovukIndex
   class MultipleMessagesInElasticsearchResponse < StandardError; end
   class NotFoundError < StandardError; end
   class UnknownDocumentTypeError < StandardError; end
-  class MissingBasePath < StandardError; end
+  class NotIdentifiable < StandardError; end
   class MissingExternalUrl < StandardError; end
 
   DOCUMENT_TYPES_WITHOUT_BASE_PATH = %w(contact world_location).freeze
@@ -35,14 +35,14 @@ module GovukIndex
       logger.debug("Processing #{routing_key}: #{payload}")
       Services.statsd_client.increment('govuk_index.sidekiq-consumed')
 
-      type_inferrer = DocumentTypeInferrer.new(payload)
+      type_mapper = DocumentTypeMapper.new(payload)
 
-      if type_inferrer.unpublishing_type?
+      if type_mapper.unpublishing_type?
         presenter = ElasticsearchDeletePresenter.new(payload: payload)
       else
         presenter = ElasticsearchPresenter.new(
           payload: payload,
-          type_inferrer: type_inferrer,
+          type_mapper: type_mapper,
         )
       end
 
@@ -50,7 +50,7 @@ module GovukIndex
 
       identifier = "#{presenter.link} #{presenter.type || "'unmapped type'"}"
 
-      if type_inferrer.unpublishing_type?
+      if type_mapper.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{identifier}")
         processor.delete(presenter)
       elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path)
@@ -63,7 +63,7 @@ module GovukIndex
       end
 
     # Rescuing as we don't want to retry this class of error
-    rescue MissingBasePath => e
+    rescue NotIdentifiable => e
       return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
       GovukError.notify(e, extra: { message_body: payload })
       # Unpublishing messages for something that does not exist may have been
