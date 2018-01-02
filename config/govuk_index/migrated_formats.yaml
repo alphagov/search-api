@@ -39,6 +39,7 @@ migrated:
 - manual
 - manual_section
 - policy
+- recommended-link # Search admin
 - service_manual_guide
 - service_manual_homepage
 - service_manual_service_standard
@@ -51,8 +52,7 @@ migrated:
   - '/help'
   - '/find-local-council'
 
-indexable:
-- recommended-link
+indexable: []
 
 non_indexable:
 - calculator
