@@ -95,26 +95,6 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(sitemap_xml[0]).not_to include("/external-example-answer")
   end
 
-  it "should_not_include_inside_government_links" do
-    generator = SitemapGenerator.new(SearchConfig.instance)
-    add_sample_documents(
-      [
-        {
-          "title" => "Some content from Inside Gov",
-          "description" => "We list some inside gov results in the mainstream index.",
-          "format" => "inside-government-link",
-          "link" => "https://www.gov.uk/government/some-content",
-        },
-      ],
-      index_name: 'government_test'
-    )
-
-    sitemap_xml = generator.sitemaps
-
-    expect(sitemap_xml.length).to eq(1)
-    expect(sitemap_xml[0]).not_to include("/government/some-content")
-  end
-
   it "links_should_include_timestamps" do
     generator = SitemapGenerator.new(SearchConfig.instance)
     add_sample_documents(
