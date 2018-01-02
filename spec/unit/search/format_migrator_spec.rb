@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Search::FormatMigrator do
-  it "when_base_query_without_migrated_formats" do
+  it "when base query without migrated formats" do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
     base_query = { filter: 'component' }
     expected = {
@@ -16,7 +16,7 @@ RSpec.describe Search::FormatMigrator do
     expect(described_class.new(base_query).call).to eq(expected)
   end
 
-  it "when_base_query_with_migrated_formats" do
+  it "when base query with migrated formats" do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('help_page' => :all)
     base_query = { filter: 'component' }
     expected = {
@@ -39,7 +39,7 @@ RSpec.describe Search::FormatMigrator do
     expect(described_class.new(base_query).call).to eq(expected)
   end
 
-  it "when_no_base_query_without_migrated_formats" do
+  it "when no base query without migrated formats" do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
     expected = {
       indices: {
@@ -51,7 +51,7 @@ RSpec.describe Search::FormatMigrator do
     expect(described_class.new(nil).call).to eq(expected)
   end
 
-  it "when_no_base_query_with_migrated_formats" do
+  it "when no base query with migrated formats" do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('help_page' => :all)
     expected = {
       indices: {

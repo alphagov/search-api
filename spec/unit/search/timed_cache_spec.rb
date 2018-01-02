@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 RSpec.describe Search::TimedCache do
-  it "result_is_not_called_until_needed" do
+  it "result is not called until needed" do
     fetch = double("fetch")
     expect(fetch).to receive(:call).never
 
     described_class.new(5) { fetch.call }
   end
 
-  it "result_is_cached" do
+  it "result is cached" do
     fetch = double("fetch")
     expect(fetch).to receive(:call).and_return("foo").once
 
@@ -16,7 +16,7 @@ RSpec.describe Search::TimedCache do
     2.times { expect(cache.get).to eq("foo") }
   end
 
-  it "cache_does_not_expire_within_lifetime" do
+  it "cache does not expire within lifetime" do
     fetch = double("fetch")
     expect(fetch).to receive(:call).and_return("foo").once
 
@@ -34,7 +34,7 @@ RSpec.describe Search::TimedCache do
     cache.get
   end
 
-  it "cache_expires" do
+  it "cache expires" do
     fetch = double("fetch")
     expect(fetch).to receive(:call).and_return("foo").twice
 

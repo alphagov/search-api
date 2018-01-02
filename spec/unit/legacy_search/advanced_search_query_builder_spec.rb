@@ -7,7 +7,7 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
     described_class.new(keywords, filter_params, sort_order, mappings)
   end
 
-  it "builder_excludes_withdrawn" do
+  it "builder excludes withdrawn" do
     builder = build_builder
     query_hash = builder.filter_query_hash
 
@@ -19,7 +19,7 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
   end
 
 
-  it "builder_single_filters" do
+  it "builder single filters" do
     builder = build_builder("how to drive", { "format" => "organisation" })
     query_hash = builder.filter_query_hash
 
@@ -33,7 +33,7 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
     )
   end
 
-  it "builder_multiple_filters" do
+  it "builder multiple filters" do
     builder = build_builder("how to drive", { "format" => "organisation", "specialist_sectors" => "driving" })
     query_hash = builder.filter_query_hash
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 require "sitemap/sitemap"
 
 RSpec.describe PropertyBoostCalculator do
-  it "boosts_are_between_0_and_1" do
+  it "boosts are between 0 and 1" do
     stub_boost_config({
       "format" => {
         "format1" => 0,
@@ -22,7 +22,7 @@ RSpec.describe PropertyBoostCalculator do
     expect(calculator.boost(build_document(format: "format5"))).to eq(1)
   end
 
-  it "unboosted_format_has_default_boost" do
+  it "unboosted format has default boost" do
     stub_boost_config({
       "format" => {
         "some_format" => 1,
@@ -34,7 +34,7 @@ RSpec.describe PropertyBoostCalculator do
     expect(0.5).to eq(calculator.boost(build_document(format: "some_format")))
   end
 
-  it "boosts_limit_is_1" do
+  it "boosts limit is 1" do
     stub_boost_config({
       "format" => {
         "format1" => 10,
@@ -50,7 +50,7 @@ RSpec.describe PropertyBoostCalculator do
     expect(calculator.boost(build_document(format: "format3"))).to eq(1)
   end
 
-  it "unconfigured_format_has_default_boost" do
+  it "unconfigured format has default boost" do
     stub_boost_config({
       "format" => {
         "some_format" => 0.3,
@@ -62,7 +62,7 @@ RSpec.describe PropertyBoostCalculator do
     expect(0.5).to eq(calculator.boost(build_document(format: "other_format")))
   end
 
-  it "unconfigured_property_has_default_boost" do
+  it "unconfigured property has default boost" do
     stub_boost_config({
       "some_other_property" => {
         "some_value" => 0.3,
@@ -74,7 +74,7 @@ RSpec.describe PropertyBoostCalculator do
     expect(0.5).to eq(calculator.boost(build_document(document_type: "some_doc_type")))
   end
 
-  it "boosts_are_rounded" do
+  it "boosts are rounded" do
     stub_boost_config({
       "format" => {
         "format1" => 0.123,
@@ -88,7 +88,7 @@ RSpec.describe PropertyBoostCalculator do
     expect(0.27).to eq(calculator.boost(build_document(format: "format2")))
   end
 
-  it "boosts_for_different_fields_are_combined" do
+  it "boosts for different fields are combined" do
     stub_boost_config({
       "format" => {
         "publication" => 0.5,
@@ -115,7 +115,7 @@ RSpec.describe PropertyBoostCalculator do
     expect(0.07).to eq(calculator.boost(document))
   end
 
-  it "external_search_overrides_are_applied" do
+  it "external search overrides are applied" do
     config = {
       "base" => {
         "format" => {

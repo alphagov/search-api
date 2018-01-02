@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'StatusTest' do
-  it "shows_queue_job_count" do
+  it "shows queue job count" do
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }
     )
@@ -13,7 +13,7 @@ RSpec.describe 'StatusTest' do
     expect(parsed_response["queues"]["bulk"]["jobs"]).to eq(12)
   end
 
-  it "shows_per_queue_retry_count" do
+  it "shows per queue retry count" do
     retries = %w(bulk bulk something-else).map { |q| double(queue: q) }
 
     expect(Sidekiq::RetrySet).to receive(:new).and_return(retries)
@@ -27,7 +27,7 @@ RSpec.describe 'StatusTest' do
     expect(parsed_response["queues"]["bulk"]["retries"]).to eq(2)
   end
 
-  it "shows_zero_retry_count" do
+  it "shows zero retry count" do
     expect(Sidekiq::RetrySet).to receive(:new).and_return([])
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }
@@ -39,7 +39,7 @@ RSpec.describe 'StatusTest' do
     expect(parsed_response["queues"]["bulk"]["retries"]).to eq(0)
   end
 
-  it "shows_per_queue_scheduled_count" do
+  it "shows per queue scheduled count" do
     scheduled = %w(bulk bulk something-else).map { |q| double(queue: q) }
 
     expect(Sidekiq::ScheduledSet).to receive(:new).and_return(scheduled)
@@ -53,7 +53,7 @@ RSpec.describe 'StatusTest' do
     expect(parsed_response["queues"]["bulk"]["scheduled"]).to eq(2)
   end
 
-  it "shows_zero_retry_count_scheduled" do
+  it "shows zero retry count scheduled" do
     expect(Sidekiq::ScheduledSet).to receive(:new).and_return([])
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }

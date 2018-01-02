@@ -14,7 +14,7 @@ RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
     }
   end
 
-  it "can_fetch_sector_by_slug" do
+  it "can fetch sector by slug" do
     allow(@index).to receive(:documents_by_format)
       .with("specialist_sector", anything)
       .and_return([oil_and_gas])
@@ -22,14 +22,14 @@ RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
     expect(oil_and_gas).to eq(sector)
   end
 
-  it "only_required_fields_are_requested_from_index" do
+  it "only required fields are requested from index" do
     expect(@index).to receive(:documents_by_format)
       .with("specialist_sector", sample_field_definitions(%w{link slug title content_id}))
       .and_return([])
     @specialist_sector_registry["oil-and-gas/licensing"]
   end
 
-  it "returns_nil_if_sector_not_found" do
+  it "returns nil if sector not found" do
     allow(@index).to receive(:documents_by_format)
       .with("specialist_sector", anything)
       .and_return([oil_and_gas])
@@ -37,7 +37,7 @@ RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
     expect(sector).to be_nil
   end
 
-  it "uses_300_second_cache_lifetime" do
+  it "uses 300 second cache lifetime" do
     expect(Search::TimedCache).to receive(:new).with(300, anything)
 
     described_class.new(@index, sample_field_definitions, "specialist_sector")

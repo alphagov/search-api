@@ -9,25 +9,25 @@ RSpec.describe SitemapPresenter do
     allow(@boost_calculator).to receive(:boost).and_return(1)
   end
 
-  it "url_is_document_link_if_link_is_http_url" do
+  it "url is document link if link is http url" do
     document = build_document(url: "http://some.url")
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.url).to eq("http://some.url")
   end
 
-  it "url_is_document_link_if_link_is_https_url" do
+  it "url is document link if link is https url" do
     document = build_document(url: "https://some.url")
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.url).to eq("https://some.url")
   end
 
-  it "url_appends_host_name_if_link_is_a_path" do
+  it "url appends host name if link is a path" do
     document = build_document(url: "/some/path")
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.url).to eq("https://website_root/some/path")
   end
 
-  it "last_updated_is_timestamp_if_timestamp_is_date_time" do
+  it "last updated is timestamp if timestamp is date time" do
     document = build_document(
       url: "/some/path",
       timestamp: "2014-01-28T14:41:50+00:00"
@@ -36,7 +36,7 @@ RSpec.describe SitemapPresenter do
     expect(presenter.last_updated).to eq("2014-01-28T14:41:50+00:00")
   end
 
-  it "last_updated_is_timestamp_if_timestamp_is_date" do
+  it "last updated is timestamp if timestamp is date" do
     document = build_document(
       url: "/some/path",
       timestamp: "2017-07-12"
@@ -45,7 +45,7 @@ RSpec.describe SitemapPresenter do
     expect(presenter.last_updated).to eq("2017-07-12")
   end
 
-  it "last_updated_is_limited_to_recent_date" do
+  it "last updated is limited to recent date" do
     document = build_document(
       url: "/some/path",
       timestamp: "1995-06-01"
@@ -54,7 +54,7 @@ RSpec.describe SitemapPresenter do
     expect(presenter.last_updated).to eq("2012-10-17T00:00:00+00:00")
   end
 
-  it "last_updated_is_omitted_if_timestamp_is_missing" do
+  it "last updated is omitted if timestamp is missing" do
     document = build_document(
       url: "/some/path",
       timestamp: nil
@@ -63,7 +63,7 @@ RSpec.describe SitemapPresenter do
     expect(presenter.last_updated).to be_nil
   end
 
-  it "last_updated_is_omitted_if_timestamp_is_invalid" do
+  it "last updated is omitted if timestamp is invalid" do
     document = build_document(
       url: "/some/path",
       timestamp: "not-a-date"
@@ -72,7 +72,7 @@ RSpec.describe SitemapPresenter do
     expect(presenter.last_updated).to be_nil
   end
 
-  it "last_updated_is_omitted_if_timestamp_is_in_invalid_format" do
+  it "last updated is omitted if timestamp is in invalid format" do
     document = build_document(
       url: "/some/path",
       timestamp: "01-01-2017"
@@ -81,7 +81,7 @@ RSpec.describe SitemapPresenter do
     expect(presenter.last_updated).to be_nil
   end
 
-  it "default_page_priority_is_maximum_value" do
+  it "default page priority is maximum value" do
     document = build_document(
       url: "/some/path",
       is_withdrawn: false
@@ -90,7 +90,7 @@ RSpec.describe SitemapPresenter do
     expect(presenter.priority).to eq(1)
   end
 
-  it "withdrawn_page_has_lower_priority" do
+  it "withdrawn page has lower priority" do
     document = build_document(
       url: "/some/path",
       is_withdrawn: true
@@ -99,7 +99,7 @@ RSpec.describe SitemapPresenter do
     expect(0.25).to eq(presenter.priority)
   end
 
-  it "page_with_no_withdrawn_flag_has_maximum_priority" do
+  it "page with no withdrawn flag has maximum priority" do
     document = build_document(
       url: "/some/path"
     )
@@ -107,7 +107,7 @@ RSpec.describe SitemapPresenter do
     expect(presenter.priority).to eq(1)
   end
 
-  it "page_with_boosted_format_has_adjusted_priority" do
+  it "page with boosted format has adjusted priority" do
     document = build_document(
       url: "/some/path",
       format: "aaib_report"

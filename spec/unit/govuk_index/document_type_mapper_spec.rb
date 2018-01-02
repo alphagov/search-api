@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe GovukIndex::DocumentTypeMapper do
-  it "infer_payload_document_type" do
+  it "infer payload document_type" do
     payload = {
       "base_path" => "/cheese",
       "document_type" => "help_page"

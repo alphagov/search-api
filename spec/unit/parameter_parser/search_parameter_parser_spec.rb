@@ -224,7 +224,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(query: nil)).to eq(p.parsed_params)
   end
 
-  it "understand the similar_to parameter" do
+  it "understand the similar to parameter" do
     p = described_class.new({ "similar_to" => ["/search-term"] }, @schema)
 
     expect(p.error).to eq("")
@@ -232,7 +232,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(similar_to: "/search-term")).to eq(p.parsed_params)
   end
 
-  it "complain about a repeated similar_to parameter" do
+  it "complain about a repeated similar to parameter" do
     p = described_class.new({ "similar_to" => %w(/hello /world) }, @schema)
 
     expect(%{Too many values (2) for parameter "similar_to" (must occur at most once)}).to eq(p.error)
@@ -240,7 +240,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(similar_to: "/hello")).to eq(p.parsed_params)
   end
 
-  it "strip whitespace from similar_to parameter" do
+  it "strip whitespace from similar to parameter" do
     p = described_class.new({ "similar_to" => ["/cheese "] }, @schema)
 
     expect(p.error).to eq("")
@@ -248,7 +248,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(similar_to: "/cheese")).to eq(p.parsed_params)
   end
 
-  it "put the similar_to parameter in normalized form" do
+  it "put the similar to parameter in normalized form" do
     p = described_class.new({ "similar_to" => ["/cafe\u0300 "] }, @schema)
 
     expect(p.error).to eq("")
@@ -256,7 +256,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(similar_to: "/caf\u00e8")).to eq(p.parsed_params)
   end
 
-  it "complain about invalid unicode in the similar_to parameter" do
+  it "complain about invalid unicode in the similar to parameter" do
     p = described_class.new({ "similar_to" => ["\xff"] }, @schema)
 
     expect(p.error).to eq("Invalid unicode in similar_to")
@@ -264,7 +264,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(similar_to: nil)).to eq(p.parsed_params)
   end
 
-  it "complain when both q and similar_to parameters are provided" do
+  it "complain when both q and similar to parameters are provided" do
     p = described_class.new({ "q" => ["hello"], "similar_to" => ["/world"] }, @schema)
 
     expect(p.error).to eq("Parameters 'q' and 'similar_to' cannot be used together")
@@ -272,7 +272,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(query: "hello", similar_to: "/world")).to eq(p.parsed_params)
   end
 
-  it "set the order parameter to nil when the similar_to parameter is provided" do
+  it "set the order parameter to nil when the similar to parameter is provided" do
     p = described_class.new({ "similar_to" => ["/hello"], "order" => ["title"] }, @schema)
 
     expect(p.error).to eq("")
@@ -409,7 +409,7 @@ RSpec.describe SearchParameterParser do
   end
 
   # TODO: this is deprecated behaviour
-  it "rewrite document_type filter to _type filter" do
+  it "rewrite document_type filter to  type filter" do
     parser = described_class.new(
       { "filter_document_type" => ["cma_case"] },
       @schema,
@@ -423,7 +423,7 @@ RSpec.describe SearchParameterParser do
   end
 
   context "when the filter field is a date type" do
-    it "include the type in return value of #parsed_params" do
+    it "include the type in return value of #parsed params" do
       params = {
         "filter_document_type" => ["cma_case"],
         "filter_opened_date" => "from:2014-04-01 05:08,to:2014-04-02 17:43:12",
@@ -720,7 +720,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params({})).to eq(p.parsed_params)
   end
 
-  it "merge fields from repeated example_fields options" do
+  it "merge fields from repeated example fields options" do
     p = described_class.new({
       "aggregate_organisations" => ["10,examples:5,example_fields:slug,example_fields:title:link,example_scope:global"],
     }, @schema)
@@ -738,7 +738,7 @@ RSpec.describe SearchParameterParser do
     )).to eq(p.parsed_params)
   end
 
-  it "require the example_scope to be set" do
+  it "require the example scope to be set" do
     p = described_class.new({
       "aggregate_organisations" => ["10,examples:5,example_fields:slug:title"],
     }, @schema)
@@ -748,7 +748,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params({ aggregates: {} })).to eq(p.parsed_params)
   end
 
-  it "allow example_scope to be set to 'query'" do
+  it "allow example scope to be set to 'query'" do
     p = described_class.new({
       "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
     }, @schema)
@@ -765,7 +765,7 @@ RSpec.describe SearchParameterParser do
     )).to eq(p.parsed_params)
   end
 
-  it "complain about an invalid example_scope option" do
+  it "complain about an invalid example scope option" do
     p = described_class.new({
       "aggregate_organisations" => ["10,examples:5,example_scope:invalid"],
     }, @schema)
@@ -775,7 +775,7 @@ RSpec.describe SearchParameterParser do
     expect(expected_params({})).to eq(p.parsed_params)
   end
 
-  it "complain about a repeated example_scope option" do
+  it "complain about a repeated example scope option" do
     p = described_class.new({
       "aggregate_organisations" => ["10,examples:5,example_scope:global,example_scope:global"],
     }, @schema)
@@ -871,28 +871,28 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(debug: { explain: true })).to eq(p.parsed_params)
   end
 
-  it "understand disable_synonyms in the debug parameter" do
+  it "understand disable synonyms in the debug parameter" do
     p = described_class.new({ "debug" => ["disable_synonyms"] }, @schema)
 
     expect(p).to be_valid
     expect(expected_params(debug: { disable_synonyms: true })).to eq(p.parsed_params)
   end
 
-  it "understand the test_variant parameter" do
+  it "understand the test variant parameter" do
     p = described_class.new({ "ab_tests" => ["min_should_match_length:A"] }, @schema)
 
     expect(p).to be_valid
     expect(expected_params(ab_tests: { min_should_match_length: 'A' })).to eq(p.parsed_params)
   end
 
-  it "understand multiple test_variant parameters" do
+  it "understand multiple test variant parameters" do
     p = described_class.new({ "ab_tests" => ["min_should_match_length:A,other_test_case:B"] }, @schema)
 
     expect(p).to be_valid
     expect(expected_params(ab_tests: { min_should_match_length: 'A', other_test_case: 'B' })).to eq(p.parsed_params)
   end
 
-  it "complain about invalid test_variant where no variant_type is provided" do
+  it "complain about invalid test variant where no variant type is provided" do
     p = described_class.new({ "ab_tests" => ["min_should_match_length"] }, @schema)
 
     expect(p).not_to be_valid

@@ -38,7 +38,7 @@ RSpec.describe "Collections publishing" do
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
   end
 
-  it "indexes a specialist_sector page" do
+  it "indexes a specialist sector page" do
     random_example = generate_random_example(
       schema: "topic",
       payload: {

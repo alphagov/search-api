@@ -5,7 +5,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     allow_any_instance_of(Indexer::PopularityLookup).to receive(:lookup_popularities).and_return({})
   end
 
-  it "aaib_report" do
+  it "aaib report" do
     custom_metadata = {
       "date_of_occurrence" => "2015-10-10",
       "aircraft_category" => ["commercial-fixed-wing"],
@@ -22,7 +22,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "asylum_support_decision" do
+  it "asylum support decision" do
     custom_metadata = {
       "hidden_indexable_content" => "some hidden content",
       "tribunal_decision_categories" => ["section-95-support-for-asylum-seekers"],
@@ -42,7 +42,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect(document[:indexable_content]).to eq("some hidden content")
   end
 
-  it "business_finance_support_scheme" do
+  it "business finance support scheme" do
     custom_metadata = {
       "business_sizes" => ["under-10", "between-10-and-249"],
       "business_stages" => ["start-up"],
@@ -55,7 +55,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata)
   end
 
-  it "cma_case" do
+  it "cma case" do
     custom_metadata = {
       "opened_date" => "2014-01-01",
       "closed_date" => "2015-01-01",
@@ -72,7 +72,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "countryside_stewardship_grant" do
+  it "countryside stewardship grant" do
     custom_metadata = {
       "grant_type" => "option",
       "land_use" => ["priority-habitats", "trees-non-woodland", "uplands"],
@@ -86,7 +86,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "dfid_research_output" do
+  it "dfid research output" do
     custom_metadata = {
       "dfid_document_type" => "book_chapter",
       "country" => ["GB"],
@@ -98,7 +98,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata)
   end
 
-  it "drug_safety_update" do
+  it "drug safety update" do
     custom_metadata = {
       "therapeutic_area" => ["cancer", "haematology", "immunosuppression-transplantation"],
     }
@@ -106,7 +106,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata)
   end
 
-  it "employment_appeal_tribunal_decision" do
+  it "employment appeal tribunal decision" do
     custom_metadata = {
       "hidden_indexable_content" => "hidden content",
       "tribunal_decision_categories" => ["age-discrimination"],
@@ -119,7 +119,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect(document[:indexable_content]).to eq("hidden content")
   end
 
-  it "employment_tribunal_decision" do
+  it "employment tribunal decision" do
     custom_metadata = {
       "hidden_indexable_content" => "hidden etd content",
       "tribunal_decision_categories" => ["age-discrimination"],
@@ -131,7 +131,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect(document[:indexable_content]).to eq("hidden etd content")
   end
 
-  it "european_structural_investment_fund" do
+  it "european structural investment fund" do
     custom_metadata = {
       "closing_date" => "2016-01-01",
       "fund_state" => "open",
@@ -146,7 +146,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "international_development_fund" do
+  it "international development fund" do
     custom_metadata = {
       "closing_date" => "2016-01-01",
       "fund_state" => "open",
@@ -161,7 +161,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "maib_report" do
+  it "maib report" do
     custom_metadata = {
       "date_of_occurrence" => "2015-10-10",
       "report_type" => "investigation-report",
@@ -174,7 +174,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "medical_safety_alert" do
+  it "medical safety alert" do
     custom_metadata = {
       "alert_type" => "company-led-drugs",
       "issued_date" => "2016-02-01",
@@ -187,7 +187,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "raib_report" do
+  it "raib report" do
     custom_metadata = {
       "date_of_occurrence" => "2015-10-10",
       "report_type" => "investigation-report",
@@ -200,7 +200,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "service_standard_report" do
+  it "service standard report" do
     custom_metadata = {
       "assessment_date" => "2016-10-10"
     }
@@ -209,7 +209,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
   end
 
 
-  it "tax_tribunal_decision" do
+  it "tax tribunal decision" do
     custom_metadata = {
       "hidden_indexable_content" => "hidden ttd content",
       "tribunal_decision_category" => "banking",
@@ -220,7 +220,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect(document[:indexable_content]).to eq("hidden ttd content")
   end
 
-  it "utaac_decision" do
+  it "utaac decision" do
     custom_metadata = {
       "hidden_indexable_content" => "hidden utaac content",
       "tribunal_decision_categories" => ["Benefits for children"],

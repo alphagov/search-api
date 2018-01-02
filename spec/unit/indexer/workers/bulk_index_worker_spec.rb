@@ -5,7 +5,7 @@ RSpec.describe Indexer::BulkIndexWorker do
     { link: "/#{slug}", title: slug.capitalize }
   end
 
-  it "indexes_documents" do
+  it "indexes documents" do
     mock_index = double("index")
     expect(mock_index).to receive(:bulk_index).with(SAMPLE_DOCUMENT_HASHES)
     allow_any_instance_of(SearchIndices::SearchServer).to receive(:index)
@@ -16,7 +16,7 @@ RSpec.describe Indexer::BulkIndexWorker do
     worker.perform("test-index", SAMPLE_DOCUMENT_HASHES)
   end
 
-  it "retries_when_index_locked" do
+  it "retries when index locked" do
     lock_delay = described_class::LOCK_DELAY
 
     mock_index = double("index")
@@ -32,7 +32,7 @@ RSpec.describe Indexer::BulkIndexWorker do
     worker.perform("test-index", SAMPLE_DOCUMENT_HASHES)
   end
 
-  it "forwards_to_failure_queue" do
+  it "forwards to failure queue" do
     stub_message = {}
     expect(GovukError).to receive(:notify).with(Indexer::FailedJobException.new, extra: stub_message)
     fail_block = described_class.sidekiq_retries_exhausted_block

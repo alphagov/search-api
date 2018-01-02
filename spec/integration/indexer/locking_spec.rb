@@ -5,7 +5,7 @@ RSpec.describe 'ElasticsearchLockingTest' do
     stub_tagging_lookup
   end
 
-  it "should_fail_to_insert_when_index_locked" do
+  it "should fail to insert when index locked" do
     index = search_server.index_group(SearchConfig.instance.default_index_name).current
     with_lock(index) do
       expect {
@@ -14,7 +14,7 @@ RSpec.describe 'ElasticsearchLockingTest' do
     end
   end
 
-  it "should_fail_to_amend_when_index_locked" do
+  it "should fail to amend when index locked" do
     index = search_server.index_group(SearchConfig.instance.default_index_name).current
     index.add([sample_document])
 
@@ -25,7 +25,7 @@ RSpec.describe 'ElasticsearchLockingTest' do
     end
   end
 
-  it "should_fail_to_delete_when_index_locked" do
+  it "should fail to delete when index locked" do
     index = search_server.index_group(SearchConfig.instance.default_index_name).current
     index.add([sample_document])
 
@@ -36,7 +36,7 @@ RSpec.describe 'ElasticsearchLockingTest' do
     end
   end
 
-  it "should_unlock_index" do
+  it "should unlock index" do
     index = search_server.index_group(SearchConfig.instance.default_index_name).current
     with_lock(index) do
       # Nothing to do here

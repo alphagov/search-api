@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'BoosterTest' do
-  it "service_manual_formats_are_weighted_down" do
+  it "service manual formats are weighted down" do
     commit_document("govuk_test",
       "title" => "Agile is good",
       "link" => "/agile-is-good",

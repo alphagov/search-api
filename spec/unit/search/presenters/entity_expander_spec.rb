@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Search::EntityExpander do
   # Since expanding is being done in the same way we only have to test one
   # case (organisations). Integration tests cover the rest.
-  it "expands_elements_in_document" do
+  it "expands elements in document" do
     expandable_target = {
         "slug" => "rail-statistics",
         "link" => "/government/organisations/department-for-transport/series/rail-statistics",

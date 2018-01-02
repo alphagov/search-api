@@ -42,7 +42,7 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
     expect { presenter.type }.to raise_error(GovukIndex::NotFoundError)
   end
 
-  it "is invalid if the base path is missing" do
+  it "is invalid if the base_path is missing" do
     payload = {}
 
     presenter = described_class.new(payload: payload)

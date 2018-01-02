@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Indexer::CompareEnumerator do
-  it "when_matching_keys_exist" do
+  it "when matching keys exist" do
     data_left = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_left' }
     data_right = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_right' }
 
@@ -11,7 +11,7 @@ RSpec.describe Indexer::CompareEnumerator do
     expect(results).to eq([[data_left, data_right]])
   end
 
-  it "when_key_only_exists_in_left_index" do
+  it "when key only exists in left index" do
     data = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_left' }
 
     stub_scroll_enumerator(left_request: [data], right_request: [])
@@ -21,7 +21,7 @@ RSpec.describe Indexer::CompareEnumerator do
   end
 
 
-  it "when_key_only_exists_in_right_index" do
+  it "when key only exists in right index" do
     data = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_right' }
 
     stub_scroll_enumerator(left_request: [], right_request: [data])
@@ -30,7 +30,7 @@ RSpec.describe Indexer::CompareEnumerator do
     expect(results).to eq([[described_class::NO_VALUE, data]])
   end
 
-  it "with_matching_ids_but_different_types" do
+  it "with matching ids but different types" do
     data_left = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_left' }
     data_right = { '_root_id' => 'abc', '_root_type' => 'other_stuff', 'custom' => 'data_right' }
 
@@ -43,7 +43,7 @@ RSpec.describe Indexer::CompareEnumerator do
     ])
   end
 
-  it "with_different_ids" do
+  it "with different ids" do
     data_left = { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data_left' }
     data_right = { '_root_id' => 'def', '_root_type' => 'stuff', 'custom' => 'data_right' }
 
@@ -56,7 +56,7 @@ RSpec.describe Indexer::CompareEnumerator do
     ])
   end
 
-  it "correct_aligns_records_with_matching_keys" do
+  it "correct aligns records with matching keys" do
     key1 = { '_root_id' => 'abc', '_root_type' => 'stuff' }
     key2 = { '_root_id' => 'def', '_root_type' => 'stuff' }
     key3 = { '_root_id' => 'ghi', '_root_type' => 'stuff' }
@@ -75,7 +75,7 @@ RSpec.describe Indexer::CompareEnumerator do
     ])
   end
 
-  it "scroll_enumerator_mappings" do
+  it "scroll enumerator mappings" do
     data = { '_id' => 'abc', '_type' => 'stuff', '_source' => { 'custom' => 'data' } }
     stub_client_for_scroll_enumerator(return_values: [[data], []])
 
@@ -86,7 +86,7 @@ RSpec.describe Indexer::CompareEnumerator do
     ])
   end
 
-  it "scroll_enumerator_mappings_when_filter_is_passed_in" do
+  it "scroll enumerator mappings when filter is passed in" do
     data = { '_id' => 'abc', '_type' => 'stuff', '_source' => { 'custom' => 'data' } }
     search_body = { query: 'custom_filter', sort: 'by_stuff' }
 
@@ -99,7 +99,7 @@ RSpec.describe Indexer::CompareEnumerator do
     ])
   end
 
-  it "scroll_enumerator_mappings_without_sorting" do
+  it "scroll enumerator mappings without sorting" do
     data = { '_id' => 'abc', '_type' => 'stuff', '_source' => { 'custom' => 'data' } }
     search_body = { query: 'custom_filter' }
 

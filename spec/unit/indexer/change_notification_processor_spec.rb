@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Indexer::ChangeNotificationProcessor do
-  it "rejects_base_pathless_documents" do
+  it "rejects base_pathless documents" do
     message_payload = {
       "content_id" => "4711fc53-673a-4211-bae6-e0a3d3afd82f",
       "base_path" => nil,
@@ -16,7 +16,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
     expect(:rejected).to eq(result)
   end
 
-  it "rejects_invalid_documents" do
+  it "rejects invalid documents" do
     message_payload = {}
 
     result = described_class.trigger(message_payload)
@@ -24,7 +24,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
     expect(:rejected).to eq(result)
   end
 
-  it "rejects_missing_documents" do
+  it "rejects missing documents" do
     message_payload = {
       "content_id" => "4711fc53-673a-4211-bae6-e0a3d3afd82f",
       "base_path" => "/does-not-exist",
@@ -43,7 +43,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
     expect(:rejected).to eq(result)
   end
 
-  it "accepts_existing_documents" do
+  it "accepts existing documents" do
     message_payload = {
       "content_id" => "4711fc53-673a-4211-bae6-e0a3d3afd82f",
       "base_path" => "/does-exist",

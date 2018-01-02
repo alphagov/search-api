@@ -15,7 +15,7 @@ RSpec.describe 'SpecialistFormatTest' do
     consumer.run
   end
 
-  it "specialist_publisher_finders_are_correctly_indexed" do
+  it "specialist publisher finders are correctly indexed" do
     random_example = generate_random_example(
       schema: "finder",
       payload: { document_type: "finder" },
@@ -28,7 +28,7 @@ RSpec.describe 'SpecialistFormatTest' do
     expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: 'edition')
   end
 
-  it "specialist_documents_are_correctly_indexed" do
+  it "specialist documents are correctly indexed" do
     document_types = %w(
       aaib_report
       asylum_support_decision
@@ -63,7 +63,7 @@ RSpec.describe 'SpecialistFormatTest' do
     end
   end
 
-  it "esi_documents_are_correctly_indexed" do
+  it "esi documents are correctly indexed" do
     publisher_document_type = 'esi_fund'
     search_document_type = 'european_structural_investment_fund'
 
@@ -82,7 +82,7 @@ RSpec.describe 'SpecialistFormatTest' do
     )
   end
 
-  it "finders_email_signup_are_never_indexed" do
+  it "finders email signup are never indexed" do
     random_example = generate_random_example(
       schema: "finder_email_signup",
       payload: { document_type: "finder_email_signup" },

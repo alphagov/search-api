@@ -5,7 +5,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return('help_page' => :all)
   end
 
-  it "updates_the_popularity_when_it_exists" do
+  it "updates the popularity when it exists" do
     id = insert_document('govuk_test', { popularity: 0.222, format: 'help_page' }, type: 'edition')
     commit_index('govuk_test')
 
@@ -21,7 +21,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     expect_document_is_in_rummager({ 'link' => id, 'popularity' => popularity }, type: 'edition', index: 'govuk_test')
   end
 
-  it "set_the_popularity_to_the_lowest_popularity_when_it_doesnt_exist" do
+  it "set the popularity to the lowest popularity when it doesnt exist" do
     id = insert_document('govuk_test', { popularity: 0.222, format: 'help_page' }, type: 'edition')
     commit_index('govuk_test')
 
@@ -35,7 +35,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     expect_document_is_in_rummager({ 'link' => id, 'popularity' => popularity }, type: 'edition', index: 'govuk_test')
   end
 
-  it "ignores_popularity_update_if_version_has_moved_on" do
+  it "ignores popularity update if version has moved on" do
     id = insert_document('govuk_test', { popularity: 0.222, format: 'help_page' }, type: 'edition', version: 2)
     commit_index('govuk_test')
 
@@ -54,7 +54,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     expect_document_is_in_rummager({ 'link' => id, 'popularity' => 0.222 }, type: 'edition', index: 'govuk_test')
   end
 
-  it "copies_version_information" do
+  it "copies version information" do
     id = insert_document('govuk_test', { popularity: 0.222, format: 'help_page' }, type: 'edition', version: 3)
     commit_index('govuk_test')
     GovukIndex::PopularityUpdater.update('govuk_test')
@@ -63,7 +63,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     expect(document['_version']).to eq(3)
   end
 
-  it "skips_non_indexable_formats" do
+  it "skips non indexable formats" do
     id = insert_document('govuk_test', { popularity: 0.222, format: 'edition' }, type: 'edition', version: 3)
     commit_index('govuk_test')
     GovukIndex::PopularityUpdater.update('govuk_test')
@@ -72,7 +72,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     expect(0.222).to eq(document['_source']['popularity'])
   end
 
-  it "does_not_skips_non_indexable_formats_if_process_all_flag_is_set" do
+  it "does not skips non indexable formats if process all flag is set" do
     id = insert_document('govuk_test', { popularity: 0.222, format: 'edition' }, type: 'edition', version: 3)
     commit_index('govuk_test')
 

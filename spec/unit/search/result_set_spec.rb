@@ -42,7 +42,7 @@ RSpec.describe Search::ResultSet do
       expect(described_class.from_elasticsearch(sample_elasticsearch_types, @response).total).to eq(1)
     end
 
-    it "pass the fields to Document.from_hash" do
+    it "pass the fields to Document.from hash" do
       expected_hash = hash_including("foo" => "bar")
       expect(Document).to receive(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).and_return(:doc)
 
@@ -50,7 +50,7 @@ RSpec.describe Search::ResultSet do
       expect(result_set.results).to eq([:doc])
     end
 
-    it "pass the result score to Document.from_hash" do
+    it "pass the result score to Document.from hash" do
       expect(Document).to receive(:from_hash).with(an_instance_of(Hash), sample_elasticsearch_types, 12).and_return(:doc)
 
       result_set = described_class.from_elasticsearch(sample_elasticsearch_types, @response)

@@ -30,7 +30,7 @@ RSpec.describe FieldTypes do
       expect(@types.get("objects").children).to eq("named")
     end
 
-    it "know that the `opaque_object` type has dynamic children" do
+    it "know that the `opaque object` type has dynamic children" do
       expect(@types.get("opaque_object").children).to eq("dynamic")
     end
 
@@ -46,14 +46,14 @@ RSpec.describe FieldTypes do
       @types = described_class.new("/config/path")
     end
 
-    it "fail if a field type has no es_config property" do
+    it "fail if a field type has no es config property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({ "identifier" => {} })
       expect_raises_message(%{Missing "es_config" in field type "identifier" in "/config/path/field_types.json"}) do
         @types.get("identifier")
       end
     end
 
-    it "fail if a field type has an invalid `filter_type` property" do
+    it "fail if a field type has an invalid `filter type` property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return(
         { "identifier" => { "es_config" => {}, "filter_type" => "bad value" } }
       )

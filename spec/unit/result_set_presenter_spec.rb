@@ -207,7 +207,7 @@ RSpec.describe Search::ResultSetPresenter do
       end
     end
 
-    it "have the score in es_score" do
+    it "have the score in es score" do
       @output[:results].zip(sample_docs).each do |result, doc|
         expect(result.keys).not_to include("_score")
         expect(result[:es_score]).not_to be_nil
@@ -283,7 +283,7 @@ RSpec.describe Search::ResultSetPresenter do
       end
     end
 
-    it "have the score in es_score" do
+    it "have the score in es score" do
       @output[:results].zip(sample_docs).each do |result, doc|
         expect(result.keys).not_to include("_score")
         expect(result[:es_score]).not_to be_nil

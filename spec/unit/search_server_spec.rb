@@ -8,35 +8,35 @@ RSpec.describe SearchIndices::SearchServer do
     schema
   end
 
-  it "returns_an_index" do
+  it "returns an index" do
     search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
     index = search_server.index("mainstream_test")
     expect(index).to be_a(SearchIndices::Index)
     expect(index.index_name).to eq("mainstream_test")
   end
 
-  it "returns_an_index_for_govuk_index" do
+  it "returns an index for govuk index" do
     search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
     index = search_server.index("govuk_test")
     expect(index).to be_a(SearchIndices::Index)
     expect(index.index_name).to eq("govuk_test")
   end
 
-  it "raises_an_error_for_unknown_index" do
+  it "raises an error for unknown index" do
     search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
     expect {
       search_server.index("z")
     }.to raise_error(SearchIndices::NoSuchIndex)
   end
 
-  it "can_get_multi_index" do
+  it "can get multi index" do
     search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
     index = search_server.index_for_search(%w{mainstream_test page-traffic_test})
     expect(index).to be_a(LegacyClient::IndexForSearch)
     expect(index.index_names).to eq(["mainstream_test", "page-traffic_test"])
   end
 
-  it "raises_an_error_for_unknown_index_in_multi_index" do
+  it "raises an error for unknown index in multi index" do
     search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
     expect {
       search_server.index_for_search(%w{mainstream_test unknown})

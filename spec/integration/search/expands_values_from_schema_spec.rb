@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'ExpandsValuesFromSchemaTest' do
-  it "extra_fields_decorated_by_schema" do
+  it "extra fields decorated by schema" do
     commit_document("mainstream_test", {
       "link" => "/cma-cases/sample-cma-case",
       "case_type" => "mergers",

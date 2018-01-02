@@ -7,49 +7,49 @@ RSpec.describe 'QuotedAndUnquotedSearchTest' do
     Rummager.class_variable_set(:'@@registries', nil)
   end
 
-  it "old_weighting_three_matches_found_for_london" do
+  it "old weighting three matches found for london" do
     commit_london_transport_docs
     get "/search?q=london"
     expect(last_response.status).to eq(200)
     expect(parsed_response["results"].size).to eq(3)
   end
 
-  it "old_weighting_three_matches_found_for_transport" do
+  it "old weighting three matches found for transport" do
     commit_london_transport_docs
     get "/search?q=transport"
     expect(last_response.status).to eq(200)
     expect(parsed_response["results"].size).to eq(3)
   end
 
-  it "old_weighting_three_matches_found_for_unquoted_london_transport" do
+  it "old weighting three matches found for unquoted london transport" do
     commit_london_transport_docs
     get "/search?q=london+transport"
     expect(last_response.status).to eq(200)
     expect(parsed_response["results"].size).to eq(3)
   end
 
-  it "old_weighting_one_match_found_for_quoted_london_transport" do
+  it "old weighting one match found for quoted london transport" do
     commit_london_transport_docs
     get "/search?q=%22london+transport%22"
     expect(last_response.status).to eq(200)
     expect(parsed_response["results"].size).to eq(1)
   end
 
-  it "old_weighting_synonyms_are_returned_with_unquoted_phrases" do
+  it "old weighting synonyms are returned with unquoted phrases" do
     commit_synonym_documents
     get "/search?q=driving+abroad"
     expect(last_response.status).to eq(200)
     expect(parsed_response["results"].size).to eq(2)
   end
 
-  it "old_weighting_stemming_is_in_place_for_unquoted_phrases" do
+  it "old weighting stemming is in place for unquoted phrases" do
     commit_stemming_documents
     get "/search?q=dog"
     expect(last_response.status).to eq(200)
     expect(parsed_response["results"].size).to eq(2)
   end
 
-  it "old_weighting_stemming_is_still_in_place_even_for_quoted_phrases" do
+  it "old weighting stemming is still in place even for quoted phrases" do
     commit_stemming_documents
     get "/search?q=%22dog%22"
     expect(last_response.status).to eq(200)
