@@ -5,12 +5,21 @@ index:
         # At index time, elasticsearch will use an analyzer named default in the index settings
         # if no analyzer is specified in the field mapping:
         # https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
+        #
+        # We don't need this at query time unless synonyms are disabled
+        # using a debug flag.
         default:
           type: custom
           tokenizer: standard
           filter: [standard, asciifolding, lowercase, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
+        # This analyzer does not filter out these stopwords:
+        # a, an, and, are, as, at, be, but, by,
+        # for, if, in, into, is, it,
+        # no, not, of, on, or, such,
+        # that, the, their, then, there, these,
+        # they, this, to, was, will, with
         searchable_text:
           type: custom
           tokenizer: standard
