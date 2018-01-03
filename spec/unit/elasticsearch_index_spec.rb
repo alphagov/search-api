@@ -7,7 +7,7 @@ RSpec.describe SearchIndices::Index do
     @index = build_mainstream_index
   end
 
-  it "real name" do
+  it "has returns the name of the index as real_name" do
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
         body: { "real-name" => { "aliases" => { "mainstream_test" => {} } } }.to_json,
@@ -17,7 +17,7 @@ RSpec.describe SearchIndices::Index do
     expect(@index.real_name).to eq("real-name")
   end
 
-  it "real name when no index" do
+  it "returns nil for real_name when elasticsearch returns a 404 response" do
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
       .to_return(
         status: 404,
@@ -28,7 +28,7 @@ RSpec.describe SearchIndices::Index do
     expect(@index.real_name).to be_nil
   end
 
-  it "real name when no index es0 20" do
+  it "returns nil for real_name when elasticsearch reports the index as missing" do
     # elasticsearch is weird: even though /index/_status 404s if the index
     # doesn't exist, /index/_aliases returns a 200.
     stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
@@ -83,7 +83,7 @@ RSpec.describe SearchIndices::Index do
     end
   end
 
-  it "raw search" do
+  it "can be searched" do
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
       body: %r{"query":"keyword search"},
     ).to_return(
@@ -96,7 +96,7 @@ RSpec.describe SearchIndices::Index do
     assert_requested(stub_get)
   end
 
-  it "raw search with type" do
+  it "can be searched for a specific type" do
     stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/test-type/_search").with(
       body: %r{"query":"keyword search"},
     ).to_return(
@@ -109,7 +109,7 @@ RSpec.describe SearchIndices::Index do
     assert_requested(stub_get)
   end
 
-  it "commit" do
+  it "can manually commit changes" do
     refresh_url = "http://example.com:9200/mainstream_test/_refresh"
     stub_request(:post, refresh_url).to_return(
       body: '{"ok":true,"_shards":{"total":1,"successful":1,"failed":0}}',
@@ -175,8 +175,7 @@ RSpec.describe SearchIndices::Index do
     expect((1..10).map { |i| "/organisation-#{i}" }).to eq(result.map { |r| r['link'] })
   end
 
-  it "all documents size" do
-    # Test that we can count the documents without retrieving them all
+  it "can count the documents without retrieving them all" do
     search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=50&version=true"
     stub_request(:get, search_pattern).with(
       body: { query: expected_all_documents_query }.to_json
@@ -187,7 +186,7 @@ RSpec.describe SearchIndices::Index do
     expect(@index.all_documents.size).to eq(100)
   end
 
-  it "all documents" do
+  it "can retrieve all documents" do
     search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=50&version=true"
 
     stub_request(:get, search_uri).with(
@@ -217,7 +216,7 @@ RSpec.describe SearchIndices::Index do
     expect(all_documents.last.link).to eq("/foo-100")
   end
 
-  it "changing scroll id" do
+  it "can scroll through the documents" do
     search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=2&version=true"
 
     allow(SearchIndices::Index).to receive(:scroll_batch_size).and_return(2)
