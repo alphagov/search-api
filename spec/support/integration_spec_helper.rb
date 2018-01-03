@@ -116,7 +116,7 @@ module IntegrationSpecHelper
     commit_index(index_name)
   end
 
-  def commit_index(index_name = "mainstream_test")
+  def commit_index(index_name)
     client.indices.refresh(index: index_name)
   end
 
@@ -134,7 +134,7 @@ module IntegrationSpecHelper
     JSON.parse(last_response.body)
   end
 
-  def expect_document_is_in_rummager(document, type: "edition", index: 'mainstream_test', id: nil)
+  def expect_document_is_in_rummager(document, type: "edition", id: nil, index:)
     retrieved = fetch_document_from_rummager(id: id || document['link'], index: index)
 
     expect(retrieved["_type"]).to eq(type)
@@ -210,7 +210,7 @@ private
     end
   end
 
-  def fetch_document_from_rummager(id:, index: 'mainstream_test', type: '_all')
+  def fetch_document_from_rummager(id:, type: '_all', index:)
     client.get(
       index: index,
       type: type,

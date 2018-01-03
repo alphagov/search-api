@@ -216,7 +216,7 @@ private
 
   def expect_document_missing_in_rummager(id:, type:)
     expect {
-      fetch_document_from_rummager(id: id, type: type)
+      fetch_document_from_rummager(id: id, type: type, index: "mainstream_test")
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 

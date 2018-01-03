@@ -71,7 +71,7 @@ RSpec.describe 'search queries' do
       insert_document('mainstream_test', { organisations: ['org1'], mainstream_browse_pages: ["browse/page/2"] })
       insert_document('mainstream_test', { organisations: ['org2'], mainstream_browse_pages: ["browse/page/1"] })
       insert_document('mainstream_test', { organisations: ['org2'], mainstream_browse_pages: ["browse/page/2"] })
-      commit_index
+      commit_index('mainstream_test')
 
       get "/search?aggregate_mainstream_browse_pages=2&filter_organisations=org2"
       expect(parsed_response["total"]).to eq(2)

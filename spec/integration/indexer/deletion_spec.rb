@@ -38,7 +38,7 @@ RSpec.describe 'ElasticsearchDeletionTest' do
       "link" => "/something",
     }.to_json
 
-    commit_index
+    commit_index('mainstream_test')
 
     delete "/metasearch_test/documents/best_bet/jobs_exact"
 

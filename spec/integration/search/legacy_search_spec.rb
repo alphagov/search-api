@@ -5,7 +5,7 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest' do
     @index_name = "mainstream_test"
 
     add_sample_documents
-    commit_index
+    commit_index('mainstream_test')
   end
 
   def sample_document_attributes
@@ -160,7 +160,7 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest' do
       insert_document("mainstream_test", sample_document)
     end
 
-    commit_index
+    commit_index('mainstream_test')
 
     get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&mainstream_browse_pages=crime/example"
 

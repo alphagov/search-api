@@ -16,12 +16,15 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
       'link' => '/foo',
     }.to_json
 
-    commit_index
+    commit_index('mainstream_test')
 
-    expect_document_is_in_rummager({
-      "link" => "/foo",
-      "mainstream_browse_pages" => [],
-    })
+    expect_document_is_in_rummager(
+      {
+        "link" => "/foo",
+        "mainstream_browse_pages" => [],
+      },
+      index: "mainstream_test",
+    )
 
     publishing_api_has_expanded_links(
       content_id: "DOCUMENT-CONTENT-ID",
@@ -37,11 +40,14 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
       "base_path" => "/foo"
     })
 
-    commit_index
+    commit_index('mainstream_test')
 
-    expect_document_is_in_rummager({
-      "link" => "/foo",
-      "mainstream_browse_pages" => ['my-browse'],
-    })
+    expect_document_is_in_rummager(
+      {
+        "link" => "/foo",
+        "mainstream_browse_pages" => ['my-browse'],
+      },
+      index: "mainstream_test",
+    )
   end
 end

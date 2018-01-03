@@ -4,7 +4,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest' do
   before do
     insert_document('mainstream_test', title: 'mainstream answer', link: '/mainstream/answer', format: 'answer')
     insert_document('mainstream_test', title: 'mainstream help', link: '/mainstream/help', format: 'help_page')
-    commit_index
+    commit_index('mainstream_test')
     insert_document('govuk_test', title: 'govuk answer', link: '/govuk/answer', format: 'answer')
     insert_document('govuk_test', title: 'govuk help', link: '/govuk/help', format: 'help_page')
     commit_index('govuk_test')

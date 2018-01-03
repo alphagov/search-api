@@ -13,10 +13,13 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
 
     post "/mainstream_test/documents/%2Fan-example-answer", "title=A+new+title"
 
-    expect_document_is_in_rummager({
-      "title" => "A new title",
-      "link" => "/an-example-answer",
-    }, type: "edition")
+    expect_document_is_in_rummager(
+      {
+        "title" => "A new title",
+        "link" => "/an-example-answer",
+      }, type: "edition",
+      index: "mainstream_test",
+    )
   end
 
   it "should amend a document from non edition docs" do
@@ -27,10 +30,14 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
 
     post "/mainstream_test/documents/%2Fan-example-answer", "title=A+new+title"
 
-    expect_document_is_in_rummager({
-      "title" => "A new title",
-      "link" => "/an-example-answer",
-    }, type: "aaib_report")
+    expect_document_is_in_rummager(
+      {
+        "title" => "A new title",
+        "link" => "/an-example-answer",
+      },
+      type: "aaib_report",
+      index: "mainstream_test",
+    )
   end
 
   it "should amend a document queued" do
