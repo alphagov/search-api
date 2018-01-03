@@ -6,7 +6,7 @@ RSpec.describe 'ElasticsearchDeletionTest' do
       "link" => "/an-example-page"
     })
 
-    delete "/documents/%2Fan-example-page"
+    delete "/mainstream_test/documents/%2Fan-example-page"
 
     expect_document_missing_in_rummager(id: "/an-example-page", index: "mainstream_test")
   end
@@ -16,7 +16,7 @@ RSpec.describe 'ElasticsearchDeletionTest' do
       "link" => "/an-example-page"
     })
 
-    delete "/documents/%2Fan-example-page"
+    delete "/mainstream_test/documents/%2Fan-example-page"
 
     expect(last_response.status).to eq(202)
   end
@@ -26,7 +26,7 @@ RSpec.describe 'ElasticsearchDeletionTest' do
       "link" => "http://example.com/",
     })
 
-    delete "/documents/edition/http:%2F%2Fexample.com%2F"
+    delete "/mainstream_test/documents/edition/http:%2F%2Fexample.com%2F"
 
     expect_document_missing_in_rummager(id: "http://example.com/", index: "mainstream_test")
   end

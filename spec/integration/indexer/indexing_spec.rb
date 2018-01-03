@@ -21,7 +21,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       expanded_links: {},
     )
 
-    post "/documents", {
+    post "/mainstream_test/documents", {
       "_type" => "manual",
       "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
@@ -56,7 +56,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       expanded_links: {},
     )
 
-    post "/documents", {
+    post "/mainstream_test/documents", {
       "content_id" => "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
       "link" => "/an-example-answer",
     }.to_json
@@ -68,7 +68,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
   end
 
   it "indexes start and end dates" do
-    post "/documents", {
+    post "/mainstream_test/documents", {
       "title" => "TITLE",
       "format" => "topical_event",
       "slug" => "/government/topical-events/foo",
@@ -88,7 +88,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
   end
 
   it "tags organisation pages to themselves, so that filtering on an organisation returns the homepage" do
-    post "/documents", {
+    post "/mainstream_test/documents", {
       'title' => 'HMRC',
       'link' => '/government/organisations/hmrc',
       'slug' => 'hmrc',
@@ -103,7 +103,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
   end
 
   it "returns a 202 (queued) response" do
-    post "/documents", SAMPLE_DOCUMENT.to_json
+    post "/mainstream_test/documents", SAMPLE_DOCUMENT.to_json
 
     expect(last_response.status).to eq(202)
     expect_document_is_in_rummager(SAMPLE_DOCUMENT)
@@ -165,7 +165,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         expanded_links: {},
       )
 
-      post "/documents", {
+      post "/mainstream_test/documents", {
         "_type" => "manual",
         "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
         "title" => "TITLE",

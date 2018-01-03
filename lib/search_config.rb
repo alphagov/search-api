@@ -8,7 +8,6 @@ class SearchConfig
     spelling_index_names
     base_uri
     govuk_index_name
-    default_index_name
     page_traffic_index_name
   ].each do |config_method|
     define_method config_method do

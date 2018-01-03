@@ -11,7 +11,7 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
       expanded_links: {},
     )
 
-    post "/documents", {
+    post "/mainstream_test/documents", {
       'title' => 'Foo',
       'link' => '/foo',
     }.to_json

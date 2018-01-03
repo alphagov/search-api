@@ -11,7 +11,7 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
       "link" => "/an-example-answer",
     })
 
-    post "/documents/%2Fan-example-answer", "title=A+new+title"
+    post "/mainstream_test/documents/%2Fan-example-answer", "title=A+new+title"
 
     expect_document_is_in_rummager({
       "title" => "A new title",
@@ -25,7 +25,7 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
       "link" => "/an-example-answer",
     }, type: "aaib_report")
 
-    post "/documents/%2Fan-example-answer", "title=A+new+title"
+    post "/mainstream_test/documents/%2Fan-example-answer", "title=A+new+title"
 
     expect_document_is_in_rummager({
       "title" => "A new title",
@@ -39,7 +39,7 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
       "link" => "/an-example-answer",
     })
 
-    post "/documents/%2Fan-example-answer", "title=A+new+title"
+    post "/mainstream_test/documents/%2Fan-example-answer", "title=A+new+title"
 
     expect(last_response.status).to eq(202)
   end

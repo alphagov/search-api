@@ -7,7 +7,6 @@ production: &default
   metasearch_index_name: "metasearch"
   page_traffic_index_name: "page-traffic"
   popularity_rank_offset: 10
-  default_index_name: "mainstream"
   # When doing spell checking, which indices to use?
   spelling_index_names:
     - government
@@ -24,7 +23,6 @@ test:
   metasearch_index_name: "metasearch_test"
   page_traffic_index_name: "page-traffic_test"
   popularity_rank_offset: 10
-  default_index_name: "mainstream_test"
   spelling_index_names:
     - mainstream_test
     - government_test

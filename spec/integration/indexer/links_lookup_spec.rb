@@ -7,7 +7,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
   it "indexes document without publishing api content unchanged" do
     publishing_api_has_lookups({})
 
-    post "/documents", {
+    post "/mainstream_test/documents", {
       "link" => "/something-not-in-publishing-api",
     }.to_json
 
@@ -19,7 +19,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
   it "indexes document with external url unchanged" do
     publishing_api_has_lookups({})
 
-    post "/documents", {
+    post "/mainstream_test/documents", {
       "link" => "http://example.com/some-link",
     }.to_json
 
@@ -77,7 +77,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
       }
     )
 
-    post "/documents", {
+    post "/mainstream_test/documents", {
       "link" => "/foo/bar",
     }.to_json
 
@@ -108,7 +108,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
       }
     )
 
-    post "/documents", {
+    post "/mainstream_test/documents", {
       "link" => "/my-base-path",
       "content_id" => "CONTENT-ID-OF-DOCUMENT",
     }.to_json
@@ -189,7 +189,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
       }
     )
 
-    post "/documents", {
+    post "/mainstream_test/documents", {
       "link" => "/foo/bar",
     }.to_json
 

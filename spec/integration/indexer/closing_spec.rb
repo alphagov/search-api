@@ -5,8 +5,8 @@ RSpec.describe 'ElasticsearchClosingTest' do
     stub_tagging_lookup
   end
 
-  it "should fail to insert or get when index closed" do
-    index = search_server.index_group(SearchConfig.instance.default_index_name).current
+  it "will not allow insertion into closed index" do
+    index = search_server.index_group('government_test').current
     index.close
 
     expect {
@@ -15,6 +15,6 @@ RSpec.describe 'ElasticsearchClosingTest' do
 
     # Re-opening the index again, as they are not recreated on each test run
     # anymore.
-    client.indices.open(index: SearchConfig.instance.default_index_name)
+    client.indices.open(index: 'government_test')
   end
 end
