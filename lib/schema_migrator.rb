@@ -1,8 +1,9 @@
 class SchemaMigrator
-  def initialize(index_name, config, wait_between_task_list_check: 5)
+  def initialize(index_name, config, wait_between_task_list_check: 5, io: STDOUT)
     @index_name = index_name
     @config = config
     @wait_between_task_list_check = wait_between_task_list_check
+    @io = io
 
     index_group.current.with_lock do
       yield(self)
@@ -42,10 +43,12 @@ class SchemaMigrator
   end
 
   def comparison
-    @comparison ||= Indexer::Comparer.new(index_group.current.real_name, index.real_name).run
+    @comparison ||= Indexer::Comparer.new(index_group.current.real_name, index.real_name, io: io).run
   end
 
 private
+
+  attr_reader :io
 
   # this is awful but is caused by the return format of the tasks lists
   def running_tasks
