@@ -17,7 +17,7 @@ namespace :message_queue do
 
   desc "Gets data from RabbitMQ and insert into govuk index"
   task :insert_data_into_govuk do
-    GovukMessageQueueConsumer::Consumer.new(
+    GovukMessageQueueConsumer::BatchConsumer.new(
       queue_name: "rummager_govuk_index",
       processor: GovukIndex::PublishingEventProcessor.new,
       statsd_client: Services.statsd_client,
@@ -26,7 +26,7 @@ namespace :message_queue do
 
   desc "Gets data from RabbitMQ and insert into govuk index (bulk reindex queue)"
   task :bulk_insert_data_into_govuk do
-    GovukMessageQueueConsumer::Consumer.new(
+    GovukMessageQueueConsumer::BatchConsumer.new(
       queue_name: "rummager_bulk_reindex",
       processor: GovukIndex::PublishingEventProcessor.new,
       statsd_client: Services.statsd_client,
