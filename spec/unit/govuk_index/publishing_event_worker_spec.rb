@@ -23,6 +23,33 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       subject.perform([['routing.key', payload]])
     end
 
+    context "when a message containing an invalid format is received" do
+      let(:actions) { Index::ElasticsearchProcessor.govuk }
+      payload = {
+        "base_path" => "/cheese",
+        "document_type" => "dossier_of_cheese",
+        "title" => "We love cheese",
+        "content_id" => "sc8b0284-0deg-d4d2-8af0-29c50gd88b7e",
+      }
+
+      it "notifies of a validation error" do
+        expect(GovukError).to receive(:notify).with(
+          instance_of(GovukIndex::InvalidFormatError),
+          extra: {
+            message_body: {
+              "base_path" => "/cheese",
+              "document_type" => "dossier_of_cheese",
+              "title" => "We love cheese",
+              "content_id" => "sc8b0284-0deg-d4d2-8af0-29c50gd88b7e",
+            },
+            error_message: "dossier_of_cheese is an invalid format"
+          }
+        )
+
+        subject.perform([['routing.key', payload]])
+      end
+    end
+
     context "when a message to unpublish the document is received" do
       it "will delete the document" do
         payload = {
