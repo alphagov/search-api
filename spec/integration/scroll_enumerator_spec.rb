@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'ScrollEnumeratorTest' do
-  it "returns_expected_results_for_unsorted_search" do
+  it "returns expected results for unsorted search" do
     10.times.each do |id|
       commit_document("mainstream_test", { some: 'data' }, id: "id-#{id}", type: "edition")
     end
@@ -16,7 +16,7 @@ RSpec.describe 'ScrollEnumeratorTest' do
     expect(results.count).to eq(10)
   end
 
-  it "returns_expected_results_for_sorted_search" do
+  it "returns expected results for sorted search" do
     10.times.each do |id|
       commit_document("mainstream_test", { some: 'data' }, id: "id-#{id}", type: "edition")
     end
@@ -31,7 +31,7 @@ RSpec.describe 'ScrollEnumeratorTest' do
     expect(results.count).to eq(10)
   end
 
-  it "returns_expected_results_when_empty_result_set" do
+  it "returns expected results when empty result set" do
     results = ScrollEnumerator.new(
       client: client,
       index_names: 'mainstream_test',

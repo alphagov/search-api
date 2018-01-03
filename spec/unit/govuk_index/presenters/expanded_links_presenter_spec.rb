@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe GovukIndex::ExpandedLinksPresenter do
-  it "mainstream_browse_pages" do
+  it "mainstream browse pages" do
     expanded_links = {
       "mainstream_browse_pages" => [
           {

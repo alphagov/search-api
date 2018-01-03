@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Search::ResultPresenter do
-  it "conversion_values_to_single_objects" do
+  it "conversion values to single objects" do
     document = {
       '_type' => 'raib_report',
       '_index' => 'mainstream_test',
@@ -13,7 +13,7 @@ RSpec.describe Search::ResultPresenter do
     expect(result["format"]).to eq("a-string")
   end
 
-  it "conversion_values_to_labelled_objects" do
+  it "conversion values to labelled objects" do
     document = {
       '_type' => 'raib_report',
       '_index' => 'mainstream_test',

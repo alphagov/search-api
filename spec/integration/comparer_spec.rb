@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'ComparerTest' do
-  it "for_sort_ordering" do
+  it "for sort ordering" do
     insert_document('mainstream_test', { some: 'data' }, id: 'ABC', type: 'edition')
     insert_document('mainstream_test', { some: 'data' }, id: 'DEF', type: 'hmrc_manual')
     commit_document('mainstream_test', { some: 'data' }, id: 'GHI', type: 'edition')
@@ -33,7 +33,7 @@ RSpec.describe 'ComparerTest' do
     ]).to eq results.to_a
   end
 
-  it "only_compares_filtered_formats" do
+  it "only compares filtered formats" do
     insert_document('mainstream_test', { some: 'data', format: 'edition' }, id: 'ABC', type: 'edition')
     insert_document('mainstream_test', { some: 'data', format: 'other' }, id: 'DEF', type: 'hmrc_manual')
     commit_document('mainstream_test', { some: 'data', format: 'other' }, id: 'GHI', type: 'edition')
@@ -57,7 +57,7 @@ RSpec.describe 'ComparerTest' do
     ]).to eq results.to_a
   end
 
-  it "comparison_output_works" do
+  it "comparison output works" do
     insert_document('mainstream_test', { some: 'data', format: 'edition', field: 1 }, id: 'ABC', type: 'edition')
     insert_document('mainstream_test', { some: 'data', format: 'other' }, id: 'DEF', type: 'other')
     commit_document('mainstream_test', { some: 'data', format: 'other' }, id: 'GHI', type: 'edition')

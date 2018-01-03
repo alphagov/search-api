@@ -11,7 +11,7 @@ RSpec.describe 'ElasticsearchDeletionTest' do
     expect_document_missing_in_rummager(id: "/an-example-page", index: "mainstream_test")
   end
 
-  it "removes a document from the index_queued" do
+  it "removes a document from the index queued" do
     commit_document("mainstream_test", {
       "link" => "/an-example-page"
     })

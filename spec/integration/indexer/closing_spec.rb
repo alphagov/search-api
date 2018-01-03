@@ -5,7 +5,7 @@ RSpec.describe 'ElasticsearchClosingTest' do
     stub_tagging_lookup
   end
 
-  it "should_fail_to_insert_or_get_when_index_closed" do
+  it "should fail to insert or get when index closed" do
     index = search_server.index_group(SearchConfig.instance.default_index_name).current
     index.close
 

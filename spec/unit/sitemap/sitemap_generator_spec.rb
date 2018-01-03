@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe SitemapGenerator do
-  it "should_generate_sitemap" do
+  it "should generate sitemap" do
     sitemap = described_class.new(index_names: '')
 
     sitemap_xml = sitemap.generate_xml([
@@ -17,7 +17,7 @@ RSpec.describe SitemapGenerator do
     expect(urls[2]).to eq("http://www.dev.gov.uk/yet-another-page")
   end
 
-  it "links_should_include_timestamps" do
+  it "links should include timestamps" do
     sitemap = described_class.new(index_names: '')
 
     sitemap_xml = sitemap.generate_xml([
@@ -29,7 +29,7 @@ RSpec.describe SitemapGenerator do
     expect(pages[0].css("lastmod").text).to eq("2014-01-28T14:41:50+00:00")
   end
 
-  it "missing_timestamps_are_ignored" do
+  it "missing timestamps are ignored" do
     sitemap = described_class.new(index_names: '')
 
     sitemap_xml = sitemap.generate_xml([
@@ -41,7 +41,7 @@ RSpec.describe SitemapGenerator do
     expect_page_has_no_lastmod(pages[0])
   end
 
-  it "page_priority_is_document_priority" do
+  it "page priority is document priority" do
     sitemap = described_class.new(index_names: '')
 
     document = build_document('/some-path')

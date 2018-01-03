@@ -5,7 +5,7 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
     stub_tagging_lookup
   end
 
-  it "should_amend_a_document" do
+  it "should amend a document" do
     commit_document("mainstream_test", {
       "title" => "The old title",
       "link" => "/an-example-answer",
@@ -19,7 +19,7 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
     }, type: "edition")
   end
 
-  it "should_amend_a_document_from_non_edition_docs" do
+  it "should amend a document from non edition docs" do
     commit_document("mainstream_test", {
       "title" => "The old title",
       "link" => "/an-example-answer",
@@ -33,7 +33,7 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
     }, type: "aaib_report")
   end
 
-  it "should_amend_a_document_queued" do
+  it "should amend a document queued" do
     commit_document("mainstream_test", {
       "title" => "The old title",
       "link" => "/an-example-answer",

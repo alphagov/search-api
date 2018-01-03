@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'DuplicateDeleterTest' do
-  it "can_not_delete_when_only_a_single_document" do
+  it "can not delete when only a single document" do
     commit_document(
       "mainstream_test",
       {
@@ -17,7 +17,7 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_present_in_rummager(id: "/an-example-page", type: "edition")
   end
 
-  it "can_delete_duplicate_documents_on_different_types" do
+  it "can delete duplicate documents on different types" do
     commit_document(
       "mainstream_test",
       {
@@ -43,7 +43,7 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_missing_in_rummager(id: "/an-example-page", type: "edition")
   end
 
-  it "cant_delete_a_type_that_doesnt_exist" do
+  it "cant delete a type that doesnt exist" do
     commit_document(
       "mainstream_test",
       {
@@ -68,7 +68,7 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_present_in_rummager(id: "/an-example-page", type: "edition")
   end
 
-  it "cant_delete_duplicate_content_ids_when_id_doesnt_match" do
+  it "cant delete duplicate content_ids when id doesnt match" do
     commit_document(
       "mainstream_test",
       {
@@ -93,7 +93,7 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_present_in_rummager(id: "/an-example-page", type: "cma_case")
   end
 
-  it "can_delete_duplicate_documents_on_different_types_using_link" do
+  it "can delete duplicate documents on different types using link" do
     commit_document(
       "mainstream_test",
       {
@@ -118,7 +118,7 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_missing_in_rummager(id: "/an-example-page", type: "edition")
   end
 
-  it "cant_delete_duplicate_documents_using_link_with_different_content_ids" do
+  it "cant delete duplicate documents using link with different content_ids" do
     commit_document(
       "mainstream_test",
       {
@@ -143,7 +143,7 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_present_in_rummager(id: "/an-example-page", type: "edition")
   end
 
-  it "can_delete_duplicate_documents_if_bad_item_has_nil_content_id" do
+  it "can delete duplicate documents if bad item has nil content_id" do
     commit_document(
       "mainstream_test",
       { "link" => "/an-example-page" },
@@ -165,7 +165,7 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_missing_in_rummager(id: "/an-example-page", type: "edition")
   end
 
-  it "cant_delete_duplicate_documents_if_good_item_has_nil_content_id" do
+  it "cant delete duplicate documents if good item has nil content_id" do
     commit_document(
       "mainstream_test",
       {
@@ -187,7 +187,7 @@ RSpec.describe 'DuplicateDeleterTest' do
     expect_document_present_in_rummager(id: "/an-example-page", type: "edition")
   end
 
-  it "can_delete_duplicate_documents_on_different_types_using_link_when_both_content_ids_are_missing" do
+  it "can delete duplicate documents on different types using link when both content_ids are missing" do
     commit_document(
       "mainstream_test",
       { "link" => "/an-example-page" },

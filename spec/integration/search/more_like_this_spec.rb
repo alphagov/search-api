@@ -1,19 +1,19 @@
 require 'spec_helper'
 
 RSpec.describe 'MoreLikeThisTest' do
-  it "returns_success" do
+  it "returns success" do
     get "/search?similar_to=/mainstream-1"
 
     expect(last_response).to be_ok
   end
 
-  it "returns_no_results_without_documents" do
+  it "returns no results without documents" do
     get "/search?similar_to=/mainstream-1"
 
     expect(result_links).to be_empty
   end
 
-  it "returns_results_from_mainstream_index" do
+  it "returns results from mainstream index" do
     add_sample_documents('mainstream_test', 15)
 
     get "/search?similar_to=/mainstream-1&count=20&start=0"
@@ -22,7 +22,7 @@ RSpec.describe 'MoreLikeThisTest' do
     expect(result_links.count).to eq(14)
   end
 
-  it "returns_results_from_government_index" do
+  it "returns results from government index" do
     add_sample_documents('government_test', 15)
 
     get "/search?similar_to=/government-1&count=20&start=0"
@@ -31,7 +31,7 @@ RSpec.describe 'MoreLikeThisTest' do
     expect(result_links.count).to eq(14)
   end
 
-  it "returns_similar_docs" do
+  it "returns similar docs" do
     add_sample_documents('mainstream_test', 15)
     add_sample_documents('government_test', 15)
 

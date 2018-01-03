@@ -18,7 +18,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     )
   end
 
-  it "directly_mapped_fields" do
+  it "directly mapped fields" do
     payload = generate_random_example(
       payload: { expanded_links: {} },
       excluded_fields: ["withdrawn_notice"],
@@ -34,7 +34,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     end
   end
 
-  it "non_directly_mapped_fields" do
+  it "non directly mapped fields" do
     defined_fields = {
       base_path: "/some/path",
       expanded_links: {},
@@ -65,7 +65,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     expect(presenter.link).to eq("some_url")
   end
 
-  it "withdrawn_when_withdrawn_notice_present" do
+  it "withdrawn when withdrawn notice present" do
     payload = {
       "base_path" => "/some/path",
       "withdrawn_notice" => {
@@ -79,7 +79,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     expect(presenter.is_withdrawn).to eq(true)
   end
 
-  it "popularity_when_value_is_returned_from_lookup" do
+  it "popularity when value is returned from lookup" do
     payload = { "base_path" => "/some/path" }
 
     popularity = 0.0125356
@@ -92,7 +92,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     expect(popularity).to eq(presenter.popularity)
   end
 
-  it "no_popularity_when_no_value_is_returned_from_lookup" do
+  it "no popularity when no value is returned from lookup" do
     payload = { "base_path" => "/some/path" }
 
     expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', SearchConfig.instance).and_return(@popularity_lookup)

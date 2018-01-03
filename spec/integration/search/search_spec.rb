@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 RSpec.describe 'SearchTest' do
-  it "returns_success" do
+  it "returns success" do
     get "/search?q=important"
 
     expect(last_response).to be_ok
   end
 
-  it "spell_checking_with_typo" do
+  it "spell checking with typo" do
     commit_document("mainstream_test",
       "title" => "I am the result",
       "description" => "This is a test search result",
@@ -19,7 +19,7 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response['suggested_queries']).to eq(['search'])
   end
 
-  it "spell_checking_with_blacklisted_typo" do
+  it "spell checking with blacklisted typo" do
     commit_document("mainstream_test",
       "title" => "Brexitt",
       "description" => "Brexitt",
@@ -30,7 +30,7 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response['suggested_queries']).to eq([])
   end
 
-  it "spell_checking_without_typo" do
+  it "spell checking without typo" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?q=milliband"
@@ -38,7 +38,7 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response['suggested_queries']).to eq([])
   end
 
-  it "returns_docs_from_all_indexes" do
+  it "returns docs from all indexes" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?q=important"
@@ -47,7 +47,7 @@ RSpec.describe 'SearchTest' do
     expect(result_links).to include "/mainstream-1"
   end
 
-  it "sort_by_date_ascending" do
+  it "sort by date ascending" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=public_timestamp"
@@ -55,7 +55,7 @@ RSpec.describe 'SearchTest' do
     expect(result_links.take(2)).to eq(["/government-1", "/government-2"])
   end
 
-  it "sort_by_date_descending" do
+  it "sort by date descending" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=-public_timestamp"
@@ -65,7 +65,7 @@ RSpec.describe 'SearchTest' do
     expect(result_links.take(2)).to eq(["/government-2", "/government-1"])
   end
 
-  it "sort_by_title_ascending" do
+  it "sort by title ascending" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?order=title"
@@ -74,7 +74,7 @@ RSpec.describe 'SearchTest' do
     expect(lowercase_titles).to eq(lowercase_titles.sort)
   end
 
-  it "filter_by_field" do
+  it "filter by field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_mainstream_browse_pages=browse/page/1"
@@ -82,7 +82,7 @@ RSpec.describe 'SearchTest' do
     expect(result_links.sort).to eq(["/government-1", "/mainstream-1"])
   end
 
-  it "reject_by_field" do
+  it "reject by field" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?reject_mainstream_browse_pages=browse/page/1"
@@ -90,7 +90,7 @@ RSpec.describe 'SearchTest' do
     expect(result_links.sort).to eq(["/government-2", "/mainstream-2"])
   end
 
-  it "can_filter_for_missing_field" do
+  it "can filter for missing field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_specialist_sectors=_MISSING"
@@ -98,7 +98,7 @@ RSpec.describe 'SearchTest' do
     expect(result_links.sort).to eq(["/government-1", "/mainstream-1"])
   end
 
-  it "can_filter_for_missing_or_specific_value_in_field" do
+  it "can filter for missing or specific value in field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
@@ -106,7 +106,7 @@ RSpec.describe 'SearchTest' do
     expect(result_links.sort).to eq(["/government-1", "/mainstream-1"])
   end
 
-  it "can_filter_and_reject" do
+  it "can filter and reject" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
@@ -117,7 +117,7 @@ RSpec.describe 'SearchTest' do
     ]).to eq(result_links.sort)
   end
 
-  it "only_contains_fields_which_are_present" do
+  it "only contains fields which are present" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&order=public_timestamp"
@@ -127,27 +127,27 @@ RSpec.describe 'SearchTest' do
     expect(results[1]["specialist_sectors"]).to eq([{ "slug" => "farming" }])
   end
 
-  it "validates_integer_params" do
+  it "validates integer params" do
     get "/search?start=a"
 
     expect(last_response.status).to eq(422)
     expect(parsed_response).to eq({ "error" => "Invalid value \"a\" for parameter \"start\" (expected positive integer)" })
   end
 
-  it "allows_integer_params_leading_zeros" do
+  it "allows integer params leading zeros" do
     get "/search?start=09"
 
     expect(last_response).to be_ok
   end
 
-  it "validates_unknown_params" do
+  it "validates unknown params" do
     get "/search?foo&bar=1"
 
     expect(last_response.status).to eq(422)
     expect(parsed_response).to eq("error" => "Unexpected parameters: foo, bar")
   end
 
-  it "debug_explain_returns_explanations" do
+  it "debug explain returns explanations" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
     get "/search?debug=explain"
@@ -159,7 +159,7 @@ RSpec.describe 'SearchTest' do
     expect(first_hit_explain.keys).to include("details")
   end
 
-  it "can_scope_by_elasticsearch_type" do
+  it "can scope by elasticsearch type" do
     commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
 
     get "/search?filter_document_type=cma_case"
@@ -177,7 +177,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "can_filter_between_dates" do
+  it "can filter between dates" do
     commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
@@ -194,7 +194,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "can_filter_between_dates_with_reversed_parameter_order" do
+  it "can filter between dates with reversed parameter order" do
     commit_document("mainstream_test", cma_case_attributes, type: "cma_case")
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
@@ -338,7 +338,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "cannot_provide_date_filter_key_multiple_times" do
+  it "cannot provide date filter key multiple times" do
     get "/search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
 
     expect(last_response.status).to eq(422)
@@ -349,7 +349,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "cannot_provide_invalid_dates_for_date_filter" do
+  it "cannot provide invalid dates for date filter" do
     get "/search?filter_document_type=cma_case&filter_opened_date=from:not-a-date"
 
     expect(last_response.status).to eq(422)
@@ -360,7 +360,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "expandinging_of_organisations" do
+  it "expandinging of organisations" do
     commit_document("mainstream_test",
       "title" => 'Advice on Treatment of Dragons',
       "link" => '/dragon-guide',
@@ -383,7 +383,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "expandinging_of_organisations_via_content_id" do
+  it "expandinging of organisations via content_id" do
     commit_document(
       "mainstream_test",
       "title" => 'Advice on Treatment of Dragons',
@@ -424,7 +424,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "search_for_expanded_organisations_works" do
+  it "search for expanded organisations works" do
     commit_document(
       "mainstream_test",
       "title" => 'Advice on Treatment of Dragons',
@@ -446,7 +446,7 @@ RSpec.describe 'SearchTest' do
     expect(first_result['expanded_organisations']).to be_truthy
   end
 
-  it "filter_by_organisation_content_ids_works" do
+  it "filter by organisation content_ids works" do
     commit_document(
       "mainstream_test",
       "title" => 'Advice on Treatment of Dragons',
@@ -468,7 +468,7 @@ RSpec.describe 'SearchTest' do
     expect(first_result['expanded_organisations']).to be_truthy
   end
 
-  it "expandinging_of_topics" do
+  it "expandinging of topics" do
     commit_document("mainstream_test",
       "title" => 'Advice on Treatment of Dragons',
       "link" => '/dragon-guide',
@@ -504,7 +504,7 @@ RSpec.describe 'SearchTest' do
     expect(first_result['topic_content_ids']).to eq(['topic-content-id'])
   end
 
-  it "filter_by_topic_content_ids_works" do
+  it "filter by topic content_ids works" do
     commit_document("mainstream_test",
       "title" => 'Advice on Treatment of Dragons',
       "link" => '/dragon-guide',
@@ -524,7 +524,7 @@ RSpec.describe 'SearchTest' do
     expect(first_result['expanded_topics']).to be_truthy
   end
 
-  it "withdrawn_content" do
+  it "withdrawn content" do
     commit_document("mainstream_test",
       "title" => "I am the result",
       "description" => "This is a test search result",
@@ -536,7 +536,7 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response.fetch("total")).to eq(0)
   end
 
-  it "withdrawn_content_with_flag" do
+  it "withdrawn content with flag" do
     commit_document("mainstream_test",
       "title" => "I am the result",
       "description" => "This is a test search result",
@@ -549,7 +549,7 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response.dig("results", 0, "is_withdrawn")).to be true
   end
 
-  it "withdrawn_content_with_flag_with_aggregations" do
+  it "withdrawn content with flag with aggregations" do
     commit_document("mainstream_test",
       "title" => "I am the result",
       "organisation" => "Test Org",
@@ -562,13 +562,13 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response.fetch("total")).to eq(1)
   end
 
-  it "show_the_query" do
+  it "show the query" do
     get "/search?q=test&debug=show_query"
 
     expect(parsed_response.fetch("elasticsearch_query")).to be_truthy
   end
 
-  it "taxonomy_can_be_returned" do
+  it "taxonomy can be returned" do
     commit_document("mainstream_test",
       "title" => "I am the result",
       "description" => "This is a test search result",
@@ -583,7 +583,7 @@ RSpec.describe 'SearchTest' do
     expect(taxons).to eq(["eb2093ef-778c-4105-9f33-9aa03d14bc5c"])
   end
 
-  it "taxonomy_can_be_filtered" do
+  it "taxonomy can be filtered" do
     commit_document("mainstream_test",
       "title" => "I am the result",
       "description" => "This is a test search result",
@@ -605,7 +605,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "taxonomy_can_be_filtered_by_part" do
+  it "taxonomy can be filtered by part" do
     commit_document("mainstream_test",
       "title" => "I am the result",
       "description" => "This is a test search result",
@@ -625,14 +625,14 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response.fetch("total")).to eq(1)
   end
 
-  it "return_400_response_for_integers_out_of_range" do
+  it "return 400 response for integers out of range" do
     get '/search.json?count=50&start=7599999900'
 
     expect(last_response).to be_bad_request
     expect(last_response.body).to eq('Integer value of 7599999900 exceeds maximum allowed')
   end
 
-  it "return_400_response_for_query_term_length_too_long" do
+  it "return 400 response for query term length too long" do
     terms = 1025.times.map { ('a'..'z').to_a.sample(5).join }.join(' ')
     get "/search.json?q=#{terms}"
 

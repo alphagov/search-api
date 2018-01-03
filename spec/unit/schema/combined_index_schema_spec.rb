@@ -7,7 +7,7 @@ RSpec.describe CombinedIndexSchema do
     @combined_schema = described_class.new(@index_names, search_config.schema_config)
   end
 
-  it "basic_field_definitions" do
+  it "basic field definitions" do
     # The title and public_timestamp fields are defined in the
     # base_elasticsearch_type, so are available in all documents holding content.
     expect(@combined_schema.field_definitions["title"].type.name).to eq("searchable_sortable_text")
@@ -15,7 +15,7 @@ RSpec.describe CombinedIndexSchema do
     expect(@combined_schema.field_definitions["public_timestamp"].type.name).to eq("date")
   end
 
-  it "merged_field_definitions" do
+  it "merged field definitions" do
     # The location field is defined in both the
     # international_development_fund document type, and in the
     # european_structural_investment_fund document type, with different
@@ -25,7 +25,7 @@ RSpec.describe CombinedIndexSchema do
     expect(locations).to include({ "label" => "North East", "value" => "north-east" })
   end
 
-  it "allowed_filter_fields" do
+  it "allowed filter fields" do
     expect(@combined_schema.allowed_filter_fields).not_to include "title"
     expect(@combined_schema.allowed_filter_fields).to include "organisations"
   end

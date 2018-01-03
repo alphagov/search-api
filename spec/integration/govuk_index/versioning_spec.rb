@@ -7,7 +7,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     @processor = GovukIndex::PublishingEventProcessor.new
   end
 
-  it "should_successfully_index_increasing_version_numbers" do
+  it "should successfully index increasing version numbers" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
 
     version1 = generate_random_example(
@@ -28,7 +28,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     expect(document["_source"]["title"]).to eq("new title")
   end
 
-  it "should_discard_message_with_same_version_as_existing_document" do
+  it "should discard message with same version as existing document" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
     version1 = generate_random_example(payload: { payload_version: 123 })
 
@@ -46,7 +46,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     expect(version1["title"]).to eq(document["_source"]["title"])
   end
 
-  it "should_discard_message_with_earlier_version_than_existing_document" do
+  it "should discard message with earlier version than existing document" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
 
     version1 = generate_random_example(payload: { payload_version: 123 })
@@ -65,7 +65,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     expect(version1["title"]).to eq(document["_source"]["title"])
   end
 
-  it "should_delete_and_recreate_document_when_unpublished_and_republished" do
+  it "should delete and recreate document when unpublished and republished" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
     version1 = generate_random_example(
       payload: { payload_version: 1 },
@@ -99,7 +99,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     expect(document["_version"]).to eq(3)
   end
 
-  it "should_discard_unpublishing_message_with_earlier_version" do
+  it "should discard unpublishing message with earlier version" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
     version1 = generate_random_example(payload: { payload_version: 2 })
 
@@ -123,7 +123,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     expect(document["_version"]).to eq(2)
   end
 
-  it "should_ignore_event_for_non_indexable_formats" do
+  it "should ignore event for non indexable formats" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
 
     version1 = generate_random_example(payload: { payload_version: 123 })

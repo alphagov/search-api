@@ -9,7 +9,7 @@ RSpec.describe SchemaMigrator do
     index_group = search_server.index_group("govuk_test")
     original_index = index_group.current_real
 
-    SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2) do |migrator|
+    SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
       migrator.reindex
       migrator.switch_to_new_index
     end
@@ -40,7 +40,7 @@ RSpec.describe SchemaMigrator do
     it "identifies when content has not changed" do
       commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" })
 
-      SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2) do |migrator|
+      SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
         migrator.reindex
 
         expect(migrator).not_to be_changed
@@ -50,7 +50,7 @@ RSpec.describe SchemaMigrator do
     it "finds added content" do
       commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" })
 
-      SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2) do |migrator|
+      SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
         migrator.reindex
 
         search_server.index_group("govuk_test").current_real.unlock
@@ -63,7 +63,7 @@ RSpec.describe SchemaMigrator do
     it "finds removed content" do
       commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" }, type: "edition")
 
-      SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2) do |migrator|
+      SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
         migrator.reindex
 
         search_server.index_group("govuk_test").current_real.unlock
@@ -79,7 +79,7 @@ RSpec.describe SchemaMigrator do
         { "link" => "/some-page", "title" => "Original title" }
       )
 
-      SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2) do |migrator|
+      SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
         migrator.reindex
 
         search_server.index_group("govuk_test").current_real.unlock

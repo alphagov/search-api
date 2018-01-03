@@ -6,7 +6,7 @@ RSpec.describe 'AnalyticsDataTest' do
     @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, %w(mainstream_test govuk_test))
   end
 
-  it "fetches_rows_of_analytics_dimensions" do
+  it "fetches rows of analytics dimensions" do
     document = {
       "content_id" => "587b0635-2911-49e6-af68-3f0ea1b07cc5",
       "link" => "/an-example-page",
@@ -79,7 +79,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(rows.to_a).to eq([expected_row])
   end
 
-  it "missing_data_is_nil" do
+  it "missing data is nil" do
     document = {}
     id = commit_document("mainstream_test", document)
 
@@ -90,7 +90,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(rows.to_a).to eq([expected_row])
   end
 
-  it "content_id_is_preferred_to_link_for_product_id" do
+  it "content_id is preferred to link for product id" do
     document = {
       "content_id" => "some_content_id",
       "link" => "/some/page/path",
@@ -102,7 +102,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(rows.first[0]).to eq("some_content_id")
   end
 
-  it "product_id_falls_back_to_link_if_content_id_is_missing" do
+  it "product id falls back to link if content_id is missing" do
     document = {
       "link" => "/some/page/path",
     }
@@ -113,7 +113,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(rows.first[0]).to eq("/some/page/path")
   end
 
-  it "document_type_is_preferred_to_format" do
+  it "document_type is preferred to format" do
     document = {
       "format" => "some_format",
       "content_store_document_type" => "some_document_type",
@@ -125,7 +125,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(rows.first[5]).to eq("some_document_type")
   end
 
-  it "document_type_falls_back_to_format_if_not_present" do
+  it "document_type falls back to format if not present" do
     document = {
       "format" => "some_format",
     }
@@ -136,7 +136,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(rows.first[5]).to eq("some_format")
   end
 
-  it "sanitises_unix_line_breaks_in_titles" do
+  it "sanitises unix line breaks in titles" do
     document = {
       "title" => <<~HEREDOC
         A page title
@@ -151,7 +151,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(rows.first[4]).to eq("A page title with some line breaks")
   end
 
-  it "sanitises_windows_line_breaks_in_titles" do
+  it "sanitises windows line breaks in titles" do
     document = {
       "title" => "A page title\r\nwith some\r\nline breaks"
     }
@@ -162,7 +162,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(rows.first[4]).to eq("A page title with some line breaks")
   end
 
-  it "fetches_all_rows" do
+  it "fetches all rows" do
     fixture_file = File.expand_path("../fixtures/content_for_analytics.json", __FILE__)
     documents = JSON.parse(File.read(fixture_file))
     documents.each do |document|
@@ -174,7 +174,7 @@ RSpec.describe 'AnalyticsDataTest' do
     expect(analytics_data.size).to eq(30)
   end
 
-  it "headers_and_rows_are_consisent" do
+  it "headers and rows are consisent" do
     document = {
       "content_id" => "587b0635-2911-49e6-af68-3f0ea1b07cc5",
       "link" => "/an-example-page",

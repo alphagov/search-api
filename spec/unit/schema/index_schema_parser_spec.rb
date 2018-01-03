@@ -21,7 +21,7 @@ RSpec.describe IndexSchemaParser do
       expect(@index_schemas["mainstream"].name).to eq("mainstream")
     end
 
-    it "include configuration for the `manual_section` type in the `mainstream` index" do
+    it "include configuration for the `manual section` type in the `mainstream` index" do
       es_mappings = @index_schemas["mainstream"].es_mappings
       expect(es_mappings.keys).to include("manual_section")
       expect(
@@ -42,14 +42,14 @@ RSpec.describe IndexSchemaParser do
       @parser = described_class.new("index", "index.json", elasticsearch_types)
     end
 
-    it "fail if index schema specifies an unknown document type" do
+    it "fail if index schema specifies an unknown document_type" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({
         "elasticsearch_types" => ["unknown_doc_type"],
       })
       expect_raises_message(%{Unknown document type "unknown_doc_type", in index definition in "index.json"}) { @parser.parse }
     end
 
-    it "fail if index schema doesn't specify `elasticsearch_types`" do
+    it "fail if index schema doesn't specify `elasticsearch types`" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({})
       expect_raises_message(%{Missing "elasticsearch_types", in index definition in "index.json"}) { @parser.parse }
     end

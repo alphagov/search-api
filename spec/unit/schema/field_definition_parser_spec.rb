@@ -22,7 +22,7 @@ RSpec.describe FieldDefinitionParser do
       expect(@definitions["link"].children).to be_nil
     end
 
-    it "know that the `attachments` field has a child of `title` of type searchable_text" do
+    it "know that the `attachments` field has a child of `title` of type searchable text" do
       expect(@definitions["attachments"].children["title"].type.name).to eq("searchable_text")
     end
 

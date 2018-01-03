@@ -16,7 +16,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     expect(expected_identifier).to eq(presenter.identifier)
   end
 
-  it "raise UnknownDocumentTypeError if the document type does not have a valid mapping" do
+  it "raise UnknownDocumentTypeError if the document_type does not have a valid mapping" do
     payload = generate_random_example(payload: { payload_version: 1 })
     presenter = elasticsearch_presenter(payload, nil)
 
@@ -25,7 +25,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     }.to raise_error(GovukIndex::UnknownDocumentTypeError)
   end
 
-  it "is invalid if the base path is missing" do
+  it "is invalid if the base_path is missing" do
     payload = {}
 
     presenter = elasticsearch_presenter(payload)

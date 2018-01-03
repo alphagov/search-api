@@ -84,7 +84,7 @@ RSpec.describe 'search queries' do
   end
 
   context "migrated formats" do
-    it "does not include duplicate documents in govuk_index within the count" do
+    it "does not include duplicate documents in govuk index within the count" do
       commit_document('govuk_test', { organisations: ['org1'] })
       commit_document('mainstream_test', { organisations: ['org1'] })
 
@@ -153,7 +153,7 @@ RSpec.describe 'search queries' do
     end
   end
 
-  it "returns count when there are missing_options" do
+  it "returns count when there are missing options" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&aggregate_mainstream_browse_pages=1"
@@ -172,7 +172,7 @@ RSpec.describe 'search queries' do
     )
   end
 
-  it "returns count when filtering on a field within an all_filters scope" do
+  it "returns count when filtering on a field within an all filters scope" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
     get "/search?q=important&aggregate_mainstream_browse_pages=2,scope:all_filters&filter_mainstream_browse_pages=browse/page/1"

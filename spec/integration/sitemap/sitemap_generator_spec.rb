@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'SitemapGeneratorTest' do
 
-  it "should_generate_multiple_sitemaps" do
+  it "should generate multiple sitemaps" do
     allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
     add_sample_documents(
       [
@@ -39,7 +39,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(expected_sitemap_count).to eq(sitemap_xml.length)
   end
 
-  it "does_not_include_migrated_formats_from_mainstream" do
+  it "does not include migrated formats from mainstream" do
     allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
     add_sample_documents(
       [
@@ -61,7 +61,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(sitemap_xml[0]).not_to include("/an-example-answer")
   end
 
-  it "should_include_homepage" do
+  it "should include homepage" do
     generator = SitemapGenerator.new(SearchConfig.instance)
     sitemap_xml = generator.sitemaps
 
@@ -73,7 +73,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(pages[0].css("priority").text).to eq("0.5")
   end
 
-  it "should_not_include_recommended_links" do
+  it "should not include recommended links" do
     generator = SitemapGenerator.new(SearchConfig.instance)
     add_sample_documents(
       [
@@ -95,7 +95,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(sitemap_xml[0]).not_to include("/external-example-answer")
   end
 
-  it "links_should_include_timestamps" do
+  it "links should include timestamps" do
     generator = SitemapGenerator.new(SearchConfig.instance)
     add_sample_documents(
       [
@@ -121,7 +121,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(pages[0].css("lastmod").text).to eq("2017-07-01T12:41:34+00:00")
   end
 
-  it "links_should_include_priorities" do
+  it "links should include priorities" do
     generator = SitemapGenerator.new(SearchConfig.instance)
     add_sample_documents(
       [

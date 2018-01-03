@@ -7,44 +7,44 @@ RSpec.describe 'SettingsTest' do
       "It's Mitt’s" => %w(it mitt)
   end
 
-  it "uses_correct_stemming" do
+  it "uses correct stemming" do
     expect_tokenisation :default,
       "news" => ["news"]
   end
 
-  it "query_default" do
+  it "query default" do
     expect_tokenisation :query_default,
       "It's A Small World" => %w(it small world),
       "It's, It’s Mr. O'Neill" => %w(it it mr oneil)
   end
 
-  it "shingled_query_analyzer" do
+  it "shingled query analyzer" do
     expect_tokenisation :shingled_query_analyzer,
       "Hello Hallo" => ["hello", "hello hallo", "hallo"],
       "H'lo ’Hallo" => ["h'lo", "h'lo hallo", "hallo"]
   end
 
-  it "exact_match" do
+  it "exact match" do
     expect_tokenisation :exact_match,
       "It’s A Small W'rld" => ["it's a small w'rld"]
   end
 
-  it "best_bet_stemmed_match" do
+  it "best bet stemmed match" do
     expect_tokenisation :best_bet_stemmed_match,
       "It’s A Small W'rld" => %w(it a small wrld)
   end
 
-  it "spelling_analyzer" do
+  it "spelling analyzer" do
     expect_tokenisation :spelling_analyzer,
       "It’s Grammed" => ["its", "its grammed", "grammed"]
   end
 
-  it "string_for_sorting" do
+  it "string for sorting" do
     expect_tokenisation :string_for_sorting,
       "It's A Small W’rld" => ["its a small wrld"]
   end
 
-  it "with_shingles_analyzer" do
+  it "with shingles analyzer" do
     expect_tokenisation :with_shingles,
       "The small brown dog" => ["the small", "small brown", "brown dog"]
   end

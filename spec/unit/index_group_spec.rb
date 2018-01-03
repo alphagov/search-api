@@ -18,7 +18,7 @@ RSpec.describe SearchIndices::IndexGroup do
     )
   end
 
-  it "create_index" do
+  it "create index" do
     expected_body = {
       "settings" => @schema.elasticsearch_settings("mainstream"),
       "mappings" => @schema.elasticsearch_mappings("mainstream"),
@@ -37,7 +37,7 @@ RSpec.describe SearchIndices::IndexGroup do
     expect(index.index_name).to match(/^mainstream-/)
   end
 
-  it "switch_index_with_no_existing_alias" do
+  it "switch index with no existing alias" do
     new_index = double("New index", index_name: "test-new")
     get_stub = stub_request(:get, "#{SearchConfig.instance.base_uri}/_aliases")
       .to_return(
@@ -65,7 +65,7 @@ RSpec.describe SearchIndices::IndexGroup do
     assert_requested(post_stub)
   end
 
-  it "switch_index_with_existing_alias" do
+  it "switch index with existing alias" do
     new_index = double("New index", index_name: "test-new")
     get_stub = stub_request(:get, "#{SearchConfig.instance.base_uri}/_aliases")
       .to_return(
@@ -93,7 +93,7 @@ RSpec.describe SearchIndices::IndexGroup do
     assert_requested(post_stub)
   end
 
-  it "switch_index_with_multiple_existing_aliases" do
+  it "switch index with multiple existing aliases" do
     # Not expecting the system to get into this state, but it should cope
     new_index = double("New index", index_name: "test-new")
     get_stub = stub_request(:get, "#{SearchConfig.instance.base_uri}/_aliases")
@@ -124,7 +124,7 @@ RSpec.describe SearchIndices::IndexGroup do
     assert_requested(post_stub)
   end
 
-  it "switch_index_with_existing_real_index" do
+  it "switch index with existing real index" do
     new_index = double("New index", index_name: "test-new")
     stub_request(:get, "#{SearchConfig.instance.base_uri}/_aliases")
       .to_return(
@@ -140,7 +140,7 @@ RSpec.describe SearchIndices::IndexGroup do
     }.to raise_error(RuntimeError)
   end
 
-  it "index_names_with_no_indices" do
+  it "index names with no indices" do
     stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
       .to_return(
         status: 200,
@@ -151,7 +151,7 @@ RSpec.describe SearchIndices::IndexGroup do
     expect(@server.index_group("test").index_names).to eq([])
   end
 
-  it "index_names_with_index" do
+  it "index names with index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
       .to_return(
@@ -165,7 +165,7 @@ RSpec.describe SearchIndices::IndexGroup do
     expect(@server.index_group("test").index_names).to eq([index_name])
   end
 
-  it "index_names_with_other_groups" do
+  it "index names with other groups" do
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
@@ -182,7 +182,7 @@ RSpec.describe SearchIndices::IndexGroup do
     expect(@server.index_group("test").index_names).to eq([this_name])
   end
 
-  it "clean_with_no_indices" do
+  it "clean with no indices" do
     stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
       .to_return(
         status: 200,
@@ -193,7 +193,7 @@ RSpec.describe SearchIndices::IndexGroup do
     @server.index_group("test").clean
   end
 
-  it "clean_with_dead_index" do
+  it "clean with dead index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
       .to_return(
@@ -212,7 +212,7 @@ RSpec.describe SearchIndices::IndexGroup do
     assert_requested delete_stub
   end
 
-  it "clean_with_live_index" do
+  it "clean with live index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
       .to_return(
@@ -226,7 +226,7 @@ RSpec.describe SearchIndices::IndexGroup do
     @server.index_group("test").clean
   end
 
-  it "clean_with_multiple_indices" do
+  it "clean with multiple indices" do
     index_names = [
       "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012",
       "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef"
@@ -251,7 +251,7 @@ RSpec.describe SearchIndices::IndexGroup do
     delete_stubs.each do |delete_stub| assert_requested delete_stub end
   end
 
-  it "clean_with_live_and_dead_indices" do
+  it "clean with live and dead indices" do
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     dead_name = "test-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
@@ -273,7 +273,7 @@ RSpec.describe SearchIndices::IndexGroup do
     assert_requested delete_stub
   end
 
-  it "clean_with_other_alias" do
+  it "clean with other alias" do
     # If there's an alias we don't know about, that should save the index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
@@ -288,7 +288,7 @@ RSpec.describe SearchIndices::IndexGroup do
     @server.index_group("test").clean
   end
 
-  it "clean_with_other_groups" do
+  it "clean with other groups" do
     # Check we don't go around deleting index from other groups
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"

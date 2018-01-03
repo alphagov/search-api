@@ -4,7 +4,7 @@ require "gds_api/test_helpers/publishing_api_v2"
 RSpec.describe 'TaglookupDuringIndexingTest' do
   include GdsApi::TestHelpers::PublishingApiV2
 
-  it "indexes_document_without_publishing_api_content_unchanged" do
+  it "indexes document without publishing api content unchanged" do
     publishing_api_has_lookups({})
 
     post "/documents", {
@@ -16,7 +16,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
     )
   end
 
-  it "indexes_document_with_external_url_unchanged" do
+  it "indexes document with external url unchanged" do
     publishing_api_has_lookups({})
 
     post "/documents", {
@@ -28,7 +28,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
     )
   end
 
-  it "indexes_documents_with_links_from_publishing_api" do
+  it "indexes documents with links from publishing api" do
     publishing_api_has_lookups(
       "/foo/bar" => "DOCUMENT-CONTENT-ID"
     )
@@ -95,7 +95,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
     )
   end
 
-  it "skips_content_id_lookup_if_it_already_has_a_content_id" do
+  it "skips content id lookup if it already has a content_id" do
     publishing_api_has_expanded_links(
       content_id: "CONTENT-ID-OF-DOCUMENT",
       expanded_links: {
@@ -121,7 +121,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
     )
   end
 
-  it "extracts_parts_of_taxonomy" do
+  it "extracts parts of taxonomy" do
     grandparent_1_content_id = "22aadc14-9bca-40d9-abb4-4f21f9792a05"
     grandparent_1 = {
       "content_id" => grandparent_1_content_id,

@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Index::ElasticsearchProcessor do
   subject { described_class.govuk }
 
-  it "should_save_valid_document" do
+  it "should save valid document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
       _type: "help_page",
@@ -22,7 +22,7 @@ RSpec.describe Index::ElasticsearchProcessor do
     subject.commit
   end
 
-  it "should_delete_valid_document" do
+  it "should delete valid document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
       _type: "help_page",

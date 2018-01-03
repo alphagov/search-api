@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'ResultsWithHighlightingTest' do
-  it "returns_highlighted_title" do
+  it "returns highlighted title" do
     commit_document("mainstream_test",
       "title" => "I am the result",
       "link" => "/some-nice-link",
@@ -13,7 +13,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
     expect(first_search_result['title_with_highlighting']).to eq("I am the <mark>result</mark>")
   end
 
-  it "returns_highlighted_title_fallback" do
+  it "returns highlighted title fallback" do
     commit_document("mainstream_test",
       "title" => "Thing without",
       "description" => "I am the result",
@@ -26,7 +26,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
     expect(first_search_result['title_with_highlighting']).to eq("Thing without")
   end
 
-  it "returns_highlighted_description" do
+  it "returns highlighted description" do
     commit_document("mainstream_test",
       "link" => "/some-nice-link",
       "description" => "This is a test search result of many results."
@@ -40,7 +40,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
     )
   end
 
-  it "returns_documents_html_escaped" do
+  it "returns documents html escaped" do
     commit_document("mainstream_test",
       "title" => "Escape & highlight my title",
       "link" => "/some-nice-link",
@@ -57,7 +57,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
     )
   end
 
-  it "returns_truncated_correctly_where_result_at_start_of_description" do
+  it "returns truncated correctly where result at start of description" do
     commit_document("mainstream_test",
       "link" => "/some-nice-link",
       "description" => "word " + ("something " * 200)
@@ -70,7 +70,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
     expect(description.ends_with?("…")).to be_truthy
   end
 
-  it "returns_truncated_correctly_where_result_at_end_of_description" do
+  it "returns truncated correctly where result at end of description" do
     commit_document("mainstream_test",
       "link" => "/some-nice-link",
       "description" => ("something " * 200) + " word"
@@ -83,7 +83,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
     expect(description.size < 350).to be_truthy
   end
 
-  it "returns_truncated_correctly_where_result_in_middle_of_description" do
+  it "returns truncated correctly where result in middle of description" do
     commit_document("mainstream_test",
       "link" => "/some-nice-link",
       "description" => ("something " * 200) + " word " + ("something " * 200)

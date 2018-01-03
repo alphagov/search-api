@@ -9,14 +9,14 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     @wrapper = described_class.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
   end
 
-  it "pagination_params_are_required" do
+  it "pagination params are required" do
     stub_empty_search
 
     expect_rejected_search("Pagination params are required.", {})
     expect(@wrapper.advanced_search({ 'page' => '1', 'per_page' => '1' })).to be_truthy
   end
 
-  it "pagination_params_are_converted_to_from_and_to_correctly" do
+  it "pagination params are converted to from and to correctly" do
     stub_empty_search(body: /\"from\":0,\"size\":10/)
     @wrapper.advanced_search({ 'page' => '1', 'per_page' => '10' })
 
@@ -24,7 +24,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     @wrapper.advanced_search({ 'page' => '3', 'per_page' => '3' })
   end
 
-  it "keyword_param_is_converted_to_a_boosted_title_and_unboosted_general_query" do
+  it "keyword param is converted to a boosted title and unboosted general query" do
     stub_empty_search(body: {
       "from" => 0,
       "size" => 1,
@@ -71,12 +71,12 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     @wrapper.advanced_search(default_params.merge('keywords' => 'happy fun time'))
   end
 
-  it "missing_keyword_param_means_a_match_all_query" do
+  it "missing keyword param means a match all query" do
     stub_empty_search(body: /#{Regexp.escape("\"query\":{\"match_all\":{}}")}/)
     @wrapper.advanced_search(default_params)
   end
 
-  it "single_value_filter_param_is_turned_into_a_term_filter" do
+  it "single value filter param is turned into a term filter" do
     stub_empty_search(body: /#{Regexp.escape("\"term\":{\"mainstream_browse_pages\":\"jones\"}")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => 'jones'))
 
@@ -84,31 +84,31 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones']))
   end
 
-  it "multiple_value_filter_param_is_turned_into_a_terms_filter" do
+  it "multiple value filter param is turned into a terms filter" do
     stub_empty_search(body: /#{Regexp.escape("\"terms\":{\"mainstream_browse_pages\":[\"jones\",\"richards\"]}")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => %w(jones richards)))
   end
 
-  it "filter_params_are_turned_into_anded_term_filters_on_that_property" do
+  it "filter params are turned into anded term filters on that property" do
     stub_empty_search(body: /#{Regexp.escape("\"filter\":{\"and\":[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones'], 'link' => ['richards']))
   end
 
-  it "filter_params_on_a_boolean_mapping_property_are_convered_to_true_based_on_something_that_looks_truthy" do
+  it "filter params on a boolean mapping property are convered to true based on something that looks truthy" do
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(body: /#{Regexp.escape("{\"term\":{\"boolean_property\":true}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'true'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '1'))
   end
 
-  it "filter_params_on_a_boolean_mapping_property_are_convered_to_false_based_on_something_that_looks_falsey" do
+  it "filter params on a boolean mapping property are convered to false based on something that looks falsey" do
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(body: /#{Regexp.escape("\"term\":{\"boolean_property\":false}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'false'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '0'))
   end
 
-  it "filter_params_on_a_boolean_mapping_property_are_rejected_if_they_dont_look_truthy_or_falsey" do
+  it "filter params on a boolean mapping property are rejected if they dont look truthy or falsey" do
     @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search
 
@@ -119,7 +119,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     expect_rejected_search('Invalid value "cheese" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'cheese'))
   end
 
-  it "filter_params_on_a_date_mapping_property_are_turned_into_a_range_filter_with_order_based_on_the_key_in_the_value" do
+  it "filter params on a date mapping property are turned into a range filter with order based on the key in the value" do
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
 
     stub_empty_search(body: /#{Regexp.escape("\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}")}/)
@@ -139,7 +139,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     @wrapper.advanced_search(default_params.merge('date_property' => { 'after' => '2013-02-02' }))
   end
 
-  it "filter_params_on_a_date_mapping_property_without_a_before_or_after_key_in_the_value_are_rejected" do
+  it "filter params on a date mapping property without a before or after key in the value are rejected" do
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
     stub_empty_search
 
@@ -150,7 +150,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     expect_rejected_search('Invalid value {"before"=>"2013-02-02", "up-to"=>"2013-02-02"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2013-02-02', 'up-to' => '2013-02-02' }))
   end
 
-  it "filter_params_on_a_date_mapping_property_without_a_incorrectly_formatted_date_are_rejected" do
+  it "filter params on a date mapping property without a incorrectly formatted date are rejected" do
     @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
     stub_empty_search
 
@@ -160,27 +160,27 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     expect_rejected_search('Invalid value {"before"=>"2013-2-2"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2013-2-2' }))
   end
 
-  it "filter_params_that_are_not_index_properties_are_not_allowed" do
+  it "filter params that are not index properties are not allowed" do
     expect_rejected_search('Querying unknown properties ["brian", "keith"]', default_params.merge('brian' => 'jones', 'keith' => 'richards'))
   end
 
-  it "order_params_are_turned_into_a_sort_query" do
+  it "order params are turned into a sort query" do
     stub_empty_search(body: /#{Regexp.escape("\"sort\":[{\"title\":\"asc\"}]")}/)
     @wrapper.advanced_search(default_params.merge('order' => { 'title' => 'asc' }))
   end
 
-  it "order_params_on_properties_not_in_the_mappings_are_not_allowed" do
+  it "order params on properties not in the mappings are not allowed" do
     expect_rejected_search('Sorting on unknown property ["brian"]', default_params.merge('order' => { 'brian' => 'asc' }))
   end
 
-  it "returns_the_total_and_the_hits" do
+  it "returns the total and the hits" do
     stub_empty_search
     result_set = @wrapper.advanced_search(default_params)
     expect(result_set.total).to eq(0)
     expect(result_set.results).to eq([])
   end
 
-  it "returns_the_hits_converted_into_documents" do
+  it "returns the hits converted into documents" do
     stub_request(:get, "http://example.com:9200/mainstream_test/_search")
       .to_return(
         status: 200,

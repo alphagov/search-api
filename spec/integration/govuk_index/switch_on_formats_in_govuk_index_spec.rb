@@ -10,7 +10,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest' do
     commit_index('govuk_test')
   end
 
-  it "defaults_to_excluding_govuk_index_records" do
+  it "defaults to excluding govuk index records" do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
 
     get "/search"
@@ -18,7 +18,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest' do
     expect(parsed_response['results'].map { |r| r['title'] }.sort).to eq(['mainstream answer', 'mainstream help'])
   end
 
-  it "can_enable_format_to_use_govuk_index" do
+  it "can enable format to use govuk index" do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('help_page' => :all)
 
     get "/search"
@@ -26,7 +26,7 @@ RSpec.describe 'GovukIndex::SwitchOnFormatsInGovukIndexTest' do
     expect(parsed_response['results'].map { |r| r['title'] }.sort).to eq(['govuk help', 'mainstream answer'])
   end
 
-  it "can_enable_multiple_formats_to_use_govuk_index" do
+  it "can enable multiple formats to use govuk index" do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("help_page" => :all, "answer" => :all)
 
     get "/search"

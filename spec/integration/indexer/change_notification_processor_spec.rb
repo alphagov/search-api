@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'ChangeNotificationProcessorTest' do
-  it "triggering_a_reindex" do
+  it "triggering a reindex" do
     publishing_api_has_lookups(
       "/foo" => "DOCUMENT-CONTENT-ID"
     )

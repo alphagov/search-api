@@ -17,7 +17,7 @@ RSpec.describe Indexer::DocumentPreparer do
       expect(0.5).to eq(updated_doc_hash["popularity"])
     end
 
-    it "adds document type groupings" do
+    it "adds document_type groupings" do
       stub_tagging_lookup
 
       doc_hash = {
