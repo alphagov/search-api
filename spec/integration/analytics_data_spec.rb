@@ -55,7 +55,7 @@ RSpec.describe 'AnalyticsDataTest' do
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
       "format" => "answers",
     }
-    commit_document("government_test", document.merge("title" => "mainstream title",))
+    commit_document("government_test", document.merge("title" => "government title",))
     commit_document("govuk_test", document.merge("title" => "govuk title",))
 
     rows = @analytics_data_fetcher.rows

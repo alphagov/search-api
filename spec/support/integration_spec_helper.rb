@@ -205,7 +205,9 @@ module IntegrationSpecHelper
 private
 
   def build_sample_documents_on_content_indices(documents_per_index:)
-    SearchConfig.instance.all_index_names.each do |index_name|
+    config = SearchConfig.instance
+    index_names = config.content_index_names + [config.govuk_index_name]
+    index_names.each do |index_name|
       add_sample_documents(index_name, documents_per_index)
     end
   end

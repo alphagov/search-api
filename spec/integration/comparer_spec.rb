@@ -34,9 +34,9 @@ RSpec.describe 'ComparerTest' do
   end
 
   it "only compares filtered formats" do
-    insert_document('mainstream_test', { some: 'data', format: 'edition' }, id: 'ABC', type: 'edition')
-    insert_document('mainstream_test', { some: 'data', format: 'other' }, id: 'DEF', type: 'hmrc_manual')
-    commit_document('mainstream_test', { some: 'data', format: 'other' }, id: 'GHI', type: 'edition')
+    insert_document('govuk_test', { some: 'data', format: 'edition' }, id: 'ABC', type: 'edition')
+    insert_document('govuk_test', { some: 'data', format: 'other' }, id: 'DEF', type: 'hmrc_manual')
+    commit_document('govuk_test', { some: 'data', format: 'other' }, id: 'GHI', type: 'edition')
 
     insert_document('government_test', { some: 'data', format: 'edition' }, id: 'ABC', type: 'edition')
     insert_document('government_test', { some: 'data', format: 'other' }, id: 'DEF', type: 'hmrc_manual')

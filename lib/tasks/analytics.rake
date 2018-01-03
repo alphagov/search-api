@@ -2,7 +2,7 @@ require "analytics_data"
 require "csv"
 
 namespace :analytics do
-  ALL_CONTENT_SEARCH_INDICES = %w(mainstream detailed government govuk).freeze
+  ALL_CONTENT_SEARCH_INDICES = %w(detailed government govuk).freeze
 
   desc "
   Export all indexed pages to a CSV suitable for importing into Google Analytics.

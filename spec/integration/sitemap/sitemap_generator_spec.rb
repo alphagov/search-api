@@ -39,7 +39,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(expected_sitemap_count).to eq(sitemap_xml.length)
   end
 
-  it "does not include migrated formats from mainstream" do
+  it "does not include migrated formats from gocvernment" do
     allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
     add_sample_documents(
       [

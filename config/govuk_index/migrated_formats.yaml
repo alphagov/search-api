@@ -44,7 +44,6 @@ migrated:
 - service_manual_homepage
 - service_manual_service_standard
 - service_manual_topic
-- smart-answer # needed to stop these rendering from mainstream. THis can be removed once we stop using mainstream.
 - task_list
 - travel_advice
 - travel_advice_index

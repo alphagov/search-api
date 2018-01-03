@@ -101,7 +101,7 @@ private
 
   def combined_index_schema
     @combined_index_schema ||= CombinedIndexSchema.new(
-      all_index_names,
+      content_index_names + [govuk_index_name],
       schema_config
     )
   end

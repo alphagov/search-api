@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'MoreLikeThisTest' do
- it "returns success" do
+  it "returns success" do
     get "/search?similar_to=/govuk-1"
 
     expect(last_response).to be_ok
@@ -37,7 +37,7 @@ RSpec.describe 'MoreLikeThisTest' do
 
     get "/search?similar_to=/govuk-1&count=50&start=0"
 
-    # All mainstream documents (excluding the one we're using for comparison)
+    # All govuk documents (excluding the one we're using for comparison)
     # should be returned. The government links should also be returned as they
     # are similar enough (in this case, the test factories produce similar
     # looking records).

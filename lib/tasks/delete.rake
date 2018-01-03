@@ -36,30 +36,6 @@ namespace :delete do
   end
 
   desc "
-  Delete the documents from a search index as specified in the given file. The
-  file should contain a list of page paths separated by new lines.
-  Usage
-  rake 'delete:documents_from_file[/path/to/file, mainstream]'
-  "
-  task :documents_from_file, [:file_path, :index_name] do |_, args|
-    search_config = SearchConfig.new
-    index = search_config.search_server.index(args[:index_name])
-
-    CSV.read(args[:file_path]).each do |row|
-      base_path = row[0]
-
-      search_result = index.get_document_by_id(base_path)
-
-      if search_result
-        puts "Deleting #{base_path}"
-        Indexer::DeleteWorker.perform_async("mainstream", "dfid_research_output", base_path)
-      else
-        puts "Skipping #{base_path} because it is not present in the search index"
-      end
-    end
-  end
-
-  desc "
   Delete all documents by format from an index.
   Usage
   rake 'delete:by_format[format_name, elasticsearch_index]'

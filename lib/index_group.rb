@@ -1,10 +1,10 @@
 module SearchIndices
   # A group of related indexes.
   #
-  # An index group, say "mainstream", consists of a number of indexes of the
-  # form "mainstream-<timestamp>-<uuid>". For example:
+  # An index group, say "govuk", consists of a number of indexes of the
+  # form "govuk-<timestamp>-<uuid>". For example:
   #
-  #   mainstream-2013-02-28t15:51:12z-50e3251b-869b-4894-b83c-de4675cefff6
+  #   govuk-2013-02-28t15:51:12z-50e3251b-869b-4894-b83c-de4675cefff6
   #
   # One of these indexes is aliased to the group name itself.
   class IndexGroup

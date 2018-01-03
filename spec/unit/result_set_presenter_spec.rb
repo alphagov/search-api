@@ -13,7 +13,7 @@ RSpec.describe Search::ResultSetPresenter do
         "link" => "/government/publications/staffordshire-cheese",
       },
     }, {
-      "_index" => "mainstream-2014-03-19t14:35:28z-6472f975-dc38-49a5-98eb-c498e619650c",
+      "_index" => "govuk-2014-03-19t14:35:28z-6472f975-dc38-49a5-98eb-c498e619650c",
       _type: "edition",
       _id: "/duty-relief-for-imports-and-exports",
       "_score" => 0.49672604,
@@ -23,7 +23,7 @@ RSpec.describe Search::ResultSetPresenter do
         "link" => "/duty-relief-for-imports-and-exports",
       },
     }, {
-      "_index" => "mainstream-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
+      "_index" => "govuk-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
       _type: "edition",
       _id: "/dairy-farming-and-schemes",
       "_score" => 0.34655035,
@@ -203,7 +203,7 @@ RSpec.describe Search::ResultSetPresenter do
 
     it "have short index names" do
       @output[:results].each do |result|
-        expect(%w[mainstream government]).to include(result[:index])
+        expect(%w[govuk government]).to include(result[:index])
       end
     end
 
@@ -279,7 +279,7 @@ RSpec.describe Search::ResultSetPresenter do
 
     it "have short index names" do
       @output[:results].each do |result|
-        expect(%w[mainstream government]).to include(result[:index])
+        expect(%w[govuk government]).to include(result[:index])
       end
     end
 

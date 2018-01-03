@@ -18,7 +18,7 @@ curl 'https://www.gov.uk/api/search.json?q=taxes&count=1'
             "document_type": "edition",
             "es_score": 0.191312,
             "format": "transaction",
-            "index": "mainstream",
+            "index": "govuk",
             "link": "/vehicle-tax",
             "organisations": [
                 {

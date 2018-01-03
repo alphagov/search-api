@@ -17,7 +17,7 @@ RSpec.describe IndexSchemaParser do
       @identifier_es_config = { "type" => "string", "index" => "not_analyzed", "include_in_all" => false }
     end
 
-    it "have a schema for the mainstream index" do
+    it "have a schema for the govuk index" do
       expect(@index_schemas["govuk"].name).to eq("govuk")
     end
 

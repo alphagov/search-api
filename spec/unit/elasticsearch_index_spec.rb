@@ -4,7 +4,7 @@ RSpec.describe SearchIndices::Index do
   include Fixtures::DefaultMappings
 
   before do
-    @index = build_mainstream_index
+    @index = build_government_index
   end
 
   it "has returns the name of the index as real_name" do
@@ -274,7 +274,7 @@ private
     }.to_json
   end
 
-  def build_mainstream_index
+  def build_government_index
     base_uri = "http://example.com:9200"
     search_config = SearchConfig.new
     described_class.new(base_uri, "government_test", "government_test", default_mappings, search_config)
