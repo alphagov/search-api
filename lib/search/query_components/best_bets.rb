@@ -16,7 +16,7 @@ module QueryComponents
       }
 
       unless worst_bets.empty?
-        result[:bool][:must_not] = [{ ids: { values: worst_bets } }]
+        result[:bool][:must_not] = [{ terms: { link: worst_bets } }]
       end
 
       result
@@ -38,7 +38,7 @@ module QueryComponents
         {
           function_score: {
             query: {
-              ids: { values: links },
+              terms: { link: links },
             },
             boost_factor: (bb_max_position + 1 - position) * 1_000_000,
           }
