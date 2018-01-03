@@ -2,33 +2,33 @@ require 'spec_helper'
 
 RSpec.describe 'ElasticsearchDeletionTest' do
   it "removes a document from the index" do
-    commit_document("mainstream_test", {
+    commit_document("government_test", {
       "link" => "/an-example-page"
     })
 
-    delete "/mainstream_test/documents/%2Fan-example-page"
+    delete "/government_test/documents/%2Fan-example-page"
 
-    expect_document_missing_in_rummager(id: "/an-example-page", index: "mainstream_test")
+    expect_document_missing_in_rummager(id: "/an-example-page", index: "government_test")
   end
 
   it "removes a document from the index queued" do
-    commit_document("mainstream_test", {
+    commit_document("government_test", {
       "link" => "/an-example-page"
     })
 
-    delete "/mainstream_test/documents/%2Fan-example-page"
+    delete "/government_test/documents/%2Fan-example-page"
 
     expect(last_response.status).to eq(202)
   end
 
   it "removes document with url" do
-    commit_document("mainstream_test", {
+    commit_document("government_test", {
       "link" => "http://example.com/",
     })
 
-    delete "/mainstream_test/documents/edition/http:%2F%2Fexample.com%2F"
+    delete "/government_test/documents/edition/http:%2F%2Fexample.com%2F"
 
-    expect_document_missing_in_rummager(id: "http://example.com/", index: "mainstream_test")
+    expect_document_missing_in_rummager(id: "http://example.com/", index: "government_test")
   end
 
   it "should delete a best bet by type and id" do
@@ -38,7 +38,7 @@ RSpec.describe 'ElasticsearchDeletionTest' do
       "link" => "/something",
     }.to_json
 
-    commit_index('mainstream_test')
+    commit_index('government_test')
 
     delete "/metasearch_test/documents/best_bet/jobs_exact"
 

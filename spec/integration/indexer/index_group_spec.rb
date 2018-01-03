@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'ElasticsearchIndexGroupTest' do
   before do
-    @group_name = "mainstream_test"
+    @group_name = "government_test"
     IndexHelpers.clean_index_group(@group_name)
 
     @index_group = search_server.index_group(@group_name)
@@ -23,7 +23,7 @@ RSpec.describe 'ElasticsearchIndexGroupTest' do
     expect(@index_group.index_names.count).to eq(1)
     expect(index.index_name).to eq(@index_group.index_names[0])
     expect(
-      SearchConfig.instance.search_server.schema.elasticsearch_mappings("mainstream")
+      SearchConfig.instance.search_server.schema.elasticsearch_mappings("government")
     ).to eq(index.mappings)
   end
 

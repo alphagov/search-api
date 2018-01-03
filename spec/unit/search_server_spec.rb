@@ -9,37 +9,37 @@ RSpec.describe SearchIndices::SearchServer do
   end
 
   it "returns an index" do
-    search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
-    index = search_server.index("mainstream_test")
+    search_server = described_class.new("http://l", schema_config, ["government_test", "page-traffic_test"], 'govuk_test', ["government_test"], SearchConfig.new)
+    index = search_server.index("government_test")
     expect(index).to be_a(SearchIndices::Index)
-    expect(index.index_name).to eq("mainstream_test")
+    expect(index.index_name).to eq("government_test")
   end
 
   it "returns an index for govuk index" do
-    search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
+    search_server = described_class.new("http://l", schema_config, ["government_test", "page-traffic_test"], 'govuk_test', ["government_test"], SearchConfig.new)
     index = search_server.index("govuk_test")
     expect(index).to be_a(SearchIndices::Index)
     expect(index.index_name).to eq("govuk_test")
   end
 
   it "raises an error for unknown index" do
-    search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
+    search_server = described_class.new("http://l", schema_config, ["government_test", "page-traffic_test"], 'govuk_test', ["government_test"], SearchConfig.new)
     expect {
       search_server.index("z")
     }.to raise_error(SearchIndices::NoSuchIndex)
   end
 
   it "can get multi index" do
-    search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
-    index = search_server.index_for_search(%w{mainstream_test page-traffic_test})
+    search_server = described_class.new("http://l", schema_config, ["government_test", "page-traffic_test"], 'govuk_test', ["government_test"], SearchConfig.new)
+    index = search_server.index_for_search(%w{government_test page-traffic_test})
     expect(index).to be_a(LegacyClient::IndexForSearch)
-    expect(index.index_names).to eq(["mainstream_test", "page-traffic_test"])
+    expect(index.index_names).to eq(["government_test", "page-traffic_test"])
   end
 
   it "raises an error for unknown index in multi index" do
-    search_server = described_class.new("http://l", schema_config, ["mainstream_test", "page-traffic_test"], 'govuk_test', ["mainstream_test"], SearchConfig.new)
+    search_server = described_class.new("http://l", schema_config, ["government_test", "page-traffic_test"], 'govuk_test', ["government_test"], SearchConfig.new)
     expect {
-      search_server.index_for_search(%w{mainstream_test unknown})
+      search_server.index_for_search(%w{government_test unknown})
     }.to raise_error(SearchIndices::NoSuchIndex)
   end
 end

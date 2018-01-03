@@ -52,7 +52,7 @@ RSpec.describe 'SitemapGeneratorTest' do
           "public_timestamp" => "2017-07-01T12:41:34+00:00"
         },
       ],
-      index_name: "mainstream_test"
+      index_name: "government_test"
     )
     generator = SitemapGenerator.new(SearchConfig.instance)
     sitemap_xml = generator.sitemaps
@@ -149,7 +149,7 @@ RSpec.describe 'SitemapGeneratorTest' do
 
 private
 
-  def add_sample_documents(docs, index_name: 'mainstream_test')
+  def add_sample_documents(docs, index_name: 'government_test')
     docs.each do |sample_document|
       insert_document(index_name, sample_document)
     end

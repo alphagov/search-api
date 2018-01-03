@@ -4,7 +4,7 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
   it "appending a slash to the link field" do
     document = {
       '_type' => 'raib_report',
-      '_index' => 'mainstream_test',
+      '_index' => 'govuk_test',
       'fields' => { 'link' => ['some/link'] }
     }
 
@@ -16,7 +16,7 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
   it "keep http links intact" do
     document = {
       '_type' => 'raib_report',
-      '_index' => 'mainstream_test',
+      '_index' => 'govuk_test',
       'fields' => { 'link' => ['http://example.org/some-link'] }
     }
 
@@ -28,7 +28,7 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
   it "keep correct links intact" do
     document = {
       '_type' => 'raib_report',
-      '_index' => 'mainstream_test',
+      '_index' => 'govuk_test',
       'fields' => { 'link' => ['/some-link'] }
     }
 

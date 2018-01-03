@@ -8,9 +8,9 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "has returns the name of the index as real_name" do
-    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
+    stub_request(:get, "http://example.com:9200/government_test/_aliases")
       .to_return(
-        body: { "real-name" => { "aliases" => { "mainstream_test" => {} } } }.to_json,
+        body: { "real-name" => { "aliases" => { "government_test" => {} } } }.to_json,
         headers: { 'Content-Type' => 'application/json' },
       )
 
@@ -18,7 +18,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "returns nil for real_name when elasticsearch returns a 404 response" do
-    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
+    stub_request(:get, "http://example.com:9200/government_test/_aliases")
       .to_return(
         status: 404,
         body: '{"error":"IndexMissingException[[text-index] missing]","status":404}',
@@ -31,7 +31,7 @@ RSpec.describe SearchIndices::Index do
   it "returns nil for real_name when elasticsearch reports the index as missing" do
     # elasticsearch is weird: even though /index/_status 404s if the index
     # doesn't exist, /index/_aliases returns a 200.
-    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
+    stub_request(:get, "http://example.com:9200/government_test/_aliases")
       .to_return(
         body: "{}",
         headers: { 'Content-Type' => 'application/json' },
@@ -41,9 +41,9 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "exists" do
-    stub_request(:get, "http://example.com:9200/mainstream_test/_aliases")
+    stub_request(:get, "http://example.com:9200/government_test/_aliases")
       .to_return(
-        body: { "real-name" => { "aliases" => { "mainstream_test" => {} } } }.to_json,
+        body: { "real-name" => { "aliases" => { "government_test" => {} } } }.to_json,
         headers: { 'Content-Type' => 'application/json' },
       )
 
@@ -66,11 +66,11 @@ RSpec.describe SearchIndices::Index do
 
     response = <<-eos
 {"took":0,"items":[
-  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/bar", "ok":true } },
-  { "index": { "_index":"mainstream_test", "_type":"edition", "_id":"/foo/baz", "error":"stuff" } }
+  { "index": { "_index":"government_test", "_type":"edition", "_id":"/foo/bar", "ok":true } },
+  { "index": { "_index":"government_test", "_type":"edition", "_id":"/foo/baz", "error":"stuff" } }
 ]}
     eos
-    stub_request(:post, "http://example.com:9200/mainstream_test/_bulk").to_return(
+    stub_request(:post, "http://example.com:9200/government_test/_bulk").to_return(
       body: response,
       headers: { 'Content-Type' => 'application/json' },
     )
@@ -84,7 +84,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can be searched" do
-    stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/_search").with(
+    stub_get = stub_request(:get, "http://example.com:9200/government_test/_search").with(
       body: %r{"query":"keyword search"},
     ).to_return(
       body: '{"hits":{"hits":[]}}',
@@ -97,7 +97,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can be searched for a specific type" do
-    stub_get = stub_request(:get, "http://example.com:9200/mainstream_test/test-type/_search").with(
+    stub_get = stub_request(:get, "http://example.com:9200/government_test/test-type/_search").with(
       body: %r{"query":"keyword search"},
     ).to_return(
       body: '{"hits":{"hits":[]}}',
@@ -110,7 +110,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can manually commit changes" do
-    refresh_url = "http://example.com:9200/mainstream_test/_refresh"
+    refresh_url = "http://example.com:9200/government_test/_refresh"
     stub_request(:post, refresh_url).to_return(
       body: '{"ok":true,"_shards":{"total":1,"successful":1,"failed":0}}',
       headers: { 'Content-Type' => 'application/json' },
@@ -122,7 +122,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can fetch documents by format" do
-    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=500&version=true"
+    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=500&version=true"
     stub_request(:get, search_pattern).with(
       body: { query: { term: { format: "organisation" } }, fields: %w{title link} }
     ).to_return(
@@ -148,7 +148,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can fetch documents by format with certain fields" do
-    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=500&version=true"
+    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=500&version=true"
 
     stub_request(:get, search_pattern).with(
       body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"fields\":[\"title\",\"link\"]}"
@@ -176,7 +176,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can count the documents without retrieving them all" do
-    search_pattern = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=50&version=true"
+    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=50&version=true"
     stub_request(:get, search_pattern).with(
       body: { query: expected_all_documents_query }.to_json
     ).to_return(
@@ -187,7 +187,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can retrieve all documents" do
-    search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=50&version=true"
+    search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=50&version=true"
 
     stub_request(:get, search_uri).with(
       body: { query: expected_all_documents_query }.to_json
@@ -217,7 +217,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can scroll through the documents" do
-    search_uri = "http://example.com:9200/mainstream_test/_search?scroll=1m&search_type=scan&size=2&version=true"
+    search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=2&version=true"
 
     allow(SearchIndices::Index).to receive(:scroll_batch_size).and_return(2)
 
@@ -277,7 +277,7 @@ private
   def build_mainstream_index
     base_uri = "http://example.com:9200"
     search_config = SearchConfig.new
-    described_class.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
+    described_class.new(base_uri, "government_test", "government_test", default_mappings, search_config)
   end
 
   def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)

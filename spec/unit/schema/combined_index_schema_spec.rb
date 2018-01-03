@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe CombinedIndexSchema do
   before do
     search_config = SearchConfig.new
-    @index_names = search_config.content_index_names
+    @index_names = search_config.all_index_names
     @combined_schema = described_class.new(@index_names, search_config.schema_config)
   end
 

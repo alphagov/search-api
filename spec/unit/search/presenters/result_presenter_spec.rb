@@ -4,7 +4,7 @@ RSpec.describe Search::ResultPresenter do
   it "conversion values to single objects" do
     document = {
       '_type' => 'raib_report',
-      '_index' => 'mainstream_test',
+      '_index' => 'govuk_test',
       'fields' => { 'format' => ['a-string'] }
     }
 
@@ -16,7 +16,7 @@ RSpec.describe Search::ResultPresenter do
   it "conversion values to labelled objects" do
     document = {
       '_type' => 'raib_report',
-      '_index' => 'mainstream_test',
+      '_index' => 'govuk_test',
       'fields' => { 'railway_type' => ['heavy-rail', 'light-rail'] }
     }
 

@@ -67,11 +67,11 @@ RSpec.describe 'search queries' do
     end
 
     it "returns count with filter on a different field" do
-      insert_document('mainstream_test', { organisations: ['org1'], mainstream_browse_pages: ["browse/page/1"] })
-      insert_document('mainstream_test', { organisations: ['org1'], mainstream_browse_pages: ["browse/page/2"] })
-      insert_document('mainstream_test', { organisations: ['org2'], mainstream_browse_pages: ["browse/page/1"] })
-      insert_document('mainstream_test', { organisations: ['org2'], mainstream_browse_pages: ["browse/page/2"] })
-      commit_index('mainstream_test')
+      insert_document('govuk_test', organisations: ['org1'], mainstream_browse_pages: ["browse/page/1"], format: "answer")
+      insert_document('govuk_test', organisations: ['org1'], mainstream_browse_pages: ["browse/page/2"], format: "answer")
+      insert_document('govuk_test', organisations: ['org2'], mainstream_browse_pages: ["browse/page/1"], format: "answer")
+      insert_document('govuk_test', organisations: ['org2'], mainstream_browse_pages: ["browse/page/2"], format: "answer")
+      commit_index('govuk_test')
 
       get "/search?aggregate_mainstream_browse_pages=2&filter_organisations=org2"
       expect(parsed_response["total"]).to eq(2)
@@ -86,7 +86,7 @@ RSpec.describe 'search queries' do
   context "migrated formats" do
     it "does not include duplicate documents in govuk index within the count" do
       commit_document('govuk_test', { organisations: ['org1'] })
-      commit_document('mainstream_test', { organisations: ['org1'] })
+      commit_document('government_test', { organisations: ['org1'] })
 
       get "/search?aggregate_organisations=10"
       expect(parsed_response["total"]).to eq(1)
@@ -99,7 +99,7 @@ RSpec.describe 'search queries' do
     it "returns examples before migration" do
       allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
 
-      add_sample_documents('mainstream_test', 2)
+      add_sample_documents('government_test', 2)
       add_sample_documents('govuk_test', 2)
 
       get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
@@ -107,13 +107,13 @@ RSpec.describe 'search queries' do
       options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
       actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-      expect(actual_results).to eq(%w(/mainstream-1))
+      expect(actual_results).to eq(%w(/government-1))
     end
 
     it "returns examples after migration" do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('answers' => :all)
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('answer' => :all)
 
-      add_sample_documents('mainstream_test', 2)
+      add_sample_documents('government_test', 2, override: { "format" => "answer" })
       add_sample_documents('govuk_test', 2)
 
       get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
@@ -127,7 +127,7 @@ RSpec.describe 'search queries' do
     it "returns examples before migration within query scope" do
       allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
 
-      add_sample_documents('mainstream_test', 2)
+      add_sample_documents('government_test', 2, override: { "format" => "answer" })
       add_sample_documents('govuk_test', 2)
 
       get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
@@ -135,13 +135,13 @@ RSpec.describe 'search queries' do
       options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
       actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-      expect(actual_results).to eq(%w(/mainstream-1))
+      expect(actual_results).to eq(%w(/government-1))
     end
 
     it "returns examples after migration within query scope" do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('answers' => :all)
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('answer' => :all)
 
-      add_sample_documents('mainstream_test', 2)
+      add_sample_documents('government_test', 2, override: { "format" => "answer" })
       add_sample_documents('govuk_test', 2)
 
       get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
@@ -201,7 +201,7 @@ RSpec.describe 'search queries' do
         .first["value"]["example_info"]["examples"]
         .map { |h| h["link"] }
         .sort
-    ).to eq(["/government-1", "/mainstream-1"])
+    ).to eq(["/government-1", "/govuk-1"])
   end
 
   it "can be searched by every aggregate for dfid" do
@@ -212,9 +212,10 @@ RSpec.describe 'search queries' do
       "country" => %w(TZ AL),
       "dfid_review_status" => "peer_reviewed",
       "first_published_at" => "2014-04-02",
+      "format" => "dfid_research_output",
     }
 
-    commit_document("mainstream_test", dfid_research_output_attributes, type: "dfid_research_output")
+    commit_document("govuk_test", dfid_research_output_attributes, type: "dfid_research_output")
 
     aggregate_queries = %w(
       filter_dfid_review_status[]=peer_reviewed

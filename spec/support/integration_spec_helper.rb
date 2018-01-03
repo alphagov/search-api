@@ -151,7 +151,7 @@ module IntegrationSpecHelper
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 
-  def sample_document_attributes(index_name, section_count)
+  def sample_document_attributes(index_name, section_count, override: {})
     short_index_name = index_name.sub("_test", "")
     (1..section_count).map do |i|
       title = "Sample #{short_index_name} document #{i}"
@@ -163,7 +163,7 @@ module IntegrationSpecHelper
         "link" => "/#{short_index_name}-#{i}",
         "indexable_content" => "Something something important content id #{i}",
         "mainstream_browse_pages" => "browse/page/#{i}",
-        "format" => "answers"
+        "format" => index_name =~ /govuk/ ? "answer" : "edition"
       }
       if i % 2 == 0
         fields["specialist_sectors"] = ["farming"]
@@ -171,12 +171,12 @@ module IntegrationSpecHelper
       if short_index_name == "government"
         fields["public_timestamp"] = "#{i + 2000}-01-01T00:00:00"
       end
-      fields
+      fields.merge(override)
     end
   end
 
-  def add_sample_documents(index_name, count)
-    attributes = sample_document_attributes(index_name, count)
+  def add_sample_documents(index_name, count, override: {})
+    attributes = sample_document_attributes(index_name, count, override: override)
     data = attributes.flat_map do |sample_document|
       [
         { index: { _id: sample_document['link'], _type: 'edition' } },
@@ -205,7 +205,7 @@ module IntegrationSpecHelper
 private
 
   def build_sample_documents_on_content_indices(documents_per_index:)
-    SearchConfig.instance.content_index_names.each do |index_name|
+    SearchConfig.instance.all_index_names.each do |index_name|
       add_sample_documents(index_name, documents_per_index)
     end
   end

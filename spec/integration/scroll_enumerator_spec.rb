@@ -3,12 +3,12 @@ require 'spec_helper'
 RSpec.describe 'ScrollEnumeratorTest' do
   it "returns expected results for unsorted search" do
     10.times.each do |id|
-      commit_document("mainstream_test", { some: 'data' }, id: "id-#{id}", type: "edition")
+      commit_document("govuk_test", { some: 'data' }, id: "id-#{id}", type: "edition")
     end
 
     results = ScrollEnumerator.new(
       client: client,
-      index_names: 'mainstream_test',
+      index_names: 'govuk_test',
       search_body: { query: { match_all: {} } },
       batch_size: 4
     ) { |d| d }
@@ -18,12 +18,12 @@ RSpec.describe 'ScrollEnumeratorTest' do
 
   it "returns expected results for sorted search" do
     10.times.each do |id|
-      commit_document("mainstream_test", { some: 'data' }, id: "id-#{id}", type: "edition")
+      commit_document("govuk_test", { some: 'data' }, id: "id-#{id}", type: "edition")
     end
 
     results = ScrollEnumerator.new(
       client: client,
-      index_names: 'mainstream_test',
+      index_names: 'govuk_test',
       search_body: { query: { match_all: {} }, sort: [{ _uid: { order: 'asc' } }] },
       batch_size: 4
     ) { |d| d }
@@ -34,7 +34,7 @@ RSpec.describe 'ScrollEnumeratorTest' do
   it "returns expected results when empty result set" do
     results = ScrollEnumerator.new(
       client: client,
-      index_names: 'mainstream_test',
+      index_names: 'govuk_test',
       search_body: { query: { match_all: {} } },
       batch_size: 4
     ) { |d| d }

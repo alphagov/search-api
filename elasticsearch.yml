@@ -16,7 +16,7 @@ development:
 
 test:
   base_uri: <%= ENV.fetch('ELASTICSEARCH_URI', 'http://localhost:9200') %>
-  content_index_names: ["mainstream_test", "government_test"]
+  content_index_names: ["government_test"]
   govuk_index_name: "govuk_test"
   auxiliary_index_names: ["page-traffic_test", "metasearch_test"]
   registry_index: "government_test"
@@ -24,5 +24,4 @@ test:
   page_traffic_index_name: "page-traffic_test"
   popularity_rank_offset: 10
   spelling_index_names:
-    - mainstream_test
     - government_test

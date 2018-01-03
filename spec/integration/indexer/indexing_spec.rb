@@ -21,8 +21,8 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       expanded_links: {},
     )
 
-    post "/mainstream_test/documents", {
-      "_type" => "manual",
+    post "/government_test/documents", {
+      "_type" => "edition",
       "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
       "title" => "TITLE",
       "format" => "answer",
@@ -49,8 +49,8 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "licence_short_description" => "A short description of a licence",
         "search_user_need_document_supertype" => "core",
       },
-      type: "manual",
-      index: "mainstream_test",
+      type: "edition",
+      index: "government_test",
     )
   end
 
@@ -60,7 +60,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       expanded_links: {},
     )
 
-    post "/mainstream_test/documents", {
+    post "/government_test/documents", {
       "content_id" => "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
       "link" => "/an-example-answer",
     }.to_json
@@ -71,12 +71,12 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "link" => "/an-example-answer",
       },
       type: "edition",
-      index: "mainstream_test",
+      index: "government_test",
     )
   end
 
   it "indexes start and end dates" do
-    post "/mainstream_test/documents", {
+    post "/government_test/documents", {
       "title" => "TITLE",
       "format" => "topical_event",
       "slug" => "/government/topical-events/foo",
@@ -94,12 +94,12 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "start_date" => "2016-01-01T00:00:00Z",
         "end_date" => "2017-01-01T00:00:00Z"
       },
-      index: "mainstream_test",
+      index: "government_test",
     )
   end
 
   it "tags organisation pages to themselves, so that filtering on an organisation returns the homepage" do
-    post "/mainstream_test/documents", {
+    post "/government_test/documents", {
       'title' => 'HMRC',
       'link' => '/government/organisations/hmrc',
       'slug' => 'hmrc',
@@ -112,15 +112,15 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "link" => "/government/organisations/hmrc",
         "organisations" => ["hmrc"],
       },
-      index: "mainstream_test",
+      index: "government_test",
     )
   end
 
   it "returns a 202 (queued) response" do
-    post "/mainstream_test/documents", SAMPLE_DOCUMENT.to_json
+    post "/government_test/documents", SAMPLE_DOCUMENT.to_json
 
     expect(last_response.status).to eq(202)
-    expect_document_is_in_rummager(SAMPLE_DOCUMENT, index: "mainstream_test")
+    expect_document_is_in_rummager(SAMPLE_DOCUMENT, index: "government_test")
   end
 
   context "when indexing to the metasearch index" do
@@ -179,8 +179,8 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         expanded_links: {},
       )
 
-      post "/mainstream_test/documents", {
-        "_type" => "manual",
+      post "/government_test/documents", {
+        "_type" => "edition",
         "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
         "title" => "TITLE",
         "format" => "answer",
@@ -207,8 +207,8 @@ RSpec.describe 'ElasticsearchIndexingTest' do
           "licence_short_description" => "A short description of a licence",
           "search_user_need_document_supertype" => "core",
         },
-        type: "manual",
-        index: "mainstream_test",
+        type: "edition",
+        index: "government_test",
       )
     end
   end

@@ -101,7 +101,7 @@ private
 
   def combined_index_schema
     @combined_index_schema ||= CombinedIndexSchema.new(
-      content_index_names,
+      all_index_names,
       schema_config
     )
   end

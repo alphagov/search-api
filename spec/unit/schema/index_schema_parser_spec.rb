@@ -18,11 +18,11 @@ RSpec.describe IndexSchemaParser do
     end
 
     it "have a schema for the mainstream index" do
-      expect(@index_schemas["mainstream"].name).to eq("mainstream")
+      expect(@index_schemas["govuk"].name).to eq("govuk")
     end
 
-    it "include configuration for the `manual section` type in the `mainstream` index" do
-      es_mappings = @index_schemas["mainstream"].es_mappings
+    it "include configuration for the `manual section` type in the `govuk` index" do
+      es_mappings = @index_schemas["govuk"].es_mappings
       expect(es_mappings.keys).to include("manual_section")
       expect(
         hash_including({

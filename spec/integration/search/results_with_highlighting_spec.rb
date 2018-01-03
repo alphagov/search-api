@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe 'ResultsWithHighlightingTest' do
   it "returns highlighted title" do
-    commit_document("mainstream_test",
+    commit_document("government_test",
       "title" => "I am the result",
       "link" => "/some-nice-link",
     )
@@ -14,7 +14,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
   end
 
   it "returns highlighted title fallback" do
-    commit_document("mainstream_test",
+    commit_document("government_test",
       "title" => "Thing without",
       "description" => "I am the result",
       "link" => "/some-nice-link",
@@ -27,7 +27,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
   end
 
   it "returns highlighted description" do
-    commit_document("mainstream_test",
+    commit_document("government_test",
       "link" => "/some-nice-link",
       "description" => "This is a test search result of many results."
     )
@@ -41,7 +41,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
   end
 
   it "returns documents html escaped" do
-    commit_document("mainstream_test",
+    commit_document("government_test",
       "title" => "Escape & highlight my title",
       "link" => "/some-nice-link",
       "description" => "Escape & highlight the description as well."
@@ -58,7 +58,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
   end
 
   it "returns truncated correctly where result at start of description" do
-    commit_document("mainstream_test",
+    commit_document("government_test",
       "link" => "/some-nice-link",
       "description" => "word " + ("something " * 200)
     )
@@ -71,7 +71,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
   end
 
   it "returns truncated correctly where result at end of description" do
-    commit_document("mainstream_test",
+    commit_document("government_test",
       "link" => "/some-nice-link",
       "description" => ("something " * 200) + " word"
     )
@@ -84,7 +84,7 @@ RSpec.describe 'ResultsWithHighlightingTest' do
   end
 
   it "returns truncated correctly where result in middle of description" do
-    commit_document("mainstream_test",
+    commit_document("government_test",
       "link" => "/some-nice-link",
       "description" => ("something " * 200) + " word " + ("something " * 200)
     )

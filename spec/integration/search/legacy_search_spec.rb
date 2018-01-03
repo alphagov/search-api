@@ -2,10 +2,10 @@ require 'spec_helper'
 
 RSpec.describe 'ElasticsearchAdvancedSearchTest' do
   before do
-    @index_name = "mainstream_test"
+    @index_name = "govuk_test"
 
     add_sample_documents
-    commit_index('mainstream_test')
+    commit_index('govuk_test')
   end
 
   def sample_document_attributes
@@ -61,7 +61,7 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest' do
 
   def add_sample_documents
     sample_document_attributes.each do |sample_document|
-      insert_document("mainstream_test", sample_document)
+      insert_document("govuk_test", sample_document)
     end
   end
 
@@ -157,10 +157,10 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest' do
       }
     ]
     more_documents.each do |sample_document|
-      insert_document("mainstream_test", sample_document)
+      insert_document("govuk_test", sample_document)
     end
 
-    commit_index('mainstream_test')
+    commit_index('govuk_test')
 
     get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&mainstream_browse_pages=crime/example"
 
