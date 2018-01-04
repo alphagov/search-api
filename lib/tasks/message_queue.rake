@@ -21,6 +21,8 @@ namespace :message_queue do
       queue_name: "rummager_govuk_index",
       processor: GovukIndex::PublishingEventProcessor.new,
       statsd_client: Services.statsd_client,
+      batch_size: 500,
+      batch_timeout: 10,
     ).run
   end
 
@@ -30,6 +32,8 @@ namespace :message_queue do
       queue_name: "rummager_bulk_reindex",
       processor: GovukIndex::PublishingEventProcessor.new,
       statsd_client: Services.statsd_client,
+      batch_size: 500,
+      batch_timeout: 10,
     ).run
   end
 end
