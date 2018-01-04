@@ -34,12 +34,28 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
-      "stemmed_query_as_term" => nil,
     }
     described_class.new(id: "ca3916-exact", document: document).insert
     commit_index("metasearch_test")
 
     expect_document_is_in_rummager(document, type: "best_bet", index: "metasearch_test", id: "ca3916-exact")
+  end
+
+  it "can insert a new stemmed document" do
+    document = {
+      "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
+      "exact_query" => nil,
+      "stemmed_query" => "car taxes",
+    }
+    described_class.new(id: "car tax-stemmed", document: document).insert
+    commit_index("metasearch_test")
+
+    expect_document_is_in_rummager(
+      document.merge("stemmed_query_as_term" => " car tax "),
+      type: "best_bet",
+      index: "metasearch_test",
+      id: "car tax-stemmed",
+    )
   end
 
   it "can overwrite an existing document" do
@@ -53,7 +69,6 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
-      "stemmed_query_as_term" => nil,
     }
     described_class.new(id: "ca3916-exact", document: document).insert
     commit_index("metasearch_test")
@@ -70,7 +85,6 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
-      "stemmed_query_as_term" => nil,
     }
     expect do
       described_class.new(id: "ca3916-exact", document: document).insert

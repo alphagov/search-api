@@ -24,9 +24,17 @@ module MetasearchIndex
         {
           exact_query: @document["exact_query"],
           stemmed_query: @document["stemmed_query"],
-          stemmed_query_as_term: @document["stemmed_query_as_term"],
+          stemmed_query_as_term: @document["stemmed_query"].presence && " #{analyzed_stemmed_query} ",
           details: @document["details"],
         }
+      end
+
+      def analyzed_stemmed_query
+        analyzed_query = MetasearchIndex::Client.analyze(
+          body: @document["stemmed_query"],
+          analyzer: "best_bet_stemmed_match",
+        )
+        analyzed_query["tokens"].map { |token_info| token_info["token"] }.join(" ")
       end
     end
   end
