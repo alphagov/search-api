@@ -31,10 +31,18 @@
 - index: hazardous substances, dangerous substances
 - index: holiday pay, holiday entitlement
 - index: pension forecast, pension statement
-- index: practical driving test, practical test
-- index: provisional driving licence, provisional licence
 - index: tariff classification, trade tariff
 - index: tariff codes, commodity codes
+
+# Treat synonyms of differing lengths the same
+
+# Multiword synonyms "play havoc" with term positions, so avoid creating index rules that change the phrase length.
+# See: https://www.elastic.co/guide/en/elasticsearch/guide/current/multi-word-synonyms.html
+# If a phrase expands to a longer phrase, extra words will be highlighted in search descriptions.
+- both: practical test, practical tests => practical test, practical_driving_test
+- both: practical driving test, practical driving tests => practical driving test, practical_driving_test
+- both: provisional licence, provisional license, provisonal licence, provisonal license => provisional licence, provisional_driving_licence
+- both: provisional driving licence, provisional driving license, provisonal driving licence, provisonal driving license => provisional driving licence, provisional_driving_licence
 
 # Expanding queries to capture similar meanings.
 
