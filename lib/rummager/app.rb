@@ -28,6 +28,12 @@ class Rummager < Sinatra::Application
     halt(404)
   end
 
+  def prevent_access_to_govuk
+    if index_name == 'govuk'
+      halt(403, "Actions to govuk index are not allowed via this endpoint, please use the message queue to update this index")
+    end
+  end
+
   def index_name
     @index_name ||= params["index"]
   end
@@ -166,6 +172,7 @@ class Rummager < Sinatra::Application
 
   # Insert (or overwrite) a document
   post "/:index/documents" do
+    prevent_access_to_govuk
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
       hash["_type"] ||= "edition"
@@ -189,10 +196,12 @@ class Rummager < Sinatra::Application
   end
 
   post "/:index/commit" do
+    prevent_access_to_govuk
     simple_json_result(current_index.commit)
   end
 
   delete "/:index/documents/*" do
+    prevent_access_to_govuk
     document_link = params["splat"].first
 
     if (type = get_type_from_request_body(request.body))
@@ -223,6 +232,7 @@ class Rummager < Sinatra::Application
 
   # Update an existing document
   post "/:index/documents/*" do
+    prevent_access_to_govuk
     document_id = params["splat"].first
     updates = request.POST
     Indexer::AmendWorker.perform_async(index_name, document_id, updates)
@@ -230,6 +240,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/:index/documents" do
+    prevent_access_to_govuk
     if params["delete_all"]
       # No longer supported; instead use the
       # `rummager:switch_to_empty_index` Rake command
