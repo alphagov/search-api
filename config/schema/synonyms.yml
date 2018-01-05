@@ -31,10 +31,19 @@
 - index: hazardous substances, dangerous substances
 - index: holiday pay, holiday entitlement
 - index: pension forecast, pension statement
-- index: practical driving test, practical test
-- index: provisional driving licence, provisional licence
 - index: tariff classification, trade tariff
 - index: tariff codes, commodity codes
+
+# Treat synonyms of differing lengths the same
+
+# Multiword synonyms "play havoc" with term positions, so avoid creating index rules that change the phrase length.
+# See: https://www.elastic.co/guide/en/elasticsearch/guide/current/multi-word-synonyms.html
+# If a phrase expands to a longer phrase, extra words will be highlighted in search descriptions.
+# NOTE: terms like `practical_driving_test` are not marked as keywords so they are still stemmed.
+- both: practical test, practical tests => practical test, practical_driving_test
+- both: practical driving test, practical driving tests => practical driving test, practical_driving_test
+- both: provisional licence, provisional license => provisional licence, provisional_driving_licence
+- both: provisional driving licence, provisional driving license => provisional driving licence, provisional_driving_licence
 
 # Expanding queries to capture similar meanings.
 
@@ -53,21 +62,21 @@
 - search: emissions, pollution
 - search: fees, costs, prices
 - search: reduction, discount
-- search: renew, expired, out of date
-- search: self employed, self employment, sole trader, starting a business
+- search: expired, out of date => expired, out of date, renew
+- search: self employed, self employment, sole trader
 
 # Adding terms to return relevant content that doesn't mention the original search term
 - search: how much => how much, fees, rates
 - search: apostille => apostille, document legalised
-- search: bad weather, winter weather => cold weather, severe weather, winter weather, energy grants, heating
+- search: bad weather, winter weather => bad weather, cold weather, severe weather, winter weather, energy grants, heating
 - search: benefit checker, benefits checker => benefits adviser
 - search: bin collection => bin collection, rubbish collection
-- search: bno => overseas british passport
+- search: bno => bno, overseas british passport
 - search: cancel child benefit => stop child benefit
 - search: curriculum vitae => cv, curriculum vitae
 # Seasonal need - also for Christmas and New Year payments
 - search: easter => easter, paid early
-- search: fiance, fiancee, fiancé, fiancée => partner, family, visa
+- search: fiance, fiancee, fiancé, fiancée => fiance, fiancee, fiancé, fiancée, partner, family, visa
 - search: flood alert, flood alerts => flood alerts, flood warnings
 - search: hpi check => used car check
 - search: intestacy => intestacy, wills, inherits
@@ -75,24 +84,24 @@
 - search: kiev => kiev, kyiv, ukraine
 - search: mot checker => mot check
 # Student finance login
-- search: my account => your account, online account
+- search: my account => my account, your account, online account
 - search: not arrived => not arrived, contact dvla
 - search: not received => not received, contact dvla
 - search: refuse collection => refuse collection, rubbish collection
-- search: self certificate => self certification
+- search: self certificate => self certificate, self certification
 - search: sign off, signing off, starting work => sign off, signing off, starting work, from benefits to work, return to work, adviser
 - search: soc code, soc codes => soc code, sponsorship, skilled worker
 - search: social security => social security, benefits
 - search: sponsor login => sponsorship management system
 - search: spouse visa, spousal visa => spouse visa, partner visa, family
-- search: starting a company => starting a company, starting a business
+- search: starting a company => starting a company, starting a business, set up a business
 - search: under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room
 - search: visa4uk => visa4uk, uk visa
-- search: waste carriers licence, waste carriers license => register as a waste carrier, licence
+- search: waste carriers licence, waste carriers license => waste carriers licence, register as a waste carrier
 
 # Unofficial or deprecated terms should expand to the preferred term
 - search: ancestral visa => ancestry visa
-- search: bedroom tax => spare bedroom, spare room
+- search: bedroom tax => bedroom tax, spare bedroom, spare room
 - search: death duty => death duty, death duties, inheritance tax
 - search: drivers licence => drivers licence, driving licence
 - search: dole => dole, jobseeker's allowance
@@ -104,17 +113,16 @@
 - search: fired => fired, dismissed, dismissal
 - search: firing => firing, dismiss, dismissing, dismissal
 - search: heating allowance => winter fuel payment
-- search: independent safeguarding authority => disclosure and barring service
-- search: inland revenue => hmrc, hm revenue customs
+- search: inland revenue => inland revenue, hmrc, hm revenue customs
 - search: nextstep => careers, national careers service
-- search: old age pension => state pension
+- search: old age pension => old age pension, state pension
 - search: rfl refund => vehicle tax refunds
 - search: road tax => road tax, car tax
-- search: unemployment benefit => jobseeker's allowance
+- search: unemployment benefit => unemployment benefit, jobseeker's allowance
 - search: unsorn, un sorn, cancel sorn => sorn
 - search: winter fuel allowance, winter allowance => winter fuel payment
 - search: winter payment, winter payments => winter fuel payment
-- search: xmas => christmas
+- search: xmas => xmas, christmas
 
 # Separate run-together terms
 - search: bluebadge => blue badge
@@ -189,15 +197,16 @@
 
 # Acronyms
 - search: aspp, additional paternity pay
-- search: crb, criminal records bureau, dbs, disclosure and barring service
+- search: crb, criminal records bureau => crb, criminal records bureau, dbs, disclosure and barring service
 - search: csco, carbon saving community obligation
-- search: cwp => cold weather
+- search: cwp => cwp, cold weather
 - search: dada, dance and drama awards
+- search: dbs, disclosure and barring service
 - search: dda, disability discrimination act
 - search: dfe, department for education
 - search: dfid, department for international development
 - search: dh, department of health
-- search: doh => department of health
+- search: doh => doh, department of health
 - search: dhp, discretionary housing payment
 - search: dla, disability living allowance
 - search: ea, environment agency
@@ -209,42 +218,41 @@
 - search: fco, foreign commonwealth office
 - search: fcoc, future character of conflict
 - search: foi, freedom of information
-- search: gae => government authorised exchange
+- search: gae => gae, government authorised exchange
 - search: gdhif, green deal home improvement fund
-- search: gsc => government security classifications
+- search: gsc => gsc, government security classifications
 - search: hmcs, hmcts, hm courts tribunals service
 - search: idi, immigration directorate instructions
-- search: iib => industrial injuries disablement benefit
-- search: ilr => indefinite leave, settle, individualised learner record
+- search: iib => iib, industrial injuries disablement benefit
+- search: ilr => ilr, indefinite leave, settle, individualised learner record
 - search: jsa, jobseeker's allowance
 - search: lha, local housing allowance
 - search: lpa, lasting power of attorney
-- search: nasm => noise amelioration scheme military
+- search: nasm => nasm, noise amelioration scheme military
 - search: nea, new enterprise allowance
-- search: ni => national insurance
-- search: nin, nino => national insurance number
-- search: nppg => national planning practice guidance
+- search: nin, nino => nin, nino, national insurance number
+- search: nppg => nppg, national planning practice guidance
 - search: ntl, no time limit
 - search: ogn, operational guidance note
 - search: ospp, ordinary statutory paternity pay
 - search: pcdl, professional and career development loan
 - search: pilon, payment in lieu of notice, pay in lieu of notice
-- search: ppg => pollution prevention guidance
-- search: psw => post study work
+- search: ppg => ppg, pollution prevention guidance
+- search: psw => psw, post study work
 - search: rlmt, resident labour market test
 - search: rnps, register of number plate suppliers
 - search: rti, real time information
-- search: s2p => state second pension
+- search: s2p => s2p, state second pension
 - search: sap, statutory adoption pay
 - search: sar, subject access request
-- search: sf => student finance
-- search: sfe => student finance england
+- search: sf => sf, student finance
+- search: sfe => sfe, student finance england
 - search: slc, student loans company
 - search: sms, sponsorship management system
-- search: spol => state pension online
+- search: spol => spol, state pension online
 - search: spp, statutory paternity pay
-- search: twov => transit without visa
-- search: uj, ujm => universal jobmatch
+- search: twov => twov, transit without visa
+- search: uj, ujm => uj, ujm, universal jobmatch
 - search: ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration
 - search: utr, unique taxpayer reference
 
@@ -315,28 +323,34 @@
 - search: v149 => v149, vehicle tax rates
 - search: v188 => disability exemption
 - search: v5 => v5, v5c
-- search: v888 => v888, vehicle information
-- search: v890 => sorn
+- search: v888 => v888, information about a vehicle
+- search: v890 => v890, sorn
 - search: vaf4 => vaf4a
-- search: vat1, vat 1, vat2, vat 2, vat50, vat 50, vat51, vat 51, vat1a, vat 1a, vat1b, vat 1b => vat registration
+- search: vat 1 => vat1, vat 1
+- search: vat 2 => vat2, vat 2
+- search: vat 50 => vat50, vat 50
+- search: vat 51 => vat51, vat 51
+- search: vat 1a => vat1a, vat 1a
+- search: vat 1b => vat1b, vat 1b
+- search: vat 1c => vat1c, vat 1c
 
 # Job searches
 # Birmingham Airport jobs
 - search: b26 3qz => jobs
 
 # Abbreviations
-- search: cert => certificate
-- search: digi => digital
-- search: gov => government
-- search: hep => hepatitis
-- search: lic => licence
+- search: cert => cert, certificate
+- search: digi => digi, digital
+- search: gov => gov, government
+- search: hep => hep, hepatitis
+- search: lic => lic, licence
 - search: min wage => minimum wage
 - search: no plate => number plate
-- search: reg => registration
+- search: reg => reg, registration
 - search: ref number => ref number, reference number
-- search: tacho, tacho graph, taco, taco graph => tachograph
+- search: tacho, tacho graph, taco, taco graph => tacho, tachograph
 # eg unique tax reference, unique tax code
-- search: unique tax => unique taxpayer
+- search: unique tax => unique tax, unique taxpayer
 
 # Correcting mistakes
 - search: cy1 => cyi
@@ -360,7 +374,7 @@
 - search: direct gov => directgov
 - search: flood line => floodline
 - search: heat wave => heatwave
-- search: help line => helpline
+- search: help line => help line, helpline
 - search: jelly fish => jellyfish
 - search: job centre => jobcentre
 - search: job match => job match, jobmatch
@@ -371,7 +385,14 @@
 - search: tax payer => tax payer, taxpayer
 
 # Foreign language
-- search: visum, viza, vize, visado, visados, visto, vistos, visti => visa
+- search: visum => visum, visa
+- search: viza => viza, visa
+- search: vize => vize, visa
+- search: visado => visado, visa
+- search: visados => visados, visa
+- search: visto => visto, visa
+- search: vistos => vistos, visa
+- search: visti => visti, visa
 
 # Common misspellings
 - search: addres => address
@@ -436,7 +457,7 @@
 - search: cossh => coshh
 - search: crisi => crisis
 - search: crissis => crisis
-- search: deregistration => de registration
+- search: deregistration => deregistration, de registration
 - search: diability => disability
 - search: disabilty => disability
 - search: disk => disk, disc
@@ -503,7 +524,7 @@
 - search: pention => pension
 - search: pentions => pensions
 - search: perscriptions => prescriptions
-- search: pra => practical
+- search: pra => pra, practical
 - search: pract => practical
 - search: pratical => practical
 - search: pregancy => pregnancy

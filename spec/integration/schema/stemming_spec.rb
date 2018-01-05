@@ -1,52 +1,51 @@
 require 'spec_helper'
 
 RSpec.describe 'SettingsTest' do
-  it "default" do
-    expect_tokenisation :default,
-      "It's A Small’s World" => %w(it small world),
-      "It's Mitt’s" => %w(it mitt)
+  describe 'the default analyzer' do
+    it "reduces words to their stems" do
+      expect_tokenisation :default,
+        "It's A Small’s World" => %w(it small world),
+        "It's Mitt’s" => %w(it mitt)
+    end
+
+    it "doesn't over-stem important words" do
+      expect_tokenisation :default,
+        "news" => %w(news)
+    end
   end
 
-  it "uses correct stemming" do
-    expect_tokenisation :default,
-      "news" => ["news"]
+  describe "exact matching" do
+    it "preserves quotes" do
+      expect_tokenisation :exact_match,
+        "It’s A Small W'rld" => ["it's a small w'rld"]
+    end
+
+    it "preserves stopwords" do
+      expect_tokenisation :exact_match,
+        "to" => %w(to)
+    end
   end
 
-  it "query default" do
-    expect_tokenisation :query_default,
-      "It's A Small World" => %w(it small world),
-      "It's, It’s Mr. O'Neill" => %w(it it mr oneil)
+  describe "searchable text" do
+    it "preserves stopwords" do
+      expect_tokenisation :searchable_text,
+        "to be or not to be" => %w(to be or not to be)
+    end
   end
 
-  it "shingled query analyzer" do
-    expect_tokenisation :shingled_query_analyzer,
-      "Hello Hallo" => ["hello", "hello hallo", "hallo"],
-      "H'lo ’Hallo" => ["h'lo", "h'lo hallo", "hallo"]
-  end
-
-  it "exact match" do
-    expect_tokenisation :exact_match,
-      "It’s A Small W'rld" => ["it's a small w'rld"]
-  end
-
-  it "best bet stemmed match" do
+  it "stems best bets" do
     expect_tokenisation :best_bet_stemmed_match,
       "It’s A Small W'rld" => %w(it a small wrld)
   end
 
-  it "spelling analyzer" do
+  it "uses the default shingle filter for spelling suggestions" do
     expect_tokenisation :spelling_analyzer,
       "It’s Grammed" => ["its", "its grammed", "grammed"]
   end
 
-  it "string for sorting" do
+  it "ignores quotes for sorting" do
     expect_tokenisation :string_for_sorting,
       "It's A Small W’rld" => ["its a small wrld"]
-  end
-
-  it "with shingles analyzer" do
-    expect_tokenisation :with_shingles,
-      "The small brown dog" => ["the small", "small brown", "brown dog"]
   end
 
 private
@@ -56,7 +55,7 @@ private
   def expect_tokenisation(analyzer, assertions)
     assertions.each do |query, expected_output|
       tokens = fetch_tokens_for_analyzer(query, analyzer)
-      expect(expected_output).to eq(tokens)
+      expect(tokens).to eq(expected_output)
     end
   end
 

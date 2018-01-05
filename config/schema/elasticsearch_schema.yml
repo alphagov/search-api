@@ -5,12 +5,21 @@ index:
         # At index time, elasticsearch will use an analyzer named default in the index settings
         # if no analyzer is specified in the field mapping:
         # https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
+        #
+        # We don't need this at query time unless synonyms are disabled
+        # using a debug flag.
         default:
           type: custom
           tokenizer: standard
           filter: [standard, asciifolding, lowercase, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
+        # This analyzer does not filter out these stopwords:
+        # a, an, and, are, as, at, be, but, by,
+        # for, if, in, into, is, it,
+        # no, not, of, on, or, such,
+        # that, the, their, then, there, these,
+        # they, this, to, was, will, with
         searchable_text:
           type: custom
           tokenizer: standard
@@ -32,49 +41,6 @@ index:
           tokenizer: standard
           filter: [standard, asciifolding, lowercase, search_synonym, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
-
-        # Analyzer used to search across pairs of adjacent words.
-        with_shingles:
-          type: custom
-          tokenizer: standard
-          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english, text_shingles]
-          char_filter: [normalize_quotes, strip_quotes]
-
-        # Analyzer used to search for codes like "P46", allowing codes to be
-        # split by whitespace.  Finds "codes" which consist of some letters and
-        # some digits, possibly split into two by whitespace.
-        with_id_codes:
-          type: custom
-          tokenizer: id_codes_split_sentences
-          filter:
-            - asciifolding
-            - lowercase
-            - id_codes_find_phrases
-            - id_codes_strip_symbols
-            - id_codes_squash_multiple_spaces
-            - id_codes_min_length
-            - id_codes_make_groups
-            - id_codes_strip_spaces
-            - id_codes_require_digit
-            - id_codes_min_length
-          char_filter: [normalize_quotes]
-
-        # No longer used, but defined to avoid errors during deploy
-        # (specifically, if an index has been migrated, but beofre the app
-        # servers have been restarted, the "query_default" analyzer needs to
-        # exist or queries will fail due to the analyzer they're trying to use
-        # not being found).
-        query_default:
-          type: custom
-          tokenizer: standard
-          filter: [standard, lowercase, old_synonym, stop, stemmer_override, stemmer_english]
-          char_filter: [normalize_quotes, strip_quotes]
-
-        # Analyzer used at query time for old-style shingle matching.
-        shingled_query_analyzer:
-          type: custom
-          tokenizer: standard
-          filter: [standard, asciifolding, lowercase, stop, stemmer_override, stemmer_english, old_shingles]
 
         # An analyzer for doing "exact" word matching (but stripping wrapping whitespace, and case insensitive).
         exact_match:
@@ -106,14 +72,6 @@ index:
 
       tokenizer:
 
-        # Split text on sentence separator characters.
-        #
-        # Doesn't split text on a period which isn't followed by a space (eg, a
-        # period in an acronym, or code, or number).
-        id_codes_split_sentences:
-          type: pattern
-          pattern: '(\.\s)|[!?"\n]'
-
       char_filter:
         strip_quotes:
           type: "pattern_replace"
@@ -133,106 +91,3 @@ index:
         stemmer_english:
           type: stemmer
           name: porter2
-
-        # Filter used in the analyzer for ".shingle" subfields
-        text_shingles:
-          type: shingle
-          max_shingle_size: 2
-          min_shingle_size: 2
-          output_unigrams: false
-
-        # Filter used in the analyzer for ".with_id_codes" subfields
-        # Breaks the text down into "phrases", defined here as sequences of
-        # letters or various special characters.
-        id_codes_find_phrases:
-          type: pattern_capture
-          preserve_original: false
-          patterns:
-            # Any of the allowed symbols
-            - '((?:[a-z0-9\.:/\\_\s\(\)-])+)'
-
-            # preserve_original being set to false is ignored if there are no
-            # matches.  We don't want this behaviour, so we hack around it by
-            # adding a fallback match for individual characters.  We then strip
-            # these out with a `length` filter setting the minimum length of a
-            # term produced here to 2 characters.  It would be better if
-            # `preserve_original => false` did what it said.
-            - '(.)'
-
-        # Strip any non alphanumeric (or space) characters,
-        # replacing them with spaces.
-        id_codes_strip_symbols:
-          type: pattern_replace
-          pattern: '[^a-z0-9\s]'
-          replacement: ' '
-
-        # Replace any multiple spaces with a single space.
-        id_codes_squash_multiple_spaces:
-          type: pattern_replace
-          pattern: '\s{2,}'
-          replacement: ' '
-
-        # Split text into "groups", where each group is either a
-        # single word or a pair of words.
-        id_codes_make_groups:
-          type: pattern_capture
-          preserve_original: false
-          patterns:
-
-            # Match overlapping pairs of "words"
-            - |-
-              (?x:
-
-                # Start a positive lookahead group.
-                # Stuff inside the lookahead section will match,
-                # but won't advance the cursor position for the
-                # next match.  This lets us make overlapping
-                # groups.
-                (?=
-
-                  ( # Capture pairs of "words"
-                    [a-z0-9]+
-                    \s
-                    [a-z0-9]+
-                  )
-                )
-
-                # This is outside the lookahead, and outside the
-                # capture group.  All it does is to advance the
-                # cursor for the next match past the current word.
-                [a-z0-9]+
-              )
-
-            # Match single "words"
-            - '([a-z0-9]+)'
-
-        # Remove any space characters.
-        id_codes_strip_spaces:
-          type: pattern_replace
-          pattern: '\s'
-          replacement: ''
-
-        # Only keep terms which have at least one digit.
-        id_codes_require_digit:
-          type: pattern_capture
-          preserve_original: false
-          patterns:
-            - '^(.*\d.*)$'
-
-            # preserve_original being set to false is ignored if there are no
-            # matches.  We don't want this behaviour, so we hack around it by
-            # adding a fallback match for individual characters.  We then strip
-            # these out with a `length` filter setting the minimum length of a
-            # term produced here to 2 characters.  It would be better if
-            # `preserve_original => false` did what it said.
-            - '(.)'
-
-        id_codes_min_length:
-          type: length
-          min: 2
-
-        # Shingle filter used for the old weighting
-        old_shingles:
-          type: shingle
-          max_shingle_size: 2
-          min_shingle_size: 2
