@@ -17,7 +17,7 @@ The publishing API now notifies rummager of every update, using a RabbitMQ
 message queue. Rummager responds to these messages by updating the `govuk`
 index. This has allowed us to remove the old `mainstream` index, which contained
 all sorts of documents beyond what we normally think of as "mainstream" content.
-The `govuk` index can be rebuilt from scratch in about an hour by resending the content
+The `govuk` index can be rebuilt from scratch by resending the content
 from publishing API.
 
 See [ADR 006](adr-004-transition-mainstream-to-publishing-api-index.md) for more
