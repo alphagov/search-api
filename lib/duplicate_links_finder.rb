@@ -1,5 +1,5 @@
 class DuplicateLinksFinder
-  DEFAULT_INDICES_TO_SEARCH = %w(mainstream detailed government govuk).freeze
+  DEFAULT_INDICES_TO_SEARCH = %w(detailed government govuk).freeze
 
   def initialize(elasticsearch_url: nil, indices: DEFAULT_INDICES_TO_SEARCH)
     @client = Elasticsearch::Client.new(host: elasticsearch_url || SearchConfig.new.elasticsearch["base_uri"])

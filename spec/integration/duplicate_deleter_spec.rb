@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe 'DuplicateDeleterTest' do
   it "can not delete when only a single document" do
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
@@ -19,19 +19,21 @@ RSpec.describe 'DuplicateDeleterTest' do
 
   it "can delete duplicate documents on different types" do
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "edition",
     )
     commit_document(
-      "mainstream_test",
+      "govuk_test",
 
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "cma_case",
     )
@@ -45,18 +47,20 @@ RSpec.describe 'DuplicateDeleterTest' do
 
   it "cant delete a type that doesnt exist" do
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "edition",
     )
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "cma_case",
     )
@@ -70,18 +74,20 @@ RSpec.describe 'DuplicateDeleterTest' do
 
   it "cant delete duplicate content_ids when id doesnt match" do
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/not-an-example-page",
+        format: "cma_case",
       },
       type: "edition",
     )
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "cma_case",
     )
@@ -95,18 +101,20 @@ RSpec.describe 'DuplicateDeleterTest' do
 
   it "can delete duplicate documents on different types using link" do
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "edition",
     )
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "cma_case",
     )
@@ -120,18 +128,20 @@ RSpec.describe 'DuplicateDeleterTest' do
 
   it "cant delete duplicate documents using link with different content_ids" do
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "aaaaaaaa-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "edition",
     )
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "cma_case",
     )
@@ -145,15 +155,19 @@ RSpec.describe 'DuplicateDeleterTest' do
 
   it "can delete duplicate documents if bad item has nil content_id" do
     commit_document(
-      "mainstream_test",
-      { "link" => "/an-example-page" },
+      "govuk_test",
+      {
+        "link" => "/an-example-page",
+        format: "cma_case",
+      },
       type: "edition",
     )
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "cma_case",
     )
@@ -167,16 +181,20 @@ RSpec.describe 'DuplicateDeleterTest' do
 
   it "cant delete duplicate documents if good item has nil content_id" do
     commit_document(
-      "mainstream_test",
+      "govuk_test",
       {
         "content_id" => "3c824d6b-d982-4426-9a7d-43f2b865e77c",
         "link" => "/an-example-page",
+        format: "cma_case",
       },
       type: "edition",
     )
     commit_document(
-      "mainstream_test",
-      { "link" => "/an-example-page" },
+      "govuk_test",
+      {
+        "link" => "/an-example-page",
+        format: "cma_case",
+      },
       type: "cma_case",
     )
 
@@ -189,13 +207,19 @@ RSpec.describe 'DuplicateDeleterTest' do
 
   it "can delete duplicate documents on different types using link when both content_ids are missing" do
     commit_document(
-      "mainstream_test",
-      { "link" => "/an-example-page" },
+      "govuk_test",
+      {
+        "link" => "/an-example-page",
+        "format" => "cma_case",
+      },
       type: "edition",
     )
     commit_document(
-      "mainstream_test",
-      { "link" => "/an-example-page" },
+      "govuk_test",
+      {
+        "link" => "/an-example-page",
+        "format" => "cma_case",
+      },
       type: "cma_case",
     )
 
@@ -209,14 +233,14 @@ RSpec.describe 'DuplicateDeleterTest' do
 private
 
   # TODO: change this to use global `expect_document_is_in_rummager` method
-  def expect_document_present_in_rummager(id:, type:, index: "mainstream_test")
+  def expect_document_present_in_rummager(id:, type:, index: "govuk_test")
     doc = fetch_document_from_rummager(id: id, type: type, index: index)
     expect(doc).to be_truthy
   end
 
   def expect_document_missing_in_rummager(id:, type:)
     expect {
-      fetch_document_from_rummager(id: id, type: type)
+      fetch_document_from_rummager(id: id, type: type, index: "govuk_test")
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 

@@ -3,19 +3,19 @@ require 'spec_helper'
 RSpec.describe 'MissingMetadataTest' do
   it "finds missing content_id" do
     commit_document(
-      'mainstream_test',
+      'government_test',
       'link' => '/path/to_page',
     )
 
     runner = MissingMetadata::Runner.new('content_id', search_config: SearchConfig.instance, logger: io)
     results = runner.retrieve_records_with_missing_value
 
-    expect([{ _id: '/path/to_page', index: 'mainstream_test' }]).to eq results
+    expect([{ _id: '/path/to_page', index: 'government_test' }]).to eq results
   end
 
   it "ignores already set content_id" do
     commit_document(
-      'mainstream_test',
+      'government_test',
       'link' => '/path/to_page',
       'content_id' => '8aea1742-9cc6-4dfb-a63b-12c3e66a601f',
     )
@@ -28,7 +28,7 @@ RSpec.describe 'MissingMetadataTest' do
 
   it "finds missing document_type" do
     commit_document(
-      'mainstream_test',
+      'government_test',
       'link' => '/path/to_page',
       'content_id' => '8aea1742-9cc6-4dfb-a63b-12c3e66a601f',
     )
@@ -36,12 +36,12 @@ RSpec.describe 'MissingMetadataTest' do
     runner = MissingMetadata::Runner.new('content_store_document_type', search_config: SearchConfig.instance, logger: io)
     results = runner.retrieve_records_with_missing_value
 
-    expect([{ _id: '/path/to_page', index: 'mainstream_test', content_id: '8aea1742-9cc6-4dfb-a63b-12c3e66a601f' }]).to eq results
+    expect([{ _id: '/path/to_page', index: 'government_test', content_id: '8aea1742-9cc6-4dfb-a63b-12c3e66a601f' }]).to eq results
   end
 
   it "ignores already set document_type" do
     commit_document(
-      'mainstream_test',
+      'government_test',
       'link' => '/path/to_page',
       'content_id' => '8aea1742-9cc6-4dfb-a63b-12c3e66a601f',
       'content_store_document_type' => 'guide',

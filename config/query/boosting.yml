@@ -1,10 +1,9 @@
 base:
   format:
-    # Mainstream formats
     service_manual_guide: 0.3
     service_manual_topic: 0.3
     transaction: 1.5
-    # Should appear below mainstream content
+    # Should appear below govuk (mainstream) content
     aaib_report: 0.2
     dfid_research_output: 0.2
     hmrc_manual_section: 0.2

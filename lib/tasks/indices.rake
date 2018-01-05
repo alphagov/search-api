@@ -73,14 +73,16 @@ namespace :rummager do
     end
   end
 
-  desc "Sync unmigrated data from mainstream into govuk
+  desc "Sync unmigrated data into govuk
 
 While we are migrating data to govuk, it is important that govuk has
-all the data from mainstream in order for soring to be calculated
+all the data from specified index in order for soring to be calculated
 correctly
 "
   task :sync_govuk do
-    GovukIndex::SyncUpdater.update
+    raise("Can not migrate multiple indices") if index_names.count > 1
+    raise("Can not migrate for govuk index") if index_names.include?('govuk')
+    GovukIndex::SyncUpdater.update(source_index: index_names.first)
   end
 
   desc "Update popularity data in indices.

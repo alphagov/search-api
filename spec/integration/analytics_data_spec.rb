@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe 'AnalyticsDataTest' do
   before do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
-    @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, %w(mainstream_test govuk_test))
+    @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, %w(government_test govuk_test))
   end
 
   it "fetches rows of analytics dimensions" do
@@ -18,7 +18,7 @@ RSpec.describe 'AnalyticsDataTest' do
       "user_journey_document_supertype" => "some_user_journey_supertype",
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
     }
-    commit_document("mainstream_test", document)
+    commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
 
@@ -55,7 +55,7 @@ RSpec.describe 'AnalyticsDataTest' do
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
       "format" => "answers",
     }
-    commit_document("mainstream_test", document.merge("title" => "mainstream title",))
+    commit_document("government_test", document.merge("title" => "government title",))
     commit_document("govuk_test", document.merge("title" => "govuk title",))
 
     rows = @analytics_data_fetcher.rows
@@ -81,7 +81,7 @@ RSpec.describe 'AnalyticsDataTest' do
 
   it "missing data is nil" do
     document = {}
-    id = commit_document("mainstream_test", document)
+    id = commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
 
@@ -95,7 +95,7 @@ RSpec.describe 'AnalyticsDataTest' do
       "content_id" => "some_content_id",
       "link" => "/some/page/path",
     }
-    commit_document("mainstream_test", document)
+    commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
 
@@ -106,7 +106,7 @@ RSpec.describe 'AnalyticsDataTest' do
     document = {
       "link" => "/some/page/path",
     }
-    commit_document("mainstream_test", document)
+    commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
 
@@ -118,7 +118,7 @@ RSpec.describe 'AnalyticsDataTest' do
       "format" => "some_format",
       "content_store_document_type" => "some_document_type",
     }
-    commit_document("mainstream_test", document)
+    commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
 
@@ -129,7 +129,7 @@ RSpec.describe 'AnalyticsDataTest' do
     document = {
       "format" => "some_format",
     }
-    commit_document("mainstream_test", document)
+    commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
 
@@ -144,7 +144,7 @@ RSpec.describe 'AnalyticsDataTest' do
         line breaks
         HEREDOC
     }
-    commit_document("mainstream_test", document)
+    commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
 
@@ -155,7 +155,7 @@ RSpec.describe 'AnalyticsDataTest' do
     document = {
       "title" => "A page title\r\nwith some\r\nline breaks"
     }
-    commit_document("mainstream_test", document)
+    commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
 
@@ -166,7 +166,7 @@ RSpec.describe 'AnalyticsDataTest' do
     fixture_file = File.expand_path("../fixtures/content_for_analytics.json", __FILE__)
     documents = JSON.parse(File.read(fixture_file))
     documents.each do |document|
-      commit_document("mainstream_test", document)
+      commit_document("government_test", document)
     end
 
     analytics_data = @analytics_data_fetcher.rows.to_a
@@ -180,7 +180,7 @@ RSpec.describe 'AnalyticsDataTest' do
       "link" => "/an-example-page",
       "popularity": 0.5,
     }
-    commit_document("mainstream_test", document)
+    commit_document("government_test", document)
 
     rows = @analytics_data_fetcher.rows
     headers = @analytics_data_fetcher.headers

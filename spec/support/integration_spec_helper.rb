@@ -116,7 +116,7 @@ module IntegrationSpecHelper
     commit_index(index_name)
   end
 
-  def commit_index(index_name = "mainstream_test")
+  def commit_index(index_name)
     client.indices.refresh(index: index_name)
   end
 
@@ -134,7 +134,7 @@ module IntegrationSpecHelper
     JSON.parse(last_response.body)
   end
 
-  def expect_document_is_in_rummager(document, type: "edition", index: 'mainstream_test', id: nil)
+  def expect_document_is_in_rummager(document, type: "edition", id: nil, index:)
     retrieved = fetch_document_from_rummager(id: id || document['link'], index: index)
 
     expect(retrieved["_type"]).to eq(type)
@@ -151,7 +151,7 @@ module IntegrationSpecHelper
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 
-  def sample_document_attributes(index_name, section_count)
+  def sample_document_attributes(index_name, section_count, override: {})
     short_index_name = index_name.sub("_test", "")
     (1..section_count).map do |i|
       title = "Sample #{short_index_name} document #{i}"
@@ -163,7 +163,7 @@ module IntegrationSpecHelper
         "link" => "/#{short_index_name}-#{i}",
         "indexable_content" => "Something something important content id #{i}",
         "mainstream_browse_pages" => "browse/page/#{i}",
-        "format" => "answers"
+        "format" => index_name =~ /govuk/ ? "answer" : "edition"
       }
       if i % 2 == 0
         fields["specialist_sectors"] = ["farming"]
@@ -171,12 +171,12 @@ module IntegrationSpecHelper
       if short_index_name == "government"
         fields["public_timestamp"] = "#{i + 2000}-01-01T00:00:00"
       end
-      fields
+      fields.merge(override)
     end
   end
 
-  def add_sample_documents(index_name, count)
-    attributes = sample_document_attributes(index_name, count)
+  def add_sample_documents(index_name, count, override: {})
+    attributes = sample_document_attributes(index_name, count, override: override)
     data = attributes.flat_map do |sample_document|
       [
         { index: { _id: sample_document['link'], _type: 'edition' } },
@@ -205,12 +205,14 @@ module IntegrationSpecHelper
 private
 
   def build_sample_documents_on_content_indices(documents_per_index:)
-    SearchConfig.instance.content_index_names.each do |index_name|
+    config = SearchConfig.instance
+    index_names = config.content_index_names + [config.govuk_index_name]
+    index_names.each do |index_name|
       add_sample_documents(index_name, documents_per_index)
     end
   end
 
-  def fetch_document_from_rummager(id:, index: 'mainstream_test', type: '_all')
+  def fetch_document_from_rummager(id:, type: '_all', index:)
     client.get(
       index: index,
       type: type,

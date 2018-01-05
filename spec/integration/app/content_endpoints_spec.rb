@@ -7,8 +7,8 @@ RSpec.describe 'ContentEndpointsTest' do
     expect(last_response).to be_not_found
   end
 
-  it "that getting a document returns the document" do
-    commit_document("mainstream_test", {
+  it "that_getting_a_document_returns_the_document" do
+    commit_document("govuk_test", {
       "title" => "A nice title",
       "link" => "a-document/in-search",
     })
@@ -20,7 +20,7 @@ RSpec.describe 'ContentEndpointsTest' do
   end
 
   it "deleting a document" do
-    commit_document("mainstream_test", {
+    commit_document("govuk_test", {
       "title" => "A nice title",
       "link" => "a-document/in-search",
     })
@@ -37,7 +37,7 @@ RSpec.describe 'ContentEndpointsTest' do
   end
 
   it "deleting a document from locked index" do
-    commit_document("mainstream_test", {
+    commit_document("govuk_test", {
       "title" => "A nice title",
       "link" => "a-document/in-search",
     })

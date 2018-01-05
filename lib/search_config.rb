@@ -8,7 +8,6 @@ class SearchConfig
     spelling_index_names
     base_uri
     govuk_index_name
-    default_index_name
     page_traffic_index_name
   ].each do |config_method|
     define_method config_method do
@@ -102,7 +101,7 @@ private
 
   def combined_index_schema
     @combined_index_schema ||= CombinedIndexSchema.new(
-      content_index_names,
+      content_index_names + [govuk_index_name],
       schema_config
     )
   end

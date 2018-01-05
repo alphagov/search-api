@@ -5,6 +5,8 @@ require 'rummager'
 require 'routes/content'
 
 class Rummager < Sinatra::Application
+  class AttemptToUseDefaultMainstreamIndex < StandardError; end
+
   # - Stop double slashes in URLs (even escaped ones) being flattened to single ones
   #
   # - Explicitly allow requests that are referred from other domains so we can link
@@ -27,7 +29,7 @@ class Rummager < Sinatra::Application
   end
 
   def index_name
-    @index_name ||= params["index"] || SearchConfig.instance.default_index_name
+    @index_name ||= params["index"]
   end
 
   def text_error(content)
@@ -92,8 +94,18 @@ class Rummager < Sinatra::Application
     halt(404, env['sinatra.error'].message)
   end
 
+  error Rummager::AttemptToUseDefaultMainstreamIndex do
+    GovukError.notify(
+      env['sinatra.error'],
+      extra: {
+        params: params,
+      },
+    )
+    halt(500, env['sinatra.error'].message)
+  end
 
-# Return results for the GOV.UK site search
+
+  # Return results for the GOV.UK site search
   #
   # For details, see doc/search-api.md
   ["/search.?:request_format?"].each do |path|
@@ -153,7 +165,7 @@ class Rummager < Sinatra::Application
   end
 
   # Insert (or overwrite) a document
-  post "/?:index?/documents" do
+  post "/:index/documents" do
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
       hash["_type"] ||= "edition"
@@ -176,11 +188,11 @@ class Rummager < Sinatra::Application
     json_result 200, "Success"
   end
 
-  post "/?:index?/commit" do
+  post "/:index/commit" do
     simple_json_result(current_index.commit)
   end
 
-  delete "/?:index?/documents/*" do
+  delete "/:index/documents/*" do
     document_link = params["splat"].first
 
     if (type = get_type_from_request_body(request.body))
@@ -210,14 +222,14 @@ class Rummager < Sinatra::Application
   end
 
   # Update an existing document
-  post "/?:index?/documents/*" do
+  post "/:index/documents/*" do
     document_id = params["splat"].first
     updates = request.POST
     Indexer::AmendWorker.perform_async(index_name, document_id, updates)
     json_result 202, "Queued"
   end
 
-  delete "/?:index?/documents" do
+  delete "/:index/documents" do
     if params["delete_all"]
       # No longer supported; instead use the
       # `rummager:switch_to_empty_index` Rake command
@@ -245,5 +257,27 @@ class Rummager < Sinatra::Application
       }
     end
     status.to_json
+  end
+
+  # these endpoints are used to capture any usage of old endpoints which relied on a default index.
+  # They can be removed once we are happy they are not being accessed.
+  delete "/documents" do
+    raise AttemptToUseDefaultMainstreamIndex
+  end
+
+  post "/documents/*" do
+    raise AttemptToUseDefaultMainstreamIndex
+  end
+
+  delete "/documents/*" do
+    raise AttemptToUseDefaultMainstreamIndex
+  end
+
+  post "/commit" do
+    raise AttemptToUseDefaultMainstreamIndex
+  end
+
+  post "/documents" do
+    raise AttemptToUseDefaultMainstreamIndex
   end
 end

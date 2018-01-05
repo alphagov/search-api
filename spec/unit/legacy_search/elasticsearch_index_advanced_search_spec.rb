@@ -6,7 +6,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   before do
     base_uri = "http://example.com:9200"
     search_config = SearchConfig.new
-    @wrapper = described_class.new(base_uri, "mainstream_test", "mainstream_test", default_mappings, search_config)
+    @wrapper = described_class.new(base_uri, "government_test", "government_test", default_mappings, search_config)
   end
 
   it "pagination params are required" do
@@ -181,10 +181,10 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "returns the hits converted into documents" do
-    stub_request(:get, "http://example.com:9200/mainstream_test/_search")
+    stub_request(:get, "http://example.com:9200/government_test/_search")
       .to_return(
         status: 200,
-        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"indexable_content\": \"some_content\"}, \"_type\": \"contact\"}]}}",
+        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"indexable_content\": \"some_content\"}, \"_type\": \"edition\"}]}}",
         headers: { "Content-Type" => "application/json" }
       )
     result_set = @wrapper.advanced_search(default_params)
@@ -198,7 +198,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   def stub_empty_search(with_args = {})
-    r = stub_request(:get, "http://example.com:9200/mainstream_test/_search")
+    r = stub_request(:get, "http://example.com:9200/government_test/_search")
     r.with(with_args) unless with_args.empty?
     r.to_return(
       status: 200,

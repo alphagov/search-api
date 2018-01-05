@@ -29,7 +29,7 @@ def words_without_punctuation(copy)
 end
 
 # The indexes which make up GOV.UK.
-index_names = %w(mainstream detailed government)
+index_names = %w(detailed government govuk)
 search_server = SearchConfig.new.search_server
 indices = index_names.map { |name| search_server.index(name) }
 

@@ -57,7 +57,7 @@
 
 # Never try to correct full names of cabinet members. These can be removed in
 # the future when elasticsearch has "learned" that their names are correct
-# because they are found often in government/mainstream indices.
+# because they are found often in government/govuk indices.
 
 - david cameron
 - george osborne

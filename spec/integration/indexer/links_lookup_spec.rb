@@ -7,24 +7,26 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
   it "indexes document without publishing api content unchanged" do
     publishing_api_has_lookups({})
 
-    post "/documents", {
+    post "/government_test/documents", {
       "link" => "/something-not-in-publishing-api",
     }.to_json
 
     expect_document_is_in_rummager(
-      "link" => "/something-not-in-publishing-api",
+      { "link" => "/something-not-in-publishing-api" },
+      index: "government_test",
     )
   end
 
   it "indexes document with external url unchanged" do
     publishing_api_has_lookups({})
 
-    post "/documents", {
+    post "/government_test/documents", {
       "link" => "http://example.com/some-link",
     }.to_json
 
     expect_document_is_in_rummager(
-      "link" => "http://example.com/some-link",
+      { "link" => "http://example.com/some-link" },
+      index: "government_test",
     )
   end
 
@@ -77,21 +79,24 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
       }
     )
 
-    post "/documents", {
+    post "/government_test/documents", {
       "link" => "/foo/bar",
     }.to_json
 
     expect_document_is_in_rummager(
-      "link" => "/foo/bar",
-      "specialist_sectors" => ["my-topic/a", "my-topic/b"],
-      "mainstream_browse_pages" => ["my-browse/1"],
-      "organisations" => ["my-org/1", "my-court"],
-      "primary_publishing_organisation" => ["my-org/1"],
-      "part_of_taxonomy_tree" => ["TAXON-1"],
-      "taxons" => ["TAXON-1"],
-      "topic_content_ids" => ["TOPIC-CONTENT-ID-1", "TOPIC-CONTENT-ID-2"],
-      "mainstream_browse_page_content_ids" => ["BROWSE-1"],
-      "organisation_content_ids" => ["ORG-1", "ORG-2"],
+      {
+        "link" => "/foo/bar",
+        "specialist_sectors" => ["my-topic/a", "my-topic/b"],
+        "mainstream_browse_pages" => ["my-browse/1"],
+        "organisations" => ["my-org/1", "my-court"],
+        "primary_publishing_organisation" => ["my-org/1"],
+        "part_of_taxonomy_tree" => ["TAXON-1"],
+        "taxons" => ["TAXON-1"],
+        "topic_content_ids" => ["TOPIC-CONTENT-ID-1", "TOPIC-CONTENT-ID-2"],
+        "mainstream_browse_page_content_ids" => ["BROWSE-1"],
+        "organisation_content_ids" => ["ORG-1", "ORG-2"],
+      },
+      index: "government_test",
     )
   end
 
@@ -108,16 +113,19 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
       }
     )
 
-    post "/documents", {
+    post "/government_test/documents", {
       "link" => "/my-base-path",
       "content_id" => "CONTENT-ID-OF-DOCUMENT",
     }.to_json
 
     expect_document_is_in_rummager(
-      "link" => "/my-base-path",
-      "content_id" => "CONTENT-ID-OF-DOCUMENT",
-      "specialist_sectors" => ["my-topic/a"],
-      "topic_content_ids" => ["TOPIC-CONTENT-ID-1"],
+      {
+        "link" => "/my-base-path",
+        "content_id" => "CONTENT-ID-OF-DOCUMENT",
+        "specialist_sectors" => ["my-topic/a"],
+        "topic_content_ids" => ["TOPIC-CONTENT-ID-1"],
+      },
+      index: "government_test",
     )
   end
 
@@ -189,17 +197,20 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
       }
     )
 
-    post "/documents", {
+    post "/government_test/documents", {
       "link" => "/foo/bar",
     }.to_json
 
     expect_document_is_in_rummager(
-      "link" => "/foo/bar",
-      "part_of_taxonomy_tree" => [
-        grandparent_1_content_id, parent_1_content_id, taxon_1_content_id,
-        grandparent_2_content_id, parent_2_content_id, taxon_2_content_id,
-      ],
-      "taxons" => [taxon_1_content_id, taxon_2_content_id],
+      {
+        "link" => "/foo/bar",
+        "part_of_taxonomy_tree" => [
+          grandparent_1_content_id, parent_1_content_id, taxon_1_content_id,
+          grandparent_2_content_id, parent_2_content_id, taxon_2_content_id,
+        ],
+        "taxons" => [taxon_1_content_id, taxon_2_content_id],
+      },
+      index: "government_test",
     )
   end
 end
