@@ -37,7 +37,7 @@ module Search
 
     def specialist_sectors
       BaseRegistry.new(
-        search_server.index_for_search(search_config.content_index_names),
+        search_server.index_for_search([search_config.govuk_index_name]),
         field_definitions,
         "specialist_sector"
       )

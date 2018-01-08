@@ -360,7 +360,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "expandinging of organisations" do
+  it "expands organisations" do
     commit_document("government_test",
       "title" => 'Advice on Treatment of Dragons',
       "link" => '/dragon-guide',
@@ -383,7 +383,7 @@ RSpec.describe 'SearchTest' do
     )
   end
 
-  it "expandinging of organisations via content_id" do
+  it "expands organisations via content_id" do
     commit_document(
       "government_test",
       "title" => 'Advice on Treatment of Dragons',
@@ -468,14 +468,14 @@ RSpec.describe 'SearchTest' do
     expect(first_result['expanded_organisations']).to be_truthy
   end
 
-  it "expandinging of topics" do
+  it "expands topics" do
     commit_document("government_test",
       "title" => 'Advice on Treatment of Dragons',
       "link" => '/dragon-guide',
       "topic_content_ids" => ['topic-content-id']
     )
 
-    commit_document("government_test",
+    commit_document("govuk_test",
       "content_id" => 'topic-content-id',
       "slug" => 'topic-magic',
       "title" => 'Magic topic',
