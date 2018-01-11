@@ -44,7 +44,12 @@ module SpecHelpers
     retry_attempts.times do
       random_example = GovukSchemas::RandomExample.for_schema(notification_schema: schema) do |hash|
         hash.merge!(payload.stringify_keys)
-        hash["details"].merge!(details.stringify_keys)
+
+        unless details.empty?
+          document_details = hash["details"] || {}
+          hash["details"] = document_details.merge(details.stringify_keys)
+        end
+
         hash.delete_if { |k, _| excluded_fields.include?(k) }
         hash
       end
