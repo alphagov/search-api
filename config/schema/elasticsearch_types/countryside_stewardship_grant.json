@@ -99,16 +99,16 @@
         "value": "mid-tier"
       },
       {
-        "label": "Offer: Lowland grazing",
+        "label": "Offer: Arable",
+        "value": "offer-arable"
+      },
+      {
+        "label": "Offer: Lowland Grazing",
         "value": "offer-lowland-grazing"
       },
       {
-        "label": "Offer: Mixed farming",
+        "label": "Offer: Mixed Farming",
         "value": "offer-mixed-farming"
-      },
-      {
-        "label": "Offer: Arable",
-        "value": "offer-arable"
       },
       {
         "label": "Offer: Upland",
