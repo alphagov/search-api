@@ -20,11 +20,7 @@ gem "statsd-ruby", "~> 1.4.0"
 gem "unf", "~> 0.1.4"
 gem "whenever", "~> 0.10.0"
 
-if ENV["MESSAGE_QUEUE_CONSUMER_DEV"]
-  gem "govuk_message_queue_consumer", path: "../govuk_message_queue_consumer"
-else
-  gem "govuk_message_queue_consumer", "~> 3.1.0"
-end
+gem "govuk_message_queue_consumer", :git => 'https://github.com/alphagov/govuk_message_queue_consumer.git', :branch => 'process-batches-of-messages'
 
 group :test do
   gem 'bunny-mock', '~> 1.7'
