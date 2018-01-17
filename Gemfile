@@ -24,7 +24,7 @@ gem "whenever", "~> 0.10.0"
 if ENV["MESSAGE_QUEUE_CONSUMER_DEV"]
   gem "govuk_message_queue_consumer", path: "../govuk_message_queue_consumer"
 else
-  gem "govuk_message_queue_consumer", "~> 3.1.0"
+  gem "govuk_message_queue_consumer", "~> 3.2.0"
 end
 
 group :test do
