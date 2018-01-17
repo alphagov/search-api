@@ -29,6 +29,10 @@
       {
         "label": "Sport aviation and balloons",
         "value": "sport-aviation-and-balloons"
+      },
+      {
+        "label": "Unmanned Aircraft Systems (UAS)",
+        "value": "unmanned-aircraft-systems"
       }
     ],
     "report_type": [
