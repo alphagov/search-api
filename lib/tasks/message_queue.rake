@@ -6,6 +6,18 @@
 require 'rummager'
 
 namespace :message_queue do
+  desc "Create the queues that Rummager uses with Rabbit MQ"
+  task :create_queues do
+    config = GovukMessageQueueConsumer::RabbitMQConfig.from_environment(ENV)
+    bunny = Bunny.new(config)
+
+    channel = bunny.start.create_channel
+    exch = Bunny::Exchange.new(channel, :topic, "published_documents")
+    channel.queue("rummager_to_be_indexed").bind(exch, routing_key: "*.links")
+    channel.queue("rummager_bulk_reindex").bind(exch, routing_key: "*.bulk.reindex")
+    channel.queue("rummager_govuk_index").bind(exch, routing_key: "*.*")
+  end
+
   desc "Index documents that are published to the publishing-api"
   task :listen_to_publishing_queue do
     GovukMessageQueueConsumer::Consumer.new(
