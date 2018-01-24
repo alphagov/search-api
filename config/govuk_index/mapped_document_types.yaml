@@ -28,6 +28,7 @@ medical_safety_alert: medical_safety_alert # Specialist Publisher
 place: edition
 policy: policy # Policy Publisher
 raib_report: raib_report # Specialist Publisher
+residential_property_tribunal_decision: residential_property_tribunal_decision # Specialist Publisher 
 service_manual_guide: service_manual_guide
 service_manual_homepage: service_manual_guide
 service_manual_service_standard: service_manual_guide
