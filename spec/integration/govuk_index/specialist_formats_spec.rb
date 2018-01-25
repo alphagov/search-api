@@ -43,6 +43,7 @@ RSpec.describe 'SpecialistFormatTest' do
       maib_report
       medical_safety_alert
       raib_report
+      residential_property_tribunal_decision
       service_standard_report
       tax_tribunal_decision
       utaac_decision
