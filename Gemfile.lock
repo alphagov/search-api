@@ -120,7 +120,7 @@ GEM
     parallel (1.12.1)
     parser (2.4.0.2)
       ast (~> 2.3)
-    plek (2.0.0)
+    plek (2.1.0)
     powerpack (0.1.1)
     pry (0.11.3)
       coderay (~> 1.1.0)
@@ -257,7 +257,7 @@ DEPENDENCIES
   loofah
   mr-sparkle (= 0.3.0)
   nokogiri (~> 1.8.2)
-  plek (~> 2.0)
+  plek (~> 2.1)
   pry-byebug
   rack (~> 2.0)
   rack-logstasher (~> 1.0.0)
