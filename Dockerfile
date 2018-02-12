@@ -19,4 +19,4 @@ ADD Gemfile* $APP_HOME/
 RUN bundle install
 ADD . $APP_HOME
 
-CMD bundle exec unicorn -p $PORT -o 0.0.0.0
+CMD bundle exec foreman run web
