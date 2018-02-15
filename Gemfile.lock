@@ -27,12 +27,12 @@ GEM
     docile (1.1.5)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
-    elasticsearch (2.0.2)
-      elasticsearch-api (= 2.0.2)
-      elasticsearch-transport (= 2.0.2)
-    elasticsearch-api (2.0.2)
+    elasticsearch (6.0.1)
+      elasticsearch-api (= 6.0.1)
+      elasticsearch-transport (= 6.0.1)
+    elasticsearch-api (6.0.1)
       multi_json
-    elasticsearch-transport (2.0.2)
+    elasticsearch-transport (6.0.1)
       faraday
       multi_json
     faraday (0.14.0)
@@ -110,7 +110,7 @@ GEM
       rb-fsevent (>= 0.9)
       rb-inotify (>= 0.8)
       unicorn (>= 4.5)
-    multi_json (1.12.2)
+    multi_json (1.13.1)
     multipart-post (2.0.0)
     mustermann (1.0.1)
     netrc (0.11.0)
@@ -243,7 +243,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (~> 5.1.4)
   bunny-mock (~> 1.7)
-  elasticsearch (~> 2)
+  elasticsearch (~> 6)
   foreman (~> 0.84)
   gds-api-adapters (~> 51.2)
   govuk-content-schema-test-helpers (~> 1.6.0)

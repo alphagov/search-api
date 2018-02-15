@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "activesupport", "~> 5.1.4"
-gem "elasticsearch", "~> 2"
+gem "elasticsearch", "~> 6"
 gem "foreman", "~> 0.84"
 gem "gds-api-adapters", "~> 51.2"
 gem "govuk_app_config", "~> 1.3.0"
