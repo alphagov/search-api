@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "activesupport", "~> 5.1.4"
+gem "activesupport", "~> 5.1.5"
 gem "elasticsearch", "~> 2"
 gem "foreman", "~> 0.84"
 gem "gds-api-adapters", "~> 51.2"
