@@ -30,6 +30,7 @@ require 'time'
 require 'unf'
 require 'uri'
 require 'yaml'
+require 'zlib'
 
 initializers_path = File.expand_path("../config/initializers/*.rb", __dir__)
 Dir[initializers_path].each { |f| require f }
