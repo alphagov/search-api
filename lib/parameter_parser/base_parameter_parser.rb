@@ -42,6 +42,8 @@ class BaseParameterParser
   # aggregates for.  This should be a subset of allowed_filter_fields
   ALLOWED_AGGREGATE_FIELDS = %w(
     content_purpose_document_supertype
+    content_purpose_supergroup
+    content_purpose_subgroup
     content_store_document_type
     detailed_format
     document_collections
@@ -87,6 +89,8 @@ class BaseParameterParser
     publishing_app
     rendering_app
     specialist_sectors
+    content_purpose_supergroup
+    content_purpose_subgroup
   ).freeze
 
   # The keys by which aggregates values can be sorted (using the "order" option).

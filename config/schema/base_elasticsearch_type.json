@@ -33,6 +33,8 @@
     "title",
     "topic_content_ids",
     "updated_at",
-    "user_journey_document_supertype"
+    "user_journey_document_supertype",
+    "content_purpose_supergroup",
+    "content_purpose_subgroup"
   ]
 }
