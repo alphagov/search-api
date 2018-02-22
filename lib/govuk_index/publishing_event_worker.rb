@@ -7,7 +7,6 @@ module GovukIndex
   class UnknownDocumentTypeError < StandardError; end
   class NotIdentifiable < StandardError; end
   class MissingExternalUrl < StandardError; end
-  class InvalidFormatError < StandardError; end
 
   DOCUMENT_TYPES_WITHOUT_BASE_PATH = %w(contact world_location).freeze
 
@@ -61,7 +60,6 @@ module GovukIndex
         processor.save(presenter)
       else
         logger.info("#{routing_key} -> UNKNOWN #{identifier}")
-        GovukError.notify(InvalidFormatError.new, extra: { message_body: payload, error_message: "#{presenter.format} is an invalid format" })
       end
 
     # Rescuing as we don't want to retry this class of error
