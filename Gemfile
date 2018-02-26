@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "activesupport", "~> 5.1.5"
 gem "elasticsearch", "~> 2"
-gem "gds-api-adapters", "~> 51.2"
+gem "gds-api-adapters", "~> 51.3"
 gem "govuk_app_config", "~> 1.3.1"
 gem "govuk_document_types", "~> 0.2.0"
 gem "govuk-lint", "~> 3.6.0"
