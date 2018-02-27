@@ -14,6 +14,16 @@
     "type": "identifier"
   },
 
+  "content_purpose_supergroup": {
+    "description": "Grouping for content purpose supergroups. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
+    "type": "identifier"
+  },
+
+  "content_purpose_subgroup": {
+    "description": "Grouping for content purpose subgroups. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
+    "type": "identifier"
+  },
+
   "email_document_supertype": {
     "description": "High level group for email subscriptions use to identify publications and announcement. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"
