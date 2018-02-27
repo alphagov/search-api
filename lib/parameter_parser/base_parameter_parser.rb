@@ -42,6 +42,8 @@ class BaseParameterParser
   # aggregates for.  This should be a subset of allowed_filter_fields
   ALLOWED_AGGREGATE_FIELDS = %w(
     content_purpose_document_supertype
+    content_purpose_subgroup
+    content_purpose_supergroup
     content_store_document_type
     detailed_format
     document_collections
@@ -77,6 +79,8 @@ class BaseParameterParser
   # restriction could be relaxed in future.
   ALLOWED_AGGREGATE_EXAMPLE_FIELDS = %w(
     content_store_document_type
+    content_purpose_subgroup
+    content_purpose_supergroup
     email_document_supertype
     format
     government_document_supertype
