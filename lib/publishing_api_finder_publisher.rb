@@ -8,11 +8,7 @@ class PublishingApiFinderPublisher
   end
 
   def call
-    if pre_production?(finder)
-      publish(finder)
-    else
-      logger.info("Not publishing #{finder['name']} because it's not pre_production")
-    end
+    publish(finder)
   end
 
 private
@@ -28,14 +24,6 @@ private
   end
 
   def publish(finder)
-    export_finder(finder)
-  end
-
-  def pre_production?(finder)
-    finder["pre_production"] == true
-  end
-
-  def export_finder(finder)
     presenter = FinderContentItemPresenter.new(finder, timestamp)
 
     logger.info("Publishing '#{presenter.name}' finder")

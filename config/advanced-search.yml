@@ -6,7 +6,6 @@ document_type: search
 locale: en
 name: Advanced search
 phase: live
-pre_production: true
 publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder
