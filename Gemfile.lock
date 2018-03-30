@@ -2,9 +2,9 @@ GEM
   remote: https://rubygems.org/
   specs:
     PriorityQueue (0.1.2)
-    activesupport (5.1.5)
+    activesupport (5.1.6)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (~> 0.7)
+      i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     addressable (2.5.2)
@@ -72,7 +72,7 @@ GEM
     hashdiff (0.3.7)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.9.5)
+    i18n (1.0.0)
       concurrent-ruby (~> 1.0)
     json (2.1.0)
     json-schema (2.8.0)
@@ -238,7 +238,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 5.1.5)
+  activesupport (~> 5.1.6)
   bunny-mock (~> 1.7)
   elasticsearch (~> 2)
   gds-api-adapters (~> 52.5)
