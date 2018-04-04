@@ -31,3 +31,6 @@ Raven.configure do |config|
 
   use Raven::Rack
 end
+
+Encoding.default_external = "UTF-8"
+Encoding.default_internal = "UTF-8"
