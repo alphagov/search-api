@@ -238,7 +238,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 5.1.5)
+  activesupport (~> 5.1.6)
   bunny-mock (~> 1.7)
   elasticsearch (~> 2)
   gds-api-adapters (~> 52.5)
