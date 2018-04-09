@@ -56,6 +56,7 @@ class BaseParameterParser
     navigation_document_supertype
     organisation_type
     organisations
+    part_of_taxonomy_tree
     people
     policies
     policy_areas
