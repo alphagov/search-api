@@ -1,7 +1,6 @@
 ---
 base_path: "/search/advanced"
 content_id: 3df77dea-00c5-43f0-8f31-d08b8bd2a4d6
-content_purpose_document_supertype: navigation
 document_type: search
 locale: en
 name: Advanced search

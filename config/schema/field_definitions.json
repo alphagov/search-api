@@ -9,11 +9,6 @@
     "type": "identifier"
   },
 
-  "content_purpose_document_supertype": {
-    "description": "Grouping for content performance supertypes. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
-    "type": "identifier"
-  },
-
   "content_purpose_supergroup": {
     "description": "Grouping for content purpose supergroups. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"

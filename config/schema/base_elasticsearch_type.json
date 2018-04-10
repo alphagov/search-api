@@ -2,7 +2,6 @@
   "fields": [
     "all_searchable_text",
     "content_id",
-    "content_purpose_document_supertype",
     "content_purpose_subgroup",
     "content_purpose_supergroup",
     "content_store_document_type",
