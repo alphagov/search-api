@@ -15,7 +15,6 @@ module GovukIndex
     delegate_to_payload :description
     delegate_to_payload :email_document_supertype
     delegate_to_payload :government_document_supertype
-    delegate_to_payload :navigation_document_supertype
     delegate_to_payload :public_timestamp, hash_key: "public_updated_at"
     delegate_to_payload :publishing_app
     delegate_to_payload :rendering_app
