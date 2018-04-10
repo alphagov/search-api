@@ -56,6 +56,7 @@ class BaseParameterParser
     navigation_document_supertype
     organisation_type
     organisations
+    part_of_taxonomy_tree
     people
     policies
     policy_areas
@@ -88,9 +89,11 @@ class BaseParameterParser
     manual
     navigation_document_supertype
     organisations
+    part_of_taxonomy_tree
     publishing_app
     rendering_app
     specialist_sectors
+    taxons
   ).freeze
 
   # The keys by which aggregates values can be sorted (using the "order" option).
