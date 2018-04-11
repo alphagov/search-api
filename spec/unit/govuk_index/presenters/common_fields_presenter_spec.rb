@@ -10,7 +10,6 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       content_id
       email_document_supertype
       government_document_supertype
-      navigation_document_supertype
       publishing_app
       rendering_app
       search_user_need_document_supertype

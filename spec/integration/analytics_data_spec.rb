@@ -14,7 +14,6 @@ RSpec.describe 'AnalyticsDataTest' do
       "content_store_document_type" => "some_document_type",
       "primary_publishing_organisation" => %w(some_publishing_org),
       "organisations" => %w(some_org another_org yet_another_org),
-      "navigation_document_supertype" => "some_navigation_supertype",
       "user_journey_document_supertype" => "some_user_journey_supertype",
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
     }
@@ -29,7 +28,6 @@ RSpec.describe 'AnalyticsDataTest' do
         nil,
         "some page title",
         "some_document_type",
-        "some_navigation_supertype",
         nil,
         "some_user_journey_supertype",
         "some_org, another_org, yet_another_org",
@@ -50,7 +48,6 @@ RSpec.describe 'AnalyticsDataTest' do
       "content_store_document_type" => "some_document_type",
       "primary_publishing_organisation" => %w(some_publishing_org),
       "organisations" => %w(some_org another_org yet_another_org),
-      "navigation_document_supertype" => "some_navigation_supertype",
       "user_journey_document_supertype" => "some_user_journey_supertype",
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
       "format" => "answers",
@@ -67,7 +64,6 @@ RSpec.describe 'AnalyticsDataTest' do
       nil,
       "govuk title",
       "some_document_type",
-      "some_navigation_supertype",
       nil,
       "some_user_journey_supertype",
       "some_org, another_org, yet_another_org",
@@ -85,7 +81,7 @@ RSpec.describe 'AnalyticsDataTest' do
 
     rows = @analytics_data_fetcher.rows
 
-    expected_row = [id, id, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
+    expected_row = [id, id, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
 
     expect(rows.to_a).to eq([expected_row])
   end

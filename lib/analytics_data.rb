@@ -37,7 +37,6 @@ private
       "ga:productCategoryHierarchy" => lambda { |_| nil }, # Placeholder: taxonomy
       "ga:dimension72" => lambda { |item| sanitise_for_google_analytics(item["title"]) },
       "ga:dimension73" => lambda { |item| item["content_store_document_type"] || item["format"] },
-      "ga:dimension74" => lambda { |item| item["navigation_document_supertype"] },
       "ga:dimension75" => lambda { |_| nil }, # Placeholder: mainstream/specialist supertype
       "ga:dimension76" => lambda { |item| item["user_journey_document_supertype"] },
       "ga:dimension77" => lambda { |item| item["organisations"]&.join(", ") },

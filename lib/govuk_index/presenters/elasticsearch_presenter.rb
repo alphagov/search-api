@@ -64,7 +64,6 @@ module GovukIndex
         manual:                              details.parent_manual,
         market_sector:                       specialist.market_sector,
         medical_specialism:                  specialist.medical_specialism,
-        navigation_document_supertype:       common_fields.navigation_document_supertype,
         opened_date:                         specialist.opened_date,
         organisation_content_ids:            expanded_links.organisation_content_ids,
         organisations:                       expanded_links.organisations,

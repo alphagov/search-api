@@ -22,9 +22,26 @@ base:
     # Topics
     specialist_sector: 2.5
   content_store_document_type:
+    answer: 2.5
+    contact: 2.5
+    detailed_guide: 2.5
+    document_collection: 2.5
     foi_release: 0.2
-  navigation_document_supertype:
+    form: 2.5
     guidance: 2.5
+    guide: 2.5
+    licence: 2.5
+    local_transaction: 2.5
+    manual: 2.5
+    map: 2.5
+    place: 2.5
+    promotional: 2.5
+    regulation: 2.5
+    simple_smart_answer: 2.5
+    smart_answer: 2.5
+    statutory_guidance: 2.5
+    transaction: 2.5
+    travel_advice: 2.5
   search_user_need_document_supertype:
     core: 1.5
   organisation_state:
