@@ -53,7 +53,8 @@ migrated:
   - '/help'
   - '/find-local-council'
 
-indexable: []
+indexable:
+- taxon
 
 non_indexable:
 - calculator
