@@ -6,9 +6,9 @@ RSpec.describe "taxon publishing" do
     @channel = bunny_mock.start.channel
 
     consumer = GovukMessageQueueConsumer::Consumer.new(
-      queue_name: "external_content.test",
+      queue_name: "taxon.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("taxon.test")
@@ -18,17 +18,17 @@ RSpec.describe "taxon publishing" do
   it "indexes a taxon page" do
     random_example = generate_random_example(
       schema: "taxon",
-      base_path: "/transport/all",
       payload: {
-        document_type: "taxon"
-}
-      )
+        document_type: "taxon",
+        base_path: "/transport/all",
+      }
+    )
+
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("taxon" => :all)
     @queue.publish(random_example.to_json, content_type: "application/json")
-    content_id = random_example["content_id"]
 
     expected_document = { "link" => random_example["base_path"] }
-    expect_document_is_in_rummager(expected_document, id: content_id, index: "govuk_test", type: "edition")
+    expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
   end
 
   it "removes a taxon page" do

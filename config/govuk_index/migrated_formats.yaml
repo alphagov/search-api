@@ -280,6 +280,8 @@ migrated:
   - '/help'
   - '/find-local-council'
 
+indexable: []
+
 non_indexable:
 - calculator
 - license_finder
