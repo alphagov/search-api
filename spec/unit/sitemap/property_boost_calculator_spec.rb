@@ -96,6 +96,9 @@ RSpec.describe PropertyBoostCalculator do
       "content_store_document_type" => {
         "foi_release" => 0.2,
       },
+      "navigation_document_supertype" => {
+        "guidance" => 0.8
+      }
     })
 
     calculator = subject
@@ -103,6 +106,7 @@ RSpec.describe PropertyBoostCalculator do
     document = {
       "format" => "publication",
       "content_store_document_type" => "foi_release",
+      "navigation_document_supertype" => "some_other_value"
     }
 
     #   1 - 2^(-format boost * document type boost * navigation supertype boost)
