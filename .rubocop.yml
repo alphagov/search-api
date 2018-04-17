@@ -43,3 +43,12 @@ Style/SymbolArray:
 Style/MethodCalledOnDoEndBlock:
   Exclude:
     - 'spec/**/*'
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
