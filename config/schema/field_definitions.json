@@ -232,6 +232,16 @@
     "type": "identifier"
   },
 
+  "organisation_brand": {
+    "description": "The branding (controls the colour) of the organisation logo",
+    "type": "identifier"
+  },
+
+  "organisation_crest": {
+    "description": "The class name of the crest to display when rendering the organisation logo",
+    "type": "identifier"
+  },
+
   "organisation_state": {
     "description": "Status of an organisation page on GOV.UK: {live, joining, exempt, transitioning, closed, devolved}",
     "type": "identifier"
@@ -401,6 +411,11 @@
 
   "closing_date": {
     "type": "date"
+  },
+
+  "logo_formatted_title": {
+    "description": "The title (with line breaks) to be displayed alongside the organisation logo",
+    "type": "identifier"
   },
 
   "manual": {
