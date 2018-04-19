@@ -84,7 +84,10 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       "slug" => "/government/topical-events/foo",
       "link" => "/government/topical-events/foo",
       "start_date" => "2016-01-01T00:00:00Z",
-      "end_date" => "2017-01-01T00:00:00Z"
+      "end_date" => "2017-01-01T00:00:00Z",
+      'logo_formatted_title' => 'The\nTitle',
+      'organisation_brand' => 'cabinet-office',
+      'organisation_crest' => 'single-identity'
     }.to_json
 
     expect_document_is_in_rummager(
@@ -94,7 +97,10 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "slug" => "/government/topical-events/foo",
         "link" => "/government/topical-events/foo",
         "start_date" => "2016-01-01T00:00:00Z",
-        "end_date" => "2017-01-01T00:00:00Z"
+        "end_date" => "2017-01-01T00:00:00Z",
+        'logo_formatted_title' => 'The\nTitle',
+        'organisation_brand' => 'cabinet-office',
+        'organisation_crest' => 'single-identity'
       },
       index: "government_test",
     )

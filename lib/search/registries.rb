@@ -31,7 +31,15 @@ module Search
         index,
         field_definitions,
         "organisation",
-        %w{slug content_id link title acronym organisation_type organisation_state}
+        %w{
+          slug content_id
+          link title acronym
+          organisation_type
+          organisation_state
+          logo_formatted_title
+          organisation_brand
+          organisation_crest
+        }
       )
     end
 
