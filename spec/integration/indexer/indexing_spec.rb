@@ -87,7 +87,8 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       "end_date" => "2017-01-01T00:00:00Z",
       'logo_formatted_title' => 'The\nTitle',
       'organisation_brand' => 'cabinet-office',
-      'organisation_crest' => 'single-identity'
+      'organisation_crest' => 'single-identity',
+      'logo_url' => 'http://url/to/logo.png'
     }.to_json
 
     expect_document_is_in_rummager(
@@ -100,7 +101,8 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "end_date" => "2017-01-01T00:00:00Z",
         'logo_formatted_title' => 'The\nTitle',
         'organisation_brand' => 'cabinet-office',
-        'organisation_crest' => 'single-identity'
+        'organisation_crest' => 'single-identity',
+        'logo_url' => 'http://url/to/logo.png'
       },
       index: "government_test",
     )

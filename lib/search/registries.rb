@@ -39,6 +39,7 @@ module Search
           logo_formatted_title
           organisation_brand
           organisation_crest
+          logo_url
         }
       )
     end
