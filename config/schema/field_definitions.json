@@ -418,6 +418,11 @@
     "type": "identifier"
   },
 
+  "logo_url": {
+    "description": "The url of the custom logo - applies to organisations with a custom logo",
+    "type": "identifier"
+  },
+
   "manual": {
     "type": "identifier",
     "description": "Base path of the manual this document belongs to. Eg `/service-manual` or `/hmrc-internal-manuals/air-passenger-duty`"
