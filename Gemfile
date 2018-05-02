@@ -35,7 +35,7 @@ group :test do
   gem "simplecov", "~> 0.16.1"
   gem "simplecov-rcov", "~> 0.2.3"
   gem "timecop", "~> 0.9.1"
-  gem "webmock", "~> 3.4.0"
+  gem "webmock", "~> 3.4.1"
 end
 
 group :development do
