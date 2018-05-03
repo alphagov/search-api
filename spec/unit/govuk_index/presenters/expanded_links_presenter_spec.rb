@@ -86,7 +86,17 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
                       "content_id" => "206b7f3a-49b5-476f-af0f-fd27e2a68473",
                       "locale" => "en",
                       "title" => "Parenting, childcare and children's services ",
-                      "links" => {}
+                      "links" => {
+                        "root_taxon" => [
+                          {
+                            "base_path" => '/',
+                            "content_id" => "f3bbdec2-0e62-4520-a7fd-6ffd5d36e03a",
+                            "locale" => "en",
+                            "title" => "GOV.UK homepage",
+                            "links" => {}
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
@@ -100,6 +110,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     presenter = expanded_links_presenter(expanded_links)
 
     expected_taxonomy_tree = [
+      "f3bbdec2-0e62-4520-a7fd-6ffd5d36e03a",
       "206b7f3a-49b5-476f-af0f-fd27e2a68473",
       "5a9e6b26-ae64-4129-93ee-968028381e83",
       "13bba81c-b2b1-4b13-a3de-b24748977198"
