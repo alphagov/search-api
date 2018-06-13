@@ -37,10 +37,10 @@ service_standard_report: service_standard_report # Specialist Publisher
 simple_smart_answer: edition
 special_route: edition
 step_by_step_nav: edition
-taxon: edition # Content Tagger
-topic: edition # Collections Publisher
 task_list: edition
 tax_tribunal_decision: tax_tribunal_decision # Specialist Publisher
+taxon: edition # Content Tagger
+topic: edition # Collections Publisher
 transaction: edition
 travel_advice: edition # Travel advice publisher
 travel_advice_index: edition # Travel advice publisher
