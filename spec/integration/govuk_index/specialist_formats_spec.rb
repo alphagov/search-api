@@ -45,6 +45,7 @@ RSpec.describe 'SpecialistFormatTest' do
       raib_report
       residential_property_tribunal_decision
       service_standard_report
+      statutory_instrument
       tax_tribunal_decision
       utaac_decision
     )
