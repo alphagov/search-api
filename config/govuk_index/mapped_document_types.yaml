@@ -35,12 +35,13 @@ service_manual_service_standard: service_manual_guide
 service_manual_topic: service_manual_topic
 service_standard_report: service_standard_report # Specialist Publisher
 simple_smart_answer: edition
+statutory_instrument: statutory_instrument # Specialist Publisher
 special_route: edition
 step_by_step_nav: edition
-taxon: edition # Content Tagger
-topic: edition # Collections Publisher
 task_list: edition
 tax_tribunal_decision: tax_tribunal_decision # Specialist Publisher
+taxon: edition # Content Tagger
+topic: edition # Collections Publisher
 transaction: edition
 travel_advice: edition # Travel advice publisher
 travel_advice_index: edition # Travel advice publisher

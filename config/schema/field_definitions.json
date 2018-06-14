@@ -625,5 +625,25 @@
 
   "licence_short_description": {
     "type": "searchable_text"
+  },
+
+  "sifting_status": {
+    "description": "The open/close/etc state of a statutory instrument",
+    "type": "identifiers"
+  },
+
+  "subject": {
+    "description": "The associated top level taxon for statutory instruments",
+    "type": "identifiers"
+  },
+
+  "laid_date": {
+    "description": "The date on which a statutory instrument was laid before parliament",
+    "type": "date"
+  },
+
+  "sift_end_date": {
+    "description": "The date on which sifting of a statutory instrument ends",
+    "type": "date"
   }
 }
