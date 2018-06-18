@@ -2,6 +2,23 @@ require 'rummager'
 
 namespace :delete do
   desc "
+  Delete a single content search result
+  Usage
+  LINK=/path/of/result rake delete:result
+  "
+  task :result do
+    link = ENV.fetch("LINK")
+
+    index = SearchConfig.instance.content_index
+    raw_result = index.get_document_by_link(link)
+
+    raise "No document found with link #{link}." unless raw_result
+
+    index = search_server.index(raw_result['real_index_name'])
+    index.delete(raw_result['_type'], raw_result['_id'])
+  end
+
+  desc "
   Delete duplicates with the content IDs and/or links provided
   Usage
   TYPE_TO_DELETE=edition CONTENT_IDS=id1,id2 rake delete:duplicates
