@@ -35,11 +35,18 @@ module Search
           slug content_id
           link title acronym
           organisation_type
+          organisation_closed_state
           organisation_state
           logo_formatted_title
           organisation_brand
           organisation_crest
           logo_url
+          closed_at public_timestamp
+          analytics_identifier
+          child_organisations
+          parent_organisations
+          superseded_organisations
+          superseding_organisations
         }
       )
     end

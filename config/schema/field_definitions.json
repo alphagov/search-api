@@ -169,6 +169,11 @@
     "description": "End date for topical content. Assume null means in the past for topical event pages."
   },
 
+  "closed_at": {
+    "type": "date",
+    "description": "Closing date for closed organisations."
+  },
+
   "latest_change_note": {
     "description": "Note indicating what changed in the last major revision.",
     "type": "unsearchable_text"
@@ -182,6 +187,11 @@
   "acronym": {
     "description": "Acronym associated with the page title. Used for organisation pages.",
     "type": "searchable_text"
+  },
+
+  "analytics_identifier": {
+    "description": "A unique identifier used for analytics.",
+    "type": "identifier"
   },
 
   "attachments": {
@@ -232,6 +242,26 @@
     "type": "identifier"
   },
 
+  "child_organisations": {
+    "description": "A list of organisations that are children of the organisation.",
+    "type": "identifiers"
+  },
+
+  "parent_organisations": {
+    "description": "A list of organisations that are parents of the organisation.",
+    "type": "identifiers"
+  },
+
+  "superseded_organisations": {
+    "description": "A list of organisations that are superseded by the organisation.",
+    "type": "identifiers"
+  },
+
+  "superseding_organisations": {
+    "description": "A list of organisations that supersede the organisation.",
+    "type": "identifiers"
+  },
+
   "organisation_brand": {
     "description": "The branding (controls the colour) of the organisation logo",
     "type": "identifier"
@@ -244,6 +274,11 @@
 
   "organisation_state": {
     "description": "Status of an organisation page on GOV.UK: {live, joining, exempt, transitioning, closed, devolved}",
+    "type": "identifier"
+  },
+
+  "organisation_closed_state": {
+    "description": "Status of a closed organisation page on GOV.UK: {no_longer_exists, replaced, split, merged, changed_name, left_gov, devolved}",
     "type": "identifier"
   },
 
