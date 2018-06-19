@@ -1,7 +1,10 @@
 {
   "fields": [
     "acronym",
+    "analytics_identifier",
     "attachments",
+    "child_organisations",
+    "closed_at",
     "detailed_format",
     "display_type",
     "document_collections",
@@ -20,10 +23,12 @@
     "metadata",
     "operational_field",
     "organisation_brand",
+    "organisation_closed_state",
     "organisation_crest",
     "organisation_state",
     "organisation_type",
     "organisations",
+    "parent_organisations",
     "people",
     "policies",
     "policy_areas",
@@ -34,6 +39,8 @@
     "search_format_types",
     "slug",
     "specialist_sectors",
+    "superseded_organisations",
+    "superseding_organisations",
     "start_date",
     "statistics_announcement_state",
     "world_locations"
