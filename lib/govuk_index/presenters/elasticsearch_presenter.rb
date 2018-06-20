@@ -52,6 +52,7 @@ module GovukIndex
         hmrc_manual_section_id:              common_fields.section_id,
         indexable_content:                   indexable.indexable_content,
         industries:                          specialist.industries,
+        regions:                             specialist.regions,
         is_withdrawn:                        common_fields.is_withdrawn,
         issued_date:                         specialist.issued_date,
         land_use:                            specialist.land_use,
