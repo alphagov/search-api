@@ -145,24 +145,33 @@ module Indexer
     end
 
     def parts_of_taxonomy_for_all_taxons(links)
-      links.fetch("taxons", []).flat_map { |taxon_hash| parts_of_taxonomy(taxon_hash) }
+      links.fetch("taxons", []).flat_map do |taxon_hash|
+        parts_of_taxonomy(taxon_hash)
+      end
     end
 
     def parts_of_taxonomy(taxon_hash)
       parents = [taxon_hash["content_id"]]
 
-      direct_parents = taxon_hash.dig("links", "parent_taxons")
-      while direct_parents
+      direct_parents = direct_parent_taxons(taxon_hash)
+
+      while direct_parents && !direct_parents.empty?
         # There should not be more than one parent for a taxon. If there is,
         # make an arbitrary choice.
         direct_parent = direct_parents.first
 
         parents << direct_parent["content_id"]
 
-        direct_parents = direct_parent["links"]["parent_taxons"]
+        direct_parents = direct_parent_taxons(direct_parent)
       end
 
       parents.reverse
+    end
+
+    def direct_parent_taxons(taxon)
+      taxon.dig("links", "parent_taxons") ||
+        taxon.dig("links", "root_taxon") ||
+        []
     end
 
     def content_ids_for(links, link_type)
