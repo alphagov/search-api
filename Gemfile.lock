@@ -35,7 +35,7 @@ GEM
     elasticsearch-transport (2.0.2)
       faraday
       multi_json
-    faraday (0.15.0)
+    faraday (0.15.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.23)
     gds-api-adapters (52.6.0)
@@ -52,7 +52,7 @@ GEM
       rubocop (~> 0.52.0)
       rubocop-rspec (~> 1.19.0)
       scss_lint
-    govuk_app_config (1.5.0)
+    govuk_app_config (1.5.1)
       logstasher (~> 1.2.2)
       sentry-raven (~> 2.7.1)
       statsd-ruby (~> 1.4.0)
@@ -186,7 +186,7 @@ GEM
     scss_lint (0.57.0)
       rake (>= 0.9, < 13)
       sass (~> 3.5.5)
-    sentry-raven (2.7.3)
+    sentry-raven (2.7.4)
       faraday (>= 0.7.6, < 1.0)
     sidekiq (5.0.5)
       concurrent-ruby (~> 1.0)
@@ -243,7 +243,7 @@ DEPENDENCIES
   gds-api-adapters (~> 52.6)
   govuk-content-schema-test-helpers (~> 1.6.1)
   govuk-lint (~> 3.8.0)
-  govuk_app_config (~> 1.5.0)
+  govuk_app_config (~> 1.5.1)
   govuk_document_types (~> 0.4.0)
   govuk_message_queue_consumer (~> 3.2.0)
   govuk_schemas (~> 3.1.0)
