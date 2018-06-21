@@ -680,5 +680,10 @@
   "sift_end_date": {
     "description": "The date on which sifting of a statutory instrument ends",
     "type": "date"
+  },
+
+  "withdrawn_date": {
+    "description": "The date on which a statutory instrument was withdrawn",
+    "type": "date"
   }
 }
