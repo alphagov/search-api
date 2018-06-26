@@ -1,7 +1,6 @@
 {
   "fields": [
     "country",
-    "first_published_at",
     "dfid_authors",
     "dfid_review_status",
     "dfid_theme",

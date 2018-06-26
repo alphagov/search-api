@@ -1,7 +1,6 @@
 {
   "fields": [
-    "therapeutic_area",
-    "first_published_at"
+    "therapeutic_area"
   ],
 
   "expanded_search_result_fields": {
