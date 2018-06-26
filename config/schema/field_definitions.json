@@ -648,11 +648,6 @@
     "type": "searchable_identifiers"
   },
 
-  "regions": {
-    "description": "The regions served by a business finance support scheme",
-    "type": "searchable_identifiers"
-  },
-
   "types_of_support": {
     "description": "The types of support provided by a business finance support scheme",
     "type": "searchable_identifiers"
