@@ -3,7 +3,8 @@
     "laid_date",
     "sift_end_date",
     "sifting_status",
-    "subject"
+    "subject",
+    "withdrawn_date"
   ],
 
   "expanded_search_result_fields": {
