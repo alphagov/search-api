@@ -52,20 +52,29 @@ migrated:
   - /world/afghanistan
   - /world/albania
   - /world/algeria
+  - /world/american-samoa
+  - /world/andorra
   - /world/angola
   - /world/anguilla
+  - /world/antigua-and-barbuda
   - /world/argentina
   - /world/armenia
+  - /world/aruba
   - /world/australia
   - /world/austria
   - /world/azerbaijan
+  - /world/bahamas
   - /world/bahrain
   - /world/bangladesh
   - /world/barbados
   - /world/belarus
   - /world/belgium
   - /world/belize
+  - /world/benin
+  - /world/bermuda
+  - /world/bhutan
   - /world/bolivia
+  - /world/bonaire-st-eustatius-saba
   - /world/bosnia-and-herzegovina
   - /world/botswana
   - /world/brazil
@@ -73,37 +82,60 @@ migrated:
   - /world/british-virgin-islands
   - /world/brunei
   - /world/bulgaria
+  - /world/burkina-faso
   - /world/burma
+  - /world/burundi
   - /world/cambodia
   - /world/cameroon
   - /world/canada
+  - /world/cape-verde
   - /world/cayman-islands
+  - /world/central-african-republic
+  - /world/chad
   - /world/chile
   - /world/china
   - /world/colombia
+  - /world/comoros
+  - /world/congo
   - /world/costa-rica
+  - /world/cote-d-ivoire
   - /world/croatia
   - /world/cuba
+  - /world/curacao
   - /world/cyprus
   - /world/czech-republic
   - /world/democratic-republic-of-the-congo
   - /world/denmark
+  - /world/djibouti
+  - /world/dominica
   - /world/dominican-republic
   - /world/ecuador
   - /world/egypt
+  - /world/el-salvador
+  - /world/equatorial-guinea
   - /world/eritrea
   - /world/estonia
   - /world/ethiopia
+  - /world/falkland-islands
   - /world/fiji
   - /world/finland
   - /world/france
+  - /world/french-guiana
+  - /world/french-polynesia
+  - /world/gabon
   - /world/gambia
   - /world/georgia
   - /world/germany
   - /world/ghana
+  - /world/gibraltar
   - /world/greece
+  - /world/grenada
+  - /world/guadeloupe
   - /world/guatemala
+  - /world/guinea
+  - /world/guinea-bissau
   - /world/guyana
+  - /world/haiti
   - /world/holy-see
   - /world/honduras
   - /world/hong-kong
@@ -121,14 +153,20 @@ migrated:
   - /world/jordan
   - /world/kazakhstan
   - /world/kenya
+  - /world/kiribati
   - /world/kosovo
   - /world/kuwait
+  - /world/kyrgyzstan
   - /world/laos
   - /world/latvia
   - /world/lebanon
+  - /world/lesotho
+  - /world/liberia
   - /world/libya
+  - /world/liechtenstein
   - /world/lithuania
   - /world/luxembourg
+  - /world/macao
   - /world/macedonia
   - /world/madagascar
   - /world/malawi
@@ -136,33 +174,50 @@ migrated:
   - /world/maldives
   - /world/mali
   - /world/malta
+  - /world/marshall-islands
+  - /world/martinique
+  - /world/mauritania
   - /world/mauritius
+  - /world/mayotte
   - /world/mexico
+  - /world/micronesia
   - /world/moldova
+  - /world/monaco
   - /world/mongolia
   - /world/montenegro
   - /world/montserrat
   - /world/morocco
   - /world/mozambique
   - /world/namibia
+  - /world/nauru
   - /world/nepal
   - /world/netherlands
+  - /world/new-caledonia
   - /world/new-zealand
+  - /world/nicaragua
+  - /world/niger
   - /world/nigeria
   - /world/north-korea
   - /world/norway
   - /world/oman
   - /world/pakistan
+  - /world/palau
   - /world/panama
   - /world/papua-new-guinea
+  - /world/paraguay
   - /world/peru
   - /world/philippines
+  - /world/pitcairn-island
   - /world/poland
   - /world/portugal
   - /world/qatar
+  - /world/reunion
   - /world/romania
   - /world/russia
   - /world/rwanda
+  - /world/samoa
+  - /world/san-marino
+  - /world/sao-tome-and-principe
   - /world/saudi-arabia
   - /world/senegal
   - /world/serbia
@@ -174,11 +229,21 @@ migrated:
   - /world/solomon-islands
   - /world/somalia
   - /world/south-africa
+  - /world/south-georgia-and-south-sandwich-islands
   - /world/south-korea
   - /world/south-sudan
   - /world/spain
   - /world/sri-lanka
+  - /world/st-helena-ascension-and-tristan-da-cunha
+  - /world/st-kitts-and-nevis
+  - /world/st-lucia
+  - /world/st-maarten
+  - /world/st-martin
+  - /world/st-pierre-and-miquelon
+  - /world/st-vincent-and-the-grenadines
   - /world/sudan
+  - /world/suriname
+  - /world/swaziland
   - /world/sweden
   - /world/switzerland
   - /world/syria
@@ -186,95 +251,30 @@ migrated:
   - /world/tajikistan
   - /world/tanzania
   - /world/thailand
+  - /world/the-occupied-palestinian-territories
   - /world/timor-leste
+  - /world/togo
+  - /world/tonga
   - /world/trinidad-and-tobago
   - /world/tunisia
   - /world/turkey
   - /world/turkmenistan
   - /world/turks-and-caicos-islands
+  - /world/tuvalu
   - /world/uganda
   - /world/ukraine
   - /world/united-arab-emirates
   - /world/uruguay
   - /world/usa
   - /world/uzbekistan
+  - /world/vanuatu
   - /world/venezuela
   - /world/vietnam
+  - /world/wallis-and-futuna
+  - /world/western-sahara
   - /world/yemen
   - /world/zambia
   - /world/zimbabwe
-  - /world/andorra
-  - /world/antigua-and-barbuda
-  - /world/bahamas
-  - /world/benin
-  - /world/bhutan
-  - /world/burkina-faso
-  - /world/cape-verde
-  - /world/comoros
-  - /world/congo
-  - /world/cote-d-ivoire
-  - /world/djibouti
-  - /world/dominica
-  - /world/equatorial-guinea
-  - /world/grenada
-  - /world/guinea-bissau
-  - /world/haiti
-  - /world/kiribati
-  - /world/lesotho
-  - /world/liberia
-  - /world/liechtenstein
-  - /world/macao
-  - /world/marshall-islands
-  - /world/micronesia
-  - /world/nauru
-  - /world/nicaragua
-  - /world/niger
-  - /world/the-occupied-palestinian-territories
-  - /world/palau
-  - /world/paraguay
-  - /world/samoa
-  - /world/sao-tome-and-principe
-  - /world/st-kitts-and-nevis
-  - /world/st-vincent-and-the-grenadines
-  - /world/suriname
-  - /world/swaziland
-  - /world/togo
-  - /world/tuvalu
-  - /world/vanuatu
-  - /world/bermuda
-  - /world/burundi
-  - /world/el-salvador
-  - /world/falkland-islands
-  - /world/guinea
-  - /world/st-helena-ascension-and-tristan-da-cunha
-  - /world/st-lucia
-  - /world/kyrgyzstan
-  - /world/pitcairn-island
-  - /world/chad
-  - /world/mauritania
-  - /world/american-samoa
-  - /world/aruba
-  - /world/bonaire-st-eustatius-saba
-  - /world/central-african-republic
-  - /world/curacao
-  - /world/french-guiana
-  - /world/french-polynesia
-  - /world/gabon
-  - /world/gibraltar
-  - /world/guadeloupe
-  - /world/martinique
-  - /world/mayotte
-  - /world/monaco
-  - /world/new-caledonia
-  - /world/reunion
-  - /world/san-marino
-  - /world/south-georgia-and-south-sandwich-islands
-  - /world/st-maarten
-  - /world/st-pierre-and-miquelon
-  - /world/tonga
-  - /world/wallis-and-futuna
-  - /world/western-sahara
-  - /world/st-martin
 - travel_advice
 - travel_advice_index
 - special_route:
