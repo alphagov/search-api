@@ -5,7 +5,7 @@ class SearchParameterParser < BaseParameterParser
     expanded_topics
     expanded_organisations
   ].freeze
-  MAX_RESULTS = 1000
+  MAX_RESULTS = 1500
 
   def initialize(params, schema)
     @schema = schema

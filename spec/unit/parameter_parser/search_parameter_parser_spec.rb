@@ -177,9 +177,9 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about an overly large count parameter" do
-    p = described_class.new({ "count" => %w(1001) }, @schema)
+    p = described_class.new({ "count" => %w(1501) }, @schema)
 
-    expect(%{Maximum result set size (as specified in 'count') is 1000}).to eq(p.error)
+    expect(%{Maximum result set size (as specified in 'count') is 1500}).to eq(p.error)
     expect(p).not_to be_valid
     expect(expected_params(count: 10)).to eq(p.parsed_params)
   end
