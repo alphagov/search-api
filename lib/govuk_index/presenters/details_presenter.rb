@@ -6,6 +6,7 @@ module GovukIndex
 
     set_payload_method :details
 
+    delegate_to_payload :image
     delegate_to_payload :licence_identifier
     delegate_to_payload :licence_short_description
     delegate_to_payload :url
