@@ -8,6 +8,7 @@
     "content_store_document_type",
     "description",
     "email_document_supertype",
+    "first_published_at",
     "format",
     "government_document_supertype",
     "indexable_content",
