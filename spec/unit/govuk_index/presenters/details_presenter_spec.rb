@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe GovukIndex::DetailsPresenter do
-  subject { described_class.new(details: details, format: format) }
+  subject(:presented_details) { described_class.new(details: details, format: format) }
 
   context "licence format" do
     let(:format) { 'licence' }
@@ -20,8 +20,8 @@ RSpec.describe GovukIndex::DetailsPresenter do
     }
 
     it "should extract licence specific fields" do
-      expect(subject.licence_identifier).to eq(details["licence_identifier"])
-      expect(subject.licence_short_description).to eq(details["licence_short_description"])
+      expect(presented_details.licence_identifier).to eq(details["licence_identifier"])
+      expect(presented_details.licence_short_description).to eq(details["licence_short_description"])
     end
   end
 
@@ -35,8 +35,8 @@ RSpec.describe GovukIndex::DetailsPresenter do
         }
       }
 
-      it "should have no image" do
-        expect(subject.image).to be nil
+      it "has no image" do
+        expect(presented_details.image).to be nil
       end
     end
 
@@ -52,8 +52,8 @@ RSpec.describe GovukIndex::DetailsPresenter do
         }
       }
 
-      it "should have an image" do
-        expect(subject.image).to eq({
+      it "has an image" do
+        expect(presented_details.image).to eq({
           "alt_text" => "Christmas",
           "url" => "https://assets.publishing.service.gov.uk/christmas.jpg"
         })
@@ -68,7 +68,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       let(:details) { {} }
 
       it "should have no latest change note" do
-        expect(subject.latest_change_note).to be_nil
+        expect(presented_details.latest_change_note).to be_nil
       end
     end
 
@@ -78,7 +78,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       }
 
       it "should have no latest change note" do
-        expect(subject.latest_change_note).to be_nil
+        expect(presented_details.latest_change_note).to be_nil
       end
     end
 
@@ -106,7 +106,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       }
 
       it "should combine the title and description from the most recent change note" do
-        expect(subject.latest_change_note).to eq("Change 3 in Manual section B")
+        expect(presented_details.latest_change_note).to eq("Change 3 in Manual section B")
       end
     end
   end
