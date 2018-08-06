@@ -64,6 +64,11 @@
     "type": "searchable_text"
   },
 
+  "image": {
+    "description": "Information about the image for this page including a link and alternative text.",
+    "type": "opaque_object"
+  },
+
   "link": {
     "description": "The link to the document.  This is usually the path component of the URL of the document, including a leading slash, but sometimes omits the leading slash, and is sometimes an absolute URL of related content which does not appear on GOV.UK",
     "type": "identifier"
