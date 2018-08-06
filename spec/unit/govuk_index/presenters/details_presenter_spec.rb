@@ -25,6 +25,41 @@ RSpec.describe GovukIndex::DetailsPresenter do
     end
   end
 
+  context "images" do
+    context "document without an image" do
+      let(:format) { 'answer' }
+
+      let(:details) {
+        {
+          "body" => "<p>Gallwch ddefnyddio’r gwasanaethau canlynol gan Gyllid a Thollau Ei Mawrhydi </p>\n\n",
+          "external_related_links" => []
+        }
+      }
+
+      it "has no image" do
+        expect(subject.image_url).to be nil
+      end
+    end
+
+    context "document with an image" do
+      let(:format) { 'news_article' }
+
+      let(:details) {
+        {
+          "image" => {
+            "alt_text" => "Christmas",
+            "url" => "https://assets.publishing.service.gov.uk/christmas.jpg"
+          },
+          "body" => "<div class=\"govspeak\"><p>We wish you a merry Christmas.</p></div>",
+        }
+      }
+
+      it "has an image" do
+        expect(subject.image_url).to eq("https://assets.publishing.service.gov.uk/christmas.jpg")
+      end
+    end
+  end
+
   context "hmrc_manual format" do
     let(:format) { "hmrc_manual" }
 
