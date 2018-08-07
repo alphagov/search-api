@@ -227,6 +227,11 @@
     "type": "identifiers"
   },
 
+  "image_url": {
+    "description": "The URL of the image associated with an edition",
+    "type": "identifier"
+  },
+
   "release_timestamp": {
     "description": "When statistics will be released, for statistics announcement pages.",
     "type": "date"

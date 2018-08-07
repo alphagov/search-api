@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe GovukIndex::DetailsPresenter do
-  subject { described_class.new(details: details, format: format) }
+  subject(:presented_details) { described_class.new(details: details, format: format) }
 
   context "licence format" do
     let(:format) { 'licence' }
@@ -20,8 +20,43 @@ RSpec.describe GovukIndex::DetailsPresenter do
     }
 
     it "should extract licence specific fields" do
-      expect(subject.licence_identifier).to eq(details["licence_identifier"])
-      expect(subject.licence_short_description).to eq(details["licence_short_description"])
+      expect(presented_details.licence_identifier).to eq(details["licence_identifier"])
+      expect(presented_details.licence_short_description).to eq(details["licence_short_description"])
+    end
+  end
+
+  context "images" do
+    context "document without an image" do
+      let(:format) { 'answer' }
+
+      let(:details) {
+        {
+          "body" => "<p>Gallwch ddefnyddio’r gwasanaethau canlynol gan Gyllid a Thollau Ei Mawrhydi </p>\n\n",
+          "external_related_links" => []
+        }
+      }
+
+      it "has no image" do
+        expect(presented_details.image_url).to be nil
+      end
+    end
+
+    context "document with an image" do
+      let(:format) { 'news_article' }
+
+      let(:details) {
+        {
+          "image" => {
+            "alt_text" => "Christmas",
+            "url" => "https://assets.publishing.service.gov.uk/christmas.jpg"
+          },
+          "body" => "<div class=\"govspeak\"><p>We wish you a merry Christmas.</p></div>",
+        }
+      }
+
+      it "has an image" do
+        expect(presented_details.image_url).to eq("https://assets.publishing.service.gov.uk/christmas.jpg")
+      end
     end
   end
 
@@ -32,7 +67,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       let(:details) { {} }
 
       it "should have no latest change note" do
-        expect(subject.latest_change_note).to be_nil
+        expect(presented_details.latest_change_note).to be_nil
       end
     end
 
@@ -42,7 +77,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       }
 
       it "should have no latest change note" do
-        expect(subject.latest_change_note).to be_nil
+        expect(presented_details.latest_change_note).to be_nil
       end
     end
 
@@ -70,7 +105,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       }
 
       it "should combine the title and description from the most recent change note" do
-        expect(subject.latest_change_note).to eq("Change 3 in Manual section B")
+        expect(presented_details.latest_change_note).to eq("Change 3 in Manual section B")
       end
     end
   end

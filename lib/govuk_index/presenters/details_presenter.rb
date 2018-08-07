@@ -35,6 +35,10 @@ module GovukIndex
       service_manual || details.dig("manual", "base_path")
     end
 
+    def image_url
+      details.dig("image", "url")
+    end
+
   private
 
     def service_manual
