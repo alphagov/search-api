@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "activesupport", "~> 5.2.0"
+gem "activesupport", "~> 5.2.1"
 gem "elasticsearch", "~> 2"
 gem "gds-api-adapters", "~> 52.7"
 gem "govuk_app_config", "~> 1.8.0"
