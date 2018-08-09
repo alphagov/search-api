@@ -88,6 +88,7 @@ module Indexer
         # we can do at this point. There doesn't seem to be any compelling reason to record
         # this in Sentry as there is no bug to fix.
         @logger.error("HTTP not found error fetching expanded links for #{content_id}: #{e.message}")
+        nil
       rescue GdsApi::HTTPErrorResponse => e
         @logger.error("HTTP error fetching expanded links for #{content_id}: #{e.message}")
         # We capture all GdsApi HTTP exceptions here so that we can send them
