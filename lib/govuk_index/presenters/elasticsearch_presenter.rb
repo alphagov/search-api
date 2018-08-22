@@ -119,6 +119,10 @@ module GovukIndex
       common_fields.link
     end
 
+    def publishing_app
+      common_fields.publishing_app
+    end
+
     def valid!
       if format == "recommended-link"
         details.url || raise(MissingExternalUrl, "url missing from details section")
