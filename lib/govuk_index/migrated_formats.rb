@@ -5,7 +5,7 @@ module GovukIndex
     def non_indexable?(format, path, app)
       non_indexable_formats[format] &&
         (non_indexable_formats[format] == :all || non_indexable_formats[format].include?(path) ||
-          published_by_whitehall?(format, app))
+          published_by_non_indexable_app?(format, app))
     end
 
     def non_indexable_formats
@@ -14,7 +14,7 @@ module GovukIndex
 
     def indexable?(format, path, app)
       indexable_formats[format] && (indexable_formats[format] == :all ||
-        indexable_formats[format].include?(path) || published_by_content_publisher?(format, app))
+        indexable_formats[format].include?(path) || published_by_indexable_app?(format, app))
     end
 
     def indexable_formats
@@ -42,14 +42,14 @@ module GovukIndex
       end
     end
 
-    def published_by_content_publisher?(format, app)
-      return false unless app == "content-publisher"
-      indexable_formats[format]["publishing_app"]&.include?("content-publisher")
+    def published_by_indexable_app?(format, app)
+      return false unless indexable_formats[format].is_a?(Hash)
+      indexable_formats[format]["publishing_app"] == app
     end
 
-    def published_by_whitehall?(format, app)
-      return false unless app == "whitehall"
-      non_indexable_formats[format]["publishing_app"]&.include?("whitehall")
+    def published_by_non_indexable_app?(format, app)
+      return false unless non_indexable_formats[format].is_a?(Hash)
+      non_indexable_formats[format]["publishing_app"] == app
     end
   end
 end
