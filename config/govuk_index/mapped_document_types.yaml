@@ -28,6 +28,7 @@ medical_safety_alert: medical_safety_alert # Specialist Publisher
 news_story: edition
 place: edition
 policy: policy # Policy Publisher
+press_release: edition
 raib_report: raib_report # Specialist Publisher
 residential_property_tribunal_decision: residential_property_tribunal_decision # Specialist Publisher
 service_manual_guide: service_manual_guide
