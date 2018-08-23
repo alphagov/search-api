@@ -5,6 +5,8 @@ migrated:
 # Contacts
 - contact
 # Content Publisher - formats not indexable when published by Whitehall
+- government_response:
+    publishing_app: content-publisher
 - news_story:
     publishing_app: content-publisher
 - press_release:
@@ -363,7 +365,8 @@ non_indexable:
 #- finder # migrated
 - foi_release
 - form
-- government_response
+- government_response: # indexable when published by Content Publisher
+    publishing_app: whitehall
 - guidance
 - html_publication
 - impact_assessment

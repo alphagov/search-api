@@ -13,6 +13,7 @@ employment_tribunal_decision: employment_tribunal_decision # Specialist Publishe
 esi_fund: european_structural_investment_fund # Specialist Publisher
 external_content: edition # Search Admin
 finder: edition # Specialist Publisher
+government_response: edition
 guide: edition
 help_page: edition
 hmrc_manual: hmrc_manual
