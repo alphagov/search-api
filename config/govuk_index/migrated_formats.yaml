@@ -9,6 +9,8 @@ migrated:
     publishing_app: content-publisher
 - press_release:
     publishing_app: content-publisher
+- world_news_story:
+    publishing_app: content-publisher
 # Publisher
 - answer
 - guide
@@ -412,6 +414,7 @@ non_indexable:
 - welsh_language_scheme
 - working_group
 - world_location
-- world_news_story
+- world_news_story: # indexable when published by Content Publisher
+    publishing_app: whitehall
 - worldwide_organisation
 - written_statement
