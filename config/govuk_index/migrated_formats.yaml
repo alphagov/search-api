@@ -48,6 +48,8 @@ migrated:
 - statutory_instrument
 - step_by_step_nav
 - task_list
+- news_story: # not indexable when published by Whitehall
+    publishing_app: content-publisher
 - taxon:
   - /world/afghanistan
   - /world/albania
@@ -369,7 +371,8 @@ non_indexable:
 - ministerial_role
 - national_statistics
 - national_statistics_announcement
-- news_story
+- news_story: # indexable when published by Content Publisher
+    publishing_app: whitehall
 - notice
 - official_statistics
 - official_statistics_announcement

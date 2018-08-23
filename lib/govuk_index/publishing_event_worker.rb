@@ -53,9 +53,9 @@ module GovukIndex
       if type_mapper.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{identifier}")
         processor.delete(presenter)
-      elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path)
+      elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path, presenter.publishing_app)
         logger.info("#{routing_key} -> BLACKLISTED #{identifier}")
-      elsif MigratedFormats.indexable?(presenter.format, presenter.base_path)
+      elsif MigratedFormats.indexable?(presenter.format, presenter.base_path, presenter.publishing_app)
         logger.info("#{routing_key} -> INDEX #{identifier}")
         processor.save(presenter)
       else
