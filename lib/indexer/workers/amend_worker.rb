@@ -6,6 +6,7 @@ module Indexer
       logger.info "Amending document '#{document_link}' in '#{index_name}'"
       logger.info "Amending fields #{updates.keys.join(', ')}"
       logger.debug "Amendments: #{updates}"
+      return if updates.empty?
       begin
         index(index_name).amend(document_link, updates)
       rescue SearchIndices::IndexLocked
