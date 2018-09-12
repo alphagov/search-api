@@ -9,7 +9,6 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     @directly_mapped_fields = %w(
       content_id
       email_document_supertype
-      first_published_at
       government_document_supertype
       navigation_document_supertype
       publishing_app
