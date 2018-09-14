@@ -32,6 +32,7 @@ module GovukIndex
     delegate_to_payload :hidden_indexable_content
     delegate_to_payload :industries
     delegate_to_payload :issued_date
+    delegate_to_payload :laid_date
     delegate_to_payload :land_use
     delegate_to_payload :location, convert_to_array: true
     delegate_to_payload :market_sector
@@ -41,6 +42,9 @@ module GovukIndex
     delegate_to_payload :railway_type
     delegate_to_payload :report_type, convert_to_array: true
     delegate_to_payload :registration
+    delegate_to_payload :sift_end_date
+    delegate_to_payload :sifting_status
+    delegate_to_payload :subject
     delegate_to_payload :therapeutic_area
     delegate_to_payload :tiers_or_standalone_items
     delegate_to_payload :tribunal_decision_categories
@@ -56,6 +60,7 @@ module GovukIndex
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type
     delegate_to_payload :will_continue_on
+    delegate_to_payload :withdrawn_date
 
     def initialize(metadata:)
       @metadata = metadata || {}
