@@ -39,6 +39,7 @@ migrated:
 - raib_report
 - residential_property_tribunal_decision
 - service_standard_report
+- statutory_instrument
 - tax_tribunal_decision
 - utaac_decision
 # Other
@@ -54,7 +55,6 @@ migrated:
 - service_manual_homepage
 - service_manual_service_standard
 - service_manual_topic
-- statutory_instrument
 - step_by_step_nav
 - task_list
 - taxon:
