@@ -33,6 +33,7 @@ migrated:
 - employment_appeal_tribunal_decision
 - employment_tribunal_decision
 - european_structural_investment_fund # use Rummager name as mapping occurs before validation check
+- export_health_certificate
 - international_development_fund
 - maib_report
 - medical_safety_alert

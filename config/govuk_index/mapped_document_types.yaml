@@ -11,6 +11,7 @@ drug_safety_update: drug_safety_update # Specialist Publisher
 employment_appeal_tribunal_decision: employment_appeal_tribunal_decision # Specialist Publisher
 employment_tribunal_decision: employment_tribunal_decision # Specialist Publisher
 esi_fund: european_structural_investment_fund # Specialist Publisher
+export_health_certificate: export_health_certificate # Specialist Publisher
 external_content: edition # Search Admin
 finder: edition # Specialist Publisher
 government_response: edition
