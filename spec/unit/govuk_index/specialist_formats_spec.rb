@@ -92,6 +92,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
       "country" => ["GB"],
       "dfid_authors" => ["Mr. Potato Head", "Mrs. Potato Head"],
       "dfid_theme" => ["infrastructure"],
+      "first_published_at" => "2016-04-28",
     }
     document = build_example_with_metadata(custom_metadata)
     expect_document_include_hash(document, custom_metadata)
