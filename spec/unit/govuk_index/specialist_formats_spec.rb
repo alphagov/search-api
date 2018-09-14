@@ -208,6 +208,22 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
     expect_document_include_hash(document, custom_metadata)
   end
 
+  it "statutory instrument" do
+    custom_metadata = {
+      "laid_date" => "2018-06-01",
+      "sift_end_date" => "2018-09-01",
+      "sifting_status" => "closed",
+      "withdrawn_date" => "2018-07-01",
+    }
+    special_formated_output = {
+      "laid_date" => "2018-06-01",
+      "sifting_status" => "closed",
+    }
+    document = build_example_with_metadata(custom_metadata)
+    expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
+  end
+
+
 
   it "tax tribunal decision" do
     custom_metadata = {

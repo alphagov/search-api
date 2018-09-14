@@ -55,6 +55,7 @@ module GovukIndex
         industries:                          specialist.industries,
         is_withdrawn:                        common_fields.is_withdrawn,
         issued_date:                         specialist.issued_date,
+        laid_date:                           specialist.laid_date,
         land_use:                            specialist.land_use,
         latest_change_note:                  details.latest_change_note,
         licence_identifier:                  details.licence_identifier,
@@ -82,6 +83,9 @@ module GovukIndex
         registration:                        specialist.registration,
         rendering_app:                       common_fields.rendering_app,
         report_type:                         specialist.report_type,
+        sift_end_date:                       specialist.sift_end_date,
+        sifting_status:                      specialist.sifting_status,
+        subject:                             specialist.subject,
         search_user_need_document_supertype: common_fields.search_user_need_document_supertype,
         slug:                                slug,
         specialist_sectors:                  expanded_links.specialist_sectors,
@@ -104,6 +108,7 @@ module GovukIndex
         value_of_funding:                    specialist.value_of_funding,
         vessel_type:                         specialist.vessel_type,
         will_continue_on:                    specialist.will_continue_on,
+        withdrawn_date:                      specialist.withdrawn_date,
       }.reject { |_, v| v.nil? }
     end
 
