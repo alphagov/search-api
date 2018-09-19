@@ -15,7 +15,7 @@ gem "rack", "~> 2.0"
 gem "rack-logstasher", "~> 1.0.0"
 gem "rake", "~> 12.3"
 gem 'sidekiq-limit_fetch'
-gem "sinatra", "~> 2.0.3"
+gem "sinatra", "~> 2.0.4"
 gem "statsd-ruby", "~> 1.4.0"
 gem "unf", "~> 0.1.4"
 gem "whenever", "~> 0.10.0"
