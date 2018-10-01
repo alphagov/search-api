@@ -5,14 +5,14 @@ module Search
     class NumberOutOfRange < Error; end
     class QueryTooLong < Error; end
 
-    attr_reader :index, :registries, :spelling_index, :suggestion_blacklist
+    attr_reader :index, :registries, :spelling_index, :suggestion_blocklist
 
     def initialize(registries:, content_index:, metasearch_index:, spelling_index:)
       @index = content_index
       @registries = registries
       @metasearch_index = metasearch_index
       @spelling_index = spelling_index
-      @suggestion_blacklist = SuggestionBlacklist.new(registries)
+      @suggestion_blocklist = SuggestionBlocklist.new(registries)
     end
 
     # Search and combine the indices and return a hash of ResultSet objects
@@ -58,7 +58,7 @@ module Search
     # Our solution is to run a separate query to fetch the suggestions, only using
     # the indices we want.
     def run_spell_checks(search_params)
-      return unless suggestion_blacklist.should_correct?(search_params.query)
+      return unless suggestion_blocklist.should_correct?(search_params.query)
 
       query = {
         size: 0,

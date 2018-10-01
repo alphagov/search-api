@@ -19,7 +19,7 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response['suggested_queries']).to eq(['search'])
   end
 
-  it "spell checking with blacklisted typo" do
+  it "spell checking with blocklisted typo" do
     commit_document("government_test",
       "title" => "Brexitt",
       "description" => "Brexitt",
