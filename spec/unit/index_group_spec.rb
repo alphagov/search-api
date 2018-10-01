@@ -3,7 +3,8 @@ require 'spec_helper'
 RSpec.describe SearchIndices::IndexGroup do
   ELASTICSEARCH_OK = {
     status: 200,
-    body: { "ok" => true, "acknowledged" => true }.to_json
+    body: { "ok" => true, "acknowledged" => true }.to_json,
+    headers: { "Content-Type" => "application/json" },
   }.freeze
 
   before do
@@ -25,11 +26,7 @@ RSpec.describe SearchIndices::IndexGroup do
     }.to_json
     stub = stub_request(:put, %r(#{SearchConfig.instance.base_uri}/government-.*))
       .with(body: expected_body)
-      .to_return(
-        status: 200,
-        headers: { 'Content-Type' => 'application/json' },
-        body: '{"ok": true, "acknowledged": true}'
-      )
+      .to_return(ELASTICSEARCH_OK)
     index = @server.index_group("government").create_index
 
     assert_requested(stub)
