@@ -33,12 +33,14 @@ migrated:
 - employment_appeal_tribunal_decision
 - employment_tribunal_decision
 - european_structural_investment_fund # use Rummager name as mapping occurs before validation check
+- export_health_certificate
 - international_development_fund
 - maib_report
 - medical_safety_alert
 - raib_report
 - residential_property_tribunal_decision
 - service_standard_report
+- statutory_instrument
 - tax_tribunal_decision
 - utaac_decision
 # Other
@@ -54,7 +56,6 @@ migrated:
 - service_manual_homepage
 - service_manual_service_standard
 - service_manual_topic
-- statutory_instrument
 - step_by_step_nav
 - task_list
 - taxon:

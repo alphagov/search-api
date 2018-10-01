@@ -690,5 +690,20 @@
   "withdrawn_date": {
     "description": "The date on which a statutory instrument was withdrawn",
     "type": "date"
+  },
+
+  "certificate_status": {
+    "description": "The active/on-hold state of the certificate",
+    "type": "identifiers"
+  },
+
+  "commodity_type": {
+    "description": "The type of the commodity being exported",
+    "type": "identifier"
+  },
+
+  "destination_country": {
+    "description": "The country being exported to",
+    "type": "identifiers"
   }
 }

@@ -12,11 +12,14 @@ module GovukIndex
     delegate_to_payload :business_stages
     delegate_to_payload :case_state, convert_to_array: true
     delegate_to_payload :case_type, convert_to_array: true
+    delegate_to_payload :certificate_status
     delegate_to_payload :closed_date
     delegate_to_payload :closing_date
+    delegate_to_payload :commodity_type
     delegate_to_payload :continuation_link
     delegate_to_payload :country
     delegate_to_payload :date_of_occurrence
+    delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
     delegate_to_payload :dfid_authors
     delegate_to_payload :dfid_document_type
