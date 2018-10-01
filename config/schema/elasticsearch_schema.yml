@@ -75,7 +75,7 @@ index:
       char_filter:
         strip_quotes:
           type: "pattern_replace"
-          pattern: "\'"
+          pattern: "'"
           replacement: ""
 
         normalize_quotes:
