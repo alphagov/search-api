@@ -1,5 +1,5 @@
 module Search
-  SuggestionBlacklist = Struct.new(:registries) do
+  SuggestionBlocklist = Struct.new(:registries) do
     STRINGS_WITH_DIGITS = /\d/
 
     def should_correct?(string)

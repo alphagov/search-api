@@ -124,7 +124,7 @@ require 'search/query_parameters'
 require 'search/registries'
 require 'search/registry'
 require 'search/result_set'
-require 'search/suggestion_blacklist'
+require 'search/suggestion_blocklist'
 require 'search/timed_cache'
 
 require 'index'

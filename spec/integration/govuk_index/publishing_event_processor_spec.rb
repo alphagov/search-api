@@ -113,7 +113,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       expect(document_b["_type"]).to eq("edition")
     end
 
-    it "skips blacklisted formats" do
+    it "skips blocklisted formats" do
       logger = double(info: true, debug: true)
       worker = GovukIndex::PublishingEventWorker.new
       allow(worker).to receive(:logger).and_return(logger)
@@ -123,16 +123,16 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
         payload: { document_type: "smart_answer", payload_version: 123 },
       )
 
-      expect(logger).to receive(:info).with("test.route -> BLACKLISTED #{random_example['base_path']} 'unmapped type'")
       worker.perform([['test.route', random_example]])
       commit_index 'govuk_test'
 
+      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} 'unmapped type'")
       expect {
         fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
       }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
     end
 
-    it "alerts on unknown formats - neither white or black listed" do
+    it "alerts on unknown formats - neither safe or block listed" do
       allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(false)
       allow(GovukIndex::MigratedFormats).to receive(:non_indexable?).and_return(false)
 
@@ -148,7 +148,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       worker.perform([['test.route', random_example]])
     end
 
-    it "will consider a format that is both white and black listed to be blacklisted" do
+    it "will consider a format that is both safe and block listed to be blocklisted" do
       allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
       allow(GovukIndex::MigratedFormats).to receive(:non_indexable?).and_return(true)
 
@@ -160,11 +160,11 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
         payload: { document_type: "help_page", payload_version: 123 },
       )
 
-      expect(logger).to receive(:info).with("test.route -> BLACKLISTED #{random_example['base_path']} edition")
       worker.perform([['test.route', random_example]])
+      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition")
     end
 
-    it "can black/white list specific base_paths within a format" do
+    it "can block/safe list specific base_paths within a format" do
       logger = double(info: true, debug: true)
       worker = GovukIndex::PublishingEventWorker.new
       allow(worker).to receive(:logger).and_return(logger)
@@ -178,10 +178,10 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
         payload: { document_type: "special_route", base_path: '/help', payload_version: 123 },
       )
 
-      expect(logger).to receive(:info).with("test.route -> BLACKLISTED #{homepage_example['base_path']} edition")
-      expect(logger).to receive(:info).with("test.route -> INDEX #{help_example['base_path']} edition")
       worker.perform([['test.route', homepage_example]])
       worker.perform([['test.route', help_example]])
+      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{homepage_example['base_path']} edition")
+      expect(logger).to have_received(:info).with("test.route -> INDEX #{help_example['base_path']} edition")
     end
   end
 

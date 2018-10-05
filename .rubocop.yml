@@ -33,7 +33,7 @@ Style/IfUnlessModifier:
 Style/ClassVars:
   Exclude:
     - 'app.rb'
-    - 'lib/search/suggestion_blacklist.rb'
+    - 'lib/search/suggestion_blocklist.rb'
 
 # Cannot use %i arrays as rake task arguments
 Style/SymbolArray:
@@ -51,4 +51,7 @@ RSpec/InstanceVariable:
   Enabled: false
 
 RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
   Enabled: false

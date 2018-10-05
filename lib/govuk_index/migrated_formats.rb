@@ -9,7 +9,7 @@ module GovukIndex
     end
 
     def non_indexable_formats
-      @blacklist_formats ||= convert_to_allowed_hash(data_file['non_indexable'])
+      @non_indexable_formats ||= convert_to_allowed_hash(data_file['non_indexable'])
     end
 
     def indexable?(format, path, app)
