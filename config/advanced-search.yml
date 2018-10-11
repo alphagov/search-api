@@ -49,6 +49,14 @@ details:
     display_as_result_metadata: false
     filterable: true
     allowed_values: []
+  - filter_key: organisations
+    key: organisations
+    name: Organisations
+    type: hidden
+    preposition: ''
+    display_as_result_metadata: false
+    filterable: true
+    allowed_values: []
   default_documents_per_page: 20
 routes:
 - path: "/search/advanced"
