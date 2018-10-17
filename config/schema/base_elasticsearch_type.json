@@ -34,6 +34,7 @@
     "taxons",
     "title",
     "topic_content_ids",
+    "topical_events",
     "updated_at",
     "user_journey_document_supertype"
   ]
