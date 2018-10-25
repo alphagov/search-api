@@ -67,6 +67,7 @@ class BaseParameterParser
     search_user_need_document_supertype
     specialist_sectors
     taxons
+    topical_events
     user_journey_document_supertype
     world_locations
   ).freeze
@@ -94,6 +95,7 @@ class BaseParameterParser
     rendering_app
     specialist_sectors
     taxons
+    topical_events
   ).freeze
 
   # The keys by which aggregates values can be sorted (using the "order" option).
@@ -137,6 +139,7 @@ class BaseParameterParser
     policy_areas
     world_locations
     topic_content_ids
+    topical_events
     expanded_topics
     organisation_content_ids
     expanded_organisations

@@ -104,6 +104,11 @@
     "type": "identifiers"
   },
 
+  "topical_events": {
+    "description": "The topical events related to this page. These are \"slug\" identifiers.",
+    "type": "identifiers"
+  },
+
   "policies": {
     "description": "Policy content related to the page (https://www.gov.uk/government/policies).",
     "type": "identifiers"
