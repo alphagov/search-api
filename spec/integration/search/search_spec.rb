@@ -272,9 +272,9 @@ RSpec.describe 'SearchTest' do
 
     expect(last_response.status).to eq(422)
     expect(
-        { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} }
+      parsed_response
     ).to eq(
-      parsed_response,
+      { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} }
     )
   end
 
@@ -283,9 +283,9 @@ RSpec.describe 'SearchTest' do
 
     expect(last_response.status).to eq(422)
     expect(
-        { "error" => %{Invalid "from" value "not-a-date" for parameter "opened_date" (expected ISO8601 date)} }
+      parsed_response
     ).to eq(
-      parsed_response,
+      { "error" => %{Invalid "from" value "not-a-date" for parameter "opened_date" (expected ISO8601 date)} }
     )
   end
 
@@ -313,7 +313,7 @@ RSpec.describe 'SearchTest' do
 
     # Keeps the organisation content ids
     expect(
-        first_result['organisation_content_ids']
+      first_result['organisation_content_ids']
     ).to eq(
       ['organisation-content-id']
     )
@@ -379,8 +379,7 @@ RSpec.describe 'SearchTest' do
                                                           "slug" => 'topic-magic',
                                                           "link" => '/magic-topic-site',
                                                           "title" => 'Magic topic'
-                                                        }
-                                                      )
+                                                        })
 
     # Keeps the topic content ids
     expect(first_result['topic_content_ids']).to eq(['topic-content-id'])
