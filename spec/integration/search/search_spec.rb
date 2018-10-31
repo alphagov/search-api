@@ -1,4 +1,9 @@
 require 'spec_helper'
+require_relative '../../support/search_integration_spec_helper'
+
+RSpec.configure do |c|
+  c.include SearchIntegrationSpecHelper
+end
 
 RSpec.describe 'SearchTest' do
   it "returns success" do
@@ -8,22 +13,18 @@ RSpec.describe 'SearchTest' do
   end
 
   it "spell checking with typo" do
-    commit_document("government_test",
-      "title" => "I am the result",
-      "description" => "This is a test search result",
-      "link" => "/some-nice-link"
-    )
+    commit_ministry_of_magic_document
 
-    get "/search?q=serch&suggest=spelling"
+    get "/search?q=ministry of magick&suggest=spelling"
 
-    expect(parsed_response['suggested_queries']).to eq(['search'])
+    expect(parsed_response['suggested_queries']).to eq(['ministry of magic'])
   end
 
   it "spell checking with blocklisted typo" do
     commit_document("government_test",
-      "title" => "Brexitt",
-      "description" => "Brexitt",
-      "link" => "/brexitt")
+                    "title" => "Brexitt",
+                    "description" => "Brexitt",
+                    "link" => "/brexitt")
 
     get "/search?q=brexit&suggest=spelling"
 
@@ -71,7 +72,7 @@ RSpec.describe 'SearchTest' do
     get "/search?order=title"
     lowercase_titles = result_titles.map(&:downcase)
 
-    expect(lowercase_titles).to eq(lowercase_titles.sort)
+    expect(lowercase_titles).to eq(["sample government document 1", "sample govuk document 1"])
   end
 
   it "filter by field" do
@@ -112,9 +113,9 @@ RSpec.describe 'SearchTest' do
     get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
     expect([
-      "/government-2",
-      "/govuk-2",
-    ]).to eq(result_links.sort)
+               "/government-2",
+               "/govuk-2",
+           ]).to eq(result_links.sort)
   end
 
   it "only contains fields which are present" do
@@ -171,7 +172,7 @@ RSpec.describe 'SearchTest' do
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      )
+        )
     ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
@@ -212,122 +213,50 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can filter from date" do
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-03-30", "link" => "/old-cma-with-date"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-03-30T23:00:00.000+00:00", "link" => "/old-cma-with-datetime"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-03-31", "link" => "/matching-cma-with-date"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-03-31T00:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
-      type: "cma_case")
-
+    commit_filter_from_date_documents
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
 
     expect(last_response).to be_ok
-    expect(parsed_response.fetch("results")).to contain_exactly(
-      hash_including("link" => "/matching-cma-with-date"),
-      hash_including("link" => "/matching-cma-with-datetime"),
-    )
+    expect_response_includes_matching_date_and_datetime_results(parsed_response.fetch("results"))
   end
 
   it "can filter from time" do
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-03-31", "link" => "/old-cma-with-date"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-03-31T13:59:59.000+00:00", "link" => "/old-cma-with-datetime"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-01", "link" => "/matching-cma-with-date"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-03-31T14:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
-      type: "cma_case")
-
+    commit_filter_from_time_documents
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31 14:00:00"
 
     expect(last_response).to be_ok
-    expect(parsed_response.fetch("results")).to contain_exactly(
-      hash_including("link" => "/matching-cma-with-date"),
-      hash_including("link" => "/matching-cma-with-datetime"),
-    )
+    expect_response_includes_matching_date_and_datetime_results(parsed_response.fetch("results"))
   end
 
   it "can filter to date" do
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-02", "link" => "/matching-cma-with-date"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-02T05:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-03", "link" => "/future-cma-with-date"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-03T00:00:00.000+00:00", "link" => "/future-cma-with-datetime"),
-      type: "cma_case")
+    commit_filter_to_date_documents
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
 
     expect(last_response).to be_ok
-    expect(parsed_response.fetch("results")).to contain_exactly(
-      hash_including("link" => "/matching-cma-with-date"),
-      hash_including("link" => "/matching-cma-with-datetime"),
-    )
+    expect_response_includes_matching_date_and_datetime_results(parsed_response.fetch("results"))
   end
 
   it "can filter to time" do
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-02", "link" => "/matching-cma-with-date"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-02T11:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-03", "link" => "/future-cma-with-date"),
-      type: "cma_case")
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2014-04-02T11:00:01.000+00:00", "link" => "/future-cma-with-datetime"),
-      type: "cma_case")
+    commit_filter_to_time_documents
 
     get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02 11:00:00"
 
     expect(last_response).to be_ok
-    expect(parsed_response.fetch("results")).to contain_exactly(
-      hash_including("link" => "/matching-cma-with-date"),
-      hash_including("link" => "/matching-cma-with-datetime"),
-    )
+    expect_response_includes_matching_date_and_datetime_results(parsed_response.fetch("results"))
   end
 
   it "can filter times in different time zones" do
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2017-07-01T11:20:00.000-03:00", "link" => "/cma-1"),
-      type: "cma_case")
+      type: "cma_case"
+    )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2017-07-02T00:15:00.000+01:00", "link" => "/cma-2"),
-      type: "cma_case")
+      type: "cma_case"
+    )
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2017-07-01 12:00,to:2017-07-01 23:30:00"
 
@@ -343,7 +272,7 @@ RSpec.describe 'SearchTest' do
 
     expect(last_response.status).to eq(422)
     expect(
-      { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} }
+        { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} }
     ).to eq(
       parsed_response,
     )
@@ -354,118 +283,58 @@ RSpec.describe 'SearchTest' do
 
     expect(last_response.status).to eq(422)
     expect(
-      { "error" => %{Invalid "from" value "not-a-date" for parameter "opened_date" (expected ISO8601 date)} }
+        { "error" => %{Invalid "from" value "not-a-date" for parameter "opened_date" (expected ISO8601 date)} }
     ).to eq(
       parsed_response,
     )
   end
 
   it "expands organisations" do
-    commit_document("government_test",
-      "title" => 'Advice on Treatment of Dragons',
-      "link" => '/dragon-guide',
-      "organisations" => ['/ministry-of-magic']
-    )
-
-    commit_document("government_test",
-      "slug" => '/ministry-of-magic',
-      "title" => 'Ministry of Magic',
-      "link" => '/ministry-of-magic-site',
-      "format" => 'organisation'
-    )
+    commit_treatment_of_dragons_document({ "organisations" => ['/ministry-of-magic'] })
+    commit_ministry_of_magic_document({ "format" => 'organisation' })
 
     get "/search.json?q=dragons"
 
     expect(first_result['organisations']).to eq(
       [{ "slug" => "/ministry-of-magic",
-         "link" => "/ministry-of-magic-site",
-         "title" => "Ministry of Magic" }]
+      "link" => "/ministry-of-magic-site",
+      "title" => "Ministry of Magic" }]
     )
   end
 
   it "expands organisations via content_id" do
-    commit_document(
-      "government_test",
-      "title" => 'Advice on Treatment of Dragons',
-      "link" => '/dragon-guide',
-      "organisation_content_ids" => ['organisation-content-id']
-    )
-
-    commit_document(
-      "government_test",
-      "content_id" => 'organisation-content-id',
-      "slug" => '/ministry-of-magic',
-      "title" => 'Ministry of Magic',
-      "link" => '/ministry-of-magic-site',
-      "format" => 'organisation'
-    )
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => ['organisation-content-id'] })
+    commit_ministry_of_magic_document({ "content_id" => 'organisation-content-id', "format" => 'organisation' })
 
     get "/search.json?q=dragons"
 
     # Adds a new key with the expanded organisations
-    expect(
-      first_result['expanded_organisations']
-    ).to eq(
-      [
-        {
-          "content_id" => 'organisation-content-id',
-          "slug" => '/ministry-of-magic',
-          "link" => '/ministry-of-magic-site',
-          "title" => 'Ministry of Magic',
-        }
-      ]
-    )
+    expect_result_includes_ministry_of_magic_for_key(first_result, 'expanded_organisations', "content_id" => 'organisation-content-id')
 
     # Keeps the organisation content ids
     expect(
-      first_result['organisation_content_ids']
+        first_result['organisation_content_ids']
     ).to eq(
       ['organisation-content-id']
     )
   end
 
   it "search for expanded organisations works" do
-    commit_document(
-      "government_test",
-      "title" => 'Advice on Treatment of Dragons',
-      "link" => '/dragon-guide',
-      "organisation_content_ids" => ['organisation-content-id']
-    )
-
-    commit_document(
-      "government_test",
-      "content_id" => 'organisation-content-id',
-      "slug" => '/ministry-of-magic',
-      "title" => 'Ministry of Magic',
-      "link" => '/ministry-of-magic-site',
-      "format" => 'organisation'
-    )
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => ['organisation-content-id'] })
+    commit_ministry_of_magic_document({ "content_id" => 'organisation-content-id', "format" => 'organisation' })
 
     get "/search.json?q=dragons&fields[]=expanded_organisations"
 
-    expect(first_result['expanded_organisations']).to be_truthy
+    expect_result_includes_ministry_of_magic_for_key(first_result, 'expanded_organisations', "content_id" => 'organisation-content-id')
   end
 
   it "filter by organisation content_ids works" do
-    commit_document(
-      "government_test",
-      "title" => 'Advice on Treatment of Dragons',
-      "link" => '/dragon-guide',
-      "organisation_content_ids" => ['organisation-content-id']
-    )
-
-    commit_document(
-      "government_test",
-      "content_id" => 'organisation-content-id',
-      "slug" => '/ministry-of-magic',
-      "title" => 'Ministry of Magic',
-      "link" => '/ministry-of-magic-site',
-      "format" => 'organisation'
-    )
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => ['organisation-content-id'] })
+    commit_ministry_of_magic_document({ "content_id" => 'organisation-content-id', "format" => 'organisation' })
 
     get "/search.json?filter_organisation_content_ids[]=organisation-content-id"
 
-    expect(first_result['expanded_organisations']).to be_truthy
+    expect_result_includes_ministry_of_magic_for_key(first_result, 'expanded_organisations', "content_id" => 'organisation-content-id')
   end
 
   it 'will filter by topical_events slug' do
@@ -493,114 +362,75 @@ RSpec.describe 'SearchTest' do
   end
 
   it "expands topics" do
-    commit_document("government_test",
-      "title" => 'Advice on Treatment of Dragons',
-      "link" => '/dragon-guide',
-      "topic_content_ids" => ['topic-content-id']
-    )
-
-    commit_document("govuk_test",
-      "content_id" => 'topic-content-id',
-      "slug" => 'topic-magic',
-      "title" => 'Magic topic',
-      "link" => '/magic-topic-site',
-      # TODO: we should rename this format to `topic` and update all apps
-      "format" => 'specialist_sector'
-    )
+    commit_treatment_of_dragons_document({ "topic_content_ids" => ['topic-content-id'] })
+    commit_ministry_of_magic_document({ "index" => 'govuk_test',
+                                        "content_id" => 'topic-content-id',
+                                        "slug" => 'topic-magic',
+                                        "title" => 'Magic topic',
+                                        "link" => '/magic-topic-site',
+                                        # TODO: we should rename this format to `topic` and update all apps
+                                        "format" => 'specialist_sector' })
 
     get "/search.json?q=dragons"
 
     # Adds a new key with the expanded topics
-    expect(
-      first_result['expanded_topics']
-    ).to eq(
-      [
-        {
-          "content_id" => 'topic-content-id',
-          "slug" => "topic-magic",
-          "link" => "/magic-topic-site",
-          "title" => "Magic topic"
-        }
-      ]
-    )
+    expect_result_includes_ministry_of_magic_for_key(first_result, 'expanded_topics', {
+                                                          "content_id" => 'topic-content-id',
+                                                          "slug" => 'topic-magic',
+                                                          "link" => '/magic-topic-site',
+                                                          "title" => 'Magic topic'
+                                                        }
+                                                      )
 
     # Keeps the topic content ids
     expect(first_result['topic_content_ids']).to eq(['topic-content-id'])
   end
 
   it "filter by topic content_ids works" do
-    commit_document("government_test",
-      "title" => 'Advice on Treatment of Dragons',
-      "link" => '/dragon-guide',
-      "topic_content_ids" => ['topic-content-id']
-    )
+    commit_treatment_of_dragons_document({ "topic_content_ids" => ['topic-content-id'] })
+    commit_ministry_of_magic_document({ "index" => 'govuk_test',
+                                        "content_id" => 'topic-content-id',
+                                        "slug" => 'topic-magic',
+                                        "title" => 'Magic topic',
+                                        "link" => '/magic-topic-site',
+                                        # TODO: we should rename this format to `topic` and update all apps
+                                        "format" => 'specialist_sector' })
 
-    commit_document("government_test",
-      "content_id" => 'topic-content-id',
-      "slug" => 'topic-magic',
-      "title" => 'Magic topic',
-      "link" => '/magic-topic-site',
-      # TODO: we should rename this format to `topic` and update all apps
-      "format" => 'specialist_sector'
-    )
     get "/search.json?filter_topic_content_ids[]=topic-content-id"
 
-    expect(first_result['expanded_topics']).to be_truthy
+    expect(first_result['topic_content_ids']).to eq(['topic-content-id'])
   end
 
-  it "withdrawn content" do
-    commit_document("government_test",
-      "title" => "I am the result",
-      "description" => "This is a test search result",
-      "link" => "/some-nice-link",
-      "is_withdrawn" => true
-    )
-
-    get "/search?q=test"
+  it "will not return withdrawn content" do
+    commit_treatment_of_dragons_document({ "is_withdrawn" => true })
+    get "/search?q=Advice on Treatment of Dragons"
     expect(parsed_response.fetch("total")).to eq(0)
   end
 
-  it "withdrawn content with flag" do
-    commit_document("government_test",
-      "title" => "I am the result",
-      "description" => "This is a test search result",
-      "link" => "/some-nice-link",
-      "is_withdrawn" => true
-    )
+  it "will return withdrawn content with flag" do
+    commit_treatment_of_dragons_document({ "is_withdrawn" => true })
 
-    get "/search?q=test&debug=include_withdrawn&fields[]=is_withdrawn"
+    get "/search?q=Advice on Treatment of Dragons&debug=include_withdrawn&fields[]=is_withdrawn"
     expect(parsed_response.fetch("total")).to eq(1)
     expect(parsed_response.dig("results", 0, "is_withdrawn")).to be true
   end
 
-  it "withdrawn content with flag with aggregations" do
-    commit_document("government_test",
-      "title" => "I am the result",
-      "organisation" => "Test Org",
-      "description" => "This is a test search result",
-      "link" => "/some-nice-link",
-      "is_withdrawn" => true
-    )
-
-    get "/search?q=test&debug=include_withdrawn&aggregate_mainstream_browse_pages=2"
+  it "will return withdrawn content with flag with aggregations" do
+    commit_treatment_of_dragons_document({ "is_withdrawn" => true })
+    get "/search?q=Advice on Treatment of Dragons&debug=include_withdrawn&aggregate_mainstream_browse_pages=2"
     expect(parsed_response.fetch("total")).to eq(1)
   end
 
-  it "show the query" do
+  it "will show the query" do
     get "/search?q=test&debug=show_query"
 
     expect(parsed_response.fetch("elasticsearch_query")).to be_truthy
   end
 
-  it "taxonomy can be returned" do
-    commit_document("government_test",
-      "title" => "I am the result",
-      "description" => "This is a test search result",
-      "link" => "/some-nice-link",
-      "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
-    )
+  it "can return the taxonomy" do
+    commit_ministry_of_magic_document("taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"])
 
-    get "/search?q=test&fields[]=taxons"
+    get "/search?q=Ministry of Magict&fields[]=taxons"
     expect(parsed_response.fetch("total")).to eq(1)
 
     taxons = parsed_response.dig("results", 0, "taxons")
@@ -608,36 +438,30 @@ RSpec.describe 'SearchTest' do
   end
 
   it "taxonomy can be filtered" do
-    commit_document("government_test",
-      "title" => "I am the result",
-      "description" => "This is a test search result",
-      "link" => "/some-nice-link",
-      "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"]
-    )
+    commit_ministry_of_magic_document("taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"])
+    commit_treatment_of_dragons_document("taxons" => ["some-other-taxon"])
 
     get "/search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
-    expect(
-      hash_including(
-        "title" => "I am the result",
-        "link" => "/some-nice-link",
-      )
-    ).to eq(
-      parsed_response.fetch("results").fetch(0),
-    )
+    expect_result_includes_ministry_of_magic_for_key(parsed_response, "results", {
+      "_id" => "/ministry-of-magic-site",
+      "document_type" => "edition",
+      "elasticsearch_type" => "edition",
+      "es_score" => nil,
+      "index" => "government_test",
+      "link" => "/ministry-of-magic-site"
+    })
   end
 
-  it "taxonomy can be filtered by part" do
-    commit_document("government_test",
-      "title" => "I am the result",
-      "description" => "This is a test search result",
-      "link" => "/some-nice-link",
-      "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
-      "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
+  it "can filter by part of taxonomy" do
+    commit_ministry_of_magic_document(
+      {
+        "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
+        "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
+      }
     )
-
     get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
     expect(last_response).to be_ok
@@ -664,7 +488,7 @@ RSpec.describe 'SearchTest' do
     expect(last_response.body).to eq('Query must be less than 1024 words')
   end
 
-private
+  private
 
   def first_result
     @first_result ||= parsed_response['results'].first
@@ -680,16 +504,5 @@ private
     @_result_titles ||= parsed_response["results"].map do |result|
       result["title"]
     end
-  end
-
-  def cma_case_attributes(attributes = {})
-    {
-      "title" => "Somewhat Unique CMA Case",
-      "link" => "/cma-cases/somewhat-unique-cma-case",
-      "indexable_content" => "Mergers of cheeses and faces",
-      "specialist_sectors" => ["farming"],
-      "opened_date" => "2014-04-01",
-      "format" => "cma_case",
-    }.merge(attributes)
   end
 end

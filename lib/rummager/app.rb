@@ -131,6 +131,30 @@ class Rummager < Sinatra::Application
     end
   end
 
+  # Batch return results for the GOV.UK site search
+  ["/batch_search.?:request_format?"].each do |path|
+    get path do
+      json_only
+
+      search_parameters = CGI::parse(request.query_string)
+      parsed_searches_parameters = Hash.new { |hash, key| hash[key] = {} }
+      search_parameters.each_pair do |parameter, values|
+        parts = parameter.scan(/(?<=\[)\w+(?=\])/m)
+        parsed_searches_parameters[parts[0]][parts[1]] = values
+      end
+      searches = parsed_searches_parameters.values
+      results = []
+      begin
+        results = SearchConfig.instance.run_batch_search(searches)
+      rescue BaseParameterParser::ParseError => e
+        status 422
+        return { error: e.error }.to_json
+      end
+
+      { results: results }.to_json
+    end
+  end
+
   # Perform an advanced search. Supports filters and pagination.
   #
   # Returns the first N results if no keywords or filters supplied

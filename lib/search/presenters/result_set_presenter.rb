@@ -30,7 +30,7 @@ module Search
     def present
       response = {
         results: presented_results,
-        total: es_response["hits"]["total"],
+        total: es_response.dig("hits","total"),
         start: search_params.start,
         search_params.aggregate_name => presented_aggregates,
         suggested_queries: suggested_queries
@@ -50,7 +50,7 @@ module Search
     end
 
     def presented_results
-      es_response["hits"]["hits"].map do |raw_result|
+      es_response.dig("hits","hits").to_a.map do |raw_result|
         ResultPresenter.new(raw_result.to_hash, @registries, @schema, search_params).present
       end
     end
