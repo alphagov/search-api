@@ -6,17 +6,7 @@ module QueryComponents
 
     def initialize(search_params = QueryParameters.new)
       super
-
-      @rejects = []
-      @filters = []
-
-      search_params.filters.each do |filter|
-        if filter.reject
-          @rejects << filter
-        else
-          @filters << filter
-        end
-      end
+      @rejects, @filters = search_params.filters.partition(&:reject)
     end
 
     def selected_queries(excluding = [])
@@ -50,7 +40,7 @@ module QueryComponents
         raise "Filter type not supported"
       end
 
-      combine_filters(es_filters, :or)
+      combine_by_should(es_filters)
     end
 
     def exclude_fields_from_filters(excluded_field_names, filters)
