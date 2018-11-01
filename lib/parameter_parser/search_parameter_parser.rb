@@ -7,6 +7,10 @@ class SearchParameterParser < BaseParameterParser
   ].freeze
   MAX_RESULTS = 1500
 
+  # We currently have 375,000 items in Rummager.  Anything over around 900_000
+  # results in 5XX errors
+  MAX_START = 900_000
+
   def initialize(params, schema)
     @schema = schema
     process(params)
@@ -30,7 +34,7 @@ private
     @used_params << "c"
 
     @parsed_params = {
-      start: single_integer_param("start", 0),
+      start: capped_start,
       count: capped_count,
       query: normalize_query(single_param("q"), "query"),
       similar_to: normalize_query(single_param("similar_to"), "similar_to"),
@@ -53,6 +57,16 @@ private
     unused_params = @params.keys - @used_params
     unless unused_params.empty?
       @errors << "Unexpected parameters: #{unused_params.join(', ')}"
+    end
+  end
+
+  def capped_start
+    specified_start = single_integer_param("start", 0)
+    if specified_start > MAX_START
+      @errors << "Maximum result set start point (as specified in 'start') is #{MAX_START}"
+      return 0
+    else
+      specified_start
     end
   end
 
