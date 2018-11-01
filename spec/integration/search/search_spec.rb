@@ -649,13 +649,6 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response.fetch("total")).to eq(1)
   end
 
-  it "return 400 response for integers out of range" do
-    get '/search.json?count=50&start=7599999900'
-
-    expect(last_response).to be_bad_request
-    expect(last_response.body).to eq('Integer value of 7599999900 exceeds maximum allowed')
-  end
-
   it "return 400 response for query term length too long" do
     terms = 1025.times.map { ('a'..'z').to_a.sample(5).join }.join(' ')
     get "/search.json?q=#{terms}"

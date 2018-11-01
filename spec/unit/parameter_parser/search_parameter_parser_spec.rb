@@ -136,6 +136,14 @@ RSpec.describe SearchParameterParser do
     expect(expected_params(start: 2)).to eq(p.parsed_params)
   end
 
+  it "complains about a start parameter that is too large" do
+    p = described_class.new({ "start" => %w(999999) }, @schema)
+
+    expect(p.error).to eq("Maximum result set start point (as specified in 'start') is 900000")
+    expect(p).not_to be_valid
+    expect(expected_params(start: 0)).to eq(p.parsed_params)
+  end
+
   it "understands the count parameter" do
     p = described_class.new({ "count" => ["5"] }, @schema)
 
