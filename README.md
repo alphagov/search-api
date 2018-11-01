@@ -64,6 +64,13 @@ To create an empty index for all rummager indices:
 
     RUMMAGER_INDEX=all bundle exec rake rummager:create_all_indices
 
+### Starting elasticsearch
+If you're running the GDS development VM you need to have elasticsearch running before running the tests or starting the application.
+
+Elasticsearch should start when you start up your dev VM, but if it doesn't, run:
+
+	sudo service elasticsearch-development.development start
+
 ### Running the test suite
 
     bundle exec rake
@@ -72,7 +79,7 @@ To create an empty index for all rummager indices:
 
 If you're running the GDS development VM:
 
-    cd /var/govuk/development && bundle exec bowl rummager
+    cd /var/govuk/govuk-puppet/development-vm && bundle exec bowl rummager
 
 Rummager should then be available at
 [rummager.dev.gov.uk](http://rummager.dev.gov.uk/search.json?q=taxes).
