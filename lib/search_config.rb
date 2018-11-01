@@ -61,6 +61,18 @@ class SearchConfig
     searcher.run(search_params)
   end
 
+  def run_batch_search(searches)
+    search_params = []
+    searches.each do |search|
+      parser = SearchParameterParser.new(search, combined_index_schema)
+      parser.validate!
+
+      search_params << Search::QueryParameters.new(parser.parsed_params)
+    end
+
+    batch_searcher.run(search_params)
+  end
+
   def metasearch_index
     search_server.index(metasearch_index_name)
   end
@@ -85,11 +97,6 @@ private
 
   def searcher
     @searcher ||= begin
-      registries = Search::Registries.new(
-        search_server,
-        self
-      )
-
       Search::Query.new(
         content_index: content_index,
         registries: registries,
@@ -97,6 +104,24 @@ private
         spelling_index: spelling_index
       )
     end
+  end
+
+  def batch_searcher
+    @batch_searcher ||= begin
+      Search::BatchQuery.new(
+        content_index: content_index,
+        registries: registries,
+        metasearch_index: metasearch_index,
+        spelling_index: spelling_index
+      )
+    end
+  end
+
+  def registries
+    @registries ||= Search::Registries.new(
+      search_server,
+      self
+    )
   end
 
   def combined_index_schema

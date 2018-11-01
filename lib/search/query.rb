@@ -25,7 +25,36 @@ module Search
 
       payload     = process_elasticsearch_errors { builder.payload }
       es_response = process_elasticsearch_errors { index.raw_search(payload) }
+      process_es_response(search_params, builder, payload, es_response)
+    end
 
+  private
+
+    attr_reader :metasearch_index
+
+    def content_index_names
+      # index is a IndexForSearch object, which combines all the content indexes
+      index.index_names
+    end
+
+    def fetch_spell_checks(search_params)
+      SpellCheckFetcher.new(search_params, registries).es_response
+    end
+
+    def process_elasticsearch_errors
+      yield
+    rescue Elasticsearch::Transport::Transport::Errors::InternalServerError => e
+      case e.message
+      when /Numeric value \(([0-9]*)\) out of range of/
+        raise(NumberOutOfRange, "Integer value of #{$1} exceeds maximum allowed")
+      when /maxClauseCount is set to/
+        raise(QueryTooLong, 'Query must be less than 1024 words')
+      else
+        raise
+      end
+    end
+
+    def process_es_response(search_params, builder, payload, es_response)
       example_fetcher = AggregateExampleFetcher.new(index, es_response, search_params, builder)
       aggregate_examples = example_fetcher.fetch
 
@@ -68,32 +97,6 @@ module Search
       response = spelling_index.raw_search(query)
 
       response['suggest']
-    end
-
-  private
-
-    attr_reader :metasearch_index
-
-    def content_index_names
-      # index is a IndexForSearch object, which combines all the content indexes
-      index.index_names
-    end
-
-    def fetch_spell_checks(search_params)
-      SpellCheckFetcher.new(search_params, registries).es_response
-    end
-
-    def process_elasticsearch_errors
-      yield
-    rescue Elasticsearch::Transport::Transport::Errors::InternalServerError => e
-      case e.message
-      when /Numeric value \(([0-9]*)\) out of range of/
-        raise(NumberOutOfRange, "Integer value of #{$1} exceeds maximum allowed")
-      when /maxClauseCount is set to/
-        raise(QueryTooLong, 'Query must be less than 1024 words')
-      else
-        raise
-      end
     end
   end
 end
