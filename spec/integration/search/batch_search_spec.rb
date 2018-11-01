@@ -483,15 +483,6 @@ RSpec.describe 'BatchSearchTest' do
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 
-  it "return 200 response for integers out of range" do
-    commit_ministry_of_magic_document
-    get build_get_url([{ count: 50, start: 7599999900 }, { q: "Ministry of Magic" }])
-    results = parsed_response['results']
-
-    expect(last_response).to be_ok
-    expect_results_includes_ministry_of_magic(results, 1, 0)
-  end
-
   it "return 400 response for query term length too long" do
     terms = 1025.times.map { ('a'..'z').to_a.sample(5).join }.join(' ')
     get build_get_url([{ q: terms }, { q: "Minstry of Magic" }])
