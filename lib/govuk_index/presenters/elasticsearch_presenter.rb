@@ -56,6 +56,7 @@ module GovukIndex
         image_url:                           details.image_url,
         indexable_content:                   indexable.indexable_content,
         industries:                          specialist.industries,
+        regions:                             specialist.regions,
         is_withdrawn:                        common_fields.is_withdrawn,
         issued_date:                         specialist.issued_date,
         laid_date:                           specialist.laid_date,

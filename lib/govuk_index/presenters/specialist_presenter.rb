@@ -43,6 +43,7 @@ module GovukIndex
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
     delegate_to_payload :railway_type
+    delegate_to_payload :regions
     delegate_to_payload :report_type, convert_to_array: true
     delegate_to_payload :registration
     delegate_to_payload :sift_end_date

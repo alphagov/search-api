@@ -112,10 +112,7 @@ RSpec.describe 'SearchTest' do
 
     get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
 
-    expect([
-               "/government-2",
-               "/govuk-2",
-           ]).to eq(result_links.sort)
+    expect(result_links.sort).to eq(["/government-2", "/govuk-2"])
   end
 
   it "only contains fields which are present" do
@@ -487,13 +484,13 @@ RSpec.describe 'SearchTest' do
   end
 
   def result_links
-    @_result_links ||= parsed_response["results"].map do |result|
+    @result_links ||= parsed_response["results"].map do |result|
       result["link"]
     end
   end
 
   def result_titles
-    @_result_titles ||= parsed_response["results"].map do |result|
+    @result_titles ||= parsed_response["results"].map do |result|
       result["title"]
     end
   end

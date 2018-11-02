@@ -3,6 +3,7 @@
     "business_sizes",
     "business_stages",
     "industries",
+    "regions",
     "types_of_support"
   ],
 
@@ -114,6 +115,20 @@
         "label": "Wholesale and retail",
         "value": "wholesale-and-retail"
       }
+    ],
+
+    "regions": [
+      {"label": "East Midlands", "value": "east-midlands"},
+      {"label": "Eastern", "value": "eastern"},
+      {"label": "London", "value": "london"},
+      {"label": "North East", "value": "north-east"},
+      {"label": "North West", "value": "north-west"},
+      {"label": "Northern Ireland", "value": "northern-ireland"},
+      {"label": "Scotland", "value": "scotland"},
+      {"label": "South East", "value": "south-east"},
+      {"label": "Wales", "value": "wales"},
+      {"label": "West Midlands", "value": "west-midlands"},
+      {"label": "Yorkshire and the Humber", "value": "yorkshire-and-the-humber"}
     ],
 
     "business_sizes": [
