@@ -29,8 +29,8 @@ RSpec.describe SearchParameterParser do
     }.merge(params)
   end
 
-  def text_filter(field_name, values, rejects = false)
-    described_class::TextFieldFilter.new(field_name, values, rejects)
+  def text_filter(field_name, values, operation = :filter)
+    described_class::TextFieldFilter.new(field_name, values, operation)
   end
 
   before do
@@ -293,12 +293,8 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(
-      hash_including(filters: [
-        text_filter("organisations", ["hm-magic"])
-      ])
-    ).to eq(
-      p.parsed_params,
+    expect(p.parsed_params[:filters]).to eq(
+      [text_filter("organisations", ["hm-magic"])]
     )
   end
 
@@ -307,12 +303,8 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(
-      hash_including(filters: [
-        text_filter("organisations", ["hm-magic"], true)
-      ])
-    ).to eq(
-      p.parsed_params,
+    expect(p.parsed_params[:filters]).to eq(
+      [text_filter("organisations", ["hm-magic"], :reject)]
     )
   end
 
@@ -324,14 +316,10 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(
-      hash_including(filters: [
-        text_filter("mainstream_browse_pages", ["cheese"]),
-        text_filter("organisations", ["hm-magic"], true),
+    expect(p.parsed_params[:filters]).to match_array([
+        text_filter("organisations", ["hm-magic"], :reject),
+        text_filter("mainstream_browse_pages", %w[cheese], :filter)
       ])
-    ).to eq(
-      p.parsed_params,
-    )
   end
 
   it "understands multiple filter paramers" do
@@ -409,10 +397,8 @@ RSpec.describe SearchParameterParser do
 
     expect(%{"spells" is not a valid reject field}).to eq(p.error)
     expect(p).not_to be_valid
-    expect(
-      expected_params(filters: [text_filter("organisations", ["hm-magic"], true)])
-    ).to eq(
-      p.parsed_params,
+    expect(p.parsed_params).to eq(
+      expected_params(filters: [text_filter("organisations", ["hm-magic"], :reject)])
     )
   end
 

@@ -6,7 +6,7 @@ module QueryComponents
 
     def initialize(search_params = QueryParameters.new)
       super
-      @rejects, @filters = search_params.filters.partition(&:reject)
+      @rejects, @filters = search_params.filters.partition { |filter| filter.operation == :reject }
     end
 
     def selected_queries(excluding = [])

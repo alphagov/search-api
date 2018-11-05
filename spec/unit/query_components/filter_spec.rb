@@ -6,15 +6,15 @@ RSpec.describe QueryComponents::Filter do
   end
 
   def make_date_filter_param(field_name, values)
-    SearchParameterParser::DateFieldFilter.new(field_name, values, false)
+    SearchParameterParser::DateFieldFilter.new(field_name, values, :filter)
   end
 
   def text_filter(field_name, values)
-    SearchParameterParser::TextFieldFilter.new(field_name, values, false)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, :filter)
   end
 
   def reject_filter(field_name, values)
-    SearchParameterParser::TextFieldFilter.new(field_name, values, true)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, :reject)
   end
 
   context "search with one filter" do
