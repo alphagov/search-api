@@ -98,6 +98,7 @@ module GovukIndex
         tiers_or_standalone_items:           specialist.tiers_or_standalone_items,
         title:                               common_fields.title,
         topic_content_ids:                   expanded_links.topic_content_ids,
+        topical_events:                      expanded_links.topical_events,
         tribunal_decision_categories:        specialist.tribunal_decision_categories,
         tribunal_decision_category:          specialist.tribunal_decision_category,
         tribunal_decision_country:           specialist.tribunal_decision_country,
