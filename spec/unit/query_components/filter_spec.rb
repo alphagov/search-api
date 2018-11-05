@@ -25,7 +25,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      expect(result).to eq("terms" => { "organisations" => ["hm-magic"] })
+      expect(result).to eq(bool: { must: ["terms" => { "organisations" => ["hm-magic"] }] })
     end
 
     it "append the correct date filters" do
@@ -35,7 +35,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      expect(result).to eq("range" => { "field_with_date" => { "from" => "2014-04-01T00:00:00+00:00", "to" => "2014-04-02T00:00:00+00:00" } })
+      expect(result).to eq(bool: { must: ["range" => { "field_with_date" => { "from" => "2014-04-01T00:00:00+00:00", "to" => "2014-04-02T00:00:00+00:00" } }] })
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      expect(result).to eq("terms" => { "organisations" => ["hm-magic", "hmrc"] })
+      expect(result).to eq(bool: { must: ["terms" => { "organisations" => ["hm-magic", "hmrc"] }] })
     end
   end
 
@@ -66,8 +66,8 @@ RSpec.describe QueryComponents::Filter do
 
       expect(result).to eq(
         bool: {
-          must: { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
-          must_not: { "terms" => { "mainstream_browse_pages" => ["benefits"] } },
+          must: [{ "terms" => { "organisations" => ["hm-magic", "hmrc"] } }],
+          must_not: [{ "terms" => { "mainstream_browse_pages" => %w[benefits] } }],
         }
       )
     end
@@ -87,10 +87,12 @@ RSpec.describe QueryComponents::Filter do
       result = builder.payload
 
       expect(result).to eq(
-        and: [
-          { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
-          { "terms" => { "mainstream_browse_pages" => ["levitation"] } },
-        ].compact
+        bool: {
+          must: [
+            { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
+            { "terms" => { "mainstream_browse_pages" => %w[levitation] } },
+          ].compact
+        }
       )
     end
   end
