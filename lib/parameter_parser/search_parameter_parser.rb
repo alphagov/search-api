@@ -159,12 +159,13 @@ private
 
   # Returns hashes of
   #   {'operation'=> 'filter/reject',
+  #    'multivalue_query' => 'any/all',
   #    'name'=>'...',
   #    'full_name'=>'...',
   #    'values'=>[...]}
   def analyze_filters(parameters)
     matches = parameters.keys.map do |name|
-      /^(?'full_name'(?'operation'filter|reject)_(?'name'.*))$/.match(name)
+      /^(?'full_name'(?'operation'filter|reject)_(?:(?'multivalue_query'any|all)_)?(?'name'.*))$/.match(name)
     end
     matches.compact.map do |match|
       captures = match.named_captures
@@ -183,7 +184,8 @@ private
       build_filter(
         filter_name_lookup(hash['name']),
         hash.fetch('values'),
-        hash.fetch('operation').to_sym
+        hash.fetch('operation').to_sym,
+        (hash.fetch('multivalue_query') || 'any').to_sym
       )
     end
     result.compact
@@ -200,7 +202,7 @@ private
     @schema.field_definitions.keys + VIRTUAL_FIELDS
   end
 
-  def build_filter(field_name, values, operation)
+  def build_filter(field_name, values, operation, multivalue_query)
     if field_name == '_type'
       filter_type = "text"
     else
@@ -217,7 +219,7 @@ private
       "date" => DateFieldFilter,
     }.fetch(filter_type)
 
-    filter = filter_class.new(field_name, values, operation)
+    filter = filter_class.new(field_name, values, operation, multivalue_query)
     if filter.valid?
       filter
     else
@@ -227,13 +229,16 @@ private
   end
 
   class Filter
-    attr_reader :field_name, :include_missing, :values, :operation, :errors
+    attr_reader :field_name, :include_missing, :values, :operation, :multivalue_query, :errors
 
-    def initialize(field_name, values, operation)
+    #operation is :reject or :filter
+    #multivalue_query is :all or :any
+    def initialize(field_name, values, operation, multivalue_query)
       @field_name = field_name
       @include_missing = values.include? BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE
       @values = Array(values).reject { |value| value == BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE }
       @operation = operation
+      @multivalue_query = multivalue_query
       @errors = []
     end
 
@@ -242,7 +247,7 @@ private
     end
 
     def ==(other)
-      [field_name, values, operation] == [other.field_name, other.values, other.operation]
+      [field_name, values, operation, multivalue_query] == [other.field_name, other.values, other.operation, other.multivalue_query]
     end
 
     def valid?
@@ -253,7 +258,7 @@ private
   class DateFieldFilter < Filter
     DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
-    def initialize(field_name, values, operation)
+    def initialize(field_name, values, operation, multivalue_query)
       super
       @values = parse_dates(@values)
     end

@@ -29,8 +29,8 @@ RSpec.describe SearchParameterParser do
     }.merge(params)
   end
 
-  def text_filter(field_name, values, operation = :filter)
-    described_class::TextFieldFilter.new(field_name, values, operation)
+  def text_filter(field_name, values, operation = :filter, multivalue_query = :any)
+    described_class::TextFieldFilter.new(field_name, values, operation, multivalue_query)
   end
 
   before do
@@ -304,21 +304,45 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"], :reject)]
+      [text_filter("organisations", ["hm-magic"], :reject, :any)]
     )
+  end
+
+  it "understands reject_any paramers" do
+    p = described_class.new({ "reject_any_organisations" => ["hm-magic"] }, @schema)
+
+    expect(p.error).to eq("")
+    expect(p).to be_valid
+    expect(p.parsed_params[:filters]).to eq(
+      [text_filter("organisations", ["hm-magic"], :reject, :any)]
+                                         )
+  end
+
+  it "understands reject_all paramers" do
+    p = described_class.new({ "reject_all_organisations" => ["hm-magic"] }, @schema)
+
+    expect(p.error).to eq("")
+    expect(p).to be_valid
+    expect(p.parsed_params[:filters]).to eq(
+      [text_filter("organisations", ["hm-magic"], :reject, :all)]
+                                         )
   end
 
   it "understands some rejects and some filter paramers" do
     p = described_class.new({
       "reject_organisations" => ["hm-magic"],
-      "filter_mainstream_browse_pages" => ["cheese"],
+      "filter_all_mainstream_browse_pages" => %w[cheese],
+      "filter_any_slug" => ["/slug1", "/slug2"],
+      "reject_all_link" => ["/link"],
     }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to match_array([
-        text_filter("organisations", ["hm-magic"], :reject),
-        text_filter("mainstream_browse_pages", %w[cheese], :filter)
+        text_filter("organisations", ["hm-magic"], :reject, :any),
+        text_filter("mainstream_browse_pages", %w[cheese], :filter, :all),
+        text_filter("slug", ["/slug1", "/slug2"], :filter, :any),
+        text_filter("link", ["/link"], :reject, :all)
       ])
   end
 
