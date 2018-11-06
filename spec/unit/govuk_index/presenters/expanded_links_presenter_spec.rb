@@ -81,6 +81,56 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expect(presenter.topical_events).to eq(expected_topical_events)
   end
 
+  it "world_locations" do
+    expanded_links = {
+      "world_locations" => [
+        {
+          "content_id" => "5e9f420d-7706-11e4-a3cb-005056011aef",
+          "title" => "Bonaire/St Eustatius/Saba",
+          "schema_name" => "world_location",
+          "locale" => "en",
+          "analytics_identifier" => "WL224",
+          "links" => {}
+        },
+        {
+          "content_id" => "dc258e77-8731-4c7f-9a6f-df508b991298",
+          "title" => "Saint-Barthélemy",
+          "schema_name" => "world_location",
+          "locale" => "en",
+          "analytics_identifier" => "WL247",
+          "links" => {}
+        },
+        {
+          "content_id" => "5e9f3c6b-7706-11e4-a3cb-005056011aef",
+          "title" => "St Helena, Ascension and Tristan da Cunha",
+          "schema_name" => "world_location",
+          "locale" => "en",
+          "analytics_identifier" => "WL216",
+          "links" => {}
+        },
+        {
+          "content_id" => "5e9f3c18-7706-11e4-a3cb-005056011aef",
+          "title" =>
+          "The UK Permanent Delegation to the OECD (Organisation for Economic Co-operation and Development)",
+          "schema_name" => "world_location",
+          "locale" => "en",
+          "analytics_identifier" => "WL210",
+          "links" => {}
+        },
+      ]
+    }
+    presenter = expanded_links_presenter(expanded_links)
+
+    expected_world_locations = [
+      "bonaire-st-eustatius-saba",
+      "saint-barthelemy",
+      "st-helena-ascension-and-tristan-da-cunha",
+      "the-uk-permanent-delegation-to-the-oecd-organisation-for-economic-co-operation-and-development"
+    ]
+
+    expect(presenter.world_locations).to eq(expected_world_locations)
+  end
+
   it "taxons" do
     expanded_links = {
       "taxons" => [
