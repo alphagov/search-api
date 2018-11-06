@@ -6,15 +6,15 @@ RSpec.describe QueryComponents::Filter do
   end
 
   def make_date_filter_param(field_name, values)
-    SearchParameterParser::DateFieldFilter.new(field_name, values, false)
+    SearchParameterParser::DateFieldFilter.new(field_name, values, :filter, :any)
   end
 
-  def text_filter(field_name, values)
-    SearchParameterParser::TextFieldFilter.new(field_name, values, false)
+  def text_filter(field_name, values, multivalue_query: :any)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, :filter, multivalue_query)
   end
 
-  def reject_filter(field_name, values)
-    SearchParameterParser::TextFieldFilter.new(field_name, values, true)
+  def reject_filter(field_name, values, multivalue_query: :any)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, :reject, multivalue_query)
   end
 
   context "search with one filter" do
@@ -51,7 +51,7 @@ RSpec.describe QueryComponents::Filter do
     end
   end
 
-  context "search with a filter and rejects" do
+  context "with a filter and rejects" do
     it "have correct filter" do
       builder = described_class.new(
         make_search_params(
@@ -73,7 +73,45 @@ RSpec.describe QueryComponents::Filter do
     end
   end
 
-  context "search with multiple filters" do
+  context "with all filter and rejects" do
+    it "have correct filter" do
+      builder = described_class.new(
+        make_search_params(
+          [
+            text_filter("organisations", ["hm-magic", "hmrc"], multivalue_query: :all),
+            reject_filter("mainstream_browse_pages", %w[benefits government], multivalue_query: :all),
+          ]
+        )
+      )
+
+      result = builder.payload
+
+      expect(result).to eq(
+        bool: {
+          must: [{ bool:
+                    { must: [
+                         {
+                           term: { "organisations" => "hm-magic" }
+                         },
+                         {
+                           term: { "organisations" => "hmrc" }
+                         }
+                       ] } }],
+          must_not: [{ bool:
+                       { must: [
+                         {
+                           term: { "mainstream_browse_pages" => "benefits" }
+                         },
+                         {
+                           term: { "mainstream_browse_pages" => "government" }
+                         }
+                       ] } }]
+        }
+                        )
+    end
+  end
+
+  context "with multiple filters" do
     it "have correct filter" do
       builder = described_class.new(
         make_search_params(

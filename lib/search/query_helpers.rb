@@ -14,6 +14,14 @@ module Search
       end
     end
 
+    def bool_must_filter(field_name, values)
+      {
+        bool: {
+          must: values.map { |value| { term: { field_name => value } } }
+        }
+      }
+    end
+
     def terms_filter(field_name, values)
       return nil if values.empty?
 

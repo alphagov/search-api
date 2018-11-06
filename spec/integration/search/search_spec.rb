@@ -115,6 +115,56 @@ RSpec.describe 'SearchTest' do
     expect(result_links.sort).to eq(["/government-2", "/govuk-2"])
   end
 
+  describe 'filter/reject when an attribute has multiple values' do
+    before do
+      commit_document("government_test",
+                      "link" => '/one',
+                      "part_of_taxonomy_tree" => %w[a b c])
+      commit_document("government_test",
+                      "link" => '/two',
+                      "part_of_taxonomy_tree" => %w[d e f])
+      commit_document("government_test",
+                      "link" => '/three',
+                      "part_of_taxonomy_tree" => %w[b e])
+    end
+
+    describe 'filter_all' do
+      it 'filters all documents containing taxon b and e' do
+        get "/search?filter_all_part_of_taxonomy_tree=b&filter_all_part_of_taxonomy_tree=e"
+        expect(result_links.sort).to eq([
+                                          '/three'
+                                        ])
+      end
+    end
+
+    describe 'filter_any' do
+      it 'filters any document containing taxon c or f' do
+        get "/search?filter_any_part_of_taxonomy_tree=c&filter_any_part_of_taxonomy_tree=f"
+        expect(result_links.sort).to match_array([
+                                                   '/one', '/two'
+                                                 ])
+      end
+    end
+
+    describe 'reject_all' do
+      it 'rejects all documents containing taxon b and e' do
+        get "/search?reject_all_part_of_taxonomy_tree=b&reject_all_part_of_taxonomy_tree=e"
+        expect(result_links.sort).to match_array([
+                                                   '/one', '/two'
+                                                 ])
+      end
+    end
+
+    describe 'reject_any' do
+      it 'rejects any documents containing taxon c or f' do
+        get "/search?reject_any_part_of_taxonomy_tree=c&reject_any_part_of_taxonomy_tree=f"
+        expect(result_links.sort).to match_array([
+                                                   '/three'
+                                                 ])
+      end
+    end
+  end
+
   it "only contains fields which are present" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 

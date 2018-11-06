@@ -711,7 +711,7 @@ RSpec.describe Search::ResultSetPresenter do
     end
   end
 
-  def text_filter(field_name, values, reject = false)
-    SearchParameterParser::TextFieldFilter.new(field_name, values, reject)
+  def text_filter(field_name, values)
+    SearchParameterParser::TextFieldFilter.new(field_name, values, :filter, :any)
   end
 end

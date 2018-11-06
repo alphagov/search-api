@@ -108,6 +108,14 @@ Only some fields can be filtered on - an HTTP 422 error will be returned if the 
 
 If a filter and a reject are specified for the same field, an HTTP 422 error will be returned. However, it is valid to specify a reject for some fields and a filter for others - documents will be required to match the criteria on both fields.
 
+For filtering multivalued fields such as `part_of_taxonomy_tree`, you can use an additional operation:
+
+- `filter_any_<field name>` returns documents that contain at least one of the specified values for the field name.
+- `filter_all_<field name>` returns documents that contain all of the specified values for the field name.
+- `reject_any_<field name>` same as filter_any, but rejects documents instead.
+- `reject_all_<field name>` same as filter_all, but rejects documents instead.
+
+This can be useful to find all documents that are tagged to two taxons (use `filter_all_`), or documents that have been tagged to one of two taxons (use `filter_any_`)
 ## Aggregation parameters
 
 Aggregations look at all the values of a a field and count up the number of times each one appears in documents matching the search.

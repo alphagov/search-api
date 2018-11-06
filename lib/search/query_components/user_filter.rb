@@ -6,7 +6,7 @@ module QueryComponents
 
     def initialize(search_params = QueryParameters.new)
       super
-      @rejects, @filters = search_params.filters.partition(&:reject)
+      @rejects, @filters = search_params.filters.partition { |filter| filter.operation == :reject }
     end
 
     def selected_queries(excluding = [])
@@ -33,7 +33,11 @@ module QueryComponents
 
       case filter.type
       when "string"
-        es_filters << terms_filter(field_name, values)
+        if filter.multivalue_query == :any
+          es_filters << terms_filter(field_name, values)
+        else # :all
+          es_filters << bool_must_filter(field_name, values)
+        end
       when "date"
         es_filters << date_filter(field_name, values.first)
       else

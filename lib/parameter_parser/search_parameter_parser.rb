@@ -145,49 +145,50 @@ private
     fields
   end
 
-  def parameters_starting_with(prefix)
-    with_prefix = @params.select do |name, _|
-      name.start_with?(prefix)
-    end
-
-    with_prefix.each_with_object({}) do |(name, value), result|
-      @used_params << name
-      result[name.sub(prefix, "")] = value
-    end
-  end
-
-  def validate_filter_parameters(parameters, type)
-    allowed, disallowed = parameters.partition { |field, _|
-      allowed_filter_fields.include?(field)
+  def validate_filter_parameters(parameter_hashes)
+    allowed, disallowed = parameter_hashes.partition { |parameter_hash|
+      allowed_filter_fields.include?(parameter_hash['name'])
     }
 
-    disallowed.each do |field, _|
-      @errors << %{"#{field}" is not a valid #{type} field}
+    disallowed.each do |parameter_hash|
+      @errors << %{"#{parameter_hash['name']}" is not a valid #{parameter_hash['operation']} field}
     end
 
     allowed
   end
 
-  def filters
-    filter_parameters = parameters_starting_with("filter_")
-    reject_parameters = parameters_starting_with("reject_")
-
-    build_filters(
-      validate_filter_parameters(filter_parameters, "filter"),
-      validate_filter_parameters(reject_parameters, "reject")
-    )
+  # Returns hashes of
+  #   {'operation'=> 'filter/reject',
+  #    'multivalue_query' => 'any/all',
+  #    'name'=>'...',
+  #    'full_name'=>'...',
+  #    'values'=>[...]}
+  def analyze_filters(parameters)
+    matches = parameters.keys.map do |name|
+      /^(?'full_name'(?'operation'filter|reject)_(?:(?'multivalue_query'any|all)_)?(?'name'.*))$/.match(name)
+    end
+    matches.compact.map do |match|
+      captures = match.named_captures
+      full_name = captures['full_name']
+      captures.merge({ 'values' => parameters[full_name] })
+    end
   end
 
-  def build_filters(filter_parameters, reject_parameters)
-    filters = filter_parameters.map { |field, values|
-      build_filter(filter_name_lookup(field), values, false)
-    }.compact
+  def filters
+    filter_hashes = analyze_filters(@params)
 
-    rejects = reject_parameters.map { |field, values|
-      build_filter(filter_name_lookup(field), values, true)
-    }.compact
+    @used_params.concat(filter_hashes.map { |h| h['full_name'] })
 
-    filters.concat(rejects)
+    validated_hashes = validate_filter_parameters(filter_hashes)
+    result = validated_hashes.map do |hash|
+      build_filter(
+        filter_name_lookup(hash['name']),
+        hash.fetch('values'),
+        hash.fetch('operation').to_sym,
+        (hash.fetch('multivalue_query') || 'any').to_sym
+      )
+    end
+    result.compact
   end
 
   def allowed_filter_fields
@@ -201,7 +202,7 @@ private
     @schema.field_definitions.keys + VIRTUAL_FIELDS
   end
 
-  def build_filter(field_name, values, reject)
+  def build_filter(field_name, values, operation, multivalue_query)
     if field_name == '_type'
       filter_type = "text"
     else
@@ -218,7 +219,7 @@ private
       "date" => DateFieldFilter,
     }.fetch(filter_type)
 
-    filter = filter_class.new(field_name, values, reject)
+    filter = filter_class.new(field_name, values, operation, multivalue_query)
     if filter.valid?
       filter
     else
@@ -228,13 +229,16 @@ private
   end
 
   class Filter
-    attr_reader :field_name, :include_missing, :values, :reject, :errors
+    attr_reader :field_name, :include_missing, :values, :operation, :multivalue_query, :errors
 
-    def initialize(field_name, values, reject)
+    #operation is :reject or :filter
+    #multivalue_query is :all or :any
+    def initialize(field_name, values, operation, multivalue_query)
       @field_name = field_name
       @include_missing = values.include? BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE
       @values = Array(values).reject { |value| value == BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE }
-      @reject = reject
+      @operation = operation
+      @multivalue_query = multivalue_query
       @errors = []
     end
 
@@ -243,7 +247,7 @@ private
     end
 
     def ==(other)
-      [field_name, values, reject] == [other.field_name, other.values, other.reject]
+      [field_name, values, operation, multivalue_query] == [other.field_name, other.values, other.operation, other.multivalue_query]
     end
 
     def valid?
@@ -254,7 +258,7 @@ private
   class DateFieldFilter < Filter
     DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
-    def initialize(field_name, values, reject)
+    def initialize(field_name, values, operation, multivalue_query)
       super
       @values = parse_dates(@values)
     end
