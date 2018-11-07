@@ -54,6 +54,12 @@ module GovukIndex
       end
     end
 
+    def world_locations
+      expanded_links.fetch("world_locations", {}).map do |world_location|
+        world_location.fetch("title").parameterize
+      end
+    end
+
   private
 
     attr_reader :expanded_links
