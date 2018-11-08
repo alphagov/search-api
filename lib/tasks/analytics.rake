@@ -10,13 +10,15 @@ namespace :analytics do
   The generated file is saved to disk, so you should run this task from the server and
   then use SCP to retrieve the file, which will be around 100 MB.
   "
-  task :create_data_import_csv do
-    elasticsearch_config = SearchConfig.new.elasticsearch
+  task :create_data_import_csv, [:path] do |_, args|
+    args.with_defaults(path: (ENV['EXPORT_PATH'] || 'data'))
+    path = args[:path]
 
+    elasticsearch_config = SearchConfig.new.elasticsearch
     analytics_data = AnalyticsData.new(elasticsearch_config["base_uri"], ALL_CONTENT_SEARCH_INDICES)
 
-    path = ENV['EXPORT_PATH'] || 'data'
     FileUtils.mkdir_p(path)
+
     file_name = "#{path}/analytics_data_import_#{Date.today.strftime('%Y%m%d')}.csv"
     puts "Exporting to: #{file_name}"
 
