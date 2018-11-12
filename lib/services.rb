@@ -37,6 +37,10 @@ module Services
   def self.statsd_client
     @statsd_client ||= Statsd.new.tap { |sd| sd.namespace = "govuk.app.rummager" }
   end
+
+  def self.worldwide_api
+    @worldwide_api ||= GdsApi::Worldwide.new(Plek.find('whitehall-admin'))
+  end
 end
 
 # First attempt at a retry-thing. Keeping it inside this repo for ease of

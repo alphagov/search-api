@@ -47,7 +47,7 @@ require "#{__dir__}/support/integration_spec_helper"
 require "#{__dir__}/support/index_helpers"
 
 require "gds_api/test_helpers/publishing_api_v2"
-
+require "gds_api/test_helpers/worldwide"
 
 RSpec.configure do |config|
   config.define_derived_metadata(file_path: %r{/spec/integration/}) do |metadata|
@@ -58,6 +58,7 @@ RSpec.configure do |config|
   config.include SpecHelpers
   config.include HashIncludingHelpers
   config.include SchemaHelpers
+  config.include GdsApi::TestHelpers::Worldwide
 
   config.include IntegrationSpecHelper, tags: :integration
   config.include Rack::Test::Methods, tags: :integration
@@ -78,6 +79,7 @@ RSpec.configure do |config|
   # config.warnings = true
 
   config.before do
+    stub_any_world_locations_request
     # search_config is a global object that has state, while most of the stubbing
     # is automatically reset, the index_names or passed into children object and
     # cached there.
@@ -91,4 +93,8 @@ RSpec.configure do |config|
 
   config.order = :random
   Kernel.srand config.seed
+
+  def stub_any_world_locations_request
+    worldwide_api_has_locations %w(hogwarts privet-drive diagon-alley)
+  end
 end

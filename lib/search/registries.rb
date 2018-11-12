@@ -19,7 +19,7 @@ module Search
         policy_areas: registry_for_document_format('topic'),
         document_series: registry_for_document_format('document_series'),
         document_collections: registry_for_document_format('document_collection'),
-        world_locations: registry_for_document_format('world_location'),
+        world_locations: world_locations,
         people: registry_for_document_format('person'),
       }
     end
@@ -49,6 +49,10 @@ module Search
           superseding_organisations
         }
       )
+    end
+
+    def world_locations
+      @world_locations ||= WorldLocationsRegistry.new
     end
 
     def specialist_sectors
