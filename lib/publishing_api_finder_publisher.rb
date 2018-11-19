@@ -1,19 +1,19 @@
 require "gds_api/publishing_api_v2"
 
 class PublishingApiFinderPublisher
-  def initialize(finder, timestamp = Time.now.iso8601, logger = Logger.new(STDOUT))
-    @finder = finder
+  def initialize(schema, timestamp = Time.now.iso8601, logger = Logger.new(STDOUT))
+    @schema = schema
     @logger = logger
     @timestamp = timestamp
   end
 
   def call
-    publish(finder)
+    publish(schema)
   end
 
 private
 
-  attr_reader :finder, :logger, :timestamp
+  attr_reader :schema, :logger, :timestamp
 
   def publishing_api
     @publishing_api ||= GdsApi::PublishingApiV2.new(
@@ -23,41 +23,105 @@ private
     )
   end
 
-  def publish(finder)
-    presenter = FinderContentItemPresenter.new(finder, timestamp)
+  def publish(schema)
+    finder_presenter = FinderContentItemPresenter.new(schema, timestamp)
 
-    logger.info("Publishing '#{presenter.name}' finder")
+    logger.info("Publishing '#{finder_presenter.name}' finder")
 
-    publishing_api.put_content(presenter.content_id, presenter.present)
-    publishing_api.patch_links(presenter.content_id, presenter.present_links)
-    publishing_api.publish(presenter.content_id)
+    publishing_api.put_content(finder_presenter.content_id, finder_presenter.present)
+    publishing_api.patch_links(finder_presenter.content_id, finder_presenter.present_links)
+    publishing_api.publish(finder_presenter.content_id)
+
+    if schema.key?("signup_content_id")
+      signup_presenter = FinderEmailSignupContentItemPresenter.new(schema, timestamp)
+
+      logger.info("Publishing '#{signup_presenter.name}' finder")
+
+      publishing_api.put_content(signup_presenter.content_id, signup_presenter.present)
+      publishing_api.patch_links(signup_presenter.content_id, signup_presenter.present_links)
+      publishing_api.publish(signup_presenter.content_id)
+    end
   end
 end
 
 class FinderContentItemPresenter
-  attr_reader :content_id, :finder, :name, :timestamp
+  attr_reader :content_id, :schema, :name, :timestamp
 
-  def initialize(finder, timestamp)
-    @finder = finder
-    @content_id = finder["content_id"]
-    @name = finder["name"]
+  def initialize(schema, timestamp)
+    @schema = schema
+    @content_id = schema["content_id"]
+    @name = schema["name"]
     @timestamp = timestamp
   end
 
   def present
     {
-      base_path: finder["base_path"],
-      description: finder["description"],
-      details: finder["details"].except("reject"),
-      document_type: finder["document_type"],
+      base_path: schema["base_path"],
+      description: schema["description"],
+      details: details,
+      document_type: schema["document_type"],
       locale: "en",
       phase: "live",
       public_updated_at: timestamp,
-      publishing_app: finder["publishing_app"],
-      rendering_app: finder["rendering_app"],
-      routes: finder["routes"],
-      schema_name: finder["schema_name"],
-      title: finder["title"],
+      publishing_app: schema["publishing_app"],
+      rendering_app: schema["rendering_app"],
+      routes: schema["routes"],
+      schema_name: schema["schema_name"],
+      title: schema["title"],
+      update_type: "minor",
+    }
+  end
+
+  def present_links
+    { content_id: content_id, links: {} }
+  end
+
+  def details
+    schema["details"].except("reject", "subscription_list_title_prefix", "email_filter_facets")
+  end
+end
+
+class FinderEmailSignupContentItemPresenter
+  attr_reader :content_id, :schema, :name, :timestamp
+
+  def initialize(schema, timestamp)
+    @schema = schema
+    @content_id = schema["signup_content_id"]
+    @name = schema["name"]
+    @timestamp = timestamp
+  end
+
+
+  def content_id
+    schema["signup_content_id"]
+  end
+
+  def details
+    schema.fetch("details", {}).merge(
+      "subscription_list_title_prefix" => schema.fetch("subscription_list_title_prefix", {}),
+      "email_filter_facets" => schema.fetch("email_filter_facets", []),
+    ).except("document_noun", "facets", "reject")
+  end
+
+  def routes
+    [{ "type" => "exact", "path" => base_path }]
+  end
+
+  def present
+    path = schema["base_path"] + "/email-signup"
+    {
+      base_path: path,
+      description: schema["signup_copy"],
+      details: details,
+      document_type: "finder_email_signup",
+      locale: "en",
+      phase: "live",
+      public_updated_at: timestamp,
+      publishing_app: schema["publishing_app"],
+      rendering_app: schema["rendering_app"],
+      routes: [{ "type" => "exact", "path" => path }],
+      schema_name: "finder_email_signup",
+      title: schema.fetch("signup_title", schema.fetch("name")),
       update_type: "minor",
     }
   end

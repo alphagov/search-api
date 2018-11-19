@@ -1,0 +1,90 @@
+---
+base_path: "/find-eu-exit-guidance-business"
+content_id: 42ce66de-04f3-4192-bf31-8394538e0734
+signup_content_id: 2818d67a-029a-4899-a438-a543d5c6a20d
+title: Find EU Exit guidance for your business
+description: ''
+name: 'Find EU Exit guidance for your business'
+locale: en
+public_updated_at: '2018-11-23T09:00:00.000+00:00'
+publishing_app: specialist-publisher
+rendering_app: finder-frontend
+details:
+  beta: false
+  document_noun: publication
+  email_filter_facets:
+  - facet_id: sector
+    facet_name: Sector
+    facet_choices:
+    - key: aerospace
+      radio_button_name: Aerospace
+      topic_name: aerospace
+      prechecked: false
+    - key: agriculture-environment-and-natural-resources
+      radio_button_name: Agriculture, environment and natural resources
+      topic_name: agriculture-environment-and-natural-resources
+      prechecked: false
+    - key: building-and-construction
+      topic_name: building-and-construction
+      radio_button_name: Building and construction
+      prechecked: false
+    - key: chemicals
+      topic_name: chemicals
+      radio_button_name: Chemicals
+      prechecked: false
+  - facet_id: location
+    facet_name: Location
+    facet_choices:
+    - key: buy_productions
+      radio_button_name: Buy products
+      topic_name: buy_products
+      prechecked: false
+    - key: sell_products
+      radio_button_name: Sell products
+      topic_name: sell_products
+      prechecked: false
+    - key: transport_goods
+      topic_name: transport_goods
+      radio_button_name: Transport goods
+      prechecked: false
+    - key: other_business_abroad
+      topic_name: other_business_abroad
+      radio_button_name: Other business abroad
+      prechecked: false
+  facets:
+  - allowed_values:
+    - label: Aerospace
+      value: aerospace
+    - label: Agriculture, environment and natural resources
+      value: agriculture-environment-and-natural-resources
+    - label: Building and construction
+      value: building-and-construction
+    - label: Chemicals
+      value: chemicals
+    display_as_result_metadata: true
+    filterable: true
+    key: sector
+    name: Sector
+    preposition: for businesses in
+    type: text
+  - allowed_values:
+    - label: Buy products
+      value: buy_products
+    - label: Sell products
+      value: sell_products
+    - label: Transport goods
+      value: transport_goods
+    - label: Other business abroad
+      value: other_business_abroad
+    display_as_result_metadata: true
+    filterable: true
+    key: location
+    name: Location
+    preposition: businesses that
+    type: text
+  show_summaries: true
+routes:
+- path: "/find-eu-exit-guidance-business"
+  type: exact
+document_type: finder
+schema_name: finder
