@@ -82,7 +82,6 @@ details:
     name: Location
     preposition: businesses that
     type: text
-  show_summaries: true
 routes:
 - path: "/find-eu-exit-guidance-business"
   type: exact
