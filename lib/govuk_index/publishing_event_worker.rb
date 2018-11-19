@@ -8,7 +8,26 @@ module GovukIndex
   class NotIdentifiable < StandardError; end
   class MissingExternalUrl < StandardError; end
 
-  DOCUMENT_TYPES_WITHOUT_BASE_PATH = %w(contact world_location).freeze
+  DOCUMENT_TYPES_WITHOUT_BASE_PATH =
+    %w(
+      contact
+      role_appointment
+      world_location
+
+      # role document types
+      ambassador_role
+      board_member_role
+      chief_professional_officer_role
+      chief_scientific_officer_role
+      deputy_head_of_mission_role
+      governor_role
+      high_commissioner_role
+      military_role
+      ministerial_role
+      special_representative_role
+      traffic_commissioner_role
+      worldwide_office_staff_role
+    ).freeze
 
   class PublishingEventWorker < Indexer::BaseWorker
     notify_of_failures
