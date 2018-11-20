@@ -1,6 +1,14 @@
 {
   "fields": [
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
+    "hmrc_manual_section_id",
+    "intellectual_property",
     "manual",
-    "hmrc_manual_section_id"
+    "personal_data",
+    "public_sector_procurement",
+    "regulations_and_standards",
+    "receiving_eu_funding",
+    "sector_business_area"
   ]
 }
