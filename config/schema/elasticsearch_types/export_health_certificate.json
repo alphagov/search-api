@@ -2,7 +2,15 @@
   "fields": [
     "certificate_status",
     "commodity_type",
-    "destination_country"
+    "destination_country",
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
+    "intellectual_property",
+    "personal_data",
+    "public_sector_procurement",
+    "receiving_eu_funding",
+    "regulations_and_standards",
+    "sector_business_area"
   ],
 
   "expanded_search_result_fields": {
