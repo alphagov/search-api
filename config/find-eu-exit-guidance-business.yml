@@ -7,15 +7,17 @@ description: ''
 name: 'Find EU Exit guidance for your business'
 locale: en
 public_updated_at: '2018-11-23T09:00:00.000+00:00'
-publishing_app: specialist-publisher
+publishing_app: rummager
 rendering_app: finder-frontend
 details:
   beta: false
   document_noun: publication
-  subscription_list_title_prefix: Find EU Exit guidance for your business
+  subscription_list_title_prefix: 'Find EU Exit guidance for your business '
+  reject:
+    sector_business_area: "_MISSING"
   email_filter_facets:
-  - facet_id: sector
-    facet_name: Sector
+  - facet_id: sector_business_area
+    facet_name: Sector / Business Area
     facet_choices:
     - key: accommodation-restaurants-and-catering-services
       radio_button_name: Accommodation, restaurants and catering services
@@ -208,22 +210,22 @@ details:
   - facet_id: employ_eu_citizens
     facet_name: Employ EU citizens
     facet_choices:
-    - key: yes
-      radio_button_name: Yes
+    - key: "yes"
+      radio_button_name: "Yes"
       topic_name: Employ EU citizens
       prechecked: false
-    - key: no
-      radio_button_name: No
+    - key: "no"
+      radio_button_name: "No"
       topic_name: Do not employ EU citizens
       prechecked: false
-    - key: dont_know
+    - key: dont-know
       radio_button_name: Don't know
-      topic_name: Not sure if we employ EU citizens
+      topic_name: Don't know if we employ EU citizens
       prechecked: false
   - facet_id: doing_business_in_the_eu
     facet_name: Doing business in the EU
     facet_choices:
-    - key: do_business_in_the_eu
+    - key: do-business-in-the-eu
       radio_button_name: We do business in the EU
       topic_name: We do business in the EU
       prechecked: false
@@ -239,40 +241,40 @@ details:
       radio_button_name: Transporting
       topic_name: Transporting
       prechecked: false
-    - key: other_eu
+    - key: other-eu
       radio_button_name: Other - EU
       topic_name: Other - EU
       prechecked: false
-    - key: other_rest_of_the_world
+    - key: other-rest-of-the-world
       radio_button_name: Other - Rest of the world
       topic_name: Other - Rest of the world
       prechecked: false
   - facet_id: regulations_and_standards
-    facet_name: Regualtions and standards
+    facet_name: Regulations and standards
     facet_choices:
-    - key: products_or_goods
+    - key: products-or-goods
       radio_button_name: Products or goods
       topic_name: Products or goods
       prechecked: false
   - facet_id: personal_data
     facet_name: Personal data (EEA)
     facet_choices:
-    - key: processing_personal_data
+    - key: processing-personal-data
       radio_button_name: Processing personal data
       topic_name: Processing personal data
       prechecked: false
-    - key: interacting_with_eea
+    - key: interacting-with-eea
       radio_button_name: Interacting with an EEA website
       topic_name: Interacting with an EEA website
       prechecked: false
-    - key: digital_service_provider
+    - key: digital-service-provider
       radio_button_name: Digital service provider
       topic_name: Digital service provider
       prechecked: false
   - facet_id: intellectual_property
     facet_name: Intellectual property
     facet_choices:
-    - key: have_intellectual_property
+    - key: have-intellectual-property
       radio_button_name: Have intellectual property
       topic_name: Have intellectual property
       prechecked: false
@@ -292,7 +294,7 @@ details:
       radio_button_name: Patents
       topic_name: Patents
       prechecked: false
-    - key: exhaustion_of_rights
+    - key: exhaustion-of-rights
       radio_button_name: Exhaustion of rights
       topic_name: Exhaustion of rights
       prechecked: false
@@ -307,11 +309,11 @@ details:
       radio_button_name: COSME
       topic_name: COSME
       prechecked: false
-    - key: european-investment-bank-eib-
+    - key: european-investment-bank-eib
       radio_button_name: European Investment Bank (EIB)
       topic_name: European Investment Bank (EIB)
       prechecked: false
-    - key: european-structural-fund-esf-
+    - key: european-structural-fund-esf
       radio_button_name: European Structural Fund (ESF)
       topic_name: European Structural Fund (ESF)
       prechecked: false
@@ -338,11 +340,11 @@ details:
   - facet_id: public_sector_procurement
     facet_name: Public sector procurement
     facet_choices:
-    - key: civil_government_contracts
+    - key: civil-government-contracts
       radio_button_name: Civil government contracts
       topic_name: Civil government contracts
       prechecked: false
-    - key: defence_contracts
+    - key: defence-contracts
       radio_button_name: Defence contracts
       topic_name: Defence contracts
       prechecked: false
@@ -396,7 +398,7 @@ details:
       value: imputed-rent
     - label: Insurance
       value: insurance
-    - label: Land transport (excl. rail
+    - label: Land transport (excl. rail)
       value: land-transport-excl-rail
     - label: Medical services
       value: medical-services
@@ -420,7 +422,7 @@ details:
       value: public-administration-and-defence
     - label: Rail
       value: rail
-    - label: Real Estate (excl. Imputed Rent
+    - label: Real Estate (excl. Imputed Rent)
       value: real-estate-excl-imputed-rent
     - label: Retail
       value: retail
@@ -438,14 +440,14 @@ details:
       value: top-ten-trade-partners-by-value
     - label: Warehousing and support for transportation
       value: warehousing-and-support-for-transportation
-    - label: Water Transport (Maritime/ports
+    - label: Water Transport (Maritime/ports)
       value: water-transport-maritime-ports
     - label: Wholesale (excl. Motor Vehicles)
       value: wholesale-excl-motor-vehicles
     display_as_result_metadata: true
     filterable: true
-    key: sector
-    name: Sector
+    key: sector_business_area
+    name: Sector / Business Area
     preposition: for businesses in
     type: text
   - allowed_values:
@@ -454,7 +456,7 @@ details:
     - label: "No"
       value: "no"
     - label: Don't know
-      value: dont_know
+      value: dont-know
     display_as_result_metadata: true
     filterable: true
     key: employ_eu_citizens
@@ -463,7 +465,7 @@ details:
     type: text
   - allowed_values:
     - label: Do business in the EU
-      value: do_business_in_the_eu
+      value: do-business-in-the-eu
     - label: Buying
       value: buying
     - label: Selling
@@ -471,9 +473,9 @@ details:
     - label: Transporting
       value: transporting
     - label: Other - EU
-      value: other_eu
+      value: other-eu
     - label: Other - Rest of the world
-      value: other_rest_of_the_world
+      value: other-rest-of-the-world
     display_as_result_metadata: true
     filterable: true
     key: doing_business_in_the_eu
@@ -482,7 +484,7 @@ details:
     type: text
   - allowed_values:
     - label: Products or goods
-      value: products_or_goods
+      value: products-or-goods
     display_as_result_metadata: true
     filterable: true
     key: regulations_and_standards
@@ -491,20 +493,20 @@ details:
     type: text
   - allowed_values:
     - label: Processing personal data
-      value: processing_personal_data
+      value: processing-personal-data
     - label: Interacting with EEA website
-      value: interacting_with_eea_website
+      value: interacting-with-eea-website
     - label: Digital service provide
-      value: digital_service_provider
+      value: digital-service-provider
     display_as_result_metadata: true
     filterable: true
-    key: personal_data_eea
+    key: personal_data
     name: Personal data (EEA)
     preposition: businesses that
     type: text
   - allowed_values:
     - label: Have intellectual property
-      value: have_intellectual_property
+      value: have-intellectual-property
     - label: Copyright
       value: copyright
     - label: Trademarks
@@ -514,7 +516,7 @@ details:
     - label: Patents
       value: patents
     - label: Exhaustion of rights
-      value: exhaustion_of_rights
+      value: exhaustion-of-rights
     display_as_result_metadata: true
     filterable: true
     key: intellectual_property
@@ -542,15 +544,15 @@ details:
       value: etf
     display_as_result_metadata: true
     filterable: true
-    key: receive_eu_funding
+    key: receiving_eu_funding
     name: Receiving EU funding
     preposition: businesses that
     type: text
   - allowed_values:
     - label: Civil government contracts
-      value: civil_government_contracts
+      value: civil-government-contracts
     - label: Defence contracts
-      value: defence_contracts
+      value: defence-contracts
     display_as_result_metadata: true
     filterable: true
     key: public_sector_procurement
