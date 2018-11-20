@@ -1,7 +1,15 @@
 {
   "fields": [
-    "therapeutic_area",
-    "first_published_at"
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
+    "first_published_at",
+    "intellectual_property",
+    "personal_data",
+    "public_sector_procurement",
+    "receiving_eu_funding",
+    "regulations_and_standards",
+    "sector_business_area",
+    "therapeutic_area"
   ],
 
   "expanded_search_result_fields": {
