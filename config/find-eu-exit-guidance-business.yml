@@ -562,5 +562,7 @@ details:
 routes:
 - path: "/find-eu-exit-guidance-business"
   type: exact
+- path: "/find-eu-exit-guidance-business.json"
+  type: exact
 document_type: finder
 schema_name: finder
