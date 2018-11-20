@@ -44,7 +44,7 @@ RSpec.describe PublishingApiFinderPublisher do
 
       it "patches links for the finder" do
         expect(publishing_api).to have_received(:patch_links)
-          .with(content_id, { content_id: content_id, links: {} })
+          .with(content_id, { content_id: content_id, links: anything })
       end
 
       it "publishes the finder to the Publishing API" do
