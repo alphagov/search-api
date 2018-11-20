@@ -715,5 +715,45 @@
   "destination_country": {
     "description": "The country being exported to",
     "type": "identifiers"
+  },
+
+  "sector_business_area": {
+    "description": "The sector or business area",
+    "type": "identifiers"
+  },
+
+  "employ_eu_citizens": {
+    "description": "Whether or not the EU citizens are employed",
+    "type": "identifiers"
+  },
+
+  "doing_business_in_the_eu": {
+    "description": "Whether or not the going concern does business in the EU and their type of business (e.g. buying, selling, transporting)",
+    "type": "identifiers"
+  },
+
+  "regulations_and_standards": {
+    "description": "Regulations that apply to the business",
+    "type": "identifiers"
+  },
+
+  "personal_data": {
+    "description": "The type of personal data processing the organisation handles",
+    "type": "identifiers"
+  },
+
+  "intellectual_property": {
+    "description": "The type of intellectual property a business holds",
+    "type": "identifiers"
+  },
+
+  "receiving_eu_funding": {
+    "description": "The EU scheme from which the business receives its funding",
+    "type": "identifiers"
+  },
+
+  "public_sector_procurement": {
+    "description": "The public sector body that procures goods or services",
+    "type": "identifiers"
   }
 }
