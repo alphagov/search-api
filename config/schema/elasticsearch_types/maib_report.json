@@ -1,8 +1,16 @@
 {
   "fields": [
-    "vessel_type",
+    "date_of_occurrence",
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
+    "intellectual_property",
+    "personal_data",
+    "public_sector_procurement",
+    "receiving_eu_funding",
+    "regulations_and_standards",
     "report_type",
-    "date_of_occurrence"
+    "sector_business_area",
+    "vessel_type"
   ],
 
   "expanded_search_result_fields": {

@@ -1,8 +1,16 @@
 {
   "fields": [
+    "date_of_occurrence",
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
+    "intellectual_property",
+    "personal_data",
+    "public_sector_procurement",
     "railway_type",
+    "receiving_eu_funding",
+    "regulations_and_standards",
     "report_type",
-    "date_of_occurrence"
+    "sector_business_area"
   ],
 
   "expanded_search_result_fields": {

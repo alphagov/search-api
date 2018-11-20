@@ -1,11 +1,19 @@
 {
   "fields": [
     "aircraft_category",
-    "report_type",
-    "date_of_occurrence",
-    "registration",
     "aircraft_type",
-    "location"
+    "date_of_occurrence",
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
+    "intellectual_property",
+    "location",
+    "personal_data",
+    "public_sector_procurement",
+    "receiving_eu_funding",
+    "registration",
+    "regulations_and_standards",
+    "report_type",
+    "sector_business_area"
   ],
 
   "expanded_search_result_fields": {

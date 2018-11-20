@@ -2,8 +2,16 @@
   "fields": [
     "business_sizes",
     "business_stages",
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
     "industries",
+    "intellectual_property",
+    "personal_data",
+    "public_sector_procurement",
+    "receiving_eu_funding",
     "regions",
+    "regulations_and_standards",
+    "sector_business_area",
     "types_of_support"
   ],
 

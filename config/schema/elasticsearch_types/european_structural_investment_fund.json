@@ -1,10 +1,18 @@
 {
   "fields": [
+    "closing_date",
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
     "fund_state",
     "fund_type",
-    "location",
     "funding_source",
-    "closing_date"
+    "intellectual_property",
+    "location",
+    "personal_data",
+    "public_sector_procurement",
+    "receiving_eu_funding",
+    "regulations_and_standards",
+    "sector_business_area"
   ],
 
   "expanded_search_result_fields": {
