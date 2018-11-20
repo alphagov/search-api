@@ -1,5 +1,13 @@
 {
   "fields": [
-    "manual"
+    "doing_business_in_the_eu",
+    "employ_eu_citizens",
+    "intellectual_property",
+    "manual",
+    "personal_data",
+    "public_sector_procurement",
+    "regulations_and_standards",
+    "receiving_eu_funding",
+    "sector_business_area"
   ]
 }
