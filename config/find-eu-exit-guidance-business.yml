@@ -1,0 +1,566 @@
+---
+base_path: "/find-eu-exit-guidance-business"
+content_id: 42ce66de-04f3-4192-bf31-8394538e0734
+signup_content_id: 2818d67a-029a-4899-a438-a543d5c6a20d
+title: Find EU Exit guidance for your business
+description: ''
+name: 'Find EU Exit guidance for your business'
+locale: en
+public_updated_at: '2018-11-23T09:00:00.000+00:00'
+publishing_app: rummager
+rendering_app: finder-frontend
+details:
+  beta: false
+  document_noun: publication
+  subscription_list_title_prefix: 'Find EU Exit guidance for your business '
+  reject:
+    sector_business_area: "_MISSING"
+  email_filter_facets:
+  - facet_id: sector_business_area
+    facet_name: Sector / Business Area
+    facet_choices:
+    - key: accommodation-restaurants-and-catering-services
+      radio_button_name: Accommodation, restaurants and catering services
+      topic_name: Accommodation, restaurants and catering services
+      prechecked: false
+    - key: aerospace
+      radio_button_name: Aerospace
+      topic_name: Aerospace
+      prechecked: false
+    - key: agriculture
+      radio_button_name: Agriculture
+      topic_name: Agriculture
+      prechecked: false
+    - key: air-transport-aviation
+      radio_button_name: Air transport (Aviation)
+      topic_name: Air transport (Aviation)
+      prechecked: false
+    - key: ancillary-services
+      radio_button_name: Ancillary Services
+      topic_name: Ancillary Services
+      prechecked: false
+    - key: animal-health
+      radio_button_name: Animal Health
+      topic_name: Animal Health
+      prechecked: false
+    - key: automotive
+      radio_button_name: Automotive
+      topic_name: Automotive
+      prechecked: false
+    - key: banking-market-infrastructure
+      radio_button_name: Banking, market infrastructure
+      topic_name: Banking, market infrastructure
+      prechecked: false
+    - key: broadcasting
+      radio_button_name: Broadcasting
+      topic_name: Broadcasting
+      prechecked: false
+    - key: chemicals
+      radio_button_name: Chemicals
+      topic_name: Chemicals
+      prechecked: false
+    - key: computer-services
+      radio_button_name: Computer Services
+      topic_name: Computer Services
+      prechecked: false
+    - key: construction-contracting
+      radio_button_name: Construction Contracting
+      topic_name: Construction Contracting
+      prechecked: false
+    - key: education
+      radio_button_name: Education
+      topic_name: Education
+      prechecked: false
+    - key: electricity
+      radio_button_name: Electricity
+      topic_name: Electricity
+      prechecked: false
+    - key: electronics
+      radio_button_name: Electronics
+      topic_name: Electronics
+      prechecked: false
+    - key: environmental-services
+      radio_button_name: Environmental Services
+      topic_name: Environmental Services
+      prechecked: false
+    - key: fisheries
+      radio_button_name: Fisheries
+      topic_name: Fisheries
+      prechecked: false
+    - key: food-and-drink
+      radio_button_name: Food and Drink
+      topic_name: Food and Drink
+      prechecked: false
+    - key: furniture-and-other-manufacturing
+      radio_button_name: Furniture and other manufacturing
+      topic_name: Furniture and other manufacturing
+      prechecked: false
+    - key: gas-markets
+      radio_button_name: Gas markets
+      topic_name: Gas markets
+      prechecked: false
+    - key: goods-sectors-each-0-4-of-gva
+      radio_button_name: Goods sectors each <0.4% of GVA
+      topic_name: Goods sectors each <0.4% of GVA
+      prechecked: false
+    - key: imports
+      radio_button_name: Imports
+      topic_name: Imports
+      prechecked: false
+    - key: imputed-rent
+      radio_button_name: Imputed Rent
+      topic_name: Imputed Rent
+      prechecked: false
+    - key: insurance
+      radio_button_name: Insurance
+      topic_name: Insurance
+      prechecked: false
+    - key: land-transport-excl-rail
+      radio_button_name: Land transport (excl. rail)
+      topic_name: Land transport (excl. rail)
+      prechecked: false
+    - key: medical-services
+      radio_button_name: Medical services
+      topic_name: Medical services
+      prechecked: false
+    - key: motor-trades
+      radio_button_name: Motor Trades
+      topic_name: Motor Trades
+      prechecked: false
+    - key: network-industries-0-3-of-gva
+      radio_button_name: Network Industries <0.3% of GVA
+      topic_name: Network Industries <0.3% of GVA
+      prechecked: false
+    - key: oil-and-gas-production
+      radio_button_name: Oil and gas production
+      topic_name: Oil and gas production
+      prechecked: false
+    - key: other-personal-services
+      radio_button_name: Other personal services
+      topic_name: Other personal services
+      prechecked: false
+    - key: parts-and-machinery
+      radio_button_name: Parts and machinery
+      topic_name: Parts and machinery
+      prechecked: false
+    - key: pharmaceuticals
+      radio_button_name: Pharmaceuticals
+      topic_name: Pharmaceuticals
+      prechecked: false
+    - key: post
+      radio_button_name: Post
+      topic_name: Post
+      prechecked: false
+    - key: professional-and-business-services
+      radio_button_name: Professional and Business services
+      topic_name: Professional and Business services
+      prechecked: false
+    - key: public-administration-and-defence
+      radio_button_name: Public Administration and Defence
+      topic_name: Public Administration and Defence
+      prechecked: false
+    - key: rail
+      radio_button_name: Rail
+      topic_name: Rail
+      prechecked: false
+    - key: real-estate-excl-imputed-rent
+      radio_button_name: Real Estate (excl. Imputed Rent)
+      topic_name: Real Estate (excl. Imputed Rent)
+      prechecked: false
+    - key: retail
+      radio_button_name: Retail
+      topic_name: Retail
+      prechecked: false
+    - key: service-sectors-each-1-of-gva
+      radio_button_name: Service sectors each <1% of GVA
+      topic_name: Service sectors each <1% of GVA
+      prechecked: false
+    - key: social-work
+      radio_button_name: Social Work
+      topic_name: Social Work
+      prechecked: false
+    - key: steel-and-other-metals-commodities
+      radio_button_name: Steel and other metals/commodities
+      topic_name: Steel and other metals/commodities
+      prechecked: false
+    - key: telecoms
+      radio_button_name: Telecoms
+      topic_name: Telecoms
+      prechecked: false
+    - key: textiles-and-clothing
+      radio_button_name: Textiles and clothing
+      topic_name: Textiles and clothing
+      prechecked: false
+    - key: top-ten-trade-partners-by-value
+      radio_button_name: Top Ten Trade Partners by Value
+      topic_name: Top Ten Trade Partners by Value
+      prechecked: false
+    - key: warehousing-and-support-for-transportation
+      radio_button_name: Warehousing and support for transportation
+      topic_name: Warehousing and support for transportation
+      prechecked: false
+    - key: water-transport-maritime-ports
+      radio_button_name: Water Transport (Maritime/ports
+      topic_name: Water Transport (Maritime/ports
+      prechecked: false
+    - key: wholesale-excl-motor-vehicles
+      radio_button_name: Wholesale (excl. Motor Vehicles)
+      topic_name: Wholesale (excl. Motor Vehicles)
+      prechecked: false
+  - facet_id: employ_eu_citizens
+    facet_name: Employ EU citizens
+    facet_choices:
+    - key: "yes"
+      radio_button_name: "Yes"
+      topic_name: Employ EU citizens
+      prechecked: false
+    - key: "no"
+      radio_button_name: "No"
+      topic_name: Do not employ EU citizens
+      prechecked: false
+    - key: dont-know
+      radio_button_name: Don't know
+      topic_name: Don't know if we employ EU citizens
+      prechecked: false
+  - facet_id: doing_business_in_the_eu
+    facet_name: Doing business in the EU
+    facet_choices:
+    - key: do-business-in-the-eu
+      radio_button_name: We do business in the EU
+      topic_name: We do business in the EU
+      prechecked: false
+    - key: buying
+      radio_button_name: Buying
+      topic_name: Buying
+      prechecked: false
+    - key: selling
+      radio_button_name: Selling
+      topic_name: Selling
+      prechecked: false
+    - key: transporting
+      radio_button_name: Transporting
+      topic_name: Transporting
+      prechecked: false
+    - key: other-eu
+      radio_button_name: Other - EU
+      topic_name: Other - EU
+      prechecked: false
+    - key: other-rest-of-the-world
+      radio_button_name: Other - Rest of the world
+      topic_name: Other - Rest of the world
+      prechecked: false
+  - facet_id: regulations_and_standards
+    facet_name: Regulations and standards
+    facet_choices:
+    - key: products-or-goods
+      radio_button_name: Products or goods
+      topic_name: Products or goods
+      prechecked: false
+  - facet_id: personal_data
+    facet_name: Personal data (EEA)
+    facet_choices:
+    - key: processing-personal-data
+      radio_button_name: Processing personal data
+      topic_name: Processing personal data
+      prechecked: false
+    - key: interacting-with-eea
+      radio_button_name: Interacting with an EEA website
+      topic_name: Interacting with an EEA website
+      prechecked: false
+    - key: digital-service-provider
+      radio_button_name: Digital service provider
+      topic_name: Digital service provider
+      prechecked: false
+  - facet_id: intellectual_property
+    facet_name: Intellectual property
+    facet_choices:
+    - key: have-intellectual-property
+      radio_button_name: Have intellectual property
+      topic_name: Have intellectual property
+      prechecked: false
+    - key: copyright
+      radio_button_name: Copyright
+      topic_name: Copyright
+      prechecked: false
+    - key: trademarks
+      radio_button_name: Trademarks
+      topic_name: Trademarks
+      prechecked: false
+    - key: designs
+      radio_button_name: Designs
+      topic_name: Designs
+      prechecked: false
+    - key: patents
+      radio_button_name: Patents
+      topic_name: Patents
+      prechecked: false
+    - key: exhaustion-of-rights
+      radio_button_name: Exhaustion of rights
+      topic_name: Exhaustion of rights
+      prechecked: false
+  - facet_id: receiving_eu_funding
+    facet_name: Receiving EU funding
+    facet_choices:
+    - key: horizon-2020
+      radio_button_name: Horizon 2020
+      topic_name: Horizon 2020
+      prechecked: false
+    - key: cosme
+      radio_button_name: COSME
+      topic_name: COSME
+      prechecked: false
+    - key: european-investment-bank-eib
+      radio_button_name: European Investment Bank (EIB)
+      topic_name: European Investment Bank (EIB)
+      prechecked: false
+    - key: european-structural-fund-esf
+      radio_button_name: European Structural Fund (ESF)
+      topic_name: European Structural Fund (ESF)
+      prechecked: false
+    - key: eurdf
+      radio_button_name: EURDF
+      topic_name: EURDF
+      prechecked: false
+    - key: etcf
+      radio_button_name: ETCF
+      topic_name: ETCF
+      prechecked: false
+    - key: esc
+      radio_button_name: ESC
+      topic_name: ESC
+      prechecked: false
+    - key: ecp
+      radio_button_name: ECP
+      topic_name: ECP
+      prechecked: false
+    - key: etf
+      radio_button_name: ETF
+      topic_name: ETF
+      prechecked: false
+  - facet_id: public_sector_procurement
+    facet_name: Public sector procurement
+    facet_choices:
+    - key: civil-government-contracts
+      radio_button_name: Civil government contracts
+      topic_name: Civil government contracts
+      prechecked: false
+    - key: defence-contracts
+      radio_button_name: Defence contracts
+      topic_name: Defence contracts
+      prechecked: false
+  facets:
+  - allowed_values:
+    - label: Accommodation, restaurants and catering services
+      value: accommodation-restaurants-and-catering-services
+    - label: Aerospace
+      value: aerospace
+    - label: Agriculture
+      value: agriculture
+    - label: Air transport (Aviation
+      value: air-transport-aviation
+    - label: Ancillary Services
+      value: ancillary-services
+    - label: Animal Health
+      value: animal-health
+    - label: Automotive
+      value: automotive
+    - label: Banking, market infrastructure
+      value: banking-market-infrastructure
+    - label: Broadcasting
+      value: broadcasting
+    - label: Chemicals
+      value: chemicals
+    - label: Computer Services
+      value: computer-services
+    - label: Construction Contracting
+      value: construction-contracting
+    - label: Education
+      value: education
+    - label: Electricity
+      value: electricity
+    - label: Electronics
+      value: electronics
+    - label: Environmental Services
+      value: environmental-services
+    - label: Fisheries
+      value: fisheries
+    - label: Food and Drink
+      value: food-and-drink
+    - label: Furniture and other manufacturing
+      value: furniture-and-other-manufacturing
+    - label: Gas markets
+      value: gas-markets
+    - label: Goods sectors each <0.4% of GVA
+      value: goods-sectors-each-0-4-of-gva
+    - label: Imports
+      value: imports
+    - label: Imputed Rent
+      value: imputed-rent
+    - label: Insurance
+      value: insurance
+    - label: Land transport (excl. rail)
+      value: land-transport-excl-rail
+    - label: Medical services
+      value: medical-services
+    - label: Motor Trades
+      value: motor-trades
+    - label: Network Industries <0.3% of GVA
+      value: network-industries-0-3-of-gva
+    - label: Oil and gas production
+      value: oil-and-gas-production
+    - label: Other personal services
+      value: other-personal-services
+    - label: Parts and machinery
+      value: parts-and-machinery
+    - label: Pharmaceuticals
+      value: pharmaceuticals
+    - label: Post
+      value: post
+    - label: Professional and Business services
+      value: professional-and-business-services
+    - label: Public Administration and Defence
+      value: public-administration-and-defence
+    - label: Rail
+      value: rail
+    - label: Real Estate (excl. Imputed Rent)
+      value: real-estate-excl-imputed-rent
+    - label: Retail
+      value: retail
+    - label: Service sectors each <1% of GVA
+      value: service-sectors-each-1-of-gva
+    - label: Social Work
+      value: social-work
+    - label: Steel and other metals/commodities
+      value: steel-and-other-metals-commodities
+    - label: Telecoms
+      value: telecoms
+    - label: Textiles and clothing
+      value: textiles-and-clothing
+    - label: Top Ten Trade Partners by Value
+      value: top-ten-trade-partners-by-value
+    - label: Warehousing and support for transportation
+      value: warehousing-and-support-for-transportation
+    - label: Water Transport (Maritime/ports)
+      value: water-transport-maritime-ports
+    - label: Wholesale (excl. Motor Vehicles)
+      value: wholesale-excl-motor-vehicles
+    display_as_result_metadata: true
+    filterable: true
+    key: sector_business_area
+    name: Sector / Business Area
+    preposition: for businesses in
+    type: text
+  - allowed_values:
+    - label: "Yes"
+      value: "yes"
+    - label: "No"
+      value: "no"
+    - label: Don't know
+      value: dont-know
+    display_as_result_metadata: true
+    filterable: true
+    key: employ_eu_citizens
+    name: Employ EU citizens
+    preposition: businesses that
+    type: text
+  - allowed_values:
+    - label: Do business in the EU
+      value: do-business-in-the-eu
+    - label: Buying
+      value: buying
+    - label: Selling
+      value: selling
+    - label: Transporting
+      value: transporting
+    - label: Other - EU
+      value: other-eu
+    - label: Other - Rest of the world
+      value: other-rest-of-the-world
+    display_as_result_metadata: true
+    filterable: true
+    key: doing_business_in_the_eu
+    name: Doing business in the EU
+    preposition: businesses that
+    type: text
+  - allowed_values:
+    - label: Products or goods
+      value: products-or-goods
+    display_as_result_metadata: true
+    filterable: true
+    key: regulations_and_standards
+    name: Regulations and standards
+    preposition: businesses that
+    type: text
+  - allowed_values:
+    - label: Processing personal data
+      value: processing-personal-data
+    - label: Interacting with EEA website
+      value: interacting-with-eea-website
+    - label: Digital service provide
+      value: digital-service-provider
+    display_as_result_metadata: true
+    filterable: true
+    key: personal_data
+    name: Personal data (EEA)
+    preposition: businesses that
+    type: text
+  - allowed_values:
+    - label: Have intellectual property
+      value: have-intellectual-property
+    - label: Copyright
+      value: copyright
+    - label: Trademarks
+      value: trademarks
+    - label: Designs
+      value: designs
+    - label: Patents
+      value: patents
+    - label: Exhaustion of rights
+      value: exhaustion-of-rights
+    display_as_result_metadata: true
+    filterable: true
+    key: intellectual_property
+    name: Intellectual property
+    preposition: businesses that
+    type: text
+  - allowed_values:
+    - label: Horizon 2020
+      value: horizon-2020
+    - label: COSME
+      value: cosme
+    - label: European Investment Bank (EIB)
+      value: european-investment-bank-eib
+    - label: European Structural Fund (ESF)
+      value: european-structural-fund-esf
+    - label: EURDF
+      value: eurdf
+    - label: ETCF
+      value: etcf
+    - label: ESC
+      value: esc
+    - label: ECP
+      value: ecp
+    - label: ETF
+      value: etf
+    display_as_result_metadata: true
+    filterable: true
+    key: receiving_eu_funding
+    name: Receiving EU funding
+    preposition: businesses that
+    type: text
+  - allowed_values:
+    - label: Civil government contracts
+      value: civil-government-contracts
+    - label: Defence contracts
+      value: defence-contracts
+    display_as_result_metadata: true
+    filterable: true
+    key: public_sector_procurement
+    name: Public sector procurement
+    preposition: businesses that
+    type: text
+routes:
+- path: "/find-eu-exit-guidance-business"
+  type: exact
+document_type: finder
+schema_name: finder
