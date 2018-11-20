@@ -80,7 +80,7 @@ class FinderContentItemPresenter
   end
 
   def details
-    schema["details"].except("reject", "subscription_list_title_prefix", "email_filter_facets")
+    schema["details"].except("email_filter_facets", "subscription_list_title_prefix")
   end
 end
 
@@ -99,7 +99,7 @@ class FinderEmailSignupContentItemPresenter
     details.merge(
       "subscription_list_title_prefix" => details.fetch("subscription_list_title_prefix", {}),
       "email_filter_facets" => details.fetch("email_filter_facets", []),
-    ).except("document_noun", "facets", "reject")
+    ).except("document_noun", "facets", "filter", "reject")
   end
 
   def present

@@ -13,8 +13,8 @@ details:
   beta: false
   document_noun: publication
   subscription_list_title_prefix: 'Find EU Exit guidance for your business '
-  reject:
-    sector_business_area: "_MISSING"
+  filter:
+    appear_in_find_eu_exit_guidance_business_finder: "yes"
   email_filter_facets:
   - facet_id: sector_business_area
     facet_name: Sector / Business Area
