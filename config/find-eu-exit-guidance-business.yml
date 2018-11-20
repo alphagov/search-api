@@ -12,6 +12,7 @@ rendering_app: finder-frontend
 details:
   beta: false
   document_noun: publication
+  subscription_list_title_prefix: Find EU Exit guidance for your business
   email_filter_facets:
   - facet_id: sector
     facet_name: Sector

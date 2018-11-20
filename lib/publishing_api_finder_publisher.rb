@@ -92,9 +92,10 @@ class FinderEmailSignupContentItemPresenter
   end
 
   def details
-    schema.fetch("details", {}).merge(
-      "subscription_list_title_prefix" => schema.fetch("subscription_list_title_prefix", {}),
-      "email_filter_facets" => schema.fetch("email_filter_facets", []),
+    details = schema.fetch("details", {})
+    details.merge(
+      "subscription_list_title_prefix" => details.fetch("subscription_list_title_prefix", {}),
+      "email_filter_facets" => details.fetch("email_filter_facets", []),
     ).except("document_noun", "facets", "reject")
   end
 
