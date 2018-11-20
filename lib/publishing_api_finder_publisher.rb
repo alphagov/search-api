@@ -73,7 +73,10 @@ class FinderContentItemPresenter
   end
 
   def present_links
-    { content_id: content_id, links: {} }
+    links = {}
+    links["email_alert_signup"] = schema["signup_content_id"] if schema.key?("signup_content_id")
+
+    { content_id: content_id, links: links }
   end
 
   def details
