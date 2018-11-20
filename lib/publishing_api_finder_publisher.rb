@@ -73,7 +73,12 @@ class FinderContentItemPresenter
   end
 
   def present_links
-    { content_id: content_id, links: {} }
+    {
+      content_id: content_id,
+      links: {
+        email_alert_signup: [schema["signup_content_id"]].compact
+      }
+    }
   end
 
   def details
