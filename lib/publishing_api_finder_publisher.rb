@@ -91,20 +91,11 @@ class FinderEmailSignupContentItemPresenter
     @timestamp = timestamp
   end
 
-
-  def content_id
-    schema["signup_content_id"]
-  end
-
   def details
     schema.fetch("details", {}).merge(
       "subscription_list_title_prefix" => schema.fetch("subscription_list_title_prefix", {}),
       "email_filter_facets" => schema.fetch("email_filter_facets", []),
     ).except("document_noun", "facets", "reject")
-  end
-
-  def routes
-    [{ "type" => "exact", "path" => base_path }]
   end
 
   def present
