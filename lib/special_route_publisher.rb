@@ -73,6 +73,14 @@ class SpecialRoutePublisher
         title: "GOV.UK sitemaps prefix",
         description: "The prefix URL under which our XML sitemaps are located.",
         type: "prefix",
+      },
+      {
+        rendering_app: "finder-frontend",
+        base_path: "/prepare-business-uk-leaving-eu",
+        content_id: "b9ef4434-761f-49ae-af97-dc7a248499c4",
+        title: "Prepare your business for the UK leaving the EU",
+        description: "Q&A frontend for the 'Find EU Exit guidance for your business' finder",
+        type: "exact",
       }
     ]
   end
