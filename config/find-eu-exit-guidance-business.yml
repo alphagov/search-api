@@ -461,7 +461,7 @@ details:
     filterable: true
     key: employ_eu_citizens
     name: Employ EU citizens
-    preposition: businesses that
+    preposition: for businesses that
     type: text
   - allowed_values:
     - label: Do business in the EU
@@ -480,7 +480,7 @@ details:
     filterable: true
     key: doing_business_in_the_eu
     name: Doing business in the EU
-    preposition: businesses that
+    preposition: for businesses that
     type: text
   - allowed_values:
     - label: Products or goods
@@ -489,7 +489,7 @@ details:
     filterable: true
     key: regulations_and_standards
     name: Regulations and standards
-    preposition: businesses that
+    preposition: for businesses that sell
     type: text
   - allowed_values:
     - label: Processing personal data
@@ -502,7 +502,7 @@ details:
     filterable: true
     key: personal_data
     name: Personal data (EEA)
-    preposition: businesses that
+    preposition: for businesses involved in
     type: text
   - allowed_values:
     - label: Have intellectual property
@@ -521,7 +521,7 @@ details:
     filterable: true
     key: intellectual_property
     name: Intellectual property
-    preposition: businesses that
+    preposition: for businesses working with
     type: text
   - allowed_values:
     - label: Horizon 2020
@@ -546,7 +546,7 @@ details:
     filterable: true
     key: receiving_eu_funding
     name: Receiving EU funding
-    preposition: businesses that
+    preposition: for businesses that receive funding from
     type: text
   - allowed_values:
     - label: Civil government contracts
@@ -557,7 +557,7 @@ details:
     filterable: true
     key: public_sector_procurement
     name: Public sector procurement
-    preposition: businesses that
+    preposition: businesses that work with
     type: text
 routes:
 - path: "/find-eu-exit-guidance-business"
