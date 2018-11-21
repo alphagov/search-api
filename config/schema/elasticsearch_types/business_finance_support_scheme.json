@@ -135,6 +135,7 @@
       {"label": "Northern Ireland", "value": "northern-ireland"},
       {"label": "Scotland", "value": "scotland"},
       {"label": "South East", "value": "south-east"},
+      {"label": "South West", "value": "south-west"},
       {"label": "Wales", "value": "wales"},
       {"label": "West Midlands", "value": "west-midlands"},
       {"label": "Yorkshire and the Humber", "value": "yorkshire-and-the-humber"}
