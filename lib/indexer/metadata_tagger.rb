@@ -17,8 +17,10 @@ module Indexer
         metadata["appear_in_find_eu_exit_guidance_business_finder"] = "yes"
 
         item_in_search = SearchConfig.instance.content_index.get_document_by_link(base_path)
-        index_to_update = item_in_search["real_index_name"]
-        Indexer::AmendWorker.new.perform(index_to_update, base_path, metadata)
+        if item_in_search
+          index_to_update = item_in_search["real_index_name"]
+          Indexer::AmendWorker.new.perform(index_to_update, base_path, metadata)
+        end
       end
     end
 
