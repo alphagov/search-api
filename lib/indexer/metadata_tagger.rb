@@ -30,6 +30,10 @@ module Indexer
       end
     end
 
+    def self.metadata_for_base_path(base_path)
+      @metadata[base_path].to_h
+    end
+
     def self.create_all_metadata
       {
         "sector_business_area" => all_sector_business_area,
