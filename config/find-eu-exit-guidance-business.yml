@@ -208,27 +208,12 @@ details:
       radio_button_name: Wholesale (excl. Motor Vehicles)
       topic_name: Wholesale (excl. Motor Vehicles)
       prechecked: false
-  - facet_id: employ_eu_citizens
-    facet_name: Employ EU citizens
-    facet_choices:
-    - key: "yes"
-      radio_button_name: "Yes"
-      topic_name: Employ EU citizens
-      prechecked: false
-    - key: "no"
-      radio_button_name: "No"
-      topic_name: Do not employ EU citizens
-      prechecked: false
-    - key: dont-know
-      radio_button_name: Don't know
-      topic_name: Don't know if we employ EU citizens
-      prechecked: false
   - facet_id: doing_business_in_the_eu
     facet_name: Doing business in the EU
     facet_choices:
     - key: do-business-in-the-eu
-      radio_button_name: We do business in the EU
-      topic_name: We do business in the EU
+      radio_button_name: Do business in the EU
+      topic_name: Do business in the EU
       prechecked: false
     - key: buying
       radio_button_name: Buying
@@ -243,30 +228,45 @@ details:
       topic_name: Transporting
       prechecked: false
     - key: other-eu
-      radio_button_name: Other - EU
-      topic_name: Other - EU
+      radio_button_name: Other business in the EU
+      topic_name: Other business in the EU
       prechecked: false
-    - key: other-rest-of-the-world
-      radio_button_name: Other - Rest of the world
-      topic_name: Other - Rest of the world
+  - facet_id: employ_eu_citizens
+    facet_name: Employ EU citizens
+    facet_choices:
+    - key: "yes"
+      radio_button_name: "Yes"
+      topic_name: "Yes"
+      prechecked: false
+    - key: "no"
+      radio_button_name: "No"
+      topic_name: "No"
+      prechecked: false
+    - key: dont-know
+      radio_button_name: Don't know
+      topic_name: Don't know
       prechecked: false
   - facet_id: regulations_and_standards
-    facet_name: Regulations and standards
+    facet_name: Sell products and goods in the UK
     facet_choices:
-    - key: products-or-goods
-      radio_button_name: Products or goods
-      topic_name: Products or goods
+    - key: "yes"
+      radio_button_name: "Yes"
+      topic_name: "Yes"
+      prechecked: false
+    - key: "no"
+      radio_button_name: "No"
+      topic_name: "No"
       prechecked: false
   - facet_id: personal_data
-    facet_name: Personal data (EEA)
+    facet_name: Personal data
     facet_choices:
     - key: processing-personal-data
       radio_button_name: Processing personal data
       topic_name: Processing personal data
       prechecked: false
     - key: interacting-with-eea
-      radio_button_name: Interacting with an EEA website
-      topic_name: Interacting with an EEA website
+      radio_button_name: Visiting a website hosted in the EEA
+      topic_name: Visiting a website hosted in the EEA
       prechecked: false
     - key: digital-service-provider
       radio_button_name: Digital service provider
@@ -275,17 +275,13 @@ details:
   - facet_id: intellectual_property
     facet_name: Intellectual property
     facet_choices:
-    - key: have-intellectual-property
-      radio_button_name: Have intellectual property
-      topic_name: Have intellectual property
-      prechecked: false
     - key: copyright
       radio_button_name: Copyright
       topic_name: Copyright
       prechecked: false
     - key: trademarks
-      radio_button_name: Trademarks
-      topic_name: Trademarks
+      radio_button_name: Trade marks
+      topic_name: Trade marks
       prechecked: false
     - key: designs
       radio_button_name: Designs
@@ -298,6 +294,17 @@ details:
     - key: exhaustion-of-rights
       radio_button_name: Exhaustion of rights
       topic_name: Exhaustion of rights
+      prechecked: false
+  - facet_id: public_sector_procurement
+    facet_name: Public sector procurement
+    facet_choices:
+    - key: civil-government-contracts
+      radio_button_name: Civil government contracts
+      topic_name: Civil government contracts
+      prechecked: false
+    - key: defence-contracts
+      radio_button_name: Defence contracts
+      topic_name: Defence contracts
       prechecked: false
   - facet_id: receiving_eu_funding
     facet_name: Receiving EU funding
@@ -319,8 +326,8 @@ details:
       topic_name: European Structural Fund (ESF)
       prechecked: false
     - key: eurdf
-      radio_button_name: EURDF
-      topic_name: EURDF
+      radio_button_name: European Redevelopment Fund (EURDF)
+      topic_name: European Redevelopment Fund (EURDF)
       prechecked: false
     - key: etcf
       radio_button_name: ETCF
@@ -337,17 +344,6 @@ details:
     - key: etf
       radio_button_name: ETF
       topic_name: ETF
-      prechecked: false
-  - facet_id: public_sector_procurement
-    facet_name: Public sector procurement
-    facet_choices:
-    - key: civil-government-contracts
-      radio_button_name: Civil government contracts
-      topic_name: Civil government contracts
-      prechecked: false
-    - key: defence-contracts
-      radio_button_name: Defence contracts
-      topic_name: Defence contracts
       prechecked: false
   facets:
   - allowed_values:
@@ -508,7 +504,7 @@ details:
   - allowed_values:
     - label: Copyright
       value: copyright
-    - label: Trademarks
+    - label: Trade marks
       value: trademarks
     - label: Designs
       value: designs
