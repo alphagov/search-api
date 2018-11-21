@@ -452,6 +452,23 @@ details:
     preposition: for businesses in
     type: text
   - allowed_values:
+    - label: Do business in the EU
+      value: do-business-in-the-eu
+    - label: Buying
+      value: buying
+    - label: Selling
+      value: selling
+    - label: Transporting
+      value: transporting
+    - label: Other business in the EU
+      value: other-eu
+    display_as_result_metadata: false
+    filterable: true
+    key: doing_business_in_the_eu
+    name: Doing business in the EU
+    preposition: for businesses that
+    type: text
+  - allowed_values:
     - label: "Yes"
       value: "yes"
     - label: "No"
@@ -465,49 +482,28 @@ details:
     preposition: for businesses that
     type: text
   - allowed_values:
-    - label: Do business in the EU
-      value: do-business-in-the-eu
-    - label: Buying
-      value: buying
-    - label: Selling
-      value: selling
-    - label: Transporting
-      value: transporting
-    - label: Other - EU
-      value: other-eu
-    - label: Other - Rest of the world
-      value: other-rest-of-the-world
-    display_as_result_metadata: false
-    filterable: true
-    key: doing_business_in_the_eu
-    name: Doing business in the EU
-    preposition: for businesses that
-    type: text
-  - allowed_values:
     - label: Products or goods
       value: products-or-goods
     display_as_result_metadata: false
     filterable: true
     key: regulations_and_standards
-    name: Regulations and standards
+    name: Sell products and goods in the UK
     preposition: for businesses that sell
     type: text
   - allowed_values:
     - label: Processing personal data
       value: processing-personal-data
-    - label: Interacting with EEA website
+    - label: Visiting a website hosted in the EEA
       value: interacting-with-eea-website
-    - label: Digital service provide
+    - label: Digital service provider
       value: digital-service-provider
     display_as_result_metadata: false
     filterable: true
     key: personal_data
-    name: Personal data (EEA)
+    name: Personal data
     preposition: for businesses involved in
     type: text
   - allowed_values:
-    - label: Have intellectual property
-      value: have-intellectual-property
     - label: Copyright
       value: copyright
     - label: Trademarks
@@ -525,6 +521,17 @@ details:
     preposition: for businesses working with
     type: text
   - allowed_values:
+    - label: Civil government contracts
+      value: civil-government-contracts
+    - label: Defence contracts
+      value: defence-contracts
+    display_as_result_metadata: false
+    filterable: true
+    key: public_sector_procurement
+    name: Public sector procurement
+    preposition: businesses that work with
+    type: text
+  - allowed_values:
     - label: Horizon 2020
       value: horizon-2020
     - label: COSME
@@ -533,7 +540,7 @@ details:
       value: european-investment-bank-eib
     - label: European Structural Fund (ESF)
       value: european-structural-fund-esf
-    - label: EURDF
+    - label: European Redevelopment Fund (EURDF)
       value: eurdf
     - label: ETCF
       value: etcf
@@ -548,17 +555,6 @@ details:
     key: receiving_eu_funding
     name: Receiving EU funding
     preposition: for businesses that receive funding from
-    type: text
-  - allowed_values:
-    - label: Civil government contracts
-      value: civil-government-contracts
-    - label: Defence contracts
-      value: defence-contracts
-    display_as_result_metadata: false
-    filterable: true
-    key: public_sector_procurement
-    name: Public sector procurement
-    preposition: businesses that work with
     type: text
 routes:
 - path: "/find-eu-exit-guidance-business"
