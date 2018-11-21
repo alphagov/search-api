@@ -482,8 +482,10 @@ details:
     preposition: for businesses that
     type: text
   - allowed_values:
-    - label: Products or goods
-      value: products-or-goods
+    - label: "Yes"
+      value: "yes"
+    - label: "No"
+      value: "no"
     display_as_result_metadata: false
     filterable: true
     key: regulations_and_standards
