@@ -36,7 +36,7 @@ module GovukIndex
       processor = Index::ElasticsearchProcessor.govuk
 
       messages.each do |routing_key, payload|
-        if payload.has_key? "base_path"
+        if payload.is_a?(Hash) && payload.has_key?("base_path")
           base_path = payload["base_path"]
           extra_metadata = Indexer::MetadataTagger.metadata_for_base_path(base_path)
           payload = payload.merge(extra_metadata)
