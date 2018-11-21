@@ -327,15 +327,15 @@ details:
       prechecked: false
     - key: eurdf
       radio_button_name: European Redevelopment Fund (EURDF)
-      topic_name: European Redevelopment Fund (EURDF)
+      topic_name: EURDF
       prechecked: false
     - key: etcf
-      radio_button_name: ETCF
-      topic_name: ETCF
+      radio_button_name: European Territorial Cooperation Fund (ETCF)
+      topic_name: European Territorial Cooperation Fund (ETCF)
       prechecked: false
     - key: esc
-      radio_button_name: ESC
-      topic_name: ESC
+      radio_button_name: European Solidarity Corps (ESC)
+      topic_name: European Solidarity Corps (ESC)
       prechecked: false
     - key: ecp
       radio_button_name: ECP
@@ -540,9 +540,9 @@ details:
       value: european-structural-fund-esf
     - label: European Redevelopment Fund (EURDF)
       value: eurdf
-    - label: ETCF
+    - label: European Territorial Cooperation Fund (ETCF)
       value: etcf
-    - label: ESC
+    - label: European Solidarity Corps (ESC)
       value: esc
     - label: ECP
       value: ecp
