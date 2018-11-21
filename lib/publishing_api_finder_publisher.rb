@@ -99,7 +99,7 @@ class FinderEmailSignupContentItemPresenter
     details.merge(
       "subscription_list_title_prefix" => details.fetch("subscription_list_title_prefix", {}),
       "email_filter_facets" => details.fetch("email_filter_facets", []),
-    ).except("document_noun", "facets", "filter", "reject")
+    ).except("document_noun", "facets", "filter", "reject", "summary")
   end
 
   def present
