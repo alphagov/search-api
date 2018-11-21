@@ -302,6 +302,7 @@ non_indexable:
   - '/tour'
   - '/help/ab-testing'
   - '/help.json'
+  - '/prepare-business-uk-leaving-eu'
   - '/random'
   # from whitehall
   - "/BingSiteAuth.xml"
