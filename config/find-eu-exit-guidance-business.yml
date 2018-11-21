@@ -444,7 +444,7 @@ details:
       value: water-transport-maritime-ports
     - label: Wholesale (excl. Motor Vehicles)
       value: wholesale-excl-motor-vehicles
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     key: sector_business_area
     name: Sector / Business Area
@@ -457,7 +457,7 @@ details:
       value: "no"
     - label: Don't know
       value: dont-know
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     key: employ_eu_citizens
     name: Employ EU citizens
@@ -476,7 +476,7 @@ details:
       value: other-eu
     - label: Other - Rest of the world
       value: other-rest-of-the-world
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     key: doing_business_in_the_eu
     name: Doing business in the EU
@@ -485,7 +485,7 @@ details:
   - allowed_values:
     - label: Products or goods
       value: products-or-goods
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     key: regulations_and_standards
     name: Regulations and standards
@@ -498,7 +498,7 @@ details:
       value: interacting-with-eea-website
     - label: Digital service provide
       value: digital-service-provider
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     key: personal_data
     name: Personal data (EEA)
@@ -517,7 +517,7 @@ details:
       value: patents
     - label: Exhaustion of rights
       value: exhaustion-of-rights
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     key: intellectual_property
     name: Intellectual property
@@ -542,7 +542,7 @@ details:
       value: ecp
     - label: ETF
       value: etf
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     key: receiving_eu_funding
     name: Receiving EU funding
@@ -553,7 +553,7 @@ details:
       value: civil-government-contracts
     - label: Defence contracts
       value: defence-contracts
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     key: public_sector_procurement
     name: Public sector procurement
