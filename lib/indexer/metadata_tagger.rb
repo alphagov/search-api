@@ -6,7 +6,7 @@ module Indexer
       @metadata = {}
       @config = YAML.load_file(facet_config_file_path)
 
-      CSV.foreach(file_name, converters: lambda { |v| v || "" }) do |row|
+      CSV.foreach(metadata_file_path, converters: lambda { |v| v || "" }) do |row|
         base_path = row[0]
 
         if row[1] == "yes"

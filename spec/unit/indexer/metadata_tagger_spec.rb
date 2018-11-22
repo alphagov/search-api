@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Indexer::MetadataTagger do
-  let(:facet_config_file) { File.join(Dir.pwd, "config", "find-eu-exit-guidance-business.yml") }
+  let(:facet_config_file) { File.expand_path("fixtures/facet_config.yml", __dir__) }
   # rubocop:disable RSpec/VerifiedDoubles, RSpec/AnyInstance, RSpec/MessageSpies
   it "amends documents" do
     fixture_file = File.expand_path("fixtures/metadata.csv", __dir__)
