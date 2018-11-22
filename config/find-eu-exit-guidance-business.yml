@@ -249,13 +249,9 @@ details:
   - facet_id: regulations_and_standards
     facet_name: Sell products and goods in the UK
     facet_choices:
-    - key: "yes"
-      radio_button_name: "Yes"
-      topic_name: "Yes"
-      prechecked: false
-    - key: "no"
-      radio_button_name: "No"
-      topic_name: "No"
+    - key: products-or-goods
+      radio_button_name: Products and goods sold in the UK
+      topic_name: Products and goods sold in the UK
       prechecked: false
   - facet_id: personal_data
     facet_name: Personal data
@@ -478,10 +474,8 @@ details:
     preposition: for businesses that
     type: text
   - allowed_values:
-    - label: "Yes"
-      value: "yes"
-    - label: "No"
-      value: "no"
+    - label: Products and goods sold in the UK
+      value: products-or-goods
     display_as_result_metadata: false
     filterable: true
     key: regulations_and_standards
