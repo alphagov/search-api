@@ -2,9 +2,9 @@ require 'csv'
 
 module Indexer
   class MetadataTagger
-    def self.initialise(metadata_file_path)
+    def self.initialise(metadata_file_path, facet_config_file_path)
       @metadata = {}
-      @config = YAML.load_file(File.join(Dir.pwd, 'config/find-eu-exit-guidance-business.yml'))
+      @config = YAML.load_file(facet_config_file_path)
 
       CSV.foreach(file_name, converters: lambda { |v| v || "" }) do |row|
         base_path = row[0]

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Indexer::MetadataTagger do
+  let(:facet_config_file) { File.join(Dir.pwd, "config", "find-eu-exit-guidance-business.yml") }
   # rubocop:disable RSpec/VerifiedDoubles, RSpec/AnyInstance, RSpec/MessageSpies
   it "amends documents" do
     fixture_file = File.expand_path("fixtures/metadata.csv", __dir__)
@@ -23,7 +24,7 @@ RSpec.describe Indexer::MetadataTagger do
       .with(test_index_name)
       .and_return(mock_index)
 
-    described_class.initialise(fixture_file)
+    described_class.initialise(fixture_file, facet_config_file)
     described_class.amend_all_metadata
   end
 
@@ -44,7 +45,7 @@ RSpec.describe Indexer::MetadataTagger do
       "sector_business_area" => ["accommodation-restaurants-and-catering-services", "aerospace", "agriculture", "air-transport-aviation", "ancillary-services", "animal-health", "automotive", "banking-market-infrastructure", "broadcasting", "chemicals", "computer-services", "construction-contracting", "education", "electricity", "electronics", "environmental-services", "fisheries", "food-and-drink", "furniture-and-other-manufacturing", "gas-markets", "goods-sectors-each-0-4-of-gva", "imports", "imputed-rent", "insurance", "land-transport-excl-rail", "medical-services", "motor-trades", "network-industries-0-3-of-gva", "oil-and-gas-production", "other-personal-services", "parts-and-machinery", "pharmaceuticals", "post", "professional-and-business-services", "public-administration-and-defence", "rail", "real-estate-excl-imputed-rent", "retail", "service-sectors-each-1-of-gva", "social-work", "steel-and-other-metals-commodities", "telecoms", "textiles-and-clothing", "top-ten-trade-partners-by-value", "warehousing-and-support-for-transportation", "water-transport-maritime-ports", "wholesale-excl-motor-vehicles"],
       "employ_eu_citizens" => ["yes", "no", "dont-know"],
       "doing_business_in_the_eu" => ["do-business-in-the-eu", "buying", "selling", "transporting", "other-eu"],
-      "regulations_and_standards" => ["yes", "no"],
+      "regulations_and_standards" => %w(yes no),
       "personal_data" => ["processing-personal-data", "interacting-with-eea-website", "digital-service-provider"],
       "intellectual_property" => ["copyright", "trademarks", "designs", "patents", "exhaustion-of-rights"],
       "receiving_eu_funding" => ["horizon-2020", "cosme", "european-investment-bank-eib", "european-structural-fund-esf", "eurdf", "etcf", "esc", "ecp", "etf"],
@@ -57,7 +58,7 @@ RSpec.describe Indexer::MetadataTagger do
       .with(test_index_name)
       .and_return(mock_index)
 
-    described_class.initialise(fixture_file)
+    described_class.initialise(fixture_file, facet_config_file)
     described_class.amend_all_metadata
   end
   # rubocop:enable RSpec/VerifiedDoubles, RSpec/AnyInstance, RSpec/MessageSpies
