@@ -164,3 +164,6 @@ require 'sitemap/sitemap_cleanup'
 require 'sitemap/sitemap_generator'
 require 'sitemap/sitemap_presenter'
 require 'sitemap/sitemap_writer'
+
+metadata_file_path = File.join(settings.root, '../../config/metadata.csv')
+Indexer::MetadataTagger.initialise(metadata_file_path)

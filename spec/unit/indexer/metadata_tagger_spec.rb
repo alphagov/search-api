@@ -23,7 +23,8 @@ RSpec.describe Indexer::MetadataTagger do
       .with(test_index_name)
       .and_return(mock_index)
 
-    described_class.amend_indexes_for_file(fixture_file)
+    described_class.initialise(fixture_file)
+    described_class.amend_all_metadata
   end
 
   it "amends with everything" do
@@ -56,7 +57,8 @@ RSpec.describe Indexer::MetadataTagger do
       .with(test_index_name)
       .and_return(mock_index)
 
-    described_class.amend_indexes_for_file(fixture_file)
+    described_class.initialise(fixture_file)
+    described_class.amend_all_metadata
   end
   # rubocop:enable RSpec/VerifiedDoubles, RSpec/AnyInstance, RSpec/MessageSpies
 end

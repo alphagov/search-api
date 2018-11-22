@@ -2,26 +2,36 @@ require 'csv'
 
 module Indexer
   class MetadataTagger
-    def self.amend_indexes_for_file(file_name)
-      file = CSV.read(file_name)
+    def self.initialise(file_name)
+      @metadata = {}
 
-      file.each do |row|
+      CSV.foreach(file_name) do |row|
         base_path = row[0]
 
         if row[1] == "yes"
-          metadata = create_all_metadata
+          metadata_for_path = create_all_metadata
         else
-          metadata = specific_metadata(row)
+          metadata_for_path = specific_metadata(row)
         end
 
-        metadata["appear_in_find_eu_exit_guidance_business_finder"] = "yes"
+        metadata_for_path["appear_in_find_eu_exit_guidance_business_finder"] = "yes"
 
+        @metadata[base_path] = metadata_for_path
+      end
+    end
+
+    def self.amend_all_metadata
+      @metadata.each do |base_path, metadata|
         item_in_search = SearchConfig.instance.content_index.get_document_by_link(base_path)
         if item_in_search
           index_to_update = item_in_search["real_index_name"]
           Indexer::AmendWorker.new.perform(index_to_update, base_path, metadata)
         end
       end
+    end
+
+    def self.metadata_for_base_path(base_path)
+      @metadata[base_path].to_h
     end
 
     def self.create_all_metadata
