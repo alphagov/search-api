@@ -166,4 +166,5 @@ require 'sitemap/sitemap_presenter'
 require 'sitemap/sitemap_writer'
 
 metadata_file_path = File.join(settings.root, '../../config/business_readiness.csv')
-Indexer::MetadataTagger.initialise(metadata_file_path)
+facet_config_file_path = File.join(settings.root, '../../config/find-eu-exit-guidance-business.yml')
+Indexer::MetadataTagger.initialise(metadata_file_path, facet_config_file_path)

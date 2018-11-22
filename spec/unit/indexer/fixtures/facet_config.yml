@@ -1,0 +1,212 @@
+---
+details:
+  facets:
+  - allowed_values:
+    - label: Accommodation, restaurants and catering services
+      value: accommodation-restaurants-and-catering-services
+    - label: Aerospace
+      value: aerospace
+    - label: Agriculture
+      value: agriculture
+    - label: Air transport (Aviation
+      value: air-transport-aviation
+    - label: Ancillary Services
+      value: ancillary-services
+    - label: Animal Health
+      value: animal-health
+    - label: Automotive
+      value: automotive
+    - label: Banking, market infrastructure
+      value: banking-market-infrastructure
+    - label: Broadcasting
+      value: broadcasting
+    - label: Chemicals
+      value: chemicals
+    - label: Computer Services
+      value: computer-services
+    - label: Construction Contracting
+      value: construction-contracting
+    - label: Education
+      value: education
+    - label: Electricity
+      value: electricity
+    - label: Electronics
+      value: electronics
+    - label: Environmental Services
+      value: environmental-services
+    - label: Fisheries
+      value: fisheries
+    - label: Food and Drink
+      value: food-and-drink
+    - label: Furniture and other manufacturing
+      value: furniture-and-other-manufacturing
+    - label: Gas markets
+      value: gas-markets
+    - label: Goods sectors each <0.4% of GVA
+      value: goods-sectors-each-0-4-of-gva
+    - label: Imports
+      value: imports
+    - label: Imputed Rent
+      value: imputed-rent
+    - label: Insurance
+      value: insurance
+    - label: Land transport (excl. rail)
+      value: land-transport-excl-rail
+    - label: Medical services
+      value: medical-services
+    - label: Motor Trades
+      value: motor-trades
+    - label: Network Industries <0.3% of GVA
+      value: network-industries-0-3-of-gva
+    - label: Oil and gas production
+      value: oil-and-gas-production
+    - label: Other personal services
+      value: other-personal-services
+    - label: Parts and machinery
+      value: parts-and-machinery
+    - label: Pharmaceuticals
+      value: pharmaceuticals
+    - label: Post
+      value: post
+    - label: Professional and Business services
+      value: professional-and-business-services
+    - label: Public Administration and Defence
+      value: public-administration-and-defence
+    - label: Rail
+      value: rail
+    - label: Real Estate (excl. Imputed Rent)
+      value: real-estate-excl-imputed-rent
+    - label: Retail
+      value: retail
+    - label: Service sectors each <1% of GVA
+      value: service-sectors-each-1-of-gva
+    - label: Social Work
+      value: social-work
+    - label: Steel and other metals/commodities
+      value: steel-and-other-metals-commodities
+    - label: Telecoms
+      value: telecoms
+    - label: Textiles and clothing
+      value: textiles-and-clothing
+    - label: Top Ten Trade Partners by Value
+      value: top-ten-trade-partners-by-value
+    - label: Warehousing and support for transportation
+      value: warehousing-and-support-for-transportation
+    - label: Water Transport (Maritime/ports)
+      value: water-transport-maritime-ports
+    - label: Wholesale (excl. Motor Vehicles)
+      value: wholesale-excl-motor-vehicles
+    display_as_result_metadata: false
+    filterable: true
+    key: sector_business_area
+    name: Sector / Business Area
+    preposition: for businesses in
+    type: text
+  - allowed_values:
+    - label: Do business in the EU
+      value: do-business-in-the-eu
+    - label: Buying
+      value: buying
+    - label: Selling
+      value: selling
+    - label: Transporting
+      value: transporting
+    - label: Other business in the EU
+      value: other-eu
+    display_as_result_metadata: false
+    filterable: true
+    key: doing_business_in_the_eu
+    name: Doing business in the EU
+    preposition: for businesses that
+    type: text
+  - allowed_values:
+    - label: "Yes"
+      value: "yes"
+    - label: "No"
+      value: "no"
+    - label: Don't know
+      value: dont-know
+    display_as_result_metadata: false
+    filterable: true
+    key: employ_eu_citizens
+    name: Employ EU citizens
+    preposition: for businesses that
+    type: text
+  - allowed_values:
+    - label: "Yes"
+      value: "yes"
+    - label: "No"
+      value: "no"
+    display_as_result_metadata: false
+    filterable: true
+    key: regulations_and_standards
+    name: Sell products and goods in the UK
+    preposition: for businesses that sell
+    type: text
+  - allowed_values:
+    - label: Processing personal data
+      value: processing-personal-data
+    - label: Visiting a website hosted in the EEA
+      value: interacting-with-eea-website
+    - label: Digital service provider
+      value: digital-service-provider
+    display_as_result_metadata: false
+    filterable: true
+    key: personal_data
+    name: Personal data
+    preposition: for businesses involved in
+    type: text
+  - allowed_values:
+    - label: Copyright
+      value: copyright
+    - label: Trade marks
+      value: trademarks
+    - label: Designs
+      value: designs
+    - label: Patents
+      value: patents
+    - label: Exhaustion of rights
+      value: exhaustion-of-rights
+    display_as_result_metadata: false
+    filterable: true
+    key: intellectual_property
+    name: Intellectual property
+    preposition: for businesses working with
+    type: text
+  - allowed_values:
+    - label: Civil government contracts
+      value: civil-government-contracts
+    - label: Defence contracts
+      value: defence-contracts
+    display_as_result_metadata: false
+    filterable: true
+    key: public_sector_procurement
+    name: Public sector procurement
+    preposition: businesses that work with
+    type: text
+  - allowed_values:
+    - label: Horizon 2020
+      value: horizon-2020
+    - label: COSME
+      value: cosme
+    - label: European Investment Bank (EIB)
+      value: european-investment-bank-eib
+    - label: European Structural Fund (ESF)
+      value: european-structural-fund-esf
+    - label: European Redevelopment Fund (EURDF)
+      value: eurdf
+    - label: European Territorial Cooperation Fund (ETCF)
+      value: etcf
+    - label: European Solidarity Corps (ESC)
+      value: esc
+    - label: ECP
+      value: ecp
+    - label: ETF
+      value: etf
+    display_as_result_metadata: false
+    filterable: true
+    key: receiving_eu_funding
+    name: Receiving EU funding
+    preposition: for businesses that receive funding from
+    type: text
+
