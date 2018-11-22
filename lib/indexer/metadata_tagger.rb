@@ -5,7 +5,7 @@ module Indexer
     def self.initialise(file_name)
       @metadata = {}
 
-      CSV.foreach(file_name) do |row|
+      CSV.foreach(file_name, converters: lambda { |v| v || "" }) do |row|
         base_path = row[0]
 
         if row[1] == "yes"
