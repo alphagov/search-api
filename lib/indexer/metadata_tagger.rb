@@ -51,7 +51,7 @@ module Indexer
       metadata = {}
       facets_from_finder_config.each_with_index do |facet, index|
         row_index = index + 2
-        metadata[facet["key"]] = row.fetch(row_index, "").split(",")
+        metadata[facet["key"]] = row.fetch(row_index, "").split(",").map(&:lstrip)
       end
       metadata.reject do |_, value|
         value == []
