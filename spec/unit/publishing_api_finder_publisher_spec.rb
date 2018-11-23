@@ -64,6 +64,20 @@ RSpec.describe PublishingApiFinderPublisher do
         it "publishes the email signup to the Publishing API" do
           expect(publishing_api).to have_received(:publish).with(signup_content_id)
         end
+
+        it "maps filter facets to email facets in the payload" do
+          if signup_content_id
+            filter_facets = payload[:details]["facets"]
+            email_facets = signup_payload[:details]["email_filter_facets"]
+
+            expect(email_facets.map { |f| f["facet_id"] }).to eq(filter_facets.map { |ft| ft["key"] })
+
+            email_facet_values = email_facets.map { |f| f["facet_choices"].map { |fc| fc["key"] } }
+            filter_facet_values = filter_facets.map { |f| f["allowed_values"].map { |av| av["value"] } }
+
+            expect(email_facet_values).to eq(filter_facet_values)
+          end
+        end
       end
     end
   end

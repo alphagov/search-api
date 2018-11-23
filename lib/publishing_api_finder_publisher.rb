@@ -98,7 +98,7 @@ class FinderEmailSignupContentItemPresenter
     details = schema.fetch("details", {})
     details.merge(
       "subscription_list_title_prefix" => details.fetch("subscription_list_title_prefix", {}),
-      "email_filter_facets" => details.fetch("email_filter_facets", []),
+      "email_filter_facets" => email_filter_facets,
     ).except("document_noun", "facets", "filter", "reject", "summary")
   end
 
@@ -123,5 +123,22 @@ class FinderEmailSignupContentItemPresenter
 
   def present_links
     { content_id: content_id, links: {} }
+  end
+
+  def email_filter_facets
+    schema["details"]["facets"].map do |facet|
+      {
+        "facet_id" => facet["key"],
+        "facet_name" => facet["name"],
+        "facet_choices" => facet["allowed_values"].map do |av|
+          {
+            "key" => av["value"],
+            "radio_button_name" => av["label"],
+            "topic_name" => av["label"],
+            "prechecked" => false
+          }
+        end
+      }
+    end
   end
 end
