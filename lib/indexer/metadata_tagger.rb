@@ -9,7 +9,7 @@ module Indexer
       CSV.foreach(metadata_file_path, converters: lambda { |v| v || "" }) do |row|
         base_path = row[0]
 
-        if row[1] == "yes"
+        if row[1].strip == "yes"
           metadata_for_path = create_all_metadata
         else
           metadata_for_path = specific_metadata(row)
@@ -51,7 +51,7 @@ module Indexer
       metadata = {}
       facets_from_finder_config.each_with_index do |facet, index|
         row_index = index + 2
-        metadata[facet["key"]] = row.fetch(row_index, "").split(",")
+        metadata[facet["key"]] = row.fetch(row_index, "").split(",").map(&:strip)
       end
       metadata.reject do |_, value|
         value == []
