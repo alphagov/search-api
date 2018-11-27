@@ -142,7 +142,8 @@ These are used by [search admin](https://github.com/alphagov/search-admin/).
 	functionality.
 - [Popularity information](doc/popularity.md): Rummager uses Google Analytics
 	data to improve search results.
-- [Publishing advanced search](doc/advanced-search.md): A task to publish the advanced search finder content item
+- [Publishing advanced search](doc/advanced-search.md): Information about the advanced search finder
+- [Publishing document finders](doc/publishing-finders.md): Information about publishing finders using rake tasks
 
 ## Licence
 
