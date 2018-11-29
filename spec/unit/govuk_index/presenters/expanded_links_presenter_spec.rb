@@ -243,6 +243,23 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expect(presenter.policy_groups).to eq(["micropig-advisory-group"])
   end
 
+  it "default_news_image" do
+    default_news_image_url = "https://www.test.gov.uk/default_news_image.jpg"
+    expanded_links = {
+      "primary_publishing_organisation" => [
+        {
+          "details" => {
+            "default_news_image" => { "url" => default_news_image_url }
+          }
+        }
+      ]
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+
+    expect(presenter.default_news_image).to eq(default_news_image_url)
+  end
+
   def expanded_links_presenter(expanded_links)
     described_class.new(expanded_links)
   end
