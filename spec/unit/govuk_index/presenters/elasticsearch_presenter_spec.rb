@@ -63,6 +63,34 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     end
   end
 
+  describe "#image_url" do
+    let(:default_news_image_url) { "https://www.test.gov.uk/default_news_image.jpg" }
+    let(:expanded_links) do
+      { "primary_publishing_organisation" => [{
+        "details" => { "default_news_image" => { "url" => default_news_image_url } }
+      }] }
+    end
+
+    it "returns a document's organisation's default news image if it does not have an image" do
+      payload = generate_random_example(payload: { payload_version: 1 })
+      payload["details"].delete("image")
+      payload["expanded_links"] = expanded_links
+
+      presenter = elasticsearch_presenter(payload, payload["document_type"])
+      expect(presenter.image_url).to eq(default_news_image_url)
+    end
+
+    it "returns a document's image when it and organisation's default news image are present " do
+      image_url = "https://www.test.gov.uk/image.jpg"
+      payload = generate_random_example(payload: { payload_version: 1 })
+      payload["expanded_links"] = expanded_links
+      payload["details"]["image"] = { "url" => image_url }
+
+      presenter = elasticsearch_presenter(payload, payload["document_type"])
+      expect(presenter.image_url).to eq(image_url)
+    end
+  end
+
   def elasticsearch_presenter(payload, type = "aaib_report")
     type_mapper = GovukIndex::DocumentTypeMapper.new(payload)
     allow(type_mapper).to receive(:type).and_return(type)

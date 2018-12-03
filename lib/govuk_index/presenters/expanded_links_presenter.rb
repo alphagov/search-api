@@ -60,6 +60,11 @@ module GovukIndex
       end
     end
 
+    def default_news_image
+      organisation = expanded_links.fetch("primary_publishing_organisation", [])
+      organisation[0].dig("details", "default_news_image", "url") unless organisation.empty?
+    end
+
   private
 
     attr_reader :expanded_links

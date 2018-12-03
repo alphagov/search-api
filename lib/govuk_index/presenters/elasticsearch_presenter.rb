@@ -53,7 +53,7 @@ module GovukIndex
         grant_type:                          specialist.grant_type,
         hidden_indexable_content:            specialist.hidden_indexable_content,
         hmrc_manual_section_id:              common_fields.section_id,
-        image_url:                           details.image_url,
+        image_url:                           image_url,
         indexable_content:                   indexable.indexable_content,
         industries:                          specialist.industries,
         regions:                             specialist.regions,
@@ -140,6 +140,10 @@ module GovukIndex
       else
         base_path || raise(NotIdentifiable, "base_path missing from payload")
       end
+    end
+
+    def image_url
+      details.image_url || expanded_links.default_news_image
     end
 
   private
