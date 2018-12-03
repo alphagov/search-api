@@ -12,6 +12,7 @@
     "government_document_supertype",
     "indexable_content",
     "navigation_document_supertype",
+    "image_url",
     "is_withdrawn",
     "latest_change_note",
     "licence_identifier",
