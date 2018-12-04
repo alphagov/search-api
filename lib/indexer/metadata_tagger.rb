@@ -9,7 +9,7 @@ module Indexer
       CSV.foreach(metadata_file_path, converters: lambda { |v| v || "" }) do |row|
         base_path = row[0]
 
-        metadata_for_path = specific_metadata(row)
+        metadata_for_path = create_metadata_for_row(row)
 
         metadata_for_path["appear_in_find_eu_exit_guidance_business_finder"] = "yes"
 
@@ -35,7 +35,7 @@ module Indexer
       @metadata[base_path].to_h
     end
 
-    def self.specific_metadata(row)
+    def self.create_metadata_for_row(row)
       metadata = {}
       facets_from_finder_config.each_with_index do |facet, index|
         row_index = index + 1
