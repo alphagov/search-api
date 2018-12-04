@@ -752,7 +752,7 @@
     "type": "identifiers"
   },
 
-  "receiving_eu_funding": {
+  "eu_uk_government_funding": {
     "description": "The EU scheme from which the business receives its funding",
     "type": "identifiers"
   },

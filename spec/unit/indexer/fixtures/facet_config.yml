@@ -205,7 +205,7 @@ details:
       value: etf
     display_as_result_metadata: false
     filterable: true
-    key: receiving_eu_funding
+    key: eu_uk_government_funding
     name: Receiving EU funding
     preposition: for businesses that receive funding from
     type: text
