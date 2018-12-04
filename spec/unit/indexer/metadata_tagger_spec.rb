@@ -15,7 +15,7 @@ RSpec.describe Indexer::MetadataTagger do
 
     metadata = {
       "sector_business_area" => %w(aerospace agriculture),
-      "doing_business_in_the_eu" => %w(yes),
+      "business_activity" => %w(yes),
       "appear_in_find_eu_exit_guidance_business_finder" => "yes"
     }
 

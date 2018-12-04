@@ -2,7 +2,7 @@
   "fields": [
     "appear_in_find_eu_exit_guidance_business_finder",
     "closing_date",
-    "doing_business_in_the_eu",
+    "business_activity",
     "employ_eu_citizens",
     "fund_state",
     "fund_type",
@@ -11,7 +11,7 @@
     "location",
     "personal_data",
     "public_sector_procurement",
-    "receiving_eu_funding",
+    "eu_uk_government_funding",
     "regulations_and_standards",
     "sector_business_area"
   ],
