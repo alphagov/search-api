@@ -115,7 +115,7 @@ details:
       value: other-eu
     display_as_result_metadata: false
     filterable: true
-    key: doing_business_in_the_eu
+    key: business_activity
     name: Doing business in the EU
     preposition: for businesses that
     type: text
