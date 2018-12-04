@@ -48,7 +48,7 @@ RSpec.describe Indexer::MetadataTagger do
       "regulations_and_standards" => %w(yes no),
       "personal_data" => ["processing-personal-data", "interacting-with-eea-website", "digital-service-provider"],
       "intellectual_property" => ["copyright", "trademarks", "designs", "patents", "exhaustion-of-rights"],
-      "receiving_eu_funding" => ["horizon-2020", "cosme", "european-investment-bank-eib", "european-structural-fund-esf", "eurdf", "etcf", "esc", "ecp", "etf"],
+      "eu_uk_government_funding" => ["horizon-2020", "cosme", "european-investment-bank-eib", "european-structural-fund-esf", "eurdf", "etcf", "esc", "ecp", "etf"],
       "public_sector_procurement" => ["civil-government-contracts", "defence-contracts"],
       "appear_in_find_eu_exit_guidance_business_finder" => "yes"
     }
