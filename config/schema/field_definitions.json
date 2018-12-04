@@ -732,7 +732,7 @@
     "type": "identifiers"
   },
 
-  "doing_business_in_the_eu": {
+  "business_activity": {
     "description": "Whether or not the going concern does business in the EU and their type of business (e.g. buying, selling, transporting)",
     "type": "identifiers"
   },
