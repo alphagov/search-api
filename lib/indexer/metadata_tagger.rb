@@ -9,11 +9,7 @@ module Indexer
       CSV.foreach(metadata_file_path, converters: lambda { |v| v || "" }) do |row|
         base_path = row[0]
 
-        if row[1].strip == "yes"
-          metadata_for_path = create_all_metadata
-        else
-          metadata_for_path = specific_metadata(row)
-        end
+        metadata_for_path = specific_metadata(row)
 
         metadata_for_path["appear_in_find_eu_exit_guidance_business_finder"] = "yes"
 
@@ -39,18 +35,10 @@ module Indexer
       @metadata[base_path].to_h
     end
 
-    def self.create_all_metadata
-      all_metadata = {}
-      facets_from_finder_config.each do |facet|
-        all_metadata[facet["key"]] = facet["allowed_values"].map { |f| f["value"] }
-      end
-      all_metadata
-    end
-
     def self.specific_metadata(row)
       metadata = {}
       facets_from_finder_config.each_with_index do |facet, index|
-        row_index = index + 2
+        row_index = index + 1
         metadata[facet["key"]] = row.fetch(row_index, "").split(",").map(&:strip)
       end
       metadata.reject do |_, value|
