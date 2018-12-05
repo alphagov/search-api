@@ -71,8 +71,12 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
       }] }
     end
 
-    it "returns a document's organisation's default news image if it does not have an image" do
-      payload = generate_random_example(payload: { payload_version: 1 })
+    it "returns a newslike document's organisation's default news image if it does not have an image" do
+      payload = generate_random_example(schema: "news_article", payload: {
+        payload_version: 1,
+        document_type: "news_story",
+        content_purpose_subgroup: "news",
+      })
       payload["details"].delete("image")
       payload["expanded_links"] = expanded_links
 
@@ -88,6 +92,14 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
 
       presenter = elasticsearch_presenter(payload, payload["document_type"])
       expect(presenter.image_url).to eq(image_url)
+    end
+
+    it "returns nil if a document has no image and is not a newslike document" do
+      payload = generate_random_example(payload: { payload_version: 1 })
+      payload["details"].delete("image")
+
+      presenter = elasticsearch_presenter(payload, payload["document_type"])
+      expect(presenter.image_url).to be nil
     end
   end
 

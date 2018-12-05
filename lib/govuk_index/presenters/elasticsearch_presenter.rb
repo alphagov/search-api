@@ -143,7 +143,7 @@ module GovukIndex
     end
 
     def image_url
-      details.image_url || expanded_links.default_news_image
+      details.image_url || (expanded_links.default_news_image if newslike?)
     end
 
   private
@@ -182,6 +182,12 @@ module GovukIndex
 
     def specialist
       @_specialist ||= SpecialistPresenter.new(metadata: payload.dig("details", "metadata"))
+    end
+
+    def newslike?
+      return false if common_fields.content_store_document_type == "fatality_notice"
+      common_fields.content_purpose_subgroup == "news" ||
+        common_fields.content_purpose_subgroup == "speeches_and_statements"
     end
   end
 end
