@@ -81,6 +81,14 @@ class SpecialRoutePublisher
         title: "Prepare your business for the UK leaving the EU",
         description: "Q&A frontend for the 'Find EU Exit guidance for your business' finder",
         type: "exact",
+      },
+      {
+        rendering_app: "finder-frontend",
+        base_path: "/uk-nationals-living-in-the-eu",
+        content_id: "7a99da17-e9e1-410b-b67d-c3f6348c595d",
+        title: "UK nationals living in the EU",
+        description: "Q&A frontend for the country pages affected by EU Exit",
+        type: "exact",
       }
     ]
   end
