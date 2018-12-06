@@ -45,5 +45,29 @@ module Indexer
         value == []
       end
     end
+
+    def self.all_nil_metadata_hash
+      metadata = {}
+
+      facets_from_finder_config.each do |facet|
+        metadata[facet["key"]] = nil
+      end
+
+      metadata
+    end
+
+    def self.remove_all_metadata_for_base_paths(base_paths)
+      base_paths = Array(base_paths)
+
+      base_paths.each do |base_path|
+        item_in_search = SearchConfig.instance.content_index.get_document_by_link(base_path)
+        if item_in_search
+          index_to_update = item_in_search["real_index_name"]
+          metadata_for_path = all_nil_metadata_hash
+          metadata_for_path["appear_in_find_eu_exit_guidance_business_finder"] = nil
+          Indexer::AmendWorker.new.perform(index_to_update, base_path, metadata_for_path)
+        end
+      end
+    end
   end
 end
