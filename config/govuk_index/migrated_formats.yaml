@@ -303,6 +303,7 @@ non_indexable:
   - '/help/ab-testing'
   - '/help.json'
   - '/prepare-business-uk-leaving-eu'
+  - '/uk-nationals-living-in-the-eu'
   - '/random'
   # from whitehall
   - "/BingSiteAuth.xml"
