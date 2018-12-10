@@ -16,6 +16,20 @@ namespace :publishing_api do
     PublishingApiFinderPublisher.new(finder, timestamp).call
   end
 
+  desc "Unpublish document finder."
+  task :unpublish_document_finder do
+    document_finder_config = ENV["DOCUMENT_FINDER_CONFIG"]
+
+    unless document_finder_config
+      raise "Please supply a valid finder config file name"
+    end
+
+    finder = YAML.load_file("config/#{document_finder_config}")
+
+    Services.publishing_api.unpublish(finder["content_id"], "gone")
+    Services.publishing_api.unpublish(finder["signup_content_id"], "gone")
+  end
+
   desc "Publish citizen topic finders"
   task :publish_citizen_finders do
     topic_config = YAML.load_file("config/topic_finders/finder_content_items.yml")
