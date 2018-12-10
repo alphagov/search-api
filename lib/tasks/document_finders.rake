@@ -1,4 +1,5 @@
 require "publishing_api_finder_publisher"
+require "publishing_api_topic_finder_publisher"
 
 namespace :publishing_api do
   desc "Publish document finder."
@@ -13,5 +14,23 @@ namespace :publishing_api do
     timestamp = Time.now.iso8601
 
     PublishingApiFinderPublisher.new(finder, timestamp).call
+  end
+
+  desc "Publish citizen topic finders"
+  task :publish_citizen_finders do
+    topic_config = YAML.load_file("config/topic_finders/finder_content_items.yml")
+
+    PublishingApiTopicFinderPublisher.new(topic_config["topics"], Time.now.iso8601).call
+  end
+
+  desc "Unpublish citizen topic finders"
+  task :unpublish_citizen_finders do
+    topic_config = YAML.load_file("config/topic_finders/finder_content_items.yml")
+
+    topic_config["topics"].each do |topic|
+      puts "Unpublishing #{topic['slug']}"
+      Services.publishing_api.unpublish(topic["finder_content_id"], type: "gone")
+    end
+    puts "Finished"
   end
 end
