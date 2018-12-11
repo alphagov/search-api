@@ -1,7 +1,7 @@
 require 'publishing_api_finder_publisher'
 
 class PrepareEuExitFinderPublisher
-  TEMPLATE_CONTENT_ITEM_PATH = "config/prepare-eu-exit.yml.erb".freeze
+  TEMPLATE_PATH = "config/prepare-eu-exit.yml.erb".freeze
 
   def initialize(topics, timestamp = Time.now.iso8601)
     @topics = validate(topics)
@@ -9,7 +9,7 @@ class PrepareEuExitFinderPublisher
   end
 
   def call
-    template_content_item = File.read(TEMPLATE_CONTENT_ITEM_PATH)
+    template = ERB.new(File.read(TEMPLATE_PATH))
 
     @topics.each do |topic|
       config = {
@@ -20,7 +20,7 @@ class PrepareEuExitFinderPublisher
         topic_slug: topic["slug"],
       }
 
-      finder = YAML.safe_load(ERB.new(template_content_item).result(binding))
+      finder = YAML.safe_load(template.result(binding))
 
       PublishingApiFinderPublisher.new(finder, @timestamp).call
     end
