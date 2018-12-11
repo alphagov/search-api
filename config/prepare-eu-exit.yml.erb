@@ -1,3 +1,41 @@
+# Required config keys for processing the ERB
+# :finder_content_id
+# :timestamp
+# :topic_content_id
+# :topic_name
+# :topic_slug
+
+base_path: "/prepare-eu-exit/<%= config[:topic_slug] %>"
+content_id: "<%= config[:finder_content_id] %>"
+title: "<%= config[:topic_name] %> – EU Exit guidance"
+description:
+name: "<%= config[:topic_name] %> – EU Exit guidance"
+locale: en
+public_updated_at: "<%= config[:timestamp] %>"
+publishing_app: rummager
+rendering_app: finder-frontend
+details:
+  beta: false
+  document_noun: publication
+  facets: []
+  filter:
+    all_part_of_taxonomy_tree:
+      - "d7bdaee2-8ea5-460e-b00d-6e9382eb6b61"
+      - "<%= config[:topic_content_id] %>"
+    content_purpose_supergroup:
+      - services
+      - guidance_and_regulation
+  subscription_list_title_prefix: "<%= config[:topic_name] %> – EU Exit guidance"
+  summary:
+routes:
+- path: "/prepare-eu-exit/<%= config[:topic_slug] %>"
+  type: exact
+- path: "/prepare-eu-exit/<%= config[:topic_slug] %>.json"
+  type: exact
+document_type: finder
+schema_name: finder
+parent:
+  - ecb55f9d-0823-43bd-a116-dbfab2b76ef9
 topics:
   - title: "Entering and staying in the UK"
     slug: "entering-staying-uk"

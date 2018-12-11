@@ -1,3 +1,6 @@
+require "publishing_api_finder_publisher"
+require "prepare_eu_exit_finder_publisher"
+
 namespace :publishing_api do
   desc "Publish special routes such as sitemaps"
   task :publish_special_routes do
@@ -31,5 +34,51 @@ namespace :publishing_api do
     content_ids.each do |content_id|
       Services.publishing_api.unpublish(content_id, type: "gone")
     end
+  end
+
+  desc "Publish document finder."
+  task :publish_document_finder do
+    document_finder_config = ENV["DOCUMENT_FINDER_CONFIG"]
+
+    unless document_finder_config
+      raise "Please supply a valid finder config file name"
+    end
+
+    finder = YAML.load_file("config/#{document_finder_config}")
+    timestamp = Time.now.iso8601
+
+    PublishingApiFinderPublisher.new(finder, timestamp).call
+  end
+
+  desc "Unpublish document finder."
+  task :unpublish_document_finder do
+    document_finder_config = ENV["DOCUMENT_FINDER_CONFIG"]
+
+    unless document_finder_config
+      raise "Please supply a valid finder config file name"
+    end
+
+    finder = YAML.load_file("config/#{document_finder_config}")
+
+    Services.publishing_api.unpublish(finder["content_id"], "gone")
+    Services.publishing_api.unpublish(finder["signup_content_id"], "gone")
+  end
+
+  desc "Publish Prepare EU Exit finders"
+  task :publish_prepare_eu_exit_finders do
+    topic_config = YAML.load_file("config/prepare-eu-exit.yml")
+
+    PrepareEuExitFinderPublisher.new(topic_config["topics"], Time.now.iso8601).call
+  end
+
+  desc "Unpublish Prepare EU Exit finders"
+  task :unpublish_prepare_eu_exit_finders do
+    prepare_eu_exit_finder_config = YAML.load_file("config/prepare-eu-exit.yml")
+
+    prepare_eu_exit_finder_config["topics"].each do |topic|
+      puts "Unpublishing #{topic['slug']}"
+      Services.publishing_api.unpublish(topic["finder_content_id"], type: "gone")
+    end
+    puts "Finished"
   end
 end
