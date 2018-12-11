@@ -5,7 +5,7 @@
 # :topic_name
 # :topic_slug
 
-base_path: "/prepare-eu-exit-live-uk/<%= config[:topic_slug] %>"
+base_path: "/prepare-eu-exit/<%= config[:topic_slug] %>"
 content_id: "<%= config[:finder_content_id] %>"
 title: "<%= config[:topic_name] %> – EU Exit guidance"
 description:
@@ -28,9 +28,9 @@ details:
   subscription_list_title_prefix: "<%= config[:topic_name] %> – EU Exit guidance"
   summary:
 routes:
-- path: "/prepare-eu-exit-live-uk/<%= config[:topic_slug] %>"
+- path: "/prepare-eu-exit/<%= config[:topic_slug] %>"
   type: exact
-- path: "/prepare-eu-exit-live-uk/<%= config[:topic_slug] %>.json"
+- path: "/prepare-eu-exit/<%= config[:topic_slug] %>.json"
   type: exact
 document_type: finder
 schema_name: finder
