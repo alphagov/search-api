@@ -27,7 +27,7 @@ RSpec.describe PublishingApiTopicFinderPublisher do
     let(:publishing_api) { instance_double("GdsApi::PublishingApiV2") }
     let(:item) {
       {
-        "base_path" => "/prepare-eu-exit-live-uk/seaside-fun",
+        "base_path" => "/prepare-eu-exit/seaside-fun",
         "description" => nil,
         "details" => {
           "beta" => false,
@@ -46,8 +46,8 @@ RSpec.describe PublishingApiTopicFinderPublisher do
         "publishing_app" => "rummager",
         "rendering_app" => "finder-frontend",
         "routes" => [
-          { "path" => "/prepare-eu-exit-live-uk/seaside-fun", "type" => "exact" },
-          { "path" => "/prepare-eu-exit-live-uk/seaside-fun.json", "type" => "exact" }
+          { "path" => "/prepare-eu-exit/seaside-fun", "type" => "exact" },
+          { "path" => "/prepare-eu-exit/seaside-fun.json", "type" => "exact" }
         ],
         "schema_name" => "finder",
         "title" => "Having fun at the seaside – EU Exit guidance",
