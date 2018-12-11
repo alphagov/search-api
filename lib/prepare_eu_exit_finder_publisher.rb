@@ -3,21 +3,21 @@ require 'publishing_api_finder_publisher'
 class PrepareEuExitFinderPublisher
   TEMPLATE_CONTENT_ITEM_PATH = "config/prepare-eu-exit.yml.erb".freeze
 
-  def initialize(finder_config, timestamp = Time.now.iso8601)
-    @finder_config = validate(finder_config)
+  def initialize(topics, timestamp = Time.now.iso8601)
+    @topics = validate(topics)
     @timestamp = timestamp
   end
 
   def call
     template_content_item = File.read(TEMPLATE_CONTENT_ITEM_PATH)
 
-    @finder_config.each do |item|
+    @topics.each do |topic|
       config = {
-        finder_content_id: item["finder_content_id"],
+        finder_content_id: topic["finder_content_id"],
         timestamp: @timestamp,
-        topic_content_id: item["topic_content_id"],
-        topic_name: item["title"],
-        topic_slug: item["slug"],
+        topic_content_id: topic["topic_content_id"],
+        topic_name: topic["title"],
+        topic_slug: topic["slug"],
       }
 
       finder = YAML.safe_load(ERB.new(template_content_item).result(binding))
