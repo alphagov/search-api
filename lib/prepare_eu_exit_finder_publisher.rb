@@ -3,6 +3,8 @@ require 'publishing_api_finder_publisher'
 class PrepareEuExitFinderPublisher
   TEMPLATE_PATH = "config/prepare-eu-exit.yml.erb".freeze
 
+  PrepareEuExitFinderValidationError = Class.new(StandardError)
+
   def initialize(topics, timestamp = Time.now.iso8601)
     @topics = validate(topics)
     @timestamp = timestamp
@@ -36,5 +38,3 @@ private
     finder_config
   end
 end
-
-class PrepareEuExitFinderValidationError < StandardError; end
