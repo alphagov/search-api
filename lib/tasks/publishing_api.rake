@@ -66,16 +66,16 @@ namespace :publishing_api do
 
   desc "Publish Prepare EU Exit finders"
   task :publish_prepare_eu_exit_finders do
-    topic_config = YAML.load_file("config/prepare-eu-exit.yml")
+    config = YAML.safe_load(ERB.new(File.read("config/prepare-eu-exit.yml.erb")).result_with_hash(config: {}))
 
-    PrepareEuExitFinderPublisher.new(topic_config["topics"], Time.now.iso8601).call
+    PrepareEuExitFinderPublisher.new(config["topics"], Time.now.iso8601).call
   end
 
   desc "Unpublish Prepare EU Exit finders"
   task :unpublish_prepare_eu_exit_finders do
-    prepare_eu_exit_finder_config = YAML.load_file("config/prepare-eu-exit.yml")
+    config = YAML.safe_load(ERB.new(File.read("config/prepare-eu-exit.yml.erb")).result_with_hash(config: {}))
 
-    prepare_eu_exit_finder_config["topics"].each do |topic|
+    config["topics"].each do |topic|
       puts "Unpublishing #{topic['slug']}"
       Services.publishing_api.unpublish(topic["finder_content_id"], type: "gone")
     end
