@@ -84,9 +84,9 @@ class SpecialRoutePublisher
       },
       {
         rendering_app: "finder-frontend",
-        base_path: "/uk-nationals-living-in-the-eu",
+        base_path: "/uk-citizens-living-in-the-eu",
         content_id: "7a99da17-e9e1-410b-b67d-c3f6348c595d",
-        title: "UK nationals living in the EU",
+        title: "UK citizens living in the EU",
         description: "Q&A frontend for the country pages affected by EU Exit",
         type: "exact",
       }
