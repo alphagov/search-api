@@ -1,28 +1,30 @@
 require 'publishing_api_finder_publisher'
 
 class PrepareEuExitFinderPublisher
-  TEMPLATE_CONTENT_ITEM_PATH = "config/prepare-eu-exit.yml.erb".freeze
+  TEMPLATE_PATH = "config/prepare-eu-exit.yml.erb".freeze
 
-  def initialize(finder_config, timestamp = Time.now.iso8601)
-    @finder_config = validate(finder_config)
+  PrepareEuExitFinderValidationError = Class.new(StandardError)
+
+  def initialize(topics, timestamp = Time.now.iso8601)
+    @topics = validate(topics)
     @timestamp = timestamp
   end
 
   def call
-    template_content_item = File.read(TEMPLATE_CONTENT_ITEM_PATH)
+    template = ERB.new(File.read(TEMPLATE_PATH))
 
-    @finder_config.each do |item|
-      config = {
-        finder_content_id: item["finder_content_id"],
+    @topics.each do |topic|
+      schema_config = {
+        finder_content_id: topic["finder_content_id"],
         timestamp: @timestamp,
-        topic_content_id: item["topic_content_id"],
-        topic_name: item["title"],
-        topic_slug: item["slug"],
+        topic_content_id: topic["topic_content_id"],
+        topic_name: topic["title"],
+        topic_slug: topic["slug"],
       }
 
-      finder = YAML.safe_load(ERB.new(template_content_item).result(binding))
+      schema = YAML.safe_load(template.result_with_hash(config: schema_config))
 
-      PublishingApiFinderPublisher.new(finder, @timestamp).call
+      PublishingApiFinderPublisher.new(schema, @timestamp).call
     end
   end
 
@@ -36,5 +38,3 @@ private
     finder_config
   end
 end
-
-class PrepareEuExitFinderValidationError < StandardError; end
