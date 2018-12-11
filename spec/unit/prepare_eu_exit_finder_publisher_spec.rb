@@ -1,7 +1,7 @@
 require "spec_helper"
-require "publishing_api_topic_finder_publisher"
+require "prepare_eu_exit_finder_publisher"
 
-RSpec.describe PublishingApiTopicFinderPublisher do
+RSpec.describe PrepareEuExitFinderPublisher do
   subject(:instance) { described_class.new(config, timestamp) }
 
   let(:finder_content_id) { "finder-finder-finder" }
