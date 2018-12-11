@@ -1,7 +1,7 @@
 require 'publishing_api_finder_publisher'
 
 class PublishingApiTopicFinderPublisher
-  TEMPLATE_CONTENT_ITEM_PATH = "config/topic_finders/prepare-individual-uk-leaving-eu.yml.erb".freeze
+  TEMPLATE_CONTENT_ITEM_PATH = "config/prepare-eu-exit.yml.erb".freeze
 
   def initialize(finder_config, timestamp = Time.now.iso8601)
     @finder_config = validate(finder_config)
