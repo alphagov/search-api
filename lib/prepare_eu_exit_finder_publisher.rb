@@ -12,7 +12,7 @@ class PrepareEuExitFinderPublisher
     template = ERB.new(File.read(TEMPLATE_PATH))
 
     @topics.each do |topic|
-      config = {
+      schema_config = {
         finder_content_id: topic["finder_content_id"],
         timestamp: @timestamp,
         topic_content_id: topic["topic_content_id"],
@@ -20,9 +20,9 @@ class PrepareEuExitFinderPublisher
         topic_slug: topic["slug"],
       }
 
-      finder = YAML.safe_load(template.result(binding))
+      schema = YAML.safe_load(template.result_with_hash(config: schema_config))
 
-      PublishingApiFinderPublisher.new(finder, @timestamp).call
+      PublishingApiFinderPublisher.new(schema, @timestamp).call
     end
   end
 
