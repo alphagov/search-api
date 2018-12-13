@@ -38,6 +38,7 @@ RSpec.describe PrepareEuExitFinderPublisher do
             "content_purpose_supergroup" => %w(services guidance_and_regulation),
             "content_store_document_type" => %w(travel_advice_index)
           },
+          "show_summaries" => true,
           "summary" => nil
         },
         "document_type" => "finder",
