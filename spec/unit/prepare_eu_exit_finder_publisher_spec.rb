@@ -35,7 +35,8 @@ RSpec.describe PrepareEuExitFinderPublisher do
           "facets" => [],
           "filter" => {
             "all_part_of_taxonomy_tree" => ["d7bdaee2-8ea5-460e-b00d-6e9382eb6b61", "seaside-seaside-seaside"],
-            "content_purpose_supergroup" => %w(services guidance_and_regulation)
+            "content_purpose_supergroup" => %w(services guidance_and_regulation),
+            "content_store_document_type" => %w(travel_advice_index)
           },
           "summary" => nil
         },
