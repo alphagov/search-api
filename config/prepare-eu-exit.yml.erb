@@ -4,12 +4,15 @@
 # :topic_content_id
 # :topic_name
 # :topic_slug
+<% base_path = "/prepare-eu-exit/#{config[:topic_slug]}" %>
+<% citizen_taxon_id = "d7bdaee2-8ea5-460e-b00d-6e9382eb6b61" %>
+<% title = "#{config[:topic_name]} – EU Exit guidance" %>
 
-base_path: "/prepare-eu-exit/<%= config[:topic_slug] %>"
-content_id: "<%= config[:finder_content_id] %>"
-title: "<%= config[:topic_name] %> – EU Exit guidance"
+base_path: <%= base_path %>
+content_id: <%= config[:finder_content_id] %>
+title: <%= title %>
 description:
-name: "<%= config[:topic_name] %> – EU Exit guidance"
+name: <%= title %>
 locale: en
 public_updated_at: "<%= config[:timestamp] %>"
 publishing_app: rummager
@@ -20,20 +23,22 @@ details:
   facets: []
   filter:
     all_part_of_taxonomy_tree:
-      - "d7bdaee2-8ea5-460e-b00d-6e9382eb6b61"
-      - "<%= config[:topic_content_id] %>"
+      - <%= citizen_taxon_id %>
+      - <%= config[:topic_content_id] %>
     content_purpose_supergroup:
       - services
       - guidance_and_regulation
     content_store_document_type:
       - travel_advice_index
-  subscription_list_title_prefix: "<%= config[:topic_name] %> – EU Exit guidance"
+  subscription_list_title_prefix: <%= title %>
   show_summaries: true
   summary:
 routes:
-- path: "/prepare-eu-exit/<%= config[:topic_slug] %>"
+- path: <%= base_path %>
   type: exact
-- path: "/prepare-eu-exit/<%= config[:topic_slug] %>.json"
+- path: <%= base_path %>.atom
+  type: exact
+- path: <%= base_path %>.json
   type: exact
 document_type: finder
 schema_name: finder

@@ -49,6 +49,7 @@ RSpec.describe PrepareEuExitFinderPublisher do
         "rendering_app" => "finder-frontend",
         "routes" => [
           { "path" => "/prepare-eu-exit/seaside-fun", "type" => "exact" },
+          { "path" => "/prepare-eu-exit/seaside-fun.atom", "type" => "exact" },
           { "path" => "/prepare-eu-exit/seaside-fun.json", "type" => "exact" }
         ],
         "schema_name" => "finder",
