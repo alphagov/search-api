@@ -61,6 +61,29 @@ RSpec.describe Indexer::MetadataTagger do
       described_class.initialise(fixture_file, facet_config_file)
       described_class.remove_all_metadata_for_base_paths(base_path)
     end
+
+    it "clears all eu exit guidance metadat" do
+      fixture_file = File.expand_path("fixtures/metadata.csv", __dir__)
+
+      allow(described_class)
+        .to receive(:find_all_eu_exit_guidance)
+        .and_return(
+          {
+            results:
+              [
+                { "link" => "a_base_path", item: "one" },
+                { "link" => "another_base_path", item: "two" }
+              ]
+          }
+      )
+
+      expect(described_class)
+        .to receive(:remove_all_metadata_for_base_paths)
+        .with(%w(a_base_path another_base_path))
+
+      described_class.initialise(fixture_file, facet_config_file)
+      described_class.destroy_all_eu_exit_guidance!
+    end
   end
   # rubocop:enable RSpec/VerifiedDoubles, RSpec/AnyInstance, RSpec/MessageSpies
 end

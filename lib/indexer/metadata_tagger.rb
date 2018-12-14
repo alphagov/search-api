@@ -69,5 +69,21 @@ module Indexer
         end
       end
     end
+
+    def self.destroy_all_eu_exit_guidance!
+      base_paths = find_all_eu_exit_guidance[:results].collect do |result|
+        result["link"]
+      end
+
+      remove_all_metadata_for_base_paths(base_paths) if base_paths
+    end
+
+    def self.find_all_eu_exit_guidance
+      # hard code 500 items - it should be enough for now
+      SearchConfig.new.run_search(
+        "filter_appear_in_find_eu_exit_guidance_business_finder" => "yes",
+        "count" => "500"
+      )
+    end
   end
 end
