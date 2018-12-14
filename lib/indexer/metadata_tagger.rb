@@ -82,7 +82,7 @@ module Indexer
       # hard code 500 items - it should be enough for now
       SearchConfig.new.run_search(
         "filter_appear_in_find_eu_exit_guidance_business_finder" => "yes",
-        "count" => "500"
+        "count" => %w(500)
       )
     end
   end
