@@ -20,6 +20,7 @@ class PrepareEuExitFinderPublisher
         topic_content_id: topic["topic_content_id"],
         topic_name: topic["title"],
         topic_slug: topic["slug"],
+        topic_summary: topic["summary"]
       }
 
       schema = YAML.safe_load(template.result_with_hash(config: schema_config))

@@ -12,6 +12,7 @@ RSpec.describe PrepareEuExitFinderPublisher do
         "slug" => "seaside-fun",
         "topic_content_id" => "seaside-seaside-seaside",
         "finder_content_id" => finder_content_id,
+        "summary" => "Something"
       }
     ]
   }
@@ -39,7 +40,7 @@ RSpec.describe PrepareEuExitFinderPublisher do
             "content_store_document_type" => %w(travel_advice_index)
           },
           "show_summaries" => true,
-          "summary" => nil
+          "summary" => "Something"
         },
         "document_type" => "finder",
         "locale" => "en",
