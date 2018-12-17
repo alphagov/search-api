@@ -32,7 +32,7 @@ details:
       - travel_advice_index
   subscription_list_title_prefix: <%= title %>
   show_summaries: true
-  summary:
+  summary:  <%= config[:topic_summary] %>
 routes:
 - path: <%= base_path %>
   type: exact
@@ -53,6 +53,7 @@ topics:
     slug: "going-and-being-abroad"
     topic_content_id: "9597c30a-605a-4e36-8bc1-47e5cdae41b3"
     finder_content_id: "d37a4cad-42ee-4a82-bb91-7de603848c72"
+    summary: "Check <a href='/foreign-travel-advice'>foreign travel advice</a> if you know which country you’re travelling to."
   - title: "Education, training and skills"
     slug: "education"
     topic_content_id: "c58fdadd-7743-46d6-9629-90bb3ccc4ef0"
