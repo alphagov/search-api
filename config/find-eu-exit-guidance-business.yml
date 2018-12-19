@@ -231,6 +231,8 @@ details:
 routes:
 - path: "/find-eu-exit-guidance-business"
   type: exact
+- path: "/find-eu-exit-guidance-business.atom"
+  type: exact
 - path: "/find-eu-exit-guidance-business.json"
   type: exact
 document_type: finder
