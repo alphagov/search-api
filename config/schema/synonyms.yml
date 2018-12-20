@@ -1114,3 +1114,6 @@
 # Country changes
 - search: burma => burma, myanmar
 - search: myanmar => burma, myanmar
+
+# Common transliterations
+- search: hezbollah, hizballah, hizbullah => hezbollah, hizballah, hizbullah
