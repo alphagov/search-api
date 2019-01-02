@@ -16,6 +16,7 @@ publishing_app: rummager
 rendering_app: finder-frontend
 details:
   beta: false
+  canonical_link: true
   document_noun: publication
   subscription_list_title_prefix: 'Find EU Exit guidance for your business '
   summary: 'This is the information that has been published so far for your business to prepare for EU exit. You can change what information you get using the checkboxes. Come back to this page regularly or sign up to receive emails when new information is published.'
