@@ -18,6 +18,10 @@ class Rummager < Sinatra::Application
   #   personalised information in the response.
   set :protection, except: [:path_traversal, :escaped_params, :frame_options, :json_csrf]
 
+  def warden
+    env["warden"]
+  end
+
   def search_server
     SearchConfig.instance.search_server
   end
@@ -116,6 +120,7 @@ class Rummager < Sinatra::Application
   # For details, see doc/search-api.md
   ["/search.?:request_format?"].each do |path|
     get path do
+      warden.authenticate!
       json_only
 
       query_params = parse_query_string(request.query_string)
@@ -321,5 +326,9 @@ class Rummager < Sinatra::Application
 
   post "/documents" do
     raise AttemptToUseDefaultMainstreamIndex
+  end
+
+  post "/unauthenticated/?" do
+    halt(401, "No")
   end
 end
