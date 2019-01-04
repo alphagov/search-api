@@ -7,6 +7,21 @@ require 'routes/content'
 class Rummager < Sinatra::Application
   class AttemptToUseDefaultMainstreamIndex < StandardError; end
 
+  Warden::Strategies.add :bearer_token, Warden::OAuth2::Strategies::Bearer
+  Warden::OAuth2.configure { |config| config.token_model = Auth::GdsSso }
+  Warden::Strategies.add :mock_bearer_token, Auth::MockStrategy
+  # This ensures that post /unsubscribe is called no matter which method fails
+  Warden::Manager.before_failure { |env, _| env["REQUEST_METHOD"] = "POST" }
+
+  use Warden::Manager do |config|
+    default_strategy = %w[development test].include?(ENV["RACK_ENV"]) ? "mock" : "real"
+    mock = ENV.fetch("GDS_SSO_STRATEGY", default_strategy) == "mock"
+
+    config.default_strategies mock ? [:mock_bearer_token] : [:bearer_token]
+    config.failure_app = Rummager
+    config.intercept_401 = false
+   end
+
   # - Stop double slashes in URLs (even escaped ones) being flattened to single ones
   #
   # - Explicitly allow requests that are referred from other domains so we can link
