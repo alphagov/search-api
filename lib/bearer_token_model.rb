@@ -2,7 +2,9 @@ require "oauth2"
 
 class BearerTokenModel
   def self.locate(token_string)
-    new(token_string).locate
+    Services.cache.fetch(['api-user-cache', token_string], expires_in: 5.minutes) do
+      new(token_string).locate
+    end
   end
 
   def initialize(token_string)
