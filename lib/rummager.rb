@@ -18,7 +18,7 @@ require 'logging'
 require 'loofah'
 require 'net/http'
 require 'nokogiri'
-require "oauth2"
+require 'oauth2'
 require 'open-uri'
 require 'ostruct'
 require 'plek'
@@ -30,8 +30,8 @@ require 'statsd'
 require 'time'
 require 'unf'
 require 'uri'
-require "warden"
-require "warden-oauth2"
+require 'warden'
+require 'warden-oauth2'
 require 'yaml'
 require 'zlib'
 
@@ -46,8 +46,8 @@ require 'duplicate_links_finder'
 require 'govuk_document_types'
 require 'special_route_publisher'
 
-require "auth/gds_sso"
-require "auth/mock_strategy"
+require 'auth/gds_sso'
+require 'auth/mock_strategy'
 
 require 'indexer'
 require 'indexer/amender'

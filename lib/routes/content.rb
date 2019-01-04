@@ -9,6 +9,7 @@ class Rummager < Sinatra::Application
 
   delete '/content' do
     begin
+      require_authentication
       raw_result = find_result_by_link(params["link"])
       delete_result_from_index(raw_result)
       json_result 204, "Deleted the link from search index"

@@ -29,6 +29,11 @@ module SpecHelpers
     publishing_api_has_lookups({})
   end
 
+  def stub_successful_authentication
+    warden_double = double(Warden::Proxy, authenticate!: true)
+    allow_any_instance_of(Rummager).to receive(:warden).and_return(warden_double)
+  end
+
   # need to add additional page_traffic data in order to set maximum allowed ranking value
   def setup_page_traffic_data(document_count:)
     document_count.times.each do |i|

@@ -47,6 +47,10 @@ class Rummager < Sinatra::Application
     halt(404)
   end
 
+  def require_authentication
+    warden.authenticate!
+  end
+
   def prevent_access_to_govuk
     if index_name == 'govuk'
       halt(403, "Actions to govuk index are not allowed via this endpoint, please use the message queue to update this index")
@@ -135,7 +139,6 @@ class Rummager < Sinatra::Application
   # For details, see doc/search-api.md
   ["/search.?:request_format?"].each do |path|
     get path do
-      warden.authenticate!
       json_only
 
       query_params = parse_query_string(request.query_string)
@@ -216,6 +219,7 @@ class Rummager < Sinatra::Application
 
   # Insert (or overwrite) a document
   post "/:index/documents" do
+    require_authentication
     prevent_access_to_govuk
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
@@ -238,6 +242,7 @@ class Rummager < Sinatra::Application
   end
 
   post "/v2/metasearch/documents" do
+    require_authentication
     document = JSON.parse(request.body.read)
 
     inserter = MetasearchIndex::Inserter::V2.new(id: document['_id'], document: document)
@@ -247,11 +252,13 @@ class Rummager < Sinatra::Application
   end
 
   post "/:index/commit" do
+    require_authentication
     prevent_access_to_govuk
     simple_json_result(current_index.commit)
   end
 
   delete "/:index/documents/*" do
+    require_authentication
     prevent_access_to_govuk
     document_link = params["splat"].first
 
@@ -267,6 +274,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/v2/metasearch/documents/*" do
+    require_authentication
     id = params["splat"].first
 
     deleter = MetasearchIndex::Deleter::V2.new(id: id)
@@ -283,6 +291,7 @@ class Rummager < Sinatra::Application
 
   # Update an existing document
   post "/:index/documents/*" do
+    require_authentication
     prevent_access_to_govuk
     document_id = params["splat"].first
     updates = request.POST
@@ -291,6 +300,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/:index/documents" do
+    require_authentication
     prevent_access_to_govuk
     if params["delete_all"]
       # No longer supported; instead use the

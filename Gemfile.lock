@@ -18,6 +18,7 @@ GEM
       bunny (>= 1.7)
     byebug (9.1.0)
     chronic (0.10.2)
+    climate_control (0.2.0)
     coderay (1.1.2)
     concurrent-ruby (1.1.4)
     connection_pool (2.2.2)
@@ -254,6 +255,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (~> 5.2.2)
   bunny-mock (~> 1.7)
+  climate_control
   elasticsearch (~> 2)
   gds-api-adapters (~> 55.0)
   govuk-content-schema-test-helpers (~> 1.6.1)
@@ -289,4 +291,4 @@ DEPENDENCIES
   whenever (~> 0.10.0)
 
 BUNDLED WITH
-   1.16.2
+   1.17.1

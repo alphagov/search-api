@@ -48,4 +48,7 @@ group :development do
   gem "rainbow"
 end
 
-gem "pry-byebug", group: [:development, :test]
+group :development, :test do
+  gem "pry-byebug"
+  gem "climate_control"
+end
