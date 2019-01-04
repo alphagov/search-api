@@ -2,6 +2,8 @@ require 'spec_helper'
 
 RSpec.describe 'AuthorizationTests' do
   context "when signin is invalid" do
+    let(:gds_sso_instance) { instance_double(Auth::GdsSso) }
+
     around do |example|
       ClimateControl.modify(GDS_SSO_MOCK_INVALID: "true") { example.run }
     end
@@ -13,8 +15,6 @@ RSpec.describe 'AuthorizationTests' do
     end
 
     it "receives a response wth invalid token error when bearer token is not valid" do
-      allow_any_instance_of(Auth::GdsSso).to receive(:locate).and_return(nil)
-
       header "Authorization", "Bearer 1234"
 
       response = post "/unauthenticated", {}.to_json

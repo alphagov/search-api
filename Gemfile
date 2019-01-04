@@ -9,7 +9,6 @@ gem "govuk-lint", "~> 3.10.0"
 gem "logging", "~> 2.2.2"
 gem "govuk_sidekiq", "~> 3.0.2"
 gem "loofah"
-gem "nokogiri", "~> 1.9.1"
 gem "oauth2"
 gem "nokogiri", "~> 1.10.0"
 gem "plek", "~> 2.1"
@@ -32,6 +31,7 @@ end
 
 group :test do
   gem 'bunny-mock', '~> 1.7'
+  gem 'climate_control', '~> 0.2'
   gem 'govuk_schemas', '~> 3.2.0'
   gem 'govuk-content-schema-test-helpers', '~> 1.6.1'
   gem "rack-test", "~> 1.1.0"
@@ -48,7 +48,4 @@ group :development do
   gem "rainbow"
 end
 
-group :development, :test do
-  gem "pry-byebug"
-  gem "climate_control"
-end
+gem "pry-byebug", group: [:development, :test]

@@ -14,7 +14,7 @@ module Auth
       access_token = OAuth2::AccessToken.new(oauth_client, token_string)
       body = access_token.get("/user.json?client_id=#{CGI.escape(oauth_id)}").body
       JSON.parse(body)["user"]
-    rescue OAuth2::Error => e
+    rescue OAuth2::Error
       nil
     end
 

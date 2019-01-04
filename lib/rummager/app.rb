@@ -20,7 +20,7 @@ class Rummager < Sinatra::Application
     config.default_strategies mock ? [:mock_bearer_token] : [:bearer_token]
     config.failure_app = Rummager
     config.intercept_401 = false
-   end
+  end
 
   # - Stop double slashes in URLs (even escaped ones) being flattened to single ones
   #
@@ -354,7 +354,7 @@ class Rummager < Sinatra::Application
   end
 
   post "/unauthenticated/?" do
-    if env["HTTP_AUTHORIZATION"].to_s.match(/\ABearer /)
+    if env["HTTP_AUTHORIZATION"].to_s.start_with?("Bearer ")
       message = "Bearer token does not appear to be valid"
       bearer_error = "invalid_token"
     else

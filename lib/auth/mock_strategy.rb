@@ -8,9 +8,9 @@ module Auth
         # This is to match the object signon returns for a user
         success!({
           "uid" => "e7def478-c626-4d1b-9a4d-8a31e3ecfa0d",
-          "name" => "Mock API user",
+          "name" => "Mock API User",
           "email" => "mock.user@example.com",
-          "permissions" => ["signin"],
+          "permissions" => %w(signin),
           "organisation_slug" => nil,
           "organisation_content_id" => nil,
           "disabled" => false,

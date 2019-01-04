@@ -21,6 +21,7 @@ require 'rummager'
 require 'rummager/app' # load the website
 
 require "bundler/setup"
+require "climate_control"
 require "rack/test"
 require "pp"
 require "timecop"
@@ -38,7 +39,6 @@ Logging.logger.root.appenders = nil
 Sidekiq::Logging.logger = nil
 
 require 'webmock/rspec'
-require 'climate_control'
 
 require "#{__dir__}/support/default_mappings"
 require "#{__dir__}/support/spec_helpers"
