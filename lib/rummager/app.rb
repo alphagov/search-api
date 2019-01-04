@@ -329,6 +329,16 @@ class Rummager < Sinatra::Application
   end
 
   post "/unauthenticated/?" do
-    halt(401, "No")
+    if env["HTTP_AUTHORIZATION"].to_s.match(/\ABearer /)
+      message = "Bearer token does not appear to be valid"
+      bearer_error = "invalid_token"
+    else
+      message = "No bearer token was provided"
+      bearer_error = "invalid_request"
+    end
+
+    headers = { "WWW-Authenticate" => %(Bearer error=#{bearer_error}) }
+    body = { message: message }.to_json
+    halt(401, headers, body)
   end
 end
