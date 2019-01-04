@@ -3,7 +3,6 @@ require 'spec_helper'
 RSpec.describe 'ElasticsearchAmendmentTest' do
   before do
     stub_tagging_lookup
-    stub_successful_authentication
   end
 
   it "should amend a document" do

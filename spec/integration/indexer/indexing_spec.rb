@@ -13,7 +13,6 @@ RSpec.describe 'ElasticsearchIndexingTest' do
 
   before do
     stub_tagging_lookup
-    stub_successful_authentication
   end
 
   it "adds a document to the search index" do

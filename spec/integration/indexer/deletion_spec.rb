@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe 'ElasticsearchDeletionTest' do
-  before do
-    stub_successful_authentication
-  end
-
   it "removes a document from the index" do
     commit_document("government_test", {
       "link" => "/an-example-page"
