@@ -7,21 +7,6 @@ require 'routes/content'
 class Rummager < Sinatra::Application
   class AttemptToUseDefaultMainstreamIndex < StandardError; end
 
-  Warden::Strategies.add :bearer_token, Warden::OAuth2::Strategies::Bearer
-  Warden::OAuth2.configure { |config| config.token_model = Auth::GdsSso }
-  Warden::Strategies.add :mock_bearer_token, Auth::MockStrategy
-  # This ensures that post /unsubscribe is called no matter which method fails
-  Warden::Manager.before_failure { |env, _| env["REQUEST_METHOD"] = "POST" }
-
-  use Warden::Manager do |config|
-    default_strategy = %w[development test].include?(ENV["RACK_ENV"]) ? "mock" : "real"
-    mock = ENV.fetch("GDS_SSO_STRATEGY", default_strategy) == "mock"
-
-    config.default_strategies mock ? [:mock_bearer_token] : [:bearer_token]
-    config.failure_app = Rummager
-    config.intercept_401 = false
-  end
-
   # - Stop double slashes in URLs (even escaped ones) being flattened to single ones
   #
   # - Explicitly allow requests that are referred from other domains so we can link
@@ -33,10 +18,6 @@ class Rummager < Sinatra::Application
   #   personalised information in the response.
   set :protection, except: [:path_traversal, :escaped_params, :frame_options, :json_csrf]
 
-  def warden
-    env["warden"]
-  end
-
   def search_server
     SearchConfig.instance.search_server
   end
@@ -45,10 +26,6 @@ class Rummager < Sinatra::Application
     search_server.index(index_name)
   rescue SearchIndices::NoSuchIndex
     halt(404)
-  end
-
-  def require_authentication
-    warden.authenticate!
   end
 
   def prevent_access_to_govuk
@@ -219,7 +196,6 @@ class Rummager < Sinatra::Application
 
   # Insert (or overwrite) a document
   post "/:index/documents" do
-    require_authentication
     prevent_access_to_govuk
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
@@ -242,7 +218,6 @@ class Rummager < Sinatra::Application
   end
 
   post "/v2/metasearch/documents" do
-    require_authentication
     document = JSON.parse(request.body.read)
 
     inserter = MetasearchIndex::Inserter::V2.new(id: document['_id'], document: document)
@@ -252,13 +227,11 @@ class Rummager < Sinatra::Application
   end
 
   post "/:index/commit" do
-    require_authentication
     prevent_access_to_govuk
     simple_json_result(current_index.commit)
   end
 
   delete "/:index/documents/*" do
-    require_authentication
     prevent_access_to_govuk
     document_link = params["splat"].first
 
@@ -274,7 +247,6 @@ class Rummager < Sinatra::Application
   end
 
   delete "/v2/metasearch/documents/*" do
-    require_authentication
     id = params["splat"].first
 
     deleter = MetasearchIndex::Deleter::V2.new(id: id)
@@ -291,7 +263,6 @@ class Rummager < Sinatra::Application
 
   # Update an existing document
   post "/:index/documents/*" do
-    require_authentication
     prevent_access_to_govuk
     document_id = params["splat"].first
     updates = request.POST
@@ -300,7 +271,6 @@ class Rummager < Sinatra::Application
   end
 
   delete "/:index/documents" do
-    require_authentication
     prevent_access_to_govuk
     if params["delete_all"]
       # No longer supported; instead use the
@@ -351,19 +321,5 @@ class Rummager < Sinatra::Application
 
   post "/documents" do
     raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  post "/unauthenticated/?" do
-    if env["HTTP_AUTHORIZATION"].to_s.start_with?("Bearer ")
-      message = "Bearer token does not appear to be valid"
-      bearer_error = "invalid_token"
-    else
-      message = "No bearer token was provided"
-      bearer_error = "invalid_request"
-    end
-
-    headers = { "WWW-Authenticate" => %(Bearer error=#{bearer_error}) }
-    body = { message: message }.to_json
-    halt(401, headers, body)
   end
 end
