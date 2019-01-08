@@ -21,6 +21,7 @@ require 'rummager'
 require 'rummager/app' # load the website
 
 require "bundler/setup"
+require "climate_control"
 require "rack/test"
 require "pp"
 require "timecop"

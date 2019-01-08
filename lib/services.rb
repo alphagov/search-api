@@ -1,3 +1,5 @@
+require 'active_support/cache'
+
 module Services
   def self.publishing_api
     @publishing_api ||= GdsApi::PublishingApiV2.new(
@@ -36,6 +38,16 @@ module Services
 
   def self.statsd_client
     @statsd_client ||= Statsd.new.tap { |sd| sd.namespace = "govuk.app.rummager" }
+  end
+
+  def self.cache
+    @cache ||= if ENV['RACK_ENV'] == 'production'
+                 # Using a memory store as this is expected to store signon
+                 # tokens, this will be cleared each time the app starts
+                 ActiveSupport::Cache.lookup_store(:memory_store)
+               else
+                 ActiveSupport::Cache.lookup_store(:null_store)
+               end
   end
 end
 
