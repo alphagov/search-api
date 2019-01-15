@@ -74,73 +74,69 @@ module LegacySearch
     end
 
     def query_hash
-      keyword_query_hash
-        .merge(filter_query_hash)
-        .merge(order_query_hash)
+      {
+        query: {
+          bool: {
+            filter: filter_array,
+            must: keyword_query_hash
+          }
+        }
+      }.merge(order_query_hash)
     end
 
     def keyword_query_hash
       if @keywords
         {
-          query: {
-            function_score: {
-              query: {
-                bool: {
-                  should: [
-                    {
-                      query_string: {
-                        query: escape(@keywords),
-                        fields: ["title^3"],
-                        default_operator: "and",
-                        analyzer: "default"
-                      }
-                    },
-                    {
-                      query_string: {
-                        query: escape(@keywords),
-                        analyzer: "with_search_synonyms"
-                      }
+          function_score: {
+            query: {
+              bool: {
+                should: [
+                  {
+                    query_string: {
+                      query: escape(@keywords),
+                      fields: ["title^3"],
+                      default_operator: "and",
+                      analyzer: "default"
                     }
-                  ]
-                }
-              },
-              functions: [
-                filter: { term: { search_format_types: "edition" } },
-                script_score: {
-                  script: {
-                    lang: "painless",
-                    inline: "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
-                    params: {
-                      now: time_in_millis_to_nearest_minute
-                    },
                   },
-                }
-              ]
-            }
+                  {
+                    query_string: {
+                      query: escape(@keywords),
+                      analyzer: "with_search_synonyms"
+                    }
+                  }
+                ]
+              }
+            },
+            functions: [
+              filter: { term: { search_format_types: "edition" } },
+              script_score: {
+                script: {
+                  lang: "painless",
+                  inline: "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
+                  params: {
+                    now: time_in_millis_to_nearest_minute
+                  },
+                },
+              }
+            ]
           }
         }
       else
-        { "query" => { "match_all" => {} } }
+        { match_all: {} }
       end
+    end
+
+    def filter_array
+      # Withdrawn documents should never be part of advanced search
+      withdrawn_query = { bool: { must_not: { term: { is_withdrawn: true } } } }
+      filters = filters_hash
+      filters << withdrawn_query
+      filters
     end
 
     def time_in_millis_to_nearest_minute
       (Time.now.to_i / 60) * 60000
-    end
-
-    def filter_query_hash
-      # Withdrawn documents should never be part of advanced search
-      withdrawn_query = { "not" => { "term" => { "is_withdrawn" => true } } }
-
-      filters = filters_hash
-      filters << withdrawn_query
-
-      if filters.size > 1
-        filters = { "and" => filters }
-      else
-        filters = filters.first
-      end
-      { "filter" => filters || {} }
     end
 
     def order_query_hash

@@ -3,9 +3,9 @@ require 'spec_helper'
 RSpec.describe Search::AggregateExampleFetcher do
   def query_for_example_global(field, value, return_fields)
     {
-      bool: {
-        must: {
-          query: nil,
+      query: {
+        bool: {
+          must: nil,
           filter: {
             bool: {
               must: [
@@ -32,15 +32,13 @@ RSpec.describe Search::AggregateExampleFetcher do
     {
       query: {
         bool: {
-          must: {
-            query: query,
-            filter: {
-              bool: {
-                must: [
-                  { term: { field => value } },
-                  filter
-                ]
-              }
+          must: query,
+          filter: {
+            bool: {
+              must: [
+                { term: { field => value } },
+                filter
+              ]
             }
           }
         }

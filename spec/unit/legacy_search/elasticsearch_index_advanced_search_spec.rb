@@ -29,53 +29,57 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
       "from" => 0,
       "size" => 1,
       "query" => {
-        "function_score" => {
-          "query" => {
-            "bool" => {
-              "should" => [
+        "bool" => {
+          "filter" => [{ "bool" => { "must_not" => { "term" => { "is_withdrawn" => true } } } }],
+          "must" => {
+            "function_score" => {
+              "query" => {
+                "bool" => {
+                  "should" => [
+                    {
+                      "query_string" => {
+                        "query" => "happy fun time",
+                        "fields" => ["title^3"],
+                        "default_operator" => "and",
+                        "analyzer" => "default"
+                      }
+                    },
+                    {
+                      "query_string" =>
+                      {
+                        "query" => "happy fun time",
+                        "analyzer" => "with_search_synonyms"
+                      }
+                    }
+                  ]
+                }
+              },
+              "functions" => [
                 {
-                  "query_string" => {
-                    "query" => "happy fun time",
-                    "fields" => ["title^3"],
-                    "default_operator" => "and",
-                    "analyzer" => "default"
-                  }
-                },
-                {
-                  "query_string" =>
-                  {
-                    "query" => "happy fun time",
-                    "analyzer" => "with_search_synonyms"
+                  "filter" => {
+                    "term" => {
+                      "search_format_types" => "edition"
+                    }
+                  },
+                  "script_score" => {
+                    "script" => {
+                      "lang" => "painless",
+                      "inline" => "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
+                      "params" => { "now" => (Time.now.to_i / 60) * 60000 }
+                    },
                   }
                 }
               ]
             }
           },
-          "functions" => [
-            {
-              "filter" => {
-                "term" => {
-                  "search_format_types" => "edition"
-                }
-              },
-              "script_score" => {
-                "script" => {
-                  "lang" => "painless",
-                  "inline" => "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
-                  "params" => { "now" => (Time.now.to_i / 60) * 60000 }
-                },
-              }
-            }
-          ]
         }
-      },
-      "filter" => { "not" => { "term" => { "is_withdrawn" => true } } }
+      }
     })
     @wrapper.advanced_search(default_params.merge('keywords' => 'happy fun time'))
   end
 
   it "missing keyword param means a match all query" do
-    stub_empty_search(body: /#{Regexp.escape("\"query\":{\"match_all\":{}}")}/)
+    stub_empty_search(body: /#{Regexp.escape("\"must\":{\"match_all\":{}}")}/)
     @wrapper.advanced_search(default_params)
   end
 
@@ -93,7 +97,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params are turned into anded term filters on that property" do
-    stub_empty_search(body: /#{Regexp.escape("\"filter\":{\"and\":[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
+    stub_empty_search(body: /#{Regexp.escape("\"filter\":[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones'], 'link' => ['richards']))
   end
 
