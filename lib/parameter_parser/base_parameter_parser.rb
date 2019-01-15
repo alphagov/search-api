@@ -24,6 +24,7 @@ class BaseParameterParser
     start_date
     assessment_date
     popularity
+    release_timestamp
   ).freeze
 
   SORT_MAPPINGS = {
