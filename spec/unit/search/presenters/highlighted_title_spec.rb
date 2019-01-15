@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Search::HighlightedTitle do
   it "highlights the title" do
     title = described_class.new({
-      "fields" => { "title" => "A Title" },
+      "_source" => { "title" => "A Title" },
       "highlight" => { "title" => ["A Highlighted Title"] }
     })
 
@@ -12,7 +12,7 @@ RSpec.describe Search::HighlightedTitle do
 
   it "highlights the title with synonyms" do
     title = described_class.new({
-      "fields" => { "title.synonym" => "A Title" },
+      "_source" => { "title.synonym" => "A Title" },
       "highlight" => { "title.synonym" => ["A Highlighted Title"] }
     })
 
@@ -21,7 +21,7 @@ RSpec.describe Search::HighlightedTitle do
 
   it "escapes the title when it falls back to the unhighlighted title" do
     title = described_class.new({
-      "fields" => { "title" => "A & Title" },
+      "_source" => { "title" => "A & Title" },
     })
 
     expect(title.text).to eq("A &amp; Title")

@@ -12,7 +12,7 @@ RSpec.describe Search::BestBetsChecker do
         }
       },
       size: 1000,
-      fields: [:details, :stemmed_query_as_term],
+      _source: { includes: %i[details stemmed_query_as_term] },
     }
   end
 
@@ -26,7 +26,7 @@ RSpec.describe Search::BestBetsChecker do
       "_type" => "best_bet",
       "_id" => "#{query}-#{type}",
       "_score" => 1.0,
-      "fields" => {
+      "_source" => {
         "details" => JSON.generate({
           best_bets: best_bets.map do |link, position|
             { link: link, position: position }

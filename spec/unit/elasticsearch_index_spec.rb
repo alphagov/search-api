@@ -124,14 +124,14 @@ RSpec.describe SearchIndices::Index do
   it "can fetch documents by format" do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=500&version=true"
     stub_request(:get, search_pattern).with(
-      body: { query: { term: { format: "organisation" } }, fields: %w{title link} }
+      body: { query: { term: { format: "organisation" } }, _source: { includes: %w{title link} } }
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
     )
 
     hits = (1..10).map { |i|
-      { "fields" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
+      { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
     }
     stub_request(:get, scroll_uri).with(
       body: "abcdefgh"
@@ -151,14 +151,14 @@ RSpec.describe SearchIndices::Index do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=500&version=true"
 
     stub_request(:get, search_pattern).with(
-      body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"fields\":[\"title\",\"link\"]}"
+      body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"_source\":{\"includes\":[\"title\",\"link\"]}}"
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
     )
 
     hits = (1..10).map { |i|
-      { "fields" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
+      { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
     }
     stub_request(:get, scroll_uri).with(
       body: "abcdefgh"
@@ -297,7 +297,7 @@ private
           "path_components" => paths,
         },
       },
-      "fields" => ["rank_14"],
+      "_source" => { "includes" => %w[rank_14] },
       "sort" => [
         { "rank_14" => { "order" => "asc" } }
       ],
@@ -308,7 +308,7 @@ private
         "hits" => paths_to_return.map {|path|
           {
             "_id" => path,
-            "fields" => {
+            "_source" => {
               "rank_14" => popularity
             }
           }

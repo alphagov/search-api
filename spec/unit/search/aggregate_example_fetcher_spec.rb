@@ -56,7 +56,7 @@ RSpec.describe Search::AggregateExampleFetcher do
       "hits" => {
         "total" => total_examples,
         "hits" => titles.map { |title|
-          { "fields" => { "title" => title } }
+          { "_source" => { "title" => title } }
         }
       }
     }

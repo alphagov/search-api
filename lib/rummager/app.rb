@@ -211,8 +211,8 @@ class Rummager < Sinatra::Application
     result_set = current_index.advanced_search(request.params)
     results = result_set.results.map do |document|
       # Wrap in hash to be compatible with the way Search works.
-      raw_result = { "fields" => document.to_hash }
-      search_params = Search::QueryParameters.new(return_fields: raw_result['fields'].keys)
+      raw_result = { "_source" => document.to_hash }
+      search_params = Search::QueryParameters.new(return_fields: raw_result['_source'].keys)
       Search::ResultPresenter.new(raw_result, {}, nil, search_params).present
     end
 

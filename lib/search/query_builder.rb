@@ -15,7 +15,9 @@ module Search
       hash_without_blank_values(
         from: search_params.start,
         size: search_params.count,
-        fields: fields.uniq,
+        _source: {
+          includes: fields.uniq,
+        },
         query: {
           bool: {
             must: query,

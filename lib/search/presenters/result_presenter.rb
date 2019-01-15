@@ -10,7 +10,7 @@ module Search
     end
 
     def present
-      result = raw_result['fields'] || {}
+      result = raw_result['_source'] || {}
 
       if schema
         result = convert_elasticsearch_array_fields(result)
