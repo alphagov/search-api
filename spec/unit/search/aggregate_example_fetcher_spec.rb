@@ -11,10 +11,10 @@ RSpec.describe Search::AggregateExampleFetcher do
               must: [
                 { term: { field => value } },
                 { indices: {
-                  indices: SearchConfig.instance.content_index_names,
-                  filter: {},
-                  no_match_filter: 'none'
-                } }
+                    indices: SearchConfig.instance.content_index_names,
+                    query: {},
+                    no_match_query: 'none'
+                  } }
               ]
             },
           },

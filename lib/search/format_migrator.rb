@@ -8,8 +8,8 @@ module Search
       {
         indices: {
           indices: SearchConfig.instance.content_index_names,
-          filter: excluding_formats,
-          no_match_filter: only_formats
+          query: excluding_formats,
+          no_match_query: only_formats
         }
       }
     end
