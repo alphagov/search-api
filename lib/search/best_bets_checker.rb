@@ -85,9 +85,9 @@ module Search
       es_response = @metasearch_index.raw_search(lookup_payload, "best_bet")
 
       es_response["hits"]["hits"].map do |hit|
-        details = JSON.parse(Array(hit["fields"]["details"]).first)
+        details = JSON.parse(Array(hit["_source"]["details"]).first)
         _bet_query, _, bet_type = hit["_id"].rpartition('-')
-        stemmed_query_as_term = Array(hit["fields"]["stemmed_query_as_term"]).first
+        stemmed_query_as_term = Array(hit["_source"]["stemmed_query_as_term"]).first
 
         # The search on the stemmed_query field is overly broad, so here we need
         # to filter out such matches where the query in the bet is not a
@@ -127,7 +127,9 @@ module Search
           }
         },
         size: 1000,
-        fields: [:details, :stemmed_query_as_term]
+        _source: {
+          includes: %i[details stemmed_query_as_term],
+        },
       }
     end
   end

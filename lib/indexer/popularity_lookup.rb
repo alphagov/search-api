@@ -16,7 +16,7 @@ module Indexer
             path_components: links
           }
         },
-        fields: ["rank_14"],
+        _source: { includes: %w[rank_14] },
         sort: [
           { rank_14: { order: "asc" } }
         ],
@@ -27,7 +27,7 @@ module Indexer
 
       results["hits"]["hits"].each do |hit|
         link = hit["_id"]
-        rank = Array(hit["fields"]["rank_14"]).first
+        rank = Array(hit["_source"]["rank_14"]).first
         next if rank.nil?
         ranks[link] = [rank, ranks[link]].min
       end

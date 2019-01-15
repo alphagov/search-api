@@ -161,11 +161,11 @@ module SearchIndices
       batch_size = 500
       search_body = {
         query: { term: { format: format } },
-        fields: field_definitions.keys,
+        _source: { includes: field_definitions.keys },
       }
 
       ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        LegacyClient::MultivalueConverter.new(hit["fields"], field_definitions).converted_hash
+        LegacyClient::MultivalueConverter.new(hit["_source"], field_definitions).converted_hash
       end
     end
 

@@ -74,7 +74,9 @@ module Search
             }
           },
           size: example_count,
-          fields: example_fields,
+          _source: {
+            includes: example_fields,
+          },
           sort: [{ popularity: { order: :desc } }],
         }
       }
@@ -107,7 +109,7 @@ module Search
       slugs.zip(response_list) { |slug, response|
         result[slug] = {
           total: response["hits"]["total"],
-          examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["fields"] || {}) },
+          examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["_source"] || {}) },
         }
       }
 

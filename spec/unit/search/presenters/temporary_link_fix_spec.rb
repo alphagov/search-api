@@ -5,7 +5,7 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
     document = {
       '_type' => 'raib_report',
       '_index' => 'govuk_test',
-      'fields' => { 'link' => ['some/link'] }
+      '_source' => { 'link' => ['some/link'] }
     }
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
@@ -17,7 +17,7 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
     document = {
       '_type' => 'raib_report',
       '_index' => 'govuk_test',
-      'fields' => { 'link' => ['http://example.org/some-link'] }
+      '_source' => { 'link' => ['http://example.org/some-link'] }
     }
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
@@ -29,7 +29,7 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
     document = {
       '_type' => 'raib_report',
       '_index' => 'govuk_test',
-      'fields' => { 'link' => ['/some-link'] }
+      '_source' => { 'link' => ['/some-link'] }
     }
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present

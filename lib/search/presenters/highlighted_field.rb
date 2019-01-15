@@ -13,7 +13,7 @@ module Search
     end
 
     def original
-      Rack::Utils.escape_html(raw_result["fields"][name] || raw_result["fields"]["#{name}.synonym"])
+      Rack::Utils.escape_html(raw_result["_source"][name] || raw_result["_source"]["#{name}.synonym"])
     end
 
   private

@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Search::HighlightedDescription do
   it "adds highlighting if present" do
     raw_result = {
-      "fields" => { "description" => "I will be highlighted." },
+      "_source" => { "description" => "I will be highlighted." },
       "highlight" => { "description" => ["I will be <mark>highlighted</mark>."] }
     }
 
@@ -14,7 +14,7 @@ RSpec.describe Search::HighlightedDescription do
 
   it "highlights description with synonyms if present" do
     raw_result = {
-      "fields" => { "description.synonym" => "I will be highlighted." },
+      "_source" => { "description.synonym" => "I will be highlighted." },
       "highlight" => { "description.synonym" => ["I will be <mark>highlighted</mark>."] }
     }
 
@@ -25,7 +25,7 @@ RSpec.describe Search::HighlightedDescription do
 
   it "uses default description if highlight not found" do
     raw_result = {
-      "fields" => { "description" => "I will not be highlighted & escaped." }
+      "_source" => { "description" => "I will not be highlighted & escaped." }
     }
 
     highlighted_description = described_class.new(raw_result).text
@@ -35,7 +35,7 @@ RSpec.describe Search::HighlightedDescription do
 
   it "uses description with synonyms if highlight not found" do
     raw_result = {
-      "fields" => { "description.synonym" => "I will not be highlighted & escaped." }
+      "_source" => { "description.synonym" => "I will not be highlighted & escaped." }
     }
 
     highlighted_description = described_class.new(raw_result).text
@@ -45,7 +45,7 @@ RSpec.describe Search::HighlightedDescription do
 
   it "truncates default description if highlight not found" do
     raw_result = {
-      "fields" => { "description" => ("This is a sentence that is too long." * 10) }
+      "_source" => { "description" => ("This is a sentence that is too long." * 10) }
     }
 
     highlighted_description = described_class.new(raw_result).text
@@ -56,7 +56,7 @@ RSpec.describe Search::HighlightedDescription do
 
   it "returns empty string if theres no description" do
     raw_result = {
-      "fields" => { "description" => nil }
+      "_source" => { "description" => nil }
     }
 
     highlighted_description = described_class.new(raw_result).text
