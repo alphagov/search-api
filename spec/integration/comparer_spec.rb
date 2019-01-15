@@ -42,7 +42,14 @@ RSpec.describe 'ComparerTest' do
     insert_document('government_test', { some: 'data', format: 'other' }, id: 'DEF', type: 'hmrc_manual')
     commit_document('government_test', { some: 'data', format: 'edition' }, id: 'GHI', type: 'edition')
 
-    query = { filter: { term: { format: 'edition' } } }
+    query = {
+      query: {
+        bool: {
+          must: { match_all: {} },
+          filter: { term: { format: 'edition' } }
+        }
+      }
+    }
     results = Indexer::CompareEnumerator.new('govuk_test', 'government_test', query)
 
     expect([

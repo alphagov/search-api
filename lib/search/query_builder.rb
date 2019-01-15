@@ -16,8 +16,12 @@ module Search
         from: search_params.start,
         size: search_params.count,
         fields: fields.uniq,
-        query: query,
-        filter: filter,
+        query: {
+          bool: {
+            must: query,
+            filter: filter,
+          },
+        },
         sort: sort,
         aggs: aggregates,
         highlight: highlight,

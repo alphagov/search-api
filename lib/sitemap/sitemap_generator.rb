@@ -14,10 +14,10 @@ class SitemapGenerator
     search_body = {
       query: {
         bool: {
-          must_not: { terms: { format: EXCLUDED_FORMATS } }
+          must_not: { terms: { format: EXCLUDED_FORMATS } },
+          filter: Search::FormatMigrator.new.call,
         }
       },
-      filter: Search::FormatMigrator.new.call
     }
     property_boost_calculator = PropertyBoostCalculator.new
 
