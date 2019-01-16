@@ -59,6 +59,7 @@ migrated:
 - step_by_step_nav
 - task_list
 - taxon:
+  - /government/brexit
   - /world/afghanistan
   - /world/albania
   - /world/algeria
