@@ -54,13 +54,15 @@ module Search
     # explicitly set to "multivalued" in the schema.  So if any other
     # fields have been returned as an array, pick the first value.
     def convert_elasticsearch_array_fields(result)
-      result.each do |field_name, values|
+      result.each_with_object({}) do |(field_name, values), out|
+        # drop fields not in the schema
+        next unless document_schema.fields.has_key? field_name
+        out[field_name] = values
         next if field_name[0] == '_'
         next if document_schema.fields.fetch(field_name).type.multivalued
         next unless values.is_a? Array
-        result[field_name] = values.first
+        out[field_name] = values.first
       end
-      result
     end
 
     def document_schema
