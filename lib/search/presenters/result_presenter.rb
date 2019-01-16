@@ -50,13 +50,14 @@ module Search
       result.merge(expanded_params)
     end
 
-    # Elasticsearch returns all fields as arrays by default. We convert those
-    # arrays into a single value here, unless we've explicitly set the field to
-    # be "multivalued" in the database schema.
+    # The only fields which should be returned as arrays are ones
+    # explicitly set to "multivalued" in the schema.  So if any other
+    # fields have been returned as an array, pick the first value.
     def convert_elasticsearch_array_fields(result)
       result.each do |field_name, values|
         next if field_name[0] == '_'
         next if document_schema.fields.fetch(field_name).type.multivalued
+        next unless values.is_a? Array
         result[field_name] = values.first
       end
       result
