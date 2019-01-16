@@ -59,8 +59,11 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
                 }
               },
               "script_score" => {
-                "script" => "((0.15 / ((3.1*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
-                "params" => { "now" => (Time.now.to_i / 60) * 60000 }
+                "script" => {
+                  "lang" => "painless",
+                  "inline" => "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
+                  "params" => { "now" => (Time.now.to_i / 60) * 60000 }
+                },
               }
             }
           ]

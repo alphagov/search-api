@@ -10,7 +10,10 @@ module QueryComponents
           boost_mode: :multiply, # Multiply script score with query score
           query: boosted_query,
           script_score: {
-            script: "doc['popularity'].value + #{POPULARITY_OFFSET}",
+            script: {
+              lang: "painless",
+              inline: "doc['popularity'].value + #{POPULARITY_OFFSET}",
+            },
           }
         }
       }
