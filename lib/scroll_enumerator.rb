@@ -61,13 +61,14 @@ private
 
   def initial_scroll_result(batch_size, search_body)
     # Set off a query to get back a scroll ID and result count
-    # using scan search_type when sort order is set will result in the sort order being ignored.
+    # if there is no sort order, explicitly sort by "_doc"
+    body = search_body[:sort] ? search_body : search_body.merge(sort: %w[_doc])
     client.search(
       index: @index_names,
       scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
       size: batch_size,
-      body: search_body,
-      search_type: search_body[:sort] ? "query_then_fetch" : "scan",
+      body: body,
+      search_type: "query_then_fetch",
       version: true,
     )
   end
