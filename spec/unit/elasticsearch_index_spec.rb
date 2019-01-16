@@ -122,9 +122,9 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can fetch documents by format" do
-    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=500&version=true"
+    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=500&version=true"
     stub_request(:get, search_pattern).with(
-      body: { query: { term: { format: "organisation" } }, _source: { includes: %w{title link} } }
+      body: { query: { term: { format: "organisation" } }, _source: { includes: %w{title link} }, sort: %w[_doc] }
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
@@ -133,9 +133,7 @@ RSpec.describe SearchIndices::Index do
     hits = (1..10).map { |i|
       { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
     }
-    stub_request(:get, scroll_uri).with(
-      body: "abcdefgh"
-    ).to_return(
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 10, hits),
       headers: { 'Content-Type' => 'application/json' },
     ).then.to_return(
@@ -148,10 +146,10 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can fetch documents by format with certain fields" do
-    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=500&version=true"
+    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=500&version=true"
 
     stub_request(:get, search_pattern).with(
-      body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"_source\":{\"includes\":[\"title\",\"link\"]}}"
+      body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"_source\":{\"includes\":[\"title\",\"link\"]},\"sort\":[\"_doc\"]}"
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
@@ -160,9 +158,7 @@ RSpec.describe SearchIndices::Index do
     hits = (1..10).map { |i|
       { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
     }
-    stub_request(:get, scroll_uri).with(
-      body: "abcdefgh"
-    ).to_return(
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 10, hits),
       headers: { 'Content-Type' => 'application/json' },
     ).then.to_return(
@@ -176,9 +172,9 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can count the documents without retrieving them all" do
-    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=50&version=true"
+    search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=50&version=true"
     stub_request(:get, search_pattern).with(
-      body: { query: expected_all_documents_query }.to_json
+      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 100 } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
@@ -187,10 +183,10 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can retrieve all documents" do
-    search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=50&version=true"
+    search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=50&version=true"
 
     stub_request(:get, search_uri).with(
-      body: { query: expected_all_documents_query }.to_json
+      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 100, hits: [] } }.to_json,
       headers: { 'Content-Type' => 'application/json' },
@@ -198,9 +194,7 @@ RSpec.describe SearchIndices::Index do
     hits = (1..100).map { |i|
       { "_source" => { "link" => "/foo-#{i}" }, "_type" => "edition" }
     }
-    stub_request(:get, scroll_uri).with(
-      body: "abcdefgh"
-    ).to_return(
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 100, hits[0, 50]),
       headers: { 'Content-Type' => 'application/json' },
     ).then.to_return(
@@ -217,12 +211,12 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can scroll through the documents" do
-    search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=scan&size=2&version=true"
+    search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=2&version=true"
 
     allow(SearchIndices::Index).to receive(:scroll_batch_size).and_return(2)
 
     stub_request(:get, search_uri).with(
-      body: { query: expected_all_documents_query }.to_json
+      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 3, hits: [] } }.to_json,
 
@@ -233,25 +227,19 @@ RSpec.describe SearchIndices::Index do
     }
     total = hits.size
 
-    stub_request(:get, scroll_uri).with(
-      body: "abcdefgh"
-    ).to_return(
+    stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("ijklmnop", total, hits[0, 2]),
 
       headers: { 'Content-Type' => 'application/json' },
     ).then.to_raise("should never happen")
 
-    stub_request(:get, scroll_uri).with(
-      body: "ijklmnop"
-    ).to_return(
+    stub_request(:get, scroll_uri("ijklmnop")).to_return(
       body: scroll_response_body("qrstuvwx", total, hits[2, 1]),
 
       headers: { 'Content-Type' => 'application/json' },
     ).then.to_raise("should never happen")
 
-    stub_request(:get, scroll_uri).with(
-      body: "qrstuvwx"
-    ).to_return(
+    stub_request(:get, scroll_uri("qrstuvwx")).to_return(
       body: scroll_response_body("yz", total, []),
 
       headers: { 'Content-Type' => 'application/json' },
@@ -263,8 +251,8 @@ RSpec.describe SearchIndices::Index do
 
 private
 
-  def scroll_uri
-    "http://example.com:9200/_search/scroll?scroll=1m"
+  def scroll_uri(scroll_id)
+    "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=#{scroll_id}"
   end
 
   def scroll_response_body(scroll_id, total_results, results)
