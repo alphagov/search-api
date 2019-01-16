@@ -31,7 +31,7 @@ module QueryComponents
         boosts.map do |value, boost|
           {
             filter: { term: { property.to_sym => value } },
-            boost_factor: boost
+            weight: boost
           }
         end
       end
