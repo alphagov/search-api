@@ -107,9 +107,12 @@ module LegacySearch
               functions: [
                 filter: { term: { search_format_types: "edition" } },
                 script_score: {
-                  script: "((0.15 / ((3.1*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
-                  params: {
-                    now: time_in_millis_to_nearest_minute
+                  script: {
+                    lang: "painless",
+                    inline: "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
+                    params: {
+                      now: time_in_millis_to_nearest_minute
+                    },
                   },
                 }
               ]
