@@ -83,7 +83,7 @@ module Indexer
 
     # duplicated in index.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = @client.indices.analyze(index: @index_name, body: query, analyzer: "best_bet_stemmed_match")
+      analyzed_query = @client.indices.analyze(index: @index_name, text: query, analyzer: "best_bet_stemmed_match")
 
       analyzed_query["tokens"].map { |token_info|
         token_info["token"]
