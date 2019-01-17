@@ -20,7 +20,7 @@ module Search
       result = add_virtual_fields(result)
       result = expand_entities(result)
       result = temporarily_fix_link_field(result)
-      result = only_return_explicitely_requested_values(result)
+      result = only_return_explicitly_requested_values(result)
       result = add_debug_values(result)
 
       result
@@ -106,7 +106,7 @@ module Search
       result
     end
 
-    def only_return_explicitely_requested_values(result)
+    def only_return_explicitly_requested_values(result)
       result.slice(*search_params.return_fields)
     end
 
