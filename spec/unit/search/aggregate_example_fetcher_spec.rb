@@ -3,35 +3,52 @@ require 'spec_helper'
 RSpec.describe Search::AggregateExampleFetcher do
   def query_for_example_global(field, value, return_fields)
     {
-      query: {
-        filtered: {
+      bool: {
+        must: {
           query: nil,
           filter: {
-            and: [
-              { term: { field => value } },
-              { indices: {
-                indices: SearchConfig.instance.content_index_names,
-                filter: {},
-                no_match_filter: 'none'
-              } }
-            ]
+            bool: {
+              must: [
+                { term: { field => value } },
+                { indices: {
+                  indices: SearchConfig.instance.content_index_names,
+                  filter: {},
+                  no_match_filter: 'none'
+                } }
+              ]
+            },
           },
         },
       },
       size: 2,
-      fields: return_fields,
+      _source: {
+        includes: return_fields
+      },
       sort: [{ popularity: { order: :desc } }]
     }
   end
 
   def query_for_example_query(field, value, return_fields, query, filter)
     {
-      query: { filtered: { query: query, filter: { and: [
-        { term: { field => value } },
-        filter
-      ] } } },
+      query: {
+        bool: {
+          must: {
+            query: query,
+            filter: {
+              bool: {
+                must: [
+                  { term: { field => value } },
+                  filter
+                ]
+              }
+            }
+          }
+        }
+      },
       size: 2,
-      fields: return_fields,
+      _source: {
+        includes: return_fields
+      },
       sort: [{ popularity: { order: :desc } }]
     }
   end
