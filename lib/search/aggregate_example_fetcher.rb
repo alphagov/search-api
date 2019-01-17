@@ -61,16 +61,16 @@ module Search
         if query_filter.nil?
           filter = { term: { field_name => slug } }
         else
-          filter = { and: [
+          filter = [
             { term: { field_name => slug } },
             query_filter,
-          ] }
+          ]
         end
         {
           query: {
-            filtered: {
-              query: query,
-              filter: filter,
+            bool: {
+              must: query,
+              filter: { bool: { must: filter } },
             }
           },
           size: example_count,
