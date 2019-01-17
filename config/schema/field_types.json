@@ -99,7 +99,8 @@
           "type": "string",
           "index": "analyzed",
           "analyzer": "string_for_sorting",
-          "include_in_all": false
+          "include_in_all": false,
+          "fielddata": true
         },
         "no_stop": {
           "type": "string",
