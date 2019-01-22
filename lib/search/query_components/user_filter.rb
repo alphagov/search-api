@@ -25,7 +25,7 @@ module QueryComponents
       es_filters = []
 
       if filter.include_missing
-        es_filters << { "missing" => { field: filter.field_name } }
+        es_filters << { bool: { must_not: { exists: { field: filter.field_name } } } }
       end
 
       field_name = filter.field_name
