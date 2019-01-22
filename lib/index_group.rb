@@ -44,7 +44,7 @@ module SearchIndices
     def switch_to(index)
       # Loading this manually rather than using `index_map` because we may have
       # unaliased indices, which won't match the new naming convention.
-      indices = @client.indices.get_aliases
+      indices = @client.indices.get_alias
 
       # Bail if there is an existing index with this name.
       # elasticsearch won't allow us to add an alias with the same name as an

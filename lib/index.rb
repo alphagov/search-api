@@ -40,7 +40,7 @@ module SearchIndices
       # { real_name => { "aliases" => { alias => {} } } }
       # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
       begin
-        alias_info = @client.indices.get_aliases(index: @index_name)
+        alias_info = @client.indices.get_alias(index: @index_name)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         return nil
       end

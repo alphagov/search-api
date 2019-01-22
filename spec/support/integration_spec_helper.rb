@@ -44,7 +44,7 @@ module IntegrationSpecHelper
   def self.allow_elasticsearch_connection_to_test
     allowed_paths = []
     allowed_paths << '[a-z_-]+[_-]test.*'
-    allowed_paths << '_aliases'
+    allowed_paths << '_alias'
     allowed_paths << '_bulk'
     allowed_paths << '_reindex'
     allowed_paths << '_search/scroll'
