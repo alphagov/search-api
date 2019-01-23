@@ -44,7 +44,7 @@ RSpec.describe Search::FormatMigrator do
     expected = {
       indices: {
         indices: %w(government_test),
-        query: {},
+        query: { bool: { must: { match_all: {} } } },
         no_match_query: 'none'
       }
     }
