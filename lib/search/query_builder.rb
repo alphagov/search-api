@@ -18,12 +18,8 @@ module Search
         _source: {
           includes: fields.uniq,
         },
-        query: {
-          bool: {
-            must: query,
-            filter: filter,
-          },
-        },
+        query: query,
+        post_filter: filter,
         sort: sort,
         aggs: aggregates,
         highlight: highlight,

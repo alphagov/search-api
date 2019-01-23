@@ -8,7 +8,7 @@ RSpec.describe Search::FormatMigrator do
       indices: {
         indices: %w(government_test),
         query: {
-          bool: { should: [base_query] }
+          bool: { must: base_query }
         },
         no_match_query: 'none'
       }
@@ -24,14 +24,13 @@ RSpec.describe Search::FormatMigrator do
         indices: %w(government_test),
         query: {
           bool: {
-            should: [base_query],
-            must_not: { terms: { format: ['help_page'] } },
+            must: base_query,
+            must_not: { terms: { format: %w[help_page] } },
           }
         },
         no_match_query: {
           bool: {
-            should: [base_query],
-            must: { terms: { format: ['help_page'] } },
+            must: [base_query, { terms: { format: %w[help_page] } }],
           }
         }
       }
@@ -58,12 +57,12 @@ RSpec.describe Search::FormatMigrator do
         indices: %w(government_test),
         query: {
           bool: {
-            must_not: { terms: { format: ['help_page'] } },
+            must_not: { terms: { format: %w[help_page] } },
           }
         },
         no_match_query: {
           bool: {
-            must: { terms: { format: ['help_page'] } },
+            must: { terms: { format: %w[help_page] } },
           }
         }
       }
