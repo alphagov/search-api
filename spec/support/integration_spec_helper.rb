@@ -83,7 +83,7 @@ module IntegrationSpecHelper
     id ||= "/test/#{SecureRandom.uuid}"
     attributes['link'] ||= id
 
-    client.create(
+    client.index(
       {
         index: index_name,
         type: type,
