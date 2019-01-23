@@ -24,7 +24,7 @@ module Search
       options = {}
       options[:should] = [@base] if @base
       options[:must_not] = { terms: { format: migrated_formats } } if migrated_formats.any?
-      options.any? ? { bool: options } : {}
+      { bool: options.any? ? options : { must: { match_all: {} } } }
     end
 
     def only_formats

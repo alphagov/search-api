@@ -12,7 +12,7 @@ RSpec.describe Search::AggregateExampleFetcher do
                 { term: { field => value } },
                 { indices: {
                     indices: SearchConfig.instance.content_index_names,
-                    query: {},
+                    query: { bool: { must: { match_all: {} } } },
                     no_match_query: 'none'
                   } }
               ]
