@@ -591,10 +591,8 @@ RSpec.describe 'SearchTest' do
 
   it "return 400 response for query term length too long" do
     terms = 1025.times.map { ('a'..'z').to_a.sample(5).join }.join(' ')
-    get "/search.json?q=#{terms}"
 
-    expect(last_response).to be_bad_request
-    expect(last_response.body).to eq('Query must be less than 1024 words')
+    expect { get "/search.json?q=#{terms}" }.to raise_error(Elasticsearch::Transport::Transport::Errors::BadRequest)
   end
 
   private
