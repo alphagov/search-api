@@ -6,7 +6,7 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.5.2)
+    addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     amq-protocol (2.3.0)
     ast (2.4.0)
@@ -40,7 +40,7 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
-    gds-api-adapters (57.0.0)
+    gds-api-adapters (57.1.0)
       addressable
       link_header
       null_logger
@@ -256,7 +256,7 @@ DEPENDENCIES
   bunny-mock (~> 1.7)
   climate_control (~> 0.2)
   elasticsearch (~> 2)
-  gds-api-adapters (~> 57.0)
+  gds-api-adapters (~> 57.1)
   govuk-content-schema-test-helpers (~> 1.6.1)
   govuk-lint (~> 3.10.0)
   govuk_app_config (~> 1.11.2)
