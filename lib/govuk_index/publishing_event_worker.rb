@@ -36,8 +36,8 @@ module GovukIndex
       processor = Index::ElasticsearchProcessor.govuk
 
       messages.each do |routing_key, payload|
-        if payload.is_a?(Hash) && payload.has_key?("base_path")
-          base_path = payload["base_path"]
+        base_path = path_for(payload)
+        if base_path
           extra_metadata = Indexer::MetadataTagger.metadata_for_base_path(base_path)
           payload = payload.merge(extra_metadata)
         end
@@ -122,6 +122,16 @@ module GovukIndex
           reason: "Elasticsearch failures",
           messages: "#{messages_with_error.count} of #{messages.count} failed - see ElasticsearchError's for details",
         )
+      end
+    end
+
+    # This is a duplication of logic in the ElasticsearchPresenter and CommonFieldsPresenter
+    # necessary because we need to extract the path **before** instantiating the presenter
+    # so that we can find the relevant metadata by base path and merge this into the payload
+    # used to instantiate the presenter.
+    def path_for(payload)
+      if payload.is_a?(Hash)
+        payload.fetch("base_path", payload.fetch("details", {})["url"])
       end
     end
   end
