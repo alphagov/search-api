@@ -1,5 +1,5 @@
 ---
-tag: rummager.publishing.service.gov.uk
+tag: search-api.publishing.service.gov.uk
 :concurrency: 5
 staging:
   :concurrency:  16

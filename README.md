@@ -1,4 +1,6 @@
-# Rummager
+# Search API
+
+**This is a fork of [rummager](https://github.com/alphagov/rummager), and is in a half-renamed state!  We will clean this up as the migration progresses.**
 
 Rummager indexes content into [elasticsearch](https://www.elastic.co/products/elasticsearch) and serves the GOV.UK search API.
 

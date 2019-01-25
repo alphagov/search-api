@@ -16,7 +16,7 @@ RSpec.describe Indexer::MessageProcessor, 'RakeTest' do
 
       expect(GovukMessageQueueConsumer::Consumer).to receive(:new)
         .with(
-          queue_name: "rummager_to_be_indexed",
+          queue_name: "search_api_to_be_indexed",
           processor: indexer,
           statsd_client: statsd_client,
         ).and_return(consumer)

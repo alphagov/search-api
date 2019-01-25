@@ -12,7 +12,7 @@ description: 'This is the information that has been published so far for your bu
 name: 'Find EU Exit guidance for your business'
 locale: en
 public_updated_at: '2018-11-23T09:00:00.000+00:00'
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 links:
   facet_group:
