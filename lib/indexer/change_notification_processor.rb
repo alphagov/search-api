@@ -13,7 +13,8 @@ module Indexer
       return :rejected unless document
       index_name = document['real_index_name']
       document_id = document['_id']
-      updates = {}
+      base_path = content_item['base_path']
+      updates = {}.merge(Indexer::MetadataTagger.metadata_for_base_path(base_path))
       Indexer::AmendWorker.perform_async(index_name, document_id, updates)
       :accepted
     end

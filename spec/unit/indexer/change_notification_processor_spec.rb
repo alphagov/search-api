@@ -66,4 +66,27 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
 
     expect(:accepted).to eq(result)
   end
+
+  it "adds additional metadata to relevant documents" do
+    message_payload = {
+      "base_path" => "/tag-me",
+    }
+    metadata = {
+      "sector_business_area" => %W(land-transport-excl-rail),
+      "business_activity" => %W(transporting),
+    }
+    index_mock = double
+    allow(index_mock).to receive(:get_document_by_link).with("/tag-me").and_return(
+      "link" => "/tag-me",
+      "real_index_name" => "index_name-abc",
+      "_id" => "document_id_999"
+    )
+    allow(IndexFinder).to receive(:content_index).and_return(index_mock)
+
+    allow(Indexer::MetadataTagger).to receive(:metadata_for_base_path).with("/tag-me").and_return(metadata)
+    allow(Indexer::AmendWorker).to receive(:perform_async).with("index_name-abc", "document_id_999", metadata)
+    result = described_class.trigger(message_payload)
+
+    expect(result).to eq(:accepted)
+  end
 end
