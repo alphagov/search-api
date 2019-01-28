@@ -1,5 +1,8 @@
 index:
   settings:
+    mapping:
+      total_fields:
+        limit: 2000
     analysis:
       analyzer:
         # At index time, elasticsearch will use an analyzer named default in the index settings
