@@ -2,6 +2,6 @@
 
 library("govuk")
 
-node('elasticsearch-2.4') {
+node('elasticsearch-5.6') {
   govuk.buildProject(publishingE2ETests: true)
 }
