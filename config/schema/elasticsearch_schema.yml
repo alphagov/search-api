@@ -94,3 +94,22 @@ index:
         stemmer_english:
           type: stemmer
           name: porter2
+    # The following settings were in puppet, but now index config
+    # can't be applied from the nodes, so they have to live here.
+    # This means that we can no longer (easily) have ci-agents or the
+    # dev VM use no replicas.
+    number_of_replicas: 1
+    number_of_shards: 3
+    refresh_interval: '1s'
+    search:
+      slowlog:
+        threshold:
+          query:
+            warn: '5s'
+            info: '2s'
+            debug: '1s'
+          fetch:
+            warn: '1s'
+            info: '800ms'
+            debug: '500ms'
+    max_result_window: 1000000
