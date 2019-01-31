@@ -60,6 +60,22 @@ class SpecialRoutePublisher
       },
       {
         rendering_app: "rummager",
+        content_id: "0818867d-8026-482c-b797-306fb74f5a2d",
+        base_path: "/api/search.json",
+        title: "GOV.UK search results API",
+        description: "Sitewide search results are displayed in JSON format here.",
+        type: "exact",
+      },
+      {
+        rendering_app: "rummager",
+        content_id: "5edd25bd-987f-45d3-8eca-5fb35cbf2978",
+        base_path: "/api/batch_search.json",
+        title: "GOV.UK batch search results API",
+        description: "Sitewide batch search results are displayed in JSON format here.",
+        type: "exact",
+      },
+      {
+        rendering_app: "rummager",
         base_path: "/sitemap.xml",
         content_id: "fee32a90-397a-4761-9f98-b06e47d2b798",
         title: "GOV.UK sitemap index",
