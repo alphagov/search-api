@@ -349,6 +349,19 @@ RSpec.describe 'SearchTest' do
     )
   end
 
+  it "also works with the /api prefix" do
+    commit_treatment_of_dragons_document({ "organisations" => ['/ministry-of-magic'] })
+    commit_ministry_of_magic_document({ "format" => 'organisation' })
+
+    get "/api/search.json?q=dragons"
+
+    expect(first_result['organisations']).to eq(
+      [{ "slug" => "/ministry-of-magic",
+      "link" => "/ministry-of-magic-site",
+      "title" => "Ministry of Magic" }]
+    )
+  end
+
   it "expands organisations via content_id" do
     commit_treatment_of_dragons_document({ "organisation_content_ids" => ['organisation-content-id'] })
     commit_ministry_of_magic_document({ "content_id" => 'organisation-content-id', "format" => 'organisation' })
