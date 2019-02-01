@@ -137,7 +137,7 @@ class Rummager < Sinatra::Application
   # Return results for the GOV.UK site search
   #
   # For details, see doc/search-api.md
-  ["/search.?:request_format?"].each do |path|
+  ["/search.?:request_format?", "/api/search.?:request_format?"].each do |path|
     get path do
       json_only
 
@@ -150,12 +150,13 @@ class Rummager < Sinatra::Application
         return { error: e.error }.to_json
       end
 
+      headers['Access-Control-Allow-Origin'] = '*'
       results.to_json
     end
   end
 
   # Batch return results for the GOV.UK site search
-  ["/batch_search.?:request_format?"].each do |path|
+  ["/batch_search.?:request_format?", "/api/batch_search.?:request_format?"].each do |path|
     get path do
       json_only
 
@@ -174,6 +175,7 @@ class Rummager < Sinatra::Application
         return { error: e.error }.to_json
       end
 
+      headers['Access-Control-Allow-Origin'] = '*'
       { results: results }.to_json
     end
   end
