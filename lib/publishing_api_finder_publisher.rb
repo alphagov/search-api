@@ -76,6 +76,7 @@ class FinderContentItemPresenter
     links = {}
     links["email_alert_signup"] = [schema["signup_content_id"]] if schema.key?("signup_content_id")
     links["parent"] = Array(schema["parent"]) if schema.key?("parent")
+    links["ordered_related_items"] = Array(schema["ordered_related_items"]) if schema.key?("ordered_related_items")
 
     { content_id: content_id, links: links }
   end
