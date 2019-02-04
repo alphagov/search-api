@@ -438,7 +438,7 @@ RSpec.describe SearchParameterParser do
     it "includes the type in return value of #parsed params" do
       params = {
         "filter_document_type" => ["cma_case"],
-        "filter_opened_date" => "from:2014-04-01 05:08,to:2014-04-02 17:43:12",
+        "filter_opened_date" => ["from:2014-04-01 05:08,to:2014-04-02 17:43:12"],
       }
 
       parser = described_class.new(params, @schema)
@@ -478,7 +478,7 @@ RSpec.describe SearchParameterParser do
     it "includes the whole day if time is omitted" do
       params = {
         "filter_document_type" => ["cma_case"],
-        "filter_public_timestamp" => "from:2017-06-05,to:2017-06-08",
+        "filter_public_timestamp" => ["from:2017-06-05,to:2017-06-08"],
       }
 
       parser = described_class.new(params, @schema)
@@ -499,7 +499,7 @@ RSpec.describe SearchParameterParser do
     it "does not filter on date if the date is invalid" do
       params = {
         "filter_document_type" => ["cma_case"],
-        "filter_opened_date" => "from:2014-bananas-01 00:00,to:2014-04-02 00:00",
+        "filter_opened_date" => ["from:2014-bananas-01 00:00,to:2014-04-02 00:00"],
       }
 
       parser = described_class.new(params, @schema)
@@ -513,7 +513,7 @@ RSpec.describe SearchParameterParser do
     it "does not filter on date if the filter parameter name is invalid" do
       params = {
         "filter_document_type" => ["cma_case"],
-        "filter_opened_date" => "some_invalid_parameter:2014-04-01",
+        "filter_opened_date" => ["some_invalid_parameter:2014-04-01"],
       }
 
       parser = described_class.new(params, @schema)
