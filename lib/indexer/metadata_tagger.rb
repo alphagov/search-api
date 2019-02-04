@@ -81,7 +81,7 @@ module Indexer
     def self.find_all_eu_exit_guidance
       # hard code 500 items - it should be enough for now
       SearchConfig.new.run_search(
-        "filter_appear_in_find_eu_exit_guidance_business_finder" => "yes",
+        "filter_appear_in_find_eu_exit_guidance_business_finder" => %w[yes],
         "count" => %w(500)
       )
     end

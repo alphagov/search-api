@@ -9,7 +9,7 @@ class DuplicateDeleter
 
   def call(ids, id_type: 'content_id')
     ids.each do |id|
-      results = search_config.run_search("filter_#{id_type}" => id, 'fields' => ['content_id'])
+      results = search_config.run_search("filter_#{id_type}" => Array(id), 'fields' => %w[content_id])
 
       if results[:results].count < 2
         io.puts "Skipping #{id_type} #{id} as less than 2 results found"
