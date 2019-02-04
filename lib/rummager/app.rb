@@ -167,16 +167,13 @@ class Rummager < Sinatra::Application
         parsed_searches_parameters[parts[0]][parts[1]] = values
       end
       searches = parsed_searches_parameters.values
-      results = []
       begin
-        results = SearchConfig.instance.run_batch_search(searches)
+        headers['Access-Control-Allow-Origin'] = '*'
+        { results: SearchConfig.instance.run_batch_search(searches) }.to_json
       rescue BaseParameterParser::ParseError => e
         status 422
-        return { error: e.error }.to_json
+        { error: e.error }.to_json
       end
-
-      headers['Access-Control-Allow-Origin'] = '*'
-      { results: results }.to_json
     end
   end
 
