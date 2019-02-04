@@ -51,7 +51,8 @@ RSpec.describe SearchParameterParser do
       ["public_timestamp", date_type],
       ["slug", identifier_type],
       ["link", identifier_type],
-
+      ["content_purpose_supergroup", identifier_type],
+      ["content_store_document_type", identifier_type],
       ["case_type", identifier_type],
       ["opened_date", date_type],
     ].each { |field, type|
@@ -522,6 +523,68 @@ RSpec.describe SearchParameterParser do
         .find { |filter| filter.field_name == "opened_date" }
 
       expect(opened_date_filter).to be_nil
+    end
+  end
+
+  describe 'filtering on content_purpose_supergroup' do
+    before do
+      allow(GovukDocumentTypes).to receive(:supergroup_document_types).
+          with('my_supergroup').
+          and_return(%w[doc_type1 doc_type2])
+    end
+
+    it 'substitutes the content_purpose_supergroup with content_store_document_type' do
+      params = {
+          "filter_content_purpose_supergroup" => %w[my_supergroup],
+      }
+      parser = described_class.new(params, @schema)
+      filter = parser.parsed_params.fetch(:filters).first
+      expect(filter.field_name).to eq('content_store_document_type')
+      expect(filter.values).to match_array(%w[doc_type1 doc_type2])
+    end
+
+    it 'adds document types to existing ones' do
+      params = {
+          "filter_content_purpose_supergroup" => %w[my_supergroup],
+          "filter_content_store_document_type" => %w[doc_type3],
+      }
+      parser = described_class.new(params, @schema)
+      filters = parser.parsed_params.fetch(:filters)
+      filter = filters.first
+      expect(filters.count).to eq(1)
+      expect(filter.field_name).to eq('content_store_document_type')
+      expect(filter.values).to match_array(%w[doc_type1 doc_type2 doc_type3])
+      expect(parser.error).to be_empty
+    end
+    it 'does not add document types to existing ones because different filter operators' do
+      params = {
+          "filter_content_purpose_supergroup" => %w[my_supergroup],
+          "reject_content_store_document_type" => %w[doc_type3],
+      }
+      parser = described_class.new(params, @schema)
+      filters = parser.parsed_params.fetch(:filters)
+      expect(filters.count).to eq(2)
+      expect(parser.error).to be_empty
+    end
+    it 'does not add document types to existing ones because different combination operators' do
+      params = {
+          "filter_all_content_purpose_supergroup" => %w[my_supergroup],
+          "filter_any_content_store_document_type" => %w[doc_type3],
+      }
+      parser = described_class.new(params, @schema)
+      filters = parser.parsed_params.fetch(:filters)
+      expect(filters.count).to eq(2)
+      expect(parser.error).to be_empty
+    end
+    it 'handles an invalid content_purpose_supergroup' do
+      allow(GovukDocumentTypes).to receive(:supergroup_document_types).
+          with('invalid_supergroup').
+          and_return([])
+      params = {
+          "filter_all_content_purpose_supergroup" => %w[invalid_supergroup]
+      }
+      parser = described_class.new(params, @schema)
+      expect(parser.error).to eq('"invalid_supergroup" contains invalid content purpose supergroups')
     end
   end
 

@@ -146,6 +146,11 @@ private
   end
 
   def validate_filter_parameters(parameter_hashes)
+    validated_hashes = validate_filter_names(parameter_hashes)
+    validate_supergroups(validated_hashes)
+  end
+
+  def validate_filter_names(parameter_hashes)
     allowed, disallowed = parameter_hashes.partition { |parameter_hash|
       allowed_filter_fields.include?(parameter_hash['name'])
     }
@@ -155,6 +160,30 @@ private
     end
 
     allowed
+  end
+
+  def validate_supergroups(parameter_hashes)
+    allowed, disallowed = parameter_hashes.partition do |parameter_hash|
+      if is_supergroup?(parameter_hash['name'])
+        contains_no_invalid_supergroups?(parameter_hash['values'])
+      else
+        true
+      end
+    end
+
+    disallowed.each do |parameter_hash|
+      @errors << %{"#{parameter_hash['values'].join(',')}" contains invalid content purpose supergroups}
+    end
+
+    allowed
+  end
+
+  def is_supergroup?(name)
+    name == 'content_purpose_supergroup'
+  end
+
+  def contains_no_invalid_supergroups?(supergroups)
+    supergroups.none? { |supergroup| GovukDocumentTypes.supergroup_document_types(supergroup).empty? }
   end
 
   # Returns hashes of
@@ -169,8 +198,12 @@ private
     end
     matches.compact.map do |match|
       captures = match.named_captures
+      multivalue_query = (captures.fetch('multivalue_query') || 'any').to_sym
       full_name = captures['full_name']
-      captures.merge({ 'values' => parameters[full_name] })
+      captures.merge(
+        { 'values' => parameters[full_name],
+          'multivalue_query' => multivalue_query }
+      )
     end
   end
 
@@ -179,16 +212,45 @@ private
 
     @used_params.concat(filter_hashes.map { |h| h['full_name'] })
 
-    validated_hashes = validate_filter_parameters(filter_hashes)
-    result = validated_hashes.map do |hash|
+    validated_filter_hashes = validate_filter_parameters(filter_hashes)
+    transformed_filter_hashes = transform_to_document_types(validated_filter_hashes)
+    grouped_hashes = group_hashes(transformed_filter_hashes)
+    result = grouped_hashes.map do |hash|
       build_filter(
         filter_name_lookup(hash['name']),
         hash.fetch('values'),
         hash.fetch('operation').to_sym,
-        (hash.fetch('multivalue_query') || 'any').to_sym
+        hash.fetch('multivalue_query')
       )
     end
     result.compact
+  end
+
+  def group_hashes(filter_hashes)
+    grouped_hashes = filter_hashes.group_by { |filter_hash|
+      "#{filter_hash['operation']}_#{filter_hash['multivalue_query']}_#{filter_hash['name']}"
+    }
+    grouped_hashes.values.map do |grouped_filter_hashes|
+      values = grouped_filter_hashes.inject([]) do |result, grouped_filter_hash|
+        result | grouped_filter_hash['values']
+      end
+      grouped_filter_hashes.first.merge({ 'values' => values })
+    end
+  end
+
+  def transform_to_document_types(filter_hashes)
+    filter_hashes.map do |filter_hash|
+      if filter_hash['name'] == 'content_purpose_supergroup'
+        filter_hash.dup.merge(
+          {
+            'name' => 'content_store_document_type',
+            'values' => filter_hash['values'].flat_map { |value| GovukDocumentTypes.supergroup_document_types(value) }
+          }
+        )
+      else
+        filter_hash
+      end
+    end
   end
 
   def allowed_filter_fields

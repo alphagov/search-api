@@ -540,6 +540,29 @@ RSpec.describe 'SearchTest' do
     expect(last_response.body).to eq('Query must be less than 1024 words')
   end
 
+  describe 'substitute content_purpose_supergroup with document_types' do
+    before do
+      commit_ministry_of_magic_document('content_store_document_type' => "doc_type")
+      commit_treatment_of_dragons_document('content_store_document_type' => "other_doc_type")
+    end
+
+    it "Returns correct values for a valid document_supertype" do
+      allow(GovukDocumentTypes).to receive(:supergroup_document_types).
+          with('my_supergroup').
+          and_return(%w[doc_type])
+      get "/search?filter_content_purpose_supergroup=my_supergroup"
+      expect(result_titles).to eq(['Ministry of Magic'])
+    end
+
+    it "Returns no values for an invalid document_supertype" do
+      allow(GovukDocumentTypes).to receive(:supergroup_document_types).
+          with('invalid_supergroup').
+          and_return(%w[])
+      get "/search?filter_content_purpose_supergroup=invalid_supergroup"
+      expect(parsed_response).to eq({ "error" => '"invalid_supergroup" contains invalid content purpose supergroups' })
+    end
+  end
+
   private
 
   def first_result
