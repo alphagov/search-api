@@ -8,6 +8,7 @@ rendering_app: finder-frontend
 schema_name: finder
 title: News and communications
 description: Find news and communications from government
+signup_content_id: 54fa4dca-4dfb-40a5-b860-127716f02e75
 details:
   document_noun: result
   filter:

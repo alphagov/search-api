@@ -50,6 +50,29 @@ namespace :publishing_api do
     PublishingApiFinderPublisher.new(finder, timestamp).call
   end
 
+  desc "
+    Publish finder and email signup content items
+
+    Usage:
+    FINDER_CONFIG=news_and_communications.yml EMAIL_SIGNUP_CONFIG=news_and_communications_email_signup.yml rake publishing_api:publish_finder
+  "
+  task :publish_finder do
+    finder_config = ENV["FINDER_CONFIG"]
+    email_signup_config = ENV["EMAIL_SIGNUP_CONFIG"]
+
+    unless finder_config || email_signup_finder_config
+      raise "Please supply a valid config file name, e.g. FINDER_CONFIG=news_and_communications.yml and/or EMAIL_SIGNUP_CONFIG=news_and_communications_email_signup.yml"
+    end
+
+    finder = YAML.load_file("config/finders/#{finder_config}")
+    email_signup = YAML.load_file("config/finders/#{email_signup_config}")
+    timestamp = Time.now.iso8601
+
+    ContentItemPublisher::FinderEmailSignupPublisher.new(email_signup, timestamp).call if email_signup
+    ContentItemPublisher::FinderPublisher.new(finder, timestamp).call if finder
+    puts "FINISHED"
+  end
+
   desc "Unpublish document finder."
   task :unpublish_document_finder do
     document_finder_config = ENV["DOCUMENT_FINDER_CONFIG"]

@@ -49,6 +49,13 @@ require 'special_route_publisher'
 require 'auth/gds_sso'
 require 'auth/mock_strategy'
 
+require 'content_item_publisher/publisher'
+require 'content_item_publisher/content_item_presenter'
+require 'content_item_publisher/finder_publisher'
+require 'content_item_publisher/finder_presenter'
+require 'content_item_publisher/finder_email_signup_publisher'
+require 'content_item_publisher/finder_email_signup_presenter'
+
 require 'indexer'
 require 'indexer/amender'
 require 'indexer/bulk_payload_generator'
