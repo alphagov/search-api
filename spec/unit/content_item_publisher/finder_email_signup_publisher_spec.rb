@@ -21,25 +21,24 @@ RSpec.describe ContentItemPublisher::FinderEmailSignupPublisher do
 
     before do
       allow(logger).to receive(:info)
-      allow(GdsApi::PublishingApiV2).to receive(:new).and_return(publishing_api)
-      allow(publishing_api).to receive(:put_content)
-      allow(publishing_api).to receive(:patch_links)
-      allow(publishing_api).to receive(:publish)
+      allow(Services.publishing_api).to receive(:put_content)
+      allow(Services.publishing_api).to receive(:patch_links)
+      allow(Services.publishing_api).to receive(:publish)
 
       instance.call
     end
 
     it "drafts the email signup page" do
-      expect(publishing_api).to have_received(:put_content).with(content_id, payload)
+      expect(Services.publishing_api).to have_received(:put_content).with(content_id, payload)
     end
 
     it "patches links for the email signup page" do
-      expect(publishing_api).to have_received(:patch_links)
+      expect(Services.publishing_api).to have_received(:patch_links)
         .with(content_id, { content_id: content_id, links: anything })
     end
 
     it "publishes the email signup page to the Publishing API" do
-      expect(publishing_api).to have_received(:publish).with(content_id)
+      expect(Services.publishing_api).to have_received(:publish).with(content_id)
     end
   end
 end
