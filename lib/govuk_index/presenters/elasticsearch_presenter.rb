@@ -181,7 +181,7 @@ module GovukIndex
     end
 
     def specialist
-      @_specialist ||= SpecialistPresenter.new(metadata: payload.dig("details", "metadata"))
+      @_specialist ||= SpecialistPresenter.new(payload)
     end
 
     def newslike?

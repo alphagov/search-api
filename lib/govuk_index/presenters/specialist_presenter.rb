@@ -26,7 +26,6 @@ module GovukIndex
     delegate_to_payload :dfid_review_status
     delegate_to_payload :dfid_theme
     delegate_to_payload :eligible_entities
-    delegate_to_payload :first_published_at
     delegate_to_payload :fund_state, convert_to_array: true
     delegate_to_payload :fund_type
     delegate_to_payload :funding_amount
@@ -66,8 +65,13 @@ module GovukIndex
     delegate_to_payload :will_continue_on
     delegate_to_payload :withdrawn_date
 
-    def initialize(metadata:)
-      @metadata = metadata || {}
+    def initialize(payload)
+      @payload = payload
+      @metadata = @payload.dig("details", "metadata") || {}
+    end
+
+    def first_published_at
+      metadata["first_published_at"] || @payload["first_published_at"]
     end
 
   private
