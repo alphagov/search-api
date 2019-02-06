@@ -169,19 +169,19 @@ module GovukIndex
     end
 
     def common_fields
-      @_common_fields ||= CommonFieldsPresenter.new(payload)
+      @common_fields ||= CommonFieldsPresenter.new(payload)
     end
 
     def details
-      @_details ||= DetailsPresenter.new(details: payload["details"], format: common_fields.format)
+      @details ||= DetailsPresenter.new(details: payload["details"], format: common_fields.format)
     end
 
     def expanded_links
-      @_expanded_links ||= ExpandedLinksPresenter.new(payload["expanded_links"])
+      @expanded_links ||= ExpandedLinksPresenter.new(payload["expanded_links"])
     end
 
     def specialist
-      @_specialist ||= SpecialistPresenter.new(metadata: payload.dig("details", "metadata"))
+      @specialist ||= SpecialistPresenter.new(payload)
     end
 
     def newslike?
