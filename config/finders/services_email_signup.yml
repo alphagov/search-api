@@ -1,0 +1,28 @@
+---
+base_path: "/services/email-signup"
+content_id: e72eda7d-8fff-498f-b0f4-c07d8cd8ceb5
+document_type: finder_email_signup
+locale: en
+publishing_app: rummager
+rendering_app: finder-frontend
+schema_name: finder_email_signup
+title: Services
+description: You'll get an email when services are published.
+details:
+  email_filter_by:
+  email_filter_name:
+  subscription_list_title_prefix: 'Services'
+  filter:
+    content_purpose_supergroup: services
+  email_filter_facets:
+  - facet_id: organisations
+    facet_name: organisations
+  - facet_id: level_one_taxon
+    filter_key: all_part_of_taxonomy_tree
+    facet_name: topics
+  - facet_id: level_two_taxon
+    filter_key: all_part_of_taxonomy_tree
+    facet_name: topics
+routes:
+- path: "/services/email-signup"
+  type: exact
