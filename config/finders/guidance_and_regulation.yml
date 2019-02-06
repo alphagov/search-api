@@ -1,0 +1,67 @@
+---
+base_path: "/guidance-and-regulation"
+content_id: b8507038-e3b5-422c-bc51-28ff1ed12370
+signup_content_id: 30974a3c-b86d-4f12-883d-783e97055690
+document_type: finder
+locale: en
+publishing_app: rummager
+rendering_app: finder-frontend
+schema_name: finder
+title: Guidance and regulation
+description: Find guidance and regulation from government
+details:
+  document_noun: result
+  filter:
+    content_purpose_supergroup:
+    - guidance_and_regulation
+  format_name: Guidance and regulation
+  show_summaries: true
+  sort:
+  - name: Most viewed
+    key: "-popularity"
+  - name: Relevance
+    key: "-relevance"
+  - name: Updated (newest)
+    key: "-public_timestamp"
+    default: true
+  - name: Updated (oldest)
+    key: public_timestamp
+  facets:
+  - key: "_unused"
+    filter_key: all_part_of_taxonomy_tree
+    keys:
+    - level_one_taxon
+    - level_two_taxon
+    name: topic
+    short_name: topic
+    type: taxon
+    display_as_result_metadata: false
+    filterable: true
+    preposition: about
+  - key: organisations
+    name: Organisation
+    short_name: From
+    preposition: from
+    type: text
+    display_as_result_metadata: true
+    filterable: true
+  - key: world_locations
+    name: World location
+    preposition: in
+    type: text
+    display_as_result_metadata: true
+    filterable: true
+  - key: public_timestamp
+    short_name: Updated
+    name: Updated
+    type: date
+    display_as_result_metadata: true
+    filterable: true
+  default_documents_per_page: 20
+routes:
+- path: "/guidance-and-regulation"
+  type: exact
+- path: "/guidance-and-regulation.atom"
+  type: exact
+- path: "/guidance-and-regulation.json"
+  type: exact
