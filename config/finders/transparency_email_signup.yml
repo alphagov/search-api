@@ -1,0 +1,32 @@
+---
+base_path: "/transparency-and-freedom-of-information-releases/email-signup"
+content_id: 92f7eb26-030b-4a41-962e-d8e0f8814654
+document_type: finder_email_signup
+locale: en
+publishing_app: rummager
+rendering_app: finder-frontend
+schema_name: finder_email_signup
+title: Transparency and freedom of information releases
+description: You'll get an email when transparency and freedom of information releases are published.
+details:
+  email_filter_by:
+  email_filter_name:
+  subscription_list_title_prefix: 'Transparency and freedom of information'
+  filter:
+    content_purpose_supergroup: transparency
+  email_filter_facets:
+  - facet_id: people
+    facet_name: people
+  - facet_id: organisations
+    facet_name: organisations
+  - facet_id: world_locations
+    facet_name: world locations
+  - facet_id: level_one_taxon
+    filter_key: all_part_of_taxonomy_tree
+    facet_name: topics
+  - facet_id: level_two_taxon
+    filter_key: all_part_of_taxonomy_tree
+    facet_name: topics
+routes:
+- path: "/transparency-and-freedom-of-information-releases/email-signup"
+  type: exact
