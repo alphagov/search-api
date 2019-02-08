@@ -98,7 +98,12 @@ module Indexer
     def self.send_notification(document, metadata)
       payload = email_alert_api_payload(document, metadata)
 
-      email_alert_api.send_alert(payload)
+      begin
+        email_alert_api.send_alert(payload)
+        puts "notification sent for #{payload}"
+      rescue GdsApi::HTTPConflict
+        puts "email-alert-api returned 409 conflict for #{payload}"
+      end
     end
 
     def self.email_alert_api_payload(document, metadata)
