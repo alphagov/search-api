@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'gds_api/email_alert_api'
 
 RSpec.describe Indexer::MetadataTagger do
   let(:facet_config_file) { File.expand_path("fixtures/facet_config.yml", __dir__) }
@@ -19,6 +20,18 @@ RSpec.describe Indexer::MetadataTagger do
       "appear_in_find_eu_exit_guidance_business_finder" => "yes"
     }
 
+    allow(described_class)
+      .to receive(:find_all_eu_exit_guidance)
+      .and_return(
+        {
+          results:
+            [
+              { "link" => "a_base_path", item: "one" },
+              { "link" => "another_base_path", item: "two" }
+            ]
+        }
+    )
+
     expect(mock_index).to receive(:amend).with(base_path, metadata)
     expect_any_instance_of(SearchIndices::SearchServer).to receive(:index)
       .with(test_index_name)
@@ -27,6 +40,67 @@ RSpec.describe Indexer::MetadataTagger do
     described_class.initialise(fixture_file, facet_config_file)
     described_class.amend_all_metadata
   end
+
+  it "notifies for new documents" do
+    fixture_file = File.expand_path("fixtures/metadata.csv", __dir__)
+    base_path = '/a_base_path'
+    test_index_name = 'test-index'
+
+    mock_index = double("index")
+    mock_email_alert_api = double("email_alert_api")
+
+    expect_any_instance_of(LegacyClient::IndexForSearch).to receive(:get_document_by_link)
+      .and_return(
+        'real_index_name' => test_index_name,
+        '_source' => {
+          "link" => "/a_base_path",
+          "content_id" => "f2b1e88f-fdb3-4338-80c3-c36ac9b385ac",
+          "tags" => {}
+        }
+      )
+
+    expect(GdsApi::EmailAlertApi).to receive(:new).and_return(mock_email_alert_api)
+
+    metadata = {
+      "sector_business_area" => %w(aerospace agriculture),
+      "business_activity" => %w(yes),
+      "appear_in_find_eu_exit_guidance_business_finder" => "yes"
+    }
+
+    allow(described_class)
+      .to receive(:find_all_eu_exit_guidance)
+      .and_return(
+        {
+          results:
+            [
+              { "link" => "differnt_base_path", item: "one" },
+              { "link" => "another_base_path", item: "two" }
+            ]
+        }
+    )
+
+    expect(mock_index).to receive(:amend).with(base_path, metadata)
+    expect_any_instance_of(SearchIndices::SearchServer).to receive(:index)
+      .with(test_index_name)
+      .and_return(mock_index)
+
+    expect(mock_email_alert_api).to receive(:send_alert).with(
+      a_hash_including(
+        base_path: "/a_base_path",
+        content_id: "f2b1e88f-fdb3-4338-80c3-c36ac9b385ac",
+        tags: {
+          "appear_in_find_eu_exit_guidance_business_finder" => "yes",
+          "business_activity" => %W(yes),
+          "sector_business_area" => %W(aerospace agriculture),
+        },
+      )
+    )
+
+    described_class.initialise(fixture_file, facet_config_file)
+    described_class.amend_all_metadata
+  end
+
+
 
   context "when removing metadata" do
     def nil_metadata_hash
@@ -43,7 +117,7 @@ RSpec.describe Indexer::MetadataTagger do
       }
     end
 
-    it "nils out all metadatad for a base path" do
+    it "nils out all metadata for a base path" do
       fixture_file = File.expand_path("fixtures/metadata.csv", __dir__)
       base_path = "/a_base_path"
       test_index = "test_index"

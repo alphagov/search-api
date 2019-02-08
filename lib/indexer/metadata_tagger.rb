@@ -1,4 +1,5 @@
 require 'csv'
+require 'gds_api/email_alert_api'
 
 module Indexer
   class MetadataTagger
@@ -22,11 +23,17 @@ module Indexer
     end
 
     def self.amend_all_metadata
+      base_paths = all_indexed_eu_exit_guidance_paths.map { |p| "/#{p}" }
+
       @metadata.each do |base_path, metadata|
         item_in_search = SearchConfig.instance.content_index.get_document_by_link(base_path)
         if item_in_search
           index_to_update = item_in_search["real_index_name"]
           Indexer::AmendWorker.new.perform(index_to_update, base_path, metadata)
+
+          unless base_paths.empty? || base_paths.include?(base_path)
+            send_notification(item_in_search["_source"], metadata)
+          end
         end
       end
     end
@@ -71,9 +78,7 @@ module Indexer
     end
 
     def self.destroy_all_eu_exit_guidance!
-      base_paths = find_all_eu_exit_guidance[:results].collect do |result|
-        result["link"]
-      end
+      base_paths = all_indexed_eu_exit_guidance_paths
 
       remove_all_metadata_for_base_paths(base_paths) if base_paths
     end
@@ -86,11 +91,21 @@ module Indexer
       )
     end
 
+    def self.all_indexed_eu_exit_guidance_paths
+      find_all_eu_exit_guidance[:results].collect { |r| r["link"] }
+    end
+
+    def self.send_notification(document, metadata)
+      payload = email_alert_api_payload(document, metadata)
+
+      email_alert_api.send_alert(payload)
+    end
+
     def self.email_alert_api_payload(document, metadata)
       {
         title: document["title"],
         description: document["description"],
-        change_note: "EU Exit guidance for business published",
+        change_note: "This publication has just been added to the EU Exit business guidance finder on GOV.UK.",
         subject: document["title"],
         tags: metadata,
         links: {
