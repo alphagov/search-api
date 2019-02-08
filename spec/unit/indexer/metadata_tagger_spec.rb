@@ -62,7 +62,7 @@ RSpec.describe Indexer::MetadataTagger do
       described_class.remove_all_metadata_for_base_paths(base_path)
     end
 
-    it "clears all eu exit guidance metadat" do
+    it "clears all eu exit guidance metadata" do
       fixture_file = File.expand_path("fixtures/metadata.csv", __dir__)
 
       allow(described_class)
@@ -83,6 +83,60 @@ RSpec.describe Indexer::MetadataTagger do
 
       described_class.initialise(fixture_file, facet_config_file)
       described_class.destroy_all_eu_exit_guidance!
+    end
+  end
+
+  describe "email_alert_api_payload" do
+    let(:document) {
+      {
+        "content_id" => "9d58f37a-7ebe-436a-b7fc-bdb5e287a2b3",
+        "title" => "Operating in the EU after Brexit",
+        "description" => "When the UK leaves the EU, the way businesses both offer services in the EU and operate will change.",
+        "publishing_app" => "whitehall",
+        "content_store_document_type" => "detailed_guide",
+        "public_timestamp" => "2018-01-02 10:10:20.002",
+        "link" => "/guidance/operating-in-the-eu-after-brexit",
+        "taxons" => { a: 'a', b: 'b' },
+        "organisation_content_ids" => ["16f03199-c4f4-408f-844c-bd8489b0a06b"],
+      }
+    }
+    let(:metadata) {
+      {
+        "sector_business_area" => %w(aerospace agriculture),
+        "business_activity" => %w(yes),
+        "appear_in_find_eu_exit_guidance_business_finder" => "yes"
+      }
+    }
+    let(:payload) {
+      described_class.email_alert_api_payload(document, metadata)
+    }
+
+    it "presents metadata as tags" do
+      expect(payload[:tags]).to eq(metadata)
+    end
+
+    it "presents common document attributes" do
+      %i[content_id title description publishing_app].each do |key|
+        expect(payload[key]).to eq(document[key.to_s])
+      end
+    end
+
+    it "presents urgency and priority fields" do
+      expect(payload[:urgent]).to be true
+      expect(payload[:priority]).to eq("high")
+    end
+
+    it "presents fields mapped to appropriate keys" do
+      expect(payload[:base_path]).to eq(document["link"])
+      expect(payload[:document_type]).to eq(document["content_store_document_type"])
+      expect(payload[:public_updated_at]).to eq(document["public_timestamp"])
+    end
+
+    it "presents links" do
+      links = payload[:links]
+      expect(links[:content_id]).to eq(document["content_id"])
+      expect(links[:organisations]).to eq(document["organisation_content_ids"])
+      expect(links[:taxons]).to eq(document["taxons"])
     end
   end
   # rubocop:enable RSpec/VerifiedDoubles, RSpec/AnyInstance, RSpec/MessageSpies

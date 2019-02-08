@@ -85,5 +85,36 @@ module Indexer
         "count" => %w(500)
       )
     end
+
+    def self.email_alert_api_payload(document, metadata)
+      {
+        title: document["title"],
+        description: document["description"],
+        change_note: "EU Exit guidance for business published",
+        subject: document["title"],
+        tags: metadata,
+        links: {
+          content_id: document["content_id"],
+          organisations: document["organisation_content_ids"],
+          taxons: document["taxons"],
+        },
+        urgent: true,
+        document_type: document["content_store_document_type"],
+        email_document_supertype: "other",
+        government_document_supertype: "other",
+        content_id: document["content_id"],
+        public_updated_at: document["public_timestamp"],
+        publishing_app: document["publishing_app"],
+        base_path: document["link"],
+        priority: "high",
+      }
+    end
+
+    def self.email_alert_api
+      @email_alert_api ||= GdsApi::EmailAlertApi.new(
+        Plek.current.find('email-alert-api'),
+        bearer_token: ENV['EMAIL_ALERT_API_BEARER_TOKEN'] || 'example123'
+      )
+    end
   end
 end
