@@ -289,5 +289,8 @@ DEPENDENCIES
   webmock (~> 3.5.1)
   whenever (~> 0.10.0)
 
+RUBY VERSION
+   ruby 2.6.1p33
+
 BUNDLED WITH
-   1.17.1
+   1.17.3

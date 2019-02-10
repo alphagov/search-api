@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+ruby File.read(".ruby-version").chomp
+
 gem "activesupport", "~> 5.2.2"
 gem "elasticsearch", "~> 2"
 gem "gds-api-adapters", "~> 57.3"
