@@ -23,7 +23,7 @@ module Indexer
     end
 
     def self.amend_all_metadata
-      base_paths = all_indexed_eu_exit_guidance_paths.map { |p| "/#{p}" }
+      base_paths = all_indexed_eu_exit_guidance_paths
 
       @metadata.each do |base_path, metadata|
         item_in_search = SearchConfig.instance.content_index.get_document_by_link(base_path)
@@ -32,6 +32,7 @@ module Indexer
           Indexer::AmendWorker.new.perform(index_to_update, base_path, metadata)
 
           unless base_paths.empty? || base_paths.include?(base_path)
+            puts "Enqueuing notification for update to #{base_path}"
             Indexer::MetadataTaggerNotificationWorker.perform_async(item_in_search, metadata)
           end
         end

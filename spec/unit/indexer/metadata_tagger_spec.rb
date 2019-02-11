@@ -26,8 +26,8 @@ RSpec.describe Indexer::MetadataTagger do
         {
           results:
             [
-              { "link" => "a_base_path", item: "one" },
-              { "link" => "another_base_path", item: "two" }
+              { "link" => "/a_base_path", item: "one" },
+              { "link" => "/another_base_path", item: "two" }
             ]
         }
     )
@@ -70,8 +70,8 @@ RSpec.describe Indexer::MetadataTagger do
         {
           results:
             [
-              { "link" => "differnt_base_path", item: "one" },
-              { "link" => "another_base_path", item: "two" }
+              { "link" => "/differnt_base_path", item: "one" },
+              { "link" => "/another_base_path", item: "two" }
             ]
         }
     )
@@ -148,15 +148,15 @@ RSpec.describe Indexer::MetadataTagger do
           {
             results:
               [
-                { "link" => "a_base_path", item: "one" },
-                { "link" => "another_base_path", item: "two" }
+                { "link" => "/a_base_path", item: "one" },
+                { "link" => "/another_base_path", item: "two" }
               ]
           }
       )
 
       expect(described_class)
         .to receive(:remove_all_metadata_for_base_paths)
-        .with(%w(a_base_path another_base_path))
+        .with(%w(/a_base_path /another_base_path))
 
       described_class.initialise(fixture_file, facet_config_file)
       described_class.destroy_all_eu_exit_guidance!
