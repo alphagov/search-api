@@ -31,7 +31,7 @@ module Indexer
           index_to_update = item_in_search["real_index_name"]
           Indexer::AmendWorker.new.perform(index_to_update, base_path, metadata)
 
-          unless base_paths.empty? || base_paths.include?(base_path)
+          unless base_paths.include?(base_path) || item_in_search["_source"]["is_withdrawn"]
             puts "Enqueuing notification for update to #{base_path}"
             Indexer::MetadataTaggerNotificationWorker.perform_async(item_in_search, metadata)
           end
