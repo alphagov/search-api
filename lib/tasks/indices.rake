@@ -98,6 +98,19 @@ This does not update the schema.
     end
   end
 
+  desc "Update supertypes from govuk_document_types gem.
+
+Update all data in the index inplace (without locks) with supertypes from the
+govuk_document_types gem using sidekiq workers.
+
+This does not update the schema.
+"
+  task :update_supertypes do
+    index_names.each do |index_name|
+      GovukIndex::SupertypeUpdater.update(index_name)
+    end
+  end
+
   desc "Migrate the data to a new schema definition
 
 Lock the current index, migrate all the data to a new index,
