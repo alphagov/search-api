@@ -1,4 +1,5 @@
 require 'csv'
+require 'indexer/workers/metadata_tagger_notification_worker'
 
 module Indexer
   class MetadataTagger
@@ -22,11 +23,18 @@ module Indexer
     end
 
     def self.amend_all_metadata
+      base_paths = all_indexed_eu_exit_guidance_paths
+
       @metadata.each do |base_path, metadata|
         item_in_search = SearchConfig.instance.content_index.get_document_by_link(base_path)
         if item_in_search
           index_to_update = item_in_search["real_index_name"]
           Indexer::AmendWorker.new.perform(index_to_update, base_path, metadata)
+
+          unless base_paths.include?(base_path) || item_in_search["_source"]["is_withdrawn"]
+            puts "Enqueuing notification for update to #{base_path}"
+            Indexer::MetadataTaggerNotificationWorker.perform_async(item_in_search, metadata)
+          end
         end
       end
     end
@@ -71,9 +79,7 @@ module Indexer
     end
 
     def self.destroy_all_eu_exit_guidance!
-      base_paths = find_all_eu_exit_guidance[:results].collect do |result|
-        result["link"]
-      end
+      base_paths = all_indexed_eu_exit_guidance_paths
 
       remove_all_metadata_for_base_paths(base_paths) if base_paths
     end
@@ -84,6 +90,10 @@ module Indexer
         "filter_appear_in_find_eu_exit_guidance_business_finder" => "yes",
         "count" => %w(500)
       )
+    end
+
+    def self.all_indexed_eu_exit_guidance_paths
+      find_all_eu_exit_guidance[:results].collect { |r| r["link"] }
     end
   end
 end
