@@ -48,7 +48,7 @@ RSpec.describe Indexer::MetadataTaggerNotificationWorker do
     it "presents fields mapped to appropriate keys" do
       expect(payload[:base_path]).to eq(document["link"])
       expect(payload[:document_type]).to eq(document["content_store_document_type"])
-      expect(payload[:public_updated_at]).to eq(document["public_timestamp"])
+      expect(payload[:public_updated_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
     end
 
     it "presents links" do
