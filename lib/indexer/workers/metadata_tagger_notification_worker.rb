@@ -36,7 +36,7 @@ module Indexer
         email_document_supertype: "other",
         government_document_supertype: "other",
         content_id: document["content_id"],
-        public_updated_at: document["public_timestamp"],
+        public_updated_at: Time.now.iso8601,
         publishing_app: document.fetch("publishing_app", "rummager"),
         base_path: document["link"],
         priority: "high",
