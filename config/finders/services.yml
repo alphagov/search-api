@@ -24,7 +24,7 @@ details:
     name: Organisation
     preposition: from
     short_name: From
-    type: text
+    type: autocomplete
   filter:
     content_purpose_supergroup:
     - services
