@@ -49,9 +49,7 @@ module Indexer
         row_index = index + 1
         metadata[facet["key"]] = row.fetch(row_index, "").split(",").map(&:strip)
       end
-      metadata.reject do |_, value|
-        value == []
-      end
+      metadata
     end
 
     def self.all_nil_metadata_hash
