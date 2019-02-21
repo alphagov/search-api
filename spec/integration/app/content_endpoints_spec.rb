@@ -16,7 +16,7 @@ RSpec.describe 'ContentEndpointsTest' do
     get "/content?link=a-document/in-search"
 
     expect(last_response).to be_ok
-    expect("title" => "A nice title", "link" => "a-document/in-search").to eq parsed_response['raw_source']
+    expect("title" => "A nice title", "link" => "a-document/in-search", "document_type" => "edition").to eq parsed_response['raw_source']
   end
 
   it "deleting a document" do

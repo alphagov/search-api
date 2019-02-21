@@ -52,7 +52,7 @@ module Indexer
 
     def prepare_format_field(doc_hash)
       if doc_hash["format"].nil?
-        doc_hash.merge("format" => doc_hash["_type"])
+        doc_hash.merge("format" => doc_hash["document_type"])
       else
         doc_hash
       end
@@ -68,7 +68,7 @@ module Indexer
     # checked to see if it is a substring match for the (similarly normalised)
     # user's query.  If so, the best bet is used.
     def prepare_if_best_bet(doc_hash)
-      if doc_hash["_type"] != "best_bet"
+      if doc_hash["document_type"] != "best_bet"
         return doc_hash
       end
 

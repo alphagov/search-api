@@ -67,7 +67,7 @@ RSpec.describe SchemaMigrator do
         migrator.reindex
 
         search_server.index_group("govuk_test").current_real.unlock
-        client.delete(index: "govuk_test", id: "/a-page-to-be-reindexed", type: "edition", refresh: true)
+        client.delete(index: "govuk_test", id: "/a-page-to-be-reindexed", type: "generic-document", refresh: true)
 
         expect(migrator).to be_changed
       end

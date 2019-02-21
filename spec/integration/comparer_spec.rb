@@ -15,19 +15,19 @@ RSpec.describe 'ComparerTest' do
     # ordered by type and the ID
     expect([
       [
-        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'link' => 'ABC' },
-        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'link' => 'ABC' },
+        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'link' => 'ABC', 'document_type' => 'edition' },
+        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'link' => 'ABC', 'document_type' => 'edition' },
       ],
       [
         :__no_value_found__,
-        { 'some' => 'data', '_root_id' => 'DEF', '_root_type' => 'edition', 'link' => 'DEF' },
+        { 'some' => 'data', '_root_id' => 'DEF', '_root_type' => 'edition', 'link' => 'DEF', 'document_type' => 'edition' },
       ],
       [
-        { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => 'edition', 'link' => 'GHI' },
-        { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => 'edition', 'link' => 'GHI' },
+        { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => 'edition', 'link' => 'GHI', 'document_type' => 'edition' },
+        { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => 'edition', 'link' => 'GHI', 'document_type' => 'edition' },
       ],
       [
-        { 'some' => 'data', '_root_id' => 'DEF', '_root_type' => 'hmrc_manual', 'link' => 'DEF' },
+        { 'some' => 'data', '_root_id' => 'DEF', '_root_type' => 'hmrc_manual', 'link' => 'DEF', 'document_type' => 'hmrc_manual' },
         :__no_value_found__,
       ],
     ]).to eq results.to_a
@@ -54,12 +54,12 @@ RSpec.describe 'ComparerTest' do
 
     expect([
       [
-        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'ABC' },
-        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'ABC' },
+        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'ABC', 'document_type' => 'edition' },
+        { 'some' => 'data', '_root_id' => 'ABC', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'ABC', 'document_type' => 'edition' },
       ],
       [
         :__no_value_found__,
-        { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'GHI' },
+        { 'some' => 'data', '_root_id' => 'GHI', '_root_type' => 'edition', 'format' => 'edition', 'link' => 'GHI', 'document_type' => 'edition' },
       ],
     ]).to eq results.to_a
   end

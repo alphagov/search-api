@@ -6,7 +6,7 @@ module IntegrationSpecHelper
     "description" => "DESCRIPTION",
     "format" => "local_transaction",
     "link" => "/URL",
-    "_type" => "edition",
+    "document_type" => "edition",
   }.freeze
 
   def self.included(base)
@@ -81,13 +81,14 @@ module IntegrationSpecHelper
       end
 
     id ||= "/test/#{SecureRandom.uuid}"
+    attributes['document_type'] ||= type
     attributes['link'] ||= id
 
     client.index(
       {
         index: index_name,
-        type: type,
         id: id,
+        type: 'generic-document',
         body: attributes,
       }.merge(version_details)
     )
@@ -101,18 +102,20 @@ module IntegrationSpecHelper
     hits = client.search(index: index, size: 1000)['hits']['hits']
     return if hits.empty?
 
-    client.bulk body: (hits.map { |hit| { delete: { _index: index, _type: hit['_type'], _id: hit['_id'] } } })
+    client.bulk body: (hits.map { |hit| { delete: { _index: index, _type: 'generic-document', _id: hit['_id'] } } })
     commit_index index
   end
 
   def commit_document(index_name, attributes, id: attributes["link"], type: "edition")
-    return_id = insert_document(index_name, attributes, id: id, type: type)
+    attributes['document_type'] ||= type
+    return_id = insert_document(index_name, attributes, id: id, type: 'generic-document')
     commit_index(index_name)
     return_id
   end
 
   def update_document(index_name, attributes, id: attributes["link"], type: "edition")
-    client.update(index: index_name, id: id, type: type, body: { doc: attributes })
+    attributes['document_type'] ||= type
+    client.update(index: index_name, id: id, type: 'generic-document', body: { doc: attributes })
     commit_index(index_name)
   end
 
@@ -137,9 +140,8 @@ module IntegrationSpecHelper
   def expect_document_is_in_rummager(document, type: "edition", id: nil, index:)
     retrieved = fetch_document_from_rummager(id: id || document['link'], index: index)
 
-    expect(retrieved["_type"]).to eq(type)
-
     retrieved_source = retrieved["_source"]
+    expect(retrieved_source["document_type"]).to eq(type)
     document.each do |key, value|
       expect(value).to eq(retrieved_source[key]), "Field #{key} should be '#{value}' but was '#{retrieved_source[key]}'"
     end
@@ -163,7 +165,8 @@ module IntegrationSpecHelper
         "link" => "/#{short_index_name}-#{i}",
         "indexable_content" => "Something something important content id #{i}",
         "mainstream_browse_pages" => "browse/page/#{i}",
-        "format" => index_name =~ /govuk/ ? "answer" : "edition"
+        "format" => index_name =~ /govuk/ ? "answer" : "edition",
+        "document_type" => "edition"
       }
       if i % 2 == 0
         fields["specialist_sectors"] = ["farming"]
@@ -179,7 +182,7 @@ module IntegrationSpecHelper
     attributes = sample_document_attributes(index_name, count, override: override)
     data = attributes.flat_map do |sample_document|
       [
-        { index: { _id: sample_document['link'], _type: 'edition' } },
+        { index: { _id: sample_document['link'], _type: 'generic-document' } },
         sample_document,
       ]
     end

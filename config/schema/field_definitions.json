@@ -24,6 +24,11 @@
     "type": "identifier"
   },
 
+  "document_type": {
+    "description": "Type of document this data represents.  Implicitly included into all schemas.  Implemented to resolve the deprecation of multiple document types in Elasticsearch 6.x.",
+    "type": "identifier"
+  },
+
   "email_document_supertype": {
     "description": "High level group for email subscriptions use to identify publications and announcement. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"

@@ -36,6 +36,6 @@ private
 
   def delete_result_from_index(raw_result)
     index = search_server.index(raw_result['real_index_name'])
-    index.delete(raw_result['_type'], raw_result['_id'])
+    index.delete(raw_result['_id'])
   end
 end

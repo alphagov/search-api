@@ -56,8 +56,8 @@ RSpec.describe SearchIndices::Index do
     stub_popularity_index_requests(["/foo/bar", "/foo/baz"], 1.0, 20)
 
     json_documents = [
-      { "_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "0.09090909090909091" },
-      { "_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091" }
+      { "document_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "0.09090909090909091" },
+      { "document_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091" }
     ]
 
     documents = json_documents.map do |json_document|
@@ -66,8 +66,8 @@ RSpec.describe SearchIndices::Index do
 
     response = <<-eos
 {"took":0,"items":[
-  { "index": { "_index":"government_test", "_type":"edition", "_id":"/foo/bar", "ok":true } },
-  { "index": { "_index":"government_test", "_type":"edition", "_id":"/foo/baz", "error":"stuff" } }
+  { "index": { "_index":"government_test", "_type":"generic-document", "_id":"/foo/bar", "ok":true } },
+  { "index": { "_index":"government_test", "_type":"generic-document", "_id":"/foo/baz", "error":"stuff" } }
 ]}
     eos
     stub_request(:post, "http://example.com:9200/government_test/_bulk").to_return(
@@ -84,7 +84,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can be searched" do
-    stub_get = stub_request(:get, "http://example.com:9200/government_test/_search").with(
+    stub_get = stub_request(:get, "http://example.com:9200/government_test/generic-document/_search").with(
       body: %r{"query":"keyword search"},
     ).to_return(
       body: '{"hits":{"hits":[]}}',
@@ -92,19 +92,6 @@ RSpec.describe SearchIndices::Index do
     )
 
     @index.raw_search({ query: "keyword search" })
-
-    assert_requested(stub_get)
-  end
-
-  it "can be searched for a specific type" do
-    stub_get = stub_request(:get, "http://example.com:9200/government_test/test-type/_search").with(
-      body: %r{"query":"keyword search"},
-    ).to_return(
-      body: '{"hits":{"hits":[]}}',
-      headers: { 'Content-Type' => 'application/json' },
-    )
-
-    @index.raw_search({ query: "keyword search" }, "test-type")
 
     assert_requested(stub_get)
   end
@@ -192,7 +179,7 @@ RSpec.describe SearchIndices::Index do
       headers: { 'Content-Type' => 'application/json' },
     )
     hits = (1..100).map { |i|
-      { "_source" => { "link" => "/foo-#{i}" }, "_type" => "edition" }
+      { "_source" => { "link" => "/foo-#{i}", "document_type" => "edition" }, "_type" => "generic-document" }
     }
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 100, hits[0, 50]),
@@ -223,7 +210,7 @@ RSpec.describe SearchIndices::Index do
       headers: { 'Content-Type' => 'application/json' },
     )
     hits = (1..3).map { |i|
-      { "_source" => { "link" => "/foo-#{i}" }, "_type" => "edition" }
+      { "_source" => { "link" => "/foo-#{i}", "document_type" => "edition" }, "_type" => "generic-document" }
     }
     total = hits.size
 
@@ -270,7 +257,7 @@ private
 
   def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)
     # stub the request for total results
-    stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
+    stub_request(:get, "http://example.com:9200/page-traffic_test/generic-document/_search").
       with(body: { "query" => { "match_all" => {} }, "size" => 0 }.to_json).
       to_return(
         body: { "hits" => { "total" => total_pages } }.to_json,
@@ -304,7 +291,7 @@ private
       }
     }
 
-    stub_request(:get, "http://example.com:9200/page-traffic_test/_search").
+    stub_request(:get, "http://example.com:9200/page-traffic_test/generic-document/_search").
       with(body: expected_query.to_json).
       to_return(
         body: response.to_json,

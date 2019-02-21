@@ -36,7 +36,7 @@ RSpec.describe Document do
     expect(document.to_hash.has_key?("_type")).to be_falsey
     expect(document.to_hash.has_key?("_id")).to be_falsey
     expect(document.elasticsearch_export["_id"]).to eq("jobs_exact")
-    expect(document.elasticsearch_export["_type"]).to eq("best_bet")
+    expect(document.elasticsearch_export["document_type"]).to eq("best_bet")
   end
 
   it "should reject document with no type" do
@@ -99,20 +99,21 @@ RSpec.describe Document do
       "link" => "/an-example-guide",
       "indexable_content" => "HERE IS SOME CONTENT",
     }
-    input_hash = expected_hash.merge("_type" => "edition")
+    input_hash = expected_hash.merge("document_type" => "edition")
 
     document = described_class.from_hash(input_hash, sample_elasticsearch_types)
     expect(expected_hash).to eq(document.to_hash)
   end
 
   it "should skip missing fields in to hash" do
-    document = described_class.from_hash({ "_type" => "edition" }, sample_elasticsearch_types)
+    document = described_class.from_hash({ "document_type" => "edition" }, sample_elasticsearch_types)
     expect(document.to_hash.keys).to eq([])
   end
 
   it "should skip missing fields in elasticsearch export" do
     hash = {
-        "_type" => "edition",
+        "_type" => "generic-document",
+        "document_type" => "edition",
         "title" => "TITLE",
         "description" => "DESCRIPTION",
         "format" => "guide",

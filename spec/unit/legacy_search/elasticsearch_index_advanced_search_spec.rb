@@ -102,21 +102,21 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params on a boolean mapping property are convered to true based on something that looks truthy" do
-    @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(body: /#{Regexp.escape("{\"term\":{\"boolean_property\":true}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'true'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '1'))
   end
 
   it "filter params on a boolean mapping property are convered to false based on something that looks falsey" do
-    @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(body: /#{Regexp.escape("\"term\":{\"boolean_property\":false}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'false'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '0'))
   end
 
   it "filter params on a boolean mapping property are rejected if they dont look truthy or falsey" do
-    @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search
 
     expect_rejected_search('Invalid value "falsey" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'falsey'))
@@ -127,7 +127,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params on a date mapping property are turned into a range filter with order based on the key in the value" do
-    @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
 
     stub_empty_search(body: /#{Regexp.escape("\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => { 'to' => '2013-02-02' }))
@@ -147,7 +147,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params on a date mapping property without a before or after key in the value are rejected" do
-    @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
     stub_empty_search
 
     expect_rejected_search('Invalid value {} for date property "date_property"', default_params.merge('date_property' => {}))
@@ -158,7 +158,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params on a date mapping property without a incorrectly formatted date are rejected" do
-    @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
     stub_empty_search
 
     expect_rejected_search('Invalid value {"before"=>"2 Feb 2013"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2 Feb 2013' }))
@@ -191,7 +191,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     stub_request(:get, "http://example.com:9200/government_test/_search")
       .to_return(
         status: 200,
-        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"indexable_content\": \"some_content\"}, \"_type\": \"edition\"}]}}",
+        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"indexable_content\": \"some_content\", \"document_type\": \"edition\"}, \"_type\": \"generic-document\"}]}}",
         headers: { "Content-Type" => "application/json" }
       )
     result_set = @wrapper.advanced_search(default_params)

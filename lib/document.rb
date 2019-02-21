@@ -7,11 +7,11 @@ class Document
     @es_score = es_score
     update_attributes!(attributes)
     @id = attributes["_id"]
-    @type = attributes["_type"]
+    @type = attributes.fetch("document_type", attributes["_type"])
   end
 
   def self.from_hash(hash, elasticsearch_types, es_score = nil)
-    type = hash["_type"]
+    type = hash.fetch("document_type", hash["_type"])
     if type.nil?
       raise "Missing elasticsearch type"
     end
@@ -73,7 +73,8 @@ class Document
           doc[key] = value
         end
       end
-      doc["_type"] = @type
+      doc["document_type"] = @type
+      doc["_type"] = "generic-document"
       doc["_id"] = @id if @id
     end
   end

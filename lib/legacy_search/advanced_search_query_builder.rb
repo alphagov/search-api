@@ -10,18 +10,18 @@ module LegacySearch
     end
 
     def unknown_keys
-      if @mappings["edition"]["properties"]["attachments"]
-        attachment_keys = @mappings["edition"]["properties"]["attachments"]["properties"].keys.map { |k| "attachments.#{k}" }
+      if @mappings["generic-document"]["properties"]["attachments"]
+        attachment_keys = @mappings["generic-document"]["properties"]["attachments"]["properties"].keys.map { |k| "attachments.#{k}" }
       else
         attachment_keys = []
       end
 
-      @unknown_keys ||= @filter_params.keys - (@mappings["edition"]["properties"].keys + attachment_keys)
+      @unknown_keys ||= @filter_params.keys - (@mappings["generic-document"]["properties"].keys + attachment_keys)
     end
 
     def unknown_sort_key
       if @sort_order
-        @unknown_sort_key ||= @sort_order.keys - @mappings['edition']['properties'].keys
+        @unknown_sort_key ||= @sort_order.keys - @mappings['generic-document']['properties'].keys
       else
         []
       end
@@ -196,11 +196,11 @@ module LegacySearch
     end
 
     def date_properties
-      @date_properties ||= @mappings["edition"]["properties"].select { |_p, h| h["type"] == "date" }.keys
+      @date_properties ||= @mappings["generic-document"]["properties"].select { |_p, h| h["type"] == "date" }.keys
     end
 
     def boolean_properties
-      @boolean_properties ||= @mappings["edition"]["properties"].select { |_p, h| h["type"] == "boolean" }.keys
+      @boolean_properties ||= @mappings["generic-document"]["properties"].select { |_p, h| h["type"] == "boolean" }.keys
     end
   end
 end

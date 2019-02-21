@@ -3,13 +3,6 @@ require 'spec_helper'
 RSpec.describe DuplicateLinksFinder do
   subject { described_class.new(indices: %w(government_test govuk_test)) }
 
-  it "finds duplicates" do
-    create_document_with(type: "edition")
-    create_document_with(type: "policy")
-
-    expect(subject.find_exact_duplicates).to eq(["/an-example-page"])
-  end
-
   it "does not incorrectly report dupliciates" do
     create_document_with(link: "/document-1")
     create_document_with(link: "/document-2")

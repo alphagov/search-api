@@ -192,7 +192,7 @@ private
 
   def allowed_filter_fields
     # `document_type` & `elasticsearch_type` are aliases for the internal
-    # "_type" field.
+    # "document_type" field.
     # TODO: Clients should not use this `document_type`.
     %w[document_type elasticsearch_type] + @schema.allowed_filter_fields + VirtualFilterParser.virtual_filters
   end
@@ -202,7 +202,7 @@ private
   end
 
   def build_filter(field_name, values, operation, multivalue_query)
-    if field_name == '_type'
+    if field_name == 'document_type'
       filter_type = "text"
     else
       filter_type = @schema.field_definitions.fetch(field_name).type.filter_type

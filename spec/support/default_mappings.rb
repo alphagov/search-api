@@ -2,7 +2,7 @@ module Fixtures
   module DefaultMappings
     def default_mappings
       {
-        "edition" => {
+        "generic-document" => {
           "_all" => { "enabled" => true },
           "properties" => {
             "title" => { "type" => "string", "index" => "analyzed" },
@@ -11,11 +11,6 @@ module Fixtures
             "link" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
             "indexable_content" => { "type" => "string", "index" => "analyzed" },
             "mainstream_browse_pages" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
-          }
-        },
-        "best_bet" => {
-          "properties" => {
-            "query" => { "type" => "string", "index" => "not_analyzed" }
           }
         }
       }

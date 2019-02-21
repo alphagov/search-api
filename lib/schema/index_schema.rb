@@ -1,20 +1,27 @@
 class IndexSchema
   attr_reader :name, :elasticsearch_types
 
-  def initialize(name, elasticsearch_types)
+  def initialize(name, field_definitions, elasticsearch_types)
     @name = name
     @elasticsearch_types = Hash[elasticsearch_types.map { |elasticsearch_type|
       [elasticsearch_type.name, elasticsearch_type]
     }]
+    @document_type_field = field_definitions['document_type'][:es_config]
   end
 
   def es_mappings
-    @elasticsearch_types.reduce({}) { |mappings, (type_name, elasticsearch_type)|
-      mappings[type_name] = {
-        "properties" => elasticsearch_type.es_config
-      }
-      mappings
+    properties = {
+      'document_type' => @document_type_field,
     }
+    @elasticsearch_types.each do |_key, value|
+      properties = properties.merge(value.es_config)
+    end
+    mappings = {
+      "generic-document" => {
+        "properties" => properties
+      }
+    }
+    mappings
   end
 
   def elasticsearch_type(elasticsearch_type_name)
@@ -23,9 +30,10 @@ class IndexSchema
 end
 
 class IndexSchemaParser
-  def initialize(index_name, schema_file_path, known_elasticsearch_types)
+  def initialize(index_name, schema_file_path, field_definitions, known_elasticsearch_types)
     @index_name = index_name
     @schema_file_path = schema_file_path
+    @field_definitions = field_definitions
     @known_elasticsearch_types = known_elasticsearch_types
   end
 
@@ -34,15 +42,16 @@ class IndexSchemaParser
 
     IndexSchema.new(
       @index_name,
+      @field_definitions,
       lookup_elasticsearch_types(elasticsearch_type_names),
     )
   end
 
-  def self.parse_all(config_path, known_elasticsearch_types)
+  def self.parse_all(config_path, field_definitions, known_elasticsearch_types)
     Hash[IndexSchemaParser::index_schema_paths(config_path).map { |index_name, schema_file_path|
       [
         index_name,
-        IndexSchemaParser.new(index_name, schema_file_path, known_elasticsearch_types).parse
+        IndexSchemaParser.new(index_name, schema_file_path, field_definitions, known_elasticsearch_types).parse
       ]
     }]
   end

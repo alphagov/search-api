@@ -15,9 +15,8 @@ module Indexer
       return unless raw_document
 
       document_source = raw_document["_source"]
-      # For backwards-compatibility, ensure that the source _type and _id are
-      # the same as the main Elasticsearch _type and _id
-      document_source["_type"] = raw_document["_type"]
+      # For backwards-compatibility, ensure that the source _id is the
+      # same as the main Elasticsearch _id
       document_source["_id"] = raw_document["_id"]
 
       document = index.document_from_hash(document_source)

@@ -153,7 +153,7 @@ module SearchIndices
       # Set off a scan query to get back a scroll ID and result count
       batch_size = self.class.scroll_batch_size
       ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        document_from_hash(hit["_source"].merge("_id" => hit["_id"], "_type" => hit["_type"]))
+        document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
       end
     end
 
@@ -173,9 +173,9 @@ module SearchIndices
       LegacySearch::AdvancedSearch.new(@mappings, @elasticsearch_types, @client, @index_name).result_set(params)
     end
 
-    def raw_search(payload, type = nil)
+    def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_name, type: type, body: payload)
+      @client.search(index: @index_name, type: 'generic-document', body: payload)
     end
 
     # Convert a best bet query to a string formed by joining the normalised
@@ -190,9 +190,9 @@ module SearchIndices
       }.join(" ")
     end
 
-    def delete(type, id)
+    def delete(id)
       begin
-        @client.delete(index: @index_name, type: type, id: id)
+        @client.delete(index: @index_name, type: 'generic-document', id: id)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true

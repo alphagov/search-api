@@ -432,7 +432,7 @@ RSpec.describe SearchParameterParser do
     )
 
     expect(parser.parsed_params[:filters]).to eq(
-      [text_filter("_type", %w[cma_case])]
+      [text_filter("document_type", %w[cma_case])]
     )
   end
 

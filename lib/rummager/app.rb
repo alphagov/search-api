@@ -225,7 +225,7 @@ class Rummager < Sinatra::Application
     prevent_access_to_govuk
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
-      hash["_type"] ||= "edition"
+      hash["document_type"] ||= hash.fetch("_type", "edition")
 
       if hash.has_key? "link"
         base_path = hash["link"]
@@ -286,7 +286,8 @@ class Rummager < Sinatra::Application
   end
 
   def get_type_from_request_body(request_body)
-    JSON.parse(request_body.read).fetch("_type", nil)
+    body = JSON.parse(request_body.read)
+    body.fetch("document_type", body.fetch("_type", nil))
   rescue JSON::ParserError
     nil
   end

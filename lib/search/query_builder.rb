@@ -34,7 +34,8 @@ module Search
     # explicitly.
     def fields
       search_params.return_fields +
-        %w[title description organisation_content_ids topic_content_ids
+        %w[document_type
+           title description organisation_content_ids topic_content_ids
            mainstream_browse_page_content_ids]
     end
 
@@ -116,7 +117,6 @@ module Search
     def more_like_this_query_hash
       docs = content_index_names.reduce([]) do |documents, index_name|
         documents << {
-          _type: 'edition',
           _id: search_params.similar_to,
           _index: index_name
         }

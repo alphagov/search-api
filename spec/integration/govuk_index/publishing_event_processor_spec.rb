@@ -29,7 +29,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
 
       expect(random_example["base_path"]).to eq(document["_source"]["link"])
       expect(random_example["base_path"]).to eq(document["_id"])
-      expect(document["_type"]).to eq("edition")
+      expect(document["_source"]["document_type"]).to eq("edition")
 
       expect(@queue.message_count).to eq(0)
       expect(@channel.acknowledged_state[:acked].count).to eq(1)
@@ -106,11 +106,11 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
 
       expect(document_a["_source"]["link"]).to eq(random_example_a["base_path"])
       expect(document_a["_id"]).to eq(random_example_a["base_path"])
-      expect(document_a["_type"]).to eq("edition")
+      expect(document_a["_source"]["document_type"]).to eq("edition")
 
       expect(document_b["_source"]["link"]).to eq(random_example_b["base_path"])
       expect(document_b["_id"]).to eq(random_example_b["base_path"])
-      expect(document_b["_type"]).to eq("edition")
+      expect(document_b["_source"]["document_type"]).to eq("edition")
     end
 
     it "skips blocklisted formats" do

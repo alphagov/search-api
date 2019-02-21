@@ -13,9 +13,9 @@ module LegacyClient
       @search_config = search_config
     end
 
-    def raw_search(payload, type = nil)
+    def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_names, type: type, body: payload)
+      @client.search(index: @index_names, type: 'generic-document', body: payload)
     end
 
     def get_document_by_link(link)

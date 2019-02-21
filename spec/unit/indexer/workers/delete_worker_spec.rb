@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Indexer::DeleteWorker do
   it "deletes documents" do
     mock_index = double("index")
-    expect(mock_index).to receive(:delete).with("edition", "/foobang")
+    expect(mock_index).to receive(:delete).with("/foobang")
     expect_any_instance_of(SearchIndices::SearchServer).to receive(:index)
       .with("test-index")
       .and_return(mock_index)

@@ -15,7 +15,7 @@ module MetasearchIndex
 
       def identifier
         {
-          _type: 'best_bet',
+          _type: 'generic-document',
           _id: @id,
         }
       end
@@ -26,6 +26,7 @@ module MetasearchIndex
           stemmed_query: @document["stemmed_query"],
           stemmed_query_as_term: @document["stemmed_query"].presence && " #{analyzed_stemmed_query} ",
           details: @document["details"],
+          document_type: 'best_bet',
         }
       end
 
