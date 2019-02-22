@@ -10,7 +10,13 @@ RSpec.describe Indexer::MetadataTagger do
     {
       "sector_business_area" => %w(aerospace agriculture),
       "business_activity" => %w(yes),
-      "appear_in_find_eu_exit_guidance_business_finder" => "yes"
+      "appear_in_find_eu_exit_guidance_business_finder" => "yes",
+      "employ_eu_citizens" => [],
+      "eu_uk_government_funding" => [],
+      "intellectual_property" => [],
+      "personal_data" => [],
+      "public_sector_procurement" => [],
+      "regulations_and_standards" => [],
     }
   }
   let(:mock_index) { double(:index) }
@@ -87,6 +93,12 @@ RSpec.describe Indexer::MetadataTagger do
           "appear_in_find_eu_exit_guidance_business_finder" => "yes",
           "business_activity" => %W(yes),
           "sector_business_area" => %W(aerospace agriculture),
+          "employ_eu_citizens" => [],
+          "eu_uk_government_funding" => [],
+          "intellectual_property" => [],
+          "personal_data" => [],
+          "public_sector_procurement" => [],
+          "regulations_and_standards" => [],
         }
       )
 
