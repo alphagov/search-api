@@ -107,8 +107,7 @@ module IntegrationSpecHelper
   end
 
   def commit_document(index_name, attributes, id: attributes["link"], type: "edition")
-    attributes['document_type'] ||= type
-    return_id = insert_document(index_name, attributes, id: id, type: 'generic-document')
+    return_id = insert_document(index_name, attributes, id: id, type: type)
     commit_index(index_name)
     return_id
   end
