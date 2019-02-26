@@ -33,7 +33,7 @@ RSpec.describe "taxon publishing" do
 
   it "removes a taxon page" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("taxon" => :all)
-    content_id = "b7e993e1-9afa-4235-99a4-479caa240267"
+    content_id = "c6d82aef-8f85-43b5-8a15-87719916204c"
     document = { "link" => "/transport/all", "content_id" => content_id }
 
     commit_document('govuk_test', document, id: content_id, type: 'taxon')
