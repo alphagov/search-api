@@ -4,7 +4,7 @@ RUN gem install foreman
 
 ENV GOVUK_APP_NAME search-api
 ENV REDIS_HOST redis
-ENV ELASTICSEARCH_URI http://elasticsearch:9200
+ENV ELASTICSEARCH_URI http://elasticsearch5:9200
 ENV PORT 3233
 ENV RABBITMQ_HOSTS rabbitmq
 ENV RABBITMQ_VHOST /
