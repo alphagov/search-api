@@ -6,6 +6,7 @@ gem "gds-api-adapters", "~> 57.4"
 gem "govuk_app_config", "~> 1.11.3"
 gem "govuk_document_types", "~> 0.9.0"
 gem "govuk-lint", "~> 3.11.0"
+gem "irb", "~> 1.0", require: false
 gem "logging", "~> 2.2.2"
 gem "govuk_sidekiq", "~> 3.0.2"
 gem "loofah"
