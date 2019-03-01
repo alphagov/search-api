@@ -76,6 +76,10 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
             "base_path" => "/alpha-taxonomy/my-taxon-1"
           }
         ],
+        facet_values: [
+          { "content_id" => "TAG-1" },
+          { "content_id" => "TAG-2" }
+        ]
       }
     )
 
@@ -95,6 +99,7 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
         "topic_content_ids" => ["TOPIC-CONTENT-ID-1", "TOPIC-CONTENT-ID-2"],
         "mainstream_browse_page_content_ids" => ["BROWSE-1"],
         "organisation_content_ids" => ["ORG-1", "ORG-2"],
+        "facet_values" => ["TAG-1", "TAG-2"]
       },
       index: "government_test",
     )
