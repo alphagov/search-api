@@ -149,6 +149,11 @@
     "type": "identifiers"
   },
 
+  "facet_values": {
+      "description": "Facet values associated the the documents. Used for modelling facets in finders",
+      "type": "identifiers"
+  },
+
   "updated_at": {
     "description": "When the page was last updated. This field is unreliable and may be deprecated in a future version.",
     "type": "date"
