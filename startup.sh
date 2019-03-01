@@ -1,4 +1,4 @@
 #!/bin/bash
 
 bundle install
-bundle exec mr-sparkle --force-polling -- -p 3233
+bundle exec mr-sparkle --force-polling -- -p 3009
