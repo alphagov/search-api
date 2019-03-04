@@ -8,7 +8,6 @@ rendering_app: finder-frontend
 schema_name: finder
 title: All content
 description: Find content from government
-signup_content_id: 49838f97-5d2e-407a-8876-30c4abe2a6bc
 details:
   default_documents_per_page: 20
   document_noun: result
@@ -63,8 +62,4 @@ details:
     name: Updated (oldest)
 routes:
 - path: "/all-content"
-  type: exact
-- path: "/all-content.atom"
-  type: exact
-- path: "/all-content.json"
   type: exact
