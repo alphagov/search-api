@@ -13,9 +13,6 @@ details:
   default_documents_per_page: 20
   document_noun: result
   format_name: Documents
-  reject:
-    content_purpose_supergroup:
-    - other
   facets:
   - key: "_unused"
     display_as_result_metadata: false
