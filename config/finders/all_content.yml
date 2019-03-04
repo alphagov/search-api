@@ -51,12 +51,12 @@ details:
     type: date
   show_summaries: true
   sort:
-  - key: "-popularity"
+  - default: true
+    key: "-popularity"
     name: Most viewed
   - key: "-relevance"
     name: Relevance
-  - default: true
-    key: "-public_timestamp"
+  - key: "-public_timestamp"
     name: Updated (newest)
   - key: public_timestamp
     name: Updated (oldest)
