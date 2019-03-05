@@ -60,16 +60,21 @@ namespace :publishing_api do
     finder_config = ENV["FINDER_CONFIG"]
     email_signup_config = ENV["EMAIL_SIGNUP_CONFIG"]
 
-    unless finder_config || email_signup_finder_config
+    unless finder_config || email_signup_config
       raise "Please supply a valid config file name, e.g. FINDER_CONFIG=news_and_communications.yml and/or EMAIL_SIGNUP_CONFIG=news_and_communications_email_signup.yml"
     end
 
-    finder = YAML.load_file("config/finders/#{finder_config}")
-    email_signup = YAML.load_file("config/finders/#{email_signup_config}")
     timestamp = Time.now.iso8601
 
-    ContentItemPublisher::FinderEmailSignupPublisher.new(email_signup, timestamp).call if email_signup
-    ContentItemPublisher::FinderPublisher.new(finder, timestamp).call if finder
+    unless email_signup_config.nil?
+      email_signup = YAML.load_file("config/finders/#{email_signup_config}")
+      ContentItemPublisher::FinderEmailSignupPublisher.new(email_signup, timestamp).call
+    end
+
+    unless finder_config.nil?
+      finder = YAML.load_file("config/finders/#{finder_config}")
+      ContentItemPublisher::FinderPublisher.new(finder, timestamp).call
+    end
     puts "FINISHED"
   end
 
