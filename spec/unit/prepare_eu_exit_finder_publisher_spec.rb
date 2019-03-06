@@ -39,6 +39,12 @@ RSpec.describe PrepareEuExitFinderPublisher do
             "content_purpose_supergroup" => %w(services guidance_and_regulation)
           },
           "show_summaries" => true,
+          "sort" => [
+            { "default" => true, "key" => "-popularity", "name" => "Most viewed" },
+            { "key" => "-relevance", "name" => "Relevance" },
+            { "key" => "-public_timestamp", "name" => "Updated (newest)" },
+            { "key" => "public_timestamp", "name" => "Updated (oldest)" }
+          ],
           "summary" => "Something"
         },
         "document_type" => "finder",

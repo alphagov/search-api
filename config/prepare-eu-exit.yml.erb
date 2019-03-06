@@ -30,6 +30,16 @@ details:
       - guidance_and_regulation
   subscription_list_title_prefix: <%= title %>
   show_summaries: true
+  sort:
+  - default: true
+    key: "-popularity"
+    name: Most viewed
+  - key: "-relevance"
+    name: Relevance
+  - key: "-public_timestamp"
+    name: Updated (newest)
+  - key: public_timestamp
+    name: Updated (oldest)
   summary:  <%= config[:topic_summary] %>
 routes:
 - path: <%= base_path %>
