@@ -19,11 +19,11 @@ details:
   sort:
   - name: Most viewed
     key: "-popularity"
+    default: true
   - name: Relevance
     key: "-relevance"
   - name: Updated (newest)
     key: "-public_timestamp"
-    default: true
   - name: Updated (oldest)
     key: public_timestamp
   facets:
