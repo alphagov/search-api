@@ -29,4 +29,15 @@ RSpec.describe ContentItemPublisher::FinderPresenter do
   it "sets the public_updated_at value" do
     expect(instance.present[:public_updated_at]).to eq(timestamp)
   end
+
+  it "sets the links hash" do
+    expect(instance.present_links[:links]).to eq({ "email_alert_signup" => ["54fa4dca-4dfb-40a5-b860-127716f02e75"],
+                                                   "parent" => [] })
+  end
+
+  it "uses empty arrays to remove links" do
+    finder.except!("signup_content_id")
+    expect(instance.present_links[:links]).to eq({ "email_alert_signup" => [],
+                                                   "parent" => [] })
+  end
 end
