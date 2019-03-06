@@ -2,7 +2,6 @@
 base_path: "/services"
 content_id: f6d779ac-5f78-413d-a1ff-da391944e6ec
 description: Find services from government
-signup_content_id: e72eda7d-8fff-498f-b0f4-c07d8cd8ceb5
 details:
   default_documents_per_page: 20
   document_noun: service
