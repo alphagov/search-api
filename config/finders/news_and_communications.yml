@@ -54,6 +54,7 @@ details:
     type: text
     display_as_result_metadata: true
     filterable: true
+    show_option_select_filter: true
   - key: people
     name: Person
     preposition: from
@@ -66,6 +67,7 @@ details:
     type: text
     display_as_result_metadata: true
     filterable: true
+    show_option_select_filter: true
   - key: public_timestamp
     short_name: Updated
     name: Updated
