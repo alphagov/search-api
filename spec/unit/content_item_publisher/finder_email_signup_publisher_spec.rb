@@ -2,8 +2,11 @@ require "spec_helper"
 
 RSpec.describe ContentItemPublisher::FinderEmailSignupPublisher do
   %w(
-    finders/news_and_communications.yml
-    finders/all_content.yml
+    finders/policy_and_engagement_email_signup.yml
+    finders/news_and_communications_email_signup.yml
+    finders/guidance_and_regulation_email_signup.yml
+    finders/transparency_email_signup.yml
+    finders/all_content_email_signup.yml
   ).each do |config_file|
 
     subject(:instance) { described_class.new(finder, timestamp) }
