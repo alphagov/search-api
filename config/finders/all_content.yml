@@ -8,14 +8,10 @@ rendering_app: finder-frontend
 schema_name: finder
 title: All content
 description: Find content from government
-signup_content_id: 49838f97-5d2e-407a-8876-30c4abe2a6bc
 details:
   default_documents_per_page: 20
   document_noun: result
   format_name: Documents
-  reject:
-    content_purpose_supergroup:
-    - other
   facets:
   - key: "_unused"
     display_as_result_metadata: false
@@ -56,19 +52,15 @@ details:
     type: date
   show_summaries: true
   sort:
-  - key: "-popularity"
+  - default: true
+    key: "-popularity"
     name: Most viewed
   - key: "-relevance"
     name: Relevance
-  - default: true
-    key: "-public_timestamp"
+  - key: "-public_timestamp"
     name: Updated (newest)
   - key: public_timestamp
     name: Updated (oldest)
 routes:
 - path: "/all-content"
-  type: exact
-- path: "/all-content.atom"
-  type: exact
-- path: "/all-content.json"
   type: exact
