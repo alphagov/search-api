@@ -8,7 +8,7 @@ gem "govuk_document_types", "~> 0.9.0"
 gem "govuk-lint", "~> 3.11.0"
 gem "irb", "~> 1.0", require: false
 gem "logging", "~> 2.2.2"
-gem "govuk_sidekiq", "~> 3.0.2"
+gem "govuk_sidekiq", "~> 3.0.3"
 gem "loofah"
 gem "oauth2"
 gem "nokogiri", "~> 1.10.1"
