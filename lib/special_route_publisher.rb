@@ -8,7 +8,7 @@ class SpecialRoutePublisher
 
   def take_ownership_of_search_routes
     publishing_api = GdsApi::PublishingApiV2.new(
-      Plek.new.find('publishing-api'),
+      Plek.new.find('publishing-api', external: true),
       bearer_token: ENV['PUBLISHING_API_BEARER_TOKEN'] || 'example'
     )
     %w(/search /search.json /search/opensearch.xml).each do |path|
