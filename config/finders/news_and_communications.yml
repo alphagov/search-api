@@ -61,6 +61,7 @@ details:
     type: text
     display_as_result_metadata: false
     filterable: true
+    show_option_select_filter: true
   - key: world_locations
     name: World location
     preposition: in
