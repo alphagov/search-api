@@ -68,12 +68,14 @@ details:
     type: text
     display_as_result_metadata: true
     filterable: true
+    show_option_select_filter: true
   - key: world_locations
     name: World location
     preposition: in
     type: text
     display_as_result_metadata: true
     filterable: true
+    show_option_select_filter: true
   - key: public_timestamp
     short_name: Updated
     name: Updated
