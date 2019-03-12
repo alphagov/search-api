@@ -1,0 +1,90 @@
+---
+base_path: "/policy-papers-and-consultations"
+content_id: 45bb9f22-096a-4e4c-a39e-04a65ff82da7
+document_type: finder
+locale: en
+publishing_app: rummager
+rendering_app: finder-frontend
+schema_name: finder
+title: Policy papers and consultations
+description: Find policy papers and consultations from government
+signup_content_id: 5a4dc517-57cf-4dd6-873f-f1d29f6d540c
+details:
+  document_noun: result
+  filter:
+    content_purpose_supergroup:
+    - policy_and_engagement
+  format_name: document
+  show_summaries: true
+  sort:
+  - name: Most viewed
+    key: "-popularity"
+  - name: Relevance
+    key: "-relevance"
+  - name: Updated (newest)
+    key: "-public_timestamp"
+    default: true
+  - name: Updated (oldest)
+    key: public_timestamp
+  facets:
+  - key: "_unused"
+    filter_key: all_part_of_taxonomy_tree
+    keys:
+    - level_one_taxon
+    - level_two_taxon
+    name: topic
+    short_name: topic
+    type: taxon
+    display_as_result_metadata: false
+    filterable: true
+    preposition: about
+  - key: content_store_document_type
+    name: Document type
+    preposition: with document type
+    type: text
+    display_as_result_metadata: true
+    filterable: true
+    option_lookup:
+      policy_papers:
+      - impact_assessment
+      - case_study
+      - policy_paper
+      open_consultations:
+      - open_consultation
+      closed_consultations:
+      - closed_consultation
+      - consultation_outcome
+    allowed_values:
+    - label: Policy papers
+      value: policy_papers
+    - label: Consultations (open)
+      value: open_consultations
+    - label: Consultations (closed)
+      value: closed_consultations
+  - key: organisations
+    name: Organisation
+    short_name: From
+    preposition: from
+    type: text
+    display_as_result_metadata: true
+    filterable: true
+  - key: world_locations
+    name: World location
+    preposition: in
+    type: text
+    display_as_result_metadata: true
+    filterable: true
+  - key: public_timestamp
+    short_name: Updated
+    name: Updated
+    type: date
+    display_as_result_metadata: true
+    filterable: true
+  default_documents_per_page: 20
+routes:
+- path: "/policy-papers-and-consultations"
+  type: exact
+- path: "/policy-papers-and-consultations.atom"
+  type: exact
+- path: "/policy-papers-and-consultations.json"
+  type: exact
