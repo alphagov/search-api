@@ -1,5 +1,5 @@
 ---
-base_path: "/news-and-communications/email-signup"
+base_path: "/search/news-and-communications/email-signup"
 content_id: 54fa4dca-4dfb-40a5-b860-127716f02e75
 document_type: finder_email_signup
 locale: en
@@ -32,5 +32,5 @@ details:
     filter_value: d6c2de5d-ef90-45d1-82d4-5f2438369eea
     facet_name: topics
 routes:
-- path: "/news-and-communications/email-signup"
+- path: "/search/news-and-communications/email-signup"
   type: exact

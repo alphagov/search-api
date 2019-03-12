@@ -1,5 +1,5 @@
 ---
-base_path: "/transparency-and-freedom-of-information-releases"
+base_path: "/search/transparency-and-freedom-of-information-releases"
 content_id: 9d21cee6-990b-4e87-b254-cada0e2ec4db
 description: Find transparency and freedom of information releases from government
 signup_content_id: 92f7eb26-030b-4a41-962e-d8e0f8814654
@@ -60,9 +60,9 @@ rendering_app: finder-frontend
 schema_name: finder
 title: Transparency and freedom of information releases
 routes:
-- path: "/transparency-and-freedom-of-information-releases"
+- path: "/search/transparency-and-freedom-of-information-releases"
   type: exact
-- path: "/transparency-and-freedom-of-information-releases.atom"
+- path: "/search/transparency-and-freedom-of-information-releases.atom"
   type: exact
-- path: "/transparency-and-freedom-of-information-releases.json"
+- path: "/search/transparency-and-freedom-of-information-releases.json"
   type: exact

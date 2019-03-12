@@ -1,5 +1,5 @@
 ---
-base_path: "/all-content/email-signup"
+base_path: "/search/all/email-signup"
 content_id: 49838f97-5d2e-407a-8876-30c4abe2a6bc
 document_type: finder_email_signup
 locale: en
@@ -28,5 +28,5 @@ details:
     filter_key: all_part_of_taxonomy_tree
     facet_name: topics
 routes:
-- path: "/all-content/email-signup"
+- path: "/search/all/email-signup"
   type: exact
