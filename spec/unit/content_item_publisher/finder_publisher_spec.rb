@@ -7,6 +7,7 @@ RSpec.describe ContentItemPublisher::FinderPublisher do
     finders/guidance_and_regulation.yml
     finders/transparency.yml
     finders/all_content.yml
+    finders/statistics.yml
   ).each do |config_file|
 
     subject(:instance) { described_class.new(finder, timestamp) }
