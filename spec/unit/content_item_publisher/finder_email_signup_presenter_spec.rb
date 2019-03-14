@@ -10,6 +10,7 @@ RSpec.describe ContentItemPublisher::FinderEmailSignupPresenter do
     finders/all_content_email_signup.yml
     finders/guidance_and_regulation_email_signup.yml
     finders/transparency_email_signup.yml
+    finders/statistics_email_signup.yml
   ).each do |config_file|
 
     subject(:instance) { described_class.new(finder, timestamp) }
