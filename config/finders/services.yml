@@ -1,5 +1,5 @@
 ---
-base_path: "/services"
+base_path: "/search/services"
 content_id: f6d779ac-5f78-413d-a1ff-da391944e6ec
 description: Find services from government
 details:
@@ -44,9 +44,9 @@ rendering_app: finder-frontend
 schema_name: finder
 title: Services
 routes:
-- path: "/services"
+- path: "/search/services"
   type: exact
-- path: "/services.atom"
+- path: "/search/services.atom"
   type: exact
-- path: "/services.json"
+- path: "/search/services.json"
   type: exact

@@ -1,5 +1,5 @@
 ---
-base_path: "/policy-papers-and-consultations/email-signup"
+base_path: "/search/policy-papers-and-consultations/email-signup"
 content_id: 5a4dc517-57cf-4dd6-873f-f1d29f6d540c
 document_type: finder_email_signup
 locale: en
@@ -40,5 +40,5 @@ details:
     filter_key: all_part_of_taxonomy_tree
     facet_name: topics
 routes:
-- path: "/policy-papers-and-consultations/email-signup"
+- path: "/search/policy-papers-and-consultations/email-signup"
   type: exact

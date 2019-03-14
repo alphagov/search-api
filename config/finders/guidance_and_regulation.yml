@@ -1,5 +1,5 @@
 ---
-base_path: "/guidance-and-regulation"
+base_path: "/search/guidance-and-regulation"
 content_id: b8507038-e3b5-422c-bc51-28ff1ed12370
 signup_content_id: 30974a3c-b86d-4f12-883d-783e97055690
 document_type: finder
@@ -61,9 +61,9 @@ details:
     filterable: true
   default_documents_per_page: 20
 routes:
-- path: "/guidance-and-regulation"
+- path: "/search/guidance-and-regulation"
   type: exact
-- path: "/guidance-and-regulation.atom"
+- path: "/search/guidance-and-regulation.atom"
   type: exact
-- path: "/guidance-and-regulation.json"
+- path: "/search/guidance-and-regulation.json"
   type: exact
