@@ -88,7 +88,8 @@ correctly
   desc "Update popularity data in indices.
 
 Update all data in the index inplace (without locks) with the new popularity
-data using sidekiq workers.
+data using sidekiq workers. The Rake task will exit when the workers
+have finished.
 
 This does not update the schema.
 "

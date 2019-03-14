@@ -6,6 +6,8 @@ module GovukIndex
         destination_index: index_name,
         process_all: process_all,
       ).run
+
+      worker.wait_until_processed
     end
 
     def self.worker
