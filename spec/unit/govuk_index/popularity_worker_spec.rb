@@ -7,11 +7,11 @@ RSpec.describe GovukIndex::PopularityWorker do
     allow(GovukDocumentTypes).to receive(:supertypes).
       with(document_type: 'testgroup').
       and_return("supertype1" => "type1", "supertype2" => "type2")
-    @processor = instance_double('processor', save: nil, commit: nil)
+    @processor = instance_double('processor', update: nil, commit: nil)
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(@processor)
   end
 
-  it "saves all records" do
+  it "updates all records" do
     stub_popularity_data
     records = [
       { 'identifier' => { '_id' => 'record_1' }, 'document' => {} },
@@ -19,7 +19,7 @@ RSpec.describe GovukIndex::PopularityWorker do
     ]
     worker.perform(records, "govuk_test")
 
-    expect(@processor).to have_received(:save).twice
+    expect(@processor).to have_received(:update).twice
     expect(@processor).to have_received(:commit)
   end
 
@@ -31,10 +31,10 @@ RSpec.describe GovukIndex::PopularityWorker do
 
     worker.perform([@record], "govuk_test")
 
-    expect(@processor).to have_received(:save).with(
+    expect(@processor).to have_received(:update).with(
       having_attributes(
         identifier: { '_id' => 'record_1', '_version_type' => 'external_gte' },
-        document: hash_including({ 'popularity' => 0.7, 'title' => 'test_doc' })
+        document: { 'popularity' => 0.7 }
       )
     )
   end

@@ -9,7 +9,7 @@ module GovukIndex
 
       popularities = retrieve_popularities_for(destination_index, records)
       records.each do |record|
-        actions.save(
+        actions.update(
           process_record(record, popularities)
         )
       end
@@ -21,7 +21,7 @@ module GovukIndex
       base_path = record['identifier']['_id']
       OpenStruct.new(
         identifier: record['identifier'].merge('_version_type' => 'external_gte'),
-        document: record['document'].merge('popularity' => popularities[base_path]),
+        document: { 'popularity' => popularities[base_path] },
       )
     end
 

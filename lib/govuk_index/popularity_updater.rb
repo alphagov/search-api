@@ -18,6 +18,7 @@ module GovukIndex
       super(
         source_index: source_index,
         destination_index: destination_index,
+        include_document: false
       )
     end
 

@@ -6,9 +6,10 @@ module GovukIndex
 
     class ImplementationRequired < StandardError; end
 
-    def initialize(source_index:, destination_index:)
+    def initialize(source_index:, destination_index:, include_document: true)
       @source_index = source_index
       @destination_index = destination_index
+      @include_document = include_document
     end
 
     def run(async: true)
@@ -44,8 +45,8 @@ module GovukIndex
       ) do |record|
         {
           'identifier' => record.slice(*%w{_id _type _version}),
-          'document' => record.fetch('_source'),
-        }
+          'document' => @include_document ? record.fetch('_source') : nil,
+        }.compact
       end
     end
   end
