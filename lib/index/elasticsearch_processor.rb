@@ -23,6 +23,11 @@ module Index
       @actions << presenter.document
     end
 
+    def update(presenter)
+      @actions << { update: presenter.identifier }
+      @actions << { doc: presenter.document }
+    end
+
     def delete(presenter)
       @actions << { delete: presenter.identifier }
     end
