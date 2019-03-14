@@ -1,0 +1,45 @@
+---
+base_path: "/search/statistics/email-signup"
+content_id: 119db584-0ae7-45e4-8f3a-fd79316c6921
+document_type: finder_email_signup
+locale: en
+publishing_app: rummager
+rendering_app: finder-frontend
+schema_name: finder_email_signup
+title: Statistics
+description: You'll get an email each time statistics are published.
+details:
+  email_filter_by:
+  email_filter_name:
+  subscription_list_title_prefix: Statistics
+  filter: {}
+  email_filter_facets:
+  - facet_id: content_store_document_type
+    facet_name: document types
+    option_lookup:
+      statistics_published:
+      - statistics
+      - national_statistics
+      - statistical_data_set
+      - official_statistics
+      statistics_upcoming:
+      - statistics_announcement
+      - national_statistics_announcement
+      - official_statistics_announcement
+      research:
+      - dfid_research_output
+      - independent_report
+      - research
+  - facet_id: organisations
+    facet_name: organisations
+  - facet_id: world_locations
+    facet_name: world locations
+  - facet_id: level_one_taxon
+    filter_key: all_part_of_taxonomy_tree
+    facet_name: topics
+  - facet_id: level_two_taxon
+    filter_key: all_part_of_taxonomy_tree
+    facet_name: topics
+routes:
+- path: "/search/statistics/email-signup"
+  type: exact
