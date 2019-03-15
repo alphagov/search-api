@@ -631,6 +631,33 @@
   "tribunal_decision_reference_number": {
     "type": "identifier"
   },
+  "uk_market_conformity_assessment_body_name": {
+    "type": "searchable_identifier"
+  },
+  "uk_market_conformity_assessment_body_number": {
+    "type": "searchable_identifier"
+  },
+  "uk_market_conformity_assessment_body_type": {
+    "type": "searchable_identifiers"
+  },
+  "uk_market_conformity_assessment_body_registered_office_location": {
+    "type": "searchable_identifier"
+  },
+  "uk_market_conformity_assessment_body_testing_locations": {
+    "type": "searchable_identifiers"
+  },
+  "uk_market_conformity_assessment_body_website": {
+    "type": "identifier"
+  },
+  "uk_market_conformity_assessment_body_email": {
+    "type": "identifier"
+  },
+  "uk_market_conformity_assessment_body_phone": {
+    "type": "identifier"
+  },
+  "uk_market_conformity_assessment_body_legislative_area": {
+    "type": "searchable_identifiers"
+  },
   "dfid_authors": {
     "description": "A set of author names, which aren't selected from a predefined list and don't repeat",
     "type": "searchable_identifiers"

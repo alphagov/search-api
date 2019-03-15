@@ -1,0 +1,14 @@
+{
+  "fields": [
+    "uk_market_conformity_assessment_body_name",
+    "updated_at",
+    "uk_market_conformity_assessment_body_number",
+    "uk_market_conformity_assessment_body_type",
+    "uk_market_conformity_assessment_body_registered_office_location",
+    "uk_market_conformity_assessment_body_testing_locations",
+    "uk_market_conformity_assessment_body_website",
+    "uk_market_conformity_assessment_body_email",
+    "uk_market_conformity_assessment_body_phone",
+    "uk_market_conformity_assessment_body_legislative_area"
+  ]
+}
