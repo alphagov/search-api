@@ -16,10 +16,19 @@ publishing_app: rummager
 rendering_app: finder-frontend
 details:
   beta: false
-  canonical_link: true
   document_noun: publication
-  subscription_list_title_prefix: 'Find EU Exit guidance for your business '
   summary: 'This is the information that has been published so far for your business to prepare for EU exit. You can change what information you get using the checkboxes. Come back to this page regularly or sign up to receive emails when new information is published.'
+  canonical_link: true
+  sort:
+    - name: Topic
+      key: topic
+      default: true
+    - name: Most viewed
+      key: -popularity
+    - name: Most recent
+      key: -public_timestamp
+    - name: A to Z
+      key: title
   filter:
     appear_in_find_eu_exit_guidance_business_finder: "yes"
   facets:
@@ -30,23 +39,23 @@ details:
       value: aerospace
     - label: Agriculture
       value: agriculture
-    - label: Air transport (Aviation
+    - label: Air transport (aviation)
       value: air-transport-aviation
-    - label: Ancillary Services
+    - label: Ancillary services
       value: ancillary-services
-    - label: Animal Health
+    - label: Animal health
       value: animal-health
     - label: Automotive
       value: automotive
-    - label: Banking, market infrastructure
+    - label: Banking, markets and infrastructure
       value: banking-market-infrastructure
     - label: Broadcasting
       value: broadcasting
     - label: Chemicals
       value: chemicals
-    - label: Computer Services
+    - label: Computer services
       value: computer-services
-    - label: Construction Contracting
+    - label: Construction and contracting
       value: construction-contracting
     - label: Education
       value: education
@@ -54,32 +63,28 @@ details:
       value: electricity
     - label: Electronics
       value: electronics
-    - label: Environmental Services
+    - label: Environmental services
       value: environmental-services
     - label: Fisheries
       value: fisheries
-    - label: Food and Drink
+    - label: Food and drink
       value: food-and-drink
     - label: Furniture and other manufacturing
       value: furniture-and-other-manufacturing
     - label: Gas markets
       value: gas-markets
-    - label: Goods sectors each <0.4% of GVA
-      value: goods-sectors-each-0-4-of-gva
     - label: Imports
       value: imports
-    - label: Imputed Rent
+    - label: Imputed rent
       value: imputed-rent
     - label: Insurance
       value: insurance
-    - label: Land transport (excl. rail)
+    - label: Land transport (excluding rail)
       value: land-transport-excl-rail
     - label: Medical services
       value: medical-services
-    - label: Motor Trades
+    - label: Motor trades
       value: motor-trades
-    - label: Network Industries <0.3% of GVA
-      value: network-industries-0-3-of-gva
     - label: Oil and gas production
       value: oil-and-gas-production
     - label: Other personal services
@@ -90,91 +95,81 @@ details:
       value: pharmaceuticals
     - label: Post
       value: post
-    - label: Professional and Business services
+    - label: Professional and business services
       value: professional-and-business-services
-    - label: Public Administration and Defence
+    - label: Public administration and defence
       value: public-administration-and-defence
     - label: Rail
       value: rail
-    - label: Real Estate (excl. Imputed Rent)
+    - label: Real estate (excluding imputed rent)
       value: real-estate-excl-imputed-rent
     - label: Retail
       value: retail
-    - label: Service sectors each <1% of GVA
-      value: service-sectors-each-1-of-gva
-    - label: Social Work
+    - label: Social work
       value: social-work
-    - label: Steel and other metals/commodities
+    - label: Steel and other metals or commodities
       value: steel-and-other-metals-commodities
     - label: Telecoms
       value: telecoms
     - label: Textiles and clothing
       value: textiles-and-clothing
-    - label: Top Ten Trade Partners by Value
-      value: top-ten-trade-partners-by-value
     - label: Warehousing and support for transportation
       value: warehousing-and-support-for-transportation
-    - label: Water Transport (Maritime/ports)
+    - label: Water transport including maritime and ports
       value: water-transport-maritime-ports
-    - label: Wholesale (excl. Motor Vehicles)
+    - label: Wholesale (excluding motor vehicles)
       value: wholesale-excl-motor-vehicles
-    display_as_result_metadata: false
+    display_as_result_metadata: true
     filterable: true
+    combine_mode: and
     key: sector_business_area
     name: Sector / Business Area
-    preposition: for businesses in
+    preposition: your business is in
     type: text
   - allowed_values:
-    - label: Do business in the EU
-      value: do-business-in-the-eu
-    - label: Buying
-      value: buying
-    - label: Selling
-      value: selling
-    - label: Transporting
-      value: transporting
-    - label: Other business in the EU
-      value: other-eu
-    display_as_result_metadata: false
-    filterable: true
-    key: business_activity
-    name: Doing business in the EU
-    preposition: for businesses that
-    type: text
-  - allowed_values:
-    - label: "Yes"
-      value: "yes"
-    - label: "No"
-      value: "no"
-    - label: Don't know
-      value: dont-know
-    display_as_result_metadata: false
-    filterable: true
-    key: employ_eu_citizens
-    name: Employ EU citizens
-    preposition: for businesses that
-    type: text
-  - allowed_values:
-    - label: Products and goods sold in the UK
+    - label: Sell products or goods in the UK
       value: products-or-goods
-    display_as_result_metadata: false
+    - label: Buy products or goods from abroad
+      value: buying
+    - label: Sell products or goods abroad
+      value: selling
+    - label: Do other types of business in the EU
+      value: other-eu
+    - label: Transport goods abroad
+      value: transporting
+    display_as_result_metadata: true
     filterable: true
-    key: regulations_and_standards
-    name: Sell products and goods in the UK
-    preposition: for businesses that sell
+    combine_mode: and
+    key: business_activity
+    name: Business activity
+    preposition: you
     type: text
   - allowed_values:
-    - label: Processing personal data
-      value: processing-personal-data
-    - label: Visiting a website hosted in the EEA
-      value: interacting-with-eea-website
-    - label: Digital service provider
-      value: digital-service-provider
-    display_as_result_metadata: false
+    - label: "EU citizens"
+      value: "yes"
+    - label: "No EU citizens"
+      value: "no"
+    display_as_result_metadata: true
     filterable: true
+    combine_mode: or
+    key: employ_eu_citizens
+    name: Who you employ
+    short_name: Employing EU citizens
+    preposition: you employ
+    type: text
+  - allowed_values:
+    - label: Processing personal data from Europe
+      value: processing-personal-data
+    - label: Using websites or services hosted in Europe
+      value: interacting-with-eea-website
+    - label: Providing digital services available to Europe
+      value: digital-service-provider
+    display_as_result_metadata: true
+    filterable: true
+    combine_mode: or
     key: personal_data
     name: Personal data
-    preposition: for businesses involved in
+    preposition: you exchange personal data by
     type: text
   - allowed_values:
     - label: Copyright
@@ -187,47 +182,37 @@ details:
       value: patents
     - label: Exhaustion of rights
       value: exhaustion-of-rights
-    display_as_result_metadata: false
+    display_as_result_metadata: true
     filterable: true
+    combine_mode: or
     key: intellectual_property
     name: Intellectual property
-    preposition: for businesses working with
+    preposition: you use or rely on
+    type: text
+  - allowed_values:
+    - label: EU funding
+      value: receiving-eu-funding
+    - label: UK government funding
+      value: receiving-uk-government-funding
+    display_as_result_metadata: true
+    filterable: true
+    combine_mode: or
+    key: eu_uk_government_funding
+    name: EU or UK government funding
+    short_name: EU or UK government funding
+    preposition: you get
     type: text
   - allowed_values:
     - label: Civil government contracts
       value: civil-government-contracts
     - label: Defence contracts
       value: defence-contracts
-    display_as_result_metadata: false
+    display_as_result_metadata: true
     filterable: true
+    combine_mode: or
     key: public_sector_procurement
     name: Public sector procurement
-    preposition: businesses that work with
-    type: text
-  - allowed_values:
-    - label: Horizon 2020
-      value: horizon-2020
-    - label: COSME
-      value: cosme
-    - label: European Investment Bank (EIB)
-      value: european-investment-bank-eib
-    - label: European Structural Fund (ESF)
-      value: european-structural-fund-esf
-    - label: European Redevelopment Fund (EURDF)
-      value: eurdf
-    - label: European Territorial Cooperation Fund (ETCF)
-      value: etcf
-    - label: European Solidarity Corps (ESC)
-      value: esc
-    - label: ECP
-      value: ecp
-    - label: ETF
-      value: etf
-    display_as_result_metadata: false
-    filterable: true
-    key: eu_uk_government_funding
-    name: Receiving EU funding
-    preposition: for businesses that receive funding from
+    preposition: you apply for
     type: text
 routes:
 - path: "/find-eu-exit-guidance-business"
