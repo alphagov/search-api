@@ -70,9 +70,9 @@ module Search
           query: {
             bool: {
               must: query,
-              filter: { bool: { must: filter } },
             }
           },
+          post_filter: { bool: { must: filter } },
           size: example_count,
           _source: {
             includes: example_fields,

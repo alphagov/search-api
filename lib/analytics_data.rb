@@ -15,9 +15,9 @@ class AnalyticsData
       query: {
         bool: {
           must: { match_all: {} },
-          filter: Search::FormatMigrator.new.call,
         },
       },
+      post_filter: Search::FormatMigrator.new.call,
     }
 
     ScrollEnumerator.new(client: client, index_names: @indices, search_body: query) do |hit|

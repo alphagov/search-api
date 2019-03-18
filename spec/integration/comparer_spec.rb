@@ -46,9 +46,9 @@ RSpec.describe 'ComparerTest' do
       query: {
         bool: {
           must: { match_all: {} },
-          filter: { term: { format: 'edition' } }
         }
-      }
+      },
+      post_filter: { term: { format: 'edition' } }
     }
     results = Indexer::CompareEnumerator.new('govuk_test', 'government_test', query)
 

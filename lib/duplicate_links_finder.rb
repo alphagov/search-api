@@ -11,7 +11,6 @@ class DuplicateLinksFinder
       query: {
         bool: {
           must: { match_all: {} },
-          filter: Search::FormatMigrator.new.call,
         },
       },
       aggs: {
@@ -29,6 +28,7 @@ class DuplicateLinksFinder
           }
         }
       },
+      post_filter: Search::FormatMigrator.new.call,
       size: 0,
     }
     results = client.search(index: indices, body: body)

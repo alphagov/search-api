@@ -6,18 +6,18 @@ RSpec.describe Search::AggregateExampleFetcher do
       query: {
         bool: {
           must: nil,
-          filter: {
-            bool: {
-              must: [
-                { term: { field => value } },
-                { indices: {
-                    indices: SearchConfig.instance.content_index_names,
-                    query: { bool: { must: { match_all: {} } } },
-                    no_match_query: 'none'
-                  } }
-              ]
-            },
-          },
+        },
+      },
+      post_filter: {
+        bool: {
+          must: [
+            { term: { field => value } },
+            { indices: {
+                indices: SearchConfig.instance.content_index_names,
+                query: { bool: { must: { match_all: {} } } },
+                no_match_query: 'none'
+              } }
+          ]
         },
       },
       size: 2,
@@ -33,14 +33,14 @@ RSpec.describe Search::AggregateExampleFetcher do
       query: {
         bool: {
           must: query,
-          filter: {
-            bool: {
-              must: [
-                { term: { field => value } },
-                filter
-              ]
-            }
-          }
+        }
+      },
+      post_filter: {
+        bool: {
+          must: [
+            { term: { field => value } },
+            filter
+          ]
         }
       },
       size: 2,

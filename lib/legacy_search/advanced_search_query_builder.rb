@@ -77,10 +77,14 @@ module LegacySearch
       {
         query: {
           bool: {
-            filter: filter_array,
             must: keyword_query_hash
           }
-        }
+        },
+        post_filter: {
+          bool: {
+            must: filter_array
+          }
+        },
       }.merge(order_query_hash)
     end
 

@@ -28,9 +28,13 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     stub_empty_search(body: {
       "from" => 0,
       "size" => 1,
+      "post_filter" => {
+        "bool" => {
+          "must" => [{ "bool" => { "must_not" => { "term" => { "is_withdrawn" => true } } } }]
+        }
+      },
       "query" => {
         "bool" => {
-          "filter" => [{ "bool" => { "must_not" => { "term" => { "is_withdrawn" => true } } } }],
           "must" => {
             "function_score" => {
               "query" => {
@@ -97,7 +101,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params are turned into anded term filters on that property" do
-    stub_empty_search(body: /#{Regexp.escape("\"filter\":[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
+    stub_empty_search(body: /#{Regexp.escape("[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones'], 'link' => ['richards']))
   end
 

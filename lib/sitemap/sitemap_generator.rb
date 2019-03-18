@@ -15,9 +15,9 @@ class SitemapGenerator
       query: {
         bool: {
           must_not: { terms: { format: EXCLUDED_FORMATS } },
-          filter: Search::FormatMigrator.new.call,
         }
       },
+      post_filter: Search::FormatMigrator.new.call,
     }
     property_boost_calculator = PropertyBoostCalculator.new
 
