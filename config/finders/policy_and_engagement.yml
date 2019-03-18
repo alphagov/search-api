@@ -42,7 +42,7 @@ details:
     name: Document type
     preposition: with document type
     type: text
-    display_as_result_metadata: true
+    display_as_result_metadata: false
     filterable: true
     option_lookup:
       policy_papers:
