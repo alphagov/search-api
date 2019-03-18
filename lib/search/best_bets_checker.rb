@@ -120,14 +120,14 @@ module Search
       {
         query: {
           bool: {
-            must: {
-              match: { document_type: "best_bet" },
-            },
             should: [
               { match: { exact_query: @query } },
-              { match: { stemmed_query: @query } }
+              { match: { stemmed_query: @query } },
             ]
           }
+        },
+        post_filter: {
+          bool: { must: { match: { document_type: "best_bet" } } }
         },
         size: 1000,
         _source: {
