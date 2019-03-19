@@ -1,5 +1,5 @@
 ---
-base_path: "/search/statistics"
+base_path: "/search/research-and-statistics"
 content_id: 8f827d53-9ad1-4b90-b6ae-2301c1ecdf02
 description: Find statistics from government
 document_type: finder
@@ -120,9 +120,9 @@ details:
     filterable: true
   default_documents_per_page: 20
 routes:
-- path: "/search/statistics"
+- path: "/search/research-and-statistics"
   type: exact
-- path: "/search/statistics.atom"
+- path: "/search/research-and-statistics.atom"
   type: exact
-- path: "/search/statistics.json"
+- path: "/search/research-and-statistics.json"
   type: exact
