@@ -10,13 +10,21 @@ The configuration for these finders can be found in YAML files in
 the `config/` directory. These config files are a YAML representation
 of a content item.  
 
-This rake task is used to present the finders to the publishing API:
+This rake task is used to present the advanced-search finder to the publishing API:
 
 ```
 DOCUMENT_FINDER_CONFIG=<finder-config-file-path> publishing_api:publish_document_finder
 ```
 
-**Note:** The rake task `publishing_api:publish_document_finder` is to be deprecated.
+This rake task is used to present the Find EU Exit guidance for business finder to the
+publishing API:
+
+```
+publishing_api:publish_eu_exit_business_finder
+```
+
+**Note:** Both rake tasks `publishing_api:publish_document_finder` and `publishing_api:publish_eu_exit_business_finder`
+are to be deprecated.
 
 For new finder content items, use the rake task `publishing_api:publish_finder`. For example:
 
