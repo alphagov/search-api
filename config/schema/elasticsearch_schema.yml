@@ -1,5 +1,8 @@
 index:
   settings:
+    similarity:
+      default:
+        type: classic
     mapping:
       total_fields:
         limit: 2000
