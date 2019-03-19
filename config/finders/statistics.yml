@@ -10,7 +10,7 @@ schema_name: finder
 signup_content_id: 119db584-0ae7-45e4-8f3a-fd79316c6921
 title: Statistics
 details:
-  document_noun: statistic
+  document_noun: result
   filter: {}
   format_name: statistic
   show_summaries: true
