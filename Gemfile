@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "activesupport", "~> 5.2.2"
 gem "elasticsearch", "~> 2"
 gem "gds-api-adapters", "~> 57.4"
-gem "govuk_app_config", "~> 1.12.0"
+gem "govuk_app_config", "~> 1.13.0"
 gem "govuk_document_types", "~> 0.9.0"
 gem "govuk-lint", "~> 3.11.0"
 gem "irb", "~> 1.0", require: false
