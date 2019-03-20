@@ -1,14 +1,40 @@
 ---
-base_path: "/search/research-and-statistics"
+analytics_identifier:
+base_path: "/search/statistics"
 content_id: 8f827d53-9ad1-4b90-b6ae-2301c1ecdf02
-description: Find statistics from government
+content_purpose_document_supertype: navigation
 document_type: finder
+email_document_supertype: other
+first_published_at: '2019-01-15T14:47:48.000+00:00'
+government_document_supertype: other
 locale: en
-publishing_app: rummager
+navigation_document_supertype: other
+phase: alpha
+public_updated_at: '2019-01-15T14:47:48.000+00:00'
+publishing_app: finder-frontend
 rendering_app: finder-frontend
 schema_name: finder
-signup_content_id: 119db584-0ae7-45e4-8f3a-fd79316c6921
-title: Statistics
+search_user_need_document_supertype: government
+title: Research and Statistics
+updated_at: '2019-01-15T14:47:48.000+00:00'
+user_journey_document_supertype: finding
+withdrawn_notice: {}
+publishing_request_id: ''
+links:
+  email_alert_signup:
+  - api_path: "/api/content/search/statistics/email-signup"
+    base_path: "/search/statistics/email-signup"
+    content_id: 119db584-0ae7-45e4-8f3a-fd79316c6921
+    document_type: finder_email_signup
+    locale: en
+    public_updated_at: '2019-03-14T10:22:17Z'
+    schema_name: finder_email_signup
+    title: Statistics
+    withdrawn: false
+    links: {}
+    api_url: https://www.gov.uk/api/content/policy-papers-and-consultations/email-signup
+    web_url: "/search/statistics/email-signup"
+description: Find statistics from government
 details:
   document_noun: result
   filter: {}
@@ -57,8 +83,7 @@ details:
     type: text
     display_as_result_metadata: true
     filterable: false
-  - key: _unused
-    filter_key: all_part_of_taxonomy_tree
+  - filter_key: all_part_of_taxonomy_tree
     keys:
     - level_one_taxon
     - level_two_taxon
@@ -119,10 +144,3 @@ details:
     display_as_result_metadata: true
     filterable: true
   default_documents_per_page: 20
-routes:
-- path: "/search/research-and-statistics"
-  type: exact
-- path: "/search/research-and-statistics.atom"
-  type: exact
-- path: "/search/research-and-statistics.json"
-  type: exact
