@@ -7,7 +7,7 @@ publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Policy papers and consultations
-description: You'll get an email each time policy papers and consultations are published.
+description: You'll get an email each time content is published.
 details:
   email_filter_by:
   email_filter_name:
