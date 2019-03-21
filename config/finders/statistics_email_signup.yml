@@ -6,8 +6,8 @@ locale: en
 publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder_email_signup
-title: Statistics
-description: You'll get an email each time statistics are published.
+title: Research and statistics
+description: You'll get an email each time content is published.
 details:
   email_filter_by:
   email_filter_name:
