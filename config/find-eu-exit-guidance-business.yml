@@ -7,9 +7,9 @@
 base_path: "/find-eu-exit-guidance-business"
 content_id: 42ce66de-04f3-4192-bf31-8394538e0734
 signup_content_id: 2818d67a-029a-4899-a438-a543d5c6a20d
-title: Find EU Exit guidance for your business
-description: 'This is the information that has been published so far for your business to prepare for EU exit. You can change what information you get using the checkboxes. Come back to this page regularly or sign up to receive emails when new information is published.'
-name: 'Find EU Exit guidance for your business'
+title: Find EU Exit guidance for your organisation
+description: 'This is the information that has been published so far for your organisation to prepare for EU exit. You can change what information you get using the checkboxes. Come back to this page regularly or sign up to receive emails when new information is published.'
+name: 'Find EU Exit guidance for your organisation'
 locale: en
 public_updated_at: '2018-11-23T09:00:00.000+00:00'
 publishing_app: rummager
@@ -17,7 +17,7 @@ rendering_app: finder-frontend
 details:
   beta: false
   document_noun: publication
-  summary: 'This is the information that has been published so far for your business to prepare for EU exit. You can change what information you get using the checkboxes. Come back to this page regularly or sign up to receive emails when new information is published.'
+  summary: 'This is the information that has been published so far for your organisation to prepare for EU exit. You can change what information you get using the checkboxes. Come back to this page regularly or sign up to receive emails when new information is published.'
   canonical_link: true
   sort:
     - name: Topic
@@ -123,8 +123,8 @@ details:
     filterable: true
     combine_mode: and
     key: sector_business_area
-    name: Sector / Business Area
-    preposition: your business is in
+    name: Sector / Organisation Area
+    preposition: your organisation is in
     type: text
   - allowed_values:
     - label: Sell products or goods in the UK
@@ -141,7 +141,7 @@ details:
     filterable: true
     combine_mode: and
     key: business_activity
-    name: Business activity
+    name: Organisation activity
     preposition: you
     type: text
   - allowed_values:

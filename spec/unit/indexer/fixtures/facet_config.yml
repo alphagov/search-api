@@ -99,8 +99,8 @@ details:
     display_as_result_metadata: false
     filterable: true
     key: sector_business_area
-    name: Sector / Business Area
-    preposition: for businesses in
+    name: Sector / Organisation Area
+    preposition: for Organisations in
     type: text
   - allowed_values:
     - label: Do business in the EU
@@ -117,7 +117,7 @@ details:
     filterable: true
     key: business_activity
     name: Doing business in the EU
-    preposition: for businesses that
+    preposition: for Organisations that
     type: text
   - allowed_values:
     - label: "Yes"
@@ -130,7 +130,7 @@ details:
     filterable: true
     key: employ_eu_citizens
     name: Employ EU citizens
-    preposition: for businesses that
+    preposition: for organisations that
     type: text
   - allowed_values:
     - label: "Yes"
@@ -141,7 +141,7 @@ details:
     filterable: true
     key: regulations_and_standards
     name: Sell products and goods in the UK
-    preposition: for businesses that sell
+    preposition: for organisations that sell
     type: text
   - allowed_values:
     - label: Processing personal data
@@ -154,7 +154,7 @@ details:
     filterable: true
     key: personal_data
     name: Personal data
-    preposition: for businesses involved in
+    preposition: for organisations involved in
     type: text
   - allowed_values:
     - label: Copyright
@@ -171,7 +171,7 @@ details:
     filterable: true
     key: intellectual_property
     name: Intellectual property
-    preposition: for businesses working with
+    preposition: for organisations working with
     type: text
   - allowed_values:
     - label: Civil government contracts
@@ -182,7 +182,7 @@ details:
     filterable: true
     key: public_sector_procurement
     name: Public sector procurement
-    preposition: businesses that work with
+    preposition: organisations that work with
     type: text
   - allowed_values:
     - label: Horizon 2020
@@ -207,6 +207,6 @@ details:
     filterable: true
     key: eu_uk_government_funding
     name: Receiving EU funding
-    preposition: for businesses that receive funding from
+    preposition: for organisations that receive funding from
     type: text
 

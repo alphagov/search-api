@@ -94,8 +94,8 @@ class SpecialRoutePublisher
         rendering_app: "finder-frontend",
         base_path: "/prepare-business-uk-leaving-eu",
         content_id: "b9ef4434-761f-49ae-af97-dc7a248499c4",
-        title: "Prepare your business for the UK leaving the EU",
-        description: "Q&A frontend for the 'Find EU Exit guidance for your business' finder",
+        title: "Prepare your business or organisation for the UK leaving the EU",
+        description: "Q&A frontend for the 'Find EU Exit guidance for your business or organisation' finder",
         type: "exact",
       },
       {

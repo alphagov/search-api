@@ -6,7 +6,7 @@ locale: en
 publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder_email_signup
-title: Find EU Exit guidance for your business
+title: Find EU Exit guidance for your organisation
 description: You'll get an email each time EU Exit guidance is published.
 details:
   email_filter_by: appear_in_find_eu_exit_guidance_business_finder
@@ -16,7 +16,7 @@ details:
     radio_button_name: "yes"
     topic_name: "appear in find eu exit guidance business finder"
     prechecked: true
-  subscription_list_title_prefix: 'Find EU Exit guidance for your business'
+  subscription_list_title_prefix: 'Find EU Exit guidance for your organisation'
 routes:
 - path: "/find-eu-exit-guidance-business/email-signup"
   type: exact
