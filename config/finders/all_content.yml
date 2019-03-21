@@ -27,6 +27,14 @@ details:
     type: taxon
   - display_as_result_metadata: true
     filterable: true
+    key: manual
+    name: Manual
+    preposition: in manual
+    short_name: in
+    type: text
+    show_option_select_filter: false
+  - display_as_result_metadata: false
+    filterable: true
     key: organisations
     name: Organisation
     preposition: from
