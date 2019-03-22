@@ -1,0 +1,65 @@
+---
+base_path: "/prepare-eu-exit/all"
+content_id: 3a6d9383-5341-47a8-aaee-860dabd7c4d8
+description: Detailed information about changes happening after Brexit.
+document_type: finder
+locale: en
+parent: ecb55f9d-0823-43bd-a116-dbfab2b76ef9 # /prepare-eu-exit
+publishing_app: rummager
+rendering_app: finder-frontend
+schema_name: finder
+signup_content_id: 6a46087b-737e-40c8-bcf2-afa580b7263e # /prepare-eu-exit/all/email-signup
+title: Detailed EU Exit guidance
+details:
+  default_documents_per_page: 20
+  document_noun: result
+  hide_facets_by_default: false
+  show_summaries: true
+  summary: "<p>Detailed information about changes happening after Brexit.</p>"
+  filter:
+    all_part_of_taxonomy_tree: d7bdaee2-8ea5-460e-b00d-6e9382eb6b61
+  facets:
+  - display_as_result_metadata: true
+    filterable: true
+    key: any_part_of_taxonomy_tree
+    name: Topic
+    preposition: about
+    short_name: About
+    type: text
+    show_option_select_filter: false
+    allowed_values:
+    - label: Business and industry
+      value: 495afdb6-47be-4df1-8b38-91c8adb1eefc
+    - label: Crime, justice and law
+      value: ba951b09-5146-43be-87af-44075eac3ae9
+    - label: Education, training and skills
+      value: c58fdadd-7743-46d6-9629-90bb3ccc4ef0
+    - label: Environment
+      value: 3cf97f69-84de-41ae-bc7b-7e2cc238fa58
+    - label: Going and being abroad
+      value: 9597c30a-605a-4e36-8bc1-47e5cdae41b3
+    - label: Health and social care
+      value: 8124ead8-8ebc-4faf-88ad-dd5cbcc92ba8
+    - label: Parenting, childcare and children's services
+      value: 206b7f3a-49b5-476f-af0f-fd27e2a68473
+    - label: Transport
+      value: a4038b29-b332-4f13-98b1-1c9709e216bc
+    - label: Work
+      value: d0f1e5a3-c8f4-4780-8678-994f19104b21
+  sort:
+  - key: "-popularity"
+    name: Most viewed
+  - key: "-relevance"
+    name: Relevance
+  - default: true
+    key: "-public_timestamp"
+    name: Updated (newest)
+  - key: public_timestamp
+    name: Updated (oldest)
+routes:
+- path: "/prepare-eu-exit/all"
+  type: exact
+- path: "/prepare-eu-exit/all.atom"
+  type: exact
+- path: "/prepare-eu-exit/all.json"
+  type: exact
