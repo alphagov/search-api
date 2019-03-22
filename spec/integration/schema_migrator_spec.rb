@@ -9,10 +9,9 @@ RSpec.describe SchemaMigrator do
     index_group = search_server.index_group("govuk_test")
     original_index = index_group.current_real
 
-    SchemaMigrator.new("govuk_test", search_config, wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-      migrator.reindex
-      migrator.switch_to_new_index
-    end
+    migrator = described_class.new("govuk_test", search_config, wait_between_task_list_check: 0.2, io: StringIO.new)
+    migrator.reindex
+    migrator.switch_to_new_index
 
     expect(index_group.current_real.real_name).not_to eq(original_index.real_name)
   end

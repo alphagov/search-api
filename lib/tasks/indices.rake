@@ -125,16 +125,17 @@ You should run this task if the index schema has changed.
     failed_indices = []
 
     index_names.each do |index_name|
-      SchemaMigrator.new(index_name, search_config) do |migrator|
-        migrator.reindex
+      migrator = SchemaMigrator.new(index_name, search_config)
+      migrator.reindex
 
-        if migrator.changed?
-          puts "Difference during reindex for: #{index_name}"
-          puts migrator.comparison.inspect
-          failed_indices << index_name
-        else
-          migrator.switch_to_new_index
-        end
+      if migrator.failed == true
+        failed_indices << index_name
+      else
+        # We need to switch the aliases without a lock, since
+        # read_only_allow_delete prevents aliases being changed
+        # After running the schema migration, traffic must be
+        # represented anyway, so the race condition is irrelevant
+        migrator.switch_to_new_index
       end
     end
 

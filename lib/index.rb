@@ -58,13 +58,13 @@ module SearchIndices
 
     # Apply a write lock to this index, making it read-only
     def lock
-      request_body = { "index" => { "blocks" => { "write" => true } } }
+      request_body = { "index" => { "blocks" => { "read_only_allow_delete" => true } } }
       @client.indices.put_settings(index: @index_name, body: request_body)
     end
 
     # Remove any write lock applied to this index
     def unlock
-      request_body = { "index" => { "blocks" => { "write" => false } } }
+      request_body = { "index" => { "blocks" => { "read_only_allow_delete" => false } } }
       @client.indices.put_settings(index: @index_name, body: request_body)
     end
 
@@ -234,11 +234,11 @@ module SearchIndices
   private
 
     # Parse an elasticsearch error message to determine whether it's caused by
-    # a write-locked index. An example write-lock error message:
+    # a read-only index. An example read-only error message:
     #
-    #     "ClusterBlockException[blocked by: [FORBIDDEN/8/index write (api)];]"
+    #     "ClusterBlockException[blocked by: [FORBIDDEN/8/index read-only / allow delete (api)];]"
     def locked_index_error?(error_message)
-      error_message =~ %r{\[FORBIDDEN/[^/]+/index write}
+      error_message =~ %r{\[FORBIDDEN/[^/]+/index read-only}
     end
 
     def logger
