@@ -60,6 +60,7 @@ details:
     key: public_timestamp
     name: Updated
     short_name: Updated
+    preposition: Updated
     type: date
   show_summaries: true
   sort:
