@@ -1,13 +1,17 @@
-# Adding new fields to rummager
+# Adding new fields to a document type
 
 ### The schema
 
-`config/schema` contains a bunch of JSON files that together define a schema for documents in rummager. This is described in more detail in the [README](../config/schema/README.md).
+`config/schema` contains a bunch of JSON files that together define a schema for documents in Search API. This is described in more detail in the [README](../config/schema/README.md).
 
 First you need to decide which field type to use.
 `field_types.json` defines common elasticsearch configuration that we reuse for multiple fields having the same type.
 
-The type you use affects whether the field is [analysed](https://www.elastic.co/guide/en/elasticsearch/guide/current/mapping-analysis.html) by elasticsearch and whether you can use it in [filters](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html) and [aggregates](https://www.elastic.co/guide/en/elasticsearch/reference/1.4/search-aggregations.html).
+The type you use affects whether the field is [analysed][] by elasticsearch and whether you can use it in [filters][] and [aggregates][].
+
+[analysed]: https://www.elastic.co/guide/en/elasticsearch/guide/current/mapping-analysis.html
+[filter]: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-filter-context.html
+[aggregates]: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/search-aggregations.html
 
 Add your new field to `field_definitions.json`.
 
@@ -19,17 +23,19 @@ The easiest way to test the new fields is to write an integration test for it. T
 
 ### Transformation during indexing
 
-Some fields get transformed by rummager before they are stored in Elasticsearch. This is handled by the `DocumentPreparer` class.
+Some fields get transformed by Search API before they are stored in Elasticsearch. This is handled by the `DocumentPreparer` class.
 
 ### Presenting for search
 
-Some fields get expanded by rummager when they are presented in search results. For example, `specialist_sector` links get expanded by looking up the corresponding documents from the search index and extracting title, content id, and link fields. This is handled by `Search::BaseRegistry`.
+Some fields get expanded by Search API when they are presented in search results. For example, `specialist_sector` links get expanded by looking up the corresponding documents from the search index and extracting title, content id, and link fields. This is handled by `Search::BaseRegistry`.
 
-### Updating Rummager schema indexes on all environments
+### Updating Search API schema indexes on all environments
 
 **Caution:** Do not run this rake task in production during working hours except in an emergency. Content published while the task is running will not be available in search results until the task completes. The impact of this can be reduced if you run the task out of peak publishing hours.
 
-In order for the new field to work as expected, you will need to run a Jenkins job on all environments. The job is "Search reindex with new schema" ([Link to integration version of task](https://deploy.integration.publishing.service.gov.uk/job/search_reindex_with_new_schema/)), and will run the `rummager:migrate_schema` rake task. It can take over 40 minutes to complete.
+In order for the new field to work as expected, you will need to run a Jenkins job on all environments. The job is "Search reindex with new schema" ([Link to integration version of task][reindex]), and will run the `rummager:migrate_schema` rake task. It can take over 40 minutes to complete.
+
+[reindex]: https://deploy.integration.publishing.service.gov.uk/job/search_api_reindex_with_new_schema/
 
 This job will block other rake tasks from being run for 15 minutes to an hour.
 
@@ -43,4 +49,4 @@ For the new elasticsearch configuration to take effect, you need to manually reb
 
 In the past, this was done automatically every night by the [`search_fetch_analytics`](https://github.com/alphagov/search-analytics) jenkins job, but this automation [was reverted](https://github.com/alphagov/search-analytics/commit/a5c3ac58f7198eba74ab7b5bd5555aa07490442a#diff-0484c7ea1cf547a292a2190d0c1c060b). You must run this manually.
 
-If you prefer running a rake task rather than a pre-written Jenkins job, you can run `RUMMAGER_INDEX=all SKIP_LINKS_INDEXING_TO_PREVENT_TIMEOUTS=1 rummager:migrate_schema`.
+If you prefer running a rake task rather than a pre-written Jenkins job, you can run `RUMMAGER_INDEX=all CONFIRM_INDEX_MIGRATION_START=1 rummager:migrate_schema`.

@@ -10,7 +10,7 @@ If you do need to fetch the analytics data directly yourself, the
 [search-analytics project README](https://github.com/alphagov/search-analytics)
 describes how to set up and run the extraction of page traffic information from
 Google Analytics.  It will produce a dump file suitable for loading into an
-elasticsearch index using rummager's `bulk_load` tool.
+elasticsearch index using the `bulk_load` tool.
 
 Once you have the popularity data in a file named, say, `page-traffic.dump`,
 load it into elasticsearch using:
@@ -22,4 +22,4 @@ is run after populating the page-traffic index. As part of the migration, the
 popularity for each document will be computed from the page-traffic index and
 merged into the documents. To do this, run:
 
-    RUMMAGER_INDEX=all bundle exec rake rummager:migrate_schema
+    RUMMAGER_INDEX=all CONFIRM_INDEX_MIRATION_START=1 bundle exec rake rummager:migrate_schema

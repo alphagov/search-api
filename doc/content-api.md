@@ -1,4 +1,4 @@
-# Rummager Content API
+# Content API
 
 ### `GET /content/?link=/a-link`
 
@@ -7,10 +7,10 @@ Returns information about the search result with the specified link.
 ### Example response
 
 ```
-curl -XGET http://rummager.dev.gov.uk/content?link=/vehicle-tax
+curl -XGET http://search-api.dev.gov.uk/content?link=/vehicle-tax
 ```
 
-Currently returns a hash with one element: `raw_source`, which contains the raw elasticsearch document (`_source`).
+Currently returns a hash with one element: `raw_source`, which contains the raw elasticsearch document.
 
 ```json
 {  
@@ -43,7 +43,7 @@ Deletes the search result with the specified link.
 ## Example response
 
 ```
-curl -XDELETE http://rummager.dev.gov.uk/content?link=/vehicle-tax
+curl -XDELETE http://search-api.dev.gov.uk/content?link=/vehicle-tax
 ```
 
 Will return 404 when the link is not found, 204 when it is deleted.

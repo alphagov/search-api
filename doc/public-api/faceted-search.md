@@ -98,7 +98,7 @@ The special value `_MISSING` may be specified as a filter value - this will matc
 
 For string fields, values are the field value to match.
 
-For date fields, values are date ranges. These are specified as comma separated lists of key:value parameters, where key is one of `from` or `to`, and the value is an ISO formatted date (with no timezone). UTC is assumed for all dates handled by rummager. Date ranges are inclusive of their endpoints.
+For date fields, values are date ranges. These are specified as comma separated lists of key:value parameters, where key is one of `from` or `to`, and the value is an ISO formatted date (with no timezone). UTC is assumed for all dates. Date ranges are inclusive of their endpoints.
 
 For example: `from:2014-04-01 00:00,to:2014-04-02 00:00` is a range for 24 hours from midnight at the start of April the 1st 2014, including midnight that day or the following day.
 

@@ -109,6 +109,11 @@ The files contain JSON object with the following keys:
     with the hash `{ "label": "Bar the bar", "value": "bar" }`. This can be used
     when displaying the search results.
 
+Even though we have different schemas for different "elasticsearch
+document types", in practice elasticsearch only knows about one
+"type": which is the union of all the schemas.  This is because
+Elasticsearch 6 does not allow multiple types in the same index.
+
 ## Indexes
 
 Indexes in elasticsearch are defined by files in the `indexes` directory.

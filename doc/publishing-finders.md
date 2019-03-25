@@ -1,7 +1,7 @@
-# Publishing finders from a Rummager rake task
+# Publishing finders
 
-Rummager is currently used to publish two specific finders which do
-not fit the standard specialist document finder pattern. These are:
+Search API is currently used to publish some finders which do not fit
+the standard specialist document finder pattern. These are:
 
 - Advanced search, available at the path `/search/advanced`
 - Find EU Exit guidance for business (currently in development)
@@ -34,4 +34,4 @@ FINDER_CONFIG=news_and_communications.yml EMAIL_SIGNUP_CONFIG=news_and_communica
 
 **NOTE:** The `find-eu-exit-guidance-business` finder config is overwritten by a
 [shared definition in the govuk-app-deployment-secrets repo](https://github.com/alphagov/govuk-app-deployment-secrets/blob/master/shared_config/find-eu-exit-guidance-business.yml), the file committed to the
-Rummager repo is a development copy.
+Search API repo is a development copy.
