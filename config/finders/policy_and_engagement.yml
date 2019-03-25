@@ -40,7 +40,7 @@ details:
     preposition: about
   - key: content_store_document_type
     name: Document type
-    preposition: with document type
+    preposition: of type
     type: text
     display_as_result_metadata: false
     filterable: true
@@ -79,6 +79,7 @@ details:
   - key: public_timestamp
     short_name: Updated
     name: Updated
+    preposition: Updated
     type: date
     display_as_result_metadata: true
     filterable: true

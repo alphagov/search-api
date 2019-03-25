@@ -38,6 +38,7 @@ details:
     key: public_timestamp
     name: Updated
     short_name: Updated
+    preposition: Updated
     type: date
   filter:
     content_purpose_supergroup:
