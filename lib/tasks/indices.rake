@@ -27,22 +27,6 @@ namespace :rummager do
     end
   end
 
-  desc "Compare two indices with an option format filter"
-  task :compare_govuk, :format do |_, args|
-    filtered_format = args[:format]
-    filtered_format = nil if filtered_format == 'all'
-    comparer = Indexer::GovukIndexFieldComparer.new
-    puts Indexer::Comparer.new(
-      'mainstream',
-      'govuk',
-      field_comparer: comparer,
-      ignore: %w(popularity is_withdrawn),
-      filtered_format: filtered_format,
-      enum_options: { include_version: true },
-    ).run
-    puts comparer.stats
-  end
-
   desc "Create a brand new indices and assign an alias if no alias currently exists"
   task :create_all_indices do
     index_names.each do |index_name|
