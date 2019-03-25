@@ -26,13 +26,14 @@ details:
     short_name: topic
     type: taxon
   - display_as_result_metadata: false
-    filterable: false
+    filterable: true
     key: manual
     name: Manual
     preposition: in manual
     short_name: in
-    type: text
+    type: hidden
     show_option_select_filter: false
+    allowed_values: []
   - display_as_result_metadata: true
     filterable: true
     key: organisations
