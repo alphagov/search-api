@@ -78,6 +78,60 @@ namespace :publishing_api do
     puts "FINISHED"
   end
 
+  desc "Publishes supergroup finders and their email signup pages"
+  task :publish_supergroup_finders do
+    finders = [
+      {
+        finder: 'all_content.yml',
+        email_signup: 'all_content_email_signup.yml'
+      },
+      {
+        finder: 'news_and_communications.yml',
+        email_signup: 'news_and_communications_email_signup.yml'
+      },
+      {
+        finder: 'guidance_and_regulation.yml',
+        email_signup: 'guidance_and_regulation_email_signup.yml'
+      },
+      {
+        finder: 'policy_and_engagement.yml',
+        email_signup: 'policy_and_engagement_email_signup.yml'
+      },
+      {
+        finder: 'statistics.yml',
+        email_signup: 'statistics_email_signup.yml'
+      },
+      {
+        finder: 'transparency.yml',
+        email_signup: 'transparency_email_signup.yml'
+      },
+      {
+        finder: 'services.yml',
+      },
+    ]
+
+    puts "PUBLISHING ALL SUPERGROUP FINDERS..."
+
+    finders.each { |finder_hash|
+      finder_config = finder_hash[:finder]
+      email_signup_config = finder_hash[:email_signup]
+      timestamp = Time.now.iso8601
+
+      puts "Publishing #{finder_config}..."
+
+      unless email_signup_config.nil?
+        email_signup = YAML.load_file("config/finders/#{email_signup_config}")
+        ContentItemPublisher::FinderEmailSignupPublisher.new(email_signup, timestamp).call
+      end
+
+      unless finder_config.nil?
+        finder = YAML.load_file("config/finders/#{finder_config}")
+        ContentItemPublisher::FinderPublisher.new(finder, timestamp).call
+      end
+    }
+    puts "FINISHED"
+  end
+
   desc "
     Publish business readiness finder and email signup content items
 
