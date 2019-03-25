@@ -33,7 +33,7 @@ Some fields get expanded by Search API when they are presented in search results
 
 **Caution:** Do not run this rake task in production during working hours except in an emergency. Content published while the task is running will not be available in search results until the task completes. The impact of this can be reduced if you run the task out of peak publishing hours.
 
-In order for the new field to work as expected, you will need to run a Jenkins job on all environments. The job is "Search reindex with new schema" ([Link to integration version of task][reindex]), and will run the `rummager:migrate_schema` rake task. It can take over 40 minutes to complete.
+In order for the new field to work as expected, you will need to run a Jenkins job on all environments. The job is "Search reindex with new schema" ([Link to integration version of task][reindex]), and will run the `rummager:migrate_schema` rake task. It can take over 2 hours to complete.
 
 [reindex]: https://deploy.integration.publishing.service.gov.uk/job/search_api_reindex_with_new_schema/
 
