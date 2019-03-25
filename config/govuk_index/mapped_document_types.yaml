@@ -4,7 +4,6 @@ asylum_support_decision: asylum_support_decision # Specialist Publisher
 business_finance_support_scheme: business_finance_support_scheme # Specialist Publisher
 calendar: edition
 cma_case: cma_case # Specialist Publisher
-uk_market_conformity_assessment_body: uk_market_conformity_assessment_body # Specialist Publisher
 contact: contact
 countryside_stewardship_grant: countryside_stewardship_grant # Specialist Publisher
 dfid_research_output: dfid_research_output # Specialist Publisher
@@ -50,5 +49,6 @@ topic: edition # Collections Publisher
 transaction: edition
 travel_advice: edition # Travel advice publisher
 travel_advice_index: edition # Travel advice publisher
+uk_market_conformity_assessment_body: uk_market_conformity_assessment_body # Specialist Publisher
 utaac_decision: utaac_decision # Specialist Publisher
 world_news_story: edition

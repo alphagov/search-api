@@ -4,7 +4,6 @@
     "asylum_support_decision",
     "business_finance_support_scheme",
     "cma_case",
-    "uk_market_conformity_assessment_body",
     "contact",
     "countryside_stewardship_grant",
     "dfid_research_output",
@@ -29,6 +28,7 @@
     "service_standard_report",
     "statutory_instrument",
     "tax_tribunal_decision",
+    "uk_market_conformity_assessment_body",
     "utaac_decision"
   ]
 }

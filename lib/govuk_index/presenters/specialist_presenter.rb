@@ -16,15 +16,6 @@ module GovukIndex
     delegate_to_payload :closed_date
     delegate_to_payload :closing_date
     delegate_to_payload :commodity_type
-    delegate_to_payload :uk_market_conformity_assessment_body_name
-    delegate_to_payload :uk_market_conformity_assessment_body_number
-    delegate_to_payload :uk_market_conformity_assessment_body_type, convert_to_array: true
-    delegate_to_payload :uk_market_conformity_assessment_body_registered_office_location
-    delegate_to_payload :uk_market_conformity_assessment_body_testing_locations, convert_to_array: true
-    delegate_to_payload :uk_market_conformity_assessment_body_website
-    delegate_to_payload :uk_market_conformity_assessment_body_email
-    delegate_to_payload :uk_market_conformity_assessment_body_phone
-    delegate_to_payload :uk_market_conformity_assessment_body_legislative_area, convert_to_array: true
     delegate_to_payload :continuation_link
     delegate_to_payload :country
     delegate_to_payload :date_of_occurrence
@@ -69,6 +60,15 @@ module GovukIndex
     delegate_to_payload :tribunal_decision_sub_categories
     delegate_to_payload :tribunal_decision_sub_category
     delegate_to_payload :types_of_support
+    delegate_to_payload :uk_market_conformity_assessment_body_name
+    delegate_to_payload :uk_market_conformity_assessment_body_number
+    delegate_to_payload :uk_market_conformity_assessment_body_type, convert_to_array: true
+    delegate_to_payload :uk_market_conformity_assessment_body_registered_office_location
+    delegate_to_payload :uk_market_conformity_assessment_body_testing_locations, convert_to_array: true
+    delegate_to_payload :uk_market_conformity_assessment_body_website
+    delegate_to_payload :uk_market_conformity_assessment_body_email
+    delegate_to_payload :uk_market_conformity_assessment_body_phone
+    delegate_to_payload :uk_market_conformity_assessment_body_legislative_area, convert_to_array: true
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type
     delegate_to_payload :will_continue_on
