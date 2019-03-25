@@ -3,7 +3,7 @@
 Rummager is currently used to publish two specific finders which do
 not fit the standard specialist document finder pattern. These are:
 
-- [Advanced search](advanced-search.md)
+- Advanced search, available at the path `/search/advanced`
 - Find EU Exit guidance for business (currently in development)
 
 The configuration for the EU Exit business finder can be found in YAML files in
