@@ -1,0 +1,48 @@
+---
+#
+# NOTE: This is a development copy of the new find-eu-exit-guidance-business finder config
+# This uses the new links based approach to tagging.
+# See https://github.com/alphagov/govuk-app-deployment-secrets/blob/master/shared_config/find-eu-exit-guidance-business.yml
+# for deployment config.
+#
+base_path: "/find-eu-exit-guidance-business-wip"
+content_id: 1a9b9a23-115c-4219-89a9-d980532ef698 
+signup_content_id: 2818d67a-029a-4899-a438-a543d5c6a20d
+title: Find EU Exit guidance for your business
+description: 'This is the information that has been published so far for your business to prepare for EU exit. You can change what information you get using the checkboxes. Come back to this page regularly or sign up to receive emails when new information is published.'
+name: 'Find EU Exit guidance for your business'
+locale: en
+public_updated_at: '2018-11-23T09:00:00.000+00:00'
+publishing_app: rummager
+rendering_app: finder-frontend
+links:
+  facet_group:
+    - "52435175-82ed-4a04-adef-74c0199d0f46"
+details:
+  beta: false
+  canonical_link: true
+  document_noun: publication
+  summary: 'This is the information that has been published so far for your organisation to prepare for EU exit. You can change what information you get using the checkboxes. Come back to this page regularly or sign up to receive emails when new information is published.'
+  filter:
+    facet_groups: "52435175-82ed-4a04-adef-74c0199d0f46"
+  sort:
+    - name: "Topic"
+      key: "topic"
+      default: true
+    - name: "Most viewed"
+      key: "-popularity"
+    - name: "Relevance"
+      key: "-relevance"
+    - name: "Most recent"
+      key: "-public_timestamp"
+    - name: "A to Z"
+      key: "title"
+  facets: []
+routes:
+- path: "/find-eu-exit-guidance-business-wip"
+  type: exact
+
+- path: "/find-eu-exit-guidance-business-wip.json"
+  type: exact
+document_type: finder
+schema_name: finder
