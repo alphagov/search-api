@@ -8,7 +8,7 @@ publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder
 signup_content_id: 119db584-0ae7-45e4-8f3a-fd79316c6921
-title: Statistics
+title: Research and statistics
 details:
   document_noun: result
   filter: {}
