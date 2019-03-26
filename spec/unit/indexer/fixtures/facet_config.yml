@@ -2,100 +2,132 @@
 details:
   facets:
   - allowed_values:
-    - label: Accommodation, restaurants and catering services
-      value: accommodation-restaurants-and-catering-services
+    - label: Accommodation
+      value: accommodation
     - label: Aerospace
       value: aerospace
-    - label: Agriculture
+    - label: Agriculture and forestry (including wholesale)
       value: agriculture
-    - label: Air transport (Aviation
-      value: air-transport-aviation
-    - label: Ancillary Services
-      value: ancillary-services
-    - label: Animal Health
-      value: animal-health
+    - label: Air freight and air passenger services
+      value: air-freight-air-passenger-services
+    - label: Arts, culture and heritage
+      value: arts-culture-heritage
     - label: Automotive
       value: automotive
-    - label: Banking, market infrastructure
-      value: banking-market-infrastructure
-    - label: Broadcasting
+    - label: Auxiliary activities
+      value: auxiliary-activities
+    - label: Media and broadcasting
       value: broadcasting
+    - label: Charities
+      value: charities
     - label: Chemicals
       value: chemicals
-    - label: Computer Services
-      value: computer-services
-    - label: Construction Contracting
+    - label: Clothing and consumer goods
+      value: clothing-consumer-goods
+    - label: Clothing and consumer goods manufacture
+      value: clothing-consumer-goods-manufacturing
+    - label: Construction
       value: construction-contracting
+    - label: Digital, technology and computer services
+      value: computer-services
+    - label: Creative industries
+      value: creative-industries
+    - label: Defence
+      value: defence
     - label: Education
       value: education
     - label: Electricity
       value: electricity
-    - label: Electronics
-      value: electronics
-    - label: Environmental Services
+    - label: Electronics, parts and machinery
+      value: electronics-parts-machinery
+    - label: Environmental services
       value: environmental-services
-    - label: Fisheries
+    - label: Financial services
+      value: financial-services
+    - label: Fisheries (including wholesale)
       value: fisheries
-    - label: Food and Drink
+    - label: Food, drink and tobacco (retail and wholesale)
       value: food-and-drink
-    - label: Furniture and other manufacturing
-      value: furniture-and-other-manufacturing
-    - label: Gas markets
-      value: gas-markets
-    - label: Goods sectors each <0.4% of GVA
-      value: goods-sectors-each-0-4-of-gva
-    - label: Imports
-      value: imports
-    - label: Imputed Rent
-      value: imputed-rent
+    - label: Food, drink and tobacco (processing)
+      value: food-drink-tobacco
+    - label: Furniture manufacture
+      value: furniture-manufacture
+    - label: Gambling
+      value: gambling
+    - label: Health and social care services
+      value: health-social-care-services
+    - label: Installation, servicing and repair
+      value: installation-servicing-repair
     - label: Insurance
       value: insurance
-    - label: Land transport (excl. rail)
-      value: land-transport-excl-rail
-    - label: Medical services
-      value: medical-services
-    - label: Motor Trades
+    - label: Justice, including prisons
+      value: justice-prisons
+    - label: Marine
+      value: marine
+    - label: Marine transport
+      value: marine-transport
+    - label: Medical technology
+      value: medical-technology
+    - label: Metals manufacture
+      value: metals-manufacture
+    - label: Mining
+      value: mining
+    - label: Motor trade
       value: motor-trades
-    - label: Network Industries <0.3% of GVA
-      value: network-industries-0-3-of-gva
-    - label: Oil and gas production
-      value: oil-and-gas-production
-    - label: Other personal services
-      value: other-personal-services
-    - label: Parts and machinery
-      value: parts-and-machinery
+    - label: Non-metal materials manufacture
+      value: non-metal-materials-manufacture
+    - label: Nuclear
+      value: nuclear
+    - label: Oil, gas and coal
+      value: oil-gas-coal
+    - label: Other advanced manufacturing
+      value: other-advanced-manufacturing
+    - label: Other energy
+      value: other-energy
+    - label: Other manufacturing
+      value: other-manufacturing
+    - label: Personal services
+      value: personal-services
     - label: Pharmaceuticals
       value: pharmaceuticals
-    - label: Post
-      value: post
-    - label: Professional and Business services
+    - label: Ports and airports
+      value: ports-airports
+    - label: Postal and courier services
+      value: postal-courier-services
+    - label: Professional and business services
       value: professional-and-business-services
-    - label: Public Administration and Defence
-      value: public-administration-and-defence
+    - label: Public administration
+      value: public-administration
     - label: Rail
       value: rail
-    - label: Real Estate (excl. Imputed Rent)
+    - label: Rail (passengers and freight)
+      value: rail-passenger-freight
+    - label: Real estate
       value: real-estate-excl-imputed-rent
-    - label: Retail
+    - label: Repair of computers and consumer goods
+      value: repair-of-computers-consumer-goods
+    - label: Research
+      value: research
+    - label: Restaurants, bars and catering
+      value: restaurants-bars-catering
+    - label: Retail and wholesale (excluding motor trade, food and drink)
       value: retail
-    - label: Service sectors each <1% of GVA
-      value: service-sectors-each-1-of-gva
-    - label: Social Work
-      value: social-work
-    - label: Steel and other metals/commodities
-      value: steel-and-other-metals-commodities
-    - label: Telecoms
+    - label: Road (passengers and freight)
+      value: road-passengers-freight
+    - label: Space
+      value: space
+    - label: Sports and recreation
+      value: sports-recreation
+    - label: Telecoms and information services
       value: telecoms
-    - label: Textiles and clothing
-      value: textiles-and-clothing
-    - label: Top Ten Trade Partners by Value
-      value: top-ten-trade-partners-by-value
-    - label: Warehousing and support for transportation
-      value: warehousing-and-support-for-transportation
-    - label: Water Transport (Maritime/ports)
-      value: water-transport-maritime-ports
-    - label: Wholesale (excl. Motor Vehicles)
-      value: wholesale-excl-motor-vehicles
+    - label: Tourism
+      value: tourism
+    - label: Veterinary
+      value: veterinary
+    - label: Voluntary and community organisations
+      value: voluntary-community-organisations
+    - label: Warehouses, services and pipelines
+      value: warehouses-services-pipelines
     display_as_result_metadata: false
     filterable: true
     key: sector_business_area
