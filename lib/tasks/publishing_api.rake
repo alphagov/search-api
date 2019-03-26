@@ -142,6 +142,25 @@ namespace :publishing_api do
     puts "FINISHED"
   end
 
+  desc "
+    Temporary task to publish links-based business readiness finder using existing email signup
+    Publishes the new finder config to /find-eu-exit-guidance-business-wip
+
+    Usage:
+    rake publishing_api:publish_eu_exit_business_finder_wip
+  "
+  task :publish_eu_exit_business_finder_wip do
+    finder_config = File.join(Dir.pwd, "config", "find-eu-exit-guidance-business-wip.yml")
+
+    timestamp = Time.now.iso8601
+
+    unless finder_config.nil?
+      finder = YAML.load_file(finder_config.to_s)
+      ContentItemPublisher::FinderPublisher.new(finder, timestamp).call
+    end
+    puts "FINISHED"
+  end
+
   desc "Unpublish document finder."
   task :unpublish_document_finder do
     document_finder_config = ENV["DOCUMENT_FINDER_CONFIG"]
