@@ -6,15 +6,9 @@ not fit the standard specialist document finder pattern. These are:
 - [Advanced search](advanced-search)
 - Find EU Exit guidance for business (currently in development)
 
-The configuration for these finders can be found in YAML files in
+The configuration for the EU Exit business finder can be found in YAML files in
 the `config/` directory. These config files are a YAML representation
-of a content item.  
-
-This rake task is used to present the advanced-search finder to the publishing API:
-
-```
-DOCUMENT_FINDER_CONFIG=<finder-config-file-path> publishing_api:publish_document_finder
-```
+of a content item.
 
 This rake task is used to present the Find EU Exit guidance for business finder to the
 publishing API:
@@ -23,8 +17,7 @@ publishing API:
 publishing_api:publish_eu_exit_business_finder
 ```
 
-**Note:** Both rake tasks `publishing_api:publish_document_finder` and `publishing_api:publish_eu_exit_business_finder`
-are to be deprecated.
+**Note:** `publishing_api:publish_eu_exit_business_finder` is to be deprecated.
 
 For new finder content items, use the rake task `publishing_api:publish_finder`. For example:
 
