@@ -6,7 +6,7 @@ locale: en
 publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder
-title: All content
+title: Search
 description: Find content from government
 details:
   default_documents_per_page: 20

@@ -6,7 +6,7 @@ locale: en
 publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder_email_signup
-title: All content
+title: Search
 description: You'll get an email when content is published.
 details:
   email_filter_by:
