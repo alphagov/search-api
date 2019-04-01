@@ -7,7 +7,7 @@ publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Research and statistics
-description: You'll get an email each time content is published.
+description: <p>You can't subscribe to get email notifications about upcoming statistics.</p><p>Subscribe to published statistics to get an email every time statistics are published or updated.</p>
 details:
   email_filter_by:
   email_filter_name:
@@ -15,21 +15,25 @@ details:
   filter: {}
   email_filter_facets:
   - facet_id: content_store_document_type
-    facet_name: document types
-    option_lookup:
-      statistics_published:
+    facet_name: Research and statistics
+    facet_choices:
+    - key: statistics_published
+      filter_values:
       - statistics
       - national_statistics
       - statistical_data_set
       - official_statistics
-      statistics_upcoming:
-      - statistics_announcement
-      - national_statistics_announcement
-      - official_statistics_announcement
-      research:
+      radio_button_name: Statistics (published)
+      topic_name: Statistics (published)
+      prechecked: false
+    - key: research
+      filter_values:
       - dfid_research_output
       - independent_report
       - research
+      radio_button_name: Research
+      topic_name: Research
+      prechecked: false
   - facet_id: organisations
     facet_name: organisations
   - facet_id: world_locations
