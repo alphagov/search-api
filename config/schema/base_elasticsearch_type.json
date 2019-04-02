@@ -10,6 +10,7 @@
     "email_document_supertype",
     "facet_groups",
     "facet_values",
+    "and_facet_values",
     "format",
     "government_document_supertype",
     "indexable_content",
