@@ -31,7 +31,7 @@ details:
     name: Manual
     preposition: in manual
     short_name: in
-    type: hidden
+    type: hidden_clearable
     show_option_select_filter: false
     allowed_values: []
   - display_as_result_metadata: true
