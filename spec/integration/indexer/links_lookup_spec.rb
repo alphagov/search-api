@@ -80,6 +80,10 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
           { "content_id" => "TAG-1" },
           { "content_id" => "TAG-2" }
         ],
+        and_facet_values: [
+          { "content_id" => "TAG-1" },
+          { "content_id" => "TAG-2" }
+        ],
         facet_groups: [
           { "content_id" => "TGRP-1" },
           { "content_id" => "TGRP-2" }
@@ -104,7 +108,8 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
         "mainstream_browse_page_content_ids" => ["BROWSE-1"],
         "organisation_content_ids" => ["ORG-1", "ORG-2"],
         "facet_groups" => ["TGRP-1", "TGRP-2"],
-        "facet_values" => ["TAG-1", "TAG-2"]
+        "facet_values" => ["TAG-1", "TAG-2"],
+        "and_facet_values" => ["TAG-1", "TAG-2"]
       },
       index: "government_test",
     )

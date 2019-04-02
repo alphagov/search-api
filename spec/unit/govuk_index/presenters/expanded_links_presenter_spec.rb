@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 RSpec.describe GovukIndex::ExpandedLinksPresenter do
@@ -200,6 +201,20 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expected_facet_values = ['ec58ec61-71a6-475a-8df5-da5f866990b5', 'dd71726f-3fe5-4e5f-8d29-8f668e32a659']
 
     expect(presenter.facet_values).to eq(expected_facet_values)
+  end
+
+  it 'and_facet_values' do
+    expanded_links = {
+      'and_facet_values' => [
+        { 'content_id' => 'ec58ec61-71a6-475a-8df5-da5f866990b5' },
+        { 'content_id' => 'dd71726f-3fe5-4e5f-8d29-8f668e32a659' }
+      ]
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+    expected_facet_values = ['ec58ec61-71a6-475a-8df5-da5f866990b5', 'dd71726f-3fe5-4e5f-8d29-8f668e32a659']
+
+    expect(presenter.and_facet_values).to eq(expected_facet_values)
   end
 
   it 'facet_groups' do

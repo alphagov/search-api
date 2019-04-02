@@ -159,6 +159,11 @@
       "type": "identifiers"
   },
 
+  "and_facet_values": {
+      "description": "Facet values associated the the documents. Copy to allow for AND filters",
+      "type": "identifiers"
+  },
+
   "updated_at": {
     "description": "When the page was last updated. This field is unreliable and may be deprecated in a future version.",
     "type": "date"
