@@ -1,21 +1,21 @@
 ---
 base_path: "/prepare-eu-exit/all"
 content_id: 3a6d9383-5341-47a8-aaee-860dabd7c4d8
-description: Detailed information about changes happening after Brexit.
+description: Detailed information about Brexit changes if you live in the UK.
 document_type: finder
 locale: en
 parent: ecb55f9d-0823-43bd-a116-dbfab2b76ef9 # /prepare-eu-exit
 publishing_app: rummager
 rendering_app: finder-frontend
 schema_name: finder
-signup_content_id: 6a46087b-737e-40c8-bcf2-afa580b7263e # /prepare-eu-exit/all/email-signup
 title: Detailed EU Exit guidance
 details:
   default_documents_per_page: 20
   document_noun: result
   hide_facets_by_default: false
   show_summaries: true
-  summary: "<p>Detailed information about changes happening after Brexit.</p>"
+  signup_link: "/email-signup/?topic=/government/brexit-guidance-for-uk-citizens"
+  summary: "<p>Detailed information about Brexit changes if you live in the UK.</p>"
   filter:
     all_part_of_taxonomy_tree:
     - d7bdaee2-8ea5-460e-b00d-6e9382eb6b61
