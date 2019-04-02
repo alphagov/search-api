@@ -4,18 +4,12 @@ require "govuk_schemas/rspec_matchers"
 RSpec.describe ContentItemPublisher::FinderPresenter do
   include GovukSchemas::RSpecMatchers
 
-  %w(
-    finders/policy_and_engagement.yml
-    finders/news_and_communications.yml
-    finders/all_content.yml
-    finders/guidance_and_regulation.yml
-    finders/transparency.yml
-    finders/statistics.yml
-  ).each do |config_file|
+  finders_glob = File.join(Dir.pwd, "config", "finders", "*_finder.yml")
+  Dir.glob(finders_glob).each do |config_file|
 
     subject(:instance) { described_class.new(finder, timestamp) }
 
-    let(:finder) { YAML.load_file(File.join(Dir.pwd, "config", config_file)) }
+    let(:finder) { YAML.load_file(config_file) }
     let(:content_id) { finder["content_id"] }
     let(:timestamp) { Time.now.iso8601 }
 
