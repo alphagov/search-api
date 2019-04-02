@@ -29,7 +29,6 @@ module GovukIndex
       # The page traffic loader is is a daily process, so there
       # won't be a race condition
       index_group.switch_to(new_index)
-      old_index.close
     end
 
   private
