@@ -153,7 +153,6 @@ private
     disallowed.each do |parameter_hash|
       @errors << %{"#{parameter_hash['name']}" is not a valid #{parameter_hash['operation']} field}
     end
-
     allowed
   end
 
@@ -178,8 +177,8 @@ private
     filter_hashes = analyze_filters(@params)
 
     @used_params.concat(filter_hashes.map { |h| h['full_name'] })
-
     validated_hashes = validate_filter_parameters(filter_hashes)
+    validated_hashes, @errors = VirtualFilterParser.new(validated_hashes, @errors).parse
     result = validated_hashes.map do |hash|
       build_filter(
         filter_name_lookup(hash['name']),
@@ -195,7 +194,7 @@ private
     # `document_type` & `elasticsearch_type` are aliases for the internal
     # "_type" field.
     # TODO: Clients should not use this `document_type`.
-    %w[document_type elasticsearch_type] + @schema.allowed_filter_fields
+    %w[document_type elasticsearch_type] + @schema.allowed_filter_fields + VirtualFilterParser.virtual_filters
   end
 
   def allowed_return_fields

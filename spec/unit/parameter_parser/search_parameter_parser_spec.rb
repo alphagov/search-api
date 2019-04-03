@@ -49,11 +49,13 @@ RSpec.describe SearchParameterParser do
       ["mainstream_browse_pages", identifier_type],
       ["organisations", identifier_type],
       ["public_timestamp", date_type],
+      ["release_timestamp", date_type],
       ["slug", identifier_type],
       ["link", identifier_type],
-
+      ["format", identifier_type],
       ["case_type", identifier_type],
       ["opened_date", date_type],
+      ["content_store_document_type", identifier_type],
     ].each { |field, type|
       definition = double("#{field} definition")
       allow(definition).to receive(:type).and_return(type)
@@ -917,5 +919,57 @@ RSpec.describe SearchParameterParser do
 
     expect(p).not_to be_valid
     expect(p.error).to eq("Invalid ab_tests, missing type \"min_should_match_length\"")
+  end
+
+  it "converts filter_research_and_statistics correctly if it is 'upcoming_statistics' and release timestamp is overwritten" do
+    Timecop.freeze(Time.local(2008, 9, 1)) do
+      p = described_class.new(
+        {
+          'filter_research_and_statistics' => %w(upcoming_statistics),
+          'filter_release_timestamp' => "from:#{Date.today.iso8601}"
+        }, @schema
+      )
+      expect(p).to be_valid
+
+      release_timestamp_filter = p.parsed_params.fetch(:filters).find { |filter| filter.field_name == 'release_timestamp' }
+
+      expect(release_timestamp_filter.values.first.from).to eq('Mon, 01 Sep 2008 00:00:00 +0000')
+      expect(release_timestamp_filter.values.first.to).to eq(OpenStruct.new(iso8601: nil))
+
+      format_filter = p.parsed_params.fetch(:filters).find { |filter| filter.field_name == 'format' }
+      expect(format_filter.values.first).to eq('statistics_announcement')
+    end
+  end
+
+  it "converts filter_research_and_statistics correctly if it is 'published_statistics' and release timestamp is overwritten" do
+    Timecop.freeze(Time.local(2008, 9, 1)) do
+      p = described_class.new(
+        {
+          'filter_research_and_statistics' => %w(published_statistics)
+        }, @schema
+      )
+
+      expect(p).to be_valid
+
+      content_store_document_type_filter = p.parsed_params.fetch(:filters).find { |filter| filter.field_name == 'content_store_document_type' }
+
+      expect(content_store_document_type_filter.values).to eq(%w(statistics national_statistics statistical_data_set official_statistics))
+    end
+  end
+
+  it "converts filter_research_and_statistics correctly if it is 'research' and content_store_document_type is overwritten" do
+    Timecop.freeze(Time.local(2008, 9, 1)) do
+      p = described_class.new(
+        {
+          'filter_research_and_statistics' => %w(research),
+          'filter_content_store_document_type' => 'some-content-type'
+        }, @schema
+      )
+      expect(p).to be_valid
+
+      content_store_document_type_filter = p.parsed_params.fetch(:filters).find { |filter| filter.field_name == 'content_store_document_type' }
+
+      expect(content_store_document_type_filter.values).to eq(%w(dfid_research_output independent_report research))
+    end
   end
 end
