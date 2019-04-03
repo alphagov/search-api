@@ -205,7 +205,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
 
   it 'and_facet_values' do
     expanded_links = {
-      'and_facet_values' => [
+      'facet_values' => [
         { 'content_id' => 'ec58ec61-71a6-475a-8df5-da5f866990b5' },
         { 'content_id' => 'dd71726f-3fe5-4e5f-8d29-8f668e32a659' }
       ]
