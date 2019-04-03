@@ -80,10 +80,6 @@ RSpec.describe 'TaglookupDuringIndexingTest' do
           { "content_id" => "TAG-1" },
           { "content_id" => "TAG-2" }
         ],
-        and_facet_values: [
-          { "content_id" => "TAG-1" },
-          { "content_id" => "TAG-2" }
-        ],
         facet_groups: [
           { "content_id" => "TGRP-1" },
           { "content_id" => "TGRP-2" }
