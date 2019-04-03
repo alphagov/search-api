@@ -137,6 +137,12 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
         facet_values: ["4577e252-45c3-4c91-a040-c9f8568d0150", "5e326667-0d05-4453-b3a0-a1c6e797171e"]
       )
     end
+
+    it 'returns and_facet_values' do
+      expect(presenter.document).to include(
+        and_facet_values: ["4577e252-45c3-4c91-a040-c9f8568d0150", "5e326667-0d05-4453-b3a0-a1c6e797171e"]
+      )
+    end
   end
 
   def elasticsearch_presenter(payload, type = "aaib_report")
