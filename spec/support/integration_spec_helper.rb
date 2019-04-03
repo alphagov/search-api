@@ -50,7 +50,7 @@ module IntegrationSpecHelper
     allowed_paths << '_search/scroll'
     allowed_paths << '_tasks'
 
-    allow_urls = %r{http://localhost:9200/(#{allowed_paths.join('|')})}
+    allow_urls = %r{#{SearchConfig.instance.base_uri}/(#{allowed_paths.join('|')})}
     WebMock.disable_net_connect!(allow: allow_urls)
     yield
   ensure
