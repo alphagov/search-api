@@ -103,6 +103,42 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     end
   end
 
+  describe 'facet fields' do
+    let(:expanded_links) do
+      {
+        "facet_groups" => [{ "content_id" => "3501d07d-12f7-4f7e-97f9-0de008d556cd" }],
+        "facet_values" => [
+          { "content_id" => "4577e252-45c3-4c91-a040-c9f8568d0150" },
+          { "content_id" => "5e326667-0d05-4453-b3a0-a1c6e797171e" }
+        ]
+      }
+    end
+
+    let(:payload) do
+      payload = generate_random_example(payload: { payload_version: 1 })
+      payload["expanded_links"] = expanded_links
+      payload
+    end
+    let(:presenter) { elasticsearch_presenter(payload, payload["document_type"]) }
+    let(:popularity_instance) { instance_double(Indexer::PopularityLookup, lookup_popularities: {}) }
+
+    before do
+      allow(Indexer::PopularityLookup).to receive(:new).and_return(popularity_instance)
+    end
+
+    it 'returns facet_groups' do
+      expect(presenter.document).to include(
+        facet_groups: ["3501d07d-12f7-4f7e-97f9-0de008d556cd"]
+      )
+    end
+
+    it 'returns facet_values' do
+      expect(presenter.document).to include(
+        facet_values: ["4577e252-45c3-4c91-a040-c9f8568d0150", "5e326667-0d05-4453-b3a0-a1c6e797171e"]
+      )
+    end
+  end
+
   def elasticsearch_presenter(payload, type = "aaib_report")
     type_mapper = GovukIndex::DocumentTypeMapper.new(payload)
     allow(type_mapper).to receive(:type).and_return(type)
