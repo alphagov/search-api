@@ -40,10 +40,6 @@ module GovukIndex
       content_ids("facet_values")
     end
 
-    def and_facet_values
-      content_ids("facet_values")
-    end
-
     def topic_content_ids
       content_ids("topics")
     end
