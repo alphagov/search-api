@@ -14,7 +14,7 @@ class SpecialRoutePublisher
     %w(/search /search.json /search/opensearch.xml).each do |path|
       publishing_api.put_path(
         path,
-        publishing_app: 'search-api',
+        publishing_app: 'rummager',
         override_existing: true
       )
     end
@@ -23,7 +23,7 @@ class SpecialRoutePublisher
   def publish(route)
     @publisher.publish(
       route.merge(
-        publishing_app: "search-api",
+        publishing_app: "rummager",
         format: "special_route",
         public_updated_at: Time.now.iso8601,
         update_type: "major",
