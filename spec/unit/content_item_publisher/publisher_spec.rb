@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe ContentItemPublisher::Publisher do
   subject(:instance) { described_class.new(finder, timestamp) }
 
-  let(:config_file) { "finders/news_and_communications.yml" }
+  let(:config_file) { "finders/news_and_communications_finder.yml" }
   let(:finder) { YAML.load_file(File.join(Dir.pwd, "config", config_file)) }
   let(:timestamp) { Time.now.iso8601 }
   let(:logger) { instance_double("Logger") }
