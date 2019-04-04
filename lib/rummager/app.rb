@@ -226,13 +226,6 @@ class Rummager < Sinatra::Application
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
       hash["document_type"] ||= hash.fetch("_type", "edition")
-
-      if hash.has_key? "link"
-        base_path = hash["link"]
-        extra_metadata = Indexer::MetadataTagger.metadata_for_base_path(base_path)
-        hash = hash.merge(extra_metadata)
-      end
-
       current_index.document_from_hash(hash)
     }
 
