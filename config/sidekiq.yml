@@ -2,9 +2,9 @@
 tag: search-api.publishing.service.gov.uk
 :concurrency: 5
 staging:
-  :concurrency:  16
+  :concurrency:  12
 production:
-  :concurrency:  16
+  :concurrency:  12
 :require: ./lib/rummager.rb
 :logfile: ./log/sidekiq.log
 :queues:
