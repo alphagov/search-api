@@ -125,8 +125,8 @@ namespace :publishing_api do
     rake publishing_api:publish_eu_exit_business_finder
   "
   task :publish_eu_exit_business_finder do
-    finder_config = File.join(Dir.pwd, "config", "find-eu-exit-guidance-business-email-signup.yml")
-    email_signup_config = File.join(Dir.pwd, "config", "find-eu-exit-guidance-business.yml")
+    finder_config = File.join(Dir.pwd, "config", "find-eu-exit-guidance-business.yml")
+    email_signup_config = File.join(Dir.pwd, "config", "find-eu-exit-guidance-business-email-signup.yml")
 
     timestamp = Time.now.iso8601
 
