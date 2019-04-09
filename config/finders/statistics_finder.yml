@@ -68,33 +68,19 @@ details:
     display_as_result_metadata: false
     filterable: true
     preposition: about
-  - key: content_store_document_type
+  - key: research_and_statistics
     name: Statistics
     type: radio
     display_as_result_metadata: false
     filterable: true
     hide_facet_tag: true
     preposition: that are
-    option_lookup:
-      statistics_published:
-      - statistics
-      - national_statistics
-      - statistical_data_set
-      - official_statistics
-      statistics_upcoming:
-      - statistics_announcement
-      - national_statistics_announcement
-      - official_statistics_announcement
-      research:
-      - dfid_research_output
-      - independent_report
-      - research
     allowed_values:
     - label: Statistics (published)
-      value: statistics_published
+      value: published_statistics
       default: true
     - label: Statistics (upcoming)
-      value: statistics_upcoming
+      value: upcoming_statistics
     - label: Research
       value: research
   - key: organisations
