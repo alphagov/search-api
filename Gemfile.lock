@@ -141,7 +141,7 @@ GEM
     rack (2.0.6)
     rack-cache (1.9.0)
       rack (>= 0.4)
-    rack-logstasher (1.0.0)
+    rack-logstasher (1.0.1)
       logstash-event
       rack (~> 2.0)
     rack-protection (2.0.5)
@@ -274,7 +274,7 @@ DEPENDENCIES
   plek (~> 2.1)
   pry-byebug
   rack (~> 2.0)
-  rack-logstasher (~> 1.0.0)
+  rack-logstasher (~> 1.0.1)
   rack-test (~> 1.1.0)
   rainbow
   rake (~> 12.3)
