@@ -83,11 +83,15 @@ module Indexer
 
     # duplicated in index.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = @client.indices.analyze(index: @index_name, text: query, analyzer: "best_bet_stemmed_match")
+      begin
+        analyzed_query = @client.indices.analyze(index: @index_name, text: query, analyzer: "best_bet_stemmed_match")
 
-      analyzed_query["tokens"].map { |token_info|
-        token_info["token"]
-      }.join(" ")
+        analyzed_query["tokens"].map { |token_info|
+          token_info["token"]
+        }.join(" ")
+      rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+        ""
+      end
     end
 
     def add_self_to_organisations_links(doc_hash)
