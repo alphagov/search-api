@@ -684,6 +684,18 @@
     "description": "The date when the assessment was held.",
     "type": "date"
   },
+  "result": {
+    "description": "The result of the assessment.",
+    "type": "searchable_identifier"
+  },
+  "service_provider": {
+    "description": "The organisation providing the service under assessment.",
+    "type": "identifier"
+  },
+  "stage": {
+    "description": "The current stage of the service under assessment.",
+    "type": "searchable_identifier"
+  },
 
   "content_store_document_type": {
     "description": "The document type as stored in the Content Store",

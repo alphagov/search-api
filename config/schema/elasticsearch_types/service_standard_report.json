@@ -4,11 +4,14 @@
     "assessment_date",
     "business_activity",
     "employ_eu_citizens",
+    "eu_uk_government_funding",
     "intellectual_property",
     "personal_data",
     "public_sector_procurement",
-    "eu_uk_government_funding",
     "regulations_and_standards",
-    "sector_business_area"
+    "result",
+    "sector_business_area",
+    "service_provider",
+    "stage"
   ]
 }
