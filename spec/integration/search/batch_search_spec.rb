@@ -517,12 +517,6 @@ RSpec.describe 'BatchSearchTest' do
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 
-  it "return 400 response for query term length too long" do
-    terms = 1025.times.map { ('a'..'z').to_a.sample(5).join }.join(' ')
-
-    expect { get build_get_url([{ q: terms }, { q: "Minstry of Magic" }]) }.to raise_error(Elasticsearch::Transport::Transport::Errors::BadRequest)
-  end
-
   it "will allow ten searches" do
     commit_ministry_of_magic_document
     searches = 10.times.map do

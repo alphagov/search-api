@@ -202,6 +202,17 @@ RSpec.describe SearchParameterParser do
     expect(p.parsed_params).to eq(expected_params(query: "search-term"))
   end
 
+  it "complains when the q parameter is too long" do
+    max_length = described_class::MAX_QUERY_LENGTH
+    long_query = "a" * max_length
+    too_long_query = "1234567890#{long_query}"
+    p = described_class.new({ "q" => [too_long_query] }, @schema)
+
+    expect(p.error).to eq(%{Query exceeds the maximum allowed length})
+    expect(p).not_to be_valid
+    expect(p.parsed_params).to eq(expected_params(query: too_long_query))
+  end
+
   it "complains about a repeated q parameter" do
     p = described_class.new({ "q" => %w(hello world) }, @schema)
 

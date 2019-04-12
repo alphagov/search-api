@@ -11,6 +11,10 @@ class SearchParameterParser < BaseParameterParser
   # results in 5XX errors
   MAX_START = 900_000
 
+  # Reject queries over this length, because such queries are likely
+  # bots and have a negative effect on performance.
+  MAX_QUERY_LENGTH = 512
+
   def initialize(params, schema)
     @schema = schema
     process(params)
@@ -52,6 +56,10 @@ private
     # similar documents, but not both at the same time.
     if @parsed_params[:query] && @parsed_params[:similar_to]
       @errors << "Parameters 'q' and 'similar_to' cannot be used together"
+    end
+
+    if @parsed_params[:query] && @parsed_params[:query].length > MAX_QUERY_LENGTH
+      @errors << "Query exceeds the maximum allowed length"
     end
 
     unused_params = @params.keys - @used_params
