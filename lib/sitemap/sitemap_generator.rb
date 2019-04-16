@@ -7,7 +7,7 @@ class SitemapGenerator
   end
 
   def self.sitemap_limit
-    50_000
+    25_000
   end
 
   def get_all_documents
