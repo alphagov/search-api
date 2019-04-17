@@ -17,7 +17,7 @@ module ContentItemPublisher
         locale: "en",
         phase: "live",
         public_updated_at: timestamp,
-        publishing_app: "rummager",
+        publishing_app: "search-api",
         rendering_app: "finder-frontend",
         routes: content_item["routes"],
         schema_name: content_item["schema_name"],

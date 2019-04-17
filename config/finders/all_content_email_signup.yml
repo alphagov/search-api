@@ -3,7 +3,7 @@ base_path: "/search/all/email-signup"
 content_id: 49838f97-5d2e-407a-8876-30c4abe2a6bc
 document_type: finder_email_signup
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Search

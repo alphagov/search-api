@@ -3,7 +3,7 @@ base_path: "/search/guidance-and-regulation/email-signup"
 content_id: 30974a3c-b86d-4f12-883d-783e97055690
 document_type: finder_email_signup
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Guidance and regulation

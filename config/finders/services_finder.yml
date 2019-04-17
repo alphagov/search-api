@@ -39,7 +39,7 @@ details:
     name: Relevance
 document_type: finder
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder
 title: Services

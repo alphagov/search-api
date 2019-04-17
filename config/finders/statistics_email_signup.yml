@@ -3,7 +3,7 @@ base_path: "/search/research-and-statistics/email-signup"
 content_id: 119db584-0ae7-45e4-8f3a-fd79316c6921
 document_type: finder_email_signup
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Research and statistics

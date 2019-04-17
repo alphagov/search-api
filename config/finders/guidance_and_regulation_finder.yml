@@ -4,7 +4,7 @@ content_id: b8507038-e3b5-422c-bc51-28ff1ed12370
 signup_content_id: 30974a3c-b86d-4f12-883d-783e97055690
 document_type: finder
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder
 title: Guidance and regulation

@@ -3,7 +3,7 @@ base_path: "/find-eu-exit-guidance-business/email-signup"
 content_id: 2818d67a-029a-4899-a438-a543d5c6a20d
 document_type: finder_email_signup
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Find EU Exit guidance for your business

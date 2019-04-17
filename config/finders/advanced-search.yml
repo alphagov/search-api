@@ -6,7 +6,7 @@ document_type: search
 locale: en
 name: Advanced search
 phase: live
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder
 search_user_need_document_supertype: government

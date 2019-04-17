@@ -3,7 +3,7 @@ base_path: "/search/news-and-communications/email-signup"
 content_id: 54fa4dca-4dfb-40a5-b860-127716f02e75
 document_type: finder_email_signup
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: News and communications

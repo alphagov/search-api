@@ -37,7 +37,7 @@ module Indexer
         government_document_supertype: "other",
         content_id: document["content_id"],
         public_updated_at: Time.now.iso8601,
-        publishing_app: document.fetch("publishing_app", "rummager"),
+        publishing_app: document.fetch("publishing_app", "search-api"),
         base_path: document["link"],
         priority: "high",
       }

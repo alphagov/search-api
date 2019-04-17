@@ -3,7 +3,7 @@ base_path: "/search/news-and-communications"
 content_id: 622e9691-4b4f-4e9c-bce1-098b0c4f5ee2
 document_type: finder
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder
 title: News and communications

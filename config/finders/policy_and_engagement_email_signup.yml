@@ -3,7 +3,7 @@ base_path: "/search/policy-papers-and-consultations/email-signup"
 content_id: 5a4dc517-57cf-4dd6-873f-f1d29f6d540c
 document_type: finder_email_signup
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Policy papers and consultations

@@ -3,7 +3,7 @@ base_path: "/search/transparency-and-freedom-of-information-releases/email-signu
 content_id: 92f7eb26-030b-4a41-962e-d8e0f8814654
 document_type: finder_email_signup
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Transparency and freedom of information releases
