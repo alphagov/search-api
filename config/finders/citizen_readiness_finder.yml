@@ -5,7 +5,7 @@ description: Detailed information about Brexit changes if you live in the UK.
 document_type: finder
 locale: en
 parent: ecb55f9d-0823-43bd-a116-dbfab2b76ef9 # /prepare-eu-exit
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder
 title: Detailed EU Exit guidance

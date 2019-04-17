@@ -3,7 +3,7 @@ base_path: "/search/all"
 content_id: dd395436-9b40-41f3-8157-740a453ac972
 document_type: finder
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder
 title: Search

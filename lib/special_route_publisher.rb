@@ -14,7 +14,7 @@ class SpecialRoutePublisher
     %w(/search /search.json /search/opensearch.xml).each do |path|
       publishing_api.put_path(
         path,
-        publishing_app: 'rummager',
+        publishing_app: 'search-api',
         override_existing: true
       )
     end
@@ -23,7 +23,7 @@ class SpecialRoutePublisher
   def publish(route)
     @publisher.publish(
       route.merge(
-        publishing_app: "rummager",
+        publishing_app: "search-api",
         format: "special_route",
         public_updated_at: Time.now.iso8601,
         update_type: "major",
@@ -59,7 +59,7 @@ class SpecialRoutePublisher
         type: "exact",
       },
       {
-        rendering_app: "rummager",
+        rendering_app: "search-api",
         content_id: "0818867d-8026-482c-b797-306fb74f5a2d",
         base_path: "/api/search.json",
         title: "GOV.UK search results API",
@@ -67,7 +67,7 @@ class SpecialRoutePublisher
         type: "exact",
       },
       {
-        rendering_app: "rummager",
+        rendering_app: "search-api",
         content_id: "5edd25bd-987f-45d3-8eca-5fb35cbf2978",
         base_path: "/api/batch_search.json",
         title: "GOV.UK batch search results API",
@@ -75,7 +75,7 @@ class SpecialRoutePublisher
         type: "exact",
       },
       {
-        rendering_app: "rummager",
+        rendering_app: "search-api",
         base_path: "/sitemap.xml",
         content_id: "fee32a90-397a-4761-9f98-b06e47d2b798",
         title: "GOV.UK sitemap index",
@@ -83,7 +83,7 @@ class SpecialRoutePublisher
         type: "exact",
       },
       {
-        rendering_app: "rummager",
+        rendering_app: "search-api",
         base_path: "/sitemaps",
         content_id: "c202c6a5-656c-40d1-ae55-36fab995709c",
         title: "GOV.UK sitemaps prefix",

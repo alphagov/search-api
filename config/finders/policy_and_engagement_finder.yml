@@ -3,7 +3,7 @@ base_path: "/search/policy-papers-and-consultations"
 content_id: 45bb9f22-096a-4e4c-a39e-04a65ff82da7
 document_type: finder
 locale: en
-publishing_app: rummager
+publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder
 title: Policy papers and consultations
