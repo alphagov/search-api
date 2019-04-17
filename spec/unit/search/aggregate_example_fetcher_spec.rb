@@ -4,34 +4,49 @@ RSpec.describe Search::AggregateExampleFetcher do
   def query_for_example_global(field, value, return_fields)
     {
       query: {
-        filtered: {
-          query: nil,
-          filter: {
-            and: [
-              { term: { field => value } },
-              { indices: {
+        bool: {
+          must: nil,
+        },
+      },
+      post_filter: {
+        bool: {
+          must: [
+            { term: { field => value } },
+            { indices: {
                 indices: SearchConfig.instance.content_index_names,
-                filter: {},
-                no_match_filter: 'none'
+                query: { bool: { must: { match_all: {} } } },
+                no_match_query: 'none'
               } }
-            ]
-          },
+          ]
         },
       },
       size: 2,
-      fields: return_fields,
+      _source: {
+        includes: return_fields
+      },
       sort: [{ popularity: { order: :desc } }]
     }
   end
 
   def query_for_example_query(field, value, return_fields, query, filter)
     {
-      query: { filtered: { query: query, filter: { and: [
-        { term: { field => value } },
-        filter
-      ] } } },
+      query: {
+        bool: {
+          must: query,
+        }
+      },
+      post_filter: {
+        bool: {
+          must: [
+            { term: { field => value } },
+            filter
+          ]
+        }
+      },
       size: 2,
-      fields: return_fields,
+      _source: {
+        includes: return_fields
+      },
       sort: [{ popularity: { order: :desc } }]
     }
   end
@@ -41,7 +56,7 @@ RSpec.describe Search::AggregateExampleFetcher do
       "hits" => {
         "total" => total_examples,
         "hits" => titles.map { |title|
-          { "fields" => { "title" => title } }
+          { "_source" => { "title" => title } }
         }
       }
     }

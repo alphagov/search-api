@@ -138,7 +138,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       stubbed_client = client
 
       locked_response = { "items" => [
-        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index write" } } }
+        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } }
       ] }
 
       expect(stubbed_client).to receive(:bulk).and_return(locked_response)
@@ -177,7 +177,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       stubbed_client = client
 
       locked_response = { "items" => [
-        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index write" } } }
+        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } }
       ] }
 
       expect(stubbed_client).to receive(:bulk).and_return(locked_response)

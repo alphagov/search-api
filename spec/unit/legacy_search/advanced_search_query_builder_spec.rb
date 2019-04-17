@@ -9,57 +9,49 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
 
   it "builder excludes withdrawn" do
     builder = build_builder
-    query_hash = builder.filter_query_hash
+    query_hash = builder.filter_array
 
     expect(query_hash).to eq(
-      "filter" => {
-        "not" => { "term" => { "is_withdrawn" => true } }
-      }
+      [{ bool: { must_not: { term: { is_withdrawn: true } } } }]
     )
   end
 
 
   it "builder single filters" do
     builder = build_builder("how to drive", { "format" => "organisation" })
-    query_hash = builder.filter_query_hash
+    query_hash = builder.filter_array
 
     expect(query_hash).to eq(
-      "filter" => {
-        "and" => [
-          { "term" => { "format" => "organisation" } },
-          { "not" => { "term" => { "is_withdrawn" => true } } }
-        ]
-      }
+      [
+        { "term" => { "format" => "organisation" } },
+        { bool: { must_not: { term: { is_withdrawn: true } } } }
+      ]
     )
   end
 
   it "builder multiple filters" do
     builder = build_builder("how to drive", { "format" => "organisation", "specialist_sectors" => "driving" })
-    query_hash = builder.filter_query_hash
+    query_hash = builder.filter_array
 
     expect(query_hash).to eq(
-      "filter" => {
-        "and" => [
-          { "term" => { "format" => "organisation" } },
-          { "term" => { "specialist_sectors" => "driving" } },
-          { "not" => { "term" => { "is_withdrawn" => true } } }
-        ]
-      }
+      [
+        { "term" => { "format" => "organisation" } },
+        { "term" => { "specialist_sectors" => "driving" } },
+        { bool: { must_not: { term: { is_withdrawn: true } } } }
+      ]
     )
   end
 
   it "ignores empty filters" do
     builder = build_builder("how to drive", { "format" => "organisation", "specialist_sectors" => "driving", "people" => nil })
-    query_hash = builder.filter_query_hash
+    query_hash = builder.filter_array
 
     expect(query_hash).to eq(
-      "filter" => {
-        "and" => [
-          { "term" => { "format" => "organisation" } },
-          { "term" => { "specialist_sectors" => "driving" } },
-          { "not" => { "term" => { "is_withdrawn" => true } } }
-        ]
-      }
+      [
+        { "term" => { "format" => "organisation" } },
+        { "term" => { "specialist_sectors" => "driving" } },
+        { bool: { must_not: { term: { is_withdrawn: true } } } }
+      ]
     )
   end
 end

@@ -42,6 +42,12 @@ RSpec.describe ContentItemPublisher::FinderPresenter do
                                                       "ordered_related_items" => ordered_related_items_links })
       end
 
+      it "includes facet_group in the links hash if present" do
+        facet_group_links = ['facet-group-uuid']
+        finder['links'] = { 'facet_group' => facet_group_links }
+        expect(instance.present_links[:links]).to include("facet_group" => facet_group_links)
+      end
+
       it "uses empty arrays to remove links" do
         finder_with_no_links = finder.except("parent").except("signup_content_id").except("ordered_related_items")
         presenter_with_empty_links = described_class.new(finder_with_no_links, timestamp)

@@ -517,14 +517,6 @@ RSpec.describe 'BatchSearchTest' do
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 
-  it "return 400 response for query term length too long" do
-    terms = 1025.times.map { ('a'..'z').to_a.sample(5).join }.join(' ')
-    get build_get_url([{ q: terms }, { q: "Minstry of Magic" }])
-
-    expect(last_response).to be_bad_request
-    expect(last_response.body).to eq('Query must be less than 1024 words')
-  end
-
   it "will allow ten searches" do
     commit_ministry_of_magic_document
     searches = 10.times.map do

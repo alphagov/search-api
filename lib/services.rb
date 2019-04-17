@@ -37,7 +37,7 @@ module Services
   end
 
   def self.statsd_client
-    @statsd_client ||= Statsd.new.tap { |sd| sd.namespace = "govuk.app.rummager" }
+    @statsd_client ||= Statsd.new.tap { |sd| sd.namespace = "govuk.app.search-api" }
   end
 
   def self.cache

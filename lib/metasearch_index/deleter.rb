@@ -2,7 +2,7 @@ module MetasearchIndex
   module Deleter
     class V2
       def initialize(id:)
-        @id = id.presence || raise(ArgumentError, "ID and Type must be supplied.")
+        @id = id.presence || raise(ArgumentError, "ID must be supplied.")
       end
 
       def delete
@@ -14,7 +14,7 @@ module MetasearchIndex
 
       def identifier
         {
-          _type: 'best_bet',
+          _type: 'generic-document',
           _id: @id,
         }
       end

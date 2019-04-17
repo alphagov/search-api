@@ -1,34 +1,40 @@
 class SchemaMigrator
+  attr_accessor :failed
+
   def initialize(index_name, config, wait_between_task_list_check: 5, io: STDOUT)
     @index_name = index_name
     @config = config
     @wait_between_task_list_check = wait_between_task_list_check
     @io = io
-
-    index_group.current.with_lock do
-      yield(self)
-    end
   end
 
   def reindex
-    response = Services.elasticsearch(timeout: 60).reindex(
-      wait_for_completion: false,
-      body: {
-        source: {
-          index: index_group.current.real_name,
+    index_group.current.with_lock do
+      response = Services.elasticsearch(timeout: 60).reindex(
+        wait_for_completion: false,
+        body: {
+          source: {
+            index: index_group.current.real_name,
+          },
+          dest: {
+            index: index.real_name,
+            version_type: "external",
+          }
         },
-        dest: {
-          index: index.real_name,
-          version_type: "external",
-        }
-      },
-      refresh: true
-    )
+        refresh: true
+      )
 
-    task_id = response.fetch('task')
+      task_id = response.fetch('task')
 
-    while running_tasks.include?(task_id)
-      sleep @wait_between_task_list_check
+      while running_tasks.include?(task_id)
+        sleep @wait_between_task_list_check
+      end
+
+      if changed?
+        puts "Difference during reindex for: #{index_name}"
+        puts comparison.inspect
+        @failed = true
+      end
     end
   end
 

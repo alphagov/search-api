@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 RSpec.describe Indexer::DeleteWorker do
+  # rubocop:disable RSpec/MessageSpies
   it "deletes documents" do
     mock_index = double("index")
-    expect(mock_index).to receive(:delete).with("edition", "/foobang")
+    expect(mock_index).to receive(:delete).with("/foobang")
     expect_any_instance_of(SearchIndices::SearchServer).to receive(:index)
       .with("test-index")
       .and_return(mock_index)
@@ -11,6 +12,7 @@ RSpec.describe Indexer::DeleteWorker do
     worker = described_class.new
     worker.perform("test-index", "edition", "/foobang")
   end
+  # rubocop:enable RSpec/MessageSpies
 
   it "retries when index locked" do
     lock_delay = described_class::LOCK_DELAY

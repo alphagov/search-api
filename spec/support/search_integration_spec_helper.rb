@@ -28,6 +28,7 @@ module SearchIntegrationSpecHelper
       "specialist_sectors" => %w(farming),
       "opened_date" => "2014-04-01",
       "format" => "cma_case",
+      "document_type" => "cma_case"
     }.merge(attributes)
   end
 

@@ -10,7 +10,7 @@ module Search
     end
 
     def present
-      result = raw_result['fields'] || {}
+      result = raw_result['_source'] || {}
 
       if schema
         result = convert_elasticsearch_array_fields(result)
@@ -50,22 +50,30 @@ module Search
       result.merge(expanded_params)
     end
 
-    # Elasticsearch returns all fields as arrays by default. We convert those
-    # arrays into a single value here, unless we've explicitly set the field to
-    # be "multivalued" in the database schema.
+    # The only fields which should be returned as arrays are ones
+    # explicitly set to "multivalued" in the schema.  So if any other
+    # fields have been returned as an array, pick the first value.
     def convert_elasticsearch_array_fields(result)
-      result.each do |field_name, values|
+      result.each_with_object({}) do |(field_name, values), out|
+        # drop fields not in the schema
+        next unless document_schema.fields.has_key? field_name
+
+        out[field_name] = values
+
         next if field_name[0] == '_'
+
         next if document_schema.fields.fetch(field_name).type.multivalued
-        result[field_name] = values.first
+
+        next unless values.is_a? Array
+
+        out[field_name] = values.first
       end
-      result
     end
 
     def document_schema
       @document_schema ||= begin
         index_schema = schema.schema_for_alias_name(raw_result["_index"])
-        index_schema.elasticsearch_type(raw_result["_type"])
+        index_schema.elasticsearch_type(raw_result["_source"]["document_type"])
       end
     end
 
@@ -85,11 +93,11 @@ module Search
         result[:_explanation] = raw_result["_explanation"]
       end
 
-      result[:elasticsearch_type] = raw_result["_type"]
+      result[:elasticsearch_type] = raw_result["_source"]["document_type"]
 
       # TODO: clients should not use this. It's probably only used in the
       # search results in the `frontend` application.
-      result[:document_type] = raw_result["_type"]
+      result[:document_type] = raw_result["_source"]["document_type"]
 
       result
     end

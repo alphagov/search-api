@@ -29,9 +29,9 @@ RSpec.describe Search::ResultSet do
           "hits" => [
             {
               "_score" => 12,
-              "_type" => "contact",
+              "_type" => "generic-document",
               "_id" => "some_id",
-              "_source" => { "foo" => "bar" },
+              "_source" => { "document_type" => "contact", "foo" => "bar" },
             }
           ]
         }
@@ -58,7 +58,7 @@ RSpec.describe Search::ResultSet do
     end
 
     it "populates the document id and type from the metafields" do
-      expected_hash = hash_including("_type" => "contact", "_id" => "some_id")
+      expected_hash = hash_including("document_type" => "contact", "_id" => "some_id")
       expect(Document).to receive(:from_hash).with(expected_hash, sample_elasticsearch_types, anything).and_return(:doc)
 
       result_set = described_class.from_elasticsearch(sample_elasticsearch_types, @response)

@@ -122,7 +122,7 @@ RSpec.describe SitemapPresenter do
   def build_document(url:, timestamp: nil, format: nil, is_withdrawn: nil)
     document = {
       "link" => url,
-      "_type" => "some_type",
+      "document_type" => "some_type",
     }
     document["public_timestamp"] = timestamp if timestamp
     document["format"] = format if format

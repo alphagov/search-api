@@ -211,8 +211,8 @@ class Rummager < Sinatra::Application
     result_set = current_index.advanced_search(request.params)
     results = result_set.results.map do |document|
       # Wrap in hash to be compatible with the way Search works.
-      raw_result = { "fields" => document.to_hash }
-      search_params = Search::QueryParameters.new(return_fields: raw_result['fields'].keys)
+      raw_result = { "_source" => document.to_hash }
+      search_params = Search::QueryParameters.new(return_fields: raw_result['_source'].keys)
       Search::ResultPresenter.new(raw_result, {}, nil, search_params).present
     end
 
@@ -225,7 +225,7 @@ class Rummager < Sinatra::Application
     prevent_access_to_govuk
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
-      hash["_type"] ||= "edition"
+      hash["document_type"] ||= hash.fetch("_type", "edition")
 
       if hash.has_key? "link"
         base_path = hash["link"]
@@ -286,7 +286,8 @@ class Rummager < Sinatra::Application
   end
 
   def get_type_from_request_body(request_body)
-    JSON.parse(request_body.read).fetch("_type", nil)
+    body = JSON.parse(request_body.read)
+    body.fetch("document_type", body.fetch("_type", nil))
   rescue JSON::ParserError
     nil
   end

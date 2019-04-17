@@ -27,22 +27,6 @@ namespace :rummager do
     end
   end
 
-  desc "Compare two indices with an option format filter"
-  task :compare_govuk, :format do |_, args|
-    filtered_format = args[:format]
-    filtered_format = nil if filtered_format == 'all'
-    comparer = Indexer::GovukIndexFieldComparer.new
-    puts Indexer::Comparer.new(
-      'mainstream',
-      'govuk',
-      field_comparer: comparer,
-      ignore: %w(popularity is_withdrawn),
-      filtered_format: filtered_format,
-      enum_options: { include_version: true },
-    ).run
-    puts comparer.stats
-  end
-
   desc "Create a brand new indices and assign an alias if no alias currently exists"
   task :create_all_indices do
     index_names.each do |index_name|
@@ -125,16 +109,17 @@ You should run this task if the index schema has changed.
     failed_indices = []
 
     index_names.each do |index_name|
-      SchemaMigrator.new(index_name, search_config) do |migrator|
-        migrator.reindex
+      migrator = SchemaMigrator.new(index_name, search_config)
+      migrator.reindex
 
-        if migrator.changed?
-          puts "Difference during reindex for: #{index_name}"
-          puts migrator.comparison.inspect
-          failed_indices << index_name
-        else
-          migrator.switch_to_new_index
-        end
+      if migrator.failed == true
+        failed_indices << index_name
+      else
+        # We need to switch the aliases without a lock, since
+        # read_only_allow_delete prevents aliases being changed
+        # After running the schema migration, traffic must be
+        # represented anyway, so the race condition is irrelevant
+        migrator.switch_to_new_index
       end
     end
 

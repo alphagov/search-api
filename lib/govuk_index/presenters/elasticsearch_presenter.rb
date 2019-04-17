@@ -41,6 +41,7 @@ module GovukIndex
         dfid_document_type:                  specialist.dfid_document_type,
         dfid_review_status:                  specialist.dfid_review_status,
         dfid_theme:                          specialist.dfid_theme,
+        document_type:                       type,
         eligible_entities:                   specialist.eligible_entities,
         email_document_supertype:            common_fields.email_document_supertype,
         facet_values:                        expanded_links.facet_values,

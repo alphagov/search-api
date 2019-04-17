@@ -40,7 +40,7 @@ module SearchIndices
       # { real_name => { "aliases" => { alias => {} } } }
       # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
       begin
-        alias_info = @client.indices.get_aliases(index: @index_name)
+        alias_info = @client.indices.get_alias(index: @index_name)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         return nil
       end
@@ -58,13 +58,13 @@ module SearchIndices
 
     # Apply a write lock to this index, making it read-only
     def lock
-      request_body = { "index" => { "blocks" => { "write" => true } } }
+      request_body = { "index" => { "blocks" => { "read_only_allow_delete" => true } } }
       @client.indices.put_settings(index: @index_name, body: request_body)
     end
 
     # Remove any write lock applied to this index
     def unlock
-      request_body = { "index" => { "blocks" => { "write" => false } } }
+      request_body = { "index" => { "blocks" => { "read_only_allow_delete" => false } } }
       @client.indices.put_settings(index: @index_name, body: request_body)
     end
 
@@ -153,7 +153,7 @@ module SearchIndices
       # Set off a scan query to get back a scroll ID and result count
       batch_size = self.class.scroll_batch_size
       ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        document_from_hash(hit["_source"].merge("_id" => hit["_id"], "_type" => hit["_type"]))
+        document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
       end
     end
 
@@ -161,11 +161,11 @@ module SearchIndices
       batch_size = 500
       search_body = {
         query: { term: { format: format } },
-        fields: field_definitions.keys,
+        _source: { includes: field_definitions.keys },
       }
 
       ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
-        LegacyClient::MultivalueConverter.new(hit["fields"], field_definitions).converted_hash
+        LegacyClient::MultivalueConverter.new(hit["_source"], field_definitions).converted_hash
       end
     end
 
@@ -173,9 +173,9 @@ module SearchIndices
       LegacySearch::AdvancedSearch.new(@mappings, @elasticsearch_types, @client, @index_name).result_set(params)
     end
 
-    def raw_search(payload, type = nil)
+    def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_name, type: type, body: payload)
+      @client.search(index: @index_name, type: 'generic-document', body: payload)
     end
 
     # Convert a best bet query to a string formed by joining the normalised
@@ -183,16 +183,20 @@ module SearchIndices
     #
     # duplicated in document_preparer.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = @client.indices.analyze(index: @index_name, body: query, analyzer: "best_bet_stemmed_match")
+      begin
+        analyzed_query = @client.indices.analyze(index: @index_name, text: query, analyzer: "best_bet_stemmed_match")
 
-      analyzed_query["tokens"].map { |token_info|
-        token_info["token"]
-      }.join(" ")
+        analyzed_query["tokens"].map { |token_info|
+          token_info["token"]
+        }.join(" ")
+      rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+        ""
+      end
     end
 
-    def delete(type, id)
+    def delete(id)
       begin
-        @client.delete(index: @index_name, type: type, id: id)
+        @client.delete(index: @index_name, type: 'generic-document', id: id)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true
@@ -234,11 +238,11 @@ module SearchIndices
   private
 
     # Parse an elasticsearch error message to determine whether it's caused by
-    # a write-locked index. An example write-lock error message:
+    # a read-only index. An example read-only error message:
     #
-    #     "ClusterBlockException[blocked by: [FORBIDDEN/8/index write (api)];]"
+    #     "ClusterBlockException[blocked by: [FORBIDDEN/8/index read-only / allow delete (api)];]"
     def locked_index_error?(error_message)
-      error_message =~ %r{\[FORBIDDEN/[^/]+/index write}
+      error_message =~ %r{\[FORBIDDEN/[^/]+/index read-only}
     end
 
     def logger

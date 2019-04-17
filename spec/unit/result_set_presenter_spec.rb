@@ -7,7 +7,7 @@ RSpec.describe Search::ResultSetPresenter do
       _type: "edition",
       _id: "/government/publications/staffordshire-cheese",
       "_score" => 3.0514863,
-      "fields" => {
+      "_source" => {
         "description" => "Staffordshire Cheese Product of Designated Origin (PDO) and Staffordshire Organic Cheese.",
         "title" => "Staffordshire Cheese",
         "link" => "/government/publications/staffordshire-cheese",
@@ -17,7 +17,7 @@ RSpec.describe Search::ResultSetPresenter do
       _type: "edition",
       _id: "/duty-relief-for-imports-and-exports",
       "_score" => 0.49672604,
-      "fields" => {
+      "_source" => {
         "description" => "Schemes that offer reduced or zero rate duty and VAT for imports and exports",
         "title" => "Duty relief for imports and exports",
         "link" => "/duty-relief-for-imports-and-exports",
@@ -27,7 +27,7 @@ RSpec.describe Search::ResultSetPresenter do
       _type: "edition",
       _id: "/dairy-farming-and-schemes",
       "_score" => 0.34655035,
-      "fields" => {
+      "_source" => {
         "title" => "Dairy farming and schemes",
         "link" => "/dairy-farming-and-schemes",
         "policy_areas" => ["farming"],

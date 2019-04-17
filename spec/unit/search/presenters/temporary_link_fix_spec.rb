@@ -3,9 +3,9 @@ require 'spec_helper'
 RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
   it "appending a slash to the link field" do
     document = {
-      '_type' => 'raib_report',
+      '_type' => 'generic-document',
       '_index' => 'govuk_test',
-      'fields' => { 'link' => ['some/link'] }
+      '_source' => { 'document_type' => 'raib_report', 'link' => ['some/link'] }
     }
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
@@ -15,9 +15,9 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
 
   it "keep http links intact" do
     document = {
-      '_type' => 'raib_report',
+      '_type' => 'generic-document',
       '_index' => 'govuk_test',
-      'fields' => { 'link' => ['http://example.org/some-link'] }
+      '_source' => { 'document_type' => 'raib_report', 'link' => ['http://example.org/some-link'] }
     }
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
@@ -27,9 +27,9 @@ RSpec.describe Search::ResultPresenter, 'Temporary Link Fix' do
 
   it "keep correct links intact" do
     document = {
-      '_type' => 'raib_report',
+      '_type' => 'generic-document',
       '_index' => 'govuk_test',
-      'fields' => { 'link' => ['/some-link'] }
+      '_source' => { 'document_type' => 'raib_report', 'link' => ['/some-link'] }
     }
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present

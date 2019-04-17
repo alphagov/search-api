@@ -7,6 +7,7 @@ RSpec.describe 'ContentEndpointsTest' do
     expect(last_response).to be_not_found
   end
 
+  # rubocop:disable RSpec/ExpectActual
   it "that_getting_a_document_returns_the_document" do
     commit_document("govuk_test", {
       "title" => "A nice title",
@@ -16,8 +17,9 @@ RSpec.describe 'ContentEndpointsTest' do
     get "/content?link=a-document/in-search"
 
     expect(last_response).to be_ok
-    expect("title" => "A nice title", "link" => "a-document/in-search").to eq parsed_response['raw_source']
+    expect("title" => "A nice title", "link" => "a-document/in-search", "document_type" => "edition").to eq parsed_response['raw_source']
   end
+  # rubocop:enable RSpec/ExpectActual
 
   it "deleting a document" do
     commit_document("govuk_test", {

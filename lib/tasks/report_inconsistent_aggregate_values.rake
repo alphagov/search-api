@@ -18,7 +18,7 @@ task :report_inconsistent_aggregate_values do
     people
   )
 
-  rummager = GdsApi::Rummager.new(Plek.new.find("rummager"))
+  rummager = GdsApi::Rummager.new(Plek.new.find("search-api"))
   aggregate_values_to_report = {}
 
   aggregates.each do |aggregate|

@@ -8,8 +8,8 @@ module Search
       {
         indices: {
           indices: SearchConfig.instance.content_index_names,
-          filter: excluding_formats,
-          no_match_filter: only_formats
+          query: excluding_formats,
+          no_match_query: only_formats
         }
       }
     end
@@ -22,17 +22,23 @@ module Search
 
     def excluding_formats
       options = {}
-      options[:should] = [@base] if @base
+      options[:must] = @base if @base
       options[:must_not] = { terms: { format: migrated_formats } } if migrated_formats.any?
-      options.any? ? { bool: options } : {}
+      { bool: options.any? ? options : { must: { match_all: {} } } }
     end
 
     def only_formats
       return 'none' if migrated_formats.empty?
-      options = {}
-      options[:should] = [@base] if @base
-      options[:must] = { terms: { format: migrated_formats } }
-      { bool: options }
+      {
+        bool: {
+          must:
+            if @base
+              [@base, { terms: { format: migrated_formats } }]
+            else
+              { terms: { format: migrated_formats } }
+            end
+        },
+      }
     end
   end
 end

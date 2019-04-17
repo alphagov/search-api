@@ -22,12 +22,13 @@ module GovukIndex
 
         GovukIndex::PageTrafficWorker.wait_until_processed
         new_index.commit
-
-        # Switch aliases inside the lock so we avoid a race condition where a
-        # new index exists, but the old index is available for writes
-        index_group.switch_to(new_index)
-        old_index.close
       end
+
+      # We need to switch the aliases without a lock, since
+      # read_only_allow_delete prevents aliases being changed
+      # The page traffic loader is is a daily process, so there
+      # won't be a race condition
+      index_group.switch_to(new_index)
     end
 
   private

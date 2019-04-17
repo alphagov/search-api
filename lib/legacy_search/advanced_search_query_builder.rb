@@ -10,18 +10,18 @@ module LegacySearch
     end
 
     def unknown_keys
-      if @mappings["edition"]["properties"]["attachments"]
-        attachment_keys = @mappings["edition"]["properties"]["attachments"]["properties"].keys.map { |k| "attachments.#{k}" }
+      if @mappings["generic-document"]["properties"]["attachments"]
+        attachment_keys = @mappings["generic-document"]["properties"]["attachments"]["properties"].keys.map { |k| "attachments.#{k}" }
       else
         attachment_keys = []
       end
 
-      @unknown_keys ||= @filter_params.keys - (@mappings["edition"]["properties"].keys + attachment_keys)
+      @unknown_keys ||= @filter_params.keys - (@mappings["generic-document"]["properties"].keys + attachment_keys)
     end
 
     def unknown_sort_key
       if @sort_order
-        @unknown_sort_key ||= @sort_order.keys - @mappings['edition']['properties'].keys
+        @unknown_sort_key ||= @sort_order.keys - @mappings['generic-document']['properties'].keys
       else
         []
       end
@@ -74,70 +74,73 @@ module LegacySearch
     end
 
     def query_hash
-      keyword_query_hash
-        .merge(filter_query_hash)
-        .merge(order_query_hash)
+      {
+        query: {
+          bool: {
+            must: keyword_query_hash
+          }
+        },
+        post_filter: {
+          bool: {
+            must: filter_array
+          }
+        },
+      }.merge(order_query_hash)
     end
 
     def keyword_query_hash
       if @keywords
         {
-          query: {
-            function_score: {
-              query: {
-                bool: {
-                  should: [
-                    {
-                      query_string: {
-                        query: escape(@keywords),
-                        fields: ["title^3"],
-                        default_operator: "and",
-                        analyzer: "default"
-                      }
-                    },
-                    {
-                      query_string: {
-                        query: escape(@keywords),
-                        analyzer: "with_search_synonyms"
-                      }
+          function_score: {
+            query: {
+              bool: {
+                should: [
+                  {
+                    query_string: {
+                      query: escape(@keywords),
+                      fields: ["title^3"],
+                      default_operator: "and",
+                      analyzer: "default"
                     }
-                  ]
-                }
-              },
-              functions: [
-                filter: { term: { search_format_types: "edition" } },
-                script_score: {
-                  script: "((0.15 / ((3.1*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
+                  },
+                  {
+                    query_string: {
+                      query: escape(@keywords),
+                      analyzer: "with_search_synonyms"
+                    }
+                  }
+                ]
+              }
+            },
+            functions: [
+              filter: { term: { search_format_types: "edition" } },
+              script_score: {
+                script: {
+                  lang: "painless",
+                  inline: "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
                   params: {
                     now: time_in_millis_to_nearest_minute
                   },
-                }
-              ]
-            }
+                },
+              }
+            ]
           }
         }
       else
-        { "query" => { "match_all" => {} } }
+        { match_all: {} }
       end
+    end
+
+    def filter_array
+      # Withdrawn documents should never be part of advanced search
+      withdrawn_query = { bool: { must_not: { term: { is_withdrawn: true } } } }
+      filters = filters_hash
+      filters << withdrawn_query
+      filters
     end
 
     def time_in_millis_to_nearest_minute
       (Time.now.to_i / 60) * 60000
-    end
-
-    def filter_query_hash
-      # Withdrawn documents should never be part of advanced search
-      withdrawn_query = { "not" => { "term" => { "is_withdrawn" => true } } }
-
-      filters = filters_hash
-      filters << withdrawn_query
-
-      if filters.size > 1
-        filters = { "and" => filters }
-      else
-        filters = filters.first
-      end
-      { "filter" => filters || {} }
     end
 
     def order_query_hash
@@ -197,11 +200,11 @@ module LegacySearch
     end
 
     def date_properties
-      @date_properties ||= @mappings["edition"]["properties"].select { |_p, h| h["type"] == "date" }.keys
+      @date_properties ||= @mappings["generic-document"]["properties"].select { |_p, h| h["type"] == "date" }.keys
     end
 
     def boolean_properties
-      @boolean_properties ||= @mappings["edition"]["properties"].select { |_p, h| h["type"] == "boolean" }.keys
+      @boolean_properties ||= @mappings["generic-document"]["properties"].select { |_p, h| h["type"] == "boolean" }.keys
     end
   end
 end

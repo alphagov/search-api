@@ -9,7 +9,9 @@ class DuplicateLinksFinder
   def find_exact_duplicates
     body = {
       query: {
-        match_all: {}
+        bool: {
+          must: { match_all: {} },
+        },
       },
       aggs: {
         dups: {
@@ -26,7 +28,7 @@ class DuplicateLinksFinder
           }
         }
       },
-      filter: Search::FormatMigrator.new.call,
+      post_filter: Search::FormatMigrator.new.call,
       size: 0,
     }
     results = client.search(index: indices, body: body)

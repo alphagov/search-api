@@ -22,7 +22,13 @@ module GovukIndex
 
     def type
       raise NotFoundError if existing_document.nil?
-      existing_document['_type']
+      source = existing_document['_source']
+      fallback = existing_document['_type']
+      if source
+        source['document_type'] || fallback
+      else
+        fallback
+      end
     end
 
   private

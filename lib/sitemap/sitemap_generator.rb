@@ -7,17 +7,17 @@ class SitemapGenerator
   end
 
   def self.sitemap_limit
-    50_000
+    25_000
   end
 
   def get_all_documents
     search_body = {
       query: {
         bool: {
-          must_not: { terms: { format: EXCLUDED_FORMATS } }
+          must_not: { terms: { format: EXCLUDED_FORMATS } },
         }
       },
-      filter: Search::FormatMigrator.new.call
+      post_filter: Search::FormatMigrator.new.call,
     }
     property_boost_calculator = PropertyBoostCalculator.new
 

@@ -76,18 +76,18 @@ RSpec.describe Indexer::CompareEnumerator do
   end
 
   it "scroll enumerator mappings" do
-    data = { '_id' => 'abc', '_type' => 'stuff', '_source' => { 'custom' => 'data' } }
+    data = { '_id' => 'abc', '_type' => 'generic-document', '_source' => { 'custom' => 'data', 'document_type' => 'stuff' } }
     stub_client_for_scroll_enumerator(return_values: [[data], []])
 
     enum = described_class.new('index_a', 'index_b').get_enum('index_name')
 
     expect(enum.to_a).to eq([
-      { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
+      { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data', 'document_type' => 'stuff' }
     ])
   end
 
   it "scroll enumerator mappings when filter is passed in" do
-    data = { '_id' => 'abc', '_type' => 'stuff', '_source' => { 'custom' => 'data' } }
+    data = { '_id' => 'abc', '_type' => 'generic-document', '_source' => { 'custom' => 'data', 'document_type' => 'stuff' } }
     search_body = { query: 'custom_filter', sort: 'by_stuff' }
 
     stub_client_for_scroll_enumerator(return_values: [[data], []], search_body: search_body)
@@ -95,12 +95,12 @@ RSpec.describe Indexer::CompareEnumerator do
     enum = described_class.new('index_a', 'index_b').get_enum('index_name', search_body)
 
     expect(enum.to_a).to eq([
-      { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
+      { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data', 'document_type' => 'stuff' }
     ])
   end
 
   it "scroll enumerator mappings without sorting" do
-    data = { '_id' => 'abc', '_type' => 'stuff', '_source' => { 'custom' => 'data' } }
+    data = { '_id' => 'abc', '_type' => 'generic-document', '_source' => { 'custom' => 'data', 'document_type' => 'stuff' } }
     search_body = { query: 'custom_filter' }
 
     stub_client_for_scroll_enumerator(return_values: [[data], []], search_body: search_body.merge(sort: described_class::DEFAULT_SORT))
@@ -108,7 +108,7 @@ RSpec.describe Indexer::CompareEnumerator do
     enum = described_class.new('index_a', 'index_b').get_enum('index_name', search_body)
 
     expect(enum.to_a).to eq([
-      { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data' }
+      { '_root_id' => 'abc', '_root_type' => 'stuff', 'custom' => 'data', 'document_type' => 'stuff' }
     ])
   end
 

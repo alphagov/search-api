@@ -52,7 +52,7 @@ module Indexer
 
     def prepare_format_field(doc_hash)
       if doc_hash["format"].nil?
-        doc_hash.merge("format" => doc_hash["_type"])
+        doc_hash.merge("format" => doc_hash["document_type"])
       else
         doc_hash
       end
@@ -68,7 +68,7 @@ module Indexer
     # checked to see if it is a substring match for the (similarly normalised)
     # user's query.  If so, the best bet is used.
     def prepare_if_best_bet(doc_hash)
-      if doc_hash["_type"] != "best_bet"
+      if doc_hash["document_type"] != "best_bet"
         return doc_hash
       end
 
@@ -83,11 +83,15 @@ module Indexer
 
     # duplicated in index.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = @client.indices.analyze(index: @index_name, body: query, analyzer: "best_bet_stemmed_match")
+      begin
+        analyzed_query = @client.indices.analyze(index: @index_name, text: query, analyzer: "best_bet_stemmed_match")
 
-      analyzed_query["tokens"].map { |token_info|
-        token_info["token"]
-      }.join(" ")
+        analyzed_query["tokens"].map { |token_info|
+          token_info["token"]
+        }.join(" ")
+      rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+        ""
+      end
     end
 
     def add_self_to_organisations_links(doc_hash)

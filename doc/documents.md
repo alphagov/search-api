@@ -1,4 +1,4 @@
-# Rummager Documents API
+# Documents API
 
 ### `POST /:index/documents`
 

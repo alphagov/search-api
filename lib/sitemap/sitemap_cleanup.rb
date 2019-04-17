@@ -19,7 +19,7 @@ private
   end
 
   def parse_sitemap_date(filename)
-    date_string = filename.match(/sitemap(?:_[0-9])?_([0-9T-]+)\.xml/)[1]
+    date_string = filename.match(/sitemap(?:_[0-9]+)?_([0-9T-]+)\.xml/)[1]
     Date.strptime(date_string, '%FT%H')
   end
 

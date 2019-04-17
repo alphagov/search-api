@@ -28,51 +28,62 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     stub_empty_search(body: {
       "from" => 0,
       "size" => 1,
+      "post_filter" => {
+        "bool" => {
+          "must" => [{ "bool" => { "must_not" => { "term" => { "is_withdrawn" => true } } } }]
+        }
+      },
       "query" => {
-        "function_score" => {
-          "query" => {
-            "bool" => {
-              "should" => [
+        "bool" => {
+          "must" => {
+            "function_score" => {
+              "query" => {
+                "bool" => {
+                  "should" => [
+                    {
+                      "query_string" => {
+                        "query" => "happy fun time",
+                        "fields" => ["title^3"],
+                        "default_operator" => "and",
+                        "analyzer" => "default"
+                      }
+                    },
+                    {
+                      "query_string" =>
+                      {
+                        "query" => "happy fun time",
+                        "analyzer" => "with_search_synonyms"
+                      }
+                    }
+                  ]
+                }
+              },
+              "functions" => [
                 {
-                  "query_string" => {
-                    "query" => "happy fun time",
-                    "fields" => ["title^3"],
-                    "default_operator" => "and",
-                    "analyzer" => "default"
-                  }
-                },
-                {
-                  "query_string" =>
-                  {
-                    "query" => "happy fun time",
-                    "analyzer" => "with_search_synonyms"
+                  "filter" => {
+                    "term" => {
+                      "search_format_types" => "edition"
+                    }
+                  },
+                  "script_score" => {
+                    "script" => {
+                      "lang" => "painless",
+                      "inline" => "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
+                      "params" => { "now" => (Time.now.to_i / 60) * 60000 }
+                    },
                   }
                 }
               ]
             }
           },
-          "functions" => [
-            {
-              "filter" => {
-                "term" => {
-                  "search_format_types" => "edition"
-                }
-              },
-              "script_score" => {
-                "script" => "((0.15 / ((3.1*pow(10,-11)) * abs(now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
-                "params" => { "now" => (Time.now.to_i / 60) * 60000 }
-              }
-            }
-          ]
         }
-      },
-      "filter" => { "not" => { "term" => { "is_withdrawn" => true } } }
+      }
     })
     @wrapper.advanced_search(default_params.merge('keywords' => 'happy fun time'))
   end
 
   it "missing keyword param means a match all query" do
-    stub_empty_search(body: /#{Regexp.escape("\"query\":{\"match_all\":{}}")}/)
+    stub_empty_search(body: /#{Regexp.escape("\"must\":{\"match_all\":{}}")}/)
     @wrapper.advanced_search(default_params)
   end
 
@@ -90,26 +101,26 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params are turned into anded term filters on that property" do
-    stub_empty_search(body: /#{Regexp.escape("\"filter\":{\"and\":[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
+    stub_empty_search(body: /#{Regexp.escape("[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
     @wrapper.advanced_search(default_params.merge('mainstream_browse_pages' => ['jones'], 'link' => ['richards']))
   end
 
   it "filter params on a boolean mapping property are convered to true based on something that looks truthy" do
-    @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(body: /#{Regexp.escape("{\"term\":{\"boolean_property\":true}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'true'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '1'))
   end
 
   it "filter params on a boolean mapping property are convered to false based on something that looks falsey" do
-    @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search(body: /#{Regexp.escape("\"term\":{\"boolean_property\":false}")}/)
     @wrapper.advanced_search(default_params.merge('boolean_property' => 'false'))
     @wrapper.advanced_search(default_params.merge('boolean_property' => '0'))
   end
 
   it "filter params on a boolean mapping property are rejected if they dont look truthy or falsey" do
-    @wrapper.mappings['edition']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['boolean_property'] = { "type" => "boolean", "index" => "analyzed" }
     stub_empty_search
 
     expect_rejected_search('Invalid value "falsey" for boolean property "boolean_property"', default_params.merge('boolean_property' => 'falsey'))
@@ -120,7 +131,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params on a date mapping property are turned into a range filter with order based on the key in the value" do
-    @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
 
     stub_empty_search(body: /#{Regexp.escape("\"range\":{\"date_property\":{\"to\":\"2013-02-02\"}}")}/)
     @wrapper.advanced_search(default_params.merge('date_property' => { 'to' => '2013-02-02' }))
@@ -140,7 +151,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params on a date mapping property without a before or after key in the value are rejected" do
-    @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
     stub_empty_search
 
     expect_rejected_search('Invalid value {} for date property "date_property"', default_params.merge('date_property' => {}))
@@ -151,7 +162,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
   end
 
   it "filter params on a date mapping property without a incorrectly formatted date are rejected" do
-    @wrapper.mappings['edition']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
+    @wrapper.mappings['generic-document']['properties']['date_property'] = { "type" => "date", "index" => "analyzed" }
     stub_empty_search
 
     expect_rejected_search('Invalid value {"before"=>"2 Feb 2013"} for date property "date_property"', default_params.merge('date_property' => { 'before' => '2 Feb 2013' }))
@@ -184,7 +195,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
     stub_request(:get, "http://example.com:9200/government_test/_search")
       .to_return(
         status: 200,
-        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"indexable_content\": \"some_content\"}, \"_type\": \"edition\"}]}}",
+        body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"indexable_content\": \"some_content\", \"document_type\": \"edition\"}, \"_type\": \"generic-document\"}]}}",
         headers: { "Content-Type" => "application/json" }
       )
     result_set = @wrapper.advanced_search(default_params)

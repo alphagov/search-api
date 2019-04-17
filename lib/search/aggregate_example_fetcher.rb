@@ -61,20 +61,22 @@ module Search
         if query_filter.nil?
           filter = { term: { field_name => slug } }
         else
-          filter = { and: [
+          filter = [
             { term: { field_name => slug } },
             query_filter,
-          ] }
+          ]
         end
         {
           query: {
-            filtered: {
-              query: query,
-              filter: filter,
+            bool: {
+              must: query,
             }
           },
+          post_filter: { bool: { must: filter } },
           size: example_count,
-          fields: example_fields,
+          _source: {
+            includes: example_fields,
+          },
           sort: [{ popularity: { order: :desc } }],
         }
       }
@@ -107,7 +109,7 @@ module Search
       slugs.zip(response_list) { |slug, response|
         result[slug] = {
           total: response["hits"]["total"],
-          examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["fields"] || {}) },
+          examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["_source"] || {}) },
         }
       }
 

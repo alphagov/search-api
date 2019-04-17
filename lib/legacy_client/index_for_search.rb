@@ -13,9 +13,9 @@ module LegacyClient
       @search_config = search_config
     end
 
-    def raw_search(payload, type = nil)
+    def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_names, type: type, body: payload)
+      @client.search(index: @index_names, type: 'generic-document', body: payload)
     end
 
     def get_document_by_link(link)
@@ -44,11 +44,11 @@ module LegacyClient
       batch_size = 500
       search_body = {
         query: { term: { format: format } },
-        fields: field_definitions.keys,
+        _source: { includes: field_definitions.keys },
       }
 
       ScrollEnumerator.new(client: @client, search_body: search_body, batch_size: batch_size, index_names: @index_names) do |hit|
-        MultivalueConverter.new(hit["fields"], field_definitions).converted_hash
+        MultivalueConverter.new(hit["_source"], field_definitions).converted_hash
       end
     end
 

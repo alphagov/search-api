@@ -11,9 +11,9 @@ module Indexer
     #
     # The format is as follows:
     #
-    #   {"index": {"_type": "edition", "_id": "/bank-holidays"}}
+    #   {"index": {"_type": "generic-document", "_id": "/bank-holidays"}}
     #   { <document source> }
-    #   {"index": {"_type": "edition", "_id": "/something-else"}}
+    #   {"index": {"_type": "generic-document", "_id": "/something-else"}}
     #   { <document source> }
     #
     # See <http://www.elasticsearch.org/guide/reference/api/bulk/>
@@ -44,7 +44,7 @@ module Indexer
     def index_action(doc_hash)
       {
         "index" => {
-          "_type" => doc_hash["_type"],
+          "_type" => "generic-document",
           "_id" => (doc_hash["_id"] || doc_hash["link"])
         }
       }

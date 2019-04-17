@@ -7,10 +7,10 @@ RSpec.describe Search::FormatMigrator do
     expected = {
       indices: {
         indices: %w(government_test),
-        filter: {
-          bool: { should: [base_query] }
+        query: {
+          bool: { must: base_query }
         },
-        no_match_filter: 'none'
+        no_match_query: 'none'
       }
     }
     expect(described_class.new(base_query).call).to eq(expected)
@@ -22,16 +22,15 @@ RSpec.describe Search::FormatMigrator do
     expected = {
       indices: {
         indices: %w(government_test),
-        filter: {
+        query: {
           bool: {
-            should: [base_query],
-            must_not: { terms: { format: ['help_page'] } },
+            must: base_query,
+            must_not: { terms: { format: %w[help_page] } },
           }
         },
-        no_match_filter: {
+        no_match_query: {
           bool: {
-            should: [base_query],
-            must: { terms: { format: ['help_page'] } },
+            must: [base_query, { terms: { format: %w[help_page] } }],
           }
         }
       }
@@ -44,8 +43,8 @@ RSpec.describe Search::FormatMigrator do
     expected = {
       indices: {
         indices: %w(government_test),
-        filter: {},
-        no_match_filter: 'none'
+        query: { bool: { must: { match_all: {} } } },
+        no_match_query: 'none'
       }
     }
     expect(described_class.new(nil).call).to eq(expected)
@@ -56,14 +55,14 @@ RSpec.describe Search::FormatMigrator do
     expected = {
       indices: {
         indices: %w(government_test),
-        filter: {
+        query: {
           bool: {
-            must_not: { terms: { format: ['help_page'] } },
+            must_not: { terms: { format: %w[help_page] } },
           }
         },
-        no_match_filter: {
+        no_match_query: {
           bool: {
-            must: { terms: { format: ['help_page'] } },
+            must: { terms: { format: %w[help_page] } },
           }
         }
       }

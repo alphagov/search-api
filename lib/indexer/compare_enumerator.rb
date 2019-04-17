@@ -3,9 +3,11 @@ module Indexer
     NO_VALUE = :__no_value_found__
     BATCH_SIZE = 250
     DEFAULT_QUERY = { match_all: {} }.freeze
-    # the `_uid` is a combination of the id and type (format: 'type#id') and is used
-    # as sorting on the _id field does not return ordered results
-    DEFAULT_SORT = [{ _uid: { order: 'asc' } }].freeze
+    # sort by the document_type then the _uid, which is "type#id" -
+    # sorting on the id directly is not possible, and the type will
+    # always be "generic-document", which is why we first need to sort
+    # by document_type.
+    DEFAULT_SORT = %i(document_type _uid).freeze
 
     def initialize(left_index_name, right_index_name, search_body = {}, options = {})
       @options = options
@@ -54,7 +56,7 @@ module Indexer
     def flattened_document(document)
       result = {
         "_root_id" => document["_id"],
-        "_root_type" => document["_type"],
+        "_root_type" => document["_source"]["document_type"],
       }
 
       result["_root_version"] = document["_version"] if @options[:include_version]

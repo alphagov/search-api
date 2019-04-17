@@ -13,7 +13,7 @@ RSpec.describe 'Loading page traffic data' do
 
     document = fetch_document_from_rummager(id: id, index: 'page-traffic_test')
 
-    expect(document["_type"]).to eq('page_traffic')
+    expect(document["_source"]["document_type"]).to eq('page_traffic')
     expect(document['_source']['rank_14']).to eq(100)
   end
 end

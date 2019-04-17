@@ -27,7 +27,7 @@ module QueryComponents
     attr_reader :metasearch_index
 
     # `best_bet_queries` make sure documents with the specified IDs are returned
-    # by elasticsearch. It also adds a huge boost factor for these results, to
+    # by elasticsearch. It also adds a huge weight for these results, to
     # make them on top of the search results page.
     #
     # Note that bets with a lower `position` will turn up higher than bets with
@@ -40,7 +40,7 @@ module QueryComponents
             query: {
               terms: { link: links },
             },
-            boost_factor: (bb_max_position + 1 - position) * 1_000_000,
+            weight: (bb_max_position + 1 - position) * 1_000_000,
           }
         }
       end

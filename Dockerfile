@@ -2,10 +2,10 @@ FROM ruby:2.6.1
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y build-essential && apt-get clean
 RUN gem install foreman
 
-ENV GOVUK_APP_NAME rummager
+ENV GOVUK_APP_NAME search-api
 ENV REDIS_HOST redis
-ENV ELASTICSEARCH_URI http://elasticsearch:9200
-ENV PORT 3009
+ENV ELASTICSEARCH_URI http://elasticsearch5:9200
+ENV PORT 3233
 ENV RABBITMQ_HOSTS rabbitmq
 ENV RABBITMQ_VHOST /
 ENV RABBITMQ_USER guest

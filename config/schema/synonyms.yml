@@ -1,39 +1,39 @@
 ---
 # Multiple spellings
-- search: one, 1
-- search: two, 2
-- search: three, 3
-- search: four, 4
-- search: five, 5
-- search: six, 6
-- search: seven, 7
-- search: eight, 8
-- search: nine, 9
-- search: ten, 10
-- search: adviser, advisor
-- search: businesslink, business link
-- search: licence, license
-- search: practice, practise
-- search: trademark, trade mark
+- search: one, 1 => one, 1
+- search: two, 2 => two, 2
+- search: three, 3 => three, 3
+- search: four, 4 => four, 4
+- search: five, 5 => five, 5
+- search: six, 6 => six, 6
+- search: seven, 7 => seven, 7
+- search: eight, 8 => eight, 8
+- search: nine, 9 => nine, 9
+- search: ten, 10 => ten, 10
+- search: adviser, advisor => adviser, advisor
+- search: businesslink, business link => businesslink, business link
+- search: licence, license => licence, license
+- search: practice, practise => practice, practise
+- search: trademark, trade mark => trademark, trade mark
 
 # Same meanings
-- search: abroad, overseas
+- search: abroad, overseas => abroad, overseas
 - search: brexit, eu exit => brexit, eu exit
-- search: motorbike, motorcycle
-- search: opening times, opening hours
-- search: sickness, illness
+- search: motorbike, motorcycle => motorbike, motorcycle
+- search: opening times, opening hours => opening times, opening hours
+- search: sickness, illness => sickness, illness
 
 # Expanding document text to capture similar meanings.
 
 # This can affect any searches containing any of these words,
 # rather than just these whole phrases, so we need to watch out for any
 # unexpected effects.
-- index: car tax bands, vehicle tax rates
-- index: hazardous substances, dangerous substances
-- index: holiday pay, holiday entitlement
-- index: pension forecast, pension statement
-- index: tariff classification, trade tariff
-- index: tariff codes, commodity codes
+- index: car tax bands, vehicle tax rates => car tax bands, vehicle tax rates
+- index: hazardous substances, dangerous substances => hazardous substances, dangerous substances
+- index: holiday pay, holiday entitlement => holiday pay, holiday entitlement
+- index: pension forecast, pension statement => pension forecast, pension statement
+- index: tariff classification, trade tariff => tariff classification, trade tariff
+- index: tariff codes, commodity codes => tariff codes, commodity codes
 
 # Treat synonyms of differing lengths the same
 
@@ -52,19 +52,19 @@
 # This will artificially increase the size of the user's query, so "minimum
 # should match" requirements can be easily met even if only part of the phrase
 # matches.
-- search: social fund, budgeting loans, crisis loans
-- search: work experience, internship, interns
-- search: apply, applying, application, claim, claiming
-- search: bank holiday, bank holidays, public holiday, public holidays
-- search: bankrupt, bankruptcy
-- search: car, vehicle
-- search: copyright, intellectual property
-- search: death, bereavement
-- search: emissions, pollution
-- search: fees, costs, prices
-- search: reduction, discount
+- search: social fund, budgeting loans, crisis loans => social fund, budgeting loans, crisis loans
+- search: work experience, internship, interns => work experience, internship, interns
+- search: apply, applying, application, claim, claiming => apply, applying, application, claim, claiming
+- search: bank holiday, bank holidays, public holiday, public holidays => bank holiday, bank holidays, public holiday, public holidays
+- search: bankrupt, bankruptcy => bankrupt, bankruptcy
+- search: car, vehicle => car, vehicle
+- search: copyright, intellectual property => copyright, intellectual property
+- search: death, bereavement => death, bereavement
+- search: emissions, pollution => emissions, pollution
+- search: fees, costs, prices => fees, costs, prices
+- search: reduction, discount => reduction, discount
 - search: expired, out of date => expired, out of date, renew
-- search: self employed, self employment, sole trader
+- search: self employed, self employment, sole trader => self employed, self employment, sole trader
 
 # Adding terms to return relevant content that doesn't mention the original search term
 - search: how much => how much, fees, rates
@@ -197,65 +197,65 @@
 - search: sanctionsconlist, sanctionsconlist.csv, sanctionsconlist.txt, sanctionslist => financial sanctions consolidated list
 
 # Acronyms
-- search: aspp, additional paternity pay
+- search: aspp, additional paternity pay => aspp, additional paternity pay
 - search: crb, criminal records bureau => crb, criminal records bureau, dbs, disclosure and barring service
-- search: csco, carbon saving community obligation
+- search: csco, carbon saving community obligation => csco, carbon saving community obligation
 - search: cwp => cwp, cold weather
-- search: dada, dance and drama awards
-- search: dbs, disclosure and barring service
-- search: dda, disability discrimination act
-- search: dfe, department for education
-- search: dfid, department for international development
-- search: dh, department of health
+- search: dada, dance and drama awards => dada, dance and drama awards
+- search: dbs, disclosure and barring service => dbs, disclosure and barring service
+- search: dda, disability discrimination act => dda, disability discrimination act
+- search: dfe, department for education => dfe, department for education
+- search: dfid, department for international development => dfid, department for international development
+- search: dh, department of health => dh, department of health
 - search: doh => doh, department of health
-- search: dhp, discretionary housing payment
-- search: dla, disability living allowance
-- search: ea, environment agency
-- search: eccn, export control classification number
-- search: eco, energy company obligation
-- search: ecs, employer checking service
-- search: eis, enterprise investment scheme
-- search: esa, employment and support allowance
-- search: fco, foreign commonwealth office
-- search: fcoc, future character of conflict
-- search: foi, freedom of information
+- search: dhp, discretionary housing payment => dhp, discretionary housing payment
+- search: dla, disability living allowance => dla, disability living allowance
+- search: ea, environment agency => ea, environment agency
+- search: eccn, export control classification number => eccn, export control classification number
+- search: eco, energy company obligation => eco, energy company obligation
+- search: ecs, employer checking service => ecs, employer checking service
+- search: eis, enterprise investment scheme => eis, enterprise investment scheme
+- search: esa, employment and support allowance => esa, employment and support allowance
+- search: fco, foreign commonwealth office => fco, foreign commonwealth office
+- search: fcoc, future character of conflict => fcoc, future character of conflict
+- search: foi, freedom of information => foi, freedom of information
 - search: gae => gae, government authorised exchange
-- search: gdhif, green deal home improvement fund
+- search: gdhif, green deal home improvement fund => gdhif, green deal home improvement fund
 - search: gsc => gsc, government security classifications
-- search: hmcs, hmcts, hm courts tribunals service
-- search: idi, immigration directorate instructions
+- search: hmcs, hmcts, hm courts tribunals service => hmcs, hmcts, hm courts tribunals service
+- search: idi, immigration directorate instructions => idi, immigration directorate instructions
 - search: iib => iib, industrial injuries disablement benefit
 - search: ilr => ilr, indefinite leave, settle, individualised learner record
-- search: jsa, jobseeker's allowance
-- search: lha, local housing allowance
-- search: lpa, lasting power of attorney
+- search: jsa, jobseeker's allowance => jsa, jobseeker's allowance
+- search: lha, local housing allowance => lha, local housing allowance
+- search: lpa, lasting power of attorney => lpa, lasting power of attorney
 - search: nasm => nasm, noise amelioration scheme military
-- search: nea, new enterprise allowance
+- search: nea, new enterprise allowance => nea, new enterprise allowance
 - search: nin, nino => nin, nino, national insurance number
 - search: nppg => nppg, national planning practice guidance
-- search: ntl, no time limit
-- search: ogn, operational guidance note
-- search: ospp, ordinary statutory paternity pay
-- search: pcdl, professional and career development loan
-- search: pilon, payment in lieu of notice, pay in lieu of notice
+- search: ntl, no time limit => ntl, no time limit
+- search: ogn, operational guidance note => ogn, operational guidance note
+- search: ospp, ordinary statutory paternity pay => ospp, ordinary statutory paternity pay
+- search: pcdl, professional and career development loan => pcdl, professional and career development loan
+- search: pilon, payment in lieu of notice, pay in lieu of notice => pilon, payment in lieu of notice, pay in lieu of notice
 - search: ppg => ppg, pollution prevention guidance
 - search: psw => psw, post study work
-- search: rlmt, resident labour market test
-- search: rnps, register of number plate suppliers
-- search: rti, real time information
+- search: rlmt, resident labour market test => rlmt, resident labour market test
+- search: rnps, register of number plate suppliers => rnps, register of number plate suppliers
+- search: rti, real time information => rti, real time information
 - search: s2p => s2p, state second pension
-- search: sap, statutory adoption pay
-- search: sar, subject access request
+- search: sap, statutory adoption pay => sap, statutory adoption pay
+- search: sar, subject access request => sar, subject access request
 - search: sf => sf, student finance
 - search: sfe => sfe, student finance england
-- search: slc, student loans company
-- search: sms, sponsorship management system
+- search: slc, student loans company => slc, student loans company
+- search: sms, sponsorship management system => sms, sponsorship management system
 - search: spol => spol, state pension online
-- search: spp, statutory paternity pay
+- search: spp, statutory paternity pay => spp, statutory paternity pay
 - search: twov => twov, transit without visa
 - search: uj, ujm => uj, ujm, universal jobmatch
 - search: ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration
-- search: utr, unique taxpayer reference
+- search: utr, unique taxpayer reference => utr, unique taxpayer reference
 
 # Acronyms with spaces or punctuation
 - search: c v => cv
@@ -1107,7 +1107,7 @@
 - search: booklet an, an booklet => naturalisation booklet
 - search: form an, an form => form an application for naturalisation as a british citizen
 - search: guide an, an guide => naturalisation guide
-- search: will, wills
+- search: will, wills => will, wills
 
 # Common misspellings of key people, in both publishing and searching
-- both: asad, assad
+- both: asad, assad => asad, assad

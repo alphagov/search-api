@@ -5,7 +5,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     payload = generate_random_example(payload: { payload_version: 1 })
 
     expected_identifier = {
-      _type: payload["document_type"],
+      _type: "generic-document",
       _id: payload["base_path"],
       version: 1,
       version_type: "external"

@@ -7,12 +7,15 @@ RSpec.describe Search::BestBetsChecker do
         bool: {
           should: [
             { match: { exact_query: query } },
-            { match: { stemmed_query: query } }
+            { match: { stemmed_query: query } },
           ]
         }
       },
+      post_filter: {
+        bool: { must: { match: { document_type: "best_bet" } } }
+      },
       size: 1000,
-      fields: [:details, :stemmed_query_as_term],
+      _source: { includes: %i[details stemmed_query_as_term] },
     }
   end
 
@@ -23,10 +26,10 @@ RSpec.describe Search::BestBetsChecker do
   def bb_doc(query, type, best_bets, worst_bets)
     {
       "_index" => "metasearch-2014-05-14t17:27:17z-bc245536-f1c1-4f95-83e4-596199b81f0a",
-      "_type" => "best_bet",
+      "_type" => "generic-document",
       "_id" => "#{query}-#{type}",
       "_score" => 1.0,
-      "fields" => {
+      "_source" => {
         "details" => JSON.generate({
           best_bets: best_bets.map do |link, position|
             { link: link, position: position }
@@ -43,7 +46,7 @@ RSpec.describe Search::BestBetsChecker do
     @index = double("metasearch index")
     @checker = described_class.new(query, @index)
     expect(@index).to receive(:raw_search).with(
-      best_bets_query(query), "best_bet"
+      best_bets_query(query)
     ).and_return(
       bb_hits(hits)
     )

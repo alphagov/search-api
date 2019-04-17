@@ -9,7 +9,7 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
     }
 
     existing_document = {
-      "_type" => "cheddar",
+      "_source" => { "document_type" => "cheddar" },
       "_id" => "/cheese",
       "payload_version" => 8,
     }
@@ -17,7 +17,7 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
     allow_any_instance_of(described_class).to receive(:existing_document).and_return(existing_document)
 
     expected_identifier = {
-      _type: "cheddar",
+      _type: "generic-document",
       _id: "/cheese",
       version: 15,
       version_type: "external"

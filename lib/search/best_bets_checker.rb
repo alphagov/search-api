@@ -82,12 +82,12 @@ module Search
     # the best bet should appear at.
     def fetch_bets
       analyzed_users_query = " #{@metasearch_index.analyzed_best_bet_query(@query)} "
-      es_response = @metasearch_index.raw_search(lookup_payload, "best_bet")
+      es_response = @metasearch_index.raw_search(lookup_payload)
 
       es_response["hits"]["hits"].map do |hit|
-        details = JSON.parse(Array(hit["fields"]["details"]).first)
+        details = JSON.parse(Array(hit["_source"]["details"]).first)
         _bet_query, _, bet_type = hit["_id"].rpartition('-')
-        stemmed_query_as_term = Array(hit["fields"]["stemmed_query_as_term"]).first
+        stemmed_query_as_term = Array(hit["_source"]["stemmed_query_as_term"]).first
 
         # The search on the stemmed_query field is overly broad, so here we need
         # to filter out such matches where the query in the bet is not a
@@ -122,12 +122,17 @@ module Search
           bool: {
             should: [
               { match: { exact_query: @query } },
-              { match: { stemmed_query: @query } }
+              { match: { stemmed_query: @query } },
             ]
           }
         },
+        post_filter: {
+          bool: { must: { match: { document_type: "best_bet" } } }
+        },
         size: 1000,
-        fields: [:details, :stemmed_query_as_term]
+        _source: {
+          includes: %i[details stemmed_query_as_term],
+        },
       }
     end
   end

@@ -20,7 +20,7 @@ module Search
 
     def self.document_from_hit(hit, elasticsearch_types)
       Document.from_hash(
-        hit["_source"].merge("_type" => hit["_type"], "_id" => hit["_id"]),
+        hit["_source"].merge("_id" => hit["_id"]),
         elasticsearch_types,
         hit["_score"])
     end

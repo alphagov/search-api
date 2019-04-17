@@ -33,7 +33,7 @@ RSpec.describe GovukIndex::PopularityWorker do
 
     expect(@processor).to have_received(:save).with(
       having_attributes(
-        identifier: { '_id' => 'record_1', '_version_type' => 'external_gte' },
+        identifier: { '_id' => 'record_1', '_version_type' => 'external_gte', '_type' => 'generic-document' },
         document: hash_including({ 'popularity' => 0.7, 'title' => 'test_doc' })
       )
     )

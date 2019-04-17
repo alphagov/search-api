@@ -20,7 +20,9 @@ module Indexer
       log "processing: #{@old_index_name}/#{@new_index_name}"
 
       search_body = {}
-      search_body[:filter] = { term: { format: @filtered_format } } if @filtered_format
+      if @filtered_format
+        search_body[:post_filter] = { term: { format: @filtered_format } } if @filtered_format
+      end
 
       CompareEnumerator.new(@old_index_name, @new_index_name, search_body, @enum_options).each do |old_item, new_item|
         if old_item == CompareEnumerator::NO_VALUE

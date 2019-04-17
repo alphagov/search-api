@@ -1,5 +1,5 @@
 set :output, {:error => 'log/cron.error.log', :standard => 'log/cron.log'}
-bundler_prefix = ENV.fetch('BUNDLER_PREFIX', '/usr/local/bin/govuk_setenv rummager')
+bundler_prefix = ENV.fetch('BUNDLER_PREFIX', '/usr/local/bin/govuk_setenv search-api')
 job_type :rake, "cd :path && #{bundler_prefix} bundle exec rake :task :output"
 
 # Sitemap filenames are generated based on the current day and hour. Putting

@@ -31,7 +31,7 @@ RSpec.describe 'ElasticsearchLockingTest' do
 
     with_lock(index) do
       expect {
-        index.delete("edition", sample_document.link)
+        index.delete(sample_document.link)
       }.to raise_error(SearchIndices::IndexLocked)
     end
   end

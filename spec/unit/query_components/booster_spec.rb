@@ -52,8 +52,8 @@ RSpec.describe QueryComponents::Booster do
       script_score = announcement_boost[:script_score]
 
       expected_time_in_millis = 1457712000000
-      expect(expected_time_in_millis).to eq(script_score[:params][:now])
-      expect(script_score[:script]).to match(/doc\['public_timestamp'\]/)
+      expect(expected_time_in_millis).to eq(script_score[:script][:params][:now])
+      expect(script_score[:script][:inline]).to match(/doc\['public_timestamp'\]/)
     end
   end
 
@@ -96,22 +96,22 @@ RSpec.describe QueryComponents::Booster do
     expect_boost_for_field(result, :content_store_document_type, "foi_release", 0.2)
   end
 
-  def expect_format_boost(result, content_format, expected_boost_factor)
-    expect_boost_for_field(result, :format, content_format, expected_boost_factor)
+  def expect_format_boost(result, content_format, expected_weight)
+    expect_boost_for_field(result, :format, content_format, expected_weight)
   end
 
   def expect_no_format_boost(result, content_format)
     expect_no_boost_for_field(result, :format, content_format)
   end
 
-  def expect_organisation_state_boost(result, state, expected_boost_factor)
-    expect_boost_for_field(result, :organisation_state, state, expected_boost_factor)
+  def expect_organisation_state_boost(result, state, expected_weight)
+    expect_boost_for_field(result, :organisation_state, state, expected_weight)
   end
 
-  def expect_boost_for_field(result, field, value, expected_boost_factor)
+  def expect_boost_for_field(result, field, value, expected_weight)
     boost = result[:function_score][:functions].detect { |f| f[:filter][:term][field] == value }
     expect(boost).not_to be_nil, "Could not find boost for '#{field}': '#{value}'"
-    expect(expected_boost_factor).to be_within(0.001).of(boost[:boost_factor])
+    expect(expected_weight).to be_within(0.001).of(boost[:weight])
   end
 
   def expect_no_boost_for_field(result, field, value)

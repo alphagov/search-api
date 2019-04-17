@@ -57,7 +57,7 @@ RSpec.describe SitemapGenerator do
   def build_document(url, timestamp: nil, is_withdrawn: nil)
     attributes = {
       "link" => url,
-      "_type" => "some_type",
+      "document_type" => "some_type",
     }
     attributes["public_timestamp"] = timestamp if timestamp
     attributes["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?

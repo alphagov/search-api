@@ -13,7 +13,7 @@ RSpec.describe Search::QueryBuilder do
       result = builder.payload
       expect(result[:from]).to eq(11)
       expect(result[:size]).to eq(34)
-      expect(result[:fields]).to include('a_field')
+      expect(result[:_source][:includes]).to include('a_field')
       expect(result.key?(:query)).to be_truthy
     end
   end

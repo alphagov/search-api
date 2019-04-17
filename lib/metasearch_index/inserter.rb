@@ -15,7 +15,7 @@ module MetasearchIndex
 
       def identifier
         {
-          _type: 'best_bet',
+          _type: 'generic-document',
           _id: @id,
         }
       end
@@ -26,12 +26,13 @@ module MetasearchIndex
           stemmed_query: @document["stemmed_query"],
           stemmed_query_as_term: @document["stemmed_query"].presence && " #{analyzed_stemmed_query} ",
           details: @document["details"],
+          document_type: 'best_bet',
         }
       end
 
       def analyzed_stemmed_query
         analyzed_query = MetasearchIndex::Client.analyze(
-          body: @document["stemmed_query"],
+          text: @document["stemmed_query"],
           analyzer: "best_bet_stemmed_match",
         )
         analyzed_query["tokens"].map { |token_info| token_info["token"] }.join(" ")
