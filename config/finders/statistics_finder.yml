@@ -68,21 +68,13 @@ details:
     display_as_result_metadata: false
     filterable: true
     preposition: about
-  - key: research_and_statistics
+  - key: content_store_document_type
     name: Statistics
-    type: radio
+    type: research_and_statistics
     display_as_result_metadata: false
     filterable: true
     hide_facet_tag: true
     preposition: that are
-    allowed_values:
-    - label: Statistics (published)
-      value: published_statistics
-      default: true
-    - label: Statistics (upcoming)
-      value: upcoming_statistics
-    - label: Research
-      value: research
   - key: organisations
     name: Organisation
     short_name: Organisation
