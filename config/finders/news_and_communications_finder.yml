@@ -12,8 +12,9 @@ signup_content_id: 54fa4dca-4dfb-40a5-b860-127716f02e75
 details:
   document_noun: result
   filter:
-    content_purpose_supergroup:
-    - news_and_communications
+    content_purpose_subgroup:
+    - news
+    - speeches_and_statements
   format_name: News or communications
   show_summaries: true
   sort:
