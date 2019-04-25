@@ -24,13 +24,19 @@ module Search
       )
 
       payload     = process_elasticsearch_errors { builder.payload }
-      es_response = process_elasticsearch_errors { index.raw_search(payload) }
+      es_response = process_elasticsearch_errors { timed_raw_search(payload) }
       process_es_response(search_params, builder, payload, es_response)
     end
 
   private
 
     attr_reader :metasearch_index
+
+    def timed_raw_search(payload)
+      GovukStatsd.time("elasticsearch.raw_search") do
+        index.raw_search(payload)
+      end
+    end
 
     def content_index_names
       # index is a IndexForSearch object, which combines all the content indexes

@@ -6,7 +6,7 @@ module Search
       log_search_count(searches_params)
       builders = create_query_builders(searches_params)
       payloads = aggregate_payloads(builders)
-      es_responses = index.msearch(payloads)["responses"]
+      es_responses = timed_msearch(payloads)["responses"]
 
       searches_params.map.with_index do |search_params, i|
         process_es_response(search_params, builders[i], payloads[i], es_responses[i])
@@ -14,6 +14,12 @@ module Search
     end
 
   private
+
+    def timed_msearch(payloads)
+      GovukStatsd.time("elasticsearch.msearch") do
+        index.msearch(payloads)
+      end
+    end
 
     def create_query_builders(searches_params)
       searches_params.map do |search_params|
