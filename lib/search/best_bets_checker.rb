@@ -82,7 +82,7 @@ module Search
     # the best bet should appear at.
     def fetch_bets
       analyzed_users_query = " #{@metasearch_index.analyzed_best_bet_query(@query)} "
-      es_response = @metasearch_index.raw_search(lookup_payload)
+      es_response = timed_raw_search(lookup_payload)
 
       es_response["hits"]["hits"].map do |hit|
         details = JSON.parse(Array(hit["_source"]["details"]).first)
@@ -99,6 +99,12 @@ module Search
         end
       end
       .compact
+    end
+
+    def timed_raw_search(payload)
+      GovukStatsd.time("elasticsearch.best_bets_raw_search") do
+        @metasearch_index.raw_search(payload)
+      end
     end
 
     # Return a payload for a query across the best_bets type in the metasearch
