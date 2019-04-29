@@ -3,7 +3,6 @@ require 'spec_helper'
 RSpec.describe GovukIndex::PublishingEventWorker do
   before do
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
-    allow(Indexer::MetadataTagger).to receive(:metadata_for_base_path).and_return({ "cake": "cheese" })
   end
   let(:actions) { double('actions') }
 
@@ -23,8 +22,6 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
 
       subject.perform([['routing.key', payload]])
-
-      expect(Indexer::MetadataTagger).to have_received(:metadata_for_base_path).with("/cheese")
     end
 
     context "when a message to unpublish the document is received" do
