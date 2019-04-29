@@ -45,8 +45,11 @@ module GovukIndex
     delegate_to_payload :regions
     delegate_to_payload :registration
     delegate_to_payload :report_type, convert_to_array: true
+    delegate_to_payload :result
+    delegate_to_payload :service_provider
     delegate_to_payload :sift_end_date
     delegate_to_payload :sifting_status
+    delegate_to_payload :stage
     delegate_to_payload :subject
     delegate_to_payload :therapeutic_area
     delegate_to_payload :tiers_or_standalone_items
