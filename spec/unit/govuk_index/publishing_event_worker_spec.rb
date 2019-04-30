@@ -5,7 +5,8 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
     allow(Indexer::MetadataTagger).to receive(:metadata_for_base_path).and_return({ "cake": "cheese" })
   end
-  let(:actions) { double('actions') }
+
+  let(:actions) { instance_double('actions') }
 
   context 'when a single message is received' do
 
