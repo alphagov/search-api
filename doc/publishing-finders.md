@@ -31,7 +31,3 @@ For new finder content items, use the rake task `publishing_api:publish_finder`.
 ```
 FINDER_CONFIG=news_and_communications.yml EMAIL_SIGNUP_CONFIG=news_and_communications_email_signup.yml publishing_api:publish_finder
 ```
-
-**NOTE:** The `find-eu-exit-guidance-business` finder config is overwritten by a
-[shared definition in the govuk-app-deployment-secrets repo](https://github.com/alphagov/govuk-app-deployment-secrets/blob/master/shared_config/find-eu-exit-guidance-business.yml), the file committed to the
-Search API repo is a development copy.
