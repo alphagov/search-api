@@ -1,9 +1,6 @@
 require 'rummager'
 
 namespace :rummager do
-  # this is needed to support the migration to ES 2.4
-  ELASTICSEARCH_VERSION = '2.4'.freeze
-
   desc "Lists current Rummager indices, pass [all] to show inactive indices"
   task :list_indices, :all do |_, args|
     show_all = args[:all] || false
