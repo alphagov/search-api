@@ -64,7 +64,7 @@ To create an empty index:
 
 To create an empty index for all rummager indices:
 
-    RUMMAGER_INDEX=all bundle exec rake search:create_all_indices
+    SEARCH_INDEX=all bundle exec rake search:create_all_indices
 
 ### Starting elasticsearch
 If you're running the GDS development VM you need to have elasticsearch running before running the tests or starting the application.
@@ -125,7 +125,7 @@ are 'good' results for some sample queries.
 
 After changing the schema, you'll need to recreate the index. This reindexes documents from the existing index.
 
-    RUMMAGER_INDEX=all bundle exec rake search:migrate_schema
+    SEARCH_INDEX=all bundle exec rake search:migrate_schema
 
 ### Internal only APIs
 

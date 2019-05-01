@@ -35,12 +35,13 @@ def elasticsearch_uri
 end
 
 def index_names
-  case ENV["RUMMAGER_INDEX"]
+  search_index = ENV["SEARCH_INDEX"]
+  case search_index
   when "all"
     search_config.all_index_names
   when String
-    [ENV["RUMMAGER_INDEX"]]
+    [search_index]
   else
-    raise "You must specify an index name in RUMMAGER_INDEX, or 'all'"
+    raise "You must specify an index name in SEARCH_INDEX, or 'all'"
   end
 end

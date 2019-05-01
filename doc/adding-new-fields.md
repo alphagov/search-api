@@ -49,4 +49,4 @@ For the new elasticsearch configuration to take effect, you need to manually reb
 
 In the past, this was done automatically every night by the [`search_fetch_analytics`](https://github.com/alphagov/search-analytics) jenkins job, but this automation [was reverted](https://github.com/alphagov/search-analytics/commit/a5c3ac58f7198eba74ab7b5bd5555aa07490442a#diff-0484c7ea1cf547a292a2190d0c1c060b). You must run this manually.
 
-If you prefer running a rake task rather than a pre-written Jenkins job, you can run `RUMMAGER_INDEX=all CONFIRM_INDEX_MIGRATION_START=1 search:migrate_schema`.
+If you prefer running a rake task rather than a pre-written Jenkins job, you can run `SEARCH_INDEX=all CONFIRM_INDEX_MIGRATION_START=1 search:migrate_schema`.
