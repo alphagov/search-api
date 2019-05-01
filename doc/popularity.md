@@ -22,4 +22,4 @@ is run after populating the page-traffic index. As part of the migration, the
 popularity for each document will be computed from the page-traffic index and
 merged into the documents. To do this, run:
 
-    RUMMAGER_INDEX=all CONFIRM_INDEX_MIRATION_START=1 bundle exec rake rummager:migrate_schema
+    RUMMAGER_INDEX=all CONFIRM_INDEX_MIRATION_START=1 bundle exec rake search:migrate_schema

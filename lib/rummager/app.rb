@@ -300,7 +300,7 @@ class Rummager < Sinatra::Application
     prevent_access_to_govuk
     if params["delete_all"]
       # No longer supported; instead use the
-      # `rummager:switch_to_empty_index` Rake command
+      # `search:switch_to_empty_index` Rake command
       halt 400
     else
       action = current_index.delete(params["link"])
