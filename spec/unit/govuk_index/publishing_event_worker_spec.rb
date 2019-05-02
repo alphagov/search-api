@@ -4,7 +4,8 @@ RSpec.describe GovukIndex::PublishingEventWorker do
   before do
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
   end
-  let(:actions) { double('actions') }
+
+  let(:actions) { instance_double('actions') }
 
   context 'when a single message is received' do
 
