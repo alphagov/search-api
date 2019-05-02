@@ -1,9 +1,4 @@
 ---
-#
-# NOTE: This is a development copy of the find-eu-exit-guidance-business finder config
-# See https://github.com/alphagov/govuk-app-deployment-secrets/blob/master/shared_config/find-eu-exit-guidance-business.yml
-# for deployment config.
-#
 base_path: "/find-eu-exit-guidance-business"
 content_id: 42ce66de-04f3-4192-bf31-8394538e0734
 signup_content_id: 2818d67a-029a-4899-a438-a543d5c6a20d
