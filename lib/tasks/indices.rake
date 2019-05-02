@@ -1,10 +1,7 @@
 require 'rummager'
 
-namespace :rummager do
-  # this is needed to support the migration to ES 2.4
-  ELASTICSEARCH_VERSION = '2.4'.freeze
-
-  desc "Lists current Rummager indices, pass [all] to show inactive indices"
+namespace :search do
+  desc "Lists current indices, pass [all] to show inactive indices"
   task :list_indices, :all do |_, args|
     show_all = args[:all] || false
     index_names.each do |name|
@@ -204,7 +201,7 @@ You should run this task if the index schema has changed.
   desc "
   Check for any taxons that are not in a draft state for a particular format.
   Usage
-  rake 'rummager:check_for_non_draft_taxons[format_name, elasticsearch_index]'
+  rake 'search:check_for_non_draft_taxons[format_name, elasticsearch_index]'
   "
   task :check_for_non_draft_taxons, [:format, :index_name] do |_, args|
     format = args[:format]
