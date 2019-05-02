@@ -9,11 +9,11 @@ schema_name: finder_email_signup
 title: Find EU Exit guidance for your business
 description: You'll get an email each time EU Exit guidance is published.
 details:
-  email_filter_by: appear_in_find_eu_exit_guidance_business_finder
-  email_filter_name: appear_in_find_eu_exit_guidance_business_finder
+  email_filter_by: facet_groups
+  email_filter_name: facet_groups
   email_signup_choice:
-  - key: "yes"
-    radio_button_name: "yes"
+  - key: "52435175-82ed-4a04-adef-74c0199d0f46"
+    radio_button_name: "52435175-82ed-4a04-adef-74c0199d0f46"
     topic_name: "appear in find eu exit guidance business finder"
     prechecked: true
   subscription_list_title_prefix: 'Find EU Exit guidance for your business'
