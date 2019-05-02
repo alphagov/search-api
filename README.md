@@ -1,8 +1,8 @@
 # Search API
 
-**This was called "rummager", and is in a half-renamed state!  We will be cleaning this up and renaming everything.**
+**This was called "rummager", and to avoid messing up the `git blame`, there are still a lot of references to "rummager" (eg, filenames).  You can read "rummager" as "search-api".**
 
-Rummager indexes content into [elasticsearch](https://www.elastic.co/products/elasticsearch) and serves the GOV.UK search API.
+Search API indexes content into [elasticsearch](https://www.elastic.co/products/elasticsearch) and serves the GOV.UK search API.
 
 ## Live examples
 
@@ -20,18 +20,18 @@ You can also find some examples in the blog post: ["Use the search API to get us
 
 ## Technical documentation
 
-Rummager is a Sinatra application that interfaces with Elasticsearch.
+Search API is a Sinatra application that interfaces with Elasticsearch.
 
 There are two ways documents get added to a search index:
 
-1. HTTP requests to Rummager's [Documents API](doc/documents.md) (deprecated)
-2. Rummager subscribes to RabbitMQ messages from the
+1. HTTP requests to Search API's [Documents API](doc/documents.md) (deprecated)
+2. Search API subscribes to RabbitMQ messages from the
 	 [Publishing API](https://github.com/alphagov/publishing-api).
 
-*Note: Once whitehall documents are using the new indexing process, the documents API will be removed and rummager will consume only
+*Note: Once whitehall documents are using the new indexing process, the documents API will be removed and search API will consume only
 from the publishing API.*
 
-Rummager search results are weighted by [popularity](doc/popularity.md). We
+Search API search results are weighted by [popularity](doc/popularity.md). We
 rebuild the index nightly to incorporate the latest analytics.
 
 ### Nomenclature
@@ -44,7 +44,7 @@ rebuild the index nightly to incorporate the latest analytics.
 	types are defined in
 	[config/schema/elasticsearch_types](config/schema/elasticsearch_types)
 - **Index**: An [elasticsearch search
-	index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Rummager
+	index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Search API
 	maintains several separate indices (`detailed`, `government` and `govuk`), 
 	but searches return documents from all of them.
 - **Index Group**: An alias in elasticsearch that points to one index at a
@@ -62,7 +62,7 @@ To create an empty index:
 
     bundle exec rake search:create_index[<index_name>]
 
-To create an empty index for all rummager indices:
+To create an empty index for all Search API indices:
 
     SEARCH_INDEX=all bundle exec rake search:create_all_indices
 
@@ -81,27 +81,27 @@ Elasticsearch should start when you start up your dev VM, but if it doesn't, run
 
 If you're running the GDS development VM:
 
-    cd /var/govuk/govuk-puppet/development-vm && bundle exec bowl rummager
+    cd /var/govuk/govuk-puppet/development-vm && bundle exec bowl search-api
 
-Rummager should then be available at
-[rummager.dev.gov.uk](http://rummager.dev.gov.uk/search.json?q=taxes).
+Search API should then be available at
+[search-api.dev.gov.uk](http://search-api.dev.gov.uk/search.json?q=taxes).
 
 If you're not running the GDS development VM:
 
     ./startup.sh
 
 #### Workers
-Rummager uses Sidekiq to manage its indexing workload. To run
+Search API uses Sidekiq to manage its indexing workload. To run
 this in the development VM, you need to run both of these commands:
 
     # to start the Sidekiq process
     bundle exec rake jobs:work
 
-    # to start the rummager webapp
+    # to start the search-api webapp
     bundle exec mr-sparkle --force-polling -- -p 3233
 
 #### Publishing API integration
-Rummager subscribes to a RabbitMQ queue of updates from publishing-api. This still requires Sidekiq to be running.
+Search API subscribes to a RabbitMQ queue of updates from publishing-api. This still requires Sidekiq to be running.
 
 		bundle exec rake message_queue:insert_data_into_govuk
 
@@ -118,7 +118,7 @@ Using [search-performance-explorer](https://github.com/alphagov/search-performan
 you can compare the results side by side.
 
 The [health check script](https://github.com/alphagov/search-performance-explorer/blob/master/health-check.md)
-can be used to evaluate Rummager using a set of judgments about which documents
+can be used to evaluate Search API using a set of judgments about which documents
 are 'good' results for some sample queries.
 
 ### Changing the schema/Reindexing
@@ -140,7 +140,7 @@ These are used by [search admin](https://github.com/alphagov/search-admin/).
 
 - [New indexing process](doc/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](doc/schemas.md): how to work with schemas and the document types
-- [Popularity information](doc/popularity.md): Rummager uses Google Analytics
+- [Popularity information](doc/popularity.md): Search API uses Google Analytics
 	data to improve search results.
 - [Publishing advanced search](doc/advanced-search.md): Information about the advanced search finder
 - [Publishing document finders](doc/publishing-finders.md): Information about publishing finders using rake tasks
