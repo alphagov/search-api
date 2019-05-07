@@ -40,7 +40,7 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.10.0)
-    gds-api-adapters (59.0.0)
+    gds-api-adapters (59.1.0)
       addressable
       link_header
       null_logger
@@ -231,7 +231,7 @@ GEM
       thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.5)
+    unf_ext (0.0.7.6)
     unicode-display_width (1.5.0)
     unicorn (5.4.1)
       kgio (~> 2.6)
@@ -255,7 +255,7 @@ DEPENDENCIES
   bunny-mock (~> 1.7)
   climate_control (~> 0.2)
   elasticsearch (~> 5)
-  gds-api-adapters (~> 59.0)
+  gds-api-adapters (~> 59.1)
   govuk-content-schema-test-helpers (~> 1.6.1)
   govuk-lint (~> 3.11.1)
   govuk_app_config (~> 1.15.1)
