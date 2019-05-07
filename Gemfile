@@ -5,7 +5,7 @@ gem "elasticsearch", "~> 5"
 gem "gds-api-adapters", "~> 59.0"
 gem "govuk_app_config", "~> 1.15.1"
 gem "govuk_document_types", "~> 0.9.0"
-gem "govuk-lint", "~> 3.11.0"
+gem "govuk-lint", "~> 3.11.1"
 gem "irb", "~> 1.0", require: false
 gem "logging", "~> 2.2.2"
 gem "govuk_sidekiq", "~> 3.0.3"
