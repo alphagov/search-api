@@ -3,6 +3,8 @@ set :root, File.dirname(__FILE__)
 
 require 'rummager'
 require 'routes/content'
+require 'govuk_app_config'
+require 'healthcheck/sidekiq_queue_latencies_check'
 
 class Rummager < Sinatra::Application
   class AttemptToUseDefaultMainstreamIndex < StandardError; end
@@ -325,6 +327,17 @@ class Rummager < Sinatra::Application
       }
     end
     status.to_json
+  end
+
+  # Healthcheck using govuk_app_config for Icinga alerts
+  # See govuk_app_config/healthcheck for guidance on adding checks.
+  get '/healthcheck' do
+    checks = [
+      GovukHealthcheck::SidekiqRedis,
+      Healthcheck::SidekiqQueueLatenciesCheck
+    ]
+
+    GovukHealthcheck.healthcheck(checks).to_json
   end
 
   # these endpoints are used to capture any usage of old endpoints which relied on a default index.
