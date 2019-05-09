@@ -49,7 +49,7 @@ GEM
       rest-client (~> 2.0)
     govuk-content-schema-test-helpers (1.6.1)
       json-schema (~> 2.8.0)
-    govuk-lint (3.11.1)
+    govuk-lint (3.11.2)
       rubocop (~> 0.64)
       rubocop-rspec (~> 1.28)
       scss_lint
@@ -257,7 +257,7 @@ DEPENDENCIES
   elasticsearch (~> 5)
   gds-api-adapters (~> 59.2)
   govuk-content-schema-test-helpers (~> 1.6.1)
-  govuk-lint (~> 3.11.1)
+  govuk-lint (~> 3.11.2)
   govuk_app_config (~> 1.16.0)
   govuk_document_types (~> 0.9.0)
   govuk_message_queue_consumer (~> 3.4.0)
