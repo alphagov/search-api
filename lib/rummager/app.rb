@@ -5,6 +5,7 @@ require 'rummager'
 require 'routes/content'
 require 'govuk_app_config'
 require 'healthcheck/sidekiq_queue_latencies_check'
+require 'healthcheck/elasticsearch_connectivity_check'
 
 class Rummager < Sinatra::Application
   class AttemptToUseDefaultMainstreamIndex < StandardError; end
@@ -334,7 +335,8 @@ class Rummager < Sinatra::Application
   get '/healthcheck' do
     checks = [
       GovukHealthcheck::SidekiqRedis,
-      Healthcheck::SidekiqQueueLatenciesCheck
+      Healthcheck::SidekiqQueueLatenciesCheck,
+      Healthcheck::ElasticsearchConnectivityCheck,
     ]
 
     GovukHealthcheck.healthcheck(checks).to_json

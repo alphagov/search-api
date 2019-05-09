@@ -10,6 +10,7 @@ RSpec.describe 'HealthcheckTest' do
     # rubocop:disable RSpec/AnyInstance
     allow_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(queues)
     allow_any_instance_of(Sidekiq::Queue).to receive(:latency).and_return(queue_latency)
+    allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_return('status' => 'green')
     # rubocop:enable RSpec/AnyInstance
   end
 
@@ -24,6 +25,32 @@ RSpec.describe 'HealthcheckTest' do
         get "/healthcheck"
 
         expect(parsed_response['status']).to eq 'critical'
+      end
+    end
+  end
+
+  describe "#elasticsearch_connectivity check" do
+    context "when elasticsearch CANNOT be connected to" do
+      before do
+        # rubocop:disable RSpec/AnyInstance
+        allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_raise(Faraday::ConnectionFailed)
+        # rubocop:enable RSpec/AnyInstance
+      end
+
+      it "returns a critical status" do
+        get "/healthcheck"
+
+        expect(parsed_response['status']).to eq 'critical'
+        expect(parsed_response.dig('checks', 'elasticsearch_connectivity', 'status')).to eq 'critical'
+      end
+    end
+
+    context "when elasticsearch CAN be connected to" do
+      it "returns an OK status" do
+        get "/healthcheck"
+
+        expect(parsed_response['status']).to eq 'ok'
+        expect(parsed_response.dig('checks', 'elasticsearch_connectivity', 'status')).to eq 'ok'
       end
     end
   end
