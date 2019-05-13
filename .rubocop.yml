@@ -3,9 +3,6 @@ require: rubocop-rspec
 Style/ConditionalAssignment:
   Enabled: false
 
-Performance/TimesMap:
-  Enabled: false
-
 AllCops:
   TargetRubyVersion: 2.3
 
