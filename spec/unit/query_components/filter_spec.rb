@@ -13,6 +13,10 @@ RSpec.describe QueryComponents::Filter do
     SearchParameterParser::TextFieldFilter.new(field_name, values, :filter, multivalue_query)
   end
 
+  def nested_filter(field_name, values, multivalue_query: :any)
+    SearchParameterParser::NestedFieldFilter.new(field_name, values, :filter, multivalue_query)
+  end
+
   def reject_filter(field_name, values, multivalue_query: :any)
     SearchParameterParser::TextFieldFilter.new(field_name, values, :reject, multivalue_query)
   end
@@ -73,7 +77,7 @@ RSpec.describe QueryComponents::Filter do
     end
   end
 
-  context "with all filter and rejects" do
+  context "with all filter and reGjects" do
     it "have correct filter" do
       builder = described_class.new(
         make_search_params(
@@ -129,6 +133,29 @@ RSpec.describe QueryComponents::Filter do
           must: [
             { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
             { "terms" => { "mainstream_browse_pages" => %w[levitation] } },
+          ].compact
+        }
+      )
+    end
+  end
+
+  context "with nested filter values" do
+    it "nests terms queries within must (AND) clauses" do
+      builder = described_class.new(
+        make_search_params(
+          [
+            nested_filter("facet_values", { "and" => { "0" => %W(A B), "1" => %W(C D) } }),
+          ],
+        )
+      )
+
+      result = builder.payload
+
+      expect(result).to eq(
+        bool: {
+          must: [
+            { "terms" => { "facet_values" => %W(A B) } },
+            { "terms" => { "facet_values" => %W(C D) } },
           ].compact
         }
       )

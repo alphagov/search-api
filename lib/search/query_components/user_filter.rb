@@ -11,7 +11,7 @@ module QueryComponents
 
     def selected_queries(excluding = [])
       remaining = exclude_fields_from_filters(excluding, filters)
-      remaining.map { |filter| filter_hash(filter) }
+      remaining.map { |filter| filter_hash(filter) }.flatten
     end
 
     def rejected_queries(excluding = [])
@@ -31,20 +31,33 @@ module QueryComponents
       field_name = filter.field_name
       values = filter.values
 
-      case filter.type
-      when "string"
-        if filter.multivalue_query == :any
-          es_filters << terms_filter(field_name, values)
-        else # :all
-          es_filters << bool_must_filter(field_name, values)
-        end
-      when "date"
-        es_filters << date_filter(field_name, values.first)
+      # eg. values = `{"and"=>{"0"=>["a", "b"], "1"=>["c", "d"]}}`
+      if values.is_a?(Hash) && values.keys == %W(and)
+        es_filters + nested_filters(field_name, values)
       else
-        raise "Filter type not supported"
+        es_filters << send("#{filter.type}_filter_hash", filter, field_name, values)
+        combine_by_should(es_filters)
       end
+    end
 
-      combine_by_should(es_filters)
+    def date_filter_hash(_, field_name, values)
+      date_filter(field_name, values.first)
+    end
+
+    def string_filter_hash(filter, field_name, values)
+      if filter.multivalue_query == :any
+        terms_filter(field_name, values)
+      else # :all
+        bool_must_filter(field_name, values)
+      end
+    end
+
+    def nested_filters(field_name, values)
+      [].tap do |ary|
+        values.fetch("and", []).each do |_, nested_values|
+          ary << terms_filter(field_name, nested_values)
+        end
+      end
     end
 
     def exclude_fields_from_filters(excluded_field_names, filters)

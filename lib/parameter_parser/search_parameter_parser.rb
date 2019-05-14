@@ -332,6 +332,17 @@ private
     end
   end
 
+  class NestedFieldFilter < Filter
+    def initialize(field_name, values, operation, multivalue_query)
+      super
+      @values = values
+    end
+
+    def type
+      "nested"
+    end
+  end
+
   def filter_name_lookup(name)
     FILTER_NAME_MAPPING.fetch(name, name)
   end
