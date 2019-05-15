@@ -60,7 +60,13 @@ private
   end
 
   def fetch_tokens_for_analyzer(query, analyzer)
-    result = client.indices.analyze(index: 'government_test', analyzer: analyzer.to_s, text: query)
+    result = client.indices.analyze(
+      index: 'government_test',
+      body: {
+        analyzer: analyzer.to_s,
+        text: query,
+      }
+    )
     mappings = result['tokens']
     mappings.map { |mapping| mapping['token'] }
   end

@@ -5,7 +5,10 @@ module MetasearchIndex
     end
 
     def analyze(params)
-      client.indices.analyze(params.merge(index: index_name))
+      client.indices.analyze(
+        index: index_name,
+        body: params,
+      )
     end
 
   private

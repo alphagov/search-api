@@ -184,7 +184,13 @@ module SearchIndices
     # duplicated in document_preparer.rb
     def analyzed_best_bet_query(query)
       begin
-        analyzed_query = @client.indices.analyze(index: @index_name, text: query, analyzer: "best_bet_stemmed_match")
+        analyzed_query = @client.indices.analyze(
+          index: @index_name,
+          body: {
+            text: query,
+            analyzer: "best_bet_stemmed_match",
+          },
+        )
 
         analyzed_query["tokens"].map { |token_info|
           token_info["token"]

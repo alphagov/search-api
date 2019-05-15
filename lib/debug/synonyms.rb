@@ -28,11 +28,11 @@ module Debug
       end
 
       def analyze_query(query)
-        client.indices.analyze text: query, analyzer: 'with_search_synonyms', index: index
+        client.indices.analyze index: index, body: { text: query, analyzer: 'with_search_synonyms' }
       end
 
       def analyze_index(query)
-        client.indices.analyze text: query, analyzer: 'with_index_synonyms', index: index
+        client.indices.analyze index: index, body: { text: query, analyzer: 'with_index_synonyms' }
       end
     end
   end
