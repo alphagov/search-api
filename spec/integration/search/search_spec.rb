@@ -165,6 +165,46 @@ RSpec.describe 'SearchTest' do
     end
   end
 
+  describe "boolean filtering" do
+    context "when boolean filters are not true or false" do
+      it "returns an error" do
+        get "/search?filter_is_withdrawn=blah"
+
+        expect(last_response.status).to eq(422)
+        expect(parsed_response).to eq({ "error" => "is_withdrawn requires a boolean (true or false)" })
+      end
+    end
+
+    context "when an invalid filter is used" do
+      it "returns an error" do
+        get "/search?filter_has_some_very_incorrect_filter=false"
+
+        expect(last_response.status).to eq(422)
+        expect(parsed_response).to eq({ "error" => "\"has_some_very_incorrect_filter\" is not a valid filter field" })
+      end
+    end
+
+    context "when a valid filter is used" do
+      before do
+        build_sample_documents_on_content_indices(documents_per_index: 2)
+        commit_ministry_of_magic_document(has_official_document: true)
+        commit_treatment_of_dragons_document(has_official_document: false)
+      end
+
+      it "can filter on boolean fields = true" do
+        get "/search?filter_has_official_document=true"
+
+        expect(result_links.sort).to eq(%w(/ministry-of-magic-site))
+      end
+
+      it "can filter on boolean fields = false" do
+        get "/search?filter_has_official_document=false"
+
+        expect(result_links.sort).to eq(%w(/dragon-guide))
+      end
+    end
+  end
+
   it "only contains fields which are present" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 

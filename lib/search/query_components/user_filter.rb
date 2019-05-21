@@ -40,6 +40,8 @@ module QueryComponents
         end
       when "date"
         es_filters << date_filter(field_name, values.first)
+      when "boolean"
+        es_filters << bool_must_filter(field_name, values)
       else
         raise "Filter type not supported"
       end

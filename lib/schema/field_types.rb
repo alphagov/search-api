@@ -22,7 +22,7 @@ private
       end
 
       filter_type = value.delete("filter_type")
-      unless [nil, "text", "date"].include? filter_type
+      unless [nil, "text", "date", "boolean"].include? filter_type
         raise %{Invalid value for "filter_type" ("#{filter_type}") in field type "#{type_name}" in "#{types_file_path}"}
       end
 

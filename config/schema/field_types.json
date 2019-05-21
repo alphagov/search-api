@@ -166,6 +166,7 @@
 
   "boolean": {
     "description": "A boolean value which can be returned and used for filtering and aggregating",
+    "filter_type": "boolean",
     "es_config": {
       "type": "boolean",
       "include_in_all": false
