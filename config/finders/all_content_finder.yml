@@ -11,6 +11,9 @@ description: Find content from government
 details:
   default_documents_per_page: 20
   document_noun: result
+  reject:
+    link:
+      - "/search/all"
   format_name: Documents
   hide_facets_by_default: true
   facets:
