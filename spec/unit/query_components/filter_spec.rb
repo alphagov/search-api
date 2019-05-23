@@ -9,6 +9,10 @@ RSpec.describe QueryComponents::Filter do
     SearchParameterParser::DateFieldFilter.new(field_name, values, :filter, :any)
   end
 
+  def make_boolean_filter_param(field_name, values)
+    SearchParameterParser::BooleanFieldFilter.new(field_name, values, :filter, :any)
+  end
+
   def text_filter(field_name, values, multivalue_query: :any)
     SearchParameterParser::TextFieldFilter.new(field_name, values, :filter, multivalue_query)
   end
@@ -36,6 +40,16 @@ RSpec.describe QueryComponents::Filter do
       result = builder.payload
 
       expect(result).to eq(bool: { must: ["range" => { "field_with_date" => { "from" => "2014-04-01T00:00:00+00:00", "to" => "2014-04-02T00:00:00+00:00" } }] })
+    end
+
+    it "appends the correct boolean filters" do
+      builder = described_class.new(
+        make_search_params([make_boolean_filter_param("field_with_boolean", %w(true))])
+      )
+
+      result = builder.payload
+
+      expect(result).to eq({ bool: { must: [{ bool: { must: [{ term: { "field_with_boolean" => "true" } }] } }] } })
     end
   end
 

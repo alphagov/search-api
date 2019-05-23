@@ -225,6 +225,7 @@ private
     filter_class = {
       "text" => TextFieldFilter,
       "date" => DateFieldFilter,
+      "boolean" => BooleanFieldFilter,
     }.fetch(filter_type)
 
     filter = filter_class.new(field_name, values, operation, multivalue_query)
@@ -329,6 +330,30 @@ private
   class TextFieldFilter < Filter
     def type
       "string"
+    end
+  end
+
+  class BooleanFieldFilter < Filter
+    def initialize(field_name, values, operation, multivalue_query)
+      super
+      @values = parse_bool(values, field_name)
+    end
+
+    def type
+      "boolean"
+    end
+
+  private
+
+    def parse_bool(values, field_name)
+      values.map { |value|
+        if %w(true false).include?(value)
+          value
+        else
+          @errors << %{#{field_name} requires a boolean (true or false)}
+          'false'
+        end
+      }
     end
   end
 
