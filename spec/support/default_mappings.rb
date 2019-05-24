@@ -5,12 +5,12 @@ module Fixtures
         "generic-document" => {
           "_all" => { "enabled" => true },
           "properties" => {
-            "title" => { "type" => "string", "index" => "analyzed" },
-            "description" => { "type" => "string", "index" => "analyzed" },
-            "format" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
-            "link" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
-            "indexable_content" => { "type" => "string", "index" => "analyzed" },
-            "mainstream_browse_pages" => { "type" => "string", "index" => "not_analyzed", "include_in_all" => false },
+            "title" => { "type" => "text", "index" => true },
+            "description" => { "type" => "text", "index" => true },
+            "format" => { "type" => "keyword", "index" => true, "include_in_all" => false },
+            "link" => { "type" => "keyword", "index" => true, "include_in_all" => false },
+            "indexable_content" => { "type" => "text", "index" => true },
+            "mainstream_browse_pages" => { "type" => "keyword", "index" => true, "include_in_all" => false },
           }
         }
       }
@@ -41,7 +41,7 @@ module Fixtures
             }
           ],
           "properties" => {
-            "path_components" => { "type" => "string", "index" => "not_analyzed" }
+            "path_components" => { "type" => "keyword", "index" => true }
           }
         }
       }
