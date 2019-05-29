@@ -40,7 +40,7 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.10.0)
-    gds-api-adapters (59.2.1)
+    gds-api-adapters (59.4.0)
       addressable
       link_header
       null_logger
@@ -136,7 +136,7 @@ GEM
     pry-byebug (3.7.0)
       byebug (~> 11.0)
       pry (~> 0.10)
-    public_suffix (3.0.3)
+    public_suffix (3.1.0)
     rack (2.0.7)
     rack-cache (1.9.0)
       rack (>= 0.4)
@@ -255,7 +255,7 @@ DEPENDENCIES
   bunny-mock (~> 1.7)
   climate_control (~> 0.2)
   elasticsearch (~> 6)
-  gds-api-adapters (~> 59.2)
+  gds-api-adapters (~> 59.4)
   govuk-content-schema-test-helpers (~> 1.6.1)
   govuk-lint (~> 3.11.2)
   govuk_app_config (~> 1.16.3)
