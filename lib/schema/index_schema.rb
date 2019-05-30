@@ -18,6 +18,7 @@ class IndexSchema
     end
     mappings = {
       "generic-document" => {
+        "_all" => { "enabled" => false },
         "properties" => properties
       }
     }
