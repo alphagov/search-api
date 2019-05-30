@@ -11,7 +11,7 @@ signup_content_id: 119db584-0ae7-45e4-8f3a-fd79316c6921
 title: Research and statistics
 phase: beta
 details:
-  beta_message: "link to survey"
+  beta_message: Research and statistics search is new - <a href="https://www.smartsurvey.co.uk/s/research-statistics-search-survey/">tell us what you think</a>
   document_noun: result
   filter: {}
   format_name: statistic
