@@ -3,14 +3,13 @@ module Fixtures
     def default_mappings
       {
         "generic-document" => {
-          "_all" => { "enabled" => true },
           "properties" => {
             "title" => { "type" => "text", "index" => true },
             "description" => { "type" => "text", "index" => true },
-            "format" => { "type" => "keyword", "index" => true, "include_in_all" => false },
-            "link" => { "type" => "keyword", "index" => true, "include_in_all" => false },
+            "format" => { "type" => "keyword", "index" => true },
+            "link" => { "type" => "keyword", "index" => true },
             "indexable_content" => { "type" => "text", "index" => true },
-            "mainstream_browse_pages" => { "type" => "keyword", "index" => true, "include_in_all" => false },
+            "mainstream_browse_pages" => { "type" => "keyword", "index" => true },
           }
         }
       }
@@ -19,7 +18,6 @@ module Fixtures
     def page_traffic_mappings
       {
         "page-traffic" => {
-          "_all" => { "enabled" => false },
           "dynamic_templates" => [
             {
               "view_count" => {
