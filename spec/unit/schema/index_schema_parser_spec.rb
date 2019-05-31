@@ -14,7 +14,7 @@ RSpec.describe IndexSchemaParser do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
       elasticsearch_types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
       @index_schemas = described_class.parse_all(schema_dir, field_definitions, elasticsearch_types)
-      @identifier_es_config = { "type" => "string", "index" => "not_analyzed", "include_in_all" => false }
+      @identifier_es_config = { "type" => "keyword", "index" => true, "include_in_all" => false }
     end
 
     it "have a schema for the govuk index" do
