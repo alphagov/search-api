@@ -53,10 +53,10 @@ module QueryComponents
       # individual fields
       [
         dis_max_query([
-          minimum_should_match_default_analyzer("title.no_stop", search_params.query, type: :phrase, boost: PHRASE_MATCH_TITLE_BOOST),
-          minimum_should_match_default_analyzer("acronym.no_stop", search_params.query, type: :phrase, boost: PHRASE_MATCH_ACRONYM_BOOST),
-          minimum_should_match_default_analyzer("description.no_stop", search_params.query, type: :phrase, boost: PHRASE_MATCH_DESCRIPTION_BOOST),
-          minimum_should_match_default_analyzer("indexable_content.no_stop", search_params.query, type: :phrase, boost: PHRASE_MATCH_INDEXABLE_CONTENT_BOOST)
+          match_phrase_default_analyzer("title.no_stop", search_params.query, PHRASE_MATCH_TITLE_BOOST),
+          match_phrase_default_analyzer("acronym.no_stop", search_params.query, PHRASE_MATCH_ACRONYM_BOOST),
+          match_phrase_default_analyzer("description.no_stop", search_params.query, PHRASE_MATCH_DESCRIPTION_BOOST),
+          match_phrase_default_analyzer("indexable_content.no_stop", search_params.query, PHRASE_MATCH_INDEXABLE_CONTENT_BOOST)
         ])
       ]
     end
@@ -131,20 +131,12 @@ module QueryComponents
       end
     end
 
-    # FIXME: this method is basically the same as #minimum_should_match, but
-    # doesn't override the analyzer.
-    # Boost is only used for quoted phrase queries.
-    # Minimum should match is only used for the optional id code query
-    # Operator doesn't seem to be used.
-    def minimum_should_match_default_analyzer(field_name, query, type: :boolean, boost: 1.0, minimum_should_match: MINIMUM_SHOULD_MATCH, operator: :or)
+    def match_phrase_default_analyzer(field_name, query, boost)
       {
-        match: {
+        match_phrase: {
           field_name => {
-            type: type,
             boost: boost,
             query: query,
-            minimum_should_match: minimum_should_match,
-            operator: operator,
           }
         }
       }
