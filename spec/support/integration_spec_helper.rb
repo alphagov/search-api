@@ -69,7 +69,7 @@ module IntegrationSpecHelper
     Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_elasticsearch_types)
   end
 
-  def insert_document(index_name, attributes, id: attributes["link"], type: "edition", version: nil)
+  def insert_document(index_name, attributes, id: nil, type: "edition", version: nil)
     version_details =
       if version
         {
@@ -80,16 +80,18 @@ module IntegrationSpecHelper
         {}
       end
 
-    id ||= "/test/#{SecureRandom.uuid}"
-    attributes['document_type'] ||= type
-    attributes['link'] ||= id
+    atts = attributes.symbolize_keys
+
+    id ||= atts[:link] || "/test/#{SecureRandom.uuid}"
+    atts[:document_type] ||= type
+    atts[:link] ||= id
 
     client.index(
       {
         index: index_name,
         id: id,
         type: 'generic-document',
-        body: attributes,
+        body: atts,
       }.merge(version_details)
     )
 
@@ -106,15 +108,21 @@ module IntegrationSpecHelper
     commit_index index
   end
 
-  def commit_document(index_name, attributes, id: attributes["link"], type: "edition")
-    return_id = insert_document(index_name, attributes, id: id, type: type)
+  def commit_document(index_name, attributes, id: nil, type: "edition")
+    atts = attributes.symbolize_keys
+    id ||= atts[:link]
+
+    return_id = insert_document(index_name, atts, id: id, type: type)
     commit_index(index_name)
     return_id
   end
 
-  def update_document(index_name, attributes, id: attributes["link"], type: "edition")
-    attributes['document_type'] ||= type
-    client.update(index: index_name, id: id, type: 'generic-document', body: { doc: attributes })
+  def update_document(index_name, attributes, id: nil, type: "edition")
+    atts = attributes.symbolize_keys
+    atts[:document_type] ||= type
+    id ||= atts[:link]
+
+    client.update(index: index_name, id: id, type: 'generic-document', body: { doc: atts })
     commit_index(index_name)
   end
 
