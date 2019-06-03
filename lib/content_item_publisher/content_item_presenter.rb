@@ -15,7 +15,7 @@ module ContentItemPublisher
         details: content_item["details"],
         document_type: content_item["document_type"],
         locale: "en",
-        phase: "live",
+        phase: content_item["phase"] || "live",
         public_updated_at: timestamp,
         publishing_app: "search-api",
         rendering_app: "finder-frontend",
