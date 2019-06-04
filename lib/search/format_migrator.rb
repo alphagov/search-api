@@ -6,12 +6,15 @@ module Search
 
     def call
       {
-        indices: {
-          indices: SearchConfig.instance.content_index_names,
-          query: excluding_formats,
-          no_match_query: only_formats
+        bool: {
+          minimum_should_match: 1,
+          should: [excluding_formats, only_formats]
         }
       }
+    end
+
+    def migrated_indices
+      SearchConfig.instance.new_content_index.real_index_names
     end
 
     def migrated_formats
@@ -22,23 +25,41 @@ module Search
 
     def excluding_formats
       options = {}
-      options[:must] = @base if @base
-      options[:must_not] = { terms: { format: migrated_formats } } if migrated_formats.any?
-      { bool: options.any? ? options : { must: { match_all: {} } } }
+      options[:must] = base
+
+      if migrated_formats.any?
+        options[:must_not] = [
+          { terms: { _index: migrated_indices } },
+          { terms: { format: migrated_formats } }
+        ]
+      else
+        options[:must_not] = { terms: { _index: migrated_indices } }
+      end
+
+      { bool: options }
     end
 
     def only_formats
-      return 'none' if migrated_formats.empty?
+      return { bool: { must_not: { match_all: {} } } } if migrated_formats.empty?
+
       {
         bool: {
-          must:
-            if @base
-              [@base, { terms: { format: migrated_formats } }]
-            else
-              { terms: { format: migrated_formats } }
-            end
+          must: [
+            base,
+            { terms: { _index: migrated_indices } },
+            { terms: { format: migrated_formats } }
+          ],
         },
       }
+    end
+
+    def base
+      # {} isn't legal in a must
+      if @base && @base != {}
+        @base
+      else
+        { match_all: {} }
+      end
     end
   end
 end

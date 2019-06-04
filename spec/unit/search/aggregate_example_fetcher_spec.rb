@@ -12,11 +12,20 @@ RSpec.describe Search::AggregateExampleFetcher do
         bool: {
           must: [
             { term: { field => value } },
-            { indices: {
-                indices: SearchConfig.instance.content_index_names,
-                query: { bool: { must: { match_all: {} } } },
-                no_match_query: 'none'
-              } }
+            {
+              bool: {
+                minimum_should_match: 1,
+                should: [
+                  {
+                    bool: {
+                      must: { match_all: {} },
+                      must_not: { terms: { _index: %w(govuk_test) } }
+                    }
+                  },
+                  { bool: { must_not: { match_all: {} } } }
+                ]
+              }
+            }
           ]
         },
       },
@@ -69,6 +78,12 @@ RSpec.describe Search::AggregateExampleFetcher do
     allow(index).to receive(:schema).and_return(schema)
     index
   end
+
+  # rubocop:disable RSpec/AnyInstance
+  before do
+    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
+  end
+  # rubocop:enable RSpec/AnyInstance
 
   context "#prepare_response" do
     it "map an empty response" do
