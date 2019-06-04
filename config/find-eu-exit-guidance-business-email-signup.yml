@@ -9,13 +9,363 @@ schema_name: finder_email_signup
 title: Find EU Exit guidance for your business
 description: You'll get an email each time EU Exit guidance is published.
 details:
-  email_filter_by: facet_groups
-  email_filter_name: facet_groups
-  email_signup_choice:
-  - key: "52435175-82ed-4a04-adef-74c0199d0f46"
-    radio_button_name: "52435175-82ed-4a04-adef-74c0199d0f46"
-    topic_name: "appear in find eu exit guidance business finder"
-    prechecked: true
+  email_filter_facets:
+  - facet_id: facet_groups
+    facet_name: Facet_groups
+    facet_choices:
+    - key: 52435175-82ed-4a04-adef-74c0199d0f46
+      radio_button_name: 52435175-82ed-4a04-adef-74c0199d0f46
+      topic_name: appear in find eu exit guidance business finder
+      prechecked: true
+  - facet_id: sector_business_area
+    facet_name: Sector / Business area
+    facet_choices:
+    - key: accommodation
+      radio_button_name: Accommodation
+      topic_name: Accommodation
+      prechecked: false
+    - key: aerospace
+      radio_button_name: Aerospace
+      topic_name: Aerospace
+      prechecked: false
+    - key: agriculture
+      radio_button_name: Agriculture and forestry (including wholesale)
+      topic_name: Agriculture and forestry (including wholesale)
+      prechecked: false
+    - key: air-freight-air-passenger-services
+      radio_button_name: Air freight and air passenger services
+      topic_name: Air freight and air passenger services
+      prechecked: false
+    - key: arts-culture-heritage
+      radio_button_name: Arts, culture and heritage
+      topic_name: Arts, culture and heritage
+      prechecked: false
+    - key: automotive
+      radio_button_name: Automotive
+      topic_name: Automotive
+      prechecked: false
+    - key: auxiliary-activities
+      radio_button_name: Auxiliary activities
+      topic_name: Auxiliary activities
+      prechecked: false
+    - key: charities
+      radio_button_name: Charities
+      topic_name: Charities
+      prechecked: false
+    - key: chemicals
+      radio_button_name: Chemicals
+      topic_name: Chemicals
+      prechecked: false
+    - key: clothing-consumer-goods
+      radio_button_name: Clothing and consumer goods
+      topic_name: Clothing and consumer goods
+      prechecked: false
+    - key: clothing-consumer-goods-manufacturing
+      radio_button_name: Clothing and consumer goods manufacture
+      topic_name: Clothing and consumer goods manufacture
+      prechecked: false
+    - key: computer-services
+      radio_button_name: Digital, technology and computer services
+      topic_name: Digital, technology and computer services
+      prechecked: false
+    - key: construction-contracting
+      radio_button_name: Construction
+      topic_name: Construction
+      prechecked: false
+    - key: creative-industries
+      radio_button_name: Creative industries
+      topic_name: Creative industries
+      prechecked: false
+    - key: defence
+      radio_button_name: Defence
+      topic_name: Defence
+      prechecked: false
+    - key: education
+      radio_button_name: Education
+      topic_name: Education
+      prechecked: false
+    - key: electricity
+      radio_button_name: Electricity
+      topic_name: Electricity
+      prechecked: false
+    - key: electronics-parts-machinery
+      radio_button_name: Electronics, parts and machinery
+      topic_name: Electronics, parts and machinery
+      prechecked: false
+    - key: environmental-services
+      radio_button_name: Environmental services
+      topic_name: Environmental services
+      prechecked: false
+    - key: financial-services
+      radio_button_name: Financial services
+      topic_name: Financial services
+      prechecked: false
+    - key: fisheries
+      radio_button_name: Fisheries (including wholesale)
+      topic_name: Fisheries (including wholesale)
+      prechecked: false
+    - key: food-and-drink
+      radio_button_name: Food, drink and tobacco (retail and wholesale)
+      topic_name: Food, drink and tobacco (retail and wholesale)
+      prechecked: false
+    - key: food-drink-tobacco
+      radio_button_name: Food, drink and tobacco (processing)
+      topic_name: Food, drink and tobacco (processing)
+      prechecked: false
+    - key: furniture-manufacture
+      radio_button_name: Furniture manufacture
+      topic_name: Furniture manufacture
+      prechecked: false
+    - key: gambling
+      radio_button_name: Gambling
+      topic_name: Gambling
+      prechecked: false
+    - key: health-social-care-services
+      radio_button_name: Health and social care services
+      topic_name: Health and social care services
+      prechecked: false
+    - key: installation-servicing-repair
+      radio_button_name: Installation, servicing and repair
+      topic_name: Installation, servicing and repair
+      prechecked: false
+    - key: insurance
+      radio_button_name: Insurance
+      topic_name: Insurance
+      prechecked: false
+    - key: justice-prisons
+      radio_button_name: Justice including prisons
+      topic_name: Justice including prisons
+      prechecked: false
+    - key: marine
+      radio_button_name: Marine
+      topic_name: Marine
+      prechecked: false
+    - key: marine-transport
+      radio_button_name: Marine transport
+      topic_name: Marine transport
+      prechecked: false
+    - key: broadcasting
+      radio_button_name: Media and broadcasting
+      topic_name: Media and broadcasting
+      prechecked: false
+    - key: medical-technology
+      radio_button_name: Medical technology
+      topic_name: Medical technology
+      prechecked: false
+    - key: metals-manufacture
+      radio_button_name: Metals manufacture
+      topic_name: Metals manufacture
+      prechecked: false
+    - key: mining
+      radio_button_name: Mining
+      topic_name: Mining
+      prechecked: false
+    - key: motor-trades
+      radio_button_name: Motor trade
+      topic_name: Motor trade
+      prechecked: false
+    - key: non-metal-materials-manufacture
+      radio_button_name: Non-metal materials manufacture
+      topic_name: Non-metal materials manufacture
+      prechecked: false
+    - key: nuclear
+      radio_button_name: Nuclear
+      topic_name: Nuclear
+      prechecked: false
+    - key: other-advanced-manufacturing
+      radio_button_name: Other advanced manufacturing
+      topic_name: Other advanced manufacturing
+      prechecked: false
+    - key: oil-gas-coal
+      radio_button_name: Oil, gas and coal
+      topic_name: Oil, gas and coal
+      prechecked: false
+    - key: other-energy
+      radio_button_name: Other energy
+      topic_name: Other energy
+      prechecked: false
+    - key: other-manufacturing
+      radio_button_name: Other manufacturing
+      topic_name: Other manufacturing
+      prechecked: false
+    - key: personal-services
+      radio_button_name: Personal services
+      topic_name: Personal services
+      prechecked: false
+    - key: pharmaceuticals
+      radio_button_name: Pharmaceuticals
+      topic_name: Pharmaceuticals
+      prechecked: false
+    - key: ports-airports
+      radio_button_name: Ports and airports
+      topic_name: Ports and airports
+      prechecked: false
+    - key: postal-courier-services
+      radio_button_name: Postal and courier services
+      topic_name: Postal and courier services
+      prechecked: false
+    - key: professional-and-business-services
+      radio_button_name: Professional and business services
+      topic_name: Professional and business services
+      prechecked: false
+    - key: public-administration
+      radio_button_name: Public administration
+      topic_name: Public administration
+      prechecked: false
+    - key: rail
+      radio_button_name: Rail
+      topic_name: Rail
+      prechecked: false
+    - key: rail-passenger-freight
+      radio_button_name: Rail (passengers and freight)
+      topic_name: Rail (passengers and freight)
+      prechecked: false
+    - key: real-estate-excl-imputed-rent
+      radio_button_name: Real estate
+      topic_name: Real estate
+      prechecked: false
+    - key: repair-of-computers-consumer-goods
+      radio_button_name: Repair of computers and consumer goods
+      topic_name: Repair of computers and consumer goods
+      prechecked: false
+    - key: research
+      radio_button_name: Research
+      topic_name: Research
+      prechecked: false
+    - key: restaurants-bars-catering
+      radio_button_name: Restaurants, bars and catering
+      topic_name: Restaurants, bars and catering
+      prechecked: false
+    - key: retail
+      radio_button_name: Retail and wholesale (excluding motor trade, food and drink)
+      topic_name: Retail and wholesale (excluding motor trade, food and drink)
+      prechecked: false
+    - key: road-passengers-freight
+      radio_button_name: Road (passengers and freight)
+      topic_name: Road (passengers and freight)
+      prechecked: false
+    - key: space
+      radio_button_name: Space
+      topic_name: Space
+      prechecked: false
+    - key: sports-recreation
+      radio_button_name: Sports and recreation
+      topic_name: Sports and recreation
+      prechecked: false
+    - key: telecoms
+      radio_button_name: Telecoms and information services
+      topic_name: Telecoms and information services
+      prechecked: false
+    - key: tourism
+      radio_button_name: Tourism
+      topic_name: Tourism
+      prechecked: false
+    - key: veterinary
+      radio_button_name: Veterinary
+      topic_name: Veterinary
+      prechecked: false
+    - key: voluntary-community-organisations
+      radio_button_name: Voluntary and community organistions
+      topic_name: Voluntary and community organistions
+      prechecked: false
+    - key: warehouses-services-pipelines
+      radio_button_name: Warehousing, services and pipelines
+      topic_name: Warehousing, services and pipelines
+      prechecked: false
+  - facet_id: business_activity
+    facet_name: Organisation activity
+    facet_choices:
+    - key: products-or-goods
+      radio_button_name: Sell products or goods in the UK
+      topic_name: Sell products or goods in the UK
+      prechecked: false
+    - key: buying
+      radio_button_name: Buy products or goods from abroad
+      topic_name: Buy products or goods from abroad
+      prechecked: false
+    - key: selling
+      radio_button_name: Sell products or goods abroad
+      topic_name: Sell products or goods abroad
+      prechecked: false
+    - key: other-eu
+      radio_button_name: Do other types of business in the EU
+      topic_name: Do other types of business in the EU
+      prechecked: false
+    - key: transporting
+      radio_button_name: Transport goods abroad
+      topic_name: Transport goods abroad
+      prechecked: false
+  - facet_id: employ_eu_citizens
+    facet_name: Who you employ
+    facet_choices:
+    - key: 'yes'
+      radio_button_name: EU citizens
+      topic_name: EU citizens
+      prechecked: false
+    - key: 'no'
+      radio_button_name: Non-EU citizens
+      topic_name: No EU citizens
+      prechecked: false
+  - facet_id: personal_data
+    facet_name: Personal data
+    facet_choices:
+    - key: processing-personal-data
+      radio_button_name: Processing personal data from Europe
+      topic_name: Processing personal data from Europe
+      prechecked: false
+    - key: interacting-with-eea-website
+      radio_button_name: Using websites or services hosted in Europe
+      topic_name: Using websites or services hosted in Europe
+      prechecked: false
+    - key: digital-service-provider
+      radio_button_name: Providing digital services available to Europe
+      topic_name: Providing digital services available to Europe
+      prechecked: false
+  - facet_id: intellectual_property
+    facet_name: Intellectual property
+    facet_choices:
+    - key: copyright
+      radio_button_name: Copyright
+      topic_name: Copyright
+      prechecked: false
+    - key: trademarks
+      radio_button_name: Trade marks
+      topic_name: Trade marks
+      prechecked: false
+    - key: designs
+      radio_button_name: Designs
+      topic_name: Designs
+      prechecked: false
+    - key: patents
+      radio_button_name: Patents
+      topic_name: Patents
+      prechecked: false
+    - key: exhaustion-of-rights
+      radio_button_name: Exhaustion of rights
+      topic_name: Exhaustion of rights
+      prechecked: false
+  - facet_id: eu_uk_government_funding
+    facet_name: EU or UK government funding
+    facet_choices:
+    - key: receiving-eu-funding
+      radio_button_name: EU funding
+      topic_name: EU funding
+      prechecked: false
+    - key: receiving-uk-government-funding
+      radio_button_name: UK government funding
+      topic_name: UK government funding
+      prechecked: false
+  - facet_id: public_sector_procurement
+    facet_name: Public sector procurement
+    facet_choices:
+    - key: civil-government-contracts
+      radio_button_name: Civil government contracts
+      topic_name: Civil government contracts
+      prechecked: false
+    - key: defence-contracts
+      radio_button_name: Defence contracts
+      topic_name: Defence contracts
+      prechecked: false
   subscription_list_title_prefix: 'Find EU Exit guidance for your business'
 routes:
 - path: "/find-eu-exit-guidance-business/email-signup"
