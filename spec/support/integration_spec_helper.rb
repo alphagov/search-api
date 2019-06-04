@@ -42,6 +42,8 @@ module IntegrationSpecHelper
   end
 
   def self.allow_elasticsearch_connection_to_test
+    allowed_hosts = Clusters.active.map(&:uri)
+
     allowed_paths = []
     allowed_paths << '[a-z_-]+[_-]test.*'
     allowed_paths << '_alias'
@@ -50,7 +52,8 @@ module IntegrationSpecHelper
     allowed_paths << '_search/scroll'
     allowed_paths << '_tasks'
 
-    allow_urls = %r{#{SearchConfig.instance.base_uri}/(#{allowed_paths.join('|')})}
+    allow_urls = %r{#{allowed_hosts.map { |host| "#{host}/(#{allowed_paths.join('|')})" }.join('|')}}
+
     WebMock.disable_net_connect!(allow: allow_urls)
     yield
   ensure
@@ -61,12 +64,20 @@ module IntegrationSpecHelper
     SearchConfig.instance
   end
 
+  def with_just_one_cluster
+    allow(Clusters).to receive(:active).and_return([Clusters.default_cluster])
+  end
+
   def search_server
     search_config.search_server
   end
 
   def sample_document
     Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_elasticsearch_types)
+  end
+
+  def random_cluster
+    clusters.sample
   end
 
   def insert_document(index_name, attributes, id: nil, type: "edition", version: nil)
@@ -86,14 +97,16 @@ module IntegrationSpecHelper
     atts[:document_type] ||= type
     atts[:link] ||= id
 
-    client.index(
-      {
-        index: index_name,
-        id: id,
-        type: 'generic-document',
-        body: atts,
-      }.merge(version_details)
-    )
+    clusters.each { |cluster|
+      client(cluster: cluster).index(
+        {
+          index: index_name,
+          id: id,
+          type: 'generic-document',
+          body: atts,
+        }.merge(version_details)
+      )
+    }
 
     id
   end
@@ -101,10 +114,15 @@ module IntegrationSpecHelper
   def clean_index_content(index)
     commit_index index
 
-    hits = client.search(index: index, size: 1000)['hits']['hits']
-    return if hits.empty?
+    clusters.map do |cluster|
+      hits = client(cluster: cluster).search(index: index, size: 1000)['hits']['hits']
 
-    client.bulk body: (hits.map { |hit| { delete: { _index: index, _type: 'generic-document', _id: hit['_id'] } } })
+      next if hits.empty?
+
+      client(cluster: cluster)
+        .bulk(body: (hits.map { |hit| { delete: { _index: index, _type: 'generic-document', _id: hit['_id'] } } }))
+    end
+
     commit_index index
   end
 
@@ -118,46 +136,51 @@ module IntegrationSpecHelper
   end
 
   def update_document(index_name, attributes, id: nil, type: "edition")
-    atts = attributes.symbolize_keys
-    atts[:document_type] ||= type
-    id ||= atts[:link]
-
-    client.update(index: index_name, id: id, type: 'generic-document', body: { doc: atts })
+    attributes['document_type'] ||= type
+    clusters.each { |cluster|
+      client(cluster: cluster).update(index: index_name, id: id, type: 'generic-document', body: { doc: atts })
+    }
     commit_index(index_name)
   end
 
   def commit_index(index_name)
-    client.indices.refresh(index: index_name)
+    clusters.each { |cluster|
+      client(cluster: cluster).indices.refresh(index: index_name)
+    }
   end
 
   def app
     Rummager
   end
 
-  def client
+  def client(cluster: Clusters.default_cluster)
     # Set a fairly long timeout to avoid timeouts on index creation on the CI
     # servers
-    @client ||= Services::elasticsearch(hosts: SearchConfig.instance.base_uri, timeout: 10)
+    Services.elasticsearch(cluster: cluster, timeout: 10)
   end
 
   def parsed_response
     JSON.parse(last_response.body)
   end
 
-  def expect_document_is_in_rummager(document, type: "edition", id: nil, index:)
-    retrieved = fetch_document_from_rummager(id: id || document['link'], index: index)
+  def expect_document_is_in_rummager(document, type: "edition", id: nil, index:, clusters: Clusters.active)
+    clusters.each { |cluster|
+      retrieved = fetch_document_from_rummager(id: id || document['link'], index: index, cluster: cluster)
 
-    retrieved_source = retrieved["_source"]
-    expect(retrieved_source["document_type"]).to eq(type)
-    document.each do |key, value|
-      expect(value).to eq(retrieved_source[key]), "Field #{key} should be '#{value}' but was '#{retrieved_source[key]}'"
-    end
+      retrieved_source = retrieved["_source"]
+      expect(retrieved_source["document_type"]).to eq(type)
+      document.each do |key, value|
+        expect(value).to eq(retrieved_source[key]), "Field #{key} should be '#{value}' but was '#{retrieved_source[key]}'"
+      end
+    }
   end
 
   def expect_document_missing_in_rummager(id:, index:)
-    expect {
-      fetch_document_from_rummager(id: id, index: index)
-    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+    clusters.each { |cluster|
+      expect {
+        fetch_document_from_rummager(id: id, index: index, cluster: cluster)
+      }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+    }
   end
 
   def sample_document_attributes(index_name, section_count, override: {})
@@ -194,7 +217,7 @@ module IntegrationSpecHelper
       ]
     end
 
-    client.bulk(index: index_name, body: data)
+    clusters.each { |cluster| client(cluster: cluster).bulk(index: index_name, body: data) }
     commit_index(index_name)
   end
 
@@ -202,9 +225,11 @@ module IntegrationSpecHelper
     index_name ||= SearchConfig.instance.default_index_name
     raise "Attempting to delete non-test index: #{index_name}" unless index_name =~ /test/
 
-    if client.indices.exists?(index: index_name)
-      client.indices.delete(index: index_name)
-    end
+    clusters.each { |cluster|
+      if client(cluster: cluster).indices.exists?(index: index_name)
+        client(cluster: cluster).indices.delete(index: index_name)
+      end
+    }
   end
 
   def stub_message_payload(example_document, unpublishing: false)
@@ -214,6 +239,10 @@ module IntegrationSpecHelper
 
 private
 
+  def clusters
+    Clusters.active
+  end
+
   def build_sample_documents_on_content_indices(documents_per_index:)
     config = SearchConfig.instance
     index_names = config.content_index_names + [config.govuk_index_name]
@@ -222,8 +251,8 @@ private
     end
   end
 
-  def fetch_document_from_rummager(id:, type: '_all', index:)
-    client.get(
+  def fetch_document_from_rummager(id:, type: '_all', index:, cluster: Clusters.default_cluster)
+    client(cluster: cluster).get(
       index: index,
       type: type,
       id: id

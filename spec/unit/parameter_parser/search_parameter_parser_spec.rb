@@ -5,6 +5,7 @@ RSpec.describe SearchParameterParser do
     {
       start: 0,
       count: 10,
+      cluster: Clusters.default_cluster,
       query: nil,
       similar_to: nil,
       order: nil,
@@ -87,6 +88,31 @@ RSpec.describe SearchParameterParser do
 
     expect(p).to be_valid
     expect(p.parsed_params).to eq(expected_params({}))
+  end
+
+  it "understands the cluster parameter" do
+    cluster = Clusters.active.sample # random cluster
+    p = described_class.new({ "cluster" => [cluster.key] }, @schema)
+
+    expect(p.error).to eq("")
+    expect(p).to be_valid
+    expect(p.parsed_params).to eq(expected_params(cluster: cluster))
+  end
+
+  it "complains about invalid cluster parameters" do
+    p = described_class.new({ "cluster" => %w(INVALID_CLUSTER) }, @schema)
+
+    expect(p.error).to eq(%{Invalid cluster. Accepted values: #{Clusters.active.map(&:key).join(', ')}})
+    expect(p).not_to be_valid
+    expect(p.parsed_params).to eq(expected_params(cluster: Clusters.default_cluster))
+  end
+
+  it "complains about a repeated cluster parameter" do
+    p = described_class.new({ "cluster" => %w(A B) }, @schema)
+
+    expect(p.error).to eq(%{Too many values (2) for parameter "cluster" (must occur at most once)})
+    expect(p).not_to be_valid
+    expect(p.parsed_params).to eq(expected_params(cluster: Clusters.default_cluster))
   end
 
   it "complain about multiple unknown parameters" do

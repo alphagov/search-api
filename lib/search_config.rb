@@ -23,19 +23,27 @@ class SearchConfig
     end
   end
 
-  def search_server
-    @server ||= SearchIndices::SearchServer.new(
-      elasticsearch["base_uri"],
-      schema_config,
-      index_names,
-      govuk_index_name,
-      content_index_names,
-      self,
-    )
+  def search_servers
+    @search_servers ||= begin
+      Clusters.active.map { |cluster| search_server(cluster: cluster) }
+    end
+  end
+
+  def search_server(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
+      SearchIndices::SearchServer.new(
+        cluster.uri,
+        schema_config,
+        index_names,
+        govuk_index_name,
+        content_index_names,
+        self,
+      )
+    end
   end
 
   def schema_config
-    @schema ||= SchemaConfig.new(config_path)
+    @schema_config ||= SchemaConfig.new(es_config.config_path)
   end
 
   def index_names
@@ -49,7 +57,7 @@ class SearchConfig
   end
 
   def elasticsearch
-    @elasticsearch ||= config_for("elasticsearch")[ENV['RACK_ENV']]
+    @elasticsearch ||= es_config.config
   end
 
   def run_search(raw_parameters)
@@ -58,7 +66,7 @@ class SearchConfig
 
     search_params = Search::QueryParameters.new(parser.parsed_params)
 
-    searcher.run(search_params)
+    searcher(cluster: search_params.cluster).run(search_params)
   end
 
   def run_batch_search(searches)
@@ -70,58 +78,74 @@ class SearchConfig
       search_params << Search::QueryParameters.new(parser.parsed_params)
     end
 
-    batch_searcher.run(search_params)
+    batch_searcher(cluster: search_params.first.cluster).run(search_params)
   end
 
-  def metasearch_index
-    search_server.index(metasearch_index_name)
+  def metasearch_index(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
+      search_server(cluster: cluster).index(metasearch_index_name)
+    end
   end
 
-  def spelling_index
-    search_server.index_for_search(spelling_index_names)
+  def spelling_index(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
+      search_server(cluster: cluster).index_for_search(spelling_index_names)
+    end
   end
 
-  def content_index
-    search_server.index_for_search(content_index_names + [govuk_index_name])
+  def content_index(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
+      search_server(cluster: cluster).index_for_search(content_index_names + [govuk_index_name])
+    end
   end
 
-  def old_content_index
-    search_server.index_for_search(content_index_names)
+  def old_content_index(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
+      search_server(cluster: cluster).index_for_search(content_index_names)
+    end
   end
 
-  def new_content_index
-    search_server.index_for_search([govuk_index_name])
+  def new_content_index(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
+      search_server(cluster: cluster).index_for_search([govuk_index_name])
+    end
   end
 
 private
 
-  def searcher
-    @searcher ||= begin
+  def es_config
+    @es_config ||= ElasticsearchConfig.new
+  end
+
+  def searcher(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
       Search::Query.new(
-        content_index: content_index,
-        registries: registries,
-        metasearch_index: metasearch_index,
-        spelling_index: spelling_index
+        content_index: content_index(cluster: cluster),
+        registries: registries(cluster: cluster),
+        metasearch_index: metasearch_index(cluster: cluster),
+        spelling_index: spelling_index(cluster: cluster),
       )
     end
   end
 
-  def batch_searcher
-    @batch_searcher ||= begin
+  def batch_searcher(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
       Search::BatchQuery.new(
-        content_index: content_index,
-        registries: registries,
-        metasearch_index: metasearch_index,
-        spelling_index: spelling_index
+        content_index: content_index(cluster: cluster),
+        registries: registries(cluster: cluster),
+        metasearch_index: metasearch_index(cluster: cluster),
+        spelling_index: spelling_index(cluster: cluster),
       )
     end
   end
 
-  def registries
-    @registries ||= Search::Registries.new(
-      search_server,
-      self
-    )
+  def registries(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
+      @registries ||= Search::Registries.new(
+        search_server(cluster: cluster),
+        self
+      )
+    end
   end
 
   def combined_index_schema
@@ -131,15 +155,11 @@ private
     )
   end
 
-  def config_path
-    File.expand_path("../config/schema", File.dirname(__FILE__))
-  end
+  def meta_assign(method, cluster, &block)
+    Clusters.validate_cluster_key!(cluster.key)
 
-  def config_path_for(kind)
-    File.expand_path("../#{kind}.yml", File.dirname(__FILE__))
-  end
-
-  def config_for(kind)
-    YAML.load(ERB.new(File.read(config_path_for(kind))).result)
+    # Lets us cache instance variables on a per-cluster basis.
+    @cached_methods ||= {}
+    @cached_methods["#{method}_for_cluster_#{cluster.key}"] ||= block.call
   end
 end

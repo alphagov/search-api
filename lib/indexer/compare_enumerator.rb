@@ -9,7 +9,8 @@ module Indexer
     # by document_type.
     DEFAULT_SORT = %i(document_type _uid).freeze
 
-    def initialize(left_index_name, right_index_name, search_body = {}, options = {})
+    def initialize(left_index_name, right_index_name, cluster = Clusters.default_cluster, search_body = {}, options = {})
+      @cluster = cluster
       @options = options
       super() do |yielder|
         left_enum = get_enum(left_index_name, search_body)
@@ -65,6 +66,8 @@ module Indexer
 
   private
 
+    attr_reader :cluster
+
     def get_next_from_enumerator(enum)
       enum.next
     rescue StopIteration # we rescue this as we want both enumerators to complete
@@ -77,10 +80,7 @@ module Indexer
     end
 
     def client
-      Services.elasticsearch(
-        hosts: search_config.elasticsearch["base_uri"],
-        timeout: 30.0
-      )
+      Services.elasticsearch(cluster: cluster, timeout: 30.0)
     end
 
     def search_config

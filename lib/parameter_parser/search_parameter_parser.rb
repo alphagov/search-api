@@ -40,6 +40,7 @@ private
     @parsed_params = {
       start: capped_start,
       count: capped_count,
+      cluster: cluster,
       query: normalize_query(single_param("q"), "query"),
       similar_to: normalize_query(single_param("similar_to"), "similar_to"),
       order: order,
@@ -66,6 +67,16 @@ private
     unless unused_params.empty?
       @errors << "Unexpected parameters: #{unused_params.join(', ')}"
     end
+  end
+
+  def cluster
+    cluster_key = single_param('cluster')
+    Clusters.get_cluster(cluster_key)
+  rescue Clusters::ClusterNotFoundError
+    if cluster_key.present?
+      @errors << "Invalid cluster. Accepted values: #{Clusters.cluster_keys.join(', ')}"
+    end
+    Clusters.default_cluster
   end
 
   def capped_start

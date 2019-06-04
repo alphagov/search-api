@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Index::ElasticsearchProcessor do
   subject { described_class.govuk }
+  let(:cluster_count) { Clusters.count }
 
   it "should save valid document" do
     presenter = double(:presenter)
@@ -16,8 +17,9 @@ RSpec.describe Index::ElasticsearchProcessor do
 
     client = double('client')
     allow(Services).to receive('elasticsearch').and_return(client)
-    expect(client).to receive(:bulk).with(index: SearchConfig.instance.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
-
+    # rubocop:disable RSpec/MessageSpies
+    expect(client).to receive(:bulk).exactly(cluster_count).times.with(index: SearchConfig.instance.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
+    # rubocop:enable RSpec/MessageSpies
     subject.save(presenter)
     subject.commit
   end
@@ -35,7 +37,8 @@ RSpec.describe Index::ElasticsearchProcessor do
 
     client = double('client')
     allow(Services).to receive('elasticsearch').and_return(client)
-    expect(client).to receive(:bulk).with(
+    # rubocop:disable RSpec/MessageSpies
+    expect(client).to receive(:bulk).exactly(cluster_count).times.with(
       index: SearchConfig.instance.govuk_index_name,
       body: [
         {
@@ -43,6 +46,7 @@ RSpec.describe Index::ElasticsearchProcessor do
         }
       ]
     )
+    # rubocop:enable RSpec/MessageSpies
 
     subject.delete(presenter)
     subject.commit

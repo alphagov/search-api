@@ -185,7 +185,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
     end
   end
 
-  def client
-    @client ||= Services::elasticsearch(hosts: SearchConfig.instance.base_uri)
+  def client(cluster: Cluster.default_cluster)
+    @client ||= Services.elasticsearch(cluster: cluster)
   end
 end

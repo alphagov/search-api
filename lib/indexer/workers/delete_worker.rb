@@ -6,7 +6,7 @@ module Indexer
       logger.info "Deleting #{elasticsearch_type} document '#{document_id}' of type '#{elasticsearch_type}' from '#{index_name}'"
 
       begin
-        index(index_name).delete(document_id)
+        indexes(index_name).each { |index| index.delete(document_id) }
       rescue SearchIndices::IndexLocked
         logger.info "Index #{index_name} is locked; rescheduling"
         self.class.perform_in(LOCK_DELAY, index_name, elasticsearch_type, document_id)

@@ -33,7 +33,8 @@ module Search
         total: es_response.dig("hits", "total") || 0,
         start: search_params.start,
         search_params.aggregate_name => presented_aggregates,
-        suggested_queries: suggested_queries
+        suggested_queries: suggested_queries,
+        es_cluster: search_params.cluster.key,
       }
 
       if search_params.show_query?

@@ -7,7 +7,7 @@ module Indexer
       logger.info "Amending fields #{updates.keys.join(', ')}"
       logger.debug "Amendments: #{updates}"
       begin
-        index(index_name).amend(document_link, updates)
+        indexes(index_name).each { |index| index.amend(document_link, updates) }
       rescue SearchIndices::IndexLocked
         logger.info "Index #{index_name} is locked; rescheduling"
         self.class.perform_in(LOCK_DELAY, index_name, document_link, updates)

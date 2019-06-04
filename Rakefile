@@ -26,12 +26,29 @@ def search_config
   SearchConfig.instance
 end
 
-def search_server
-  search_config.search_server
+def search_server(cluster: Clusters.default_cluster)
+  search_config.search_server(cluster: cluster)
 end
 
-def elasticsearch_uri
-  SearchConfig.new.elasticsearch["base_uri"]
+def clusters_from_args(args)
+  return Clusters.active unless args[:clusters].present?
+
+  derive_clusters(args[:clusters].split(' '))
+end
+
+def derive_clusters(cluster_keys = [])
+  unpermitted_cluster = cluster_keys.find { |key| Clusters.cluster_keys.exclude?(key) }
+
+  if unpermitted_cluster.present?
+    raise("`clusters` must be one of #{Clusters.cluster_keys.join(', ')}. \n
+          Leave this field blank to run against all clusters.")
+  end
+
+  Clusters.active.select { |cluster| cluster_keys.include? cluster.key }
+end
+
+def warn_for_single_cluster_run
+  puts "WARNING: this will only run on the default cluster."
 end
 
 def index_names

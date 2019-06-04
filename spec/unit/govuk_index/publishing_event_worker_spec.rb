@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe GovukIndex::PublishingEventWorker do
+  subject(:worker) { described_class.new }
+
   before do
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
   end
@@ -15,14 +17,16 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         "document_type" => "help_page",
         "title" => "We love cheese"
       }
+      responses = [{ 'items' => [{ 'index' => { 'status' => 200 } }] }]
 
+      # rubocop:disable RSpec/MessageSpies
       expect(actions).to receive(:save)
-      expect(actions).to receive(:commit).and_return('items' => [{ 'index' => { 'status' => 200 } }])
+      expect(actions).to receive(:commit).and_return(responses)
 
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
-
-      subject.perform([['routing.key', payload]])
+      # rubocop:enable RSpec/MessageSpies
+      worker.perform([['routing.key', payload]])
     end
 
     context "when a message to unpublish the document is received" do
@@ -33,13 +37,16 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "title" => "We love cheese"
         }
         stub_document_type_mapper
+        responses = [{ 'items' => [{ 'delete' => { 'status' => 200 } }] }]
 
+        # rubocop:disable RSpec/MessageSpies
         expect(actions).to receive(:delete)
-        expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 200 } }])
+        expect(actions).to receive(:commit).and_return(responses)
 
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.delete')
-        subject.perform([['routing.unpublish', payload]])
+        # rubocop:enable RSpec/MessageSpies
+        worker.perform([['routing.unpublish', payload]])
       end
 
       it "will not delete withdrawn documents" do
@@ -52,14 +59,16 @@ RSpec.describe GovukIndex::PublishingEventWorker do
             "withdrawn_at" => "2017-08-03T14:02:18Z"
           }
         }
+        responses = [{ 'items' => [{ 'index' => { 'status' => 200 } }] }]
 
+        # rubocop:disable RSpec/MessageSpies
         expect(actions).to receive(:save)
-        expect(actions).to receive(:commit).and_return('items' => [{ 'index' => { 'status' => 200 } }])
+        expect(actions).to receive(:commit).and_return(responses)
 
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
-
-        subject.perform([['routing.unpublish', payload]])
+        # rubocop:enable RSpec/MessageSpies
+        worker.perform([['routing.unpublish', payload]])
       end
 
       it "will raise an error when elasticsearch returns a 500 status" do
@@ -68,17 +77,19 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "document_type" => "gone",
           "title" => "We love cheese"
         }
+        failure_response = [{ 'items' => [{ 'delete' => { 'status' => 500 } }] }]
         stub_document_type_mapper
 
+        # rubocop:disable RSpec/MessageSpies
         expect(actions).to receive(:delete)
-        expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 500 } }])
+        expect(actions).to receive(:commit).and_return(failure_response)
 
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.delete_error')
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
-
+        # rubocop:enable RSpec/MessageSpies
         expect {
-          subject.perform([['routing.unpublish', payload]])
+          worker.perform([['routing.unpublish', payload]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
 
@@ -89,13 +100,15 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "title" => "We love cheese"
         }
         stub_document_type_mapper
-
+        responses = [{ 'items' => [{ 'delete' => { 'status' => 404 } }] }]
+        # rubocop:disable RSpec/MessageSpies
         expect(actions).to receive(:delete)
-        expect(actions).to receive(:commit).and_return('items' => [{ 'delete' => { 'status' => 404 } }])
+        expect(actions).to receive(:commit).and_return(responses)
 
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed')
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.already_deleted')
-        subject.perform([['routing.unpublish', payload]])
+        # rubocop:enable RSpec/MessageSpies
+        worker.perform([['routing.unpublish', payload]])
       end
     end
 
@@ -119,7 +132,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           }
         )
 
-        subject.perform([['routing.key', payload]])
+        worker.perform([['routing.key', payload]])
       end
     end
 
@@ -135,7 +148,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       it "don't notify of a validation error for missing basepath" do
         expect(GovukError).not_to receive(:notify)
 
-        subject.perform([['routing.key', payload]])
+        worker.perform([['routing.key', payload]])
       end
     end
   end
@@ -171,38 +184,41 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     end
 
     it 'can save multiple documents' do
-      expect(actions).to receive(:save).twice
-      expect(actions).to receive(:commit).and_return(
+      responses = [{
         'items' => [{ 'index' => { 'status' => 200 } }, { 'index' => { 'status' => 200 } }]
-      )
+      }]
+
+      # rubocop:disable RSpec/MessageSpies
+      expect(actions).to receive(:save).twice
+      expect(actions).to receive(:commit).and_return(responses)
 
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed').twice
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.multiple_responses')
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index').twice
-      subject.perform([['routing.key', payload1], ['routing.key', payload2]])
+      # rubocop:enable RSpec/MessageSpies
+      worker.perform([['routing.key', payload1], ['routing.key', payload2]])
     end
 
     it 'can save and delete documents in the same batch' do
       stub_document_type_mapper
-
+      responses = [{ 'items' => [{ 'index' => { 'status' => 200 } }, { 'delete' => { 'status' => 200 } }] }]
+      # rubocop:disable RSpec/MessageSpies
       expect(actions).to receive(:save)
       expect(actions).to receive(:delete)
-      expect(actions).to receive(:commit).and_return(
-        'items' => [{ 'index' => { 'status' => 200 } }, { 'delete' => { 'status' => 200 } }]
-      )
-
+      expect(actions).to receive(:commit).and_return(responses)
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed').twice
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.multiple_responses')
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
       expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.delete')
-      subject.perform([['routing.key', payload1], ['routing.key', payload_delete]])
+      # rubocop:enable RSpec/MessageSpies
+      worker.perform([['routing.key', payload1], ['routing.key', payload_delete]])
     end
 
     context 'when all messages fail' do
       before do
         allow(actions).to receive(:save).twice
         allow(actions).to receive(:commit).and_return(
-          'items' => [{ 'index' => { 'status' => 500 } }, { 'index' => { 'status' => 500 } }]
+          [{ 'items' => [{ 'index' => { 'status' => 500 } }, { 'index' => { 'status' => 500 } }] }]
         )
         allow(Services.statsd_client).to receive(:increment)
       end
@@ -211,7 +227,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed').twice
 
         expect {
-          subject.perform([['routing.key', payload1], ['routing.key', payload2]])
+          worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
 
@@ -220,7 +236,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
 
         expect {
-          subject.perform([['routing.key', payload1], ['routing.key', payload2]])
+          worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
 
@@ -228,7 +244,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
 
         expect {
-          subject.perform([['routing.key', payload1], ['routing.key', payload2]])
+          worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
     end
@@ -237,7 +253,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       before do
         allow(actions).to receive(:save).twice
         allow(actions).to receive(:commit).and_return(
-          'items' => [{ 'index' => { 'status' => 200 } }, { 'index' => { 'status' => 500 } }]
+          [{ 'items' => [{ 'index' => { 'status' => 200 } }, { 'index' => { 'status' => 500 } }] }]
         )
         allow(Services.statsd_client).to receive(:increment)
         # allow(GovukIndex::PublishingEventWorker).to receive(:perform_async)
@@ -245,7 +261,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
 
       it 'will raise an error so that sidekiq retries the entire batch' do
         expect {
-          subject.perform([['routing.key', payload1], ['routing.key', payload2]])
+          worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
 
@@ -253,7 +269,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index_error')
         expect(Services.statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
         expect {
-          subject.perform([['routing.key', payload1], ['routing.key', payload2]])
+          worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
     end
@@ -261,12 +277,12 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     it "raises an error is the number of response item does not match the number of actions requested" do
       allow(actions).to receive(:save).twice
       allow(actions).to receive(:commit).and_return(
-        'items' => [{ 'index' => { 'status' => 200 } }]
+        [{ 'items' => [{ 'index' => { 'status' => 200 } }] }]
       )
       allow(Services.statsd_client).to receive(:increment)
 
       expect {
-        subject.perform([['routing.key', payload1], ['routing.key', payload2]])
+        worker.perform([['routing.key', payload1], ['routing.key', payload2]])
       }.to raise_error(GovukIndex::ElasticsearchInvalidResponseItemCount, "received 1 expected 2")
     end
   end

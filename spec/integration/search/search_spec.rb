@@ -526,6 +526,16 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response.fetch("elasticsearch_query")).to be_truthy
   end
 
+  it "will show the cluster" do
+    get "/search?q=test"
+    expect(parsed_response.fetch("es_cluster")).to eq(Clusters.default_cluster.key)
+
+    Clusters.active.each { |cluster|
+      get "/search?q=test&cluster=#{cluster.key}"
+      expect(parsed_response.fetch("es_cluster")).to eq(cluster.key)
+    }
+  end
+
   it "can return the taxonomy" do
     commit_ministry_of_magic_document("taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"])
 

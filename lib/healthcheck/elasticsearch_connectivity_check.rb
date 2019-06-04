@@ -47,6 +47,7 @@ module Healthcheck
     end
 
     def elasticsearch_client
+      # TODO: healthcheck all active clusters
       @elasticsearch_client ||= Services::elasticsearch(hosts: elasticsearch_url)
     end
   end

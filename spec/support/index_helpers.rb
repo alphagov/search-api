@@ -1,11 +1,12 @@
 class IndexHelpers
   def self.setup_test_indexes
-    puts 'Setting up test indexes...'
+    puts "Setting up test indexes on clusters #{Clusters.active.map(&:key).join(',')}..."
+    start_time = Time.now
 
     clean_all
     create_all
 
-    puts 'Done.'
+    puts "Done in #{Time.now - start_time} seconds."
   end
 
   def self.all_index_names
@@ -22,16 +23,18 @@ class IndexHelpers
   def self.clean_index_group(index_name)
     raise "Attempting to clean non-test index: #{index_name}" unless index_name =~ /test/
 
-    search_server = SearchConfig.instance.search_server
-    index_group = search_server.index_group(index_name)
+    Clusters.active.each { |cluster|
+      search_server = SearchConfig.instance.search_server(cluster: cluster)
+      index_group = search_server.index_group(index_name)
 
-    # Delete any indices left over
-    index_group.clean
+      # Delete any indices left over
+      index_group.clean
 
-    # Clean up the test index too
-    if index_group.current.exists?
-      index_group.send(:delete, index_group.current.real_name)
-    end
+      # Clean up the test index too
+      if index_group.current.exists?
+        index_group.send(:delete, index_group.current.real_name)
+      end
+    }
   end
 
   def self.create_all
@@ -41,9 +44,10 @@ class IndexHelpers
   end
 
   def self.create_test_index(group_name = DEFAULT_INDEX_NAME)
-    search_server = SearchConfig.instance.search_server
-    index_group = search_server.index_group(group_name)
-    index = index_group.create_index
-    index_group.switch_to(index)
+    Clusters.active.each { |cluster|
+      index_group = SearchConfig.instance.search_server(cluster: cluster).index_group(group_name)
+      index = index_group.create_index
+      index_group.switch_to(index)
+    }
   end
 end

@@ -8,8 +8,10 @@ module MetasearchIndex
       def delete
         processor = Index::ElasticsearchProcessor.metasearch
         processor.delete(self)
-        response = processor.commit
-        Index::ResponseValidator.new(namespace: 'metasearch_index').valid!(response['items'].first)
+        responses = processor.commit
+        responses.each do |response|
+          Index::ResponseValidator.new(namespace: 'metasearch_index').valid!(response['items'].first)
+        end
       end
 
       def identifier

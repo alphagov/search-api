@@ -9,8 +9,10 @@ module MetasearchIndex
       def insert
         processor = Index::ElasticsearchProcessor.metasearch
         processor.save(self)
-        response = processor.commit
-        Index::ResponseValidator.new(namespace: 'metasearch_index').valid!(response["items"].first)
+        responses = processor.commit
+        responses.each { |response|
+          Index::ResponseValidator.new(namespace: 'metasearch_index').valid!(response["items"].first)
+        }
       end
 
       def identifier

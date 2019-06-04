@@ -22,16 +22,19 @@ module Index
     end
 
     def bulk(params)
-      client.bulk(
-        params.merge(index: index_name)
-      )
+      Clusters.active.map do |cluster|
+        client(cluster: cluster).bulk(
+          params.merge(index: index_name)
+        )
+      end
     end
 
   private
 
-    def client
-      @_client ||= Services.elasticsearch(
-        hosts: search_config.base_uri,
+    def client(cluster: Clusters.default_cluster)
+      @_client ||= {}
+      @_client[cluster.key] ||= Services.elasticsearch(
+        cluster: cluster,
         timeout: @_options[:timeout] || TIMEOUT_SECONDS,
         retry_on_failure: true,
       )
