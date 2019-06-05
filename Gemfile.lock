@@ -129,7 +129,7 @@ GEM
     parallel (1.17.0)
     parser (2.6.3.0)
       ast (~> 2.4.0)
-    plek (2.1.1)
+    plek (3.0.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -269,7 +269,7 @@ DEPENDENCIES
   mr-sparkle (= 0.3.0)
   nokogiri (~> 1.10.3)
   oauth2
-  plek (~> 2.1)
+  plek (~> 3.0)
   pry-byebug
   rack (~> 2.0)
   rack-logstasher (~> 1.0.1)
