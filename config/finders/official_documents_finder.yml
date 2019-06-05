@@ -73,9 +73,9 @@ details:
     filterable: true
   default_documents_per_page: 20
 routes:
-- path: "/search/official-documents"
+- path: "/official-documents"
   type: exact
-- path: "/search/official-documents.atom"
+- path: "/official-documents.atom"
   type: exact
-- path: "/search/official-documents.json"
+- path: "/official-documents.json"
   type: exact
