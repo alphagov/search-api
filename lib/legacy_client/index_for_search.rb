@@ -13,6 +13,15 @@ module LegacyClient
       @search_config = search_config
     end
 
+    def real_index_names
+      index_names.map do |index_name|
+        # this may throw an exception if the index name isn't found,
+        # but we want to propagate the error in that case as it
+        # shouldn't happen.
+        @client.indices.get_alias(index: index_name).keys.first
+      end
+    end
+
     def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
       @client.search(index: @index_names, type: 'generic-document', body: payload)

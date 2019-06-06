@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 RSpec.describe SitemapGenerator do
+  # rubocop:disable RSpec/AnyInstance
+  before do
+    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
+  end
+  # rubocop:enable RSpec/AnyInstance
+
   it "should generate sitemap" do
     sitemap = described_class.new(index_names: '')
 

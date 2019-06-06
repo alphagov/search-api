@@ -17,13 +17,10 @@ module Search
 
     # Search and combine the indices and return a hash of ResultSet objects
     def run(search_params)
-      builder = QueryBuilder.new(
-        search_params: search_params,
-        content_index_names: content_index_names,
-        metasearch_index: metasearch_index
-      )
+      builder_payload = timed_build_query(search_params)
+      builder = builder_payload[:builder]
+      payload = builder_payload[:payload]
 
-      payload     = process_elasticsearch_errors { builder.payload }
       es_response = process_elasticsearch_errors { timed_raw_search(payload) }
       process_es_response(search_params, builder, payload, es_response)
     end
@@ -31,6 +28,20 @@ module Search
   private
 
     attr_reader :metasearch_index
+
+    def timed_build_query(search_params)
+      GovukStatsd.time("build_query") do
+        builder = QueryBuilder.new(
+          search_params: search_params,
+          content_index_names: content_index_names,
+          metasearch_index: metasearch_index
+        )
+
+        payload = process_elasticsearch_errors { builder.payload }
+
+        { builder: builder, payload: payload }
+      end
+    end
 
     def timed_raw_search(payload)
       GovukStatsd.time("elasticsearch.raw_search") do
