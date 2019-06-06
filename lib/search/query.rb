@@ -17,6 +17,7 @@ module Search
 
     # Search and combine the indices and return a hash of ResultSet objects
     def run(search_params)
+      log_search
       builder_payload = timed_build_query(search_params)
       builder = builder_payload[:builder]
       payload = builder_payload[:payload]
@@ -114,6 +115,10 @@ module Search
       response = spelling_index.raw_search(query)
 
       response['suggest']
+    end
+
+    def log_search
+      GovukStatsd.increment "search_query"
     end
   end
 end
