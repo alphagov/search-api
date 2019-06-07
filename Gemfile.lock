@@ -40,7 +40,7 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.10.0)
-    gds-api-adapters (59.4.0)
+    gds-api-adapters (59.5.0)
       addressable
       link_header
       null_logger
@@ -255,7 +255,7 @@ DEPENDENCIES
   bunny-mock (~> 1.7)
   climate_control (~> 0.2)
   elasticsearch (~> 6)
-  gds-api-adapters (~> 59.4)
+  gds-api-adapters (~> 59.5)
   govuk-content-schema-test-helpers (~> 1.6.1)
   govuk-lint (~> 3.11.2)
   govuk_app_config (~> 1.18.1)
