@@ -80,5 +80,7 @@ details:
 routes:
 - path: "/search/all"
   type: exact
+- path: "/search/all.atom"
+  type: exact
 - path: "/search/all.json"
   type: exact
