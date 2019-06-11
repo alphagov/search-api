@@ -33,7 +33,7 @@ RSpec.describe 'HealthcheckTest' do
     context "when elasticsearch CANNOT be connected to" do
       before do
         # rubocop:disable RSpec/AnyInstance
-        allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_raise(Faraday::ConnectionFailed)
+        allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_raise(Faraday::Error)
         # rubocop:enable RSpec/AnyInstance
       end
 

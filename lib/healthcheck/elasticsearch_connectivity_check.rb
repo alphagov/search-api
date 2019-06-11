@@ -9,19 +9,21 @@ module Healthcheck
     end
 
     def status
-      can_connect? ? :ok : :critical
+      clusters_healthy? ? :ok : :critical
     end
 
     def message
-      if can_connect?
-        "search-api can to connect to elasticsearch"
+      if clusters_healthy?
+        "search-api can connect to all elasticsearch clusters"
       else
-        "search-api CANNOT connect to elasticsearch!"
+        names = failing_clusters.map(&:key).join(', ')
+        failed = failing_clusters.count
+        "search-api cannot connect to #{failed} elasticsearch #{"cluster".pluralize(failed)}! \n Failing: #{names}"
       end
     end
 
     def details
-      can_connect? ? { extra: cluster_health } : {}
+      clusters_healthy? ? { extra: cluster_healths } : {}
     end
 
     # Optional
@@ -31,24 +33,35 @@ module Healthcheck
 
   private
 
-    def can_connect?
-      cluster_health.present?
+    def clusters_healthy?
+      @clusters_healthy ||= failing_clusters.none?
+    end
+
+    def failing_clusters
+      @failing_clusters ||= Clusters.active.reject { |cluster| can_connect?(cluster) }
+    end
+
+    def can_connect?(cluster)
+      cluster_health(cluster).present?
     rescue Faraday::Error
       false
     end
 
-    def cluster_health
+    def cluster_healths
+      {
+        cluster_healths: Clusters.active.map { |cluster|
+          cluster_health(cluster).merge(cluster_name: cluster.key)
+        }
+      }
+    end
+
+    def cluster_health(cluster)
       # Makes a call to the elasticsearch cluster
-      @cluster_health ||= elasticsearch_client.cluster.health
+      elasticsearch_client(cluster).cluster.health
     end
 
-    def elasticsearch_url
-      SearchConfig.instance.base_uri
-    end
-
-    def elasticsearch_client
-      # TODO: healthcheck all active clusters
-      @elasticsearch_client ||= Services::elasticsearch(hosts: elasticsearch_url)
+    def elasticsearch_client(cluster)
+      Services.elasticsearch(cluster: cluster)
     end
   end
 end
