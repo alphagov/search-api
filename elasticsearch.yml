@@ -17,6 +17,7 @@ production: &default
       default: true
     - uri_key: base_uri_b
       key: B
+      schema_config_file: elasticsearch_schema_b.yml
       default: false
 
 development:
@@ -40,4 +41,5 @@ test:
       default: true
     - uri_key: base_uri_b
       key: B
+      schema_config_file: elasticsearch_schema_b.yml
       default: false
