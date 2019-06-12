@@ -2,8 +2,9 @@
 class SchemaConfig
   attr_reader :field_definitions
 
-  def initialize(config_path)
+  def initialize(config_path, schema_config_file: 'elasticsearch_schema.yml')
     @config_path = config_path
+    @schema_config_file = schema_config_file
     @field_definitions = FieldDefinitionParser.new(config_path).parse
     @elasticsearch_types = ElasticsearchTypesParser.new(config_path, @field_definitions).parse
     @index_schemas = IndexSchemaParser.parse_all(config_path, @field_definitions, @elasticsearch_types)
@@ -35,14 +36,14 @@ class SchemaConfig
 
 private
 
-  attr_reader :config_path
+  attr_reader :config_path, :schema_config_file
 
   def synonym_config
     YAML.load_file(File.join(config_path, "synonyms.yml"))
   end
 
   def schema_yaml
-    load_yaml("elasticsearch_schema.yml")
+    load_yaml(schema_config_file)
   end
 
   def elasticsearch_index
