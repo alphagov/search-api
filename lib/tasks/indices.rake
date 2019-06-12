@@ -183,8 +183,8 @@ You should run this task if the index schema has changed.
         docs = stats["_all"]["primaries"]["docs"]
 
         count = docs["count"]
-        statsd.gauge("#{index}_index.docs.count", count)
-        puts "#{index}_index.docs.count=#{count}"
+        statsd.gauge("#{index}_index.docs.total", count)
+        puts "#{index}_index.docs.total=#{count}"
 
         deleted = docs["deleted"]
         statsd.gauge("#{index}_index.docs.deleted", deleted)
