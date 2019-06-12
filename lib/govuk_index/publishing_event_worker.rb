@@ -39,9 +39,11 @@ module GovukIndex
         process_action(processor, routing_key, payload)
       end
 
-      response = processor.commit
-      process_response(response, messages) if response
+      responses = processor.commit
 
+      (responses || []).each do |response|
+        process_response(response, messages)
+      end
     # Rescuing exception to guarantee we capture all Sidekiq retries
     rescue Exception # rubocop:disable Lint/RescueException
       Services.statsd_client.increment('govuk_index.sidekiq-retry')

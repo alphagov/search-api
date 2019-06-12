@@ -30,8 +30,10 @@ module Indexer
 
   private
 
-    def index(index_name)
-      SearchConfig.instance.search_server.index(index_name)
+    def indexes(index_name)
+      SearchConfig.instance.search_servers.map { |search_server|
+        search_server.index(index_name)
+      }
     end
   end
 end

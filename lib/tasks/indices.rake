@@ -2,55 +2,69 @@ require 'rummager'
 
 namespace :search do
   desc "Lists current indices, pass [all] to show inactive indices"
-  task :list_indices, :all do |_, args|
+  task :list_indices, :all, :clusters do |_, args|
     show_all = args[:all] || false
-    index_names.each do |name|
-      index_group = search_server.index_group(name)
-      active_index_name = index_group.current.real_name
-      if show_all
-        index_names = index_group.index_names
-      else
-        index_names = [active_index_name]
-      end
-      puts "#{name}:"
-      index_names.sort.each do |index_name|
-        if index_name == active_index_name
-          puts "* #{index_name}"
+    clusters_from_args(args).each do |cluster|
+      puts "CLUSTER #{cluster.key}"
+      puts "===================================================="
+      index_names.each do |name|
+        index_group = search_server(cluster: cluster).index_group(name)
+        active_index_name = index_group.current.real_name
+        if show_all
+          index_names = index_group.index_names
         else
-          puts "  #{index_name}"
+          index_names = [active_index_name]
         end
+        puts "#{name}:"
+        index_names.sort.each do |index_name|
+          if index_name == active_index_name
+            puts "* #{index_name}"
+          else
+            puts "  #{index_name}"
+          end
+        end
+        puts
       end
-      puts
     end
   end
 
-  desc "Create a brand new indices and assign an alias if no alias currently exists"
-  task :create_all_indices do
-    index_names.each do |index_name|
-      index_group = search_config.search_server.index_group(index_name)
+  desc "Create a brand new indices and assign an alias if no alias currently exists
+        Specify clusters to run this against; by default runs against all clusters.
+  "
+  task :create_all_indices, :clusters do |_, args|
+    clusters_from_args(args).each do |cluster|
+      index_names.each do |index_name|
+        index_group = search_config.search_server(cluster: cluster).index_group(index_name)
+        index = index_group.create_index
+        index_group.switch_to(index) unless index_group.current_real
+      end
+    end
+  end
+
+  desc "Create a brand new index and assign an alias if no alias currently exists"
+  task :create_index, :index_name, :clusters do |_, args|
+    clusters_from_args(args).each do |cluster|
+      index_group = search_config.search_server(cluster: cluster).index_group(args[:index_name])
       index = index_group.create_index
       index_group.switch_to(index) unless index_group.current_real
     end
   end
 
-  desc "Create a brand new index and assign an alias if no alias currently exists"
-  task :create_index, :index_name do |_, args|
-    index_group = search_config.search_server.index_group(args[:index_name])
-    index = index_group.create_index
-    index_group.switch_to(index) unless index_group.current_real
-  end
-
   desc "Lock the index for writes"
-  task :lock do
-    index_names.each do |index_name|
-      SearchConfig.instance.search_server.index(index_name).lock
+  task :lock, :clusters do |_, args|
+    clusters_from_args(args).each do |cluster|
+      index_names.each do |index_name|
+        SearchConfig.instance.search_server(cluster: cluster).index(index_name).lock
+      end
     end
   end
 
   desc "Unlock the index for writes"
-  task :unlock do
-    index_names.each do |index_name|
-      SearchConfig.instance.search_server.index(index_name).unlock
+  task :unlock, :clusters do |_, args|
+    clusters_from_args(args).each do |cluster|
+      index_names.each do |index_name|
+        SearchConfig.instance.search_server(cluster: cluster).index(index_name).unlock
+      end
     end
   end
 
@@ -99,42 +113,50 @@ wait for the process to complete, switch to the new index and
 release the lock.
 
 You should run this task if the index schema has changed.
+
+Specify a list of clusters `migrate_schema['A B C']` if you like, otherwise
+this task will run against all active clusters.
 "
-  task :migrate_schema do
+  task :migrate_schema, [:clusters] do |_, args|
     raise('Please set `CONFIRM_INDEX_MIGRATION_START` to run this task') unless ENV['CONFIRM_INDEX_MIGRATION_START']
 
-    failed_indices = []
+    clusters_from_args(args).each do |cluster|
+      puts "Migrating schema on cluster #{cluster.key}"
+      failed_indices = []
 
-    index_names.each do |index_name|
-      migrator = SchemaMigrator.new(index_name, search_config)
-      migrator.reindex
+      index_names.each do |index_name|
+        migrator = SchemaMigrator.new(index_name, search_config, cluster: cluster)
+        migrator.reindex
 
-      if migrator.failed == true
-        failed_indices << index_name
-      else
-        # We need to switch the aliases without a lock, since
-        # read_only_allow_delete prevents aliases being changed
-        # After running the schema migration, traffic must be
-        # represented anyway, so the race condition is irrelevant
-        migrator.switch_to_new_index
+        if migrator.failed == true
+          failed_indices << index_name
+        else
+          # We need to switch the aliases without a lock, since
+          # read_only_allow_delete prevents aliases being changed
+          # After running the schema migration, traffic must be
+          # represented anyway, so the race condition is irrelevant
+          migrator.switch_to_new_index
+        end
       end
-    end
 
-    raise "Failure during reindexing for: #{failed_indices.join(', ')}" if failed_indices.any?
+      raise "Failure during reindexing for: #{failed_indices.join(', ')}" if failed_indices.any?
+    end
   end
 
   desc "Switches an index group to a new index WITHOUT transferring the data"
-  task :switch_to_empty_index do
+  task :switch_to_empty_index, :clusters do |_, args|
     # Note that this task will effectively clear out the index, so shouldn't be
     # run on production without some serious consideration.
-    index_names.each do |index_name|
-      index_group = search_server.index_group(index_name)
-      index_group.switch_to index_group.create_index
+    clusters_from_args(args).each do |cluster|
+      index_names.each do |index_name|
+        index_group = search_server(cluster: cluster).index_group(index_name)
+        index_group.switch_to index_group.create_index
+      end
     end
   end
 
   desc "Switches an index group to a specific index WITHOUT transferring data"
-  task :switch_to_named_index, [:new_index_name] do |_, args|
+  task :switch_to_named_index, [:new_index_name, :clusters] do |_, args|
     # This makes no assumptions on the contents of the new index.
     # If it has been restored from a snapshot, you should check that the
     # index is fully recovered first. See :check_recovery.
@@ -142,11 +164,13 @@ You should run this task if the index schema has changed.
 
     new_index_name = args.new_index_name
 
-    index_names.each do |index_name|
-      if new_index_name.include?(index_name)
-        puts "Switching #{index_name} -> #{args.new_index_name}"
-        index_group = search_server.index_group(index_name)
-        index_group.switch_to(index_group.index_for_name(new_index_name))
+    clusters_from_args(args).each do |cluster|
+      index_names.each do |index_name|
+        if new_index_name.include?(index_name)
+          puts "Switching #{index_name} -> #{args.new_index_name}"
+          index_group = search_server(cluster: cluster).index_group(index_name)
+          index_group.switch_to(index_group.index_for_name(new_index_name))
+        end
       end
     end
   end
@@ -156,46 +180,54 @@ You should run this task if the index schema has changed.
     # as we only want to clean the indices for the versions that matches from the overnight copy task
     # if we didn't check this we could potentially attempt to delete one of the new indices as we are importing
     # data into it.
-    index_names.each do |index_name|
-      search_server.index_group(index_name).clean
+    Clusters.active.each do |cluster|
+      index_names.each do |index_name|
+        search_server(cluster: cluster).index_group(index_name).clean
+      end
     end
   end
 
   desc "Check whether a restored index has recovered"
-  task :check_recovery, [:index_name] do |_, args|
+  task :check_recovery, [:index_name, :clusters] do |_, args|
     raise "An 'index_name' must be supplied" unless args.index_name
 
-    puts SearchIndices::Index.index_recovered?(
-      base_uri: elasticsearch_uri,
-      index_name: args.index_name
-    )
+    clusters_from_args(args).each do |cluster|
+      puts "Recovery status of #{args.index_name} on cluster #{cluster.key} (#{cluster.uri}):"
+      puts SearchIndices::Index.index_recovered?(
+        base_uri: cluster.uri,
+        index_name: args.index_name
+      )
+    end
   end
 
   desc "Monitor the search indices and send data to statsd"
   task :monitor_indices do
-    client = Services.elasticsearch
-    statsd = Services.statsd_client
-    missing = []
+    Clusters.active.each do |cluster|
+      client = Services.elasticsearch(cluster: cluster)
+      statsd = Services.statsd_client
+      missing = []
+      cluster_name = "cluster_#{cluster.key}"
 
-    SearchConfig.instance.all_index_names.each do |index|
-      begin
-        stats = client.indices.stats index: index, docs: true
-        docs = stats["_all"]["primaries"]["docs"]
+      SearchConfig.instance.all_index_names.each do |index|
+        begin
+          stats = client.indices.stats index: index, docs: true
+          docs = stats["_all"]["primaries"]["docs"]
 
-        count = docs["count"]
-        statsd.gauge("#{index}_index.docs.total", count)
-        puts "#{index}_index.docs.total=#{count}"
+          count = docs["count"]
+          statsd.gauge("#{cluster_name}.#{index}_index.docs.count", count)
+          puts "#{cluster_name}.#{index}_index.docs.count=#{count}"
 
-        deleted = docs["deleted"]
-        statsd.gauge("#{index}_index.docs.deleted", deleted)
-        puts "#{index}_index.docs.deleted=#{deleted}"
+          deleted = docs["deleted"]
+          statsd.gauge("#{cluster_name}.#{index}_index.docs.deleted", deleted)
+          puts "#{cluster_name}.#{index}_index.docs.deleted=#{deleted}"
 
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound
-        missing << index
+        rescue Elasticsearch::Transport::Transport::Errors::NotFound
+          missing << index
+        end
       end
-    end
 
-    raise Exception.new("Missing index #{missing}!") unless missing.empty?
+      raise Exception.new("Missing index (on cluster #{cluster_name}) #{missing}!") unless missing.empty?
+    end
   end
 
   desc "
@@ -204,6 +236,7 @@ You should run this task if the index schema has changed.
   rake 'search:check_for_non_draft_taxons[format_name, elasticsearch_index]'
   "
   task :check_for_non_draft_taxons, [:format, :index_name] do |_, args|
+    warn_for_single_cluster_run
     format = args[:format]
     index  = args[:index_name]
 
@@ -212,7 +245,7 @@ You should run this task if the index schema has changed.
     elsif index.nil?
       puts 'Specify an index'
     else
-      client = Services.elasticsearch(hosts: SearchConfig.new.base_uri, timeout: 5.0)
+      client = Services.elasticsearch(hosts: Clusters.default_cluster, timeout: 5.0)
       publishing_api = Services.publishing_api
 
       taxons = {}

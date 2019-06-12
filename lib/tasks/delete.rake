@@ -15,7 +15,8 @@ namespace :delete do
     elsif index.nil?
       puts 'Specify an index'
     else
-      client = Services.elasticsearch(hosts: SearchConfig.new.base_uri, timeout: 5.0)
+      warn_for_single_cluster_run
+      client = Services.elasticsearch(cluster: Clusters.default_cluster, timeout: 5.0)
 
       delete_commands = ScrollEnumerator.new(
         client: client,

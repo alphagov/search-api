@@ -32,7 +32,7 @@ RSpec.describe SchemaMigrator do
     end
 
     expect_document_is_in_rummager(document, index: "govuk_test", id: "/a-page-to-be-reindexed")
-    expect_document_is_in_rummager(document, index: original_index.real_name, id: "/a-page-to-be-reindexed")
+    expect_document_is_in_rummager(document, index: original_index.real_name, id: "/a-page-to-be-reindexed", clusters: [Clusters.default_cluster])
   end
 
   context "index comparison" do

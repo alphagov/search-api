@@ -4,13 +4,14 @@ module Indexer
 
     DEFAULT_FIELDS_TO_IGNORE = ["popularity"].freeze
 
-    def initialize(old_index_name, new_index_name, filtered_format: nil, ignore: DEFAULT_FIELDS_TO_IGNORE, io: STDOUT, field_comparer: nil, enum_options: {})
+    def initialize(old_index_name, new_index_name, cluster: Clusters.default_cluster, filtered_format: nil, ignore: DEFAULT_FIELDS_TO_IGNORE, io: STDOUT, field_comparer: nil, enum_options: {})
       @old_index_name = old_index_name
       @new_index_name = new_index_name
       @filtered_format = filtered_format
       @field_to_ignore = ignore
       @field_comparer = field_comparer || ->(_id, key, old, new) { key =~ /^_root/ || old == new }
       @io = io
+      @cluster = cluster
       @enum_options = enum_options
     end
 
@@ -24,7 +25,7 @@ module Indexer
         search_body[:post_filter] = { term: { format: @filtered_format } } if @filtered_format
       end
 
-      CompareEnumerator.new(@old_index_name, @new_index_name, search_body, @enum_options).each do |old_item, new_item|
+      CompareEnumerator.new(@old_index_name, @new_index_name, @cluster, search_body, @enum_options).each do |old_item, new_item|
         if old_item == CompareEnumerator::NO_VALUE
           outcomes[:added_items] += 1
         elsif new_item == CompareEnumerator::NO_VALUE

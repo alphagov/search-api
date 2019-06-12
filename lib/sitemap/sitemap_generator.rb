@@ -27,7 +27,7 @@ class SitemapGenerator
       yielder << homepage
 
       enum = ScrollEnumerator.new(
-        client: Services.elasticsearch(hosts: @search_config.base_uri, timeout: SearchIndices::Index::TIMEOUT_SECONDS),
+        client: Services.elasticsearch(cluster: Clusters.default_cluster, timeout: SearchIndices::Index::TIMEOUT_SECONDS),
         search_body: search_body,
         index_names: index_names,
         batch_size: SearchIndices::Index.scroll_batch_size

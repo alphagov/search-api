@@ -11,11 +11,12 @@ namespace :analytics do
   then use SCP to retrieve the file, which will be around 100 MB.
   "
   task :create_data_import_csv, [:path] do |_, args|
+    warn_for_single_cluster_run
     args.with_defaults(path: (ENV['EXPORT_PATH'] || 'data'))
     path = args[:path]
 
     elasticsearch_config = SearchConfig.new.elasticsearch
-    analytics_data = AnalyticsData.new(elasticsearch_config["base_uri"], ALL_CONTENT_SEARCH_INDICES)
+    analytics_data = AnalyticsData.new(Clusters.default_cluster.uri, ALL_CONTENT_SEARCH_INDICES)
 
     FileUtils.mkdir_p(path)
 

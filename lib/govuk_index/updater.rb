@@ -12,11 +12,13 @@ module GovukIndex
     end
 
     def run(async: true)
-      scroll_enumerator.each_slice(PROCESSOR_BATCH_SIZE) do |documents|
-        if async
-          worker.perform_async(documents, @destination_index)
-        else
-          worker.new.perform(documents, @destination_index)
+      Clusters.active.each do |cluster|
+        scroll_enumerator(cluster: cluster).each_slice(PROCESSOR_BATCH_SIZE) do |documents|
+          if async
+            worker.perform_async(documents, @destination_index)
+          else
+            worker.new.perform(documents, @destination_index)
+          end
         end
       end
     end
@@ -35,9 +37,9 @@ module GovukIndex
       self.class.worker
     end
 
-    def scroll_enumerator
+    def scroll_enumerator(cluster:)
       ScrollEnumerator.new(
-        client: Services.elasticsearch(hosts: SearchConfig.instance.base_uri, timeout: TIMEOUT_SECONDS),
+        client: Services.elasticsearch(cluster: cluster, timeout: TIMEOUT_SECONDS),
         index_names: @source_index,
         search_body: search_body,
         batch_size: SCROLL_BATCH_SIZE

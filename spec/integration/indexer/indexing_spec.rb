@@ -11,8 +11,11 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     "indexable_content" => "HERE IS SOME CONTENT"
   }.freeze
 
+  let(:index_name) { 'government_test' }
+
   before do
     stub_tagging_lookup
+    with_just_one_cluster
   end
 
   it "adds a document to the search index" do
@@ -134,6 +137,8 @@ RSpec.describe 'ElasticsearchIndexingTest' do
   end
 
   context "when indexing to the metasearch index" do
+    let(:index_name) { 'metasearch_test' }
+
     it "reschedules the job if the index has a write lock" do
       stubbed_client = client
 
@@ -141,10 +146,11 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } }
       ] }
 
+      # rubocop:disable RSpec/MessageSpies
       expect(stubbed_client).to receive(:bulk).and_return(locked_response)
       expect(stubbed_client).to receive(:bulk).and_call_original
-      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
-
+      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client) # rubocop:disable RSpec/AnyInstance
+      # rubocop:enable RSpec/MessageSpies
       details = <<~DETAILS
         {\"best_bets\":[
           {\"link\":\"/learn-to-drive-a-car\",\"position\":1},
@@ -153,7 +159,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         ],\"worst_bets\":[]}", "stemmed_query_as_term"=>" learn to drive "}]
       DETAILS
 
-      post "/metasearch_test/documents", {
+      post "/#{index_name}/documents", {
         "_id" => "learn+to+drive-exact",
         "_type" => "best_bet",
         "stemmed_query" => "learn to drive",
@@ -165,7 +171,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
           "stemmed_query" => "learn to drive",
           "details" => details,
         },
-        index: "metasearch_test",
+        index: index_name,
         type: "best_bet",
         id: "learn+to+drive-exact",
       )
@@ -180,10 +186,11 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } }
       ] }
 
+      # rubocop:disable RSpec/MessageSpies
       expect(stubbed_client).to receive(:bulk).and_return(locked_response)
       expect(stubbed_client).to receive(:bulk).and_call_original
-      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
-
+      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client) # rubocop:disable RSpec/AnyInstance
+      # rubocop:enable RSpec/MessageSpies
       publishing_api_has_expanded_links(
         content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
         expanded_links: {},

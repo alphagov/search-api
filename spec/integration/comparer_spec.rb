@@ -50,7 +50,7 @@ RSpec.describe 'ComparerTest' do
       },
       post_filter: { term: { format: 'edition' } }
     }
-    results = Indexer::CompareEnumerator.new('govuk_test', 'government_test', query)
+    results = Indexer::CompareEnumerator.new('govuk_test', 'government_test', Clusters.default_cluster, query)
 
     expect([
       [
@@ -73,7 +73,7 @@ RSpec.describe 'ComparerTest' do
     insert_document('government_test', { some: 'data', format: 'other' }, id: 'DEF', type: 'other')
     commit_document('government_test', { some: 'data', format: 'edition' }, id: 'GHI', type: 'edition')
 
-    comparer = Indexer::Comparer.new('govuk_test', 'government_test', filtered_format: 'edition', io: StringIO.new)
+    comparer = Indexer::Comparer.new('govuk_test', 'government_test', cluster: Clusters.default_cluster, filtered_format: 'edition', io: StringIO.new)
 
     expect(comparer.run).to eq(changed: 1, 'changes: field': 1, added_items: 1)
   end
