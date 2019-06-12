@@ -354,6 +354,7 @@ non_indexable:
 # whitehall formats
 - about
 - about_our_services
+- accessibility_statement
 - access_and_opening
 - authored_article
 - case_study
