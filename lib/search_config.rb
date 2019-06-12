@@ -33,7 +33,7 @@ class SearchConfig
     meta_assign(__method__, cluster) do
       SearchIndices::SearchServer.new(
         cluster.uri,
-        schema_config,
+        schema_config(cluster: cluster),
         index_names,
         govuk_index_name,
         content_index_names,
@@ -42,8 +42,13 @@ class SearchConfig
     end
   end
 
-  def schema_config
-    @schema_config ||= SchemaConfig.new(es_config.config_path)
+  def schema_config(cluster: Clusters.default_cluster)
+    meta_assign(__method__, cluster) do
+      SchemaConfig.new(
+        es_config.config_path,
+        schema_config_file: cluster.schema_config_file,
+      )
+    end
   end
 
   def index_names
@@ -149,6 +154,10 @@ private
   end
 
   def combined_index_schema
+    # schema_config here corresponds to the default cluster, which is
+    # fine because the 'elasticsearch_types' field (which the combined
+    # index schema uses) is unaffected by the 'elasticsearch_settings'
+    # field (which is what can be overridden per-cluster).
     @combined_index_schema ||= CombinedIndexSchema.new(
       content_index_names + [govuk_index_name],
       schema_config

@@ -1,0 +1,115 @@
+index:
+  settings:
+    mapping:
+      total_fields:
+        limit: 2000
+    analysis:
+      analyzer:
+        # At index time, elasticsearch will use an analyzer named default in the index settings
+        # if no analyzer is specified in the field mapping:
+        # https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
+        #
+        # We don't need this at query time unless synonyms are disabled
+        # using a debug flag.
+        default:
+          type: custom
+          tokenizer: standard
+          filter: [standard, asciifolding, lowercase, stop, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
+
+        # This analyzer does not filter out these stopwords:
+        # a, an, and, are, as, at, be, but, by,
+        # for, if, in, into, is, it,
+        # no, not, of, on, or, such,
+        # that, the, their, then, there, these,
+        # they, this, to, was, will, with
+        searchable_text:
+          type: custom
+          tokenizer: standard
+          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used at index time for the .synonym variants of searchable
+        # text fields.
+        with_index_synonyms:
+          type: custom
+          tokenizer: standard
+          filter: [standard, asciifolding, lowercase, index_synonym, stop, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used at search time for the .synonym variants of searchable
+        # text fields.
+        with_search_synonyms:
+          type: custom
+          tokenizer: standard
+          filter: [standard, asciifolding, lowercase, search_synonym, stop, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
+
+        # An analyzer for doing "exact" word matching (but stripping wrapping whitespace, and case insensitive).
+        exact_match:
+          type: custom
+          tokenizer: keyword
+          filter: [asciifolding, trim, lowercase]
+          char_filter: [normalize_quotes]
+
+        # An analyzer for doing stemmed word matching for best bets.
+        best_bet_stemmed_match:
+          type: custom
+          tokenizer: standard
+          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english]
+          char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used to process text supplied to the field for use in spelling correction.
+        spelling_analyzer:
+          type: custom
+          tokenizer: standard
+          filter: [standard, asciifolding, lowercase, shingle]
+          char_filter: [normalize_quotes, strip_quotes]
+
+        # Analyzer used to process text fields for use for sorting.
+        string_for_sorting:
+          type: custom
+          tokenizer: keyword
+          filter: [trim, lowercase]
+          char_filter: [normalize_quotes, strip_quotes]
+
+      tokenizer:
+
+      char_filter:
+        strip_quotes:
+          type: "pattern_replace"
+          pattern: "'"
+          replacement: ""
+
+        normalize_quotes:
+          type: "mapping"
+          mappings:
+            - "\u0091=>\u0027"
+            - "\u0092=>\u0027"
+            - "\u2018=>\u0027"
+            - "\u2019=>\u0027"
+            - "\uFF07=>\u0027"
+
+      filter:
+        stemmer_english:
+          type: stemmer
+          name: porter2
+    # The following settings were in puppet, but now index config
+    # can't be applied from the nodes, so they have to live here.
+    # This means that we can no longer (easily) have ci-agents or the
+    # dev VM use no replicas.
+    number_of_replicas: 1
+    number_of_shards: 3
+    refresh_interval: '1s'
+    search:
+      slowlog:
+        threshold:
+          query:
+            warn: '5s'
+            info: '2s'
+            debug: '1s'
+          fetch:
+            warn: '1s'
+            info: '800ms'
+            debug: '500ms'
+    max_result_window: 1000000

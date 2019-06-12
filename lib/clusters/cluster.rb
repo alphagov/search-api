@@ -1,10 +1,11 @@
 module Clusters
   class Cluster
-    attr_reader :key, :default
+    attr_reader :key, :schema_config_file, :default
 
-    def initialize(key:, uri_key:, default: false)
+    def initialize(key:, uri_key:, schema_config_file: 'elasticsearch_schema.yml', default: false)
       @key = key
       @uri_key = uri_key
+      @schema_config_file = schema_config_file
       @default = default
     end
 
