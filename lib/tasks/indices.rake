@@ -118,8 +118,6 @@ Specify a list of clusters `migrate_schema['A B C']` if you like, otherwise
 this task will run against all active clusters.
 "
   task :migrate_schema, [:clusters] do |_, args|
-    raise('Please set `CONFIRM_INDEX_MIGRATION_START` to run this task') unless ENV['CONFIRM_INDEX_MIGRATION_START']
-
     clusters_from_args(args).each do |cluster|
       puts "Migrating schema on cluster #{cluster.key}"
       failed_indices = []
