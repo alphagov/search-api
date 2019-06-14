@@ -9,13 +9,440 @@ schema_name: finder_email_signup
 title: Find EU Exit guidance for your business
 description: You'll get an email each time EU Exit guidance is published.
 details:
-  email_filter_by: facet_groups
-  email_filter_name: facet_groups
-  email_signup_choice:
-  - key: "52435175-82ed-4a04-adef-74c0199d0f46"
-    radio_button_name: "52435175-82ed-4a04-adef-74c0199d0f46"
-    topic_name: "appear in find eu exit guidance business finder"
-    prechecked: true
+  combine_mode: or
+  email_filter_by: facet_values
+  email_filter_facets:
+  - facet_id: sector_business_area
+    facet_name: Sector / Business area
+    facet_choices:
+    - key: accommodation
+      content_id: 894a7c88-40bb-4ba6-a234-b7e15d8a0c21
+      radio_button_name: Accommodation
+      topic_name: Accommodation
+      prechecked: false
+    - key: aerospace
+      content_id: 24fd50fa-6619-46ca-96cd-8ce90fa076ce
+      radio_button_name: Aerospace
+      topic_name: Aerospace
+      prechecked: false
+    - key: agriculture
+      content_id: 94b3cfe2-af89-4744-b8d7-7fc79edcbc85
+      radio_button_name: Agriculture and forestry (including wholesale)
+      topic_name: Agriculture and forestry (including wholesale)
+      prechecked: false
+    - key: air-freight-air-passenger-services
+      content_id: 43d328b3-59ee-4d5d-bda0-7c7d4bb301be
+      radio_button_name: Air freight and air passenger services
+      topic_name: Air freight and air passenger services
+      prechecked: false
+    - key: arts-culture-heritage
+      content_id: cf341686-c886-42c7-bf8e-cf177b6a2100
+      radio_button_name: Arts, culture and heritage
+      topic_name: Arts, culture and heritage
+      prechecked: false
+    - key: automotive
+      content_id: e53e578a-01d2-4844-b52b-fd375ee4c4b9
+      radio_button_name: Automotive
+      topic_name: Automotive
+      prechecked: false
+    - key: auxiliary-activities
+      content_id: 5faa1741-fc55-4110-b342-de92f6324118
+      radio_button_name: Auxiliary activities
+      topic_name: Auxiliary activities
+      prechecked: false
+    - key: charities
+      content_id: 05334231-9be3-4670-a2f5-84bef7e3badd
+      radio_button_name: Charities
+      topic_name: Charities
+      prechecked: false
+    - key: chemicals
+      content_id: 7620da7a-0427-4b3c-9498-db9dc25209b
+      radio_button_name: Chemicals
+      topic_name: Chemicals
+      prechecked: false
+    - key: clothing-consumer-goods
+      content_id: 1e3e8abd-135d-4844-afa8-5c51df3d3c57
+      radio_button_name: Clothing and consumer goods
+      topic_name: Clothing and consumer goods
+      prechecked: false
+    - key: clothing-consumer-goods-manufacturing
+      content_id: a7263c3b-7ade-4a91-9f51-40ebc57b3f98
+      radio_button_name: Clothing and consumer goods manufacture
+      topic_name: Clothing and consumer goods manufacture
+      prechecked: false
+    - key: computer-services
+      content_id: 70e6087f-714e-4922-8e06-72cfff997785
+      radio_button_name: Digital, technology and computer services
+      topic_name: Digital, technology and computer services
+      prechecked: false
+    - key: construction-contracting
+      content_id: 9eb88205-118b-4f0b-abd9-ac6b469054c5
+      radio_button_name: Construction
+      topic_name: Construction
+      prechecked: false
+    - key: creative-industries
+      content_id: 69f9bfbb-b85e-4898-bee9-9f0e6bb5db7f
+      radio_button_name: Creative industries
+      topic_name: Creative industries
+      prechecked: false
+    - key: defence
+      content_id: 77764805-73e6-4d47-9f20-aedd6de7dab9
+      radio_button_name: Defence
+      topic_name: Defence
+      prechecked: false
+    - key: education
+      content_id: 7c980b5d-a7ea-4d6e-aad1-e80e882566c4
+      radio_button_name: Education
+      topic_name: Education
+      prechecked: false
+    - key: electricity
+      content_id: 14d13ea1-db43-4b35-9cc2-3808d4ff731d
+      radio_button_name: Electricity
+      topic_name: Electricity
+      prechecked: false
+    - key: electronics-parts-machinery
+      content_id: 01b51981-1ad6-4e45-9b14-b8a57fcb4204
+      radio_button_name: Electronics, parts and machinery
+      topic_name: Electronics, parts and machinery
+      prechecked: false
+    - key: environmental-services
+      content_id: 3a8f00ff-f098-4fd1-81bc-7914e963f842
+      radio_button_name: Environmental services
+      topic_name: Environmental services
+      prechecked: false
+    - key: financial-services
+      content_id: 8be45b7f-93df-4646-a93f-9ec8c24f4577
+      radio_button_name: Financial services
+      topic_name: Financial services
+      prechecked: false
+    - key: fisheries
+      content_id: c5e26d37-def8-40aa-8b46-d9a23ffaceb1
+      radio_button_name: Fisheries (including wholesale)
+      topic_name: Fisheries (including wholesale)
+      prechecked: false
+    - key: food-and-drink
+      content_id: 53f9ce4c-7cbb-447f-bdf1-a9b022896d3a
+      radio_button_name: Food, drink and tobacco (retail and wholesale)
+      topic_name: Food, drink and tobacco (retail and wholesale)
+      prechecked: false
+    - key: food-drink-tobacco
+      content_id: 9f3476e1-8ff0-455d-a14e-003236b2797c
+      radio_button_name: Food, drink and tobacco (processing)
+      topic_name: Food, drink and tobacco (processing)
+      prechecked: false
+    - key: furniture-manufacture
+      content_id: 040649fc-4e2c-4028-b846-77fe3eebd1f7
+      radio_button_name: Furniture manufacture
+      topic_name: Furniture manufacture
+      prechecked: false
+    - key: gambling
+      content_id: 6ae9d424-6ade-456e-bcbe-6ce72b72ca13
+      radio_button_name: Gambling
+      topic_name: Gambling
+      prechecked: false
+    - key: health-social-care-services
+      content_id: 2665a837-037e-4dba-9859-be1f35a88d1e
+      radio_button_name: Health and social care services
+      topic_name: Health and social care services
+      prechecked: false
+    - key: installation-servicing-repair
+      content_id: 1a647ff3-73bc-4f0d-8b06-d07c62023d35
+      radio_button_name: Installation, servicing and repair
+      topic_name: Installation, servicing and repair
+      prechecked: false
+    - key: insurance
+      content_id: d6cdac38-eab5-4915-8917-b328c18957d8
+      radio_button_name: Insurance
+      topic_name: Insurance
+      prechecked: false
+    - key: justice-prisons
+      content_id: cec78369-d11b-48cb-9a90-ebd4ebb5de37
+      radio_button_name: Justice including prisons
+      topic_name: Justice including prisons
+      prechecked: false
+    - key: marine
+      content_id: 18c3892e-8a0e-4884-906e-5938380eceee
+      radio_button_name: Marine
+      topic_name: Marine
+      prechecked: false
+    - key: marine-transport
+      content_id: 356f46a0-17d3-4ba4-8952-8c02244f904
+      radio_button_name: Marine transport
+      topic_name: Marine transport
+      prechecked: false
+    - key: broadcasting
+      content_id: 442e7d39-9ebf-46c5-813a-daa328e135b8
+      radio_button_name: Media and broadcasting
+      topic_name: Media and broadcasting
+      prechecked: false
+    - key: medical-technology
+      content_id: 6e019777-9029-414b-b81e-ccb955669f86
+      radio_button_name: Medical technology
+      topic_name: Medical technology
+      prechecked: false
+    - key: metals-manufacture
+      content_id: 5cedc5d2-8e0c-4706-86c6-3e6ac2c3d7ad
+      radio_button_name: Metals manufacture
+      topic_name: Metals manufacture
+      prechecked: false
+    - key: mining
+      content_id: f97da086-4f36-4229-a427-ccdb021ab058
+      radio_button_name: Mining
+      topic_name: Mining
+      prechecked: false
+    - key: motor-trades
+      content_id: c366fc8d-03d6-417c-9a23-6f1bce72db5c
+      radio_button_name: Motor trade
+      topic_name: Motor trade
+      prechecked: false
+    - key: non-metal-materials-manufacture
+      content_id: cbe95935-13c7-4de8-8d3c-b7c9ef8d69a2
+      radio_button_name: Non-metal materials manufacture
+      topic_name: Non-metal materials manufacture
+      prechecked: false
+    - key: nuclear
+      content_id: 45bfb0a2-b60d-40f2-b9af-b5d2b4b91445
+      radio_button_name: Nuclear
+      topic_name: Nuclear
+      prechecked: false
+    - key: other-advanced-manufacturing
+      content_id: 14cf2a68-3297-44d3-ba01-a4426845b1b8
+      radio_button_name: Other advanced manufacturing
+      topic_name: Other advanced manufacturing
+      prechecked: false
+    - key: oil-gas-coal
+      content_id: 46ad5a1d-fc2d-4065-a34f-3f7b2fea8e81
+      radio_button_name: Oil, gas and coal
+      topic_name: Oil, gas and coal
+      prechecked: false
+    - key: other-energy
+      content_id: 2c562ab5-7891-4a00-8510-a5ebdb4001c8
+      radio_button_name: Other energy
+      topic_name: Other energy
+      prechecked: false
+    - key: other-manufacturing
+      content_id: 7536c0c4-fb41-43f4-a2c4-08f4fa9f5427
+      radio_button_name: Other manufacturing
+      topic_name: Other manufacturing
+      prechecked: false
+    - key: personal-services
+      content_id: d9da7c7b-b0c9-4757-aa45-9c70dd78df62
+      radio_button_name: Personal services
+      topic_name: Personal services
+      prechecked: false
+    - key: pharmaceuticals
+      content_id: 93f5c156-2449-4e52-9e92-aefc73586ffd
+      radio_button_name: Pharmaceuticals
+      topic_name: Pharmaceuticals
+      prechecked: false
+    - key: ports-airports
+      content_id: 4591ce75-7568-48c6-af5f-3558f89f7f57
+      radio_button_name: Ports and airports
+      topic_name: Ports and airports
+      prechecked: false
+    - key: postal-courier-services
+      content_id: 16a9ce39-7786-4ae2-8289-93d924c958a5
+      radio_button_name: Postal and courier services
+      topic_name: Postal and courier services
+      prechecked: false
+    - key: professional-and-business-services
+      content_id: f07527f1-e6de-4fe8-b7d9-b197769e1f1f
+      radio_button_name: Professional and business services
+      topic_name: Professional and business services
+      prechecked: false
+    - key: public-administration
+      content_id: 091c0e83-bb54-4727-9b2c-a919510e1e79
+      radio_button_name: Public administration
+      topic_name: Public administration
+      prechecked: false
+    - key: rail
+      content_id: 53bcfcf0-e22a-416d-91ac-2661e1d6ed04
+      radio_button_name: Rail
+      topic_name: Rail
+      prechecked: false
+    - key: rail-passenger-freight
+      content_id: 2e1cf5a9-d410-4cfc-9f54-d94302f8fbd1
+      radio_button_name: Rail (passengers and freight)
+      topic_name: Rail (passengers and freight)
+      prechecked: false
+    - key: real-estate-excl-imputed-rent
+      content_id: dba1b198-1ead-4de4-a961-b11d71fc6f20
+      radio_button_name: Real estate
+      topic_name: Real estate
+      prechecked: false
+    - key: repair-of-computers-consumer-goods
+      content_id: c1d8057c-76bf-431c-9ac8-6281a4b7b9ca
+      radio_button_name: Repair of computers and consumer goods
+      topic_name: Repair of computers and consumer goods
+      prechecked: false
+    - key: research
+      content_id: 39771bc2-8b2c-43e9-9cfc-fa3606b67db6
+      radio_button_name: Research
+      topic_name: Research
+      prechecked: false
+    - key: restaurants-bars-catering
+      content_id: a572f853-18bf-41b6-9afa-82c1723e3de9
+      radio_button_name: Restaurants, bars and catering
+      topic_name: Restaurants, bars and catering
+      prechecked: false
+    - key: retail
+      content_id: 34a6edd0-46ea-4a76-ae80-8c96709d4f59
+      radio_button_name: Retail and wholesale (excluding motor trade, food and drink)
+      topic_name: Retail and wholesale (excluding motor trade, food and drink)
+      prechecked: false
+    - key: road-passengers-freight
+      content_id: 6f5f8dbb-3cd3-475d-8f3a-ed6e22d370be
+      radio_button_name: Road (passengers and freight)
+      topic_name: Road (passengers and freight)
+      prechecked: false
+    - key: space
+      content_id: b4e507df-f067-4749-9468-3de120775216
+      radio_button_name: Space
+      topic_name: Space
+      prechecked: false
+    - key: sports-recreation
+      content_id: 4d98ae8d-fd44-4e5d-8cf0-b9b01bd76b1a
+      radio_button_name: Sports and recreation
+      topic_name: Sports and recreation
+      prechecked: false
+    - key: telecoms
+      content_id: f4e525fd-3f56-47c7-b4b7-d9c7664027ee
+      radio_button_name: Telecoms and information services
+      topic_name: Telecoms and information services
+      prechecked: false
+    - key: tourism
+      content_id: ec2c2efd-4cf1-4a5a-94fb-c905d2f3924b
+      radio_button_name: Tourism
+      topic_name: Tourism
+      prechecked: false
+    - key: veterinary
+      content_id: 5d8c33a5-2c88-4f33-b3c0-73b49b96d81a
+      radio_button_name: Veterinary
+      topic_name: Veterinary
+      prechecked: false
+    - key: voluntary-community-organisations
+      content_id: c66d8196-977f-47a5-806f-885c9cf01412
+      radio_button_name: Voluntary and community organistions
+      topic_name: Voluntary and community organistions
+      prechecked: false
+    - key: warehouses-services-pipelines
+      content_id: 15ad9a45-5536-4323-97f9-ed470cdf1e3b
+      radio_button_name: Warehousing, services and pipelines
+      topic_name: Warehousing, services and pipelines
+      prechecked: false
+  - facet_id: business_activity
+    facet_name: Organisation activity
+    facet_choices:
+    - key: products-or-goods
+      content_id: a55f04df-3877-4c73-bbfe-ad7339cdfccf
+      radio_button_name: Sell products or goods in the UK
+      topic_name: Sell products or goods in the UK
+      prechecked: false
+    - key: buying
+      content_id: d422aa2e-59ad-4986-8ef0-973959878912
+      radio_button_name: Buy products or goods from abroad
+      topic_name: Buy products or goods from abroad
+      prechecked: false
+    - key: selling
+      content_id: 7283b8e1-840f-49da-967f-c0a512a3f531
+      radio_button_name: Sell products or goods abroad
+      topic_name: Sell products or goods abroad
+      prechecked: false
+    - key: other-eu
+      content_id: 7ae8e57c-ea7a-42de-84fc-a084b5f64bca
+      radio_button_name: Do other types of business in the EU
+      topic_name: Do other types of business in the EU
+      prechecked: false
+    - key: transporting
+      content_id: 07398027-ee4d-4bda-b53e-2dc655734049
+      radio_button_name: Transport goods abroad
+      topic_name: Transport goods abroad
+      prechecked: false
+  - facet_id: employ_eu_citizens
+    facet_name: Who you employ
+    facet_choices:
+    - key: 'yes'
+      content_id: 5476f0c7-d029-459b-8a17-196374ae3366
+      radio_button_name: EU citizens
+      topic_name: EU citizens
+      prechecked: false
+    - key: 'no'
+      content_id: bbdbda71-b1ec-46b8-a5b8-931d933288e9
+      radio_button_name: Non-EU citizens
+      topic_name: No EU citizens
+      prechecked: false
+  - facet_id: personal_data
+    facet_name: Personal data
+    facet_choices:
+    - key: processing-personal-data
+      content_id: c9aa5056-77d7-4bdb-af4f-7679dd1d6a2a
+      radio_button_name: Processing personal data from Europe
+      topic_name: Processing personal data from Europe
+      prechecked: false
+    - key: interacting-with-eea-website
+      content_id: af6c860e-6d0e-4045-a66a-b14040d63a20
+      radio_button_name: Using websites or services hosted in Europe
+      topic_name: Using websites or services hosted in Europe
+      prechecked: false
+    - key: digital-service-provider
+      content_id: 855757bc-c578-4b78-9dfa-a75e2ae70eaa
+      radio_button_name: Providing digital services available to Europe
+      topic_name: Providing digital services available to Europe
+      prechecked: false
+  - facet_id: intellectual_property
+    facet_name: Intellectual property
+    facet_choices:
+    - key: copyright
+      content_id: c308aa59-c234-48d4-885d-5d964e710bd1
+      radio_button_name: Copyright
+      topic_name: Copyright
+      prechecked: false
+    - key: trademarks
+      content_id: 231e7512-8054-41c6-80c5-9d353c7f1c52
+      radio_button_name: Trade marks
+      topic_name: Trade marks
+      prechecked: false
+    - key: designs
+      content_id: 4be67a27-0d5a-444b-9379-9161365206f7
+      radio_button_name: Designs
+      topic_name: Designs
+      prechecked: false
+    - key: patents
+      content_id: ed2109a5-5bc1-40f1-af71-3657263fd4e0
+      radio_button_name: Patents
+      topic_name: Patents
+      prechecked: false
+    - key: exhaustion-of-rights
+      content_id: 32282878-5d75-42be-911d-ef7ba102bc7f
+      radio_button_name: Exhaustion of rights
+      topic_name: Exhaustion of rights
+      prechecked: false
+  - facet_id: eu_uk_government_funding
+    facet_name: EU or UK government funding
+    facet_choices:
+    - key: receiving-eu-funding
+      content_id: c1fcd375-897f-4a57-88e6-49d5b9a6799d
+      radio_button_name: EU funding
+      topic_name: EU funding
+      prechecked: false
+    - key: receiving-uk-government-funding
+      content_id: 4dd0faa0-29e0-4be8-bb7d-88dc53bf9682
+      radio_button_name: UK government funding
+      topic_name: UK government funding
+      prechecked: false
+  - facet_id: public_sector_procurement
+    facet_name: Public sector procurement
+    facet_choices:
+    - key: civil-government-contracts
+      content_id: f165dc7c-7cef-446a-bdfd-8a1ca685d091
+      radio_button_name: Civil government contracts
+      topic_name: Civil government contracts
+      prechecked: false
+    - key: defence-contracts
+      content_id: 33fc20d7-6a45-40c9-b31f-e4678f962ff1
+      radio_button_name: Defence contracts
+      topic_name: Defence contracts
+      prechecked: false
   subscription_list_title_prefix: 'Find EU Exit guidance for your business'
 routes:
 - path: "/find-eu-exit-guidance-business/email-signup"
