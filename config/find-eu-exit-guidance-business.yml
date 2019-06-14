@@ -41,29 +41,4 @@ routes:
   type: exact
 document_type: finder
 schema_name: finder
-ordered_related_items:
-  - 705ff357-7e3a-49ae-823e-5d6c7078d350
-  - e9bf1cbb-fcba-485a-8e1b-bf36d195c7b1
-  - f026b0f9-ce9c-499a-a3cd-1ba9aad8f368
-  - b0a8b221-b2cb-434c-abb8-1a7323fd1e05
-  - d2c7d17e-adf5-4ea1-b16b-4db9f922190a
-  - a5d2f87c-06ae-4cf0-bea7-3fc9746eddd9
-  - fae745d3-c5a5-4505-aa59-d257e4e938c1
-  - 27952a1b-702d-4166-bd62-6538892f73c3
-  - 88ad2f6e-fb1e-47c9-8201-fdb02f90542c
-  - 7dd1f3ec-04a9-4954-b7c1-b7fd531daafc
-  - b1194956-d0dd-4353-a835-5c4650528e74
-  - f896235a-0cf0-4047-af75-926df45e1aa6
-  - 1ecf3661-4bf0-4776-9cd6-7ecd5cffac2e
-  - 2f6219da-6453-494f-bd5e-2e599642612d
-  - 54b2b1e7-68a1-4df9-a9e4-70bcd0bcde71
-  - aff1b568-e23b-464b-bd24-5c0a0cd9bf27
-  - b7b029ef-a1a5-4d87-9e21-3b7409baf77c
-  - 4cc71bfd-4a2b-4bb0-b3b2-de9a9909ab53
-  - 7567f8d9-ac09-47ed-aa89-cd51e56d72b1
-  - f0dcee7c-97f2-47da-9727-1f4fb1bf0578
-  - e5b88fc9-60c5-4747-a9a1-263db349605b
-  - 4645a471-468e-4634-be0c-f63668d57626
-  - 9aa99522-bab7-4176-811a-82b104710e3f
-  - 0246736f-ef09-4d45-ba2d-cd10dc80b82b
-  - 5e017fbd-e165-43a1-8a16-57edf9f527b0
+ordered_related_items: []
