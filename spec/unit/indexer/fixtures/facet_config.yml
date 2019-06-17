@@ -28,12 +28,12 @@ details:
       value: clothing-consumer-goods-manufacturing
     - label: Construction
       value: construction-contracting
-    - label: Digital, technology and computer services
-      value: computer-services
     - label: Creative industries
       value: creative-industries
     - label: Defence
       value: defence
+    - label: Digital, technology and computer services
+      value: computer-services
     - label: Education
       value: education
     - label: Electricity
