@@ -70,11 +70,6 @@ details:
       radio_button_name: Clothing and consumer goods manufacture
       topic_name: Clothing and consumer goods manufacture
       prechecked: false
-    - key: computer-services
-      content_id: 70e6087f-714e-4922-8e06-72cfff997785
-      radio_button_name: Digital, technology and computer services
-      topic_name: Digital, technology and computer services
-      prechecked: false
     - key: construction-contracting
       content_id: 9eb88205-118b-4f0b-abd9-ac6b469054c5
       radio_button_name: Construction
@@ -89,6 +84,11 @@ details:
       content_id: 77764805-73e6-4d47-9f20-aedd6de7dab9
       radio_button_name: Defence
       topic_name: Defence
+      prechecked: false
+    - key: computer-services
+      content_id: 70e6087f-714e-4922-8e06-72cfff997785
+      radio_button_name: Digital, technology and computer services
+      topic_name: Digital, technology and computer services
       prechecked: false
     - key: education
       content_id: 7c980b5d-a7ea-4d6e-aad1-e80e882566c4
