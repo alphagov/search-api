@@ -9,7 +9,6 @@ schema_name: finder_email_signup
 title: Find EU Exit guidance for your business
 description: You'll get an email each time EU Exit guidance is published.
 details:
-  combine_mode: or
   email_filter_by: facet_values
   email_filter_facets:
   - facet_id: sector_business_area
