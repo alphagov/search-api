@@ -11,9 +11,11 @@ RSpec.describe 'Loading page traffic data' do
     GovukIndex::PageTrafficLoader.new
       .load_from(StringIO.new(data))
 
-    document = fetch_document_from_rummager(id: id, index: 'page-traffic_test')
+    Clusters.active.each do |cluster|
+      document = fetch_document_from_rummager(id: id, index: 'page-traffic_test', cluster: cluster)
 
-    expect(document["_source"]["document_type"]).to eq('page_traffic')
-    expect(document['_source']['rank_14']).to eq(100)
+      expect(document["_source"]["document_type"]).to eq('page_traffic')
+      expect(document['_source']['rank_14']).to eq(100)
+    end
   end
 end

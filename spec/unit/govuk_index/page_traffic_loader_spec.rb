@@ -20,10 +20,13 @@ RSpec.describe GovukIndex::PageTrafficLoader do
     line2 = [{ "val" => "c" }, { "data" => 1 }, { "val" => "d" }, { "data" => 1 }]
     line3 = [{ "val" => "e" }, { "data" => 1 }]
 
-    expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line1, 'new_index_name')
-    expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line2, 'new_index_name')
-    expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line3, 'new_index_name')
-
+    Clusters.active.each do |cluster|
+      # rubocop:disable RSpec/MessageSpies
+      expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line1, 'new_index_name', cluster.key)
+      expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line2, 'new_index_name', cluster.key)
+      expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line3, 'new_index_name', cluster.key)
+      # rubocop:enable RSpec/MessageSpies
+    end
     loader = GovukIndex::PageTrafficLoader.new(iostream_batch_size: 2)
 
     loader.load_from(input)

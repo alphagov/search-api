@@ -12,6 +12,7 @@ module Index
 
     def initialize(options = {})
       @_index = options.delete(:index_name)
+      @clusters = options.delete(:clusters) || Clusters.active
       @_options = options
     end
 
@@ -22,7 +23,7 @@ module Index
     end
 
     def bulk(params)
-      Clusters.active.map do |cluster|
+      clusters.map do |cluster|
         client(cluster: cluster).bulk(
           params.merge(index: index_name)
         )
@@ -30,6 +31,8 @@ module Index
     end
 
   private
+
+    attr_reader :clusters
 
     def client(cluster: Clusters.default_cluster)
       @_client ||= {}
