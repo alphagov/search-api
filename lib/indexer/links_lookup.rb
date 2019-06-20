@@ -143,7 +143,6 @@ module Indexer
         'organisation_content_ids' => content_ids_for(links, 'organisations'),
         'facet_groups' => content_ids_for(links, 'facet_groups'),
         'facet_values' => content_ids_for(links, 'facet_values'),
-        'and_facet_values' => content_ids_for(links, 'facet_values'),
         'part_of_taxonomy_tree' => parts_of_taxonomy_for_all_taxons(links)
       }
     end
