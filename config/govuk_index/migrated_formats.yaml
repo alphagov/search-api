@@ -291,6 +291,7 @@ migrated:
 - travel_advice_index
 - special_route:
   - '/help'
+  - '/help/cookies'
   - '/find-local-council'
 
 indexable: []
