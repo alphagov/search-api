@@ -50,6 +50,10 @@
       {
         "label": "Reviews of orders and undertakings",
         "value": "review-of-orders-and-undertakings"
+      },
+      {
+        "label": "State aid",
+        "value": "state-aid"
       }
     ],
 
@@ -299,6 +303,38 @@
       {
         "label": "Regulatory references and appeals - final determination",
         "value": "regulatory-references-and-appeals-final-determination"
+      },
+      {
+        "label": "State aid - no aid",
+        "value": "state-aid-no-aid"
+      },
+      {
+        "label": "State aid - aid approved",
+        "value": "state-aid-aid-approved"
+      },
+      {
+        "label": "State aid - conditional decision",
+        "value": "state-aid-conditional-decision"
+      },
+      {
+        "label": "State aid - aid not approved",
+        "value": "state-aid-aid-not-approved"
+      },
+      {
+        "label": "State aid - investigation",
+        "value": "state-aid-investigation"
+      },
+      {
+        "label": "State aid - recommendation accepted",
+        "value": "state-aid-recommendation-accepted"
+      },
+      {
+        "label": "State aid - recommendation implemented",
+        "value": "state-aid-recommendation-implemented"
+      },
+      {
+        "label": "State aid - aid not misused",
+        "value": "state-aid-aid-not-misused"
       }
     ]
   }
