@@ -23,6 +23,15 @@ RSpec.describe GovukIndex::MigratedFormats do
     end
   end
 
+  describe 'content that has indexable format but non-indexable path' do
+    it 'returns true if the content is non indexable for a format that is otherwise indexable' do
+      non_indexable_path = described_class.non_indexable_path
+
+      expect(non_indexable_path.include?('/help/cookie-details')).to be true
+      expect(described_class.non_indexable?('help_page', '/help/cookie-details', 'publisher')).to be true
+    end
+  end
+
   describe 'content that can be published by both Content Publisher and Whitehall' do
     it '#non_indexable? returns false if content is published by Content Publisher' do
       expect(described_class.non_indexable?('news_story', '/a-path', 'content-publisher')).to be false

@@ -296,6 +296,9 @@ migrated:
 
 indexable: []
 
+non_indexable_path:
+- '/help/cookie-details'
+
 non_indexable:
 - calculator
 - license_finder
