@@ -32,7 +32,7 @@ class SchemaMigrator
       end
 
       if changed?
-        puts "Difference during reindex for: #{index_name}"
+        puts "Difference during reindex for: #{@index_name}"
         puts comparison.inspect
         @failed = true
       end
