@@ -4,15 +4,15 @@ module GovukIndex
     QUEUE_NAME = 'bulk'.freeze
     sidekiq_options queue: QUEUE_NAME
 
-    def self.perform_async(records, destination_index)
+    def self.perform_async(records, destination_index, cluster_key)
       data = Base64.encode64(Zlib::Deflate.deflate(Sidekiq.dump_json(records)))
-      super(data, destination_index)
+      super(data, destination_index, cluster_key)
     end
 
-    def perform(data, destination_index)
+    def perform(data, destination_index, cluster_key)
       records = Sidekiq.load_json(Zlib::Inflate.inflate(Base64.decode64(data)))
-
-      actions = Index::ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index))
+      cluster = Clusters.get_cluster(cluster_key)
+      actions = Index::ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index, clusters: [cluster]))
 
       records.each_slice(2) do |identifier, document|
         identifier['index'] = identifier['index'].merge('_type' => 'generic-document')
