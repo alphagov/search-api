@@ -26,9 +26,9 @@ RSpec.describe GovukIndex::PageTrafficLoader do
       expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line2, 'new_index_name', cluster.key)
       expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line3, 'new_index_name', cluster.key)
       # rubocop:enable RSpec/MessageSpies
-    end
-    loader = GovukIndex::PageTrafficLoader.new(iostream_batch_size: 2)
+      loader = described_class.new(cluster: cluster, iostream_batch_size: 2)
 
-    loader.load_from(input)
+      loader.load_from(input)
+    end
   end
 end
