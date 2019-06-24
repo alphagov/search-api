@@ -1,7 +1,8 @@
 module Search
   class FormatMigrator
-    def initialize(base = nil)
-      @base = base
+    def initialize(base_query: nil, cluster: Clusters.default_cluster)
+      @base_query = base_query
+      @cluster = cluster
     end
 
     def call
@@ -13,19 +14,21 @@ module Search
       }
     end
 
+  private
+
+    attr_reader :cluster
+
     def migrated_indices
-      SearchConfig.instance.new_content_index.real_index_names
+      SearchConfig.instance.new_content_index(cluster: cluster).real_index_names
     end
 
     def migrated_formats
       GovukIndex::MigratedFormats.migrated_formats.keys
     end
 
-  private
-
     def excluding_formats
       options = {}
-      options[:must] = base
+      options[:must] = base_query
 
       if migrated_formats.any?
         options[:must_not] = [
@@ -45,7 +48,7 @@ module Search
       {
         bool: {
           must: [
-            base,
+            base_query,
             { terms: { _index: migrated_indices } },
             { terms: { format: migrated_formats } }
           ],
@@ -53,10 +56,10 @@ module Search
       }
     end
 
-    def base
+    def base_query
       # {} isn't legal in a must
-      if @base && @base != {}
-        @base
+      if @base_query && @base_query != {}
+        @base_query
       else
         { match_all: {} }
       end
