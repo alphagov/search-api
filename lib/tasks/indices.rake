@@ -212,8 +212,8 @@ this task will run against all active clusters.
           docs = stats["_all"]["primaries"]["docs"]
 
           count = docs["count"]
-          statsd.gauge("#{cluster_name}.#{index}_index.docs.count", count)
-          puts "#{cluster_name}.#{index}_index.docs.count=#{count}"
+          statsd.gauge("#{cluster_name}.#{index}_index.docs.total", count)
+          puts "#{cluster_name}.#{index}_index.docs.total=#{count}"
 
           deleted = docs["deleted"]
           statsd.gauge("#{cluster_name}.#{index}_index.docs.deleted", deleted)
