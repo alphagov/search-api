@@ -7,7 +7,7 @@ publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Find EU Exit guidance for your business
-description: You'll get an email each time EU Exit guidance is published.
+description: Sign up for email alerts to Brexit guidance for businesses.
 details:
   email_filter_by: facet_values
   email_filter_facets:
