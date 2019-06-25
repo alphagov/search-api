@@ -67,7 +67,7 @@ module Indexer
         return nil
       end
 
-      traffic_index_name = SearchConfig.auxiliary_index_names.find {|index|
+      traffic_index_name = SearchConfig.auxiliary_index_names.find { |index|
         index.start_with?("page-traffic")
       }
 
