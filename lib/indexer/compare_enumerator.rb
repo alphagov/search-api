@@ -84,7 +84,7 @@ module Indexer
     end
 
     def search_config
-      @search_config ||= SearchConfig.instance
+      @search_config ||= SearchConfig.instance(cluster)
     end
   end
 end

@@ -41,6 +41,7 @@ private
       start: capped_start,
       count: capped_count,
       cluster: cluster,
+      search_config: SearchConfig.instance(cluster),
       query: normalize_query(single_param("q"), "query"),
       similar_to: normalize_query(single_param("similar_to"), "similar_to"),
       order: order,
@@ -70,13 +71,16 @@ private
   end
 
   def cluster
-    cluster_key = single_param('cluster')
-    Clusters.get_cluster(cluster_key)
-  rescue Clusters::ClusterNotFoundError
-    if cluster_key.present?
-      @errors << "Invalid cluster. Accepted values: #{Clusters.cluster_keys.join(', ')}"
-    end
-    Clusters.default_cluster
+    @cluster ||=
+      begin
+        cluster_key = single_param('cluster')
+        Clusters.get_cluster(cluster_key)
+      rescue Clusters::ClusterNotFoundError
+        if cluster_key.present?
+          @errors << "Invalid cluster. Accepted values: #{Clusters.cluster_keys.join(', ')}"
+        end
+        Clusters.default_cluster
+      end
   end
 
   def capped_start

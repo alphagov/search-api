@@ -10,14 +10,14 @@ RSpec.describe SearchIndices::IndexGroup do
   BASE_URI = "http://example.com:9200".freeze
 
   before do
-    @schema = SearchConfig.instance.search_server.schema
+    @schema = SearchConfig.instance(Clusters.default_cluster).search_server.schema
     @server = SearchIndices::SearchServer.new(
       BASE_URI,
       @schema,
       %w(government custom),
       'govuk',
       ["government"],
-      SearchConfig.new
+      SearchConfig.instance(Clusters.default_cluster),
     )
   end
 

@@ -45,7 +45,7 @@ module Indexer
     end
 
     def search_config
-      @search_config ||= SearchConfig.new
+      @search_config ||= SearchConfig.new(Clusters.default_cluster)
     end
 
     def changed_fields(old_item, new_item)

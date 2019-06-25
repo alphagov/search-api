@@ -1,8 +1,8 @@
 module Search
   class FormatMigrator
-    def initialize(base_query: nil, cluster: Clusters.default_cluster)
+    def initialize(search_config, base_query: nil)
+      @search_config = search_config
       @base_query = base_query
-      @cluster = cluster
     end
 
     def call
@@ -16,10 +16,10 @@ module Search
 
   private
 
-    attr_reader :cluster
+    attr_reader :search_config
 
     def migrated_indices
-      SearchConfig.instance.new_content_index(cluster: cluster).real_index_names
+      search_config.new_content_index.real_index_names
     end
 
     def migrated_formats

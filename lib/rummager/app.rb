@@ -41,7 +41,7 @@ class Rummager < Sinatra::Application
   end
 
   def search_server
-    SearchConfig.instance.search_server
+    SearchConfig.instance(Clusters.default_cluster).search_server
   end
 
   def current_index

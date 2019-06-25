@@ -30,7 +30,7 @@ end
 
 # The indexes which make up GOV.UK.
 index_names = %w(detailed government govuk)
-search_server = SearchConfig.new.search_server
+search_server = SearchConfig.new(Clusters.default_cluster).search_server
 indices = index_names.map { |name| search_server.index(name) }
 
 document_count = 0
