@@ -1,12 +1,4 @@
 class SearchConfig
-  %w[
-    base_uri
-  ].each do |config_method|
-    define_method config_method do
-      elasticsearch.fetch(config_method)
-    end
-  end
-
   class << self
     attr_writer :instance
 
