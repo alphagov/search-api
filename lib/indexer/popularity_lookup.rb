@@ -36,7 +36,7 @@ module Indexer
         if ranks[link] == 0
           popularity_score = 0
         else
-          popularity_score = 1.0 / (ranks[link] + @search_config.popularity_rank_offset)
+          popularity_score = 1.0 / (ranks[link] + SearchConfig.popularity_rank_offset)
         end
 
         [link, popularity_score]
@@ -67,7 +67,7 @@ module Indexer
         return nil
       end
 
-      traffic_index_name = @search_config.auxiliary_index_names.find {|index|
+      traffic_index_name = SearchConfig.auxiliary_index_names.find {|index|
         index.start_with?("page-traffic")
       }
 

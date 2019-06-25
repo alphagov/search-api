@@ -55,7 +55,7 @@ def index_names
   search_index = ENV["SEARCH_INDEX"]
   case search_index
   when "all"
-    search_config.all_index_names
+    SearchConfig.all_index_names
   when String
     [search_index]
   else

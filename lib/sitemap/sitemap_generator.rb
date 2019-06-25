@@ -67,7 +67,7 @@ private
   StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
 
   def index_names
-    @search_config.content_index_names + [@search_config.govuk_index_name]
+    SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
   end
 
   def homepage

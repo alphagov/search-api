@@ -206,7 +206,7 @@ this task will run against all active clusters.
       missing = []
       cluster_name = "cluster_#{cluster.key}"
 
-      SearchConfig.instance.all_index_names.each do |index|
+      SearchConfig.all_index_names.each do |index|
         begin
           stats = client.indices.stats index: index, docs: true
           docs = stats["_all"]["primaries"]["docs"]

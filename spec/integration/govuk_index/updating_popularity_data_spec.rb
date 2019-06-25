@@ -14,7 +14,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     insert_document('page-traffic_test', { rank_14: document_rank, path_components: [id, '/test'] }, id: id, type: 'page-traffic')
     setup_page_traffic_data(document_count: document_count)
 
-    popularity = 1.0 / ([document_rank, document_count].min + SearchConfig.instance.popularity_rank_offset)
+    popularity = 1.0 / ([document_rank, document_count].min + SearchConfig.popularity_rank_offset)
 
     GovukIndex::PopularityUpdater.update('govuk_test')
 
@@ -28,7 +28,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     document_count = 4
     setup_page_traffic_data(document_count: document_count)
 
-    popularity = 1.0 / (document_count + SearchConfig.instance.popularity_rank_offset)
+    popularity = 1.0 / (document_count + SearchConfig.popularity_rank_offset)
 
     GovukIndex::PopularityUpdater.update('govuk_test')
 
@@ -80,7 +80,7 @@ RSpec.describe 'GovukIndex::UpdatingPopularityDataTest' do
     setup_page_traffic_data(document_count: document_count)
 
     GovukIndex::PopularityUpdater.update('govuk_test', process_all: true)
-    popularity = 1.0 / (document_count + SearchConfig.instance.popularity_rank_offset)
+    popularity = 1.0 / (document_count + SearchConfig.popularity_rank_offset)
 
     document = fetch_document_from_rummager(id: id, index: 'govuk_test')
     expect(popularity).to eq(document['_source']['popularity'])
