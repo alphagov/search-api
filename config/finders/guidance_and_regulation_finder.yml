@@ -38,6 +38,14 @@ details:
     display_as_result_metadata: false
     filterable: true
     preposition: about
+  - key: topic
+    filter_key: all_part_of_taxonomy_tree
+    name: topic
+    short_name: topic
+    type: hidden
+    display_as_result_metadata: false
+    hide_facet_tag: true
+    filterable: true
   - key: organisations
     name: Organisation
     short_name: From
