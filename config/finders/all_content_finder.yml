@@ -37,6 +37,27 @@ details:
     type: hidden_clearable
     show_option_select_filter: false
     allowed_values: []
+  - display_as_result_metadata: false
+    filterable: true
+    key: content_purpose_supergroup
+    name: Show in
+    preposition: in
+    short_name: In
+    type: text
+    show_option_select_filter: true
+    allowed_values:
+    - label: News and communications
+      value: news_and_communications
+    - label: Guidance and regulation
+      value: guidance_and_regulation
+    - label: Services
+      value: services
+    - label: Policy and engagement
+      value: policy_and_engagement
+    - label: Research and statistics
+      value: research_and_statistics
+    - label: Transparency
+      value: transparency
   - display_as_result_metadata: true
     filterable: true
     key: organisations
