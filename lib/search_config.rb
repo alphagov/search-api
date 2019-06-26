@@ -71,11 +71,7 @@ class SearchConfig
     end
 
     def elasticsearch
-      @elasticsearch ||= es_config.config
-    end
-
-    def es_config
-      @es_config ||= ElasticsearchConfig.new
+      @elasticsearch ||= ElasticsearchConfig.new.config
     end
 
   private
@@ -109,7 +105,7 @@ class SearchConfig
 
   def schema_config
     @schema_config ||= SchemaConfig.new(
-      SearchConfig.es_config.config_path,
+      ElasticsearchConfig.new.config_path,
       schema_config_file: cluster.schema_config_file,
     )
   end
