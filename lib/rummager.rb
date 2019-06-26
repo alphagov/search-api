@@ -41,7 +41,6 @@ Dir[initializers_path].each { |f| require f }
 require 'analytics_data'
 require File.expand_path('../config/logging_setup', __dir__)
 require 'document'
-require 'duplicate_links_finder'
 require 'govuk_document_types'
 require 'special_route_publisher'
 
