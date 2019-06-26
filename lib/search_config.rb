@@ -55,7 +55,7 @@ class SearchConfig
 
       search_params = Search::QueryParameters.new(parser.parsed_params)
 
-      instance(search_params.cluster).run_search_with_params(search_params)
+      search_params.search_config.run_search_with_params(search_params)
     end
 
     def run_batch_search(searches)
@@ -67,7 +67,7 @@ class SearchConfig
         search_params << Search::QueryParameters.new(parser.parsed_params)
       end
 
-      instance(search_params.first.cluster).run_batch_search_with_params(search_params)
+      search_params.first.search_config.run_batch_search_with_params(search_params)
     end
 
     def elasticsearch
