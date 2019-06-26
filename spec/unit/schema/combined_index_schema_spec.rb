@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe CombinedIndexSchema do
   before do
-    search_config = SearchConfig.new(Clusters.default_cluster)
+    search_config = SearchConfig.default_instance
     @index_names = SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
     @combined_schema = described_class.new(@index_names, search_config.schema_config)
   end

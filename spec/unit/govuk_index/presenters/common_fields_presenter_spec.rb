@@ -85,7 +85,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     popularity = 0.0125356
 
     # rubocop:disable RSpec/MessageSpies
-    expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', SearchConfig.instance(Clusters.default_cluster)).and_return(@popularity_lookup)
+    expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', SearchConfig.default_instance).and_return(@popularity_lookup)
     expect(@popularity_lookup).to receive(:lookup_popularities).with([payload['base_path']]).and_return(payload["base_path"] => popularity)
     # rubocop:enable RSpec/MessageSpies
 
@@ -98,7 +98,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = { "base_path" => "/some/path" }
 
     # rubocop:disable RSpec/MessageSpies
-    expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', SearchConfig.instance(Clusters.default_cluster)).and_return(@popularity_lookup)
+    expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', SearchConfig.default_instance).and_return(@popularity_lookup)
     expect(@popularity_lookup).to receive(:lookup_popularities).with([payload['base_path']]).and_return({})
     # rubocop:enable RSpec/MessageSpies
 

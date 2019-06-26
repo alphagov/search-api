@@ -24,7 +24,7 @@ RSpec.describe 'ElasticsearchIndexGroupTest' do
     expect(@index_group.index_names.count).to eq(1)
     expect(index.index_name).to eq(@index_group.index_names[0])
     expect(
-      SearchConfig.instance(Clusters.default_cluster).search_server.schema.elasticsearch_mappings("government")
+      SearchConfig.default_instance.search_server.schema.elasticsearch_mappings("government")
     ).to eq(index.mappings)
   end
 

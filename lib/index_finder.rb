@@ -10,7 +10,7 @@ class IndexFinder
     end
 
     def search_config
-      @search_config ||= SearchConfig.instance(Clusters.default_cluster)
+      @search_config ||= SearchConfig.default_instance
     end
 
     def search_server

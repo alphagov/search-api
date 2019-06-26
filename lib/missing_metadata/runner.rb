@@ -3,7 +3,7 @@ module MissingMetadata
     PAGE_SIZE = 200
     MAX_PAGES = 52
 
-    def initialize(missing_field_name, search_config: SearchConfig.new(Clusters.default_cluster), logger: STDOUT)
+    def initialize(missing_field_name, search_config: SearchConfig.default_instance, logger: STDOUT)
       @missing_field_name = missing_field_name
       @search_config = search_config
       publishing_api = Services.publishing_api

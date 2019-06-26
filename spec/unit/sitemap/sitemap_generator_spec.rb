@@ -8,7 +8,7 @@ RSpec.describe SitemapGenerator do
   # rubocop:enable RSpec/AnyInstance
 
   it "should generate sitemap" do
-    sitemap = described_class.new(SearchConfig.instance(Clusters.default_cluster))
+    sitemap = described_class.new(SearchConfig.default_instance)
 
     sitemap_xml = sitemap.generate_xml([
       build_document('https://www.gov.uk/page'),
@@ -24,7 +24,7 @@ RSpec.describe SitemapGenerator do
   end
 
   it "links should include timestamps" do
-    sitemap = described_class.new(SearchConfig.instance(Clusters.default_cluster))
+    sitemap = described_class.new(SearchConfig.default_instance)
 
     sitemap_xml = sitemap.generate_xml([
       build_document('/some-page', timestamp: "2014-01-28T14:41:50+00:00"),
@@ -36,7 +36,7 @@ RSpec.describe SitemapGenerator do
   end
 
   it "missing timestamps are ignored" do
-    sitemap = described_class.new(SearchConfig.instance(Clusters.default_cluster))
+    sitemap = described_class.new(SearchConfig.default_instance)
 
     sitemap_xml = sitemap.generate_xml([
       build_document('/page-without-date'),
@@ -48,7 +48,7 @@ RSpec.describe SitemapGenerator do
   end
 
   it "page priority is document priority" do
-    sitemap = described_class.new(SearchConfig.instance(Clusters.default_cluster))
+    sitemap = described_class.new(SearchConfig.default_instance)
 
     document = build_document('/some-path')
     allow(document).to receive(:priority).and_return(0.48)

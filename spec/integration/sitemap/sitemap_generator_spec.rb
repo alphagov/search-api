@@ -32,7 +32,7 @@ RSpec.describe 'SitemapGeneratorTest' do
       index_name: "govuk_test"
     )
 
-    generator = SitemapGenerator.new(SearchConfig.instance(Clusters.default_cluster))
+    generator = SitemapGenerator.new(SearchConfig.default_instance)
     sitemap_xml = generator.sitemaps
 
     expected_sitemap_count = 2 # sample_document.count + homepage / sitemap_limit rounded up
@@ -54,7 +54,7 @@ RSpec.describe 'SitemapGeneratorTest' do
       ],
       index_name: "government_test"
     )
-    generator = SitemapGenerator.new(SearchConfig.instance(Clusters.default_cluster))
+    generator = SitemapGenerator.new(SearchConfig.default_instance)
     sitemap_xml = generator.sitemaps
     expect(sitemap_xml.length).to eq(1)
 
@@ -62,7 +62,7 @@ RSpec.describe 'SitemapGeneratorTest' do
   end
 
   it "should include homepage" do
-    generator = SitemapGenerator.new(SearchConfig.instance(Clusters.default_cluster))
+    generator = SitemapGenerator.new(SearchConfig.default_instance)
     sitemap_xml = generator.sitemaps
 
     pages = Nokogiri::XML(sitemap_xml[0])
@@ -74,7 +74,7 @@ RSpec.describe 'SitemapGeneratorTest' do
   end
 
   it "should not include recommended links" do
-    generator = SitemapGenerator.new(SearchConfig.instance(Clusters.default_cluster))
+    generator = SitemapGenerator.new(SearchConfig.default_instance)
     add_sample_documents(
       [
         {
@@ -96,7 +96,7 @@ RSpec.describe 'SitemapGeneratorTest' do
   end
 
   it "links should include timestamps" do
-    generator = SitemapGenerator.new(SearchConfig.instance(Clusters.default_cluster))
+    generator = SitemapGenerator.new(SearchConfig.default_instance)
     add_sample_documents(
       [
         {
@@ -122,7 +122,7 @@ RSpec.describe 'SitemapGeneratorTest' do
   end
 
   it "links should include priorities" do
-    generator = SitemapGenerator.new(SearchConfig.instance(Clusters.default_cluster))
+    generator = SitemapGenerator.new(SearchConfig.default_instance)
     add_sample_documents(
       [
         {

@@ -4,7 +4,7 @@ RSpec.describe QueryComponents::BestBets do
   context "when best bets is disabled in debug" do
     it "return the query without modification" do
       builder = described_class.new(
-        metasearch_index: SearchConfig.instance(Clusters.default_cluster).metasearch_index,
+        metasearch_index: SearchConfig.default_instance.metasearch_index,
         search_params: Search::QueryParameters.new(debug: { disable_best_bets: true })
       )
 
@@ -16,7 +16,7 @@ RSpec.describe QueryComponents::BestBets do
 
   context "with a single best bet url" do
     it "include the ID of the document in the results" do
-      builder = described_class.new(metasearch_index: SearchConfig.instance(Clusters.default_cluster).metasearch_index)
+      builder = described_class.new(metasearch_index: SearchConfig.default_instance.metasearch_index)
       allow(builder).to receive(:best_bets).and_return(1 => ['/best-bet'])
 
       result = builder.wrap('QUERY')
@@ -28,7 +28,7 @@ RSpec.describe QueryComponents::BestBets do
 
   context "with two best bet urls on different positions" do
     it "include IDs of the documents in the results" do
-      builder = described_class.new(metasearch_index: SearchConfig.instance(Clusters.default_cluster).metasearch_index)
+      builder = described_class.new(metasearch_index: SearchConfig.default_instance.metasearch_index)
       allow(builder).to receive(:best_bets).and_return(1 => ['/best-bet'], 2 => ['/other-best-bet'])
 
       result = builder.wrap('QUERY')
@@ -48,7 +48,7 @@ RSpec.describe QueryComponents::BestBets do
 
   context "with two best bet urls on the same position" do
     it "include IDs of the documents in the results" do
-      builder = described_class.new(metasearch_index: SearchConfig.instance(Clusters.default_cluster).metasearch_index)
+      builder = described_class.new(metasearch_index: SearchConfig.default_instance.metasearch_index)
       allow(builder).to receive(:best_bets).and_return(1 => ['/best-bet', '/other-best-bet'])
 
       result = builder.wrap('QUERY')
@@ -60,7 +60,7 @@ RSpec.describe QueryComponents::BestBets do
 
   context "with a 'worst bet'" do
     it "completely exclude the documents from the results" do
-      builder = described_class.new(metasearch_index: SearchConfig.instance(Clusters.default_cluster).metasearch_index)
+      builder = described_class.new(metasearch_index: SearchConfig.default_instance.metasearch_index)
       allow(builder).to receive(:worst_bets).and_return(['/worst-bet', '/other-worst-bet'])
 
       result = builder.wrap({})

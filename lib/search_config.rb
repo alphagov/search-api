@@ -22,6 +22,12 @@ class SearchConfig
       @instance[cluster.key] ||= new(cluster)
     end
 
+    def default_instance
+      # 'instance' doesn't have default parameters so that you have to
+      # explicitly think about and opt into the default.
+      instance(Clusters.default_cluster)
+    end
+
     def reset_instances
       # used in the tests because SearchConfig.instance is stateful
       @instance = {}
@@ -81,7 +87,7 @@ class SearchConfig
       # field (which is what can be overridden per-cluster).
       @combined_index_schema ||= CombinedIndexSchema.new(
         content_index_names + [govuk_index_name],
-        instance(Clusters.default_cluster).schema_config
+        default_instance.schema_config
       )
     end
   end

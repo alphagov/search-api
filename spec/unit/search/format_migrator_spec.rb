@@ -30,7 +30,7 @@ RSpec.describe Search::FormatMigrator do
           }
         }
         expect(described_class.new(
-          SearchConfig.instance(Clusters.default_cluster),
+          SearchConfig.default_instance,
           base_query: base_query,
         ).call).to eq(expected)
       end
@@ -64,7 +64,7 @@ RSpec.describe Search::FormatMigrator do
           }
         }
         expect(described_class.new(
-          SearchConfig.instance(Clusters.default_cluster),
+          SearchConfig.default_instance,
           base_query: base_query,
         ).call).to eq(expected)
       end
@@ -86,7 +86,7 @@ RSpec.describe Search::FormatMigrator do
           }
         }
         expect(described_class.new(
-          SearchConfig.instance(Clusters.default_cluster),
+          SearchConfig.default_instance,
         ).call).to eq(expected)
       end
 
@@ -118,7 +118,7 @@ RSpec.describe Search::FormatMigrator do
           }
         }
         expect(described_class.new(
-          SearchConfig.instance(Clusters.default_cluster),
+          SearchConfig.default_instance,
         ).call).to eq(expected)
       end
     end

@@ -51,7 +51,7 @@ module GovukIndex
     def popularity
       # popularity should be consistent across clusters, so look up in
       # the default
-      lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.instance(Clusters.default_cluster))
+      lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.default_instance)
       lookup.lookup_popularities([link])[link]
     end
 

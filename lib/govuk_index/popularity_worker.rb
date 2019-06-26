@@ -28,7 +28,7 @@ module GovukIndex
     def retrieve_popularities_for(index_name, records)
       # popularity should be consistent across clusters, so look up in
       # the default
-      lookup = Indexer::PopularityLookup.new(index_name, SearchConfig.instance(Clusters.default_cluster))
+      lookup = Indexer::PopularityLookup.new(index_name, SearchConfig.default_instance)
       lookup.lookup_popularities(records.map { |r| r['identifier']['_id'] })
     end
   end

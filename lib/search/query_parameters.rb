@@ -17,7 +17,7 @@ module Search
         return_fields: [],
         ab_tests: {},
         cluster: Clusters.default_cluster,
-        search_config: SearchConfig.instance(Clusters.default_cluster)
+        search_config: SearchConfig.default_instance,
       }.merge(params)
       params.each do |k, v|
         public_send("#{k}=", v)

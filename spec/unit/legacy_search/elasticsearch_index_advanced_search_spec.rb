@@ -5,7 +5,7 @@ RSpec.describe SearchIndices::Index, 'Advanced Search' do
 
   before do
     base_uri = "http://example.com:9200"
-    search_config = SearchConfig.instance(Clusters.default_cluster)
+    search_config = SearchConfig.default_instance
     @wrapper = described_class.new(base_uri, "government_test", "government_test", default_mappings, search_config)
   end
 
