@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe LegacyClient::IndexForSearch do
   it "makes a request to elasticsearch for the alias name" do
-    base_uri = SearchConfig.instance.base_uri
+    base_uri = "http://localhost:9200"
     alias_name = "some-alias"
     real_name = "some-index"
 

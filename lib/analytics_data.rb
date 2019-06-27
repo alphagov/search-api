@@ -17,7 +17,7 @@ class AnalyticsData
           must: { match_all: {} },
         },
       },
-      post_filter: Search::FormatMigrator.new.call,
+      post_filter: Search::FormatMigrator.new(SearchConfig.default_instance).call,
     }
 
     ScrollEnumerator.new(client: client, index_names: @indices, search_body: query) do |hit|

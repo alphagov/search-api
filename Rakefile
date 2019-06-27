@@ -22,12 +22,8 @@ def logger
   Logging.logger.root
 end
 
-def search_config
-  SearchConfig.instance
-end
-
 def search_server(cluster: Clusters.default_cluster)
-  search_config.search_server(cluster: cluster)
+  search_config.instance(cluster).search_server
 end
 
 def clusters_from_args(args)
@@ -55,7 +51,7 @@ def index_names
   search_index = ENV["SEARCH_INDEX"]
   case search_index
   when "all"
-    search_config.all_index_names
+    SearchConfig.all_index_names
   when String
     [search_index]
   else

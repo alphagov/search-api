@@ -46,7 +46,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       insert_document("page-traffic_test", { rank_14: document_rank, path_components: [random_example["base_path"]] }, id: random_example["base_path"], type: "page-traffic")
       setup_page_traffic_data(document_count: document_count)
 
-      popularity = 1.0 / ([document_count, document_rank].min + SearchConfig.instance.popularity_rank_offset)
+      popularity = 1.0 / ([document_count, document_rank].min + SearchConfig.popularity_rank_offset)
 
       @queue.publish(random_example.to_json, content_type: "application/json")
       commit_index 'govuk_test'

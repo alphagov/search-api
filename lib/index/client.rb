@@ -43,10 +43,6 @@ module Index
       )
     end
 
-    def search_config
-      @_config ||= SearchConfig.instance
-    end
-
     def index_name
       raise "Must be implemented in child class"
     end

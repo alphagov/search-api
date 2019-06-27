@@ -72,8 +72,8 @@ module Search
 
     def filter
       Search::FormatMigrator.new(
+        search_params.search_config,
         base_query: QueryComponents::Filter.new(search_params).payload,
-        cluster: search_params.cluster,
       ).call
     end
 

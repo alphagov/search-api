@@ -10,8 +10,7 @@ class IndexHelpers
   end
 
   def self.all_index_names
-    config = SearchConfig.instance
-    config.content_index_names + config.auxiliary_index_names + [config.govuk_index_name]
+    SearchConfig.content_index_names + SearchConfig.auxiliary_index_names + [SearchConfig.govuk_index_name]
   end
 
   def self.clean_all
@@ -24,7 +23,7 @@ class IndexHelpers
     raise "Attempting to clean non-test index: #{index_name}" unless index_name =~ /test/
 
     Clusters.active.each { |cluster|
-      search_server = SearchConfig.instance.search_server(cluster: cluster)
+      search_server = SearchConfig.instance(cluster).search_server
       index_group = search_server.index_group(index_name)
 
       # Delete any indices left over
@@ -45,7 +44,7 @@ class IndexHelpers
 
   def self.create_test_index(group_name = DEFAULT_INDEX_NAME)
     Clusters.active.each { |cluster|
-      index_group = SearchConfig.instance.search_server(cluster: cluster).index_group(group_name)
+      index_group = SearchConfig.instance(cluster).search_server.index_group(group_name)
       index = index_group.create_index
       index_group.switch_to(index)
     }

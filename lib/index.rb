@@ -24,7 +24,7 @@ module SearchIndices
       @mappings = mappings
       @search_config = search_config
       @elasticsearch_types = @search_config.schema_config.elasticsearch_types(base_index_name)
-      @is_content_index = !(@search_config.auxiliary_index_names.include? base_index_name)
+      @is_content_index = !(SearchConfig.auxiliary_index_names.include? base_index_name)
     end
 
     # Translate index names like `govuk-2015-05-06t09..` into its proper

@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe 'AnalyticsDataTest' do
   before do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
-    @analytics_data_fetcher = AnalyticsData.new(SearchConfig.instance.base_uri, %w(government_test govuk_test))
+    @analytics_data_fetcher = AnalyticsData.new(SearchConfig.default_instance.base_uri, %w(government_test govuk_test))
   end
 
   it "fetches rows of analytics dimensions" do

@@ -82,7 +82,7 @@ RSpec.configure do |config|
     # search_config is a global object that has state, while most of the stubbing
     # is automatically reset, the index_names or passed into children object and
     # cached there.
-    SearchConfig.instance = SearchConfig.new
+    SearchConfig.reset_instances
   end
 
   if config.files_to_run.one?

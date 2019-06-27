@@ -17,7 +17,7 @@ class SitemapGenerator
           must_not: { terms: { format: EXCLUDED_FORMATS } },
         }
       },
-      post_filter: Search::FormatMigrator.new.call,
+      post_filter: Search::FormatMigrator.new(@search_config).call,
     }
     property_boost_calculator = PropertyBoostCalculator.new
 
@@ -67,7 +67,7 @@ private
   StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
 
   def index_names
-    @search_config.content_index_names + [@search_config.govuk_index_name]
+    SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
   end
 
   def homepage

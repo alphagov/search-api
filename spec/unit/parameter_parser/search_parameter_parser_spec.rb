@@ -6,6 +6,7 @@ RSpec.describe SearchParameterParser do
       start: 0,
       count: 10,
       cluster: Clusters.default_cluster,
+      search_config: SearchConfig.default_instance,
       query: nil,
       similar_to: nil,
       order: nil,

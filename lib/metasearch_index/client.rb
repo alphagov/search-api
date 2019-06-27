@@ -14,7 +14,9 @@ module MetasearchIndex
   private
 
     def index_name
-      @_index ||= search_config.metasearch_index_name
+      # rubocop:disable Naming/MemoizedInstanceVariableName
+      @_index ||= SearchConfig.metasearch_index_name
+      # rubocop:enable Naming/MemoizedInstanceVariableName
     end
   end
 end

@@ -2,7 +2,7 @@
 class IndexFinder
   class << self
     def content_index
-      search_config.search_server.index_for_search(search_config.content_index_names)
+      search_config.search_server.index_for_search(SearchConfig.content_index_names)
     end
 
     def by_name(index_name)
@@ -10,7 +10,7 @@ class IndexFinder
     end
 
     def search_config
-      @search_config ||= SearchConfig.instance
+      @search_config ||= SearchConfig.default_instance
     end
 
     def search_server

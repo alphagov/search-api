@@ -1,10 +1,9 @@
 class SchemaMigrator
   attr_accessor :failed
 
-  def initialize(index_name, config, cluster: Clusters.default_cluster, wait_between_task_list_check: 5, io: STDOUT)
+  def initialize(index_name, cluster: Clusters.default_cluster, wait_between_task_list_check: 5, io: STDOUT)
     @index_name = index_name
     @cluster = cluster
-    @config = config
     @wait_between_task_list_check = wait_between_task_list_check
     @io = io
   end
@@ -67,7 +66,7 @@ private
   end
 
   def index_group
-    @index_group ||= @config.search_server(cluster: cluster).index_group(@index_name)
+    @index_group ||= SearchConfig.instance(cluster).search_server.index_group(@index_name)
   end
 
   def index

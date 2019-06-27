@@ -7,15 +7,17 @@ RSpec.describe SearchIndices::IndexGroup do
     headers: { "Content-Type" => "application/json" },
   }.freeze
 
+  BASE_URI = "http://example.com:9200".freeze
+
   before do
-    @schema = SearchConfig.instance.search_server.schema
+    @schema = SearchConfig.default_instance.search_server.schema
     @server = SearchIndices::SearchServer.new(
-      SearchConfig.instance.base_uri,
+      BASE_URI,
       @schema,
       %w(government custom),
       'govuk',
       ["government"],
-      SearchConfig.new
+      SearchConfig.default_instance,
     )
   end
 
@@ -24,7 +26,7 @@ RSpec.describe SearchIndices::IndexGroup do
       "settings" => @schema.elasticsearch_settings("government"),
       "mappings" => @schema.elasticsearch_mappings("government"),
     }.to_json
-    stub = stub_request(:put, %r(#{SearchConfig.instance.base_uri}/government-.*))
+    stub = stub_request(:put, %r(#{BASE_URI}/government-.*))
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
     index = @server.index_group("government").create_index
@@ -36,7 +38,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with no existing alias" do
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{SearchConfig.instance.base_uri}/_alias")
+    get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -49,7 +51,7 @@ RSpec.describe SearchIndices::IndexGroup do
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
     }.to_json
-    post_stub = stub_request(:post, "#{SearchConfig.instance.base_uri}/_aliases")
+    post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(
         body: expected_body,
         headers: { 'Content-Type' => 'application/json' }
@@ -64,7 +66,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with existing alias" do
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{SearchConfig.instance.base_uri}/_alias")
+    get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -80,7 +82,7 @@ RSpec.describe SearchIndices::IndexGroup do
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
     }.to_json
-    post_stub = stub_request(:post, "#{SearchConfig.instance.base_uri}/_aliases")
+    post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
 
@@ -93,7 +95,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "switch index with multiple existing aliases" do
     # Not expecting the system to get into this state, but it should cope
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{SearchConfig.instance.base_uri}/_alias")
+    get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -111,7 +113,7 @@ RSpec.describe SearchIndices::IndexGroup do
         { "add" => { "index" => "test-new", "alias" => "test" } }
       ]
     }.to_json
-    post_stub = stub_request(:post, "#{SearchConfig.instance.base_uri}/_aliases")
+    post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
 
@@ -123,7 +125,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with existing real index" do
     new_index = double("New index", index_name: "test-new")
-    stub_request(:get, "#{SearchConfig.instance.base_uri}/_alias")
+    stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -138,7 +140,7 @@ RSpec.describe SearchIndices::IndexGroup do
   end
 
   it "index names with no indices" do
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -150,7 +152,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "index names with index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -166,7 +168,7 @@ RSpec.describe SearchIndices::IndexGroup do
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -180,7 +182,7 @@ RSpec.describe SearchIndices::IndexGroup do
   end
 
   it "clean with no indices" do
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -192,7 +194,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "clean with dead index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -201,7 +203,7 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json
       )
 
-    delete_stub = stub_request(:delete, "#{SearchConfig.instance.base_uri}/#{index_name}")
+    delete_stub = stub_request(:delete, "#{BASE_URI}/#{index_name}")
       .to_return(ELASTICSEARCH_OK)
 
     @server.index_group("test").clean
@@ -211,7 +213,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "clean with live index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -228,7 +230,7 @@ RSpec.describe SearchIndices::IndexGroup do
       "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012",
       "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef"
     ]
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -239,7 +241,7 @@ RSpec.describe SearchIndices::IndexGroup do
       )
 
     delete_stubs = index_names.map { |index_name|
-      stub_request(:delete, "#{SearchConfig.instance.base_uri}/#{index_name}")
+      stub_request(:delete, "#{BASE_URI}/#{index_name}")
         .to_return(ELASTICSEARCH_OK)
     }
 
@@ -252,7 +254,7 @@ RSpec.describe SearchIndices::IndexGroup do
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     dead_name = "test-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -262,7 +264,7 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json
       )
 
-    delete_stub = stub_request(:delete, "#{SearchConfig.instance.base_uri}/#{dead_name}")
+    delete_stub = stub_request(:delete, "#{BASE_URI}/#{dead_name}")
       .to_return(ELASTICSEARCH_OK)
 
     @server.index_group("test").clean
@@ -273,7 +275,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "clean with other alias" do
     # If there's an alias we don't know about, that should save the index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -290,7 +292,7 @@ RSpec.describe SearchIndices::IndexGroup do
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{SearchConfig.instance.base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { 'Content-Type' => 'application/json' },
@@ -300,7 +302,7 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json
       )
 
-    delete_stub = stub_request(:delete, "#{SearchConfig.instance.base_uri}/#{this_name}")
+    delete_stub = stub_request(:delete, "#{BASE_URI}/#{this_name}")
       .to_return(ELASTICSEARCH_OK)
 
     @server.index_group("test").clean

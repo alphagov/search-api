@@ -46,8 +46,8 @@ module GovukIndex
     end
 
     def index_group
-      @index_group ||= SearchConfig.instance.search_server(cluster: cluster).index_group(
-        SearchConfig.instance.page_traffic_index_name
+      @index_group ||= SearchConfig.instance(cluster).search_server.index_group(
+        SearchConfig.page_traffic_index_name
       )
     end
   end

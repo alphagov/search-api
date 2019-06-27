@@ -18,7 +18,7 @@ RSpec.describe Index::ElasticsearchProcessor do
     client = double('client')
     allow(Services).to receive('elasticsearch').and_return(client)
     # rubocop:disable RSpec/MessageSpies
-    expect(client).to receive(:bulk).exactly(cluster_count).times.with(index: SearchConfig.instance.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
+    expect(client).to receive(:bulk).exactly(cluster_count).times.with(index: SearchConfig.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
     # rubocop:enable RSpec/MessageSpies
     subject.save(presenter)
     subject.commit
@@ -39,7 +39,7 @@ RSpec.describe Index::ElasticsearchProcessor do
     allow(Services).to receive('elasticsearch').and_return(client)
     # rubocop:disable RSpec/MessageSpies
     expect(client).to receive(:bulk).exactly(cluster_count).times.with(
-      index: SearchConfig.instance.govuk_index_name,
+      index: SearchConfig.govuk_index_name,
       body: [
         {
           delete: presenter.identifier

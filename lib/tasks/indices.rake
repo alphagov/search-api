@@ -34,7 +34,7 @@ namespace :search do
   task :create_all_indices, :clusters do |_, args|
     clusters_from_args(args).each do |cluster|
       index_names.each do |index_name|
-        index_group = search_config.search_server(cluster: cluster).index_group(index_name)
+        index_group = SearchConfig.instance(cluster).search_server.index_group(index_name)
         index = index_group.create_index
         index_group.switch_to(index) unless index_group.current_real
       end
@@ -44,7 +44,7 @@ namespace :search do
   desc "Create a brand new index and assign an alias if no alias currently exists"
   task :create_index, :index_name, :clusters do |_, args|
     clusters_from_args(args).each do |cluster|
-      index_group = search_config.search_server(cluster: cluster).index_group(args[:index_name])
+      index_group = SearchConfig.instance(cluster).search_server.index_group(args[:index_name])
       index = index_group.create_index
       index_group.switch_to(index) unless index_group.current_real
     end
@@ -54,7 +54,7 @@ namespace :search do
   task :lock, :clusters do |_, args|
     clusters_from_args(args).each do |cluster|
       index_names.each do |index_name|
-        SearchConfig.instance.search_server(cluster: cluster).index(index_name).lock
+        search_server(cluster: cluster).index(index_name).lock
       end
     end
   end
@@ -63,7 +63,7 @@ namespace :search do
   task :unlock, :clusters do |_, args|
     clusters_from_args(args).each do |cluster|
       index_names.each do |index_name|
-        SearchConfig.instance.search_server(cluster: cluster).index(index_name).unlock
+        search_server(cluster: cluster).index(index_name).unlock
       end
     end
   end
@@ -123,7 +123,7 @@ this task will run against all active clusters.
       failed_indices = []
 
       index_names.each do |index_name|
-        migrator = SchemaMigrator.new(index_name, search_config, cluster: cluster)
+        migrator = SchemaMigrator.new(index_name, cluster: cluster)
         migrator.reindex
 
         if migrator.failed == true
@@ -206,7 +206,7 @@ this task will run against all active clusters.
       missing = []
       cluster_name = "cluster_#{cluster.key}"
 
-      SearchConfig.instance.all_index_names.each do |index|
+      SearchConfig.all_index_names.each do |index|
         begin
           stats = client.indices.stats index: index, docs: true
           docs = stats["_all"]["primaries"]["docs"]

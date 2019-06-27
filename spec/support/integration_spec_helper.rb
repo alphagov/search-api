@@ -60,16 +60,16 @@ module IntegrationSpecHelper
     WebMock.disable_net_connect!(allow: nil)
   end
 
-  def search_config
-    SearchConfig.instance
+  def search_config(cluster = Clusters.default_cluster)
+    SearchConfig.instance(cluster)
   end
 
   def with_just_one_cluster
     allow(Clusters).to receive(:active).and_return([Clusters.default_cluster])
   end
 
-  def search_server
-    search_config.search_server
+  def search_server(cluster = Clusters.default_cluster)
+    search_config(cluster).search_server
   end
 
   def sample_document
@@ -222,10 +222,10 @@ module IntegrationSpecHelper
   end
 
   def try_remove_test_index(index_name = nil)
-    index_name ||= SearchConfig.instance.default_index_name
-    raise "Attempting to delete non-test index: #{index_name}" unless index_name =~ /test/
-
     clusters.each { |cluster|
+      index_name ||= SearchConfig.instance(cluster).default_index_name
+      raise "Attempting to delete non-test index: #{index_name}" unless index_name =~ /test/
+
       if client(cluster: cluster).indices.exists?(index: index_name)
         client(cluster: cluster).indices.delete(index: index_name)
       end
@@ -244,8 +244,7 @@ private
   end
 
   def build_sample_documents_on_content_indices(documents_per_index:)
-    config = SearchConfig.instance
-    index_names = config.content_index_names + [config.govuk_index_name]
+    index_names = SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
     index_names.each do |index_name|
       add_sample_documents(index_name, documents_per_index)
     end

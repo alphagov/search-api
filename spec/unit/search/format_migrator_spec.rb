@@ -30,8 +30,8 @@ RSpec.describe Search::FormatMigrator do
           }
         }
         expect(described_class.new(
+          SearchConfig.default_instance,
           base_query: base_query,
-          cluster: cluster,
         ).call).to eq(expected)
       end
 
@@ -63,7 +63,10 @@ RSpec.describe Search::FormatMigrator do
             ]
           }
         }
-        expect(described_class.new(base_query: base_query, cluster: cluster).call).to eq(expected)
+        expect(described_class.new(
+          SearchConfig.default_instance,
+          base_query: base_query,
+        ).call).to eq(expected)
       end
 
       it "when no base query without migrated formats" do
@@ -83,7 +86,7 @@ RSpec.describe Search::FormatMigrator do
           }
         }
         expect(described_class.new(
-          cluster: cluster,
+          SearchConfig.default_instance,
         ).call).to eq(expected)
       end
 
@@ -115,7 +118,7 @@ RSpec.describe Search::FormatMigrator do
           }
         }
         expect(described_class.new(
-          cluster: cluster,
+          SearchConfig.default_instance,
         ).call).to eq(expected)
       end
     end

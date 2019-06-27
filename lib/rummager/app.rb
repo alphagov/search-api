@@ -41,7 +41,7 @@ class Rummager < Sinatra::Application
   end
 
   def search_server
-    SearchConfig.instance.search_server
+    SearchConfig.default_instance.search_server
   end
 
   def current_index
@@ -147,7 +147,7 @@ class Rummager < Sinatra::Application
       query_params = parse_query_string(request.query_string)
 
       begin
-        results = SearchConfig.instance.run_search(query_params)
+        results = SearchConfig.run_search(query_params)
       rescue BaseParameterParser::ParseError => e
         status 422
         return { error: e.error }.to_json
@@ -172,7 +172,7 @@ class Rummager < Sinatra::Application
       searches = parsed_searches_parameters.values
       results = []
       begin
-        results = SearchConfig.instance.run_batch_search(searches)
+        results = SearchConfig.run_batch_search(searches)
       rescue BaseParameterParser::ParseError => e
         status 422
         return { error: e.error }.to_json

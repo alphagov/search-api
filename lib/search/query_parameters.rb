@@ -2,14 +2,23 @@ module Search
   # Value object that holds the parsed parameters for a search.
   class QueryParameters
     attr_accessor :query, :similar_to, :order, :start, :count, :return_fields,
-                  :aggregates, :aggregate_name, :filters, :debug, :suggest, :is_quoted_phrase, :ab_tests, :cluster
+                  :aggregates, :aggregate_name, :filters, :debug, :suggest, :is_quoted_phrase,
+                  :ab_tests, :cluster, :search_config
 
     # starts and ends with quotes with no quotes in between, with or without
     # leading or trailing whitespace
     QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/
 
     def initialize(params = {})
-      params = { aggregates: [], filters: {}, debug: {}, return_fields: [], ab_tests: {}, cluster: Clusters.default_cluster }.merge(params)
+      params = {
+        aggregates: [],
+        filters: {},
+        debug: {},
+        return_fields: [],
+        ab_tests: {},
+        cluster: Clusters.default_cluster,
+        search_config: SearchConfig.default_instance,
+      }.merge(params)
       params.each do |k, v|
         public_send("#{k}=", v)
       end

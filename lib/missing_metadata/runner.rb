@@ -3,7 +3,7 @@ module MissingMetadata
     PAGE_SIZE = 200
     MAX_PAGES = 52
 
-    def initialize(missing_field_name, search_config: SearchConfig.new, logger: STDOUT)
+    def initialize(missing_field_name, search_config: SearchConfig.default_instance, logger: STDOUT)
       @missing_field_name = missing_field_name
       @search_config = search_config
       publishing_api = Services.publishing_api
@@ -33,7 +33,7 @@ module MissingMetadata
       (0..Float::INFINITY).lazy.each do |page|
         logger.puts "Fetching page #{page + 1}"
 
-        response = search_config.run_search(
+        response = SearchConfig.run_search(
           "filter_#{@missing_field_name}" => %w(_MISSING),
           "count" => [PAGE_SIZE.to_s],
           "start" => [(page * PAGE_SIZE).to_s],
