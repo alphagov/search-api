@@ -138,6 +138,10 @@ class SearchConfig
     @new_content_index ||= search_server.index_for_search([SearchConfig.govuk_index_name])
   end
 
+  def base_uri
+    cluster.uri
+  end
+
 private
 
   attr_accessor :cluster
