@@ -21,18 +21,23 @@ details:
       prechecked: false
     - key: aerospace
       content_id: 24fd50fa-6619-46ca-96cd-8ce90fa076ce
-      radio_button_name: Aerospace
-      topic_name: Aerospace
+      radio_button_name: Aerospace and space
+      topic_name: Aerospace and space
       prechecked: false
-    - key: agriculture
-      content_id: 94b3cfe2-af89-4744-b8d7-7fc79edcbc85
-      radio_button_name: Agriculture and forestry (including wholesale)
-      topic_name: Agriculture and forestry (including wholesale)
+    - key: agriculture-and-farming
+      content_id: 9d54c591-f5ca-4d0c-a484-12d5591987cb
+      radio_button_name: Agriculture and farming
+      topic_name: Agriculture and farming
       prechecked: false
     - key: air-freight-air-passenger-services
       content_id: 43d328b3-59ee-4d5d-bda0-7c7d4bb301be
       radio_button_name: Air freight and air passenger services
       topic_name: Air freight and air passenger services
+      prechecked: false
+    - key: animals-and-animal-products
+      content_id: 769b6a0c-9d64-45a4-850a-a8f7cfd5b60e
+      radio_button_name: Animals and animal products (excluding food)
+      topic_name: Animals and animal products (excluding food)
       prechecked: false
     - key: arts-culture-heritage
       content_id: cf341686-c886-42c7-bf8e-cf177b6a2100
@@ -44,30 +49,15 @@ details:
       radio_button_name: Automotive
       topic_name: Automotive
       prechecked: false
-    - key: auxiliary-activities
-      content_id: 5faa1741-fc55-4110-b342-de92f6324118
-      radio_button_name: Auxiliary activities
-      topic_name: Auxiliary activities
-      prechecked: false
     - key: charities
       content_id: 05334231-9be3-4670-a2f5-84bef7e3badd
       radio_button_name: Charities
       topic_name: Charities
       prechecked: false
     - key: chemicals
-      content_id: 7620da7a-0427-4b3c-9498-db9dc25209b
+      content_id: 7620da7a-0427-4b3c-9498-db9dc25209b0
       radio_button_name: Chemicals
       topic_name: Chemicals
-      prechecked: false
-    - key: clothing-consumer-goods
-      content_id: 1e3e8abd-135d-4844-afa8-5c51df3d3c57
-      radio_button_name: Clothing and consumer goods
-      topic_name: Clothing and consumer goods
-      prechecked: false
-    - key: clothing-consumer-goods-manufacturing
-      content_id: a7263c3b-7ade-4a91-9f51-40ebc57b3f98
-      radio_button_name: Clothing and consumer goods manufacture
-      topic_name: Clothing and consumer goods manufacture
       prechecked: false
     - key: construction-contracting
       content_id: 9eb88205-118b-4f0b-abd9-ac6b469054c5
@@ -83,6 +73,11 @@ details:
       content_id: 77764805-73e6-4d47-9f20-aedd6de7dab9
       radio_button_name: Defence
       topic_name: Defence
+      prechecked: false
+    - key: diamonds
+      content_id: a68e08f2-6728-4f1d-bb90-514e733db8de
+      radio_button_name: Diamonds
+      topic_name: Diamonds
       prechecked: false
     - key: computer-services
       content_id: 70e6087f-714e-4922-8e06-72cfff997785
@@ -121,18 +116,8 @@ details:
       prechecked: false
     - key: food-and-drink
       content_id: 53f9ce4c-7cbb-447f-bdf1-a9b022896d3a
-      radio_button_name: Food, drink and tobacco (retail and wholesale)
-      topic_name: Food, drink and tobacco (retail and wholesale)
-      prechecked: false
-    - key: food-drink-tobacco
-      content_id: 9f3476e1-8ff0-455d-a14e-003236b2797c
-      radio_button_name: Food, drink and tobacco (processing)
-      topic_name: Food, drink and tobacco (processing)
-      prechecked: false
-    - key: furniture-manufacture
-      content_id: 040649fc-4e2c-4028-b846-77fe3eebd1f7
-      radio_button_name: Furniture manufacture
-      topic_name: Furniture manufacture
+      radio_button_name: Food, drink and tobacco
+      topic_name: Food, drink and tobacco
       prechecked: false
     - key: gambling
       content_id: 6ae9d424-6ade-456e-bcbe-6ce72b72ca13
@@ -159,15 +144,15 @@ details:
       radio_button_name: Justice including prisons
       topic_name: Justice including prisons
       prechecked: false
+    - key: clothing-consumer-goods-manufacturing
+      content_id: a7263c3b-7ade-4a91-9f51-40ebc57b3f98
+      radio_button_name: Manufacturing of consumer goods
+      topic_name: Manufacturing of consumer goods
+      prechecked: false
     - key: marine
       content_id: 18c3892e-8a0e-4884-906e-5938380eceee
-      radio_button_name: Marine
-      topic_name: Marine
-      prechecked: false
-    - key: marine-transport
-      content_id: 356f46a0-17d3-4ba4-8952-8c02244f904
-      radio_button_name: Marine transport
-      topic_name: Marine transport
+      radio_button_name: Marine and marine transport
+      topic_name: Marine and marine transport
       prechecked: false
     - key: broadcasting
       content_id: 442e7d39-9ebf-46c5-813a-daa328e135b8
@@ -204,25 +189,10 @@ details:
       radio_button_name: Nuclear
       topic_name: Nuclear
       prechecked: false
-    - key: other-advanced-manufacturing
-      content_id: 14cf2a68-3297-44d3-ba01-a4426845b1b8
-      radio_button_name: Other advanced manufacturing
-      topic_name: Other advanced manufacturing
-      prechecked: false
     - key: oil-gas-coal
       content_id: 46ad5a1d-fc2d-4065-a34f-3f7b2fea8e81
       radio_button_name: Oil, gas and coal
       topic_name: Oil, gas and coal
-      prechecked: false
-    - key: other-energy
-      content_id: 2c562ab5-7891-4a00-8510-a5ebdb4001c8
-      radio_button_name: Other energy
-      topic_name: Other energy
-      prechecked: false
-    - key: other-manufacturing
-      content_id: 7536c0c4-fb41-43f4-a2c4-08f4fa9f5427
-      radio_button_name: Other manufacturing
-      topic_name: Other manufacturing
       prechecked: false
     - key: personal-services
       content_id: d9da7c7b-b0c9-4757-aa45-9c70dd78df62
@@ -231,8 +201,13 @@ details:
       prechecked: false
     - key: pharmaceuticals
       content_id: 93f5c156-2449-4e52-9e92-aefc73586ffd
-      radio_button_name: Pharmaceuticals
-      topic_name: Pharmaceuticals
+      radio_button_name: Pharmaceuticals and clinical trials
+      topic_name: Pharmaceuticals and clinical trials
+      prechecked: false
+    - key: plants-and-forestry
+      content_id: afd45eef-743a-417d-9245-3eab8322116d
+      radio_button_name: Plants and forestry
+      topic_name: Plants and forestry
       prechecked: false
     - key: ports-airports
       content_id: 4591ce75-7568-48c6-af5f-3558f89f7f57
@@ -246,8 +221,8 @@ details:
       prechecked: false
     - key: professional-and-business-services
       content_id: f07527f1-e6de-4fe8-b7d9-b197769e1f1f
-      radio_button_name: Professional and business services
-      topic_name: Professional and business services
+      radio_button_name: Professional, legal and business services
+      topic_name: Professional, legal and business services
       prechecked: false
     - key: public-administration
       content_id: 091c0e83-bb54-4727-9b2c-a919510e1e79
@@ -256,8 +231,8 @@ details:
       prechecked: false
     - key: rail
       content_id: 53bcfcf0-e22a-416d-91ac-2661e1d6ed04
-      radio_button_name: Rail
-      topic_name: Rail
+      radio_button_name: Rail (manufacture)
+      topic_name: Rail (manufacture)
       prechecked: false
     - key: rail-passenger-freight
       content_id: 2e1cf5a9-d410-4cfc-9f54-d94302f8fbd1
@@ -269,10 +244,10 @@ details:
       radio_button_name: Real estate
       topic_name: Real estate
       prechecked: false
-    - key: repair-of-computers-consumer-goods
-      content_id: c1d8057c-76bf-431c-9ac8-6281a4b7b9ca
-      radio_button_name: Repair of computers and consumer goods
-      topic_name: Repair of computers and consumer goods
+    - key: other-energy
+      content_id: 2c562ab5-7891-4a00-8510-a5ebdb4001c8
+      radio_button_name: Renewable energy
+      topic_name: Renewable energy
       prechecked: false
     - key: research
       content_id: 39771bc2-8b2c-43e9-9cfc-fa3606b67db6
@@ -286,18 +261,13 @@ details:
       prechecked: false
     - key: retail
       content_id: 34a6edd0-46ea-4a76-ae80-8c96709d4f59
-      radio_button_name: Retail and wholesale (excluding motor trade, food and drink)
-      topic_name: Retail and wholesale (excluding motor trade, food and drink)
+      radio_button_name: Retail and wholesale (excluding food, drink and motors)
+      topic_name: Retail and wholesale (excluding food, drink and motors)
       prechecked: false
     - key: road-passengers-freight
       content_id: 6f5f8dbb-3cd3-475d-8f3a-ed6e22d370be
       radio_button_name: Road (passengers and freight)
       topic_name: Road (passengers and freight)
-      prechecked: false
-    - key: space
-      content_id: b4e507df-f067-4749-9468-3de120775216
-      radio_button_name: Space
-      topic_name: Space
       prechecked: false
     - key: sports-recreation
       content_id: 4d98ae8d-fd44-4e5d-8cf0-b9b01bd76b1a
@@ -321,8 +291,8 @@ details:
       prechecked: false
     - key: voluntary-community-organisations
       content_id: c66d8196-977f-47a5-806f-885c9cf01412
-      radio_button_name: Voluntary and community organistions
-      topic_name: Voluntary and community organistions
+      radio_button_name: Voluntary and community organisations
+      topic_name: Voluntary and community organisations
       prechecked: false
     - key: warehouses-services-pipelines
       content_id: 15ad9a45-5536-4323-97f9-ed470cdf1e3b
@@ -334,28 +304,33 @@ details:
     facet_choices:
     - key: products-or-goods
       content_id: a55f04df-3877-4c73-bbfe-ad7339cdfccf
-      radio_button_name: Sell products or goods in the UK
-      topic_name: Sell products or goods in the UK
+      radio_button_name: Sell goods or provide services in the UK
+      topic_name: Sell goods or provide services in the UK
       prechecked: false
     - key: buying
       content_id: d422aa2e-59ad-4986-8ef0-973959878912
-      radio_button_name: Buy products or goods from abroad
-      topic_name: Buy products or goods from abroad
+      radio_button_name: Import from the EU
+      topic_name: Import from the EU
       prechecked: false
     - key: selling
       content_id: 7283b8e1-840f-49da-967f-c0a512a3f531
-      radio_button_name: Sell products or goods abroad
-      topic_name: Sell products or goods abroad
+      radio_button_name: Export to the EU
+      topic_name: Export to the EU
       prechecked: false
     - key: other-eu
       content_id: 7ae8e57c-ea7a-42de-84fc-a084b5f64bca
-      radio_button_name: Do other types of business in the EU
-      topic_name: Do other types of business in the EU
+      radio_button_name: Provide services or do business in the EU
+      topic_name: Provide services or do business in the EU
       prechecked: false
     - key: transporting
       content_id: 07398027-ee4d-4bda-b53e-2dc655734049
-      radio_button_name: Transport goods abroad
-      topic_name: Transport goods abroad
+      radio_button_name: Haulage of goods across EU borders
+      topic_name: Haulage of goods across EU borders
+      prechecked: false
+    - key: none-of-these
+      content_id: c35c2e8c-f88e-42e0-83ed-62e896aafd92
+      radio_button_name: None of these
+      topic_name: None of these
       prechecked: false
   - facet_id: employ_eu_citizens
     facet_name: Who you employ
@@ -368,7 +343,7 @@ details:
     - key: 'no'
       content_id: bbdbda71-b1ec-46b8-a5b8-931d933288e9
       radio_button_name: Non-EU citizens
-      topic_name: No EU citizens
+      topic_name: Non-EU citizens
       prechecked: false
   - facet_id: personal_data
     facet_name: Personal data
@@ -434,8 +409,8 @@ details:
     facet_choices:
     - key: civil-government-contracts
       content_id: f165dc7c-7cef-446a-bdfd-8a1ca685d091
-      radio_button_name: Civil government contracts
-      topic_name: Civil government contracts
+      radio_button_name: Public sector contracts
+      topic_name: Public sector contracts
       prechecked: false
     - key: defence-contracts
       content_id: 33fc20d7-6a45-40c9-b31f-e4678f962ff1
