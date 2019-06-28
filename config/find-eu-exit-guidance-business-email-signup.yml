@@ -337,13 +337,13 @@ details:
     facet_choices:
     - key: 'yes'
       content_id: 5476f0c7-d029-459b-8a17-196374ae3366
-      radio_button_name: EU citizens
-      topic_name: EU citizens
+      radio_button_name: EU or EEA citizens
+      topic_name: EU or EEA citizens
       prechecked: false
     - key: 'no'
       content_id: bbdbda71-b1ec-46b8-a5b8-931d933288e9
-      radio_button_name: Non-EU citizens
-      topic_name: Non-EU citizens
+      radio_button_name: No EU or EEA citizens
+      topic_name: No EU or EEA citizens
       prechecked: false
   - facet_id: personal_data
     facet_name: Personal data
