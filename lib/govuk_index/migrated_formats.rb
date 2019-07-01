@@ -5,11 +5,15 @@ module GovukIndex
     def non_indexable?(format, path, app)
       non_indexable_formats[format] &&
         (non_indexable_formats[format] == :all || non_indexable_formats[format].include?(path) ||
-          published_by_non_indexable_app?(format, app))
+          published_by_non_indexable_app?(format, app)) || non_indexable_path.include?(path)
     end
 
     def non_indexable_formats
       @non_indexable_formats ||= convert_to_allowed_hash(data_file['non_indexable'])
+    end
+
+    def non_indexable_path
+      @non_indexable_path ||= data_file['non_indexable_path']
     end
 
     def indexable?(format, path, app)
