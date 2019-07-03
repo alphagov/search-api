@@ -7,7 +7,6 @@ RSpec.describe Indexer::AmendWorker do
   let(:content_id) {'41609206-8736-4ff3-b582-63c9fccafe4d'}
   let(:document) {{"title" => 'Old title', "content_id" => content_id, "link" => link}}
   let(:updates) {{"title" => "New title"}}
-  let(:cluster_count) {Clusters.count}
 
   before(:each) do
     Sidekiq::Worker.clear_all
@@ -23,7 +22,11 @@ RSpec.describe Indexer::AmendWorker do
 
       doc_with_updates = document.merge(updates)
 
-      assert_requested request, times: cluster_count
+      # Previously, this used a let to store Clusters.count, however,
+      # I _think_ that this meant that if the test that only used one cluster ran before
+      # this one, then the incorrect cluster count was stored, the request was made twice
+      # but it asserted that there should only be one request, which is wrong
+      assert_requested request, times: Clusters.count
       expect_document_is_in_rummager(doc_with_updates, id: link, index: index_name)
     end
   end
@@ -34,9 +37,11 @@ RSpec.describe Indexer::AmendWorker do
       lock_delay = Indexer::DeleteWorker::LOCK_DELAY
       mock_index = double("index") # rubocop:disable RSpec/VerifiedDoubles
       # rubocop:disable RSpec/MessageSpies
-      expect(mock_index).to receive(:amend).and_raise(SearchIndices::IndexLocked)
 
-      expect_any_instance_of(SearchIndices::SearchServer).to receive(:index) # rubocop:disable RSpec/AnyInstance
+      # We can change these to allow (IMHO) becausee don't really care how many times they were called, that's
+      # an implementation detail, we only care that the job count was increased
+      allow(mock_index).to receive(:amend).and_raise(SearchIndices::IndexLocked)
+      allow_any_instance_of(SearchIndices::SearchServer).to receive(:index) # rubocop:disable RSpec/AnyInstance
                                                                .with(index_name)
                                                                .and_return(mock_index)
 
