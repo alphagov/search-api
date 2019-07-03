@@ -87,6 +87,15 @@ details:
     short_name: Updated
     preposition: Updated
     type: date
+  - display_as_result_metadata: false
+    filterable: true
+    key: topical_events
+    name: Topical event
+    preposition: about
+    short_name: about
+    type: hidden
+    show_option_select_filter: false
+    allowed_values: []
   show_summaries: true
   sort:
   - default: true
