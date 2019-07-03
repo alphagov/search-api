@@ -32,6 +32,8 @@ module Indexer
 
     def indexes(index_name)
       SearchConfig.search_servers.map { |search_server|
+        puts "CALL INDEX"
+        puts caller
         search_server.index(index_name)
       }
     end

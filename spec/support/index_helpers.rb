@@ -3,7 +3,7 @@ class IndexHelpers
     puts "Setting up test indexes on clusters #{Clusters.active.map(&:key).join(',')}..."
     start_time = Time.now
 
-    clean_all
+
     create_all
 
     puts "Done in #{Time.now - start_time} seconds."

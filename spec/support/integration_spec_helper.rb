@@ -53,7 +53,6 @@ module IntegrationSpecHelper
     allowed_paths << '_tasks'
 
     allow_urls = %r{#{allowed_hosts.map { |host| "#{host}/(#{allowed_paths.join('|')})" }.join('|')}}
-
     WebMock.disable_net_connect!(allow: allow_urls)
     yield
   ensure
