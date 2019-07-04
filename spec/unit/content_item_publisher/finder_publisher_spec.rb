@@ -32,24 +32,23 @@ RSpec.describe ContentItemPublisher::FinderPublisher do
 
         before do
           allow(logger).to receive(:info)
-          allow(Services.publishing_api).to receive(:put_content)
-          allow(Services.publishing_api).to receive(:patch_links)
-          allow(Services.publishing_api).to receive(:publish)
+          stub_any_publishing_api_put_content
+          stub_any_publishing_api_patch_links
+          stub_any_publishing_api_publish
 
           instance.call
         end
 
         it "drafts the finder" do
-          expect(Services.publishing_api).to have_received(:put_content).with(content_id, payload)
+          assert_publishing_api_put_content(content_id, payload)
         end
 
         it "patches links for the finder" do
-          expect(Services.publishing_api).to have_received(:patch_links)
-            .with(content_id, { content_id: content_id, links: anything })
+          assert_publishing_api_patch_links(content_id, ->(request) { JSON.parse(request.body).has_key?('links') })
         end
 
         it "publishes the finder to the Publishing API" do
-          expect(Services.publishing_api).to have_received(:publish).with(content_id)
+          assert_publishing_api_publish(content_id)
         end
       end
     end

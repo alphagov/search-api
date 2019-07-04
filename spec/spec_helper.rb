@@ -83,6 +83,7 @@ RSpec.configure do |config|
     # is automatically reset, the index_names or passed into children object and
     # cached there.
     SearchConfig.reset_instances
+    Services.cache.clear
   end
 
   if config.files_to_run.one?

@@ -80,7 +80,7 @@ private
     allow(Indexer::CompareEnumerator).to receive(:new).with(
       'index_a',
       'index_b',
-      Clusters.default_cluster,
+      satisfy {|c| c.key == Clusters.default_cluster.key },
       {},
       {},
     ).and_return([[left, right]].to_enum)

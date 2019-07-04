@@ -2,11 +2,11 @@
 # the various elasticsearch clusters that search-api can talk to.
 module Clusters
   def self.count
-    @count ||= active.count
+    active.count
   end
 
   def self.default_cluster
-    @default_cluster ||= active.find(&:default)
+    active.find(&:default)
   end
 
   def self.validate_cluster_key!(cluster_key)
@@ -17,7 +17,7 @@ module Clusters
   end
 
   def self.cluster_keys
-    @cluster_keys ||= active.map(&:key)
+    active.map(&:key)
   end
 
   class InvalidClusterError < StandardError; end
@@ -32,10 +32,12 @@ module Clusters
   end
 
   def self.active
-    @active ||= begin
-      defined_clusters = ElasticsearchConfig.new.config['clusters']
-      defined_clusters.map { |cluster| Cluster.new(cluster.deep_symbolize_keys) }
-      .reject(&:inactive?)
+    Services.cache.fetch("elastic_search_active_clusters") do
+      begin
+        defined_clusters = ElasticsearchConfig.new.config['clusters']
+        defined_clusters.map { |cluster| Cluster.new(cluster.deep_symbolize_keys) }
+        .reject(&:inactive?)
+      end
     end
   end
 end
