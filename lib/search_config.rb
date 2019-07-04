@@ -68,7 +68,7 @@ class SearchConfig
 
     def elasticsearch
       Cache.get(Cache::SEARCH_CONFIG) do
-        @elasticsearch = ElasticsearchConfig.new.config
+        ElasticsearchConfig.new.config
       end
     end
 
