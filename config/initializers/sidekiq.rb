@@ -2,8 +2,8 @@ require "govuk_sidekiq/sidekiq_initializer"
 
 if ENV["RACK_ENV"] == "test"
   redis_config = {
-    host: ENV.fetch("REDIS_HOST", "127.0.0.1"),
-    port: ENV.fetch("REDIS_PORT", 6379),
+    host: ENV.fetch("REDIS_TEST_HOST", "127.0.0.1"),
+    port: ENV.fetch("REDIS_TEST_PORT", 6379),
     namespace: "search-api-test"
   }
 
