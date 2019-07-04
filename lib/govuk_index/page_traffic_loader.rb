@@ -13,10 +13,8 @@ module GovukIndex
 
       old_index = index_group.current_real
       @logger.info "Old index #{old_index.real_name}"
-
       old_index.with_lock do
         @logger.info "Indexing to #{new_index.real_name}"
-
         in_even_sized_batches(iostream) do |lines|
           GovukIndex::PageTrafficWorker.perform_async(lines, new_index.real_name, cluster.key)
         end
