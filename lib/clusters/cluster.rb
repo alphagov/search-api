@@ -24,7 +24,7 @@ module Clusters
     attr_reader :uri_key
 
     def elasticsearch_config
-      @elasticsearch_config ||= ElasticsearchConfig.new.config
+      ElasticsearchConfig.new.config
     end
   end
 end
