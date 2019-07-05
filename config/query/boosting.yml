@@ -2,6 +2,7 @@ base:
   format:
     service_manual_guide: 0.3
     service_manual_topic: 0.3
+    step_by_step_nav: 2.5
     transaction: 1.5
     # Should appear below govuk (mainstream) content
     aaib_report: 0.2
