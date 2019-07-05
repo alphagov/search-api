@@ -10,11 +10,11 @@ class IndexFinder
     end
 
     def search_config
-      @search_config ||= SearchConfig.default_instance
+      @search_config = SearchConfig.default_instance
     end
 
     def search_server
-      @search_server ||= search_config.search_server
+      @search_server = search_config.search_server
     end
   end
 end

@@ -2,7 +2,7 @@ require 'active_support/cache'
 
 module Services
   def self.publishing_api
-    @publishing_api ||= GdsApi::PublishingApiV2.new(
+    GdsApi::PublishingApiV2.new(
       Plek.find('publishing-api'),
       bearer_token: ENV['PUBLISHING_API_BEARER_TOKEN'] || 'example',
 
@@ -37,17 +37,13 @@ module Services
   end
 
   def self.statsd_client
-    @statsd_client ||= Statsd.new.tap { |sd| sd.namespace = "govuk.app.search-api" }
+    Cache.get(Cache::STATSD_CLIENT) do
+      Statsd.new.tap { |sd| sd.namespace = "govuk.app.search-api" }
+    end
   end
 
   def self.cache
-    @cache ||= if ENV['RACK_ENV'] == 'production'
-                 # Using a memory store as this is expected to store signon
-                 # tokens, this will be cleared each time the app starts
-                 ActiveSupport::Cache.lookup_store(:memory_store)
-               else
-                 ActiveSupport::Cache.lookup_store(:null_store)
-               end
+    ActiveSupport::Cache.lookup_store(:memory_store)
   end
 end
 

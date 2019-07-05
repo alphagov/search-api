@@ -14,18 +14,16 @@ RSpec.describe Indexer::AmendWorker do
   end
 
   it "amends documents" do
-    Sidekiq::Testing.fake! do
-      commit_document(index_name, document)
+    commit_document(index_name, document)
 
-      request = stub_request_to_publishing_api(content_id)
+    request = stub_request_to_publishing_api(content_id)
 
-      described_class.new.perform(index_name, link, updates)
+    described_class.new.perform(index_name, link, updates)
 
-      doc_with_updates = document.merge(updates)
+    doc_with_updates = document.merge(updates)
 
-      assert_requested request, times: cluster_count
-      expect_document_is_in_rummager(doc_with_updates, id: link, index: index_name)
-    end
+    assert_requested request, times: cluster_count
+    expect_document_is_in_rummager(doc_with_updates, id: link, index: index_name)
   end
 
   it "retries when index locked" do

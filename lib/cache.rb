@@ -4,6 +4,7 @@ class Cache
   SEARCH_CONFIG = 'SEARCH_CONFIG:'.freeze
   CLUSTER = 'CLUSTER:'.freeze
   ACTIVE_CLUSTERS = 'ACTIVE_CLUSTERS:'.freeze
+  STATSD_CLIENT = 'STATSD_CLIENT:'.freeze
 
   @cache = {}
 

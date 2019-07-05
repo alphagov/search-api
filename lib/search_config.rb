@@ -18,8 +18,9 @@ class SearchConfig
     end
 
     def instance(cluster)
-      @instance ||= {}
-      @instance[cluster.key] ||= new(cluster)
+      Cache.get("#{Cache::CLUSTER}#{cluster.key}") do
+        new(cluster)
+      end
     end
 
     def default_instance
@@ -28,13 +29,8 @@ class SearchConfig
       instance(Clusters.default_cluster)
     end
 
-    def reset_instances
-      # used in the tests because SearchConfig.instance is stateful
-      @instance = {}
-    end
-
     def search_servers
-      @search_servers ||= begin
+      Cache.get(Cache::SEARCH_SERVERS) do
         Clusters.active.map { |cluster| SearchConfig.instance(cluster).search_server }
       end
     end
@@ -71,7 +67,9 @@ class SearchConfig
     end
 
     def elasticsearch
-      @elasticsearch ||= ElasticsearchConfig.new.config
+      Cache.get(Cache::SEARCH_CONFIG) do
+        ElasticsearchConfig.new.config
+      end
     end
 
   private
@@ -81,10 +79,12 @@ class SearchConfig
       # fine because the 'elasticsearch_types' field (which the combined
       # index schema uses) is unaffected by the 'elasticsearch_settings'
       # field (which is what can be overridden per-cluster).
-      @combined_index_schema ||= CombinedIndexSchema.new(
-        content_index_names + [govuk_index_name],
-        default_instance.schema_config
-      )
+      Cache.get(Cache::COMBINED_INDEX_SCHEMA) do
+        CombinedIndexSchema.new(
+          content_index_names + [govuk_index_name],
+          default_instance.schema_config
+          )
+      end
     end
   end
 

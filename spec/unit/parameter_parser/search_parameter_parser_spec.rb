@@ -1,14 +1,18 @@
 require 'spec_helper'
 
 RSpec.describe SearchParameterParser do
+  def cluster_with_key(key)
+    satisfy { |c| c.key == key }
+  end
+
   def expected_params(params)
     {
       start: 0,
       count: 10,
-      cluster: Clusters.default_cluster,
-      search_config: SearchConfig.default_instance,
       query: nil,
       similar_to: nil,
+      cluster: cluster_with_key(Clusters.default_cluster.key),
+      search_config: instance_of(SearchConfig),
       order: nil,
       return_fields: BaseParameterParser::DEFAULT_RETURN_FIELDS,
       filters: [],
@@ -73,7 +77,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about an unknown parameter" do
@@ -81,14 +85,14 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Unexpected parameters: p")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "allows the c parameter to be anything" do
     p = described_class.new({ "c" => ["1234567890"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "understands the cluster parameter" do
@@ -97,7 +101,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(cluster: cluster))
+    expect(p.parsed_params).to match(expected_params(cluster: cluster_with_key(cluster.key)))
   end
 
   it "complains about invalid cluster parameters" do
@@ -105,7 +109,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Invalid cluster. Accepted values: #{Clusters.active.map(&:key).join(', ')}})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(cluster: Clusters.default_cluster))
+    expect(p.parsed_params).to match(expected_params(cluster: cluster_with_key(Clusters.default_cluster.key)))
   end
 
   it "complains about a repeated cluster parameter" do
@@ -113,7 +117,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "cluster" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(cluster: Clusters.default_cluster))
+    expect(p.parsed_params).to match(expected_params(cluster: cluster_with_key(Clusters.default_cluster.key)))
   end
 
   it "complain about multiple unknown parameters" do
@@ -121,14 +125,14 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Unexpected parameters: p, boo")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "understands the start parameter" do
     p = described_class.new({ "start" => ["5"] }, @schema)
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(start: 5))
+    expect(p.parsed_params).to match(expected_params(start: 5))
   end
 
   it "complains about a non-integer start parameter" do
@@ -136,7 +140,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Invalid value \"5.5\" for parameter \"start\" (expected positive integer)")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a negative start parameter" do
@@ -144,7 +148,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Invalid negative value \"-1\" for parameter \"start\" (expected positive integer)")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a non-decimal start parameter" do
@@ -152,7 +156,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Invalid value \"x\" for parameter \"start\" (expected positive integer)")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a repeated start parameter" do
@@ -160,7 +164,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "start" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(start: 2))
+    expect(p.parsed_params).to match(expected_params(start: 2))
   end
 
   it "complains about a start parameter that is too large" do
@@ -168,7 +172,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Maximum result set start point (as specified in 'start') is 900000")
     expect(p).not_to be_valid
-    expect(expected_params(start: 0)).to eq(p.parsed_params)
+    expect(p.parsed_params).to match(expected_params(start: 0))
   end
 
   it "understands the count parameter" do
@@ -176,7 +180,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(count: 5))
+    expect(p.parsed_params).to match(expected_params(count: 5))
   end
 
   it "complains about a non-integer count parameter" do
@@ -184,7 +188,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Invalid value \"5.5\" for parameter \"count\" (expected positive integer)")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a negative count parameter" do
@@ -192,7 +196,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Invalid negative value \"-1\" for parameter \"count\" (expected positive integer)")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a non-decimal count parameter" do
@@ -200,7 +204,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Invalid value \"x\" for parameter \"count\" (expected positive integer)")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a repeated count parameter" do
@@ -208,7 +212,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "count" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(count: 2))
+    expect(p.parsed_params).to match(expected_params(count: 2))
   end
 
   it "complains about an overly large count parameter" do
@@ -216,7 +220,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Maximum result set size (as specified in 'count') is 1500})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(count: 10))
+    expect(p.parsed_params).to match(expected_params(count: 10))
   end
 
   it "understands the q parameter" do
@@ -224,7 +228,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(query: "search-term"))
+    expect(p.parsed_params).to match(expected_params(query: "search-term"))
   end
 
   it "complains when the q parameter is too long" do
@@ -235,7 +239,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Query exceeds the maximum allowed length})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(query: too_long_query))
+    expect(p.parsed_params).to match(expected_params(query: too_long_query))
   end
 
   it "complains about a repeated q parameter" do
@@ -243,7 +247,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "q" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(query: "hello"))
+    expect(p.parsed_params).to match(expected_params(query: "hello"))
   end
 
   it "strips whitespace from the query" do
@@ -251,7 +255,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(query: "cheese"))
+    expect(p.parsed_params).to match(expected_params(query: "cheese"))
   end
 
   it "puts the query in normalized form" do
@@ -259,7 +263,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(query: "caf\u00e8"))
+    expect(p.parsed_params).to match(expected_params(query: "caf\u00e8"))
   end
 
   it "complains about invalid unicode in the query" do
@@ -267,7 +271,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Invalid unicode in query")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(query: nil))
+    expect(p.parsed_params).to match(expected_params(query: nil))
   end
 
   it "understands the similar_to parameter" do
@@ -275,7 +279,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(similar_to: "/search-term"))
+    expect(p.parsed_params).to match(expected_params(similar_to: "/search-term"))
   end
 
   it "complains about a repeated similar_to parameter" do
@@ -283,7 +287,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "similar_to" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(similar_to: "/hello"))
+    expect(p.parsed_params).to match(expected_params(similar_to: "/hello"))
   end
 
   it "strips whitespace from similar_to parameter" do
@@ -291,7 +295,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(similar_to: "/cheese"))
+    expect(p.parsed_params).to match(expected_params(similar_to: "/cheese"))
   end
 
   it "puts the similar_to parameter in normalized form" do
@@ -299,7 +303,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(similar_to: "/caf\u00e8"))
+    expect(p.parsed_params).to match(expected_params(similar_to: "/caf\u00e8"))
   end
 
   it "complains about invalid unicode in the similar_to parameter" do
@@ -307,7 +311,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Invalid unicode in similar_to")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(similar_to: nil))
+    expect(p.parsed_params).to match(expected_params(similar_to: nil))
   end
 
   it "complains when both q and similar_to parameters are provided" do
@@ -315,7 +319,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Parameters 'q' and 'similar_to' cannot be used together")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(query: "hello", similar_to: "/world"))
+    expect(p.parsed_params).to match(expected_params(query: "hello", similar_to: "/world"))
   end
 
   it "sets the order parameter to nil when the similar_to parameter is provided" do
@@ -323,7 +327,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(similar_to: "/hello"))
+    expect(p.parsed_params).to match(expected_params(similar_to: "/hello"))
   end
 
   it "understands filter paramers" do
@@ -389,7 +393,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(
+    expect(p.parsed_params).to match(
       expected_params(
         filters: [
           text_filter("organisations", [
@@ -439,8 +443,8 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{"spells" is not a valid filter field})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(
-      expected_params(filters: [text_filter("organisations", ["hm-magic"])])
+    expect(p.parsed_params).to match(
+      expected_params(filters: [text_filter("organisations", %w[hm-magic])])
     )
   end
 
@@ -455,8 +459,8 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{"spells" is not a valid reject field})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(
-      expected_params(filters: [text_filter("organisations", ["hm-magic"], :reject)])
+    expect(p.parsed_params).to match(
+      expected_params(filters: [text_filter("organisations", %w[hm-magic], :reject)])
     )
   end
 
@@ -568,7 +572,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params({ order: %w(public_timestamp asc) }))
+    expect(p.parsed_params).to match(expected_params({ order: %w(public_timestamp asc) }))
   end
 
   it "understands a descending sort" do
@@ -576,7 +580,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params({ order: %w(public_timestamp desc) }))
+    expect(p.parsed_params).to match(expected_params({ order: %w(public_timestamp desc) }))
   end
 
   it "complains about disallowed sort fields" do
@@ -584,7 +588,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{"spells" is not a valid sort field})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about disallowed descending sort fields" do
@@ -592,7 +596,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{"spells" is not a valid sort field})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a repeated sort parameter" do
@@ -600,7 +604,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "order" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(order: %w(public_timestamp asc)))
+    expect(p.parsed_params).to match(expected_params(order: %w(public_timestamp asc)))
   end
 
   it "understands a aggregate field" do
@@ -608,7 +612,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(
+    expect(p.parsed_params).to match(
       expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) })
     )
   end
@@ -621,7 +625,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(
+    expect(p.parsed_params).to match(
       expected_params(
         aggregates: {
           "organisations" => expected_aggregate_params(requested: 10),
@@ -639,7 +643,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{"spells" is not a valid aggregate field})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(
+    expect(p.parsed_params).to match(
       expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) })
     )
   end
@@ -652,7 +656,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{"spells" is not a valid aggregate field. Invalid value "magic" for first parameter for aggregate "organisations" (expected positive integer)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about empty values for aggregate parameter" do
@@ -660,7 +664,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Invalid value "" for first parameter for aggregate "organisations" (expected positive integer)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a repeated aggregate parameter" do
@@ -668,7 +672,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "aggregate_organisations" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(
+    expect(p.parsed_params).to match(
       expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 5) })
     )
   end
@@ -680,7 +684,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(
+    expect(p.parsed_params).to match(
       expected_params(
         aggregates: {
           "organisations" => expected_aggregate_params(
@@ -701,13 +705,13 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(
-      aggregates: {
-        "organisations" => expected_aggregate_params(
-          requested: 10,
-          order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
-      )
-}
+    expect(p.parsed_params).to match(expected_params(
+                                       aggregates: {
+                                         "organisations" => expected_aggregate_params(
+                                           requested: 10,
+                                           order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
+                                       )
+                                 }
     ))
   end
 
@@ -718,7 +722,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{"filt" is not a valid sort option in aggregate "organisations". "value.unknown" is not a valid sort option in aggregate "organisations"})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
 
@@ -729,13 +733,13 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(
-      aggregates: {
-        "organisations" => expected_aggregate_params(
-          requested: 10,
-          order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
-        )
-      }
+    expect(p.parsed_params).to match(expected_params(
+                                       aggregates: {
+                                         "organisations" => expected_aggregate_params(
+                                           requested: 10,
+                                           order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
+                                         )
+                                       }
     ))
   end
 
@@ -746,13 +750,13 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(
-      aggregates: {
-        "organisations" => expected_aggregate_params(
-          requested: 10,
-          scope: :all_filters,
-        )
-      }
+    expect(p.parsed_params).to match(expected_params(
+                                       aggregates: {
+                                         "organisations" => expected_aggregate_params(
+                                           requested: 10,
+                                           scope: :all_filters,
+                                         )
+                                       }
     ))
   end
 
@@ -763,7 +767,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{"unknown" is not a valid scope option in aggregate "organisations"})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a repeated examples option" do
@@ -773,7 +777,7 @@ RSpec.describe SearchParameterParser do
 
     expect(%{Too many values (2) for parameter "examples" in aggregate "organisations" (must occur at most once)}).to eq(p.error)
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "merges fields from repeated example fields options" do
@@ -783,15 +787,15 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(
-      aggregates: {
-        "organisations" => expected_aggregate_params(
-          requested: 10,
-          examples: 5,
-          example_fields: %w(slug title link),
-          example_scope: :global,
-        )
-      }
+    expect(p.parsed_params).to match(expected_params(
+                                       aggregates: {
+                                         "organisations" => expected_aggregate_params(
+                                           requested: 10,
+                                           examples: 5,
+                                           example_fields: %w(slug title link),
+                                           example_scope: :global,
+                                         )
+                                       }
     ))
   end
 
@@ -802,7 +806,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("example_scope parameter must be set to 'query' or 'global' when requesting examples")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({ aggregates: {} }))
+    expect(p.parsed_params).to match(expected_params({ aggregates: {} }))
   end
 
   it "allows example scope to be set to 'query'" do
@@ -811,15 +815,15 @@ RSpec.describe SearchParameterParser do
     }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(
-      aggregates: {
-        "organisations" => expected_aggregate_params(
-          requested: 10,
-          examples: 5,
-          example_fields: %w(slug title),
-          example_scope: :query,
-        )
-      }
+    expect(p.parsed_params).to match(expected_params(
+                                       aggregates: {
+                                         "organisations" => expected_aggregate_params(
+                                           requested: 10,
+                                           examples: 5,
+                                           example_fields: %w(slug title),
+                                           example_scope: :query,
+                                         )
+                                       }
     ))
   end
 
@@ -830,7 +834,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("example_scope parameter must be set to 'query' or 'global' when requesting examples")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "complains about a repeated example scope option" do
@@ -840,7 +844,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "example_scope" in aggregate "organisations" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "validates options in the values for the aggregate parameter" do
@@ -854,7 +858,7 @@ RSpec.describe SearchParameterParser do
       %{Unexpected options in aggregate "organisations": example},
     ].join(". "))
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params({}))
+    expect(p.parsed_params).to match(expected_params({}))
   end
 
   it "accepts facets as a alias for aggregates" do
@@ -887,7 +891,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(return_fields: %w(title description)))
+    expect(p.parsed_params).to match(expected_params(return_fields: %w(title description)))
   end
 
   it "complains about invalid fields parameters" do
@@ -895,7 +899,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Some requested fields are not valid return fields: [\"waffle\"]")
     expect(p).not_to be_valid
-    expect(expected_params(return_fields: ["title"])).to eq(p.parsed_params)
+    expect(p.parsed_params).to match(expected_params(return_fields: %w[title]))
   end
 
   it "understands the debug parameter" do
@@ -903,7 +907,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Unknown debug option "unknown_option"})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to eq(expected_params(debug: { disable_best_bets: true, disable_popularity: true }))
+    expect(p.parsed_params).to match(expected_params(debug: { disable_best_bets: true, disable_popularity: true }))
   end
 
   it "merges values from repeated debug parameters" do
@@ -911,7 +915,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(debug: { disable_best_bets: true, explain: true, disable_popularity: true }))
+    expect(p.parsed_params).to match(expected_params(debug: { disable_best_bets: true, explain: true, disable_popularity: true }))
   end
 
   it "ignores empty options in the debug parameter" do
@@ -919,35 +923,35 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(debug: {}))
+    expect(p.parsed_params).to match(expected_params(debug: {}))
   end
 
   it "understands explain in the debug parameter" do
     p = described_class.new({ "debug" => ["explain"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(debug: { explain: true }))
+    expect(p.parsed_params).to match(expected_params(debug: { explain: true }))
   end
 
   it "understands disable synonyms in the debug parameter" do
     p = described_class.new({ "debug" => ["disable_synonyms"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(debug: { disable_synonyms: true }))
+    expect(p.parsed_params).to match(expected_params(debug: { disable_synonyms: true }))
   end
 
   it "understands the test variant parameter" do
     p = described_class.new({ "ab_tests" => ["min_should_match_length:A"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(ab_tests: { min_should_match_length: 'A' }))
+    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: 'A' }))
   end
 
   it "understands multiple test variant parameters" do
     p = described_class.new({ "ab_tests" => ["min_should_match_length:A,other_test_case:B"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to eq(expected_params(ab_tests: { min_should_match_length: 'A', other_test_case: 'B' }))
+    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: 'A', other_test_case: 'B' }))
   end
 
   it "complains about invalid test variant where no variant type is provided" do
