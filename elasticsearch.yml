@@ -25,7 +25,7 @@ development:
 
 test:
   base_uri: <%= ENV.fetch('ELASTICSEARCH_URI', 'http://localhost:9200') %>
-  base_uri_b: <%= ENV["ELASTICSEARCH_B_URI"] %>
+  base_uri_b: <%= ENV.fetch("ELASTICSEARCH_B_URI", 'http://localhost:9201') %>
   content_index_names: ["government_test"]
   govuk_index_name: "govuk_test"
   auxiliary_index_names: ["page-traffic_test", "metasearch_test"]
