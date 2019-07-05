@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'sidekiq/testing'
 
 RSpec.describe Indexer::AmendWorker do
   let(:index_name) { 'government_test' }
@@ -8,34 +9,42 @@ RSpec.describe Indexer::AmendWorker do
   let(:updates) { { "title" => "New title" } }
   let(:cluster_count) { Clusters.count }
 
+  before do
+    Sidekiq::Worker.clear_all
+  end
+
   it "amends documents" do
-    commit_document(index_name, document)
+    Sidekiq::Testing.fake! do
+      commit_document(index_name, document)
 
-    request = stub_request_to_publishing_api(content_id)
+      request = stub_request_to_publishing_api(content_id)
 
-    described_class.new.perform(index_name, link, updates)
+      described_class.new.perform(index_name, link, updates)
 
-    doc_with_updates = document.merge(updates)
+      doc_with_updates = document.merge(updates)
 
-    assert_requested request, times: cluster_count
-    expect_document_is_in_rummager(doc_with_updates, id: link, index: index_name)
+      assert_requested request, times: cluster_count
+      expect_document_is_in_rummager(doc_with_updates, id: link, index: index_name)
+    end
   end
 
   it "retries when index locked" do
-    with_just_one_cluster
-    lock_delay = Indexer::DeleteWorker::LOCK_DELAY
-    mock_index = double("index") # rubocop:disable RSpec/VerifiedDoubles
-    # rubocop:disable RSpec/MessageSpies
-    expect(mock_index).to receive(:amend).and_raise(SearchIndices::IndexLocked)
-    expect_any_instance_of(SearchIndices::SearchServer).to receive(:index) # rubocop:disable RSpec/AnyInstance
-      .with(index_name)
-      .and_return(mock_index)
+    Sidekiq::Testing.fake! do
+      with_just_one_cluster
+      mock_index = double("index") # rubocop:disable RSpec/VerifiedDoubles
+      # rubocop:disable RSpec/MessageSpies
+      expect(mock_index).to receive(:amend).and_raise(SearchIndices::IndexLocked)
 
-    expect(described_class).to receive(:perform_in)
-      .with(lock_delay, index_name, link, updates)
-    # rubocop:enable RSpec/MessageSpies
-    worker = described_class.new
-    worker.perform(index_name, link, updates)
+      expect_any_instance_of(SearchIndices::SearchServer).to receive(:index) # rubocop:disable RSpec/AnyInstance
+                                                               .with(index_name)
+                                                               .and_return(mock_index)
+
+      # rubocop:enable RSpec/MessageSpies
+      worker = described_class.new
+      expect {
+        worker.perform(index_name, link, updates)
+      }.to change { described_class.jobs.count }.by(1)
+    end
   end
 
   it "forwards to failure queue" do
