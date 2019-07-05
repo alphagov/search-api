@@ -14,19 +14,19 @@ RSpec.describe ContentItemPublisher::FacetGroupFinderPublisher do
   finder_config["details"]["facets"] = []
 
   context "when publishing finder config has facet group in it's links" do
-    subject(:instance) {described_class.new(finder, timestamp)}
+    subject(:instance) { described_class.new(finder, timestamp) }
 
-    let(:finder) {finder_config}
-    let(:content_id) {finder["content_id"]}
-    let(:timestamp) {Time.now.iso8601}
-    let(:logger) {instance_double("Logger")}
+    let(:finder) { finder_config }
+    let(:content_id) { finder["content_id"] }
+    let(:timestamp) { Time.now.iso8601 }
+    let(:logger) { instance_double("Logger") }
 
     before do
       allow(Logger).to receive(:new).and_return(logger)
     end
 
     describe "#call" do
-      let(:publishing_api) {instance_double("GdsApi::PublishingApiV2")}
+      let(:publishing_api) { instance_double("GdsApi::PublishingApiV2") }
       let(:payload) {
         ContentItemPublisher::FacetGroupFinderPresenter.new(finder, timestamp).present
       }
@@ -45,7 +45,8 @@ RSpec.describe ContentItemPublisher::FacetGroupFinderPublisher do
       end
 
       it "patches links for the finder" do
-        assert_publishing_api_patch_links(content_id, ->(request) {JSON.parse(request.body) == {
+        assert_publishing_api_patch_links(content_id, ->(request) {
+  JSON.parse(request.body) == {
           'links' =>
             {
               "email_alert_signup" => [finder_config["signup_content_id"]],
@@ -53,7 +54,8 @@ RSpec.describe ContentItemPublisher::FacetGroupFinderPublisher do
               "ordered_related_items" => finder_config["ordered_related_items"],
               "parent" => []
             }
-        }})
+        }
+}                                                      )
       end
 
       it "publishes the finder to the Publishing API" do

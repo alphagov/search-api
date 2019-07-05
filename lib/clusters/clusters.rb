@@ -32,7 +32,7 @@ module Clusters
   end
 
   def self.active
-    Cache.get(Cache::ACTIVE_CLUSTERS)  do
+    Cache.get(Cache::ACTIVE_CLUSTERS) do
       defined_clusters = ElasticsearchConfig.new.config['clusters']
       defined_clusters.map { |cluster| Cluster.new(cluster.deep_symbolize_keys) }
       .reject(&:inactive?)

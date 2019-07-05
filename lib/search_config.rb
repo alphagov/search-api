@@ -81,8 +81,8 @@ class SearchConfig
       # field (which is what can be overridden per-cluster).
       Cache.get(Cache::COMBINED_INDEX_SCHEMA) do
         CombinedIndexSchema.new(
-            content_index_names + [govuk_index_name],
-            default_instance.schema_config
+          content_index_names + [govuk_index_name],
+          default_instance.schema_config
           )
       end
     end

@@ -5,8 +5,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
 
   before do
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
-
-    @statsd_client = double('statsd_client', increment: nil)
+    @statsd_client = instance_double('Statsd', increment: nil)
     allow(Services).to receive(:statsd_client).and_return @statsd_client
   end
 
@@ -227,28 +226,25 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       end
 
       it 'will reprocess the entire batch using ES retry mechanism' do
-        expect(@statsd_client).to receive(:increment).with('govuk_index.sidekiq-consumed').twice
-
         expect {
           worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
+        expect(@statsd_client).to have_received(:increment).with('govuk_index.sidekiq-consumed').twice
       end
 
       it 'will notify for each message that fails' do
-        expect(@statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index_error').twice
-        expect(@statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
-
         expect {
           worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
+        expect(@statsd_client).to have_received(:increment).with('govuk_index.elasticsearch.index_error').twice
+        expect(@statsd_client).to have_received(:increment).with('govuk_index.sidekiq-retry')
       end
 
       it 'will notify that the batch failed' do
-        expect(@statsd_client).to receive(:increment).with('govuk_index.sidekiq-retry')
-
         expect {
           worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
+        expect(@statsd_client).to have_received(:increment).with('govuk_index.sidekiq-retry')
       end
     end
 
@@ -269,11 +265,11 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       end
 
       it 'will notify for each message that fails' do
-        expect(@statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index_error')
-        expect(@statsd_client).to receive(:increment).with('govuk_index.elasticsearch.index')
         expect {
           worker.perform([['routing.key', payload1], ['routing.key', payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
+        expect(@statsd_client).to have_received(:increment).with('govuk_index.elasticsearch.index_error')
+        expect(@statsd_client).to have_received(:increment).with('govuk_index.elasticsearch.index')
       end
     end
 

@@ -2,14 +2,14 @@ require 'spec_helper'
 require 'sidekiq/testing'
 
 RSpec.describe Indexer::AmendWorker do
-  let(:index_name) {'government_test'}
-  let(:link) {'/doc-for-deletion'}
-  let(:content_id) {'41609206-8736-4ff3-b582-63c9fccafe4d'}
-  let(:document) {{"title" => 'Old title', "content_id" => content_id, "link" => link}}
-  let(:updates) {{"title" => "New title"}}
-  let(:cluster_count) {Clusters.count}
+  let(:index_name) { 'government_test' }
+  let(:link) { '/doc-for-deletion' }
+  let(:content_id) { '41609206-8736-4ff3-b582-63c9fccafe4d' }
+  let(:document) { { "title" => 'Old title', "content_id" => content_id, "link" => link } }
+  let(:updates) { { "title" => "New title" } }
+  let(:cluster_count) { Clusters.count }
 
-  before(:each) do
+  before do
     Sidekiq::Worker.clear_all
   end
 
@@ -31,7 +31,6 @@ RSpec.describe Indexer::AmendWorker do
   it "retries when index locked" do
     Sidekiq::Testing.fake! do
       with_just_one_cluster
-      lock_delay = Indexer::DeleteWorker::LOCK_DELAY
       mock_index = double("index") # rubocop:disable RSpec/VerifiedDoubles
       # rubocop:disable RSpec/MessageSpies
       expect(mock_index).to receive(:amend).and_raise(SearchIndices::IndexLocked)
@@ -44,7 +43,7 @@ RSpec.describe Indexer::AmendWorker do
       worker = described_class.new
       expect {
         worker.perform(index_name, link, updates)
-      }.to change {Indexer::AmendWorker.jobs.count}.by(1)
+      }.to change { described_class.jobs.count }.by(1)
     end
   end
 
