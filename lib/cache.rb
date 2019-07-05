@@ -8,13 +8,11 @@ class Cache
   @@cache = {}
 
   def self.get(key)
-    @@cache[key] || begin
-       block_given? ? (@@cache[key] = yield) : nil
+    if @@cache.has_key?(key)
+      @@cache[key]
+    else
+      block_given? ? (@@cache[key] = yield) : nil
     end
-  end
-
-  def self.put(key, value)
-    @@cache[key] = value
   end
 
   def self.clear

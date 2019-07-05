@@ -80,10 +80,10 @@ class SearchConfig
       # index schema uses) is unaffected by the 'elasticsearch_settings'
       # field (which is what can be overridden per-cluster).
       Cache.get(Cache::COMBINED_INDEX_SCHEMA) do
-      CombinedIndexSchema.new(
-          content_index_names + [govuk_index_name],
-          default_instance.schema_config
-        )
+        CombinedIndexSchema.new(
+            content_index_names + [govuk_index_name],
+            default_instance.schema_config
+          )
       end
     end
   end
