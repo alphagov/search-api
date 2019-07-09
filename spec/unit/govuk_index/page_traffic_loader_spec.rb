@@ -21,6 +21,7 @@ RSpec.describe GovukIndex::PageTrafficLoader do
     line3 = [{ "val" => "e" }, { "data" => 1 }]
 
     Clusters.active.each do |cluster|
+      input.rewind
       # rubocop:disable RSpec/MessageSpies
       expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line1, 'new_index_name', cluster.key)
       expect(GovukIndex::PageTrafficWorker).to receive(:perform_async).with(line2, 'new_index_name', cluster.key)

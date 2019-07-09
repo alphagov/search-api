@@ -27,9 +27,13 @@ module ContentItemPublisher
 
       logger.info("Publishing #{presenter.description}")
 
-      Services.publishing_api.put_content(presenter.content_id, presenter.present)
-      Services.publishing_api.patch_links(presenter.content_id, presenter.present_links)
-      Services.publishing_api.publish(presenter.content_id)
+      publishing_api.put_content(presenter.content_id, presenter.present)
+      publishing_api.patch_links(presenter.content_id, presenter.present_links)
+      publishing_api.publish(presenter.content_id)
+    end
+
+    def publishing_api
+      @publishing_api ||= Services.publishing_api
     end
   end
 end

@@ -10,7 +10,7 @@ module Clusters
     end
 
     def uri
-      @uri ||= elasticsearch_config[uri_key]
+      @uri ||= ElasticsearchConfig.new.config[uri_key]
     end
 
     def inactive?
@@ -22,9 +22,5 @@ module Clusters
   private
 
     attr_reader :uri_key
-
-    def elasticsearch_config
-      @elasticsearch_config ||= ElasticsearchConfig.new.config
-    end
   end
 end
