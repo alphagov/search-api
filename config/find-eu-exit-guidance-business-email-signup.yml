@@ -6,7 +6,7 @@ locale: en
 publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
-title: Find EU Exit guidance for your business
+title: Find Brexit guidance for your business
 description: Sign up for email alerts to Brexit guidance for businesses.
 details:
   email_filter_by: facet_values
