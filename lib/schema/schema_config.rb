@@ -49,16 +49,11 @@ private
   def elasticsearch_index
     schema_yaml["index"].tap do |index|
       index["settings"]["analysis"]["filter"].merge!(
-        "old_synonym" => old_synonym_filter,
         "stemmer_override" => stems_filter,
         "index_synonym" => @index_synonyms.es_config,
         "search_synonym" => @search_synonyms.es_config,
       )
     end
-  end
-
-  def old_synonym_filter
-    load_yaml("old_synonyms.yml")
   end
 
   def stems_filter
