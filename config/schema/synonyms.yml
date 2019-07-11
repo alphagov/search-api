@@ -1111,3 +1111,7 @@
 
 # Common misspellings of key people, in both publishing and searching
 - both: asad, assad => asad, assad
+
+# Country changes
+- search: burma => burma, myanmar
+- search: myanmar => burma, myanmar
