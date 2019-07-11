@@ -73,12 +73,10 @@ private
   def cluster
     @cluster ||=
       begin
-        cluster_key = single_param('cluster')
+        cluster_key = ab_tests.fetch(:search_cluster, Clusters.default_cluster.key)
         Clusters.get_cluster(cluster_key)
       rescue Clusters::ClusterNotFoundError
-        if cluster_key.present?
-          @errors << "Invalid cluster. Accepted values: #{Clusters.cluster_keys.join(', ')}"
-        end
+        @errors << "Invalid cluster. Accepted values: #{Clusters.cluster_keys.join(', ')}"
         Clusters.default_cluster
       end
   end
@@ -422,14 +420,17 @@ private
   end
 
   def ab_tests
-    variants = character_separated_param("ab_tests")
-    variants = variants.map { |variant| variant.split(':', 2) }
+    @ab_tests ||=
+      begin
+        variants = character_separated_param("ab_tests")
+        variants = variants.map { |variant| variant.split(':', 2) }
 
-    variants.each_with_object({}) do |(variant_name, variant_code), variants_hash|
-      if variant_code.blank?
-        @errors << %{Invalid ab_tests, missing type "#{variant_name}"}
+        variants.each_with_object({}) do |(variant_name, variant_code), variants_hash|
+          if variant_code.blank?
+            @errors << %{Invalid ab_tests, missing type "#{variant_name}"}
+          end
+          variants_hash[variant_name.to_sym] = variant_code
+        end
       end
-      variants_hash[variant_name.to_sym] = variant_code
-    end
   end
 end
