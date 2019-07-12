@@ -43,7 +43,13 @@ You can see the reasons behind an `es_score` by including the
 `debug=explain` query parameter in your query.  This will add an
 `_explanation` field to every result, similar to a SQL-like `EXPLAIN`.
 
-Example: https://www.gov.uk/api/search.json?debug=explain&q=harry%20potter
+For example, see the explanation produced by [searching for "harry
+potter"][explain-example].  This shows an example of stemming, where
+"harry" becomes "harri".  This is due to the rule "replace suffix 'y'
+or 'Y' by 'i' if preceded by a non-vowel which is not the first letter
+of the word".  You can also see that text similarity scoring ([BM25][]
+in Elasticsearch 6) works by considering both term frequency and
+document frequency.
 
 You can see the query Search API sends to Elasticsearch with the
 `debug=show_query` parameter.  Debug parameters can be combined, like
@@ -403,9 +409,11 @@ dependence on the page views.
 [stems.yml]: https://github.com/alphagov/search-api/blob/master/config/schema/stems.yml
 [synonyms.yml]: https://github.com/alphagov/search-api/blob/master/config/schema/synonyms.yml
 
+[BM25]: https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-similarity.html#bm25
 [Porter2 stemming algorithm]: http://snowball.tartarus.org/algorithms/english/stemmer.html
 [Search Admin]: https://github.com/alphagov/search-admin
 [analyzer]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
+[explain-example]: https://www.gov.uk/api/search.json?debug=explain&q=harry%20potter
 [explain]: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html
 [phrase queries]: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query-phrase.html
 [relevancy]: https://www.elastic.co/guide/en/elasticsearch/guide/master/relevance-conclusion.html
