@@ -95,29 +95,39 @@ RSpec.describe SearchParameterParser do
     expect(p.parsed_params).to match(expected_params({}))
   end
 
-  it "understands the cluster parameter" do
+  it "understands the search_cluster A/B parameter" do
     cluster = Clusters.active.sample # random cluster
-    p = described_class.new({ "cluster" => [cluster.key] }, @schema)
+    p = described_class.new({ "ab_tests" => ["search_cluster:#{cluster.key}"] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(cluster: cluster_with_key(cluster.key)))
+    expect(p.parsed_params).to match(
+      expected_params(
+        ab_tests: { search_cluster: cluster.key },
+        cluster: cluster_with_key(cluster.key),
+       )
+    )
   end
 
-  it "complains about invalid cluster parameters" do
-    p = described_class.new({ "cluster" => %w(INVALID_CLUSTER) }, @schema)
+  it "uses the default cluster if the search_cluster A/B parameter is not set" do
+    p = described_class.new({ "ab_tests" => [] }, @schema)
+
+    expect(p.error).to eq("")
+    expect(p).to be_valid
+    expect(p.parsed_params).to match(expected_params(cluster: cluster_with_key(Clusters.default_cluster.key)))
+  end
+
+  it "complains about invalid search_cluster A/B parameters" do
+    p = described_class.new({ "ab_tests" => ["search_cluster:invalid"] }, @schema)
 
     expect(p.error).to eq(%{Invalid cluster. Accepted values: #{Clusters.active.map(&:key).join(', ')}})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to match(expected_params(cluster: cluster_with_key(Clusters.default_cluster.key)))
-  end
-
-  it "complains about a repeated cluster parameter" do
-    p = described_class.new({ "cluster" => %w(A B) }, @schema)
-
-    expect(p.error).to eq(%{Too many values (2) for parameter "cluster" (must occur at most once)})
-    expect(p).not_to be_valid
-    expect(p.parsed_params).to match(expected_params(cluster: cluster_with_key(Clusters.default_cluster.key)))
+    expect(p.parsed_params).to match(
+      expected_params(
+        ab_tests: { search_cluster: "invalid" },
+        cluster: cluster_with_key(Clusters.default_cluster.key),
+      )
+     )
   end
 
   it "complain about multiple unknown parameters" do
