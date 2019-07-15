@@ -115,6 +115,9 @@ documents of the "announcement" type in the [booster.rb][] file.  It
 serves to increase the score of new documents and decrease the score
 of old documents.
 
+Only documents of `search_format_types` 'announcement' are affected by
+recency boosting.
+
 The curve came from the solr documentation, but the link to the
 original source is broken, so it is unclear why this particular curve
 was chosen.
