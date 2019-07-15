@@ -12,7 +12,8 @@ search.
    2. [Best and worst bets](#best-and-worst-bets)
    3. [Stopwords](#stopwords)
    4. [Synonyms](#synonyms)
-   5. [Analyzers](#analyzers)
+   5. [Categorisation of fields](#categorisation-of-fields)
+   6. [Analyzers](#analyzers)
 3. [Possible problems with queries and relevance](#possible-problems-with-queries-and-relevance)
 
 
@@ -255,6 +256,26 @@ followed by keepwords.
 
 In other words: generate candidate keyphrases by shingling, expand
 them with synonyms, then cull out any non-synonyms with keepwords.
+
+### Categorisation of fields
+
+We use parts of a document differently when processing a search query.
+
+We do some categorisation of document fields, to tell Elasticsearch what
+we can use them for.
+
+For example `date` is used for date fields which can be returned and used
+for ordering, filtering and aggregating. This lets you filter e.g.
+`filter_public_timestamp=from:2015-01-01`.
+
+There are also fields like `acronym` which is categorised as a
+`searchable_text` type that Elasticsearch looks at when you submit a keyword
+search. So you can search for `MOD` and get a link to that organisation as
+the top result.
+
+These are configured in [`config/schema/field_types.json`](https://github.com/alphagov/search-api/blob/master/config/schema/field_types.json) and
+[`config/schema/field_definitions.json`](https://github.com/alphagov/search-api/blob/master/config/schema/field_definitions.json).
+
 
 ### Analyzers
 
