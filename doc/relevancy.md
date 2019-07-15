@@ -14,6 +14,7 @@ search.
    4. [Synonyms](#synonyms)
    5. [Categorisation of fields](#categorisation-of-fields)
    6. [Analyzers](#analyzers)
+   7. [Excluded formats](#excluded-formats)
 3. [Possible problems with queries and relevance](#possible-problems-with-queries-and-relevance)
 
 
@@ -276,7 +277,6 @@ the top result.
 These are configured in [`config/schema/field_types.json`](https://github.com/alphagov/search-api/blob/master/config/schema/field_types.json) and
 [`config/schema/field_definitions.json`](https://github.com/alphagov/search-api/blob/master/config/schema/field_definitions.json).
 
-
 ### Analyzers
 
 We have a number of custom analyzers that can be invoked at index time or when querying.
@@ -361,6 +361,15 @@ These are the steps, ignoring asciifolding, which have been added:
    to the Porter algorithm.
    https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stemmer-tokenfilter.html
 
+
+### Excluded formats
+
+There are some document formats that are not included in search results.
+These include smart answers, calculators, licence finders.
+
+We also exclude some paths, such as `/random`, `/homepage`, and `/humans.txt`.
+
+These no-indexed paths and formats are defined in [`config/govuk_index/migrated_formats.yaml`](https://github.com/alphagov/search-api/blob/master/config/govuk_index/migrated_formats.yaml).
 
 ## Possible problems with queries and relevance
 
