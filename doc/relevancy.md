@@ -178,7 +178,7 @@ This is handled by the default [stop token filter][].
 
 There has been some talk of not including stopwords in the past
 ([0fe6e52][], May 2015) during this time a `no_stop` method was
-implemented that seems to stop stopwords from being used.  Again this
+implemented that seems to prevent stopwords from being used.  Again this
 seems to be served by Elasticsearch because it's not defined in Search
 API.
 
