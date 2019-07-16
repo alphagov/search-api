@@ -252,8 +252,8 @@ configuration, and then passed to Elasticsearch directly.
 keywords, it can be useful to use "keepwords" to only filter the
 phrases we want.
 
-The post suggests to first generate shingles, followed by synonyms,
-followed by keepwords.
+The post suggests to first generate [shingles][], followed by synonyms,
+followed by [keepwords][].
 
 In other words: generate candidate keyphrases by shingling, expand
 them with synonyms, then cull out any non-synonyms with keepwords.
@@ -457,3 +457,4 @@ dependence on the page views.
 [stop token filter]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stop-tokenfilter.html
 [synonyms-blog]: https://opensourceconnections.com/blog/2016/12/02/solr-elasticsearch-synonyms-better-patterns-keyphrases/
 [this curve]: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427e5qr62u0si
+[keepwords]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-keep-words-tokenfilter.html
