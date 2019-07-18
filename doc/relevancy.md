@@ -182,11 +182,12 @@ implemented that seems to prevent stopwords from being used.  Again this
 seems to be served by Elasticsearch because it's not defined in Search
 API.
 
+**Potential improvements to stopwords**
+
 Given that we're taking a stock list of stopwords from Elasticsearch,
 we may be missing out on a chance to edit them in a way that might be
-more useful for users.  I'm not sure how we'd go about changing this
-but I'd guess that we'd need to look into what words could be useful
-to omit / not omit.
+more useful for users. Looking into what words to omit / not omit might
+be a useful tuning exercise.
 
 A search with stopwords is different to a search without stopwords:
 
@@ -202,9 +203,8 @@ A synonym is a word or phrase that means exactly or nearly the same as
 another word or phrase in the same language, for example shut is a
 synonym of close.
 
-For example, we use synonyms to show relevant results related to
-"vehicle tax" regardless of whether you searched for "car tax" or
-"auto tax".
+We use synonyms to show relevant results related to "vehicle tax" regardless
+of whether you searched for "car tax" or "auto tax".
 
 Synonyms are defined in the [synonyms.yml][] file and are applied to
 the Elasticsearch index configuration in the [schema_config.rb][]
@@ -305,9 +305,15 @@ This table describes what each of our analyzers do:
 | `string_for_sorting`     | ✖                  | Used for storing a sortable subfield                                    | ✔                | ✔            | keyword                  | ✔    | ✔         | ✖            | ✖                   | ✖                 | ✖                   | ✖                            | ✖                | ✖               | ✖             | ✖                 |
 
 
-The main analyzer used at the moment is called `with_search_synonyms`.
+Analyzers are used for different purposes, as the table describes. All of the
+analyzers above are used for some purpose.
 
-```
+The main analyzer used at the moment is called `with_search_synonyms`.
+This is the same as the `default` analyzer, except it also uses synonyms.
+
+
+```yaml
+# The default analyzer
 with_search_synonyms:
   type: custom
   tokenizer: standard
@@ -318,6 +324,15 @@ with_search_synonyms:
 These are the steps, ignoring asciifolding, which have been added:
 
 1. Normalise and strip quotes
+
+  The character filters ensure that words with curly apostrophes are normalised
+  and in some cases removed, for consistent behaviour when searching with
+  quotes.
+
+  ```ruby
+    "It's A Small’s World" => ["it", "small", "world"],
+    "H'lo ’Hallo" => ["h'lo", "h'lo hallo", "hallo"]
+  ```
 
    ```
    normalize_quotes:
@@ -335,27 +350,29 @@ These are the steps, ignoring asciifolding, which have been added:
      replacement: ""
    ```
 
-2. Split into tokens
+2. Split into tokens (tokenizer)
+
+   We use the default Elasticsearch tokeniser (`tokenizer: standard`).
 
    The standard tokeniser uses the unicode text segmentation algorithm.
    https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenizer.html
 
-3. Lowercase everything
+3. Lowercase everything (filter)
 
    https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lowercase-tokenfilter.html
 
-4. Remove stopwords
+4. Remove stopwords (filter)
 
    https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stop-tokenfilter.html
 
    Removes words in the english stopword list
 
-5. Apply our custom stemmer override to each token
+5. Apply our custom stemmer override to each token (filter)
 
    Customises stemming using this list
    https://github.com/alphagov/search-api/blob/master/config/schema/stems.yml
 
-6. Apply the english Stemmer to each token
+6. Apply the english Stemmer to each token (filter)
 
    The [Porter2 stemming algorithm][] for english text, an improvement
    to the Porter algorithm.
@@ -378,14 +395,30 @@ These no-indexed paths and formats are defined in [`config/govuk_index/migrated_
 We use [phrase queries][] to take phrases into account in search queries.
 
 We're not using the _[slop][]_ parameter, so the phrase component will
-only work where the query uses the exact same phrasing. I'm not sure
-this is all that useful for us, except maybe for names of
-services/forms/departments.
+only work where the query uses the exact same phrasing. It's not clear
+whether this would be useful, except maybe for names of services/forms/departments.
 
 The `slop` parameter tells the `match_phrase` query how far apart terms are
 allowed to be while still considering the document a match. By _how far
 apart_ we mean _how many times do you need to move a term in order to make
 the query and document match?_
+
+Explanation from the Lucene documentation:
+
+> Sets the number of other words permitted between words in query phrase.
+> If zero, then this is an exact phrase search.
+
+> The slop is in fact an edit-distance, where the units correspond to moves
+> of terms in the query phrase out of position. For example, to switch the
+> order of two words requires two moves (the first move places the words
+> atop one another), so to permit re-orderings of phrases, the slop must
+> be at least two.
+
+> More exact matches are scored higher than sloppier matches, thus
+> search results are sorted by exactness.
+
+Essentially, with a `slop` value of 1, a query for 'harry potter' would
+return documents with the phrase 'potter harry' in them.
 
 Although all words need to be present in phrase matching, even when using
 slop, the words don’t necessarily need to be in the same sequence in order
