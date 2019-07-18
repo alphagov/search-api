@@ -24,7 +24,14 @@ module Auth
 
     def oauth_client
       @oauth_client ||= OAuth2::Client.new(
-        oauth_id, oauth_secret, site: Plek.new.external_url_for("signon")
+        oauth_id,
+        oauth_secret,
+        site: Plek.new.external_url_for("signon"),
+        connection_opts: {
+          headers: {
+            user_agent: "oauth-client (#{ENV.fetch('GOVUK_APP_NAME', 'search-api')})"
+          }
+        }
       )
     end
 
