@@ -43,7 +43,7 @@ module Services
   end
 
   def self.cache
-    ActiveSupport::Cache.lookup_store(:memory_store)
+    @cache ||= ActiveSupport::Cache.lookup_store(:memory_store)
   end
 end
 
