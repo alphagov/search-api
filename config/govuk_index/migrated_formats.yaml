@@ -297,6 +297,7 @@ indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
+- '/world/burma/news'
 
 non_indexable:
 - calculator
