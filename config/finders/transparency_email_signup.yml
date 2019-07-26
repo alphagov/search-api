@@ -21,6 +21,9 @@ details:
     facet_name: organisations
   - facet_id: world_locations
     facet_name: world locations
+  - facet_id: topic
+    filter_key: all_part_of_taxonomy_tree
+    facet_name: topics
   - facet_id: level_one_taxon
     filter_key: all_part_of_taxonomy_tree
     facet_name: topics
