@@ -192,7 +192,7 @@ module SearchIndices
           },
         )
 
-        analyzed_query["tokens"].map { |token_info|
+        analyzed_query.fetch('tokens', []).map { |token_info|
           token_info["token"]
         }.join(" ")
       rescue Elasticsearch::Transport::Transport::Errors::BadRequest
