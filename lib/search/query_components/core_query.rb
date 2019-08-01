@@ -69,7 +69,7 @@ module QueryComponents
           match_phrase("description", PHRASE_MATCH_DESCRIPTION_BOOST),
           match_phrase("indexable_content", PHRASE_MATCH_INDEXABLE_CONTENT_BOOST),
           match_all_terms(%w(title acronym description indexable_content)),
-          match_any_terms(%w(title acronym description indexable_content)),
+          match_any_terms(%w(title acronym description indexable_content), 0.2),
           minimum_should_match("all_searchable_text")
         ], tie_breaker: 0.7)
       ]
@@ -87,7 +87,7 @@ module QueryComponents
       }
     end
 
-    def match_phrase(field_name, boost)
+    def match_phrase(field_name, boost = 1.0)
       {
         match_phrase: {
           synonym_field(field_name) => {
@@ -99,11 +99,12 @@ module QueryComponents
       }
     end
 
-    def match_all_terms(fields)
+    def match_all_terms(fields, boost = 1.0)
       fields = fields.map { |f| synonym_field(f) }
 
       {
         multi_match: {
+          boost: boost,
           query: escape(search_term),
           operator: "and",
           fields: fields,
@@ -112,15 +113,16 @@ module QueryComponents
       }
     end
 
-    def match_any_terms(fields)
+    def match_any_terms(fields, boost = 1.0)
       fields = fields.map { |f| synonym_field(f) }
 
       {
         multi_match: {
+          boost: boost,
           query: escape(search_term),
           operator: "or",
           fields: fields,
-          analyzer: query_analyzer
+          analyzer: query_analyzer,
         }
       }
     end
