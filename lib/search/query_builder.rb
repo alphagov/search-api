@@ -50,8 +50,22 @@ module Search
           format_boost.wrap(
             if search_params.quoted_search_phrase?
               core_query.quoted_phrase_query
-            else
+            elsif search_params.ab_tests.fetch(:search_cluster, 'A') == 'B'
               core_query.unquoted_phrase_query
+            else
+              {
+                bool: {
+                  should: [
+                    core_query.match_phrase("title"),
+                    core_query.match_phrase("acronym"),
+                    core_query.match_phrase("description"),
+                    core_query.match_phrase("indexable_content"),
+                    core_query.match_all_terms(%w(title acronym description indexable_content)),
+                    core_query.match_any_terms(%w(title acronym description indexable_content)),
+                    core_query.minimum_should_match("all_searchable_text")
+                  ],
+                }
+              }
             end
           )
         )
