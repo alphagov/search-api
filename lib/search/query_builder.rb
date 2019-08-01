@@ -51,11 +51,7 @@ module Search
             if search_params.quoted_search_phrase?
               core_query.quoted_phrase_query
             else
-              {
-                bool: {
-                  should: core_query.unquoted_phrase_query
-                }
-              }
+              core_query.unquoted_phrase_query
             end
           )
         )
