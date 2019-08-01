@@ -2,12 +2,12 @@ require 'spec_helper'
 
 RSpec.describe 'SortTest' do
   context "without explicit ordering" do
-    it "order by popularity" do
+    it "order by popularity, with a tie-breaker" do
       builder = QueryComponents::Sort.new(Search::QueryParameters.new)
 
       result = builder.payload
 
-      expect(result).to eq([{ "popularity" => { order: "desc" } }])
+      expect(result).to eq([{ "popularity" => { order: "desc" } }, { "content_id" => { order: "asc" } }])
     end
   end
 
@@ -22,22 +22,22 @@ RSpec.describe 'SortTest' do
   end
 
   context "search with ascending sort" do
-    it "put documents without a timestamp at the bottom" do
+    it "put documents without a timestamp at the bottom, with a tie-breaker" do
       builder = QueryComponents::Sort.new(Search::QueryParameters.new(order: %w(public_timestamp asc)))
 
       result = builder.payload
 
-      expect(result).to eq([{ "public_timestamp" => { order: "asc", missing: "_last", unmapped_type: "integer" } }])
+      expect(result).to eq([{ "public_timestamp" => { order: "asc", missing: "_last", unmapped_type: "integer" } }, { "content_id" => { order: "asc" } }])
     end
   end
 
   context "search with descending sort" do
-    it "put documents without a timestamp at the bottom" do
+    it "put documents without a timestamp at the bottom, with a tie-breaker" do
       builder = QueryComponents::Sort.new(Search::QueryParameters.new(order: %w(public_timestamp desc)))
 
       result = builder.payload
 
-      expect(result).to eq([{ "public_timestamp" => { order: "desc", missing: "_last", unmapped_type: "integer" } }])
+      expect(result).to eq([{ "public_timestamp" => { order: "desc", missing: "_last", unmapped_type: "integer" } }, { "content_id" => { order: "asc" } }])
     end
   end
 
