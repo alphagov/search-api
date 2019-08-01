@@ -72,7 +72,7 @@ GEM
       sidekiq (>= 5, < 6)
       sidekiq-logging-json (~> 0.0)
       sidekiq-statsd (~> 0.1)
-    hashdiff (0.4.0)
+    hashdiff (1.0.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (1.6.0)
@@ -244,7 +244,7 @@ GEM
       rack (>= 2.0.6)
     warden-oauth2 (0.0.1)
       warden
-    webmock (3.6.0)
+    webmock (3.6.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -290,7 +290,7 @@ DEPENDENCIES
   unf (~> 0.1.4)
   warden
   warden-oauth2
-  webmock (~> 3.6.0)
+  webmock (~> 3.6.2)
   whenever (~> 1.0.0)
 
 BUNDLED WITH
