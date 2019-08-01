@@ -71,7 +71,7 @@ module QueryComponents
           match_all_terms(%w(title acronym description indexable_content)),
           match_any_terms(%w(title acronym description indexable_content)),
           minimum_should_match("all_searchable_text")
-        ])
+        ], tie_breaker: 0.7)
       ]
     end
 
