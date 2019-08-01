@@ -64,10 +64,10 @@ module QueryComponents
     def unquoted_phrase_query
       [
         dis_max_query([
-          match_phrase("title"),
-          match_phrase("acronym"),
-          match_phrase("description"),
-          match_phrase("indexable_content"),
+          match_phrase("title", PHRASE_MATCH_TITLE_BOOST),
+          match_phrase("acronym", PHRASE_MATCH_ACRONYM_BOOST),
+          match_phrase("description", PHRASE_MATCH_DESCRIPTION_BOOST),
+          match_phrase("indexable_content", PHRASE_MATCH_INDEXABLE_CONTENT_BOOST),
           match_all_terms(%w(title acronym description indexable_content)),
           match_any_terms(%w(title acronym description indexable_content)),
           minimum_should_match("all_searchable_text")
@@ -87,10 +87,11 @@ module QueryComponents
       }
     end
 
-    def match_phrase(field_name)
+    def match_phrase(field_name, boost)
       {
         match_phrase: {
           synonym_field(field_name) => {
+            boost: boost,
             query: escape(search_term),
             analyzer: query_analyzer,
           }
