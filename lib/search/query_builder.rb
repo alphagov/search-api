@@ -53,15 +53,7 @@ module Search
             else
               {
                 bool: {
-                  should: [
-                    core_query.match_phrase("title"),
-                    core_query.match_phrase("acronym"),
-                    core_query.match_phrase("description"),
-                    core_query.match_phrase("indexable_content"),
-                    core_query.match_all_terms(%w(title acronym description indexable_content)),
-                    core_query.match_any_terms(%w(title acronym description indexable_content)),
-                    core_query.minimum_should_match("all_searchable_text")
-                  ],
+                  should: core_query.unquoted_phrase_query
                 }
               }
             end
