@@ -70,15 +70,16 @@ module QueryComponents
           match_phrase("indexable_content", PHRASE_MATCH_INDEXABLE_CONTENT_BOOST),
           match_all_terms(%w(title acronym description indexable_content)),
           match_any_terms(%w(title acronym description indexable_content), 0.2),
-          minimum_should_match("all_searchable_text")
+          minimum_should_match("all_searchable_text", 0.2)
         ], tie_breaker: 0.7)
       ]
     end
 
-    def minimum_should_match(field_name)
+    def minimum_should_match(field_name, boost = 1.0)
       {
         match: {
           synonym_field(field_name) => {
+            boost: boost,
             query: escape(search_term),
             analyzer: query_analyzer,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
