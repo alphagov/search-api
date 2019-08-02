@@ -22,7 +22,7 @@ RSpec.describe ContentItemPublisher::FinderPresenter do
       let(:timestamp) { Time.now.iso8601 }
 
       it "presents a valid payload" do
-        expect(instance.present).to be_valid_against_schema("finder")
+        expect(instance.present).to be_valid_against_publisher_schema("finder")
       end
 
       it "exposes the content_id" do
