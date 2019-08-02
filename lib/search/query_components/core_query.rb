@@ -61,10 +61,25 @@ module QueryComponents
       ]
     end
 
-    def minimum_should_match(field_name)
+    def unquoted_phrase_query
+      [
+        dis_max_query([
+          match_phrase("title", PHRASE_MATCH_TITLE_BOOST),
+          match_phrase("acronym", PHRASE_MATCH_ACRONYM_BOOST),
+          match_phrase("description", PHRASE_MATCH_DESCRIPTION_BOOST),
+          match_phrase("indexable_content", PHRASE_MATCH_INDEXABLE_CONTENT_BOOST),
+          match_all_terms(%w(title acronym description indexable_content)),
+          match_any_terms(%w(title acronym description indexable_content), 0.2),
+          minimum_should_match("all_searchable_text", 0.2)
+        ], tie_breaker: 0.7)
+      ]
+    end
+
+    def minimum_should_match(field_name, boost = 1.0)
       {
         match: {
           synonym_field(field_name) => {
+            boost: boost,
             query: escape(search_term),
             analyzer: query_analyzer,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
@@ -73,10 +88,11 @@ module QueryComponents
       }
     end
 
-    def match_phrase(field_name)
+    def match_phrase(field_name, boost = 1.0)
       {
         match_phrase: {
           synonym_field(field_name) => {
+            boost: boost,
             query: escape(search_term),
             analyzer: query_analyzer,
           }
@@ -84,11 +100,12 @@ module QueryComponents
       }
     end
 
-    def match_all_terms(fields)
+    def match_all_terms(fields, boost = 1.0)
       fields = fields.map { |f| synonym_field(f) }
 
       {
         multi_match: {
+          boost: boost,
           query: escape(search_term),
           operator: "and",
           fields: fields,
@@ -97,15 +114,16 @@ module QueryComponents
       }
     end
 
-    def match_any_terms(fields)
+    def match_any_terms(fields, boost = 1.0)
       fields = fields.map { |f| synonym_field(f) }
 
       {
         multi_match: {
+          boost: boost,
           query: escape(search_term),
           operator: "or",
           fields: fields,
-          analyzer: query_analyzer
+          analyzer: query_analyzer,
         }
       }
     end

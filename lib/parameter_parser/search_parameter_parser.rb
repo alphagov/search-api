@@ -73,7 +73,7 @@ private
   def cluster
     @cluster ||=
       begin
-        cluster_key = ab_tests.fetch(:search_cluster, Clusters.default_cluster.key)
+        cluster_key = ab_tests.fetch(:search_cluster_query, Clusters.default_cluster.key)
         Clusters.get_cluster(cluster_key)
       rescue Clusters::ClusterNotFoundError
         @errors << "Invalid cluster. Accepted values: #{Clusters.cluster_keys.join(', ')}"
