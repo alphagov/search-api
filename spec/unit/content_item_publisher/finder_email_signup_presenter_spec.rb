@@ -22,7 +22,7 @@ RSpec.describe ContentItemPublisher::FinderEmailSignupPresenter do
       let(:timestamp) { Time.now.iso8601 }
 
       it "presents a valid payload" do
-        expect(instance.present).to be_valid_against_schema("finder_email_signup")
+        expect(instance.present).to be_valid_against_publisher_schema("finder_email_signup")
       end
 
       it "exposes the content_id" do

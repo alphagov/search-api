@@ -33,7 +33,7 @@ end
 group :test do
   gem 'bunny-mock', '~> 1.7'
   gem 'climate_control', '~> 0.2'
-  gem 'govuk_schemas', '~> 3.3.0'
+  gem 'govuk_schemas', '~> 4.0.0'
   gem 'govuk-content-schema-test-helpers', '~> 1.6.1'
   gem "rack-test", "~> 1.1.0"
   gem 'rspec'
