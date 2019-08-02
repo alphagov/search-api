@@ -531,7 +531,7 @@ RSpec.describe 'SearchTest' do
     expect(parsed_response.fetch("es_cluster")).to eq(Clusters.default_cluster.key)
 
     Clusters.active.each { |cluster|
-      get "/search?q=test&ab_tests=search_cluster:#{cluster.key}"
+      get "/search?q=test&ab_tests=search_cluster_query:#{cluster.key}"
       expect(parsed_response.fetch("es_cluster")).to eq(cluster.key)
     }
   end
