@@ -26,6 +26,19 @@ details:
     display_as_result_metadata: false
     hide_facet_tag: true
     filterable: true
+  - key: content_store_document_type
+    name: Document type
+    preposition: of type
+    type: text
+    display_as_result_metadata: false
+    filterable: true
+    allowed_values:
+    - label: Corporate report
+      value: corporate_report
+    - label: FOI release
+      value: foi_release
+    - label: Transparency data
+      value: transparency
   - display_as_result_metadata: true
     filterable: true
     key: organisations
