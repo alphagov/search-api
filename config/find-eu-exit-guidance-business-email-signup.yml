@@ -417,7 +417,7 @@ details:
       radio_button_name: Defence contracts
       topic_name: Defence contracts
       prechecked: false
-  subscription_list_title_prefix: 'Find EU Exit guidance for your business'
+  subscription_list_title_prefix: 'Find Brexit guidance for your business'
 routes:
 - path: "/find-eu-exit-guidance-business/email-signup"
   type: exact
