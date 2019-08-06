@@ -17,6 +17,8 @@ details:
   email_filter_facets:
   - facet_id: content_purpose_supergroup
     facet_name: content_purpose_supergroup
+  - facet_id: content_store_document_type
+    facet_name: content_store_document_type
   - facet_id: people
     facet_name: people
   - facet_id: organisations
