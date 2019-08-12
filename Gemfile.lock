@@ -117,7 +117,7 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.0.3)
     netrc (0.11.0)
-    nokogiri (1.10.3)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     null_logger (0.0.1)
     oauth2 (1.4.1)
@@ -271,7 +271,7 @@ DEPENDENCIES
   logging (~> 2.2.2)
   loofah
   mr-sparkle (= 0.3.0)
-  nokogiri (~> 1.10.3)
+  nokogiri (~> 1.10.4)
   oauth2
   plek (~> 3.0)
   pry-byebug
