@@ -3,6 +3,8 @@ source "https://rubygems.org"
 gem "activesupport", "~> 5.2.3"
 gem "elasticsearch", "~> 6"
 gem "gds-api-adapters", "~> 59.6"
+gem 'google-api-client', '~> 0.30.8'
+gem 'googleauth', '~> 0.8.1'
 gem "govuk_app_config", "~> 1.20.2"
 gem "govuk_document_types", "~> 0.9.2"
 gem "govuk-lint", "~> 3.11.5"
