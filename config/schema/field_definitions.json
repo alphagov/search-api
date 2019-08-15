@@ -257,6 +257,11 @@
     "type": "date"
   },
 
+  "display_date": {
+    "description": "The display text for the proposed release date for a statistics announcement.  This may be approximate.",
+    "type": "identifier"
+  },
+
   "metadata": {
     "description": "The \"metadata\" field is intended for the storage of additional non-searchable document data. This allows additional information to be stored and displayed in search results without having to make changes to the schema.",
     "type": "opaque_object"
