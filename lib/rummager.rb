@@ -38,7 +38,6 @@ require 'zlib'
 initializers_path = File.expand_path("../config/initializers/*.rb", __dir__)
 Dir[initializers_path].each { |f| require f }
 
-require 'analytics_data'
 require 'cache'
 require File.expand_path('../config/logging_setup', __dir__)
 require 'document'
