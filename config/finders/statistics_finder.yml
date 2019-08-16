@@ -30,11 +30,11 @@ details:
   - name: Release date (oldest)
     key: release_timestamp
   facets:
-  - key: release_timestamp
-    name: release_timestamp
+  - key: display_date
+    name: display_date
     short_name: Release date
     preposition: from
-    type: date
+    type: text
     display_as_result_metadata: true
     filterable: false
   - key: statistics_announcement_state
