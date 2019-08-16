@@ -11,6 +11,7 @@
     "document_collections",
     "document_series",
     "business_activity",
+    "display_date",
     "employ_eu_citizens",
     "end_date",
     "government_name",
