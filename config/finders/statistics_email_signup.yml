@@ -7,33 +7,16 @@ publishing_app: search-api
 rendering_app: finder-frontend
 schema_name: finder_email_signup
 title: Research and statistics
-description: <p>You can't subscribe to get email notifications about upcoming statistics.</p><p>Subscribe to published statistics to get an email every time statistics are published or updated.</p>
+description: You'll get an email every time research and statistics are updated, published or cancelled.
 details:
   email_filter_by:
   email_filter_name:
   subscription_list_title_prefix: Statistics
-  filter: {}
+  filter:
+    content_purpose_supergroup: research_and_statistics
   email_filter_facets:
   - facet_id: content_store_document_type
-    facet_name: Research and statistics
-    facet_choices:
-    - key: statistics_published
-      filter_values:
-      - statistics
-      - national_statistics
-      - statistical_data_set
-      - official_statistics
-      radio_button_name: Statistics (published)
-      topic_name: Statistics (published)
-      prechecked: false
-    - key: research
-      filter_values:
-      - dfid_research_output
-      - independent_report
-      - research
-      radio_button_name: Research
-      topic_name: Research
-      prechecked: false
+    facet_name: document_type
   - facet_id: organisations
     facet_name: organisations
   - facet_id: world_locations
