@@ -30,20 +30,6 @@ details:
   - name: Release date (oldest)
     key: release_timestamp
   facets:
-  - key: release_timestamp
-    name: release_timestamp
-    short_name: Release date
-    preposition: from
-    type: date
-    display_as_result_metadata: true
-    filterable: false
-  - key: statistics_announcement_state
-    name: State
-    short_name: State
-    preposition: from
-    type: text
-    display_as_result_metadata: true
-    filterable: false
   - key: display_type
     name: content_store_document_type
     short_name: Document type
@@ -106,6 +92,20 @@ details:
     type: date
     display_as_result_metadata: true
     filterable: true
+  - key: display_date
+    name: display_date
+    short_name: Release date
+    preposition: from
+    type: text
+    display_as_result_metadata: true
+    filterable: false
+  - key: statistics_announcement_state
+    name: State
+    short_name: State
+    preposition: from
+    type: text
+    display_as_result_metadata: true
+    filterable: false
   default_documents_per_page: 20
 routes:
 - path: "/search/research-and-statistics"
