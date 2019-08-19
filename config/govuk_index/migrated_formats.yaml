@@ -370,7 +370,10 @@ non_indexable:
 - decision
 - document_collection
 - equality_and_diversity
+- facet
+- facet_group
 - facet_value
+- facet_values
 - fatality_notice
 - field_of_operation
 #- finder # migrated
