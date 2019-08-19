@@ -1,6 +1,6 @@
 {
   "all_searchable_text": {
-    "description": "Special field which searchable text is copied into; similar to the standard `_all` field, but more customisable",
+    "description": "Special field which searchable text is copied into; similar to the standard `_all` field, but more customisable.  The indexable_content is included in this field.",
     "type": "all_searchable_text_type"
   },
 
@@ -75,7 +75,7 @@
   },
 
   "indexable_content": {
-    "description": "The main chunk of text that is indexed for the page. This varies by document type/publishing app, and may not be suitable for users to read. HTML tags are stripped out.",
+    "description": "The main chunk of text that is indexed for the page. May not be suitable for users to read. HTML tags are stripped out.  Whitehall sets this field directly, for other documents in the govuk index, see https://github.com/alphagov/search-api/blob/master/lib/govuk_index/presenters/indexable_content_presenter.rb",
     "type": "searchable_text"
   },
 
