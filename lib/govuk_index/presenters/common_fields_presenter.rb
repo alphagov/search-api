@@ -7,12 +7,16 @@ module GovukIndex
       "service_manual_service_standard" => "service_manual_guide",
       "topic" => "specialist_sector",
     }.freeze
+    BREXIT_PAGE = {
+      "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
+      "title" => "Get ready for Brexit",
+      "description" => "The UK is leaving the EU. Find out how you should get ready for Brexit and what government is doing."
+    }.freeze
     extend MethodBuilder
 
     delegate_to_payload :content_id
     delegate_to_payload :content_purpose_document_supertype
     delegate_to_payload :content_store_document_type, hash_key: "document_type"
-    delegate_to_payload :description
     delegate_to_payload :email_document_supertype
     delegate_to_payload :government_document_supertype
     delegate_to_payload :navigation_document_supertype
@@ -41,7 +45,11 @@ module GovukIndex
     end
 
     def title
-      [section_id, payload["title"]].compact.join(" - ")
+      brexit_page? ? BREXIT_PAGE["title"] : [section_id, payload["title"]].compact.join(" - ")
+    end
+
+    def description
+      brexit_page? ? BREXIT_PAGE["description"] : payload["description"]
     end
 
     def is_withdrawn
@@ -67,5 +75,9 @@ module GovukIndex
   private
 
     attr_reader :payload
+
+    def brexit_page?
+      content_id == BREXIT_PAGE["content_id"]
+    end
   end
 end
