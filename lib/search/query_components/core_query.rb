@@ -10,13 +10,13 @@ module QueryComponents
     QUERY_TIME_SYNONYMS_ANALYZER = "with_search_synonyms".freeze
 
     # Clause boosts for a search query
-    MATCH_ALL_TITLE_BOOST = 5
-    MATCH_ALL_ACRONYM_BOOST = 5
-    MATCH_ALL_DESCRIPTION_BOOST = 2
-    MATCH_ALL_INDEXABLE_CONTENT_BOOST = 1
-    MATCH_ALL_MULTI_BOOST = 0.2
-    MATCH_ANY_MULTI_BOOST = 0.2
-    MATCH_MINIMUM_BOOST = 0.2
+    MATCH_ALL_TITLE_BOOST = 10
+    MATCH_ALL_ACRONYM_BOOST = 10
+    MATCH_ALL_DESCRIPTION_BOOST = 5
+    MATCH_ALL_INDEXABLE_CONTENT_BOOST = 2
+    MATCH_ALL_MULTI_BOOST = 0.5
+    MATCH_ANY_MULTI_BOOST = 0.5
+    MATCH_MINIMUM_BOOST = 0.5
 
     # If the search query is a single quoted phrase, we run a different query,
     # which uses phrase matching across various fields.
