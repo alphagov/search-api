@@ -58,5 +58,29 @@ module Search
         }
       end
     end
+
+    def should_coord_query(queries)
+      # Calculates a score by running all the queries and then
+      # multiplying by the fraction which match:
+      #
+      # score = sum(query_scores) * num(matching_queries) / num(queries)
+      if queries.size == 1
+        queries.first
+      else
+        {
+          function_score: {
+            query: { bool: { should: queries } },
+            score_mode: "sum",
+            boost_mode: "multiply",
+            functions: queries.map do |q|
+              {
+                filter: q,
+                weight: 1.0 / queries.size
+              }
+            end
+          }
+        }
+      end
+    end
   end
 end

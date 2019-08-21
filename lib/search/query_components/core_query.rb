@@ -82,23 +82,6 @@ module QueryComponents
       ])
     end
 
-    # score = sum(clause_scores) * num(matching_clauses) / num(clauses)
-    def should_coord_query(queries)
-      {
-        function_score: {
-          query: { bool: { should: queries } },
-          score_mode: "sum",
-          boost_mode: "multiply",
-          functions: queries.map do |q|
-            {
-              filter: q,
-              weight: 1.0 / queries.length
-            }
-          end
-        }
-      }
-    end
-
     def minimum_should_match(field_name, boost = 1.0)
       {
         match: {
