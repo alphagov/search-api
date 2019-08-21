@@ -67,7 +67,7 @@ module QueryComponents
         match_all_terms(%w(acronym), PHRASE_MATCH_ACRONYM_BOOST),
         match_all_terms(%w(description), PHRASE_MATCH_DESCRIPTION_BOOST),
         match_all_terms(%w(indexable_content), PHRASE_MATCH_INDEXABLE_CONTENT_BOOST),
-        match_all_terms(%w(title acronym description indexable_content)),
+        match_all_terms(%w(title acronym description indexable_content), 0.2),
         match_any_terms(%w(title acronym description indexable_content), 0.2),
         minimum_should_match("all_searchable_text", 0.2)
       ])
