@@ -46,10 +46,7 @@ class SearchConfig
     end
 
     def run_search(raw_parameters)
-      parser = SearchParameterParser.new(raw_parameters, combined_index_schema)
-      parser.validate!
-
-      search_params = Search::QueryParameters.new(parser.parsed_params)
+      search_params = parse_parameters(raw_parameters)
 
       search_params.search_config.run_search_with_params(search_params)
     end
@@ -57,13 +54,22 @@ class SearchConfig
     def run_batch_search(searches)
       search_params = []
       searches.each do |search|
-        parser = SearchParameterParser.new(search, combined_index_schema)
-        parser.validate!
-
-        search_params << Search::QueryParameters.new(parser.parsed_params)
+        search_params << parse_parameters(search)
       end
 
       search_params.first.search_config.run_batch_search_with_params(search_params)
+    end
+
+    def generate_query(raw_parameters)
+      search_params = parse_parameters(raw_parameters)
+
+      search_params.search_config.generate_query_for_params(search_params)
+    end
+
+    def parse_parameters(raw_parameters)
+      parser = SearchParameterParser.new(raw_parameters, combined_index_schema)
+      parser.validate!
+      Search::QueryParameters.new(parser.parsed_params)
     end
 
     def elasticsearch
@@ -116,6 +122,10 @@ class SearchConfig
 
   def run_batch_search_with_params(search_params)
     batch_searcher.run(search_params)
+  end
+
+  def generate_query_for_params(search_params)
+    searcher.query(search_params)
   end
 
   def metasearch_index
