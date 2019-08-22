@@ -16,7 +16,7 @@ details:
     content_purpose_supergroup: research_and_statistics
   email_filter_facets:
   - facet_id: content_store_document_type
-    facet_name: document type
+    facet_name: document_type
   - facet_id: organisations
     facet_name: organisations
   - facet_id: world_locations
