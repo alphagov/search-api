@@ -152,6 +152,17 @@ class SearchConfig
     cluster.uri
   end
 
+  def get_index_for_alias(alias_name)
+    client.indices.get_alias(index: alias_name).keys.first
+  end
+
+  def rank_eval(requests:, metric:, indices: '*')
+    client.rank_eval(
+      index: indices,
+      body: { requests: requests, metric: metric }
+    )
+  end
+
 private
 
   attr_accessor :cluster
@@ -179,5 +190,9 @@ private
       search_server,
       self,
     )
+  end
+
+  def client
+    @client ||= Services.elasticsearch(hosts: base_uri)
   end
 end
