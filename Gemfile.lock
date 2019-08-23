@@ -165,7 +165,7 @@ GEM
     rack-logstasher (1.0.1)
       logstash-event
       rack (~> 2.0)
-    rack-protection (2.0.5)
+    rack-protection (2.0.7)
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -253,10 +253,10 @@ GEM
     simplecov-html (0.10.2)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    sinatra (2.0.5)
+    sinatra (2.0.7)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.5)
+      rack-protection (= 2.0.7)
       tilt (~> 2.0)
     statsd-ruby (1.4.0)
     thread_safe (0.3.6)
@@ -318,7 +318,7 @@ DEPENDENCIES
   sidekiq-limit_fetch
   simplecov (~> 0.17.0)
   simplecov-rcov (~> 0.2.3)
-  sinatra (~> 2.0.5)
+  sinatra (~> 2.0.7)
   statsd-ruby (~> 1.4.0)
   timecop (~> 0.9.1)
   unf (~> 0.1.4)
