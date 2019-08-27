@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "activesupport", "~> 5.2.3"
 gem "elasticsearch", "~> 6"
-gem "gds-api-adapters", "~> 59.6"
+gem "gds-api-adapters", "~> 60.0"
 gem 'google-api-client', '~> 0.30.8'
 gem 'googleauth', '~> 0.9.0'
 gem "govuk_app_config", "~> 1.20.2"
