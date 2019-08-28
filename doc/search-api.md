@@ -96,6 +96,3 @@ times), or in Ruby/PHP array style (ie, `name[]=value&name[]=value`).
 
 - `c`: does nothing. By setting it to unique string, you can
   use it to bypass caching when testing.
-
-- `cluster`: `nil`, `A` (elasticsearch version 5) or `B` (elasticsearch version
-  6) are accepted. Defaults to `A`.
