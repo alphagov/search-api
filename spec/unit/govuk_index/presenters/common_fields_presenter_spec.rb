@@ -65,6 +65,19 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     expect(presenter.link).to eq("some_url")
   end
 
+  it "adjusts the title and description for the Brexit topic page" do
+    payload = {
+      "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
+      "title" => "some title",
+      "description" => "some description"
+    }
+
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.title).to eq("Get ready for Brexit")
+    expect(presenter.description).to eq("The UK is leaving the EU. Find out how you should get ready for Brexit and what government is doing.")
+  end
+
   it "withdrawn when withdrawn notice present" do
     payload = {
       "base_path" => "/some/path",
