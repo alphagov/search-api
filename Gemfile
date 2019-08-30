@@ -5,7 +5,7 @@ gem "elasticsearch", "~> 6"
 gem "gds-api-adapters", "~> 60.0"
 gem 'google-api-client', '~> 0.30.8'
 gem 'googleauth', '~> 0.9.0'
-gem "govuk_app_config", "~> 1.20.2"
+gem "govuk_app_config", "~> 2.0.0"
 gem "govuk_document_types", "~> 0.9.2"
 gem "govuk-lint", "~> 3.11.5"
 gem "irb", "~> 1.0", require: false
