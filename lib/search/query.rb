@@ -15,6 +15,11 @@ module Search
       @suggestion_blocklist = SuggestionBlocklist.new(registries)
     end
 
+    def query(search_params)
+      builder_payload = timed_build_query(search_params)
+      builder_payload[:payload]
+    end
+
     # Search and combine the indices and return a hash of ResultSet objects
     def run(search_params)
       log_search

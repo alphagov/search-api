@@ -1,6 +1,7 @@
 require 'rummager'
 require 'pp'
 require 'rainbow'
+require 'debug/rank_eval'
 require 'debug/synonyms'
 
 ANSI_GREEN = "\e[32m".freeze
@@ -51,5 +52,18 @@ namespace :debug do
         puts ""
       end
     end
+  end
+
+  desc "Check how well the search query performs for a set of relevancy judgements"
+  task :ranking_evaluation, [:datafile, :ab_tests] do |_, args|
+    evaluator = Debug::RankEval.new(args.datafile, args.ab_tests)
+    results = evaluator.evaluate
+
+    maxlen = results[:query_scores].map { |query, _| query.length }.max
+    results[:query_scores].each do |query, score|
+      puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
+    end
+    puts '---'
+    puts "overall score: #{results[:score]}"
   end
 end
