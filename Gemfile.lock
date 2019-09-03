@@ -1,11 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.3)
+    activesupport (6.0.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+      zeitwerk (~> 2.1, >= 2.1.8)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     amq-protocol (2.3.0)
@@ -284,12 +285,13 @@ GEM
       hashdiff (>= 0.4.0, < 2.0.0)
     whenever (1.0.0)
       chronic (>= 0.6.3)
+    zeitwerk (2.1.9)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 5.2.3)
+  activesupport (~> 6.0.0)
   bunny-mock (~> 1.7)
   climate_control (~> 0.2)
   elasticsearch (~> 6)
