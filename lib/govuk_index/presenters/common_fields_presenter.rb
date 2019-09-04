@@ -10,7 +10,7 @@ module GovukIndex
     BREXIT_PAGE = {
       "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
       "title" => "Get ready for Brexit",
-      "description" => "The UK is leaving the EU. Find out how you should get ready for Brexit and what government is doing."
+      "description" => "The UK is leaving the EU, find out how you should get ready for Brexit."
     }.freeze
     extend MethodBuilder
 

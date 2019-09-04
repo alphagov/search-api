@@ -75,7 +75,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     presenter = common_fields_presenter(payload)
 
     expect(presenter.title).to eq("Get ready for Brexit")
-    expect(presenter.description).to eq("The UK is leaving the EU. Find out how you should get ready for Brexit and what government is doing.")
+    expect(presenter.description).to eq("The UK is leaving the EU, find out how you should get ready for Brexit.")
   end
 
   it "withdrawn when withdrawn notice present" do
