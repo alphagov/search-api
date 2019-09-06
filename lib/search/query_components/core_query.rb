@@ -57,53 +57,53 @@ module QueryComponents
     MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%".freeze
 
     # FIXME: why is this wrapped in an array?
-    def quoted_phrase_query
+    def quoted_phrase_query(query = search_term)
       # Return the highest weight found by looking for a phrase match in
       # individual fields
       [
         dis_max_query([
-          match_phrase_default_analyzer("title.no_stop", search_params.query, PHRASE_MATCH_TITLE_BOOST),
-          match_phrase_default_analyzer("acronym.no_stop", search_params.query, PHRASE_MATCH_ACRONYM_BOOST),
-          match_phrase_default_analyzer("description.no_stop", search_params.query, PHRASE_MATCH_DESCRIPTION_BOOST),
-          match_phrase_default_analyzer("indexable_content.no_stop", search_params.query, PHRASE_MATCH_INDEXABLE_CONTENT_BOOST)
+          match_phrase_default_analyzer("title.no_stop", query, PHRASE_MATCH_TITLE_BOOST),
+          match_phrase_default_analyzer("acronym.no_stop", query, PHRASE_MATCH_ACRONYM_BOOST),
+          match_phrase_default_analyzer("description.no_stop", query, PHRASE_MATCH_DESCRIPTION_BOOST),
+          match_phrase_default_analyzer("indexable_content.no_stop", query, PHRASE_MATCH_INDEXABLE_CONTENT_BOOST)
         ])
       ]
     end
 
-    def unquoted_phrase_query
+    def unquoted_phrase_query(query = search_term)
       {
         bool: {
           should: [
-            match_phrase("title"),
-            match_phrase("acronym"),
-            match_phrase("description"),
-            match_phrase("indexable_content"),
-            match_all_terms(%w(title acronym description indexable_content)),
-            match_any_terms(%w(title acronym description indexable_content)),
-            minimum_should_match("all_searchable_text")
+            match_phrase("title", query),
+            match_phrase("acronym", query),
+            match_phrase("description", query),
+            match_phrase("indexable_content", query),
+            match_all_terms(%w(title acronym description indexable_content), query),
+            match_any_terms(%w(title acronym description indexable_content), query),
+            minimum_should_match("all_searchable_text", query)
           ],
         }
       }
     end
 
-    def unquoted_phrase_query_abvariant
+    def unquoted_phrase_query_abvariant(query = search_term)
       should_coord_query([
-        match_all_terms(%w(title), MATCH_ALL_TITLE_BOOST),
-        match_all_terms(%w(acronym), MATCH_ALL_ACRONYM_BOOST),
-        match_all_terms(%w(description), MATCH_ALL_DESCRIPTION_BOOST),
-        match_all_terms(%w(indexable_content), MATCH_ALL_INDEXABLE_CONTENT_BOOST),
-        match_all_terms(%w(title acronym description indexable_content), MATCH_ALL_MULTI_BOOST),
-        match_any_terms(%w(title acronym description indexable_content), MATCH_ANY_MULTI_BOOST),
-        minimum_should_match("all_searchable_text", MATCH_MINIMUM_BOOST)
+        match_all_terms(%w(title), query, MATCH_ALL_TITLE_BOOST),
+        match_all_terms(%w(acronym), query, MATCH_ALL_ACRONYM_BOOST),
+        match_all_terms(%w(description), query, MATCH_ALL_DESCRIPTION_BOOST),
+        match_all_terms(%w(indexable_content), query, MATCH_ALL_INDEXABLE_CONTENT_BOOST),
+        match_all_terms(%w(title acronym description indexable_content), query, MATCH_ALL_MULTI_BOOST),
+        match_any_terms(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
+        minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST)
       ])
     end
 
-    def minimum_should_match(field_name, boost = 1.0)
+    def minimum_should_match(field_name, query, boost = 1.0)
       {
         match: {
           synonym_field(field_name) => {
             boost: boost,
-            query: escape(search_term),
+            query: escape(query),
             analyzer: query_analyzer,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
           }
@@ -111,25 +111,25 @@ module QueryComponents
       }
     end
 
-    def match_phrase(field_name, boost = 1.0)
+    def match_phrase(field_name, query, boost = 1.0)
       {
         match_phrase: {
           synonym_field(field_name) => {
             boost: boost,
-            query: escape(search_term),
+            query: escape(query),
             analyzer: query_analyzer,
           }
         }
       }
     end
 
-    def match_all_terms(fields, boost = 1.0)
+    def match_all_terms(fields, query, boost = 1.0)
       fields = fields.map { |f| synonym_field(f) }
 
       {
         multi_match: {
           boost: boost,
-          query: escape(search_term),
+          query: escape(query),
           operator: "and",
           fields: fields,
           analyzer: query_analyzer
@@ -137,13 +137,13 @@ module QueryComponents
       }
     end
 
-    def match_any_terms(fields, boost = 1.0)
+    def match_any_terms(fields, query, boost = 1.0)
       fields = fields.map { |f| synonym_field(f) }
 
       {
         multi_match: {
           boost: boost,
-          query: escape(search_term),
+          query: escape(query),
           operator: "or",
           fields: fields,
           analyzer: query_analyzer,
