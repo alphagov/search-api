@@ -37,12 +37,14 @@ private
     # Dummy field that can be used to bypass caching when testing/debugging
     @used_params << "c"
 
+    query = normalize_query(single_param("q"), "query")
     @parsed_params = {
       start: capped_start,
       count: capped_count,
       cluster: cluster,
       search_config: SearchConfig.instance(cluster),
-      query: normalize_query(single_param("q"), "query"),
+      query: query,
+      parsed_query: parse_query(query),
       similar_to: normalize_query(single_param("similar_to"), "similar_to"),
       order: order,
       return_fields: return_fields,
@@ -99,6 +101,39 @@ private
     else
       specified_count
     end
+  end
+
+  def parse_query(query)
+    return nil if query.nil?
+
+    quoted = []
+    unquoted = []
+
+    current_keyword = ''
+    is_inside_quote = false
+    query.split('').each do |c|
+      if c == '"'
+        current_keyword = current_keyword.strip
+        if is_inside_quote
+          quoted << current_keyword unless current_keyword.empty?
+        else
+          unquoted << current_keyword unless current_keyword.empty?
+        end
+        is_inside_quote = !is_inside_quote
+        current_keyword = ''
+      else
+        current_keyword << c
+      end
+    end
+
+    # treats an unterminated quote as an unquoted phrase
+    current_keyword = current_keyword.strip
+    unquoted << current_keyword unless current_keyword.empty?
+
+    {
+      unquoted: unquoted.join(' '),
+      quoted: quoted,
+    }
   end
 
   def normalize_query(query, description)
