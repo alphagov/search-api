@@ -71,6 +71,22 @@ module QueryComponents
     end
 
     def unquoted_phrase_query
+      {
+        bool: {
+          should: [
+            match_phrase("title"),
+            match_phrase("acronym"),
+            match_phrase("description"),
+            match_phrase("indexable_content"),
+            match_all_terms(%w(title acronym description indexable_content)),
+            match_any_terms(%w(title acronym description indexable_content)),
+            minimum_should_match("all_searchable_text")
+          ],
+        }
+      }
+    end
+
+    def unquoted_phrase_query_abvariant
       should_coord_query([
         match_all_terms(%w(title), MATCH_ALL_TITLE_BOOST),
         match_all_terms(%w(acronym), MATCH_ALL_ACRONYM_BOOST),
