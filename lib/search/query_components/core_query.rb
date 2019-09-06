@@ -9,6 +9,15 @@ module QueryComponents
     # to make the various possible queries more consistant with each other.
     QUERY_TIME_SYNONYMS_ANALYZER = "with_search_synonyms".freeze
 
+    # Clause boosts for a search query
+    MATCH_ALL_TITLE_BOOST = 10
+    MATCH_ALL_ACRONYM_BOOST = 10
+    MATCH_ALL_DESCRIPTION_BOOST = 5
+    MATCH_ALL_INDEXABLE_CONTENT_BOOST = 2
+    MATCH_ALL_MULTI_BOOST = 0.5
+    MATCH_ANY_MULTI_BOOST = 0.5
+    MATCH_MINIMUM_BOOST = 0.5
+
     # If the search query is a single quoted phrase, we run a different query,
     # which uses phrase matching across various fields.
     # Boost title the most, but ensure that organisations rank brilliantly
@@ -62,17 +71,15 @@ module QueryComponents
     end
 
     def unquoted_phrase_query
-      [
-        dis_max_query([
-          match_phrase("title", PHRASE_MATCH_TITLE_BOOST),
-          match_phrase("acronym", PHRASE_MATCH_ACRONYM_BOOST),
-          match_phrase("description", PHRASE_MATCH_DESCRIPTION_BOOST),
-          match_phrase("indexable_content", PHRASE_MATCH_INDEXABLE_CONTENT_BOOST),
-          match_all_terms(%w(title acronym description indexable_content)),
-          match_any_terms(%w(title acronym description indexable_content), 0.2),
-          minimum_should_match("all_searchable_text", 0.2)
-        ], tie_breaker: 0.7)
-      ]
+      should_coord_query([
+        match_all_terms(%w(title), MATCH_ALL_TITLE_BOOST),
+        match_all_terms(%w(acronym), MATCH_ALL_ACRONYM_BOOST),
+        match_all_terms(%w(description), MATCH_ALL_DESCRIPTION_BOOST),
+        match_all_terms(%w(indexable_content), MATCH_ALL_INDEXABLE_CONTENT_BOOST),
+        match_all_terms(%w(title acronym description indexable_content), MATCH_ALL_MULTI_BOOST),
+        match_any_terms(%w(title acronym description indexable_content), MATCH_ANY_MULTI_BOOST),
+        minimum_should_match("all_searchable_text", MATCH_MINIMUM_BOOST)
+      ])
     end
 
     def minimum_should_match(field_name, boost = 1.0)
