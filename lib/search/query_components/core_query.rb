@@ -56,18 +56,37 @@ module QueryComponents
     # MORE than 2 clauses then 2 should match.
     MINIMUM_SHOULD_MATCH = "2<2 3<3 7<50%".freeze
 
-    # FIXME: why is this wrapped in an array?
+    def mixed_quoted_unquoted_query
+      quoted = search_params.parsed_query[:quoted].map { |query| quoted_phrase_query(query) }
+
+      unquoted_query = search_params.parsed_query[:unquoted]
+      unquoted = unquoted_phrase_query(unquoted_query)
+
+      if quoted.empty?
+        unquoted
+      elsif unquoted_query.empty? && quoted.count == 1
+        # todo: check why this is in an array
+        [quoted[0]]
+      else
+        # todo: think about relative weightings here
+        {
+          bool: {
+            must: quoted,
+            should: unquoted,
+          }
+        }
+      end
+    end
+
     def quoted_phrase_query(query = search_term)
       # Return the highest weight found by looking for a phrase match in
       # individual fields
-      [
-        dis_max_query([
-          match_phrase_default_analyzer("title.no_stop", query, PHRASE_MATCH_TITLE_BOOST),
-          match_phrase_default_analyzer("acronym.no_stop", query, PHRASE_MATCH_ACRONYM_BOOST),
-          match_phrase_default_analyzer("description.no_stop", query, PHRASE_MATCH_DESCRIPTION_BOOST),
-          match_phrase_default_analyzer("indexable_content.no_stop", query, PHRASE_MATCH_INDEXABLE_CONTENT_BOOST)
-        ])
-      ]
+      dis_max_query([
+        match_phrase_default_analyzer("title.no_stop", query, PHRASE_MATCH_TITLE_BOOST),
+        match_phrase_default_analyzer("acronym.no_stop", query, PHRASE_MATCH_ACRONYM_BOOST),
+        match_phrase_default_analyzer("description.no_stop", query, PHRASE_MATCH_DESCRIPTION_BOOST),
+        match_phrase_default_analyzer("indexable_content.no_stop", query, PHRASE_MATCH_INDEXABLE_CONTENT_BOOST)
+      ])
     end
 
     def unquoted_phrase_query(query = search_term)
