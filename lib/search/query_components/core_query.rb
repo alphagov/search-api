@@ -88,13 +88,16 @@ module QueryComponents
 
     def unquoted_phrase_query_abvariant(query = search_term)
       should_coord_query([
-        match_all_terms(%w(title), query, MATCH_ALL_TITLE_BOOST),
-        match_all_terms(%w(acronym), query, MATCH_ALL_ACRONYM_BOOST),
-        match_all_terms(%w(description), query, MATCH_ALL_DESCRIPTION_BOOST),
-        match_all_terms(%w(indexable_content), query, MATCH_ALL_INDEXABLE_CONTENT_BOOST),
-        match_all_terms(%w(title acronym description indexable_content), query, MATCH_ALL_MULTI_BOOST),
-        match_any_terms(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
-        minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST)
+        match_phrase("title", query, 10),
+        match_phrase("acronym", query, 10),
+        match_phrase("description", query, 5),
+        match_phrase("indexable_content", query, 2),
+        match_all_terms(%w(title), query),
+        match_all_terms(%w(acronym), query),
+        match_all_terms(%w(description), query),
+        match_all_terms(%w(indexable_content), query),
+        match_all_terms(%w(title acronym description indexable_content), query),
+        minimum_should_match("all_searchable_text", query)
       ])
     end
 
