@@ -60,7 +60,11 @@ module QueryComponents
       quoted = search_params.parsed_query[:quoted].map { |query| quoted_phrase_query(query) }
 
       unquoted_query = search_params.parsed_query[:unquoted]
-      unquoted = unquoted_phrase_query(unquoted_query)
+      unquoted = if search_params.ab_tests.fetch(:search_cluster_query, 'A') == 'B'
+                   unquoted_phrase_query_abvariant(unquoted_query)
+                 else
+                   unquoted_phrase_query(unquoted_query)
+                 end
 
       if quoted.empty?
         unquoted

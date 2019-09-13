@@ -48,13 +48,7 @@ module Search
       best_bets.wrap(
         popularity_boost.wrap(
           format_boost.wrap(
-            if search_params.quoted_search_phrase?
-              core_query.quoted_phrase_query
-            elsif search_params.ab_tests.fetch(:search_cluster_query, 'A') == 'B'
-              core_query.unquoted_phrase_query_abvariant
-            else
-              core_query.unquoted_phrase_query
-            end
+            core_query.mixed_quoted_unquoted_query
           )
         )
       )
