@@ -165,7 +165,7 @@
   },
 
   "updated_at": {
-    "description": "When the page was last updated. This field is unreliable and may be deprecated in a future version.",
+    "description": "Time of the last indexing. May be significantly newer than `public_timestamp`, as that usually only reflects major updates and not minor ones.",
     "type": "date"
   },
 

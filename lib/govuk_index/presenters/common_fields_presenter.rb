@@ -40,6 +40,10 @@ module GovukIndex
       end
     end
 
+    def updated_at
+      DateTime.now
+    end
+
     def base_path
       payload["base_path"]
     end

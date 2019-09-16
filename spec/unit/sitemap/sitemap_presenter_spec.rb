@@ -36,6 +36,14 @@ RSpec.describe SitemapPresenter do
     expect(presenter.last_updated).to eq("2014-01-28T14:41:50+00:00")
   end
 
+  it "updated_at overrides public_timestamp if both are present" do
+    document = build_document(url: "/some/path")
+    document["public_timestamp"] = "2014-01-28T14:41:50+00:00"
+    document["updated_at"] = "2019-01-28T14:41:50+00:00"
+    presenter = described_class.new(document, @boost_calculator)
+    expect(presenter.last_updated).to eq("2019-01-28T14:41:50+00:00")
+  end
+
   it "last updated is timestamp if timestamp is date" do
     document = build_document(
       url: "/some/path",

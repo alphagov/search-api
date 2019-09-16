@@ -229,6 +229,7 @@ class Rummager < Sinatra::Application
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
       hash["document_type"] ||= hash.fetch("_type", "edition")
+      hash["updated_at"] = DateTime.now
       current_index.document_from_hash(hash)
     }
 
