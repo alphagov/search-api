@@ -35,6 +35,12 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     }.to raise_error(GovukIndex::NotIdentifiable)
   end
 
+  it "sets the updated_at timestamp" do
+    payload = generate_random_example(payload: { payload_version: 1 })
+    presenter = elasticsearch_presenter(payload, "help_page")
+    expect(presenter.updated_at).not_to be nil
+  end
+
   context "external content" do
     it "is valid if it has a URL" do
       payload = {
