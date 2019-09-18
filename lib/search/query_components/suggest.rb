@@ -9,6 +9,7 @@ module QueryComponents
           phrase: {
             field: SPELLING_FIELD,
             size: 1,
+            max_errors: 3,
             direct_generator: [{
               field: SPELLING_FIELD,
               suggest_mode: 'missing',
