@@ -1,7 +1,7 @@
 module Search
   # Value object that holds the parsed parameters for a search.
   class QueryParameters
-    attr_accessor :query, :similar_to, :order, :start, :count, :return_fields,
+    attr_accessor :query, :parsed_query, :similar_to, :order, :start, :count, :return_fields,
                   :aggregates, :aggregate_name, :filters, :debug, :suggest, :is_quoted_phrase,
                   :ab_tests, :cluster, :search_config
 

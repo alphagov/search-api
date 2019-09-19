@@ -10,6 +10,7 @@ RSpec.describe SearchParameterParser do
       start: 0,
       count: 10,
       query: nil,
+      parsed_query: nil,
       similar_to: nil,
       cluster: cluster_with_key(Clusters.default_cluster.key),
       search_config: instance_of(SearchConfig),
@@ -238,7 +239,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: "search-term"))
+    expect(p.parsed_params).to match(expected_params(query: "search-term", parsed_query: { quoted: [], unquoted: "search-term" }))
   end
 
   it "complains when the q parameter is too long" do
@@ -249,7 +250,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Query exceeds the maximum allowed length})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to match(expected_params(query: too_long_query))
+    expect(p.parsed_params).to match(expected_params(query: too_long_query, parsed_query: { quoted: [], unquoted: too_long_query }))
   end
 
   it "complains about a repeated q parameter" do
@@ -257,7 +258,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq(%{Too many values (2) for parameter "q" (must occur at most once)})
     expect(p).not_to be_valid
-    expect(p.parsed_params).to match(expected_params(query: "hello"))
+    expect(p.parsed_params).to match(expected_params(query: "hello", parsed_query: { quoted: [], unquoted: "hello" }))
   end
 
   it "strips whitespace from the query" do
@@ -265,7 +266,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: "cheese"))
+    expect(p.parsed_params).to match(expected_params(query: "cheese", parsed_query: { quoted: [], unquoted: "cheese" }))
   end
 
   it "puts the query in normalized form" do
@@ -273,7 +274,31 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: "caf\u00e8"))
+    expect(p.parsed_params).to match(expected_params(query: "caf\u00e8", parsed_query: { quoted: [], unquoted: "caf\u00e8" }))
+  end
+
+  it "parses quoted queries" do
+    p = described_class.new({ "q" => ['"hello world"'] }, @schema)
+
+    expect(p.error).to eq("")
+    expect(p).to be_valid
+    expect(p.parsed_params).to match(expected_params(query: '"hello world"', parsed_query: { quoted: ['hello world'], unquoted: "" }))
+  end
+
+  it "parses mixed quoted/unquoted queries (simple)" do
+    p = described_class.new({ "q" => ['"hello world" foo bar'] }, @schema)
+
+    expect(p.error).to eq("")
+    expect(p).to be_valid
+    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo bar', parsed_query: { quoted: ['hello world'], unquoted: "foo bar" }))
+  end
+
+  it "parses mixed quoted/unquoted queries (complex)" do
+    p = described_class.new({ "q" => ['"hello world" foo "bar" bat "baz" qux'] }, @schema)
+
+    expect(p.error).to eq("")
+    expect(p).to be_valid
+    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo "bar" bat "baz" qux', parsed_query: { quoted: ['hello world', 'bar', 'baz'], unquoted: "foo bat qux" }))
   end
 
   it "complains about invalid unicode in the query" do
@@ -329,7 +354,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("Parameters 'q' and 'similar_to' cannot be used together")
     expect(p).not_to be_valid
-    expect(p.parsed_params).to match(expected_params(query: "hello", similar_to: "/world"))
+    expect(p.parsed_params).to match(expected_params(query: "hello", similar_to: "/world", parsed_query: { quoted: [], unquoted: "hello" }))
   end
 
   it "sets the order parameter to nil when the similar_to parameter is provided" do
