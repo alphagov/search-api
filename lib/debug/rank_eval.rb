@@ -10,9 +10,9 @@ module Debug
 
     def load_from_csv(datafile)
       data = {}
-      last_query = nil
+      last_query = ""
       CSV.foreach(datafile, headers: true) do |row|
-        query = row['query'] || last_query
+        query = (row['query'] || last_query).strip
         score = row['score']
         link = row['link']
 
@@ -25,7 +25,8 @@ module Debug
 
         last_query = query
       end
-      data
+
+      ignore_extra_judgements(data)
     end
 
     def evaluate
@@ -72,6 +73,18 @@ module Debug
     end
 
   private
+
+    def ignore_extra_judgements(data)
+      data.each_with_object({}) do |(query, non_unique_judgements), output|
+        grouped_by_link = non_unique_judgements.uniq.group_by { |h| h[:link] }
+        output[query] = grouped_by_link.map { |link, judgements|
+          if judgements.count > 1
+            puts "Ignoring #{judgements.count - 1} judgements for #{link} queried with query '#{query}'"
+          end
+          judgements.first
+        }
+      end
+    end
 
     def index_for_link(link)
       return detailed_index_name if link.start_with? '/guidance/'
