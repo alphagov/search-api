@@ -61,10 +61,11 @@ module GovukIndex
     end
 
     def popularity
-      # popularity should be consistent across clusters, so look up in
-      # the default
-      lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.default_instance)
-      lookup.lookup_popularities([link])[link]
+      popularity_values[:popularity_score]
+    end
+
+    def popularity_b
+      popularity_values[:popularity_rank]
     end
 
     def format
@@ -82,6 +83,15 @@ module GovukIndex
 
     def brexit_page?
       content_id == BREXIT_PAGE["content_id"]
+    end
+
+    def popularity_values
+      @popularity_values ||= begin
+        # popularity should be consistent across clusters, so look up in
+        # the default
+        lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.default_instance)
+        lookup.lookup_popularities([link])[link] || {}
+      end
     end
   end
 end

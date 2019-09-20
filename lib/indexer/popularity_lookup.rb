@@ -39,7 +39,13 @@ module Indexer
           popularity_score = 1.0 / (ranks[link] + SearchConfig.popularity_rank_offset)
         end
 
-        [link, popularity_score]
+        [
+          link,
+          {
+            popularity_score: popularity_score,
+            popularity_rank: ranks[link],
+          }
+        ]
       }]
     end
 

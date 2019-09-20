@@ -21,7 +21,10 @@ module GovukIndex
       base_path = record['identifier']['_id']
       OpenStruct.new(
         identifier: record['identifier'].merge('_version_type' => 'external_gte', '_type' => 'generic-document'),
-        document: record['document'].merge('popularity' => popularities[base_path]),
+        document: record['document'].merge(
+          'popularity' => popularities.dig(base_path, :popularity_score),
+          'popularity_b' => popularities.dig(base_path, :popularity_rank),
+        ),
       )
     end
 

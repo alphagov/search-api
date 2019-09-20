@@ -96,15 +96,22 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = { "base_path" => "/some/path" }
 
     popularity = 0.0125356
+    popularity_rank = 0.001
 
     # rubocop:disable RSpec/MessageSpies
     expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', instance_of(SearchConfig)).and_return(@popularity_lookup)
-    expect(@popularity_lookup).to receive(:lookup_popularities).with([payload['base_path']]).and_return(payload["base_path"] => popularity)
+    expect(@popularity_lookup).to receive(:lookup_popularities).with([payload['base_path']]).and_return(
+      payload["base_path"] => {
+        popularity_score: popularity,
+        popularity_rank: popularity_rank,
+      }
+    )
     # rubocop:enable RSpec/MessageSpies
 
     presenter = common_fields_presenter(payload)
 
     expect(popularity).to eq(presenter.popularity)
+    expect(popularity_rank).to eq(presenter.popularity_b)
   end
 
   it "no popularity when no value is returned from lookup" do
@@ -117,7 +124,8 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     presenter = common_fields_presenter(payload)
 
-    expect(nil).to eq(presenter.popularity)
+    expect(presenter.popularity).to be_nil
+    expect(presenter.popularity_b).to be_nil
   end
 
   def common_fields_presenter(payload)

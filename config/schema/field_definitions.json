@@ -84,6 +84,11 @@
     "type": "float"
   },
 
+  "popularity_b": {
+    "description": "Popularity rank used to bias search results. Used at query time to compute a popularity score. A higher number indicates more pageviews. Updated nightly.",
+    "type": "integer"
+  },
+
   "organisations": {
     "description": "The organisations related to this page. This field is copied from the publishing-api. Note that means different things for different formats.",
     "type": "identifiers"
