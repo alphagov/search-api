@@ -10,8 +10,13 @@ class Rummager < Sinatra::Application
   delete '/content' do
     begin
       require_authentication
-      raw_result = find_result_by_link(params["link"])
-      delete_result_from_index(raw_result)
+      Clusters.active.map do |cluster|
+        search_config = SearchConfig.instance(cluster)
+        raw_result = find_result_by_link(params["link"], search_config)
+        index = search_config.search_server.index(raw_result['real_index_name'])
+        index.delete(raw_result['_id'])
+      end
+
       json_result 204, "Deleted the link from search index"
     rescue SearchIndices::IndexLocked
       json_result 423, "The index is locked. Please try again later."
@@ -20,22 +25,13 @@ class Rummager < Sinatra::Application
 
 private
 
-  def index
-    SearchConfig.default_instance.content_index
-  end
-
-  def find_result_by_link(link)
-    raw_result = index.get_document_by_link(link)
+  def find_result_by_link(link, search_config = SearchConfig.default_instance)
+    raw_result = search_config.content_index.get_document_by_link(link)
 
     unless raw_result
       halt 404, "No document found with link #{link}."
     end
 
     raw_result
-  end
-
-  def delete_result_from_index(raw_result)
-    index = search_server.index(raw_result['real_index_name'])
-    index.delete(raw_result['_id'])
   end
 end
