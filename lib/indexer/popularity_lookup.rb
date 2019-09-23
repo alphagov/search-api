@@ -7,7 +7,7 @@ module Indexer
 
     def lookup_popularities(links)
       if traffic_index.nil?
-        return nil
+        return {}
       end
 
       results = traffic_index.raw_search({
