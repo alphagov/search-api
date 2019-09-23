@@ -82,6 +82,7 @@ module GovukIndex
         people:                              expanded_links.people,
         policy_groups:                       expanded_links.policy_groups,
         popularity:                          common_fields.popularity,
+        popularity_b:                        common_fields.popularity_b,
         primary_publishing_organisation:     expanded_links.primary_publishing_organisation,
         public_timestamp:                    common_fields.public_timestamp,
         updated_at:                          common_fields.updated_at,

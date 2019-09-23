@@ -27,6 +27,7 @@
     "part_of_taxonomy_tree",
     "policies",
     "popularity",
+    "popularity_b",
     "primary_publishing_organisation",
     "public_timestamp",
     "publishing_app",
