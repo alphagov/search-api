@@ -324,7 +324,7 @@
 
   "people": {
     "description": "Links to people associated with this page (https://www.gov.uk/government/people).",
-    "type": "identifiers"
+    "type": "searchable_identifiers"
   },
 
   "policy_groups": {
