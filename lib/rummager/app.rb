@@ -1,3 +1,4 @@
+require "aws-sdk-s3"
 require "sinatra"
 set :root, File.dirname(__FILE__)
 
@@ -341,6 +342,27 @@ class Rummager < Sinatra::Application
     ]
 
     GovukHealthcheck.healthcheck(checks).to_json
+  end
+
+  get "/sitemap.xml" do
+    serve_from_s3("sitemap.xml")
+  end
+
+  get "/sitemaps/:sitemap" do |sitemap|
+    serve_from_s3("sitemaps/#{sitemap}")
+  end
+
+  def serve_from_s3(key)
+    o = Aws::S3::Object.new(bucket_name: ENV["AWS_S3_BUCKET_NAME"], key: key)
+
+    headers "Content-Type" => "application/xml",
+            "Last-Modified" => o.last_modified
+
+    stream do |out|
+      o.get.body.each { |chunk| out << chunk }
+    end
+  rescue Aws::S3::Errors::NotFound
+    halt(404, "No such object")
   end
 
   # these endpoints are used to capture any usage of old endpoints which relied on a default index.
