@@ -12,7 +12,6 @@ RSpec.describe GovukIndex::PublishingEventWorker do
   let(:actions) { instance_double("actions") }
 
   context "when a single message is received" do
-
     it "will save a valid document" do
       payload = {
         "base_path" => "/cheese",

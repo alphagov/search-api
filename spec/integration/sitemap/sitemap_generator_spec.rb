@@ -1,7 +1,6 @@
 require "spec_helper"
 
 RSpec.describe "SitemapGeneratorTest" do
-
   it "generates multiple sitemaps" do
     allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
     add_sample_documents(

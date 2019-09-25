@@ -3,7 +3,6 @@ require "publishing_api_finder_publisher"
 
 RSpec.describe PublishingApiFinderPublisher do
   ["advanced-search.yml", "find-eu-exit-guidance-business.yml"].each do |config_file|
-
     subject(:instance) { described_class.new(finder, timestamp) }
 
     let(:finder) {

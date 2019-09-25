@@ -10,9 +10,7 @@ RSpec.describe ContentItemPublisher::FinderPublisher do
 
   finders_glob = File.join(Dir.pwd, "config", "finders", "*_finder.yml")
   Dir.glob(finders_glob).each do |config_file|
-
     context "Checking #{File.basename(config_file)}" do
-
       subject(:instance) { described_class.new(finder, timestamp) }
 
       let(:finder) { YAML.load_file(config_file) }
