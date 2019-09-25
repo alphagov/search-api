@@ -7,7 +7,7 @@ RSpec.describe Search::FormatMigrator do
   end
   # rubocop:enable RSpec/AnyInstance
   context "with every cluster" do
-    Clusters.active.each do |cluster|
+    Clusters.active.each do |_cluster|
       it "when base query without migrated formats" do
         allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
         base_query = { filter: "component" }
