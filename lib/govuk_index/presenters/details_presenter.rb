@@ -46,6 +46,5 @@ module GovukIndex
     end
 
     attr_reader :details, :format
-
   end
 end
