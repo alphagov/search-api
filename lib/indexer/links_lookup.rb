@@ -44,10 +44,10 @@ module Indexer
         rescue GdsApi::TimedOutException => e
           @logger.error("Timeout looking up content ID for #{doc_hash['link']}")
           GovukError.notify(e,
-            extra: {
-              error_message: "Timeout looking up content ID",
-              base_path: doc_hash["link"],
-            },
+                            extra: {
+                              error_message: "Timeout looking up content ID",
+                              base_path: doc_hash["link"],
+                            },
           )
           raise Indexer::PublishingApiError
         rescue GdsApi::HTTPErrorResponse => e
@@ -56,13 +56,13 @@ module Indexer
           # manually to Sentry. This allows us to control the message and parameters
           # such that errors are grouped in a sane manner.
           GovukError.notify(e,
-            extra: {
-              message: "HTTP error looking up content ID",
-              base_path: doc_hash["link"],
-              error_code: e.code,
-              error_message: e.message,
-              error_details: e.error_details,
-            },
+                            extra: {
+                              message: "HTTP error looking up content ID",
+                              base_path: doc_hash["link"],
+                              error_code: e.code,
+                              error_message: e.message,
+                              error_details: e.error_details,
+                            },
           )
           raise Indexer::PublishingApiError
         end
@@ -77,10 +77,10 @@ module Indexer
       rescue GdsApi::TimedOutException => e
         @logger.error("Timeout fetching expanded links for #{content_id}")
         GovukError.notify(e,
-          extra: {
-            error_message: "Timeout fetching expanded links",
-            content_id: content_id,
-          },
+                          extra: {
+                            error_message: "Timeout fetching expanded links",
+                            content_id: content_id,
+                          },
         )
         raise Indexer::PublishingApiError
       rescue GdsApi::HTTPNotFound => e
@@ -95,13 +95,13 @@ module Indexer
         # manually to Sentry. This allows us to control the message and parameters
         # such that errors are grouped in a sane manner.
         GovukError.notify(e,
-          extra: {
-            message: "HTTP error fetching expanded links",
-            content_id: content_id,
-            error_code: e.code,
-            error_message: e.message,
-            error_details: e.error_details,
-          },
+                          extra: {
+                            message: "HTTP error fetching expanded links",
+                            content_id: content_id,
+                            error_code: e.code,
+                            error_message: e.message,
+                            error_details: e.error_details,
+                          },
         )
         raise Indexer::PublishingApiError
       end

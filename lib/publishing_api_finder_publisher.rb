@@ -102,8 +102,8 @@ class FinderEmailSignupContentItemPresenter
       "subscription_list_title_prefix" => details.fetch("subscription_list_title_prefix", {}),
       "email_filter_facets" => email_filter_facets,
     ).except("canonical_link", "document_noun",
-      "facets", "filter", "generic_description",
-      "reject", "summary", "sort")
+             "facets", "filter", "generic_description",
+             "reject", "summary", "sort")
   end
 
   def present

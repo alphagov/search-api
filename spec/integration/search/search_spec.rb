@@ -442,17 +442,17 @@ RSpec.describe "SearchTest" do
 
     # we DON'T want this document in our search results
     commit_document("government_test",
-      "title" => "Rules of Quiddich (2017)",
-      "link" => "/quiddich-rules-2017",
-      "format" => "detailed_guidance",
-      "topical_events" => %w[quiddich-world-cup-2017])
+                    "title" => "Rules of Quiddich (2017)",
+                    "link" => "/quiddich-rules-2017",
+                    "format" => "detailed_guidance",
+                    "topical_events" => %w[quiddich-world-cup-2017])
 
     # we DO want this document in our search results
     commit_document("government_test",
-      "title" => "Rules of Quiddich (2018)",
-      "link" => "/quiddich-rules-2018",
-      "format" => "detailed_guidance",
-      "topical_events" => [topical_event_of_interest])
+                    "title" => "Rules of Quiddich (2018)",
+                    "link" => "/quiddich-rules-2018",
+                    "format" => "detailed_guidance",
+                    "topical_events" => [topical_event_of_interest])
 
     get "/search.json?filter_topical_events=#{topical_event_of_interest}"
 

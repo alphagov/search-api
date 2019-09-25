@@ -50,11 +50,11 @@ task :report_inconsistent_aggregate_values do
     if !aggregate_values_to_report[aggregate].empty?
       # Send the errors to Sentry
       GovukError.notify(DataInconsistencyError.new,
-        extra: {
-          error_message: "Some aggregate values for \"#{aggregate}\" are not expanded",
-          aggregate: aggregate,
-          aggregate_values: aggregate_values_to_report[aggregate],
-        },
+                        extra: {
+                          error_message: "Some aggregate values for \"#{aggregate}\" are not expanded",
+                          aggregate: aggregate,
+                          aggregate_values: aggregate_values_to_report[aggregate],
+                        },
       )
     end
   end

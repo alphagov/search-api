@@ -266,7 +266,7 @@ private
   def expect_document_include_hash(document, hash)
     hash.each do |key, value|
       expect(document[key.to_sym]).to eq(value),
-        "Value for #{key}: `#{document[key.to_sym]}` did not match expected value `#{value}`"
+                                      "Value for #{key}: `#{document[key.to_sym]}` did not match expected value `#{value}`"
     end
   end
 end
