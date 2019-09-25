@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 require "spec_helper"
 
 RSpec.describe GovukIndex::ExpandedLinksPresenter do
