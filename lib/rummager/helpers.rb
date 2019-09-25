@@ -6,8 +6,8 @@ module Helpers
     @results.count == 1 ? singular : plural
   end
 
-  def simple_json_result(ok)
-    if ok
+  def simple_json_result(is_ok)
+    if is_ok
       json_result 200, "OK"
     else
       json_result 500, "error"

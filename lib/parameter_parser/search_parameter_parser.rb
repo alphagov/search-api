@@ -150,12 +150,12 @@ private
     end
   end
 
-  def normalize_unicode(s, description)
+  def normalize_unicode(string, description)
     normalizer = UNF::Normalizer.instance
     begin
       # Put strings into NFKC-normal form to ensure that accent handling works
       # correctly in elasticsearch.
-      normalizer.normalize(s, :nfkc).strip
+      normalizer.normalize(string, :nfkc).strip
     rescue ArgumentError
       @errors << %{Invalid unicode in #{description}}
       return nil
