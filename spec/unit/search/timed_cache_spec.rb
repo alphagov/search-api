@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe Search::TimedCache do
   it "result is not called until needed" do
     fetch = double("fetch")
-    expect(fetch).to receive(:call).never
+    expect(fetch).not_to receive(:call)
 
     described_class.new(5) { fetch.call }
   end
