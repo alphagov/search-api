@@ -431,7 +431,6 @@ private
 
     debug_options.each do |option|
       case option
-      when ""
       when "disable_best_bets"
         options[:disable_best_bets] = true
       when "disable_popularity"
@@ -449,7 +448,7 @@ private
       when "show_query"
         options[:show_query] = true
       else
-        @errors << %{Unknown debug option "#{option}"}
+        @errors << %{Unknown debug option "#{option}"} unless option.blank?
       end
     end
 
