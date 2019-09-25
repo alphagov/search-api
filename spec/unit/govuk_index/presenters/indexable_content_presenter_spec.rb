@@ -1,8 +1,6 @@
 require "spec_helper"
 
 RSpec.describe GovukIndex::IndexableContentPresenter do
-  let(:format) { "help_page" }
-
   subject do
     described_class.new(
       format: format,
@@ -10,6 +8,8 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
       sanitiser: GovukIndex::IndexableContentSanitiser.new,
     )
   end
+  let(:format) { "help_page" }
+
 
   context "govspeak and html in body fields" do
     let(:details) {
