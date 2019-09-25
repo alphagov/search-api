@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::ResultSet do
   context "an empty result set" do
@@ -6,8 +6,8 @@ RSpec.describe Search::ResultSet do
       @response = {
         "hits" => {
           "total" => 0,
-          "hits" => []
-        }
+          "hits" => [],
+        },
       }
     end
 
@@ -32,9 +32,9 @@ RSpec.describe Search::ResultSet do
               "_type" => "generic-document",
               "_id" => "some_id",
               "_source" => { "document_type" => "contact", "foo" => "bar" },
-            }
-          ]
-        }
+            },
+          ],
+        },
       }
     end
 

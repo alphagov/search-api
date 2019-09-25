@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe "Manual publishing" do
   before do
@@ -8,7 +8,7 @@ RSpec.describe "Manual publishing" do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "manuals.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("manuals.test")
@@ -20,7 +20,7 @@ RSpec.describe "Manual publishing" do
       schema: "manual",
       payload: {
         document_type: "manual",
-        description: "Manual description"
+        description: "Manual description",
       },
       details: {
         change_notes: [
@@ -29,8 +29,8 @@ RSpec.describe "Manual publishing" do
             title: "Name of manual section",
             published_at: "2017-06-21T10:48:34+00:00",
             base_path: "/some/section/base/path",
-          }
-        ]
+          },
+        ],
       },
     )
 
@@ -42,7 +42,7 @@ RSpec.describe "Manual publishing" do
       "link" => random_example["base_path"],
       "indexable_content" => nil,
       "description" => "Manual description",
-      "latest_change_note" => nil
+      "latest_change_note" => nil,
     }
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "manual")
@@ -54,7 +54,7 @@ RSpec.describe "Manual publishing" do
       payload: { document_type: "manual_section" },
       details: {
         manual: {
-          "base_path": "/parent/manual/path"
+          "base_path": "/parent/manual/path",
         },
       },
     )

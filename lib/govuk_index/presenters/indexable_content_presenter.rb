@@ -2,10 +2,10 @@ module GovukIndex
   class IndexableContentPresenter
     DEFAULTS = %w(body parts hidden_search_terms).freeze
     BY_FORMAT = {
-      'contact'       => %w(title description),
-      'licence'       => %w(licence_short_description licence_overview),
-      'transaction'   => %w(introductory_paragraph more_information),
-      'travel_advice' => %w(summary),
+      "contact"       => %w(title description),
+      "licence"       => %w(licence_short_description licence_overview),
+      "transaction"   => %w(introductory_paragraph more_information),
+      "travel_advice" => %w(summary),
     }.freeze
 
     def initialize(format:, details:, sanitiser:)
@@ -16,6 +16,7 @@ module GovukIndex
 
     def indexable_content
       return nil if details.nil?
+
       sanitiser.clean(indexable)
     end
 
@@ -28,13 +29,13 @@ module GovukIndex
     end
 
     def hidden_content
-      Array(details.dig('metadata', 'hidden_indexable_content') || [])
+      Array(details.dig("metadata", "hidden_indexable_content") || [])
     end
 
     def indexable_content_parts
       indexable_content_keys.flat_map do |field|
         indexable_values = details[field] || []
-        field == 'parts' ? parts(indexable_values) : [indexable_values]
+        field == "parts" ? parts(indexable_values) : [indexable_values]
       end
     end
 
@@ -44,12 +45,12 @@ module GovukIndex
 
     def parts(items)
       items.flat_map do |item|
-        [item['title'], item['body']]
+        [item["title"], item["body"]]
       end
     end
 
     def contact_groups_titles
-      details.fetch('contact_groups', []).map { |contact| contact['title'] }
+      details.fetch("contact_groups", []).map { |contact| contact["title"] }
     end
   end
 end

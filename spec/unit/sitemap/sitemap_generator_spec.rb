@@ -1,23 +1,22 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SitemapGenerator do
-  # rubocop:disable RSpec/AnyInstance
   before do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
   end
-  # rubocop:enable RSpec/AnyInstance
 
-  it "should generate sitemap" do
+
+  it "generates sitemap" do
     sitemap = described_class.new(SearchConfig.default_instance)
 
     sitemap_xml = sitemap.generate_xml([
-      build_document('https://www.gov.uk/page'),
-      build_document('/another-page'),
-      build_document('yet-another-page'),
+      build_document("https://www.gov.uk/page"),
+      build_document("/another-page"),
+      build_document("yet-another-page"),
     ])
 
     doc = Nokogiri::XML(sitemap_xml)
-    urls = doc.css('url > loc').map(&:inner_html)
+    urls = doc.css("url > loc").map(&:inner_html)
     expect(urls[0]).to eq("https://www.gov.uk/page")
     expect(urls[1]).to eq("http://www.dev.gov.uk/another-page")
     expect(urls[2]).to eq("http://www.dev.gov.uk/yet-another-page")
@@ -27,7 +26,7 @@ RSpec.describe SitemapGenerator do
     sitemap = described_class.new(SearchConfig.default_instance)
 
     sitemap_xml = sitemap.generate_xml([
-      build_document('/some-page', timestamp: "2014-01-28T14:41:50+00:00"),
+      build_document("/some-page", timestamp: "2014-01-28T14:41:50+00:00"),
     ])
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
@@ -39,7 +38,7 @@ RSpec.describe SitemapGenerator do
     sitemap = described_class.new(SearchConfig.default_instance)
 
     sitemap_xml = sitemap.generate_xml([
-      build_document('/page-without-date'),
+      build_document("/page-without-date"),
     ])
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
@@ -50,7 +49,7 @@ RSpec.describe SitemapGenerator do
   it "page priority is document priority" do
     sitemap = described_class.new(SearchConfig.default_instance)
 
-    document = build_document('/some-path')
+    document = build_document("/some-path")
     allow(document).to receive(:priority).and_return(0.48)
 
     sitemap_xml = sitemap.generate_xml([document])
@@ -70,7 +69,7 @@ RSpec.describe SitemapGenerator do
 
     SitemapPresenter.new(
       attributes,
-      PropertyBoostCalculator.new
+      PropertyBoostCalculator.new,
     )
   end
 

@@ -43,12 +43,13 @@ private
       unless value.empty?
         raise %{Unknown keys (#{value.keys.join(", ")}) in field type "#{type_name}" in "#{types_file_path}"}
       end
+
       [type_name, type]
     }]
   end
 
   def load_json
-    JSON.parse(File.read(types_file_path, encoding: 'UTF-8'))
+    JSON.parse(File.read(types_file_path, encoding: "UTF-8"))
   end
 
   def types_file_path

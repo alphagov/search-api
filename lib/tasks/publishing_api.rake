@@ -5,7 +5,7 @@ namespace :publishing_api do
   task :publish_special_routes do
     publisher = SpecialRoutePublisher.new(
       logger: Logger.new(STDOUT),
-      publishing_api: Services.publishing_api
+      publishing_api: Services.publishing_api,
     )
 
     begin
@@ -29,7 +29,7 @@ namespace :publishing_api do
 
   desc "Unpublish special routes"
   task :unpublish_prepare_business_and_uk_nationals_special_routes do
-    content_ids = ["7a99da17-e9e1-410b-b67d-c3f6348c595d", "b9ef4434-761f-49ae-af97-dc7a248499c4"]
+    content_ids = %w[7a99da17-e9e1-410b-b67d-c3f6348c595d b9ef4434-761f-49ae-af97-dc7a248499c4]
     content_ids.each do |content_id|
       Services.publishing_api.unpublish(content_id, type: "gone")
     end
@@ -67,35 +67,35 @@ namespace :publishing_api do
   task :publish_supergroup_finders do
     finders = [
       {
-        finder: 'all_content_finder.yml',
-        email_signup: 'all_content_email_signup.yml'
+        finder: "all_content_finder.yml",
+        email_signup: "all_content_email_signup.yml",
       },
       {
-        finder: 'news_and_communications_finder.yml',
-        email_signup: 'news_and_communications_email_signup.yml'
+        finder: "news_and_communications_finder.yml",
+        email_signup: "news_and_communications_email_signup.yml",
       },
       {
-        finder: 'guidance_and_regulation_finder.yml',
-        email_signup: 'guidance_and_regulation_email_signup.yml'
+        finder: "guidance_and_regulation_finder.yml",
+        email_signup: "guidance_and_regulation_email_signup.yml",
       },
       {
-        finder: 'policy_and_engagement_finder.yml',
-        email_signup: 'policy_and_engagement_email_signup.yml'
+        finder: "policy_and_engagement_finder.yml",
+        email_signup: "policy_and_engagement_email_signup.yml",
       },
       {
-        finder: 'statistics_finder.yml',
-        email_signup: 'statistics_email_signup.yml'
+        finder: "statistics_finder.yml",
+        email_signup: "statistics_email_signup.yml",
       },
       {
-        finder: 'transparency_finder.yml',
-        email_signup: 'transparency_email_signup.yml'
+        finder: "transparency_finder.yml",
+        email_signup: "transparency_email_signup.yml",
       },
       {
-        finder: 'services_finder.yml',
+        finder: "services_finder.yml",
       },
       {
-        finder: 'official_documents_finder.yml',
-      }
+        finder: "official_documents_finder.yml",
+      },
     ]
 
     puts "PUBLISHING ALL SUPERGROUP FINDERS..."

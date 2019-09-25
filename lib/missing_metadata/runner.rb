@@ -37,7 +37,7 @@ module MissingMetadata
           "filter_#{@missing_field_name}" => %w(_MISSING),
           "count" => [PAGE_SIZE.to_s],
           "start" => [(page * PAGE_SIZE).to_s],
-          "fields" => %w(content_id)
+          "fields" => %w(content_id),
         )
 
         break if response[:results].empty?

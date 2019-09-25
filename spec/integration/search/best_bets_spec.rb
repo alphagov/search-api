@@ -1,23 +1,21 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'best/worst bet functionality' do
+RSpec.describe "best/worst bet functionality" do
   it "boosts exact best bets" do
     commit_document("govuk_test",
-      "link" => '/an-organic-result',
-      "indexable_content" => 'I will turn up in searches for "a forced best bet"',
-      "format" => "answer",
-    )
+                    "link" => "/an-organic-result",
+                    "indexable_content" => 'I will turn up in searches for "a forced best bet"',
+                    "format" => "answer")
 
     commit_document("govuk_test",
-      "link" => '/the-link-that-should-surface',
-      "indexable_content" => 'Empty.',
-      "format" => "answer",
-    )
+                    "link" => "/the-link-that-should-surface",
+                    "indexable_content" => "Empty.",
+                    "format" => "answer")
 
     add_best_bet(
-      query: 'a forced best bet',
-      type: 'exact',
-      link: '/the-link-that-should-surface',
+      query: "a forced best bet",
+      type: "exact",
+      link: "/the-link-that-should-surface",
       position: 1,
     )
 
@@ -29,7 +27,7 @@ RSpec.describe 'best/worst bet functionality' do
   it "works when links do not match IDs" do
     commit_document(
       "govuk_test",
-      "link" => '/an-organic-result',
+      "link" => "/an-organic-result",
       "indexable_content" => 'I will turn up in searches for "a forced best bet"',
       "format" => "answer",
     )
@@ -37,17 +35,17 @@ RSpec.describe 'best/worst bet functionality' do
     commit_document(
       "govuk_test",
       {
-        "link" => 'https://www.nhs.uk',
+        "link" => "https://www.nhs.uk",
         "indexable_content" => 'I will turn up in searches for "a forced best bet"',
         "format" => "answer",
       },
-      id: "31e59fa7-ce2f-48b7-ba85-2f5535220cd0"
+      id: "31e59fa7-ce2f-48b7-ba85-2f5535220cd0",
     )
 
     add_best_bet(
-      query: 'a forced best bet',
-      type: 'exact',
-      link: 'https://www.nhs.uk',
+      query: "a forced best bet",
+      type: "exact",
+      link: "https://www.nhs.uk",
       position: 1,
     )
 
@@ -58,15 +56,14 @@ RSpec.describe 'best/worst bet functionality' do
 
   it "hides worst bets" do
     commit_document("govuk_test",
-      "indexable_content" => 'I should not be shown.',
-      "link" => '/we-never-show-this',
-      "format" => "answer",
-    )
+                    "indexable_content" => "I should not be shown.",
+                    "link" => "/we-never-show-this",
+                    "format" => "answer")
 
     add_worst_bet(
-      query: 'shown',
-      type: 'exact',
-      link: '/we-never-show-this',
+      query: "shown",
+      type: "exact",
+      link: "/we-never-show-this",
       position: 1,
     )
 
@@ -77,14 +74,13 @@ RSpec.describe 'best/worst bet functionality' do
 
   it "boosts stemmed best bets when the terms match exactly" do
     commit_document("govuk_test",
-      "link" => '/the-link-that-should-surface',
-      "format" => "answer",
-    )
+                    "link" => "/the-link-that-should-surface",
+                    "format" => "answer")
 
     add_best_bet(
-      query: 'best bet',
-      type: 'stemmed',
-      link: '/the-link-that-should-surface',
+      query: "best bet",
+      type: "stemmed",
+      link: "/the-link-that-should-surface",
       position: 1,
     )
 
@@ -95,14 +91,13 @@ RSpec.describe 'best/worst bet functionality' do
 
   it "boosts stemmed best bets when only the stems of the terms match" do
     commit_document("govuk_test",
-      "link" => '/the-link-that-should-surface',
-      "format" => "answer",
-    )
+                    "link" => "/the-link-that-should-surface",
+                    "format" => "answer")
 
     add_best_bet(
-      query: 'best bet',
-      type: 'stemmed',
-      link: '/the-link-that-should-surface',
+      query: "best bet",
+      type: "stemmed",
+      link: "/the-link-that-should-surface",
       position: 1,
     )
 
@@ -114,14 +109,13 @@ RSpec.describe 'best/worst bet functionality' do
 
   it "boosts stemmed best bets when the terms appear out of order" do
     commit_document("govuk_test",
-      "link" => '/only-shown-for-exact-matches',
-      "format" => "answer",
-    )
+                    "link" => "/only-shown-for-exact-matches",
+                    "format" => "answer")
 
     add_best_bet(
-      query: 'best bet',
-      type: 'stemmed',
-      link: '/only-shown-for-exact-matches',
+      query: "best bet",
+      type: "stemmed",
+      link: "/only-shown-for-exact-matches",
       position: 1,
     )
 
@@ -169,7 +163,7 @@ private
         {
           best_bets: best_bets,
           worst_bets: worst_bets,
-        }
+        },
       ),
       _type: "best_bet",
       _id: "#{query}-#{type}",

@@ -1,13 +1,13 @@
 module GovukIndex
   class SyncUpdater < Updater
-    def self.update(destination_index: 'govuk', source_index:)
+    def self.update(destination_index: "govuk", source_index:)
       new(
         source_index: source_index,
         destination_index: destination_index,
       ).run
     end
 
-    def self.update_immediately(destination_index: 'govuk', format_override:, source_index:)
+    def self.update_immediately(destination_index: "govuk", format_override:, source_index:)
       new(
         source_index: source_index,
         destination_index: destination_index,
@@ -36,11 +36,11 @@ module GovukIndex
           bool: {
             clause => {
               terms: {
-                format: Array(@format_override || MigratedFormats.indexable_formats.keys)
-              }
-            }
-          }
-        }
+                format: Array(@format_override || MigratedFormats.indexable_formats.keys),
+              },
+            },
+          },
+        },
       }
     end
   end

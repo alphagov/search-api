@@ -60,7 +60,7 @@ module QueryComponents
       quoted = search_params.parsed_query[:quoted].map { |query| quoted_phrase_query(query) }
 
       unquoted_query = search_params.parsed_query[:unquoted]
-      unquoted = if search_params.ab_tests.fetch(:search_cluster_query, 'A') == 'B'
+      unquoted = if search_params.ab_tests.fetch(:search_cluster_query, "A") == "B"
                    unquoted_phrase_query_abvariant(unquoted_query)
                  else
                    unquoted_phrase_query(unquoted_query)
@@ -77,7 +77,7 @@ module QueryComponents
           bool: {
             must: quoted,
             should: unquoted,
-          }
+          },
         }
       end
     end
@@ -89,7 +89,7 @@ module QueryComponents
         match_phrase_default_analyzer("title.no_stop", query, PHRASE_MATCH_TITLE_BOOST),
         match_phrase_default_analyzer("acronym.no_stop", query, PHRASE_MATCH_ACRONYM_BOOST),
         match_phrase_default_analyzer("description.no_stop", query, PHRASE_MATCH_DESCRIPTION_BOOST),
-        match_phrase_default_analyzer("indexable_content.no_stop", query, PHRASE_MATCH_INDEXABLE_CONTENT_BOOST)
+        match_phrase_default_analyzer("indexable_content.no_stop", query, PHRASE_MATCH_INDEXABLE_CONTENT_BOOST),
       ])
     end
 
@@ -103,9 +103,9 @@ module QueryComponents
             match_phrase("indexable_content", query),
             match_all_terms(%w(title acronym description indexable_content), query),
             match_any_terms(%w(title acronym description indexable_content), query),
-            minimum_should_match("all_searchable_text", query)
+            minimum_should_match("all_searchable_text", query),
           ],
-        }
+        },
       }
     end
 
@@ -117,7 +117,7 @@ module QueryComponents
         match_all_terms(%w(indexable_content), query, MATCH_ALL_INDEXABLE_CONTENT_BOOST),
         match_all_terms(%w(title acronym description indexable_content), query, MATCH_ALL_MULTI_BOOST),
         match_any_terms(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
-        minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST)
+        minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST),
       ])
     end
 
@@ -129,8 +129,8 @@ module QueryComponents
             query: escape(query),
             analyzer: query_analyzer,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
-          }
-        }
+          },
+        },
       }
     end
 
@@ -141,8 +141,8 @@ module QueryComponents
             boost: boost,
             query: escape(query),
             analyzer: query_analyzer,
-          }
-        }
+          },
+        },
       }
     end
 
@@ -155,8 +155,8 @@ module QueryComponents
           query: escape(query),
           operator: "and",
           fields: fields,
-          analyzer: query_analyzer
-        }
+          analyzer: query_analyzer,
+        },
       }
     end
 
@@ -170,7 +170,7 @@ module QueryComponents
           operator: "or",
           fields: fields,
           analyzer: query_analyzer,
-        }
+        },
       }
     end
 
@@ -201,8 +201,8 @@ module QueryComponents
           field_name => {
             boost: boost,
             query: query,
-          }
-        }
+          },
+        },
       }
     end
   end

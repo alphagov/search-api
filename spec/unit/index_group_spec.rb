@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SearchIndices::IndexGroup do
   ELASTICSEARCH_OK = {
@@ -15,8 +15,8 @@ RSpec.describe SearchIndices::IndexGroup do
       BASE_URI,
       @schema,
       %w(government custom),
-      'govuk',
-      ["government"],
+      "govuk",
+      %w[government],
       SearchConfig.default_instance,
     )
   end
@@ -41,20 +41,20 @@ RSpec.describe SearchIndices::IndexGroup do
     get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
-          "test-new" => { "aliases" => {} }
-        }.to_json
+          "test-new" => { "aliases" => {} },
+        }.to_json,
       )
     expected_body = {
       "actions" => [
-        { "add" => { "index" => "test-new", "alias" => "test" } }
-      ]
+        { "add" => { "index" => "test-new", "alias" => "test" } },
+      ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(
         body: expected_body,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" },
       )
       .to_return(ELASTICSEARCH_OK)
 
@@ -69,18 +69,18 @@ RSpec.describe SearchIndices::IndexGroup do
     get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
-          "test-new" => { "aliases" => {} }
-        }.to_json
+          "test-new" => { "aliases" => {} },
+        }.to_json,
       )
 
     expected_body = {
       "actions" => [
         { "remove" => { "index" => "test-old", "alias" => "test" } },
-        { "add" => { "index" => "test-new", "alias" => "test" } }
-      ]
+        { "add" => { "index" => "test-new", "alias" => "test" } },
+      ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(body: expected_body)
@@ -98,20 +98,20 @@ RSpec.describe SearchIndices::IndexGroup do
     get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-old2" => { "aliases" => { "test" => {} } },
-          "test-new" => { "aliases" => {} }
-        }.to_json
+          "test-new" => { "aliases" => {} },
+        }.to_json,
       )
 
     expected_body = {
       "actions" => [
         { "remove" => { "index" => "test-old", "alias" => "test" } },
         { "remove" => { "index" => "test-old2", "alias" => "test" } },
-        { "add" => { "index" => "test-new", "alias" => "test" } }
-      ]
+        { "add" => { "index" => "test-new", "alias" => "test" } },
+      ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(body: expected_body)
@@ -128,10 +128,10 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
-          "test" => { "aliases" => {} }
-        }.to_json
+          "test" => { "aliases" => {} },
+        }.to_json,
       )
 
     expect {
@@ -143,8 +143,8 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
-        body: {}.to_json
+        headers: { "Content-Type" => "application/json" },
+        body: {}.to_json,
       )
 
     expect(@server.index_group("test").index_names).to eq([])
@@ -155,10 +155,10 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
-          index_name => { "aliases" => { "test" => {} } }
-        }.to_json
+          index_name => { "aliases" => { "test" => {} } },
+        }.to_json,
       )
 
     expect(@server.index_group("test").index_names).to eq([index_name])
@@ -171,11 +171,11 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           this_name => { "aliases" => {} },
-          other_name => { "aliases" => {} }
-        }.to_json
+          other_name => { "aliases" => {} },
+        }.to_json,
       )
 
     expect(@server.index_group("test").index_names).to eq([this_name])
@@ -185,8 +185,8 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
-        body: {}.to_json
+        headers: { "Content-Type" => "application/json" },
+        body: {}.to_json,
       )
 
     @server.index_group("test").clean
@@ -197,10 +197,10 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
-          index_name => { "aliases" => {} }
-        }.to_json
+          index_name => { "aliases" => {} },
+        }.to_json,
       )
 
     delete_stub = stub_request(:delete, "#{BASE_URI}/#{index_name}")
@@ -216,10 +216,10 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
-          index_name => { "aliases" => { "test" => {} } }
-        }.to_json
+          index_name => { "aliases" => { "test" => {} } },
+        }.to_json,
       )
 
     @server.index_group("test").clean
@@ -228,16 +228,16 @@ RSpec.describe SearchIndices::IndexGroup do
   it "clean with multiple indices" do
     index_names = [
       "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012",
-      "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef"
+      "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef",
     ]
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           index_names[0] => { "aliases" => {} },
-          index_names[1] => { "aliases" => {} }
-        }.to_json
+          index_names[1] => { "aliases" => {} },
+        }.to_json,
       )
 
     delete_stubs = index_names.map { |index_name|
@@ -257,11 +257,11 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           live_name => { "aliases" => { "test" => {} } },
-          dead_name => { "aliases" => {} }
-        }.to_json
+          dead_name => { "aliases" => {} },
+        }.to_json,
       )
 
     delete_stub = stub_request(:delete, "#{BASE_URI}/#{dead_name}")
@@ -278,10 +278,10 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
-          index_name => { "aliases" => { "something_else" => {} } }
-        }.to_json
+          index_name => { "aliases" => { "something_else" => {} } },
+        }.to_json,
       )
 
     @server.index_group("test").clean
@@ -295,11 +295,11 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           this_name => { "aliases" => {} },
-          other_name => { "aliases" => {} }
-        }.to_json
+          other_name => { "aliases" => {} },
+        }.to_json,
       )
 
     delete_stub = stub_request(:delete, "#{BASE_URI}/#{this_name}")

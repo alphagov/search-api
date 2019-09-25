@@ -2,7 +2,7 @@ module Indexer
   class Comparer
     class MissingIdOrType < StandardError; end
 
-    DEFAULT_FIELDS_TO_IGNORE = ["popularity"].freeze
+    DEFAULT_FIELDS_TO_IGNORE = %w[popularity].freeze
 
     def initialize(old_index_name, new_index_name, cluster: Clusters.default_cluster, filtered_format: nil, ignore: DEFAULT_FIELDS_TO_IGNORE, io: STDOUT, field_comparer: nil, enum_options: {})
       @old_index_name = old_index_name
@@ -34,7 +34,7 @@ module Indexer
           fields = changed_fields(old_item, new_item)
           if fields.any?
             outcomes[:changed] += 1
-            outcomes[:"changes: #{fields.join(',')}"] += 1
+            outcomes[:"changes: #{fields.join(",")}"] += 1
           else
             outcomes[:unchanged] += 1
           end
@@ -58,7 +58,6 @@ module Indexer
     def reject_fields(hash)
       hash.reject { |k, _| @field_to_ignore.include?(k) }
     end
-
 
     def log(msg)
       @io.puts "#{Time.now}: #{msg}"

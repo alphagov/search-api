@@ -42,7 +42,7 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
 
   it "raises an error if the process fails to delete in elasticsearch" do
     failure_reponse = [{
-      "items" => [{ "insert" => { "status" => 500 } }]
+      "items" => [{ "insert" => { "status" => 500 } }],
     }]
     expect_any_instance_of(Index::ElasticsearchProcessor).to receive(:commit).and_return(failure_reponse)
     expect do

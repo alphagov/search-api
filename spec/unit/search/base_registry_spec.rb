@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::BaseRegistry do
   before do
@@ -11,7 +11,7 @@ RSpec.describe Search::BaseRegistry do
       "content_id" => "example-content-id",
       "slug" => "example-document",
       "link" => "/government/example-document",
-      "title" => "Example document"
+      "title" => "Example document",
     }
   end
 
@@ -69,7 +69,7 @@ RSpec.describe Search::BaseRegistry do
       .and_return([example_document])
 
     expect(
-      @base_registry.by_content_id("example-content-id")
+      @base_registry.by_content_id("example-content-id"),
     ).to eq(example_document)
   end
 end

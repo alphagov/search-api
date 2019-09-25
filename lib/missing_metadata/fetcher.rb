@@ -31,7 +31,6 @@ module MissingMetadata
       retry
     end
 
-
     def update_metadata(content_id, index_name, document_id)
       response = publishing_api.get_content(content_id)
 

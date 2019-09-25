@@ -18,14 +18,14 @@ module Index
 
     def get(params)
       client.get(
-        params.merge(index: index_name)
+        params.merge(index: index_name),
       )
     end
 
     def bulk(params)
       clusters.map do |cluster|
         client(cluster: cluster).bulk(
-          params.merge(index: index_name)
+          params.merge(index: index_name),
         )
       end
     end

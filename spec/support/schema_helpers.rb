@@ -1,5 +1,5 @@
 module SchemaHelpers
-  SCHEMA_DIR = File.expand_path('../../config/schema', File.dirname(__FILE__))
+  SCHEMA_DIR = File.expand_path("../../config/schema", File.dirname(__FILE__))
 
   def sample_field_definitions(fields = nil)
     @sample_field_definitions ||= FieldDefinitionParser.new(SCHEMA_DIR).parse

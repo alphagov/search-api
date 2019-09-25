@@ -1,5 +1,5 @@
 class SitemapGenerator
-  EXCLUDED_FORMATS = ["recommended-link"].freeze
+  EXCLUDED_FORMATS = %w[recommended-link].freeze
 
   def initialize(search_config)
     @search_config = search_config
@@ -15,7 +15,7 @@ class SitemapGenerator
       query: {
         bool: {
           must_not: { terms: { format: EXCLUDED_FORMATS } },
-        }
+        },
       },
       post_filter: Search::FormatMigrator.new(@search_config).call,
     }
@@ -30,7 +30,7 @@ class SitemapGenerator
         client: Services.elasticsearch(cluster: Clusters.default_cluster, timeout: SearchIndices::Index::TIMEOUT_SECONDS),
         search_body: search_body,
         index_names: index_names,
-        batch_size: SearchIndices::Index.scroll_batch_size
+        batch_size: SearchIndices::Index.scroll_batch_size,
       ) do |hit|
         SitemapPresenter.new(hit["_source"], property_boost_calculator)
       end
@@ -47,7 +47,7 @@ class SitemapGenerator
 
   # Generate a sitemap which matches the format specified in https://www.sitemaps.org/protocol.html
   def generate_xml(chunk)
-    builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+    builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
         chunk.each do |document|
           xml.url {

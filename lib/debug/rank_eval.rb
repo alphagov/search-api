@@ -1,20 +1,20 @@
-require 'csv'
+require "csv"
 
 module Debug
   class RankEval
     def initialize(datafile, ab_tests)
       @ab_tests = ab_tests
       @data = load_from_csv(datafile)
-      @search_config = SearchConfig.parse_parameters('ab_tests' => [ab_tests]).search_config
+      @search_config = SearchConfig.parse_parameters("ab_tests" => [ab_tests]).search_config
     end
 
     def load_from_csv(datafile)
       data = {}
       last_query = ""
       CSV.foreach(datafile, headers: true) do |row|
-        query = (row['query'] || last_query).strip
-        score = row['score']
-        link = row['link']
+        query = (row["query"] || last_query).strip
+        score = row["score"]
+        link = row["link"]
 
         raise "missing query for row '#{row}'" if query.nil?
         raise "missing score for row '#{row}'" if score.nil?
@@ -35,7 +35,7 @@ module Debug
           id: query,
           request: {
             query: data[:es_query][:query],
-            post_filter: data[:es_query][:post_filter]
+            post_filter: data[:es_query][:post_filter],
           },
           ratings: data[:judgements].map do |judgement|
             {
@@ -43,20 +43,20 @@ module Debug
               _id: judgement[:link],
               rating: judgement[:score],
             }
-          end
+          end,
         }
       end
 
       result = @search_config.rank_eval(
         requests: requests,
-        metric: { dcg: { k: 10 } }
+        metric: { dcg: { k: 10 } },
       )
 
       {
-        score: result['metric_score'],
-        query_scores: result['details'].each_with_object({}) do |(query, detail), acc|
-          acc[query] = detail['metric_score']
-        end
+        score: result["metric_score"],
+        query_scores: result["details"].each_with_object({}) do |(query, detail), acc|
+          acc[query] = detail["metric_score"]
+        end,
       }
     end
 
@@ -64,10 +64,10 @@ module Debug
       @queries ||= @data.each_with_object({}) do |(query, judgements), queries|
         queries[query] = {
           es_query: SearchConfig.generate_query(
-            'q' => [query],
-            'ab_tests' => [@ab_tests]
+            "q" => [query],
+            "ab_tests" => [@ab_tests],
           ),
-          judgements: judgements
+          judgements: judgements,
         }
       end
     end
@@ -87,23 +87,23 @@ module Debug
     end
 
     def index_for_link(link)
-      return detailed_index_name if link.start_with? '/guidance/'
+      return detailed_index_name if link.start_with? "/guidance/"
 
-      return government_index_name if link.start_with? '/government/'
+      return government_index_name if link.start_with? "/government/"
 
       govuk_index_name
     end
 
     def detailed_index_name
-      @detailed_index_name ||= @search_config.get_index_for_alias('detailed')
+      @detailed_index_name ||= @search_config.get_index_for_alias("detailed")
     end
 
     def government_index_name
-      @government_index_name ||= @search_config.get_index_for_alias('government')
+      @government_index_name ||= @search_config.get_index_for_alias("government")
     end
 
     def govuk_index_name
-      @govuk_index_name ||= @search_config.get_index_for_alias('govuk')
+      @govuk_index_name ||= @search_config.get_index_for_alias("govuk")
     end
   end
 end

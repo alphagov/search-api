@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SchemaMigrator do
-  before(:each) do
+  before do
     clean_index_content("govuk_test")
   end
 
@@ -22,7 +22,7 @@ RSpec.describe SchemaMigrator do
 
     document = {
       "link" => "/a-page-to-be-reindexed",
-      "title" => "A page to be reindexed"
+      "title" => "A page to be reindexed",
     }
     commit_document("govuk_test", document)
 
@@ -75,7 +75,7 @@ RSpec.describe SchemaMigrator do
     it "finds updated content" do
       commit_document(
         "govuk_test",
-        { "link" => "/some-page", "title" => "Original title" }
+        { "link" => "/some-page", "title" => "Original title" },
       )
 
       described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
@@ -84,7 +84,7 @@ RSpec.describe SchemaMigrator do
         search_server.index_group("govuk_test").current_real.unlock
         update_document(
           "govuk_test",
-          { "link" => "/some-page", "title" => "New title" }
+          { "link" => "/some-page", "title" => "New title" },
         )
 
         expect(migrator).to be_changed

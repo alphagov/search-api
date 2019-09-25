@@ -44,11 +44,10 @@ module Indexer
         rescue GdsApi::TimedOutException => e
           @logger.error("Timeout looking up content ID for #{doc_hash['link']}")
           GovukError.notify(e,
-            extra: {
-              error_message: "Timeout looking up content ID",
-              base_path: doc_hash["link"]
-            }
-          )
+                            extra: {
+                              error_message: "Timeout looking up content ID",
+                              base_path: doc_hash["link"],
+                            })
           raise Indexer::PublishingApiError
         rescue GdsApi::HTTPErrorResponse => e
           @logger.error("HTTP error looking up content ID for #{doc_hash['link']}: #{e.message}")
@@ -56,14 +55,13 @@ module Indexer
           # manually to Sentry. This allows us to control the message and parameters
           # such that errors are grouped in a sane manner.
           GovukError.notify(e,
-            extra: {
-              message: "HTTP error looking up content ID",
-              base_path: doc_hash["link"],
-              error_code: e.code,
-              error_message: e.message,
-              error_details: e.error_details
-            }
-          )
+                            extra: {
+                              message: "HTTP error looking up content ID",
+                              base_path: doc_hash["link"],
+                              error_code: e.code,
+                              error_message: e.message,
+                              error_details: e.error_details,
+                            })
           raise Indexer::PublishingApiError
         end
       end
@@ -72,16 +70,15 @@ module Indexer
     def find_links(content_id)
       begin
         GdsApi.with_retries(maximum_number_of_attempts: 5) do
-          Services.publishing_api.get_expanded_links(content_id)['expanded_links']
+          Services.publishing_api.get_expanded_links(content_id)["expanded_links"]
         end
       rescue GdsApi::TimedOutException => e
         @logger.error("Timeout fetching expanded links for #{content_id}")
         GovukError.notify(e,
-          extra: {
-            error_message: "Timeout fetching expanded links",
-            content_id: content_id
-          }
-        )
+                          extra: {
+                            error_message: "Timeout fetching expanded links",
+                            content_id: content_id,
+                          })
         raise Indexer::PublishingApiError
       rescue GdsApi::HTTPNotFound => e
         # If the Content ID no longer exists in the Publishing API, there isn't really much
@@ -95,14 +92,13 @@ module Indexer
         # manually to Sentry. This allows us to control the message and parameters
         # such that errors are grouped in a sane manner.
         GovukError.notify(e,
-          extra: {
-            message: "HTTP error fetching expanded links",
-            content_id: content_id,
-            error_code: e.code,
-            error_message: e.message,
-            error_details: e.error_details
-          }
-        )
+                          extra: {
+                            message: "HTTP error fetching expanded links",
+                            content_id: content_id,
+                            error_code: e.code,
+                            error_message: e.message,
+                            error_details: e.error_details,
+                          })
         raise Indexer::PublishingApiError
       end
     end
@@ -116,34 +112,34 @@ module Indexer
 
       # We still call topics "specialist sectors" in rummager.
       links_with_slugs["specialist_sectors"] = links["topics"].to_a.map do |content_item|
-        content_item['base_path'].sub('/topic/', '')
+        content_item["base_path"].sub("/topic/", "")
       end
 
       links_with_slugs["mainstream_browse_pages"] = links["mainstream_browse_pages"].to_a.map do |content_item|
-        content_item['base_path'].sub('/browse/', '')
+        content_item["base_path"].sub("/browse/", "")
       end
 
       links_with_slugs["organisations"] = links["organisations"].to_a.map do |content_item|
-        content_item['base_path'].sub('/government/organisations/', '').sub('/courts-tribunals/', '')
+        content_item["base_path"].sub("/government/organisations/", "").sub("/courts-tribunals/", "")
       end
 
       links_with_slugs["primary_publishing_organisation"] = links["primary_publishing_organisation"].to_a.map do |content_item|
-        content_item['base_path'].sub('/government/organisations/', '').sub('/courts-tribunals/', '')
+        content_item["base_path"].sub("/government/organisations/", "").sub("/courts-tribunals/", "")
       end
 
-      links_with_slugs["taxons"] = content_ids_for(links, 'taxons')
+      links_with_slugs["taxons"] = content_ids_for(links, "taxons")
 
       links_with_slugs
     end
 
     def taggings_with_content_ids(links)
       {
-        'topic_content_ids' => content_ids_for(links, 'topics'),
-        'mainstream_browse_page_content_ids' => content_ids_for(links, 'mainstream_browse_pages'),
-        'organisation_content_ids' => content_ids_for(links, 'organisations'),
-        'facet_groups' => content_ids_for(links, 'facet_groups'),
-        'facet_values' => content_ids_for(links, 'facet_values'),
-        'part_of_taxonomy_tree' => parts_of_taxonomy_for_all_taxons(links)
+        "topic_content_ids" => content_ids_for(links, "topics"),
+        "mainstream_browse_page_content_ids" => content_ids_for(links, "mainstream_browse_pages"),
+        "organisation_content_ids" => content_ids_for(links, "organisations"),
+        "facet_groups" => content_ids_for(links, "facet_groups"),
+        "facet_values" => content_ids_for(links, "facet_values"),
+        "part_of_taxonomy_tree" => parts_of_taxonomy_for_all_taxons(links),
       }
     end
 
@@ -179,7 +175,7 @@ module Indexer
 
     def content_ids_for(links, link_type)
       links[link_type].to_a.map do |content_item|
-        content_item['content_id']
+        content_item["content_id"]
       end
     end
   end

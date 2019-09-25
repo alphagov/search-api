@@ -3,7 +3,6 @@ require "publishing_api_finder_publisher"
 
 RSpec.describe PublishingApiFinderPublisher do
   ["advanced-search.yml", "find-eu-exit-guidance-business.yml"].each do |config_file|
-
     subject(:instance) { described_class.new(finder, timestamp) }
 
     let(:finder) {
@@ -87,7 +86,7 @@ RSpec.describe PublishingApiFinderPublisher do
 
     before do
       GovukContentSchemaTestHelpers.configure do |config|
-        config.schema_type = 'publisher_v2'
+        config.schema_type = "publisher_v2"
         config.project_root = File.expand_path(Dir.pwd)
       end
     end
@@ -113,7 +112,7 @@ RSpec.describe PublishingApiFinderPublisher do
 
     before do
       GovukContentSchemaTestHelpers.configure do |config|
-        config.schema_type = 'publisher_v2'
+        config.schema_type = "publisher_v2"
         config.project_root = File.expand_path(Dir.pwd)
       end
     end

@@ -2,7 +2,8 @@ module Search
   class BatchQuery < Query
     class TooManyQueries < Error; end
     def run(searches_params)
-      raise(TooManyQueries, 'Maximum of 10 searches per batch') unless searches_params.count <= 10
+      raise(TooManyQueries, "Maximum of 10 searches per batch") unless searches_params.count <= 10
+
       log_search_count(searches_params)
       builders = create_query_builders(searches_params)
       payloads = aggregate_payloads(builders)
@@ -26,7 +27,7 @@ module Search
         QueryBuilder.new(
           search_params: search_params,
           content_index_names: SearchConfig.content_index_names,
-          metasearch_index: metasearch_index
+          metasearch_index: metasearch_index,
         )
       end
     end

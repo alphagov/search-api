@@ -1,11 +1,11 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ElasticsearchAmendmentTest' do
+RSpec.describe "ElasticsearchAmendmentTest" do
   before do
     stub_tagging_lookup
   end
 
-  it "should amend a document" do
+  it "amends a document" do
     commit_document("government_test", {
       "title" => "The old title",
       "link" => "/an-example-answer",
@@ -18,11 +18,11 @@ RSpec.describe 'ElasticsearchAmendmentTest' do
         "title" => "A new title",
         "link" => "/an-example-answer",
       }, type: "edition",
-      index: "government_test",
+      index: "government_test"
     )
   end
 
-  it "should amend a document queued" do
+  it "amends a document queued" do
     commit_document("government_test", {
       "title" => "The old title",
       "link" => "/an-example-answer",

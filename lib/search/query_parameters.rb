@@ -7,7 +7,7 @@ module Search
 
     # starts and ends with quotes with no quotes in between, with or without
     # leading or trailing whitespace
-    QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/
+    QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/.freeze
 
     def initialize(params = {})
       params = {
@@ -54,7 +54,7 @@ module Search
     end
 
     def suggest_spelling?
-      query && suggest.include?('spelling')
+      query && suggest.include?("spelling")
     end
 
   private

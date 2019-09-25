@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SearchIndices::Index do
   include Fixtures::DefaultMappings
@@ -11,7 +11,7 @@ RSpec.describe SearchIndices::Index do
     stub_request(:get, "http://example.com:9200/government_test/_alias")
       .to_return(
         body: { "real-name" => { "aliases" => { "government_test" => {} } } }.to_json,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
       )
 
     expect(@index.real_name).to eq("real-name")
@@ -22,7 +22,7 @@ RSpec.describe SearchIndices::Index do
       .to_return(
         status: 404,
         body: '{"error":"IndexMissingException[[text-index] missing]","status":404}',
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
       )
 
     expect(@index.real_name).to be_nil
@@ -34,7 +34,7 @@ RSpec.describe SearchIndices::Index do
     stub_request(:get, "http://example.com:9200/government_test/_alias")
       .to_return(
         body: "{}",
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
       )
 
     expect(@index.real_name).to be_nil
@@ -44,35 +44,35 @@ RSpec.describe SearchIndices::Index do
     stub_request(:get, "http://example.com:9200/government_test/_alias")
       .to_return(
         body: { "real-name" => { "aliases" => { "government_test" => {} } } }.to_json,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
       )
 
     expect(@index).to be_exists
   end
 
-  it "should raise error for failures in bulk update" do
+  it "raises error for failures in bulk update" do
     stub_tagging_lookup
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar", "/foo/baz"], 1.0, 20)
 
     json_documents = [
       { "document_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "0.09090909090909091" },
-      { "document_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091" }
+      { "document_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091" },
     ]
 
     documents = json_documents.map do |json_document|
       double("document", elasticsearch_export: json_document)
     end
 
-    response = <<-eos
-{"took":0,"items":[
-  { "index": { "_index":"government_test", "_type":"generic-document", "_id":"/foo/bar", "ok":true } },
-  { "index": { "_index":"government_test", "_type":"generic-document", "_id":"/foo/baz", "error":"stuff" } }
-]}
-    eos
+    response = <<~RESPONSE
+      {"took":0,"items":[
+        { "index": { "_index":"government_test", "_type":"generic-document", "_id":"/foo/bar", "ok":true } },
+        { "index": { "_index":"government_test", "_type":"generic-document", "_id":"/foo/baz", "error":"stuff" } }
+      ]}
+    RESPONSE
     stub_request(:post, "http://example.com:9200/government_test/_bulk").to_return(
       body: response,
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     )
 
     begin
@@ -88,7 +88,7 @@ RSpec.describe SearchIndices::Index do
       body: %r{"query":"keyword search"},
     ).to_return(
       body: '{"hits":{"hits":[]}}',
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     )
 
     @index.raw_search({ query: "keyword search" })
@@ -100,7 +100,7 @@ RSpec.describe SearchIndices::Index do
     refresh_url = "http://example.com:9200/government_test/_refresh"
     stub_request(:post, refresh_url).to_return(
       body: '{"ok":true,"_shards":{"total":1,"successful":1,"failed":0}}',
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     )
 
     @index.commit
@@ -111,10 +111,10 @@ RSpec.describe SearchIndices::Index do
   it "can fetch documents by format" do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=500&version=true"
     stub_request(:get, search_pattern).with(
-      body: { query: { term: { format: "organisation" } }, _source: { includes: %w{title link} }, sort: %w[_doc] }
+      body: { query: { term: { format: "organisation" } }, _source: { includes: %w{title link} }, sort: %w[_doc] },
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     )
 
     hits = (1..10).map { |i|
@@ -122,24 +122,24 @@ RSpec.describe SearchIndices::Index do
     }
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 10, hits),
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_return(
       body: scroll_response_body("abcdefgh", 10, []),
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
 
     result = @index.documents_by_format("organisation", sample_field_definitions(%w(link title)))
-    expect((1..10).map { |i| "Organisation #{i}" }).to eq(result.map { |r| r['title'] })
+    expect((1..10).map { |i| "Organisation #{i}" }).to eq(result.map { |r| r["title"] })
   end
 
   it "can fetch documents by format with certain fields" do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=500&version=true"
 
     stub_request(:get, search_pattern).with(
-      body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"_source\":{\"includes\":[\"title\",\"link\"]},\"sort\":[\"_doc\"]}"
+      body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"_source\":{\"includes\":[\"title\",\"link\"]},\"sort\":[\"_doc\"]}",
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     )
 
     hits = (1..10).map { |i|
@@ -147,24 +147,24 @@ RSpec.describe SearchIndices::Index do
     }
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 10, hits),
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_return(
       body: scroll_response_body("abcdefgh", 10, []),
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
 
     result = @index.documents_by_format("organisation", sample_field_definitions(%w(link title))).to_a
-    expect((1..10).map { |i| "Organisation #{i}" }).to eq(result.map { |r| r['title'] })
-    expect((1..10).map { |i| "/organisation-#{i}" }).to eq(result.map { |r| r['link'] })
+    expect((1..10).map { |i| "Organisation #{i}" }).to eq(result.map { |r| r["title"] })
+    expect((1..10).map { |i| "/organisation-#{i}" }).to eq(result.map { |r| r["link"] })
   end
 
   it "can count the documents without retrieving them all" do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=50&version=true"
     stub_request(:get, search_pattern).with(
-      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json
+      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json,
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 100 } }.to_json,
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
     expect(@index.all_documents.size).to eq(100)
   end
@@ -173,23 +173,23 @@ RSpec.describe SearchIndices::Index do
     search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=50&version=true"
 
     stub_request(:get, search_uri).with(
-      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json
+      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json,
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 100, hits: [] } }.to_json,
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     )
     hits = (1..100).map { |i|
       { "_source" => { "link" => "/foo-#{i}", "document_type" => "edition" }, "_type" => "generic-document" }
     }
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 100, hits[0, 50]),
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_return(
       body: scroll_response_body("abcdefgh", 100, hits[50, 50]),
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_return(
       body: scroll_response_body("abcdefgh", 100, []),
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
     all_documents = @index.all_documents.to_a
     expect(all_documents.size).to eq(100)
@@ -200,14 +200,14 @@ RSpec.describe SearchIndices::Index do
   it "can scroll through the documents" do
     search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=2&version=true"
 
-    allow(SearchIndices::Index).to receive(:scroll_batch_size).and_return(2)
+    allow(described_class).to receive(:scroll_batch_size).and_return(2)
 
     stub_request(:get, search_uri).with(
-      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json
+      body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json,
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 3, hits: [] } }.to_json,
 
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     )
     hits = (1..3).map { |i|
       { "_source" => { "link" => "/foo-#{i}", "document_type" => "edition" }, "_type" => "generic-document" }
@@ -217,19 +217,19 @@ RSpec.describe SearchIndices::Index do
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("ijklmnop", total, hits[0, 2]),
 
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
 
     stub_request(:get, scroll_uri("ijklmnop")).to_return(
       body: scroll_response_body("qrstuvwx", total, hits[2, 1]),
 
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
 
     stub_request(:get, scroll_uri("qrstuvwx")).to_return(
       body: scroll_response_body("yz", total, []),
 
-      headers: { 'Content-Type' => 'application/json' },
+      headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
 
     all_documents = @index.all_documents.to_a
@@ -245,7 +245,7 @@ private
   def scroll_response_body(scroll_id, total_results, results)
     {
       _scroll_id: scroll_id,
-      hits: { total: total_results, hits: results }
+      hits: { total: total_results, hits: results },
     }.to_json
   end
 
@@ -262,7 +262,7 @@ private
       to_return(
         body: { "hits" => { "total" => total_pages } }.to_json,
 
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
       )
 
     # stub the search for popularity data
@@ -274,21 +274,21 @@ private
       },
       "_source" => { "includes" => %w[rank_14] },
       "sort" => [
-        { "rank_14" => { "order" => "asc" } }
+        { "rank_14" => { "order" => "asc" } },
       ],
-      "size" => total_requested
+      "size" => total_requested,
     }
     response = {
       "hits" => {
-        "hits" => paths_to_return.map {|path|
+        "hits" => paths_to_return.map { |path|
           {
             "_id" => path,
             "_source" => {
-              "rank_14" => popularity
-            }
+              "rank_14" => popularity,
+            },
           }
-        }
-      }
+        },
+      },
     }
 
     stub_request(:get, "http://example.com:9200/page-traffic_test/generic-document/_search").
@@ -296,7 +296,7 @@ private
       to_return(
         body: response.to_json,
 
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
       )
   end
 
@@ -313,10 +313,10 @@ private
       "bool" => {
         "must_not" => {
           "terms" => {
-            "format" => []
-          }
-        }
-      }
+            "format" => [],
+          },
+        },
+      },
     }
   end
 end

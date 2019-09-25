@@ -19,7 +19,7 @@ module SearchIndices
         @base_uri,
         prefix,
         @schema,
-        @search_config
+        @search_config,
       )
     end
 
@@ -47,7 +47,7 @@ module SearchIndices
       return if index_name_valid?(index_name)
 
       raise NoSuchIndex,
-        "Index name #{index_name} is not specified in the elasticsearch settings."
+            "Index name #{index_name} is not specified in the elasticsearch settings."
     end
 
     def index_name_valid?(index_name)

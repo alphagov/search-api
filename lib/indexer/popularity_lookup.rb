@@ -13,12 +13,12 @@ module Indexer
       results = traffic_index.raw_search({
         query: {
           terms: {
-            path_components: links
-          }
+            path_components: links,
+          },
         },
         _source: { includes: %w[rank_14] },
         sort: [
-          { rank_14: { order: "asc" } }
+          { rank_14: { order: "asc" } },
         ],
         size: 10 * links.size,
       })
@@ -29,11 +29,12 @@ module Indexer
         link = hit["_id"]
         rank = Array(hit["_source"]["rank_14"]).first
         next if rank.nil?
+
         ranks[link] = [rank, ranks[link]].min
       end
 
       Hash[links.map { |link|
-        if ranks[link] == 0
+        if ranks[link].zero?
           popularity_score = 0
         else
           popularity_score = 1.0 / (ranks[link] + SearchConfig.popularity_rank_offset)
@@ -44,7 +45,7 @@ module Indexer
           {
             popularity_score: popularity_score,
             popularity_rank: ranks[link],
-          }
+          },
         ]
       }]
     end
@@ -55,6 +56,7 @@ module Indexer
       if @opened_traffic_index
         return @traffic_index
       end
+
       @traffic_index = open_traffic_index
       @opened_traffic_index = true
       @traffic_index
@@ -63,7 +65,7 @@ module Indexer
     def traffic_index_size
       results = traffic_index.raw_search({
         query: { match_all: {} },
-        size: 0
+        size: 0,
       })
       results["hits"]["total"]
     end

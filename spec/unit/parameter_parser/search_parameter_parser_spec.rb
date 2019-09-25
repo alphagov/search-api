@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SearchParameterParser do
   def cluster_with_key(key)
@@ -82,7 +82,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about an unknown parameter" do
-    p = described_class.new({ "p" => ["extra"] }, @schema)
+    p = described_class.new({ "p" => %w[extra] }, @schema)
 
     expect(p.error).to eq("Unexpected parameters: p")
     expect(p).not_to be_valid
@@ -90,7 +90,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "allows the c parameter to be anything" do
-    p = described_class.new({ "c" => ["1234567890"] }, @schema)
+    p = described_class.new({ "c" => %w[1234567890] }, @schema)
 
     expect(p).to be_valid
     expect(p.parsed_params).to match(expected_params({}))
@@ -106,7 +106,7 @@ RSpec.describe SearchParameterParser do
       expected_params(
         ab_tests: { search_cluster_query: cluster.key },
         cluster: cluster_with_key(cluster.key),
-       )
+       ),
     )
   end
 
@@ -127,12 +127,12 @@ RSpec.describe SearchParameterParser do
       expected_params(
         ab_tests: { search_cluster_query: "invalid" },
         cluster: cluster_with_key(Clusters.default_cluster.key),
-      )
+      ),
      )
   end
 
   it "complain about multiple unknown parameters" do
-    p = described_class.new({ "p" => ["extra"], "boo" => ["goose"] }, @schema)
+    p = described_class.new({ "p" => %w[extra], "boo" => %w[goose] }, @schema)
 
     expect(p.error).to eq("Unexpected parameters: p, boo")
     expect(p).not_to be_valid
@@ -140,7 +140,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands the start parameter" do
-    p = described_class.new({ "start" => ["5"] }, @schema)
+    p = described_class.new({ "start" => %w[5] }, @schema)
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params).to match(expected_params(start: 5))
@@ -163,7 +163,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about a non-decimal start parameter" do
-    p = described_class.new({ "start" => ["x"] }, @schema)
+    p = described_class.new({ "start" => %w[x] }, @schema)
 
     expect(p.error).to eq("Invalid value \"x\" for parameter \"start\" (expected positive integer)")
     expect(p).not_to be_valid
@@ -187,7 +187,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands the count parameter" do
-    p = described_class.new({ "count" => ["5"] }, @schema)
+    p = described_class.new({ "count" => %w[5] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -211,7 +211,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about a non-decimal count parameter" do
-    p = described_class.new({ "count" => ["x"] }, @schema)
+    p = described_class.new({ "count" => %w[x] }, @schema)
 
     expect(p.error).to eq("Invalid value \"x\" for parameter \"count\" (expected positive integer)")
     expect(p).not_to be_valid
@@ -235,7 +235,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands the q parameter" do
-    p = described_class.new({ "q" => ["search-term"] }, @schema)
+    p = described_class.new({ "q" => %w[search-term] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -282,7 +282,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: '"hello world"', parsed_query: { quoted: ['hello world'], unquoted: "" }))
+    expect(p.parsed_params).to match(expected_params(query: '"hello world"', parsed_query: { quoted: ["hello world"], unquoted: "" }))
   end
 
   it "parses mixed quoted/unquoted queries (simple)" do
@@ -290,7 +290,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo bar', parsed_query: { quoted: ['hello world'], unquoted: "foo bar" }))
+    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo bar', parsed_query: { quoted: ["hello world"], unquoted: "foo bar" }))
   end
 
   it "parses mixed quoted/unquoted queries (complex)" do
@@ -298,7 +298,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo "bar" bat "baz" qux', parsed_query: { quoted: ['hello world', 'bar', 'baz'], unquoted: "foo bat qux" }))
+    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo "bar" bat "baz" qux', parsed_query: { quoted: ["hello world", "bar", "baz"], unquoted: "foo bat qux" }))
   end
 
   it "complains about invalid unicode in the query" do
@@ -350,7 +350,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains when both q and similar_to parameters are provided" do
-    p = described_class.new({ "q" => ["hello"], "similar_to" => ["/world"] }, @schema)
+    p = described_class.new({ "q" => %w[hello], "similar_to" => ["/world"] }, @schema)
 
     expect(p.error).to eq("Parameters 'q' and 'similar_to' cannot be used together")
     expect(p).not_to be_valid
@@ -358,7 +358,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "sets the order parameter to nil when the similar_to parameter is provided" do
-    p = described_class.new({ "similar_to" => ["/hello"], "order" => ["title"] }, @schema)
+    p = described_class.new({ "similar_to" => ["/hello"], "order" => %w[title] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -366,48 +366,48 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands filter paramers" do
-    p = described_class.new({ "filter_organisations" => ["hm-magic"] }, @schema)
+    p = described_class.new({ "filter_organisations" => %w[hm-magic] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"])]
+      [text_filter("organisations", %w[hm-magic])],
     )
   end
 
   it "understands reject paramers" do
-    p = described_class.new({ "reject_organisations" => ["hm-magic"] }, @schema)
+    p = described_class.new({ "reject_organisations" => %w[hm-magic] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"], :reject, :any)]
+      [text_filter("organisations", %w[hm-magic], :reject, :any)],
     )
   end
 
   it "understands reject_any paramers" do
-    p = described_class.new({ "reject_any_organisations" => ["hm-magic"] }, @schema)
+    p = described_class.new({ "reject_any_organisations" => %w[hm-magic] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"], :reject, :any)]
+      [text_filter("organisations", %w[hm-magic], :reject, :any)],
                                          )
   end
 
   it "understands reject_all paramers" do
-    p = described_class.new({ "reject_all_organisations" => ["hm-magic"] }, @schema)
+    p = described_class.new({ "reject_all_organisations" => %w[hm-magic] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"], :reject, :all)]
+      [text_filter("organisations", %w[hm-magic], :reject, :all)],
                                          )
   end
 
   it "understands some rejects and some filter paramers" do
     p = described_class.new({
-      "reject_organisations" => ["hm-magic"],
+      "reject_organisations" => %w[hm-magic],
       "filter_all_mainstream_browse_pages" => %w[cheese],
       "filter_any_slug" => ["/slug1", "/slug2"],
       "reject_all_link" => ["/link"],
@@ -416,33 +416,32 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to match_array([
-        text_filter("organisations", ["hm-magic"], :reject, :any),
+        text_filter("organisations", %w[hm-magic], :reject, :any),
         text_filter("mainstream_browse_pages", %w[cheese], :filter, :all),
         text_filter("slug", ["/slug1", "/slug2"], :filter, :any),
-        text_filter("link", ["/link"], :reject, :all)
+        text_filter("link", ["/link"], :reject, :all),
       ])
   end
 
   it "understands multiple filter paramers" do
-    p = described_class.new({ "filter_organisations" => ["hm-magic", "hmrc"] }, @schema)
+    p = described_class.new({ "filter_organisations" => %w[hm-magic hmrc] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params).to match(
       expected_params(
         filters: [
-          text_filter("organisations", [
-              "hm-magic",
-              "hmrc",
-            ]
-          )
+          text_filter("organisations", %w[
+              hm-magic
+              hmrc
+            ]),
         ],
-      )
+      ),
     )
   end
 
   it "understands filter for missing field" do
-    p = described_class.new({ "filter_organisations" => ["_MISSING"] }, @schema)
+    p = described_class.new({ "filter_organisations" => %w[_MISSING] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -464,14 +463,14 @@ RSpec.describe SearchParameterParser do
     expect(filters.size).to eq(1)
     expect(filters[0].field_name).to eq("organisations")
     expect(filters[0].include_missing).to be true
-    expect(filters[0].values).to eq(["hmrc"])
+    expect(filters[0].values).to eq(%w[hmrc])
   end
 
   it "complains about disallowed filter fields" do
     p = described_class.new(
       {
-        "filter_spells" => ["levitation"],
-        "filter_organisations" => ["hm-magic"]
+        "filter_spells" => %w[levitation],
+        "filter_organisations" => %w[hm-magic],
       },
       @schema,
     )
@@ -479,15 +478,15 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq(%{"spells" is not a valid filter field})
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(
-      expected_params(filters: [text_filter("organisations", %w[hm-magic])])
+      expected_params(filters: [text_filter("organisations", %w[hm-magic])]),
     )
   end
 
   it "complains about disallowed reject fields" do
     p = described_class.new(
       {
-        "reject_spells" => ["levitation"],
-        "reject_organisations" => ["hm-magic"]
+        "reject_spells" => %w[levitation],
+        "reject_organisations" => %w[hm-magic],
       },
       @schema,
     )
@@ -495,26 +494,26 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq(%{"spells" is not a valid reject field})
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(
-      expected_params(filters: [text_filter("organisations", %w[hm-magic], :reject)])
+      expected_params(filters: [text_filter("organisations", %w[hm-magic], :reject)]),
     )
   end
 
   # TODO: this is deprecated behaviour
   it "rewrites a document_type filter to a _type filter" do
     parser = described_class.new(
-      { "filter_document_type" => ["cma_case"] },
+      { "filter_document_type" => %w[cma_case] },
       @schema,
     )
 
     expect(parser.parsed_params[:filters]).to eq(
-      [text_filter("document_type", %w[cma_case])]
+      [text_filter("document_type", %w[cma_case])],
     )
   end
 
   context "when the filter field is a date type" do
     it "includes the type in return value of #parsed params" do
       params = {
-        "filter_document_type" => ["cma_case"],
+        "filter_document_type" => %w[cma_case],
         "filter_opened_date" => "from:2014-04-01 05:08,to:2014-04-02 17:43:12",
       }
 
@@ -533,7 +532,7 @@ RSpec.describe SearchParameterParser do
 
     it "understands a date filter for a missing value or a specific value" do
       parser = described_class.new({
-        "filter_document_type" => ["cma_case"],
+        "filter_document_type" => %w[cma_case],
         "filter_opened_date" => ["_MISSING", "from:2014-04-01 00:00,to:2014-04-02 00:00"],
       }, @schema)
 
@@ -554,7 +553,7 @@ RSpec.describe SearchParameterParser do
 
     it "includes the whole day if time is omitted" do
       params = {
-        "filter_document_type" => ["cma_case"],
+        "filter_document_type" => %w[cma_case],
         "filter_public_timestamp" => "from:2017-06-05,to:2017-06-08",
       }
 
@@ -575,7 +574,7 @@ RSpec.describe SearchParameterParser do
   context "filtering a date field with invalid parameters" do
     it "does not filter on date if the date is invalid" do
       params = {
-        "filter_document_type" => ["cma_case"],
+        "filter_document_type" => %w[cma_case],
         "filter_opened_date" => "from:2014-bananas-01 00:00,to:2014-04-02 00:00",
       }
 
@@ -589,7 +588,7 @@ RSpec.describe SearchParameterParser do
 
     it "does not filter on date if the filter parameter name is invalid" do
       params = {
-        "filter_document_type" => ["cma_case"],
+        "filter_document_type" => %w[cma_case],
         "filter_opened_date" => "some_invalid_parameter:2014-04-01",
       }
 
@@ -603,7 +602,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands an ascending sort" do
-    p = described_class.new({ "order" => ["public_timestamp"] }, @schema)
+    p = described_class.new({ "order" => %w[public_timestamp] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -619,7 +618,7 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about disallowed sort fields" do
-    p = described_class.new({ "order" => ["spells"] }, @schema)
+    p = described_class.new({ "order" => %w[spells] }, @schema)
 
     expect(p.error).to eq(%{"spells" is not a valid sort field})
     expect(p).not_to be_valid
@@ -643,19 +642,19 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands a aggregate field" do
-    p = described_class.new({ "aggregate_organisations" => ["10"] }, @schema)
+    p = described_class.new({ "aggregate_organisations" => %w[10] }, @schema)
 
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params).to match(
-      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) })
+      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) }),
     )
   end
 
   it "understands multiple aggregate fields" do
     p = described_class.new({
-      "aggregate_organisations" => ["10"],
-      "aggregate_mainstream_browse_pages" => ["5"],
+      "aggregate_organisations" => %w[10],
+      "aggregate_mainstream_browse_pages" => %w[5],
     }, @schema)
 
     expect(p.error).to eq("")
@@ -664,29 +663,29 @@ RSpec.describe SearchParameterParser do
       expected_params(
         aggregates: {
           "organisations" => expected_aggregate_params(requested: 10),
-          "mainstream_browse_pages" => expected_aggregate_params(requested: 5)
-        }
-      )
+          "mainstream_browse_pages" => expected_aggregate_params(requested: 5),
+        },
+      ),
     )
   end
 
   it "complains about disallowed aggregates fields" do
     p = described_class.new({
-      "aggregate_spells" => ["10"],
-      "aggregate_organisations" => ["10"],
+      "aggregate_spells" => %w[10],
+      "aggregate_organisations" => %w[10],
     }, @schema)
 
     expect(p.error).to eq(%{"spells" is not a valid aggregate field})
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(
-      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) })
+      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) }),
     )
   end
 
   it "complains about invalid values for aggregate parameter" do
     p = described_class.new({
-      "aggregate_spells" => ["levitation"],
-      "aggregate_organisations" => ["magic"],
+      "aggregate_spells" => %w[levitation],
+      "aggregate_organisations" => %w[magic],
     }, @schema)
 
     expect(p.error).to eq(%{"spells" is not a valid aggregate field. Invalid value "magic" for first parameter for aggregate "organisations" (expected positive integer)})
@@ -708,7 +707,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq(%{Too many values (2) for parameter "aggregate_organisations" (must occur at most once)})
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(
-      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 5) })
+      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 5) }),
     )
   end
 
@@ -727,9 +726,9 @@ RSpec.describe SearchParameterParser do
             examples: 5,
             example_fields: %w(slug title),
             example_scope: :global,
-          )
-        }
-    )
+          ),
+        },
+    ),
 )
   end
 
@@ -745,8 +744,8 @@ RSpec.describe SearchParameterParser do
                                          "organisations" => expected_aggregate_params(
                                            requested: 10,
                                            order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
-                                       )
-                                 }
+                                       ),
+                                 },
     ))
   end
 
@@ -773,8 +772,8 @@ RSpec.describe SearchParameterParser do
                                          "organisations" => expected_aggregate_params(
                                            requested: 10,
                                            order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
-                                         )
-                                       }
+                                         ),
+                                       },
     ))
   end
 
@@ -790,8 +789,8 @@ RSpec.describe SearchParameterParser do
                                          "organisations" => expected_aggregate_params(
                                            requested: 10,
                                            scope: :all_filters,
-                                         )
-                                       }
+                                         ),
+                                       },
     ))
   end
 
@@ -829,8 +828,8 @@ RSpec.describe SearchParameterParser do
                                            examples: 5,
                                            example_fields: %w(slug title link),
                                            example_scope: :global,
-                                         )
-                                       }
+                                         ),
+                                       },
     ))
   end
 
@@ -857,8 +856,8 @@ RSpec.describe SearchParameterParser do
                                            examples: 5,
                                            example_fields: %w(slug title),
                                            example_scope: :query,
-                                         )
-                                       }
+                                         ),
+                                       },
     ))
   end
 
@@ -906,17 +905,17 @@ RSpec.describe SearchParameterParser do
 
     expect(aggregate_p).to be_valid
     expect(facet_p).to be_valid
-    expect(aggregate_p.parsed_params['aggregates']).to eq(facet_p.parsed_params['facets'])
+    expect(aggregate_p.parsed_params["aggregates"]).to eq(facet_p.parsed_params["facets"])
   end
 
   it "compalins with facets are used in combination with aggregates" do
     p = described_class.new({
       "aggregate_organisations" => %w[10],
-      "facet_mainstream_browse_pages" => ["10"],
+      "facet_mainstream_browse_pages" => %w[10],
     }, @schema)
 
     expect(p.error).to eq(
-      "aggregates can not be used in conjuction with facets, please switch to using aggregates as facets are deprecated."
+      "aggregates can not be used in conjuction with facets, please switch to using aggregates as facets are deprecated.",
     )
     expect(p).not_to be_valid
   end
@@ -962,14 +961,14 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands explain in the debug parameter" do
-    p = described_class.new({ "debug" => ["explain"] }, @schema)
+    p = described_class.new({ "debug" => %w[explain] }, @schema)
 
     expect(p).to be_valid
     expect(p.parsed_params).to match(expected_params(debug: { explain: true }))
   end
 
   it "understands disable synonyms in the debug parameter" do
-    p = described_class.new({ "debug" => ["disable_synonyms"] }, @schema)
+    p = described_class.new({ "debug" => %w[disable_synonyms] }, @schema)
 
     expect(p).to be_valid
     expect(p.parsed_params).to match(expected_params(debug: { disable_synonyms: true }))
@@ -979,18 +978,18 @@ RSpec.describe SearchParameterParser do
     p = described_class.new({ "ab_tests" => ["min_should_match_length:A"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: 'A' }))
+    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: "A" }))
   end
 
   it "understands multiple test variant parameters" do
     p = described_class.new({ "ab_tests" => ["min_should_match_length:A,other_test_case:B"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: 'A', other_test_case: 'B' }))
+    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: "A", other_test_case: "B" }))
   end
 
   it "complains about invalid test variant where no variant type is provided" do
-    p = described_class.new({ "ab_tests" => ["min_should_match_length"] }, @schema)
+    p = described_class.new({ "ab_tests" => %w[min_should_match_length] }, @schema)
 
     expect(p).not_to be_valid
     expect(p.error).to eq("Invalid ab_tests, missing type \"min_should_match_length\"")

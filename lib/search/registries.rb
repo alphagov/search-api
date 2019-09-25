@@ -1,11 +1,12 @@
 module Search
+  # rubocop:disable Metrics/BlockLength
   Registries = Struct.new(:search_server, :search_config) do
     def [](name)
       as_hash[name]
     end
 
     def as_hash
-      @registries ||= {
+      @as_hash ||= {
         organisations: organisations,
         organisation_content_ids: organisations,
         specialist_sectors: specialist_sectors,
@@ -16,11 +17,11 @@ module Search
         # Whitehall publishes the policy areas with format "policy_area" rather
         # than "topic", we will expand `policy_areas` with data from documents
         # with format `topic`.
-        policy_areas: registry_for_document_format('topic'),
-        document_series: registry_for_document_format('document_series'),
-        document_collections: registry_for_document_format('document_collection'),
-        world_locations: registry_for_document_format('world_location'),
-        people: registry_for_document_format('person'),
+        policy_areas: registry_for_document_format("topic"),
+        document_series: registry_for_document_format("document_series"),
+        document_collections: registry_for_document_format("document_collection"),
+        world_locations: registry_for_document_format("world_location"),
+        people: registry_for_document_format("person"),
       }
     end
 
@@ -47,7 +48,7 @@ module Search
           parent_organisations
           superseded_organisations
           superseding_organisations
-        }
+        },
       )
     end
 
@@ -55,7 +56,7 @@ module Search
       BaseRegistry.new(
         search_server.index_for_search([SearchConfig.govuk_index_name]),
         field_definitions,
-        "specialist_sector"
+        "specialist_sector",
       )
     end
 
@@ -71,4 +72,5 @@ module Search
       @field_definitions ||= search_server.schema.field_definitions
     end
   end
+  # rubocop:enable Metrics/BlockLength
 end

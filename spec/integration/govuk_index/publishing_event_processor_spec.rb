@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
+RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
   context "Testing via fake rabbit queue" do
     before do
       bunny_mock = BunnyMock.new
@@ -9,7 +9,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       consumer = GovukMessageQueueConsumer::Consumer.new(
         queue_name: "bigwig.test",
         processor: GovukIndex::PublishingEventProcessor.new,
-        rabbitmq_connection: bunny_mock
+        rabbitmq_connection: bunny_mock,
       )
 
       @queue = @channel.queue("bigwig.test")
@@ -23,7 +23,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       )
 
       @queue.publish(random_example.to_json, content_type: "application/json")
-      commit_index 'govuk_test'
+      commit_index "govuk_test"
 
       document = fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
 
@@ -49,7 +49,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       popularity = 1.0 / ([document_count, document_rank].min + SearchConfig.popularity_rank_offset)
 
       @queue.publish(random_example.to_json, content_type: "application/json")
-      commit_index 'govuk_test'
+      commit_index "govuk_test"
 
       document = fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
 
@@ -91,15 +91,15 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
         payload: { document_type: "help_page", payload_version: 123 },
       )
 
-      message_a = double(:msg1, payload: random_example_a, delivery_info: { routing_key: 'big.test' })
-      message_b = double(:msg2, payload: random_example_b, delivery_info: { routing_key: 'big.test' })
+      message_a = double(:msg1, payload: random_example_a, delivery_info: { routing_key: "big.test" })
+      message_b = double(:msg2, payload: random_example_b, delivery_info: { routing_key: "big.test" })
 
       expect(message_a).to receive(:ack)
       expect(message_b).to receive(:ack)
 
       GovukIndex::PublishingEventProcessor.new.process([message_a, message_b])
 
-      commit_index 'govuk_test'
+      commit_index "govuk_test"
 
       document_a = fetch_document_from_rummager(id: random_example_a["base_path"], index: "govuk_test")
       document_b = fetch_document_from_rummager(id: random_example_b["base_path"], index: "govuk_test")
@@ -119,12 +119,12 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       allow(worker).to receive(:logger).and_return(logger)
 
       random_example = generate_random_example(
-        schema: 'generic_with_external_related_links',
+        schema: "generic_with_external_related_links",
         payload: { document_type: "smart_answer", payload_version: 123 },
       )
 
-      worker.perform([['test.route', random_example]])
-      commit_index 'govuk_test'
+      worker.perform([["test.route", random_example]])
+      commit_index "govuk_test"
 
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} 'unmapped type'")
       expect {
@@ -145,7 +145,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       )
 
       expect(logger).to receive(:info).with("test.route -> UNKNOWN #{random_example['base_path']} edition")
-      worker.perform([['test.route', random_example]])
+      worker.perform([["test.route", random_example]])
     end
 
     it "will consider a format that is both safe and block listed to be blocklisted" do
@@ -160,7 +160,7 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
         payload: { document_type: "help_page", payload_version: 123 },
       )
 
-      worker.perform([['test.route', random_example]])
+      worker.perform([["test.route", random_example]])
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition")
     end
 
@@ -170,16 +170,16 @@ RSpec.describe 'GovukIndex::PublishingEventProcessorTest' do
       allow(worker).to receive(:logger).and_return(logger)
 
       homepage_example = generate_random_example(
-        schema: 'special_route',
-        payload: { document_type: "special_route", base_path: '/homepage', payload_version: 123 },
+        schema: "special_route",
+        payload: { document_type: "special_route", base_path: "/homepage", payload_version: 123 },
       )
       help_example = generate_random_example(
-        schema: 'special_route',
-        payload: { document_type: "special_route", base_path: '/help', payload_version: 123 },
+        schema: "special_route",
+        payload: { document_type: "special_route", base_path: "/help", payload_version: 123 },
       )
 
-      worker.perform([['test.route', homepage_example]])
-      worker.perform([['test.route', help_example]])
+      worker.perform([["test.route", homepage_example]])
+      worker.perform([["test.route", help_example]])
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{homepage_example['base_path']} edition")
       expect(logger).to have_received(:info).with("test.route -> INDEX #{help_example['base_path']} edition")
     end

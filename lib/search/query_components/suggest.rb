@@ -1,6 +1,6 @@
 module QueryComponents
   class Suggest < BaseComponent
-    SPELLING_FIELD = 'spelling_text'.freeze
+    SPELLING_FIELD = "spelling_text".freeze
 
     def payload
       {
@@ -12,11 +12,11 @@ module QueryComponents
             max_errors: 3,
             direct_generator: [{
               field: SPELLING_FIELD,
-              suggest_mode: 'missing',
-              sort: 'score'
-            }]
-          }
-        }
+              suggest_mode: "missing",
+              sort: "score",
+            }],
+          },
+        },
       }
     end
   end

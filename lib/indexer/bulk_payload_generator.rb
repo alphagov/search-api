@@ -45,8 +45,8 @@ module Indexer
       {
         "index" => {
           "_type" => "generic-document",
-          "_id" => (doc_hash["_id"] || doc_hash["link"])
-        }
+          "_id" => (doc_hash["_id"] || doc_hash["link"]),
+        },
       }
     end
 
@@ -54,7 +54,7 @@ module Indexer
       DocumentPreparer.new(@client, @index_name).prepared(
         doc_hash,
         popularities,
-        @is_content_index
+        @is_content_index,
       )
     end
 
@@ -69,7 +69,7 @@ module Indexer
       end
       popularities = lookup_popularities(links.compact)
       actions.flat_map { |command_hash, doc_hash|
-        if command_hash.keys == ["index"]
+        if command_hash.keys == %w[index]
           [
             command_hash,
             index_doc(doc_hash, popularities),

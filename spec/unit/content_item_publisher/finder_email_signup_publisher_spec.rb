@@ -8,7 +8,6 @@ RSpec.describe ContentItemPublisher::FinderEmailSignupPublisher do
 
   Dir.glob(signups_glob).each do |config_file|
     context "Checking #{File.basename(config_file)}" do
-
       subject(:instance) { described_class.new(finder, timestamp) }
 
       let(:finder) { YAML.load_file(config_file) }
@@ -40,7 +39,7 @@ RSpec.describe ContentItemPublisher::FinderEmailSignupPublisher do
         end
 
         it "patches links for the email signup page" do
-          assert_publishing_api_patch_links(content_id, ->(request) { JSON.parse(request.body).has_key?('links') })
+          assert_publishing_api_patch_links(content_id, ->(request) { JSON.parse(request.body).has_key?("links") })
         end
 
         it "publishes the email signup page to the Publishing API" do

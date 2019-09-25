@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe GovukIndex::ElasticsearchPresenter do
   it "identifier" do
@@ -8,7 +8,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
       _type: "generic-document",
       _id: payload["base_path"],
       version: 1,
-      version_type: "external"
+      version_type: "external",
     }
 
     presenter = elasticsearch_presenter(payload, "help_page")
@@ -46,7 +46,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
       payload = {
         "document_type" => "external_content",
         "details" => {
-          "url" => "some URL"
+          "url" => "some URL",
         },
       }
 
@@ -73,7 +73,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     let(:default_news_image_url) { "https://www.test.gov.uk/default_news_image.jpg" }
     let(:expanded_links) do
       { "primary_publishing_organisation" => [{
-        "details" => { "default_news_image" => { "url" => default_news_image_url } }
+        "details" => { "default_news_image" => { "url" => default_news_image_url } },
       }] }
     end
 
@@ -109,14 +109,14 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     end
   end
 
-  describe 'facet fields' do
+  describe "facet fields" do
     let(:expanded_links) do
       {
         "facet_groups" => [{ "content_id" => "3501d07d-12f7-4f7e-97f9-0de008d556cd" }],
         "facet_values" => [
           { "content_id" => "4577e252-45c3-4c91-a040-c9f8568d0150" },
-          { "content_id" => "5e326667-0d05-4453-b3a0-a1c6e797171e" }
-        ]
+          { "content_id" => "5e326667-0d05-4453-b3a0-a1c6e797171e" },
+        ],
       }
     end
 
@@ -132,15 +132,15 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
       allow(Indexer::PopularityLookup).to receive(:new).and_return(popularity_instance)
     end
 
-    it 'returns facet_groups' do
+    it "returns facet_groups" do
       expect(presenter.document).to include(
-        facet_groups: ["3501d07d-12f7-4f7e-97f9-0de008d556cd"]
+        facet_groups: %w[3501d07d-12f7-4f7e-97f9-0de008d556cd],
       )
     end
 
-    it 'returns facet_values' do
+    it "returns facet_values" do
       expect(presenter.document).to include(
-        facet_values: ["4577e252-45c3-4c91-a040-c9f8568d0150", "5e326667-0d05-4453-b3a0-a1c6e797171e"]
+        facet_values: %w[4577e252-45c3-4c91-a040-c9f8568d0150 5e326667-0d05-4453-b3a0-a1c6e797171e],
       )
     end
   end

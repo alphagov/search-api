@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe "external content publishing" do
   before do
@@ -8,7 +8,7 @@ RSpec.describe "external content publishing" do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "external_content.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("external_content.test")
@@ -22,7 +22,7 @@ RSpec.describe "external content publishing" do
         document_type: "external_content",
       },
       details: {
-        hidden_search_terms: ["some, search, keywords"]
+        hidden_search_terms: ["some, search, keywords"],
       },
     )
 
@@ -47,8 +47,8 @@ RSpec.describe "external content publishing" do
 
     url = "https://www.nhs.uk"
     content_id = "b7e993e1-9afa-4235-99a4-479caa240267"
-    document = { 'link' => url, 'content_id' => content_id }
-    commit_document('govuk_test', document, id: content_id, type: 'recommended-link')
+    document = { "link" => url, "content_id" => content_id }
+    commit_document("govuk_test", document, id: content_id, type: "recommended-link")
     expect_document_is_in_rummager(document, id: content_id, index: "govuk_test", type: "recommended-link")
 
     payload = {

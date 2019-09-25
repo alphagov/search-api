@@ -28,7 +28,7 @@ class BaseParameterParser
   ).freeze
 
   SORT_MAPPINGS = {
-    "title" => "title.sort"
+    "title" => "title.sort",
   }.freeze
 
   # Incoming filter fields will have their names transformed according to the
@@ -109,7 +109,7 @@ class BaseParameterParser
   #  - value.slug: sort values by the slug part of the value.
   #  - value.title: sort values by the title of the value.
   #  - value.link: sort values by the link of the value.
-  # 
+  #
   ALLOWED_AGGREGATE_SORT_OPTIONS = %w(
     filtered
     count
@@ -123,7 +123,7 @@ class BaseParameterParser
   #  - query: Return only examples that match the query and filters
   #  - global: Return examples for the aggregates regardless of whether they match
   #            the query and filters
-  ALLOWED_EXAMPLE_SCOPES = [:global, :query].freeze
+  ALLOWED_EXAMPLE_SCOPES = %i[global query].freeze
 
   # The fields which are returned by default for search results.
   DEFAULT_RETURN_FIELDS = %w(
@@ -181,7 +181,7 @@ protected
       @errors << %{Invalid value "#{value}" for #{description} (expected positive integer)}
       return nil
     end
-    if result < 0
+    if result.negative?
       @errors << %{Invalid negative value "#{value}" for #{description} (expected positive integer)}
       return nil
     end
@@ -217,6 +217,7 @@ protected
 
     value = parse_positive_integer(value, %{parameter "#{param_name}"#{description}})
     return default if value.nil?
+
     value
   end
 end

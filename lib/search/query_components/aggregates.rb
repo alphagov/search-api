@@ -22,7 +22,7 @@ module QueryComponents
           },
         },
         field_name,
-        options
+        options,
       )
     end
 
@@ -30,7 +30,7 @@ module QueryComponents
       with_filters(
         { missing: { field: field_name } },
         field_name,
-        options
+        options,
       )
     end
 
@@ -56,12 +56,12 @@ module QueryComponents
           search_params.search_config,
           base_query: applied_filter(applied_query_filters),
         ).call,
-        aggs: { 'filtered_aggregations' => query }
+        aggs: { "filtered_aggregations" => query },
       }
     end
 
     def applied_filter(applied_query_filters)
-      if applied_query_filters && applied_query_filters.count > 0
+      if applied_query_filters && applied_query_filters.count.positive?
         applied_query_filters
       else
         { match_all: {} }

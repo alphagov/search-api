@@ -14,7 +14,7 @@ module Search
         case matcher
         when String
             # casecmp returns 0 when the strings are equivalent, ignoring case
-          candidate.casecmp(matcher) == 0
+          candidate.casecmp(matcher).zero?
         when Regexp
             # match returns nil if no match, or a MatchData if any matches
           !! candidate.match(matcher)

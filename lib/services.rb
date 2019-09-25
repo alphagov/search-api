@@ -1,10 +1,10 @@
-require 'active_support/cache'
+require "active_support/cache"
 
 module Services
   def self.publishing_api
     GdsApi::PublishingApiV2.new(
-      Plek.find('publishing-api'),
-      bearer_token: ENV['PUBLISHING_API_BEARER_TOKEN'] || 'example',
+      Plek.find("publishing-api"),
+      bearer_token: ENV["PUBLISHING_API_BEARER_TOKEN"] || "example",
 
       # The cache is not threadsafe so using it can cause bulk imports to break
       disable_cache: true,
@@ -12,7 +12,7 @@ module Services
       # Currently, expanded-links consistently takes a long time for some
       # content. This is required for indexing, so it's better to wait for this
       # to complete than abort the request.
-      timeout: 20
+      timeout: 20,
     )
   end
 
@@ -26,13 +26,13 @@ module Services
   # which time out (including PUT and DELETE requests). So the first, slow,
   # request succeeds (but times out) and the second retry request returns an
   # error because the operation has already been run.
-  def self.elasticsearch(cluster: nil, hosts: ENV['ELASTICSEARCH_HOSTS'] || 'http://localhost:9200', timeout: 5, retry_on_failure: false)
+  def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_HOSTS"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
     Elasticsearch::Client.new(
       hosts: cluster ? cluster.uri : hosts,
       request_timeout: timeout,
       logger: Logging.logger[self],
       retry_on_failure: retry_on_failure,
-      transport_options: { headers: { "Content-Type" => "application/json" } }
+      transport_options: { headers: { "Content-Type" => "application/json" } },
     )
   end
 
@@ -57,6 +57,7 @@ module GdsApi
       yield
     rescue Timeout::Error, GdsApi::TimedOutException => e
       raise e if attempts >= maximum_number_of_attempts
+
       sleep sleep_time_after_attempt(attempts)
       retry
     end

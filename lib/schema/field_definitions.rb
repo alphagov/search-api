@@ -33,12 +33,15 @@ private
 
   def parse_definitions(raw)
     definitions = {}
+
+    # rubocop:disable Metrics/BlockLength
     raw.each_pair do |field_name, value|
       # Look up the field type
       type_name = value.delete("type")
       if type_name.nil?
         raise %{Missing "type" in field definition "#{field_name}" in "#{definitions_file_path}"}
       end
+
       type = @field_types.get(type_name)
 
       # Look up the children details
@@ -47,6 +50,7 @@ private
         if type.children != "named"
           raise %{Named children not valid for type "#{type_name}" in field definition "#{field_name}" in "#{definitions_file_path}"}
         end
+
         children = parse_definitions(children_hash)
       end
 
@@ -66,8 +70,11 @@ private
       unless value.empty?
         raise %{Unknown keys (#{value.keys.join(", ")}) in field definition "#{field_name}" in "#{definitions_file_path}"}
       end
+
       definitions[field_name] = definition
     end
+    # rubocop:enable Metrics/BlockLength
+
     definitions
   end
 
@@ -80,7 +87,7 @@ private
   end
 
   def load_json
-    JSON.parse(File.read(definitions_file_path, encoding: 'UTF-8'))
+    JSON.parse(File.read(definitions_file_path, encoding: "UTF-8"))
   end
 
   def definitions_file_path

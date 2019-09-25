@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::HighlightedTitle do
   it "highlights the title" do
     title = described_class.new({
       "_source" => { "title" => "A Title" },
-      "highlight" => { "title" => ["A Highlighted Title"] }
+      "highlight" => { "title" => ["A Highlighted Title"] },
     })
 
     expect(title.text).to eq("A Highlighted Title")
@@ -13,7 +13,7 @@ RSpec.describe Search::HighlightedTitle do
   it "highlights the title with synonyms" do
     title = described_class.new({
       "_source" => { "title.synonym" => "A Title" },
-      "highlight" => { "title.synonym" => ["A Highlighted Title"] }
+      "highlight" => { "title.synonym" => ["A Highlighted Title"] },
     })
 
     expect(title.text).to eq("A Highlighted Title")

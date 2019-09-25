@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'analytics/transform'
-require 'analytics/extract'
+require "spec_helper"
+require "analytics/transform"
+require "analytics/extract"
 
 RSpec.describe Analytics::Transform do
   subject(:transformer) { described_class }
@@ -14,14 +14,14 @@ RSpec.describe Analytics::Transform do
           "/an-example-page", "some_publishing_org", nil, "some page title",
           "some_document_type", "some_navigation_supertype", nil,
           "some_user_journey_supertype", "some_org, another_org, yet_another_org",
-          "20170620", nil, nil,
+          "20170620", nil, nil
         ]],
         headers: [
           "ga:productSku", "ga:productName", "ga:productBrand",
           "ga:productCategoryHierarchy", "ga:dimension72",
           "ga:dimension73", "ga:dimension74", "ga:dimension75",
           "ga:dimension76", "ga:dimension77", "ga:dimension78",
-          "ga:dimension79", "ga:dimension80", "ga:productSku",
+          "ga:dimension79", "ga:dimension80", "ga:productSku"
         ],
       )
     end

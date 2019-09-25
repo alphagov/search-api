@@ -1,5 +1,5 @@
-require 'spec_helper'
-require 'analytics/extract'
+require "spec_helper"
+require "analytics/extract"
 
 RSpec.describe Analytics::Extract do
   subject(:extractor) { described_class.new(indices) }
@@ -57,8 +57,8 @@ RSpec.describe Analytics::Extract do
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
       "format" => "answers",
     }
-    commit_document("government_test", document.merge("title" => "government title",))
-    commit_document("govuk_test", document.merge("title" => "govuk title",))
+    commit_document("government_test", document.merge("title" => "government title"))
+    commit_document("govuk_test", document.merge("title" => "govuk title"))
 
     expected_row = [
       "587b0635-2911-49e6-af68-3f0ea1b07cc5",
@@ -128,7 +128,7 @@ RSpec.describe Analytics::Extract do
 
   it "sanitises unix line breaks in titles" do
     document = {
-      "title" => <<~HEREDOC
+      "title" => <<~HEREDOC,
         A page title
         with some
         line breaks
@@ -141,7 +141,7 @@ RSpec.describe Analytics::Extract do
 
   it "sanitises windows line breaks in titles" do
     document = {
-      "title" => "A page title\r\nwith some\r\nline breaks"
+      "title" => "A page title\r\nwith some\r\nline breaks",
     }
     commit_document("government_test", document)
 
@@ -149,7 +149,7 @@ RSpec.describe Analytics::Extract do
   end
 
   it "fetches all rows" do
-    fixture_file = File.expand_path('../fixtures/content_for_analytics.json', __dir__)
+    fixture_file = File.expand_path("../fixtures/content_for_analytics.json", __dir__)
     documents = JSON.parse(File.read(fixture_file))
     documents.each do |document|
       commit_document("government_test", document)

@@ -1,8 +1,8 @@
-require 'spec_helper'
-require 'rake'
+require "spec_helper"
+require "rake"
 load "tasks/message_queue.rake"
 
-RSpec.describe Indexer::MessageProcessor, 'RakeTest' do
+RSpec.describe Indexer::MessageProcessor, "RakeTest" do
   context "when indexing published documents to publishing-api" do
     it "use GovukMessageQueueConsumer::Consumer" do
       statsd_client = Statsd.new
@@ -11,7 +11,7 @@ RSpec.describe Indexer::MessageProcessor, 'RakeTest' do
       indexer = described_class.new
       expect(described_class).to receive(:new).and_return(indexer)
 
-      consumer = double('consumer')
+      consumer = double("consumer")
       expect(consumer).to receive(:run).and_return(true)
 
       expect(GovukMessageQueueConsumer::Consumer).to receive(:new)

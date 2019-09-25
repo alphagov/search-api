@@ -7,7 +7,7 @@ module GovukIndex
       raise UnknownDocumentTypeError unless type
 
       {
-        _type: 'generic-document',
+        _type: "generic-document",
         _id: id,
         version: payload["payload_version"],
         version_type: "external",

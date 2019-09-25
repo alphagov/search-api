@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe ContentItemPublisher::FacetGroupFinderPublisher do
   before do
     GovukContentSchemaTestHelpers.configure do |config|
-      config.schema_type = 'publisher_v2'
+      config.schema_type = "publisher_v2"
       config.project_root = File.expand_path(Dir.pwd)
     end
   end
@@ -47,13 +47,13 @@ RSpec.describe ContentItemPublisher::FacetGroupFinderPublisher do
       it "patches links for the finder" do
         assert_publishing_api_patch_links(content_id, ->(request) {
                                                         JSON.parse(request.body) == {
-                                                                'links' =>
+                                                                "links" =>
                                                                   {
                                                                     "email_alert_signup" => [finder_config["signup_content_id"]],
                                                                     "facet_group" => %w(content_id_of_facet_group),
                                                                     "ordered_related_items" => finder_config["ordered_related_items"],
-                                                                    "parent" => []
-                                                                  }
+                                                                    "parent" => [],
+                                                                  },
                                                               }
                                                       })
       end

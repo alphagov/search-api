@@ -10,7 +10,7 @@ module Search
     end
 
     def present
-      result = raw_result['_source'] || {}
+      result = raw_result["_source"] || {}
 
       if schema
         result = convert_elasticsearch_array_fields(result)
@@ -43,7 +43,7 @@ module Search
             document_schema.expanded_search_result_fields[field_name].find { |allowed_value|
               allowed_value.fetch("value") == raw_value
             }
-          }
+          },
         )
       end
 
@@ -60,7 +60,7 @@ module Search
 
         out[field_name] = values
 
-        next if field_name[0] == '_'
+        next if field_name[0] == "_"
 
         next if document_schema.fields.fetch(field_name).type.multivalued
 
@@ -103,12 +103,12 @@ module Search
     end
 
     def add_virtual_fields(result)
-      if search_params.field_requested?('title_with_highlighting')
-        result['title_with_highlighting'] = HighlightedTitle.new(raw_result).text
+      if search_params.field_requested?("title_with_highlighting")
+        result["title_with_highlighting"] = HighlightedTitle.new(raw_result).text
       end
 
-      if search_params.field_requested?('description_with_highlighting')
-        result['description_with_highlighting'] = HighlightedDescription.new(raw_result).text
+      if search_params.field_requested?("description_with_highlighting")
+        result["description_with_highlighting"] = HighlightedDescription.new(raw_result).text
       end
 
       result
@@ -119,11 +119,11 @@ module Search
     end
 
     def temporarily_fix_link_field(result)
-      return result if result['link'].nil? ||
-          result['link'].starts_with?('http') ||
-          result['link'].starts_with?('/')
+      return result if result["link"].nil? ||
+        result["link"].starts_with?("http") ||
+        result["link"].starts_with?("/")
 
-      result['link'] = '/' + result['link']
+      result["link"] = "/" + result["link"]
       result
     end
   end

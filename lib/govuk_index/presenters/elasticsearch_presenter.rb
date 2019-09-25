@@ -131,7 +131,7 @@ module GovukIndex
         vessel_type:                         specialist.vessel_type,
         will_continue_on:                    specialist.will_continue_on,
         withdrawn_date:                      specialist.withdrawn_date,
-        world_locations:                     expanded_links.world_locations
+        world_locations:                     expanded_links.world_locations,
       }.reject { |_, v| v.nil? }
     end
 
@@ -181,11 +181,11 @@ module GovukIndex
 
     def slug
       if format == "specialist_sector"
-        base_path.gsub(%r{^/topic/}, '')
+        base_path.gsub(%r{^/topic/}, "")
       elsif format == "mainstream_browse_page"
-        base_path.gsub(%r{^/browse/}, '')
+        base_path.gsub(%r{^/browse/}, "")
       elsif format == "policy"
-        base_path.gsub(%r{^/government/policies/}, '')
+        base_path.gsub(%r{^/government/policies/}, "")
       end
     end
 
@@ -207,6 +207,7 @@ module GovukIndex
 
     def newslike?
       return false if common_fields.content_store_document_type == "fatality_notice"
+
       common_fields.content_purpose_subgroup == "news" ||
         common_fields.content_purpose_subgroup == "speeches_and_statements"
     end

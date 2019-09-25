@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::BestBetsChecker do
   def best_bets_query(query)
@@ -8,11 +8,11 @@ RSpec.describe Search::BestBetsChecker do
           should: [
             { match: { exact_query: query } },
             { match: { stemmed_query: query } },
-          ]
-        }
+          ],
+        },
       },
       post_filter: {
-        bool: { must: { match: { document_type: "best_bet" } } }
+        bool: { must: { match: { document_type: "best_bet" } } },
       },
       size: 1000,
       _source: { includes: %i[details stemmed_query_as_term] },
@@ -37,8 +37,8 @@ RSpec.describe Search::BestBetsChecker do
           worst_bets: worst_bets.map do |link|
             { link: link }
           end,
-        })
-      }
+        }),
+      },
     }
   end
 
@@ -46,9 +46,9 @@ RSpec.describe Search::BestBetsChecker do
     @index = double("metasearch index")
     @checker = described_class.new(query, @index)
     expect(@index).to receive(:raw_search).with(
-      best_bets_query(query)
+      best_bets_query(query),
     ).and_return(
-      bb_hits(hits)
+      bb_hits(hits),
     )
     expect(@index).to receive(:analyzed_best_bet_query).with(query).and_return(query)
   end
@@ -70,7 +70,7 @@ RSpec.describe Search::BestBetsChecker do
   context "with an exact best bet" do
     before do
       setup_checker("foo", [
-        bb_doc("foo", "exact", [["/jobsearch", 1]], [])
+        bb_doc("foo", "exact", [["/jobsearch", 1]], []),
       ])
     end
 
@@ -86,7 +86,7 @@ RSpec.describe Search::BestBetsChecker do
   context "with an exact worst bet" do
     before do
       setup_checker("foo", [
-        bb_doc("foo", "exact", [], ["/jobsearch"])
+        bb_doc("foo", "exact", [], ["/jobsearch"]),
       ])
     end
 

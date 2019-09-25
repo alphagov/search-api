@@ -58,6 +58,7 @@ class Document
       if value.is_a?(Array) && value.size > 1 && !@field_definitions[field_name].type.multivalued
         raise "Multiple values supplied for '#{field_name}' which is a single-valued field"
       end
+
       @attributes[field_name] = value
     end
   end
@@ -92,8 +93,8 @@ class Document
       [field_name.to_s, value]
     end
 
-    without_empty_values = definitions_and_values.select do |_, value|
-      ![nil, []].include?(value)
+    without_empty_values = definitions_and_values.reject do |_, value|
+      [nil, []].include?(value)
     end
 
     field_values = Hash[without_empty_values]
@@ -108,6 +109,7 @@ class Document
   def method_missing(method_name, *args)
     if valid_assignment_method?(method_name)
       raise ArgumentError, "wrong number of arguments #{args.count} for 1" unless args.size == 1
+
       set(field_name_of_assignment_method(method_name), args[0])
     elsif has_field?(method_name)
       get(method_name)

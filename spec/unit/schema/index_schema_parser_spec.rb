@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe IndexSchemaParser do
   def expect_raises_message(message)
@@ -6,7 +6,7 @@ RSpec.describe IndexSchemaParser do
   end
 
   def schema_dir
-    File.expand_path('../../../config/schema', File.dirname(__FILE__))
+    File.expand_path("../../../config/schema", File.dirname(__FILE__))
   end
 
   context "after loading standard index schemas" do
@@ -28,9 +28,9 @@ RSpec.describe IndexSchemaParser do
         hash_including({
           "manual" => @identifier_es_config,
           "link" => @identifier_es_config,
-        })
+        }),
       ).to eq(
-        es_mappings["generic-document"]["properties"]
+        es_mappings["generic-document"]["properties"],
       )
     end
   end
@@ -44,7 +44,7 @@ RSpec.describe IndexSchemaParser do
 
     it "fail if index schema specifies an unknown document_type" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({
-        "elasticsearch_types" => ["unknown_doc_type"],
+        "elasticsearch_types" => %w[unknown_doc_type],
       })
       expect_raises_message(%{Unknown document type "unknown_doc_type", in index definition in "index.json"}) { @parser.parse }
     end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 require "sitemap/sitemap"
 
 RSpec.describe PropertyBoostCalculator do
@@ -10,7 +10,7 @@ RSpec.describe PropertyBoostCalculator do
         "format3" => 2,
         "format4" => 3,
         "format5" => 10,
-      }
+      },
     })
 
     calculator = subject
@@ -26,7 +26,7 @@ RSpec.describe PropertyBoostCalculator do
     stub_boost_config({
       "format" => {
         "some_format" => 1,
-      }
+      },
     })
 
     calculator = subject
@@ -40,7 +40,7 @@ RSpec.describe PropertyBoostCalculator do
         "format1" => 10,
         "format2" => 100,
         "format3" => 1000,
-      }
+      },
     })
 
     calculator = subject
@@ -54,7 +54,7 @@ RSpec.describe PropertyBoostCalculator do
     stub_boost_config({
       "format" => {
         "some_format" => 0.3,
-      }
+      },
     })
 
     calculator = subject
@@ -66,7 +66,7 @@ RSpec.describe PropertyBoostCalculator do
     stub_boost_config({
       "some_other_property" => {
         "some_value" => 0.3,
-      }
+      },
     })
 
     calculator = subject
@@ -79,7 +79,7 @@ RSpec.describe PropertyBoostCalculator do
       "format" => {
         "format1" => 0.123,
         "format2" => 0.456,
-      }
+      },
     })
 
     calculator = subject
@@ -97,8 +97,8 @@ RSpec.describe PropertyBoostCalculator do
         "foi_release" => 0.2,
       },
       "navigation_document_supertype" => {
-        "guidance" => 0.8
-      }
+        "guidance" => 0.8,
+      },
     })
 
     calculator = subject
@@ -106,7 +106,7 @@ RSpec.describe PropertyBoostCalculator do
     document = {
       "format" => "publication",
       "content_store_document_type" => "foi_release",
-      "navigation_document_supertype" => "some_other_value"
+      "navigation_document_supertype" => "some_other_value",
     }
 
     #   1 - 2^(-format boost * document type boost * navigation supertype boost)
@@ -120,12 +120,12 @@ RSpec.describe PropertyBoostCalculator do
       "base" => {
         "format" => {
           "service_manual_guide" => 1,
-        }
+        },
       },
       "external_search" => {
         "format" => {
-          "service_manual_guide" => 2
-        }
+          "service_manual_guide" => 2,
+        },
       },
     }
     stub_full_config(config)
@@ -140,7 +140,7 @@ RSpec.describe PropertyBoostCalculator do
 
   def stub_boost_config(boosts)
     stub_full_config({
-      "base" => boosts
+      "base" => boosts,
     })
   end
 

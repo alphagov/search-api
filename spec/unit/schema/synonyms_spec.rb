@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SynonymParser do
   it "identifies the search time synonyms" do
@@ -46,17 +46,17 @@ RSpec.describe SynonymParser do
 
     expect(@index_synonyms.es_config).to eq({
         type: :synonym,
-        synonyms: ["pig, micropig", "tiny pig => tiny pig, micropig"]
+        synonyms: ["pig, micropig", "tiny pig => tiny pig, micropig"],
       })
     expect(@search_synonyms.es_config).to eq({
         type: :synonym,
-        synonyms: ["pig, micropig", "mcrpig => micropig"]
+        synonyms: ["pig, micropig", "mcrpig => micropig"],
       })
   end
 
   it "rejects unknown synonym keys" do
     config = [
-      { "other" => "pig, micropig" }
+      { "other" => "pig, micropig" },
     ]
 
     expect {
@@ -66,7 +66,7 @@ RSpec.describe SynonymParser do
 
   it "rejects missing synonym definitions" do
     config = [
-      { "search" => "micropig =>" }
+      { "search" => "micropig =>" },
     ]
 
     expect {
@@ -160,7 +160,7 @@ RSpec.describe SynonymParser do
         "index" => "mcrpig => micropig",
         "both" => "mycropig => micropig",
         "search" => "miicropig => micropig",
-      }
+      },
     ]
 
     expect {

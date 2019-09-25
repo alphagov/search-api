@@ -19,8 +19,8 @@ module Indexer
       doc_hash = prepare_if_best_bet(doc_hash)
 
       # These fields should be part of the action hash, not the document hash.
-      doc_hash.delete('_type')
-      doc_hash.delete('_id')
+      doc_hash.delete("_type")
+      doc_hash.delete("_id")
 
       doc_hash
     end
@@ -44,7 +44,7 @@ module Indexer
     def prepare_tags_field(doc_hash)
       Indexer::LinksLookup.prepare_tags(doc_hash)
     rescue Indexer::PublishingApiError => e
-      if ENV['LOG_FAILED_LINKS_LOOKUP_AND_CONTINUE'] == '1'
+      if ENV["LOG_FAILED_LINKS_LOOKUP_AND_CONTINUE"] == "1"
         puts "Unable to lookup links for link: #{doc_hash['link']}"
         doc_hash
       else
@@ -94,7 +94,7 @@ module Indexer
           },
         )
 
-        analyzed_query.fetch('tokens', []).map { |token_info|
+        analyzed_query.fetch("tokens", []).map { |token_info|
           token_info["token"]
         }.join(" ")
       rescue Elasticsearch::Transport::Transport::Errors::BadRequest
@@ -122,7 +122,7 @@ module Indexer
 
     def prepare_document_supertypes(doc_hash)
       doc_hash.merge(
-        GovukDocumentTypes.supertypes(document_type: doc_hash["content_store_document_type"])
+        GovukDocumentTypes.supertypes(document_type: doc_hash["content_store_document_type"]),
       )
     end
   end

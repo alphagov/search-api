@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'search queries' do
-  context 'aggregation' do
+RSpec.describe "search queries" do
+  context "aggregation" do
     it "returns document count" do
       build_sample_documents_on_content_indices(documents_per_index: 2)
 
@@ -19,7 +19,7 @@ RSpec.describe 'search queries' do
           "total_options" => 2,
           "missing_options" => 0,
           "scope" => "exclude_field_filter",
-        }
+        },
       )
     end
 
@@ -42,9 +42,9 @@ RSpec.describe 'search queries' do
           "total_options" => 2,
           "missing_options" => 0,
           "scope" => "exclude_field_filter",
-        }
+        },
       )
-      expect(parsed_response['aggregates']).to be_nil
+      expect(parsed_response["aggregates"]).to be_nil
     end
   end
 
@@ -67,40 +67,40 @@ RSpec.describe 'search queries' do
     end
 
     it "returns count with filter on a different field" do
-      insert_document('govuk_test', organisations: ['org1'], mainstream_browse_pages: ["browse/page/1"], format: "answer")
-      insert_document('govuk_test', organisations: ['org1'], mainstream_browse_pages: ["browse/page/2"], format: "answer")
-      insert_document('govuk_test', organisations: ['org2'], mainstream_browse_pages: ["browse/page/1"], format: "answer")
-      insert_document('govuk_test', organisations: ['org2'], mainstream_browse_pages: ["browse/page/2"], format: "answer")
-      commit_index('govuk_test')
+      insert_document("govuk_test", organisations: %w[org1], mainstream_browse_pages: ["browse/page/1"], format: "answer")
+      insert_document("govuk_test", organisations: %w[org1], mainstream_browse_pages: ["browse/page/2"], format: "answer")
+      insert_document("govuk_test", organisations: %w[org2], mainstream_browse_pages: ["browse/page/1"], format: "answer")
+      insert_document("govuk_test", organisations: %w[org2], mainstream_browse_pages: ["browse/page/2"], format: "answer")
+      commit_index("govuk_test")
 
       get "/search?aggregate_mainstream_browse_pages=2&filter_organisations=org2"
       expect(parsed_response["total"]).to eq(2)
 
       expect(parsed_response["aggregates"]["mainstream_browse_pages"]["options"]).to eq([
         { "value" => { "slug" => "browse/page/1" }, "documents" => 1 },
-        { "value" => { "slug" => "browse/page/2" }, "documents" => 1 }
+        { "value" => { "slug" => "browse/page/2" }, "documents" => 1 },
       ])
     end
   end
 
   context "migrated formats" do
     it "does not include duplicate documents in govuk index within the count" do
-      commit_document('govuk_test', { organisations: ['org1'] })
-      commit_document('government_test', { organisations: ['org1'] })
+      commit_document("govuk_test", { organisations: %w[org1] })
+      commit_document("government_test", { organisations: %w[org1] })
 
       get "/search?aggregate_organisations=10"
       expect(parsed_response["total"]).to eq(1)
 
       expect(parsed_response["aggregates"]["organisations"]["options"]).to eq([
-        { "value" => { "slug" => "org1" }, "documents" => 1 }
+        { "value" => { "slug" => "org1" }, "documents" => 1 },
       ])
     end
 
     it "returns examples before migration" do
       allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
 
-      add_sample_documents('government_test', 2)
-      add_sample_documents('govuk_test', 2)
+      add_sample_documents("government_test", 2)
+      add_sample_documents("govuk_test", 2)
 
       get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
@@ -111,10 +111,10 @@ RSpec.describe 'search queries' do
     end
 
     it "returns examples after migration" do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('answer' => :all)
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("answer" => :all)
 
-      add_sample_documents('government_test', 2, override: { "format" => "answer" })
-      add_sample_documents('govuk_test', 2)
+      add_sample_documents("government_test", 2, override: { "format" => "answer" })
+      add_sample_documents("govuk_test", 2)
 
       get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
 
@@ -127,8 +127,8 @@ RSpec.describe 'search queries' do
     it "returns examples before migration within query scope" do
       allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
 
-      add_sample_documents('government_test', 2, override: { "format" => "answer" })
-      add_sample_documents('govuk_test', 2)
+      add_sample_documents("government_test", 2, override: { "format" => "answer" })
+      add_sample_documents("govuk_test", 2)
 
       get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
 
@@ -139,10 +139,10 @@ RSpec.describe 'search queries' do
     end
 
     it "returns examples after migration within query scope" do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('answer' => :all)
+      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("answer" => :all)
 
-      add_sample_documents('government_test', 2, override: { "format" => "answer" })
-      add_sample_documents('govuk_test', 2)
+      add_sample_documents("government_test", 2, override: { "format" => "answer" })
+      add_sample_documents("govuk_test", 2)
 
       get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
 
@@ -168,7 +168,7 @@ RSpec.describe 'search queries' do
         "total_options" => 2,
         "missing_options" => 1,
         "scope" => "exclude_field_filter",
-      }
+      },
     )
   end
 
@@ -187,7 +187,7 @@ RSpec.describe 'search queries' do
         "total_options" => 1,
         "missing_options" => 0,
         "scope" => "all_filters",
-      }
+      },
     )
   end
 
@@ -200,7 +200,7 @@ RSpec.describe 'search queries' do
       parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
         .first["value"]["example_info"]["examples"]
         .map { |h| h["link"] }
-        .sort
+        .sort,
     ).to eq(["/government-1", "/govuk-1"])
   end
 

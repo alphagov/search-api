@@ -1,4 +1,4 @@
-require 'spec/support/index_helpers'
+require "spec/support/index_helpers"
 
 module IntegrationSpecHelper
   SAMPLE_DOCUMENT_ATTRIBUTES = {
@@ -22,7 +22,7 @@ module IntegrationSpecHelper
 
     # we only want to setup the before suite code once, in addition this this we only want to
     # set it up when we are running integration tests (hence the reason we do it here).
-    @before_suite_setup ||= setup_before_suite
+    @included ||= setup_before_suite
   end
 
   def self.setup_before_suite
@@ -45,12 +45,12 @@ module IntegrationSpecHelper
     allowed_hosts = Clusters.active.map(&:uri)
 
     allowed_paths = []
-    allowed_paths << '[a-z_-]+[_-]test.*'
-    allowed_paths << '_alias'
-    allowed_paths << '_bulk'
-    allowed_paths << '_reindex'
-    allowed_paths << '_search/scroll'
-    allowed_paths << '_tasks'
+    allowed_paths << "[a-z_-]+[_-]test.*"
+    allowed_paths << "_alias"
+    allowed_paths << "_bulk"
+    allowed_paths << "_reindex"
+    allowed_paths << "_search/scroll"
+    allowed_paths << "_tasks"
 
     allow_urls = %r{#{allowed_hosts.map { |host| "#{host}/(#{allowed_paths.join('|')})" }.join('|')}}
 
@@ -85,7 +85,7 @@ module IntegrationSpecHelper
       if version
         {
           version: version,
-          version_type: 'external',
+          version_type: "external",
         }
       else
         {}
@@ -102,9 +102,9 @@ module IntegrationSpecHelper
         {
           index: index_name,
           id: id,
-          type: 'generic-document',
+          type: "generic-document",
           body: atts,
-        }.merge(version_details)
+        }.merge(version_details),
       )
     }
 
@@ -115,12 +115,12 @@ module IntegrationSpecHelper
     commit_index index
 
     clusters.map do |cluster|
-      hits = client(cluster: cluster).search(index: index, size: 1000)['hits']['hits']
+      hits = client(cluster: cluster).search(index: index, size: 1000)["hits"]["hits"]
 
       next if hits.empty?
 
       client(cluster: cluster)
-        .bulk(body: (hits.map { |hit| { delete: { _index: index, _type: 'generic-document', _id: hit['_id'] } } }))
+        .bulk(body: (hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } }))
     end
 
     commit_index index
@@ -136,9 +136,9 @@ module IntegrationSpecHelper
   end
 
   def update_document(index_name, attributes, id: nil, type: "edition")
-    attributes['document_type'] ||= type
+    attributes["document_type"] ||= type
     clusters.each { |cluster|
-      client(cluster: cluster).update(index: index_name, id: id, type: 'generic-document', body: { doc: atts })
+      client(cluster: cluster).update(index: index_name, id: id, type: "generic-document", body: { doc: atts })
     }
     commit_index(index_name)
   end
@@ -165,7 +165,7 @@ module IntegrationSpecHelper
 
   def expect_document_is_in_rummager(document, type: "edition", id: nil, index:, clusters: Clusters.active)
     clusters.each { |cluster|
-      retrieved = fetch_document_from_rummager(id: id || document['link'], index: index, cluster: cluster)
+      retrieved = fetch_document_from_rummager(id: id || document["link"], index: index, cluster: cluster)
 
       retrieved_source = retrieved["_source"]
       expect(retrieved_source["document_type"]).to eq(type)
@@ -196,10 +196,10 @@ module IntegrationSpecHelper
         "indexable_content" => "Something something important content id #{i}",
         "mainstream_browse_pages" => "browse/page/#{i}",
         "format" => index_name =~ /govuk/ ? "answer" : "edition",
-        "document_type" => "edition"
+        "document_type" => "edition",
       }
       if i % 2 == 0
-        fields["specialist_sectors"] = ["farming"]
+        fields["specialist_sectors"] = %w[farming]
       end
       if short_index_name == "government"
         fields["public_timestamp"] = "#{i + 2000}-01-01T00:00:00"
@@ -212,7 +212,7 @@ module IntegrationSpecHelper
     attributes = sample_document_attributes(index_name, count, override: override)
     data = attributes.flat_map do |sample_document|
       [
-        { index: { _id: sample_document['link'], _type: 'generic-document' } },
+        { index: { _id: sample_document["link"], _type: "generic-document" } },
         sample_document,
       ]
     end
@@ -233,7 +233,7 @@ module IntegrationSpecHelper
   end
 
   def stub_message_payload(example_document, unpublishing: false)
-    routing_key = unpublishing ? 'test.unpublish' : 'test.a_routing_key'
+    routing_key = unpublishing ? "test.unpublish" : "test.a_routing_key"
     double(:message, ack: true, payload: example_document, delivery_info: { routing_key: routing_key })
   end
 
@@ -250,11 +250,11 @@ private
     end
   end
 
-  def fetch_document_from_rummager(id:, type: '_all', index:, cluster: Clusters.default_cluster)
+  def fetch_document_from_rummager(id:, type: "_all", index:, cluster: Clusters.default_cluster)
     client(cluster: cluster).get(
       index: index,
       type: type,
-      id: id
+      id: id,
     )
   end
 end

@@ -19,12 +19,12 @@ class SchemaMigrator
           dest: {
             index: index.real_name,
             version_type: "external",
-          }
+          },
         },
-        refresh: true
+        refresh: true,
       )
 
-      task_id = response.fetch('task')
+      task_id = response.fetch("task")
 
       while running_tasks.include?(task_id)
         sleep @wait_between_task_list_check
@@ -58,10 +58,10 @@ private
 
   # this is awful but is caused by the return format of the tasks lists
   def running_tasks
-    tasks = Services.elasticsearch(cluster: cluster).tasks.list(actions: '*reindex')
-    nodes = tasks['nodes'] || {}
+    tasks = Services.elasticsearch(cluster: cluster).tasks.list(actions: "*reindex")
+    nodes = tasks["nodes"] || {}
     node_details = nodes.values || []
-    tasks = node_details.flat_map { |a| a['tasks'] }
+    tasks = node_details.flat_map { |a| a["tasks"] }
     tasks.flat_map(&:keys)
   end
 

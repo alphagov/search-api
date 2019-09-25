@@ -88,7 +88,7 @@ class SearchConfig
       Cache.get(Cache::COMBINED_INDEX_SCHEMA) do
         CombinedIndexSchema.new(
           content_index_names + [govuk_index_name],
-          default_instance.schema_config
+          default_instance.schema_config,
           )
       end
     end
@@ -156,10 +156,10 @@ class SearchConfig
     client.indices.get_alias(index: alias_name).keys.first
   end
 
-  def rank_eval(requests:, metric:, indices: '*')
+  def rank_eval(requests:, metric:, indices: "*")
     client.rank_eval(
       index: indices,
-      body: { requests: requests, metric: metric }
+      body: { requests: requests, metric: metric },
     )
   end
 

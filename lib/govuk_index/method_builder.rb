@@ -3,7 +3,8 @@ module GovukIndex
     def delegate_to_payload(name, hash_key: name, convert_to_array: false)
       define_method name do
         value = payload[hash_key.to_s]
-        return nil if value.nil? || value == ''
+        return nil if value.nil? || value == ""
+
         if convert_to_array
           Array(value)
         else

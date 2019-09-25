@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe GovukIndex::CommonFieldsPresenter do
   before do
@@ -21,9 +21,9 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
   it "directly mapped fields" do
     payload = generate_random_example(
       payload: { expanded_links: {} },
-      excluded_fields: ["withdrawn_notice"],
+      excluded_fields: %w[withdrawn_notice],
       regenerate_if: ->(example) {
-        @directly_mapped_fields.any? { |field| example[field] == '' }
+        @directly_mapped_fields.any? { |field| example[field] == "" }
       },
     )
 
@@ -42,7 +42,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     payload = generate_random_example(
       payload: defined_fields,
-      excluded_fields: ["withdrawn_notice"],
+      excluded_fields: %w[withdrawn_notice],
     )
 
     presenter = common_fields_presenter(payload)
@@ -56,8 +56,8 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = {
       "document_type" => "external_content",
       "details" => {
-        "url" => "some_url"
-      }
+        "url" => "some_url",
+      },
     }
 
     presenter = common_fields_presenter(payload)
@@ -69,7 +69,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = {
       "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
       "title" => "some title",
-      "description" => "some description"
+      "description" => "some description",
     }
 
     presenter = common_fields_presenter(payload)
@@ -83,8 +83,8 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       "base_path" => "/some/path",
       "withdrawn_notice" => {
         "explanation" => "<div class=\"govspeak\"><p>test 2</p>\n</div>",
-        "withdrawn_at" => "2017-08-03T14:02:18Z"
-      }
+        "withdrawn_at" => "2017-08-03T14:02:18Z",
+      },
     }
 
     presenter = common_fields_presenter(payload)
@@ -97,16 +97,14 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     popularity = 0.0125356
     popularity_rank = 0.001
-
-    # rubocop:disable RSpec/MessageSpies
-    expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', instance_of(SearchConfig)).and_return(@popularity_lookup)
-    expect(@popularity_lookup).to receive(:lookup_popularities).with([payload['base_path']]).and_return(
+    expect(Indexer::PopularityLookup).to receive(:new).with("govuk_index", instance_of(SearchConfig)).and_return(@popularity_lookup)
+    expect(@popularity_lookup).to receive(:lookup_popularities).with([payload["base_path"]]).and_return(
       payload["base_path"] => {
         popularity_score: popularity,
         popularity_rank: popularity_rank,
-      }
+      },
     )
-    # rubocop:enable RSpec/MessageSpies
+
 
     presenter = common_fields_presenter(payload)
 
@@ -116,11 +114,9 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
   it "no popularity when no value is returned from lookup" do
     payload = { "base_path" => "/some/path" }
+    expect(Indexer::PopularityLookup).to receive(:new).with("govuk_index", instance_of(SearchConfig)).and_return(@popularity_lookup)
+    expect(@popularity_lookup).to receive(:lookup_popularities).with([payload["base_path"]]).and_return({})
 
-    # rubocop:disable RSpec/MessageSpies
-    expect(Indexer::PopularityLookup).to receive(:new).with('govuk_index', instance_of(SearchConfig)).and_return(@popularity_lookup)
-    expect(@popularity_lookup).to receive(:lookup_popularities).with([payload['base_path']]).and_return({})
-    # rubocop:enable RSpec/MessageSpies
 
     presenter = common_fields_presenter(payload)
 

@@ -24,15 +24,15 @@ module LegacyClient
 
     def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_names, type: 'generic-document', body: payload)
+      @client.search(index: @index_names, type: "generic-document", body: payload)
     end
 
     def get_document_by_link(link)
       results = raw_search(query: { term: { link: link } }, size: 1)
-      raw_result = results['hits']['hits'].first
+      raw_result = results["hits"]["hits"].first
 
       if raw_result
-        raw_result['real_index_name'] = SearchIndices::Index.strip_alias_from_index_name(raw_result['_index'])
+        raw_result["real_index_name"] = SearchIndices::Index.strip_alias_from_index_name(raw_result["_index"])
       end
 
       raw_result
@@ -42,7 +42,7 @@ module LegacyClient
       payload = bodies.flat_map { |body|
         [
           {},
-          body
+          body,
         ]
       }
       logger.debug "Request payload: #{payload.to_json}"

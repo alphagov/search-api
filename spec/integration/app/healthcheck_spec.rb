@@ -1,17 +1,15 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'HealthcheckTest' do
+RSpec.describe "HealthcheckTest" do
   let(:queues) {
     { "bulk" => 2, "default" => 1 }
   }
   let(:queue_latency) { 1.seconds }
 
   before do
-    # rubocop:disable RSpec/AnyInstance
     allow_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(queues)
     allow_any_instance_of(Sidekiq::Queue).to receive(:latency).and_return(queue_latency)
-    allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_return('status' => 'green')
-    # rubocop:enable RSpec/AnyInstance
+    allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_return("status" => "green")
   end
 
   describe "#redis_connectivity check" do
@@ -24,7 +22,7 @@ RSpec.describe 'HealthcheckTest' do
       it "returns a critical status" do
         get "/healthcheck"
 
-        expect(parsed_response['status']).to eq 'critical'
+        expect(parsed_response["status"]).to eq "critical"
       end
     end
   end
@@ -32,16 +30,14 @@ RSpec.describe 'HealthcheckTest' do
   describe "#elasticsearch_connectivity check" do
     context "when elasticsearch CANNOT be connected to" do
       before do
-        # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_raise(Faraday::Error)
-        # rubocop:enable RSpec/AnyInstance
       end
 
       it "returns a critical status" do
         get "/healthcheck"
 
-        expect(parsed_response['status']).to eq 'critical'
-        expect(parsed_response.dig('checks', 'elasticsearch_connectivity', 'status')).to eq 'critical'
+        expect(parsed_response["status"]).to eq "critical"
+        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "critical"
       end
     end
 
@@ -49,8 +45,8 @@ RSpec.describe 'HealthcheckTest' do
       it "returns an OK status" do
         get "/healthcheck"
 
-        expect(parsed_response['status']).to eq 'ok'
-        expect(parsed_response.dig('checks', 'elasticsearch_connectivity', 'status')).to eq 'ok'
+        expect(parsed_response["status"]).to eq "ok"
+        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "ok"
       end
     end
   end
@@ -68,7 +64,7 @@ RSpec.describe 'HealthcheckTest' do
 
         expect(last_response).to be_ok
 
-        expect(parsed_response.dig('checks', 'sidekiq_queue_latency', 'status')).to eq 'ok'
+        expect(parsed_response.dig("checks", "sidekiq_queue_latency", "status")).to eq "ok"
       end
     end
 
@@ -78,8 +74,8 @@ RSpec.describe 'HealthcheckTest' do
       it "retuns a warning status" do
         get "/healthcheck"
 
-        expect(parsed_response['status']).to eq 'warning'
-        expect(parsed_response.dig('checks', 'sidekiq_queue_latency', 'status')).to eq 'warning'
+        expect(parsed_response["status"]).to eq "warning"
+        expect(parsed_response.dig("checks", "sidekiq_queue_latency", "status")).to eq "warning"
       end
     end
 
@@ -90,8 +86,8 @@ RSpec.describe 'HealthcheckTest' do
       it "retuns a critical status" do
         get "/healthcheck"
 
-        expect(parsed_response['status']).to eq('critical')
-        expect(parsed_response.dig('checks', 'sidekiq_queue_latency', 'status')).to eq 'critical'
+        expect(parsed_response["status"]).to eq("critical")
+        expect(parsed_response.dig("checks", "sidekiq_queue_latency", "status")).to eq "critical"
       end
     end
   end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe QueryComponents::Filter do
   def make_search_params(filters, include_withdrawn: true)
@@ -24,17 +24,17 @@ RSpec.describe QueryComponents::Filter do
   context "search with one filter" do
     it "append the correct text filters" do
       builder = described_class.new(
-        make_search_params([text_filter("organisations", ["hm-magic"])])
+        make_search_params([text_filter("organisations", %w[hm-magic])]),
       )
 
       result = builder.payload
 
-      expect(result).to eq(bool: { must: ["terms" => { "organisations" => ["hm-magic"] }] })
+      expect(result).to eq(bool: { must: ["terms" => { "organisations" => %w[hm-magic] }] })
     end
 
     it "append the correct date filters" do
       builder = described_class.new(
-        make_search_params([make_date_filter_param("field_with_date", ["from:2014-04-01 00:00,to:2014-04-02 00:00"])])
+        make_search_params([make_date_filter_param("field_with_date", ["from:2014-04-01 00:00,to:2014-04-02 00:00"])]),
       )
 
       result = builder.payload
@@ -44,7 +44,7 @@ RSpec.describe QueryComponents::Filter do
 
     it "appends the correct boolean filters" do
       builder = described_class.new(
-        make_search_params([make_boolean_filter_param("field_with_boolean", %w(true))])
+        make_search_params([make_boolean_filter_param("field_with_boolean", %w(true))]),
       )
 
       result = builder.payload
@@ -56,12 +56,12 @@ RSpec.describe QueryComponents::Filter do
   context "search with a filter with multiple options" do
     it "have correct filter" do
       builder = described_class.new(
-        make_search_params([text_filter("organisations", ["hm-magic", "hmrc"])])
+        make_search_params([text_filter("organisations", %w[hm-magic hmrc])]),
       )
 
       result = builder.payload
 
-      expect(result).to eq(bool: { must: ["terms" => { "organisations" => ["hm-magic", "hmrc"] }] })
+      expect(result).to eq(bool: { must: ["terms" => { "organisations" => %w[hm-magic hmrc] }] })
     end
   end
 
@@ -70,19 +70,19 @@ RSpec.describe QueryComponents::Filter do
       builder = described_class.new(
         make_search_params(
           [
-            text_filter("organisations", ["hm-magic", "hmrc"]),
-            reject_filter("mainstream_browse_pages", ["benefits"]),
-          ]
-        )
+            text_filter("organisations", %w[hm-magic hmrc]),
+            reject_filter("mainstream_browse_pages", %w[benefits]),
+          ],
+        ),
       )
 
       result = builder.payload
 
       expect(result).to eq(
         bool: {
-          must: [{ "terms" => { "organisations" => ["hm-magic", "hmrc"] } }],
+          must: [{ "terms" => { "organisations" => %w[hm-magic hmrc] } }],
           must_not: [{ "terms" => { "mainstream_browse_pages" => %w[benefits] } }],
-        }
+        },
       )
     end
   end
@@ -92,10 +92,10 @@ RSpec.describe QueryComponents::Filter do
       builder = described_class.new(
         make_search_params(
           [
-            text_filter("organisations", ["hm-magic", "hmrc"], multivalue_query: :all),
+            text_filter("organisations", %w[hm-magic hmrc], multivalue_query: :all),
             reject_filter("mainstream_browse_pages", %w[benefits government], multivalue_query: :all),
-          ]
-        )
+          ],
+        ),
       )
 
       result = builder.payload
@@ -105,22 +105,22 @@ RSpec.describe QueryComponents::Filter do
           must: [{ bool:
                     { must: [
                          {
-                           term: { "organisations" => "hm-magic" }
+                           term: { "organisations" => "hm-magic" },
                          },
                          {
-                           term: { "organisations" => "hmrc" }
-                         }
+                           term: { "organisations" => "hmrc" },
+                         },
                        ] } }],
           must_not: [{ bool:
                        { must: [
                          {
-                           term: { "mainstream_browse_pages" => "benefits" }
+                           term: { "mainstream_browse_pages" => "benefits" },
                          },
                          {
-                           term: { "mainstream_browse_pages" => "government" }
-                         }
-                       ] } }]
-        }
+                           term: { "mainstream_browse_pages" => "government" },
+                         },
+                       ] } }],
+        },
                         )
     end
   end
@@ -130,10 +130,10 @@ RSpec.describe QueryComponents::Filter do
       builder = described_class.new(
         make_search_params(
           [
-            text_filter("organisations", ["hm-magic", "hmrc"]),
-            text_filter("mainstream_browse_pages", ["levitation"]),
+            text_filter("organisations", %w[hm-magic hmrc]),
+            text_filter("mainstream_browse_pages", %w[levitation]),
           ],
-        )
+        ),
       )
 
       result = builder.payload
@@ -141,10 +141,10 @@ RSpec.describe QueryComponents::Filter do
       expect(result).to eq(
         bool: {
           must: [
-            { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
+            { "terms" => { "organisations" => %w[hm-magic hmrc] } },
             { "terms" => { "mainstream_browse_pages" => %w[levitation] } },
-          ].compact
-        }
+          ].compact,
+        },
       )
     end
   end

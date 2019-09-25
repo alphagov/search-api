@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::SuggestionBlocklist do
   context "with an organisation registry" do
     def blocklist
       described_class.new(
-        { organisations: stubbed_organisation_registry }
+        { organisations: stubbed_organisation_registry },
       )
     end
 
@@ -13,10 +13,10 @@ RSpec.describe Search::SuggestionBlocklist do
         "link" => "/government/organisations/ministry-of-defence",
         "title" => "Ministry of Defence",
         "acronym" => "MoD",
-        "organisation_type" => "Ministerial department"
+        "organisation_type" => "Ministerial department",
       }
 
-      instance_double("BaseRegistry", 'organisation_registry', all: [mod_organisation])
+      instance_double("BaseRegistry", "organisation_registry", all: [mod_organisation])
     end
 
     it "correct normal strings" do

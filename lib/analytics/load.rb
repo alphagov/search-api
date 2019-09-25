@@ -1,4 +1,4 @@
-require 'analytics/load_service'
+require "analytics/load_service"
 
 module Analytics
   class Load

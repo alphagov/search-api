@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
   it "generates an identifier for Elasticsearch" do
@@ -20,7 +20,7 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
       _type: "generic-document",
       _id: "/cheese",
       version: 15,
-      version_type: "external"
+      version_type: "external",
     }
 
     presenter = described_class.new(payload: payload)

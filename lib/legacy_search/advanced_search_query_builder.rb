@@ -21,7 +21,7 @@ module LegacySearch
 
     def unknown_sort_key
       if @sort_order
-        @unknown_sort_key ||= @sort_order.keys - @mappings['generic-document']['properties'].keys
+        @unknown_sort_key ||= @sort_order.keys - @mappings["generic-document"]["properties"].keys
       else
         []
       end
@@ -34,8 +34,8 @@ module LegacySearch
           .select { |_, value| invalid_boolean_property_value?(value) }
     end
 
-    BOOLEAN_TRUTHY = /\A(true|1)\Z/i
-    BOOLEAN_FALSEY = /\A(false|0)\Z/i
+    BOOLEAN_TRUTHY = /\A(true|1)\Z/i.freeze
+    BOOLEAN_FALSEY = /\A(false|0)\Z/i.freeze
     def invalid_boolean_property_value?(value)
       (value.to_s !~ BOOLEAN_TRUTHY) && (value.to_s !~ BOOLEAN_FALSEY)
     end
@@ -70,20 +70,20 @@ module LegacySearch
       errors << "Sorting on unknown property #{unknown_sort_key.inspect}" if unknown_sort_key.any?
       errors << invalid_boolean_properties.map { |p, v| "Invalid value #{v.inspect} for boolean property \"#{p}\"" } if invalid_boolean_properties.any?
       errors << invalid_date_properties.map { |p, v| "Invalid value #{v.inspect} for date property \"#{p}\"" } if invalid_date_properties.any?
-      errors.flatten.join('. ')
+      errors.flatten.join(". ")
     end
 
     def query_hash
       {
         query: {
           bool: {
-            must: keyword_query_hash
-          }
+            must: keyword_query_hash,
+          },
         },
         post_filter: {
           bool: {
-            must: filter_array
-          }
+            must: filter_array,
+          },
         },
       }.merge(order_query_hash)
     end
@@ -100,17 +100,17 @@ module LegacySearch
                       query: escape(@keywords),
                       fields: ["title^3"],
                       default_operator: "and",
-                      analyzer: "default"
-                    }
+                      analyzer: "default",
+                    },
                   },
                   {
                     query_string: {
                       query: escape(@keywords),
-                      analyzer: "with_search_synonyms"
-                    }
-                  }
-                ]
-              }
+                      analyzer: "with_search_synonyms",
+                    },
+                  },
+                ],
+              },
             },
             functions: [
               filter: { term: { search_format_types: "edition" } },
@@ -119,12 +119,12 @@ module LegacySearch
                   lang: "painless",
                   inline: "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
                   params: {
-                    now: time_in_millis_to_nearest_minute
+                    now: time_in_millis_to_nearest_minute,
                   },
                 },
-              }
-            ]
-          }
+              },
+            ],
+          },
         }
       else
         { match_all: {} }

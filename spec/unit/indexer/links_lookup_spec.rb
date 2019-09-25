@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Indexer::LinksLookup do
   include GdsApi::TestHelpers::PublishingApiV2
 
   let(:content_id) { "DOCUMENT_CONTENT_ID" }
-  let(:endpoint) { Plek.current.find('publishing-api') + '/v2' }
+  let(:endpoint) { Plek.current.find("publishing-api") + "/v2" }
   let(:expanded_links_url) { endpoint + "/expanded-links/" + content_id }
 
   it "retry links on timeout" do

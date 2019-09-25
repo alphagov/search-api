@@ -17,7 +17,7 @@ module Search
       return {} if @response_aggregates.nil?
 
       search_params.aggregates.reduce({}) do |result, (field_name, aggregate_params)|
-        if aggregate_params[:examples] > 0
+        if aggregate_params[:examples].positive?
           result[field_name] = fetch_for_field(field_name, aggregate_params)
         end
         result
@@ -43,7 +43,7 @@ module Search
         filter = Search::FormatMigrator.new(search_params.search_config).call
       end
 
-      aggregate_options = @response_aggregates.dig(field_name, 'filtered_aggregations', "buckets") || []
+      aggregate_options = @response_aggregates.dig(field_name, "filtered_aggregations", "buckets") || []
 
       slugs = aggregate_options.map { |option|
         option["key"]
@@ -70,7 +70,7 @@ module Search
           query: {
             bool: {
               must: query,
-            }
+            },
           },
           post_filter: { bool: { must: filter } },
           size: example_count,
@@ -98,7 +98,7 @@ module Search
     # Fetch aggregate examples for a set of slugs
     def fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
       searches = aggregate_example_searches(field_name, slugs, example_count,
-                                        example_fields, query, filter)
+                                            example_fields, query, filter)
       responses = @index.msearch(searches)
       response_list = responses["responses"]
       prepare_response(slugs, response_list)
@@ -118,7 +118,7 @@ module Search
 
     def apply_multivalued(document_attrs)
       document_attrs.reduce({}) { |result, (field_name, values)|
-        if field_name[0] == '_'
+        if field_name[0] == "_"
           # Special fields are always returned as single values.
           result[field_name] = values
           return result

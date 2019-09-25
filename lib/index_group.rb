@@ -33,7 +33,7 @@ module SearchIndices
       }
       @index_creation_client.indices.create(
         index: index_name,
-        body: index_payload
+        body: index_payload,
       )
 
       logger.info "Created index #{index_name}"
@@ -125,8 +125,8 @@ module SearchIndices
     end
 
     def alias_map(include_closed: false)
-      expand_wildcards = ['open']
-      expand_wildcards << 'closed' if include_closed
+      expand_wildcards = %w[open]
+      expand_wildcards << "closed" if include_closed
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
       indices = @client.indices.get(index: "#{@name}*", expand_wildcards: expand_wildcards)

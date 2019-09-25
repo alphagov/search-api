@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::QueryParameters do
   context "quoted_search_phrase?" do

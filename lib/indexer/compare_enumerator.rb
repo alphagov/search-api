@@ -48,7 +48,7 @@ module Indexer
         client: client,
         index_names: index_name,
         search_body: search_body,
-        batch_size: BATCH_SIZE
+        batch_size: BATCH_SIZE,
       ) do |document|
         flattened_document(document)
       end
@@ -61,7 +61,7 @@ module Indexer
       }
 
       result["_root_version"] = document["_version"] if @options[:include_version]
-      result.merge(document['_source'])
+      result.merge(document["_source"])
     end
 
   private
@@ -76,7 +76,8 @@ module Indexer
 
     def compare_key(data)
       return nil if data.nil?
-      [data['_root_type'], data['_root_id']]
+
+      [data["_root_type"], data["_root_id"]]
     end
 
     def client

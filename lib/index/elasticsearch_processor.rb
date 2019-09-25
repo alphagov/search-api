@@ -29,8 +29,9 @@ module Index
 
     def commit
       return nil if @actions.empty?
+
       @client.bulk(
-        body: @actions
+        body: @actions,
       )
     end
   end

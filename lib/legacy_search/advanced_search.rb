@@ -35,7 +35,7 @@ module LegacySearch
       starting_index = page <= 1 ? 0 : (per_page * (page - 1))
       payload = {
         "from" => starting_index,
-        "size" => per_page
+        "size" => per_page,
       }
 
       payload.merge!(query_builder.query_hash)

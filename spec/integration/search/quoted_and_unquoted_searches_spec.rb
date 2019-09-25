@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'QuotedAndUnquotedSearchTest' do
+RSpec.describe "QuotedAndUnquotedSearchTest" do
   before do
     # `@@registries` are set in Rummager and is *not* reset between tests. To
     # prevent caching issues we manually clear them here to make a "new" app.
@@ -63,21 +63,21 @@ private
     commit_document(
       "government_test",
       "title" => "This is about London and its environs",
-      "indexable_content" => 'London is a world-class city with a modern transport infrastucture',
+      "indexable_content" => "London is a world-class city with a modern transport infrastucture",
       "link" => "/london-and-environs",
     )
 
     commit_document(
       "government_test",
       "title" => "This is about the transport in Britain",
-      "indexable_content" => 'Britain has a developed transport infrastructure, especially in London',
+      "indexable_content" => "Britain has a developed transport infrastructure, especially in London",
       "link" => "/transport-in-britain",
     )
 
     commit_document(
       "government_test",
       "title" => "Transport for London formerly known as London Transport",
-      "indexable_content" => 'Transport for London used to be known as London Transport',
+      "indexable_content" => "Transport for London used to be known as London Transport",
       "link" => "/transport-for-london",
     )
   end
@@ -86,14 +86,14 @@ private
     commit_document(
       "government_test",
       "title" => "Driving abroad",
-      "indexable_content" => 'Driving abroad can be tricky.  For a start, they drive on the wrong side of the road',
+      "indexable_content" => "Driving abroad can be tricky.  For a start, they drive on the wrong side of the road",
       "link" => "/driving-abroad",
     )
 
     commit_document(
       "government_test",
       "title" => "Driving overseas",
-      "indexable_content" => 'Driving overseas can be tricky.  For a start, they drive on the wrong side of the road',
+      "indexable_content" => "Driving overseas can be tricky.  For a start, they drive on the wrong side of the road",
       "link" => "/driving-overseas",
     )
   end
@@ -102,14 +102,14 @@ private
     commit_document(
       "government_test",
       "title" => "Dog ownership",
-      "indexable_content" => 'Owning a dog is a lifelong commitment',
+      "indexable_content" => "Owning a dog is a lifelong commitment",
       "link" => "/dog-ownership",
     )
 
     commit_document(
       "government_test",
       "title" => "Problem Dogs",
-      "indexable_content" => 'Dogs which attack people can be put down and the owner prosecuted',
+      "indexable_content" => "Dogs which attack people can be put down and the owner prosecuted",
       "link" => "/problem_dogs",
     )
   end

@@ -2,7 +2,8 @@ class Sitemap
   SUB_DIRECTORY = "sitemaps".freeze
 
   def initialize(directory, timestamp = Time.now.utc)
-    raise 'Sitemap directory is required' unless directory
+    raise "Sitemap directory is required" unless directory
+
     @output_path = File.join(directory, SUB_DIRECTORY)
     @directory = directory
     @timestamp = timestamp
@@ -55,7 +56,7 @@ class Sitemap
     index_filename = "sitemap_#{@timestamp.strftime('%FT%H')}.xml"
     index_full_path = File.join(@output_path, index_filename)
     File.open(index_full_path, "w") do |sitemap_index_file|
-      builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+      builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           sitemap_filenames.each do |sitemap_filename|
             xml.sitemap {

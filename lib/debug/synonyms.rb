@@ -14,25 +14,25 @@ module Debug
           query: {
             multi_match: {
               "query" => query,
-              "fields" => %w(title.synonym^1000 description.synonym)
-            }
+              "fields" => %w(title.synonym^1000 description.synonym),
+            },
           },
           highlight: {
             "fields" => { "title.synonym" => {}, "description.synonym" => {} },
             "pre_tags" => pre_tags,
-            "post_tags" => post_tags
-          }
+            "post_tags" => post_tags,
+          },
         }
 
-        client.search(index: index, analyzer: 'with_search_synonyms', body: search_query)
+        client.search(index: index, analyzer: "with_search_synonyms", body: search_query)
       end
 
       def analyze_query(query)
-        client.indices.analyze index: index, body: { text: query, analyzer: 'with_search_synonyms' }
+        client.indices.analyze index: index, body: { text: query, analyzer: "with_search_synonyms" }
       end
 
       def analyze_index(query)
-        client.indices.analyze index: index, body: { text: query, analyzer: 'with_index_synonyms' }
+        client.indices.analyze index: index, body: { text: query, analyzer: "with_index_synonyms" }
       end
     end
   end

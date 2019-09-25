@@ -109,9 +109,9 @@ private
     quoted = []
     unquoted = []
 
-    current_keyword = ''
+    current_keyword = ""
     is_inside_quote = false
-    query.split('').each do |c|
+    query.split("").each do |c|
       if c == '"'
         current_keyword = current_keyword.strip
         if is_inside_quote
@@ -120,7 +120,7 @@ private
           unquoted << current_keyword unless current_keyword.empty?
         end
         is_inside_quote = !is_inside_quote
-        current_keyword = ''
+        current_keyword = ""
       else
         current_keyword << c
       end
@@ -131,7 +131,7 @@ private
     unquoted << current_keyword unless current_keyword.empty?
 
     {
-      unquoted: unquoted.join(' '),
+      unquoted: unquoted.join(" "),
       quoted: quoted,
     }
   end
@@ -150,12 +150,12 @@ private
     end
   end
 
-  def normalize_unicode(s, description)
+  def normalize_unicode(string, description)
     normalizer = UNF::Normalizer.instance
     begin
       # Put strings into NFKC-normal form to ensure that accent handling works
       # correctly in elasticsearch.
-      normalizer.normalize(s, :nfkc).strip
+      normalizer.normalize(string, :nfkc).strip
     rescue ArgumentError
       @errors << %{Invalid unicode in #{description}}
       return nil
@@ -172,7 +172,8 @@ private
       # elasticsearch.
       return nil
     end
-    if order.start_with?('-')
+
+    if order.start_with?("-")
       field = order[1..-1]
       dir = "desc"
     else
@@ -192,6 +193,7 @@ private
     if fields.empty?
       return DEFAULT_RETURN_FIELDS
     end
+
     disallowed_fields = fields - allowed_return_fields
     fields = fields - disallowed_fields
 
@@ -203,7 +205,7 @@ private
 
   def validate_filter_parameters(parameter_hashes)
     allowed, disallowed = parameter_hashes.partition { |parameter_hash|
-      allowed_filter_fields.include?(parameter_hash['name'])
+      allowed_filter_fields.include?(parameter_hash["name"])
     }
 
     disallowed.each do |parameter_hash|
@@ -225,23 +227,23 @@ private
     end
     matches.compact.map do |match|
       captures = match.named_captures
-      full_name = captures['full_name']
-      captures.merge({ 'values' => parameters[full_name] })
+      full_name = captures["full_name"]
+      captures.merge({ "values" => parameters[full_name] })
     end
   end
 
   def filters
     filter_hashes = analyze_filters(@params)
 
-    @used_params.concat(filter_hashes.map { |h| h['full_name'] })
+    @used_params.concat(filter_hashes.map { |h| h["full_name"] })
 
     validated_hashes = validate_filter_parameters(filter_hashes)
     result = validated_hashes.map do |hash|
       build_filter(
-        filter_name_lookup(hash['name']),
-        hash.fetch('values'),
-        hash.fetch('operation').to_sym,
-        (hash.fetch('multivalue_query') || 'any').to_sym
+        filter_name_lookup(hash["name"]),
+        hash.fetch("values"),
+        hash.fetch("operation").to_sym,
+        (hash.fetch("multivalue_query") || "any").to_sym,
       )
     end
     result.compact
@@ -259,7 +261,7 @@ private
   end
 
   def build_filter(field_name, values, operation, multivalue_query)
-    if field_name == 'document_type'
+    if field_name == "document_type"
       filter_type = "text"
     else
       filter_type = @schema.field_definitions.fetch(field_name).type.filter_type
@@ -313,7 +315,7 @@ private
   end
 
   class DateFieldFilter < Filter
-    DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
+    DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/.freeze
 
     def initialize(field_name, values, operation, multivalue_query)
       super
@@ -359,7 +361,7 @@ private
       else
         date
       end
-    rescue
+    rescue StandardError
       @errors << %{Invalid "#{label}" value "#{date_string}" for parameter "#{field_name}" (expected ISO8601 date)}
       null_date
     end
@@ -399,7 +401,7 @@ private
           value
         else
           @errors << %{#{field_name} requires a boolean (true or false)}
-          'false'
+          "false"
         end
       }
     end
@@ -429,7 +431,6 @@ private
 
     debug_options.each do |option|
       case option
-      when ""
       when "disable_best_bets"
         options[:disable_best_bets] = true
       when "disable_popularity"
@@ -447,7 +448,7 @@ private
       when "show_query"
         options[:show_query] = true
       else
-        @errors << %{Unknown debug option "#{option}"}
+        @errors << %{Unknown debug option "#{option}"} unless option.blank?
       end
     end
 
@@ -458,7 +459,7 @@ private
     @ab_tests ||=
       begin
         variants = character_separated_param("ab_tests")
-        variants = variants.map { |variant| variant.split(':', 2) }
+        variants = variants.map { |variant| variant.split(":", 2) }
 
         variants.each_with_object({}) do |(variant_name, variant_code), variants_hash|
           if variant_code.blank?

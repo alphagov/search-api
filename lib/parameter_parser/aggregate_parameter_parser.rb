@@ -39,7 +39,7 @@ private
       example_scope: example_scope,
     }
 
-    if @parsed_params[:examples] > 0 && !ALLOWED_EXAMPLE_SCOPES.include?(@parsed_params[:example_scope])
+    if @parsed_params[:examples].positive? && !ALLOWED_EXAMPLE_SCOPES.include?(@parsed_params[:example_scope])
       # global scope means that examples are looked up for each aggregate value
       # across the whole collection, not just for documents matching the query.
       # This is likely to be a surprising default, so we require that callers
@@ -84,7 +84,7 @@ private
 
   def order
     orders = character_separated_param("order", ":").map { |order|
-      if order.start_with?('-')
+      if order.start_with?("-")
         [order[1..-1], -1]
       else
         [order, 1]
@@ -126,6 +126,7 @@ private
     if fields.empty?
       return DEFAULT_AGGREGATE_EXAMPLE_FIELDS
     end
+
     disallowed_fields = fields - allowed_return_fields
     fields = fields - disallowed_fields
 

@@ -27,7 +27,7 @@ module ContentItemPublisher
       links = {
         "email_alert_signup" => email_alert_signup,
         "parent" => content_item_parent,
-        "ordered_related_items" => ordered_related_items
+        "ordered_related_items" => ordered_related_items,
       }.merge(facet_group)
 
       { content_id: content_id, links: links }

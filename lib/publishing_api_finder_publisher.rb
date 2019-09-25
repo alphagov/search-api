@@ -17,8 +17,8 @@ private
 
   def publishing_api
     @publishing_api ||= GdsApi::PublishingApiV2.new(
-      Plek.new.find('publishing-api'),
-      bearer_token: ENV['PUBLISHING_API_BEARER_TOKEN'] || 'example',
+      Plek.new.find("publishing-api"),
+      bearer_token: ENV["PUBLISHING_API_BEARER_TOKEN"] || "example",
       timeout: 10,
     )
   end
@@ -102,8 +102,8 @@ class FinderEmailSignupContentItemPresenter
       "subscription_list_title_prefix" => details.fetch("subscription_list_title_prefix", {}),
       "email_filter_facets" => email_filter_facets,
     ).except("canonical_link", "document_noun",
-      "facets", "filter", "generic_description",
-      "reject", "summary", "sort")
+             "facets", "filter", "generic_description",
+             "reject", "summary", "sort")
   end
 
   def present
@@ -139,9 +139,9 @@ class FinderEmailSignupContentItemPresenter
             "key" => av["value"],
             "radio_button_name" => av["label"],
             "topic_name" => av["label"],
-            "prechecked" => false
+            "prechecked" => false,
           }
-        end
+        end,
       }
     end
   end

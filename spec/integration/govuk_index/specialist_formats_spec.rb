@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'SpecialistFormatTest' do
+RSpec.describe "SpecialistFormatTest" do
   before do
     bunny_mock = BunnyMock.new
     @channel = bunny_mock.start.channel
@@ -8,7 +8,7 @@ RSpec.describe 'SpecialistFormatTest' do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "bigwig.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("bigwig.test")
@@ -25,7 +25,7 @@ RSpec.describe 'SpecialistFormatTest' do
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
-    expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: 'edition')
+    expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: "edition")
   end
 
   it "specialist documents are correctly indexed" do
@@ -66,8 +66,8 @@ RSpec.describe 'SpecialistFormatTest' do
   end
 
   it "esi documents are correctly indexed" do
-    publisher_document_type = 'esi_fund'
-    search_document_type = 'european_structural_investment_fund'
+    publisher_document_type = "esi_fund"
+    search_document_type = "european_structural_investment_fund"
 
     random_example = generate_random_example(
       schema: "specialist_document",
@@ -80,7 +80,7 @@ RSpec.describe 'SpecialistFormatTest' do
     expect_document_is_in_rummager(
       { "link" => random_example["base_path"], "format" => search_document_type },
       index: "govuk_test",
-      type: search_document_type
+      type: search_document_type,
     )
   end
 

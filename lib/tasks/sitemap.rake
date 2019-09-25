@@ -17,7 +17,7 @@ namespace :sitemap do
 
   desc "Generate new sitemap files and upload to S3"
   task :generate_and_upload do
-    @bucket_name = ENV['AWS_S3_BUCKET_NAME']
+    @bucket_name = ENV["AWS_S3_BUCKET_NAME"]
     raise "Missing required AWS_S3_BUCKET_NAME" if @bucket_name.nil?
 
     Dir.mktmpdir do |output_directory|
@@ -26,13 +26,13 @@ namespace :sitemap do
       filenames[:sitemaps].each do |filename, link_filename|
         upload_to_s3(
           "#{output_directory}/#{Sitemap::SUB_DIRECTORY}/#{filename}",
-          "#{Sitemap::SUB_DIRECTORY}/#{link_filename}"
+          "#{Sitemap::SUB_DIRECTORY}/#{link_filename}",
         )
       end
 
       upload_to_s3(
         "#{output_directory}/#{Sitemap::SUB_DIRECTORY}/#{filenames[:index]}",
-        "sitemap.xml"
+        "sitemap.xml",
       )
     end
   end

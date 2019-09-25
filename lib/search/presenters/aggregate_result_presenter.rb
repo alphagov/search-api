@@ -15,12 +15,13 @@ module Search
       result = {}
       aggregates.each do |field, aggregate_info|
         next if field =~ /_with_missing_value$/
+
         aggregate_parameters = search_params.aggregates[field]
 
-        options = aggregate_info['filtered_aggregations']["buckets"]
+        options = aggregate_info["filtered_aggregations"]["buckets"]
         result[field] = {
           options: aggregate_options(field, options, aggregate_parameters),
-          documents_with_no_value: aggregates["#{field}_with_missing_value"]['filtered_aggregations']["doc_count"],
+          documents_with_no_value: aggregates["#{field}_with_missing_value"]["filtered_aggregations"]["doc_count"],
           total_options: options.length,
           missing_options: [options.length - aggregate_parameters[:requested], 0].max,
           scope: aggregate_parameters[:scope],
@@ -51,9 +52,8 @@ module Search
 
       option_objects = unique_options.map { |term, count|
         make_aggregate_option(field, term, count,
-          applied_options.include?(term),
-          aggregate_parameters[:order],
-        )
+                              applied_options.include?(term),
+                              aggregate_parameters[:order])
       }
 
       top_aggregate_options(option_objects, aggregate_parameters[:requested])
@@ -99,7 +99,7 @@ module Search
     # which might actually be useful.
     def top_aggregate_options(options, requested_count)
       suggested_options = options.sort.select { |option|
-        option.count > 0
+        option.count.positive?
       }.take(requested_count)
       applied_options = options.select(&:applied)
       suggested_options.concat(applied_options).uniq.sort.map(&:as_hash)

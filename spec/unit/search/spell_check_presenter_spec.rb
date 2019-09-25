@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::SpellCheckPresenter do
   context "#present" do
@@ -9,13 +9,13 @@ RSpec.describe Search::SpellCheckPresenter do
             "text" => "some query",
             "options" => [{
               "text" => "the first suggestion",
-              "score" => 0.17877324
+              "score" => 0.17877324,
             }, {
               "text" => "the second suggestion",
-              "score" => 0.14231323
-            }]
-          }]
-        }
+              "score" => 0.14231323,
+            }],
+          }],
+        },
       }
 
       presenter = described_class.new(es_response)

@@ -21,6 +21,7 @@ module SearchIndices
       @client = build_client
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
+
       @mappings = mappings
       @search_config = search_config
       @elasticsearch_types = @search_config.schema_config.elasticsearch_types(base_index_name)
@@ -32,7 +33,7 @@ module SearchIndices
     # The regex takes the string until the first digit. After that, strip any
     # trailing dash from the string.
     def self.strip_alias_from_index_name(aliased_index_name)
-      aliased_index_name.match(%r[^\D+]).to_s.chomp('-')
+      aliased_index_name.match(%r[^\D+]).to_s.chomp("-")
     end
 
     def real_name
@@ -143,11 +144,11 @@ module SearchIndices
           "bool" => {
             "must_not" => {
               "terms" => {
-                "format" => exclude_formats
-              }
-            }
-          }
-        }
+                "format" => exclude_formats,
+              },
+            },
+          },
+        },
       }
 
       # Set off a scan query to get back a scroll ID and result count
@@ -175,7 +176,7 @@ module SearchIndices
 
     def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_name, type: 'generic-document', body: payload)
+      @client.search(index: @index_name, type: "generic-document", body: payload)
     end
 
     # Convert a best bet query to a string formed by joining the normalised
@@ -192,7 +193,7 @@ module SearchIndices
           },
         )
 
-        analyzed_query.fetch('tokens', []).map { |token_info|
+        analyzed_query.fetch("tokens", []).map { |token_info|
           token_info["token"]
         }.join(" ")
       rescue Elasticsearch::Transport::Transport::Errors::BadRequest
@@ -202,7 +203,7 @@ module SearchIndices
 
     def delete(id)
       begin
-        @client.delete(index: @index_name, type: 'generic-document', id: id)
+        @client.delete(index: @index_name, type: "generic-document", id: id)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true
@@ -226,9 +227,9 @@ module SearchIndices
       # type.  For backwards compact, if it starts with anything else currently
       # assume that the type is edition.
       if (m = link.match(/\A(edition|best_bet)\/(.*)\Z/))
-        return [m[1], m[2]]
+        [m[1], m[2]]
       else
-        return ["edition", link]
+        ["edition", link]
       end
     end
 

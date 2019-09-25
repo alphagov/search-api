@@ -9,7 +9,7 @@ module Index
 
     def valid!(response)
       action_type, details = response.first # response is a hash with a single [key, value] pair
-      status = details['status']
+      status = details["status"]
 
       if (200..399).cover?(status)
         logger.debug("Processed #{action_type} with status #{status}")
@@ -28,15 +28,15 @@ module Index
 
     def valid?(response)
       action_type, details = response.first # response is a hash with a single [key, value] pair
-      status = details['status']
+      status = details["status"]
 
       if (200..399).cover?(status)
         logger.debug("Processed #{action_type} with status #{status}")
         Services.statsd_client.increment("#{@namespace}.elasticsearch.#{action_type}")
-      elsif action_type == 'delete' && details['status'] == 404 # failed while attempting to delete missing record so just ignore it
+      elsif action_type == "delete" && details["status"] == 404 # failed while attempting to delete missing record so just ignore it
         logger.info("Tried to delete a document that wasn't there; ignoring.")
         Services.statsd_client.increment("#{@namespace}.elasticsearch.already_deleted")
-      elsif details['status'] == 409
+      elsif details["status"] == 409
         # A version conflict indicates that messages were processed out of
         # order. This is not expected to happen often but is safe to ignore.
         logger.info("#{action_type} version is outdated; ignoring.")

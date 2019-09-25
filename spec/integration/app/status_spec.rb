@@ -1,15 +1,15 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'StatusTest' do
+RSpec.describe "StatusTest" do
   it "shows queue job count" do
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
-      { "bulk" => 12 }
+      { "bulk" => 12 },
     )
 
     get "/_status"
 
     expect(last_response).to be_ok
-    expect(parsed_response["queues"].keys).to eq(["bulk"])
+    expect(parsed_response["queues"].keys).to eq(%w[bulk])
     expect(parsed_response["queues"]["bulk"]["jobs"]).to eq(12)
   end
 
@@ -18,7 +18,7 @@ RSpec.describe 'StatusTest' do
 
     expect(Sidekiq::RetrySet).to receive(:new).and_return(retries)
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
-      { "bulk" => 12 }
+      { "bulk" => 12 },
     )
 
     get "/_status"
@@ -30,7 +30,7 @@ RSpec.describe 'StatusTest' do
   it "shows zero retry count" do
     expect(Sidekiq::RetrySet).to receive(:new).and_return([])
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
-      { "bulk" => 12 }
+      { "bulk" => 12 },
     )
 
     get "/_status"
@@ -44,7 +44,7 @@ RSpec.describe 'StatusTest' do
 
     expect(Sidekiq::ScheduledSet).to receive(:new).and_return(scheduled)
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
-      { "bulk" => 12 }
+      { "bulk" => 12 },
     )
 
     get "/_status"
@@ -56,7 +56,7 @@ RSpec.describe 'StatusTest' do
   it "shows zero retry count scheduled" do
     expect(Sidekiq::ScheduledSet).to receive(:new).and_return([])
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
-      { "bulk" => 12 }
+      { "bulk" => 12 },
     )
 
     get "/_status"

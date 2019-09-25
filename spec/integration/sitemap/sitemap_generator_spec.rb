@@ -1,8 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'SitemapGeneratorTest' do
-
-  it "should generate multiple sitemaps" do
+RSpec.describe "SitemapGeneratorTest" do
+  it "generates multiple sitemaps" do
     allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
     add_sample_documents(
       [
@@ -12,24 +11,24 @@ RSpec.describe 'SitemapGeneratorTest' do
           "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
         {
           "title" => "Cheese on Ruby's face",
           "description" => "Ruby weevils",
           "format" => "answer",
           "link" => "/an-example-answer-rubylol",
-          "indexable_content" => "I like my ruby badger: he is tasty and delicious"
+          "indexable_content" => "I like my ruby badger: he is tasty and delicious",
         },
         {
           "title" => "Cheese on Python's face",
           "description" => "Python weevils",
           "format" => "answer",
           "link" => "/an-example-answer-pythonwin",
-          "indexable_content" => "I like my badger: he is pythonic and delicious"
+          "indexable_content" => "I like my badger: he is pythonic and delicious",
         },
       ],
-      index_name: "govuk_test"
+      index_name: "govuk_test",
     )
 
     generator = SitemapGenerator.new(SearchConfig.default_instance)
@@ -49,10 +48,10 @@ RSpec.describe 'SitemapGeneratorTest' do
           "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
-      index_name: "government_test"
+      index_name: "government_test",
     )
     generator = SitemapGenerator.new(SearchConfig.default_instance)
     sitemap_xml = generator.sitemaps
@@ -61,7 +60,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(sitemap_xml[0]).not_to include("/an-example-answer")
   end
 
-  it "should include homepage" do
+  it "includes homepage" do
     generator = SitemapGenerator.new(SearchConfig.default_instance)
     sitemap_xml = generator.sitemaps
 
@@ -73,7 +72,7 @@ RSpec.describe 'SitemapGeneratorTest' do
     expect(pages[0].css("priority").text).to eq("0.5")
   end
 
-  it "should not include recommended links" do
+  it "does not include recommended links" do
     generator = SitemapGenerator.new(SearchConfig.default_instance)
     add_sample_documents(
       [
@@ -82,10 +81,10 @@ RSpec.describe 'SitemapGeneratorTest' do
           "description" => "Government, government, government. Developers.",
           "format" => "recommended-link",
           "link" => "http://www.example.com/external-example-answer",
-          "indexable_content" => "Tax, benefits, roads and stuff"
+          "indexable_content" => "Tax, benefits, roads and stuff",
         },
       ],
-      index_name: 'government_test'
+      index_name: "government_test",
     )
 
     sitemap_xml = generator.sitemaps
@@ -105,10 +104,10 @@ RSpec.describe 'SitemapGeneratorTest' do
           "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
-      index_name: 'govuk_test'
+      index_name: "govuk_test",
     )
 
     sitemap_xml = generator.sitemaps
@@ -131,10 +130,10 @@ RSpec.describe 'SitemapGeneratorTest' do
           "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
-      index_name: 'govuk_test'
+      index_name: "govuk_test",
     )
 
     sitemap_xml = generator.sitemaps
@@ -149,7 +148,7 @@ RSpec.describe 'SitemapGeneratorTest' do
 
 private
 
-  def add_sample_documents(docs, index_name: 'government_test')
+  def add_sample_documents(docs, index_name: "government_test")
     docs.each do |sample_document|
       insert_document(index_name, sample_document)
     end

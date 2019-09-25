@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SpecialRoutePublisher do
   before do
     GovukContentSchemaTestHelpers.configure do |config|
-      config.schema_type = 'publisher_v2'
-      config.project_root = File.expand_path('../../../', __FILE__)
+      config.schema_type = "publisher_v2"
+      config.project_root = File.expand_path("../..", __dir__)
     end
 
     @publishing_api = double
@@ -14,11 +14,11 @@ RSpec.describe SpecialRoutePublisher do
 
     @publisher = described_class.new(
       publishing_api: @publishing_api,
-      logger: logger
+      logger: logger,
     )
   end
 
-  it "should publish a valid content item for special routes" do
+  it "publishes a valid content item for special routes" do
     @publisher.routes.each do |route|
       expect(@publishing_api).to receive(:put_content) do |_, payload|
         assert_valid_content_item(payload)
@@ -33,7 +33,7 @@ RSpec.describe SpecialRoutePublisher do
     validator = GovukContentSchemaTestHelpers::Validator.new(
       "special_route",
       "schema",
-      payload
+      payload,
     )
 
     expect(validator.valid?).to be true

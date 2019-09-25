@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'AuthorizationTests' do
+RSpec.describe "AuthorizationTests" do
   context "when signin is invalid" do
     let(:gds_sso_instance) { instance_double(Auth::GdsSso) }
 
@@ -11,7 +11,7 @@ RSpec.describe 'AuthorizationTests' do
     it "receives a response with invalid request error when no bearer token is provided" do
       response = post "/unauthenticated", {}.to_json
 
-      expect(response.original_headers.fetch('WWW-Authenticate')).to eq('Bearer error=invalid_request')
+      expect(response.original_headers.fetch("WWW-Authenticate")).to eq("Bearer error=invalid_request")
     end
 
     it "receives a response wth invalid token error when bearer token is not valid" do
@@ -19,7 +19,7 @@ RSpec.describe 'AuthorizationTests' do
 
       response = post "/unauthenticated", {}.to_json
 
-      expect(response.original_headers.fetch('WWW-Authenticate')).to eq('Bearer error=invalid_token')
+      expect(response.original_headers.fetch("WWW-Authenticate")).to eq("Bearer error=invalid_token")
     end
 
     it "prevents access to a route that requires authentication when no authentication is provided" do

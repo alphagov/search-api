@@ -1,9 +1,9 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Helpers do
   subject do
     instance = double
-    instance.extend(Helpers)
+    instance.extend(described_class)
     instance
   end
 
@@ -22,14 +22,14 @@ RSpec.describe Helpers do
 
   it "parse query string" do
     [
-      ["foo=bar", { "foo" => ["bar"] }],
-      ["foo[]=bar", { "foo" => ["bar"] }],
+      ["foo=bar", { "foo" => %w[bar] }],
+      ["foo[]=bar", { "foo" => %w[bar] }],
       ["foo=bar&foo[]=baz", { "foo" => %w(bar baz) }],
       ["foo=bar=baz", { "foo" => ["bar=baz"] }],
-      ["foo[bar]=baz", { "foo[bar]" => ["baz"] }],
-      ["foo[]=baz&q=more", { "foo" => ["baz"], "q" => ["more"] }],
-      ["foo=baz&&q=more", { "foo" => ["baz"], "q" => ["more"] }],
-      ["foo=baz&boo&q=more", { "foo" => ["baz"], "boo" => [], "q" => ["more"] }],
+      ["foo[bar]=baz", { "foo[bar]" => %w[baz] }],
+      ["foo[]=baz&q=more", { "foo" => %w[baz], "q" => %w[more] }],
+      ["foo=baz&&q=more", { "foo" => %w[baz], "q" => %w[more] }],
+      ["foo=baz&boo&q=more", { "foo" => %w[baz], "boo" => [], "q" => %w[more] }],
     ].each do |qs, expected|
       expect(subject.parse_query_string(qs)).to eq(expected)
     end

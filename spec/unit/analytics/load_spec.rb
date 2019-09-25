@@ -1,5 +1,5 @@
-require 'spec_helper'
-require 'analytics/load'
+require "spec_helper"
+require "analytics/load"
 
 RSpec.describe Analytics::Load do
   subject(:loader) { described_class }

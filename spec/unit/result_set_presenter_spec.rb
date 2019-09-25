@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::ResultSetPresenter do
   def sample_docs
@@ -30,7 +30,7 @@ RSpec.describe Search::ResultSetPresenter do
       "_source" => {
         "title" => "Dairy farming and schemes",
         "link" => "/dairy-farming-and-schemes",
-        "policy_areas" => ["farming"],
+        "policy_areas" => %w[farming],
       },
     }]
   end
@@ -40,55 +40,55 @@ RSpec.describe Search::ResultSetPresenter do
       "hits" => {
         "hits" => sample_docs,
         "total" => 3,
-      }
+      },
     }.merge(extra)
   end
 
   def sample_aggregate_data
     {
       "organisations" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "buckets" => [
             { "key" => "hm-magic", "doc_count" => 7 },
             { "key" => "hmrc", "doc_count" => 5 },
           ],
-        }
+        },
       },
       "organisations_with_missing_value" => {
-        'filtered_aggregations' => {
-          "doc_count" => 8
-        }
-      }
+        "filtered_aggregations" => {
+          "doc_count" => 8,
+        },
+      },
     }
   end
 
   def sample_aggregate_data_with_policy_areas
     {
       "organisations" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "buckets" => [
             { "key" => "hm-magic", "doc_count" => 7 },
             { "key" => "hmrc", "doc_count" => 5 },
           ],
-        }
+        },
       },
       "organisations_with_missing_value" => {
-        'filtered_aggregations' => {
-          "doc_count" => 8
-        }
+        "filtered_aggregations" => {
+          "doc_count" => 8,
+        },
       },
       "policy_areas" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "buckets" => [
             { "key" => "farming", "doc_count" => 4 },
             { "key" => "unknown_topic", "doc_count" => 5 },
           ],
-        }
+        },
       },
       "policy_areas_with_missing_value" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "doc_count" => 3,
-        }
+        },
       },
     }
   end
@@ -97,12 +97,12 @@ RSpec.describe Search::ResultSetPresenter do
     {
       "hm-magic" => {
         "link" => "/government/departments/hm-magic",
-        "title" => "Ministry of Magic"
+        "title" => "Ministry of Magic",
       },
       "hmrc" => {
         "link" => "/government/departments/hmrc",
-        "title" => "HMRC"
-      }
+        "title" => "HMRC",
+      },
     }
   end
 
@@ -148,7 +148,7 @@ RSpec.describe Search::ResultSetPresenter do
       es_response: sample_es_response(options.fetch(:es_response, {})),
       registries: org_registry.nil? ? {} : { organisations: org_registry },
       aggregate_examples: options.fetch(:aggregate_examples, {}),
-      schema: options.fetch(:schema, nil)
+      schema: options.fetch(:schema, nil),
     )
   end
 
@@ -157,8 +157,8 @@ RSpec.describe Search::ResultSetPresenter do
       results = {
         "hits" => {
           "hits" => [],
-          "total" => 0
-        }
+          "total" => 0,
+        },
       }
       @output = described_class.new(
         search_params: Search::QueryParameters.new(
@@ -217,8 +217,8 @@ RSpec.describe Search::ResultSetPresenter do
 
     it "have only the fields returned from search engine" do
       @output[:results].zip(sample_docs).each do |result, _doc|
-        doc_fields = result.keys - [:_type, :_id]
-        returned_fields = result.keys - [:esscore, :_type, :_id]
+        doc_fields = result.keys - %i[_type _id]
+        returned_fields = result.keys - %i[esscore _type _id]
         expect(doc_fields).to eq(returned_fields)
       end
     end
@@ -226,11 +226,11 @@ RSpec.describe Search::ResultSetPresenter do
 
   context "results with no fields" do
     before do
-      @empty_result = sample_docs.first.tap {|doc|
-        doc['fields'] = nil
+      @empty_result = sample_docs.first.tap { |doc|
+        doc["fields"] = nil
       }
-      response = sample_es_response.tap {|es_response|
-        es_response['hits']['hits'] = [@empty_result]
+      response = sample_es_response.tap { |es_response|
+        es_response["hits"]["hits"] = [@empty_result]
       }
 
       @output = described_class.new(
@@ -238,12 +238,12 @@ RSpec.describe Search::ResultSetPresenter do
           start: 0,
           aggregate_name: :aggregates,
         ),
-        es_response: response
+        es_response: response,
       ).present
     end
 
     it "return only basic metadata of fields" do
-      expected_keys = [:index, :es_score, :_id, :elasticsearch_type, :document_type]
+      expected_keys = %i[index es_score _id elasticsearch_type document_type]
 
       expect(expected_keys).to eq(@output[:results].first.keys)
     end
@@ -254,8 +254,8 @@ RSpec.describe Search::ResultSetPresenter do
       policy_area_registry = {
         "farming" => {
           "link" => "/government/topics/farming",
-          "title" => "Farming"
-        }
+          "title" => "Farming",
+        },
       }
 
       @output = described_class.new(
@@ -293,8 +293,8 @@ RSpec.describe Search::ResultSetPresenter do
 
     it "have only the fields returned from search engine" do
       @output[:results].zip(sample_docs).each do |result, _doc|
-        doc_fields = result.keys - [:_type, :_id]
-        returned_fields = result.keys - [:esscore, :_type, :_id]
+        doc_fields = result.keys - %i[_type _id]
+        returned_fields = result.keys - %i[esscore _type _id]
         expect(doc_fields).to eq(returned_fields)
       end
     end
@@ -363,7 +363,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
-          filters: [text_filter("organisations", ["hmrc"])],
+          filters: [text_filter("organisations", %w[hmrc])],
           aggregates: { "organisations" => aggregate_params(2) },
           aggregate_name: :aggregates,
         ),
@@ -415,7 +415,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
-          filters: [text_filter("organisations", ["hm-cheesemakers"])],
+          filters: [text_filter("organisations", %w[hm-cheesemakers])],
           aggregates: { "organisations" => aggregate_params(1) },
           aggregate_name: :aggregates,
         ),
@@ -501,7 +501,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = search_presenter(
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:count, 1]]) },
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -519,7 +519,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = search_presenter(
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:count, -1]]) },
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -538,7 +538,7 @@ RSpec.describe Search::ResultSetPresenter do
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.slug", 1]]) },
         aggregate_name: :aggregates,
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -556,7 +556,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = search_presenter(
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.link", 1]]) },
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -574,7 +574,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = search_presenter(
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.title", 1]]) },
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -664,8 +664,8 @@ RSpec.describe Search::ResultSetPresenter do
           "hm-magic" => {
             "total" => 1,
             "examples" => [{ "title" => "Ministry of Magic" }],
-          }
-        } }
+          },
+        } },
       ).present
     end
 

@@ -30,9 +30,9 @@ module GovukIndex
       {
         query: {
           terms: {
-            format: MigratedFormats.indexable_formats.keys
-          }
-        }
+            format: MigratedFormats.indexable_formats.keys,
+          },
+        },
       }
     end
   end

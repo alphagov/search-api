@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::AggregateExampleFetcher do
   def query_for_example_global(field, value, return_fields)
@@ -19,21 +19,21 @@ RSpec.describe Search::AggregateExampleFetcher do
                   {
                     bool: {
                       must: { match_all: {} },
-                      must_not: { terms: { _index: %w(govuk_test) } }
-                    }
+                      must_not: { terms: { _index: %w(govuk_test) } },
+                    },
                   },
-                  { bool: { must_not: { match_all: {} } } }
-                ]
-              }
-            }
-          ]
+                  { bool: { must_not: { match_all: {} } } },
+                ],
+              },
+            },
+          ],
         },
       },
       size: 2,
       _source: {
-        includes: return_fields
+        includes: return_fields,
       },
-      sort: [{ popularity: { order: :desc } }]
+      sort: [{ popularity: { order: :desc } }],
     }
   end
 
@@ -42,21 +42,21 @@ RSpec.describe Search::AggregateExampleFetcher do
       query: {
         bool: {
           must: query,
-        }
+        },
       },
       post_filter: {
         bool: {
           must: [
             { term: { field => value } },
-            filter
-          ]
-        }
+            filter,
+          ],
+        },
       },
       size: 2,
       _source: {
-        includes: return_fields
+        includes: return_fields,
       },
-      sort: [{ popularity: { order: :desc } }]
+      sort: [{ popularity: { order: :desc } }],
     }
   end
 
@@ -66,8 +66,8 @@ RSpec.describe Search::AggregateExampleFetcher do
         "total" => total_examples,
         "hits" => titles.map { |title|
           { "_source" => { "title" => title } }
-        }
-      }
+        },
+      },
     }
   end
 
@@ -78,12 +78,10 @@ RSpec.describe Search::AggregateExampleFetcher do
     allow(index).to receive(:schema).and_return(schema)
     index
   end
-
-  # rubocop:disable RSpec/AnyInstance
   before do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
   end
-  # rubocop:enable RSpec/AnyInstance
+
 
   context "#prepare_response" do
     it "map an empty response" do
@@ -96,8 +94,8 @@ RSpec.describe Search::AggregateExampleFetcher do
 
     it "map a response to aggregates without fields" do
       fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)
-      slugs = ['a-slug-name']
-      response_list = [{ 'hits' => { 'total' => 1, 'hits' => [{ '_id' => 'a-slug-name' }] } }]
+      slugs = %w[a-slug-name]
+      response_list = [{ "hits" => { "total" => 1, "hits" => [{ "_id" => "a-slug-name" }] } }]
 
       response = fetcher.send(:prepare_response, slugs, response_list)
 
@@ -124,13 +122,13 @@ RSpec.describe Search::AggregateExampleFetcher do
       @example_fields = %w{link title other_field}
       main_query_response = { "aggregations" => {
         "sector" => {
-          'filtered_aggregations' => {
+          "filtered_aggregations" => {
             "buckets" => [
               { "key" => "sector_1" },
               { "key" => "sector_2" },
-            ]
-          }
-        }
+            ],
+          },
+        },
       } }
       params = Search::QueryParameters.new(
         aggregates: {
@@ -138,9 +136,9 @@ RSpec.describe Search::AggregateExampleFetcher do
             requested: 10,
             examples: 2,
             example_fields: @example_fields,
-            example_scope: :global
-          }
-        }
+            example_scope: :global,
+          },
+        },
       )
       @builder = double("builder")
       @fetcher = described_class.new(@index, main_query_response, params, @builder)
@@ -153,19 +151,19 @@ RSpec.describe Search::AggregateExampleFetcher do
           query_for_example_global("sector", "sector_2", @example_fields),
         ]).and_return({ "responses" => [
           response_for_example(3, %w(example_1 example_2)),
-          response_for_example(1, ["example_3"]),
+          response_for_example(1, %w[example_3]),
         ] })
 
       expect(
         "sector" => {
           "sector_1" => { total: 3, examples: [
               { "title" => "example_1" },
-              { "title" => "example_2" }
+              { "title" => "example_2" },
             ] },
           "sector_2" => { total: 1, examples: [
-              { "title" => "example_3" }
+              { "title" => "example_3" },
             ] },
-        }
+        },
       ).to eq(@fetcher.fetch)
     end
   end
@@ -177,13 +175,13 @@ RSpec.describe Search::AggregateExampleFetcher do
 
       main_query_response = { "aggregations" => {
         "sector" => {
-          'filtered_aggregations' => {
+          "filtered_aggregations" => {
             "buckets" => [
               { "key" => "sector_1" },
               { "key" => "sector_2" },
-            ]
-          }
-        }
+            ],
+          },
+        },
       } }
 
       params = Search::QueryParameters.new(
@@ -192,9 +190,9 @@ RSpec.describe Search::AggregateExampleFetcher do
             requested: 10,
             examples: 2,
             example_fields: @example_fields,
-            example_scope: :query
-          }
-        }
+            example_scope: :query,
+          },
+        },
       )
 
       @builder = double("builder")
@@ -203,7 +201,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
     it "request and return aggregate examples with query scope" do
       query = { match: { _all: { query: "hello" } } }
-      filter = { terms: { organisations: ["hm-magic"] } }
+      filter = { terms: { organisations: %w[hm-magic] } }
       expect(@builder).to receive(:query).and_return(query)
       expect(@builder).to receive(:filter).and_return(filter)
 
@@ -213,19 +211,19 @@ RSpec.describe Search::AggregateExampleFetcher do
           query_for_example_query("sector", "sector_2", @example_fields, query, filter),
         ]).and_return({ "responses" => [
           response_for_example(3, %w(example_1 example_2)),
-          response_for_example(1, ["example_3"]),
+          response_for_example(1, %w[example_3]),
         ] })
 
       expect(
         "sector" => {
           "sector_1" => { total: 3, examples: [
               { "title" => "example_1" },
-              { "title" => "example_2" }
+              { "title" => "example_2" },
             ] },
           "sector_2" => { total: 1, examples: [
-              { "title" => "example_3" }
+              { "title" => "example_3" },
             ] },
-        }
+        },
       ).to eq(@fetcher.fetch)
     end
   end
@@ -236,11 +234,10 @@ RSpec.describe Search::AggregateExampleFetcher do
       @example_fields = %w{link title other_field}
       main_query_response = { "aggregations" => {
         "sector" => {
-          'filtered_aggregations' => {
-            "buckets" => [
-            ]
-          }
-        }
+          "filtered_aggregations" => {
+            "buckets" => [],
+          },
+        },
       } }
       params = Search::QueryParameters.new(
         aggregates: {
@@ -248,9 +245,9 @@ RSpec.describe Search::AggregateExampleFetcher do
             requested: 10,
             examples: 2,
             example_fields: @example_fields,
-            example_scope: :global
-          }
-        }
+            example_scope: :global,
+          },
+        },
       )
       @builder = double("builder")
       @fetcher = described_class.new(@index, main_query_response, params, @builder)
@@ -268,12 +265,12 @@ RSpec.describe Search::AggregateExampleFetcher do
 
       main_query_response = { "aggregations" => {
         "sector" => {
-          'filtered_aggregations' => {
+          "filtered_aggregations" => {
             "buckets" => Array((0..999).map { |i|
               { "key" => "sector_#{i}" }
-            })
-          }
-        }
+            }),
+          },
+        },
       } }
 
       params = Search::QueryParameters.new(
@@ -282,9 +279,9 @@ RSpec.describe Search::AggregateExampleFetcher do
             requested: 10,
             examples: 2,
             example_fields: @example_fields,
-            example_scope: :query
-          }
-        }
+            example_scope: :query,
+          },
+        },
       )
 
       @builder = double("builder")
@@ -293,7 +290,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
     it "request and return aggregate examples with query scope" do
       query = { match: { _all: { query: "hello" } } }
-      filter = { terms: { organisations: ["hm-magic"] } }
+      filter = { terms: { organisations: %w[hm-magic] } }
       expect(@builder).to receive(:query).and_return(query)
       expect(@builder).to receive(:filter).and_return(filter)
 
@@ -302,11 +299,13 @@ RSpec.describe Search::AggregateExampleFetcher do
         expected_queries = Array(
           sector_numbers.map { |sector_num|
             query_for_example_query("sector", "sector_#{sector_num}", @example_fields, query, filter)
-          })
+          },
+)
         stub_responses = Array(
           sector_numbers.map { |sector_num|
             response_for_example(sector_num, ["example_#{sector_num}"])
-          })
+          },
+)
         expect(@index).to receive(:msearch)
           .with(expected_queries).and_return({ "responses" => stub_responses })
       end
@@ -316,10 +315,10 @@ RSpec.describe Search::AggregateExampleFetcher do
           (0..999).map { |sector_num|
             [
               "sector_#{sector_num}",
-              { total: sector_num, examples: [{ "title" => "example_#{sector_num}" }] }
+              { total: sector_num, examples: [{ "title" => "example_#{sector_num}" }] },
             ]
           }
-        ]
+        ],
       ).to eq(@fetcher.fetch)
     end
   end

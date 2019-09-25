@@ -1,5 +1,5 @@
-require 'spec_helper'
-require 'spec/unit/helpers/cluster_test_helpers'
+require "spec_helper"
+require "spec/unit/helpers/cluster_test_helpers"
 
 RSpec.describe Clusters do
   include ClusterTestHelpers

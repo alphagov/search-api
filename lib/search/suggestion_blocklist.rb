@@ -1,6 +1,6 @@
 module Search
   SuggestionBlocklist = Struct.new(:registries) do
-    STRINGS_WITH_DIGITS = /\d/
+    STRINGS_WITH_DIGITS = /\d/.freeze
 
     def should_correct?(string)
       ! ignore_list.include?(string.to_s.downcase)
@@ -20,14 +20,14 @@ module Search
     # Custom list of words we don't want to correct because they're actually
     # correct, or sensitive.
     def words_from_ignore_file
-      @@words_from_ignore_file ||= YAML.load_file('config/suggest/ignore.yml')
+      @@words_from_ignore_file ||= YAML.load_file("config/suggest/ignore.yml")
     end
 
     # Organisation acronyms like `dvla` and 'gds' are sometimes considered
     # spelling errors. We use the organisation index to ignore all acronyms.
     def organisation_acronyms
       organisation_registry = registries[:organisations]
-      organisation_registry.all.map { |r| r['acronym'] }.compact.map(&:downcase)
+      organisation_registry.all.map { |r| r["acronym"] }.compact.map(&:downcase)
     end
   end
 end

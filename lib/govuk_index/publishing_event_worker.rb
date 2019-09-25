@@ -46,7 +46,7 @@ module GovukIndex
       end
     # Rescuing exception to guarantee we capture all Sidekiq retries
     rescue Exception # rubocop:disable Lint/RescueException
-      Services.statsd_client.increment('govuk_index.sidekiq-retry')
+      Services.statsd_client.increment("govuk_index.sidekiq-retry")
       raise
     end
 
@@ -54,7 +54,7 @@ module GovukIndex
 
     def process_action(processor, routing_key, payload)
       logger.debug("Processing #{routing_key}: #{payload}")
-      Services.statsd_client.increment('govuk_index.sidekiq-consumed')
+      Services.statsd_client.increment("govuk_index.sidekiq-consumed")
 
       type_mapper = DocumentTypeMapper.new(payload)
 
@@ -86,29 +86,31 @@ module GovukIndex
     # Rescuing as we don't want to retry this class of error
     rescue NotIdentifiable => e
       return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
+
       GovukError.notify(e, extra: { message_body: payload })
       # Unpublishing messages for something that does not exist may have been
       # processed out of order so we don't want to notify errbit but just allow
       # the process to continue
     rescue NotFoundError
       logger.info("#{payload['base_path']} could not be found.")
-      Services.statsd_client.increment('govuk_index.not-found-error')
+      Services.statsd_client.increment("govuk_index.not-found-error")
     rescue UnknownDocumentTypeError
       logger.info("#{payload['document_type']} document type is not known.")
-      Services.statsd_client.increment('govuk_index.unknown-document-type')
+      Services.statsd_client.increment("govuk_index.unknown-document-type")
     end
 
     def process_response(response, messages)
       messages_with_error = []
-      if response['items'].count > 1
-        Services.statsd_client.increment('govuk_index.elasticsearch.multiple_responses')
+      if response["items"].count > 1
+        Services.statsd_client.increment("govuk_index.elasticsearch.multiple_responses")
       end
 
-      if response['items'].count != messages.count
+      if response["items"].count != messages.count
         raise ElasticsearchInvalidResponseItemCount, "received #{response['items'].count} expected #{messages.count}"
       end
-      response['items'].zip(messages).each do |response_for_message, message|
-        messages_with_error << message unless Index::ResponseValidator.new(namespace: 'govuk_index').valid?(response_for_message)
+
+      response["items"].zip(messages).each do |response_for_message, message|
+        messages_with_error << message unless Index::ResponseValidator.new(namespace: "govuk_index").valid?(response_for_message)
       end
 
       if messages_with_error.any?

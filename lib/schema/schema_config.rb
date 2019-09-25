@@ -1,8 +1,7 @@
-
 class SchemaConfig
   attr_reader :field_definitions
 
-  def initialize(config_path, schema_config_file: 'elasticsearch_schema.yml')
+  def initialize(config_path, schema_config_file: "elasticsearch_schema.yml")
     @config_path = config_path
     @schema_config_file = schema_config_file
     @field_definitions = FieldDefinitionParser.new(config_path).parse
@@ -21,16 +20,16 @@ class SchemaConfig
   end
 
   def elasticsearch_settings(_index_name)
-    @settings ||= elasticsearch_index["settings"]
+    @elasticsearch_settings ||= elasticsearch_index["settings"]
   end
 
   def elasticsearch_types(index_name)
-    index_name = index_name.sub(/[-_]test$/, '')
+    index_name = index_name.sub(/[-_]test$/, "")
     @index_schemas.fetch(index_name).elasticsearch_types
   end
 
   def elasticsearch_mappings(index_name)
-    index_name = index_name.sub(/[-_]test$/, '')
+    index_name = index_name.sub(/[-_]test$/, "")
     @index_schemas.fetch(index_name).es_mappings
   end
 

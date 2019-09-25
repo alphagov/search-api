@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 require "sitemap/sitemap"
 
 RSpec.describe SitemapPresenter do
@@ -30,7 +30,7 @@ RSpec.describe SitemapPresenter do
   it "last updated is timestamp if timestamp is date time" do
     document = build_document(
       url: "/some/path",
-      timestamp: "2014-01-28T14:41:50+00:00"
+      timestamp: "2014-01-28T14:41:50+00:00",
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.last_updated).to eq("2014-01-28T14:41:50+00:00")
@@ -47,7 +47,7 @@ RSpec.describe SitemapPresenter do
   it "last updated is timestamp if timestamp is date" do
     document = build_document(
       url: "/some/path",
-      timestamp: "2017-07-12"
+      timestamp: "2017-07-12",
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.last_updated).to eq("2017-07-12")
@@ -56,7 +56,7 @@ RSpec.describe SitemapPresenter do
   it "last updated is limited to recent date" do
     document = build_document(
       url: "/some/path",
-      timestamp: "1995-06-01"
+      timestamp: "1995-06-01",
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.last_updated).to eq("2012-10-17T00:00:00+00:00")
@@ -65,7 +65,7 @@ RSpec.describe SitemapPresenter do
   it "last updated is omitted if timestamp is missing" do
     document = build_document(
       url: "/some/path",
-      timestamp: nil
+      timestamp: nil,
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.last_updated).to be_nil
@@ -74,7 +74,7 @@ RSpec.describe SitemapPresenter do
   it "last updated is omitted if timestamp is invalid" do
     document = build_document(
       url: "/some/path",
-      timestamp: "not-a-date"
+      timestamp: "not-a-date",
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.last_updated).to be_nil
@@ -83,7 +83,7 @@ RSpec.describe SitemapPresenter do
   it "last updated is omitted if timestamp is in invalid format" do
     document = build_document(
       url: "/some/path",
-      timestamp: "01-01-2017"
+      timestamp: "01-01-2017",
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.last_updated).to be_nil
@@ -92,7 +92,7 @@ RSpec.describe SitemapPresenter do
   it "default page priority is maximum value" do
     document = build_document(
       url: "/some/path",
-      is_withdrawn: false
+      is_withdrawn: false,
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.priority).to eq(1)
@@ -101,7 +101,7 @@ RSpec.describe SitemapPresenter do
   it "withdrawn page has lower priority" do
     document = build_document(
       url: "/some/path",
-      is_withdrawn: true
+      is_withdrawn: true,
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(0.25).to eq(presenter.priority)
@@ -109,7 +109,7 @@ RSpec.describe SitemapPresenter do
 
   it "page with no withdrawn flag has maximum priority" do
     document = build_document(
-      url: "/some/path"
+      url: "/some/path",
     )
     presenter = described_class.new(document, @boost_calculator)
     expect(presenter.priority).to eq(1)
@@ -118,7 +118,7 @@ RSpec.describe SitemapPresenter do
   it "page with boosted format has adjusted priority" do
     document = build_document(
       url: "/some/path",
-      format: "aaib_report"
+      format: "aaib_report",
     )
     property_boost_calculator = PropertyBoostCalculator.new
     allow(property_boost_calculator).to receive(:boost).with(document).and_return(0.72)

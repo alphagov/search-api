@@ -1,11 +1,11 @@
-require 'spec_helper'
-require 'sidekiq/testing'
+require "spec_helper"
+require "sidekiq/testing"
 
 RSpec.describe Indexer::AmendWorker do
-  let(:index_name) { 'government_test' }
-  let(:link) { '/doc-for-deletion' }
-  let(:content_id) { '41609206-8736-4ff3-b582-63c9fccafe4d' }
-  let(:document) { { "title" => 'Old title', "content_id" => content_id, "link" => link } }
+  let(:index_name) { "government_test" }
+  let(:link) { "/doc-for-deletion" }
+  let(:content_id) { "41609206-8736-4ff3-b582-63c9fccafe4d" }
+  let(:document) { { "title" => "Old title", "content_id" => content_id, "link" => link } }
   let(:updates) { { "title" => "New title" } }
   let(:cluster_count) { Clusters.count }
 
@@ -29,15 +29,14 @@ RSpec.describe Indexer::AmendWorker do
   it "retries when index locked" do
     Sidekiq::Testing.fake! do
       with_just_one_cluster
-      mock_index = double("index") # rubocop:disable RSpec/VerifiedDoubles
-      # rubocop:disable RSpec/MessageSpies
+      mock_index = double("index")
       expect(mock_index).to receive(:amend).and_raise(SearchIndices::IndexLocked)
 
-      expect_any_instance_of(SearchIndices::SearchServer).to receive(:index) # rubocop:disable RSpec/AnyInstance
+      expect_any_instance_of(SearchIndices::SearchServer).to receive(:index)
                                                                .with(index_name)
                                                                .and_return(mock_index)
 
-      # rubocop:enable RSpec/MessageSpies
+
       worker = described_class.new
       expect {
         worker.perform(index_name, link, updates)
@@ -47,15 +46,14 @@ RSpec.describe Indexer::AmendWorker do
 
   it "forwards to failure queue" do
     stub_message = {}
-    # rubocop:disable RSpec/MessageSpies
     expect(GovukError).to receive(:notify).with(Indexer::FailedJobException.new, extra: stub_message)
-    # rubocop:enable RSpec/MessageSpies
+
     fail_block = described_class.sidekiq_retries_exhausted_block
     fail_block.call(stub_message)
   end
 
   def stub_request_to_publishing_api(id)
-    endpoint = Plek.current.find('publishing-api') + '/v2'
+    endpoint = Plek.current.find("publishing-api") + "/v2"
     expanded_links_url = endpoint + "/expanded-links/" + id
 
     stub_request(:get, expanded_links_url).to_return(status: 200, body: {}.to_json)

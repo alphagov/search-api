@@ -1,7 +1,7 @@
 module Auth
   class GdsSso
     def self.locate(token_string)
-      Services.cache.fetch(['api-user-cache', token_string], expires_in: 5.minutes) do
+      Services.cache.fetch(["api-user-cache", token_string], expires_in: 5.minutes) do
         new(token_string).locate
       end
     end
@@ -29,9 +29,9 @@ module Auth
         site: Plek.new.external_url_for("signon"),
         connection_opts: {
           headers: {
-            user_agent: "oauth-client (#{ENV.fetch('GOVUK_APP_NAME', 'search-api')})"
-          }
-        }
+            user_agent: "oauth-client (#{ENV.fetch('GOVUK_APP_NAME', 'search-api')})",
+          },
+        },
       )
     end
 

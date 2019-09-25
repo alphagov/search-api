@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
+RSpec.describe Search::BaseRegistry, "Specialist Sector" do
   before do
     @index = double("elasticsearch index")
     @specialist_sector_registry = described_class.new(@index, sample_field_definitions, "specialist_sector")
@@ -10,7 +10,7 @@ RSpec.describe Search::BaseRegistry, 'Specialist Sector' do
     {
       "link" => "/topic/oil-and-gas/licensing",
       "slug" => "oil-and-gas/licensing",
-      "title" => "Licensing"
+      "title" => "Licensing",
     }
   end
 

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe "HMRC manual publishing" do
   before do
@@ -8,7 +8,7 @@ RSpec.describe "HMRC manual publishing" do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "hmrc_manuals.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("hmrc_manuals.test")
@@ -26,9 +26,9 @@ RSpec.describe "HMRC manual publishing" do
             title: "Name of manual section",
             published_at: "2017-06-21T10:48:34+00:00",
             base_path: "/some/section/base/path",
-            section_id: "some_manual_section_id"
-          }
-        ]
+            section_id: "some_manual_section_id",
+          },
+        ],
       },
     )
 
@@ -50,7 +50,7 @@ RSpec.describe "HMRC manual publishing" do
       details: {
         section_id: "some_section_id",
         manual: {
-          "base_path": "/parent/manual/path"
+          "base_path": "/parent/manual/path",
         },
       },
     )

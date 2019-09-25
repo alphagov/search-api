@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ElasticsearchIndexingTest' do
+RSpec.describe "ElasticsearchIndexingTest" do
   include GdsApi::TestHelpers::PublishingApiV2
 
   SAMPLE_DOCUMENT = {
@@ -8,10 +8,10 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     "description" => "DESCRIPTION",
     "format" => "answer",
     "link" => "/an-example-answer",
-    "indexable_content" => "HERE IS SOME CONTENT"
+    "indexable_content" => "HERE IS SOME CONTENT",
   }.freeze
 
-  let(:index_name) { 'government_test' }
+  let(:index_name) { "government_test" }
 
   before do
     stub_tagging_lookup
@@ -34,7 +34,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       "indexable_content" => "HERE IS SOME CONTENT",
       "licence_identifier" => "1201-5-1",
       "licence_short_description" => "A short description of a licence",
-      "search_user_need_document_supertype" => "core"
+      "search_user_need_document_supertype" => "core",
     }.to_json
 
     expect_document_is_in_rummager(
@@ -88,10 +88,10 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       "link" => "/government/topical-events/foo",
       "start_date" => "2016-01-01T00:00:00Z",
       "end_date" => "2017-01-01T00:00:00Z",
-      'logo_formatted_title' => 'The\nTitle',
-      'organisation_brand' => 'cabinet-office',
-      'organisation_crest' => 'single-identity',
-      'logo_url' => 'http://url/to/logo.png'
+      "logo_formatted_title" => 'The\nTitle',
+      "organisation_brand" => "cabinet-office",
+      "organisation_crest" => "single-identity",
+      "logo_url" => "http://url/to/logo.png",
     }.to_json
 
     expect_document_is_in_rummager(
@@ -102,10 +102,10 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "link" => "/government/topical-events/foo",
         "start_date" => "2016-01-01T00:00:00Z",
         "end_date" => "2017-01-01T00:00:00Z",
-        'logo_formatted_title' => 'The\nTitle',
-        'organisation_brand' => 'cabinet-office',
-        'organisation_crest' => 'single-identity',
-        'logo_url' => 'http://url/to/logo.png'
+        "logo_formatted_title" => 'The\nTitle',
+        "organisation_brand" => "cabinet-office",
+        "organisation_crest" => "single-identity",
+        "logo_url" => "http://url/to/logo.png",
       },
       index: "government_test",
     )
@@ -113,17 +113,17 @@ RSpec.describe 'ElasticsearchIndexingTest' do
 
   it "tags organisation pages to themselves, so that filtering on an organisation returns the homepage" do
     post "/government_test/documents", {
-      'title' => 'HMRC',
-      'link' => '/government/organisations/hmrc',
-      'slug' => 'hmrc',
-      'format' => 'organisation',
-      'organisations' => [],
+      "title" => "HMRC",
+      "link" => "/government/organisations/hmrc",
+      "slug" => "hmrc",
+      "format" => "organisation",
+      "organisations" => [],
     }.to_json
 
     expect_document_is_in_rummager(
       {
         "link" => "/government/organisations/hmrc",
-        "organisations" => ["hmrc"],
+        "organisations" => %w[hmrc],
       },
       index: "government_test",
     )
@@ -137,20 +137,18 @@ RSpec.describe 'ElasticsearchIndexingTest' do
   end
 
   context "when indexing to the metasearch index" do
-    let(:index_name) { 'metasearch_test' }
+    let(:index_name) { "metasearch_test" }
 
     it "reschedules the job if the index has a write lock" do
       stubbed_client = client
 
       locked_response = { "items" => [
-        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } }
+        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } },
       ] }
-
-      # rubocop:disable RSpec/MessageSpies
       expect(stubbed_client).to receive(:bulk).and_return(locked_response)
       expect(stubbed_client).to receive(:bulk).and_call_original
-      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client) # rubocop:disable RSpec/AnyInstance
-      # rubocop:enable RSpec/MessageSpies
+      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
+
       details = <<~DETAILS
         {\"best_bets\":[
           {\"link\":\"/learn-to-drive-a-car\",\"position\":1},
@@ -163,7 +161,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "_id" => "learn+to+drive-exact",
         "_type" => "best_bet",
         "stemmed_query" => "learn to drive",
-        "details" => details
+        "details" => details,
       }.to_json
 
       expect_document_is_in_rummager(
@@ -183,14 +181,12 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       stubbed_client = client
 
       locked_response = { "items" => [
-        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } }
+        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } },
       ] }
-
-      # rubocop:disable RSpec/MessageSpies
       expect(stubbed_client).to receive(:bulk).and_return(locked_response)
       expect(stubbed_client).to receive(:bulk).and_call_original
-      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client) # rubocop:disable RSpec/AnyInstance
-      # rubocop:enable RSpec/MessageSpies
+      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
+
       publishing_api_has_expanded_links(
         content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
         expanded_links: {},

@@ -21,6 +21,7 @@ module Search
     # Fetch the best bets, and populate @best_bets and @worst_bets
     def fetch
       return if @fetched
+
       if @query.nil?
         @best_bets = {}
         @worst_bets = []
@@ -41,7 +42,7 @@ module Search
     # Where high means the smallest positional value.
     def combine_best_bets(bets)
       bets
-      .map { |bet| [bet['position'], bet['link']] }
+      .map { |bet| [bet["position"], bet["link"]] }
       .sort
       .uniq { |_, link| link }
       .each_with_object(Hash.new) do |(position, link), result|
@@ -51,7 +52,7 @@ module Search
     end
 
     def combine_worst_bets(bets)
-      bets.map { |bet| bet['link'] }.uniq
+      bets.map { |bet| bet["link"] }.uniq
     end
 
     # Select the bet entries to use.
@@ -65,7 +66,7 @@ module Search
 
       [
         bets.flat_map { |_, best, _| best },
-        bets.flat_map { |_, _, worst| worst }
+        bets.flat_map { |_, _, worst| worst },
       ]
     end
 
@@ -84,9 +85,9 @@ module Search
       analyzed_users_query = " #{@metasearch_index.analyzed_best_bet_query(@query)} "
       es_response = timed_raw_search(lookup_payload)
 
-      es_response["hits"]["hits"].map do |hit|
+      es_response["hits"]["hits"].map { |hit|
         details = JSON.parse(Array(hit["_source"]["details"]).first)
-        _bet_query, _, bet_type = hit["_id"].rpartition('-')
+        _bet_query, _, bet_type = hit["_id"].rpartition("-")
         stemmed_query_as_term = Array(hit["_source"]["stemmed_query_as_term"]).first
 
         # The search on the stemmed_query field is overly broad, so here we need
@@ -97,7 +98,7 @@ module Search
         else
           [bet_type, details["best_bets"], details["worst_bets"]]
         end
-      end
+      }
       .compact
     end
 
@@ -129,11 +130,11 @@ module Search
             should: [
               { match: { exact_query: @query } },
               { match: { stemmed_query: @query } },
-            ]
-          }
+            ],
+          },
         },
         post_filter: {
-          bool: { must: { match: { document_type: "best_bet" } } }
+          bool: { must: { match: { document_type: "best_bet" } } },
         },
         size: 1000,
         _source: {

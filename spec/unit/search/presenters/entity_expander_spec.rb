@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::EntityExpander do
   # Since expanding is being done in the same way we only have to test one
@@ -7,13 +7,13 @@ RSpec.describe Search::EntityExpander do
     expandable_target = {
         "slug" => "rail-statistics",
         "link" => "/government/organisations/department-for-transport/series/rail-statistics",
-        "title" => "Rail statistics"
+        "title" => "Rail statistics",
     }
 
     registries = { organisations: { "rail-statistics" => expandable_target } }
 
     result = described_class.new(registries).new_result(
-      { "organisations" => ["rail-statistics"] }
+      { "organisations" => %w[rail-statistics] },
     )
 
     expect(result["organisations"].first).to eq(expandable_target)

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe "Service Manual Topic publishing" do
   before do
@@ -8,7 +8,7 @@ RSpec.describe "Service Manual Topic publishing" do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "service_manual_topic.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("service_manual_topic.test")
@@ -21,7 +21,7 @@ RSpec.describe "Service Manual Topic publishing" do
       payload: {
         document_type: "service_manual_topic",
         title: "Service Manual title",
-        description: "Service Manual description"
+        description: "Service Manual description",
       },
     )
 
@@ -34,7 +34,7 @@ RSpec.describe "Service Manual Topic publishing" do
       "indexable_content" => nil,
       "title" => random_example["title"],
       "description" => random_example["description"],
-      "manual" => "/service-manual"
+      "manual" => "/service-manual",
     }
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "service_manual_topic")

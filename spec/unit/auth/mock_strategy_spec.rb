@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Auth::MockStrategy do
-  let(:env) { { 'PATH_INFO' => '/resource' } }
+  let(:env) { { "PATH_INFO" => "/resource" } }
 
   context "when signin is invalid" do
     around do |example|
@@ -30,7 +30,7 @@ RSpec.describe Auth::MockStrategy do
         a_hash_including(
           "name" => "Mock API User",
           "email" => "mock.user@example.com",
-        )
+        ),
       )
     end
   end
