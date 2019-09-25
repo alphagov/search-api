@@ -11,8 +11,8 @@ if ENV["USE_SIMPLECOV"]
   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 end
 
-$LOAD_PATH << File.expand_path("../../", __FILE__)
-$LOAD_PATH << File.expand_path("../../lib", __FILE__)
+$LOAD_PATH << File.expand_path('..', __dir__)
+$LOAD_PATH << File.expand_path('../lib', __dir__)
 
 # load this first to avoid duplicate constant declaration error
 require "logging"

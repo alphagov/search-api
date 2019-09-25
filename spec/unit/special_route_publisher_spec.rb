@@ -4,7 +4,7 @@ RSpec.describe SpecialRoutePublisher do
   before do
     GovukContentSchemaTestHelpers.configure do |config|
       config.schema_type = "publisher_v2"
-      config.project_root = File.expand_path("../../../", __FILE__)
+      config.project_root = File.expand_path('../..', __dir__)
     end
 
     @publishing_api = double
