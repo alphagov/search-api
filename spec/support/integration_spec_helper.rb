@@ -22,7 +22,7 @@ module IntegrationSpecHelper
 
     # we only want to setup the before suite code once, in addition this this we only want to
     # set it up when we are running integration tests (hence the reason we do it here).
-    @before_suite_setup ||= setup_before_suite
+    @included ||= setup_before_suite
   end
 
   def self.setup_before_suite

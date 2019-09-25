@@ -5,7 +5,7 @@ module Search
     end
 
     def as_hash
-      @registries ||= {
+      @as_hash ||= {
         organisations: organisations,
         organisation_content_ids: organisations,
         specialist_sectors: specialist_sectors,

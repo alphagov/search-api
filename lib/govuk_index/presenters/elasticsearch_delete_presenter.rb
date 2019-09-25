@@ -37,7 +37,7 @@ module GovukIndex
     attr_reader :payload
 
     def existing_document
-      @_existing_document ||=
+      @existing_document ||=
         begin
           Client.get(type: "_all", id: id)
         rescue Elasticsearch::Transport::Transport::Errors::NotFound

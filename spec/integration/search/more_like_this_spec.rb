@@ -58,7 +58,7 @@ RSpec.describe "MoreLikeThisTest" do
 private
 
   def result_links
-    @_result_links ||= parsed_response["results"].map do |result|
+    @result_links ||= parsed_response["results"].map do |result|
       result["link"]
     end
   end

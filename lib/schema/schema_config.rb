@@ -20,7 +20,7 @@ class SchemaConfig
   end
 
   def elasticsearch_settings(_index_name)
-    @settings ||= elasticsearch_index["settings"]
+    @elasticsearch_settings ||= elasticsearch_index["settings"]
   end
 
   def elasticsearch_types(index_name)
