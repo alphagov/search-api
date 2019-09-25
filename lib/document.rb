@@ -93,8 +93,8 @@ class Document
       [field_name.to_s, value]
     end
 
-    without_empty_values = definitions_and_values.select do |_, value|
-      ![nil, []].include?(value)
+    without_empty_values = definitions_and_values.reject do |_, value|
+      [nil, []].include?(value)
     end
 
     field_values = Hash[without_empty_values]
