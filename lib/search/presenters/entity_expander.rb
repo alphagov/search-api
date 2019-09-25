@@ -66,7 +66,7 @@ module Search
   private
 
     def fetch_expanded_version_by(field, registry, mapping)
-      if [:topic_content_ids, :organisation_content_ids].include?(mapping.registry_name)
+      if %i[topic_content_ids organisation_content_ids].include?(mapping.registry_name)
         item_from_registry_by_content_id(registry, field)
       else
         item_from_registry_by_slug(registry, field)

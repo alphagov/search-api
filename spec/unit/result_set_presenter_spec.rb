@@ -217,8 +217,8 @@ RSpec.describe Search::ResultSetPresenter do
 
     it "have only the fields returned from search engine" do
       @output[:results].zip(sample_docs).each do |result, _doc|
-        doc_fields = result.keys - [:_type, :_id]
-        returned_fields = result.keys - [:esscore, :_type, :_id]
+        doc_fields = result.keys - %i[_type _id]
+        returned_fields = result.keys - %i[esscore _type _id]
         expect(doc_fields).to eq(returned_fields)
       end
     end
@@ -243,7 +243,7 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "return only basic metadata of fields" do
-      expected_keys = [:index, :es_score, :_id, :elasticsearch_type, :document_type]
+      expected_keys = %i[index es_score _id elasticsearch_type document_type]
 
       expect(expected_keys).to eq(@output[:results].first.keys)
     end
@@ -293,8 +293,8 @@ RSpec.describe Search::ResultSetPresenter do
 
     it "have only the fields returned from search engine" do
       @output[:results].zip(sample_docs).each do |result, _doc|
-        doc_fields = result.keys - [:_type, :_id]
-        returned_fields = result.keys - [:esscore, :_type, :_id]
+        doc_fields = result.keys - %i[_type _id]
+        returned_fields = result.keys - %i[esscore _type _id]
         expect(doc_fields).to eq(returned_fields)
       end
     end

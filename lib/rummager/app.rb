@@ -34,7 +34,7 @@ class Rummager < Sinatra::Application
   #   information or performs some dangerous action.
   #   In our case the only public API is search and there is no sensitive or
   #   personalised information in the response.
-  set :protection, except: [:path_traversal, :escaped_params, :frame_options, :json_csrf]
+  set :protection, except: %i[path_traversal escaped_params frame_options json_csrf]
 
   def warden
     env["warden"]

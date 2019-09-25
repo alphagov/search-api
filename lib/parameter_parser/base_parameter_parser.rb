@@ -123,7 +123,7 @@ class BaseParameterParser
   #  - query: Return only examples that match the query and filters
   #  - global: Return examples for the aggregates regardless of whether they match
   #            the query and filters
-  ALLOWED_EXAMPLE_SCOPES = [:global, :query].freeze
+  ALLOWED_EXAMPLE_SCOPES = %i[global query].freeze
 
   # The fields which are returned by default for search results.
   DEFAULT_RETURN_FIELDS = %w(

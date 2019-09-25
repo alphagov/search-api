@@ -53,4 +53,4 @@ group :development do
   gem "rainbow"
 end
 
-gem "pry-byebug", group: [:development, :test]
+gem "pry-byebug", group: %i[development test]
