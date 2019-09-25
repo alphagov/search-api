@@ -1,6 +1,6 @@
 module Search
   SuggestionBlocklist = Struct.new(:registries) do
-    STRINGS_WITH_DIGITS = /\d/
+    STRINGS_WITH_DIGITS = /\d/.freeze
 
     def should_correct?(string)
       ! ignore_list.include?(string.to_s.downcase)

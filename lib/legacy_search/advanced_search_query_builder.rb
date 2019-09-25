@@ -34,8 +34,8 @@ module LegacySearch
           .select { |_, value| invalid_boolean_property_value?(value) }
     end
 
-    BOOLEAN_TRUTHY = /\A(true|1)\Z/i
-    BOOLEAN_FALSEY = /\A(false|0)\Z/i
+    BOOLEAN_TRUTHY = /\A(true|1)\Z/i.freeze
+    BOOLEAN_FALSEY = /\A(false|0)\Z/i.freeze
     def invalid_boolean_property_value?(value)
       (value.to_s !~ BOOLEAN_TRUTHY) && (value.to_s !~ BOOLEAN_FALSEY)
     end

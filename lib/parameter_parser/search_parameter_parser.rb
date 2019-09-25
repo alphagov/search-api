@@ -315,7 +315,7 @@ private
   end
 
   class DateFieldFilter < Filter
-    DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
+    DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/.freeze
 
     def initialize(field_name, values, operation, multivalue_query)
       super

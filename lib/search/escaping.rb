@@ -4,7 +4,7 @@ module Search
       + - && || ! ( ) { } [ ] ^ " ~ * ? : \\ /
     ].map { |s| Regexp.escape(s) }.join("|") + ")")
 
-    LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/
+    LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/.freeze
 
     def escape(s)
       # 6 slashes =>
