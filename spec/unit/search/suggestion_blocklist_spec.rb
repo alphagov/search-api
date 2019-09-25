@@ -4,7 +4,7 @@ RSpec.describe Search::SuggestionBlocklist do
   context "with an organisation registry" do
     def blocklist
       described_class.new(
-        { organisations: stubbed_organisation_registry }
+        { organisations: stubbed_organisation_registry },
       )
     end
 

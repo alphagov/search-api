@@ -104,7 +104,7 @@ module IntegrationSpecHelper
           id: id,
           type: "generic-document",
           body: atts,
-        }.merge(version_details)
+        }.merge(version_details),
       )
     }
 
@@ -254,7 +254,7 @@ private
     client(cluster: cluster).get(
       index: index,
       type: type,
-      id: id
+      id: id,
     )
   end
 end

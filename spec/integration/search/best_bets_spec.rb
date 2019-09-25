@@ -41,7 +41,7 @@ RSpec.describe "best/worst bet functionality" do
         "indexable_content" => 'I will turn up in searches for "a forced best bet"',
         "format" => "answer",
       },
-      id: "31e59fa7-ce2f-48b7-ba85-2f5535220cd0"
+      id: "31e59fa7-ce2f-48b7-ba85-2f5535220cd0",
     )
 
     add_best_bet(
@@ -169,7 +169,7 @@ private
         {
           best_bets: best_bets,
           worst_bets: worst_bets,
-        }
+        },
       ),
       _type: "best_bet",
       _id: "#{query}-#{type}",

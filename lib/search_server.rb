@@ -19,7 +19,7 @@ module SearchIndices
         @base_uri,
         prefix,
         @schema,
-        @search_config
+        @search_config,
       )
     end
 

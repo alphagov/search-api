@@ -49,7 +49,7 @@ module Debug
 
       result = @search_config.rank_eval(
         requests: requests,
-        metric: { dcg: { k: 10 } }
+        metric: { dcg: { k: 10 } },
       )
 
       {
@@ -65,7 +65,7 @@ module Debug
         queries[query] = {
           es_query: SearchConfig.generate_query(
             "q" => [query],
-            "ab_tests" => [@ab_tests]
+            "ab_tests" => [@ab_tests],
           ),
           judgements: judgements,
         }

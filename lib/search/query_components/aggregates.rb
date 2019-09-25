@@ -22,7 +22,7 @@ module QueryComponents
           },
         },
         field_name,
-        options
+        options,
       )
     end
 
@@ -30,7 +30,7 @@ module QueryComponents
       with_filters(
         { missing: { field: field_name } },
         field_name,
-        options
+        options,
       )
     end
 

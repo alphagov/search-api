@@ -148,7 +148,7 @@ RSpec.describe Search::ResultSetPresenter do
       es_response: sample_es_response(options.fetch(:es_response, {})),
       registries: org_registry.nil? ? {} : { organisations: org_registry },
       aggregate_examples: options.fetch(:aggregate_examples, {}),
-      schema: options.fetch(:schema, nil)
+      schema: options.fetch(:schema, nil),
     )
   end
 
@@ -238,7 +238,7 @@ RSpec.describe Search::ResultSetPresenter do
           start: 0,
           aggregate_name: :aggregates,
         ),
-        es_response: response
+        es_response: response,
       ).present
     end
 
@@ -501,7 +501,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = search_presenter(
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:count, 1]]) },
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -519,7 +519,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = search_presenter(
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:count, -1]]) },
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -538,7 +538,7 @@ RSpec.describe Search::ResultSetPresenter do
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.slug", 1]]) },
         aggregate_name: :aggregates,
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -556,7 +556,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = search_presenter(
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.link", 1]]) },
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -574,7 +574,7 @@ RSpec.describe Search::ResultSetPresenter do
       @output = search_presenter(
         es_response: { "aggregations" => sample_aggregate_data },
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.title", 1]]) },
-        org_registry: org_registry
+        org_registry: org_registry,
       ).present
     end
 
@@ -665,7 +665,7 @@ RSpec.describe Search::ResultSetPresenter do
             "total" => 1,
             "examples" => [{ "title" => "Ministry of Magic" }],
           },
-        } }
+        } },
       ).present
     end
 

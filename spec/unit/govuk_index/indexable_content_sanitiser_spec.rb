@@ -83,7 +83,7 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
 
       expect(GovukError).to receive(:notify).with(
         GovukIndex::MissingTextHtmlContentType.new,
-        extra: { content_types: ["text/govspeak"] }
+        extra: { content_types: ["text/govspeak"] },
       )
 
       expect(subject.clean(payload)).to be_nil

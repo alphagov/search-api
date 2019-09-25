@@ -21,7 +21,7 @@ class SchemaMigrator
             version_type: "external",
           },
         },
-        refresh: true
+        refresh: true,
       )
 
       task_id = response.fetch("task")

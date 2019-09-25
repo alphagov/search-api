@@ -54,7 +54,7 @@ module Indexer
       DocumentPreparer.new(@client, @index_name).prepared(
         doc_hash,
         popularities,
-        @is_content_index
+        @is_content_index,
       )
     end
 

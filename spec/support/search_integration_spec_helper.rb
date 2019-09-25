@@ -36,22 +36,22 @@ module SearchIntegrationSpecHelper
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-03-30", "link" => "/old-cma-with-date"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-03-30T23:00:00.000+00:00", "link" => "/old-cma-with-datetime"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-03-31", "link" => "/matching-cma-with-date"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-03-31T00:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
-      type: "cma_case"
+      type: "cma_case",
     )
   end
 
@@ -59,22 +59,22 @@ module SearchIntegrationSpecHelper
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-03-31", "link" => "/old-cma-with-date"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-03-31T13:59:59.000+00:00", "link" => "/old-cma-with-datetime"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-01", "link" => "/matching-cma-with-date"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-03-31T14:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
-      type: "cma_case"
+      type: "cma_case",
     )
   end
 
@@ -82,22 +82,22 @@ module SearchIntegrationSpecHelper
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-02", "link" => "/matching-cma-with-date"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-02T05:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-03", "link" => "/future-cma-with-date"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-03T00:00:00.000+00:00", "link" => "/future-cma-with-datetime"),
-      type: "cma_case"
+      type: "cma_case",
     )
   end
 
@@ -105,22 +105,22 @@ module SearchIntegrationSpecHelper
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-02", "link" => "/matching-cma-with-date"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-02T11:00:00.000+00:00", "link" => "/matching-cma-with-datetime"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-03", "link" => "/future-cma-with-date"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2014-04-02T11:00:01.000+00:00", "link" => "/future-cma-with-datetime"),
-      type: "cma_case"
+      type: "cma_case",
     )
   end
 
@@ -141,7 +141,7 @@ module SearchIntegrationSpecHelper
     expect(result[key]).to eq(
       [
         ministry_of_magic
-      ]
+      ],
      )
   end
 end

@@ -193,7 +193,7 @@ this task will run against all active clusters.
       puts "Recovery status of #{args.index_name} on cluster #{cluster.key} (#{cluster.uri}):"
       puts SearchIndices::Index.index_recovered?(
         base_uri: cluster.uri,
-        index_name: args.index_name
+        index_name: args.index_name,
       )
     end
   end
@@ -251,7 +251,7 @@ this task will run against all active clusters.
         client: client,
         search_body: { query: { term: { format: format } } },
         batch_size: 500,
-        index_names: index
+        index_names: index,
       ) { |hit| hit }.map do |hit|
         taxons[hit["_id"]] = hit["_source"]["taxons"]
       end

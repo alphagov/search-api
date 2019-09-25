@@ -44,7 +44,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           "test-new" => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
     expected_body = {
       "actions" => [
@@ -54,7 +54,7 @@ RSpec.describe SearchIndices::IndexGroup do
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(
         body: expected_body,
-        headers: { "Content-Type" => "application/json" }
+        headers: { "Content-Type" => "application/json" },
       )
       .to_return(ELASTICSEARCH_OK)
 
@@ -73,7 +73,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-new" => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     expected_body = {
@@ -103,7 +103,7 @@ RSpec.describe SearchIndices::IndexGroup do
           "test-old" => { "aliases" => { "test" => {} } },
           "test-old2" => { "aliases" => { "test" => {} } },
           "test-new" => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     expected_body = {
@@ -131,7 +131,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           "test" => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     expect {
@@ -144,7 +144,7 @@ RSpec.describe SearchIndices::IndexGroup do
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
-        body: {}.to_json
+        body: {}.to_json,
       )
 
     expect(@server.index_group("test").index_names).to eq([])
@@ -158,7 +158,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           index_name => { "aliases" => { "test" => {} } },
-        }.to_json
+        }.to_json,
       )
 
     expect(@server.index_group("test").index_names).to eq([index_name])
@@ -175,7 +175,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: {
           this_name => { "aliases" => {} },
           other_name => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     expect(@server.index_group("test").index_names).to eq([this_name])
@@ -186,7 +186,7 @@ RSpec.describe SearchIndices::IndexGroup do
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
-        body: {}.to_json
+        body: {}.to_json,
       )
 
     @server.index_group("test").clean
@@ -200,7 +200,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           index_name => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     delete_stub = stub_request(:delete, "#{BASE_URI}/#{index_name}")
@@ -219,7 +219,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           index_name => { "aliases" => { "test" => {} } },
-        }.to_json
+        }.to_json,
       )
 
     @server.index_group("test").clean
@@ -237,7 +237,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: {
           index_names[0] => { "aliases" => {} },
           index_names[1] => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     delete_stubs = index_names.map { |index_name|
@@ -261,7 +261,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: {
           live_name => { "aliases" => { "test" => {} } },
           dead_name => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     delete_stub = stub_request(:delete, "#{BASE_URI}/#{dead_name}")
@@ -281,7 +281,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           index_name => { "aliases" => { "something_else" => {} } },
-        }.to_json
+        }.to_json,
       )
 
     @server.index_group("test").clean
@@ -299,7 +299,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: {
           this_name => { "aliases" => {} },
           other_name => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     delete_stub = stub_request(:delete, "#{BASE_URI}/#{this_name}")

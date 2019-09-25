@@ -10,7 +10,7 @@ RSpec.describe "ScrollEnumeratorTest" do
       client: client,
       index_names: "govuk_test",
       search_body: { query: { match_all: {} } },
-      batch_size: 4
+      batch_size: 4,
     ) { |d| d }
 
     expect(results.count).to eq(10)
@@ -25,7 +25,7 @@ RSpec.describe "ScrollEnumeratorTest" do
       client: client,
       index_names: "govuk_test",
       search_body: { query: { match_all: {} }, sort: [{ _uid: { order: "asc" } }] },
-      batch_size: 4
+      batch_size: 4,
     ) { |d| d }
 
     expect(results.count).to eq(10)
@@ -36,7 +36,7 @@ RSpec.describe "ScrollEnumeratorTest" do
       client: client,
       index_names: "govuk_test",
       search_body: { query: { match_all: {} } },
-      batch_size: 4
+      batch_size: 4,
     ) { |d| d }
 
     expect(results.count).to eq(0)

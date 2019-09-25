@@ -7,7 +7,7 @@ RSpec.describe Indexer::Comparer do
     comparer = described_class.new(
       "index_a",
       "index_b",
-      io: StringIO.new
+      io: StringIO.new,
     )
     outcome = comparer.run
     expect(outcome).to eq({ added_items: 1 })
@@ -19,7 +19,7 @@ RSpec.describe Indexer::Comparer do
     comparer = described_class.new(
       "index_a",
       "index_b",
-      io: StringIO.new
+      io: StringIO.new,
     )
     outcome = comparer.run
     expect(outcome).to eq({ removed_items: 1 })
@@ -31,7 +31,7 @@ RSpec.describe Indexer::Comparer do
     comparer = described_class.new(
       "index_a",
       "index_b",
-      io: StringIO.new
+      io: StringIO.new,
     )
     outcome = comparer.run
     expect(outcome).to eq(changed: 1, 'changes: data': 1)
@@ -43,7 +43,7 @@ RSpec.describe Indexer::Comparer do
     comparer = described_class.new(
       "index_a",
       "index_b",
-      io: StringIO.new
+      io: StringIO.new,
     )
     outcome = comparer.run
     expect(outcome).to eq({ unchanged: 1 })
@@ -56,7 +56,7 @@ RSpec.describe Indexer::Comparer do
       "index_a",
       "index_b",
       ignore: [:ignore],
-      io: StringIO.new
+      io: StringIO.new,
     )
     outcome = comparer.run
     expect(outcome).to eq({ unchanged: 1 })
@@ -68,7 +68,7 @@ RSpec.describe Indexer::Comparer do
     comparer = described_class.new(
       "index_a",
       "index_b",
-      io: StringIO.new
+      io: StringIO.new,
     )
     outcome = comparer.run
     expect(outcome).to eq({ unchanged: 1 })

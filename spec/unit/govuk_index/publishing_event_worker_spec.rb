@@ -131,7 +131,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
               "document_type" => "help_page",
               "title" => "We love cheese",
             },
-          }
+          },
         )
 
         worker.perform([["routing.key", payload]])
@@ -220,7 +220,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       before do
         allow(actions).to receive(:save).twice
         allow(actions).to receive(:commit).and_return(
-          [{ "items" => [{ "index" => { "status" => 500 } }, { "index" => { "status" => 500 } }] }]
+          [{ "items" => [{ "index" => { "status" => 500 } }, { "index" => { "status" => 500 } }] }],
         )
         allow(@statsd_client).to receive(:increment)
       end
@@ -252,7 +252,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       before do
         allow(actions).to receive(:save).twice
         allow(actions).to receive(:commit).and_return(
-          [{ "items" => [{ "index" => { "status" => 200 } }, { "index" => { "status" => 500 } }] }]
+          [{ "items" => [{ "index" => { "status" => 200 } }, { "index" => { "status" => 500 } }] }],
         )
         allow(@statsd_client).to receive(:increment)
         # allow(GovukIndex::PublishingEventWorker).to receive(:perform_async)
@@ -276,7 +276,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
     it "raises an error is the number of response item does not match the number of actions requested" do
       allow(actions).to receive(:save).twice
       allow(actions).to receive(:commit).and_return(
-        [{ "items" => [{ "index" => { "status" => 200 } }] }]
+        [{ "items" => [{ "index" => { "status" => 200 } }] }],
       )
       allow(@statsd_client).to receive(:increment)
 

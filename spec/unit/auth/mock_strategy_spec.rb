@@ -30,7 +30,7 @@ RSpec.describe Auth::MockStrategy do
         a_hash_including(
           "name" => "Mock API User",
           "email" => "mock.user@example.com",
-        )
+        ),
       )
     end
   end

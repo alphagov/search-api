@@ -48,9 +48,9 @@ module Search
       best_bets.wrap(
         popularity_boost.wrap(
           format_boost.wrap(
-            core_query.mixed_quoted_unquoted_query
-          )
-        )
+            core_query.mixed_quoted_unquoted_query,
+          ),
+        ),
       )
     end
 

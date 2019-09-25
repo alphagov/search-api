@@ -104,7 +104,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       payload["base_path"] => {
         popularity_score: popularity,
         popularity_rank: popularity_rank,
-      }
+      },
     )
     # rubocop:enable RSpec/MessageSpies
 

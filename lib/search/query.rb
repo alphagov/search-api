@@ -40,7 +40,7 @@ module Search
         builder = QueryBuilder.new(
           search_params: search_params,
           content_index_names: content_index_names,
-          metasearch_index: metasearch_index
+          metasearch_index: metasearch_index,
         )
 
         payload = process_elasticsearch_errors { builder.payload }
@@ -92,7 +92,7 @@ module Search
         registries: registries,
         aggregate_examples: aggregate_examples,
         schema: index.schema,
-        query_payload: payload
+        query_payload: payload,
       ).present
     end
 

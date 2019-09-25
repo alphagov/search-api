@@ -36,7 +36,7 @@ RSpec.describe Search::QueryBuilder do
     described_class.new(
       search_params: Search::QueryParameters.new({ filters: [] }.merge(params)),
       content_index_names: SearchConfig.content_index_names,
-      metasearch_index: SearchConfig.default_instance.metasearch_index
+      metasearch_index: SearchConfig.default_instance.metasearch_index,
     )
   end
 end

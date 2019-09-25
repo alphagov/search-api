@@ -12,7 +12,7 @@ RSpec.describe LegacyClient::IndexForSearch do
         headers: { "Content-Type" => "application/json" },
         body: {
           real_name => { "aliases" => {} },
-        }.to_json
+        }.to_json,
       )
 
     index_for_search = described_class.new(base_uri, [alias_name], nil, nil)

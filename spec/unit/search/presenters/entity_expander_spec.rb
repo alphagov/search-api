@@ -13,7 +13,7 @@ RSpec.describe Search::EntityExpander do
     registries = { organisations: { "rail-statistics" => expandable_target } }
 
     result = described_class.new(registries).new_result(
-      { "organisations" => ["rail-statistics"] }
+      { "organisations" => ["rail-statistics"] },
     )
 
     expect(result["organisations"].first).to eq(expandable_target)

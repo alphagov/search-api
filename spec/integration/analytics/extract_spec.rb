@@ -57,8 +57,8 @@ RSpec.describe Analytics::Extract do
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
       "format" => "answers",
     }
-    commit_document("government_test", document.merge("title" => "government title",))
-    commit_document("govuk_test", document.merge("title" => "govuk title",))
+    commit_document("government_test", document.merge("title" => "government title"))
+    commit_document("govuk_test", document.merge("title" => "govuk title"))
 
     expected_row = [
       "587b0635-2911-49e6-af68-3f0ea1b07cc5",

@@ -47,7 +47,7 @@ module Indexer
             extra: {
               error_message: "Timeout looking up content ID",
               base_path: doc_hash["link"],
-            }
+            },
           )
           raise Indexer::PublishingApiError
         rescue GdsApi::HTTPErrorResponse => e
@@ -62,7 +62,7 @@ module Indexer
               error_code: e.code,
               error_message: e.message,
               error_details: e.error_details,
-            }
+            },
           )
           raise Indexer::PublishingApiError
         end
@@ -80,7 +80,7 @@ module Indexer
           extra: {
             error_message: "Timeout fetching expanded links",
             content_id: content_id,
-          }
+          },
         )
         raise Indexer::PublishingApiError
       rescue GdsApi::HTTPNotFound => e
@@ -101,7 +101,7 @@ module Indexer
             error_code: e.code,
             error_message: e.message,
             error_details: e.error_details,
-          }
+          },
         )
         raise Indexer::PublishingApiError
       end

@@ -52,7 +52,7 @@ module Search
       option_objects = unique_options.map { |term, count|
         make_aggregate_option(field, term, count,
           applied_options.include?(term),
-          aggregate_parameters[:order],
+          aggregate_parameters[:order]
         )
       }
 

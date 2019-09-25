@@ -9,7 +9,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       consumer = GovukMessageQueueConsumer::Consumer.new(
         queue_name: "bigwig.test",
         processor: GovukIndex::PublishingEventProcessor.new,
-        rabbitmq_connection: bunny_mock
+        rabbitmq_connection: bunny_mock,
       )
 
       @queue = @channel.queue("bigwig.test")

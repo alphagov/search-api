@@ -19,7 +19,7 @@ RSpec.describe "search queries" do
           "total_options" => 2,
           "missing_options" => 0,
           "scope" => "exclude_field_filter",
-        }
+        },
       )
     end
 
@@ -42,7 +42,7 @@ RSpec.describe "search queries" do
           "total_options" => 2,
           "missing_options" => 0,
           "scope" => "exclude_field_filter",
-        }
+        },
       )
       expect(parsed_response["aggregates"]).to be_nil
     end
@@ -168,7 +168,7 @@ RSpec.describe "search queries" do
         "total_options" => 2,
         "missing_options" => 1,
         "scope" => "exclude_field_filter",
-      }
+      },
     )
   end
 
@@ -187,7 +187,7 @@ RSpec.describe "search queries" do
         "total_options" => 1,
         "missing_options" => 0,
         "scope" => "all_filters",
-      }
+      },
     )
   end
 
@@ -200,7 +200,7 @@ RSpec.describe "search queries" do
       parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
         .first["value"]["example_info"]["examples"]
         .map { |h| h["link"] }
-        .sort
+        .sort,
     ).to eq(["/government-1", "/govuk-1"])
   end
 

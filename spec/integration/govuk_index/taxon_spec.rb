@@ -21,7 +21,7 @@ RSpec.describe "taxon publishing" do
       payload: {
         document_type: "taxon",
         base_path: "/transport/all",
-      }
+      },
     )
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("taxon" => :all)

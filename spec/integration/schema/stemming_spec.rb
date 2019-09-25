@@ -65,7 +65,7 @@ private
       body: {
         analyzer: analyzer.to_s,
         text: query,
-      }
+      },
     )
     mappings = result["tokens"]
     mappings.map { |mapping| mapping["token"] }

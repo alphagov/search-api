@@ -42,7 +42,7 @@ module GovukIndex
         client: Services.elasticsearch(cluster: cluster, timeout: TIMEOUT_SECONDS),
         index_names: @source_index,
         search_body: search_body,
-        batch_size: SCROLL_BATCH_SIZE
+        batch_size: SCROLL_BATCH_SIZE,
       ) do |record|
         {
           "identifier" => record.slice(*%w{_id _type _version}),

@@ -12,7 +12,7 @@ RSpec.describe QueryComponents::Popularity do
   context "with disabling of popularity" do
     it "disable popularity" do
       builder = described_class.new(
-        search_query_params(debug: { disable_popularity: true })
+        search_query_params(debug: { disable_popularity: true }),
       )
 
       result = builder.wrap({ some: "query" })

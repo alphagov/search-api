@@ -30,7 +30,7 @@ class SitemapGenerator
         client: Services.elasticsearch(cluster: Clusters.default_cluster, timeout: SearchIndices::Index::TIMEOUT_SECONDS),
         search_body: search_body,
         index_names: index_names,
-        batch_size: SearchIndices::Index.scroll_batch_size
+        batch_size: SearchIndices::Index.scroll_batch_size,
       ) do |hit|
         SitemapPresenter.new(hit["_source"], property_boost_calculator)
       end

@@ -40,11 +40,11 @@ module Search
       Mapping.new(:people),
       Mapping.new(
         :topic_content_ids,
-        new_field_name: :expanded_topics
+        new_field_name: :expanded_topics,
       ),
       Mapping.new(
         :organisation_content_ids,
-        new_field_name: :expanded_organisations
+        new_field_name: :expanded_organisations,
       ),
     ].freeze
 

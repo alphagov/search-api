@@ -28,7 +28,7 @@ RSpec.describe Indexer::DocumentPreparer do
       updated_doc_hash = described_class.new("fake_client", "fake_index").prepared(
         doc_hash,
         {},
-        true
+        true,
       )
 
       expect(updated_doc_hash["navigation_document_supertype"]).to eq("guidance")

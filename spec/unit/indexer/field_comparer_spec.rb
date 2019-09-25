@@ -9,7 +9,7 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
       "/some/id",
       "title",
       %w(value1 value2 value3),
-      %w(value1 value2 value3)
+      %w(value1 value2 value3),
     )
     expect(is_same).to be true
   end
@@ -24,7 +24,7 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
       "/some/id",
       "title",
       %w(value1 value2 value3),
-      %w(value1 other_value2 value3)
+      %w(value1 other_value2 value3),
     )
     expect(is_same).to be false
   end
@@ -34,7 +34,7 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
       "/some/id",
       "title",
       %w(value1 value2),
-      %w(value1 value2 value3)
+      %w(value1 value2 value3),
     )
     expect(is_same).to be false
   end
@@ -44,7 +44,7 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
       "/some/id",
       "title",
       %w(value1 value2 value3),
-      %w(value1 value2)
+      %w(value1 value2),
     )
     expect(is_same).to be false
   end
@@ -65,7 +65,7 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
       "/some/id",
       "title",
       "What the government's doing about pigs' and micropigs' welfare",
-      "What the government‘s doing about pigs' and micropigs’ welfare"
+      "What the government‘s doing about pigs' and micropigs’ welfare",
     )
     expect(is_same).to be true
   end

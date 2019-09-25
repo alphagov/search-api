@@ -12,7 +12,7 @@ module Services
       # Currently, expanded-links consistently takes a long time for some
       # content. This is required for indexing, so it's better to wait for this
       # to complete than abort the request.
-      timeout: 20
+      timeout: 20,
     )
   end
 
@@ -32,7 +32,7 @@ module Services
       request_timeout: timeout,
       logger: Logging.logger[self],
       retry_on_failure: retry_on_failure,
-      transport_options: { headers: { "Content-Type" => "application/json" } }
+      transport_options: { headers: { "Content-Type" => "application/json" } },
     )
   end
 

@@ -172,7 +172,7 @@ RSpec.describe "BatchSearchTest" do
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      )
+      ),
     ).to eq(results[0]["results"][0])
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
@@ -189,7 +189,7 @@ RSpec.describe "BatchSearchTest" do
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      )
+      ),
     ).to eq(results[0]["results"][0])
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
@@ -206,7 +206,7 @@ RSpec.describe "BatchSearchTest" do
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      )
+      ),
     ).to eq(results[0]["results"][0])
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
@@ -260,12 +260,12 @@ RSpec.describe "BatchSearchTest" do
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2017-07-01T11:20:00.000-03:00", "link" => "/cma-1"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2017-07-02T00:15:00.000+01:00", "link" => "/cma-2"),
-      type: "cma_case"
+      type: "cma_case",
     )
 
     get build_get_url([{ filter_document_type: "cma_case", filter_opened_date: "from:2017-07-01 12:00,to:2017-07-01 23:30:00" }, { q: "ministry of magic" }])
@@ -300,7 +300,7 @@ RSpec.describe "BatchSearchTest" do
     expect(results[0]["results"][0]["organisations"]).to eq(
       [{ "slug" => "/ministry-of-magic",
       "link" => "/ministry-of-magic-site",
-      "title" => "Ministry of Magic" }]
+      "title" => "Ministry of Magic" }],
     )
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
@@ -316,9 +316,9 @@ RSpec.describe "BatchSearchTest" do
 
     # Keeps the organisation content ids
     expect(
-      results[0]["results"][0]["organisation_content_ids"]
+      results[0]["results"][0]["organisation_content_ids"],
     ).to eq(
-      ["organisation-content-id"]
+      ["organisation-content-id"],
     )
 
     expect_results_includes_ministry_of_magic(results, 1, 0)
@@ -471,7 +471,7 @@ RSpec.describe "BatchSearchTest" do
       {
         "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
         "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
-      }
+      },
       )
 
     get build_get_url([{ filter_part_of_taxonomy_tree: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"] }, { filter_part_of_taxonomy_tree: ["aa2093ef-778c-4105-9f33-9aa03d14bc5c"] }])
@@ -488,7 +488,7 @@ RSpec.describe "BatchSearchTest" do
     commit_ministry_of_magic_document(
       {
         "facet_groups" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
-      }
+      },
     )
 
     get build_get_url([{ filter_facet_groups: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"] }, { filter_facet_groups: ["aa2093ef-778c-4105-9f33-9aa03d14bc5c"] }])
@@ -505,7 +505,7 @@ RSpec.describe "BatchSearchTest" do
     commit_ministry_of_magic_document(
       {
         "facet_values" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
-      }
+      },
     )
 
     get build_get_url([{ filter_facet_values: ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"] }, { filter_facet_values: ["aa2093ef-778c-4105-9f33-9aa03d14bc5c"] }])

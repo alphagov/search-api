@@ -33,7 +33,7 @@ module SearchIndices
       }
       @index_creation_client.indices.create(
         index: index_name,
-        body: index_payload
+        body: index_payload,
       )
 
       logger.info "Created index #{index_name}"

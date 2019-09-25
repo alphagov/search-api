@@ -8,7 +8,7 @@ RSpec.describe "Collections publishing" do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "collections.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("collections.test")

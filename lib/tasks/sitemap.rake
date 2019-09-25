@@ -26,13 +26,13 @@ namespace :sitemap do
       filenames[:sitemaps].each do |filename, link_filename|
         upload_to_s3(
           "#{output_directory}/#{Sitemap::SUB_DIRECTORY}/#{filename}",
-          "#{Sitemap::SUB_DIRECTORY}/#{link_filename}"
+          "#{Sitemap::SUB_DIRECTORY}/#{link_filename}",
         )
       end
 
       upload_to_s3(
         "#{output_directory}/#{Sitemap::SUB_DIRECTORY}/#{filenames[:index]}",
-        "sitemap.xml"
+        "sitemap.xml",
       )
     end
   end

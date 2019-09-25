@@ -47,7 +47,7 @@ module Search
           parent_organisations
           superseded_organisations
           superseding_organisations
-        }
+        },
       )
     end
 
@@ -55,7 +55,7 @@ module Search
       BaseRegistry.new(
         search_server.index_for_search([SearchConfig.govuk_index_name]),
         field_definitions,
-        "specialist_sector"
+        "specialist_sector",
       )
     end
 

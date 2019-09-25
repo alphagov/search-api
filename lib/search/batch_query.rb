@@ -26,7 +26,7 @@ module Search
         QueryBuilder.new(
           search_params: search_params,
           content_index_names: SearchConfig.content_index_names,
-          metasearch_index: metasearch_index
+          metasearch_index: metasearch_index,
         )
       end
     end

@@ -5,7 +5,7 @@ RSpec.describe QueryComponents::BestBets do
     it "return the query without modification" do
       builder = described_class.new(
         metasearch_index: SearchConfig.default_instance.metasearch_index,
-        search_params: Search::QueryParameters.new(debug: { disable_best_bets: true })
+        search_params: Search::QueryParameters.new(debug: { disable_best_bets: true }),
       )
 
       result = builder.wrap("QUERY")

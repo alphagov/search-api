@@ -70,7 +70,7 @@ RSpec.describe SitemapGenerator do
 
     SitemapPresenter.new(
       attributes,
-      PropertyBoostCalculator.new
+      PropertyBoostCalculator.new,
     )
   end
 

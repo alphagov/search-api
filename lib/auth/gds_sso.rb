@@ -31,7 +31,7 @@ module Auth
           headers: {
             user_agent: "oauth-client (#{ENV.fetch('GOVUK_APP_NAME', 'search-api')})",
           },
-        }
+        },
       )
     end
 

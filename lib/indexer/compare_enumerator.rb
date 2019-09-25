@@ -48,7 +48,7 @@ module Indexer
         client: client,
         index_names: index_name,
         search_body: search_body,
-        batch_size: BATCH_SIZE
+        batch_size: BATCH_SIZE,
       ) do |document|
         flattened_document(document)
       end

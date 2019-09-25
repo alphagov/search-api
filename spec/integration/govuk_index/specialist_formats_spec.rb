@@ -8,7 +8,7 @@ RSpec.describe "SpecialistFormatTest" do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "bigwig.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("bigwig.test")
@@ -80,7 +80,7 @@ RSpec.describe "SpecialistFormatTest" do
     expect_document_is_in_rummager(
       { "link" => random_example["base_path"], "format" => search_document_type },
       index: "govuk_test",
-      type: search_document_type
+      type: search_document_type,
     )
   end
 

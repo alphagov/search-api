@@ -28,9 +28,9 @@ RSpec.describe IndexSchemaParser do
         hash_including({
           "manual" => @identifier_es_config,
           "link" => @identifier_es_config,
-        })
+        }),
       ).to eq(
-        es_mappings["generic-document"]["properties"]
+        es_mappings["generic-document"]["properties"],
       )
     end
   end

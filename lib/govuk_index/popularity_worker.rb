@@ -10,7 +10,7 @@ module GovukIndex
       popularities = retrieve_popularities_for(destination_index, records)
       records.each do |record|
         actions.save(
-          process_record(record, popularities)
+          process_record(record, popularities),
         )
       end
 

@@ -29,7 +29,7 @@ private
   def validate_key!(key)
     unless VALID_KEYS.include?(key)
       raise InvalidSynonymConfig.new(
-        "Unknown synonym key '#{key}'. Expected one of: #{VALID_KEYS.join(', ')}"
+        "Unknown synonym key '#{key}'. Expected one of: #{VALID_KEYS.join(', ')}",
       )
     end
   end
@@ -37,7 +37,7 @@ private
   def validate_synonym_count!(synonyms)
     if synonyms.count > 1
       raise InvalidSynonymConfig.new(
-        <<~MESSAGE
+        <<~MESSAGE,
           More than one term defined together: #{synonyms}. Each synonym should be defined as a separate item, e.g.
           - search: 'foo => bar'
           - index: 'baz, qux'

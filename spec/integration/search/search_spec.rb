@@ -259,7 +259,7 @@ RSpec.describe "SearchTest" do
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-        )
+        ),
     ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
@@ -276,7 +276,7 @@ RSpec.describe "SearchTest" do
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      )
+      ),
     ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
@@ -293,7 +293,7 @@ RSpec.describe "SearchTest" do
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-      )
+      ),
     ).to eq(
       parsed_response.fetch("results").fetch(0),
     )
@@ -337,12 +337,12 @@ RSpec.describe "SearchTest" do
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2017-07-01T11:20:00.000-03:00", "link" => "/cma-1"),
-      type: "cma_case"
+      type: "cma_case",
     )
     commit_document(
       "govuk_test",
       cma_case_attributes("opened_date" => "2017-07-02T00:15:00.000+01:00", "link" => "/cma-2"),
-      type: "cma_case"
+      type: "cma_case",
     )
 
     get "/search?filter_document_type=cma_case&filter_opened_date=from:2017-07-01 12:00,to:2017-07-01 23:30:00"
@@ -359,9 +359,9 @@ RSpec.describe "SearchTest" do
 
     expect(last_response.status).to eq(422)
     expect(
-      parsed_response
+      parsed_response,
     ).to eq(
-      { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} }
+      { "error" => %{Too many values (2) for parameter "opened_date" (must occur at most once)} },
     )
   end
 
@@ -370,9 +370,9 @@ RSpec.describe "SearchTest" do
 
     expect(last_response.status).to eq(422)
     expect(
-      parsed_response
+      parsed_response,
     ).to eq(
-      { "error" => %{Invalid "from" value "not-a-date" for parameter "opened_date" (expected ISO8601 date)} }
+      { "error" => %{Invalid "from" value "not-a-date" for parameter "opened_date" (expected ISO8601 date)} },
     )
   end
 
@@ -385,7 +385,7 @@ RSpec.describe "SearchTest" do
     expect(first_result["organisations"]).to eq(
       [{ "slug" => "/ministry-of-magic",
       "link" => "/ministry-of-magic-site",
-      "title" => "Ministry of Magic" }]
+      "title" => "Ministry of Magic" }],
     )
   end
 
@@ -398,7 +398,7 @@ RSpec.describe "SearchTest" do
     expect(first_result["organisations"]).to eq(
       [{ "slug" => "/ministry-of-magic",
       "link" => "/ministry-of-magic-site",
-      "title" => "Ministry of Magic" }]
+      "title" => "Ministry of Magic" }],
     )
   end
 
@@ -413,9 +413,9 @@ RSpec.describe "SearchTest" do
 
     # Keeps the organisation content ids
     expect(
-      first_result["organisation_content_ids"]
+      first_result["organisation_content_ids"],
     ).to eq(
-      ["organisation-content-id"]
+      ["organisation-content-id"],
     )
   end
 
@@ -569,7 +569,7 @@ RSpec.describe "SearchTest" do
       {
         "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
         "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
-      }
+      },
     )
     get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 

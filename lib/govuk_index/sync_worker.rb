@@ -12,7 +12,7 @@ module GovukIndex
           OpenStruct.new(
             identifier: record["identifier"].merge("_version_type" => "external_gte"),
             document: record["document"],
-          )
+          ),
         )
       end
 

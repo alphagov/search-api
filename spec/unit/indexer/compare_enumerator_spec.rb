@@ -136,18 +136,18 @@ private
         body: search_body || {
           query: described_class::DEFAULT_QUERY,
           sort: described_class::DEFAULT_SORT,
-        }
-      )
+        },
+      ),
     ).and_return(
-      { "_scroll_id" => "scroll_ID_0", "hits" => { "total" => 1, "hits" => return_values[0] } }
+      { "_scroll_id" => "scroll_ID_0", "hits" => { "total" => 1, "hits" => return_values[0] } },
     )
 
 
     return_values[1..-1].each_with_index do |return_value, i|
       expect(client).to receive(:scroll).with(
-        scroll_id: "scroll_ID_#{i}", scroll: "1m"
+        scroll_id: "scroll_ID_#{i}", scroll: "1m",
       ).and_return(
-        { "_scroll_id" => "scroll_ID_#{i + 1}", "hits" => { "hits" => return_value } }
+        { "_scroll_id" => "scroll_ID_#{i + 1}", "hits" => { "hits" => return_value } },
       )
     end
   end

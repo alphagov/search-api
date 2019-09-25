@@ -5,7 +5,7 @@ namespace :publishing_api do
   task :publish_special_routes do
     publisher = SpecialRoutePublisher.new(
       logger: Logger.new(STDOUT),
-      publishing_api: Services.publishing_api
+      publishing_api: Services.publishing_api,
     )
 
     begin

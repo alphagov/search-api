@@ -8,11 +8,11 @@ RSpec.describe Index::ElasticsearchProcessor do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
       _type: "help_page",
-      _id: "/cheese"
+      _id: "/cheese",
     )
     allow(presenter).to receive(:document).and_return(
       link: "/cheese",
-      title: "We love cheese"
+      title: "We love cheese",
     )
 
     client = double("client")
@@ -28,11 +28,11 @@ RSpec.describe Index::ElasticsearchProcessor do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
       _type: "help_page",
-      _id: "/cheese"
+      _id: "/cheese",
     )
     allow(presenter).to receive(:document).and_return(
       link: "/cheese",
-      title: "We love cheese"
+      title: "We love cheese",
     )
 
     client = double("client")
@@ -44,7 +44,7 @@ RSpec.describe Index::ElasticsearchProcessor do
         {
           delete: presenter.identifier,
         }
-      ]
+      ],
     )
     # rubocop:enable RSpec/MessageSpies
 

@@ -8,7 +8,7 @@ RSpec.describe "HMRC manual publishing" do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "hmrc_manuals.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("hmrc_manuals.test")

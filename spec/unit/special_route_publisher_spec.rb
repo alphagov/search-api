@@ -14,7 +14,7 @@ RSpec.describe SpecialRoutePublisher do
 
     @publisher = described_class.new(
       publishing_api: @publishing_api,
-      logger: logger
+      logger: logger,
     )
   end
 
@@ -33,7 +33,7 @@ RSpec.describe SpecialRoutePublisher do
     validator = GovukContentSchemaTestHelpers::Validator.new(
       "special_route",
       "schema",
-      payload
+      payload,
     )
 
     expect(validator.valid?).to be true

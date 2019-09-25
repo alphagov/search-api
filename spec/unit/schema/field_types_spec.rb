@@ -55,7 +55,7 @@ RSpec.describe FieldTypes do
 
     it "fail if a field type has an invalid `filter type` property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return(
-        { "identifier" => { "es_config" => {}, "filter_type" => "bad value" } }
+        { "identifier" => { "es_config" => {}, "filter_type" => "bad value" } },
       )
       expect_raises_message(%{Invalid value for "filter_type" ("bad value") in field type "identifier" in "/config/path/field_types.json"}) do
         @types.get("identifier")
@@ -64,7 +64,7 @@ RSpec.describe FieldTypes do
 
     it "fail if a field type has an invalid `children` property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return(
-        { "identifier" => { "es_config" => {}, "children" => "bad value" } }
+        { "identifier" => { "es_config" => {}, "children" => "bad value" } },
       )
       expect_raises_message(%{Invalid value for "children" ("bad value") in field type "identifier" in "/config/path/field_types.json"}) do
         @types.get("identifier")
@@ -73,7 +73,7 @@ RSpec.describe FieldTypes do
 
     it "fail if a field type has an unknown property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return(
-        { "identifier" => { "es_config" => {}, "foo" => true } }
+        { "identifier" => { "es_config" => {}, "foo" => true } },
       )
       expect_raises_message(%{Unknown keys (foo) in field type "identifier" in "/config/path/field_types.json"}) do
         @types.get("identifier")

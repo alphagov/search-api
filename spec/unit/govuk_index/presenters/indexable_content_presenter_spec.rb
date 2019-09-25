@@ -7,7 +7,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
     described_class.new(
       format: format,
       details: details,
-      sanitiser: GovukIndex::IndexableContentSanitiser.new
+      sanitiser: GovukIndex::IndexableContentSanitiser.new,
     )
   end
 

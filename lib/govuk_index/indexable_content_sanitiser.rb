@@ -25,7 +25,7 @@ module GovukIndex
       if item.count > 0
         GovukError.notify(
           GovukIndex::MissingTextHtmlContentType.new,
-          extra: { content_types: item.map { |r| r["content_type"] } }
+          extra: { content_types: item.map { |r| r["content_type"] } },
         )
       end
       nil

@@ -32,7 +32,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
 
   it "indexes documents with links from publishing api" do
     publishing_api_has_lookups(
-      "/foo/bar" => "DOCUMENT-CONTENT-ID"
+      "/foo/bar" => "DOCUMENT-CONTENT-ID",
     )
 
     publishing_api_has_expanded_links(
@@ -84,7 +84,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
           { "content_id" => "TGRP-1" },
           { "content_id" => "TGRP-2" }
         ],
-      }
+      },
     )
 
     post "/government_test/documents", {
@@ -120,7 +120,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
             "base_path" => "/topic/my-topic/a",
           }
         ],
-      }
+      },
     )
 
     post "/government_test/documents", {
@@ -197,14 +197,14 @@ RSpec.describe "TaglookupDuringIndexingTest" do
     }
 
     publishing_api_has_lookups(
-      "/foo/bar" => "DOCUMENT-CONTENT-ID"
+      "/foo/bar" => "DOCUMENT-CONTENT-ID",
     )
 
     publishing_api_has_expanded_links(
       content_id: "DOCUMENT-CONTENT-ID",
       expanded_links: {
         taxons: [taxon_1, taxon_2],
-      }
+      },
     )
 
     post "/government_test/documents", {

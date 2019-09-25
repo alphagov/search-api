@@ -8,7 +8,7 @@ RSpec.describe "external content publishing" do
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "external_content.test",
       processor: GovukIndex::PublishingEventProcessor.new,
-      rabbitmq_connection: bunny_mock
+      rabbitmq_connection: bunny_mock,
     )
 
     @queue = @channel.queue("external_content.test")

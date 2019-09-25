@@ -43,7 +43,7 @@ module Search
             document_schema.expanded_search_result_fields[field_name].find { |allowed_value|
               allowed_value.fetch("value") == raw_value
             }
-          }
+          },
         )
       end
 

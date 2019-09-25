@@ -57,7 +57,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
     allow(index_mock).to receive(:get_document_by_link).with("/does-exist").and_return(
       "link" => "/does-exist",
       "real_index_name" => "index_name-123",
-      "_id" => "document_id_345"
+      "_id" => "document_id_345",
     )
     expect(IndexFinder).to receive(:content_index).and_return(index_mock)
 

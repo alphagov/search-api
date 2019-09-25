@@ -122,7 +122,7 @@ module Indexer
 
     def prepare_document_supertypes(doc_hash)
       doc_hash.merge(
-        GovukDocumentTypes.supertypes(document_type: doc_hash["content_store_document_type"])
+        GovukDocumentTypes.supertypes(document_type: doc_hash["content_store_document_type"]),
       )
     end
   end

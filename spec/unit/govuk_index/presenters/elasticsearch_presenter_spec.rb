@@ -134,13 +134,13 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
 
     it "returns facet_groups" do
       expect(presenter.document).to include(
-        facet_groups: ["3501d07d-12f7-4f7e-97f9-0de008d556cd"]
+        facet_groups: ["3501d07d-12f7-4f7e-97f9-0de008d556cd"],
       )
     end
 
     it "returns facet_values" do
       expect(presenter.document).to include(
-        facet_values: ["4577e252-45c3-4c91-a040-c9f8568d0150", "5e326667-0d05-4453-b3a0-a1c6e797171e"]
+        facet_values: ["4577e252-45c3-4c91-a040-c9f8568d0150", "5e326667-0d05-4453-b3a0-a1c6e797171e"],
       )
     end
   end

@@ -53,7 +53,7 @@ RSpec.describe ElasticsearchTypesParser do
         hash_including({
           "manual" => @identifier_es_config,
           "link" => @identifier_es_config,
-        })
+        }),
       ).to eq(es_config)
     end
 
@@ -63,17 +63,17 @@ RSpec.describe ElasticsearchTypesParser do
 
     it "include expanded search result fields in the cma case `case state` field" do
       expect(
-        cma_case_expanded_search_result_fields
+        cma_case_expanded_search_result_fields,
       ).to eq(
-        @types["cma_case"].fields["case_state"].expanded_search_result_fields
+        @types["cma_case"].fields["case_state"].expanded_search_result_fields,
       )
     end
 
     it "expanded search result fields on a field should also be available from the document_type" do
       expect(
-        @types["cma_case"].fields["case_state"].expanded_search_result_fields
+        @types["cma_case"].fields["case_state"].expanded_search_result_fields,
       ).to eq(
-        @types["cma_case"].expanded_search_result_fields["case_state"]
+        @types["cma_case"].expanded_search_result_fields["case_state"],
       )
     end
   end

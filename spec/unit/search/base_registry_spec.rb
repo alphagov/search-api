@@ -69,7 +69,7 @@ RSpec.describe Search::BaseRegistry do
       .and_return([example_document])
 
     expect(
-      @base_registry.by_content_id("example-content-id")
+      @base_registry.by_content_id("example-content-id"),
     ).to eq(example_document)
   end
 end

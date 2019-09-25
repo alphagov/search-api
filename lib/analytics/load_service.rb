@@ -53,7 +53,7 @@ module Analytics
         ENV["GOOGLE_EXPORT_ACCOUNT_ID"],
         ENV["GOOGLE_EXPORT_WEB_PROPERTY_ID"],
         ENV["GOOGLE_EXPORT_CUSTOM_DATA_SOURCE_ID"],
-        delete_upload_data_request_object
+        delete_upload_data_request_object,
       )
     end
 

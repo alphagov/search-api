@@ -241,7 +241,7 @@ private
         filter_name_lookup(hash["name"]),
         hash.fetch("values"),
         hash.fetch("operation").to_sym,
-        (hash.fetch("multivalue_query") || "any").to_sym
+        (hash.fetch("multivalue_query") || "any").to_sym,
       )
     end
     result.compact

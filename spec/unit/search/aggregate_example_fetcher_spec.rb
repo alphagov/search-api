@@ -140,7 +140,7 @@ RSpec.describe Search::AggregateExampleFetcher do
             example_fields: @example_fields,
             example_scope: :global,
           },
-        }
+        },
       )
       @builder = double("builder")
       @fetcher = described_class.new(@index, main_query_response, params, @builder)
@@ -165,7 +165,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           "sector_2" => { total: 1, examples: [
               { "title" => "example_3" }
             ] },
-        }
+        },
       ).to eq(@fetcher.fetch)
     end
   end
@@ -194,7 +194,7 @@ RSpec.describe Search::AggregateExampleFetcher do
             example_fields: @example_fields,
             example_scope: :query,
           },
-        }
+        },
       )
 
       @builder = double("builder")
@@ -225,7 +225,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           "sector_2" => { total: 1, examples: [
               { "title" => "example_3" }
             ] },
-        }
+        },
       ).to eq(@fetcher.fetch)
     end
   end
@@ -250,7 +250,7 @@ RSpec.describe Search::AggregateExampleFetcher do
             example_fields: @example_fields,
             example_scope: :global,
           },
-        }
+        },
       )
       @builder = double("builder")
       @fetcher = described_class.new(@index, main_query_response, params, @builder)
@@ -284,7 +284,7 @@ RSpec.describe Search::AggregateExampleFetcher do
             example_fields: @example_fields,
             example_scope: :query,
           },
-        }
+        },
       )
 
       @builder = double("builder")
@@ -319,7 +319,7 @@ RSpec.describe Search::AggregateExampleFetcher do
               { total: sector_num, examples: [{ "title" => "example_#{sector_num}" }] }
             ]
           }
-        ]
+        ],
       ).to eq(@fetcher.fetch)
     end
   end

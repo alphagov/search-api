@@ -29,8 +29,8 @@ RSpec.describe GovukIndex::SupertypeWorker do
 
     expect(@processor).to have_received(:save).with(
       having_attributes(
-        document: hash_including({ "supertype1" => "type1", "supertype2" => "type2", "title" => "test_doc" })
-      )
+        document: hash_including({ "supertype1" => "type1", "supertype2" => "type2", "title" => "test_doc" }),
+      ),
     )
   end
 

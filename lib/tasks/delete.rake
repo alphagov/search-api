@@ -22,7 +22,7 @@ namespace :delete do
         client: client,
         search_body: { query: { term: { format: format } } },
         batch_size: 500,
-        index_names: index
+        index_names: index,
       ) { |hit| hit }.map do |hit|
         {
           delete: {

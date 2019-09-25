@@ -8,7 +8,7 @@ RSpec.describe Clusters::Cluster do
     described_class.new(
       key: default["key"],
       uri_key: default["uri_key"],
-      default: default["default"]
+      default: default["default"],
     )
   }
 

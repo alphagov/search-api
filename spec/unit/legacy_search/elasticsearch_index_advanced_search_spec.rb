@@ -196,7 +196,7 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
       .to_return(
         status: 200,
         body: "{\"hits\": {\"total\": 10, \"hits\": [{\"_source\": {\"indexable_content\": \"some_content\", \"document_type\": \"edition\"}, \"_type\": \"generic-document\"}]}}",
-        headers: { "Content-Type" => "application/json" }
+        headers: { "Content-Type" => "application/json" },
       )
     result_set = @wrapper.advanced_search(default_params)
     expect(result_set.total).to eq(10)
@@ -214,7 +214,7 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
     r.to_return(
       status: 200,
       body: "{\"hits\": {\"total\": 0, \"hits\": []}}",
-      headers: { "Content-Type" => "application/json" }
+      headers: { "Content-Type" => "application/json" },
     )
   end
 

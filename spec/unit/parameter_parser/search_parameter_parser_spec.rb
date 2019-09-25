@@ -106,7 +106,7 @@ RSpec.describe SearchParameterParser do
       expected_params(
         ab_tests: { search_cluster_query: cluster.key },
         cluster: cluster_with_key(cluster.key),
-       )
+       ),
     )
   end
 
@@ -127,7 +127,7 @@ RSpec.describe SearchParameterParser do
       expected_params(
         ab_tests: { search_cluster_query: "invalid" },
         cluster: cluster_with_key(Clusters.default_cluster.key),
-      )
+      ),
      )
   end
 
@@ -371,7 +371,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"])]
+      [text_filter("organisations", ["hm-magic"])],
     )
   end
 
@@ -381,7 +381,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"], :reject, :any)]
+      [text_filter("organisations", ["hm-magic"], :reject, :any)],
     )
   end
 
@@ -391,7 +391,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"], :reject, :any)]
+      [text_filter("organisations", ["hm-magic"], :reject, :any)],
                                          )
   end
 
@@ -401,7 +401,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to eq(
-      [text_filter("organisations", ["hm-magic"], :reject, :all)]
+      [text_filter("organisations", ["hm-magic"], :reject, :all)],
                                          )
   end
 
@@ -437,7 +437,7 @@ RSpec.describe SearchParameterParser do
             ]
           )
         ],
-      )
+      ),
     )
   end
 
@@ -479,7 +479,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq(%{"spells" is not a valid filter field})
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(
-      expected_params(filters: [text_filter("organisations", %w[hm-magic])])
+      expected_params(filters: [text_filter("organisations", %w[hm-magic])]),
     )
   end
 
@@ -495,7 +495,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq(%{"spells" is not a valid reject field})
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(
-      expected_params(filters: [text_filter("organisations", %w[hm-magic], :reject)])
+      expected_params(filters: [text_filter("organisations", %w[hm-magic], :reject)]),
     )
   end
 
@@ -507,7 +507,7 @@ RSpec.describe SearchParameterParser do
     )
 
     expect(parser.parsed_params[:filters]).to eq(
-      [text_filter("document_type", %w[cma_case])]
+      [text_filter("document_type", %w[cma_case])],
     )
   end
 
@@ -648,7 +648,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params).to match(
-      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) })
+      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) }),
     )
   end
 
@@ -665,8 +665,8 @@ RSpec.describe SearchParameterParser do
         aggregates: {
           "organisations" => expected_aggregate_params(requested: 10),
           "mainstream_browse_pages" => expected_aggregate_params(requested: 5),
-        }
-      )
+        },
+      ),
     )
   end
 
@@ -679,7 +679,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq(%{"spells" is not a valid aggregate field})
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(
-      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) })
+      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 10) }),
     )
   end
 
@@ -708,7 +708,7 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq(%{Too many values (2) for parameter "aggregate_organisations" (must occur at most once)})
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(
-      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 5) })
+      expected_params(aggregates: { "organisations" => expected_aggregate_params(requested: 5) }),
     )
   end
 
@@ -728,8 +728,8 @@ RSpec.describe SearchParameterParser do
             example_fields: %w(slug title),
             example_scope: :global,
           ),
-        }
-    )
+        },
+    ),
 )
   end
 
@@ -746,7 +746,7 @@ RSpec.describe SearchParameterParser do
                                            requested: 10,
                                            order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
                                        ),
-                                 }
+                                 },
     ))
   end
 
@@ -774,7 +774,7 @@ RSpec.describe SearchParameterParser do
                                            requested: 10,
                                            order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
                                          ),
-                                       }
+                                       },
     ))
   end
 
@@ -791,7 +791,7 @@ RSpec.describe SearchParameterParser do
                                            requested: 10,
                                            scope: :all_filters,
                                          ),
-                                       }
+                                       },
     ))
   end
 
@@ -830,7 +830,7 @@ RSpec.describe SearchParameterParser do
                                            example_fields: %w(slug title link),
                                            example_scope: :global,
                                          ),
-                                       }
+                                       },
     ))
   end
 
@@ -858,7 +858,7 @@ RSpec.describe SearchParameterParser do
                                            example_fields: %w(slug title),
                                            example_scope: :query,
                                          ),
-                                       }
+                                       },
     ))
   end
 
@@ -916,7 +916,7 @@ RSpec.describe SearchParameterParser do
     }, @schema)
 
     expect(p.error).to eq(
-      "aggregates can not be used in conjuction with facets, please switch to using aggregates as facets are deprecated."
+      "aggregates can not be used in conjuction with facets, please switch to using aggregates as facets are deprecated.",
     )
     expect(p).not_to be_valid
   end

@@ -46,7 +46,7 @@ RSpec.describe "ElasticsearchDeletionTest" do
       client.get(
         index: "metasearch_test",
         type: "best_bet",
-        id: "jobs_exact"
+        id: "jobs_exact",
       )
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end

@@ -29,7 +29,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "indexable_content" => "I like my badger: he is pythonic and delicious",
         },
       ],
-      index_name: "govuk_test"
+      index_name: "govuk_test",
     )
 
     generator = SitemapGenerator.new(SearchConfig.default_instance)
@@ -52,7 +52,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
-      index_name: "government_test"
+      index_name: "government_test",
     )
     generator = SitemapGenerator.new(SearchConfig.default_instance)
     sitemap_xml = generator.sitemaps
@@ -85,7 +85,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "indexable_content" => "Tax, benefits, roads and stuff",
         },
       ],
-      index_name: "government_test"
+      index_name: "government_test",
     )
 
     sitemap_xml = generator.sitemaps
@@ -108,7 +108,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
-      index_name: "govuk_test"
+      index_name: "govuk_test",
     )
 
     sitemap_xml = generator.sitemaps
@@ -134,7 +134,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
-      index_name: "govuk_test"
+      index_name: "govuk_test",
     )
 
     sitemap_xml = generator.sitemaps
