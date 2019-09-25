@@ -434,8 +434,7 @@ RSpec.describe SearchParameterParser do
           text_filter("organisations", %w[
               hm-magic
               hmrc
-            ]
-          ),
+            ]),
         ],
       ),
     )

@@ -47,8 +47,7 @@ module Indexer
                             extra: {
                               error_message: "Timeout looking up content ID",
                               base_path: doc_hash["link"],
-                            },
-          )
+                            },)
           raise Indexer::PublishingApiError
         rescue GdsApi::HTTPErrorResponse => e
           @logger.error("HTTP error looking up content ID for #{doc_hash['link']}: #{e.message}")
@@ -62,8 +61,7 @@ module Indexer
                               error_code: e.code,
                               error_message: e.message,
                               error_details: e.error_details,
-                            },
-          )
+                            },)
           raise Indexer::PublishingApiError
         end
       end
@@ -80,8 +78,7 @@ module Indexer
                           extra: {
                             error_message: "Timeout fetching expanded links",
                             content_id: content_id,
-                          },
-        )
+                          },)
         raise Indexer::PublishingApiError
       rescue GdsApi::HTTPNotFound => e
         # If the Content ID no longer exists in the Publishing API, there isn't really much
@@ -101,8 +98,7 @@ module Indexer
                             error_code: e.code,
                             error_message: e.message,
                             error_details: e.error_details,
-                          },
-        )
+                          },)
         raise Indexer::PublishingApiError
       end
     end

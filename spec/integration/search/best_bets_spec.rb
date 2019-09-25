@@ -5,14 +5,12 @@ RSpec.describe "best/worst bet functionality" do
     commit_document("govuk_test",
                     "link" => "/an-organic-result",
                     "indexable_content" => 'I will turn up in searches for "a forced best bet"',
-                    "format" => "answer",
-    )
+                    "format" => "answer",)
 
     commit_document("govuk_test",
                     "link" => "/the-link-that-should-surface",
                     "indexable_content" => "Empty.",
-                    "format" => "answer",
-    )
+                    "format" => "answer",)
 
     add_best_bet(
       query: "a forced best bet",
@@ -60,8 +58,7 @@ RSpec.describe "best/worst bet functionality" do
     commit_document("govuk_test",
                     "indexable_content" => "I should not be shown.",
                     "link" => "/we-never-show-this",
-                    "format" => "answer",
-    )
+                    "format" => "answer",)
 
     add_worst_bet(
       query: "shown",
@@ -78,8 +75,7 @@ RSpec.describe "best/worst bet functionality" do
   it "boosts stemmed best bets when the terms match exactly" do
     commit_document("govuk_test",
                     "link" => "/the-link-that-should-surface",
-                    "format" => "answer",
-    )
+                    "format" => "answer",)
 
     add_best_bet(
       query: "best bet",
@@ -96,8 +92,7 @@ RSpec.describe "best/worst bet functionality" do
   it "boosts stemmed best bets when only the stems of the terms match" do
     commit_document("govuk_test",
                     "link" => "/the-link-that-should-surface",
-                    "format" => "answer",
-    )
+                    "format" => "answer",)
 
     add_best_bet(
       query: "best bet",
@@ -115,8 +110,7 @@ RSpec.describe "best/worst bet functionality" do
   it "boosts stemmed best bets when the terms appear out of order" do
     commit_document("govuk_test",
                     "link" => "/only-shown-for-exact-matches",
-                    "format" => "answer",
-    )
+                    "format" => "answer",)
 
     add_best_bet(
       query: "best bet",

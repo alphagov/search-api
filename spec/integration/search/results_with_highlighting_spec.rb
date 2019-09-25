@@ -4,8 +4,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns highlighted title" do
     commit_document("government_test",
                     "title" => "I am the result",
-                    "link" => "/some-nice-link",
-    )
+                    "link" => "/some-nice-link",)
 
     get "/search?q=result&fields[]=title_with_highlighting"
 
@@ -17,8 +16,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
     commit_document("government_test",
                     "title" => "Thing without",
                     "description" => "I am the result",
-                    "link" => "/some-nice-link",
-    )
+                    "link" => "/some-nice-link",)
 
     get "/search?q=result&fields[]=title_with_highlighting"
 
@@ -29,8 +27,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns highlighted description" do
     commit_document("government_test",
                     "link" => "/some-nice-link",
-                    "description" => "This is a test search result of many results.",
-    )
+                    "description" => "This is a test search result of many results.",)
 
     get "/search?q=result&fields[]=description_with_highlighting"
 
@@ -44,8 +41,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
     commit_document("government_test",
                     "title" => "Escape & highlight my title",
                     "link" => "/some-nice-link",
-                    "description" => "Escape & highlight the description as well.",
-    )
+                    "description" => "Escape & highlight the description as well.",)
 
     get "/search?q=highlight&fields[]=title_with_highlighting,description_with_highlighting"
 
@@ -60,8 +56,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns truncated correctly where result at start of description" do
     commit_document("government_test",
                     "link" => "/some-nice-link",
-                    "description" => "word " + ("something " * 200),
-    )
+                    "description" => "word " + ("something " * 200),)
 
     get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result["description_with_highlighting"]
@@ -73,8 +68,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns truncated correctly where result at end of description" do
     commit_document("government_test",
                     "link" => "/some-nice-link",
-                    "description" => ("something " * 200) + " word",
-    )
+                    "description" => ("something " * 200) + " word",)
 
     get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result["description_with_highlighting"]
@@ -86,8 +80,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns truncated correctly where result in middle of description" do
     commit_document("government_test",
                     "link" => "/some-nice-link",
-                    "description" => ("something " * 200) + " word " + ("something " * 200),
-    )
+                    "description" => ("something " * 200) + " word " + ("something " * 200),)
 
     get "/search?q=word&fields[]=description_with_highlighting"
     description = first_search_result["description_with_highlighting"]
