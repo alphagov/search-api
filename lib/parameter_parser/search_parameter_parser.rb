@@ -361,7 +361,7 @@ private
       else
         date
       end
-    rescue
+    rescue StandardError
       @errors << %{Invalid "#{label}" value "#{date_string}" for parameter "#{field_name}" (expected ISO8601 date)}
       null_date
     end
