@@ -77,6 +77,7 @@ correctly
   task :sync_govuk do
     raise("Can not migrate multiple indices") if index_names.count > 1
     raise("Can not migrate for govuk index") if index_names.include?("govuk")
+
     GovukIndex::SyncUpdater.update(source_index: index_names.first)
   end
 

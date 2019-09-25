@@ -15,6 +15,7 @@ module Search
       result = {}
       aggregates.each do |field, aggregate_info|
         next if field =~ /_with_missing_value$/
+
         aggregate_parameters = search_params.aggregates[field]
 
         options = aggregate_info["filtered_aggregations"]["buckets"]

@@ -217,6 +217,7 @@ protected
 
     value = parse_positive_integer(value, %{parameter "#{param_name}"#{description}})
     return default if value.nil?
+
     value
   end
 end

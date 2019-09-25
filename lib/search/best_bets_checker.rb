@@ -21,6 +21,7 @@ module Search
     # Fetch the best bets, and populate @best_bets and @worst_bets
     def fetch
       return if @fetched
+
       if @query.nil?
         @best_bets = {}
         @worst_bets = []

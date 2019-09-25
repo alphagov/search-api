@@ -86,6 +86,7 @@ module GovukIndex
     # Rescuing as we don't want to retry this class of error
     rescue NotIdentifiable => e
       return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
+
       GovukError.notify(e, extra: { message_body: payload })
       # Unpublishing messages for something that does not exist may have been
       # processed out of order so we don't want to notify errbit but just allow
@@ -107,6 +108,7 @@ module GovukIndex
       if response["items"].count != messages.count
         raise ElasticsearchInvalidResponseItemCount, "received #{response['items'].count} expected #{messages.count}"
       end
+
       response["items"].zip(messages).each do |response_for_message, message|
         messages_with_error << message unless Index::ResponseValidator.new(namespace: "govuk_index").valid?(response_for_message)
       end

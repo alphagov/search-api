@@ -11,6 +11,7 @@ module Indexer
     def self.trigger(content_item)
       document = find_document(content_item)
       return :rejected unless document
+
       index_name = document["real_index_name"]
       document_id = document["_id"]
       updates = {}

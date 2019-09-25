@@ -48,11 +48,13 @@ module GovukIndex
 
     def published_by_indexable_app?(format, app)
       return false unless indexable_formats[format].is_a?(Hash)
+
       indexable_formats[format]["publishing_app"] == app
     end
 
     def published_by_non_indexable_app?(format, app)
       return false unless non_indexable_formats[format].is_a?(Hash)
+
       non_indexable_formats[format]["publishing_app"] == app
     end
   end

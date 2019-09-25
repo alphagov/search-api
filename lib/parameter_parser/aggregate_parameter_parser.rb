@@ -126,6 +126,7 @@ private
     if fields.empty?
       return DEFAULT_AGGREGATE_EXAMPLE_FIELDS
     end
+
     disallowed_fields = fields - allowed_return_fields
     fields = fields - disallowed_fields
 

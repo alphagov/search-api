@@ -3,6 +3,7 @@ class Sitemap
 
   def initialize(directory, timestamp = Time.now.utc)
     raise "Sitemap directory is required" unless directory
+
     @output_path = File.join(directory, SUB_DIRECTORY)
     @directory = directory
     @timestamp = timestamp

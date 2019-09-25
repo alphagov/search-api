@@ -21,6 +21,7 @@ module SearchIndices
       @client = build_client
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
+
       @mappings = mappings
       @search_config = search_config
       @elasticsearch_types = @search_config.schema_config.elasticsearch_types(base_index_name)

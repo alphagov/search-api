@@ -4,6 +4,7 @@ module GovukIndex
       define_method name do
         value = payload[hash_key.to_s]
         return nil if value.nil? || value == ""
+
         if convert_to_array
           Array(value)
         else

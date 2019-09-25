@@ -29,6 +29,7 @@ module Indexer
         link = hit["_id"]
         rank = Array(hit["_source"]["rank_14"]).first
         next if rank.nil?
+
         ranks[link] = [rank, ranks[link]].min
       end
 
@@ -55,6 +56,7 @@ module Indexer
       if @opened_traffic_index
         return @traffic_index
       end
+
       @traffic_index = open_traffic_index
       @opened_traffic_index = true
       @traffic_index

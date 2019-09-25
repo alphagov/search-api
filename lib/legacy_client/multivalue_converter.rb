@@ -14,6 +14,7 @@ module LegacyClient
       @fields.each do |field_name, values|
         values = Array.wrap(values)
         next if @field_definitions.fetch(field_name).type.multivalued
+
         @fields[field_name] = values.first
       end
 

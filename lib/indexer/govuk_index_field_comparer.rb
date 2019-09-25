@@ -12,6 +12,7 @@ module Indexer
     def call(id, key, old, new)
       return true if key =~ /^_root/
       return true if old.nil? && new == []
+
       if old.nil? && !new.nil?
         stats["AddedValue: #{key}"] += 1
         return true
@@ -25,11 +26,13 @@ module Indexer
       return true if old.nil? && new == ""
       return true if key == "rendering_app" && old == "specialist-frontend" && new == "government-frontend"
       return compare_arrays(old, new) if old.is_a?(Array) && new.is_a?(Array)
+
       clean_field(old) == clean_field(new)
     end
 
     def compare_time(key, old, new)
       return true if Time.parse(old) == Time.parse(new)
+
       stats["#{Time.parse(old) > Time.parse(new) ? "Older" : "Newer"} value for: #{key}"] += 1
       false
     rescue TypeError

@@ -3,6 +3,7 @@ module Search
     class TooManyQueries < Error; end
     def run(searches_params)
       raise(TooManyQueries, "Maximum of 10 searches per batch") unless searches_params.count <= 10
+
       log_search_count(searches_params)
       builders = create_query_builders(searches_params)
       payloads = aggregate_payloads(builders)

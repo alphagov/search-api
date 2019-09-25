@@ -76,6 +76,7 @@ module Indexer
 
     def compare_key(data)
       return nil if data.nil?
+
       [data["_root_type"], data["_root_id"]]
     end
 

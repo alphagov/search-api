@@ -172,6 +172,7 @@ private
       # elasticsearch.
       return nil
     end
+
     if order.start_with?("-")
       field = order[1..-1]
       dir = "desc"
@@ -192,6 +193,7 @@ private
     if fields.empty?
       return DEFAULT_RETURN_FIELDS
     end
+
     disallowed_fields = fields - allowed_return_fields
     fields = fields - disallowed_fields
 

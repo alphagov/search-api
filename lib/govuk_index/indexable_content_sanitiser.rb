@@ -7,6 +7,7 @@ module GovukIndex
         compact
 
       return nil if cleaned_content.empty?
+
       cleaned_content.join("\n").strip
     end
 
@@ -15,6 +16,7 @@ module GovukIndex
     def indexable_content(item)
       return [item] if item.instance_of?(String)
       return item if item.all? { |row| row.instance_of?(String) }
+
       [html_content(item)]
     end
 
@@ -33,6 +35,7 @@ module GovukIndex
 
     def strip_html_tags(value)
       return nil unless value
+
       Loofah.document(value).to_text(encode_special_chars: false)
     end
   end

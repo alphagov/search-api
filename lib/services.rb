@@ -57,6 +57,7 @@ module GdsApi
       yield
     rescue Timeout::Error, GdsApi::TimedOutException => e
       raise e if attempts >= maximum_number_of_attempts
+
       sleep sleep_time_after_attempt(attempts)
       retry
     end
