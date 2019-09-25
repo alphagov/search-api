@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe SchemaMigrator do
-  before(:each) do
+  before do
     clean_index_content("govuk_test")
   end
 
