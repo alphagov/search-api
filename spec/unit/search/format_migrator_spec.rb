@@ -6,6 +6,7 @@ RSpec.describe Search::FormatMigrator do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
   end
   # rubocop:enable RSpec/AnyInstance
+
   context "with every cluster" do
     Clusters.active.each do |_cluster|
       it "when base query without migrated formats" do
