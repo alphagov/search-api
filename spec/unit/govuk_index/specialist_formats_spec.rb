@@ -262,7 +262,6 @@ private
     described_class.new(payload: example, type_mapper: type_mapper).document
   end
 
-
   def expect_document_include_hash(document, hash)
     hash.each do |key, value|
       expect(document[key.to_sym]).to eq(value),
