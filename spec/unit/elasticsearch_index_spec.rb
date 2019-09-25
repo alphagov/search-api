@@ -64,12 +64,12 @@ RSpec.describe SearchIndices::Index do
       double("document", elasticsearch_export: json_document)
     end
 
-    response = <<~eos
+    response = <<~RESPONSE
       {"took":0,"items":[
         { "index": { "_index":"government_test", "_type":"generic-document", "_id":"/foo/bar", "ok":true } },
         { "index": { "_index":"government_test", "_type":"generic-document", "_id":"/foo/baz", "error":"stuff" } }
       ]}
-    eos
+    RESPONSE
     stub_request(:post, "http://example.com:9200/government_test/_bulk").to_return(
       body: response,
       headers: { "Content-Type" => "application/json" },
