@@ -72,8 +72,8 @@ RSpec.describe 'HealthcheckTest' do
       end
     end
 
-    context "when queue latency is 5 (seconds)" do
-      let(:queue_latency) { 5.seconds }
+    context "when queue latency is high" do
+      let(:queue_latency) { 32.seconds }
 
       it "retuns a warning status" do
         get "/healthcheck"
@@ -84,8 +84,8 @@ RSpec.describe 'HealthcheckTest' do
     end
 
 
-    context "when queue latency is 15 (seconds)" do
-      let(:queue_latency) { 15.seconds }
+    context "when queue latency is very high" do
+      let(:queue_latency) { 2.minutes }
 
       it "retuns a critical status" do
         get "/healthcheck"

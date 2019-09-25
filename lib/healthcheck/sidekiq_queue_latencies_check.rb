@@ -18,8 +18,8 @@ module Healthcheck
     def search_queue_thresholds
       {
         'default' => {
-          critical: 15.seconds,
-          warning: 2.5.seconds,
+          critical: 1.minute,
+          warning: 30.seconds,
         },
         'bulk' => {
           critical: 30.minutes,
