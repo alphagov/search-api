@@ -156,7 +156,7 @@ class SearchConfig
     client.indices.get_alias(index: alias_name).keys.first
   end
 
-  def rank_eval(requests:, metric:, indices: '*')
+  def rank_eval(requests:, metric:, indices: "*")
     client.rank_eval(
       index: indices,
       body: { requests: requests, metric: metric }

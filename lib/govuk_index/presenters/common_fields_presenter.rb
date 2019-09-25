@@ -69,7 +69,7 @@ module GovukIndex
     end
 
     def format
-      document_type = payload['document_type']
+      document_type = payload["document_type"]
       CUSTOM_FORMAT_MAP[document_type] || document_type
     end
 

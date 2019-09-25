@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SearchIndices::IndexGroup do
   ELASTICSEARCH_OK = {
@@ -15,7 +15,7 @@ RSpec.describe SearchIndices::IndexGroup do
       BASE_URI,
       @schema,
       %w(government custom),
-      'govuk',
+      "govuk",
       ["government"],
       SearchConfig.default_instance,
     )
@@ -41,7 +41,7 @@ RSpec.describe SearchIndices::IndexGroup do
     get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           "test-new" => { "aliases" => {} }
         }.to_json
@@ -54,7 +54,7 @@ RSpec.describe SearchIndices::IndexGroup do
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(
         body: expected_body,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
       .to_return(ELASTICSEARCH_OK)
 
@@ -69,7 +69,7 @@ RSpec.describe SearchIndices::IndexGroup do
     get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-new" => { "aliases" => {} }
@@ -98,7 +98,7 @@ RSpec.describe SearchIndices::IndexGroup do
     get_stub = stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-old2" => { "aliases" => { "test" => {} } },
@@ -128,7 +128,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, "#{BASE_URI}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           "test" => { "aliases" => {} }
         }.to_json
@@ -143,7 +143,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {}.to_json
       )
 
@@ -155,7 +155,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           index_name => { "aliases" => { "test" => {} } }
         }.to_json
@@ -171,7 +171,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           this_name => { "aliases" => {} },
           other_name => { "aliases" => {} }
@@ -185,7 +185,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {}.to_json
       )
 
@@ -197,7 +197,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           index_name => { "aliases" => {} }
         }.to_json
@@ -216,7 +216,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           index_name => { "aliases" => { "test" => {} } }
         }.to_json
@@ -233,7 +233,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           index_names[0] => { "aliases" => {} },
           index_names[1] => { "aliases" => {} }
@@ -257,7 +257,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           live_name => { "aliases" => { "test" => {} } },
           dead_name => { "aliases" => {} }
@@ -278,7 +278,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           index_name => { "aliases" => { "something_else" => {} } }
         }.to_json
@@ -295,7 +295,7 @@ RSpec.describe SearchIndices::IndexGroup do
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
           this_name => { "aliases" => {} },
           other_name => { "aliases" => {} }

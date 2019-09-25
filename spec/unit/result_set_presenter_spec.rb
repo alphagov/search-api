@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::ResultSetPresenter do
   def sample_docs
@@ -47,7 +47,7 @@ RSpec.describe Search::ResultSetPresenter do
   def sample_aggregate_data
     {
       "organisations" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "buckets" => [
             { "key" => "hm-magic", "doc_count" => 7 },
             { "key" => "hmrc", "doc_count" => 5 },
@@ -55,7 +55,7 @@ RSpec.describe Search::ResultSetPresenter do
         }
       },
       "organisations_with_missing_value" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "doc_count" => 8
         }
       }
@@ -65,7 +65,7 @@ RSpec.describe Search::ResultSetPresenter do
   def sample_aggregate_data_with_policy_areas
     {
       "organisations" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "buckets" => [
             { "key" => "hm-magic", "doc_count" => 7 },
             { "key" => "hmrc", "doc_count" => 5 },
@@ -73,12 +73,12 @@ RSpec.describe Search::ResultSetPresenter do
         }
       },
       "organisations_with_missing_value" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "doc_count" => 8
         }
       },
       "policy_areas" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "buckets" => [
             { "key" => "farming", "doc_count" => 4 },
             { "key" => "unknown_topic", "doc_count" => 5 },
@@ -86,7 +86,7 @@ RSpec.describe Search::ResultSetPresenter do
         }
       },
       "policy_areas_with_missing_value" => {
-        'filtered_aggregations' => {
+        "filtered_aggregations" => {
           "doc_count" => 3,
         }
       },
@@ -227,10 +227,10 @@ RSpec.describe Search::ResultSetPresenter do
   context "results with no fields" do
     before do
       @empty_result = sample_docs.first.tap {|doc|
-        doc['fields'] = nil
+        doc["fields"] = nil
       }
       response = sample_es_response.tap {|es_response|
-        es_response['hits']['hits'] = [@empty_result]
+        es_response["hits"]["hits"] = [@empty_result]
       }
 
       @output = described_class.new(

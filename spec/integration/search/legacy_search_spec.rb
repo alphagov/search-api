@@ -1,11 +1,11 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ElasticsearchAdvancedSearchTest' do
+RSpec.describe "ElasticsearchAdvancedSearchTest" do
   before do
     @index_name = "govuk_test"
 
     add_sample_documents
-    commit_index('govuk_test')
+    commit_index("govuk_test")
   end
 
   def sample_document_attributes
@@ -71,7 +71,7 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest' do
       hash = links.pop
       order = hash[:order]
     end
-    parsed_links = parsed_response['results'].map { |r| r["link"] }
+    parsed_links = parsed_response["results"].map { |r| r["link"] }
     if order
       expect(links).to eq(parsed_links)
     else
@@ -80,7 +80,7 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest' do
   end
 
   def expect_result_total(total)
-    expect(total).to eq(parsed_response['total'])
+    expect(total).to eq(parsed_response["total"])
   end
 
   it "should search by keywords" do
@@ -160,7 +160,7 @@ RSpec.describe 'ElasticsearchAdvancedSearchTest' do
       insert_document("govuk_test", sample_document)
     end
 
-    commit_index('govuk_test')
+    commit_index("govuk_test")
 
     get "/#{@index_name}/advanced_search.json?per_page=3&page=1&relevant_to_local_government=true&updated_at[after]=2012-01-02&keywords=tax&mainstream_browse_pages=crime/example"
 

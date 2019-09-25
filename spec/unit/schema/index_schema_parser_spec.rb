@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe IndexSchemaParser do
   def expect_raises_message(message)
@@ -6,7 +6,7 @@ RSpec.describe IndexSchemaParser do
   end
 
   def schema_dir
-    File.expand_path('../../../config/schema', File.dirname(__FILE__))
+    File.expand_path("../../../config/schema", File.dirname(__FILE__))
   end
 
   context "after loading standard index schemas" do

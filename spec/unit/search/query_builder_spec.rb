@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::QueryBuilder do
   # rubocop:disable RSpec/AnyInstance
@@ -11,12 +11,12 @@ RSpec.describe Search::QueryBuilder do
 
   context "with a simple search query" do
     it "return a correct query object" do
-      builder = builder_with_params(start: 11, count: 34, return_fields: ['a_field'])
+      builder = builder_with_params(start: 11, count: 34, return_fields: ["a_field"])
 
       result = builder.payload
       expect(result[:from]).to eq(11)
       expect(result[:size]).to eq(34)
-      expect(result[:_source][:includes]).to include('a_field')
+      expect(result[:_source][:includes]).to include("a_field")
       expect(result.key?(:query)).to be_truthy
     end
   end

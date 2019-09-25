@@ -1,4 +1,4 @@
-require 'rummager'
+require "rummager"
 
 namespace :search do
   desc "Lists current indices, pass [all] to show inactive indices"
@@ -76,7 +76,7 @@ correctly
 "
   task :sync_govuk do
     raise("Can not migrate multiple indices") if index_names.count > 1
-    raise("Can not migrate for govuk index") if index_names.include?('govuk')
+    raise("Can not migrate for govuk index") if index_names.include?("govuk")
     GovukIndex::SyncUpdater.update(source_index: index_names.first)
   end
 
@@ -89,7 +89,7 @@ This does not update the schema.
 "
   task :update_popularity do
     index_names.each do |index_name|
-      GovukIndex::PopularityUpdater.update(index_name, process_all: ENV.key?('PROCESS_ALL_DATA'))
+      GovukIndex::PopularityUpdater.update(index_name, process_all: ENV.key?("PROCESS_ALL_DATA"))
     end
   end
 
@@ -239,9 +239,9 @@ this task will run against all active clusters.
     index  = args[:index_name]
 
     if format.nil?
-      puts 'Specify format'
+      puts "Specify format"
     elsif index.nil?
-      puts 'Specify an index'
+      puts "Specify an index"
     else
       client = Services.elasticsearch(hosts: Clusters.default_cluster, timeout: 5.0)
       publishing_api = Services.publishing_api
@@ -253,19 +253,19 @@ this task will run against all active clusters.
         batch_size: 500,
         index_names: index
       ) { |hit| hit }.map do |hit|
-        taxons[hit['_id']] = hit['_source']['taxons']
+        taxons[hit["_id"]] = hit["_source"]["taxons"]
       end
 
       ids_to_check = []
       taxons.each do |id, content_ids|
         ids_to_check << id if content_ids.any? do |content_id|
           content_item = publishing_api.get_content(content_id).to_hash
-          content_item['publication_state'] != 'draft'
+          content_item["publication_state"] != "draft"
         end
       end
 
       if ids_to_check.empty?
-        puts 'All taxons in draft state'
+        puts "All taxons in draft state"
       else
         puts ids_to_check
       end

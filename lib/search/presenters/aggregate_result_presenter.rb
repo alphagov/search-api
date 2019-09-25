@@ -17,10 +17,10 @@ module Search
         next if field =~ /_with_missing_value$/
         aggregate_parameters = search_params.aggregates[field]
 
-        options = aggregate_info['filtered_aggregations']["buckets"]
+        options = aggregate_info["filtered_aggregations"]["buckets"]
         result[field] = {
           options: aggregate_options(field, options, aggregate_parameters),
-          documents_with_no_value: aggregates["#{field}_with_missing_value"]['filtered_aggregations']["doc_count"],
+          documents_with_no_value: aggregates["#{field}_with_missing_value"]["filtered_aggregations"]["doc_count"],
           total_options: options.length,
           missing_options: [options.length - aggregate_parameters[:requested], 0].max,
           scope: aggregate_parameters[:scope],

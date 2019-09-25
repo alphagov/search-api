@@ -1,8 +1,8 @@
-require 'spec_helper'
-require 'securerandom'
+require "spec_helper"
+require "securerandom"
 
 RSpec.describe Indexer::BulkIndexWorker do
-  let(:index_name) { 'government_test' }
+  let(:index_name) { "government_test" }
 
   SAMPLE_DOCUMENT_HASHES = %w(foo bar baz).map do |slug|
     { "link" => "/#{slug}", "title" => slug.capitalize, "document_type" => "edition" }
@@ -45,7 +45,7 @@ RSpec.describe Indexer::BulkIndexWorker do
   end
 
   def stub_request_to_publishing_api
-    endpoint = Plek.current.find('publishing-api') + '/lookup-by-base-path'
+    endpoint = Plek.current.find("publishing-api") + "/lookup-by-base-path"
 
     stub_request(:post, endpoint).to_return(status: 200, body: {}.to_json)
   end

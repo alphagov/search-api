@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe GovukIndex::DocumentTypeMapper do
   it "infer payload document_type" do

@@ -29,7 +29,7 @@ module Search
       # The basic trick here is find out if the original and highlighted
       # versions are the same.
       highlighted_without_tags = description.highlighted
-        .gsub('<mark>', '').gsub('</mark>', '')
+        .gsub("<mark>", "").gsub("</mark>", "")
 
       output = description.highlighted
 

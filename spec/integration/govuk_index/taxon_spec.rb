@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe "taxon publishing" do
   before do
@@ -36,7 +36,7 @@ RSpec.describe "taxon publishing" do
     content_id = "c6d82aef-8f85-43b5-8a15-87719916204c"
     document = { "link" => "/transport/all", "content_id" => content_id }
 
-    commit_document('govuk_test', document, id: content_id, type: 'taxon')
+    commit_document("govuk_test", document, id: content_id, type: "taxon")
     expect_document_is_in_rummager(document, id: content_id, index: "govuk_test", type: "taxon")
 
     payload = { "document_type" => "gone", "payload_version" => 15, "content_id" => content_id }

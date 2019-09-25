@@ -181,11 +181,11 @@ module GovukIndex
 
     def slug
       if format == "specialist_sector"
-        base_path.gsub(%r{^/topic/}, '')
+        base_path.gsub(%r{^/topic/}, "")
       elsif format == "mainstream_browse_page"
-        base_path.gsub(%r{^/browse/}, '')
+        base_path.gsub(%r{^/browse/}, "")
       elsif format == "policy"
-        base_path.gsub(%r{^/government/policies/}, '')
+        base_path.gsub(%r{^/government/policies/}, "")
       end
     end
 

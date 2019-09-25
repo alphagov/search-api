@@ -1,24 +1,24 @@
-ENV['RACK_ENV'] = 'test'
-require 'pry'
+ENV["RACK_ENV"] = "test"
+require "pry"
 
 if ENV["USE_SIMPLECOV"]
   require "simplecov"
   require "simplecov-rcov"
   SimpleCov.start do
-    add_filter '/spec/'
+    add_filter "/spec/"
   end
 
   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 end
 
-$LOAD_PATH << File.expand_path('../../', __FILE__)
-$LOAD_PATH << File.expand_path('../../lib', __FILE__)
+$LOAD_PATH << File.expand_path("../../", __FILE__)
+$LOAD_PATH << File.expand_path("../../lib", __FILE__)
 
 # load this first to avoid duplicate constant declaration error
-require 'logging'
+require "logging"
 
-require 'rummager'
-require 'rummager/app' # load the website
+require "rummager"
+require "rummager/app" # load the website
 
 require "bundler/setup"
 require "climate_control"
@@ -27,18 +27,18 @@ require "pp"
 require "timecop"
 require "pry-byebug"
 
-require 'sidekiq/testing'
+require "sidekiq/testing"
 require "sidekiq/testing/inline" # Make all queued jobs run immediately
-require 'bunny-mock'
-require 'govuk_schemas'
-require 'govuk-content-schema-test-helpers'
-require 'govuk-content-schema-test-helpers/validator'
+require "bunny-mock"
+require "govuk_schemas"
+require "govuk-content-schema-test-helpers"
+require "govuk-content-schema-test-helpers/validator"
 
 # Silence log output
 Logging.logger.root.appenders = nil
 Sidekiq::Logging.logger = nil
 
-require 'webmock/rspec'
+require "webmock/rspec"
 
 require "#{__dir__}/support/default_mappings"
 require "#{__dir__}/support/spec_helpers"

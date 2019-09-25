@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'analytics/transform'
-require 'analytics/extract'
+require "spec_helper"
+require "analytics/transform"
+require "analytics/extract"
 
 RSpec.describe Analytics::Transform do
   subject(:transformer) { described_class }

@@ -6,7 +6,7 @@ RSpec.describe ContentItemPublisher::FacetGroupFinderPresenter do
 
   before do
     GovukContentSchemaTestHelpers.configure do |config|
-      config.schema_type = 'publisher_v2'
+      config.schema_type = "publisher_v2"
       config.project_root = File.expand_path(Dir.pwd)
     end
   end
@@ -20,7 +20,7 @@ RSpec.describe ContentItemPublisher::FacetGroupFinderPresenter do
     subject(:instance) { described_class.new(finder, timestamp) }
 
     let(:finder) { finder_config }
-    let(:content_id) { finder['content_id'] }
+    let(:content_id) { finder["content_id"] }
     let(:timestamp) { Time.now.iso8601 }
 
     it "presents a valid payload" do
@@ -36,9 +36,9 @@ RSpec.describe ContentItemPublisher::FacetGroupFinderPresenter do
     end
 
     it "sets the links hash to include facets" do
-      email_signup_links = [finder['signup_content_id']].compact
-      parent_links = [finder['parent']].compact
-      ordered_related_items_links = finder_config['ordered_related_items']
+      email_signup_links = [finder["signup_content_id"]].compact
+      parent_links = [finder["parent"]].compact
+      ordered_related_items_links = finder_config["ordered_related_items"]
       expect(instance.present_links[:links]).to eq({ "email_alert_signup" => email_signup_links,
                                                      "parent" => parent_links,
                                                      "ordered_related_items" => ordered_related_items_links,

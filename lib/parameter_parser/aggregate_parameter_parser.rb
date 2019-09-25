@@ -84,7 +84,7 @@ private
 
   def order
     orders = character_separated_param("order", ":").map { |order|
-      if order.start_with?('-')
+      if order.start_with?("-")
         [order[1..-1], -1]
       else
         [order, 1]

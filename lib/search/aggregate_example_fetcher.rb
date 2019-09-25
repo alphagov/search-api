@@ -43,7 +43,7 @@ module Search
         filter = Search::FormatMigrator.new(search_params.search_config).call
       end
 
-      aggregate_options = @response_aggregates.dig(field_name, 'filtered_aggregations', "buckets") || []
+      aggregate_options = @response_aggregates.dig(field_name, "filtered_aggregations", "buckets") || []
 
       slugs = aggregate_options.map { |option|
         option["key"]
@@ -118,7 +118,7 @@ module Search
 
     def apply_multivalued(document_attrs)
       document_attrs.reduce({}) { |result, (field_name, values)|
-        if field_name[0] == '_'
+        if field_name[0] == "_"
           # Special fields are always returned as single values.
           result[field_name] = values
           return result

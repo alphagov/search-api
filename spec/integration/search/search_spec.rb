@@ -1,11 +1,11 @@
-require 'spec_helper'
-require_relative '../../support/search_integration_spec_helper'
+require "spec_helper"
+require_relative "../../support/search_integration_spec_helper"
 
 RSpec.configure do |c|
   c.include SearchIntegrationSpecHelper
 end
 
-RSpec.describe 'SearchTest' do
+RSpec.describe "SearchTest" do
   it "returns success" do
     get "/search?q=important"
 
@@ -17,7 +17,7 @@ RSpec.describe 'SearchTest' do
 
     get "/search?q=ministry of magick&suggest=spelling"
 
-    expect(parsed_response['suggested_queries']).to eq(['ministry of magic'])
+    expect(parsed_response["suggested_queries"]).to eq(["ministry of magic"])
   end
 
   it "spell checking with blocklisted typo" do
@@ -28,7 +28,7 @@ RSpec.describe 'SearchTest' do
 
     get "/search?q=brexit&suggest=spelling"
 
-    expect(parsed_response['suggested_queries']).to eq([])
+    expect(parsed_response["suggested_queries"]).to eq([])
   end
 
   it "spell checking without typo" do
@@ -36,7 +36,7 @@ RSpec.describe 'SearchTest' do
 
     get "/search?q=milliband"
 
-    expect(parsed_response['suggested_queries']).to eq([])
+    expect(parsed_response["suggested_queries"]).to eq([])
   end
 
   it "returns docs from all indexes" do
@@ -115,51 +115,51 @@ RSpec.describe 'SearchTest' do
     expect(result_links.sort).to eq(["/government-2", "/govuk-2"])
   end
 
-  describe 'filter/reject when an attribute has multiple values' do
+  describe "filter/reject when an attribute has multiple values" do
     before do
       commit_document("government_test",
-                      "link" => '/one',
+                      "link" => "/one",
                       "part_of_taxonomy_tree" => %w[a b c])
       commit_document("government_test",
-                      "link" => '/two',
+                      "link" => "/two",
                       "part_of_taxonomy_tree" => %w[d e f])
       commit_document("government_test",
-                      "link" => '/three',
+                      "link" => "/three",
                       "part_of_taxonomy_tree" => %w[b e])
     end
 
-    describe 'filter_all' do
-      it 'filters all documents containing taxon b and e' do
+    describe "filter_all" do
+      it "filters all documents containing taxon b and e" do
         get "/search?filter_all_part_of_taxonomy_tree=b&filter_all_part_of_taxonomy_tree=e"
         expect(result_links.sort).to eq([
-                                          '/three'
+                                          "/three"
                                         ])
       end
     end
 
-    describe 'filter_any' do
-      it 'filters any document containing taxon c or f' do
+    describe "filter_any" do
+      it "filters any document containing taxon c or f" do
         get "/search?filter_any_part_of_taxonomy_tree=c&filter_any_part_of_taxonomy_tree=f"
         expect(result_links.sort).to match_array([
-                                                   '/one', '/two'
+                                                   "/one", "/two"
                                                  ])
       end
     end
 
-    describe 'reject_all' do
-      it 'rejects all documents containing taxon b and e' do
+    describe "reject_all" do
+      it "rejects all documents containing taxon b and e" do
         get "/search?reject_all_part_of_taxonomy_tree=b&reject_all_part_of_taxonomy_tree=e"
         expect(result_links.sort).to match_array([
-                                                   '/one', '/two'
+                                                   "/one", "/two"
                                                  ])
       end
     end
 
-    describe 'reject_any' do
-      it 'rejects any documents containing taxon c or f' do
+    describe "reject_any" do
+      it "rejects any documents containing taxon c or f" do
         get "/search?reject_any_part_of_taxonomy_tree=c&reject_any_part_of_taxonomy_tree=f"
         expect(result_links.sort).to match_array([
-                                                   '/three'
+                                                   "/three"
                                                  ])
       end
     end
@@ -377,12 +377,12 @@ RSpec.describe 'SearchTest' do
   end
 
   it "expands organisations" do
-    commit_treatment_of_dragons_document({ "organisations" => ['/ministry-of-magic'] })
-    commit_ministry_of_magic_document({ "format" => 'organisation' })
+    commit_treatment_of_dragons_document({ "organisations" => ["/ministry-of-magic"] })
+    commit_ministry_of_magic_document({ "format" => "organisation" })
 
     get "/search.json?q=dragons"
 
-    expect(first_result['organisations']).to eq(
+    expect(first_result["organisations"]).to eq(
       [{ "slug" => "/ministry-of-magic",
       "link" => "/ministry-of-magic-site",
       "title" => "Ministry of Magic" }]
@@ -390,12 +390,12 @@ RSpec.describe 'SearchTest' do
   end
 
   it "also works with the /api prefix" do
-    commit_treatment_of_dragons_document({ "organisations" => ['/ministry-of-magic'] })
-    commit_ministry_of_magic_document({ "format" => 'organisation' })
+    commit_treatment_of_dragons_document({ "organisations" => ["/ministry-of-magic"] })
+    commit_ministry_of_magic_document({ "format" => "organisation" })
 
     get "/api/search.json?q=dragons"
 
-    expect(first_result['organisations']).to eq(
+    expect(first_result["organisations"]).to eq(
       [{ "slug" => "/ministry-of-magic",
       "link" => "/ministry-of-magic-site",
       "title" => "Ministry of Magic" }]
@@ -403,101 +403,101 @@ RSpec.describe 'SearchTest' do
   end
 
   it "expands organisations via content_id" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => ['organisation-content-id'] })
-    commit_ministry_of_magic_document({ "content_id" => 'organisation-content-id', "format" => 'organisation' })
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => ["organisation-content-id"] })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
 
     get "/search.json?q=dragons"
 
     # Adds a new key with the expanded organisations
-    expect_result_includes_ministry_of_magic_for_key(first_result, 'expanded_organisations', "content_id" => 'organisation-content-id')
+    expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_organisations", "content_id" => "organisation-content-id")
 
     # Keeps the organisation content ids
     expect(
-      first_result['organisation_content_ids']
+      first_result["organisation_content_ids"]
     ).to eq(
-      ['organisation-content-id']
+      ["organisation-content-id"]
     )
   end
 
   it "search for expanded organisations works" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => ['organisation-content-id'] })
-    commit_ministry_of_magic_document({ "content_id" => 'organisation-content-id', "format" => 'organisation' })
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => ["organisation-content-id"] })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
 
     get "/search.json?q=dragons&fields[]=expanded_organisations"
 
-    expect_result_includes_ministry_of_magic_for_key(first_result, 'expanded_organisations', "content_id" => 'organisation-content-id')
+    expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_organisations", "content_id" => "organisation-content-id")
   end
 
   it "filter by organisation content_ids works" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => ['organisation-content-id'] })
-    commit_ministry_of_magic_document({ "content_id" => 'organisation-content-id', "format" => 'organisation' })
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => ["organisation-content-id"] })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
 
     get "/search.json?filter_organisation_content_ids[]=organisation-content-id"
 
-    expect_result_includes_ministry_of_magic_for_key(first_result, 'expanded_organisations', "content_id" => 'organisation-content-id')
+    expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_organisations", "content_id" => "organisation-content-id")
   end
 
-  it 'will filter by topical_events slug' do
-    topical_event_of_interest = 'quiddich-world-cup-2018'
+  it "will filter by topical_events slug" do
+    topical_event_of_interest = "quiddich-world-cup-2018"
 
     # we DON'T want this document in our search results
     commit_document("government_test",
-      "title" => 'Rules of Quiddich (2017)',
-      "link" => '/quiddich-rules-2017',
-      "format" => 'detailed_guidance',
-      "topical_events" => ['quiddich-world-cup-2017'])
+      "title" => "Rules of Quiddich (2017)",
+      "link" => "/quiddich-rules-2017",
+      "format" => "detailed_guidance",
+      "topical_events" => ["quiddich-world-cup-2017"])
 
     # we DO want this document in our search results
     commit_document("government_test",
-      "title" => 'Rules of Quiddich (2018)',
-      "link" => '/quiddich-rules-2018',
-      "format" => 'detailed_guidance',
+      "title" => "Rules of Quiddich (2018)",
+      "link" => "/quiddich-rules-2018",
+      "format" => "detailed_guidance",
       "topical_events" => [topical_event_of_interest])
 
     get "/search.json?filter_topical_events=#{topical_event_of_interest}"
 
-    expect(first_result['topical_events']).to be_truthy
-    expect(first_result['topical_events']).to eq([topical_event_of_interest])
-    expect(parsed_response['results'].length).to eq 1
+    expect(first_result["topical_events"]).to be_truthy
+    expect(first_result["topical_events"]).to eq([topical_event_of_interest])
+    expect(parsed_response["results"].length).to eq 1
   end
 
   it "expands topics" do
-    commit_treatment_of_dragons_document({ "topic_content_ids" => ['topic-content-id'] })
-    commit_ministry_of_magic_document({ "index" => 'govuk_test',
-                                        "content_id" => 'topic-content-id',
-                                        "slug" => 'topic-magic',
-                                        "title" => 'Magic topic',
-                                        "link" => '/magic-topic-site',
+    commit_treatment_of_dragons_document({ "topic_content_ids" => ["topic-content-id"] })
+    commit_ministry_of_magic_document({ "index" => "govuk_test",
+                                        "content_id" => "topic-content-id",
+                                        "slug" => "topic-magic",
+                                        "title" => "Magic topic",
+                                        "link" => "/magic-topic-site",
                                         # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => 'specialist_sector' })
+                                        "format" => "specialist_sector" })
 
     get "/search.json?q=dragons"
 
     # Adds a new key with the expanded topics
-    expect_result_includes_ministry_of_magic_for_key(first_result, 'expanded_topics', {
-                                                          "content_id" => 'topic-content-id',
-                                                          "slug" => 'topic-magic',
-                                                          "link" => '/magic-topic-site',
-                                                          "title" => 'Magic topic'
+    expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_topics", {
+                                                          "content_id" => "topic-content-id",
+                                                          "slug" => "topic-magic",
+                                                          "link" => "/magic-topic-site",
+                                                          "title" => "Magic topic"
                                                         })
 
     # Keeps the topic content ids
-    expect(first_result['topic_content_ids']).to eq(['topic-content-id'])
+    expect(first_result["topic_content_ids"]).to eq(["topic-content-id"])
   end
 
   it "filter by topic content_ids works" do
-    commit_treatment_of_dragons_document({ "topic_content_ids" => ['topic-content-id'] })
-    commit_ministry_of_magic_document({ "index" => 'govuk_test',
-                                        "content_id" => 'topic-content-id',
-                                        "slug" => 'topic-magic',
-                                        "title" => 'Magic topic',
-                                        "link" => '/magic-topic-site',
+    commit_treatment_of_dragons_document({ "topic_content_ids" => ["topic-content-id"] })
+    commit_ministry_of_magic_document({ "index" => "govuk_test",
+                                        "content_id" => "topic-content-id",
+                                        "slug" => "topic-magic",
+                                        "title" => "Magic topic",
+                                        "link" => "/magic-topic-site",
                                         # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => 'specialist_sector' })
+                                        "format" => "specialist_sector" })
 
     get "/search.json?filter_topic_content_ids[]=topic-content-id"
 
-    expect(first_result['topic_content_ids']).to eq(['topic-content-id'])
+    expect(first_result["topic_content_ids"]).to eq(["topic-content-id"])
   end
 
   it "will not return withdrawn content" do
@@ -583,8 +583,8 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can filter by facet value" do
-    commit_ministry_of_magic_document({ "facet_values" => ['fe2fc3b5-a71b-4063-9605-12c3e6e179d6'] })
-    commit_treatment_of_dragons_document({ "facet_values" => ['e602eb34-a870-46ff-8ba4-de36689fb028'] })
+    commit_ministry_of_magic_document({ "facet_values" => ["fe2fc3b5-a71b-4063-9605-12c3e6e179d6"] })
+    commit_treatment_of_dragons_document({ "facet_values" => ["e602eb34-a870-46ff-8ba4-de36689fb028"] })
     get "/search?filter_facet_values=fe2fc3b5-a71b-4063-9605-12c3e6e179d6"
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
@@ -599,8 +599,8 @@ RSpec.describe 'SearchTest' do
   end
 
   it "can filter by facet group" do
-    commit_ministry_of_magic_document({ "facet_groups" => ['fe2fc3b5-a71b-4063-9605-12c3e6e179d6'] })
-    commit_treatment_of_dragons_document({ "facet_groups" => ['e602eb34-a870-46ff-8ba4-de36689fb028'] })
+    commit_ministry_of_magic_document({ "facet_groups" => ["fe2fc3b5-a71b-4063-9605-12c3e6e179d6"] })
+    commit_treatment_of_dragons_document({ "facet_groups" => ["e602eb34-a870-46ff-8ba4-de36689fb028"] })
     get "/search?filter_facet_groups=fe2fc3b5-a71b-4063-9605-12c3e6e179d6"
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
@@ -617,7 +617,7 @@ RSpec.describe 'SearchTest' do
   private
 
   def first_result
-    @first_result ||= parsed_response['results'].first
+    @first_result ||= parsed_response["results"].first
   end
 
   def result_links

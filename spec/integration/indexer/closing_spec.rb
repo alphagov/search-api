@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ElasticsearchClosingTest' do
+RSpec.describe "ElasticsearchClosingTest" do
   before do
     stub_tagging_lookup
   end
 
   it "will not allow insertion into closed index" do
-    index = search_server.index_group('government_test').current
+    index = search_server.index_group("government_test").current
     index.close
 
     expect {
@@ -15,6 +15,6 @@ RSpec.describe 'ElasticsearchClosingTest' do
 
     # Re-opening the index again, as they are not recreated on each test run
     # anymore.
-    client.indices.open(index: 'government_test')
+    client.indices.open(index: "government_test")
   end
 end

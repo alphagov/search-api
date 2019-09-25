@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'MoreLikeThisTest' do
+RSpec.describe "MoreLikeThisTest" do
   it "returns success" do
     get "/search?similar_to=/govuk-1"
 
@@ -14,7 +14,7 @@ RSpec.describe 'MoreLikeThisTest' do
   end
 
   it "returns results from mainstream index" do
-    add_sample_documents('govuk_test', 15)
+    add_sample_documents("govuk_test", 15)
 
     get "/search?similar_to=/govuk-1&count=20&start=0"
 
@@ -23,7 +23,7 @@ RSpec.describe 'MoreLikeThisTest' do
   end
 
   it "returns results from government index" do
-    add_sample_documents('government_test', 15)
+    add_sample_documents("government_test", 15)
 
     get "/search?similar_to=/government-1&count=20&start=0"
 
@@ -32,8 +32,8 @@ RSpec.describe 'MoreLikeThisTest' do
   end
 
   it "returns similar docs" do
-    add_sample_documents('govuk_test', 15)
-    add_sample_documents('government_test', 15)
+    add_sample_documents("govuk_test", 15)
+    add_sample_documents("government_test", 15)
 
     get "/search?similar_to=/govuk-1&count=50&start=0"
 

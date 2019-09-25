@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::HighlightedDescription do
   it "adds highlighting if present" do
@@ -51,7 +51,7 @@ RSpec.describe Search::HighlightedDescription do
     highlighted_description = described_class.new(raw_result).text
 
     expect(highlighted_description.size).to eq(225)
-    expect(highlighted_description.ends_with?('…')).to be_truthy
+    expect(highlighted_description.ends_with?("…")).to be_truthy
   end
 
   it "returns empty string if theres no description" do

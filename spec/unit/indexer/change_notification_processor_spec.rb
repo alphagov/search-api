@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Indexer::ChangeNotificationProcessor do
   it "rejects base_pathless documents" do

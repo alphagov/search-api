@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'StatusTest' do
+RSpec.describe "StatusTest" do
   it "shows queue job count" do
     expect_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(
       { "bulk" => 12 }

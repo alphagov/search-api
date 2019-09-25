@@ -1,7 +1,7 @@
 module GovukIndex
   class SyncWorker < Indexer::BaseWorker
     BULK_INDEX_TIMEOUT = 60
-    QUEUE_NAME = 'bulk'.freeze
+    QUEUE_NAME = "bulk".freeze
     sidekiq_options queue: QUEUE_NAME
 
     def perform(records, destination_index)
@@ -10,8 +10,8 @@ module GovukIndex
       records.each do |record|
         actions.save(
           OpenStruct.new(
-            identifier: record['identifier'].merge('_version_type' => 'external_gte'),
-            document: record['document'],
+            identifier: record["identifier"].merge("_version_type" => "external_gte"),
+            document: record["document"],
           )
         )
       end

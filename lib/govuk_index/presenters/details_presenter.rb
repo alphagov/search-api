@@ -16,7 +16,7 @@ module GovukIndex
     end
 
     def contact_groups
-      details['contact_groups']&.map { |contact| contact['slug'] }
+      details["contact_groups"]&.map { |contact| contact["slug"] }
     end
 
     def latest_change_note

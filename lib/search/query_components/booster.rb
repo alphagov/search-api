@@ -1,6 +1,6 @@
 module QueryComponents
   class Booster < BaseComponent
-    BOOST_CONFIG = YAML.load_file('config/query/boosting.yml')["base"]
+    BOOST_CONFIG = YAML.load_file("config/query/boosting.yml")["base"]
     DEFAULT_BOOST = 1
 
     def wrap(core_query)

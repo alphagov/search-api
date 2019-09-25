@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ElasticsearchDeletionTest' do
+RSpec.describe "ElasticsearchDeletionTest" do
   it "removes a document from the index" do
     commit_document("government_test", {
       "link" => "/an-example-page"
@@ -38,15 +38,15 @@ RSpec.describe 'ElasticsearchDeletionTest' do
       "link" => "/something",
     }.to_json
 
-    commit_index('government_test')
+    commit_index("government_test")
 
     delete "/metasearch_test/documents/best_bet/jobs_exact"
 
     expect {
       client.get(
-        index: 'metasearch_test',
-        type: 'best_bet',
-        id: 'jobs_exact'
+        index: "metasearch_test",
+        type: "best_bet",
+        id: "jobs_exact"
       )
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end

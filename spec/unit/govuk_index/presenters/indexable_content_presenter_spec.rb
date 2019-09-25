@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe GovukIndex::IndexableContentPresenter do
-  let(:format) { 'help_page' }
+  let(:format) { "help_page" }
 
   subject do
     described_class.new(
@@ -56,7 +56,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
   end
 
   context "additional specified indexable content keys" do
-    let(:format) { 'transaction' }
+    let(:format) { "transaction" }
     let(:details) {
       {
         "external_related_links" => [],
@@ -75,7 +75,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
   end
 
   context "contact format" do
-    let(:format) { 'contact' }
+    let(:format) { "contact" }
     let(:details) {
       {
         "title" => "Title",
@@ -99,7 +99,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
   end
 
   context "transaction with hidden_search_terms (smart answer start page)" do
-    let(:format) { 'transaction' }
+    let(:format) { "transaction" }
     let(:details) do
       {
         "introductory_paragraph" =>  [
@@ -126,7 +126,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
       }
     end
 
-    it 'hidden_search_terms is correctly indexed' do
+    it "hidden_search_terms is correctly indexed" do
       expect(subject.indexable_content).to eq("hidden 1\n\n\nhidden 2\n\n\nintro\n\n\n\nmore")
     end
   end

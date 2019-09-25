@@ -23,7 +23,7 @@ module Indexer
 
         # wait for started tasks to be finished
         sleep 1 while(Sidekiq::Workers.new.any? do |_, _, work|
-          work['queue'] == self::QUEUE_NAME && work['payload']['class'] == self.to_s
+          work["queue"] == self::QUEUE_NAME && work["payload"]["class"] == self.to_s
         end)
       end
     end

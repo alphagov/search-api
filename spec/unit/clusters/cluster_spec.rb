@@ -1,35 +1,35 @@
-require 'spec_helper'
-require 'spec/unit/helpers/cluster_test_helpers'
+require "spec_helper"
+require "spec/unit/helpers/cluster_test_helpers"
 
 RSpec.describe Clusters::Cluster do
   include ClusterTestHelpers
 
   subject(:cluster) {
     described_class.new(
-      key: default['key'],
-      uri_key: default['uri_key'],
-      default: default['default']
+      key: default["key"],
+      uri_key: default["uri_key"],
+      default: default["default"]
     )
   }
 
-  let(:default) { es_config['clusters'].find { |cluster| cluster['default'] } }
-  let(:default_uri) { es_config[default['uri_key']] }
+  let(:default) { es_config["clusters"].find { |cluster| cluster["default"] } }
+  let(:default_uri) { es_config[default["uri_key"]] }
 
-  describe '#uri' do
-    it 'returns the uri from the config' do
+  describe "#uri" do
+    it "returns the uri from the config" do
       expect(cluster.uri).to eq(default_uri)
     end
   end
 
-  describe '#inactive?' do
-    context 'when a cluster is defined in the elasticsearch.yml config file' do
-      it 'responds false when uri is present' do
+  describe "#inactive?" do
+    context "when a cluster is defined in the elasticsearch.yml config file" do
+      it "responds false when uri is present" do
         expect(cluster.inactive?).to be false
       end
     end
 
-    context 'when a cluster not defined in the elasticsearch.yml config file' do
-      subject(:cluster) { described_class.new(key: 'Z', uri_key: 'base_uri_c') }
+    context "when a cluster not defined in the elasticsearch.yml config file" do
+      subject(:cluster) { described_class.new(key: "Z", uri_key: "base_uri_c") }
 
       it "responds true" do
         expect(cluster.inactive?).to be true

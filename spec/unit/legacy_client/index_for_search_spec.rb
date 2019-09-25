@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe LegacyClient::IndexForSearch do
   it "makes a request to elasticsearch for the alias name" do
@@ -9,9 +9,9 @@ RSpec.describe LegacyClient::IndexForSearch do
     get_request = stub_request(:get, "#{base_uri}/#{alias_name}/_alias")
       .to_return(
         status: 200,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { "Content-Type" => "application/json" },
         body: {
-          real_name => { 'aliases' => {} }
+          real_name => { "aliases" => {} }
         }.to_json
       )
 

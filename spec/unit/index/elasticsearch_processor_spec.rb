@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Index::ElasticsearchProcessor do
   subject { described_class.govuk }
@@ -15,8 +15,8 @@ RSpec.describe Index::ElasticsearchProcessor do
       title: "We love cheese"
     )
 
-    client = double('client')
-    allow(Services).to receive('elasticsearch').and_return(client)
+    client = double("client")
+    allow(Services).to receive("elasticsearch").and_return(client)
     # rubocop:disable RSpec/MessageSpies
     expect(client).to receive(:bulk).exactly(cluster_count).times.with(index: SearchConfig.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
     # rubocop:enable RSpec/MessageSpies
@@ -35,8 +35,8 @@ RSpec.describe Index::ElasticsearchProcessor do
       title: "We love cheese"
     )
 
-    client = double('client')
-    allow(Services).to receive('elasticsearch').and_return(client)
+    client = double("client")
+    allow(Services).to receive("elasticsearch").and_return(client)
     # rubocop:disable RSpec/MessageSpies
     expect(client).to receive(:bulk).exactly(cluster_count).times.with(
       index: SearchConfig.govuk_index_name,

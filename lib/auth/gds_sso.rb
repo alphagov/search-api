@@ -1,7 +1,7 @@
 module Auth
   class GdsSso
     def self.locate(token_string)
-      Services.cache.fetch(['api-user-cache', token_string], expires_in: 5.minutes) do
+      Services.cache.fetch(["api-user-cache", token_string], expires_in: 5.minutes) do
         new(token_string).locate
       end
     end

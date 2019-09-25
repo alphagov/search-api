@@ -71,7 +71,7 @@ module Search
       when /Numeric value \(([0-9]*)\) out of range of/
         raise(NumberOutOfRange, "Integer value of #{$1} exceeds maximum allowed")
       when /maxClauseCount is set to/
-        raise(QueryTooLong, 'Query must be less than 1024 words')
+        raise(QueryTooLong, "Query must be less than 1024 words")
       else
         raise
       end
@@ -83,7 +83,7 @@ module Search
 
       # Augment the response with the suggest result from a separate query.
       if search_params.suggest_spelling?
-        es_response['suggest'] = run_spell_checks(search_params)
+        es_response["suggest"] = run_spell_checks(search_params)
       end
 
       ResultSetPresenter.new(
@@ -119,7 +119,7 @@ module Search
 
       response = spelling_index.raw_search(query)
 
-      response['suggest']
+      response["suggest"]
     end
 
     def log_search

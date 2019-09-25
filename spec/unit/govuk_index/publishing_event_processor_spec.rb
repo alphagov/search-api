@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe GovukIndex::PublishingEventProcessor do
   it "will process and ack a single message" do
@@ -9,11 +9,11 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
         "title" => "We love cheese"
       },
       delivery_info: {
-        routing_key: 'routing.key'
+        routing_key: "routing.key"
       }
     )
 
-    expect(GovukIndex::PublishingEventWorker).to receive(:perform_async).with([['routing.key', message.payload]])
+    expect(GovukIndex::PublishingEventWorker).to receive(:perform_async).with([["routing.key", message.payload]])
     expect(message).to receive(:ack)
 
     subject.process(message)
@@ -27,7 +27,7 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
         "title" => "We love cheese"
       },
       delivery_info: {
-        routing_key: 'routing.key'
+        routing_key: "routing.key"
       }
     )
     message2 = double(
@@ -37,12 +37,12 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
         "title" => "We love crackers"
       },
       delivery_info: {
-        routing_key: 'routing.key'
+        routing_key: "routing.key"
       }
     )
 
     expect(GovukIndex::PublishingEventWorker).to receive(:perform_async).with(
-      [['routing.key', message1.payload], ['routing.key', message2.payload]]
+      [["routing.key", message1.payload], ["routing.key", message2.payload]]
     )
     expect(message1).to receive(:ack)
     expect(message2).to receive(:ack)

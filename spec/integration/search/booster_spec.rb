@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'BoosterTest' do
+RSpec.describe "BoosterTest" do
   it "service manual formats are weighted down" do
     commit_document("govuk_test",
       "title" => "Agile is good",
@@ -26,8 +26,8 @@ RSpec.describe 'BoosterTest' do
   end
 
   def result_titles
-    parsed_response['results'].map do |result|
-      result['title']
+    parsed_response["results"].map do |result|
+      result["title"]
     end
   end
 end

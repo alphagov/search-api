@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ContentEndpointsTest' do
+RSpec.describe "ContentEndpointsTest" do
   it "content document not found" do
     get "/content?link=/a-document/that-does-not-exist"
 
@@ -17,7 +17,7 @@ RSpec.describe 'ContentEndpointsTest' do
     get "/content?link=a-document/in-search"
 
     expect(last_response).to be_ok
-    expect("title" => "A nice title", "link" => "a-document/in-search", "document_type" => "edition").to eq parsed_response['raw_source']
+    expect("title" => "A nice title", "link" => "a-document/in-search", "document_type" => "edition").to eq parsed_response["raw_source"]
   end
   # rubocop:enable RSpec/ExpectActual
 

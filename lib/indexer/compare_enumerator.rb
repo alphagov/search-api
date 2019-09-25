@@ -61,7 +61,7 @@ module Indexer
       }
 
       result["_root_version"] = document["_version"] if @options[:include_version]
-      result.merge(document['_source'])
+      result.merge(document["_source"])
     end
 
   private
@@ -76,7 +76,7 @@ module Indexer
 
     def compare_key(data)
       return nil if data.nil?
-      [data['_root_type'], data['_root_id']]
+      [data["_root_type"], data["_root_id"]]
     end
 
     def client

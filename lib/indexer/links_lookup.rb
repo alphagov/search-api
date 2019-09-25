@@ -72,7 +72,7 @@ module Indexer
     def find_links(content_id)
       begin
         GdsApi.with_retries(maximum_number_of_attempts: 5) do
-          Services.publishing_api.get_expanded_links(content_id)['expanded_links']
+          Services.publishing_api.get_expanded_links(content_id)["expanded_links"]
         end
       rescue GdsApi::TimedOutException => e
         @logger.error("Timeout fetching expanded links for #{content_id}")
@@ -116,34 +116,34 @@ module Indexer
 
       # We still call topics "specialist sectors" in rummager.
       links_with_slugs["specialist_sectors"] = links["topics"].to_a.map do |content_item|
-        content_item['base_path'].sub('/topic/', '')
+        content_item["base_path"].sub("/topic/", "")
       end
 
       links_with_slugs["mainstream_browse_pages"] = links["mainstream_browse_pages"].to_a.map do |content_item|
-        content_item['base_path'].sub('/browse/', '')
+        content_item["base_path"].sub("/browse/", "")
       end
 
       links_with_slugs["organisations"] = links["organisations"].to_a.map do |content_item|
-        content_item['base_path'].sub('/government/organisations/', '').sub('/courts-tribunals/', '')
+        content_item["base_path"].sub("/government/organisations/", "").sub("/courts-tribunals/", "")
       end
 
       links_with_slugs["primary_publishing_organisation"] = links["primary_publishing_organisation"].to_a.map do |content_item|
-        content_item['base_path'].sub('/government/organisations/', '').sub('/courts-tribunals/', '')
+        content_item["base_path"].sub("/government/organisations/", "").sub("/courts-tribunals/", "")
       end
 
-      links_with_slugs["taxons"] = content_ids_for(links, 'taxons')
+      links_with_slugs["taxons"] = content_ids_for(links, "taxons")
 
       links_with_slugs
     end
 
     def taggings_with_content_ids(links)
       {
-        'topic_content_ids' => content_ids_for(links, 'topics'),
-        'mainstream_browse_page_content_ids' => content_ids_for(links, 'mainstream_browse_pages'),
-        'organisation_content_ids' => content_ids_for(links, 'organisations'),
-        'facet_groups' => content_ids_for(links, 'facet_groups'),
-        'facet_values' => content_ids_for(links, 'facet_values'),
-        'part_of_taxonomy_tree' => parts_of_taxonomy_for_all_taxons(links)
+        "topic_content_ids" => content_ids_for(links, "topics"),
+        "mainstream_browse_page_content_ids" => content_ids_for(links, "mainstream_browse_pages"),
+        "organisation_content_ids" => content_ids_for(links, "organisations"),
+        "facet_groups" => content_ids_for(links, "facet_groups"),
+        "facet_values" => content_ids_for(links, "facet_values"),
+        "part_of_taxonomy_tree" => parts_of_taxonomy_for_all_taxons(links)
       }
     end
 
@@ -179,7 +179,7 @@ module Indexer
 
     def content_ids_for(links, link_type)
       links[link_type].to_a.map do |content_item|
-        content_item['content_id']
+        content_item["content_id"]
       end
     end
   end

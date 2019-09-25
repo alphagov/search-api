@@ -1,6 +1,6 @@
-require 'analytics/extract'
-require 'analytics/transform'
-require 'analytics/load'
+require "analytics/extract"
+require "analytics/transform"
+require "analytics/load"
 
 module Analytics
   def self.export_pages_to_google_analytics

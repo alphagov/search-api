@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe GovukIndex::DetailsPresenter do
   subject(:presented_details) { described_class.new(details: details, format: format) }
 
   context "licence format" do
-    let(:format) { 'licence' }
+    let(:format) { "licence" }
     let(:details) {
       {
         "continuation_link" => "http://www.on-and-on.com",
@@ -27,7 +27,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
 
   context "images" do
     context "document without an image" do
-      let(:format) { 'answer' }
+      let(:format) { "answer" }
 
       let(:details) {
         {
@@ -42,7 +42,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
     end
 
     context "document with an image" do
-      let(:format) { 'news_article' }
+      let(:format) { "news_article" }
 
       let(:details) {
         {

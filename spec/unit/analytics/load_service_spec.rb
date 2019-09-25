@@ -1,7 +1,7 @@
-require 'spec_helper'
-require 'google/apis/analytics_v3'
-require 'googleauth'
-require 'analytics/load_service'
+require "spec_helper"
+require "google/apis/analytics_v3"
+require "googleauth"
+require "analytics/load_service"
 
 RSpec.describe Analytics::LoadService do
   subject(:load_service) { described_class.new }
@@ -14,33 +14,33 @@ RSpec.describe Analytics::LoadService do
       587b0635-2911-49e6-af68-3f0ea1b07cc5,/an-example-page,some_publishing_org,,some page title,some_document_type,some_navigation_supertype,,some_user_journey_supertype,"some_org, another_org, yet_another_org",20170620,,
     CSV
   end
-  let(:scope) { 'https://www.googleapis.com/auth/analytics.edit' }
+  let(:scope) { "https://www.googleapis.com/auth/analytics.edit" }
   let(:upload_response) {
     instance_double("Google::Apis::AnalyticsV3::Upload",
-                    account_id: '1234',
-                    custom_data_source_id: 'abcdefg',
-                    id: 'AbCd-1234',
-                    kind: 'analytics#upload',
-                    status: 'PENDING')
+                    account_id: "1234",
+                    custom_data_source_id: "abcdefg",
+                    id: "AbCd-1234",
+                    kind: "analytics#upload",
+                    status: "PENDING")
   }
 
   let(:uploaded_item) {
     instance_double("Google::Apis::AnalyticsV3::Upload",
-                    account_id: '1234',
-                    custom_data_source_id: 'abcdefg',
-                    id: 'AbCd-1234',
-                    kind: 'analytics#upload',
-                    status: 'COMPLETED')
+                    account_id: "1234",
+                    custom_data_source_id: "abcdefg",
+                    id: "AbCd-1234",
+                    kind: "analytics#upload",
+                    status: "COMPLETED")
   }
   let(:uploaded_item2) {
     instance_double("Google::Apis::AnalyticsV3::Upload",
-                    account_id: '1234',
-                    custom_data_source_id: 'abcdefg',
-                    errors: ['Column headers missing for the input file.'],
-                    id: 'AbCd-1234',
-                    kind: 'analytics#upload',
-                    status: 'FAILED',
-                    upload_time: 'Thu, 11 Jan 2018 12:36:35 +0000')
+                    account_id: "1234",
+                    custom_data_source_id: "abcdefg",
+                    errors: ["Column headers missing for the input file."],
+                    id: "AbCd-1234",
+                    kind: "analytics#upload",
+                    status: "FAILED",
+                    upload_time: "Thu, 11 Jan 2018 12:36:35 +0000")
   }
 
   let(:upload_list) {
@@ -53,17 +53,17 @@ RSpec.describe Analytics::LoadService do
   }
 
   before do
-    ENV['GOOGLE_CLIENT_EMAIL'] = 'email@example.org'
-    ENV['GOOGLE_PRIVATE_KEY'] = 'private_key'
-    ENV['GOOGLE_EXPORT_ACCOUNT_ID'] = 'account_id'
-    ENV['GOOGLE_EXPORT_CUSTOM_DATA_SOURCE_ID'] = 'data_source_id'
-    ENV['GOOGLE_EXPORT_WEB_PROPERTY_ID'] = 'web_property_id'
+    ENV["GOOGLE_CLIENT_EMAIL"] = "email@example.org"
+    ENV["GOOGLE_PRIVATE_KEY"] = "private_key"
+    ENV["GOOGLE_EXPORT_ACCOUNT_ID"] = "account_id"
+    ENV["GOOGLE_EXPORT_CUSTOM_DATA_SOURCE_ID"] = "data_source_id"
+    ENV["GOOGLE_EXPORT_WEB_PROPERTY_ID"] = "web_property_id"
 
     allow(Google::Auth::ServiceAccountCredentials).to receive(:make_creds).and_return(authorizer)
   end
 
-  describe '#upload_csv' do
-    it 'returns a confirmation that the data has been received' do
+  describe "#upload_csv" do
+    it "returns a confirmation that the data has been received" do
       allow(load_service.service).to receive(:upload_data).and_return(upload_response)
 
       expect(load_service.upload_csv(csv)).to eq(upload_response)
@@ -73,29 +73,29 @@ RSpec.describe Analytics::LoadService do
 
     context "when env vars are unset" do
       before do
-        ENV['GOOGLE_CLIENT_EMAIL'] = nil
-        ENV['GOOGLE_PRIVATE_KEY'] = nil
-        ENV['GOOGLE_EXPORT_ACCOUNT_ID'] = nil
-        ENV['GOOGLE_EXPORT_CUSTOM_DATA_IMPORT_SOURCE_ID'] = nil
-        ENV['GOOGLE_EXPORT_TRACKER_ID'] = nil
+        ENV["GOOGLE_CLIENT_EMAIL"] = nil
+        ENV["GOOGLE_PRIVATE_KEY"] = nil
+        ENV["GOOGLE_EXPORT_ACCOUNT_ID"] = nil
+        ENV["GOOGLE_EXPORT_CUSTOM_DATA_IMPORT_SOURCE_ID"] = nil
+        ENV["GOOGLE_EXPORT_TRACKER_ID"] = nil
       end
 
-      it 'raises an ArgumentError' do
+      it "raises an ArgumentError" do
         expect { load_service.upload_csv(csv) }.to raise_error ArgumentError
       end
     end
   end
 
-  describe '#delete_previous_uploads' do
+  describe "#delete_previous_uploads" do
     let(:uploaded_item3) {
       instance_double("Google::Apis::AnalyticsV3::Upload",
-                      account_id: '1234',
-                      custom_data_source_id: 'abcdefg',
-                      errors: ['Column headers missing for the input file.'],
-                      id: 'AbCd-1234',
-                      kind: 'analytics#upload',
-                      status: 'FAILED',
-                      upload_time: 'Thu, 13 Jan 2018 12:36:35 +0000')
+                      account_id: "1234",
+                      custom_data_source_id: "abcdefg",
+                      errors: ["Column headers missing for the input file."],
+                      id: "AbCd-1234",
+                      kind: "analytics#upload",
+                      status: "FAILED",
+                      upload_time: "Thu, 13 Jan 2018 12:36:35 +0000")
     }
 
     let(:upload_list2) {
@@ -109,7 +109,7 @@ RSpec.describe Analytics::LoadService do
 
     before do
       allow(load_service.service).to receive(:list_uploads).and_return(upload_list)
-      allow(load_service.service).to receive(:delete_upload_data).and_return('')
+      allow(load_service.service).to receive(:delete_upload_data).and_return("")
     end
 
     it "deletes the existing files" do
@@ -121,14 +121,14 @@ RSpec.describe Analytics::LoadService do
 
     context "when env vars are unset" do
       before do
-        ENV['GOOGLE_CLIENT_EMAIL'] = nil
-        ENV['GOOGLE_PRIVATE_KEY'] = nil
-        ENV['GOOGLE_EXPORT_ACCOUNT_ID'] = nil
-        ENV['GOOGLE_EXPORT_CUSTOM_DATA_IMPORT_SOURCE_ID'] = nil
-        ENV['GOOGLE_EXPORT_TRACKER_ID'] = nil
+        ENV["GOOGLE_CLIENT_EMAIL"] = nil
+        ENV["GOOGLE_PRIVATE_KEY"] = nil
+        ENV["GOOGLE_EXPORT_ACCOUNT_ID"] = nil
+        ENV["GOOGLE_EXPORT_CUSTOM_DATA_IMPORT_SOURCE_ID"] = nil
+        ENV["GOOGLE_EXPORT_TRACKER_ID"] = nil
       end
 
-      it 'raises an ArgumentError' do
+      it "raises an ArgumentError" do
         expect { load_service.delete_previous_uploads }.to raise_error ArgumentError
       end
     end

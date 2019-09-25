@@ -1,11 +1,11 @@
 require "sinatra"
 set :root, File.dirname(__FILE__)
 
-require 'rummager'
-require 'routes/content'
-require 'govuk_app_config'
-require 'healthcheck/sidekiq_queue_latencies_check'
-require 'healthcheck/elasticsearch_connectivity_check'
+require "rummager"
+require "routes/content"
+require "govuk_app_config"
+require "healthcheck/sidekiq_queue_latencies_check"
+require "healthcheck/elasticsearch_connectivity_check"
 
 class Rummager < Sinatra::Application
   class AttemptToUseDefaultMainstreamIndex < StandardError; end
@@ -55,7 +55,7 @@ class Rummager < Sinatra::Application
   end
 
   def prevent_access_to_govuk
-    if index_name == 'govuk'
+    if index_name == "govuk"
       halt(403, "Actions to govuk index are not allowed via this endpoint, please use the message queue to update this index")
     end
   end
@@ -96,44 +96,44 @@ class Rummager < Sinatra::Application
   end
 
   error LegacySearch::InvalidQuery do
-    halt(422, env['sinatra.error'].message)
+    halt(422, env["sinatra.error"].message)
   end
 
   error Indexer::BulkIndexFailure do
-    halt(500, env['sinatra.error'].message)
+    halt(500, env["sinatra.error"].message)
   end
 
   error Search::Query::Error do
-    halt(400, env['sinatra.error'].message)
+    halt(400, env["sinatra.error"].message)
   end
 
   error Index::ResponseValidator::ElasticsearchError do
     GovukError.notify(
-      env['sinatra.error'],
+      env["sinatra.error"],
       extra: {
         params: params,
       },
     )
 
-    halt(500, env['sinatra.error'].message)
+    halt(500, env["sinatra.error"].message)
   end
 
   error ArgumentError do
-    halt(400, env['sinatra.error'].message)
+    halt(400, env["sinatra.error"].message)
   end
 
   error Index::ResponseValidator::NotFound do
-    halt(404, env['sinatra.error'].message)
+    halt(404, env["sinatra.error"].message)
   end
 
   error Rummager::AttemptToUseDefaultMainstreamIndex do
     GovukError.notify(
-      env['sinatra.error'],
+      env["sinatra.error"],
       extra: {
         params: params,
       },
     )
-    halt(500, env['sinatra.error'].message)
+    halt(500, env["sinatra.error"].message)
   end
 
 
@@ -153,7 +153,7 @@ class Rummager < Sinatra::Application
         return { error: e.error }.to_json
       end
 
-      headers['Access-Control-Allow-Origin'] = '*'
+      headers["Access-Control-Allow-Origin"] = "*"
       results.to_json
     end
   end
@@ -178,7 +178,7 @@ class Rummager < Sinatra::Application
         return { error: e.error }.to_json
       end
 
-      headers['Access-Control-Allow-Origin'] = '*'
+      headers["Access-Control-Allow-Origin"] = "*"
       { results: results }.to_json
     end
   end
@@ -215,7 +215,7 @@ class Rummager < Sinatra::Application
     results = result_set.results.map do |document|
       # Wrap in hash to be compatible with the way Search works.
       raw_result = { "_source" => document.to_hash }
-      search_params = Search::QueryParameters.new(return_fields: raw_result['_source'].keys)
+      search_params = Search::QueryParameters.new(return_fields: raw_result["_source"].keys)
       Search::ResultPresenter.new(raw_result, {}, nil, search_params).present
     end
 
@@ -244,7 +244,7 @@ class Rummager < Sinatra::Application
     require_authentication
     document = JSON.parse(request.body.read)
 
-    inserter = MetasearchIndex::Inserter::V2.new(id: document['_id'], document: document)
+    inserter = MetasearchIndex::Inserter::V2.new(id: document["_id"], document: document)
     inserter.insert
 
     json_result 200, "Success"
@@ -333,7 +333,7 @@ class Rummager < Sinatra::Application
 
   # Healthcheck using govuk_app_config for Icinga alerts
   # See govuk_app_config/healthcheck for guidance on adding checks.
-  get '/healthcheck' do
+  get "/healthcheck" do
     checks = [
       GovukHealthcheck::SidekiqRedis,
       Healthcheck::SidekiqQueueLatenciesCheck,

@@ -1,8 +1,8 @@
-require 'govuk_schemas'
-require 'spec_helper'
-require 'govuk_index/publishing_event_processor'
+require "govuk_schemas"
+require "spec_helper"
+require "govuk_index/publishing_event_processor"
 
-RSpec.describe 'GovukIndex::VersioningTest' do
+RSpec.describe "GovukIndex::VersioningTest" do
   before do
     @processor = GovukIndex::PublishingEventProcessor.new
   end
@@ -79,7 +79,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     expect(document["_version"]).to eq(1)
 
     version2 = generate_random_example(
-      schema: 'gone',
+      schema: "gone",
       payload: {
         base_path: base_path,
         payload_version: 2
@@ -89,7 +89,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     process_message(version2, unpublishing: true)
 
     expect {
-      fetch_document_from_rummager(id: base_path, index: 'govuk_test')
+      fetch_document_from_rummager(id: base_path, index: "govuk_test")
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
 
     version3 = version1.merge(payload_version: 3)
@@ -110,7 +110,7 @@ RSpec.describe 'GovukIndex::VersioningTest' do
     expect(document["_version"]).to eq(2)
 
     version2 = generate_random_example(
-      schema: 'gone',
+      schema: "gone",
       payload: {
         base_path: base_path,
         payload_version: 1

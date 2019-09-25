@@ -1,8 +1,8 @@
-require 'rummager'
-require 'pp'
-require 'rainbow'
-require 'debug/rank_eval'
-require 'debug/synonyms'
+require "rummager"
+require "pp"
+require "rainbow"
+require "debug/rank_eval"
+require "debug/synonyms"
 
 ANSI_GREEN = "\e[32m".freeze
 ANSI_RESET = "\e[0m".freeze
@@ -63,7 +63,7 @@ namespace :debug do
     results[:query_scores].each do |query, score|
       puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
     end
-    puts '---'
+    puts "---"
     puts "overall score: #{results[:score]}"
   end
 end

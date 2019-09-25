@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ExpandsValuesFromSchemaTest' do
+RSpec.describe "ExpandsValuesFromSchemaTest" do
   it "extra fields decorated by schema" do
     commit_document("govuk_test", {
       "link" => "/cma-cases/sample-cma-case",

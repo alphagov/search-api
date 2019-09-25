@@ -41,7 +41,7 @@ module Search
     # Where high means the smallest positional value.
     def combine_best_bets(bets)
       bets
-      .map { |bet| [bet['position'], bet['link']] }
+      .map { |bet| [bet["position"], bet["link"]] }
       .sort
       .uniq { |_, link| link }
       .each_with_object(Hash.new) do |(position, link), result|
@@ -51,7 +51,7 @@ module Search
     end
 
     def combine_worst_bets(bets)
-      bets.map { |bet| bet['link'] }.uniq
+      bets.map { |bet| bet["link"] }.uniq
     end
 
     # Select the bet entries to use.
@@ -86,7 +86,7 @@ module Search
 
       es_response["hits"]["hits"].map do |hit|
         details = JSON.parse(Array(hit["_source"]["details"]).first)
-        _bet_query, _, bet_type = hit["_id"].rpartition('-')
+        _bet_query, _, bet_type = hit["_id"].rpartition("-")
         stemmed_query_as_term = Array(hit["_source"]["stemmed_query_as_term"]).first
 
         # The search on the stemmed_query field is overly broad, so here we need

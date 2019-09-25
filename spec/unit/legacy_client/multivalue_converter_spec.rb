@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe LegacyClient::MultivalueConverter do
   it "keeps multivalue fields as array" do

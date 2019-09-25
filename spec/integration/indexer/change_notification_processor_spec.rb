@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ChangeNotificationProcessorTest' do
+RSpec.describe "ChangeNotificationProcessorTest" do
   it "triggering a reindex" do
     publishing_api_has_lookups(
       "/foo" => "DOCUMENT-CONTENT-ID"
@@ -12,11 +12,11 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
     )
 
     post "/government_test/documents", {
-      'title' => 'Foo',
-      'link' => '/foo',
+      "title" => "Foo",
+      "link" => "/foo",
     }.to_json
 
-    commit_index('government_test')
+    commit_index("government_test")
 
     expect_document_is_in_rummager(
       {
@@ -40,12 +40,12 @@ RSpec.describe 'ChangeNotificationProcessorTest' do
       "base_path" => "/foo"
     })
 
-    commit_index('government_test')
+    commit_index("government_test")
 
     expect_document_is_in_rummager(
       {
         "link" => "/foo",
-        "mainstream_browse_pages" => ['my-browse'],
+        "mainstream_browse_pages" => ["my-browse"],
       },
       index: "government_test",
     )

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
   it "generates an identifier for Elasticsearch" do

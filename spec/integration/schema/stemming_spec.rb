@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'SettingsTest' do
-  describe 'the default analyzer' do
+RSpec.describe "SettingsTest" do
+  describe "the default analyzer" do
     it "reduces words to their stems" do
       expect_tokenisation :default,
         "It's A Small’s World" => %w(it small world),
@@ -61,13 +61,13 @@ private
 
   def fetch_tokens_for_analyzer(query, analyzer)
     result = client.indices.analyze(
-      index: 'government_test',
+      index: "government_test",
       body: {
         analyzer: analyzer.to_s,
         text: query,
       }
     )
-    mappings = result['tokens']
-    mappings.map { |mapping| mapping['token'] }
+    mappings = result["tokens"]
+    mappings.map { |mapping| mapping["token"] }
   end
 end

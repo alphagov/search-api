@@ -6,12 +6,12 @@ class IndexSchema
     @elasticsearch_types = Hash[elasticsearch_types.map { |elasticsearch_type|
       [elasticsearch_type.name, elasticsearch_type]
     }]
-    @document_type_field = field_definitions['document_type'][:es_config]
+    @document_type_field = field_definitions["document_type"][:es_config]
   end
 
   def es_mappings
     properties = {
-      'document_type' => @document_type_field,
+      "document_type" => @document_type_field,
     }
     @elasticsearch_types.each do |_key, value|
       properties = properties.merge(value.es_config)
@@ -64,7 +64,7 @@ class IndexSchemaParser
 
     files.map do |filename|
       [
-        filename.sub(/.json$/, ''),
+        filename.sub(/.json$/, ""),
         File.join(config_path, "indexes", filename),
       ]
     end
@@ -102,6 +102,6 @@ private
   end
 
   def load_json
-    JSON.parse(File.read(@schema_file_path, encoding: 'UTF-8'))
+    JSON.parse(File.read(@schema_file_path, encoding: "UTF-8"))
   end
 end

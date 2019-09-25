@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ElasticsearchIndexingTest' do
+RSpec.describe "ElasticsearchIndexingTest" do
   include GdsApi::TestHelpers::PublishingApiV2
 
   SAMPLE_DOCUMENT = {
@@ -11,7 +11,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
     "indexable_content" => "HERE IS SOME CONTENT"
   }.freeze
 
-  let(:index_name) { 'government_test' }
+  let(:index_name) { "government_test" }
 
   before do
     stub_tagging_lookup
@@ -88,10 +88,10 @@ RSpec.describe 'ElasticsearchIndexingTest' do
       "link" => "/government/topical-events/foo",
       "start_date" => "2016-01-01T00:00:00Z",
       "end_date" => "2017-01-01T00:00:00Z",
-      'logo_formatted_title' => 'The\nTitle',
-      'organisation_brand' => 'cabinet-office',
-      'organisation_crest' => 'single-identity',
-      'logo_url' => 'http://url/to/logo.png'
+      "logo_formatted_title" => 'The\nTitle',
+      "organisation_brand" => "cabinet-office",
+      "organisation_crest" => "single-identity",
+      "logo_url" => "http://url/to/logo.png"
     }.to_json
 
     expect_document_is_in_rummager(
@@ -102,10 +102,10 @@ RSpec.describe 'ElasticsearchIndexingTest' do
         "link" => "/government/topical-events/foo",
         "start_date" => "2016-01-01T00:00:00Z",
         "end_date" => "2017-01-01T00:00:00Z",
-        'logo_formatted_title' => 'The\nTitle',
-        'organisation_brand' => 'cabinet-office',
-        'organisation_crest' => 'single-identity',
-        'logo_url' => 'http://url/to/logo.png'
+        "logo_formatted_title" => 'The\nTitle',
+        "organisation_brand" => "cabinet-office",
+        "organisation_crest" => "single-identity",
+        "logo_url" => "http://url/to/logo.png"
       },
       index: "government_test",
     )
@@ -113,11 +113,11 @@ RSpec.describe 'ElasticsearchIndexingTest' do
 
   it "tags organisation pages to themselves, so that filtering on an organisation returns the homepage" do
     post "/government_test/documents", {
-      'title' => 'HMRC',
-      'link' => '/government/organisations/hmrc',
-      'slug' => 'hmrc',
-      'format' => 'organisation',
-      'organisations' => [],
+      "title" => "HMRC",
+      "link" => "/government/organisations/hmrc",
+      "slug" => "hmrc",
+      "format" => "organisation",
+      "organisations" => [],
     }.to_json
 
     expect_document_is_in_rummager(
@@ -137,7 +137,7 @@ RSpec.describe 'ElasticsearchIndexingTest' do
   end
 
   context "when indexing to the metasearch index" do
-    let(:index_name) { 'metasearch_test' }
+    let(:index_name) { "metasearch_test" }
 
     it "reschedules the job if the index has a write lock" do
       stubbed_client = client

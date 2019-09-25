@@ -10,13 +10,13 @@ module MetasearchIndex
         processor.delete(self)
         responses = processor.commit
         responses.each do |response|
-          Index::ResponseValidator.new(namespace: 'metasearch_index').valid!(response['items'].first)
+          Index::ResponseValidator.new(namespace: "metasearch_index").valid!(response["items"].first)
         end
       end
 
       def identifier
         {
-          _type: 'generic-document',
+          _type: "generic-document",
           _id: @id,
         }
       end

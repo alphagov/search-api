@@ -32,7 +32,7 @@ module SearchIndices
     # The regex takes the string until the first digit. After that, strip any
     # trailing dash from the string.
     def self.strip_alias_from_index_name(aliased_index_name)
-      aliased_index_name.match(%r[^\D+]).to_s.chomp('-')
+      aliased_index_name.match(%r[^\D+]).to_s.chomp("-")
     end
 
     def real_name
@@ -175,7 +175,7 @@ module SearchIndices
 
     def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_name, type: 'generic-document', body: payload)
+      @client.search(index: @index_name, type: "generic-document", body: payload)
     end
 
     # Convert a best bet query to a string formed by joining the normalised
@@ -192,7 +192,7 @@ module SearchIndices
           },
         )
 
-        analyzed_query.fetch('tokens', []).map { |token_info|
+        analyzed_query.fetch("tokens", []).map { |token_info|
           token_info["token"]
         }.join(" ")
       rescue Elasticsearch::Transport::Transport::Errors::BadRequest
@@ -202,7 +202,7 @@ module SearchIndices
 
     def delete(id)
       begin
-        @client.delete(index: @index_name, type: 'generic-document', id: id)
+        @client.delete(index: @index_name, type: "generic-document", id: id)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true

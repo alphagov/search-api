@@ -1,6 +1,6 @@
 class ElasticsearchConfig
   def config
-    config_for("elasticsearch")[ENV['RACK_ENV']]
+    config_for("elasticsearch")[ENV["RACK_ENV"]]
   end
 
   def config_path

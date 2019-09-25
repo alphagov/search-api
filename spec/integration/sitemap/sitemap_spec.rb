@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'SitemapTest' do
+RSpec.describe "SitemapTest" do
   before do
     @path = "/tmp/#{SecureRandom.uuid}"
     FileUtils.mkdir_p("#{@path}/sitemaps")
@@ -86,7 +86,7 @@ RSpec.describe 'SitemapTest' do
   end
 
   def create_test_file(name = "#{SecureRandom.uuid}.xml")
-    File.open("#{@path}/sitemaps/#{name}", 'w+') { |f| f.puts 'test' }
+    File.open("#{@path}/sitemaps/#{name}", "w+") { |f| f.puts "test" }
     name
   end
 end

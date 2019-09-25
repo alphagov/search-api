@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SitemapCleanup do
   it "should delete old sitemaps" do
@@ -22,7 +22,7 @@ RSpec.describe SitemapCleanup do
     expect(FileUtils).to receive(:rm).with("sitemap_2015-03-04T01.xml")
     expect(FileUtils).to receive(:rm).with("sitemap_1_2015-03-04T01.xml")
 
-    cleanup = described_class.new('public')
+    cleanup = described_class.new("public")
     cleanup.delete_excess_sitemaps
   end
 
@@ -47,7 +47,7 @@ RSpec.describe SitemapCleanup do
     expect(FileUtils).to receive(:rm).with("sitemap_2015-03-03T01.xml")
     expect(FileUtils).to receive(:rm).with("sitemap_1_2015-03-03T01.xml")
 
-    cleanup = described_class.new('public')
+    cleanup = described_class.new("public")
     cleanup.delete_excess_sitemaps
   end
 end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
   include Fixtures::DefaultMappings

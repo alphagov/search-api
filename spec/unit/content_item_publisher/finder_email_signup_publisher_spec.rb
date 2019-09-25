@@ -40,7 +40,7 @@ RSpec.describe ContentItemPublisher::FinderEmailSignupPublisher do
         end
 
         it "patches links for the email signup page" do
-          assert_publishing_api_patch_links(content_id, ->(request) { JSON.parse(request.body).has_key?('links') })
+          assert_publishing_api_patch_links(content_id, ->(request) { JSON.parse(request.body).has_key?("links") })
         end
 
         it "publishes the email signup page to the Publishing API" do

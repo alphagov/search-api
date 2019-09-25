@@ -56,7 +56,7 @@ module QueryComponents
           search_params.search_config,
           base_query: applied_filter(applied_query_filters),
         ).call,
-        aggs: { 'filtered_aggregations' => query }
+        aggs: { "filtered_aggregations" => query }
       }
     end
 

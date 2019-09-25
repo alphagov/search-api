@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 module ClusterTestHelpers
   def valid_cluster_keys
@@ -6,10 +6,10 @@ module ClusterTestHelpers
   end
 
   def invalid_cluster_keys
-    @invalid_cluster_keys ||= [nil, '', 'C', :A, 'a']
+    @invalid_cluster_keys ||= [nil, "", "C", :A, "a"]
   end
 
   def default_key
-    @default_key ||= 'A'
+    @default_key ||= "A"
   end
 end

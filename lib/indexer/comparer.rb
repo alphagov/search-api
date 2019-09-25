@@ -34,7 +34,7 @@ module Indexer
           fields = changed_fields(old_item, new_item)
           if fields.any?
             outcomes[:changed] += 1
-            outcomes[:"changes: #{fields.join(',')}"] += 1
+            outcomes[:"changes: #{fields.join(",")}"] += 1
           else
             outcomes[:unchanged] += 1
           end

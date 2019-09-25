@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SynonymParser do
   it "identifies the search time synonyms" do

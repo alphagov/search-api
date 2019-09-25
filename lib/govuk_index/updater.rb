@@ -45,8 +45,8 @@ module GovukIndex
         batch_size: SCROLL_BATCH_SIZE
       ) do |record|
         {
-          'identifier' => record.slice(*%w{_id _type _version}),
-          'document' => record.fetch('_source'),
+          "identifier" => record.slice(*%w{_id _type _version}),
+          "document" => record.fetch("_source"),
         }
       end
     end

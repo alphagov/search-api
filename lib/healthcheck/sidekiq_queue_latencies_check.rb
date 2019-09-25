@@ -1,4 +1,4 @@
-require 'govuk_app_config'
+require "govuk_app_config"
 
 module Healthcheck
   # See GovukHealthcheck (govuk_app_config/docs/healthchecks.md) for usage info
@@ -17,11 +17,11 @@ module Healthcheck
 
     def search_queue_thresholds
       {
-        'default' => {
+        "default" => {
           critical: 1.minute,
           warning: 30.seconds,
         },
-        'bulk' => {
+        "bulk" => {
           critical: 30.minutes,
           warning: 5.minutes,
         }

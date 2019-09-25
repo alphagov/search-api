@@ -6,7 +6,7 @@ RSpec.describe ContentItemPublisher::FinderEmailSignupPresenter do
 
   before do
     GovukContentSchemaTestHelpers.configure do |config|
-      config.schema_type = 'publisher_v2'
+      config.schema_type = "publisher_v2"
       config.project_root = File.expand_path(Dir.pwd)
     end
   end

@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ElasticsearchLockingTest' do
+RSpec.describe "ElasticsearchLockingTest" do
   before do
     stub_tagging_lookup
   end
 
   it "will not allow inserts while locked" do
-    index = search_server.index_group('government_test').current
+    index = search_server.index_group("government_test").current
     with_lock(index) do
       expect {
         index.add([sample_document])
@@ -15,7 +15,7 @@ RSpec.describe 'ElasticsearchLockingTest' do
   end
 
   it "will not allow updates while locked" do
-    index = search_server.index_group('government_test').current
+    index = search_server.index_group("government_test").current
     index.add([sample_document])
 
     with_lock(index) do
@@ -26,7 +26,7 @@ RSpec.describe 'ElasticsearchLockingTest' do
   end
 
   it "will not allow deletes while locked" do
-    index = search_server.index_group('government_test').current
+    index = search_server.index_group("government_test").current
     index.add([sample_document])
 
     with_lock(index) do
@@ -37,7 +37,7 @@ RSpec.describe 'ElasticsearchLockingTest' do
   end
 
   it "will unlock once the block is completed and allow inserts as per normal" do
-    index = search_server.index_group('government_test').current
+    index = search_server.index_group("government_test").current
     with_lock(index) do
       # Nothing to do here
     end

@@ -20,5 +20,5 @@ else
     port: ENV.fetch("REDIS_PORT", 6379)
   }
 
-  GovukSidekiq::SidekiqInitializer.setup_sidekiq('search-api', redis_config)
+  GovukSidekiq::SidekiqInitializer.setup_sidekiq("search-api", redis_config)
 end

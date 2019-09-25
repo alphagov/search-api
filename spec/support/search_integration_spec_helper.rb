@@ -1,9 +1,9 @@
 module SearchIntegrationSpecHelper
   def commit_ministry_of_magic_document(params = {})
     document_params = {
-                        "slug" => '/ministry-of-magic',
-                        "link" => '/ministry-of-magic-site',
-                        "title" => 'Ministry of Magic'
+                        "slug" => "/ministry-of-magic",
+                        "link" => "/ministry-of-magic-site",
+                        "title" => "Ministry of Magic"
                       }
     document_params.merge!(params)
     index = params.dig("index") || "government_test"
@@ -12,8 +12,8 @@ module SearchIntegrationSpecHelper
 
   def commit_treatment_of_dragons_document(params = {})
     document_params = {
-                        "title" => 'Advice on Treatment of Dragons',
-                        "link" => '/dragon-guide'
+                        "title" => "Advice on Treatment of Dragons",
+                        "link" => "/dragon-guide"
                       }
     document_params.merge!(params)
     index = params.dig("index") || "government_test"
@@ -133,9 +133,9 @@ module SearchIntegrationSpecHelper
 
   def expect_result_includes_ministry_of_magic_for_key(result, key, additional_ministry_data = {})
     ministry_of_magic = {
-                          "slug" => '/ministry-of-magic',
-                          "link" => '/ministry-of-magic-site',
-                          "title" => 'Ministry of Magic'
+                          "slug" => "/ministry-of-magic",
+                          "link" => "/ministry-of-magic-site",
+                          "title" => "Ministry of Magic"
                         }
     ministry_of_magic.merge!(additional_ministry_data)
     expect(result[key]).to eq(

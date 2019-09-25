@@ -56,7 +56,7 @@ private
   end
 
   def load_json
-    JSON.parse(File.read(file_path, encoding: 'UTF-8'))
+    JSON.parse(File.read(file_path, encoding: "UTF-8"))
   end
 
   def parse_file
@@ -133,7 +133,7 @@ private
 
     json_files.map do |filename|
       [
-        filename.sub(/.json$/, ''),
+        filename.sub(/.json$/, ""),
         File.join(config_path, "elasticsearch_types", filename),
       ]
     end

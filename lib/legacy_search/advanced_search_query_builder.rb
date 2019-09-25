@@ -21,7 +21,7 @@ module LegacySearch
 
     def unknown_sort_key
       if @sort_order
-        @unknown_sort_key ||= @sort_order.keys - @mappings['generic-document']['properties'].keys
+        @unknown_sort_key ||= @sort_order.keys - @mappings["generic-document"]["properties"].keys
       else
         []
       end
@@ -70,7 +70,7 @@ module LegacySearch
       errors << "Sorting on unknown property #{unknown_sort_key.inspect}" if unknown_sort_key.any?
       errors << invalid_boolean_properties.map { |p, v| "Invalid value #{v.inspect} for boolean property \"#{p}\"" } if invalid_boolean_properties.any?
       errors << invalid_date_properties.map { |p, v| "Invalid value #{v.inspect} for date property \"#{p}\"" } if invalid_date_properties.any?
-      errors.flatten.join('. ')
+      errors.flatten.join(". ")
     end
 
     def query_hash

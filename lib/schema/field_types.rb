@@ -48,7 +48,7 @@ private
   end
 
   def load_json
-    JSON.parse(File.read(types_file_path, encoding: 'UTF-8'))
+    JSON.parse(File.read(types_file_path, encoding: "UTF-8"))
   end
 
   def types_file_path

@@ -67,34 +67,34 @@ namespace :publishing_api do
   task :publish_supergroup_finders do
     finders = [
       {
-        finder: 'all_content_finder.yml',
-        email_signup: 'all_content_email_signup.yml'
+        finder: "all_content_finder.yml",
+        email_signup: "all_content_email_signup.yml"
       },
       {
-        finder: 'news_and_communications_finder.yml',
-        email_signup: 'news_and_communications_email_signup.yml'
+        finder: "news_and_communications_finder.yml",
+        email_signup: "news_and_communications_email_signup.yml"
       },
       {
-        finder: 'guidance_and_regulation_finder.yml',
-        email_signup: 'guidance_and_regulation_email_signup.yml'
+        finder: "guidance_and_regulation_finder.yml",
+        email_signup: "guidance_and_regulation_email_signup.yml"
       },
       {
-        finder: 'policy_and_engagement_finder.yml',
-        email_signup: 'policy_and_engagement_email_signup.yml'
+        finder: "policy_and_engagement_finder.yml",
+        email_signup: "policy_and_engagement_email_signup.yml"
       },
       {
-        finder: 'statistics_finder.yml',
-        email_signup: 'statistics_email_signup.yml'
+        finder: "statistics_finder.yml",
+        email_signup: "statistics_email_signup.yml"
       },
       {
-        finder: 'transparency_finder.yml',
-        email_signup: 'transparency_email_signup.yml'
+        finder: "transparency_finder.yml",
+        email_signup: "transparency_email_signup.yml"
       },
       {
-        finder: 'services_finder.yml',
+        finder: "services_finder.yml",
       },
       {
-        finder: 'official_documents_finder.yml',
+        finder: "official_documents_finder.yml",
       }
     ]
 

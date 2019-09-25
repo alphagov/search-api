@@ -47,7 +47,7 @@ class SitemapGenerator
 
   # Generate a sitemap which matches the format specified in https://www.sitemaps.org/protocol.html
   def generate_xml(chunk)
-    builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+    builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
       xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
         chunk.each do |document|
           xml.url {

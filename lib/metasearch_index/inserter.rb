@@ -11,13 +11,13 @@ module MetasearchIndex
         processor.save(self)
         responses = processor.commit
         responses.each { |response|
-          Index::ResponseValidator.new(namespace: 'metasearch_index').valid!(response["items"].first)
+          Index::ResponseValidator.new(namespace: "metasearch_index").valid!(response["items"].first)
         }
       end
 
       def identifier
         {
-          _type: 'generic-document',
+          _type: "generic-document",
           _id: @id,
         }
       end
@@ -28,7 +28,7 @@ module MetasearchIndex
           stemmed_query: @document["stemmed_query"],
           stemmed_query_as_term: @document["stemmed_query"].presence && " #{analyzed_stemmed_query} ",
           details: @document["details"],
-          document_type: 'best_bet',
+          document_type: "best_bet",
         }
       end
 

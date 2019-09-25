@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::FormatMigrator do
   # rubocop:disable RSpec/AnyInstance
@@ -10,7 +10,7 @@ RSpec.describe Search::FormatMigrator do
     Clusters.active.each do |cluster|
       it "when base query without migrated formats" do
         allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
-        base_query = { filter: 'component' }
+        base_query = { filter: "component" }
         expected = {
           bool: {
             minimum_should_match: 1,
@@ -36,8 +36,8 @@ RSpec.describe Search::FormatMigrator do
       end
 
       it "when base query with migrated formats" do
-        allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('help_page' => :all)
-        base_query = { filter: 'component' }
+        allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("help_page" => :all)
+        base_query = { filter: "component" }
         expected = {
           bool: {
             minimum_should_match: 1,
@@ -91,7 +91,7 @@ RSpec.describe Search::FormatMigrator do
       end
 
       it "when no base query with migrated formats" do
-        allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return('help_page' => :all)
+        allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("help_page" => :all)
         expected = {
           bool:
           { minimum_should_match: 1,

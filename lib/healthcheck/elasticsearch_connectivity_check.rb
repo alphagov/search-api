@@ -1,4 +1,4 @@
-require 'govuk_app_config'
+require "govuk_app_config"
 
 module Healthcheck
   # This is a custom check that is called by GovukHealthcheck
@@ -16,7 +16,7 @@ module Healthcheck
       if clusters_healthy?
         "search-api can connect to all elasticsearch clusters"
       else
-        names = failing_clusters.map(&:key).join(', ')
+        names = failing_clusters.map(&:key).join(", ")
         failed = failing_clusters.count
         "search-api cannot connect to #{failed} elasticsearch #{"cluster".pluralize(failed)}! \n Failing: #{names}"
       end

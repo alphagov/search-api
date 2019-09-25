@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe QueryComponents::Filter do
   def make_search_params(filters, include_withdrawn: true)

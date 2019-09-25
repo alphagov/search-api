@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ElasticsearchIndexGroupTest' do
+RSpec.describe "ElasticsearchIndexGroupTest" do
   before do
     allow(Clusters).to receive(:active).and_return([Clusters.default_cluster])
     @group_name = "government_test"

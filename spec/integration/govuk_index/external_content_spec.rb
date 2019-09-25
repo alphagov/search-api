@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe "external content publishing" do
   before do
@@ -47,8 +47,8 @@ RSpec.describe "external content publishing" do
 
     url = "https://www.nhs.uk"
     content_id = "b7e993e1-9afa-4235-99a4-479caa240267"
-    document = { 'link' => url, 'content_id' => content_id }
-    commit_document('govuk_test', document, id: content_id, type: 'recommended-link')
+    document = { "link" => url, "content_id" => content_id }
+    commit_document("govuk_test", document, id: content_id, type: "recommended-link")
     expect_document_is_in_rummager(document, id: content_id, index: "govuk_test", type: "recommended-link")
 
     payload = {

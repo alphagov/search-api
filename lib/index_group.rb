@@ -125,8 +125,8 @@ module SearchIndices
     end
 
     def alias_map(include_closed: false)
-      expand_wildcards = ['open']
-      expand_wildcards << 'closed' if include_closed
+      expand_wildcards = ["open"]
+      expand_wildcards << "closed" if include_closed
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
       indices = @client.indices.get(index: "#{@name}*", expand_wildcards: expand_wildcards)

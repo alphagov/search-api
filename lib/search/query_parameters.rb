@@ -54,7 +54,7 @@ module Search
     end
 
     def suggest_spelling?
-      query && suggest.include?('spelling')
+      query && suggest.include?("spelling")
     end
 
   private

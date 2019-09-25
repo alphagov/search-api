@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 require "gds_api/test_helpers/publishing_api_v2"
 
-RSpec.describe 'TaglookupDuringIndexingTest' do
+RSpec.describe "TaglookupDuringIndexingTest" do
   include GdsApi::TestHelpers::PublishingApiV2
 
   it "indexes document without publishing api content unchanged" do

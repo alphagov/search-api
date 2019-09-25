@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 require "sitemap/sitemap"
 
 RSpec.describe SitemapPresenter do

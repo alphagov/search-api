@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Indexer::DocumentPreparer do
   describe "#prepared" do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::EntityExpander do
   # Since expanding is being done in the same way we only have to test one

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'SortTest' do
+RSpec.describe "SortTest" do
   context "without explicit ordering" do
     it "order by popularity, with a tie-breaker" do
       builder = QueryComponents::Sort.new(Search::QueryParameters.new)

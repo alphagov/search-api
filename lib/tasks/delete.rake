@@ -1,4 +1,4 @@
-require 'rummager'
+require "rummager"
 
 namespace :delete do
   desc "
@@ -11,9 +11,9 @@ namespace :delete do
     index  = args[:index_name]
 
     if format.nil?
-      puts 'Specify format for deletion'
+      puts "Specify format for deletion"
     elsif index.nil?
-      puts 'Specify an index'
+      puts "Specify an index"
     else
       warn_for_single_cluster_run
       client = Services.elasticsearch(cluster: Clusters.default_cluster, timeout: 5.0)
@@ -27,8 +27,8 @@ namespace :delete do
         {
           delete: {
             _index: index,
-            _type: hit['_type'],
-            _id: hit['_id']
+            _type: hit["_type"],
+            _id: hit["_id"]
           }
         }
       end

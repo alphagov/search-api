@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'SitemapGeneratorTest' do
+RSpec.describe "SitemapGeneratorTest" do
 
   it "should generate multiple sitemaps" do
     allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
@@ -85,7 +85,7 @@ RSpec.describe 'SitemapGeneratorTest' do
           "indexable_content" => "Tax, benefits, roads and stuff"
         },
       ],
-      index_name: 'government_test'
+      index_name: "government_test"
     )
 
     sitemap_xml = generator.sitemaps
@@ -108,7 +108,7 @@ RSpec.describe 'SitemapGeneratorTest' do
           "public_timestamp" => "2017-07-01T12:41:34+00:00"
         },
       ],
-      index_name: 'govuk_test'
+      index_name: "govuk_test"
     )
 
     sitemap_xml = generator.sitemaps
@@ -134,7 +134,7 @@ RSpec.describe 'SitemapGeneratorTest' do
           "public_timestamp" => "2017-07-01T12:41:34+00:00"
         },
       ],
-      index_name: 'govuk_test'
+      index_name: "govuk_test"
     )
 
     sitemap_xml = generator.sitemaps
@@ -149,7 +149,7 @@ RSpec.describe 'SitemapGeneratorTest' do
 
 private
 
-  def add_sample_documents(docs, index_name: 'government_test')
+  def add_sample_documents(docs, index_name: "government_test")
     docs.each do |sample_document|
       insert_document(index_name, sample_document)
     end

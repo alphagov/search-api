@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::SuggestionBlocklist do
   context "with an organisation registry" do
@@ -16,7 +16,7 @@ RSpec.describe Search::SuggestionBlocklist do
         "organisation_type" => "Ministerial department"
       }
 
-      instance_double("BaseRegistry", 'organisation_registry', all: [mod_organisation])
+      instance_double("BaseRegistry", "organisation_registry", all: [mod_organisation])
     end
 
     it "correct normal strings" do

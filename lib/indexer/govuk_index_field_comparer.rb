@@ -21,9 +21,9 @@ module Indexer
         return false
       end
       return compare_time(key, old, new) if %w(public_timestamp first_published_at).include?(key)
-      return compare_content(id, old, new) if key == 'indexable_content'
-      return true if old.nil? && new == ''
-      return true if key == 'rendering_app' && old == 'specialist-frontend' && new == 'government-frontend'
+      return compare_content(id, old, new) if key == "indexable_content"
+      return true if old.nil? && new == ""
+      return true if key == "rendering_app" && old == "specialist-frontend" && new == "government-frontend"
       return compare_arrays(old, new) if old.is_a?(Array) && new.is_a?(Array)
       clean_field(old) == clean_field(new)
     end
@@ -42,8 +42,8 @@ module Indexer
       if clean_old == clean_new
         true
       else
-        old_words = clean_old.split(' ').compact.reject { |w| w =~ /^\d+$/ }
-        new_words = clean_new.split(' ').compact.reject { |w| w =~ /^\d+$/ }
+        old_words = clean_old.split(" ").compact.reject { |w| w =~ /^\d+$/ }
+        new_words = clean_new.split(" ").compact.reject { |w| w =~ /^\d+$/ }
 
         extra_old = old_words - new_words
         extra_new = new_words - old_words
@@ -74,7 +74,7 @@ module Indexer
 
     def remove_links(str)
       str.gsub(/\[([^\]]*(?:\[[^\]]*\][^\]]*)?)\]\([^\)]*\)/, ' \1 ') # [name](link) => name
-        .gsub(/#+\s*/, ' ')
+        .gsub(/#+\s*/, " ")
         .gsub(/\[InlineAttachment:(?:.*\/)?([^\[\]\/]*(?:\[[^\]\/]*\][^\[\]\/]*|)*)\]/, '\1')
     end
 
@@ -83,13 +83,13 @@ module Indexer
     end
 
     def clean_content(str)
-      (str || '')
+      (str || "")
         .downcase # normalise case
         .gsub(/\.[a-z]{3}(\)| |$)/, '\1') # hash as sometimes the link will have the extension
-        .gsub(/[\s,\-_:\/–\[\]\(\)\.\*\|\\\"“”]+/, ' ') # remove all special characters
-        .gsub(/&amp;/, '&')
+        .gsub(/[\s,\-_:\/–\[\]\(\)\.\*\|\\\"“”]+/, " ") # remove all special characters
+        .gsub(/&amp;/, "&")
         .gsub(/[’'‘]/, "'")
-        .gsub(/ /, ' ') #nbsp
+        .gsub(/ /, " ") #nbsp
     end
   end
 end

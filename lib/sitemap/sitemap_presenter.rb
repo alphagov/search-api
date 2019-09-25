@@ -8,15 +8,15 @@ class SitemapPresenter
   end
 
   def url
-    if document['link'].start_with?("http")
-      document['link']
+    if document["link"].start_with?("http")
+      document["link"]
     else
-      URI.join(base_url, document['link']).to_s
+      URI.join(base_url, document["link"]).to_s
     end
   end
 
   def last_updated
-    timestamp = document.fetch('updated_at', document.fetch('public_timestamp', nil))
+    timestamp = document.fetch("updated_at", document.fetch("public_timestamp", nil))
     return nil unless timestamp
 
     # Attempt to parse timestamp to validate it
@@ -45,6 +45,6 @@ private
   end
 
   def withdrawn_status_boost
-    document['is_withdrawn'] ? 0.25 : 1
+    document["is_withdrawn"] ? 0.25 : 1
   end
 end

@@ -22,10 +22,10 @@ module GovukIndex
 
     def type
       raise NotFoundError if existing_document.nil?
-      source = existing_document['_source']
-      fallback = existing_document['_type']
+      source = existing_document["_source"]
+      fallback = existing_document["_type"]
       if source
-        source['document_type'] || fallback
+        source["document_type"] || fallback
       else
         fallback
       end
@@ -38,7 +38,7 @@ module GovukIndex
     def existing_document
       @_existing_document ||=
         begin
-          Client.get(type: '_all', id: id)
+          Client.get(type: "_all", id: id)
         rescue Elasticsearch::Transport::Transport::Errors::NotFound
           nil
         end

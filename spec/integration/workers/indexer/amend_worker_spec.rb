@@ -1,11 +1,11 @@
-require 'spec_helper'
-require 'sidekiq/testing'
+require "spec_helper"
+require "sidekiq/testing"
 
 RSpec.describe Indexer::AmendWorker do
-  let(:index_name) { 'government_test' }
-  let(:link) { '/doc-for-deletion' }
-  let(:content_id) { '41609206-8736-4ff3-b582-63c9fccafe4d' }
-  let(:document) { { "title" => 'Old title', "content_id" => content_id, "link" => link } }
+  let(:index_name) { "government_test" }
+  let(:link) { "/doc-for-deletion" }
+  let(:content_id) { "41609206-8736-4ff3-b582-63c9fccafe4d" }
+  let(:document) { { "title" => "Old title", "content_id" => content_id, "link" => link } }
   let(:updates) { { "title" => "New title" } }
   let(:cluster_count) { Clusters.count }
 
@@ -55,7 +55,7 @@ RSpec.describe Indexer::AmendWorker do
   end
 
   def stub_request_to_publishing_api(id)
-    endpoint = Plek.current.find('publishing-api') + '/v2'
+    endpoint = Plek.current.find("publishing-api") + "/v2"
     expanded_links_url = endpoint + "/expanded-links/" + id
 
     stub_request(:get, expanded_links_url).to_return(status: 200, body: {}.to_json)

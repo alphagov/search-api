@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SearchParameterParser do
   def cluster_with_key(key)
@@ -282,7 +282,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: '"hello world"', parsed_query: { quoted: ['hello world'], unquoted: "" }))
+    expect(p.parsed_params).to match(expected_params(query: '"hello world"', parsed_query: { quoted: ["hello world"], unquoted: "" }))
   end
 
   it "parses mixed quoted/unquoted queries (simple)" do
@@ -290,7 +290,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo bar', parsed_query: { quoted: ['hello world'], unquoted: "foo bar" }))
+    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo bar', parsed_query: { quoted: ["hello world"], unquoted: "foo bar" }))
   end
 
   it "parses mixed quoted/unquoted queries (complex)" do
@@ -298,7 +298,7 @@ RSpec.describe SearchParameterParser do
 
     expect(p.error).to eq("")
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo "bar" bat "baz" qux', parsed_query: { quoted: ['hello world', 'bar', 'baz'], unquoted: "foo bat qux" }))
+    expect(p.parsed_params).to match(expected_params(query: '"hello world" foo "bar" bat "baz" qux', parsed_query: { quoted: ["hello world", "bar", "baz"], unquoted: "foo bat qux" }))
   end
 
   it "complains about invalid unicode in the query" do
@@ -906,7 +906,7 @@ RSpec.describe SearchParameterParser do
 
     expect(aggregate_p).to be_valid
     expect(facet_p).to be_valid
-    expect(aggregate_p.parsed_params['aggregates']).to eq(facet_p.parsed_params['facets'])
+    expect(aggregate_p.parsed_params["aggregates"]).to eq(facet_p.parsed_params["facets"])
   end
 
   it "compalins with facets are used in combination with aggregates" do
@@ -979,14 +979,14 @@ RSpec.describe SearchParameterParser do
     p = described_class.new({ "ab_tests" => ["min_should_match_length:A"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: 'A' }))
+    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: "A" }))
   end
 
   it "understands multiple test variant parameters" do
     p = described_class.new({ "ab_tests" => ["min_should_match_length:A,other_test_case:B"] }, @schema)
 
     expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: 'A', other_test_case: 'B' }))
+    expect(p.parsed_params).to match(expected_params(ab_tests: { min_should_match_length: "A", other_test_case: "B" }))
   end
 
   it "complains about invalid test variant where no variant type is provided" do

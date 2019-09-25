@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe ElasticsearchTypesParser do
   def expect_raises_message(message)
@@ -6,7 +6,7 @@ RSpec.describe ElasticsearchTypesParser do
   end
 
   def schema_dir
-    File.expand_path('../../../config/schema', File.dirname(__FILE__))
+    File.expand_path("../../../config/schema", File.dirname(__FILE__))
   end
 
   def cma_case_expanded_search_result_fields

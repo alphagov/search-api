@@ -3,7 +3,7 @@
 # RABBITMQ_VHOST
 # RABBITMQ_USER
 # RABBITMQ_PASSWORD
-require 'rummager'
+require "rummager"
 
 namespace :message_queue do
   desc "Create the queues that Rummager uses with Rabbit MQ"

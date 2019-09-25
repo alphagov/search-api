@@ -1,9 +1,9 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe FieldTypes do
   context "after loading standard types" do
     before do
-      @types = described_class.new(File.expand_path('../../../config/schema', File.dirname(__FILE__)))
+      @types = described_class.new(File.expand_path("../../../config/schema", File.dirname(__FILE__)))
     end
 
     it "recognise the `identifier` type" do

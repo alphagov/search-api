@@ -1,9 +1,9 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe QueryComponents::Booster do
   it "apply a multiplying factor" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect(:multiply).to eq(result[:function_score][:boost_mode])
     expect(:multiply).to eq(result[:function_score][:score_mode])
@@ -11,7 +11,7 @@ RSpec.describe QueryComponents::Booster do
 
   it "boost results by individual format weightings" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_format_boost(result, "contact", 0.3)
     expect_format_boost(result, "service_manual_guide", 0.3)
@@ -20,7 +20,7 @@ RSpec.describe QueryComponents::Booster do
 
   it "not apply a boost to unspecified formats" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_no_format_boost(result, "guide")
     expect_no_format_boost(result, "some_other_format")
@@ -28,7 +28,7 @@ RSpec.describe QueryComponents::Booster do
 
   it "downweight old organisations" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_organisation_state_boost(result, "closed", 0.2)
     expect_organisation_state_boost(result, "devolved", 0.3)
@@ -36,7 +36,7 @@ RSpec.describe QueryComponents::Booster do
 
   it "downweight historic pages" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_boost_for_field(result, :is_historic, true, 0.5)
   end
@@ -44,7 +44,7 @@ RSpec.describe QueryComponents::Booster do
   it "boost announcements by date" do
     Timecop.freeze("2016-03-11 16:00".to_time) do
       builder = described_class.new(search_query_params)
-      result = builder.wrap({ some: 'query' })
+      result = builder.wrap({ some: "query" })
 
       announcement_boost = result[:function_score][:functions].detect { |f| f[:filter][:term][:search_format_types] == "announcement" }
       expect(announcement_boost).not_to be_nil, "Could not find boost for announcements"
@@ -59,7 +59,7 @@ RSpec.describe QueryComponents::Booster do
 
   it "not boost government index results" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_no_format_boost(result, "case_study")
     expect_no_format_boost(result, "take_part")
@@ -68,7 +68,7 @@ RSpec.describe QueryComponents::Booster do
 
   it "apply only individual format weightings for government formats" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_format_boost(result, "minister", 1.7)
     expect_format_boost(result, "organisation", 2.5)
@@ -77,21 +77,21 @@ RSpec.describe QueryComponents::Booster do
 
   it "boost guidance content" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_boost_for_field(result, :navigation_document_supertype, "guidance", 2.5)
   end
 
   it "downweight service assessments by large amount" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_format_boost(result, "service_standard_report", 0.05)
   end
 
   it "downweight FOI requests" do
     builder = described_class.new(search_query_params)
-    result = builder.wrap({ some: 'query' })
+    result = builder.wrap({ some: "query" })
 
     expect_boost_for_field(result, :content_store_document_type, "foi_release", 0.2)
   end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Search::AggregateExampleFetcher do
   def query_for_example_global(field, value, return_fields)
@@ -96,8 +96,8 @@ RSpec.describe Search::AggregateExampleFetcher do
 
     it "map a response to aggregates without fields" do
       fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)
-      slugs = ['a-slug-name']
-      response_list = [{ 'hits' => { 'total' => 1, 'hits' => [{ '_id' => 'a-slug-name' }] } }]
+      slugs = ["a-slug-name"]
+      response_list = [{ "hits" => { "total" => 1, "hits" => [{ "_id" => "a-slug-name" }] } }]
 
       response = fetcher.send(:prepare_response, slugs, response_list)
 
@@ -124,7 +124,7 @@ RSpec.describe Search::AggregateExampleFetcher do
       @example_fields = %w{link title other_field}
       main_query_response = { "aggregations" => {
         "sector" => {
-          'filtered_aggregations' => {
+          "filtered_aggregations" => {
             "buckets" => [
               { "key" => "sector_1" },
               { "key" => "sector_2" },
@@ -177,7 +177,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
       main_query_response = { "aggregations" => {
         "sector" => {
-          'filtered_aggregations' => {
+          "filtered_aggregations" => {
             "buckets" => [
               { "key" => "sector_1" },
               { "key" => "sector_2" },
@@ -236,7 +236,7 @@ RSpec.describe Search::AggregateExampleFetcher do
       @example_fields = %w{link title other_field}
       main_query_response = { "aggregations" => {
         "sector" => {
-          'filtered_aggregations' => {
+          "filtered_aggregations" => {
             "buckets" => [
             ]
           }
@@ -268,7 +268,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
       main_query_response = { "aggregations" => {
         "sector" => {
-          'filtered_aggregations' => {
+          "filtered_aggregations" => {
             "buckets" => Array((0..999).map { |i|
               { "key" => "sector_#{i}" }
             })

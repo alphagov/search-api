@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
+RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
   before do
     allow_any_instance_of(Indexer::PopularityLookup).to receive(:lookup_popularities).and_return({})
   end
@@ -253,8 +253,8 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, 'Specialist formats' do
 private
 
   def build_example_with_metadata(metadata)
-    example = GovukSchemas::RandomExample.for_schema(notification_schema: 'specialist_document') do |payload|
-      payload['details']['metadata'] = metadata
+    example = GovukSchemas::RandomExample.for_schema(notification_schema: "specialist_document") do |payload|
+      payload["details"]["metadata"] = metadata
       payload
     end
 

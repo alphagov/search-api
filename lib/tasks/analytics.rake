@@ -1,4 +1,4 @@
-require 'analytics/export_pages_to_google_analytics'
+require "analytics/export_pages_to_google_analytics"
 require "csv"
 
 namespace :analytics do
