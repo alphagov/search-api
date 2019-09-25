@@ -39,7 +39,7 @@ private
       example_scope: example_scope,
     }
 
-    if @parsed_params[:examples] > 0 && !ALLOWED_EXAMPLE_SCOPES.include?(@parsed_params[:example_scope])
+    if @parsed_params[:examples].positive? && !ALLOWED_EXAMPLE_SCOPES.include?(@parsed_params[:example_scope])
       # global scope means that examples are looked up for each aggregate value
       # across the whole collection, not just for documents matching the query.
       # This is likely to be a surprising default, so we require that callers

@@ -55,7 +55,7 @@ module Indexer
 
         extra_old.reject! { |old_word| new_words.any? { |new_word| new_word =~ /^#{old_word}/ } } # ignore words that have been truncated
         diff_per = (200.0 * extra_old.count / (old_words.count + new_words.count))
-        if extra_old.count == 0
+        if extra_old.count.zero?
           # we don't need to worry too much about additional words being added
           return true
         elsif diff_per < 2

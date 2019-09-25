@@ -99,7 +99,7 @@ module Search
     # which might actually be useful.
     def top_aggregate_options(options, requested_count)
       suggested_options = options.sort.select { |option|
-        option.count > 0
+        option.count.positive?
       }.take(requested_count)
       applied_options = options.select(&:applied)
       suggested_options.concat(applied_options).uniq.sort.map(&:as_hash)

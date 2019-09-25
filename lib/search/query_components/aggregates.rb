@@ -61,7 +61,7 @@ module QueryComponents
     end
 
     def applied_filter(applied_query_filters)
-      if applied_query_filters && applied_query_filters.count > 0
+      if applied_query_filters && applied_query_filters.count.positive?
         applied_query_filters
       else
         { match_all: {} }

@@ -109,7 +109,7 @@ class BaseParameterParser
   #  - value.slug: sort values by the slug part of the value.
   #  - value.title: sort values by the title of the value.
   #  - value.link: sort values by the link of the value.
-  # 
+  #
   ALLOWED_AGGREGATE_SORT_OPTIONS = %w(
     filtered
     count
@@ -181,7 +181,7 @@ protected
       @errors << %{Invalid value "#{value}" for #{description} (expected positive integer)}
       return nil
     end
-    if result < 0
+    if result.negative?
       @errors << %{Invalid negative value "#{value}" for #{description} (expected positive integer)}
       return nil
     end

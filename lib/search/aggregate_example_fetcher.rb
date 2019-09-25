@@ -17,7 +17,7 @@ module Search
       return {} if @response_aggregates.nil?
 
       search_params.aggregates.reduce({}) do |result, (field_name, aggregate_params)|
-        if aggregate_params[:examples] > 0
+        if aggregate_params[:examples].positive?
           result[field_name] = fetch_for_field(field_name, aggregate_params)
         end
         result

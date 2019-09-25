@@ -34,7 +34,7 @@ module Indexer
       end
 
       Hash[links.map { |link|
-        if ranks[link] == 0
+        if ranks[link].zero?
           popularity_score = 0
         else
           popularity_score = 1.0 / (ranks[link] + SearchConfig.popularity_rank_offset)

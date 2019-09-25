@@ -24,7 +24,7 @@ module GovukIndex
       row = item.detect { |r| r["content_type"] == "text/html" }
       return row["content"] if row
 
-      if item.count > 0
+      if item.count.positive?
         GovukError.notify(
           GovukIndex::MissingTextHtmlContentType.new,
           extra: { content_types: item.map { |r| r["content_type"] } },
