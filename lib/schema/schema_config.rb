@@ -1,4 +1,3 @@
-
 class SchemaConfig
   attr_reader :field_definitions
 
