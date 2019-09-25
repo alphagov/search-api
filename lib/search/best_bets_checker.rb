@@ -85,7 +85,7 @@ module Search
       analyzed_users_query = " #{@metasearch_index.analyzed_best_bet_query(@query)} "
       es_response = timed_raw_search(lookup_payload)
 
-      es_response["hits"]["hits"].map do |hit|
+      es_response["hits"]["hits"].map { |hit|
         details = JSON.parse(Array(hit["_source"]["details"]).first)
         _bet_query, _, bet_type = hit["_id"].rpartition("-")
         stemmed_query_as_term = Array(hit["_source"]["stemmed_query_as_term"]).first
@@ -98,7 +98,7 @@ module Search
         else
           [bet_type, details["best_bets"], details["worst_bets"]]
         end
-      end
+      }
       .compact
     end
 
