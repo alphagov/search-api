@@ -2,6 +2,7 @@ require "spec_helper"
 
 RSpec.describe Index::ElasticsearchProcessor do
   subject { described_class.govuk }
+
   let(:cluster_count) { Clusters.count }
 
   it "saves valid document" do
