@@ -114,8 +114,7 @@ RSpec.describe Search::FormatMigrator do
                   ],
                 },
               },
-            ],
-          },
+            ],},
         }
         expect(described_class.new(
           SearchConfig.default_instance,
