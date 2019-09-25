@@ -5,17 +5,17 @@ RSpec.describe "BoosterTest" do
     commit_document("govuk_test",
                     "title" => "Agile is good",
                     "link" => "/agile-is-good",
-                    "format" => "service_manual_guide",)
+                    "format" => "service_manual_guide")
 
     commit_document("govuk_test",
                     "title" => "Being agile is good",
                     "link" => "/being-agile-is-good",
-                    "format" => "service_manual_topic",)
+                    "format" => "service_manual_topic")
 
     commit_document("govuk_test",
                     "title" => "Can we be agile?",
                     "link" => "/can-we-be-agile",
-                    "format" => "cma_case",)
+                    "format" => "cma_case")
 
     get "/search?q=agile"
 

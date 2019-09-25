@@ -31,7 +31,7 @@ module Indexer
   private
 
     def with_logging(message)
-      log_payload = message.payload.slice('content_id', 'base_path', 'document_type', 'title', 'update_type', 'publishing_app')
+      log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
       puts "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json}"
 

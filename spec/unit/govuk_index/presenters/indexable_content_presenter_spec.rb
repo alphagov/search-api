@@ -8,6 +8,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
       sanitiser: GovukIndex::IndexableContentSanitiser.new,
     )
   end
+
   let(:format) { "help_page" }
 
 

@@ -302,12 +302,12 @@ RSpec.describe Search::AggregateExampleFetcher do
         expected_queries = Array(
           sector_numbers.map { |sector_num|
             query_for_example_query("sector", "sector_#{sector_num}", @example_fields, query, filter)
-          }
+          },
 )
         stub_responses = Array(
           sector_numbers.map { |sector_num|
             response_for_example(sector_num, ["example_#{sector_num}"])
-          }
+          },
 )
         expect(@index).to receive(:msearch)
           .with(expected_queries).and_return({ "responses" => stub_responses })
