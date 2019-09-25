@@ -120,8 +120,8 @@ module Search
 
     def temporarily_fix_link_field(result)
       return result if result["link"].nil? ||
-          result["link"].starts_with?("http") ||
-          result["link"].starts_with?("/")
+        result["link"].starts_with?("http") ||
+        result["link"].starts_with?("/")
 
       result["link"] = "/" + result["link"]
       result
