@@ -3,5 +3,8 @@
 library("govuk")
 
 node('elasticsearch-5.6') {
-  govuk.buildProject(publishingE2ETests: true)
+  govuk.buildProject(
+    publishingE2ETests: true,
+    rubyLintDiff: false
+  )
 }
