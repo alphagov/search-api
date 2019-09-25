@@ -219,7 +219,6 @@ this task will run against all active clusters.
           deleted = docs["deleted"]
           statsd.gauge("#{cluster_name}.#{index}_index.docs.deleted", deleted)
           puts "#{cluster_name}.#{index}_index.docs.deleted=#{deleted}"
-
         rescue Elasticsearch::Transport::Transport::Errors::NotFound
           missing << index
         end
