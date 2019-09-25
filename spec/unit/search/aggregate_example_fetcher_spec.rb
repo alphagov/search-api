@@ -235,8 +235,7 @@ RSpec.describe Search::AggregateExampleFetcher do
       main_query_response = { "aggregations" => {
         "sector" => {
           "filtered_aggregations" => {
-            "buckets" => [
-            ],
+            "buckets" => [],
           },
         },
       } }
