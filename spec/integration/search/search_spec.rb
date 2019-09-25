@@ -614,7 +614,7 @@ RSpec.describe "SearchTest" do
     })
   end
 
-  private
+private
 
   def first_result
     @first_result ||= parsed_response["results"].first
