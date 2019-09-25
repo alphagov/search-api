@@ -200,7 +200,7 @@ RSpec.describe SearchIndices::Index do
   it "can scroll through the documents" do
     search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=2&version=true"
 
-    allow(SearchIndices::Index).to receive(:scroll_batch_size).and_return(2)
+    allow(described_class).to receive(:scroll_batch_size).and_return(2)
 
     stub_request(:get, search_uri).with(
       body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json,

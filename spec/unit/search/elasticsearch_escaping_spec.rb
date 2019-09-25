@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe Search::Escaping do
   subject do
     instance = double
-    instance.extend(Search::Escaping)
+    instance.extend(described_class)
     instance
   end
 

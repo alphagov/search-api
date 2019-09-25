@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe Helpers do
   subject do
     instance = double
-    instance.extend(Helpers)
+    instance.extend(described_class)
     instance
   end
 
