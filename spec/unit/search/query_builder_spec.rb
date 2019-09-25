@@ -1,13 +1,12 @@
 require "spec_helper"
 
 RSpec.describe Search::QueryBuilder do
-  # rubocop:disable RSpec/AnyInstance
   before do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
     allow_any_instance_of(Search::BestBetsChecker).to receive(:best_bets).and_return([])
     allow_any_instance_of(Search::BestBetsChecker).to receive(:worst_bets).and_return([])
   end
-  # rubocop:enable RSpec/AnyInstance
+
 
   context "with a simple search query" do
     it "return a correct query object" do

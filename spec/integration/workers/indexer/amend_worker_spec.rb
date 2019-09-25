@@ -29,15 +29,14 @@ RSpec.describe Indexer::AmendWorker do
   it "retries when index locked" do
     Sidekiq::Testing.fake! do
       with_just_one_cluster
-      mock_index = double("index") # rubocop:disable RSpec/VerifiedDoubles
-      # rubocop:disable RSpec/MessageSpies
+      mock_index = double("index")
       expect(mock_index).to receive(:amend).and_raise(SearchIndices::IndexLocked)
 
-      expect_any_instance_of(SearchIndices::SearchServer).to receive(:index) # rubocop:disable RSpec/AnyInstance
+      expect_any_instance_of(SearchIndices::SearchServer).to receive(:index)
                                                                .with(index_name)
                                                                .and_return(mock_index)
 
-      # rubocop:enable RSpec/MessageSpies
+
       worker = described_class.new
       expect {
         worker.perform(index_name, link, updates)
@@ -47,9 +46,8 @@ RSpec.describe Indexer::AmendWorker do
 
   it "forwards to failure queue" do
     stub_message = {}
-    # rubocop:disable RSpec/MessageSpies
     expect(GovukError).to receive(:notify).with(Indexer::FailedJobException.new, extra: stub_message)
-    # rubocop:enable RSpec/MessageSpies
+
     fail_block = described_class.sidekiq_retries_exhausted_block
     fail_block.call(stub_message)
   end

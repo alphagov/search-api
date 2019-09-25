@@ -78,12 +78,10 @@ RSpec.describe Search::AggregateExampleFetcher do
     allow(index).to receive(:schema).and_return(schema)
     index
   end
-
-  # rubocop:disable RSpec/AnyInstance
   before do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
   end
-  # rubocop:enable RSpec/AnyInstance
+
 
   context "#prepare_response" do
     it "map an empty response" do

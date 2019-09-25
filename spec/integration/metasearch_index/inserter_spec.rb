@@ -80,9 +80,8 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
     failure_reponses = [{
       "items" => [{ "insert" => { "status" => 500 } }],
     }]
-    # rubocop:disable RSpec/AnyInstance
     expect_any_instance_of(Index::ElasticsearchProcessor).to receive(:commit).and_return(failure_reponses)
-    # rubocop:enable RSpec/AnyInstance
+
     document = {
       "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
       "exact_query" => "ca3916",

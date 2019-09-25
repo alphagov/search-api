@@ -19,14 +19,12 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         "title" => "We love cheese",
       }
       responses = [{ "items" => [{ "index" => { "status" => 200 } }] }]
-
-      # rubocop:disable RSpec/MessageSpies
       expect(actions).to receive(:save)
       expect(actions).to receive(:commit).and_return(responses)
 
       expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
-      # rubocop:enable RSpec/MessageSpies
+
       worker.perform([["routing.key", payload]])
     end
 
@@ -39,14 +37,12 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         }
         stub_document_type_mapper
         responses = [{ "items" => [{ "delete" => { "status" => 200 } }] }]
-
-        # rubocop:disable RSpec/MessageSpies
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return(responses)
 
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete")
-        # rubocop:enable RSpec/MessageSpies
+
         worker.perform([["routing.unpublish", payload]])
       end
 
@@ -61,14 +57,12 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           },
         }
         responses = [{ "items" => [{ "index" => { "status" => 200 } }] }]
-
-        # rubocop:disable RSpec/MessageSpies
         expect(actions).to receive(:save)
         expect(actions).to receive(:commit).and_return(responses)
 
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
-        # rubocop:enable RSpec/MessageSpies
+
         worker.perform([["routing.unpublish", payload]])
       end
 
@@ -80,15 +74,13 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         }
         failure_response = [{ "items" => [{ "delete" => { "status" => 500 } }] }]
         stub_document_type_mapper
-
-        # rubocop:disable RSpec/MessageSpies
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return(failure_response)
 
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete_error")
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-retry")
-        # rubocop:enable RSpec/MessageSpies
+
         expect {
           worker.perform([["routing.unpublish", payload]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
@@ -102,13 +94,12 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         }
         stub_document_type_mapper
         responses = [{ "items" => [{ "delete" => { "status" => 404 } }] }]
-        # rubocop:disable RSpec/MessageSpies
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return(responses)
 
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.already_deleted")
-        # rubocop:enable RSpec/MessageSpies
+
         worker.perform([["routing.unpublish", payload]])
       end
     end
@@ -188,22 +179,19 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       responses = [{
         "items" => [{ "index" => { "status" => 200 } }, { "index" => { "status" => 200 } }],
       }]
-
-      # rubocop:disable RSpec/MessageSpies
       expect(actions).to receive(:save).twice
       expect(actions).to receive(:commit).and_return(responses)
 
       expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed").twice
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.multiple_responses")
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index").twice
-      # rubocop:enable RSpec/MessageSpies
+
       worker.perform([["routing.key", payload1], ["routing.key", payload2]])
     end
 
     it "can save and delete documents in the same batch" do
       stub_document_type_mapper
       responses = [{ "items" => [{ "index" => { "status" => 200 } }, { "delete" => { "status" => 200 } }] }]
-      # rubocop:disable RSpec/MessageSpies
       expect(actions).to receive(:save)
       expect(actions).to receive(:delete)
       expect(actions).to receive(:commit).and_return(responses)
@@ -211,7 +199,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.multiple_responses")
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete")
-      # rubocop:enable RSpec/MessageSpies
+
       worker.perform([["routing.key", payload1], ["routing.key", payload_delete]])
     end
 

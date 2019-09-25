@@ -18,7 +18,7 @@ RSpec.describe "SitemapTest" do
 
     expect(File.exist?(link_name)).to eq(false)
 
-    Sitemap.new(@path).generate_and_replace(double(:content_indices)) # rubocop:disable RSpec/VerifiedDoubles
+    Sitemap.new(@path).generate_and_replace(double(:content_indices))
 
     expect(File.symlink?(link_full_name)).to eq(true)
     expect(File.readlink(link_full_name)).to eq("#{@path}/sitemaps/#{filename}")
@@ -30,7 +30,7 @@ RSpec.describe "SitemapTest" do
     allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
 
     time = Time.now.utc
-    Sitemap.new(@path, time).generate_and_replace(double(:content_indices)) # rubocop:disable RSpec/VerifiedDoubles
+    Sitemap.new(@path, time).generate_and_replace(double(:content_indices))
 
     index_filename = "#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml"
     index_linkname = "#{@path}/sitemap.xml"

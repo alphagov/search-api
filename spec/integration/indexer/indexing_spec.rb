@@ -145,12 +145,10 @@ RSpec.describe "ElasticsearchIndexingTest" do
       locked_response = { "items" => [
         { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } },
       ] }
-
-      # rubocop:disable RSpec/MessageSpies
       expect(stubbed_client).to receive(:bulk).and_return(locked_response)
       expect(stubbed_client).to receive(:bulk).and_call_original
-      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client) # rubocop:disable RSpec/AnyInstance
-      # rubocop:enable RSpec/MessageSpies
+      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
+
       details = <<~DETAILS
         {\"best_bets\":[
           {\"link\":\"/learn-to-drive-a-car\",\"position\":1},
@@ -185,12 +183,10 @@ RSpec.describe "ElasticsearchIndexingTest" do
       locked_response = { "items" => [
         { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } },
       ] }
-
-      # rubocop:disable RSpec/MessageSpies
       expect(stubbed_client).to receive(:bulk).and_return(locked_response)
       expect(stubbed_client).to receive(:bulk).and_call_original
-      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client) # rubocop:disable RSpec/AnyInstance
-      # rubocop:enable RSpec/MessageSpies
+      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
+
       publishing_api_has_expanded_links(
         content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
         expanded_links: {},

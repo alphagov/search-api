@@ -1,5 +1,3 @@
-require: rubocop-rspec
-
 Style/ConditionalAssignment:
   Enabled: false
 
@@ -40,15 +38,3 @@ Style/SymbolArray:
 Style/MethodCalledOnDoEndBlock:
   Exclude:
     - 'spec/**/*'
-
-RSpec/DescribeClass:
-  Enabled: false
-
-RSpec/InstanceVariable:
-  Enabled: false
-
-RSpec/ExampleLength:
-  Enabled: false
-
-RSpec/MultipleExpectations:
-  Enabled: false
