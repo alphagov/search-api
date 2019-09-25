@@ -96,7 +96,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
     it "map a response to aggregates without fields" do
       fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)
-      slugs = ["a-slug-name"]
+      slugs = %w[a-slug-name]
       response_list = [{ "hits" => { "total" => 1, "hits" => [{ "_id" => "a-slug-name" }] } }]
 
       response = fetcher.send(:prepare_response, slugs, response_list)
@@ -153,7 +153,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           query_for_example_global("sector", "sector_2", @example_fields),
         ]).and_return({ "responses" => [
           response_for_example(3, %w(example_1 example_2)),
-          response_for_example(1, ["example_3"]),
+          response_for_example(1, %w[example_3]),
         ] })
 
       expect(
@@ -203,7 +203,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
     it "request and return aggregate examples with query scope" do
       query = { match: { _all: { query: "hello" } } }
-      filter = { terms: { organisations: ["hm-magic"] } }
+      filter = { terms: { organisations: %w[hm-magic] } }
       expect(@builder).to receive(:query).and_return(query)
       expect(@builder).to receive(:filter).and_return(filter)
 
@@ -213,7 +213,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           query_for_example_query("sector", "sector_2", @example_fields, query, filter),
         ]).and_return({ "responses" => [
           response_for_example(3, %w(example_1 example_2)),
-          response_for_example(1, ["example_3"]),
+          response_for_example(1, %w[example_3]),
         ] })
 
       expect(
@@ -293,7 +293,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
     it "request and return aggregate examples with query scope" do
       query = { match: { _all: { query: "hello" } } }
-      filter = { terms: { organisations: ["hm-magic"] } }
+      filter = { terms: { organisations: %w[hm-magic] } }
       expect(@builder).to receive(:query).and_return(query)
       expect(@builder).to receive(:filter).and_return(filter)
 

@@ -26,8 +26,8 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
       "visas-immigration/eu-eea-commonwealth", "visas-immigration/work-visas"
     ]
 
-    expected_mainstream_browse_page_content_ids = [
-      "5f42c670-5b82-4f1f-ab52-0e100428d430", "4ab4764d-d9ce-425f-a8cc-aaba4a38be09"
+    expected_mainstream_browse_page_content_ids = %w[
+      5f42c670-5b82-4f1f-ab52-0e100428d430 4ab4764d-d9ce-425f-a8cc-aaba4a38be09
     ]
 
     expect(presenter.mainstream_browse_pages).to eq(expected_mainstream_browse_pages)
@@ -56,9 +56,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
 
     presenter = expanded_links_presenter(expanded_links)
 
-    expected_organisations = ["uk-visas-and-immigration"]
-    expected_organisation_content_ids = ["04148522-b0c1-4137-b687-5f3c3bdd561a"]
-    expected_primary_publishing_organisation = ["uk-visas-and-immigration"]
+    expected_organisations = %w[uk-visas-and-immigration]
+    expected_organisation_content_ids = %w[04148522-b0c1-4137-b687-5f3c3bdd561a]
+    expected_primary_publishing_organisation = %w[uk-visas-and-immigration]
 
     expect(presenter.organisations).to eq(expected_organisations)
     expect(presenter.organisation_content_ids).to eq(expected_organisation_content_ids)
@@ -122,11 +122,11 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     }
     presenter = expanded_links_presenter(expanded_links)
 
-    expected_world_locations = [
-      "bonaire-st-eustatius-saba",
-      "saint-barthelemy",
-      "st-helena-ascension-and-tristan-da-cunha",
-      "the-uk-permanent-delegation-to-the-oecd-organisation-for-economic-co-operation-and-development"
+    expected_world_locations = %w[
+      bonaire-st-eustatius-saba
+      saint-barthelemy
+      st-helena-ascension-and-tristan-da-cunha
+      the-uk-permanent-delegation-to-the-oecd-organisation-for-economic-co-operation-and-development
     ]
 
     expect(presenter.world_locations).to eq(expected_world_locations)
@@ -177,13 +177,13 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
 
     presenter = expanded_links_presenter(expanded_links)
 
-    expected_taxonomy_tree = [
-      "f3bbdec2-0e62-4520-a7fd-6ffd5d36e03a",
-      "206b7f3a-49b5-476f-af0f-fd27e2a68473",
-      "5a9e6b26-ae64-4129-93ee-968028381e83",
-      "13bba81c-b2b1-4b13-a3de-b24748977198"
+    expected_taxonomy_tree = %w[
+      f3bbdec2-0e62-4520-a7fd-6ffd5d36e03a
+      206b7f3a-49b5-476f-af0f-fd27e2a68473
+      5a9e6b26-ae64-4129-93ee-968028381e83
+      13bba81c-b2b1-4b13-a3de-b24748977198
     ]
-    expected_taxons = ["13bba81c-b2b1-4b13-a3de-b24748977198"]
+    expected_taxons = %w[13bba81c-b2b1-4b13-a3de-b24748977198]
 
     expect(presenter.part_of_taxonomy_tree).to eq(expected_taxonomy_tree)
     expect(presenter.taxons).to eq(expected_taxons)
@@ -198,7 +198,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     }
 
     presenter = expanded_links_presenter(expanded_links)
-    expected_facet_values = ["ec58ec61-71a6-475a-8df5-da5f866990b5", "dd71726f-3fe5-4e5f-8d29-8f668e32a659"]
+    expected_facet_values = %w[ec58ec61-71a6-475a-8df5-da5f866990b5 dd71726f-3fe5-4e5f-8d29-8f668e32a659]
 
     expect(presenter.facet_values).to eq(expected_facet_values)
   end
@@ -212,7 +212,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     }
 
     presenter = expanded_links_presenter(expanded_links)
-    expected_facet_groups = ["ec58ec61-71a6-475a-8df5-da5f866990b5", "dd71726f-3fe5-4e5f-8d29-8f668e32a659"]
+    expected_facet_groups = %w[ec58ec61-71a6-475a-8df5-da5f866990b5 dd71726f-3fe5-4e5f-8d29-8f668e32a659]
 
     expect(presenter.facet_groups).to eq(expected_facet_groups)
   end
@@ -232,7 +232,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     presenter = expanded_links_presenter(expanded_links)
 
     expected_specialist_sectors = ["benefits-credits/tax-credits"]
-    expected_topic_content_ids = ["f881f972-6094-4c7d-849c-9143461a9307"]
+    expected_topic_content_ids = %w[f881f972-6094-4c7d-849c-9143461a9307]
 
     expect(presenter.specialist_sectors).to eq(expected_specialist_sectors)
     expect(presenter.topic_content_ids).to eq(expected_topic_content_ids)
@@ -252,7 +252,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
 
     presenter = expanded_links_presenter(expanded_links)
 
-    expect(presenter.people).to eq(["badger-of-deploy"])
+    expect(presenter.people).to eq(%w[badger-of-deploy])
   end
 
   it "policy groups" do
@@ -269,7 +269,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
 
     presenter = expanded_links_presenter(expanded_links)
 
-    expect(presenter.policy_groups).to eq(["micropig-advisory-group"])
+    expect(presenter.policy_groups).to eq(%w[micropig-advisory-group])
   end
 
   it "default_news_image" do

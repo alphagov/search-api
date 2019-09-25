@@ -403,7 +403,7 @@ RSpec.describe "SearchTest" do
   end
 
   it "expands organisations via content_id" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => ["organisation-content-id"] })
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
     commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
 
     get "/search.json?q=dragons"
@@ -415,12 +415,12 @@ RSpec.describe "SearchTest" do
     expect(
       first_result["organisation_content_ids"],
     ).to eq(
-      ["organisation-content-id"],
+      %w[organisation-content-id],
     )
   end
 
   it "search for expanded organisations works" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => ["organisation-content-id"] })
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
     commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
 
     get "/search.json?q=dragons&fields[]=expanded_organisations"
@@ -429,7 +429,7 @@ RSpec.describe "SearchTest" do
   end
 
   it "filter by organisation content_ids works" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => ["organisation-content-id"] })
+    commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
     commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
 
     get "/search.json?filter_organisation_content_ids[]=organisation-content-id"
@@ -445,7 +445,7 @@ RSpec.describe "SearchTest" do
       "title" => "Rules of Quiddich (2017)",
       "link" => "/quiddich-rules-2017",
       "format" => "detailed_guidance",
-      "topical_events" => ["quiddich-world-cup-2017"])
+      "topical_events" => %w[quiddich-world-cup-2017])
 
     # we DO want this document in our search results
     commit_document("government_test",
@@ -462,7 +462,7 @@ RSpec.describe "SearchTest" do
   end
 
   it "expands topics" do
-    commit_treatment_of_dragons_document({ "topic_content_ids" => ["topic-content-id"] })
+    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
     commit_ministry_of_magic_document({ "index" => "govuk_test",
                                         "content_id" => "topic-content-id",
                                         "slug" => "topic-magic",
@@ -482,11 +482,11 @@ RSpec.describe "SearchTest" do
                                                         })
 
     # Keeps the topic content ids
-    expect(first_result["topic_content_ids"]).to eq(["topic-content-id"])
+    expect(first_result["topic_content_ids"]).to eq(%w[topic-content-id])
   end
 
   it "filter by topic content_ids works" do
-    commit_treatment_of_dragons_document({ "topic_content_ids" => ["topic-content-id"] })
+    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
     commit_ministry_of_magic_document({ "index" => "govuk_test",
                                         "content_id" => "topic-content-id",
                                         "slug" => "topic-magic",
@@ -497,7 +497,7 @@ RSpec.describe "SearchTest" do
 
     get "/search.json?filter_topic_content_ids[]=topic-content-id"
 
-    expect(first_result["topic_content_ids"]).to eq(["topic-content-id"])
+    expect(first_result["topic_content_ids"]).to eq(%w[topic-content-id])
   end
 
   it "will not return withdrawn content" do
@@ -537,18 +537,18 @@ RSpec.describe "SearchTest" do
   end
 
   it "can return the taxonomy" do
-    commit_ministry_of_magic_document("taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"])
+    commit_ministry_of_magic_document("taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c])
 
     get "/search?q=Ministry of Magict&fields[]=taxons"
     expect(parsed_response.fetch("total")).to eq(1)
 
     taxons = parsed_response.dig("results", 0, "taxons")
-    expect(taxons).to eq(["eb2093ef-778c-4105-9f33-9aa03d14bc5c"])
+    expect(taxons).to eq(%w[eb2093ef-778c-4105-9f33-9aa03d14bc5c])
   end
 
   it "taxonomy can be filtered" do
-    commit_ministry_of_magic_document("taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"])
-    commit_treatment_of_dragons_document("taxons" => ["some-other-taxon"])
+    commit_ministry_of_magic_document("taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c])
+    commit_treatment_of_dragons_document("taxons" => %w[some-other-taxon])
 
     get "/search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
@@ -567,7 +567,7 @@ RSpec.describe "SearchTest" do
   it "can filter by part of taxonomy" do
     commit_ministry_of_magic_document(
       {
-        "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
+        "taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c],
         "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
       },
     )
@@ -583,8 +583,8 @@ RSpec.describe "SearchTest" do
   end
 
   it "can filter by facet value" do
-    commit_ministry_of_magic_document({ "facet_values" => ["fe2fc3b5-a71b-4063-9605-12c3e6e179d6"] })
-    commit_treatment_of_dragons_document({ "facet_values" => ["e602eb34-a870-46ff-8ba4-de36689fb028"] })
+    commit_ministry_of_magic_document({ "facet_values" => %w[fe2fc3b5-a71b-4063-9605-12c3e6e179d6] })
+    commit_treatment_of_dragons_document({ "facet_values" => %w[e602eb34-a870-46ff-8ba4-de36689fb028] })
     get "/search?filter_facet_values=fe2fc3b5-a71b-4063-9605-12c3e6e179d6"
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
@@ -599,8 +599,8 @@ RSpec.describe "SearchTest" do
   end
 
   it "can filter by facet group" do
-    commit_ministry_of_magic_document({ "facet_groups" => ["fe2fc3b5-a71b-4063-9605-12c3e6e179d6"] })
-    commit_treatment_of_dragons_document({ "facet_groups" => ["e602eb34-a870-46ff-8ba4-de36689fb028"] })
+    commit_ministry_of_magic_document({ "facet_groups" => %w[fe2fc3b5-a71b-4063-9605-12c3e6e179d6] })
+    commit_treatment_of_dragons_document({ "facet_groups" => %w[e602eb34-a870-46ff-8ba4-de36689fb028] })
     get "/search?filter_facet_groups=fe2fc3b5-a71b-4063-9605-12c3e6e179d6"
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)

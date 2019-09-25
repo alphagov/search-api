@@ -39,7 +39,7 @@ task :report_inconsistent_aggregate_values do
     aggregate_values = response.to_hash.dig("aggregates", aggregate, "options")
 
     aggregate_values.each do |aggregate_value|
-      if aggregate_value["value"].keys == ["slug"]
+      if aggregate_value["value"].keys == %w[slug]
         # The aggregate value only contains a slug, therefore is not expanded
         puts " - \"#{aggregate_value["value"]["slug"]}\" is not expanded"
         aggregate_values_to_report[aggregate] << aggregate_value["value"]["slug"]

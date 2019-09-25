@@ -69,7 +69,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
     version1 = generate_random_example(
       payload: { payload_version: 1 },
-      excluded_fields: ["withdrawn_notice"],
+      excluded_fields: %w[withdrawn_notice],
     )
 
     base_path = version1["base_path"]
@@ -84,7 +84,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
         base_path: base_path,
         payload_version: 2,
       },
-      excluded_fields: ["withdrawn_notice"],
+      excluded_fields: %w[withdrawn_notice],
     )
     process_message(version2, unpublishing: true)
 
@@ -115,7 +115,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
         base_path: base_path,
         payload_version: 1,
       },
-      excluded_fields: ["withdrawn_notice"],
+      excluded_fields: %w[withdrawn_notice],
     )
     process_message(version2, unpublishing: true)
 

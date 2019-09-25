@@ -126,21 +126,21 @@ RSpec.describe Document do
 
   it "should include result score" do
     hash = { "link" => "/batman" }
-    field_names = ["link"]
+    field_names = %w[link]
 
     expect(5.2).to eq(described_class.new(sample_field_definitions(field_names), hash, 5.2).es_score)
   end
 
   it "includes elasticsearch score in hash" do
     hash = { "link" => "/batman" }
-    field_names = ["link"]
+    field_names = %w[link]
 
     expect(5.2).to eq(described_class.new(sample_field_definitions(field_names), hash, 5.2).to_hash["es_score"])
   end
 
   it "leaves out blank score" do
     hash = { "link" => "/batman" }
-    field_names = ["link"]
+    field_names = %w[link]
 
     expect(described_class.new(sample_field_definitions(field_names), hash).to_hash).not_to include("es_score")
   end

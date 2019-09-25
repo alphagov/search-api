@@ -21,7 +21,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
   it "directly mapped fields" do
     payload = generate_random_example(
       payload: { expanded_links: {} },
-      excluded_fields: ["withdrawn_notice"],
+      excluded_fields: %w[withdrawn_notice],
       regenerate_if: ->(example) {
         @directly_mapped_fields.any? { |field| example[field] == "" }
       },
@@ -42,7 +42,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     payload = generate_random_example(
       payload: defined_fields,
-      excluded_fields: ["withdrawn_notice"],
+      excluded_fields: %w[withdrawn_notice],
     )
 
     presenter = common_fields_presenter(payload)

@@ -123,7 +123,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
     expect_document_is_in_rummager(
       {
         "link" => "/government/organisations/hmrc",
-        "organisations" => ["hmrc"],
+        "organisations" => %w[hmrc],
       },
       index: "government_test",
     )

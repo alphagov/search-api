@@ -38,7 +38,7 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
         "indexable_content" => "Tax, benefits, roads and stuff, mostly about cheese",
         "relevant_to_local_government" => true,
         "updated_at" => "2012-01-04",
-        "organisations" => ["ministry-of-cheese"],
+        "organisations" => %w[ministry-of-cheese],
       },
       {
         "title" => "Pork pies",
@@ -177,7 +177,7 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
 
     expect(last_response).to be_ok
     expect_result_total 1
-    expect(parsed_response["results"][0]["organisations"]).to eq(["ministry-of-cheese"])
+    expect(parsed_response["results"][0]["organisations"]).to eq(%w[ministry-of-cheese])
   end
 
   it "should allow ordering by properties" do

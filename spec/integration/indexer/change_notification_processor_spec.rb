@@ -45,7 +45,7 @@ RSpec.describe "ChangeNotificationProcessorTest" do
     expect_document_is_in_rummager(
       {
         "link" => "/foo",
-        "mainstream_browse_pages" => ["my-browse"],
+        "mainstream_browse_pages" => %w[my-browse],
       },
       index: "government_test",
     )

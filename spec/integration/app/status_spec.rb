@@ -9,7 +9,7 @@ RSpec.describe "StatusTest" do
     get "/_status"
 
     expect(last_response).to be_ok
-    expect(parsed_response["queues"].keys).to eq(["bulk"])
+    expect(parsed_response["queues"].keys).to eq(%w[bulk])
     expect(parsed_response["queues"]["bulk"]["jobs"]).to eq(12)
   end
 

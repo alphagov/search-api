@@ -92,7 +92,7 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
     @wrapper.advanced_search(default_params.merge("mainstream_browse_pages" => "jones"))
 
     stub_empty_search(body: /#{Regexp.escape("\"term\":{\"mainstream_browse_pages\":\"jones\"}")}/)
-    @wrapper.advanced_search(default_params.merge("mainstream_browse_pages" => ["jones"]))
+    @wrapper.advanced_search(default_params.merge("mainstream_browse_pages" => %w[jones]))
   end
 
   it "multiple value filter param is turned into a terms filter" do
@@ -102,7 +102,7 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
 
   it "filter params are turned into anded term filters on that property" do
     stub_empty_search(body: /#{Regexp.escape("[{\"term\":{\"mainstream_browse_pages\":\"jones\"}},{\"term\":{\"link\":\"richards\"}},")}/)
-    @wrapper.advanced_search(default_params.merge("mainstream_browse_pages" => ["jones"], "link" => ["richards"]))
+    @wrapper.advanced_search(default_params.merge("mainstream_browse_pages" => %w[jones], "link" => %w[richards]))
   end
 
   it "filter params on a boolean mapping property are convered to true based on something that looks truthy" do
@@ -156,7 +156,7 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
 
     expect_rejected_search('Invalid value {} for date property "date_property"', default_params.merge("date_property" => {}))
     expect_rejected_search('Invalid value "2013-02-02" for date property "date_property"', default_params.merge("date_property" => "2013-02-02"))
-    expect_rejected_search('Invalid value ["2013-02-02"] for date property "date_property"', default_params.merge("date_property" => ["2013-02-02"]))
+    expect_rejected_search('Invalid value ["2013-02-02"] for date property "date_property"', default_params.merge("date_property" => %w[2013-02-02]))
     expect_rejected_search('Invalid value {"between"=>"2013-02-02"} for date property "date_property"', default_params.merge("date_property" => { "between" => "2013-02-02" }))
     expect_rejected_search('Invalid value {"before"=>"2013-02-02", "up-to"=>"2013-02-02"} for date property "date_property"', default_params.merge("date_property" => { "before" => "2013-02-02", "up-to" => "2013-02-02" }))
   end

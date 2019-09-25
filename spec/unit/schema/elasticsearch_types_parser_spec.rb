@@ -91,7 +91,7 @@ RSpec.describe ElasticsearchTypesParser do
 
     it "fail if document_type specifies unknown entries in `fields`" do
       allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({
-        "fields" => ["unknown_field"],
+        "fields" => %w[unknown_field],
       })
       expect_raises_message(%{Undefined field \"unknown_field\", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
     end
@@ -106,7 +106,7 @@ RSpec.describe ElasticsearchTypesParser do
 
     it "fail if `expanded search result fields` are specified in base type" do
       allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({
-        "fields" => ["case_state"],
+        "fields" => %w[case_state],
         "expanded_search_result_fields" => {
           "case_state" => cma_case_expanded_search_result_fields,
         },
@@ -121,7 +121,7 @@ RSpec.describe ElasticsearchTypesParser do
 
     it "fail if expanded search result fields are set for fields which aren't known" do
       allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({
-        "fields" => ["case_state"],
+        "fields" => %w[case_state],
         "expanded_search_result_fields" => {
           "unknown_field" => cma_case_expanded_search_result_fields,
         },

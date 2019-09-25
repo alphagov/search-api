@@ -5,7 +5,7 @@ RSpec.describe Search::ResultPresenter do
     document = {
       "_type" => "generic-document",
       "_index" => "govuk_test",
-      "_source" => { "document_type" => "raib_report", "format" => ["a-string"] },
+      "_source" => { "document_type" => "raib_report", "format" => %w[a-string] },
     }
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[format])).present
@@ -17,7 +17,7 @@ RSpec.describe Search::ResultPresenter do
     document = {
       "_type" => "generic-document",
       "_index" => "govuk_test",
-      "_source" => { "document_type" => "raib_report", "railway_type" => ["heavy-rail", "light-rail"] },
+      "_source" => { "document_type" => "raib_report", "railway_type" => %w[heavy-rail light-rail] },
     }
 
     result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[railway_type])).present

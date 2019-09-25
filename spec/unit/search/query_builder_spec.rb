@@ -11,7 +11,7 @@ RSpec.describe Search::QueryBuilder do
 
   context "with a simple search query" do
     it "return a correct query object" do
-      builder = builder_with_params(start: 11, count: 34, return_fields: ["a_field"])
+      builder = builder_with_params(start: 11, count: 34, return_fields: %w[a_field])
 
       result = builder.payload
       expect(result[:from]).to eq(11)

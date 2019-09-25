@@ -11,7 +11,7 @@ RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
         base_path: "/carrots",
         document_type: "gone",
       },
-      excluded_fields: ["withdrawn_notice"],
+      excluded_fields: %w[withdrawn_notice],
     )
     base_path = message.payload["base_path"]
 

@@ -33,7 +33,7 @@ RSpec.describe SearchIndices::SearchServer do
     search_server = described_class.new("http://l", schema_config, %w[government_test page-traffic_test], "govuk_test", %w[government_test], SearchConfig.default_instance)
     index = search_server.index_for_search(%w{government_test page-traffic_test})
     expect(index).to be_a(LegacyClient::IndexForSearch)
-    expect(index.index_names).to eq(["government_test", "page-traffic_test"])
+    expect(index.index_names).to eq(%w[government_test page-traffic_test])
   end
 
   it "raises an error for unknown index in multi index" do

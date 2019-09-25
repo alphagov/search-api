@@ -43,7 +43,7 @@ RSpec.describe ContentItemPublisher::FinderPresenter do
       end
 
       it "includes facet_group in the links hash if present" do
-        facet_group_links = ["facet-group-uuid"]
+        facet_group_links = %w[facet-group-uuid]
         finder["links"] = { "facet_group" => facet_group_links }
         expect(instance.present_links[:links]).to include("facet_group" => facet_group_links)
       end

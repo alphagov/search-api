@@ -2,7 +2,7 @@ module Indexer
   class Comparer
     class MissingIdOrType < StandardError; end
 
-    DEFAULT_FIELDS_TO_IGNORE = ["popularity"].freeze
+    DEFAULT_FIELDS_TO_IGNORE = %w[popularity].freeze
 
     def initialize(old_index_name, new_index_name, cluster: Clusters.default_cluster, filtered_format: nil, ignore: DEFAULT_FIELDS_TO_IGNORE, io: STDOUT, field_comparer: nil, enum_options: {})
       @old_index_name = old_index_name

@@ -8,7 +8,7 @@ RSpec.describe Search::MatcherSet do
   end
 
   it "should match strings case insensitively" do
-    matcher_set = described_class.new(["foo"])
+    matcher_set = described_class.new(%w[foo])
     expect(matcher_set).to include("Foo")
   end
 
@@ -19,7 +19,7 @@ RSpec.describe Search::MatcherSet do
   end
 
   it "matchers should be immutable" do
-    members = ["foo"]
+    members = %w[foo]
     matcher_set = described_class.new(members)
     members.pop
     expect(matcher_set).to include("foo")

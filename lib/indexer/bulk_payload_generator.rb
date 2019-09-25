@@ -69,7 +69,7 @@ module Indexer
       end
       popularities = lookup_popularities(links.compact)
       actions.flat_map { |command_hash, doc_hash|
-        if command_hash.keys == ["index"]
+        if command_hash.keys == %w[index]
           [
             command_hash,
             index_doc(doc_hash, popularities),
