@@ -33,8 +33,8 @@ RSpec.describe Document do
     expect(document.stemmed_query).to eq("jobs")
     expect(document.elasticsearch_export["stemmed_query"]).to eq("jobs")
 
-    expect(document.to_hash.has_key?("_type")).to be_falsey
-    expect(document.to_hash.has_key?("_id")).to be_falsey
+    expect(document.to_hash).not_to have_key("_type")
+    expect(document.to_hash).not_to have_key("_id")
     expect(document.elasticsearch_export["_id"]).to eq("jobs_exact")
     expect(document.elasticsearch_export["document_type"]).to eq("best_bet")
   end
@@ -73,7 +73,7 @@ RSpec.describe Document do
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
     expect(document.to_hash.keys).not_to include("some_other_field")
-    expect(document.respond_to?("some_other_field")).to be_falsey
+    expect(document).not_to respond_to("some_other_field")
   end
 
   it "recognises symbol keys in hash" do
