@@ -56,8 +56,8 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = {
       "document_type" => "external_content",
       "details" => {
-        "url" => "some_url"
-      }
+        "url" => "some_url",
+      },
     }
 
     presenter = common_fields_presenter(payload)
@@ -69,7 +69,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = {
       "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
       "title" => "some title",
-      "description" => "some description"
+      "description" => "some description",
     }
 
     presenter = common_fields_presenter(payload)
@@ -83,8 +83,8 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       "base_path" => "/some/path",
       "withdrawn_notice" => {
         "explanation" => "<div class=\"govspeak\"><p>test 2</p>\n</div>",
-        "withdrawn_at" => "2017-08-03T14:02:18Z"
-      }
+        "withdrawn_at" => "2017-08-03T14:02:18Z",
+      },
     }
 
     presenter = common_fields_presenter(payload)

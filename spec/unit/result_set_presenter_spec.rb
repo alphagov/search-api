@@ -40,7 +40,7 @@ RSpec.describe Search::ResultSetPresenter do
       "hits" => {
         "hits" => sample_docs,
         "total" => 3,
-      }
+      },
     }.merge(extra)
   end
 
@@ -52,13 +52,13 @@ RSpec.describe Search::ResultSetPresenter do
             { "key" => "hm-magic", "doc_count" => 7 },
             { "key" => "hmrc", "doc_count" => 5 },
           ],
-        }
+        },
       },
       "organisations_with_missing_value" => {
         "filtered_aggregations" => {
-          "doc_count" => 8
-        }
-      }
+          "doc_count" => 8,
+        },
+      },
     }
   end
 
@@ -70,12 +70,12 @@ RSpec.describe Search::ResultSetPresenter do
             { "key" => "hm-magic", "doc_count" => 7 },
             { "key" => "hmrc", "doc_count" => 5 },
           ],
-        }
+        },
       },
       "organisations_with_missing_value" => {
         "filtered_aggregations" => {
-          "doc_count" => 8
-        }
+          "doc_count" => 8,
+        },
       },
       "policy_areas" => {
         "filtered_aggregations" => {
@@ -83,12 +83,12 @@ RSpec.describe Search::ResultSetPresenter do
             { "key" => "farming", "doc_count" => 4 },
             { "key" => "unknown_topic", "doc_count" => 5 },
           ],
-        }
+        },
       },
       "policy_areas_with_missing_value" => {
         "filtered_aggregations" => {
           "doc_count" => 3,
-        }
+        },
       },
     }
   end
@@ -97,12 +97,12 @@ RSpec.describe Search::ResultSetPresenter do
     {
       "hm-magic" => {
         "link" => "/government/departments/hm-magic",
-        "title" => "Ministry of Magic"
+        "title" => "Ministry of Magic",
       },
       "hmrc" => {
         "link" => "/government/departments/hmrc",
-        "title" => "HMRC"
-      }
+        "title" => "HMRC",
+      },
     }
   end
 
@@ -157,8 +157,8 @@ RSpec.describe Search::ResultSetPresenter do
       results = {
         "hits" => {
           "hits" => [],
-          "total" => 0
-        }
+          "total" => 0,
+        },
       }
       @output = described_class.new(
         search_params: Search::QueryParameters.new(
@@ -254,8 +254,8 @@ RSpec.describe Search::ResultSetPresenter do
       policy_area_registry = {
         "farming" => {
           "link" => "/government/topics/farming",
-          "title" => "Farming"
-        }
+          "title" => "Farming",
+        },
       }
 
       @output = described_class.new(
@@ -664,7 +664,7 @@ RSpec.describe Search::ResultSetPresenter do
           "hm-magic" => {
             "total" => 1,
             "examples" => [{ "title" => "Ministry of Magic" }],
-          }
+          },
         } }
       ).present
     end

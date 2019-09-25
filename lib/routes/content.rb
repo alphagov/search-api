@@ -3,7 +3,7 @@ class Rummager < Sinatra::Application
     raw_result = find_result_by_link(params["link"])
     {
       index: SearchIndices::Index.strip_alias_from_index_name(raw_result["_index"]),
-      raw_source: raw_result["_source"]
+      raw_source: raw_result["_source"],
     }.to_json
   end
 

@@ -15,7 +15,7 @@ class SitemapGenerator
       query: {
         bool: {
           must_not: { terms: { format: EXCLUDED_FORMATS } },
-        }
+        },
       },
       post_filter: Search::FormatMigrator.new(@search_config).call,
     }

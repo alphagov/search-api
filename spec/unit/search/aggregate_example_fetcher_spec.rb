@@ -19,21 +19,21 @@ RSpec.describe Search::AggregateExampleFetcher do
                   {
                     bool: {
                       must: { match_all: {} },
-                      must_not: { terms: { _index: %w(govuk_test) } }
-                    }
+                      must_not: { terms: { _index: %w(govuk_test) } },
+                    },
                   },
                   { bool: { must_not: { match_all: {} } } }
-                ]
-              }
+                ],
+              },
             }
-          ]
+          ],
         },
       },
       size: 2,
       _source: {
-        includes: return_fields
+        includes: return_fields,
       },
-      sort: [{ popularity: { order: :desc } }]
+      sort: [{ popularity: { order: :desc } }],
     }
   end
 
@@ -42,21 +42,21 @@ RSpec.describe Search::AggregateExampleFetcher do
       query: {
         bool: {
           must: query,
-        }
+        },
       },
       post_filter: {
         bool: {
           must: [
             { term: { field => value } },
             filter
-          ]
-        }
+          ],
+        },
       },
       size: 2,
       _source: {
-        includes: return_fields
+        includes: return_fields,
       },
-      sort: [{ popularity: { order: :desc } }]
+      sort: [{ popularity: { order: :desc } }],
     }
   end
 
@@ -66,8 +66,8 @@ RSpec.describe Search::AggregateExampleFetcher do
         "total" => total_examples,
         "hits" => titles.map { |title|
           { "_source" => { "title" => title } }
-        }
-      }
+        },
+      },
     }
   end
 
@@ -128,9 +128,9 @@ RSpec.describe Search::AggregateExampleFetcher do
             "buckets" => [
               { "key" => "sector_1" },
               { "key" => "sector_2" },
-            ]
-          }
-        }
+            ],
+          },
+        },
       } }
       params = Search::QueryParameters.new(
         aggregates: {
@@ -138,8 +138,8 @@ RSpec.describe Search::AggregateExampleFetcher do
             requested: 10,
             examples: 2,
             example_fields: @example_fields,
-            example_scope: :global
-          }
+            example_scope: :global,
+          },
         }
       )
       @builder = double("builder")
@@ -181,9 +181,9 @@ RSpec.describe Search::AggregateExampleFetcher do
             "buckets" => [
               { "key" => "sector_1" },
               { "key" => "sector_2" },
-            ]
-          }
-        }
+            ],
+          },
+        },
       } }
 
       params = Search::QueryParameters.new(
@@ -192,8 +192,8 @@ RSpec.describe Search::AggregateExampleFetcher do
             requested: 10,
             examples: 2,
             example_fields: @example_fields,
-            example_scope: :query
-          }
+            example_scope: :query,
+          },
         }
       )
 
@@ -238,9 +238,9 @@ RSpec.describe Search::AggregateExampleFetcher do
         "sector" => {
           "filtered_aggregations" => {
             "buckets" => [
-            ]
-          }
-        }
+            ],
+          },
+        },
       } }
       params = Search::QueryParameters.new(
         aggregates: {
@@ -248,8 +248,8 @@ RSpec.describe Search::AggregateExampleFetcher do
             requested: 10,
             examples: 2,
             example_fields: @example_fields,
-            example_scope: :global
-          }
+            example_scope: :global,
+          },
         }
       )
       @builder = double("builder")
@@ -271,9 +271,9 @@ RSpec.describe Search::AggregateExampleFetcher do
           "filtered_aggregations" => {
             "buckets" => Array((0..999).map { |i|
               { "key" => "sector_#{i}" }
-            })
-          }
-        }
+            }),
+          },
+        },
       } }
 
       params = Search::QueryParameters.new(
@@ -282,8 +282,8 @@ RSpec.describe Search::AggregateExampleFetcher do
             requested: 10,
             examples: 2,
             example_fields: @example_fields,
-            example_scope: :query
-          }
+            example_scope: :query,
+          },
         }
       )
 

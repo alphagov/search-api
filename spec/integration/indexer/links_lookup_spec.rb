@@ -73,7 +73,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
         taxons: [
           {
             "content_id" => "TAXON-1",
-            "base_path" => "/alpha-taxonomy/my-taxon-1"
+            "base_path" => "/alpha-taxonomy/my-taxon-1",
           }
         ],
         facet_values: [
@@ -83,7 +83,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
         facet_groups: [
           { "content_id" => "TGRP-1" },
           { "content_id" => "TGRP-2" }
-        ]
+        ],
       }
     )
 
@@ -104,7 +104,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
         "mainstream_browse_page_content_ids" => ["BROWSE-1"],
         "organisation_content_ids" => ["ORG-1", "ORG-2"],
         "facet_groups" => ["TGRP-1", "TGRP-2"],
-        "facet_values" => ["TAG-1", "TAG-2"]
+        "facet_values" => ["TAG-1", "TAG-2"],
       },
       index: "government_test",
     )
@@ -119,7 +119,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
             "content_id" => "TOPIC-CONTENT-ID-1",
             "base_path" => "/topic/my-topic/a",
           }
-        ]
+        ],
       }
     )
 
@@ -145,7 +145,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       "content_id" => grandparent_1_content_id,
       "base_path" => "/grandparent-1",
       "title" => "Grandparent 1",
-      "links" => {}
+      "links" => {},
     }
 
     parent_1_content_id = "11aadc14-9bca-40d9-abb4-4f21f9792a05"
@@ -154,8 +154,8 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       "base_path" => "/parent-1",
       "title" => "Parent 1",
       "links" => {
-        "parent_taxons" => [grandparent_1]
-      }
+        "parent_taxons" => [grandparent_1],
+      },
     }
 
     taxon_1_content_id = "00aadc14-9bca-40d9-abb4-4f21f9792a05"
@@ -164,8 +164,8 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       "base_path" => "/this-is-a-taxon",
       "title" => "Taxon 1",
       "links" => {
-        "parent_taxons" => [parent_1]
-      }
+        "parent_taxons" => [parent_1],
+      },
     }
 
     grandparent_2_content_id = "03aadc14-9bca-40d9-abb4-4f21f9792a05"
@@ -173,7 +173,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       "content_id" => grandparent_2_content_id,
       "base_path" => "/grandparent-2",
       "title" => "Grandparent 2",
-      "links" => {}
+      "links" => {},
     }
 
     parent_2_content_id = "02aadc14-9bca-40d9-abb4-4f21f9792a05"
@@ -182,8 +182,8 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       "base_path" => "/parent-2",
       "title" => "Parent 2",
       "links" => {
-        "parent_taxons" => [grandparent_2]
-      }
+        "parent_taxons" => [grandparent_2],
+      },
     }
 
     taxon_2_content_id = "01aadc14-9bca-40d9-abb4-4f21f9792a05"
@@ -192,8 +192,8 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       "base_path" => "/this-is-also-a-taxon",
       "title" => "Taxon 2",
       "links" => {
-        "parent_taxons" => [parent_2]
-      }
+        "parent_taxons" => [parent_2],
+      },
     }
 
     publishing_api_has_lookups(

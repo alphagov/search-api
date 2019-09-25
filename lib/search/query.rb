@@ -114,7 +114,7 @@ module Search
 
       query = {
         size: 0,
-        suggest: QueryComponents::Suggest.new(search_params).payload
+        suggest: QueryComponents::Suggest.new(search_params).payload,
       }
 
       response = spelling_index.raw_search(query)

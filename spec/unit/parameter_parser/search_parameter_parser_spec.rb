@@ -471,7 +471,7 @@ RSpec.describe SearchParameterParser do
     p = described_class.new(
       {
         "filter_spells" => ["levitation"],
-        "filter_organisations" => ["hm-magic"]
+        "filter_organisations" => ["hm-magic"],
       },
       @schema,
     )
@@ -487,7 +487,7 @@ RSpec.describe SearchParameterParser do
     p = described_class.new(
       {
         "reject_spells" => ["levitation"],
-        "reject_organisations" => ["hm-magic"]
+        "reject_organisations" => ["hm-magic"],
       },
       @schema,
     )
@@ -664,7 +664,7 @@ RSpec.describe SearchParameterParser do
       expected_params(
         aggregates: {
           "organisations" => expected_aggregate_params(requested: 10),
-          "mainstream_browse_pages" => expected_aggregate_params(requested: 5)
+          "mainstream_browse_pages" => expected_aggregate_params(requested: 5),
         }
       )
     )
@@ -727,7 +727,7 @@ RSpec.describe SearchParameterParser do
             examples: 5,
             example_fields: %w(slug title),
             example_scope: :global,
-          )
+          ),
         }
     )
 )
@@ -745,7 +745,7 @@ RSpec.describe SearchParameterParser do
                                          "organisations" => expected_aggregate_params(
                                            requested: 10,
                                            order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
-                                       )
+                                       ),
                                  }
     ))
   end
@@ -773,7 +773,7 @@ RSpec.describe SearchParameterParser do
                                          "organisations" => expected_aggregate_params(
                                            requested: 10,
                                            order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
-                                         )
+                                         ),
                                        }
     ))
   end
@@ -790,7 +790,7 @@ RSpec.describe SearchParameterParser do
                                          "organisations" => expected_aggregate_params(
                                            requested: 10,
                                            scope: :all_filters,
-                                         )
+                                         ),
                                        }
     ))
   end
@@ -829,7 +829,7 @@ RSpec.describe SearchParameterParser do
                                            examples: 5,
                                            example_fields: %w(slug title link),
                                            example_scope: :global,
-                                         )
+                                         ),
                                        }
     ))
   end
@@ -857,7 +857,7 @@ RSpec.describe SearchParameterParser do
                                            examples: 5,
                                            example_fields: %w(slug title),
                                            example_scope: :query,
-                                         )
+                                         ),
                                        }
     ))
   end

@@ -77,7 +77,7 @@ module QueryComponents
           bool: {
             must: quoted,
             should: unquoted,
-          }
+          },
         }
       end
     end
@@ -105,7 +105,7 @@ module QueryComponents
             match_any_terms(%w(title acronym description indexable_content), query),
             minimum_should_match("all_searchable_text", query)
           ],
-        }
+        },
       }
     end
 
@@ -129,8 +129,8 @@ module QueryComponents
             query: escape(query),
             analyzer: query_analyzer,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
-          }
-        }
+          },
+        },
       }
     end
 
@@ -141,8 +141,8 @@ module QueryComponents
             boost: boost,
             query: escape(query),
             analyzer: query_analyzer,
-          }
-        }
+          },
+        },
       }
     end
 
@@ -155,8 +155,8 @@ module QueryComponents
           query: escape(query),
           operator: "and",
           fields: fields,
-          analyzer: query_analyzer
-        }
+          analyzer: query_analyzer,
+        },
       }
     end
 
@@ -170,7 +170,7 @@ module QueryComponents
           operator: "or",
           fields: fields,
           analyzer: query_analyzer,
-        }
+        },
       }
     end
 
@@ -201,8 +201,8 @@ module QueryComponents
           field_name => {
             boost: boost,
             query: query,
-          }
-        }
+          },
+        },
       }
     end
   end

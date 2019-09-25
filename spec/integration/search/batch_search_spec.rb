@@ -364,7 +364,7 @@ RSpec.describe "BatchSearchTest" do
         "content_id" => "topic-content-id",
         "slug" => "topic-magic",
         "link" => "/magic-topic-site",
-        "title" => "Magic topic"
+        "title" => "Magic topic",
     })
 
     # Keeps the topic content ids
@@ -470,7 +470,7 @@ RSpec.describe "BatchSearchTest" do
     commit_ministry_of_magic_document(
       {
         "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
-        "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
+        "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
       }
       )
 
@@ -487,7 +487,7 @@ RSpec.describe "BatchSearchTest" do
     commit_treatment_of_dragons_document
     commit_ministry_of_magic_document(
       {
-        "facet_groups" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
+        "facet_groups" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
       }
     )
 
@@ -504,7 +504,7 @@ RSpec.describe "BatchSearchTest" do
     commit_treatment_of_dragons_document
     commit_ministry_of_magic_document(
       {
-        "facet_values" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
+        "facet_values" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
       }
     )
 

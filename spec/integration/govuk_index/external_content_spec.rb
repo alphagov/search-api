@@ -22,7 +22,7 @@ RSpec.describe "external content publishing" do
         document_type: "external_content",
       },
       details: {
-        hidden_search_terms: ["some, search, keywords"]
+        hidden_search_terms: ["some, search, keywords"],
       },
     )
 

@@ -17,7 +17,7 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
         "link" => "/an-example-answer",
         "indexable_content" => "I like my badger: he is tasty and delicious",
         "relevant_to_local_government" => true,
-        "updated_at" => "2012-01-01"
+        "updated_at" => "2012-01-01",
       },
       {
         "title" => "Useful government information",
@@ -27,7 +27,7 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
         "mainstream_browse_pages" => "crime/example",
         "indexable_content" => "Tax, benefits, roads and stuff",
         "relevant_to_local_government" => false,
-        "updated_at" => "2012-01-03"
+        "updated_at" => "2012-01-03",
       },
       {
         "title" => "Cheesey government information",
@@ -38,13 +38,13 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
         "indexable_content" => "Tax, benefits, roads and stuff, mostly about cheese",
         "relevant_to_local_government" => true,
         "updated_at" => "2012-01-04",
-        "organisations" => ["ministry-of-cheese"]
+        "organisations" => ["ministry-of-cheese"],
       },
       {
         "title" => "Pork pies",
         "link" => "/pork-pies",
         "relevant_to_local_government" => true,
-        "updated_at" => "2012-01-02"
+        "updated_at" => "2012-01-02",
       },
       {
         "title" => "Doc with attachments",
@@ -52,9 +52,9 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
         "attachments" => [
           {
             "title" => "Special thing",
-            "command_paper_number" => "1234"
+            "command_paper_number" => "1234",
           }
-        ]
+        ],
       }
     ]
   end
@@ -153,7 +153,7 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
         "mainstream_browse_pages" => "crime/example",
         "indexable_content" => "Cheese tax.  Cheese recipies.  Cheese music.",
         "relevant_to_local_government" => true,
-        "updated_at" => "2012-01-01"
+        "updated_at" => "2012-01-01",
       }
     ]
     more_documents.each do |sample_document|

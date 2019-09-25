@@ -7,7 +7,7 @@ RSpec.describe Indexer::DeleteWorker do
   let(:document) {
     {
       "content_id" => "41609206-8736-4ff3-b582-63c9fccafe4d",
-      "link" => link
+      "link" => link,
     }
   }
 

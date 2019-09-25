@@ -46,7 +46,7 @@ module Indexer
           GovukError.notify(e,
             extra: {
               error_message: "Timeout looking up content ID",
-              base_path: doc_hash["link"]
+              base_path: doc_hash["link"],
             }
           )
           raise Indexer::PublishingApiError
@@ -61,7 +61,7 @@ module Indexer
               base_path: doc_hash["link"],
               error_code: e.code,
               error_message: e.message,
-              error_details: e.error_details
+              error_details: e.error_details,
             }
           )
           raise Indexer::PublishingApiError
@@ -79,7 +79,7 @@ module Indexer
         GovukError.notify(e,
           extra: {
             error_message: "Timeout fetching expanded links",
-            content_id: content_id
+            content_id: content_id,
           }
         )
         raise Indexer::PublishingApiError
@@ -100,7 +100,7 @@ module Indexer
             content_id: content_id,
             error_code: e.code,
             error_message: e.message,
-            error_details: e.error_details
+            error_details: e.error_details,
           }
         )
         raise Indexer::PublishingApiError
@@ -143,7 +143,7 @@ module Indexer
         "organisation_content_ids" => content_ids_for(links, "organisations"),
         "facet_groups" => content_ids_for(links, "facet_groups"),
         "facet_values" => content_ids_for(links, "facet_values"),
-        "part_of_taxonomy_tree" => parts_of_taxonomy_for_all_taxons(links)
+        "part_of_taxonomy_tree" => parts_of_taxonomy_for_all_taxons(links),
       }
     end
 

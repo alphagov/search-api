@@ -17,8 +17,8 @@ module Search
     def bool_must_filter(field_name, values)
       {
         bool: {
-          must: values.map { |value| { term: { field_name => value } } }
-        }
+          must: values.map { |value| { term: { field_name => value } } },
+        },
       }
     end
 
@@ -38,8 +38,8 @@ module Search
           field_name => {
             "from" => value["from"].iso8601,
             "to" => value["to"].iso8601,
-          }.reject { |_, v| v.nil? }
-        }
+          }.reject { |_, v| v.nil? },
+        },
       }
     end
 
@@ -54,7 +54,7 @@ module Search
             queries: queries,
             tie_breaker: tie_breaker,
             boost: boost,
-          }
+          },
         }
       end
     end
@@ -75,10 +75,10 @@ module Search
             functions: queries.map do |q|
               {
                 filter: q,
-                weight: 1.0 / queries.size
+                weight: 1.0 / queries.size,
               }
-            end
-          }
+            end,
+          },
         }
       end
     end

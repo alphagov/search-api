@@ -12,11 +12,11 @@ module QueryComponents
           score_mode: :multiply,
           query: {
             bool: {
-              should: [core_query]
-            }
+              should: [core_query],
+            },
           },
           functions: boost_filters,
-        }
+        },
       }
     end
 
@@ -31,7 +31,7 @@ module QueryComponents
         boosts.map do |value, boost|
           {
             filter: { term: { property.to_sym => value } },
-            weight: boost
+            weight: boost,
           }
         end
       end
@@ -52,7 +52,7 @@ module QueryComponents
               now: time_in_millis_to_nearest_minute,
             },
           },
-        }
+        },
       }
     end
 

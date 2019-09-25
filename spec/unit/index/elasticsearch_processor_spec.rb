@@ -42,7 +42,7 @@ RSpec.describe Index::ElasticsearchProcessor do
       index: SearchConfig.govuk_index_name,
       body: [
         {
-          delete: presenter.identifier
+          delete: presenter.identifier,
         }
       ]
     )

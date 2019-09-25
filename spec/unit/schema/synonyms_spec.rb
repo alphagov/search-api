@@ -46,11 +46,11 @@ RSpec.describe SynonymParser do
 
     expect(@index_synonyms.es_config).to eq({
         type: :synonym,
-        synonyms: ["pig, micropig", "tiny pig => tiny pig, micropig"]
+        synonyms: ["pig, micropig", "tiny pig => tiny pig, micropig"],
       })
     expect(@search_synonyms.es_config).to eq({
         type: :synonym,
-        synonyms: ["pig, micropig", "mcrpig => micropig"]
+        synonyms: ["pig, micropig", "mcrpig => micropig"],
       })
   end
 

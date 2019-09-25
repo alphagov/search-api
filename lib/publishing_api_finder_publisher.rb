@@ -139,9 +139,9 @@ class FinderEmailSignupContentItemPresenter
             "key" => av["value"],
             "radio_button_name" => av["label"],
             "topic_name" => av["label"],
-            "prechecked" => false
+            "prechecked" => false,
           }
-        end
+        end,
       }
     end
   end

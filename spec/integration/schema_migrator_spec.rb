@@ -22,7 +22,7 @@ RSpec.describe SchemaMigrator do
 
     document = {
       "link" => "/a-page-to-be-reindexed",
-      "title" => "A page to be reindexed"
+      "title" => "A page to be reindexed",
     }
     commit_document("govuk_test", document)
 

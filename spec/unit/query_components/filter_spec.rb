@@ -105,21 +105,21 @@ RSpec.describe QueryComponents::Filter do
           must: [{ bool:
                     { must: [
                          {
-                           term: { "organisations" => "hm-magic" }
+                           term: { "organisations" => "hm-magic" },
                          },
                          {
-                           term: { "organisations" => "hmrc" }
+                           term: { "organisations" => "hmrc" },
                          }
                        ] } }],
           must_not: [{ bool:
                        { must: [
                          {
-                           term: { "mainstream_browse_pages" => "benefits" }
+                           term: { "mainstream_browse_pages" => "benefits" },
                          },
                          {
-                           term: { "mainstream_browse_pages" => "government" }
+                           term: { "mainstream_browse_pages" => "government" },
                          }
-                       ] } }]
+                       ] } }],
         }
                         )
     end
@@ -143,7 +143,7 @@ RSpec.describe QueryComponents::Filter do
           must: [
             { "terms" => { "organisations" => ["hm-magic", "hmrc"] } },
             { "terms" => { "mainstream_browse_pages" => %w[levitation] } },
-          ].compact
+          ].compact,
         }
       )
     end

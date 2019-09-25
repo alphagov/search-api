@@ -9,15 +9,15 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "base_path" => "/browse/visas-immigration/eu-eea-commonwealth",
             "content_id" => "5f42c670-5b82-4f1f-ab52-0e100428d430",
             "locale" => "en",
-            "title" => "EU, EEA and Commonwealth"
+            "title" => "EU, EEA and Commonwealth",
           },
           {
             "base_path" => "/browse/visas-immigration/work-visas",
             "content_id" => "4ab4764d-d9ce-425f-a8cc-aaba4a38be09",
             "locale" => "en",
-            "title" => "Work visas"
+            "title" => "Work visas",
         }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)
@@ -41,7 +41,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "base_path" => "/government/organisations/uk-visas-and-immigration",
             "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
             "locale" => "en",
-            "title" => "UK Visas and Immigration"
+            "title" => "UK Visas and Immigration",
         },
       ],
       "primary_publishing_organisation" => [
@@ -49,9 +49,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "base_path" => "/government/organisations/uk-visas-and-immigration",
           "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
           "locale" => "en",
-          "title" => "UK Visas and Immigration"
+          "title" => "UK Visas and Immigration",
         }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)
@@ -72,9 +72,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "base_path" => "/government/topical-events/budget",
           "content_id" => "ca2326a6-b6c4-4750-917f-9fe12d0c59c9",
           "locale" => "en",
-          "title" => "The budget"
+          "title" => "The budget",
         }
-      ]
+      ],
     }
     presenter = expanded_links_presenter(expanded_links)
 
@@ -91,7 +91,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "schema_name" => "world_location",
           "locale" => "en",
           "analytics_identifier" => "WL224",
-          "links" => {}
+          "links" => {},
         },
         {
           "content_id" => "dc258e77-8731-4c7f-9a6f-df508b991298",
@@ -99,7 +99,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "schema_name" => "world_location",
           "locale" => "en",
           "analytics_identifier" => "WL247",
-          "links" => {}
+          "links" => {},
         },
         {
           "content_id" => "5e9f3c6b-7706-11e4-a3cb-005056011aef",
@@ -107,7 +107,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "schema_name" => "world_location",
           "locale" => "en",
           "analytics_identifier" => "WL216",
-          "links" => {}
+          "links" => {},
         },
         {
           "content_id" => "5e9f3c18-7706-11e4-a3cb-005056011aef",
@@ -116,9 +116,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "schema_name" => "world_location",
           "locale" => "en",
           "analytics_identifier" => "WL210",
-          "links" => {}
+          "links" => {},
         },
-      ]
+      ],
     }
     presenter = expanded_links_presenter(expanded_links)
 
@@ -161,18 +161,18 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
                             "content_id" => "f3bbdec2-0e62-4520-a7fd-6ffd5d36e03a",
                             "locale" => "en",
                             "title" => "GOV.UK homepage",
-                            "links" => {}
+                            "links" => {},
                           }
-                        ]
-                      }
+                        ],
+                      },
                     }
-                  ]
-                }
+                  ],
+                },
               }
-            ]
-          }
+            ],
+          },
         }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)
@@ -194,7 +194,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
       "facet_values" => [
         { "content_id" => "ec58ec61-71a6-475a-8df5-da5f866990b5" },
         { "content_id" => "dd71726f-3fe5-4e5f-8d29-8f668e32a659" }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)
@@ -208,7 +208,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
       "facet_groups" => [
         { "content_id" => "ec58ec61-71a6-475a-8df5-da5f866990b5" },
         { "content_id" => "dd71726f-3fe5-4e5f-8d29-8f668e32a659" }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)
@@ -224,9 +224,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "base_path" => "/topic/benefits-credits/tax-credits",
             "content_id" => "f881f972-6094-4c7d-849c-9143461a9307",
             "locale" => "en",
-            "title" => "Tax credits"
+            "title" => "Tax credits",
           }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)
@@ -245,9 +245,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "base_path" => "/government/people/badger-of-deploy",
             "content_id" => "dbce902f-36d1-471e-a79a-8934aee7c34c",
             "locale" => "en",
-            "title" => "Badger of Deploy"
+            "title" => "Badger of Deploy",
           }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)
@@ -262,9 +262,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "base_path" => "/government/groups/micropig-advisory-group",
             "content_id" => "33848853-6411-4e36-b72b-afe50aff1b93",
             "locale" => "en",
-            "title" => "Micropig advisory group"
+            "title" => "Micropig advisory group",
           }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)
@@ -278,10 +278,10 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
       "primary_publishing_organisation" => [
         {
           "details" => {
-            "default_news_image" => { "url" => default_news_image_url }
-          }
+            "default_news_image" => { "url" => default_news_image_url },
+          },
         }
-      ]
+      ],
     }
 
     presenter = expanded_links_presenter(expanded_links)

@@ -31,13 +31,13 @@ RSpec.describe "ChangeNotificationProcessorTest" do
       expanded_links: {
         mainstream_browse_pages: [{
           title: "Bla",
-          base_path: "/browse/my-browse"
-        }]
+          base_path: "/browse/my-browse",
+        }],
       },
     )
 
     Indexer::ChangeNotificationProcessor.trigger({
-      "base_path" => "/foo"
+      "base_path" => "/foo",
     })
 
     commit_index("government_test")

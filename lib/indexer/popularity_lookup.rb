@@ -13,8 +13,8 @@ module Indexer
       results = traffic_index.raw_search({
         query: {
           terms: {
-            path_components: links
-          }
+            path_components: links,
+          },
         },
         _source: { includes: %w[rank_14] },
         sort: [
@@ -63,7 +63,7 @@ module Indexer
     def traffic_index_size
       results = traffic_index.raw_search({
         query: { match_all: {} },
-        size: 0
+        size: 0,
       })
       results["hits"]["total"]
     end

@@ -29,8 +29,8 @@ module Auth
         site: Plek.new.external_url_for("signon"),
         connection_opts: {
           headers: {
-            user_agent: "oauth-client (#{ENV.fetch('GOVUK_APP_NAME', 'search-api')})"
-          }
+            user_agent: "oauth-client (#{ENV.fetch('GOVUK_APP_NAME', 'search-api')})",
+          },
         }
       )
     end

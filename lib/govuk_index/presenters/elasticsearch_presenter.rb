@@ -131,7 +131,7 @@ module GovukIndex
         vessel_type:                         specialist.vessel_type,
         will_continue_on:                    specialist.will_continue_on,
         withdrawn_date:                      specialist.withdrawn_date,
-        world_locations:                     expanded_links.world_locations
+        world_locations:                     expanded_links.world_locations,
       }.reject { |_, v| v.nil? }
     end
 

@@ -13,10 +13,10 @@ module QueryComponents
             direct_generator: [{
               field: SPELLING_FIELD,
               suggest_mode: "missing",
-              sort: "score"
-            }]
-          }
-        }
+              sort: "score",
+            }],
+          },
+        },
       }
     end
   end

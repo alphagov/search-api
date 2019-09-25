@@ -36,11 +36,11 @@ module GovukIndex
           bool: {
             clause => {
               terms: {
-                format: Array(@format_override || MigratedFormats.indexable_formats.keys)
-              }
-            }
-          }
-        }
+                format: Array(@format_override || MigratedFormats.indexable_formats.keys),
+              },
+            },
+          },
+        },
       }
     end
   end

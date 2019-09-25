@@ -325,7 +325,7 @@ class Rummager < Sinatra::Application
       status["queues"][queue_name] = {
         "jobs" => queue_size,
         "retries" => retry_count,
-        "scheduled" => scheduled_count
+        "scheduled" => scheduled_count,
       }
     end
     status.to_json

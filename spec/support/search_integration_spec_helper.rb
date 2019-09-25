@@ -3,7 +3,7 @@ module SearchIntegrationSpecHelper
     document_params = {
                         "slug" => "/ministry-of-magic",
                         "link" => "/ministry-of-magic-site",
-                        "title" => "Ministry of Magic"
+                        "title" => "Ministry of Magic",
                       }
     document_params.merge!(params)
     index = params.dig("index") || "government_test"
@@ -13,7 +13,7 @@ module SearchIntegrationSpecHelper
   def commit_treatment_of_dragons_document(params = {})
     document_params = {
                         "title" => "Advice on Treatment of Dragons",
-                        "link" => "/dragon-guide"
+                        "link" => "/dragon-guide",
                       }
     document_params.merge!(params)
     index = params.dig("index") || "government_test"
@@ -28,7 +28,7 @@ module SearchIntegrationSpecHelper
       "specialist_sectors" => %w(farming),
       "opened_date" => "2014-04-01",
       "format" => "cma_case",
-      "document_type" => "cma_case"
+      "document_type" => "cma_case",
     }.merge(attributes)
   end
 
@@ -135,7 +135,7 @@ module SearchIntegrationSpecHelper
     ministry_of_magic = {
                           "slug" => "/ministry-of-magic",
                           "link" => "/ministry-of-magic-site",
-                          "title" => "Ministry of Magic"
+                          "title" => "Ministry of Magic",
                         }
     ministry_of_magic.merge!(additional_ministry_data)
     expect(result[key]).to eq(

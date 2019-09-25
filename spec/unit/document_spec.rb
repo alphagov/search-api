@@ -24,7 +24,7 @@ RSpec.describe Document do
     hash = {
       "_id" => "jobs_exact",
       "_type" => "best_bet",
-      "stemmed_query" => "jobs"
+      "stemmed_query" => "jobs",
     }
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
@@ -52,7 +52,7 @@ RSpec.describe Document do
   it "should raise helpful error for unconfigured types" do
     hash = {
       "_id" => "jobs_exact",
-      "_type" => "cheese"
+      "_type" => "cheese",
     }
 
     expect {
@@ -67,7 +67,7 @@ RSpec.describe Document do
       "description" => "DESCRIPTION",
       "format" => "guide",
       "link" => "/an-example-guide",
-      "some_other_field" => "test"
+      "some_other_field" => "test",
     }
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
@@ -83,7 +83,7 @@ RSpec.describe Document do
       description: "DESCRIPTION",
       format: "guide",
       link: "/an-example-guide",
-      indexable_content: "HERE IS SOME CONTENT"
+      indexable_content: "HERE IS SOME CONTENT",
     }
 
     document = described_class.from_hash(hash, sample_elasticsearch_types)
@@ -148,7 +148,7 @@ RSpec.describe Document do
   it "should handle opaque object fields" do
     metadata = { "foo" => true, "bar" => 1 }
     document_hash = {
-      "metadata" => metadata
+      "metadata" => metadata,
     }
     doc = described_class.new(sample_field_definitions(%w(metadata)), document_hash)
 

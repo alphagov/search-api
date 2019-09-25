@@ -19,7 +19,7 @@ class SchemaMigrator
           dest: {
             index: index.real_name,
             version_type: "external",
-          }
+          },
         },
         refresh: true
       )

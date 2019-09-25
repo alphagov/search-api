@@ -6,10 +6,10 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
       payload: {
         "base_path" => "/cheese",
         "document_type" => "help_page",
-        "title" => "We love cheese"
+        "title" => "We love cheese",
       },
       delivery_info: {
-        routing_key: "routing.key"
+        routing_key: "routing.key",
       }
     )
 
@@ -24,20 +24,20 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
       payload: {
         "base_path" => "/cheese",
         "document_type" => "help_page",
-        "title" => "We love cheese"
+        "title" => "We love cheese",
       },
       delivery_info: {
-        routing_key: "routing.key"
+        routing_key: "routing.key",
       }
     )
     message2 = double(
       payload: {
         "base_path" => "/crackers",
         "document_type" => "help_page",
-        "title" => "We love crackers"
+        "title" => "We love crackers",
       },
       delivery_info: {
-        routing_key: "routing.key"
+        routing_key: "routing.key",
       }
     )
 

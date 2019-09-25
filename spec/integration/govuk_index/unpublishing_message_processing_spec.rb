@@ -9,7 +9,7 @@ RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
       user_defined: {
         payload_version: 2,
         base_path: "/carrots",
-        document_type: "gone"
+        document_type: "gone",
       },
       excluded_fields: ["withdrawn_notice"]
     )
@@ -38,8 +38,8 @@ RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
         document_type: "help_page",
         withdrawn_notice: {
           "explanation" => "<div class=\"govspeak\"><p>test 2</p>\n</div>",
-          "withdrawn_at" => "2017-08-03T14:02:18Z"
-        }
+          "withdrawn_at" => "2017-08-03T14:02:18Z",
+        },
       }
     )
     base_path = message.payload["base_path"]

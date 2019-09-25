@@ -9,8 +9,8 @@ module Search
       {
         bool: {
           minimum_should_match: 1,
-          should: [excluding_formats, only_formats]
-        }
+          should: [excluding_formats, only_formats],
+        },
       }
     end
 

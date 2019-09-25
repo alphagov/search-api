@@ -4,7 +4,7 @@ if ENV["RACK_ENV"] == "test"
   redis_config = {
     host: ENV.fetch("REDIS_HOST", "127.0.0.1"),
     port: ENV.fetch("REDIS_PORT", 6379),
-    namespace: "search-api-test"
+    namespace: "search-api-test",
   }
 
   Sidekiq.configure_server do |config|
@@ -17,7 +17,7 @@ if ENV["RACK_ENV"] == "test"
 else
   redis_config = {
     host: ENV.fetch("REDIS_HOST", "127.0.0.1"),
-    port: ENV.fetch("REDIS_PORT", 6379)
+    port: ENV.fetch("REDIS_PORT", 6379),
   }
 
   GovukSidekiq::SidekiqInitializer.setup_sidekiq("search-api", redis_config)

@@ -103,7 +103,7 @@ module Search
       docs = content_index_names.reduce([]) do |documents, index_name|
         documents << {
           _id: search_params.similar_to,
-          _index: index_name
+          _index: index_name,
         }
       end
 
@@ -111,7 +111,7 @@ module Search
         more_like_this: {
           like: docs,
           min_doc_freq: 0, # Revert to the ES 1.7 default
-        }
+        },
       }
     end
   end

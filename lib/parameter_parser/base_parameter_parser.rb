@@ -28,7 +28,7 @@ class BaseParameterParser
   ).freeze
 
   SORT_MAPPINGS = {
-    "title" => "title.sort"
+    "title" => "title.sort",
   }.freeze
 
   # Incoming filter fields will have their names transformed according to the

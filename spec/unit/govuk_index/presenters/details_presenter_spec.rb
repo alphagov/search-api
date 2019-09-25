@@ -32,7 +32,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       let(:details) {
         {
           "body" => "<p>Gallwch ddefnyddio’r gwasanaethau canlynol gan Gyllid a Thollau Ei Mawrhydi </p>\n\n",
-          "external_related_links" => []
+          "external_related_links" => [],
         }
       }
 
@@ -48,7 +48,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
         {
           "image" => {
             "alt_text" => "Christmas",
-            "url" => "https://assets.publishing.service.gov.uk/christmas.jpg"
+            "url" => "https://assets.publishing.service.gov.uk/christmas.jpg",
           },
           "body" => "<div class=\"govspeak\"><p>We wish you a merry Christmas.</p></div>",
         }
@@ -88,19 +88,19 @@ RSpec.describe GovukIndex::DetailsPresenter do
             {
               "change_note" => "Change 1",
               "title" => "Manual section A",
-              "published_at" => "2017-02-05T09:30:00+00:00"
+              "published_at" => "2017-02-05T09:30:00+00:00",
             },
             {
               "change_note" => "Change 3",
               "title" => "Manual section B",
-              "published_at" => "2017-07-24T08:00:00+00:00"
+              "published_at" => "2017-07-24T08:00:00+00:00",
             },
             {
               "change_note" => "Change 2",
               "title" => "Manual section C",
-              "published_at" => "2017-05-31T14:45:00+00:00"
+              "published_at" => "2017-05-31T14:45:00+00:00",
             }
-          ]
+          ],
         }
       }
 

@@ -30,8 +30,8 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
       "size" => 1,
       "post_filter" => {
         "bool" => {
-          "must" => [{ "bool" => { "must_not" => { "term" => { "is_withdrawn" => true } } } }]
-        }
+          "must" => [{ "bool" => { "must_not" => { "term" => { "is_withdrawn" => true } } } }],
+        },
       },
       "query" => {
         "bool" => {
@@ -45,39 +45,39 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
                         "query" => "happy fun time",
                         "fields" => ["title^3"],
                         "default_operator" => "and",
-                        "analyzer" => "default"
-                      }
+                        "analyzer" => "default",
+                      },
                     },
                     {
                       "query_string" =>
                       {
                         "query" => "happy fun time",
-                        "analyzer" => "with_search_synonyms"
-                      }
+                        "analyzer" => "with_search_synonyms",
+                      },
                     }
-                  ]
-                }
+                  ],
+                },
               },
               "functions" => [
                 {
                   "filter" => {
                     "term" => {
-                      "search_format_types" => "edition"
-                    }
+                      "search_format_types" => "edition",
+                    },
                   },
                   "script_score" => {
                     "script" => {
                       "lang" => "painless",
                       "inline" => "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
-                      "params" => { "now" => (Time.now.to_i / 60) * 60000 }
+                      "params" => { "now" => (Time.now.to_i / 60) * 60000 },
                     },
-                  }
+                  },
                 }
-              ]
-            }
+              ],
+            },
           },
-        }
-      }
+        },
+      },
     })
     @wrapper.advanced_search(default_params.merge("keywords" => "happy fun time"))
   end

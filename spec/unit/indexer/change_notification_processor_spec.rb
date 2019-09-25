@@ -8,7 +8,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
       "document_type" => "contact",
       "title" => "Mr Contact",
       "update_type" => nil,
-      "publishing_app" => "whitehall"
+      "publishing_app" => "whitehall",
     }
 
     result = described_class.trigger(message_payload)
@@ -31,7 +31,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
       "document_type" => "publication",
       "title" => "How to care for your rabbit",
       "update_type" => nil,
-      "publishing_app" => "whitehall"
+      "publishing_app" => "whitehall",
     }
 
     index_mock = double
@@ -50,7 +50,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
       "document_type" => "publication",
       "title" => "How to care for your rabbit",
       "update_type" => nil,
-      "publishing_app" => "whitehall"
+      "publishing_app" => "whitehall",
     }
 
     index_mock = double

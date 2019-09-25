@@ -82,7 +82,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
       schema: "gone",
       payload: {
         base_path: base_path,
-        payload_version: 2
+        payload_version: 2,
       },
       excluded_fields: ["withdrawn_notice"],
     )
@@ -113,7 +113,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
       schema: "gone",
       payload: {
         base_path: base_path,
-        payload_version: 1
+        payload_version: 1,
       },
       excluded_fields: ["withdrawn_notice"],
     )

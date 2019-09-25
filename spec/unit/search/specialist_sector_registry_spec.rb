@@ -10,7 +10,7 @@ RSpec.describe Search::BaseRegistry, "Specialist Sector" do
     {
       "link" => "/topic/oil-and-gas/licensing",
       "slug" => "oil-and-gas/licensing",
-      "title" => "Licensing"
+      "title" => "Licensing",
     }
   end
 

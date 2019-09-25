@@ -11,8 +11,8 @@ module QueryComponents
 
       result = {
         bool: {
-          should: [original_query] + best_bet_queries
-        }
+          should: [original_query] + best_bet_queries,
+        },
       }
 
       unless worst_bets.empty?
@@ -41,7 +41,7 @@ module QueryComponents
               terms: { link: links },
             },
             weight: (bb_max_position + 1 - position) * 1_000_000,
-          }
+          },
         }
       end
     end

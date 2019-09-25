@@ -70,7 +70,7 @@ module Search
           query: {
             bool: {
               must: query,
-            }
+            },
           },
           post_filter: { bool: { must: filter } },
           size: example_count,

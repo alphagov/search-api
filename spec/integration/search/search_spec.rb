@@ -478,7 +478,7 @@ RSpec.describe "SearchTest" do
                                                           "content_id" => "topic-content-id",
                                                           "slug" => "topic-magic",
                                                           "link" => "/magic-topic-site",
-                                                          "title" => "Magic topic"
+                                                          "title" => "Magic topic",
                                                         })
 
     # Keeps the topic content ids
@@ -560,7 +560,7 @@ RSpec.describe "SearchTest" do
       "elasticsearch_type" => "edition",
       "es_score" => nil,
       "index" => "government_test",
-      "link" => "/ministry-of-magic-site"
+      "link" => "/ministry-of-magic-site",
     })
   end
 
@@ -568,7 +568,7 @@ RSpec.describe "SearchTest" do
     commit_ministry_of_magic_document(
       {
         "taxons" => ["eb2093ef-778c-4105-9f33-9aa03d14bc5c"],
-        "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c)
+        "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
       }
     )
     get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
@@ -594,7 +594,7 @@ RSpec.describe "SearchTest" do
       "elasticsearch_type" => "edition",
       "es_score" => nil,
       "index" => "government_test",
-      "link" => "/ministry-of-magic-site"
+      "link" => "/ministry-of-magic-site",
     })
   end
 
@@ -610,7 +610,7 @@ RSpec.describe "SearchTest" do
       "elasticsearch_type" => "edition",
       "es_score" => nil,
       "index" => "government_test",
-      "link" => "/ministry-of-magic-site"
+      "link" => "/ministry-of-magic-site",
     })
   end
 

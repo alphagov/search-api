@@ -12,21 +12,21 @@ RSpec.describe "SitemapGeneratorTest" do
           "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
         {
           "title" => "Cheese on Ruby's face",
           "description" => "Ruby weevils",
           "format" => "answer",
           "link" => "/an-example-answer-rubylol",
-          "indexable_content" => "I like my ruby badger: he is tasty and delicious"
+          "indexable_content" => "I like my ruby badger: he is tasty and delicious",
         },
         {
           "title" => "Cheese on Python's face",
           "description" => "Python weevils",
           "format" => "answer",
           "link" => "/an-example-answer-pythonwin",
-          "indexable_content" => "I like my badger: he is pythonic and delicious"
+          "indexable_content" => "I like my badger: he is pythonic and delicious",
         },
       ],
       index_name: "govuk_test"
@@ -49,7 +49,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
       index_name: "government_test"
@@ -82,7 +82,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "description" => "Government, government, government. Developers.",
           "format" => "recommended-link",
           "link" => "http://www.example.com/external-example-answer",
-          "indexable_content" => "Tax, benefits, roads and stuff"
+          "indexable_content" => "Tax, benefits, roads and stuff",
         },
       ],
       index_name: "government_test"
@@ -105,7 +105,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
       index_name: "govuk_test"
@@ -131,7 +131,7 @@ RSpec.describe "SitemapGeneratorTest" do
           "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00"
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
       index_name: "govuk_test"

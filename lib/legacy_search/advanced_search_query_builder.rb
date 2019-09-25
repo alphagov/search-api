@@ -77,13 +77,13 @@ module LegacySearch
       {
         query: {
           bool: {
-            must: keyword_query_hash
-          }
+            must: keyword_query_hash,
+          },
         },
         post_filter: {
           bool: {
-            must: filter_array
-          }
+            must: filter_array,
+          },
         },
       }.merge(order_query_hash)
     end
@@ -100,17 +100,17 @@ module LegacySearch
                       query: escape(@keywords),
                       fields: ["title^3"],
                       default_operator: "and",
-                      analyzer: "default"
-                    }
+                      analyzer: "default",
+                    },
                   },
                   {
                     query_string: {
                       query: escape(@keywords),
-                      analyzer: "with_search_synonyms"
-                    }
+                      analyzer: "with_search_synonyms",
+                    },
                   }
-                ]
-              }
+                ],
+              },
             },
             functions: [
               filter: { term: { search_format_types: "edition" } },
@@ -119,12 +119,12 @@ module LegacySearch
                   lang: "painless",
                   inline: "((0.15 / ((3.1*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.5)",
                   params: {
-                    now: time_in_millis_to_nearest_minute
+                    now: time_in_millis_to_nearest_minute,
                   },
                 },
               }
-            ]
-          }
+            ],
+          },
         }
       else
         { match_all: {} }

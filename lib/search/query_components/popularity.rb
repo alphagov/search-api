@@ -14,8 +14,8 @@ module QueryComponents
               lang: "painless",
               inline: "doc['popularity'].value + #{POPULARITY_OFFSET}",
             },
-          }
-        }
+          },
+        },
       }
     end
   end

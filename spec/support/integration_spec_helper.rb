@@ -196,7 +196,7 @@ module IntegrationSpecHelper
         "indexable_content" => "Something something important content id #{i}",
         "mainstream_browse_pages" => "browse/page/#{i}",
         "format" => index_name =~ /govuk/ ? "answer" : "edition",
-        "document_type" => "edition"
+        "document_type" => "edition",
       }
       if i % 2 == 0
         fields["specialist_sectors"] = ["farming"]

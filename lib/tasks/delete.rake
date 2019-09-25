@@ -28,8 +28,8 @@ namespace :delete do
           delete: {
             _index: index,
             _type: hit["_type"],
-            _id: hit["_id"]
-          }
+            _id: hit["_id"],
+          },
         }
       end
 

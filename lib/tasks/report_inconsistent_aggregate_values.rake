@@ -28,7 +28,7 @@ task :report_inconsistent_aggregate_values do
     # Return 1000 aggregate values by default and suppress actual results
     response = rummager.search({
       "aggregate_#{aggregate}" => 1000,
-      "count" => 0
+      "count" => 0,
     })
 
     if response.code != 200
@@ -53,7 +53,7 @@ task :report_inconsistent_aggregate_values do
         extra: {
           error_message: "Some aggregate values for \"#{aggregate}\" are not expanded",
           aggregate: aggregate,
-          aggregate_values: aggregate_values_to_report[aggregate]
+          aggregate_values: aggregate_values_to_report[aggregate],
         }
       )
     end

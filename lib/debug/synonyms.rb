@@ -14,14 +14,14 @@ module Debug
           query: {
             multi_match: {
               "query" => query,
-              "fields" => %w(title.synonym^1000 description.synonym)
-            }
+              "fields" => %w(title.synonym^1000 description.synonym),
+            },
           },
           highlight: {
             "fields" => { "title.synonym" => {}, "description.synonym" => {} },
             "pre_tags" => pre_tags,
-            "post_tags" => post_tags
-          }
+            "post_tags" => post_tags,
+          },
         }
 
         client.search(index: index, analyzer: "with_search_synonyms", body: search_query)

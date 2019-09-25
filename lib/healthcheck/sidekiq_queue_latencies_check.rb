@@ -24,7 +24,7 @@ module Healthcheck
         "bulk" => {
           critical: 30.minutes,
           warning: 5.minutes,
-        }
+        },
       }
     end
   end

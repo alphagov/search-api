@@ -13,7 +13,7 @@ RSpec.describe Search::SuggestionBlocklist do
         "link" => "/government/organisations/ministry-of-defence",
         "title" => "Ministry of Defence",
         "acronym" => "MoD",
-        "organisation_type" => "Ministerial department"
+        "organisation_type" => "Ministerial department",
       }
 
       instance_double("BaseRegistry", "organisation_registry", all: [mod_organisation])

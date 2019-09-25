@@ -52,8 +52,8 @@ RSpec.describe ContentItemPublisher::FacetGroupFinderPublisher do
                                                                     "email_alert_signup" => [finder_config["signup_content_id"]],
                                                                     "facet_group" => %w(content_id_of_facet_group),
                                                                     "ordered_related_items" => finder_config["ordered_related_items"],
-                                                                    "parent" => []
-                                                                  }
+                                                                    "parent" => [],
+                                                                  },
                                                               }
                                                       })
       end

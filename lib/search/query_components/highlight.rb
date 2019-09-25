@@ -22,7 +22,7 @@ module QueryComponents
             number_of_fragments: 1,
             fragment_size: 285,
           },
-        }
+        },
       }
     end
 

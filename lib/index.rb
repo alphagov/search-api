@@ -143,11 +143,11 @@ module SearchIndices
           "bool" => {
             "must_not" => {
               "terms" => {
-                "format" => exclude_formats
-              }
-            }
-          }
-        }
+                "format" => exclude_formats,
+              },
+            },
+          },
+        },
       }
 
       # Set off a scan query to get back a scroll ID and result count

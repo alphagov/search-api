@@ -21,7 +21,7 @@ RSpec.describe "Service Manual Topic publishing" do
       payload: {
         document_type: "service_manual_topic",
         title: "Service Manual title",
-        description: "Service Manual description"
+        description: "Service Manual description",
       },
     )
 
@@ -34,7 +34,7 @@ RSpec.describe "Service Manual Topic publishing" do
       "indexable_content" => nil,
       "title" => random_example["title"],
       "description" => random_example["description"],
-      "manual" => "/service-manual"
+      "manual" => "/service-manual",
     }
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "service_manual_topic")

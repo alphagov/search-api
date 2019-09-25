@@ -8,7 +8,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
     "description" => "DESCRIPTION",
     "format" => "answer",
     "link" => "/an-example-answer",
-    "indexable_content" => "HERE IS SOME CONTENT"
+    "indexable_content" => "HERE IS SOME CONTENT",
   }.freeze
 
   let(:index_name) { "government_test" }
@@ -34,7 +34,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
       "indexable_content" => "HERE IS SOME CONTENT",
       "licence_identifier" => "1201-5-1",
       "licence_short_description" => "A short description of a licence",
-      "search_user_need_document_supertype" => "core"
+      "search_user_need_document_supertype" => "core",
     }.to_json
 
     expect_document_is_in_rummager(
@@ -91,7 +91,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
       "logo_formatted_title" => 'The\nTitle',
       "organisation_brand" => "cabinet-office",
       "organisation_crest" => "single-identity",
-      "logo_url" => "http://url/to/logo.png"
+      "logo_url" => "http://url/to/logo.png",
     }.to_json
 
     expect_document_is_in_rummager(
@@ -105,7 +105,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
         "logo_formatted_title" => 'The\nTitle',
         "organisation_brand" => "cabinet-office",
         "organisation_crest" => "single-identity",
-        "logo_url" => "http://url/to/logo.png"
+        "logo_url" => "http://url/to/logo.png",
       },
       index: "government_test",
     )
@@ -163,7 +163,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
         "_id" => "learn+to+drive-exact",
         "_type" => "best_bet",
         "stemmed_query" => "learn to drive",
-        "details" => details
+        "details" => details,
       }.to_json
 
       expect_document_is_in_rummager(

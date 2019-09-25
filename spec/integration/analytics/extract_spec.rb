@@ -128,7 +128,7 @@ RSpec.describe Analytics::Extract do
 
   it "sanitises unix line breaks in titles" do
     document = {
-      "title" => <<~HEREDOC
+      "title" => <<~HEREDOC,
         A page title
         with some
         line breaks
@@ -141,7 +141,7 @@ RSpec.describe Analytics::Extract do
 
   it "sanitises windows line breaks in titles" do
     document = {
-      "title" => "A page title\r\nwith some\r\nline breaks"
+      "title" => "A page title\r\nwith some\r\nline breaks",
     }
     commit_document("government_test", document)
 

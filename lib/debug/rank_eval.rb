@@ -35,7 +35,7 @@ module Debug
           id: query,
           request: {
             query: data[:es_query][:query],
-            post_filter: data[:es_query][:post_filter]
+            post_filter: data[:es_query][:post_filter],
           },
           ratings: data[:judgements].map do |judgement|
             {
@@ -43,7 +43,7 @@ module Debug
               _id: judgement[:link],
               rating: judgement[:score],
             }
-          end
+          end,
         }
       end
 
@@ -56,7 +56,7 @@ module Debug
         score: result["metric_score"],
         query_scores: result["details"].each_with_object({}) do |(query, detail), acc|
           acc[query] = detail["metric_score"]
-        end
+        end,
       }
     end
 
@@ -67,7 +67,7 @@ module Debug
             "q" => [query],
             "ab_tests" => [@ab_tests]
           ),
-          judgements: judgements
+          judgements: judgements,
         }
       end
     end

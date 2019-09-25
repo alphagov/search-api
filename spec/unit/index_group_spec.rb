@@ -43,13 +43,13 @@ RSpec.describe SearchIndices::IndexGroup do
         status: 200,
         headers: { "Content-Type" => "application/json" },
         body: {
-          "test-new" => { "aliases" => {} }
+          "test-new" => { "aliases" => {} },
         }.to_json
       )
     expected_body = {
       "actions" => [
         { "add" => { "index" => "test-new", "alias" => "test" } }
-      ]
+      ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(
@@ -72,7 +72,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
-          "test-new" => { "aliases" => {} }
+          "test-new" => { "aliases" => {} },
         }.to_json
       )
 
@@ -80,7 +80,7 @@ RSpec.describe SearchIndices::IndexGroup do
       "actions" => [
         { "remove" => { "index" => "test-old", "alias" => "test" } },
         { "add" => { "index" => "test-new", "alias" => "test" } }
-      ]
+      ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(body: expected_body)
@@ -102,7 +102,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: {
           "test-old" => { "aliases" => { "test" => {} } },
           "test-old2" => { "aliases" => { "test" => {} } },
-          "test-new" => { "aliases" => {} }
+          "test-new" => { "aliases" => {} },
         }.to_json
       )
 
@@ -111,7 +111,7 @@ RSpec.describe SearchIndices::IndexGroup do
         { "remove" => { "index" => "test-old", "alias" => "test" } },
         { "remove" => { "index" => "test-old2", "alias" => "test" } },
         { "add" => { "index" => "test-new", "alias" => "test" } }
-      ]
+      ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
       .with(body: expected_body)
@@ -130,7 +130,7 @@ RSpec.describe SearchIndices::IndexGroup do
         status: 200,
         headers: { "Content-Type" => "application/json" },
         body: {
-          "test" => { "aliases" => {} }
+          "test" => { "aliases" => {} },
         }.to_json
       )
 
@@ -157,7 +157,7 @@ RSpec.describe SearchIndices::IndexGroup do
         status: 200,
         headers: { "Content-Type" => "application/json" },
         body: {
-          index_name => { "aliases" => { "test" => {} } }
+          index_name => { "aliases" => { "test" => {} } },
         }.to_json
       )
 
@@ -174,7 +174,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           this_name => { "aliases" => {} },
-          other_name => { "aliases" => {} }
+          other_name => { "aliases" => {} },
         }.to_json
       )
 
@@ -199,7 +199,7 @@ RSpec.describe SearchIndices::IndexGroup do
         status: 200,
         headers: { "Content-Type" => "application/json" },
         body: {
-          index_name => { "aliases" => {} }
+          index_name => { "aliases" => {} },
         }.to_json
       )
 
@@ -218,7 +218,7 @@ RSpec.describe SearchIndices::IndexGroup do
         status: 200,
         headers: { "Content-Type" => "application/json" },
         body: {
-          index_name => { "aliases" => { "test" => {} } }
+          index_name => { "aliases" => { "test" => {} } },
         }.to_json
       )
 
@@ -236,7 +236,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           index_names[0] => { "aliases" => {} },
-          index_names[1] => { "aliases" => {} }
+          index_names[1] => { "aliases" => {} },
         }.to_json
       )
 
@@ -260,7 +260,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           live_name => { "aliases" => { "test" => {} } },
-          dead_name => { "aliases" => {} }
+          dead_name => { "aliases" => {} },
         }.to_json
       )
 
@@ -280,7 +280,7 @@ RSpec.describe SearchIndices::IndexGroup do
         status: 200,
         headers: { "Content-Type" => "application/json" },
         body: {
-          index_name => { "aliases" => { "something_else" => {} } }
+          index_name => { "aliases" => { "something_else" => {} } },
         }.to_json
       )
 
@@ -298,7 +298,7 @@ RSpec.describe SearchIndices::IndexGroup do
         headers: { "Content-Type" => "application/json" },
         body: {
           this_name => { "aliases" => {} },
-          other_name => { "aliases" => {} }
+          other_name => { "aliases" => {} },
         }.to_json
       )
 

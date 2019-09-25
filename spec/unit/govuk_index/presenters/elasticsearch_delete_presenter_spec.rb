@@ -20,7 +20,7 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
       _type: "generic-document",
       _id: "/cheese",
       version: 15,
-      version_type: "external"
+      version_type: "external",
     }
 
     presenter = described_class.new(payload: payload)

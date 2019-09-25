@@ -7,7 +7,7 @@ RSpec.describe Search::EntityExpander do
     expandable_target = {
         "slug" => "rail-statistics",
         "link" => "/government/organisations/department-for-transport/series/rail-statistics",
-        "title" => "Rail statistics"
+        "title" => "Rail statistics",
     }
 
     registries = { organisations: { "rail-statistics" => expandable_target } }

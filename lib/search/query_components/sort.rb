@@ -28,8 +28,8 @@ module QueryComponents
             # not all indices have all fields, so if the field is
             # missing treat it as an integer (any type would work,
             # really) with a missing value.
-            unmapped_type: "integer"
-          }
+            unmapped_type: "integer",
+          },
         },
         tie_breaking_sort,
       ]

@@ -8,11 +8,11 @@ RSpec.describe Search::BestBetsChecker do
           should: [
             { match: { exact_query: query } },
             { match: { stemmed_query: query } },
-          ]
-        }
+          ],
+        },
       },
       post_filter: {
-        bool: { must: { match: { document_type: "best_bet" } } }
+        bool: { must: { match: { document_type: "best_bet" } } },
       },
       size: 1000,
       _source: { includes: %i[details stemmed_query_as_term] },
@@ -37,8 +37,8 @@ RSpec.describe Search::BestBetsChecker do
           worst_bets: worst_bets.map do |link|
             { link: link }
           end,
-        })
-      }
+        }),
+      },
     }
   end
 

@@ -17,7 +17,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       payload = {
         "base_path" => "/cheese",
         "document_type" => "help_page",
-        "title" => "We love cheese"
+        "title" => "We love cheese",
       }
       responses = [{ "items" => [{ "index" => { "status" => 200 } }] }]
 
@@ -36,7 +36,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         payload = {
           "base_path" => "/cheese",
           "document_type" => "redirect",
-          "title" => "We love cheese"
+          "title" => "We love cheese",
         }
         stub_document_type_mapper
         responses = [{ "items" => [{ "delete" => { "status" => 200 } }] }]
@@ -58,8 +58,8 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           "title" => "We love cheese",
           "withdrawn_notice" => {
             "explanation" => "<div class=\"govspeak\"><p>test 2</p>\n</div>",
-            "withdrawn_at" => "2017-08-03T14:02:18Z"
-          }
+            "withdrawn_at" => "2017-08-03T14:02:18Z",
+          },
         }
         responses = [{ "items" => [{ "index" => { "status" => 200 } }] }]
 
@@ -77,7 +77,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         payload = {
           "base_path" => "/cheese",
           "document_type" => "gone",
-          "title" => "We love cheese"
+          "title" => "We love cheese",
         }
         failure_response = [{ "items" => [{ "delete" => { "status" => 500 } }] }]
         stub_document_type_mapper
@@ -99,7 +99,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         payload = {
           "base_path" => "/cheese",
           "document_type" => "substitute",
-          "title" => "We love cheese"
+          "title" => "We love cheese",
         }
         stub_document_type_mapper
         responses = [{ "items" => [{ "delete" => { "status" => 404 } }] }]
@@ -130,7 +130,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
             message_body: {
               "document_type" => "help_page",
               "title" => "We love cheese",
-            }
+            },
           }
         )
 
@@ -160,34 +160,34 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       {
         "base_path" => "/cheese",
         "document_type" => "help_page",
-        "title" => "We love cheese"
+        "title" => "We love cheese",
       }
     end
     let(:payload2) do
       {
         "base_path" => "/cheese",
         "document_type" => "help_page",
-        "title" => "We love cheese"
+        "title" => "We love cheese",
       }
     end
     let(:payload_delete) do
       {
         "base_path" => "/cheese",
         "document_type" => "gone",
-        "title" => "We love cheese"
+        "title" => "We love cheese",
       }
     end
     let(:payload_withdrawal) do
       {
         "base_path" => "/cheese",
         "document_type" => "help_page",
-        "title" => "We love cheese"
+        "title" => "We love cheese",
       }
     end
 
     it "can save multiple documents" do
       responses = [{
-        "items" => [{ "index" => { "status" => 200 } }, { "index" => { "status" => 200 } }]
+        "items" => [{ "index" => { "status" => 200 } }, { "index" => { "status" => 200 } }],
       }]
 
       # rubocop:disable RSpec/MessageSpies

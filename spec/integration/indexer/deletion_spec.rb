@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe "ElasticsearchDeletionTest" do
   it "removes a document from the index" do
     commit_document("government_test", {
-      "link" => "/an-example-page"
+      "link" => "/an-example-page",
     })
 
     delete "/government_test/documents/%2Fan-example-page"
@@ -13,7 +13,7 @@ RSpec.describe "ElasticsearchDeletionTest" do
 
   it "removes a document from the index queued" do
     commit_document("government_test", {
-      "link" => "/an-example-page"
+      "link" => "/an-example-page",
     })
 
     delete "/government_test/documents/%2Fan-example-page"

@@ -245,7 +245,7 @@ private
   def scroll_response_body(scroll_id, total_results, results)
     {
       _scroll_id: scroll_id,
-      hits: { total: total_results, hits: results }
+      hits: { total: total_results, hits: results },
     }.to_json
   end
 
@@ -276,7 +276,7 @@ private
       "sort" => [
         { "rank_14" => { "order" => "asc" } }
       ],
-      "size" => total_requested
+      "size" => total_requested,
     }
     response = {
       "hits" => {
@@ -284,11 +284,11 @@ private
           {
             "_id" => path,
             "_source" => {
-              "rank_14" => popularity
-            }
+              "rank_14" => popularity,
+            },
           }
-        }
-      }
+        },
+      },
     }
 
     stub_request(:get, "http://example.com:9200/page-traffic_test/generic-document/_search").
@@ -313,10 +313,10 @@ private
       "bool" => {
         "must_not" => {
           "terms" => {
-            "format" => []
-          }
-        }
-      }
+            "format" => [],
+          },
+        },
+      },
     }
   end
 end

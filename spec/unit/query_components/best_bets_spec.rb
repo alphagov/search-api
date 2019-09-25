@@ -38,8 +38,8 @@ RSpec.describe QueryComponents::BestBets do
           should: ["QUERY",
                    { function_score: { query: { terms: { link: ["/best-bet"] } }, weight: 2000000 } },
                    { function_score: { query: { terms: { link: ["/other-best-bet"] } }, weight: 1000000 } }
-            ]
-        }
+            ],
+        },
       }
 
       expect(result).to eq(expected)

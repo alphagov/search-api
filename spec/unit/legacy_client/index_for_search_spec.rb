@@ -11,7 +11,7 @@ RSpec.describe LegacyClient::IndexForSearch do
         status: 200,
         headers: { "Content-Type" => "application/json" },
         body: {
-          real_name => { "aliases" => {} }
+          real_name => { "aliases" => {} },
         }.to_json
       )
 

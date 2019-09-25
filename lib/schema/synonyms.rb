@@ -71,7 +71,7 @@ private
       # path `settings.analysis.filter.<filter_name>`.
       {
         type: :synonym,
-        synonyms: synonyms
+        synonyms: synonyms,
       }
     end
 

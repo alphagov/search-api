@@ -203,7 +203,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
 
   it "service standard report" do
     custom_metadata = {
-      "assessment_date" => "2016-10-10"
+      "assessment_date" => "2016-10-10",
     }
     document = build_example_with_metadata(custom_metadata)
     expect_document_include_hash(document, custom_metadata)

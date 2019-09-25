@@ -6,8 +6,8 @@ RSpec.describe Search::ResultSet do
       @response = {
         "hits" => {
           "total" => 0,
-          "hits" => []
-        }
+          "hits" => [],
+        },
       }
     end
 
@@ -33,8 +33,8 @@ RSpec.describe Search::ResultSet do
               "_id" => "some_id",
               "_source" => { "document_type" => "contact", "foo" => "bar" },
             }
-          ]
-        }
+          ],
+        },
       }
     end
 

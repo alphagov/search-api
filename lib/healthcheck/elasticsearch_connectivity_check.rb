@@ -51,7 +51,7 @@ module Healthcheck
       {
         cluster_healths: Clusters.active.map { |cluster|
           cluster_health(cluster).merge(cluster_name: cluster.key)
-        }
+        },
       }
     end
 

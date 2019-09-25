@@ -17,7 +17,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
         "body" => [
           { "content_type" => "text/govspeak", "content" => "**hello**" },
           { "content_type" => "text/html", "content" => "<strong>hello</strong>" }
-        ]
+        ],
       }
     }
 
@@ -46,7 +46,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
               { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" }
             ],
           }
-        ]
+        ],
       }
     }
 
@@ -83,13 +83,13 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
         "contact_groups" => [
           {
             "slug" => "slug-1",
-            "title" => "Title 1"
+            "title" => "Title 1",
           },
           {
             "slug" => "slug-2",
-            "title" => "Title 2"
+            "title" => "Title 2",
           }
-        ]
+        ],
       }
     }
 
@@ -105,24 +105,24 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
         "introductory_paragraph" =>  [
           {
             "content" =>  "intro\n",
-            "content_type" =>  "text/govspeak"
+            "content_type" =>  "text/govspeak",
           },
           {
             "content_type" =>  "text/html",
-            "content" =>  "<p>intro</p>\n"
+            "content" =>  "<p>intro</p>\n",
           }
         ],
         "more_information" =>  [
           {
             "content" =>  "more<\n",
-            "content_type" =>  "text/govspeak"
+            "content_type" =>  "text/govspeak",
           },
           {
             "content_type" =>  "text/html",
-            "content" =>  "<p>more</p>\n"
+            "content" =>  "<p>more</p>\n",
           }
         ],
-        "hidden_search_terms" =>  ["hidden 1", "hidden 2"]
+        "hidden_search_terms" =>  ["hidden 1", "hidden 2"],
       }
     end
 

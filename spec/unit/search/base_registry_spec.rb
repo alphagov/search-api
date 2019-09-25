@@ -11,7 +11,7 @@ RSpec.describe Search::BaseRegistry do
       "content_id" => "example-content-id",
       "slug" => "example-document",
       "link" => "/government/example-document",
-      "title" => "Example document"
+      "title" => "Example document",
     }
   end
 
