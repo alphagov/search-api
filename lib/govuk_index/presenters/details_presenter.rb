@@ -24,8 +24,8 @@ module GovukIndex
 
       if format == "hmrc_manual"
         note_info = details["change_notes"]
-          .sort_by { |note| DateTime.parse(note["published_at"]) }
-          .last
+          .max_by { |note| DateTime.parse(note["published_at"]) }
+          
 
         note_info["change_note"] + " in " + note_info["title"]
       end
