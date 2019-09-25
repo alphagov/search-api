@@ -36,7 +36,7 @@ module Fixtures
                 "match" => "rank_*",
                 "mapping" => { "type" => "float", "stored" => true },
               },
-            }
+            },
           ],
           "properties" => {
             "path_components" => { "type" => "keyword", "index" => true },

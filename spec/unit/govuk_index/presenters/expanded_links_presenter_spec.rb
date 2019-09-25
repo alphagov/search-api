@@ -16,7 +16,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "content_id" => "4ab4764d-d9ce-425f-a8cc-aaba4a38be09",
             "locale" => "en",
             "title" => "Work visas",
-        }
+        },
       ],
     }
 
@@ -50,7 +50,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
           "locale" => "en",
           "title" => "UK Visas and Immigration",
-        }
+        },
       ],
     }
 
@@ -73,7 +73,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "content_id" => "ca2326a6-b6c4-4750-917f-9fe12d0c59c9",
           "locale" => "en",
           "title" => "The budget",
-        }
+        },
       ],
     }
     presenter = expanded_links_presenter(expanded_links)
@@ -162,16 +162,16 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
                             "locale" => "en",
                             "title" => "GOV.UK homepage",
                             "links" => {},
-                          }
+                          },
                         ],
                       },
-                    }
+                    },
                   ],
                 },
-              }
+              },
             ],
           },
-        }
+        },
       ],
     }
 
@@ -193,7 +193,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expanded_links = {
       "facet_values" => [
         { "content_id" => "ec58ec61-71a6-475a-8df5-da5f866990b5" },
-        { "content_id" => "dd71726f-3fe5-4e5f-8d29-8f668e32a659" }
+        { "content_id" => "dd71726f-3fe5-4e5f-8d29-8f668e32a659" },
       ],
     }
 
@@ -207,7 +207,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expanded_links = {
       "facet_groups" => [
         { "content_id" => "ec58ec61-71a6-475a-8df5-da5f866990b5" },
-        { "content_id" => "dd71726f-3fe5-4e5f-8d29-8f668e32a659" }
+        { "content_id" => "dd71726f-3fe5-4e5f-8d29-8f668e32a659" },
       ],
     }
 
@@ -225,7 +225,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "content_id" => "f881f972-6094-4c7d-849c-9143461a9307",
             "locale" => "en",
             "title" => "Tax credits",
-          }
+          },
       ],
     }
 
@@ -246,7 +246,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "content_id" => "dbce902f-36d1-471e-a79a-8934aee7c34c",
             "locale" => "en",
             "title" => "Badger of Deploy",
-          }
+          },
       ],
     }
 
@@ -263,7 +263,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
             "content_id" => "33848853-6411-4e36-b72b-afe50aff1b93",
             "locale" => "en",
             "title" => "Micropig advisory group",
-          }
+          },
       ],
     }
 
@@ -280,7 +280,7 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "details" => {
             "default_news_image" => { "url" => default_news_image_url },
           },
-        }
+        },
       ],
     }
 

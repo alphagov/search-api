@@ -140,7 +140,7 @@ module SearchIntegrationSpecHelper
     ministry_of_magic.merge!(additional_ministry_data)
     expect(result[key]).to eq(
       [
-        ministry_of_magic
+        ministry_of_magic,
       ],
      )
   end

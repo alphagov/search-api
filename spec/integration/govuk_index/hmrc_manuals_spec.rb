@@ -27,7 +27,7 @@ RSpec.describe "HMRC manual publishing" do
             published_at: "2017-06-21T10:48:34+00:00",
             base_path: "/some/section/base/path",
             section_id: "some_manual_section_id",
-          }
+          },
         ],
       },
     )

@@ -13,7 +13,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
         "licence_short_description" => "short description",
         "licence_overview" => [
           { "content_type" => "text/govspeak", "content" => "**overview**" },
-          { "content_type" => "text/html", "content" => "<strong>overview</strong>" }
+          { "content_type" => "text/html", "content" => "<strong>overview</strong>" },
         ],
         "will_continue_on" => "on and on",
       }
@@ -99,7 +99,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
               "change_note" => "Change 2",
               "title" => "Manual section C",
               "published_at" => "2017-05-31T14:45:00+00:00",
-            }
+            },
           ],
         }
       }

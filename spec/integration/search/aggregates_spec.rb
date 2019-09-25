@@ -78,7 +78,7 @@ RSpec.describe "search queries" do
 
       expect(parsed_response["aggregates"]["mainstream_browse_pages"]["options"]).to eq([
         { "value" => { "slug" => "browse/page/1" }, "documents" => 1 },
-        { "value" => { "slug" => "browse/page/2" }, "documents" => 1 }
+        { "value" => { "slug" => "browse/page/2" }, "documents" => 1 },
       ])
     end
   end
@@ -92,7 +92,7 @@ RSpec.describe "search queries" do
       expect(parsed_response["total"]).to eq(1)
 
       expect(parsed_response["aggregates"]["organisations"]["options"]).to eq([
-        { "value" => { "slug" => "org1" }, "documents" => 1 }
+        { "value" => { "slug" => "org1" }, "documents" => 1 },
       ])
     end
 

@@ -33,7 +33,7 @@ module Search
       if migrated_formats.any?
         options[:must_not] = [
           { terms: { _index: migrated_indices } },
-          { terms: { format: migrated_formats } }
+          { terms: { format: migrated_formats } },
         ]
       else
         options[:must_not] = { terms: { _index: migrated_indices } }
@@ -50,7 +50,7 @@ module Search
           must: [
             base_query,
             { terms: { _index: migrated_indices } },
-            { terms: { format: migrated_formats } }
+            { terms: { format: migrated_formats } },
           ],
         },
       }

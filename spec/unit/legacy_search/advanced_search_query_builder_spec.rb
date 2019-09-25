@@ -24,7 +24,7 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
     expect(query_hash).to eq(
       [
         { "term" => { "format" => "organisation" } },
-        { bool: { must_not: { term: { is_withdrawn: true } } } }
+        { bool: { must_not: { term: { is_withdrawn: true } } } },
       ],
     )
   end
@@ -37,7 +37,7 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
       [
         { "term" => { "format" => "organisation" } },
         { "term" => { "specialist_sectors" => "driving" } },
-        { bool: { must_not: { term: { is_withdrawn: true } } } }
+        { bool: { must_not: { term: { is_withdrawn: true } } } },
       ],
     )
   end
@@ -50,7 +50,7 @@ RSpec.describe LegacySearch::AdvancedSearchQueryBuilder do
       [
         { "term" => { "format" => "organisation" } },
         { "term" => { "specialist_sectors" => "driving" } },
-        { bool: { must_not: { term: { is_withdrawn: true } } } }
+        { bool: { must_not: { term: { is_withdrawn: true } } } },
       ],
     )
   end

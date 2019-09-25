@@ -32,7 +32,7 @@ RSpec.describe Search::ResultSet do
               "_type" => "generic-document",
               "_id" => "some_id",
               "_source" => { "document_type" => "contact", "foo" => "bar" },
-            }
+            },
           ],
         },
       }

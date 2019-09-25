@@ -42,7 +42,7 @@ module LegacyClient
       payload = bodies.flat_map { |body|
         [
           {},
-          body
+          body,
         ]
       }
       logger.debug "Request payload: #{payload.to_json}"

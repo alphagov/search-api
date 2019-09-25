@@ -18,7 +18,7 @@ module Indexer
         },
         _source: { includes: %w[rank_14] },
         sort: [
-          { rank_14: { order: "asc" } }
+          { rank_14: { order: "asc" } },
         ],
         size: 10 * links.size,
       })
@@ -44,7 +44,7 @@ module Indexer
           {
             popularity_score: popularity_score,
             popularity_rank: ranks[link],
-          }
+          },
         ]
       }]
     end

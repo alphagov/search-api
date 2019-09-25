@@ -143,7 +143,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
       stubbed_client = client
 
       locked_response = { "items" => [
-        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } }
+        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } },
       ] }
 
       # rubocop:disable RSpec/MessageSpies
@@ -183,7 +183,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
       stubbed_client = client
 
       locked_response = { "items" => [
-        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } }
+        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } },
       ] }
 
       # rubocop:disable RSpec/MessageSpies

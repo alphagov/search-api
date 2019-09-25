@@ -109,7 +109,7 @@ RSpec.describe QueryComponents::Filter do
                          },
                          {
                            term: { "organisations" => "hmrc" },
-                         }
+                         },
                        ] } }],
           must_not: [{ bool:
                        { must: [
@@ -118,7 +118,7 @@ RSpec.describe QueryComponents::Filter do
                          },
                          {
                            term: { "mainstream_browse_pages" => "government" },
-                         }
+                         },
                        ] } }],
         },
                         )

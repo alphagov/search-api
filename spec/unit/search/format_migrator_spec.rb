@@ -25,7 +25,7 @@ RSpec.describe Search::FormatMigrator do
                 bool: {
                   must_not: { match_all: {} },
                 },
-              }
+              },
             ],
           },
         }
@@ -47,7 +47,7 @@ RSpec.describe Search::FormatMigrator do
                   must: base_query,
                   must_not: [
                     { terms: { _index: %w(govuk_test) } },
-                    { terms: { format: %w(help_page) } }
+                    { terms: { format: %w(help_page) } },
                   ],
                 },
               },
@@ -56,10 +56,10 @@ RSpec.describe Search::FormatMigrator do
                   must: [
                     base_query,
                     { terms: { _index: %w(govuk_test) } },
-                    { terms: { format: %w(help_page) } }
+                    { terms: { format: %w(help_page) } },
                   ],
                 },
-              }
+              },
             ],
           },
         }
@@ -81,7 +81,7 @@ RSpec.describe Search::FormatMigrator do
                   must_not: { terms: { _index: %w(govuk_test) } },
                 },
               },
-              { bool: { must_not: { match_all: {} } } }
+              { bool: { must_not: { match_all: {} } } },
             ],
           },
         }
@@ -101,7 +101,7 @@ RSpec.describe Search::FormatMigrator do
                   must: { match_all: {} },
                   must_not: [
                     { terms: { _index: %w(govuk_test) } },
-                    { terms: { format: %w(help_page) } }
+                    { terms: { format: %w(help_page) } },
                   ],
                 },
               },
@@ -110,10 +110,10 @@ RSpec.describe Search::FormatMigrator do
                   must: [
                     { match_all: {} },
                     { terms: { _index: %w(govuk_test) } },
-                    { terms: { format: %w(help_page) } }
+                    { terms: { format: %w(help_page) } },
                   ],
                 },
-              }
+              },
             ],
           },
         }

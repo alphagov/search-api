@@ -108,7 +108,7 @@ module LegacySearch
                       query: escape(@keywords),
                       analyzer: "with_search_synonyms",
                     },
-                  }
+                  },
                 ],
               },
             },
@@ -122,7 +122,7 @@ module LegacySearch
                     now: time_in_millis_to_nearest_minute,
                   },
                 },
-              }
+              },
             ],
           },
         }

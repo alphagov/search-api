@@ -82,7 +82,7 @@ RSpec.describe Indexer::CompareEnumerator do
     enum = described_class.new("index_a", "index_b").get_enum("index_name")
 
     expect(enum.to_a).to eq([
-      { "_root_id" => "abc", "_root_type" => "stuff", "custom" => "data", "document_type" => "stuff" }
+      { "_root_id" => "abc", "_root_type" => "stuff", "custom" => "data", "document_type" => "stuff" },
     ])
   end
 
@@ -95,7 +95,7 @@ RSpec.describe Indexer::CompareEnumerator do
     enum = described_class.new("index_a", "index_b").get_enum("index_name", search_body)
 
     expect(enum.to_a).to eq([
-      { "_root_id" => "abc", "_root_type" => "stuff", "custom" => "data", "document_type" => "stuff" }
+      { "_root_id" => "abc", "_root_type" => "stuff", "custom" => "data", "document_type" => "stuff" },
     ])
   end
 
@@ -108,7 +108,7 @@ RSpec.describe Indexer::CompareEnumerator do
     enum = described_class.new("index_a", "index_b").get_enum("index_name", search_body)
 
     expect(enum.to_a).to eq([
-      { "_root_id" => "abc", "_root_type" => "stuff", "custom" => "data", "document_type" => "stuff" }
+      { "_root_id" => "abc", "_root_type" => "stuff", "custom" => "data", "document_type" => "stuff" },
     ])
   end
 

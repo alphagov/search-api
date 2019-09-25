@@ -56,7 +56,7 @@ RSpec.describe SynonymParser do
 
   it "rejects unknown synonym keys" do
     config = [
-      { "other" => "pig, micropig" }
+      { "other" => "pig, micropig" },
     ]
 
     expect {
@@ -66,7 +66,7 @@ RSpec.describe SynonymParser do
 
   it "rejects missing synonym definitions" do
     config = [
-      { "search" => "micropig =>" }
+      { "search" => "micropig =>" },
     ]
 
     expect {
@@ -160,7 +160,7 @@ RSpec.describe SynonymParser do
         "index" => "mcrpig => micropig",
         "both" => "mycropig => micropig",
         "search" => "miicropig => micropig",
-      }
+      },
     ]
 
     expect {

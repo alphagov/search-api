@@ -95,7 +95,7 @@ namespace :publishing_api do
       },
       {
         finder: "official_documents_finder.yml",
-      }
+      },
     ]
 
     puts "PUBLISHING ALL SUPERGROUP FINDERS..."

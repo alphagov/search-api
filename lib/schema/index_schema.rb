@@ -52,7 +52,7 @@ class IndexSchemaParser
     Hash[IndexSchemaParser::index_schema_paths(config_path).map { |index_name, schema_file_path|
       [
         index_name,
-        IndexSchemaParser.new(index_name, schema_file_path, field_definitions, known_elasticsearch_types).parse
+        IndexSchemaParser.new(index_name, schema_file_path, field_definitions, known_elasticsearch_types).parse,
       ]
     }]
   end

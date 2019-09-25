@@ -43,7 +43,7 @@ RSpec.describe Index::ElasticsearchProcessor do
       body: [
         {
           delete: presenter.identifier,
-        }
+        },
       ],
     )
     # rubocop:enable RSpec/MessageSpies

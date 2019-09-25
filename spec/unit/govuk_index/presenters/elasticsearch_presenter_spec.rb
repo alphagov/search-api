@@ -115,7 +115,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
         "facet_groups" => [{ "content_id" => "3501d07d-12f7-4f7e-97f9-0de008d556cd" }],
         "facet_values" => [
           { "content_id" => "4577e252-45c3-4c91-a040-c9f8568d0150" },
-          { "content_id" => "5e326667-0d05-4453-b3a0-a1c6e797171e" }
+          { "content_id" => "5e326667-0d05-4453-b3a0-a1c6e797171e" },
         ],
       }
     end

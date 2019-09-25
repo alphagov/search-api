@@ -70,7 +70,7 @@ RSpec.describe Search::BestBetsChecker do
   context "with an exact best bet" do
     before do
       setup_checker("foo", [
-        bb_doc("foo", "exact", [["/jobsearch", 1]], [])
+        bb_doc("foo", "exact", [["/jobsearch", 1]], []),
       ])
     end
 
@@ -86,7 +86,7 @@ RSpec.describe Search::BestBetsChecker do
   context "with an exact worst bet" do
     before do
       setup_checker("foo", [
-        bb_doc("foo", "exact", [], ["/jobsearch"])
+        bb_doc("foo", "exact", [], ["/jobsearch"]),
       ])
     end
 

@@ -53,9 +53,9 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
           {
             "title" => "Special thing",
             "command_paper_number" => "1234",
-          }
+          },
         ],
-      }
+      },
     ]
   end
 
@@ -154,7 +154,7 @@ RSpec.describe "ElasticsearchAdvancedSearchTest" do
         "indexable_content" => "Cheese tax.  Cheese recipies.  Cheese music.",
         "relevant_to_local_government" => true,
         "updated_at" => "2012-01-01",
-      }
+      },
     ]
     more_documents.each do |sample_document|
       insert_document("govuk_test", sample_document)

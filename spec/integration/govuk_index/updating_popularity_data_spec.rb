@@ -46,7 +46,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
       {
         identifier: { "_id" => id, "_version" => 1 },
         document: { link: id, popularity: 0.222 },
-      }
+      },
     ])
 
     GovukIndex::PopularityUpdater.update("govuk_test")

@@ -57,7 +57,7 @@ RSpec.describe SearchIndices::Index do
 
     json_documents = [
       { "document_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "0.09090909090909091" },
-      { "document_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091" }
+      { "document_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091" },
     ]
 
     documents = json_documents.map do |json_document|
@@ -274,7 +274,7 @@ private
       },
       "_source" => { "includes" => %w[rank_14] },
       "sort" => [
-        { "rank_14" => { "order" => "asc" } }
+        { "rank_14" => { "order" => "asc" } },
       ],
       "size" => total_requested,
     }

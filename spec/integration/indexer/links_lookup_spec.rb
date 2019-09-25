@@ -46,13 +46,13 @@ RSpec.describe "TaglookupDuringIndexingTest" do
           {
             "content_id" => "TOPIC-CONTENT-ID-2",
             "base_path" => "/topic/my-topic/b",
-          }
+          },
         ],
         mainstream_browse_pages: [
           {
             "content_id" => "BROWSE-1",
             "base_path" => "/browse/my-browse/1",
-          }
+          },
         ],
         organisations: [
           {
@@ -62,7 +62,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
           {
             "content_id" => "ORG-2",
             "base_path" => "/courts-tribunals/my-court",
-          }
+          },
         ],
         primary_publishing_organisation: [
           {
@@ -74,15 +74,15 @@ RSpec.describe "TaglookupDuringIndexingTest" do
           {
             "content_id" => "TAXON-1",
             "base_path" => "/alpha-taxonomy/my-taxon-1",
-          }
+          },
         ],
         facet_values: [
           { "content_id" => "TAG-1" },
-          { "content_id" => "TAG-2" }
+          { "content_id" => "TAG-2" },
         ],
         facet_groups: [
           { "content_id" => "TGRP-1" },
-          { "content_id" => "TGRP-2" }
+          { "content_id" => "TGRP-2" },
         ],
       },
     )
@@ -118,7 +118,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
           {
             "content_id" => "TOPIC-CONTENT-ID-1",
             "base_path" => "/topic/my-topic/a",
-          }
+          },
         ],
       },
     )
@@ -216,7 +216,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
         "link" => "/foo/bar",
         "part_of_taxonomy_tree" => [
           grandparent_1_content_id, parent_1_content_id, taxon_1_content_id,
-          grandparent_2_content_id, parent_2_content_id, taxon_2_content_id,
+          grandparent_2_content_id, parent_2_content_id, taxon_2_content_id
         ],
         "taxons" => [taxon_1_content_id, taxon_2_content_id],
       },

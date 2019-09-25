@@ -22,10 +22,10 @@ RSpec.describe Search::AggregateExampleFetcher do
                       must_not: { terms: { _index: %w(govuk_test) } },
                     },
                   },
-                  { bool: { must_not: { match_all: {} } } }
+                  { bool: { must_not: { match_all: {} } } },
                 ],
               },
-            }
+            },
           ],
         },
       },
@@ -48,7 +48,7 @@ RSpec.describe Search::AggregateExampleFetcher do
         bool: {
           must: [
             { term: { field => value } },
-            filter
+            filter,
           ],
         },
       },
@@ -160,10 +160,10 @@ RSpec.describe Search::AggregateExampleFetcher do
         "sector" => {
           "sector_1" => { total: 3, examples: [
               { "title" => "example_1" },
-              { "title" => "example_2" }
+              { "title" => "example_2" },
             ] },
           "sector_2" => { total: 1, examples: [
-              { "title" => "example_3" }
+              { "title" => "example_3" },
             ] },
         },
       ).to eq(@fetcher.fetch)
@@ -220,10 +220,10 @@ RSpec.describe Search::AggregateExampleFetcher do
         "sector" => {
           "sector_1" => { total: 3, examples: [
               { "title" => "example_1" },
-              { "title" => "example_2" }
+              { "title" => "example_2" },
             ] },
           "sector_2" => { total: 1, examples: [
-              { "title" => "example_3" }
+              { "title" => "example_3" },
             ] },
         },
       ).to eq(@fetcher.fetch)
@@ -316,7 +316,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           (0..999).map { |sector_num|
             [
               "sector_#{sector_num}",
-              { total: sector_num, examples: [{ "title" => "example_#{sector_num}" }] }
+              { total: sector_num, examples: [{ "title" => "example_#{sector_num}" }] },
             ]
           }
         ],

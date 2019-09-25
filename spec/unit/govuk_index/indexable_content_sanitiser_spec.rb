@@ -24,8 +24,8 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
       payload = [
         [
           "line 1",
-          "line 2"
-        ]
+          "line 2",
+        ],
       ]
 
       expect(subject.clean(payload)).to eq("line 1\n\n\nline 2")
@@ -35,8 +35,8 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
       payload = [
         [
           "<p>line 1<\p>",
-          "<div>line<\div> 2"
-        ]
+          "<div>line<\div> 2",
+        ],
       ]
 
       expect(subject.clean(payload)).to eq("line 1\n\n\n\nline\n 2")
@@ -48,8 +48,8 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
       payload = [
         [
           { "content_type" => "text/govspeak", "content" => "**hello**" },
-          { "content_type" => "text/html", "content" => "<strong>hello</strong> <a href='www.gov.uk'>marmaduke</a>" }
-        ]
+          { "content_type" => "text/html", "content" => "<strong>hello</strong> <a href='www.gov.uk'>marmaduke</a>" },
+        ],
       ]
 
       expect(subject.clean(payload)).to eq("hello marmaduke")
@@ -59,11 +59,11 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
       payload = [
         [
           { "content_type" => "text/govspeak", "content" => "**hello**" },
-          { "content_type" => "text/html", "content" => "<strong>hello</strong>" }
+          { "content_type" => "text/html", "content" => "<strong>hello</strong>" },
         ],
         [
           { "content_type" => "text/govspeak", "content" => "**goodbye**" },
-          { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" }
+          { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" },
         ],
       ]
 
@@ -77,8 +77,8 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
           {
             "content" => "I love HTML Back end rules",
             "content_type" => "text/govspeak",
-          }
-        ]
+          },
+        ],
       ]
 
       expect(GovukError).to receive(:notify).with(
@@ -95,12 +95,12 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
       "title 1",
       [
         { "content_type" => "text/govspeak", "content" => "**hello**" },
-        { "content_type" => "text/html", "content" => "<strong>hello</strong>" }
+        { "content_type" => "text/html", "content" => "<strong>hello</strong>" },
       ],
       "title 2",
       [
         { "content_type" => "text/govspeak", "content" => "**goodbye**" },
-        { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" }
+        { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" },
       ],
     ]
 

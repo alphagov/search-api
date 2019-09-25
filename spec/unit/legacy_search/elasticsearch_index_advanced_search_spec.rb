@@ -54,7 +54,7 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
                         "query" => "happy fun time",
                         "analyzer" => "with_search_synonyms",
                       },
-                    }
+                    },
                   ],
                 },
               },
@@ -72,7 +72,7 @@ RSpec.describe SearchIndices::Index, "Advanced Search" do
                       "params" => { "now" => (Time.now.to_i / 60) * 60000 },
                     },
                   },
-                }
+                },
               ],
             },
           },

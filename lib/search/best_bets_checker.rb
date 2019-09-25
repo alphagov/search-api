@@ -65,7 +65,7 @@ module Search
 
       [
         bets.flat_map { |_, best, _| best },
-        bets.flat_map { |_, _, worst| worst }
+        bets.flat_map { |_, _, worst| worst },
       ]
     end
 

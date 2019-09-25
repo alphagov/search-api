@@ -132,7 +132,7 @@ RSpec.describe "SearchTest" do
       it "filters all documents containing taxon b and e" do
         get "/search?filter_all_part_of_taxonomy_tree=b&filter_all_part_of_taxonomy_tree=e"
         expect(result_links.sort).to eq([
-                                          "/three"
+                                          "/three",
                                         ])
       end
     end
@@ -159,7 +159,7 @@ RSpec.describe "SearchTest" do
       it "rejects any documents containing taxon c or f" do
         get "/search?reject_any_part_of_taxonomy_tree=c&reject_any_part_of_taxonomy_tree=f"
         expect(result_links.sort).to match_array([
-                                                   "/three"
+                                                   "/three",
                                                  ])
       end
     end

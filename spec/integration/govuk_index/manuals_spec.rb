@@ -29,7 +29,7 @@ RSpec.describe "Manual publishing" do
             title: "Name of manual section",
             published_at: "2017-06-21T10:48:34+00:00",
             base_path: "/some/section/base/path",
-          }
+          },
         ],
       },
     )

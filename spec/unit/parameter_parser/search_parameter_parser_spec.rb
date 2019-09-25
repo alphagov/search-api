@@ -419,7 +419,7 @@ RSpec.describe SearchParameterParser do
         text_filter("organisations", %w[hm-magic], :reject, :any),
         text_filter("mainstream_browse_pages", %w[cheese], :filter, :all),
         text_filter("slug", ["/slug1", "/slug2"], :filter, :any),
-        text_filter("link", ["/link"], :reject, :all)
+        text_filter("link", ["/link"], :reject, :all),
       ])
   end
 
@@ -435,7 +435,7 @@ RSpec.describe SearchParameterParser do
               hm-magic
               hmrc
             ]
-          )
+          ),
         ],
       ),
     )

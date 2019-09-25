@@ -25,7 +25,7 @@ RSpec.describe Search::ResultPresenter do
     expect(
       [
         { "label" => "Heavy rail", "value" => "heavy-rail" },
-        { "label" => "Light rail", "value" => "light-rail" }
+        { "label" => "Light rail", "value" => "light-rail" },
       ],
     ).to eq(result["railway_type"])
   end

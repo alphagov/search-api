@@ -16,7 +16,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
       {
         "body" => [
           { "content_type" => "text/govspeak", "content" => "**hello**" },
-          { "content_type" => "text/html", "content" => "<strong>hello</strong>" }
+          { "content_type" => "text/html", "content" => "<strong>hello</strong>" },
         ],
       }
     }
@@ -35,7 +35,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
             "slug" => "title-1",
             "body" => [
               { "content_type" => "text/govspeak", "content" => "**hello**" },
-              { "content_type" => "text/html", "content" => "<strong>hello</strong>" }
+              { "content_type" => "text/html", "content" => "<strong>hello</strong>" },
             ],
           },
           {
@@ -43,9 +43,9 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
             "slug" => "title-2",
             "body" => [
               { "content_type" => "text/govspeak", "content" => "**goodbye**" },
-              { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" }
+              { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" },
             ],
-          }
+          },
         ],
       }
     }
@@ -62,7 +62,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
         "external_related_links" => [],
         "introductory_paragraph" => [
           { "content_type" => "text/govspeak", "content" => "**introductory paragraph**" },
-          { "content_type" => "text/html", "content" => "<strong>introductory paragraph</strong>" }
+          { "content_type" => "text/html", "content" => "<strong>introductory paragraph</strong>" },
         ],
         "more_information" => "more information",
         "start_button_text" => "Start now",
@@ -88,7 +88,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
           {
             "slug" => "slug-2",
             "title" => "Title 2",
-          }
+          },
         ],
       }
     }
@@ -110,7 +110,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
           {
             "content_type" =>  "text/html",
             "content" =>  "<p>intro</p>\n",
-          }
+          },
         ],
         "more_information" =>  [
           {
@@ -120,7 +120,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
           {
             "content_type" =>  "text/html",
             "content" =>  "<p>more</p>\n",
-          }
+          },
         ],
         "hidden_search_terms" =>  ["hidden 1", "hidden 2"],
       }

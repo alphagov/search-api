@@ -48,7 +48,7 @@ RSpec.describe SearchIndices::IndexGroup do
       )
     expected_body = {
       "actions" => [
-        { "add" => { "index" => "test-new", "alias" => "test" } }
+        { "add" => { "index" => "test-new", "alias" => "test" } },
       ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
@@ -79,7 +79,7 @@ RSpec.describe SearchIndices::IndexGroup do
     expected_body = {
       "actions" => [
         { "remove" => { "index" => "test-old", "alias" => "test" } },
-        { "add" => { "index" => "test-new", "alias" => "test" } }
+        { "add" => { "index" => "test-new", "alias" => "test" } },
       ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
@@ -110,7 +110,7 @@ RSpec.describe SearchIndices::IndexGroup do
       "actions" => [
         { "remove" => { "index" => "test-old", "alias" => "test" } },
         { "remove" => { "index" => "test-old2", "alias" => "test" } },
-        { "add" => { "index" => "test-new", "alias" => "test" } }
+        { "add" => { "index" => "test-new", "alias" => "test" } },
       ],
     }.to_json
     post_stub = stub_request(:post, "#{BASE_URI}/_aliases")
@@ -228,7 +228,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "clean with multiple indices" do
     index_names = [
       "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012",
-      "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef"
+      "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef",
     ]
     stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
       .to_return(

@@ -5,7 +5,7 @@ RSpec.describe "Loading page traffic data" do
     id = "/test/page/#{SecureRandom.uuid}"
     data = [
       { index: { _id: id, _type: "page_traffic" } }.to_json,
-      { rank_14: 100, vf_14: 0.345, vc_14: 12 }.to_json
+      { rank_14: 100, vf_14: 0.345, vc_14: 12 }.to_json,
     ].join("\n")
 
     Clusters.active.each do |cluster|

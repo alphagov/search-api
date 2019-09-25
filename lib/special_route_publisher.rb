@@ -105,7 +105,7 @@ class SpecialRoutePublisher
         title: "UK nationals living in the EU",
         description: "Q&A frontend for the country pages affected by EU Exit",
         type: "exact",
-      }
+      },
     ]
   end
 end
