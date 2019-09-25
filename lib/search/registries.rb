@@ -1,4 +1,5 @@
 module Search
+  # rubocop:disable Metrics/BlockLength
   Registries = Struct.new(:search_server, :search_config) do
     def [](name)
       as_hash[name]
@@ -71,4 +72,5 @@ module Search
       @field_definitions ||= search_server.schema.field_definitions
     end
   end
+  # rubocop:enable Metrics/BlockLength
 end

@@ -33,6 +33,8 @@ private
 
   def parse_definitions(raw)
     definitions = {}
+
+    # rubocop:disable Metrics/BlockLength
     raw.each_pair do |field_name, value|
       # Look up the field type
       type_name = value.delete("type")
@@ -71,6 +73,8 @@ private
 
       definitions[field_name] = definition
     end
+    # rubocop:enable Metrics/BlockLength
+
     definitions
   end
 
