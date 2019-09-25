@@ -227,9 +227,9 @@ module SearchIndices
       # type.  For backwards compact, if it starts with anything else currently
       # assume that the type is edition.
       if (m = link.match(/\A(edition|best_bet)\/(.*)\Z/))
-        return [m[1], m[2]]
+        [m[1], m[2]]
       else
-        return ["edition", link]
+        ["edition", link]
       end
     end
 
