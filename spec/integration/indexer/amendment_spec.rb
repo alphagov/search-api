@@ -5,7 +5,7 @@ RSpec.describe "ElasticsearchAmendmentTest" do
     stub_tagging_lookup
   end
 
-  it "should amend a document" do
+  it "amends a document" do
     commit_document("government_test", {
       "title" => "The old title",
       "link" => "/an-example-answer",
@@ -22,7 +22,7 @@ RSpec.describe "ElasticsearchAmendmentTest" do
     )
   end
 
-  it "should amend a document queued" do
+  it "amends a document queued" do
     commit_document("government_test", {
       "title" => "The old title",
       "link" => "/an-example-answer",

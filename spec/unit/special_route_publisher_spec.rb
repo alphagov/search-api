@@ -18,7 +18,7 @@ RSpec.describe SpecialRoutePublisher do
     )
   end
 
-  it "should publish a valid content item for special routes" do
+  it "publishes a valid content item for special routes" do
     @publisher.routes.each do |route|
       expect(@publishing_api).to receive(:put_content) do |_, payload|
         assert_valid_content_item(payload)

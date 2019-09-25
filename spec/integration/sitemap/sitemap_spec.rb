@@ -10,7 +10,7 @@ RSpec.describe "SitemapTest" do
     FileUtils.rm_rf(@path)
   end
 
-  it "it creates symbolic links to the sitemap files" do
+  it "creates symbolic links to the sitemap files" do
     filename = create_test_file
     link_name = "sitemap_1.xml"
     link_full_name = "#{@path}/sitemaps/sitemap_1.xml"
@@ -24,7 +24,7 @@ RSpec.describe "SitemapTest" do
     expect(File.readlink(link_full_name)).to eq("#{@path}/sitemaps/#{filename}")
   end
 
-  it "it creates an index pointing to the symbolic links" do
+  it "creates an index pointing to the symbolic links" do
     filename = create_test_file
     link_name = "sitemap_1.xml"
     allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
@@ -49,7 +49,7 @@ RSpec.describe "SitemapTest" do
     expect(File.readlink(index_linkname)).to eq(index_filename)
   end
 
-  it "it does not cleanup the symbolic link files or linked files" do
+  it "does not cleanup the symbolic link files or linked files" do
     create_test_file("sitemap_1_2017-01-01T06.xml")
     create_test_file("sitemap_1_2017-01-02T06.xml")
     create_test_file("sitemap_1_2017-01-03T06.xml")
@@ -70,7 +70,7 @@ RSpec.describe "SitemapTest" do
     expect(File.exist?("#{@path}/sitemaps/sitemap.xml")).to eq(true)
   end
 
-  it "it can overwrite existing links" do
+  it "can overwrite existing links" do
     create_test_file("sitemap_1_2017-01-01T06.xml")
     filename =  create_test_file("sitemap_1_2017-01-02T06.xml")
 

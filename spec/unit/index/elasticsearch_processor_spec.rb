@@ -4,7 +4,7 @@ RSpec.describe Index::ElasticsearchProcessor do
   subject { described_class.govuk }
   let(:cluster_count) { Clusters.count }
 
-  it "should save valid document" do
+  it "saves valid document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
       _type: "help_page",
@@ -24,7 +24,7 @@ RSpec.describe Index::ElasticsearchProcessor do
     subject.commit
   end
 
-  it "should delete valid document" do
+  it "deletes valid document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
       _type: "help_page",

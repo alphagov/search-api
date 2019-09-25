@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe Sitemap, "Index" do
-  it "should generate index sitemap" do
+  it "generates index sitemap" do
     index_file = StringIO.new
     allow(File).to receive(:open).and_yield(index_file)
     sitemap = described_class.new("/foo")

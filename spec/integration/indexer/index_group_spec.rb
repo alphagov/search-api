@@ -17,7 +17,7 @@ RSpec.describe "ElasticsearchIndexGroupTest" do
     @index_group.switch_to(index)
   end
 
-  it "should create index" do
+  it "creates index" do
     expect(@index_group.index_names).to be_empty
     index = @index_group.create_index
 
@@ -28,14 +28,14 @@ RSpec.describe "ElasticsearchIndexGroupTest" do
     ).to eq(index.mappings)
   end
 
-  it "should alias index" do
+  it "aliases index" do
     index = @index_group.create_index
     @index_group.switch_to(index)
 
     expect(index.real_name).to eq(@index_group.current.real_name)
   end
 
-  it "should switch index" do
+  it "switches index" do
     old_index = @index_group.create_index
     @index_group.switch_to(old_index)
 
@@ -45,7 +45,7 @@ RSpec.describe "ElasticsearchIndexGroupTest" do
     expect(new_index.real_name).to eq(@index_group.current.real_name)
   end
 
-  it "should clean indices" do
+  it "cleans indices" do
     @index_group.create_index
     @index_group.switch_to(@index_group.create_index)
 

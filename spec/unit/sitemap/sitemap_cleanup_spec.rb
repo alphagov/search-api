@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe SitemapCleanup do
-  it "should delete old sitemaps" do
+  it "deletes old sitemaps" do
     allow(Dir).to receive(:glob).and_return(%w{
       sitemap_2015-03-05T01.xml
       sitemap_1_2015-03-05T01.xml
@@ -26,7 +26,7 @@ RSpec.describe SitemapCleanup do
     cleanup.delete_excess_sitemaps
   end
 
-  it "should delete old sitemaps with a gap in days" do
+  it "deletes old sitemaps with a gap in days" do
     allow(Dir).to receive(:glob).and_return(%w{
       sitemap_2015-03-05T01.xml
       sitemap_1_2015-03-05T01.xml

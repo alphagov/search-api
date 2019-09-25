@@ -7,7 +7,7 @@ RSpec.describe SitemapGenerator do
   end
   # rubocop:enable RSpec/AnyInstance
 
-  it "should generate sitemap" do
+  it "generates sitemap" do
     sitemap = described_class.new(SearchConfig.default_instance)
 
     sitemap_xml = sitemap.generate_xml([

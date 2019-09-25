@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe "SitemapGeneratorTest" do
 
-  it "should generate multiple sitemaps" do
+  it "generates multiple sitemaps" do
     allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
     add_sample_documents(
       [
@@ -61,7 +61,7 @@ RSpec.describe "SitemapGeneratorTest" do
     expect(sitemap_xml[0]).not_to include("/an-example-answer")
   end
 
-  it "should include homepage" do
+  it "includes homepage" do
     generator = SitemapGenerator.new(SearchConfig.default_instance)
     sitemap_xml = generator.sitemaps
 
@@ -73,7 +73,7 @@ RSpec.describe "SitemapGeneratorTest" do
     expect(pages[0].css("priority").text).to eq("0.5")
   end
 
-  it "should not include recommended links" do
+  it "does not include recommended links" do
     generator = SitemapGenerator.new(SearchConfig.default_instance)
     add_sample_documents(
       [

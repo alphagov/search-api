@@ -50,7 +50,7 @@ RSpec.describe SearchIndices::Index do
     expect(@index).to be_exists
   end
 
-  it "should raise error for failures in bulk update" do
+  it "raises error for failures in bulk update" do
     stub_tagging_lookup
     stub_traffic_index
     stub_popularity_index_requests(["/foo/bar", "/foo/baz"], 1.0, 20)

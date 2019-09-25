@@ -31,7 +31,7 @@ RSpec.describe "ElasticsearchDeletionTest" do
     expect_document_missing_in_rummager(id: "http://example.com/", index: "government_test")
   end
 
-  it "should delete a best bet by type and id" do
+  it "deletes a best bet by type and id" do
     post "/metasearch_test/documents", {
       "_id" => "jobs_exact",
       "_type" => "best_bet",

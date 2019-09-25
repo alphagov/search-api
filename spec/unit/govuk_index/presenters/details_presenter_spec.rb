@@ -19,7 +19,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
       }
     }
 
-    it "should extract licence specific fields" do
+    it "extracts licence specific fields" do
       expect(presented_details.licence_identifier).to eq(details["licence_identifier"])
       expect(presented_details.licence_short_description).to eq(details["licence_short_description"])
     end
@@ -66,7 +66,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
     context "no change notes" do
       let(:details) { {} }
 
-      it "should have no latest change note" do
+      it "has no latest change note" do
         expect(presented_details.latest_change_note).to be_nil
       end
     end
@@ -76,7 +76,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
         { "change_notes" => [] }
       }
 
-      it "should have no latest change note" do
+      it "has no latest change note" do
         expect(presented_details.latest_change_note).to be_nil
       end
     end
@@ -104,7 +104,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
         }
       }
 
-      it "should combine the title and description from the most recent change note" do
+      it "combines the title and description from the most recent change note" do
         expect(presented_details.latest_change_note).to eq("Change 3 in Manual section B")
       end
     end

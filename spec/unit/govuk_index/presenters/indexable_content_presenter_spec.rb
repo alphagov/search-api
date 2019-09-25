@@ -21,7 +21,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
       }
     }
 
-    it "should extract sanitised text from html" do
+    it "extracts sanitised text from html" do
       expect(subject.indexable_content).to eq("hello")
     end
   end
@@ -93,7 +93,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
       }
     }
 
-    it "should extract contact format indexable content correctly" do
+    it "extracts contact format indexable content correctly" do
       expect(subject.indexable_content).to eq("Title\n\n\nDescription\n\n\nTitle 1\n\n\nTitle 2")
     end
   end
