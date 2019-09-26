@@ -1,4 +1,5 @@
 require "aws-sdk-s3"
+require "date"
 require "sinatra"
 set :root, File.dirname(__FILE__)
 
@@ -356,6 +357,8 @@ class Rummager < Sinatra::Application
     o = Aws::S3::Object.new(bucket_name: ENV["AWS_S3_BUCKET_NAME"], key: key)
 
     headers "Content-Type" => "application/xml",
+            "Cache-Control" => "public",
+            "Expires" => (Date.today + 1).rfc2822,
             "Last-Modified" => o.last_modified
 
     stream do |out|
