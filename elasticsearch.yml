@@ -12,13 +12,10 @@ production: &default
   spelling_index_names:
     - government
   clusters:
-    - uri_key: base_uri
-      key: A
-      default: true
     - uri_key: base_uri_b
       key: B
       schema_config_file: elasticsearch_schema_b.yml
-      default: false
+      default: true
 
 development:
   <<: *default
@@ -36,10 +33,7 @@ test:
   spelling_index_names:
     - government_test
   clusters:
-    - uri_key: base_uri
-      key: A
-      default: true
     - uri_key: base_uri_b
       key: B
       schema_config_file: elasticsearch_schema_b.yml
-      default: false
+      default: true
