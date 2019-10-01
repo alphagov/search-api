@@ -96,41 +96,6 @@ RSpec.describe SearchParameterParser do
     expect(p.parsed_params).to match(expected_params({}))
   end
 
-  it "understands the search_cluster_query A/B parameter" do
-    cluster = Clusters.active.sample # random cluster
-    p = described_class.new({ "ab_tests" => ["search_cluster_query:#{cluster.key}"] }, @schema)
-
-    expect(p.error).to eq("")
-    expect(p).to be_valid
-    expect(p.parsed_params).to match(
-      expected_params(
-        ab_tests: { search_cluster_query: cluster.key },
-        cluster: cluster_with_key(cluster.key),
-       ),
-    )
-  end
-
-  it "uses the default cluster if the search_cluster_query A/B parameter is not set" do
-    p = described_class.new({ "ab_tests" => [] }, @schema)
-
-    expect(p.error).to eq("")
-    expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(cluster: cluster_with_key(Clusters.default_cluster.key)))
-  end
-
-  it "complains about invalid search_cluster_query A/B parameters" do
-    p = described_class.new({ "ab_tests" => ["search_cluster_query:invalid"] }, @schema)
-
-    expect(p.error).to eq(%{Invalid cluster. Accepted values: #{Clusters.active.map(&:key).join(', ')}})
-    expect(p).not_to be_valid
-    expect(p.parsed_params).to match(
-      expected_params(
-        ab_tests: { search_cluster_query: "invalid" },
-        cluster: cluster_with_key(Clusters.default_cluster.key),
-      ),
-     )
-  end
-
   it "complain about multiple unknown parameters" do
     p = described_class.new({ "p" => %w[extra], "boo" => %w[goose] }, @schema)
 

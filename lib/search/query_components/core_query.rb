@@ -60,11 +60,7 @@ module QueryComponents
       quoted = search_params.parsed_query[:quoted].map { |query| quoted_phrase_query(query) }
 
       unquoted_query = search_params.parsed_query[:unquoted]
-      unquoted = if search_params.ab_tests.fetch(:search_cluster_query, "A") == "B"
-                   unquoted_phrase_query_abvariant(unquoted_query)
-                 else
-                   unquoted_phrase_query(unquoted_query)
-                 end
+      unquoted = unquoted_phrase_query(unquoted_query)
 
       if quoted.empty?
         unquoted
@@ -94,22 +90,6 @@ module QueryComponents
     end
 
     def unquoted_phrase_query(query = search_term)
-      {
-        bool: {
-          should: [
-            match_phrase("title", query),
-            match_phrase("acronym", query),
-            match_phrase("description", query),
-            match_phrase("indexable_content", query),
-            match_all_terms(%w(title acronym description indexable_content), query),
-            match_any_terms(%w(title acronym description indexable_content), query),
-            minimum_should_match("all_searchable_text", query),
-          ],
-        },
-      }
-    end
-
-    def unquoted_phrase_query_abvariant(query = search_term)
       should_coord_query([
         match_all_terms(%w(title), query, MATCH_ALL_TITLE_BOOST),
         match_all_terms(%w(acronym), query, MATCH_ALL_ACRONYM_BOOST),
