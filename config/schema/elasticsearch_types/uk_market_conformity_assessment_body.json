@@ -14,7 +14,7 @@
   "expanded_search_result_fields": {
     "uk_market_conformity_assessment_body_type": [
       {
-        "label": "Approved Body",
+        "label": "Approved body",
         "value": "approved-body"
       },
       {
@@ -860,6 +860,10 @@
         "value": "construction-products"
       },
       {
+        "label": "Ecodesign",
+        "value": "ecodesign"
+      },
+      {
         "label": "Electromagnetic compatibility",
         "value": "electromagnetic-compatibility"
       },
@@ -872,7 +876,7 @@
         "value": "explosives"
       },
       {
-        "label": "Gas Appliances and related",
+        "label": "Gas appliances and related",
         "value": "gas-appliances-and-related"
       },
       {
@@ -888,7 +892,7 @@
         "value": "marine-equipment"
       },
       {
-        "label": "Measuring Instruments",
+        "label": "Measuring instruments",
         "value": "measuring-instruments"
       },
       {
@@ -900,11 +904,11 @@
         "value": "non-automatic-weighing-instruments"
       },
       {
-        "label": "Personal Protective Equipment",
+        "label": "Personal protective equipment",
         "value": "personal-protective-equipment"
       },
       {
-        "label": "Pressure Equipment",
+        "label": "Pressure equipment",
         "value": "pressure-equipment"
       },
       {
@@ -912,7 +916,7 @@
         "value": "pyrotechnics"
       },
       {
-        "label": "Radio Equipment",
+        "label": "Radio equipment",
         "value": "radio-equipment"
       },
       {
@@ -932,7 +936,7 @@
         "value": "toys"
       },
       {
-        "label": "Transportable Pressure Equipment",
+        "label": "Transportable pressure equipment",
         "value": "transportable-pressure-equipment"
       }
     ]
