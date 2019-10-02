@@ -8,6 +8,8 @@ class SitemapWriter
   def write_sitemaps(search_config)
     sitemap_generator = SitemapGenerator.new(search_config)
     # write our sitemap files and return an array of filenames
+    puts "Writing out sitemaps to temp files"
+
     sitemap_generator.sitemaps.map do |sitemap_xml|
       filename, link_filename = next_filename
       File.open(File.join(@directory, filename), "w") do |file|

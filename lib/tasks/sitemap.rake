@@ -20,8 +20,12 @@ namespace :sitemap do
     @bucket_name = ENV["AWS_S3_BUCKET_NAME"]
     raise "Missing required AWS_S3_BUCKET_NAME" if @bucket_name.nil?
 
+    puts "Generating sitemaps..."
+
     Dir.mktmpdir do |output_directory|
       filenames = Sitemap.new(output_directory).generate(SearchConfig.default_instance)
+
+      puts "Uploading sitemaps..."
 
       filenames[:sitemaps].each do |filename, link_filename|
         upload_to_s3(
