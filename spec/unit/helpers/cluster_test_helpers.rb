@@ -10,6 +10,6 @@ module ClusterTestHelpers
   end
 
   def default_key
-    @default_key ||= "B"
+    @default_key ||= "A"
   end
 end
