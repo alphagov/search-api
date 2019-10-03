@@ -4,10 +4,8 @@ class SitemapGenerator
     @all_documents = get_all_documents
   end
 
-  def sitemaps
-    @all_documents.each_slice(self.class.sitemap_limit).map do |chunk|
-      generate_xml(chunk)
-    end
+  def sitemap_chunks
+    @all_documents.each_slice(SITEMAP_LIMIT)
   end
 
   # Generate a sitemap which matches the format specified in https://www.sitemaps.org/protocol.html
@@ -30,10 +28,7 @@ class SitemapGenerator
 private
 
   EXCLUDED_FORMATS = %w[recommended-link].freeze
-
-  def self.sitemap_limit
-    25_000
-  end
+  SITEMAP_LIMIT = 25_000
 
   def get_all_documents
     search_body = {

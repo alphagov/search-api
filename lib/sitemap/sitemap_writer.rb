@@ -8,9 +8,10 @@ class SitemapWriter
   def write_sitemaps(search_config)
     sitemap_generator = SitemapGenerator.new(search_config)
     # write our sitemap files and return an array of filenames
-    sitemap_generator.sitemaps.map do |sitemap_xml|
+    sitemap_generator.sitemap_chunks.map do |chunk|
       filename, link_filename = next_filename
       File.open(File.join(@directory, filename), "w") do |file|
+        sitemap_xml = sitemap_generator.generate_xml(chunk)
         file.write(sitemap_xml)
       end
       [filename, link_filename]
