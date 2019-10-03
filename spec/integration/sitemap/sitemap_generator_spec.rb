@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe "SitemapGeneratorTest" do
   it "generates multiple sitemaps" do
-    allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
+    stub_const("SitemapGenerator::SITEMAP_LIMIT", 2)
     add_sample_documents(
       [
         {
@@ -32,14 +32,14 @@ RSpec.describe "SitemapGeneratorTest" do
     )
 
     generator = SitemapGenerator.new(SearchConfig.default_instance)
-    sitemap_xml = generator.sitemaps
+    sitemap_xml = sitemaps(generator)
 
     expected_sitemap_count = 2 # sample_document.count + homepage / sitemap_limit rounded up
     expect(expected_sitemap_count).to eq(sitemap_xml.length)
   end
 
   it "does not include migrated formats from gocvernment" do
-    allow(SitemapGenerator).to receive(:sitemap_limit).and_return(2)
+    stub_const("SitemapGenerator::SITEMAP_LIMIT", 2)
     add_sample_documents(
       [
         {
@@ -54,7 +54,7 @@ RSpec.describe "SitemapGeneratorTest" do
       index_name: "government_test",
     )
     generator = SitemapGenerator.new(SearchConfig.default_instance)
-    sitemap_xml = generator.sitemaps
+    sitemap_xml = sitemaps(generator)
     expect(sitemap_xml.length).to eq(1)
 
     expect(sitemap_xml[0]).not_to include("/an-example-answer")
@@ -62,7 +62,7 @@ RSpec.describe "SitemapGeneratorTest" do
 
   it "includes homepage" do
     generator = SitemapGenerator.new(SearchConfig.default_instance)
-    sitemap_xml = generator.sitemaps
+    sitemap_xml = sitemaps(generator)
 
     pages = Nokogiri::XML(sitemap_xml[0])
       .css("url")
@@ -87,7 +87,7 @@ RSpec.describe "SitemapGeneratorTest" do
       index_name: "government_test",
     )
 
-    sitemap_xml = generator.sitemaps
+    sitemap_xml = sitemaps(generator)
 
     expect(sitemap_xml.length).to eq(1)
 
@@ -110,7 +110,7 @@ RSpec.describe "SitemapGeneratorTest" do
       index_name: "govuk_test",
     )
 
-    sitemap_xml = generator.sitemaps
+    sitemap_xml = sitemaps(generator)
 
     pages = Nokogiri::XML(sitemap_xml[0])
       .css("url")
@@ -136,7 +136,7 @@ RSpec.describe "SitemapGeneratorTest" do
       index_name: "govuk_test",
     )
 
-    sitemap_xml = generator.sitemaps
+    sitemap_xml = sitemaps(generator)
 
     pages = Nokogiri::XML(sitemap_xml[0])
       .css("url")
@@ -153,5 +153,9 @@ private
       insert_document(index_name, sample_document)
     end
     commit_index index_name
+  end
+
+  def sitemaps(generator)
+    generator.sitemap_chunks.map { |chunk| generator.generate_xml(chunk) }
   end
 end
