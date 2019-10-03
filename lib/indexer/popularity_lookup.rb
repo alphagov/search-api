@@ -40,11 +40,13 @@ module Indexer
           popularity_score = 1.0 / (ranks[link] + SearchConfig.popularity_rank_offset)
         end
 
+        popularity_rank = traffic_index_size - (ranks[link] || traffic_index_size)
+
         [
           link,
           {
             popularity_score: popularity_score,
-            popularity_rank: ranks[link],
+            popularity_rank: popularity_rank,
           },
         ]
       }]
@@ -63,11 +65,13 @@ module Indexer
     end
 
     def traffic_index_size
-      results = traffic_index.raw_search({
-        query: { match_all: {} },
-        size: 0,
-      })
-      results["hits"]["total"]
+      @traffic_index_size ||= begin
+        results = traffic_index.raw_search({
+          query: { match_all: {} },
+          size: 0,
+        })
+        results["hits"]["total"]
+      end
     end
 
     def open_traffic_index
