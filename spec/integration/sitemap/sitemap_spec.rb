@@ -3,7 +3,16 @@ require "spec_helper"
 RSpec.describe "SitemapTest" do
   before do
     @path = "/tmp/#{SecureRandom.uuid}"
+    @timestamp = Time.now.utc
     FileUtils.mkdir_p("#{@path}/sitemaps")
+  end
+
+  let(:generator) {
+    double("generator")
+  }
+
+  let(:sitemap) do
+    Sitemap.new(generator, @path)
   end
 
   after do
@@ -14,11 +23,12 @@ RSpec.describe "SitemapTest" do
     filename = create_test_file
     link_name = "sitemap_1.xml"
     link_full_name = "#{@path}/sitemaps/sitemap_1.xml"
-    allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
+    sitemaps = { sitemaps: [[filename, link_name]], index: "" }
+    allow(generator).to receive(:run).and_return(sitemaps)
 
     expect(File.exist?(link_name)).to eq(false)
 
-    Sitemap.new(@path).generate_and_replace(double(:content_indices))
+    sitemap.generate_and_replace
 
     expect(File.symlink?(link_full_name)).to eq(true)
     expect(File.readlink(link_full_name)).to eq("#{@path}/sitemaps/#{filename}")
@@ -27,26 +37,16 @@ RSpec.describe "SitemapTest" do
   it "creates an index pointing to the symbolic links" do
     filename = create_test_file
     link_name = "sitemap_1.xml"
-    allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
+    index_filename = "sitemap_#{@timestamp.strftime('%FT%H')}.xml"
+    sitemaps = { sitemaps: [[filename, link_name]], index: index_filename }
+    allow(generator).to receive(:run).and_return(sitemaps)
 
-    time = Time.now.utc
-    Sitemap.new(@path, time).generate_and_replace(double(:content_indices))
+    sitemap.generate_and_replace
 
-    index_filename = "#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml"
-    index_linkname = "#{@path}/sitemap.xml"
+    index_filename_path = "#{@path}/sitemaps/#{index_filename}"
+    index_linkname_path = "#{@path}/sitemap.xml"
 
-    expected_xml = <<~XML
-      <?xml version=\"1.0\" encoding=\"UTF-8\"?>
-      <sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">
-        <sitemap>
-          <loc>http://www.dev.gov.uk/sitemaps/sitemap_1.xml</loc>
-          <lastmod>#{time.strftime("%FT%T%:z")}</lastmod>
-        </sitemap>
-      </sitemapindex>
-    XML
-
-    expect(File.read(index_filename)).to eq(expected_xml)
-    expect(File.readlink(index_linkname)).to eq(index_filename)
+    expect(File.readlink(index_linkname_path)).to eq(index_filename_path)
   end
 
   it "does not cleanup the symbolic link files or linked files" do
@@ -57,10 +57,11 @@ RSpec.describe "SitemapTest" do
     create_test_file("sitemap_1_2017-01-05T06.xml")
     create_test_file("sitemap_1_2017-01-06T06.xml")
     create_test_file("sitemap_2017-01-01T06.xml")
+
     File.symlink("#{@path}/sitemaps/sitemap_1_2017-01-06T06.xml", "#{@path}/sitemaps/sitemap_1.xml")
     File.symlink("#{@path}/sitemaps/sitemap_2017-01-01T06.xml", "#{@path}/sitemaps/sitemap.xml")
 
-    Sitemap.new(@path).cleanup
+    sitemap.cleanup
 
     expect(File.exist?("#{@path}/sitemaps/sitemap_1_2017-01-01T06.xml")).to eq(false)
     expect(File.exist?("#{@path}/sitemaps/sitemap_1_2017-01-06T06.xml")).to eq(true)
@@ -71,18 +72,17 @@ RSpec.describe "SitemapTest" do
   end
 
   it "can overwrite existing links" do
-    create_test_file("sitemap_1_2017-01-01T06.xml")
-    filename =  create_test_file("sitemap_1_2017-01-02T06.xml")
-
+    filename = create_test_file("sitemap_1_2017-01-01T06.xml")
     link_name = "sitemap_1.xml"
-    allow_any_instance_of(SitemapWriter).to receive(:write_sitemaps).and_return([[filename, link_name]])
+    index_filename = "sitemap_#{@timestamp.strftime('%FT%H')}.xml"
+    sitemaps = { sitemaps: [[filename, link_name]], index: index_filename }
+    allow(generator).to receive(:run).and_return(sitemaps)
 
-    time = Time.now.utc
     File.symlink("#{@path}/sitemaps/sitemap_1_2017-01-01T06.xml", "#{@path}/sitemap.xml")
 
-    Sitemap.new(@path, time).generate_and_replace(double)
+    sitemap.generate_and_replace
 
-    expect(File.readlink("#{@path}/sitemap.xml")).to eq("#{@path}/sitemaps/sitemap_#{time.strftime('%FT%H')}.xml")
+    expect(File.readlink("#{@path}/sitemap.xml")).to eq("#{@path}/sitemaps/sitemap_#{@timestamp.strftime('%FT%H')}.xml")
   end
 
   def create_test_file(name = "#{SecureRandom.uuid}.xml")

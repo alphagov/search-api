@@ -33,6 +33,7 @@ require "bunny-mock"
 require "govuk_schemas"
 require "govuk-content-schema-test-helpers"
 require "govuk-content-schema-test-helpers/validator"
+require "s3_client"
 
 # Silence log output
 Logging.logger.root.appenders = nil

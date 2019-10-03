@@ -1,26 +1,17 @@
 class Sitemap
-  SUB_DIRECTORY = "sitemaps".freeze
-
-  def initialize(directory, timestamp = Time.now.utc)
-    raise "Sitemap directory is required" unless directory
-
-    @output_path = File.join(directory, SUB_DIRECTORY)
+  def initialize(sitemap_generator, directory)
+    @sitemap_generator = sitemap_generator
+    @output_path = File.join(directory, SitemapWriter::SUB_DIRECTORY)
     @directory = directory
-    @timestamp = timestamp
   end
 
-  def generate_and_replace(search_config)
-    replace(generate(search_config))
+  def generate_and_replace
+    replace(generate)
   end
 
-  def generate(search_config)
-    FileUtils.mkdir_p(@output_path)
-
-    sitemap_writer = SitemapWriter.new(@output_path, @timestamp)
-    sitemaps = sitemap_writer.write_sitemaps(search_config)
-    index = write_index(sitemaps.map(&:last))
-
-    { sitemaps: sitemaps, index: index }
+  def generate
+    create_output_directory
+    @sitemap_generator.run
   end
 
   def replace(sitemaps:, index:)
@@ -52,33 +43,14 @@ class Sitemap
     FileUtils.mv("#{@directory}/sitemap_tmp.xml", "#{@directory}/sitemap.xml")
   end
 
-  def write_index(sitemap_filenames)
-    index_filename = "sitemap_#{@timestamp.strftime('%FT%H')}.xml"
-    index_full_path = File.join(@output_path, index_filename)
-    File.open(index_full_path, "w") do |sitemap_index_file|
-      builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
-        xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
-          sitemap_filenames.each do |sitemap_filename|
-            xml.sitemap {
-              xml.loc "#{base_url}/#{SUB_DIRECTORY}/#{sitemap_filename}"
-              xml.lastmod @timestamp.strftime("%FT%T%:z")
-            }
-          end
-        end
-      end
-      sitemap_index_file.write(builder.to_xml)
-    end
-    index_filename
-  end
-
   def cleanup
     sitemap_cleanup = SitemapCleanup.new(@output_path)
     sitemap_cleanup.delete_excess_sitemaps
   end
 
-private
+  def create_output_directory
+    return if File.directory?(@output_path)
 
-  def base_url
-    Plek.current.website_root
+    FileUtils.mkdir_p(@output_path)
   end
 end

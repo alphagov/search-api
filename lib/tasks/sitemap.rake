@@ -1,6 +1,7 @@
 require "aws-sdk-s3"
 require "sitemap/sitemap"
 require "tmpdir"
+require "s3_client"
 
 namespace :sitemap do
   desc "Generate new sitemap files and if all is ok switch symlink"
@@ -9,9 +10,22 @@ namespace :sitemap do
     # Generate site maps and then an index site map to point to them
 
     output_directory = File.join(PROJECT_ROOT, "public")
-    sitemap = Sitemap.new(output_directory)
-    sitemap.generate_and_replace(SearchConfig.default_instance)
 
+    search_client = Services.elasticsearch(
+      cluster: Clusters.default_cluster,
+      timeout: 10,
+    )
+
+    generator = SitemapGenerator.new(
+      SearchConfig.default_instance,
+      search_client,
+      SitemapWriter.new(output_directory, Time.now.utc),
+      S3Client.new(@bucket_name),
+    )
+
+    sitemap = Sitemap.new(generator, output_directory)
+
+    sitemap.generate_and_replace
     sitemap.cleanup
   end
 
@@ -20,25 +34,20 @@ namespace :sitemap do
     @bucket_name = ENV["AWS_S3_BUCKET_NAME"]
     raise "Missing required AWS_S3_BUCKET_NAME" if @bucket_name.nil?
 
+    search_client = Services.elasticsearch(
+      cluster: Clusters.default_cluster,
+      timeout: 10,
+    )
+
     Dir.mktmpdir do |output_directory|
-      filenames = Sitemap.new(output_directory).generate(SearchConfig.default_instance)
-
-      filenames[:sitemaps].each do |filename, link_filename|
-        upload_to_s3(
-          "#{output_directory}/#{Sitemap::SUB_DIRECTORY}/#{filename}",
-          "#{Sitemap::SUB_DIRECTORY}/#{link_filename}",
-        )
-      end
-
-      upload_to_s3(
-        "#{output_directory}/#{Sitemap::SUB_DIRECTORY}/#{filenames[:index]}",
-        "sitemap.xml",
+      generator = SitemapGenerator.new(
+        SearchConfig.default_instance,
+        search_client,
+        SitemapWriter.new(output_directory, Time.now.utc),
+        S3Client.new(@bucket_name),
       )
-    end
-  end
 
-  def upload_to_s3(source, target)
-    o = Aws::S3::Object.new(bucket_name: @bucket_name, key: target)
-    raise "Failed to upload sitemap file '#{source}' as '#{target}'" unless o.upload_file(source)
+      Sitemap.new(generator, output_directory).generate
+    end
   end
 end

@@ -5,11 +5,21 @@ RSpec.describe SitemapGenerator do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
   end
 
+  let(:sitemap_generator) {
+    search_client = double("client")
+    sitemap_writer = double("writer")
+    sitemap_uploader = double("uploader")
+
+    described_class.new(
+      SearchConfig.default_instance,
+      search_client,
+      sitemap_writer,
+      sitemap_uploader,
+    )
+  }
 
   it "generates sitemap" do
-    sitemap = described_class.new(SearchConfig.default_instance)
-
-    sitemap_xml = sitemap.generate_xml([
+    sitemap_xml = sitemap_generator.generate_xml([
       build_document("https://www.gov.uk/page"),
       build_document("/another-page"),
       build_document("yet-another-page"),
@@ -23,9 +33,7 @@ RSpec.describe SitemapGenerator do
   end
 
   it "links should include timestamps" do
-    sitemap = described_class.new(SearchConfig.default_instance)
-
-    sitemap_xml = sitemap.generate_xml([
+    sitemap_xml = sitemap_generator.generate_xml([
       build_document("/some-page", timestamp: "2014-01-28T14:41:50+00:00"),
     ])
 
@@ -35,9 +43,7 @@ RSpec.describe SitemapGenerator do
   end
 
   it "missing timestamps are ignored" do
-    sitemap = described_class.new(SearchConfig.default_instance)
-
-    sitemap_xml = sitemap.generate_xml([
+    sitemap_xml = sitemap_generator.generate_xml([
       build_document("/page-without-date"),
     ])
 
@@ -47,12 +53,10 @@ RSpec.describe SitemapGenerator do
   end
 
   it "page priority is document priority" do
-    sitemap = described_class.new(SearchConfig.default_instance)
-
     document = build_document("/some-path")
     allow(document).to receive(:priority).and_return(0.48)
 
-    sitemap_xml = sitemap.generate_xml([document])
+    sitemap_xml = sitemap_generator.generate_xml([document])
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
 

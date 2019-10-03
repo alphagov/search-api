@@ -1,6 +1,18 @@
 require "spec_helper"
 
 RSpec.describe "SitemapGeneratorTest" do
+  let(:sitemap_writer) {
+    double("sitemap_writer", write_sitemap: [], write_index: [], output_path: "")
+  }
+
+  let(:sitemap_uploader) {
+    double("sitemap_uploader", upload: true)
+  }
+
+  let(:generator) {
+    SitemapGenerator.new(search_config, client, sitemap_writer, sitemap_uploader)
+  }
+
   it "generates multiple sitemaps" do
     stub_const("SitemapGenerator::SITEMAP_LIMIT", 2)
     add_sample_documents(
@@ -31,15 +43,13 @@ RSpec.describe "SitemapGeneratorTest" do
       index_name: "govuk_test",
     )
 
-    generator = SitemapGenerator.new(SearchConfig.default_instance)
-    sitemap_xml = sitemaps(generator)
+    expect(sitemap_writer).to receive(:write_sitemap).exactly(:twice) # sample_document.count + homepage / sitemap_limit rounded up
 
-    expected_sitemap_count = 2 # sample_document.count + homepage / sitemap_limit rounded up
-    expect(expected_sitemap_count).to eq(sitemap_xml.length)
+    documents = generator.batches_of_documents
+    generator.create_sitemap_files(documents)
   end
 
-  it "does not include migrated formats from gocvernment" do
-    stub_const("SitemapGenerator::SITEMAP_LIMIT", 2)
+  it "does not include migrated formats from government" do
     add_sample_documents(
       [
         {
@@ -50,30 +60,76 @@ RSpec.describe "SitemapGeneratorTest" do
           "indexable_content" => "I like my badger: he is tasty and delicious",
           "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "not-migrated-format",
+          "link" => "/another-example-answer",
+          "indexable_content" => "I like my cat: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
+        },
       ],
       index_name: "government_test",
     )
-    generator = SitemapGenerator.new(SearchConfig.default_instance)
-    sitemap_xml = sitemaps(generator)
-    expect(sitemap_xml.length).to eq(1)
 
-    expect(sitemap_xml[0]).not_to include("/an-example-answer")
+    expected_xml = <<~HEREDOC
+      <?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+          <loc>http://www.dev.gov.uk/</loc>
+          <priority>0.5</priority>
+        </url>
+        <url>
+          <loc>http://www.dev.gov.uk/another-example-answer</loc>
+          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
+          <priority>0.5</priority>
+        </url>
+      </urlset>
+    HEREDOC
+
+    expect(sitemap_writer).to receive(:write_sitemap).with(expected_xml, 1)
+
+    documents = generator.batches_of_documents
+    generator.create_sitemap_files(documents)
   end
 
   it "includes homepage" do
-    generator = SitemapGenerator.new(SearchConfig.default_instance)
-    sitemap_xml = sitemaps(generator)
+    add_sample_documents(
+      [
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "cool-format",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
+        },
+      ],
+      index_name: "government_test",
+    )
 
-    pages = Nokogiri::XML(sitemap_xml[0])
-      .css("url")
-      .select { |item| item.css("loc").text == "http://www.dev.gov.uk/" }
+    expected_xml = <<~HEREDOC
+      <?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+          <loc>http://www.dev.gov.uk/</loc>
+          <priority>0.5</priority>
+        </url>
+        <url>
+          <loc>http://www.dev.gov.uk/an-example-answer</loc>
+          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
+          <priority>0.5</priority>
+        </url>
+      </urlset>
+    HEREDOC
 
-    expect(pages.count).to eq(1)
-    expect(pages[0].css("priority").text).to eq("0.5")
+    expect(sitemap_writer).to receive(:write_sitemap).with(expected_xml, 1)
+
+    documents = generator.batches_of_documents
+    generator.create_sitemap_files(documents)
   end
 
   it "does not include recommended links" do
-    generator = SitemapGenerator.new(SearchConfig.default_instance)
     add_sample_documents(
       [
         {
@@ -83,67 +139,37 @@ RSpec.describe "SitemapGeneratorTest" do
           "link" => "http://www.example.com/external-example-answer",
           "indexable_content" => "Tax, benefits, roads and stuff",
         },
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "unfiltered-format",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
+        },
       ],
       index_name: "government_test",
     )
 
-    sitemap_xml = sitemaps(generator)
+    expected_xml = <<~HEREDOC
+      <?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+          <loc>http://www.dev.gov.uk/</loc>
+          <priority>0.5</priority>
+        </url>
+        <url>
+          <loc>http://www.dev.gov.uk/an-example-answer</loc>
+          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
+          <priority>0.5</priority>
+        </url>
+      </urlset>
+    HEREDOC
 
-    expect(sitemap_xml.length).to eq(1)
+    expect(sitemap_writer).to receive(:write_sitemap).with(expected_xml, 1)
 
-    expect(sitemap_xml[0]).not_to include("/external-example-answer")
-  end
-
-  it "links should include timestamps" do
-    generator = SitemapGenerator.new(SearchConfig.default_instance)
-    add_sample_documents(
-      [
-        {
-          "title" => "Cheese in my face",
-          "description" => "Hummus weevils",
-          "format" => "answer",
-          "link" => "/an-example-answer",
-          "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00",
-        },
-      ],
-      index_name: "govuk_test",
-    )
-
-    sitemap_xml = sitemaps(generator)
-
-    pages = Nokogiri::XML(sitemap_xml[0])
-      .css("url")
-      .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
-
-    expect(pages.count).to eq(1)
-    expect(pages[0].css("lastmod").text).to eq("2017-07-01T12:41:34+00:00")
-  end
-
-  it "links should include priorities" do
-    generator = SitemapGenerator.new(SearchConfig.default_instance)
-    add_sample_documents(
-      [
-        {
-          "title" => "Cheese in my face",
-          "description" => "Hummus weevils",
-          "format" => "answer",
-          "link" => "/an-example-answer",
-          "indexable_content" => "I like my badger: he is tasty and delicious",
-          "public_timestamp" => "2017-07-01T12:41:34+00:00",
-        },
-      ],
-      index_name: "govuk_test",
-    )
-
-    sitemap_xml = sitemaps(generator)
-
-    pages = Nokogiri::XML(sitemap_xml[0])
-      .css("url")
-      .select { |item| item.css("loc").text == "http://www.dev.gov.uk/an-example-answer" }
-
-    expect(pages.count).to eq(1)
-    expect(0..10).to include(pages[0].css("priority").text.to_i)
+    documents = generator.batches_of_documents
+    generator.create_sitemap_files(documents)
   end
 
 private
@@ -153,9 +179,5 @@ private
       insert_document(index_name, sample_document)
     end
     commit_index index_name
-  end
-
-  def sitemaps(generator)
-    generator.sitemap_chunks.map { |chunk| generator.generate_xml(chunk) }
   end
 end
