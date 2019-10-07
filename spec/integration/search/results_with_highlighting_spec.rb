@@ -37,6 +37,32 @@ RSpec.describe "ResultsWithHighlightingTest" do
     )
   end
 
+  it "highlights mixed quoted/unquoted queries" do
+    commit_document("government_test",
+                    "link" => "/some-nice-link",
+                    "description" => "This is a test search result of many results.")
+
+    get "/search?q=\"search+result\"+test&fields[]=description_with_highlighting"
+
+    expect(first_search_result).not_to be_key("description")
+    expect("This is a <mark>test</mark> <mark>search</mark> <mark>result</mark> of many results.").to eq(
+      first_search_result["description_with_highlighting"],
+    )
+  end
+
+  it "highlights quoted queries in their entirety (other than stopwords)" do
+    commit_document("government_test",
+                    "link" => "/some-nice-link",
+                    "description" => "The ministry of magic is a magic ministry.")
+
+    get "/search?q=\"ministry of magic\"&fields[]=description_with_highlighting"
+
+    expect(first_search_result).not_to be_key("description")
+    expect("The <mark>ministry</mark> of <mark>magic</mark> is a magic ministry.").to eq(
+      first_search_result["description_with_highlighting"],
+    )
+  end
+
   it "returns documents html escaped" do
     commit_document("government_test",
                     "title" => "Escape & highlight my title",
