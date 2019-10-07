@@ -8,23 +8,14 @@ module QueryComponents
         post_tags: ["</mark>"],
         encoder: "html",
         fields: {
-          title: {
+          synonym_field("title") => {
             number_of_fragments: 0,
-            highlight_query: highlight_query(:title),
+            highlight_query: highlight_query("title"),
           },
-          "title.synonym".to_sym => {
-            number_of_fragments: 0,
-            highlight_query: highlight_query("title.synonym".to_sym),
-          },
-          description: {
+          synonym_field("description") => {
             number_of_fragments: 1,
             fragment_size: 285,
-            highlight_query: highlight_query(:description),
-          },
-          "description.synonym".to_sym => {
-            number_of_fragments: 1,
-            fragment_size: 285,
-            highlight_query: highlight_query("description.synonym".to_sym),
+            highlight_query: highlight_query("description"),
           },
         },
       }
@@ -38,8 +29,8 @@ module QueryComponents
     end
 
     def highlight_query(field)
-      components = quoted.map { |q| { match_phrase: { field => { query: q } } } }
-      components << { match: { field => { query: unquoted } } }
+      components = quoted.map { |q| { match_phrase: { synonym_field(field) => { query: q } } } }
+      components << { match: { synonym_field(field) => { query: unquoted } } }
 
       { bool: { should: components } }
     end
