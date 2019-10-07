@@ -584,6 +584,16 @@
     "type": "float"
   },
 
+  "vc_14": {
+    "description": "Field used in the page-traffic index to hold the absolute view count of this document over a 14 day period. This is a fluctuating value used in ranking calculations.",
+    "type": "integer"
+  },
+
+  "view_count": {
+    "description": "Number of views a document has had. Equivalent to vc_14 in page-traffic index. Used for popularity boosting.",
+    "type": "integer"
+  },
+
   "spelling_text": {
     "description": "Generated field, populated with the same content as sent to the _all field, but tokenised into words, lowercased and shingled, not stemmed, etc",
     "type": "spelling_text"

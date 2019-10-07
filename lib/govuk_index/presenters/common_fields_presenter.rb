@@ -68,6 +68,10 @@ module GovukIndex
       popularity_values[:popularity_rank]
     end
 
+    def view_count
+      popularity_values[:view_count]
+    end
+
     def format
       document_type = payload["document_type"]
       CUSTOM_FORMAT_MAP[document_type] || document_type
