@@ -63,6 +63,32 @@ RSpec.describe "ResultsWithHighlightingTest" do
     )
   end
 
+  it "highlights synonyms" do
+    commit_document("government_test",
+                    "link" => "/some-nice-link",
+                    "description" => "This is one (1) page.")
+
+    get "/search?q=one&fields[]=description_with_highlighting"
+
+    expect(first_search_result).not_to be_key("description")
+    expect("This is <mark>one</mark> (<mark>1</mark>) page.").to eq(
+      first_search_result["description_with_highlighting"],
+    )
+  end
+
+  it "doesn't highlight synonyms if they're disabled" do
+    commit_document("government_test",
+                    "link" => "/some-nice-link",
+                    "description" => "This is one (1) page.")
+
+    get "/search?q=one&fields[]=description_with_highlighting&debug=disable_synonyms"
+
+    expect(first_search_result).not_to be_key("description")
+    expect("This is <mark>one</mark> (1) page.").to eq(
+      first_search_result["description_with_highlighting"],
+    )
+  end
+
   it "returns documents html escaped" do
     commit_document("government_test",
                     "title" => "Escape & highlight my title",
