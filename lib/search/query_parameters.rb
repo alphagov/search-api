@@ -41,6 +41,10 @@ module Search
       ab_tests[:popularity] == "B"
     end
 
+    def use_view_count_popularity_boost?
+      ab_tests[:popularity] == "C"
+    end
+
     def disable_synonyms?
       debug[:disable_synonyms]
     end

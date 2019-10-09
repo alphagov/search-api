@@ -56,8 +56,8 @@ RSpec.describe SearchIndices::Index do
     stub_popularity_index_requests(["/foo/bar", "/foo/baz"], 1.0, 20)
 
     json_documents = [
-      { "document_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "0.09090909090909091" },
-      { "document_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091" },
+      { "document_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "0.09090909090909091", "view_count" => "1" },
+      { "document_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091", "view_count" => "2" },
     ]
 
     documents = json_documents.map do |json_document|
@@ -272,7 +272,7 @@ private
           "path_components" => paths,
         },
       },
-      "_source" => { "includes" => %w[rank_14] },
+      "_source" => { "includes" => %w[rank_14 vc_14] },
       "sort" => [
         { "rank_14" => { "order" => "asc" } },
       ],
@@ -285,6 +285,7 @@ private
             "_id" => path,
             "_source" => {
               "rank_14" => popularity,
+              "vc_14" => popularity,
             },
           }
         },

@@ -2,6 +2,7 @@
   "use_base_type": false,
   "fields": [
     "path_components",
-    "rank_14"
+    "rank_14",
+    "vc_14"
   ]
 }

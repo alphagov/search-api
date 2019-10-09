@@ -33,12 +33,14 @@ module Indexer
     def prepare_popularity_field(doc_hash, popularities)
       pop = 0.0
       pop_b = 0.0
+      view_count = 0
       link = doc_hash["link"]
       unless popularities.dig(link, :popularity_score).nil?
         pop = popularities.dig(link, :popularity_score)
         pop_b = popularities.dig(link, :popularity_rank)
+        view_count = popularities.dig(link, :view_count)
       end
-      doc_hash.merge("popularity" => pop, "popularity_b" => pop_b)
+      doc_hash.merge("popularity" => pop, "popularity_b" => pop_b, "view_count" => view_count)
     end
 
     def prepare_tags_field(doc_hash)

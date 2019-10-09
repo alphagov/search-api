@@ -129,6 +129,7 @@ module GovukIndex
         user_journey_document_supertype:     common_fields.user_journey_document_supertype,
         value_of_funding:                    specialist.value_of_funding,
         vessel_type:                         specialist.vessel_type,
+        view_count:                          common_fields.view_count,
         will_continue_on:                    specialist.will_continue_on,
         withdrawn_date:                      specialist.withdrawn_date,
         world_locations:                     expanded_links.world_locations,
