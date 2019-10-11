@@ -1,6 +1,7 @@
 module QueryComponents
   class Highlight < BaseComponent
     def payload
+      return unless search_params.parsed_query
       return unless highlighted_field_requested?
 
       {

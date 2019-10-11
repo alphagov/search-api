@@ -1,6 +1,17 @@
 require "spec_helper"
 
 RSpec.describe "ResultsWithHighlightingTest" do
+  it "doesn't break without keywords" do
+    commit_document("government_test",
+                    "title" => "I am the result",
+                    "link" => "/some-nice-link")
+
+    get "/search?fields[]=title_with_highlighting"
+
+    expect(first_search_result).not_to be_key("title")
+    expect(first_search_result["title_with_highlighting"]).to eq("I am the result")
+  end
+
   it "returns highlighted title" do
     commit_document("government_test",
                     "title" => "I am the result",
