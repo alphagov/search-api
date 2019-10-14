@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe SitemapWriter, "Index" do
+RSpec.describe Sitemap::Writer, "Index" do
   it "generates sitemap" do
     sitemap_file = StringIO.new
     sitemap_number = 5

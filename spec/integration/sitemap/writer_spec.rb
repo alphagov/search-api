@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "SitemapTest" do
+RSpec.describe Sitemap::Writer do
   before do
     @path = "/tmp/#{SecureRandom.uuid}"
     @timestamp = Time.now.utc
@@ -12,7 +12,7 @@ RSpec.describe "SitemapTest" do
   end
 
   let(:writer) {
-    SitemapWriter.new(@path, @timestamp)
+    described_class.new(@path, @timestamp)
   }
 
   it "creates a sitemap file" do

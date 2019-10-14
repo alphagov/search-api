@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "SitemapGeneratorTest" do
+RSpec.describe Sitemap::Generator do
   let(:sitemap_writer) {
     double("sitemap_writer", write_sitemap: [], write_index: [], output_path: "")
   }
@@ -10,11 +10,11 @@ RSpec.describe "SitemapGeneratorTest" do
   }
 
   let(:generator) {
-    SitemapGenerator.new(search_config, client, sitemap_writer, sitemap_uploader)
+    described_class.new(search_config, client, sitemap_writer, sitemap_uploader)
   }
 
   it "generates multiple sitemaps" do
-    stub_const("SitemapGenerator::SITEMAP_LIMIT", 2)
+    stub_const("Sitemap::Generator::SITEMAP_LIMIT", 2)
     add_sample_documents(
       [
         {
