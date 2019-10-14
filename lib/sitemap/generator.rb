@@ -1,49 +1,42 @@
 module Sitemap
   class Generator
-    def initialize(search_config, search_client, sitemap_writer, sitemap_uploader)
-      @search_config = search_config
-      @search_client = search_client
-      @sitemap_writer = sitemap_writer
-      @sitemap_uploader = sitemap_uploader
+    def initialize(search_config, search_client, uploader, timestamp)
+      @search_config    = search_config
+      @search_client    = search_client
+      @uploader         = uploader
+      @timestamp        = timestamp
     end
 
     def run
-      sitemap_files = create_sitemap_files(batches_of_documents)
-      sitemap_index_file = create_sitemap_index_file(sitemap_files)
-
-      { sitemaps: sitemap_files, index: sitemap_index_file }
+      create_sitemap_index(create_sitemaps(batches_of_documents))
     end
 
-    def create_sitemap_files(enumerator)
+    def create_sitemaps(enumerator)
       lazy_enum = enumerator.each_with_index.map do |documents, index|
         batch_number = index + 1
-        sitemap_file = create_sitemap_file(documents, batch_number)
-        upload_sitemap_file(sitemap_file)
-        sitemap_file
+        create_sitemap(documents, batch_number)
       end
       lazy_enum.force
     end
 
-    def create_sitemap_file(documents, batch_number)
-      xml_content = generate_xml(documents)
-      @sitemap_writer.write_sitemap(xml_content, batch_number)
+    def create_sitemap(documents, batch_number)
+      file_name = "sitemap_#{batch_number}.xml"
+      @uploader.upload(
+        file_content: generate_sitemap_xml(documents),
+        file_name:    file_name,
+      )
+      file_name
     end
 
-    def create_sitemap_index_file(sitemap_filenames)
-      sitemap_index_file = @sitemap_writer.write_index(sitemap_filenames.map(&:last))
-
-      source = "#{@sitemap_writer.output_path}/#{sitemap_index_file}"
-      target = "sitemap.xml"
-
-      @sitemap_uploader.upload(
-        source,
-        target,
+    def create_sitemap_index(sitemaps)
+      @uploader.upload(
+        file_content: generate_sitemap_index_xml(sitemaps),
+        file_name:    "sitemap.xml",
       )
-      sitemap_index_file
     end
 
     # Generate a sitemap which matches the format specified in https://www.sitemaps.org/protocol.html
-    def generate_xml(documents)
+    def generate_sitemap_xml(documents)
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           documents.each do |document|
@@ -55,7 +48,20 @@ module Sitemap
           end
         end
       end
+      builder.to_xml
+    end
 
+    def generate_sitemap_index_xml(sitemap_filenames)
+      builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
+        xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
+          sitemap_filenames.each do |sitemap_filename|
+            xml.sitemap {
+              xml.loc "#{base_url}/#{SUB_DIRECTORY}/#{sitemap_filename}"
+              xml.lastmod @timestamp.strftime("%FT%T%:z")
+            }
+          end
+        end
+      end
       builder.to_xml
     end
 
@@ -78,6 +84,7 @@ module Sitemap
 
     EXCLUDED_FORMATS = %w[recommended-link].freeze
     SITEMAP_LIMIT = 25_000
+    SUB_DIRECTORY = "sitemaps".freeze
 
     StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
 
@@ -104,17 +111,6 @@ module Sitemap
       @search_client.count(body: query, index: index_names)["count"]
     end
 
-    def all_documents_query
-      {
-        query: {
-          bool: {
-            must_not: { terms: { format: EXCLUDED_FORMATS } },
-          },
-        },
-        post_filter: Search::FormatMigrator.new(@search_config).call,
-      }
-    end
-
     def batch_documents_query(batch_index)
       {
         from: batch_index * SITEMAP_LIMIT,
@@ -132,14 +128,8 @@ module Sitemap
       PropertyBoostCalculator.new
     end
 
-    def upload_sitemap_file(sitemap_file)
-      filename      = "#{@sitemap_writer.output_path}/#{sitemap_file.first}"
-      link_filename = "#{Sitemap::Writer::SUB_DIRECTORY}/#{sitemap_file.last}"
-
-      @sitemap_uploader.upload(
-        filename,
-        link_filename,
-      )
+    def base_url
+      Plek.current.website_root
     end
   end
 end

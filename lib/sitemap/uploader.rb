@@ -4,9 +4,10 @@ module Sitemap
       @bucket_name = bucket_name
     end
 
-    def upload(source, target)
-      o = Aws::S3::Object.new(bucket_name: @bucket_name, key: target)
-      raise "Failed to upload sitemap file '#{source}' as '#{target}'" unless o.upload_file(source)
+    def upload(file_content:, file_name:)
+      puts "Uploading #{file_name} ..."
+      o = Aws::S3::Object.new(bucket_name: @bucket_name, key: file_name)
+      raise "Failed to create sitemap file '#{file_name}'" unless o.put(file_content)
     end
   end
 end

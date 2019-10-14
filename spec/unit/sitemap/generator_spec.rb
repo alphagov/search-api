@@ -3,23 +3,23 @@ require "spec_helper"
 RSpec.describe Sitemap::Generator do
   before do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
+    @timestamp = Time.now.utc
   end
 
   let(:sitemap_generator) {
-    search_client = double("client")
-    sitemap_writer = double("writer")
+    search_client    = double("client")
     sitemap_uploader = double("uploader")
 
     described_class.new(
       SearchConfig.default_instance,
       search_client,
-      sitemap_writer,
       sitemap_uploader,
+      @timestamp,
     )
   }
 
   it "generates sitemap" do
-    sitemap_xml = sitemap_generator.generate_xml([
+    sitemap_xml = sitemap_generator.generate_sitemap_xml([
       build_document("https://www.gov.uk/page"),
       build_document("/another-page"),
       build_document("yet-another-page"),
@@ -32,8 +32,28 @@ RSpec.describe Sitemap::Generator do
     expect(urls[2]).to eq("http://www.dev.gov.uk/yet-another-page")
   end
 
+  it "generates a sitemap index" do
+    sitemaps = ["sitemap_1.xml", "sitemap_2.xml"]
+
+    expected_xml = <<~HEREDOC
+      <?xml version="1.0" encoding="UTF-8"?>
+      <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <sitemap>
+          <loc>http://www.dev.gov.uk/sitemaps/sitemap_1.xml</loc>
+          <lastmod>#{@timestamp.strftime("%FT%T%:z")}</lastmod>
+        </sitemap>
+        <sitemap>
+          <loc>http://www.dev.gov.uk/sitemaps/sitemap_2.xml</loc>
+          <lastmod>#{@timestamp.strftime("%FT%T%:z")}</lastmod>
+        </sitemap>
+      </sitemapindex>
+    HEREDOC
+
+    expect(sitemap_generator.generate_sitemap_index_xml(sitemaps)).to eql(expected_xml)
+  end
+
   it "links should include timestamps" do
-    sitemap_xml = sitemap_generator.generate_xml([
+    sitemap_xml = sitemap_generator.generate_sitemap_xml([
       build_document("/some-page", timestamp: "2014-01-28T14:41:50+00:00"),
     ])
 
@@ -43,7 +63,7 @@ RSpec.describe Sitemap::Generator do
   end
 
   it "missing timestamps are ignored" do
-    sitemap_xml = sitemap_generator.generate_xml([
+    sitemap_xml = sitemap_generator.generate_sitemap_xml([
       build_document("/page-without-date"),
     ])
 
@@ -56,7 +76,7 @@ RSpec.describe Sitemap::Generator do
     document = build_document("/some-path")
     allow(document).to receive(:priority).and_return(0.48)
 
-    sitemap_xml = sitemap_generator.generate_xml([document])
+    sitemap_xml = sitemap_generator.generate_sitemap_xml([document])
 
     pages = Nokogiri::XML(sitemap_xml).css("url")
 

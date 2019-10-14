@@ -13,13 +13,11 @@ namespace :sitemap do
       timeout: 10,
     )
 
-    Dir.mktmpdir do |output_directory|
-      SitemapGenerator.new(
-        SearchConfig.default_instance,
-        search_client,
-        Sitemap::Writer.new(output_directory, Time.now.utc),
-        Sitemap::Uploader.new(@bucket_name),
-      ).run
-    end
+    Sitemap::Generator.new(
+      SearchConfig.default_instance,
+      search_client,
+      Sitemap::Uploader.new(@bucket_name),
+      Time.now.utc,
+    ).run
   end
 end

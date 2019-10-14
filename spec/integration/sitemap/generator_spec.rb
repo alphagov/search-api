@@ -1,19 +1,17 @@
 require "spec_helper"
 
 RSpec.describe Sitemap::Generator do
-  let(:sitemap_writer) {
-    double("sitemap_writer", write_sitemap: [], write_index: [], output_path: "")
-  }
+  before { @timestamp = Time.now.utc }
 
   let(:sitemap_uploader) {
     double("sitemap_uploader", upload: true)
   }
 
   let(:generator) {
-    described_class.new(search_config, client, sitemap_writer, sitemap_uploader)
+    described_class.new(search_config, client, sitemap_uploader, @timestamp)
   }
 
-  it "generates multiple sitemaps" do
+  it "generates and uploads multiple sitemaps" do
     stub_const("Sitemap::Generator::SITEMAP_LIMIT", 2)
     add_sample_documents(
       [
@@ -43,10 +41,10 @@ RSpec.describe Sitemap::Generator do
       index_name: "govuk_test",
     )
 
-    expect(sitemap_writer).to receive(:write_sitemap).exactly(:twice) # sample_document.count + homepage / sitemap_limit rounded up
+    expect(sitemap_uploader).to receive(:upload).exactly(:twice) # sample_document.count + homepage / sitemap_limit rounded up
 
     documents = generator.batches_of_documents
-    generator.create_sitemap_files(documents)
+    generator.create_sitemaps(documents)
   end
 
   it "does not include migrated formats from government" do
@@ -87,10 +85,10 @@ RSpec.describe Sitemap::Generator do
       </urlset>
     HEREDOC
 
-    expect(sitemap_writer).to receive(:write_sitemap).with(expected_xml, 1)
+    expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap_1.xml")
 
     documents = generator.batches_of_documents
-    generator.create_sitemap_files(documents)
+    generator.create_sitemaps(documents)
   end
 
   it "includes homepage" do
@@ -123,10 +121,10 @@ RSpec.describe Sitemap::Generator do
       </urlset>
     HEREDOC
 
-    expect(sitemap_writer).to receive(:write_sitemap).with(expected_xml, 1)
+    expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap_1.xml")
 
     documents = generator.batches_of_documents
-    generator.create_sitemap_files(documents)
+    generator.create_sitemaps(documents)
   end
 
   it "does not include recommended links" do
@@ -166,10 +164,62 @@ RSpec.describe Sitemap::Generator do
       </urlset>
     HEREDOC
 
-    expect(sitemap_writer).to receive(:write_sitemap).with(expected_xml, 1)
+    expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap_1.xml")
 
     documents = generator.batches_of_documents
-    generator.create_sitemap_files(documents)
+    generator.create_sitemaps(documents)
+  end
+
+  it "generates and uploads the sitemap index" do
+    stub_const("Sitemap::Generator::SITEMAP_LIMIT", 2)
+    add_sample_documents(
+      [
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
+        },
+        {
+          "title" => "Cheese on Ruby's face",
+          "description" => "Ruby weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer-rubylol",
+          "indexable_content" => "I like my ruby badger: he is tasty and delicious",
+        },
+        {
+          "title" => "Cheese on Python's face",
+          "description" => "Python weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer-pythonwin",
+          "indexable_content" => "I like my badger: he is pythonic and delicious",
+        },
+      ],
+      index_name: "govuk_test",
+    )
+
+    expected_xml = <<~HEREDOC
+      <?xml version="1.0" encoding="UTF-8"?>
+      <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <sitemap>
+          <loc>http://www.dev.gov.uk/sitemaps/sitemap_1.xml</loc>
+          <lastmod>#{@timestamp.strftime("%FT%T%:z")}</lastmod>
+        </sitemap>
+        <sitemap>
+          <loc>http://www.dev.gov.uk/sitemaps/sitemap_2.xml</loc>
+          <lastmod>#{@timestamp.strftime("%FT%T%:z")}</lastmod>
+        </sitemap>
+      </sitemapindex>
+    HEREDOC
+
+    documents = generator.batches_of_documents
+    sitemaps  = generator.create_sitemaps(documents)
+
+    expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap.xml").exactly(:once)
+
+    generator.create_sitemap_index(sitemaps)
   end
 
 private
