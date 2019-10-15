@@ -1,4 +1,6 @@
 require "csv"
+require "httparty"
+require "json"
 
 module Debug
   class RankEval
@@ -47,10 +49,7 @@ module Debug
         }
       end
 
-      result = @search_config.rank_eval(
-        requests: requests,
-        metric: { dcg: { k: 10 } },
-      )
+      result = rank_eval(requests)
 
       {
         score: result["metric_score"],
@@ -73,6 +72,29 @@ module Debug
     end
 
   private
+
+    def rank_eval(requests)
+      # https://www.elastic.co/guide/en/elasticsearch/reference/current/search-rank-eval.html
+      # AWS doesn't permit us to speak to all indexes with the rank eval api,
+      # and the elasticsearch client has a bug that prevents us calling individual
+      # indexes (https://github.com/elastic/elasticsearch-ruby/pull/698).
+      # This is a fix for that situation.
+      # @search_config.rank_eval(
+      #   requests: requests,
+      #   metric: { dcg: { k: 10 } },
+      # )
+
+      uri = @search_config.base_uri
+      options = {
+        body: { requests: requests, metric: { dcg: { k: 10 } } }.to_json,
+        headers: { "Content-Type" => "application/json" },
+      }
+      indices = "*"
+      url = "#{uri}/#{indices}/_rank_eval"
+      response = HTTParty.post(url, options)
+      puts "Elasticsearch: #{response.code}: #{response.message}"
+      JSON.parse(response.body).with_indifferent_access
+    end
 
     def ignore_extra_judgements(data)
       data.each_with_object({}) do |(query, non_unique_judgements), output|
