@@ -7,12 +7,10 @@ RSpec.describe Sitemap::Generator do
   end
 
   let(:sitemap_generator) {
-    search_client    = double("client")
     sitemap_uploader = double("uploader")
 
     described_class.new(
       SearchConfig.default_instance,
-      search_client,
       sitemap_uploader,
       @timestamp,
     )

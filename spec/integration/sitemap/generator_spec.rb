@@ -8,7 +8,7 @@ RSpec.describe Sitemap::Generator do
   }
 
   let(:generator) {
-    described_class.new(search_config, client, sitemap_uploader, @timestamp)
+    described_class.new(search_config, sitemap_uploader, @timestamp)
   }
 
   it "generates and uploads multiple sitemaps" do
