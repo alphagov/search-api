@@ -5,9 +5,9 @@ require "json"
 module Debug
   class RankEval
     def initialize(datafile, ab_tests)
-      @ab_tests = ab_tests
       @data = load_from_csv(datafile)
-      @search_config = SearchConfig.parse_parameters("ab_tests" => [ab_tests]).search_config
+      @search_params = ab_tests.nil? ? {} : { "ab_tests" => [ab_tests] }
+      @search_config = SearchConfig.parse_parameters(@search_params).search_config
     end
 
     def load_from_csv(datafile)
@@ -62,10 +62,7 @@ module Debug
     def queries
       @queries ||= @data.each_with_object({}) do |(query, judgements), queries|
         queries[query] = {
-          es_query: SearchConfig.generate_query(
-            "q" => [query],
-            "ab_tests" => [@ab_tests],
-          ),
+          es_query: SearchConfig.generate_query(@search_params.merge("q" => [query])),
           judgements: judgements,
         }
       end
