@@ -14,7 +14,6 @@ module Sitemap
     def create_sitemaps(enumerator)
       enumerator.with_index.map do |documents, index|
         batch_number = index + 1
-        documents.unshift(homepage) if batch_number == 1
         create_sitemap(documents, batch_number)
       end
     end
@@ -73,26 +72,28 @@ module Sitemap
       documents             = page["hits"]["hits"]
       total_documents_count = page["hits"]["total"]
       total_page_count      = total_documents_count.fdiv(SCROLL_BATCH_SIZE).ceil
+      chunk                 = [homepage]
 
-      Enumerator::Lazy.new(0...total_page_count) do |yielder|
-        if documents.count == SITEMAP_LIMIT
-          sitemaps = documents.map do |document|
-            SitemapPresenter.new(document["_source"], property_boost_calculator)
-          end
-          documents.clear
-        end
+      Enumerator::Lazy.new(0..total_page_count) do |yielder|
+        next if documents.empty? && chunk.empty?
 
-        more_documents = scroll(scroll_id)
+        documents.map do |document|
+          chunk << SitemapPresenter.new(document["_source"], property_boost_calculator)
 
-        if more_documents.any?
-          documents.push(*more_documents)
-        else
-          sitemaps = documents.map do |document|
-            SitemapPresenter.new(document["_source"], property_boost_calculator)
+          if chunk.size == SITEMAP_LIMIT
+            yielder << chunk
+            chunk = []
           end
         end
 
-        yielder << sitemaps if sitemaps
+        page      = scroll(scroll_id)
+        documents = page["hits"]["hits"]
+        scroll_id = page.fetch("_scroll_id")
+
+        if documents.empty?
+          yielder << chunk unless chunk.empty?
+          chunk = []
+        end
       end
     end
 
@@ -101,7 +102,7 @@ module Sitemap
     end
 
     def scroll(scroll_id)
-      @search_client.scroll(scroll_id: scroll_id, scroll: "1m")["hits"]["hits"]
+      @search_client.scroll(scroll_id: scroll_id, scroll: "1m")
     end
 
     def scroll_query
