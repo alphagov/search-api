@@ -36,6 +36,10 @@ class SitemapPresenter
     withdrawn_status_boost * property_boost_calculator.boost(document)
   end
 
+  def root?
+    document["link"] == base_url + "/"
+  end
+
 private
 
   attr_reader :document, :property_boost_calculator

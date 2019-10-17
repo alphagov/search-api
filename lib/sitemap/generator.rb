@@ -8,15 +8,15 @@ module Sitemap
     end
 
     def run
-      create_sitemap_index(create_sitemaps(batches_of_documents))
+      create_sitemap_index(create_sitemaps(get_all_documents))
     end
 
     def create_sitemaps(enumerator)
-      lazy_enum = enumerator.each_with_index.map do |documents, index|
+      enumerator.with_index.map do |documents, index|
         batch_number = index + 1
+        documents.unshift(homepage) if batch_number == 1
         create_sitemap(documents, batch_number)
       end
-      lazy_enum.force
     end
 
     def create_sitemap(documents, batch_number)
@@ -65,63 +65,81 @@ module Sitemap
       builder.to_xml
     end
 
-    def batches_of_documents
-      Enumerator::Lazy.new(0...batch_total_count) do |yielder, index|
-        yielder << [homepage] + get_documents_for_batch(index)
-      end
-    end
-
   private
 
-    def get_documents_for_batch(batch_index)
-      @search_client.search(
-        index: index_names,
-        body: batch_documents_query(batch_index),
-      )["hits"]["hits"].map do |hit|
-        SitemapPresenter.new(hit["_source"], property_boost_calculator)
+    def get_all_documents
+      page                  = initial_scroll
+      scroll_id             = page["_scroll_id"]
+      documents             = page["hits"]["hits"]
+      total_documents_count = page["hits"]["total"]
+      total_page_count      = total_documents_count.fdiv(SCROLL_BATCH_SIZE).ceil
+
+      Enumerator::Lazy.new(0...total_page_count) do |yielder|
+        if documents.count == SITEMAP_LIMIT
+          sitemaps = documents.map do |document|
+            SitemapPresenter.new(document["_source"], property_boost_calculator)
+          end
+          documents.clear
+        end
+
+        more_documents = scroll(scroll_id)
+
+        if more_documents.any?
+          documents.push(*more_documents)
+        else
+          sitemaps = documents.map do |document|
+            SitemapPresenter.new(document["_source"], property_boost_calculator)
+          end
+        end
+
+        yielder << sitemaps if sitemaps
       end
     end
 
-    EXCLUDED_FORMATS = %w[recommended-link].freeze
-    SITEMAP_LIMIT = 25_000
-    SUB_DIRECTORY = "sitemaps".freeze
-
-    StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
-
-    def index_names
-      SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
+    def initial_scroll
+      @search_client.search(scroll_query)
     end
 
-    def homepage
-      StaticDocumentPresenter.new(Plek.current.website_root + "/", nil, 0.5)
+    def scroll(scroll_id)
+      @search_client.scroll(scroll_id: scroll_id, scroll: "1m")["hits"]["hits"]
     end
 
-    def batch_total_count
-      @batch_total_count ||= document_count.fdiv(SITEMAP_LIMIT).ceil
-    end
-
-    def document_count
-      query = {
-        query: {
-          bool: {
-            must_not: { terms: { format: EXCLUDED_FORMATS } },
-          },
-        },
-      }
-      @search_client.count(body: query, index: index_names)["count"]
-    end
-
-    def batch_documents_query(batch_index)
+    def scroll_query
       {
-        from: batch_index * SITEMAP_LIMIT,
-        size: SITEMAP_LIMIT,
+        body: all_documents_query,
+        index: index_names,
+        scroll: "1m",
+        size: SCROLL_BATCH_SIZE,
+        search_type: "query_then_fetch",
+        version: true,
+      }
+    end
+
+    def all_documents_query
+      {
         query: {
           bool: {
             must_not: { terms: { format: EXCLUDED_FORMATS } },
           },
         },
         post_filter: Search::FormatMigrator.new(@search_config).call,
+        sort: %w[_doc],
       }
+    end
+
+    EXCLUDED_FORMATS = %w[recommended-link].freeze
+    SITEMAP_LIMIT = 25_000
+    SCROLL_BATCH_SIZE = 1000
+    SUB_DIRECTORY = "sitemaps".freeze
+
+    def index_names
+      SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
+    end
+
+    StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
+
+    def homepage
+      StaticDocumentPresenter.new(Plek.current.website_root + "/", nil, 0.5)
     end
 
     def property_boost_calculator

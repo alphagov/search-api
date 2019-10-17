@@ -1,7 +1,12 @@
 require "spec_helper"
+require "sitemap/uploader"
 
 RSpec.describe Sitemap::Generator do
-  before { @timestamp = Time.now.utc }
+  before do
+    @timestamp = Time.now.utc
+    stub_const("Sitemap::Generator::SCROLL_BATCH_SIZE", 1)
+    stub_const("Sitemap::Generator::SITEMAP_LIMIT", 2)
+  end
 
   let(:sitemap_uploader) {
     double("sitemap_uploader", upload: true)
@@ -12,7 +17,6 @@ RSpec.describe Sitemap::Generator do
   }
 
   it "generates and uploads multiple sitemaps" do
-    stub_const("Sitemap::Generator::SITEMAP_LIMIT", 2)
     add_sample_documents(
       [
         {
@@ -41,10 +45,9 @@ RSpec.describe Sitemap::Generator do
       index_name: "govuk_test",
     )
 
-    expect(sitemap_uploader).to receive(:upload).exactly(:twice) # sample_document.count + homepage / sitemap_limit rounded up
+    expect(sitemap_uploader).to receive(:upload).exactly(3).times # sample_document.count + homepage / sitemap_limit rounded up
 
-    documents = generator.batches_of_documents
-    generator.create_sitemaps(documents)
+    generator.run
   end
 
   it "does not include migrated formats from government" do
@@ -87,8 +90,7 @@ RSpec.describe Sitemap::Generator do
 
     expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap_1.xml")
 
-    documents = generator.batches_of_documents
-    generator.create_sitemaps(documents)
+    generator.run
   end
 
   it "includes homepage" do
@@ -123,8 +125,7 @@ RSpec.describe Sitemap::Generator do
 
     expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap_1.xml")
 
-    documents = generator.batches_of_documents
-    generator.create_sitemaps(documents)
+    generator.run
   end
 
   it "does not include recommended links" do
@@ -166,12 +167,10 @@ RSpec.describe Sitemap::Generator do
 
     expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap_1.xml")
 
-    documents = generator.batches_of_documents
-    generator.create_sitemaps(documents)
+    generator.run
   end
 
   it "generates and uploads the sitemap index" do
-    stub_const("Sitemap::Generator::SITEMAP_LIMIT", 2)
     add_sample_documents(
       [
         {
@@ -214,12 +213,9 @@ RSpec.describe Sitemap::Generator do
       </sitemapindex>
     HEREDOC
 
-    documents = generator.batches_of_documents
-    sitemaps  = generator.create_sitemaps(documents)
-
     expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap.xml").exactly(:once)
 
-    generator.create_sitemap_index(sitemaps)
+    generator.run
   end
 
 private
