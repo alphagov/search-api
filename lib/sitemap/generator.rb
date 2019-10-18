@@ -1,10 +1,11 @@
 module Sitemap
   class Generator
     def initialize(search_config, uploader, timestamp)
-      @search_config    = search_config
-      @search_client    = Services.elasticsearch(hosts: search_config.base_uri, timeout: 10)
-      @uploader         = uploader
-      @timestamp        = timestamp
+      @search_config = search_config
+      @search_client = Services.elasticsearch(hosts: search_config.base_uri, timeout: 10)
+      @uploader      = uploader
+      @timestamp     = timestamp
+      @logger        = Logging.logger[self]
     end
 
     def run
@@ -19,6 +20,7 @@ module Sitemap
     end
 
     def create_sitemap(documents, batch_number)
+      @logger.info "Creating sitemap #{batch_number} ..."
       file_name = "sitemap_#{batch_number}.xml"
       @uploader.upload(
         file_content: generate_sitemap_xml(documents),
@@ -28,6 +30,7 @@ module Sitemap
     end
 
     def create_sitemap_index(sitemaps)
+      @logger.info "Creating sitemap index ..."
       @uploader.upload(
         file_content: generate_sitemap_index_xml(sitemaps),
         file_name:    "sitemap.xml",
