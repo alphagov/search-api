@@ -1,5 +1,4 @@
 require "spec_helper"
-require "sitemap/sitemap"
 
 RSpec.describe SitemapPresenter do
   before do

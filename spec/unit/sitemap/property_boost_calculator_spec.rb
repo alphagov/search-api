@@ -1,5 +1,4 @@
 require "spec_helper"
-require "sitemap/sitemap"
 
 RSpec.describe PropertyBoostCalculator do
   it "boosts are between 0 and 1" do
