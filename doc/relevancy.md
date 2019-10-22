@@ -16,6 +16,7 @@ search.
    6. [Analyzers](#analyzers)
    7. [Excluded formats](#excluded-formats)
 3. [Possible problems with queries and relevance](#possible-problems-with-queries-and-relevance)
+4. [Finding underperforming queries](#finding-underperforming-queries)
 
 
 ## What is relevancy?
@@ -458,6 +459,28 @@ but something else still gets high traffic ([03c4bfa][], May 2015).
 If we had other signals of content quality we might be able to reduce our
 dependence on the page views.
 
+### Finding underperforming queries
+
+1. Go to the [datastudio report][]
+
+The report does not automatically update, so it will display only the data for the dates displayed.
+
+To get new data, rerun the BigQuery queries.
+
+2. Apply the following filters:
+
+* `click_count >= 100`
+* `median_position = ~4`
+
+Underperforming queries are ones with a significant click count and a highish median.
+
+![datastudio](images/datastudio-dash.png)
+
+3. Activate the Google Analytics [Page Chrome extension] on the GOV.UK search results page for an underperforming query
+
+You will see the clickthrough rate of each search result. Use this to inform your hypotheses.
+
+![clickthrough rates](images/ctr-stats.png)
 
 [03c4bfa]: https://github.com/alphagov/search-api/commit/03c4bfa0a1a816a57d38b71ac5cb22c3a107c275
 [0fe6e52]: https://github.com/alphagov/search-api/commit/0fe6e526c78e8b115371855a91d4b39ccb22098a
@@ -491,3 +514,5 @@ dependence on the page views.
 [synonyms-blog]: https://opensourceconnections.com/blog/2016/12/02/solr-elasticsearch-synonyms-better-patterns-keyphrases/
 [this curve]: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427e5qr62u0si
 [keepwords]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-keep-words-tokenfilter.html
+[datastudio report]: https://datastudio.google.com/u/0/reporting/1-QjJDH5YkBWhF9qb-WEOuGuGIgNJExds/page/Zaus
+[Page Chrome extension]: https://chrome.google.com/webstore/detail/page-analytics-by-google/fnbdnhhicmebfgdgglcdacdapkcihcoh?hl=en
