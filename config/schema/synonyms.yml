@@ -254,7 +254,7 @@
 - search: twov => twov, transit without visa
 - search: uj, ujm => uj, ujm, universal jobmatch
 - search: ukba, border agency, uk ba => ukba, border agency, ukvi, uk visas and immigration
-- search: utr, unique taxpayer reference => utr, unique taxpayer reference
+- search: unique taxpayer reference => utr, unique taxpayer reference
 
 # Acronyms with spaces or punctuation
 - search: c v => cv
