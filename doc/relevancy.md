@@ -470,9 +470,9 @@ To get new data, rerun the BigQuery queries.
 2. Apply the following filters:
 
 * `click_count >= 100`
-* `median_position = ~4`
+* `median_position >=4`
 
-Underperforming queries are ones with a significant click count and a highish median.
+Underperforming queries are ones with a significant click count and a highish median, i.e. around 4 and above.
 
 ![datastudio](images/datastudio-dash.png)
 
