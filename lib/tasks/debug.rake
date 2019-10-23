@@ -1,8 +1,10 @@
+require "aws-sdk-s3"
 require "rummager"
 require "pp"
 require "rainbow"
 require "debug/rank_eval"
 require "debug/synonyms"
+require "tempfile"
 
 ANSI_GREEN = "\e[32m".freeze
 ANSI_RESET = "\e[0m".freeze
@@ -56,14 +58,33 @@ namespace :debug do
 
   desc "Check how well the search query performs for a set of relevancy judgements"
   task :ranking_evaluation, [:datafile, :ab_tests] do |_, args|
-    evaluator = Debug::RankEval.new(args.datafile, args.ab_tests)
-    results = evaluator.evaluate
+    csv = args.datafile || relevancy_judgements_from_s3
+    begin
+      evaluator = Debug::RankEval.new(csv, args.ab_tests)
+      results = evaluator.evaluate
 
-    maxlen = results[:query_scores].map { |query, _| query.length }.max
-    results[:query_scores].each do |query, score|
-      puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
+      maxlen = results[:query_scores].map { |query, _| query.length }.max
+      results[:query_scores].each do |query, score|
+        puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
+      end
+      puts "---"
+      puts "overall score: #{results[:score]}"
+    ensure
+      if csv.is_a?(Tempfile)
+        file.close
+        file.unlink
+      end
     end
-    puts "---"
-    puts "overall score: #{results[:score]}"
+  end
+
+  def relevancy_judgements_from_s3
+    bucket_name = ENV["AWS_S3_RELEVANCY_BUCKET_NAME"]
+    raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME envvar" if bucket_name.nil?
+
+    filename = "judgements.csv"
+    csv = Tempfile.open(["judgements", ".csv"])
+    o = Aws::S3::Object.new(bucket_name: bucket_name, key: filename)
+    o.get(response_target: csv.path)
+    csv.path
   end
 end
