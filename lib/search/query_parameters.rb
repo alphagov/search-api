@@ -65,6 +65,10 @@ module Search
       query && suggest.include?("spelling")
     end
 
+    def use_shingles?
+      ab_tests[:shingles] == "B"
+    end
+
   private
 
     def determine_if_quoted_phrase

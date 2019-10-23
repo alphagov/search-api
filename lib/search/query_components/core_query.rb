@@ -99,7 +99,7 @@ module QueryComponents
         match_any_terms(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
         match_bigrams(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
         minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST),
-      ])
+      ].reject(&:empty?))
     end
 
     def minimum_should_match(field_name, query, boost = 1.0)
@@ -156,6 +156,8 @@ module QueryComponents
     end
 
     def match_bigrams(fields, query, boost = 1.0)
+      return {} unless search_params.use_shingles?
+
       fields = fields.map { |f| "#{f}.shingles" }
 
       {
