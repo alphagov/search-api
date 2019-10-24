@@ -7,7 +7,7 @@ module Analytics
     include Google::Apis::AnalyticsV3
     include Google::Auth
 
-    SCOPES = ["https://www.googleapis.com/auth/analytics.edit"].freeze
+    SCOPES = [AUTH_ANALYTICS_EDIT].freeze
 
     attr_reader :service
 
