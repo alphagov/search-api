@@ -66,9 +66,11 @@ namespace :debug do
       maxlen = results[:query_scores].map { |query, _| query.length }.max
       results[:query_scores].each do |query, score|
         puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
+        send_to_graphite(query, score)
       end
       puts "---"
       puts "overall score: #{results[:score]}"
+      send_to_graphite("overall_score", results[:score])
     ensure
       if csv.is_a?(Tempfile)
         file.close
@@ -86,5 +88,14 @@ namespace :debug do
     o = Aws::S3::Object.new(bucket_name: bucket_name, key: filename)
     o.get(response_target: csv.path)
     csv.path
+  end
+
+  def send_to_graphite(query, score)
+    return unless ENV["SEND_TO_GRAPHITE"]
+
+    Services.statsd_client.gauge(
+      "relevancy.query.#{query.downcase.gsub(" ", "_")}.rank_eval",
+      score,
+    )
   end
 end
