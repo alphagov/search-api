@@ -350,7 +350,7 @@ class Rummager < Sinatra::Application
   end
 
   get "/sitemaps/:sitemap" do |sitemap|
-    serve_from_s3("sitemaps/#{sitemap}")
+    serve_from_s3(sitemap)
   end
 
   def serve_from_s3(key)
