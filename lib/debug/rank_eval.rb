@@ -78,12 +78,12 @@ module Debug
       # This is a fix for that situation.
       # @search_config.rank_eval(
       #   requests: requests,
-      #   metric: { dcg: { k: 10 } },
+      #   metric: { dcg: { k: 10, normalize: true } },
       # )
 
       uri = @search_config.base_uri
       options = {
-        body: { requests: requests, metric: { dcg: { k: 10 } } }.to_json,
+        body: { requests: requests, metric: { dcg: { k: 10, normalize: true } } }.to_json,
         headers: { "Content-Type" => "application/json" },
       }
       indices = "*"
