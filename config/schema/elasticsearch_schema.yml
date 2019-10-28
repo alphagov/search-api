@@ -17,6 +17,18 @@ index:
           filter: [standard, asciifolding, lowercase, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
+        # Analyzer used at query time for old-style shingle matching.
+        shingled_query_analyzer:
+          type: custom
+          tokenizer: standard
+          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english, bigrams]
+
+        with_shingles:
+          type: custom
+          tokenizer: standard
+          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english, bigrams]
+          char_filter: [normalize_quotes, strip_quotes]
+
         # This analyzer does not filter out these stopwords:
         # a, an, and, are, as, at, be, but, by,
         # for, if, in, into, is, it,
@@ -94,6 +106,11 @@ index:
         stemmer_english:
           type: stemmer
           name: porter2
+        bigrams:
+          type: shingle
+          max_shingle_size: 2
+          min_shingle_size: 2
+          output_unigrams: false
     # The following settings were in puppet, but now index config
     # can't be applied from the nodes, so they have to live here.
     # This means that we can no longer (easily) have ci-agents or the
