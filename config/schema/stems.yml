@@ -7,6 +7,8 @@ rules: [
   "animation => animat",  # not animal
   "animator => animat",  # not animal
   "appointeeship => appointe",  # match appointee
+  "appropriation => appropriation", # not appropriate
+  "appropriating => appropriation", # not appropriate
   "collection => collection",  # DfE COLLECT not collection
   "collections => collection",  # DfE COLLECT not collection
   "community => community",
