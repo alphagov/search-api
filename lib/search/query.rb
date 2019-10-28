@@ -1,3 +1,5 @@
+require "learn_to_rank/reranker"
+
 # Performs a search across all indices used for the GOV.UK site search
 module Search
   class Query
@@ -28,7 +30,8 @@ module Search
       payload = builder_payload[:payload]
 
       es_response = process_elasticsearch_errors { timed_raw_search(payload) }
-      process_es_response(search_params, builder, payload, es_response)
+      reranked_response = rerank(es_response, search_params)
+      process_es_response(search_params, builder, payload, reranked_response)
     end
 
   private
@@ -75,6 +78,15 @@ module Search
       else
         raise
       end
+    end
+
+    def rerank(es_response, search_params)
+      return es_response unless search_params.rerank
+
+      es_response["hits"]["hits"] = LearnToRank::Reranker.new.rerank(
+        es_results: es_response.dig("hits", "hits").to_a
+      )
+      es_response
     end
 
     def process_es_response(search_params, builder, payload, es_response)

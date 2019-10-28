@@ -23,7 +23,7 @@ module Search
         sort: sort,
         aggs: aggregates,
         highlight: highlight,
-        explain: search_params.debug[:explain],
+        explain: true,
       )
     end
 
@@ -32,11 +32,12 @@ module Search
     # The same applies to all `*_content_ids` in order to be able to expand
     # their corresponding fields without having to request both fields
     # explicitly.
+    # popularity is required as a feature for LearnToRank.
     def fields
       search_params.return_fields +
         %w[document_type
            title description organisation_content_ids topic_content_ids
-           mainstream_browse_page_content_ids]
+           mainstream_browse_page_content_ids popularity]
     end
 
     def query

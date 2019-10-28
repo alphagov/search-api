@@ -69,6 +69,11 @@ module Search
       ab_tests[:shingles] == "B"
     end
 
+    def rerank
+      # TODO permit only in development
+      query && ab_tests[:relevance] == "B"
+    end
+
   private
 
     def determine_if_quoted_phrase
