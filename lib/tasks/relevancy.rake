@@ -1,7 +1,11 @@
+require "csv"
 require "rummager"
 require "analytics/overall_ctr"
 require "analytics/popular_queries"
 require "analytics/query_performance"
+require "analytics/total_query_ctr"
+require "learn_to_rank/ctr_to_judgements"
+require "learn_to_rank/ndcg"
 
 namespace :relevancy do
   desc "Show overall click-through-rate for top 3 results and top 10 results"
@@ -17,6 +21,42 @@ namespace :relevancy do
   desc "Print the top 1_000 most popular search queries and their view counts"
   task :show_top_queries do
     report_popular_queries
+  end
+
+  desc "Print the top 100 most popular search queries and their top 10 ctrs"
+  task :export_click_relevancy_judgements do
+    ctrs = Analytics::TotalQueryCtr.new(
+      queries: popular_queries.map { |q| q[0] }
+    ).call
+    judgements = LearnToRank::CtrToJudgements.new(ctrs).relevancy_judgements
+    puts "Writing to tmp/click_judgements.csv"
+    CSV.open("tmp/click_judgements.csv", "wb") do |csv|
+      csv << judgements.first.keys
+      judgements.each do |row|
+        csv << row.values
+      end
+    end
+  end
+
+  desc "Compute nDCG for a set of relevancy judgements (search performance metric)"
+  task :ndcg, [:datafile, :ab_tests] do |_, args|
+    csv = args.datafile || relevancy_judgements_from_s3
+    begin
+      evaluator = LearnToRank::Ndcg.new(csv, args.ab_tests)
+      results = evaluator.compute_ndcg
+
+      maxlen = results.keys.map { |query, _| query.length }.max
+      results.map do |(query, score)|
+        puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
+      end
+      puts "---"
+      puts "overall score: #{results["average_ndcg"]}"
+    ensure
+      if csv.is_a?(Tempfile)
+        file.close
+        file.unlink
+      end
+    end
   end
 
   desc "Send Google Analytics relevancy data to Graphite

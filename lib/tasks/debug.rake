@@ -4,6 +4,8 @@ require "pp"
 require "rainbow"
 require "debug/rank_eval"
 require "debug/synonyms"
+require "learn_to_rank/embed_features"
+require "learn_to_rank/judgements_to_svm"
 require "tempfile"
 
 ANSI_GREEN = "\e[32m".freeze
@@ -77,6 +79,14 @@ namespace :debug do
         file.unlink
       end
     end
+  end
+
+  desc "Turns relevancy judgements CSV into an SVM dataset"
+  task :build_svm_dataset, [:datafile] do |_, args|
+    csv = args.datafile || relevancy_judgements_from_s3
+    judgements = LearnToRank::EmbedFeatures.new(csv).augmented_judgements
+    svm = LearnToRank::JudgementsToSvm.new(judgements).svm_format
+    puts svm.shuffle
   end
 
   def relevancy_judgements_from_s3

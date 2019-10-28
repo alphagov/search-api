@@ -87,9 +87,14 @@ module Search
       # debugging is requested, so it's nicer to be explicit about what score
       # it is.
       result[:es_score] = raw_result["_score"]
+      # LearnToRank generated values
+      result[:model_score] = raw_result["model_score"]
+      result[:original_rank] = raw_result["original_rank"]
+      result[:combined_score] = raw_result["combined_score"]
+
       result[:_id] = raw_result["_id"]
 
-      if raw_result["_explanation"]
+      if raw_result["_explanation"] && search_params.debug[:explain]
         result[:_explanation] = raw_result["_explanation"]
       end
 

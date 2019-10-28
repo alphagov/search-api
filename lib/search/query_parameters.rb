@@ -69,6 +69,10 @@ module Search
       ab_tests[:shingles] == "B"
     end
 
+    def rerank
+      query && ab_tests[:relevance] == "B"
+    end
+
   private
 
     def determine_if_quoted_phrase
