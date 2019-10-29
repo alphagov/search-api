@@ -16,8 +16,12 @@ rules: [
   "complaints => complain",
   "corporate => corporate",  # not corporation
   "corporation => corporation",  # not corporal
+  "customs => customs", # not custom
+  "customer => customer", # not custom
   "directive => directive",
   "directives => directive",
+  "elective => elective", # not election
+  "electives => elective", # not election
   "equalities => equality",
   "equality => equality",
   "fertiliser => fertiliser",  # not fertilisation
@@ -35,6 +39,7 @@ rules: [
   "nationality => nationality",  # not national
   "nationalities => nationality",
   "naturalization => naturalis",  # not natural, nature
+  "officer => officer", # not office
   "parking => parking",  # not park
   "paye => paye",  # not pay
   "permitted => permitted",
