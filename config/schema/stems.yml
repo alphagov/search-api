@@ -43,6 +43,7 @@ rules: [
   "parking => parking",  # not park
   "paye => paye",  # not pay
   "permitted => permitted",
+  "postal => post",
   "practical => practical",
   "practice => practice",
   "probate => probate",  # not probation
