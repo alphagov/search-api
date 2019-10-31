@@ -9,8 +9,8 @@ module GovukIndex
     }.freeze
     BREXIT_PAGE = {
       "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
-      "title" => "Get ready for Brexit",
-      "description" => "A Brexit deal has been agreed in principle with the EU, find out what this means for you.",
+      "title" => "Brexit",
+      "description" => "Brexit information and guidance on how to prepare for a no deal Brexit.",
     }.freeze
     extend MethodBuilder
 
