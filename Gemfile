@@ -13,7 +13,7 @@ gem "govuk_sidekiq", "~> 3.0.3"
 gem "irb", "~> 1.0", require: false
 gem "logging", "~> 2.2.2"
 gem "loofah"
-gem "nokogiri", "~> 1.10.4"
+gem "nokogiri", "~> 1.10.5"
 gem "oauth2"
 gem "oj"
 gem "plek", "~> 3.0"
