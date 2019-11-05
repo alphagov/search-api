@@ -19,7 +19,12 @@ module Analytics
     end
 
     def call
-      build_requests.map { |req| get_ctrs_for_batch(req) }.flatten(1)
+      build_requests.map { |req|
+        # This is a batch job that runs a few times per day, so it
+        # is OK for it run slowly.
+        sleep 3
+        get_ctrs_for_batch(req)
+      }.flatten(1)
     end
 
   private
@@ -31,10 +36,12 @@ module Analytics
         retries ||= 0
         response = authenticated_service.batch_get_reports(reports_request)
         parse_ga_response(response).flatten(1)
-      rescue Google::Apis::TransmissionError => e
-        puts "Error fetching CTRS. Will retry in 5 seconds... #{e}"
-        sleep 5
+      rescue Google::Apis::TransmissionError, Google::Apis::RateLimitError => e
+        retry_wait_time = 5 * retries
+        puts "Error fetching CTRS. Will retry in #{retry_wait_time} seconds... #{e}"
+        sleep retry_wait_time
         retry if (retries += 1) < 3
+        puts "retried #{retries} times to fetch reports, will abandon it"
         []
       end
     end
