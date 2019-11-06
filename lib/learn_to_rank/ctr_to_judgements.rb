@@ -29,15 +29,38 @@ module LearnToRank
     attr_reader :ctrs
 
     def ctr_to_relevancy_score(query_ctrs)
+      benchmark = 0.0
+      normalised_scores = Array.new
+
+      # Calculate normalised scores and upper limit for benchmark
+      query_ctrs.each_with_object({}) do |(position, ctr)|
+        pos = Float(position)
+        ctr = Float(ctr)
+
+        # Generate a normalised score based on CTR
+        k = (2 * (Math.log(pos + 1) + 1) * ctr ** 0.5) / 5
+        normalised_scores.insert(position.to_i, k)
+        if k > benchmark
+          # Sets a new "high point" for searches and places it at top
+          benchmark = k
+          next
+        end
+      end
+
       query_ctrs.each_with_object({}) do |(position, ctr), h|
         pos = Float(position)
         ctr = Float(ctr)
-        k = (2 * (Math.log(pos + 1) + 1) * ctr ** 0.5) / 5
-        h[position] = if k < 0.1
+
+        # Calculates relevancy score based on percentage of relevance to the
+        # benchmark. Allows fine tuning of boundaries and takes into account
+        # weak searches. Risks flattening the results if CTR calculation results
+        # are close.
+        known_ctr = normalised_scores[position.to_i]
+        h[position.to_i] = if known_ctr < (benchmark / 100.0) * 0.5
           0
-        elsif k < 1
+        elsif known_ctr < (benchmark / 100.0) * 5
           1
-        elsif k < 2
+        elsif known_ctr < (benchmark / 100.0) * 80
           2
         else
           3
