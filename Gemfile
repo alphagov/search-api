@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "activesupport", "~> 6.0.0"
+gem "activesupport", "~> 6.0.1"
 gem "aws-sdk-s3", "~> 1.53"
 gem "elasticsearch", "~> 6"
 gem "gds-api-adapters", "~> 60.1"
