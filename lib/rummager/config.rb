@@ -11,7 +11,6 @@ disable :show_exceptions
 
 Raven.configure do |config|
   config.excluded_exceptions << "Sinatra::NotFound"
-  config.excluded_exceptions << "LegacySearch::InvalidQuery"
 
   # We manually send `Indexer::BulkIndexFailure` to Sentry with extra
   # parameters for debugging. Ignore it here so that we don't send them twice.

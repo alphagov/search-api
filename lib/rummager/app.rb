@@ -97,10 +97,6 @@ class Rummager < Sinatra::Application
     halt(503, "Redis queue timed out")
   end
 
-  error LegacySearch::InvalidQuery do
-    halt(422, env["sinatra.error"].message)
-  end
-
   error Indexer::BulkIndexFailure do
     halt(500, env["sinatra.error"].message)
   end
@@ -183,45 +179,6 @@ class Rummager < Sinatra::Application
       headers["Access-Control-Allow-Origin"] = "*"
       { results: results }.to_json
     end
-  end
-
-  # Perform an advanced search. Supports filters and pagination.
-  #
-  # Returns the first N results if no keywords or filters supplied
-  #
-  # Required parameters:
-  #   per_page              - eg "40"
-  #   page                  - eg "1"
-  #
-  # Optional parameters:
-  #   order[fieldname]      - eg order[public_timestamp]=desc
-  #   keywords              - eg "tax"
-  #
-  # Arbitrary "filter parameters", anything which is defined in the mappings
-  # for the index is allowed. Examples:
-  #   search_format_types[]        - eg "consultation"
-  #   policy_areas[]               - eg "climate-change"
-  #   organisations[]              - eg "cabinet-office"
-  #   relevant_to_local_government - eg "1"
-  #
-  # If the field type is defined as "date", this is possible:
-  #   fieldname[from]     - eg public_timestamp[from]="2013-04-30"
-  #   fieldname[to]      - eg public_timestamp[to]="2013-04-30"
-  #
-  get "/:index/advanced_search.?:request_format?" do
-    json_only
-
-    # Using request.params because it is just the params from the request
-    # rather than things added by Sinatra (eg splat, captures, index and format)
-    result_set = current_index.advanced_search(request.params)
-    results = result_set.results.map do |document|
-      # Wrap in hash to be compatible with the way Search works.
-      raw_result = { "_source" => document.to_hash }
-      search_params = Search::QueryParameters.new(return_fields: raw_result["_source"].keys)
-      Search::ResultPresenter.new(raw_result, {}, nil, search_params).present
-    end
-
-    { total: result_set.total, results: results }.to_json
   end
 
   # Insert (or overwrite) a document

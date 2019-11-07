@@ -78,9 +78,6 @@ module Search
     end
 
     def add_debug_values(result)
-      # Advanced search only passes through data, not the entire raw result.
-      return result unless raw_result["_index"]
-
       result[:index] = SearchIndices::Index.strip_alias_from_index_name(raw_result["_index"])
 
       # Put the elasticsearch score in es_score; this is used in templates when

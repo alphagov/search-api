@@ -170,10 +170,6 @@ module SearchIndices
       end
     end
 
-    def advanced_search(params)
-      LegacySearch::AdvancedSearch.new(@mappings, @elasticsearch_types, @client, @index_name).result_set(params)
-    end
-
     def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
       @client.search(index: @index_name, type: "generic-document", body: payload)
