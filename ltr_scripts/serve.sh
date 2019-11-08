@@ -9,6 +9,6 @@ set -x
 docker run -t --rm -p 8501:8501 \
     --network govuk-docker_default \
     --network-alias reranker \
-    -v "$(realpath "$EXPORT_PATH")/$LATEST:/models/ltr/1" \
+    -v "$EXPORT_PATH/$LATEST:/models/ltr/1" \
     -e MODEL_NAME=ltr \
     tensorflow/serving

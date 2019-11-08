@@ -48,8 +48,8 @@ namespace :learn_to_rank do
   task :serve_reranker_model, [:model_dir] do |_, args|
     assert_ltr!
 
-    model_dir = args.model_dir || "./tmp/libsvm"
-    sh "env EXPORT_PATH=#{model_dir} ./ltr_scripts/serve.sh"
+    model_dir = args.model_dir || "tmp/libsvm"
+    sh "env EXPORT_PATH=#{__dir__}/../../#{model_dir} ./ltr_scripts/serve.sh"
   end
 
   desc "Evaluate search performance using nDCG with and without the model"

@@ -15,6 +15,8 @@ module Evaluate
     end
 
     def compute_ndcg
+      return { "average_ndcg" => 0 } if data.empty?
+
       all = data.map do |(query, judgements)|
         { query => ndcg(ordered_ratings(query, judgements)) }
       end
@@ -39,15 +41,16 @@ module Evaluate
     end
 
     def ordered_ratings(query, ratings)
-      search_results(query).map { |result| ratings[result["link"]] }.compact
+      search_results(query).map { |result| ratings[result["link"]] || 0 }.compact
     end
 
     def search_results(query)
       begin
         retries ||= 0
         SearchConfig.run_search(@search_params.merge("q" => [query])).fetch(:results, [])
-      rescue StandardError
-        sleep 5
+      rescue StandardError => e
+        puts e
+        sleep 2
         retry if (retries += 1) < 3
         nil
       end

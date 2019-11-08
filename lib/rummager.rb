@@ -102,6 +102,8 @@ require "govuk_index/sync_updater"
 require "govuk_index/sync_worker"
 require "govuk_message_queue_consumer"
 
+require "evaluate/ndcg"
+
 require "learn_to_rank/ctr_to_judgements"
 require "learn_to_rank/embed_features"
 require "learn_to_rank/explain_scores"
