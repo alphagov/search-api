@@ -84,7 +84,7 @@ module Search
       return es_response unless search_params.rerank
 
       es_response["hits"]["hits"] = LearnToRank::Reranker.new.rerank(
-        es_results: es_response.dig("hits", "hits").to_a
+        es_results: es_response.dig("hits", "hits").to_a,
       )
       es_response
     end

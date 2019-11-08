@@ -3,7 +3,7 @@ require "learn_to_rank/explain_scores"
 module LearnToRank
   class Features
     # Features takes some values and translates them to features
-    def initialize(explain:, popularity: 0, es_score: 0)
+    def initialize(explain: {}, popularity: 0, es_score: 0)
       @popularity = popularity
       @es_score = es_score
       @explain_scores = LearnToRank::ExplainScores.new(explain)

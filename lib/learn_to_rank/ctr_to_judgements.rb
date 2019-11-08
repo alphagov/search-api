@@ -17,9 +17,9 @@ module LearnToRank
 
     def relevancy_judgements
       ctrs.map { |(query, query_ctrs)|
-          sleep 0.1
-          scores_to_results(query, ctr_to_relevancy_score(query_ctrs))
-        }
+        sleep 0.1
+        scores_to_results(query, ctr_to_relevancy_score(query_ctrs))
+      }
         .flatten
         .compact
     end
@@ -32,16 +32,16 @@ module LearnToRank
       query_ctrs.each_with_object({}) do |(position, ctr), h|
         pos = Float(position)
         ctr = Float(ctr)
-        k = (2 * (Math.log(pos + 1) + 1) * ctr ** 0.5) / 5
+        k = (2 * (Math.log(pos + 1) + 1) * ctr**0.5) / 5
         h[position] = if k < 0.1
-          0
-        elsif k < 1
-          1
-        elsif k < 2
-          2
-        else
-          3
-        end
+                        0
+                      elsif k < 1
+                        1
+                      elsif k < 2
+                        2
+                      else
+                        3
+                      end
       end
     end
 
@@ -53,13 +53,14 @@ module LearnToRank
     end
 
     def scores_to_results(query, scores)
-      results = fetch_results(query).fetch('results')
+      results = fetch_results(query).fetch("results")
       scores.map do |(position, score)|
         next unless results[position.to_i]
+
         {
           query: query,
           score: score,
-          link: results[position.to_i].dig('link')
+          link: results[position.to_i].dig("link"),
         }
       end
     end

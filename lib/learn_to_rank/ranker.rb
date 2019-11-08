@@ -9,7 +9,7 @@ module LearnToRank
     end
 
     def ranks
-      fetch_new_scores(feature_sets).fetch('results', [])
+      fetch_new_scores(feature_sets).fetch("results", [])
     end
 
   private
@@ -22,7 +22,7 @@ module LearnToRank
         method: "POST",
         body: {
           "signature_name": "regression",
-          "examples": examples
+          "examples": examples,
         }.to_json,
         headers: { "Content-Type" => "application/json" },
       }

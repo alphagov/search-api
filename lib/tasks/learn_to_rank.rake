@@ -2,7 +2,7 @@ require "csv"
 require "rummager"
 require "analytics/popular_queries"
 require "analytics/total_query_ctr"
-require "learn_to_rank/ctr_to_judgements"
+require "relevancy/load_judgements"
 
 namespace :learn_to_rank do
   desc "Export a CSV of relevancy judgements generated from CTR on popular queries"
@@ -12,7 +12,7 @@ namespace :learn_to_rank do
     popular_queries = Analytics::PopularQueries.new.queries.first(100).map { |q| q[0] }
     ctrs = Analytics::TotalQueryCtr.new(queries: popular_queries).call
     judgements = LearnToRank::CtrToJudgements.new(ctrs).relevancy_judgements
-    export_to_csv(judgements, 'click_judgments')
+    export_to_csv(judgements, "click_judgments")
   end
 
   desc "Export a CSV of SVM-formatted relevancy judgements for training a model"
@@ -20,7 +20,8 @@ namespace :learn_to_rank do
     assert_ltr!
 
     csv = args.judgements_filepath
-    judgements = LearnToRank::EmbedFeatures.new(csv).augmented_judgements
+    judgements_data = Relevancy::LoadJudgements.from_csv(csv)
+    judgements = LearnToRank::EmbedFeatures.new(judgements_data).augmented_judgements
     svm = LearnToRank::JudgementsToSvm.new(judgements).svm_format.shuffle
     File.open("tmp/train.txt", "wb") do |train|
       File.open("tmp/validate.txt", "wb") do |validate|
@@ -44,7 +45,7 @@ namespace :learn_to_rank do
   end
 
   desc "Serves a trained model"
-  task :serve_reranker_model, [:model_dir]  do |_, args|
+  task :serve_reranker_model, [:model_dir] do |_, args|
     assert_ltr!
 
     model_dir = args.model_dir || "./tmp/libsvm"
