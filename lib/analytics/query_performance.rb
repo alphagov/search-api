@@ -36,7 +36,7 @@ module Analytics
         retries ||= 0
         response = authenticated_service.batch_get_reports(reports_request)
         parse_ga_response(response).flatten(1)
-      rescue Google::Apis::TransmissionError, Google::Apis::RateLimitError, Google::Apis::ServerError => e
+      rescue Google::Apis::TransmissionError, Google::Apis::RateLimitError, Google::Apis::ServerError, Google::Apis::ClientError => e
         retry_wait_time = 5 * retries
         puts "Error fetching CTRS. Will retry in #{retry_wait_time} seconds... #{e}"
         sleep retry_wait_time
