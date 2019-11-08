@@ -2,7 +2,6 @@ require "rummager"
 require "analytics/overall_ctr"
 require "analytics/popular_queries"
 require "analytics/query_performance"
-require "evaluate/ndcg"
 require "relevancy/load_judgements"
 
 namespace :relevancy do
