@@ -3,6 +3,7 @@ require "analytics/overall_ctr"
 require "analytics/popular_queries"
 require "analytics/query_performance"
 require "evaluate/ndcg"
+require "relevancy/load_judgements"
 
 namespace :relevancy do
   desc "Show overall click-through-rate for top 3 results and top 10 results"
@@ -24,7 +25,8 @@ namespace :relevancy do
   task :ndcg, [:datafile, :ab_tests] do |_, args|
     csv = args.datafile || relevancy_judgements_from_s3
     begin
-      evaluator = Evaluate::Ndcg.new(csv, args.ab_tests)
+      judgements = Relevancy::LoadJudgements.from_csv(csv)
+      evaluator = Evaluate::Ndcg.new(judgements, args.ab_tests)
       results = evaluator.compute_ndcg
 
       maxlen = results.keys.map { |query, _| query.length }.max

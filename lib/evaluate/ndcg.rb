@@ -8,8 +8,8 @@ module Evaluate
     # a measure of ranking quality, for a set of relevancy judgements.
     # Optional: any ab tests you wish to use, e.g. "relevance:B,popularity:C"
     # Returns { "average_ndcg" => 0.99, "tax" => 0.96, "harry potter" => 0.4 ... }
-    def initialize(datafile, ab_tests)
-      @data = load_from_csv(datafile)
+    def initialize(relevancy_judgements, ab_tests)
+      @data = judgements_as_query_keyed_hash(relevancy_judgements)
       @search_params = DEFAULT_PARAMS.merge(ab_tests.nil? ? {} : { "ab_tests" => [ab_tests] })
       @search_config = SearchConfig.parse_parameters(@search_params).search_config
     end
@@ -30,24 +30,12 @@ module Evaluate
 
     attr_reader :data
 
-    def load_from_csv(datafile)
-      data = {}
-      last_query = ""
-      CSV.foreach(datafile, headers: true) do |row|
-        query = (row["query"] || last_query).strip
-        score = row["score"]
-        link = row["link"]
-
-        raise "missing query for row '#{row}'" if query.nil?
-        raise "missing score for row '#{row}'" if score.nil?
-        raise "missing link for row '#{row}" if link.nil?
-
-        data[query] = data.fetch(query, {})
-        data[query][link] = score.to_i
-
-        last_query = query
+    def judgements_as_query_keyed_hash(judgements)
+      judgements.each_with_object({}) do |judgement, hsh|
+        query = judgement[:query]
+        hsh[query] = hsh.fetch(query, {})
+        hsh[query][judgement[:id]] = judgement[:rank].to_i
       end
-      data
     end
 
     def ordered_ratings(query, ratings)

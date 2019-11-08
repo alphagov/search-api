@@ -1,4 +1,3 @@
-require "learn_to_rank/explain_scores"
 require "learn_to_rank/features"
 
 module LearnToRank
@@ -7,8 +6,8 @@ module LearnToRank
     # INPUT: [{ query: "a1", "id": "/universal-credit", rank: 1 }]
     # OUTPUT: [{ query: "a1", "id": "/universal-credit", rank: 1,
     #            view_count: 2, description_score: 2, title_score: 4 ... }]
-    def initialize(judgements_datafile)
-      @judgements = load_from_csv(judgements_datafile)
+    def initialize(judgements)
+      @judgements = judgements
       @cached_queries = {}
     end
 
@@ -29,7 +28,8 @@ module LearnToRank
     attr_reader :judgements
 
     def features(judgement)
-      return unless doc = fetch_document(judgement)
+      doc = fetch_document(judgement)
+      return unless doc
 
       feats = LearnToRank::Features.new(
         explain: doc.fetch(:_explanation, {}),
@@ -56,7 +56,8 @@ module LearnToRank
           flush_cached_queries
         end
         results.find { |doc| doc[:_id] == judgement[:id] }
-      rescue StandardError
+      rescue StandardError => e
+        puts e
         sleep 5
         retry if (retries += 1) < 3
         nil
@@ -70,23 +71,6 @@ module LearnToRank
     def do_fetch(query)
       sleep 0.2
       SearchConfig.run_search(query)[:results]
-    end
-
-    def load_from_csv(datafile)
-      data = []
-      last_query = ""
-      CSV.foreach(datafile, headers: true) do |row|
-        query = (row["query"] || last_query).strip
-        score = row["score"]
-        link = row["link"]
-
-        raise "missing query for row '#{row}'" if query.nil?
-        raise "missing score for row '#{row}'" if score.nil?
-        raise "missing link for row '#{row}" if link.nil?
-
-        data << { rank: score.to_i, id: link, query: query }
-      end
-      data
     end
   end
 end
