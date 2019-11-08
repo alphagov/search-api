@@ -4,11 +4,13 @@ module LearnToRank
     # e.g. { title_score: 0.2, description_score: 0.2, ... }
     # attr_reader :title_score, :description_score, :all_searchable_text_score, :indexable_content_score
 
+    PERMITTED_FIELDS = [:title_score, :description_score, :all_searchable_text_score, :indexable_content_score]
+
     def initialize(explain)
-      @scores = scores_from_explain(explain)
+      scores = scores_from_explain(explain)
       PERMITTED_FIELDS.each do |field|
         define_singleton_method field do
-          scores[field]
+          scores[field] || 0
         end
       end
     end
@@ -17,18 +19,12 @@ module LearnToRank
 
     attr_reader :scores
 
-    PERMITTED_FIELDS = [:title_score, :description_score, :all_searchable_text_score, :indexable_content_score]
-
-    def normalise(n)
-      "%.10f" % (((n || 0)  + 0.01) * 10000)
-    end
-
     def field_permitted?(field)
       PERMITTED_FIELDS.include? field
     end
 
     def scores_from_explain(explain)
-      description = explain["description"]
+      description = explain.fetch("description", "")
       if description.include? "PerFieldSimilarity"
         # is a bm25 score so return that value
         field = (description.split("(")[1].split(":")[0].split(".")[0] + "_score").downcase.to_sym
