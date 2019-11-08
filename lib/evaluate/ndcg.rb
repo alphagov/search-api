@@ -26,7 +26,7 @@ module Evaluate
 
   private
 
-    DEFAULT_PARAMS = { "count" => ["10"], "fields" => ["link"] }
+    DEFAULT_PARAMS = { "count" => %w[10], "fields" => %w[link] }.freeze
 
     attr_reader :data
 
@@ -67,14 +67,10 @@ module Evaluate
     end
 
     def dcg(ratings)
-      ratings
-        .map
-        .with_index { |rating, position|
-          ((2 ** rating) - 1.0) / (Math.log2(position + 2.0))
-        }
-        .inject(0) { |total, score|
-          total + score
-        }
+      processed = ratings.map.with_index { |rating, position|
+        ((2**rating) - 1.0) / Math.log2(position + 2.0)
+      }
+      processed.inject(0) { |total, score| total + score }
     end
   end
 end

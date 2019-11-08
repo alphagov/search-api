@@ -14,13 +14,14 @@ module LearnToRank
     def augmented_judgements
       count = Float(judgements.count)
       res = judgements.compact.map.with_index do |judgement, i|
-        puts "#{i}/#{count}: #{(i/count)*100}%"
+        puts "#{i}/#{count}: #{(i / count) * 100}%"
         feats = features(judgement)
         next nil unless feats
+
         judgement.merge(feats)
-      end.compact
+      end
       flush_cached_queries
-      res
+      res.compact
     end
 
   private
@@ -48,7 +49,7 @@ module LearnToRank
           "q" => [judgement[:query]],
           "debug" => %w(explain),
           "fields" => %w(popularity title),
-          "count" => ["20"]
+          "count" => %w[20],
         }
         @cached_queries[judgement[:query]] ||= do_fetch(query)
         results = @cached_queries[judgement[:query]]

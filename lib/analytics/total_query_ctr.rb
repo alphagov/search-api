@@ -33,7 +33,7 @@ module Analytics
       begin
         retries ||= 0
         response = authenticated_service.batch_get_reports(reports_request)
-        puts "Retry successful" if retries > 0
+        puts "Retry successful" if retries.positive?
         parse_ga_response(response).flatten(1)
       rescue Google::Apis::TransmissionError => e
         puts "Error fetching CTRS. Will retry in 3 seconds... #{e}"
@@ -45,13 +45,13 @@ module Analytics
 
     def parse_ga_response(response)
       response.reports.map do |query_report|
-        hsh   = Hash.new(0)
-        rows  = query_report.data.rows
+        default_hsh = Hash.new(0)
+        rows = query_report.data.rows
         return [] unless rows && rows.any?
 
-        query = query_report.data.rows.first.dimensions.last.downcase.gsub(' ', '_')
+        query = query_report.data.rows.first.dimensions.last.downcase.gsub(" ", "_")
 
-        rows.each_with_object({}) do |row, hsh|
+        rows.each_with_object(default_hsh) do |row, hsh|
           position = row.dimensions.first
           ctr = Float(row.metrics.first.values.first)
 
@@ -76,7 +76,7 @@ module Analytics
           include_empty_rows: true,
           metrics: [Metric.new(expression: "ga:productListCTR")],
           date_ranges: [
-            DateRange.new(start_date: "2019-08-01", end_date: "2019-11-01")
+            DateRange.new(start_date: "2019-08-01", end_date: "2019-11-01"),
           ],
           dimensions: [
             Dimension.new(name: "ga:productListPosition"),

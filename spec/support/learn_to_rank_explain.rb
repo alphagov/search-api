@@ -32,7 +32,7 @@ module Fixtures
                                   {
                                     "value" => 10,
                                     "description" => "boost",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 4.6167507,
@@ -41,14 +41,14 @@ module Fixtures
                                       {
                                         "value" => 670,
                                         "description" => "docFreq",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 67830,
                                         "description" => "docCount",
-                                        "details" => []
-                                      }
-                                    ]
+                                        "details" => [],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 1.2427033,
@@ -57,33 +57,33 @@ module Fixtures
                                       {
                                         "value" => 1,
                                         "description" => "termFreq=1.0",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.2,
                                         "description" => "parameter k1",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 0.75,
                                         "description" => "parameter b",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 9.567669,
                                         "description" => "avgFieldLength",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 5,
                                         "description" => "fieldLength",
-                                        "details" => []
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                                        "details" => [],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 56.917595,
@@ -96,7 +96,7 @@ module Fixtures
                                   {
                                     "value" => 10,
                                     "description" => "boost",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 4.5801435,
@@ -105,14 +105,14 @@ module Fixtures
                                       {
                                         "value" => 695,
                                         "description" => "docFreq",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 67830,
                                         "description" => "docCount",
-                                        "details" => []
-                                      }
-                                    ]
+                                        "details" => [],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 1.2427033,
@@ -121,35 +121,35 @@ module Fixtures
                                       {
                                         "value" => 1,
                                         "description" => "termFreq=1.0",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.2,
                                         "description" => "parameter k1",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 0.75,
                                         "description" => "parameter b",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 9.567669,
                                         "description" => "avgFieldLength",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 5,
                                         "description" => "fieldLength",
-                                        "details" => []
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                                        "details" => [],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
                       },
                       {
                         "value" => 51.04151,
@@ -166,7 +166,7 @@ module Fixtures
                                   {
                                     "value" => 5,
                                     "description" => "boost",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 5.4677863,
@@ -175,14 +175,14 @@ module Fixtures
                                       {
                                         "value" => 115,
                                         "description" => "docFreq",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 27365,
                                         "description" => "docCount",
-                                        "details" => []
-                                      }
-                                    ]
+                                        "details" => [],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 0.85860866,
@@ -191,33 +191,33 @@ module Fixtures
                                       {
                                         "value" => 2,
                                         "description" => "termFreq=2.0",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.2,
                                         "description" => "parameter k1",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 0.75,
                                         "description" => "parameter b",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 6.6912847,
                                         "description" => "avgFieldLength",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 21,
                                         "description" => "fieldLength",
-                                        "details" => []
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                                        "details" => [],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 27.568068,
@@ -230,7 +230,7 @@ module Fixtures
                                   {
                                     "value" => 5,
                                     "description" => "boost",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 6.4215674,
@@ -239,14 +239,14 @@ module Fixtures
                                       {
                                         "value" => 44,
                                         "description" => "docFreq",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 27365,
                                         "description" => "docCount",
-                                        "details" => []
-                                      }
-                                    ]
+                                        "details" => [],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 0.85860866,
@@ -255,35 +255,35 @@ module Fixtures
                                       {
                                         "value" => 2,
                                         "description" => "termFreq=2.0",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.2,
                                         "description" => "parameter k1",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 0.75,
                                         "description" => "parameter b",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 6.6912847,
                                         "description" => "avgFieldLength",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 21,
                                         "description" => "fieldLength",
-                                        "details" => []
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                                        "details" => [],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
                       },
                       {
                         "value" => 22.540745,
@@ -300,7 +300,7 @@ module Fixtures
                                   {
                                     "value" => 2,
                                     "description" => "boost",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 2.4964333,
@@ -309,14 +309,14 @@ module Fixtures
                                       {
                                         "value" => 5369,
                                         "description" => "docFreq",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 65180,
                                         "description" => "docCount",
-                                        "details" => []
-                                      }
-                                    ]
+                                        "details" => [],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 2.060556,
@@ -325,33 +325,33 @@ module Fixtures
                                       {
                                         "value" => 11,
                                         "description" => "termFreq=11.0",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.2,
                                         "description" => "parameter k1",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 0.75,
                                         "description" => "parameter b",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 437.44016,
                                         "description" => "avgFieldLength",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 216,
                                         "description" => "fieldLength",
-                                        "details" => []
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                                        "details" => [],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 12.252665,
@@ -364,7 +364,7 @@ module Fixtures
                                   {
                                     "value" => 2,
                                     "description" => "boost",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 2.9731452,
@@ -373,14 +373,14 @@ module Fixtures
                                       {
                                         "value" => 3333,
                                         "description" => "docFreq",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 65180,
                                         "description" => "docCount",
-                                        "details" => []
-                                      }
-                                    ]
+                                        "details" => [],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 2.060556,
@@ -389,35 +389,35 @@ module Fixtures
                                       {
                                         "value" => 11,
                                         "description" => "termFreq=11.0",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.2,
                                         "description" => "parameter k1",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 0.75,
                                         "description" => "parameter b",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 437.44016,
                                         "description" => "avgFieldLength",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 216,
                                         "description" => "fieldLength",
-                                        "details" => []
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                                        "details" => [],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
                       },
                       {
                         "value" => 5.714505,
@@ -438,7 +438,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 4.6167507,
@@ -447,14 +447,14 @@ module Fixtures
                                           {
                                             "value" => 670,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 67830,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 1.2427033,
@@ -463,33 +463,33 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "termFreq=1.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 9.567669,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 5,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
                               },
                               {
                                 "value" => 2.8458798,
@@ -502,7 +502,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 4.5801435,
@@ -511,14 +511,14 @@ module Fixtures
                                           {
                                             "value" => 695,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 67830,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 1.2427033,
@@ -527,35 +527,35 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "termFreq=1.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 9.567669,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 5,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 5.635186,
@@ -572,7 +572,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 2.4964333,
@@ -581,14 +581,14 @@ module Fixtures
                                           {
                                             "value" => 5369,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 65180,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 2.060556,
@@ -597,33 +597,33 @@ module Fixtures
                                           {
                                             "value" => 11,
                                             "description" => "termFreq=11.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 437.44016,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 216,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
                               },
                               {
                                 "value" => 3.0631661,
@@ -636,7 +636,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 2.9731452,
@@ -645,14 +645,14 @@ module Fixtures
                                           {
                                             "value" => 3333,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 65180,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 2.060556,
@@ -661,35 +661,35 @@ module Fixtures
                                           {
                                             "value" => 11,
                                             "description" => "termFreq=11.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 437.44016,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 216,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 5.104151,
@@ -706,7 +706,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 5.4677863,
@@ -715,14 +715,14 @@ module Fixtures
                                           {
                                             "value" => 115,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 27365,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.85860866,
@@ -731,33 +731,33 @@ module Fixtures
                                           {
                                             "value" => 2,
                                             "description" => "termFreq=2.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 6.6912847,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 21,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
                               },
                               {
                                 "value" => 2.7568066,
@@ -770,7 +770,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 6.4215674,
@@ -779,14 +779,14 @@ module Fixtures
                                           {
                                             "value" => 44,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 27365,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.85860866,
@@ -795,37 +795,37 @@ module Fixtures
                                           {
                                             "value" => 2,
                                             "description" => "termFreq=2.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 6.6912847,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 21,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
                       },
                       {
                         "value" => 5.714505,
@@ -846,7 +846,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 4.6167507,
@@ -855,14 +855,14 @@ module Fixtures
                                           {
                                             "value" => 670,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 67830,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 1.2427033,
@@ -871,33 +871,33 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "termFreq=1.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 9.567669,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 5,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
                               },
                               {
                                 "value" => 2.8458798,
@@ -910,7 +910,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 4.5801435,
@@ -919,14 +919,14 @@ module Fixtures
                                           {
                                             "value" => 695,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 67830,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 1.2427033,
@@ -935,35 +935,35 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "termFreq=1.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 9.567669,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 5,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 5.635186,
@@ -980,7 +980,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 2.4964333,
@@ -989,14 +989,14 @@ module Fixtures
                                           {
                                             "value" => 5369,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 65180,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 2.060556,
@@ -1005,33 +1005,33 @@ module Fixtures
                                           {
                                             "value" => 11,
                                             "description" => "termFreq=11.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 437.44016,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 216,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
                               },
                               {
                                 "value" => 3.0631661,
@@ -1044,7 +1044,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 2.9731452,
@@ -1053,14 +1053,14 @@ module Fixtures
                                           {
                                             "value" => 3333,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 65180,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 2.060556,
@@ -1069,35 +1069,35 @@ module Fixtures
                                           {
                                             "value" => 11,
                                             "description" => "termFreq=11.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 437.44016,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 216,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 5.104151,
@@ -1114,7 +1114,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 5.4677863,
@@ -1123,14 +1123,14 @@ module Fixtures
                                           {
                                             "value" => 115,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 27365,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.85860866,
@@ -1139,33 +1139,33 @@ module Fixtures
                                           {
                                             "value" => 2,
                                             "description" => "termFreq=2.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 6.6912847,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 21,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
                               },
                               {
                                 "value" => 2.7568066,
@@ -1178,7 +1178,7 @@ module Fixtures
                                       {
                                         "value" => 0.5,
                                         "description" => "boost",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 6.4215674,
@@ -1187,14 +1187,14 @@ module Fixtures
                                           {
                                             "value" => 44,
                                             "description" => "docFreq",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 27365,
                                             "description" => "docCount",
-                                            "details" => []
-                                          }
-                                        ]
+                                            "details" => [],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.85860866,
@@ -1203,37 +1203,37 @@ module Fixtures
                                           {
                                             "value" => 2,
                                             "description" => "termFreq=2.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.2,
                                             "description" => "parameter k1",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.75,
                                             "description" => "parameter b",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 6.6912847,
                                             "description" => "avgFieldLength",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 21,
                                             "description" => "fieldLength",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
                       },
                       {
                         "value" => 5.6863165,
@@ -1250,7 +1250,7 @@ module Fixtures
                                   {
                                     "value" => 0.5,
                                     "description" => "boost",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 2.499161,
@@ -1259,14 +1259,14 @@ module Fixtures
                                       {
                                         "value" => 5392,
                                         "description" => "docFreq",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 65638,
                                         "description" => "docCount",
-                                        "details" => []
-                                      }
-                                    ]
+                                        "details" => [],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 2.076128,
@@ -1275,33 +1275,33 @@ module Fixtures
                                       {
                                         "value" => 13,
                                         "description" => "termFreq=13.0",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.2,
                                         "description" => "parameter k1",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 0.75,
                                         "description" => "parameter b",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 438.984,
                                         "description" => "avgFieldLength",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 232,
                                         "description" => "fieldLength",
-                                        "details" => []
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
+                                        "details" => [],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 3.0920277,
@@ -1314,7 +1314,7 @@ module Fixtures
                                   {
                                     "value" => 0.5,
                                     "description" => "boost",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 2.9786484,
@@ -1323,14 +1323,14 @@ module Fixtures
                                       {
                                         "value" => 3338,
                                         "description" => "docFreq",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 65638,
                                         "description" => "docCount",
-                                        "details" => []
-                                      }
-                                    ]
+                                        "details" => [],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 2.076128,
@@ -1339,37 +1339,37 @@ module Fixtures
                                       {
                                         "value" => 13,
                                         "description" => "termFreq=13.0",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.2,
                                         "description" => "parameter k1",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 0.75,
                                         "description" => "parameter b",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 438.984,
                                         "description" => "avgFieldLength",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 232,
                                         "description" => "fieldLength",
-                                        "details" => []
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
+                                        "details" => [],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
                   },
                   {
                     "value" => 0.8571429,
@@ -1386,7 +1386,7 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "match filter:\n(+title.synonym:nation +title.synonym:insur)^10.0",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 0.14285715,
@@ -1395,16 +1395,16 @@ module Fixtures
                                   {
                                     "value" => 1,
                                     "description" => "constant score 1.0 - no function provided",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 0.14285715,
                                     "description" => "weight",
-                                    "details" => []
-                                  }
-                                ]
-                              }
-                            ]
+                                    "details" => [],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 0.14285715,
@@ -1413,7 +1413,7 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "match filter: (+description.synonym:nation\n+description.synonym:insur)^5.0",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 0.14285715,
@@ -1422,16 +1422,16 @@ module Fixtures
                                   {
                                     "value" => 1,
                                     "description" => "constant score 1.0 - no function provided",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 0.14285715,
                                     "description" => "weight",
-                                    "details" => []
-                                  }
-                                ]
-                              }
-                            ]
+                                    "details" => [],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 0.14285715,
@@ -1440,7 +1440,7 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "match filter: (+indexable_content.synonym:nation\n+indexable_content.synonym:insur)^2.0",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 0.14285715,
@@ -1449,16 +1449,16 @@ module Fixtures
                                   {
                                     "value" => 1,
                                     "description" => "constant score 1.0 - no function provided",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 0.14285715,
                                     "description" => "weight",
-                                    "details" => []
-                                  }
-                                ]
-                              }
-                            ]
+                                    "details" => [],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 0.14285715,
@@ -1467,7 +1467,7 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "match filter: (((+title.synonym:nation\n+title.synonym:insur) | (+indexable_content.synonym:nation\n+indexable_content.synonym:insur) | (+acronym.synonym:nation\n+acronym.synonym:insur) | (+description.synonym:nation\n+description.synonym:insur)))^0.5",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 0.14285715,
@@ -1476,16 +1476,16 @@ module Fixtures
                                   {
                                     "value" => 1,
                                     "description" => "constant score 1.0 - no function provided",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 0.14285715,
                                     "description" => "weight",
-                                    "details" => []
-                                  }
-                                ]
-                              }
-                            ]
+                                    "details" => [],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 0.14285715,
@@ -1494,7 +1494,7 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "match filter: (((title.synonym:nation\ntitle.synonym:insur) | (indexable_content.synonym:nation\nindexable_content.synonym:insur) | (acronym.synonym:nation\nacronym.synonym:insur) | (description.synonym:nation\ndescription.synonym:insur)))^0.5",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 0.14285715,
@@ -1503,16 +1503,16 @@ module Fixtures
                                   {
                                     "value" => 1,
                                     "description" => "constant score 1.0 - no function provided",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 0.14285715,
                                     "description" => "weight",
-                                    "details" => []
-                                  }
-                                ]
-                              }
-                            ]
+                                    "details" => [],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 0.14285715,
@@ -1521,7 +1521,7 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "match filter: ((all_searchable_text.synonym:nation\nall_searchable_text.synonym:insur)~2)^0.5",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 0.14285715,
@@ -1530,27 +1530,27 @@ module Fixtures
                                   {
                                     "value" => 1,
                                     "description" => "constant score 1.0 - no function provided",
-                                    "details" => []
+                                    "details" => [],
                                   },
                                   {
                                     "value" => 0.14285715,
                                     "description" => "weight",
-                                    "details" => []
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                                    "details" => [],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
                       },
                       {
                         "value" => 3.4028235e+38,
                         "description" => "maxBoost",
-                        "details" => []
-                      }
-                    ]
-                  }
-                ]
+                        "details" => [],
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 "value" => 5.625,
@@ -1567,7 +1567,7 @@ module Fixtures
                           {
                             "value" => 1,
                             "description" => "match filter: format:transaction",
-                            "details" => []
+                            "details" => [],
                           },
                           {
                             "value" => 1.5,
@@ -1576,16 +1576,16 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "constant score 1.0 - no function provided",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 1.5,
                                 "description" => "weight",
-                                "details" => []
-                              }
-                            ]
-                          }
-                        ]
+                                "details" => [],
+                              },
+                            ],
+                          },
+                        ],
                       },
                       {
                         "value" => 2.5,
@@ -1594,7 +1594,7 @@ module Fixtures
                           {
                             "value" => 1,
                             "description" => "match\nfilter: navigation_document_supertype:guidance",
-                            "details" => []
+                            "details" => [],
                           },
                           {
                             "value" => 2.5,
@@ -1603,16 +1603,16 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "constant score 1.0 - no function provided",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 2.5,
                                 "description" => "weight",
-                                "details" => []
-                              }
-                            ]
-                          }
-                        ]
+                                "details" => [],
+                              },
+                            ],
+                          },
+                        ],
                       },
                       {
                         "value" => 1.5,
@@ -1621,7 +1621,7 @@ module Fixtures
                           {
                             "value" => 1,
                             "description" => "match\nfilter: search_user_need_document_supertype:core",
-                            "details" => []
+                            "details" => [],
                           },
                           {
                             "value" => 1.5,
@@ -1630,27 +1630,27 @@ module Fixtures
                               {
                                 "value" => 1,
                                 "description" => "constant score 1.0 - no function provided",
-                                "details" => []
+                                "details" => [],
                               },
                               {
                                 "value" => 1.5,
                                 "description" => "weight",
-                                "details" => []
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
+                                "details" => [],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
                   },
                   {
                     "value" => 3.4028235e+38,
                     "description" => "maxBoost",
-                    "details" => []
-                  }
-                ]
-              }
-            ]
+                    "details" => [],
+                  },
+                ],
+              },
+            ],
           },
           {
             "value" => 0.005739337,
@@ -1691,7 +1691,7 @@ module Fixtures
                                               {
                                                 "value" => 10,
                                                 "description" => "boost",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 4.6167507,
@@ -1700,14 +1700,14 @@ module Fixtures
                                                   {
                                                     "value" => 670,
                                                     "description" => "docFreq",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 67830,
                                                     "description" => "docCount",
-                                                    "details" => []
-                                                  }
-                                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
                                               },
                                               {
                                                 "value" => 1.2427033,
@@ -1716,33 +1716,33 @@ module Fixtures
                                                   {
                                                     "value" => 1,
                                                     "description" => "termFreq=1.0",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 1.2,
                                                     "description" => "parameter k1",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 0.75,
                                                     "description" => "parameter b",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 9.567669,
                                                     "description" => "avgFieldLength",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 5,
                                                     "description" => "fieldLength",
-                                                    "details" => []
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                    "details" => [],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 56.917595,
@@ -1755,7 +1755,7 @@ module Fixtures
                                               {
                                                 "value" => 10,
                                                 "description" => "boost",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 4.5801435,
@@ -1764,14 +1764,14 @@ module Fixtures
                                                   {
                                                     "value" => 695,
                                                     "description" => "docFreq",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 67830,
                                                     "description" => "docCount",
-                                                    "details" => []
-                                                  }
-                                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
                                               },
                                               {
                                                 "value" => 1.2427033,
@@ -1780,35 +1780,35 @@ module Fixtures
                                                   {
                                                     "value" => 1,
                                                     "description" => "termFreq=1.0",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 1.2,
                                                     "description" => "parameter k1",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 0.75,
                                                     "description" => "parameter b",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 9.567669,
                                                     "description" => "avgFieldLength",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 5,
                                                     "description" => "fieldLength",
-                                                    "details" => []
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                                    "details" => [],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 51.04151,
@@ -1825,7 +1825,7 @@ module Fixtures
                                               {
                                                 "value" => 5,
                                                 "description" => "boost",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 5.4677863,
@@ -1834,14 +1834,14 @@ module Fixtures
                                                   {
                                                     "value" => 115,
                                                     "description" => "docFreq",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 27365,
                                                     "description" => "docCount",
-                                                    "details" => []
-                                                  }
-                                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
                                               },
                                               {
                                                 "value" => 0.85860866,
@@ -1850,33 +1850,33 @@ module Fixtures
                                                   {
                                                     "value" => 2,
                                                     "description" => "termFreq=2.0",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 1.2,
                                                     "description" => "parameter k1",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 0.75,
                                                     "description" => "parameter b",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 6.6912847,
                                                     "description" => "avgFieldLength",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 21,
                                                     "description" => "fieldLength",
-                                                    "details" => []
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                    "details" => [],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 27.568068,
@@ -1889,7 +1889,7 @@ module Fixtures
                                               {
                                                 "value" => 5,
                                                 "description" => "boost",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 6.4215674,
@@ -1898,14 +1898,14 @@ module Fixtures
                                                   {
                                                     "value" => 44,
                                                     "description" => "docFreq",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 27365,
                                                     "description" => "docCount",
-                                                    "details" => []
-                                                  }
-                                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
                                               },
                                               {
                                                 "value" => 0.85860866,
@@ -1914,35 +1914,35 @@ module Fixtures
                                                   {
                                                     "value" => 2,
                                                     "description" => "termFreq=2.0",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 1.2,
                                                     "description" => "parameter k1",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 0.75,
                                                     "description" => "parameter b",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 6.6912847,
                                                     "description" => "avgFieldLength",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 21,
                                                     "description" => "fieldLength",
-                                                    "details" => []
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                                    "details" => [],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 22.540745,
@@ -1959,7 +1959,7 @@ module Fixtures
                                               {
                                                 "value" => 2,
                                                 "description" => "boost",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 2.4964333,
@@ -1968,14 +1968,14 @@ module Fixtures
                                                   {
                                                     "value" => 5369,
                                                     "description" => "docFreq",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 65180,
                                                     "description" => "docCount",
-                                                    "details" => []
-                                                  }
-                                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
                                               },
                                               {
                                                 "value" => 2.060556,
@@ -1984,33 +1984,33 @@ module Fixtures
                                                   {
                                                     "value" => 11,
                                                     "description" => "termFreq=11.0",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 1.2,
                                                     "description" => "parameter k1",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 0.75,
                                                     "description" => "parameter b",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 437.44016,
                                                     "description" => "avgFieldLength",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 216,
                                                     "description" => "fieldLength",
-                                                    "details" => []
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                    "details" => [],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 12.252665,
@@ -2023,7 +2023,7 @@ module Fixtures
                                               {
                                                 "value" => 2,
                                                 "description" => "boost",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 2.9731452,
@@ -2032,14 +2032,14 @@ module Fixtures
                                                   {
                                                     "value" => 3333,
                                                     "description" => "docFreq",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 65180,
                                                     "description" => "docCount",
-                                                    "details" => []
-                                                  }
-                                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
                                               },
                                               {
                                                 "value" => 2.060556,
@@ -2048,35 +2048,35 @@ module Fixtures
                                                   {
                                                     "value" => 11,
                                                     "description" => "termFreq=11.0",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 1.2,
                                                     "description" => "parameter k1",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 0.75,
                                                     "description" => "parameter b",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 437.44016,
                                                     "description" => "avgFieldLength",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 216,
                                                     "description" => "fieldLength",
-                                                    "details" => []
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                                    "details" => [],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 5.714505,
@@ -2097,7 +2097,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 4.6167507,
@@ -2106,14 +2106,14 @@ module Fixtures
                                                       {
                                                         "value" => 670,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 67830,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 1.2427033,
@@ -2122,33 +2122,33 @@ module Fixtures
                                                       {
                                                         "value" => 1,
                                                         "description" => "termFreq=1.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 9.567669,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 5,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
                                           },
                                           {
                                             "value" => 2.8458798,
@@ -2161,7 +2161,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 4.5801435,
@@ -2170,14 +2170,14 @@ module Fixtures
                                                       {
                                                         "value" => 695,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 67830,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 1.2427033,
@@ -2186,35 +2186,35 @@ module Fixtures
                                                       {
                                                         "value" => 1,
                                                         "description" => "termFreq=1.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 9.567669,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 5,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 5.635186,
@@ -2231,7 +2231,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 2.4964333,
@@ -2240,14 +2240,14 @@ module Fixtures
                                                       {
                                                         "value" => 5369,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 65180,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 2.060556,
@@ -2256,33 +2256,33 @@ module Fixtures
                                                       {
                                                         "value" => 11,
                                                         "description" => "termFreq=11.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 437.44016,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 216,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
                                           },
                                           {
                                             "value" => 3.0631661,
@@ -2295,7 +2295,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 2.9731452,
@@ -2304,14 +2304,14 @@ module Fixtures
                                                       {
                                                         "value" => 3333,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 65180,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 2.060556,
@@ -2320,35 +2320,35 @@ module Fixtures
                                                       {
                                                         "value" => 11,
                                                         "description" => "termFreq=11.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 437.44016,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 216,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 5.104151,
@@ -2365,7 +2365,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 5.4677863,
@@ -2374,14 +2374,14 @@ module Fixtures
                                                       {
                                                         "value" => 115,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 27365,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 0.85860866,
@@ -2390,33 +2390,33 @@ module Fixtures
                                                       {
                                                         "value" => 2,
                                                         "description" => "termFreq=2.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 6.6912847,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 21,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
                                           },
                                           {
                                             "value" => 2.7568066,
@@ -2429,7 +2429,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 6.4215674,
@@ -2438,14 +2438,14 @@ module Fixtures
                                                       {
                                                         "value" => 44,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 27365,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 0.85860866,
@@ -2454,37 +2454,37 @@ module Fixtures
                                                       {
                                                         "value" => 2,
                                                         "description" => "termFreq=2.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 6.6912847,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 21,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 5.714505,
@@ -2505,7 +2505,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 4.6167507,
@@ -2514,14 +2514,14 @@ module Fixtures
                                                       {
                                                         "value" => 670,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 67830,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 1.2427033,
@@ -2530,33 +2530,33 @@ module Fixtures
                                                       {
                                                         "value" => 1,
                                                         "description" => "termFreq=1.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 9.567669,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 5,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
                                           },
                                           {
                                             "value" => 2.8458798,
@@ -2569,7 +2569,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 4.5801435,
@@ -2578,14 +2578,14 @@ module Fixtures
                                                       {
                                                         "value" => 695,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 67830,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 1.2427033,
@@ -2594,35 +2594,35 @@ module Fixtures
                                                       {
                                                         "value" => 1,
                                                         "description" => "termFreq=1.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 9.567669,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 5,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 5.635186,
@@ -2639,7 +2639,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 2.4964333,
@@ -2648,14 +2648,14 @@ module Fixtures
                                                       {
                                                         "value" => 5369,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 65180,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 2.060556,
@@ -2664,33 +2664,33 @@ module Fixtures
                                                       {
                                                         "value" => 11,
                                                         "description" => "termFreq=11.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 437.44016,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 216,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
                                           },
                                           {
                                             "value" => 3.0631661,
@@ -2703,7 +2703,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 2.9731452,
@@ -2712,14 +2712,14 @@ module Fixtures
                                                       {
                                                         "value" => 3333,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 65180,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 2.060556,
@@ -2728,35 +2728,35 @@ module Fixtures
                                                       {
                                                         "value" => 11,
                                                         "description" => "termFreq=11.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 437.44016,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 216,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 5.104151,
@@ -2773,7 +2773,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 5.4677863,
@@ -2782,14 +2782,14 @@ module Fixtures
                                                       {
                                                         "value" => 115,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 27365,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 0.85860866,
@@ -2798,33 +2798,33 @@ module Fixtures
                                                       {
                                                         "value" => 2,
                                                         "description" => "termFreq=2.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 6.6912847,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 21,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
                                           },
                                           {
                                             "value" => 2.7568066,
@@ -2837,7 +2837,7 @@ module Fixtures
                                                   {
                                                     "value" => 0.5,
                                                     "description" => "boost",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 6.4215674,
@@ -2846,14 +2846,14 @@ module Fixtures
                                                       {
                                                         "value" => 44,
                                                         "description" => "docFreq",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 27365,
                                                         "description" => "docCount",
-                                                        "details" => []
-                                                      }
-                                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
                                                   },
                                                   {
                                                     "value" => 0.85860866,
@@ -2862,37 +2862,37 @@ module Fixtures
                                                       {
                                                         "value" => 2,
                                                         "description" => "termFreq=2.0",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 1.2,
                                                         "description" => "parameter k1",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 0.75,
                                                         "description" => "parameter b",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 6.6912847,
                                                         "description" => "avgFieldLength",
-                                                        "details" => []
+                                                        "details" => [],
                                                       },
                                                       {
                                                         "value" => 21,
                                                         "description" => "fieldLength",
-                                                        "details" => []
-                                                      }
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                                        "details" => [],
+                                                      },
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 5.6863165,
@@ -2909,7 +2909,7 @@ module Fixtures
                                               {
                                                 "value" => 0.5,
                                                 "description" => "boost",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 2.499161,
@@ -2918,14 +2918,14 @@ module Fixtures
                                                   {
                                                     "value" => 5392,
                                                     "description" => "docFreq",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 65638,
                                                     "description" => "docCount",
-                                                    "details" => []
-                                                  }
-                                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
                                               },
                                               {
                                                 "value" => 2.076128,
@@ -2934,33 +2934,33 @@ module Fixtures
                                                   {
                                                     "value" => 13,
                                                     "description" => "termFreq=13.0",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 1.2,
                                                     "description" => "parameter k1",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 0.75,
                                                     "description" => "parameter b",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 438.984,
                                                     "description" => "avgFieldLength",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 232,
                                                     "description" => "fieldLength",
-                                                    "details" => []
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                    "details" => [],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 3.0920277,
@@ -2973,7 +2973,7 @@ module Fixtures
                                               {
                                                 "value" => 0.5,
                                                 "description" => "boost",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 2.9786484,
@@ -2982,14 +2982,14 @@ module Fixtures
                                                   {
                                                     "value" => 3338,
                                                     "description" => "docFreq",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 65638,
                                                     "description" => "docCount",
-                                                    "details" => []
-                                                  }
-                                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
                                               },
                                               {
                                                 "value" => 2.076128,
@@ -2998,37 +2998,37 @@ module Fixtures
                                                   {
                                                     "value" => 13,
                                                     "description" => "termFreq=13.0",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 1.2,
                                                     "description" => "parameter k1",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 0.75,
                                                     "description" => "parameter b",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 438.984,
                                                     "description" => "avgFieldLength",
-                                                    "details" => []
+                                                    "details" => [],
                                                   },
                                                   {
                                                     "value" => 232,
                                                     "description" => "fieldLength",
-                                                    "details" => []
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
+                                                    "details" => [],
+                                                  },
+                                                ],
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
                               },
                               {
                                 "value" => 0.8571429,
@@ -3045,7 +3045,7 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "match filter:\n(+title.synonym:nation +title.synonym:insur)^10.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.14285715,
@@ -3054,16 +3054,16 @@ module Fixtures
                                               {
                                                 "value" => 1,
                                                 "description" => "constant score 1.0 - no function provided",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 0.14285715,
                                                 "description" => "weight",
-                                                "details" => []
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                "details" => [],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.14285715,
@@ -3072,7 +3072,7 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "match filter: (+description.synonym:nation\n+description.synonym:insur)^5.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.14285715,
@@ -3081,16 +3081,16 @@ module Fixtures
                                               {
                                                 "value" => 1,
                                                 "description" => "constant score 1.0 - no function provided",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 0.14285715,
                                                 "description" => "weight",
-                                                "details" => []
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                "details" => [],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.14285715,
@@ -3099,7 +3099,7 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "match filter: (+indexable_content.synonym:nation\n+indexable_content.synonym:insur)^2.0",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.14285715,
@@ -3108,16 +3108,16 @@ module Fixtures
                                               {
                                                 "value" => 1,
                                                 "description" => "constant score 1.0 - no function provided",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 0.14285715,
                                                 "description" => "weight",
-                                                "details" => []
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                "details" => [],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.14285715,
@@ -3126,7 +3126,7 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "match filter: (((+title.synonym:nation\n+title.synonym:insur) | (+indexable_content.synonym:nation\n+indexable_content.synonym:insur) | (+acronym.synonym:nation\n+acronym.synonym:insur) | (+description.synonym:nation\n+description.synonym:insur)))^0.5",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.14285715,
@@ -3135,16 +3135,16 @@ module Fixtures
                                               {
                                                 "value" => 1,
                                                 "description" => "constant score 1.0 - no function provided",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 0.14285715,
                                                 "description" => "weight",
-                                                "details" => []
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                "details" => [],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.14285715,
@@ -3153,7 +3153,7 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "match filter: (((title.synonym:nation\ntitle.synonym:insur) | (indexable_content.synonym:nation\nindexable_content.synonym:insur) | (acronym.synonym:nation\nacronym.synonym:insur) | (description.synonym:nation\ndescription.synonym:insur)))^0.5",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.14285715,
@@ -3162,16 +3162,16 @@ module Fixtures
                                               {
                                                 "value" => 1,
                                                 "description" => "constant score 1.0 - no function provided",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 0.14285715,
                                                 "description" => "weight",
-                                                "details" => []
-                                              }
-                                            ]
-                                          }
-                                        ]
+                                                "details" => [],
+                                              },
+                                            ],
+                                          },
+                                        ],
                                       },
                                       {
                                         "value" => 0.14285715,
@@ -3180,7 +3180,7 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "match filter: ((all_searchable_text.synonym:nation\nall_searchable_text.synonym:insur)~2)^0.5",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 0.14285715,
@@ -3189,27 +3189,27 @@ module Fixtures
                                               {
                                                 "value" => 1,
                                                 "description" => "constant score 1.0 - no function provided",
-                                                "details" => []
+                                                "details" => [],
                                               },
                                               {
                                                 "value" => 0.14285715,
                                                 "description" => "weight",
-                                                "details" => []
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                                "details" => [],
+                                              },
+                                            ],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 3.4028235e+38,
                                     "description" => "maxBoost",
-                                    "details" => []
-                                  }
-                                ]
-                              }
-                            ]
+                                    "details" => [],
+                                  },
+                                ],
+                              },
+                            ],
                           },
                           {
                             "value" => 5.625,
@@ -3226,7 +3226,7 @@ module Fixtures
                                       {
                                         "value" => 1,
                                         "description" => "match filter: format:transaction",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.5,
@@ -3235,16 +3235,16 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "constant score 1.0 - no function provided",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.5,
                                             "description" => "weight",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 2.5,
@@ -3253,7 +3253,7 @@ module Fixtures
                                       {
                                         "value" => 1,
                                         "description" => "match\nfilter: navigation_document_supertype:guidance",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 2.5,
@@ -3262,16 +3262,16 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "constant score 1.0 - no function provided",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 2.5,
                                             "description" => "weight",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                   {
                                     "value" => 1.5,
@@ -3280,7 +3280,7 @@ module Fixtures
                                       {
                                         "value" => 1,
                                         "description" => "match\nfilter: search_user_need_document_supertype:core",
-                                        "details" => []
+                                        "details" => [],
                                       },
                                       {
                                         "value" => 1.5,
@@ -3289,40 +3289,40 @@ module Fixtures
                                           {
                                             "value" => 1,
                                             "description" => "constant score 1.0 - no function provided",
-                                            "details" => []
+                                            "details" => [],
                                           },
                                           {
                                             "value" => 1.5,
                                             "description" => "weight",
-                                            "details" => []
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
+                                            "details" => [],
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
                               },
                               {
                                 "value" => 3.4028235e+38,
                                 "description" => "maxBoost",
-                                "details" => []
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                                "details" => [],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 "value" => 3.4028235e+38,
                 "description" => "maxBoost",
-                "details" => []
-              }
-            ]
-          }
-        ]
+                "details" => [],
+              },
+            ],
+          },
+        ],
       }
     end
   end

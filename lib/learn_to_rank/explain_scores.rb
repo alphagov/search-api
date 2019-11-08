@@ -4,7 +4,7 @@ module LearnToRank
     # e.g. { title_score: 0.2, description_score: 0.2, ... }
     # attr_reader :title_score, :description_score, :all_searchable_text_score, :indexable_content_score
 
-    PERMITTED_FIELDS = [:title_score, :description_score, :all_searchable_text_score, :indexable_content_score]
+    PERMITTED_FIELDS = %i[title_score description_score all_searchable_text_score indexable_content_score].freeze
 
     def initialize(explain)
       scores = scores_from_explain(explain)

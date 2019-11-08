@@ -17,10 +17,10 @@ module LearnToRank
 
     attr_reader :judgements, :queries, :features
 
-    def judgement_to_svm(j)
-      rank = "#{j[:rank]}"
-      query_id = "qid:#{queries[j[:query]]}"
-      feats = features.map { |feat| "#{feat}:#{j.dig(:features, feat) || 0}" }
+    def judgement_to_svm(judgement)
+      rank = (judgement[:rank]).to_s
+      query_id = "qid:#{queries[judgement[:query]]}"
+      feats = features.map { |feat| "#{feat}:#{judgement.dig(:features, feat) || 0}" }
       [rank, query_id, feats].flatten.compact.join(" ")
     end
 
@@ -28,6 +28,7 @@ module LearnToRank
       latest = 0
       judgements.each_with_object({}) do |judgement, hsh|
         next if hsh[judgement[:query]]
+
         hsh[judgement[:query]] = (latest += 1)
       end
     end

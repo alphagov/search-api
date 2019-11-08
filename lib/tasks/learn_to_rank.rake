@@ -12,7 +12,7 @@ namespace :learn_to_rank do
     popular_queries = Analytics::PopularQueries.new.queries.first(100).map { |q| q[0] }
     ctrs = Analytics::TotalQueryCtr.new(queries: popular_queries).call
     judgements = LearnToRank::CtrToJudgements.new(ctrs).relevancy_judgements
-    export_to_csv(judgements, 'click_judgments')
+    export_to_csv(judgements, "click_judgments")
   end
 
   desc "Export a CSV of SVM-formatted relevancy judgements for training a model"
@@ -45,7 +45,7 @@ namespace :learn_to_rank do
   end
 
   desc "Serves a trained model"
-  task :serve_reranker_model, [:model_dir]  do |_, args|
+  task :serve_reranker_model, [:model_dir] do |_, args|
     assert_ltr!
 
     model_dir = args.model_dir || "./tmp/libsvm"
