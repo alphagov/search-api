@@ -16,7 +16,7 @@ RSpec.describe LearnToRank::JudgementsToSvm do
         [
           { query: "tax", rank: 2, features: { "1": 2, "2": 0.1, "3": 10 } },
           { query: "tax", rank: 0, features: { "1": 2, "2": 0.1, "3": 20 } },
-          { query: "cat", rank: 3, features: { "2": 2, "3": 0.2, "2": 90 } },
+          { query: "cat", rank: 3, features: { "2": 2, "3": 0.2, "1": 90 } },
           { query: "sat", rank: 2, features: { "1": 2, "3": 0.1, "2": 10 } },
           { query: "mat", rank: 3, features: { "2": 2, "1": 0.1, "3": 10 } },
           { query: "mat", rank: 1, features: { "1": 2, "2": 0.1, "3": 0 } },
@@ -27,7 +27,7 @@ RSpec.describe LearnToRank::JudgementsToSvm do
         expect(formatted).to eq([
           "2 qid:1 1:2 2:0.1 3:10",
           "0 qid:1 1:2 2:0.1 3:20",
-          "3 qid:2 1:0 2:90 3:0.2",
+          "3 qid:2 1:90 2:2 3:0.2",
           "2 qid:3 1:2 2:10 3:0.1",
           "3 qid:4 1:0.1 2:2 3:10",
           "1 qid:4 1:2 2:0.1 3:0",
