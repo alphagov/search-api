@@ -85,9 +85,11 @@ module Search
       # it is.
       result[:es_score] = raw_result["_score"]
       # LearnToRank generated values
-      result[:model_score] = raw_result["model_score"]
-      result[:original_rank] = raw_result["original_rank"]
-      result[:combined_score] = raw_result["combined_score"]
+      if ENV["ENABLE_LTR"]
+        result[:model_score] = raw_result["model_score"]
+        result[:original_rank] = raw_result["original_rank"]
+        result[:combined_score] = raw_result["combined_score"]
+      end
 
       result[:_id] = raw_result["_id"]
 
