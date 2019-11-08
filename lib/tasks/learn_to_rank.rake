@@ -35,14 +35,9 @@ namespace :learn_to_rank do
   end
 
   desc "Serves a trained model"
-  task :serve_reranker_model do
-    # TODO
-    # - Call with a filepath of a ranked model
-    # - Calls serve.sh
-    sh " OUTPUT_DIR
-    TRAIN
-    VALI
-    TEST=#{x} ./ltr_scripts/train.sh"
+  task :serve_reranker_model, [:model_dir]  do |_, args|
+    model_dir = args.model_dir || "./tmp/libsvm"
+    sh "env EXPORT_PATH=#{model_dir} ./ltr_scripts/serve.sh"
   end
 
   desc "Evaluate search performance using nDCG with and without the model"
