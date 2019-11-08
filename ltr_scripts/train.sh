@@ -1,13 +1,19 @@
-OUTPUT_DIR=./tmp/libsvm && \
-TRAIN=./tmp/ltr_data/train.txt && \
-VALI=./tmp/ltr_data/validate.txt && \
-TEST=./tmp/ltr_data/test.txt
+#!/usr/bin/env bash
 
-rm -rf $OUTPUT_DIR && \
-python3 ./tf_ranking_libsvm.py \
+OUTPUT_DIR=${OUTPUT_DIR:-../tmp/libsvm}
+TRAIN=${TRAIN:-../tmp/ltr_data/train.txt}
+VALI=${VALI:-../tmp/ltr_data/validate.txt}
+TEST=${TEST:-../tmp/ltr_data/test.txt}
+STEPS=${STEPS:-100}
+
+if [[ -d $OUTPUT_DIR ]]; then
+  rm -rf $OUTPUT_DIR
+fi
+
+python3 "$(dirname "$0")/tf_ranking_libsvm.py" \
 --train_path=$TRAIN \
 --vali_path=$VALI \
 --test_path=$TEST \
 --output_dir=$OUTPUT_DIR \
 --num_features=6 \
---num_train_steps=10000
+--num_train_steps=$STEPS

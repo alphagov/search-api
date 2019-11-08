@@ -28,11 +28,10 @@ namespace :learn_to_rank do
   end
 
   desc "Train a reranker model with relevancy judgements"
-  task :train_reranker_model, [:svm_filepath] do |_, args|
-    csv = args.datafile
-    # TODO
-    # - Call with a CSV arg of SVM-formatted relevancy judgements
-    # - Calls train.sh
+  task :train_reranker_model, [:svm_dir, :model_dir] do |_, args|
+    model_dir = args.model_dir || "tmp/libsvm"
+    svm_dir = args.svm_filepath || "tmp/ltr_data"
+    sh "env OUTPUT_DIR=#{model_dir} TRAIN=#{svm_dir}/train.txt VALI=#{svm_dir}/validate.txt TEST=#{svm_dir}/test.txt ./ltr_scripts/train.sh"
   end
 
   desc "Serves a trained model"
