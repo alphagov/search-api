@@ -2,7 +2,7 @@ require "csv"
 require "httparty"
 require "json"
 
-module LearnToRank
+module Evaluate
   class Ndcg
     # NDCG calculates nDCG (https://en.wikipedia.org/wiki/Discounted_cumulative_gain#Normalized_DCG)
     # a measure of ranking quality, for a set of relevancy judgements.

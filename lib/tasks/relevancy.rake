@@ -2,7 +2,7 @@ require "rummager"
 require "analytics/overall_ctr"
 require "analytics/popular_queries"
 require "analytics/query_performance"
-require "learn_to_rank/ndcg"
+require "evaluate/ndcg"
 
 namespace :relevancy do
   desc "Show overall click-through-rate for top 3 results and top 10 results"
@@ -24,7 +24,7 @@ namespace :relevancy do
   task :ndcg, [:datafile, :ab_tests] do |_, args|
     csv = args.datafile || relevancy_judgements_from_s3
     begin
-      evaluator = LearnToRank::Ndcg.new(csv, args.ab_tests)
+      evaluator = Evaluate::Ndcg.new(csv, args.ab_tests)
       results = evaluator.compute_ndcg
 
       maxlen = results.keys.map { |query, _| query.length }.max
