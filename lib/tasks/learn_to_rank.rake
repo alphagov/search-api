@@ -18,11 +18,14 @@ namespace :learn_to_rank do
     csv = args.judgements_filepath
     judgements = LearnToRank::EmbedFeatures.new(csv).augmented_judgements
     svm = LearnToRank::JudgementsToSvm.new(judgements).svm_format.shuffle
-    set_size = svm.count / 3
-    svm.in_groups_of(set_size).each.with_index do |svm_set, index|
-      name = %w(train validate test)[index]
-      File.open("tmp/#{name}.txt", "wb") do |file|
-        svm_set.each { |row| file.puts(row) }
+    File.open("tmp/train.txt", "wb") do |train|
+      File.open("tmp/validate.txt", "wb") do |validate|
+        File.open("tmp/test.txt", "wb") do |test|
+          svm.each.with_index do |row, index|
+            file = [train, train, validate, test][index % 4]
+            file.puts(row)
+          end
+        end
       end
     end
   end
