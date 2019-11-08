@@ -70,8 +70,7 @@ module Search
     end
 
     def rerank
-      # TODO permit only in development
-      query && ab_tests[:relevance] == "B"
+      !ENV["ENABLE_LTR"].nil? && order == "relevance" && ab_tests[:relevance] == "B"
     end
 
   private
