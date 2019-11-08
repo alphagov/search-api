@@ -2,7 +2,6 @@ require "csv"
 require "rummager"
 require "analytics/popular_queries"
 require "analytics/total_query_ctr"
-require "learn_to_rank/ctr_to_judgements"
 require "relevancy/load_judgements"
 
 namespace :learn_to_rank do

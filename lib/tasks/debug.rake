@@ -4,8 +4,6 @@ require "pp"
 require "rainbow"
 require "debug/rank_eval"
 require "debug/synonyms"
-require "learn_to_rank/embed_features"
-require "learn_to_rank/judgements_to_svm"
 require "tempfile"
 
 ANSI_GREEN = "\e[32m".freeze
