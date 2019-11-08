@@ -56,7 +56,7 @@ namespace :learn_to_rank do
   end
 
   def export_to_csv(hash, filename)
-    CSV.open("tmp/#{filepath}.csv", "wb") do |csv|
+    CSV.open("tmp/#{filename}.csv", "wb") do |csv|
       csv << hash.first.keys
       hash.each do |row|
         csv << row.values
