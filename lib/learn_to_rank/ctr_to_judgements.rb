@@ -1,5 +1,7 @@
 module LearnToRank
   class CtrToJudgements
+    PUBLIC_SEARCH_API = "https://www.gov.uk/api/search.json".freeze
+
     # CtrToJudgements takes an array of query:position click-through-rates
     # and turns them into normalised relevancy judgements between 0 and 3.
     # INPUT [{
@@ -11,8 +13,9 @@ module LearnToRank
     #   }
     # }]
     # OUTPUT [{ query: 'my query', score: 3, link: '/the-best-result' }]
-    def initialize(ctrs)
+    def initialize(ctrs, search_api: PUBLIC_SEARCH_API)
       @ctrs = ctrs.reduce({}, :merge)
+      @search_api = search_api
     end
 
     def relevancy_judgements
@@ -26,7 +29,7 @@ module LearnToRank
 
   private
 
-    attr_reader :ctrs
+    attr_reader :ctrs, :search_api
 
     def ctr_to_relevancy_score(query_ctrs)
       query_ctrs.each_with_object({}) do |(position, ctr), h|
@@ -47,7 +50,7 @@ module LearnToRank
 
     def fetch_results(query)
       q = query.gsub("_", "%20")
-      url = "https://www.gov.uk/api/search.json?fields=link&q=#{q}"
+      url = "#{search_api}?fields=link&q=#{q}"
       response = HTTParty.get(url)
       JSON.parse(response.body)
     end
