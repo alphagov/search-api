@@ -35,32 +35,34 @@ namespace :learn_to_rank do
     end
   end
 
-  desc "Train a reranker model with relevancy judgements"
-  task :train_reranker_model, [:svm_dir, :model_dir] do |_, args|
-    assert_ltr!
+  namespace :reranker do
+    desc "Train a reranker model with relevancy judgements"
+    task :train, [:svm_dir, :model_dir] do |_, args|
+      assert_ltr!
 
-    model_dir = args.model_dir || "tmp/libsvm"
-    svm_dir = args.svm_filepath || "tmp/ltr_data"
-    sh "env OUTPUT_DIR=#{model_dir} TRAIN=#{svm_dir}/train.txt VALI=#{svm_dir}/validate.txt TEST=#{svm_dir}/test.txt ./ltr_scripts/train.sh"
-  end
+      model_dir = args.model_dir || "tmp/libsvm"
+      svm_dir = args.svm_filepath || "tmp/ltr_data"
+      sh "env OUTPUT_DIR=#{model_dir} TRAIN=#{svm_dir}/train.txt VALI=#{svm_dir}/validate.txt TEST=#{svm_dir}/test.txt ./ltr_scripts/train.sh"
+    end
 
-  desc "Serves a trained model"
-  task :serve_reranker_model, [:model_dir] do |_, args|
-    assert_ltr!
+    desc "Serves a trained model"
+    task :serve, [:model_dir] do |_, args|
+      assert_ltr!
 
-    model_dir = args.model_dir || "tmp/libsvm"
-    sh "env EXPORT_PATH=#{__dir__}/../../#{model_dir} ./ltr_scripts/serve.sh"
-  end
+      model_dir = args.model_dir || "tmp/libsvm"
+      sh "env EXPORT_PATH=#{__dir__}/../../#{model_dir} ./ltr_scripts/serve.sh"
+    end
 
-  desc "Evaluate search performance using nDCG with and without the model"
-  task :how_is_it_doing do
-    assert_ltr!
+    desc "Evaluate search performance using nDCG with and without the model"
+    task :evaluate do
+      assert_ltr!
 
-    # TODO
-    # - Call with a CSV arg of relevancy judgements
-    # - runs ndcg with and without model ab test
-    # - prints them nicely with comparison
-    # - says who is winning and by how much
+      # TODO
+      # - Call with a CSV arg of relevancy judgements
+      # - runs ndcg with and without model ab test
+      # - prints them nicely with comparison
+      # - says who is winning and by how much
+    end
   end
 
   def assert_ltr!
