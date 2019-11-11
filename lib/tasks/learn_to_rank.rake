@@ -41,7 +41,7 @@ namespace :learn_to_rank do
       assert_ltr!
 
       model_dir = args.model_dir || "tmp/libsvm"
-      svm_dir = args.svm_filepath || "tmp/ltr_data"
+      svm_dir = args.svm_dir || "tmp/ltr_data"
       sh "env OUTPUT_DIR=#{model_dir} TRAIN=#{svm_dir}/train.txt VALI=#{svm_dir}/validate.txt TEST=#{svm_dir}/test.txt ./ltr_scripts/train.sh"
     end
 
