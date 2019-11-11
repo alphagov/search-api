@@ -23,7 +23,7 @@ module Search
         sort: sort,
         aggs: aggregates,
         highlight: highlight,
-        explain: true,
+        explain: search_params.debug[:explain] || search_params.rerank,
       )
     end
 
