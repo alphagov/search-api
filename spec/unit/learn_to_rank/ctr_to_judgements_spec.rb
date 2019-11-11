@@ -3,12 +3,8 @@ require "spec_helper"
 RSpec.describe LearnToRank::CtrToJudgements do
   subject(:instance) do
     described_class.new(
-      results_and_ctrs.map do |query, results|
-        {
-          query => results.each_with_object({}).with_index do |(r, h), i|
-            h[i.to_s] = r[:ctr]
-          end
-        }
+      results_and_ctrs.each_with_object({}) do |(query, results), acc|
+        acc[query] = results.each_with_object({}).with_index { |(r, h), i| h[i.to_s] = r[:ctr] }
       end, args
     )
   end

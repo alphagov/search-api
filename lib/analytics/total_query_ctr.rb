@@ -5,24 +5,22 @@ module Analytics
     include ReportRequester
 
     # QueryPerformance gets the CTR for each of a given set of queries
-    # Returns a set of queries and their absolute CTR for each position for the past 7 days
-    # [
+    # Returns a hash of queries and their absolute CTR for each position for the past 7 days
     #  {
     #   "universal credit" => {
     #     "1": 10,
     #     "2": 23,
     #     "3": 40,
     #     "4": 5,
-    #   }
-    #  }
+    #   },
     #  ...
-    # ]
+    #  }
     def initialize(queries: [])
       @queries = queries
     end
 
     def call
-      build_requests.map { |req| get_ctrs_for_batch(req) }.flatten(1)
+      build_requests.map { |req| get_ctrs_for_batch(req) }.flatten(1).reduce({}, :merge)
     end
 
   private
