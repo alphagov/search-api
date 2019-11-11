@@ -54,14 +54,38 @@ namespace :learn_to_rank do
     end
 
     desc "Evaluate search performance using nDCG with and without the model"
-    task :evaluate do
+    task :evaluate, [:relevancy_judgements] do |_, args|
       assert_ltr!
 
-      # TODO
-      # - Call with a CSV arg of relevancy judgements
-      # - runs ndcg with and without model ab test
-      # - prints them nicely with comparison
-      # - says who is winning and by how much
+      csv = args.relevancy_judgements
+      rounds = [nil, "relevance:B"]
+      results, results_with_model = rounds.map do |ab_test_round|
+        judgements = Relevancy::LoadJudgements.from_csv(csv)
+        evaluator = Evaluate::Ndcg.new(judgements, ab_test_round)
+        evaluator.compute_ndcg
+      end
+
+      merged = results.keys.each_with_object({}) do |query, hsh|
+        hsh[query] = {
+          without: results[query],
+          with_model: results_with_model[query],
+        }
+      end
+
+      maxlen = results.keys.map { |query, _| query.length }.max
+      score_maxlen = results.values.map { |score, _| score.to_s.length }.max
+
+      merged.map do |(query, scores)|
+        winning = scores[:without] <= scores[:with_model] ? "√" : "x"
+        puts "#{winning} #{(query + ':').ljust(maxlen + 1)} #{scores[:without].to_s.ljust(score_maxlen + 1)} #{scores[:with_model]}"
+      end
+
+      winning = merged.dig("average_ndcg", :without) <= merged.dig("average_ndcg", :with_model)
+
+      puts "---"
+      puts "without model score: #{merged["average_ndcg"][:without]}"
+      puts "with model score: #{merged["average_ndcg"][:with_model]}"
+      puts "The model has a #{winning ? "good" : "bad"} score"
     end
   end
 
