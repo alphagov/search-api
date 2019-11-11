@@ -29,7 +29,7 @@ module LearnToRank
           )
         }
 
-      ranked.sort_by { |res| res["combined_score"] }.reverse
+      ranked.sort_by { |res| -res["combined_score"] }
     end
   end
 end
