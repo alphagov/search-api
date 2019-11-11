@@ -9,7 +9,9 @@ module LearnToRank
     end
 
     def ranks
-      fetch_new_scores(feature_sets).fetch("results", [])
+      return [] unless feature_sets.any?
+
+      fetch_new_scores(feature_sets)
     end
 
   private
@@ -27,7 +29,19 @@ module LearnToRank
         headers: { "Content-Type" => "application/json" },
       }
       response = HTTParty.post(url, options)
-      JSON.parse(response.body)
+      return default_ranks(examples) if ranker_error(response)
+
+      JSON.parse(response.body).fetch("results", default_ranks(examples))
+    end
+
+    def default_ranks(examples)
+      # Use existing rank by giving higher score 3,2,1 to the first results.
+      (1..examples.count).reverse_each.to_a
+    end
+
+    def ranker_error(response)
+      # TODO tell graphite when there's an error
+      response.nil? || response.code != 200
     end
   end
 end
