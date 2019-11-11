@@ -1,5 +1,3 @@
-require "learn_to_rank/reranker"
-
 # Performs a search across all indices used for the GOV.UK site search
 module Search
   class Query
