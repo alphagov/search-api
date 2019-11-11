@@ -1,4 +1,5 @@
 require "csv"
+require "fileutils"
 require "rummager"
 require "analytics/popular_queries"
 require "analytics/total_query_ctr"
@@ -16,16 +17,19 @@ namespace :learn_to_rank do
   end
 
   desc "Export a CSV of SVM-formatted relevancy judgements for training a model"
-  task :generate_training_dataset, [:judgements_filepath] do |_, args|
+  task :generate_training_dataset, [:judgements_filepath, :svm_dir] do |_, args|
     assert_ltr!
+
+    svm_dir = args.svm_dir || "tmp/ltr_data"
+    FileUtils.mkdir_p svm_dir
 
     csv = args.judgements_filepath
     judgements_data = Relevancy::LoadJudgements.from_csv(csv)
     judgements = LearnToRank::EmbedFeatures.new(judgements_data).augmented_judgements
     svm = LearnToRank::JudgementsToSvm.new(judgements).svm_format.shuffle
-    File.open("tmp/train.txt", "wb") do |train|
-      File.open("tmp/validate.txt", "wb") do |validate|
-        File.open("tmp/test.txt", "wb") do |test|
+    File.open("#{svm_dir}/train.txt", "wb") do |train|
+      File.open("#{svm_dir}/validate.txt", "wb") do |validate|
+        File.open("#{svm_dir}/test.txt", "wb") do |test|
           svm.each.with_index do |row, index|
             file = [train, train, validate, test][index % 4]
             file.puts(row)
