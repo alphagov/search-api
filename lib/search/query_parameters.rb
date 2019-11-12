@@ -62,7 +62,7 @@ module Search
     end
 
     def suggest_spelling?
-      query && suggest.include?("spelling")
+      query && (suggest.include?("spelling") || suggest.include?("spelling_with_highlighting"))
     end
 
     def use_shingles?

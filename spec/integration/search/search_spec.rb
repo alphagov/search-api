@@ -20,6 +20,17 @@ RSpec.describe "SearchTest" do
     expect(parsed_response["suggested_queries"]).to eq(["ministry of magic"])
   end
 
+  it "highlights spelling suggestions" do
+    commit_ministry_of_magic_document
+
+    get "/search?q=ministry of magick&suggest=spelling_with_highlighting"
+
+    expect(parsed_response["suggested_queries"]).to eq([{
+      "text" => "ministry of magic",
+      "highlighted" => "ministry of <mark>magic</mark>",
+    }])
+  end
+
   it "spell checking with blocklisted typo" do
     commit_document("government_test",
                     "title" => "Brexitt",
