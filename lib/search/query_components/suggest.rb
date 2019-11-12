@@ -15,9 +15,28 @@ module QueryComponents
               suggest_mode: "missing",
               sort: "score",
             }],
-          },
+          }.merge(highlight),
         },
       }
+    end
+
+  private
+
+    def highlight
+      if highlighted_suggestion_requested?
+        {
+          highlight: {
+            pre_tag: "<mark>",
+            post_tag: "</mark>",
+          },
+        }
+      else
+        {}
+      end
+    end
+
+    def highlighted_suggestion_requested?
+      search_params.suggest.include?("spelling_with_highlighting")
     end
   end
 end
