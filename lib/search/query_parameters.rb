@@ -33,6 +33,10 @@ module Search
       return_fields.include?(name)
     end
 
+    def use_levenshtein?
+      ab_tests[:spelling_suggestions] == "B"
+    end
+
     def disable_popularity?
       debug[:disable_popularity]
     end
