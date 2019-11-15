@@ -26,7 +26,7 @@ module Services
   # which time out (including PUT and DELETE requests). So the first, slow,
   # request succeeds (but times out) and the second retry request returns an
   # error because the operation has already been run.
-  def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_HOSTS"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
+  def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
     Elasticsearch::Client.new(
       hosts: cluster ? cluster.uri : hosts,
       request_timeout: timeout,
