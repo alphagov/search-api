@@ -51,11 +51,6 @@
           "index": true,
           "analyzer": "searchable_text"
         },
-        "shingles": {
-          "type": "text",
-          "index": true,
-          "analyzer": "with_shingles"
-        },
         "synonym": {
           "type": "text",
           "index": true,
@@ -95,11 +90,6 @@
           "index": true,
           "analyzer": "string_for_sorting",
           "fielddata": true
-        },
-        "shingles": {
-          "type": "text",
-          "index": true,
-          "analyzer": "with_shingles"
         },
         "no_stop": {
           "type": "text",

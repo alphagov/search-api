@@ -69,10 +69,6 @@ module Search
       query && (suggest.include?("spelling") || suggest.include?("spelling_with_highlighting"))
     end
 
-    def use_shingles?
-      ab_tests[:shingles] == "B"
-    end
-
   private
 
     def determine_if_quoted_phrase

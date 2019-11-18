@@ -23,12 +23,6 @@ index:
           tokenizer: standard
           filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english, bigrams]
 
-        with_shingles:
-          type: custom
-          tokenizer: standard
-          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english, bigrams]
-          char_filter: [normalize_quotes, strip_quotes]
-
         # This analyzer does not filter out these stopwords:
         # a, an, and, are, as, at, be, but, by,
         # for, if, in, into, is, it,

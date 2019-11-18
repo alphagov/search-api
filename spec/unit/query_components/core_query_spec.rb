@@ -28,16 +28,4 @@ RSpec.describe QueryComponents::CoreQuery do
       expect(query.to_s).not_to match(/all_searchable_text\.synonym/)
     end
   end
-
-  context "the B variant of shingles" do
-    it "makes unquoted search queries match bigrams" do
-      builder = described_class.new(
-        search_query_params(ab_tests: { shingles: "B" }),
-      )
-
-      query = builder.unquoted_phrase_query("income tax")
-
-      expect(query.to_s).to include("shingled_query_analyzer")
-    end
-  end
 end
