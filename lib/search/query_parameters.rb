@@ -69,6 +69,10 @@ module Search
       query && (suggest.include?("spelling") || suggest.include?("spelling_with_highlighting"))
     end
 
+    def rerank
+      !ENV["ENABLE_LTR"].nil? && [nil, "relevance"].include?(order) && ab_tests[:relevance] == "B"
+    end
+
   private
 
     def determine_if_quoted_phrase

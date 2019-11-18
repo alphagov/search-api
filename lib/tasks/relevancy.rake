@@ -2,6 +2,7 @@ require "rummager"
 require "analytics/overall_ctr"
 require "analytics/popular_queries"
 require "analytics/query_performance"
+require "relevancy/load_judgements"
 
 namespace :relevancy do
   desc "Show overall click-through-rate for top 3 results and top 10 results"
@@ -17,6 +18,28 @@ namespace :relevancy do
   desc "Print the top 1_000 most popular search queries and their view counts"
   task :show_top_queries do
     report_popular_queries
+  end
+
+  desc "Compute nDCG for a set of relevancy judgements (search performance metric)"
+  task :ndcg, [:datafile, :ab_tests] do |_, args|
+    csv = args.datafile || relevancy_judgements_from_s3
+    begin
+      judgements = Relevancy::LoadJudgements.from_csv(csv)
+      evaluator = Evaluate::Ndcg.new(judgements, args.ab_tests)
+      results = evaluator.compute_ndcg
+
+      maxlen = results.keys.map { |query, _| query.length }.max
+      results.map do |(query, score)|
+        puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
+      end
+      puts "---"
+      puts "overall score: #{results["average_ndcg"]}"
+    ensure
+      if csv.is_a?(Tempfile)
+        file.close
+        file.unlink
+      end
+    end
   end
 
   desc "Send Google Analytics relevancy data to Graphite
