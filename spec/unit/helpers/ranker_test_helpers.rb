@@ -3,6 +3,10 @@ require "spec_helper"
 module RankerTestHelpers
   include Fixtures::LearnToRankExplain
 
+  def query
+    "harry potter"
+  end
+
   def search_results
     [
       {

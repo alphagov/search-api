@@ -104,13 +104,14 @@ require "govuk_message_queue_consumer"
 
 require "evaluate/ndcg"
 
-require "learn_to_rank/ctr_to_judgements"
 require "learn_to_rank/embed_features"
 require "learn_to_rank/explain_scores"
 require "learn_to_rank/feature_sets"
 require "learn_to_rank/features"
 require "learn_to_rank/judgements_to_svm"
+require "learn_to_rank/load_search_queries"
 require "learn_to_rank/ranker"
+require "learn_to_rank/relevancy_judgements"
 require "learn_to_rank/reranker"
 
 require "metasearch_index/client"

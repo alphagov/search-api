@@ -86,6 +86,7 @@ module Search
 
       es_response["hits"]["hits"] = LearnToRank::Reranker.new.rerank(
         es_results: results,
+        query: search_params.query,
       )
       es_response
     end

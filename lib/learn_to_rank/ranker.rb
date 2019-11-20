@@ -29,6 +29,8 @@ module LearnToRank
         headers: { "Content-Type" => "application/json" },
       }
       response = HTTParty.post(url, options)
+      log_response(response)
+
       return default_ranks(examples) if ranker_error(response)
 
       JSON.parse(response.body).fetch("results", default_ranks(examples))
@@ -42,6 +44,18 @@ module LearnToRank
     def ranker_error(response)
       # TODO tell graphite when there's an error
       response.nil? || response.code != 200
+    end
+
+    def log_response(response)
+      if response
+        logger.debug "TF Serving status_code: #{response.code}, message: #{response.message}"
+      else
+        logger.debug "TF Serving: status_code: 500, message: No response from ranker!"
+      end
+    end
+
+    def logger
+      Logging.logger.root
     end
   end
 end
