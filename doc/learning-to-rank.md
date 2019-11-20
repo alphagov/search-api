@@ -12,11 +12,11 @@ test.  ADR-010 covers the architectural decisions.
 Set up
 ------
 
-TensorFlow is wirtten in Python 3, so you will need some libraries
+TensorFlow is written in Python 3, so you will need some libraries
 installed.  The simplest way to do this is using `virtualenv`:
 
 ```sh
-virtualenv venv
+virtualenv venv -p python3
 source venv/bin/activate
 pip install -r ltr_scripts/requirements.txt
 ```
@@ -46,20 +46,40 @@ run regularly and the generated `judgements.csv` file available in:
 In the future we will store more things in these buckets, like the
 trained models.
 
-Assuming you have a `judgements.csv` file, you can generate and serve
-a model like so:
+Assuming you have a `judgements.csv` file, you can generate a dataset
+for training the model:
 
 ```sh
 bundle exec rake learn_to_rank:generate_training_dataset[judgements.csv]
+```
+
+This task needs to be run with access to Elasticsearch.  If you're
+using govuk-docker the full command will be:
+
+```sh
+govuk-docker run -e ENABLE_LTR=1 search-api-lite bundle exec rake 'learn_to_rank:generate_training_dataset[judgements.csv]'
+```
+
+Once you have the training dataset you can train and serve a model:
+
+```sh
 bundle exec rake learn_to_rank:reranker:train
 bundle exec rake learn_to_rank:reranker:serve
 ```
 
+These tasks do not need access to Elasticsearch.
+
 You now have a docker container running and responding to requests
-inside the govuk-docker network at `reranker:8501`.  If you query
-search-api with `ab_tests=relevance:B` then results will be re-ranked
-when you order by relevance.  If this doesn't happen, check you're
-running search-api with `ENABLE_LTR` set.
+inside the govuk-docker network at `reranker:8501`.  You can start
+search-api with the `ENABLE_LTR` environment variable with:
+
+```sh
+govuk-docker run -e ENABLE_LTR=1 search-api-app
+```
+
+If you now query search-api with `ab_tests=relevance:B` then results
+will be re-ranked when you order by relevance.  If this doesn't
+happen, check you're running search-api with `ENABLE_LTR` set.
 
 The `learn_to_rank:reranker:evaluate` task can be used to compare
 queries without needing to manually search for things.  It uses the
