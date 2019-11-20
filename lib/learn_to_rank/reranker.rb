@@ -25,7 +25,8 @@ module LearnToRank
           result.merge(
             "model_score" => m_score,
             "original_rank" => index + 1,
-            "combined_score" => m_score * es_score,
+            # keep best bet scores
+            "combined_score" => es_score > 1000 ? es_score : m_score,
           )
         }
 
