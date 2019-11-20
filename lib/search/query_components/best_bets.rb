@@ -30,8 +30,7 @@ module QueryComponents
     # by elasticsearch. It also adds a huge weight for these results, to
     # make them on top of the search results page.
     #
-    # Note that bets with a lower `position` will turn up higher than bets with
-    # a lower `position`.
+    # Bets are in ascending order of position (eg, bet #2 is one from the top)
     def best_bet_queries
       bb_max_position = best_bets.keys.max
       best_bets.map do |position, links|
