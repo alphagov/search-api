@@ -12,7 +12,7 @@ test.  ADR-010 covers the architectural decisions.
 Set up
 ------
 
-TensorFlow is wirtten in Python 3, so you will need some libraries
+TensorFlow is written in Python 3, so you will need some libraries
 installed.  The simplest way to do this is using `virtualenv`:
 
 ```sh
