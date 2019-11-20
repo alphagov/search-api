@@ -38,17 +38,16 @@ module LearnToRank
       clicks_above_position = 0
       ranked_documents = documents.sort_by { |doc| doc[:rank] }
       ranked_documents.map do |document|
-        position = Integer(document[:rank])
         views = Float(document[:views]) - clicks_above_position
         clicks = Float(document[:clicks])
         views = clicks unless views >= clicks
         # predicted ctr@1 to handle positional bias
         clicks_above_position += clicks
         relevancy_score = if views > 3
-          ctr_to_relevancy_score((clicks / views) * 100.0)
-        else
-          1 # bad but don't know if it's terrible
-        end
+                            ctr_to_relevancy_score((clicks / views) * 100.0)
+                          else
+                            1 # bad but don't know if it's terrible
+                          end
 
         {
           query: query,

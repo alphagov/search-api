@@ -42,7 +42,7 @@ RSpec.describe LearnToRank::Features do
           organisation_content_ids: %w[f323e83c-868b-4bcb-b6e2-a8f9bb40397e],
           indexable_content: "A short piece of content",
           query: "who is harry potter",
-          updated_at: "2019-11-12T17:16:01.000+01:00"
+          updated_at: "2019-11-12T17:16:01.000+01:00",
         )
       }
 
