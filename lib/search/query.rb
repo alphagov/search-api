@@ -81,8 +81,11 @@ module Search
     def rerank(es_response, search_params)
       return es_response unless search_params.rerank
 
+      results = es_response.dig("hits", "hits").to_a
+      return es_response if results.empty? || results[0].fetch("_score").nil?
+
       es_response["hits"]["hits"] = LearnToRank::Reranker.new.rerank(
-        es_results: es_response.dig("hits", "hits").to_a,
+        es_results: results,
       )
       es_response
     end
