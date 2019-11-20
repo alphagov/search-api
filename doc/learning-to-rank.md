@@ -16,6 +16,7 @@ TensorFlow is written in Python 3, so you will need some libraries
 installed.  The simplest way to do this is using `virtualenv`:
 
 ```sh
+pip3 install virtualenv
 virtualenv venv -p python3
 source venv/bin/activate
 pip install -r ltr_scripts/requirements.txt
