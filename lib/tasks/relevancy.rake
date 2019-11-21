@@ -48,8 +48,6 @@ namespace :relevancy do
   task :send_ga_data_to_graphite do
     puts "Sending overall CTR to graphite"
     report_overall_ctr
-    puts "Sending viewcounts to graphite"
-    report_popular_queries
     puts "Sending query click-through-rates to graphite"
     report_query_ctr
     puts "Finished"
@@ -65,7 +63,8 @@ def report_query_ctr
 end
 
 def report_popular_queries
-  report(popular_queries.map { |(query, viewcount)| ["#{query}.viewcount", viewcount] })
+  puts "Popular queries:"
+  popular_queries.map { |(query, viewcount)| puts "#{query}: #{viewcount}" }
 end
 
 def popular_queries
