@@ -10,7 +10,7 @@ gem "govuk-lint", "~> 4.3.0"
 gem "govuk_app_config", "~> 2.0.1"
 gem "govuk_document_types", "~> 0.9.2"
 gem "govuk_sidekiq", "~> 3.0.3"
-gem "irb", "~> 1.0", require: false
+gem "irb", "~> 1.1", require: false
 gem "logging", "~> 2.2.2"
 gem "loofah"
 gem "nokogiri", "~> 1.10.5"
