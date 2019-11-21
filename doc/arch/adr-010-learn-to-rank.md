@@ -79,7 +79,7 @@ harry potter  3         Harry Potter
 However, after doing this, we would train a model with this data
 to rank the results better. The model optimises for nDCG.
 
-We train the model using using a combination of relevancy judgements
+We train the model using a combination of relevancy judgements
 and features: numeric measures which indicate how well we think the
 result matches the query.
 
@@ -95,12 +95,16 @@ harry potter  3         Harry Potter  0.2         1234        1234     1234     
 ...
 ```
 
-For example, take the SVM dataset below for the query 'harry potter' (qid:1)
+For example, take the training dataset below for the query 'harry potter' (qid:1)
 
 ```
 0 qid:1 popularity:0.3 title_score:0.2 description_score:0.3 recency:0.9 pagerank:5 ...
 3 qid:1 popularity:0.1 title_score:0.6 description_score:0.7 recency:0.5 pagerank:2 ...
 ```
+
+> **Note**: This format is frequently used for Learning To Rank training
+> datasets, including the TensorFlow ranking library.
+> [Details on the format](https://sourceforge.net/p/lemur/wiki/RankLib%20File%20Format).
 
 These graded query:document pairs and their features can be used
 to train a model.
@@ -216,72 +220,19 @@ custom machine learning code, as PyTorch don't currently have a ranking library.
 [TensorFlow's ranking library]: https://github.com/tensorflow/ranking
 [elasticsearch-learning-to-rank]: https://github.com/o19s/elasticsearch-learning-to-rank
 
-### Language
+### Further decisions
 
-We would like to keep the code for this project in Ruby as much as
-possible. Search API is written in Ruby and it is the primary language
-used at GOV.UK. Necessarily some machine learning code will need to be
-written in Python because TensorFlow is a Python library.
+We have further decisions to make around the following areas, which may
+be the subject of further ADRs:
 
-### Dockerised model
-
-We will use TensorFlow Serving to make a re-ranker model available
-to Search API on search machines.
-
-We will run a docker container (containing our pre-trained model) on
-search machines to which Search API can send requests.
-
-Should the docker container fail, Search API should be resilient to this,
-and fall back to the default ranking algorithm, with results not
-re-ranked by the model.
-
-### Training
-
-**Training the model** should happen on search machines on a schedule.
-An instance of Search API will train a model using the latest relevancy
-judgements stored in S3, and will then upload a new version of the model to S3.
-On a schedule all search machines will pull the latest version of the model
-and push the new version to the locally running TF Serving container.
-
-**Training data** is made up of relevancy judgements and document features.
-The judgements may be sourced from user behaviour (implicit signals
-of relevancy) perhaps with a Click Model; so far we have used explicit
-manual judgements.
-
-Acquiring relevancy judgements is a work in progress. Our next project
-will be to create a process by which we can acquire relevancy judgements
-on a rolling basis automatically.
-
-### Re-ranking requests
-
-**Using the model** to re-rank results will involve a user searching,
-Search API will perform the query for the top-k results (say 100),
-next Search API will make a request for new scores from the re-ranker
-for the results, finally Search API will provide the re-ranked top-n
-results to the user.
-
-We may see greater search query latency when using the model. Search
-API will need to pull more data out of elasticsearch and do more
-computation, in addition to making a request to the re-ranker.
-This is something we will monitor, as we don't want to provide a much
-slower search experience at a cost of improving relevance.
-
-### Monitoring
-
-We are monitoring nDCG and click-through rates in a search relevancy
-dashboard in grafana.
-
-We will set up more monitoring and alerts as we get further into the project.
-
-### Testing the model
-
-We hope to re-use our existing offline nDCG tests and online AB testing
-process for Learning To Rank.
-
-AB testing models should be possible as TF Serving supports
-versioning models and can serve multiple models from one container.
-We plan to use AB testing to validate that the model provides better
-results to users (measured by click-through rate).
+- language: divide between ruby and python
+- hosting the trained model (dockerised?)
+- training data pipeline architecture
+- where does compute-intensive training happen?
+- failure resilience (what happens when reranker process fails? should we backup datasets, models?)
+- monitoring and alerts
+- testing/validating the model
+- how would LTR change local development?
 
 ## What success will look like
 
