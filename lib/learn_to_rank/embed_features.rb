@@ -3,8 +3,8 @@ require "learn_to_rank/features"
 module LearnToRank
   class EmbedFeatures
     # EmbedFeatures takes a set of relevancy judgements and add features to them.
-    # INPUT: [{ query: "a1", "id": "/universal-credit", rank: 1 }]
-    # OUTPUT: [{ query: "a1", "id": "/universal-credit", rank: 1,
+    # INPUT: [{ query: "a1", "id": "123456", rank: 1 }]
+    # OUTPUT: [{ query: "a1", "id": "123456", rank: 1,
     #            view_count: 2, description_score: 2, title_score: 4 ... }]
     def initialize(judgements)
       @judgements = judgements
@@ -14,7 +14,7 @@ module LearnToRank
     def augmented_judgements
       count = Float(judgements.count)
       res = judgements.compact.map.with_index do |judgement, i|
-        puts "#{i}/#{count}: #{(i / count) * 100}%"
+        logger.info "#{i}/#{count}: #{(i / count) * 100}%"
         feats = features(judgement)
         next nil unless feats
 
@@ -36,6 +36,15 @@ module LearnToRank
         explain: doc.fetch(:_explanation, {}),
         popularity: doc["popularity"],
         es_score: doc[:es_score],
+        title: doc["title"],
+        description: doc["description"],
+        link: doc["link"],
+        public_timestamp: doc["public_timestamp"],
+        format: doc["format"],
+        organisation_content_ids: doc["organisation_content_ids"],
+        query: judgement[:query],
+        indexable_content: doc["indexable_content"],
+        updated_at: doc["updated_at"],
       ).as_hash
 
       { features: feats }
@@ -48,7 +57,7 @@ module LearnToRank
         query = {
           "q" => [judgement[:query]],
           "debug" => %w(explain),
-          "fields" => %w(popularity title),
+          "fields" => %w(popularity content_id title format description link public_timestamp organisation_content_ids updated_at indexable_content),
           "count" => %w[20],
         }
         @cached_queries[judgement[:query]] ||= do_fetch(query)
@@ -56,7 +65,7 @@ module LearnToRank
         if @cached_queries.keys.count > 50
           flush_cached_queries
         end
-        results.find { |doc| doc[:_id] == judgement[:id] }
+        results.find { |doc| doc["content_id"] == judgement[:content_id] }
       rescue StandardError => e
         puts e
         sleep 5
@@ -70,8 +79,12 @@ module LearnToRank
     end
 
     def do_fetch(query)
-      sleep 0.2
+      sleep 0.05
       SearchConfig.run_search(query)[:results]
+    end
+
+    def logger
+      Logging.logger.root
     end
   end
 end

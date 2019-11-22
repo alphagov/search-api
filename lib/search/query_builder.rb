@@ -37,7 +37,8 @@ module Search
       search_params.return_fields +
         %w[document_type
            title description organisation_content_ids topic_content_ids
-           mainstream_browse_page_content_ids popularity]
+           mainstream_browse_page_content_ids popularity
+           format link public_timestamp updated_at indexable_content]
     end
 
     def query

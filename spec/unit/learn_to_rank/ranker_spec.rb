@@ -7,11 +7,12 @@ RSpec.describe LearnToRank::Ranker do
   let(:ranks) { described_class.new(feature_sets).ranks }
 
   let(:feature_sets) do
-    LearnToRank::FeatureSets.new.call(search_results)
+    LearnToRank::FeatureSets.new.call(query, search_results)
   end
 
   describe "#ranks" do
     context "when there are no search results" do
+      let(:query) { nil }
       let(:search_results) { [] }
       it "returns an empty array without calling ranker" do
         expect(ranks).to eq([])

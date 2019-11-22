@@ -6,18 +6,18 @@ RSpec.describe Evaluate::Ndcg do
   end
   let(:relevancy_judgements) do
     [
-      { query: "dog", id: "/dog", rank: 3 },
-      { query: "dog", id: "/pet", rank: 2 },
-      { query: "dog", id: "/whiskers", rank: 1 },
-      { query: "dog", id: "/kitten", rank: 0 },
-      { query: "dog", id: "/cat", rank: 0 },
-      { query: "dog", id: "/cat", rank: 0 },
+      { query: "dog", link: "/dog", rank: 3 },
+      { query: "dog", link: "/dog-walking-dogs", rank: 2 },
+      { query: "dog", link: "/dogs", rank: 3 },
+      { query: "dog", link: "/dog-dog-owner", rank: 1 },
+      { query: "dog", link: "/cat-owners", rank: 0 },
+      { query: "dog", link: "/cat", rank: 0 },
 
-      { query: "cat", id: "/cat", rank: 3 },
-      { query: "cat", id: "/kitten", rank: 3 },
-      { query: "cat", id: "/pet", rank: 2 },
-      { query: "cat", id: "/whiskers", rank: 2 },
-      { query: "cat", id: "/dog", rank: 0 },
+      { query: "cat", link: "/cat-cat-cat!", rank: 2 },
+      { query: "cat", link: "/cat-owners", rank: 2 },
+      { query: "cat", link: "/cats", rank: 3 },
+      { query: "cat", link: "/cat-dog-owners", rank: 1 },
+      { query: "cat", link: "/dog", rank: 0 },
     ]
   end
 
@@ -27,38 +27,38 @@ RSpec.describe Evaluate::Ndcg do
     context "when no relevancy judgements are provided" do
       let(:relevancy_judgements) { [] }
       it "returns the default response" do
-        expect(ndcg).to eq({ "average_ndcg" => 0 })
+        expect(ndcg).to eq({ "average_ndcg" => { "1" => 0, "10" => 0, "20" => 0, "3" => 0, "5" => 0 } })
       end
     end
 
     context "when no documents are returned for the queries" do
       it "returns a zero ndcg score for all queries" do
         expect(ndcg).to eq({
-          "average_ndcg" => 0,
-          "cat"          => 0,
-          "dog"          => 0,
+          "average_ndcg" => { "1" => 0, "10" => 0, "20" => 0, "3" => 0, "5" => 0 },
+          "cat" => { "1" => 0, "10" => 0, "20" => 0, "3" => 0, "5" => 0 },
+          "dog" => { "1" => 0, "10" => 0, "20" => 0, "3" => 0, "5" => 0 },
         })
       end
     end
 
     context "when documents are in the index" do
       it "returns the ndcg score for all queries" do
-        %w(
-          pet whiskers kitten cat cats dogs animals
-          cat-owners dog-owners dog cat-dog-owners
-          pets kittens whiskers 'dog dog owner' dogs terriers
-          corgies alsatians dogg 'cat cat cat!'
-        ).each { |doc|
+        [
+          "pet", "whiskers", "kitten", "cat", "cats", "dogs", "animals",
+          "cat-owners", "dog-owners", "dog walking dogs", "cat-dog-owners",
+          "pets", "kittens", "whiskers", "dog dog owner", "dogs", "terriers",
+          "corgies", "alsatians", "dogg", "cat cat cat!"
+        ].each { |doc|
           commit_document("government_test",
                           "title" => doc,
                           "description" => "A document about #{doc} for #{doc}s.",
-                          "link" => "/#{doc}")
+                          "link" => "/#{doc.split(' ').join('-')}")
         }
 
         expect(ndcg).to eq({
-          "average_ndcg" => 0.46533827903669656,
-          "cat"          => 0.5,
-          "dog"          => 0.43067655807339306,
+          "average_ndcg" => { "1" => 1.0, "10" => 0.8105205226122176, "20" => 0.8105205226122176, "3" => 0.8010100946003349, "5" => 0.8105205226122176 },
+          "cat" => { "1" => 1.0, "10" => 0.7782127803434975, "20" => 0.7782127803434975, "3" => 0.7591919243197319, "5" => 0.7782127803434975 },
+          "dog" => { "1" => 1.0, "10" => 0.8428282648809379, "20" => 0.8428282648809379, "3" => 0.8428282648809379, "5" => 0.8428282648809379 },
         })
       end
     end

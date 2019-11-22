@@ -4,14 +4,15 @@ require "spec/unit/helpers/ranker_test_helpers"
 RSpec.describe LearnToRank::Reranker do
   include RankerTestHelpers
 
-  let(:reranked) { described_class.new.rerank(es_results: search_results) }
+  let(:reranked) { described_class.new.rerank(query: query, es_results: search_results) }
 
   let(:feature_sets) do
-    LearnToRank::FeatureSets.new.call(search_results)
+    LearnToRank::FeatureSets.new.call(query, search_results)
   end
 
   describe "#reranked" do
     context "when there are no search results" do
+      let(:query) { nil }
       let(:search_results) { [] }
       it "returns an empty array without calling ranker" do
         expect(reranked).to eq([])

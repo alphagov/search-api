@@ -4,8 +4,8 @@ require "learn_to_rank/ranker"
 module LearnToRank
   class Reranker
     # Reranker re-orders elasticsearch results using a pre-trained model
-    def rerank(es_results: [])
-      feature_sets = FeatureSets.new.call(es_results)
+    def rerank(query: "", es_results: [])
+      feature_sets = FeatureSets.new.call(query, es_results)
       new_scores   = Ranker.new(feature_sets).ranks
 
       reorder_results(es_results, new_scores)
