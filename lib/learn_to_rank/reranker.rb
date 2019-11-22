@@ -8,6 +8,8 @@ module LearnToRank
       feature_sets = FeatureSets.new.call(query, es_results)
       new_scores   = Ranker.new(feature_sets).ranks
 
+      log_reranking
+
       reorder_results(es_results, new_scores)
     end
 
@@ -31,6 +33,10 @@ module LearnToRank
         }
 
       ranked.sort_by { |res| -res["combined_score"] }
+    end
+
+    def log_reranking
+      GovukStatsd.increment "results_reranked"
     end
   end
 end
