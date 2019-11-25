@@ -293,7 +293,8 @@ migrated:
   - '/help/cookies'
   - '/find-local-council'
 
-indexable: []
+indexable:
+- person
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -402,7 +403,6 @@ non_indexable:
 - organisation
 - our_energy_use
 - our_governance
-- person
 - personal_information_charter
 - petitions_and_campaigns
 - policy_area

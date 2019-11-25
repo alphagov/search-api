@@ -28,6 +28,7 @@ manual: manual
 manual_section: manual_section
 medical_safety_alert: medical_safety_alert # Specialist Publisher
 news_story: edition
+person: person
 place: edition
 policy: policy # Policy Publisher
 press_release: edition

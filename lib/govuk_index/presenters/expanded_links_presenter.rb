@@ -28,6 +28,10 @@ module GovukIndex
       organisation_slugs("primary_publishing_organisation")
     end
 
+    def role_appointments
+      content_ids("role_appointments")
+    end
+
     def taxons
       content_ids("taxons")
     end

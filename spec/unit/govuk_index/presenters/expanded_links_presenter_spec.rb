@@ -273,6 +273,24 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expect(presenter.policy_groups).to eq(%w[micropig-advisory-group])
   end
 
+  describe "role_appointments" do
+    let(:expanded_links) do
+      {
+        "role_appointments" => [
+          {
+              "content_id" => "215f612f-6491-4241-9d91-dd39d1759792",
+              "locale" => "en",
+              "title" => "Prime Minister",
+          },
+        ],
+      }
+    end
+
+    subject(:presenter) { expanded_links_presenter(expanded_links) }
+
+    specify { expect(presenter.role_appointments).to eq(%w[215f612f-6491-4241-9d91-dd39d1759792]) }
+  end
+
   it "default_news_image" do
     default_news_image_url = "https://www.test.gov.uk/default_news_image.jpg"
     expanded_links = {
