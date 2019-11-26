@@ -88,6 +88,7 @@ module GovukIndex
         updated_at:                          common_fields.updated_at,
         publishing_app:                      common_fields.publishing_app,
         railway_type:                        specialist.railway_type,
+        role_appointments:                   expanded_links.role_appointments,
         regions:                             specialist.regions,
         registration:                        specialist.registration,
         rendering_app:                       common_fields.rendering_app,
@@ -187,6 +188,8 @@ module GovukIndex
         base_path.gsub(%r{^/browse/}, "")
       elsif format == "policy"
         base_path.gsub(%r{^/government/policies/}, "")
+      elsif format == "person"
+        base_path.gsub(%r{^/government/people/}, "")
       end
     end
 
