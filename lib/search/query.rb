@@ -29,7 +29,7 @@ module Search
 
       es_response = process_elasticsearch_errors { timed_raw_search(payload) }
       reranked_response = rerank(es_response, search_params)
-      process_es_response(search_params, builder, payload, reranked_response)
+      process_es_response(search_params, builder, payload, reranked_response[:es_response], reranked_response[:reranked])
     end
 
   private
@@ -79,23 +79,23 @@ module Search
     end
 
     def rerank(es_response, search_params)
-      return es_response unless search_params.rerank
+      return { reranked: false, es_response: es_response } unless search_params.rerank
 
       results = es_response.dig("hits", "hits").to_a
-      return es_response if results.empty? || results[0].fetch("_score").nil?
+      return { reranked: false, es_response: es_response } if results.empty? || results[0].fetch("_score").nil?
 
       reranked = LearnToRank::Reranker.new.rerank(
         es_results: results,
         query: search_params.query,
       )
 
-      return es_response if reranked.nil?
+      return { reranked: false, es_response: es_response } if reranked.nil?
 
       es_response["hits"]["hits"] = reranked
-      es_response
+      { reranked: true, es_response: es_response }
     end
 
-    def process_es_response(search_params, builder, payload, es_response)
+    def process_es_response(search_params, builder, payload, es_response, reranked)
       example_fetcher = AggregateExampleFetcher.new(index, es_response, search_params, builder)
       aggregate_examples = example_fetcher.fetch
 
@@ -111,6 +111,7 @@ module Search
         aggregate_examples: aggregate_examples,
         schema: index.schema,
         query_payload: payload,
+        reranked: reranked,
       ).present
     end
 
