@@ -30,7 +30,13 @@ module LearnToRank
         }.to_json,
         headers: { "Content-Type" => "application/json" },
       }
-      response = HTTParty.post(url, options)
+
+      begin
+        response = HTTParty.post(url, options)
+      rescue SocketError
+        return default_ranks(examples)
+      end
+
       log_response(response)
 
       return default_ranks(examples) if ranker_error(response)
