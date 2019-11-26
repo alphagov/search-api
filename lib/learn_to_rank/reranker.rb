@@ -15,7 +15,6 @@ module LearnToRank
 
   private
 
-    DEFAULT_COUNT = 20
     MAX_MODEL_BOOST = 5
 
     def reorder_results(search_results, new_scores)
