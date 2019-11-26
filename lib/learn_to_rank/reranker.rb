@@ -1,6 +1,11 @@
 require "learn_to_rank/feature_sets"
 require "learn_to_rank/ranker"
 
+# autoloading would be nice here
+require "search/escaping"
+require "search/query_components/base_component"
+require "search/query_components/best_bets"
+
 module LearnToRank
   class Reranker
     # Reranker re-orders elasticsearch results using a pre-trained model
@@ -17,20 +22,19 @@ module LearnToRank
 
   private
 
-    DEFAULT_COUNT = 20
-    MAX_MODEL_BOOST = 5
+    MAX_MODEL_SCORE = QueryComponents::BestBets::MIN_BEST_BET_SCORE - 1
 
     def reorder_results(search_results, new_scores)
       ranked = search_results
         .map
         .with_index { |result, index|
-          m_score = [new_scores[index], MAX_MODEL_BOOST].min
+          m_score = [new_scores[index], MAX_MODEL_SCORE].min
           es_score = result.fetch("_score", 0)
           result.merge(
             "model_score" => m_score,
             "original_rank" => index + 1,
             # keep best bet scores
-            "combined_score" => es_score > 1000 ? es_score : m_score,
+            "combined_score" => es_score > MAX_MODEL_SCORE ? es_score : m_score,
           )
         }
 

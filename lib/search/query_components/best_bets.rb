@@ -1,5 +1,7 @@
 module QueryComponents
   class BestBets < BaseComponent
+    MIN_BEST_BET_SCORE = 1_000_000
+
     def initialize(metasearch_index:, search_params: Search::QueryParameters.new)
       @metasearch_index = metasearch_index
 
@@ -39,7 +41,7 @@ module QueryComponents
             query: {
               terms: { link: links },
             },
-            weight: (bb_max_position + 1 - position) * 1_000_000,
+            weight: (bb_max_position + 1 - position) * MIN_BEST_BET_SCORE,
           },
         }
       end
