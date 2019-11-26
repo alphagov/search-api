@@ -14,8 +14,8 @@ RSpec.describe LearnToRank::Ranker do
     context "when there are no search results" do
       let(:query) { nil }
       let(:search_results) { [] }
-      it "returns an empty array without calling ranker" do
-        expect(ranks).to eq([])
+      it "returns nil without calling ranker" do
+        expect(ranks).to be_nil
       end
     end
 
@@ -27,9 +27,9 @@ RSpec.describe LearnToRank::Ranker do
     end
 
     context "when the ranker is unavailable" do
-      it "returns an array of ranks in descending order, to preserve original rank" do
+      it "returns nil" do
         stub_ranker_is_unavailable
-        expect(ranks).to eq([2, 1])
+        expect(ranks).to be_nil
       end
     end
   end

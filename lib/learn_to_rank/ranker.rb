@@ -9,7 +9,7 @@ module LearnToRank
     end
 
     def ranks
-      return [] unless feature_sets.any?
+      return nil unless feature_sets.any?
 
       GovukStatsd.time("reranker.fetch_scores") do
         fetch_new_scores(feature_sets)
@@ -34,19 +34,14 @@ module LearnToRank
       begin
         response = HTTParty.post(url, options)
       rescue SocketError
-        return default_ranks(examples)
+        return nil
       end
 
       log_response(response)
 
-      return default_ranks(examples) if ranker_error(response)
+      return nil if ranker_error(response)
 
-      JSON.parse(response.body).fetch("results", default_ranks(examples))
-    end
-
-    def default_ranks(examples)
-      # Use existing rank by giving higher score 3,2,1 to the first results.
-      (1..examples.count).reverse_each.to_a
+      JSON.parse(response.body).fetch("results")
     end
 
     def ranker_error(response)
