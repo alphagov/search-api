@@ -714,4 +714,41 @@ RSpec.describe Search::ResultSetPresenter do
   def text_filter(field_name, values)
     SearchParameterParser::TextFieldFilter.new(field_name, values, :filter, :any)
   end
+
+  context "reranked results" do
+    before do
+      @results = {
+        "hits" => {
+          "hits" => [],
+          "total" => 0,
+        },
+      }
+    end
+
+    it "sets reranked: false" do
+      output = described_class.new(
+        search_params: Search::QueryParameters.new(
+          start: 0,
+          aggregate_name: :aggregates,
+        ),
+        es_response: @results,
+        reranked: false,
+      ).present
+
+      expect(output[:reranked]).to eq(false)
+    end
+
+    it "sets reranked: true" do
+      output = described_class.new(
+        search_params: Search::QueryParameters.new(
+          start: 0,
+          aggregate_name: :aggregates,
+        ),
+        es_response: @results,
+        reranked: false,
+      ).present
+
+      expect(output[:reranked]).to eq(false)
+    end
+  end
 end

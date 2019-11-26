@@ -8,6 +8,8 @@ module LearnToRank
       feature_sets = FeatureSets.new.call(query, es_results)
       new_scores   = Ranker.new(feature_sets).ranks
 
+      return nil if new_scores.nil?
+
       log_reranking
 
       reorder_results(es_results, new_scores)
