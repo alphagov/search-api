@@ -51,6 +51,7 @@ migrated:
 - hmrc_manual_section
 - manual
 - manual_section
+- person
 - policy
 - recommended-link # Search admin
 - service_manual_guide
@@ -294,7 +295,6 @@ migrated:
   - '/find-local-council'
 
 indexable:
-- person
 - ministerial_role
 
 non_indexable_path:
