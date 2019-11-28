@@ -43,6 +43,7 @@ module SpecHelpers
     payload[:document_type] ||= schema
     retry_attempts.times do
       random_example = GovukSchemas::RandomExample.for_schema(notification_schema: schema) do |hash|
+        hash["locale"] = "en"
         hash.merge!(payload.stringify_keys)
 
         unless details.empty?
