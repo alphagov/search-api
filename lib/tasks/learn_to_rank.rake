@@ -1,6 +1,7 @@
 require "csv"
 require "fileutils"
 require "rummager"
+require "zip"
 require "analytics/popular_queries"
 require "analytics/total_query_ctr"
 require "relevancy/load_judgements"
@@ -47,6 +48,38 @@ namespace :learn_to_rank do
       model_dir = args.model_dir || "tmp/libsvm"
       svm_dir = args.svm_dir || "tmp/ltr_data"
       sh "env OUTPUT_DIR=#{model_dir} TRAIN=#{svm_dir}/train.txt VALI=#{svm_dir}/validate.txt TEST=#{svm_dir}/test.txt ./ltr_scripts/train.sh"
+    end
+
+    desc "Pull learn to rank model from S3"
+    task :pull, [:model_filename] do |_, args|
+      bucket_name = ENV["AWS_S3_RELEVANCY_BUCKET_NAME"]
+      raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME" if bucket_name.blank?
+
+      raise "Please specify the model filename" if args.model_filename.blank?
+
+      model_filename = args.model_filename
+
+      o = Aws::S3::Object.new(bucket_name: bucket_name, key: "ltr/#{model_filename}")
+
+      model_dir = ENV["TENSORFLOW_MODELS_DIRECTORY"]
+
+      raise "Please specify the Tensorflow models directory" if model_dir.blank?
+
+      tmpdir = Dir.mktmpdir
+      begin
+        path = "#{tmpdir}/#{model_filename}"
+        o.get(response_target: path)
+
+        Zip::File.open(path) do |zip_file|
+          zip_file.each do |file|
+            file_path = File.join("/#{model_dir}/ltr", file.name)
+            puts "Extracting archive to #{file_path} ..."
+            zip_file.extract(file, file_path) unless File.exist?(file_path)
+          end
+        end
+      ensure
+        FileUtils.remove_entry tmpdir
+      end
     end
 
     desc "Serves a trained model"
