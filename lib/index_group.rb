@@ -4,7 +4,7 @@ module SearchIndices
   # An index group, say "govuk", consists of a number of indexes of the
   # form "govuk-<timestamp>-<uuid>". For example:
   #
-  #   govuk-2013-02-28t15:51:12z-50e3251b-869b-4894-b83c-de4675cefff6
+  #   govuk-2013-02-28t15-51-12z-50e3251b-869b-4894-b83c-de4675cefff6
   #
   # One of these indexes is aliased to the group name itself.
   class IndexGroup
@@ -119,9 +119,9 @@ module SearchIndices
     end
 
     def generate_name
-      # elasticsearch requires that all index names be lower case
-      # (Thankfully, lower case ISO8601 timestamps are still valid)
-      "#{@name}-#{Time.now.utc.iso8601}-#{SecureRandom.uuid}".downcase
+      # elasticsearch requires that all index names be lower case and
+      # doesn't allow colons
+      "#{@name}-#{Time.now.utc.iso8601}-#{SecureRandom.uuid}".downcase.gsub(/:/, "-")
     end
 
     def alias_map(include_closed: false)
@@ -133,6 +133,8 @@ module SearchIndices
       indices.select { |name| name_pattern.match name }
     end
 
+    # replace the [:-]s with -s after running a schema migration to
+    # create the new indices
     def name_pattern
       %r{
         \A
@@ -140,7 +142,7 @@ module SearchIndices
         -
         \d{4}-\d{2}-\d{2}  # Date
         t
-        \d{2}:\d{2}:\d{2}  # Time
+        \d{2}[:-]\d{2}[:-]\d{2}  # Time
         z
         -
         \h[-\h]*  # UUID
