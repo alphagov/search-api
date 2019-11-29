@@ -47,7 +47,7 @@ module QueryComponents
         script_score: {
           script: {
             lang: "painless",
-            inline: "((0.05 / ((3.16*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)",
+            source: "((0.05 / ((3.16*Math.pow(10,-11)) * Math.abs(params.now - doc['public_timestamp'].date.getMillis()) + 0.05)) + 0.12)",
             params: {
               now: time_in_millis_to_nearest_minute,
             },

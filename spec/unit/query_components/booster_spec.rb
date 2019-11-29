@@ -53,7 +53,7 @@ RSpec.describe QueryComponents::Booster do
 
       expected_time_in_millis = 1457712000000
       expect(expected_time_in_millis).to eq(script_score[:script][:params][:now])
-      expect(script_score[:script][:inline]).to match(/doc\['public_timestamp'\]/)
+      expect(script_score[:script][:source]).to match(/doc\['public_timestamp'\]/)
     end
   end
 

@@ -1658,7 +1658,7 @@ module Fixtures
             "details" => [
               {
                 "value" => 0.005739337,
-                "description" => "script score function, computed with script:\"Script{type=inline,\nlang='painless', idOrCode='doc['popularity'].value + 0.001', options={},\nparams={}}\" and parameters: \n{}",
+                "description" => "script score function, computed with script:\"Script{type=source,\nlang='painless', idOrCode='doc['popularity'].value + 0.001', options={},\nparams={}}\" and parameters: \n{}",
                 "details" => [
                   {
                     "value" => 988.3336,
