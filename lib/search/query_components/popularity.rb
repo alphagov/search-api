@@ -23,7 +23,7 @@ module QueryComponents
           script_score: {
             script: {
               lang: "painless",
-              inline: "doc['popularity'].value + #{POPULARITY_OFFSET}",
+              source: "doc['popularity'].value + #{POPULARITY_OFFSET}",
             },
           },
         },

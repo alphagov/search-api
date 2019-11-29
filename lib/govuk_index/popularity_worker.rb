@@ -20,7 +20,7 @@ module GovukIndex
     def process_record(record, popularities)
       base_path = record["identifier"]["_id"]
       OpenStruct.new(
-        identifier: record["identifier"].merge("_version_type" => "external_gte", "_type" => "generic-document"),
+        identifier: record["identifier"].merge("version_type" => "external_gte", "_type" => "generic-document"),
         document: record["document"].merge(
           "popularity" => popularities.dig(base_path, :popularity_score),
           "popularity_b" => popularities.dig(base_path, :popularity_rank),

@@ -10,7 +10,7 @@ module GovukIndex
       records.each do |record|
         actions.save(
           OpenStruct.new(
-            identifier: record["identifier"].merge("_version_type" => "external_gte"),
+            identifier: record["identifier"].merge("version_type" => "external_gte"),
             document: record["document"],
           ),
         )
