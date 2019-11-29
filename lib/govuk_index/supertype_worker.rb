@@ -22,7 +22,7 @@ module GovukIndex
 
     def process_record(record)
       OpenStruct.new(
-        identifier: record["identifier"].merge("_version_type" => "external_gte"),
+        identifier: record["identifier"].merge("version_type" => "external_gte"),
         document: update_document_supertypes(record["document"]),
       )
     end
