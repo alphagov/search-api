@@ -81,7 +81,7 @@ flags.DEFINE_string("output_dir", None, "Output directory for models.")
 flags.DEFINE_integer("train_batch_size", 32, "The batch size for training.")
 flags.DEFINE_integer("num_train_steps", 100000, "Number of steps for training.")
 
-flags.DEFINE_float("learning_rate", 0.01, "Learning rate for optimizer.")
+flags.DEFINE_float("learning_rate", 0.1, "Learning rate for optimizer.")
 flags.DEFINE_float("dropout_rate", 0.5, "The dropout rate before output layer.")
 flags.DEFINE_list("hidden_layer_dims", ["256", "128", "64"],
                   "Sizes for hidden layers.")
@@ -90,7 +90,7 @@ flags.DEFINE_integer("num_features", 136, "Number of features per document.")
 flags.DEFINE_integer("list_size", 100, "List size used for training.")
 flags.DEFINE_integer("group_size", 1, "Group size used in score function.")
 
-flags.DEFINE_string("loss", "pairwise_logistic_loss",
+flags.DEFINE_string("loss", "list_mle_loss",
                     "The RankingLossKey for the primary loss function.")
 flags.DEFINE_string(
     "secondary_loss", None, "The RankingLossKey for the secondary loss for "
@@ -356,6 +356,7 @@ def get_eval_metric_fns():
   metric_fns.update({
       "metric/%s" % name: tfr.metrics.make_ranking_metric_fn(name) for name in [
           tfr.metrics.RankingMetricKey.ARP,
+          tfr.metrics.RankingMetricKey.MRR, # Mean Reciprocal Rank
           tfr.metrics.RankingMetricKey.ORDERED_PAIR_ACCURACY,
       ]
   })
