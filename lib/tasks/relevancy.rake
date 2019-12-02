@@ -15,9 +15,12 @@ namespace :relevancy do
     report_query_ctr
   end
 
-  desc "Print the top 1_000 most popular search queries and their view counts"
+  desc "Print the top 1_000 most popular search queries, their viewcounts and CTR"
   task :show_top_queries do
+    puts "Top queries:"
     report_popular_queries
+    puts "CTR for top queries:"
+    report_query_ctr
   end
 
   desc "Compute nDCG for a set of relevancy judgements (search performance metric)"
@@ -48,8 +51,6 @@ namespace :relevancy do
   task :send_ga_data_to_graphite do
     puts "Sending overall CTR to graphite"
     report_overall_ctr
-    puts "Sending query click-through-rates to graphite"
-    report_query_ctr
     puts "Finished"
   end
 end
@@ -59,7 +60,10 @@ def report_overall_ctr
 end
 
 def report_query_ctr
-  report(Analytics::QueryPerformance.new(queries: popular_queries.map { |q| q[0] }).call)
+  ctrs = Analytics::QueryPerformance.new(queries: popular_queries.map { |q| q[0] }).call
+  ctrs.each do |(stat, reading)|
+    puts "#{stat.downcase.gsub(' ', '_')}: #{reading}"
+  end
 end
 
 def report_popular_queries
