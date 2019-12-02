@@ -30,7 +30,8 @@ namespace :learn_to_rank do
       File.open("#{svm_dir}/validate.txt", "wb") do |validate|
         File.open("#{svm_dir}/test.txt", "wb") do |test|
           svm.values.shuffle.each.with_index do |query_set, index|
-            file = [train, train, validate, test][index % 4]
+            # 70% in train 20% in test, 10% in validate
+            file = [train, train, train, train, train, train, train, test, test, validate][index % 10]
             query_set.each { |row| file.puts(row) }
           end
         end
