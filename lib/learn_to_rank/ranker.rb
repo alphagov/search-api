@@ -34,6 +34,7 @@ module LearnToRank
       begin
         response = HTTParty.post(url, options)
       rescue SocketError
+        Services.statsd_client.increment("learn_to_rank.errors.socket_error")
         return nil
       end
 
