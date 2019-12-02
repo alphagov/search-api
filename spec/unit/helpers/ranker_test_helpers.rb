@@ -29,7 +29,7 @@ module RankerTestHelpers
   end
 
   def stub_request_to_ranker(examples, rank_response)
-    stub_request(:post, "http://reranker:8501/v1/models/ltr:regress")
+    stub_request(:post, "http://0.0.0.0:8501/v1/models/ltr:regress")
       .with(
         body: {
           signature_name: "regression",
@@ -43,7 +43,7 @@ module RankerTestHelpers
   end
 
   def stub_ranker_is_unavailable
-    stub_request(:post, "http://reranker:8501/v1/models/ltr:regress")
+    stub_request(:post, "http://0.0.0.0:8501/v1/models/ltr:regress")
       .to_return(status: 500)
   end
 end

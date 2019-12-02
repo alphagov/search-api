@@ -21,7 +21,7 @@ module LearnToRank
     attr_reader :feature_sets
 
     def fetch_new_scores(examples)
-      url = "http://reranker:8501/v1/models/ltr:regress"
+      url = "http://0.0.0.0:8501/v1/models/ltr:regress"
       options = {
         method: "POST",
         body: {
