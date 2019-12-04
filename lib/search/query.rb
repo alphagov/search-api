@@ -104,6 +104,10 @@ module Search
         es_response["suggest"] = run_spell_checks(search_params)
       end
 
+      if search_params.suggest_autocomplete?
+        es_response["autocomplete"] = run_autocomplete_query(search_params)
+      end
+
       ResultSetPresenter.new(
         search_params: search_params,
         es_response: es_response,
@@ -139,6 +143,17 @@ module Search
       response = spelling_index.raw_search(query)
 
       response["suggest"]
+    end
+
+    def run_autocomplete_query(search_params)
+      query = {
+        _source: "title",
+        query: QueryComponents::Autocomplete.new(search_params).payload,
+      }
+
+      response = index.raw_search(query)
+
+      response["hits"]
     end
 
     def log_search

@@ -36,6 +36,7 @@ module Search
         start: search_params.start,
         search_params.aggregate_name => presented_aggregates,
         suggested_queries: suggested_queries,
+        suggested_autocomplete: suggested_autocomplete,
         es_cluster: search_params.cluster.key,
         reranked: reranked,
       }
@@ -51,6 +52,10 @@ module Search
 
     def suggested_queries
       SpellCheckPresenter.new(es_response).present
+    end
+
+    def suggested_autocomplete
+      AutocompletePresenter.new(es_response).present
     end
 
     def presented_results

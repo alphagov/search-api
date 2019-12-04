@@ -53,6 +53,10 @@ module Search
       debug[:show_query]
     end
 
+    def suggest_autocomplete?
+      query && suggest.include?("autocomplete")
+    end
+
     def suggest_spelling?
       query && (suggest.include?("spelling") || suggest.include?("spelling_with_highlighting"))
     end

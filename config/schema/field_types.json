@@ -101,6 +101,11 @@
           "index": true,
           "analyzer": "with_index_synonyms",
           "search_analyzer": "with_search_synonyms"
+        },
+        "edgengram": {
+          "type": "text",
+          "analyzer": "edge_ngram_analyzer",
+          "search_analyzer": "edge_ngram_search_analyzer"
         }
       }
     }
