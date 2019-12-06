@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "activesupport", "~> 6.0.1"
-gem "aws-sdk-s3", "~> 1.57"
+gem "aws-sdk-s3", "~> 1.59"
 gem "elasticsearch", "~> 6"
 gem "gds-api-adapters", "~> 62.0"
 gem "google-api-client", "~> 0.34.1"
