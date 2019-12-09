@@ -1,0 +1,71 @@
+{
+  "fields": [
+    "decision_subject",
+    "regions",
+    "case_type",
+    "outcome_type",
+    "first_published_at"
+  ],
+
+  "expanded_search_result_fields": {
+    "decision_subject": [
+      {
+        "label": "HGV operator",
+        "value": "hgv-operator"
+      },
+      {
+        "label": "Bus operator",
+        "value": "bus-operator"
+      },
+      {
+        "label": "Transport manager",
+        "value": "transport-manager"
+      }
+    ],
+
+    "regions": [
+      {"label": "East Midlands", "value": "east-midlands"},
+      {"label": "Eastern", "value": "eastern"},
+      {"label": "London", "value": "london"},
+      {"label": "North East", "value": "north-east"},
+      {"label": "North West", "value": "north-west"},
+      {"label": "Northern Ireland", "value": "northern-ireland"},
+      {"label": "Scotland", "value": "scotland"},
+      {"label": "South East", "value": "south-east"},
+      {"label": "South West", "value": "south-west"},
+      {"label": "Wales", "value": "wales"},
+      {"label": "West Midlands", "value": "west-midlands"},
+      {"label": "Yorkshire and the Humber", "value": "yorkshire-and-the-humber"}
+    ],
+
+    "case_type": [
+      {
+        "label": "Application",
+        "value": "application"
+      },
+      {
+        "label": "Regulatory",
+        "value": "regulatory"
+      },
+      {
+        "label": "Impounding",
+        "value": "impounding"
+      },
+      {
+        "label": "Environmental",
+        "value": "environmental"
+      }
+    ],
+
+    "outcome_type": [
+      {
+        "label": "No action",
+        "value": "no-action"
+      },
+      {
+        "label": "Formal warning",
+        "value": "formal-warning"
+      }
+    ]
+  }
+}

@@ -34,6 +34,7 @@ module GovukIndex
         continuation_link:                   specialist.continuation_link,
         country:                             specialist.country,
         date_of_occurrence:                  specialist.date_of_occurrence,
+        decision_subject:                    specialist.decision_subject,
         description:                         common_fields.description,
         destination_country:                 specialist.destination_country,
         development_sector:                  specialist.development_sector,
