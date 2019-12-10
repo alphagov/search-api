@@ -64,6 +64,7 @@ class BaseParameterParser
     primary_publishing_organisation
     publishing_app
     rendering_app
+    roles
     search_format_types
     search_user_need_document_supertype
     specialist_sectors
