@@ -16,15 +16,15 @@ LIBRARY_PATH = PROJECT_ROOT + "lib/"
 $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 
 require "rummager"
-require 'tempfile'
+require "tempfile"
 
-puts 'Creating temporary file to store $stdin...'
-tmp = Tempfile.open('stdin')
+puts "Creating temporary file to store $stdin..."
+tmp = Tempfile.open("stdin")
 
 begin
-  puts 'Copying stream to temporary file...'
+  puts "Copying stream to temporary file..."
   IO.copy_stream($stdin, tmp)
-  puts 'Opening temporary file as $stdin'
+  puts "Opening temporary file as $stdin"
   $stdin.reopen(tmp)
 
   Clusters.active.each do |cluster|
@@ -33,7 +33,7 @@ begin
     GovukIndex::PageTrafficLoader.new(cluster: cluster).load_from($stdin)
   end
 ensure
-  puts 'All done. Closing and deleting the temporary file...'
+  puts "All done. Closing and deleting the temporary file..."
   tmp.close
   tmp.unlink
 end
