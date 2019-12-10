@@ -278,9 +278,9 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
       {
         "role_appointments" => [
           {
-              "content_id" => "215f612f-6491-4241-9d91-dd39d1759792",
-              "locale" => "en",
-              "title" => "Prime Minister",
+            "content_id" => "215f612f-6491-4241-9d91-dd39d1759792",
+            "locale" => "en",
+            "title" => "Prime Minister",
           },
         ],
       }
