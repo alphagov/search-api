@@ -8,7 +8,7 @@ $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 
 require "rummager"
 
-EXCLUDED_FORMATS = ["recommended-link"].freeze
+EXCLUDED_FORMATS = %w[recommended-link].freeze
 
 def all_documents(indices)
   Enumerator.new do |yielder|
