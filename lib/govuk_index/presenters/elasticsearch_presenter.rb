@@ -191,6 +191,8 @@ module GovukIndex
         base_path.gsub(%r{^/government/policies/}, "")
       elsif format == "person"
         base_path.gsub(%r{^/government/people/}, "")
+      elsif format == "ministerial_role"
+        base_path.gsub(%r{^/government/ministers/}, "")
       end
     end
 
