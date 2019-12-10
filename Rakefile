@@ -10,11 +10,13 @@ require "rummager/config"
 
 Dir[File.join(PROJECT_ROOT, "lib/tasks/**/*.rake")].each { |file| load file }
 
+# rubocop:disable Lint/SuppressedException
 begin
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:spec)
 rescue LoadError
 end
+# rubocop:enable Lint/SuppressedException
 
 task default: %i[spec lint]
 
