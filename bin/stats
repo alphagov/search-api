@@ -47,7 +47,7 @@ all_documents(indices).each do |document|
   end
 end
 
-average_word_count = word_count.to_f / document_count.to_f
+average_word_count = word_count.fdiv(document_count.to_f)
 
 puts """
 GOV.UK search index contents
