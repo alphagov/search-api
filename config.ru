@@ -28,8 +28,8 @@ end
 
 unless in_development
   use Rack::Logstasher::Logger,
-    Logger.new("log/production.json.log"),
-    extra_request_headers: { "GOVUK-Request-Id" => "govuk_request_id", "x-varnish" => "varnish_id" }
+      Logger.new("log/production.json.log"),
+      extra_request_headers: { "GOVUK-Request-Id" => "govuk_request_id", "x-varnish" => "varnish_id" }
 end
 
 require "gds_api/middleware/govuk_header_sniffer"
