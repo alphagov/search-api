@@ -22,11 +22,6 @@ Style/StringLiteralsInInterpolation:
 Style/BracesAroundHashParameters:
   Enabled: false
 
-# This cop doesn't make things clearer in a lot of cases. Using the modifier
-# should be up to the developer.
-Style/IfUnlessModifier:
-  Enabled: false
-
 # The class vars in these two files are acceptable because
 # they aren't inherited.
 Style/ClassVars:
