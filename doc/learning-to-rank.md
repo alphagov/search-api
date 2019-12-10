@@ -30,7 +30,7 @@ database in the `venv` directory.  If you close the shell, you can run
 Using LTR
 ---------
 
-**Set the `ENABLE_LTR` environment variable, or all of this is disabled.**
+**Set the `ENABLE_LTR` environment variable to "true", or all of this is disabled.**
 
 There are several rake tasks for training and serving a TensorFlow
 model in the `learn_to_rank` namespace.
@@ -58,7 +58,7 @@ This task needs to be run with access to Elasticsearch.  If you're
 using govuk-docker the full command will be:
 
 ```sh
-govuk-docker run -e ENABLE_LTR=1 search-api-lite bundle exec rake 'learn_to_rank:generate_training_dataset[judgements.csv]'
+govuk-docker run -e ENABLE_LTR=true search-api-lite bundle exec rake 'learn_to_rank:generate_training_dataset[judgements.csv]'
 ```
 
 Once you have the training dataset you can train and serve a model:
@@ -75,7 +75,7 @@ inside the govuk-docker network at `reranker:8501`.  You can start
 search-api with the `ENABLE_LTR` environment variable with:
 
 ```sh
-govuk-docker run -e ENABLE_LTR=1 search-api-app
+govuk-docker run -e ENABLE_LTR=true search-api-app
 ```
 
 If you now query search-api with `ab_tests=relevance:B` then results

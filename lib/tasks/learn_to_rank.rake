@@ -4,6 +4,7 @@ require "rummager"
 require "zip"
 require "analytics/popular_queries"
 require "relevancy/load_judgements"
+require "search/relevance_helpers"
 
 namespace :learn_to_rank do
   desc "Export a CSV of relevancy judgements generated from CTR on popular queries"
@@ -131,7 +132,7 @@ namespace :learn_to_rank do
   end
 
   def assert_ltr!
-    raise "set $ENABLE_LTR to use learn_to_rank" if ENV["ENABLE_LTR"].nil?
+    raise 'set $ENABLE_LTR to "true" to use learn_to_rank' unless Search::RelevanceHelpers.ltr_enabled?
   end
 
   def export_to_csv(hash, filename)
