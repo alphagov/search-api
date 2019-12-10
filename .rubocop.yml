@@ -13,10 +13,6 @@ Metrics/BlockLength:
     - 'lib/tasks/*.rake'
     - 'spec/**/*'
 
-# Don't care about single/double quotes inside interpolation
-Style/StringLiteralsInInterpolation:
-  Enabled: false
-
 # No braces around parameters doesn't work very nicely in this
 # project because there are lots of hashes with string keys.
 Style/BracesAroundHashParameters:
