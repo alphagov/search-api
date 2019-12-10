@@ -89,6 +89,7 @@ module GovukIndex
         publishing_app:                      common_fields.publishing_app,
         railway_type:                        specialist.railway_type,
         role_appointments:                   expanded_links.role_appointments,
+        roles:                               expanded_links.roles,
         regions:                             specialist.regions,
         registration:                        specialist.registration,
         rendering_app:                       common_fields.rendering_app,
