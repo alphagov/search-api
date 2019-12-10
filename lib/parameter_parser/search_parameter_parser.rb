@@ -80,7 +80,7 @@ private
     specified_start = single_integer_param("start", 0)
     if specified_start > MAX_START
       @errors << "Maximum result set start point (as specified in 'start') is #{MAX_START}"
-      return 0
+      0
     else
       specified_start
     end
@@ -90,7 +90,7 @@ private
     specified_count = single_integer_param("count", 10)
     if specified_count > MAX_RESULTS
       @errors << "Maximum result set size (as specified in 'count') is #{MAX_RESULTS}"
-      return 10
+      10
     else
       specified_count
     end
@@ -151,7 +151,7 @@ private
       normalizer.normalize(string, :nfkc).strip
     rescue ArgumentError
       @errors << %{Invalid unicode in #{description}}
-      return nil
+      nil
     end
   end
 
