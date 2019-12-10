@@ -16,7 +16,7 @@ begin
 rescue LoadError
 end
 
-task default: [:spec, :lint]
+task default: %i[spec lint]
 
 def logger
   Logging.logger.root
