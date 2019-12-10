@@ -93,7 +93,7 @@ namespace :debug do
     return unless ENV["SEND_TO_GRAPHITE"]
 
     Services.statsd_client.gauge(
-      "relevancy.query.#{query.downcase.gsub(" ", "_")}",
+      "relevancy.query.#{query.downcase.gsub(' ', '_')}",
       score,
     )
   end

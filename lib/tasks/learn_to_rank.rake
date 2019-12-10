@@ -123,11 +123,11 @@ namespace :learn_to_rank do
       winning = merged.dig("average_ndcg", :without, ndcg_at) <= merged.dig("average_ndcg", :with_model, ndcg_at)
 
       puts "---"
-      puts "without model score: #{merged["average_ndcg"][:without][ndcg_at]}"
-      puts "with model score: #{merged["average_ndcg"][:with_model][ndcg_at]}"
-      puts "Without model: #{merged["average_ndcg"][:without]}"
-      puts "With model: #{merged["average_ndcg"][:with_model]}"
-      puts "The model has a #{winning ? "good" : "bad"} score"
+      puts "without model score: #{merged['average_ndcg'][:without][ndcg_at]}"
+      puts "with model score: #{merged['average_ndcg'][:with_model][ndcg_at]}"
+      puts "Without model: #{merged['average_ndcg'][:without]}"
+      puts "With model: #{merged['average_ndcg'][:with_model]}"
+      puts "The model has a #{winning ? 'good' : 'bad'} score"
     end
   end
 

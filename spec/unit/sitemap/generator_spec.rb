@@ -38,11 +38,11 @@ RSpec.describe Sitemap::Generator do
       <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
         <sitemap>
           <loc>http://www.dev.gov.uk/sitemaps/sitemap_1.xml</loc>
-          <lastmod>#{@timestamp.strftime("%FT%T%:z")}</lastmod>
+          <lastmod>#{@timestamp.strftime('%FT%T%:z')}</lastmod>
         </sitemap>
         <sitemap>
           <loc>http://www.dev.gov.uk/sitemaps/sitemap_2.xml</loc>
-          <lastmod>#{@timestamp.strftime("%FT%T%:z")}</lastmod>
+          <lastmod>#{@timestamp.strftime('%FT%T%:z')}</lastmod>
         </sitemap>
       </sitemapindex>
     HEREDOC

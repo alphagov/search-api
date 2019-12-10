@@ -36,7 +36,7 @@ namespace :relevancy do
         puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
       end
       puts "---"
-      puts "overall score: #{results["average_ndcg"]}"
+      puts "overall score: #{results['average_ndcg']}"
     ensure
       if csv.is_a?(Tempfile)
         file.close

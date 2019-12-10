@@ -68,7 +68,7 @@ private
       )
 
       unless value.empty?
-        raise %{Unknown keys (#{value.keys.join(", ")}) in field definition "#{field_name}" in "#{definitions_file_path}"}
+        raise %{Unknown keys (#{value.keys.join(', ')}) in field definition "#{field_name}" in "#{definitions_file_path}"}
       end
 
       definitions[field_name] = definition

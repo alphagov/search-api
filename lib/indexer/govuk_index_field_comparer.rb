@@ -33,7 +33,7 @@ module Indexer
     def compare_time(key, old, new)
       return true if Time.parse(old) == Time.parse(new)
 
-      stats["#{Time.parse(old) > Time.parse(new) ? "Older" : "Newer"} value for: #{key}"] += 1
+      stats["#{Time.parse(old) > Time.parse(new) ? 'Older' : 'Newer'} value for: #{key}"] += 1
       false
     rescue TypeError
       false

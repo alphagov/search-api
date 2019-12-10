@@ -18,7 +18,7 @@ module Healthcheck
       else
         names = failing_clusters.map(&:key).join(", ")
         failed = failing_clusters.count
-        "search-api cannot connect to #{failed} elasticsearch #{"cluster".pluralize(failed)}! \n Failing: #{names}"
+        "search-api cannot connect to #{failed} elasticsearch #{'cluster'.pluralize(failed)}! \n Failing: #{names}"
       end
     end
 

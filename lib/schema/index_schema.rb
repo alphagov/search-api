@@ -90,7 +90,7 @@ private
     end
 
     unless raw.empty?
-      raise_error %{Unknown keys (#{raw.keys.join(", ")})}
+      raise_error %{Unknown keys (#{raw.keys.join(', ')})}
     end
 
     elasticsearch_type_names
