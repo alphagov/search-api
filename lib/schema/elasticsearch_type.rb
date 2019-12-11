@@ -75,7 +75,7 @@ private
     expanded_search_result_fields = raw.delete("expanded_search_result_fields") || {}
 
     unless raw.empty?
-      raise_error %{Unknown keys (#{raw.keys.join(", ")})}
+      raise_error %{Unknown keys (#{raw.keys.join(', ')})}
     end
 
     [fields, expanded_search_result_fields, use_base_type]

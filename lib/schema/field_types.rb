@@ -41,7 +41,7 @@ private
       )
 
       unless value.empty?
-        raise %{Unknown keys (#{value.keys.join(", ")}) in field type "#{type_name}" in "#{types_file_path}"}
+        raise %{Unknown keys (#{value.keys.join(', ')}) in field type "#{type_name}" in "#{types_file_path}"}
       end
 
       [type_name, type]

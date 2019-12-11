@@ -8,7 +8,7 @@ $LOAD_PATH << LIBRARY_PATH unless $LOAD_PATH.include?(LIBRARY_PATH)
 
 require "rummager"
 
-EXCLUDED_FORMATS = ["recommended-link"].freeze
+EXCLUDED_FORMATS = %w[recommended-link].freeze
 
 def all_documents(indices)
   Enumerator.new do |yielder|
@@ -47,13 +47,13 @@ all_documents(indices).each do |document|
   end
 end
 
-average_word_count = word_count.to_f / document_count.to_f
+average_word_count = word_count.fdiv(document_count.to_f)
 
 puts """
 GOV.UK search index contents
 
 Looked at the following indices:
-#{indices.map(&:index_name).join(" ")}
+#{indices.map(&:index_name).join(' ')}
 
 Total number of documents: #{number_with_delimiter(document_count)}
 

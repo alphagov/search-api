@@ -33,7 +33,7 @@ module Indexer
     def compare_time(key, old, new)
       return true if Time.parse(old) == Time.parse(new)
 
-      stats["#{Time.parse(old) > Time.parse(new) ? "Older" : "Newer"} value for: #{key}"] += 1
+      stats["#{Time.parse(old) > Time.parse(new) ? 'Older' : 'Newer'} value for: #{key}"] += 1
       false
     rescue TypeError
       false
@@ -57,11 +57,11 @@ module Indexer
         diff_per = (200.0 * extra_old.count / (old_words.count + new_words.count))
         if extra_old.count.zero?
           # we don't need to worry too much about additional words being added
-          return true
+          true
         elsif diff_per < 2
           # if the page has less than X % difference then we are just going to say it is close enough
           # This should be reviewed with the Product Manager
-          return true
+          true
         else
           stats["Indexable Content word diff: #{extra_old.count}"] += 1
           # These are the real difference as are printed to the screen so they can be review on an individual basis
