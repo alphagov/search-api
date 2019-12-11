@@ -58,7 +58,7 @@ namespace :learn_to_rank do
 
       model_files = Aws::S3::Bucket.new(bucket_name).objects.map(&:key)
 
-      model_filename = args.model_filename || model_files.max
+      model_filename = args.model_filename || model_files.max_by(&:to_i)
 
       puts "Pulling model: #{model_filename} ..."
 
