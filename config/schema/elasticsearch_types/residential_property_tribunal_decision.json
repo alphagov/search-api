@@ -43,6 +43,10 @@
       {
         "label": "Tenant associations",
         "value": "tenant-associations"
+      },
+      {
+        "label": "Tenant Fees Act",
+        "value": "tenant-fees-act"
       }
     ],
     "tribunal_decision_sub_category": [
@@ -221,6 +225,14 @@
       {
         "label": "Tenant associations - Request for information",
         "value": "tenant-associations---request-for-information"
+      },
+      {
+        "label": "Tenant Fees Act - Recovery of a prohibited payment",
+        "value": "tenant-fees-act---recovery-of-a-prohibited-payment"
+      },
+      {
+        "label": "Tenant Fees Act - Financial Penalties",
+        "value": "tenant-fees-act---financial-penalties"
       }
     ]
   }
