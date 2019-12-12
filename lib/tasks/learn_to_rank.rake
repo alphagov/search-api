@@ -41,6 +41,30 @@ namespace :learn_to_rank do
     end
   end
 
+  desc "Pull learn to rank model from S3"
+  task :pull_model, [:model_filename] do |_, args|
+    bucket_name = ENV["AWS_S3_RELEVANCY_BUCKET_NAME"]
+    raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME" if bucket_name.blank?
+
+    models_dir = ENV["TENSORFLOW_MODELS_DIRECTORY"]
+    raise "Please specify the Tensorflow models directory" if models_dir.blank?
+
+    prefix            = "ltr"
+    model_filename    = args.model_filename || fetch_latest_model_filename(bucket_name, prefix)
+    model_version     = model_filename.to_i.to_s
+    models_dir        = File.join("/data/vhost", models_dir, "ltr")
+    model_version_dir = "#{models_dir}/#{model_version}"
+
+    if Dir.exist?(model_version_dir)
+      puts "Model version #{model_version} already present at #{model_version_dir}. Skipping pull from S3 ..."
+      next # gracefully exit rake task with code 0
+    end
+
+    pull_model_from_s3(bucket_name: bucket_name,
+                       key: "#{prefix}/#{model_filename}",
+                       models_dir: models_dir)
+  end
+
   namespace :reranker do
     desc "Train a reranker model with relevancy judgements"
     task :train, [:svm_dir, :model_dir] do |_, args|
@@ -49,40 +73,6 @@ namespace :learn_to_rank do
       model_dir = args.model_dir || "tmp/libsvm"
       svm_dir = args.svm_dir || "tmp/ltr_data"
       sh "env OUTPUT_DIR=#{model_dir} TRAIN=#{svm_dir}/train.txt VALI=#{svm_dir}/validate.txt TEST=#{svm_dir}/test.txt ./ltr_scripts/train.sh"
-    end
-
-    desc "Pull learn to rank model from S3"
-    task :pull, [:model_filename] do |_, args|
-      bucket_name = ENV["AWS_S3_RELEVANCY_BUCKET_NAME"]
-      raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME" if bucket_name.blank?
-
-      model_files = Aws::S3::Bucket.new(bucket_name).objects.map(&:key)
-
-      model_filename = args.model_filename || model_files.max_by(&:to_i)
-
-      puts "Pulling model: #{model_filename} ..."
-
-      o = Aws::S3::Object.new(bucket_name: bucket_name, key: "ltr/#{model_filename}")
-
-      model_dir = ENV["TENSORFLOW_MODELS_DIRECTORY"]
-
-      raise "Please specify the Tensorflow models directory" if model_dir.blank?
-
-      tmpdir = Dir.mktmpdir
-      begin
-        path = "#{tmpdir}/#{model_filename}"
-        o.get(response_target: path)
-
-        Zip::File.open(path) do |zip_file|
-          zip_file.each do |file|
-            file_path = File.join("/#{model_dir}/ltr", file.name)
-            puts "Extracting archive to #{file_path} ..."
-            zip_file.extract(file, file_path) unless File.exist?(file_path)
-          end
-        end
-      ensure
-        FileUtils.remove_entry tmpdir
-      end
     end
 
     desc "Serves a trained model"
@@ -143,6 +133,34 @@ namespace :learn_to_rank do
       hash.each do |row|
         csv << row.values
       end
+    end
+  end
+
+  def fetch_latest_model_filename(bucket_name, prefix)
+    s3_objects  = Aws::S3::Bucket.new(bucket_name).objects(prefix: prefix)
+    model_files = s3_objects.map { |object| object.key.delete("#{prefix}/") }
+    model_files.max_by(&:to_i)
+  end
+
+  def pull_model_from_s3(bucket_name:, key:, models_dir:)
+    tmpdir          = Dir.mktmpdir
+    response_target = "#{tmpdir}/latest_model"
+
+    begin
+      puts "Pulling model: #{key} ..."
+
+      s3_object = Aws::S3::Object.new(bucket_name: bucket_name, key: key)
+      s3_object.get(response_target: response_target)
+
+      Zip::File.open(response_target) do |zip_file|
+        zip_file.each do |source_file|
+          destination_path = File.join(models_dir, source_file.name)
+          puts "Extracting archive to #{destination_path} ..."
+          zip_file.extract(source_file, destination_path) unless File.exist?(destination_path)
+        end
+      end
+    ensure
+      FileUtils.remove_entry tmpdir
     end
   end
 end
