@@ -25,33 +25,54 @@ namespace :relevancy do
 
   desc "Compute nDCG for a set of relevancy judgements (search performance metric)"
   task :ndcg, [:datafile, :ab_tests] do |_, args|
-    csv = args.datafile || relevancy_judgements_from_s3
-    begin
-      judgements = Relevancy::LoadJudgements.from_csv(csv)
-      evaluator = Evaluate::Ndcg.new(judgements, args.ab_tests)
-      results = evaluator.compute_ndcg
+    report_ndcg(datafile: args.datafile, ab_tests: args.ab_tests)
+  end
 
-      maxlen = results.keys.map { |query, _| query.length }.max
-      results.map do |(query, score)|
-        puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
-      end
-      puts "---"
-      puts "overall score: #{results['average_ndcg']}"
-    ensure
-      if csv.is_a?(Tempfile)
-        file.close
-        file.unlink
-      end
-    end
+  desc "Send relevancy metrics to Graphite
+  Takes about 10 minutes.
+  Requires SEND_TO_GRAPHITE envvar to be set"
+  task :send_metrics_to_graphite do
+    puts "Sending Google Analytics click through rates to graphite"
+    report_overall_ctr
+    puts "Sending NDCG to graphite"
+    report_ndcg
+    puts "Finished"
   end
 
   desc "Send Google Analytics relevancy data to Graphite
   Takes about 10 minutes.
-  Requires SEND_TO_GRAPHITE envvar being set"
+  Requires SEND_TO_GRAPHITE envvar to be set
+  NOTE: To be deleted once it is no longer used by puppet.
+  "
   task :send_ga_data_to_graphite do
     puts "Sending overall CTR to graphite"
     report_overall_ctr
     puts "Finished"
+  end
+end
+
+def report_ndcg(datafile: nil, ab_tests: nil)
+  csv = datafile || relevancy_judgements_from_s3
+  begin
+    judgements = Relevancy::LoadJudgements.from_csv(csv)
+    evaluator = Evaluate::Ndcg.new(judgements, ab_tests)
+    results = evaluator.compute_ndcg
+
+    maxlen = results.keys.map { |query, _| query.length }.max
+    results.map do |(query, score)|
+      puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
+    end
+    puts "---"
+    puts "overall scores:"
+    results.dig("average_ndcg").each { |k, score|
+      puts "Average NDCG@#{k}: #{score}"
+      Services.statsd_client.gauge("relevancy.ndcg.at_#{k}", score) if ENV["SEND_TO_GRAPHITE"]
+    }
+  ensure
+    if csv.is_a?(Tempfile)
+      file.close
+      file.unlink
+    end
   end
 end
 
