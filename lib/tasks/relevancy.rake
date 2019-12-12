@@ -28,9 +28,22 @@ namespace :relevancy do
     report_ndcg(datafile: args.datafile, ab_tests: args.ab_tests)
   end
 
+  desc "Send relevancy metrics to Graphite
+  Takes about 10 minutes.
+  Requires SEND_TO_GRAPHITE envvar to be set"
+  task :send_metrics_to_graphite do
+    puts "Sending Google Analytics click through rates to graphite"
+    report_overall_ctr
+    puts "Sending NDCG to graphite"
+    report_ndcg
+    puts "Finished"
+  end
+
   desc "Send Google Analytics relevancy data to Graphite
   Takes about 10 minutes.
-  Requires SEND_TO_GRAPHITE envvar being set"
+  Requires SEND_TO_GRAPHITE envvar to be set
+  NOTE: To be deleted once it is no longer used by puppet.
+  "
   task :send_ga_data_to_graphite do
     puts "Sending overall CTR to graphite"
     report_overall_ctr
@@ -50,7 +63,11 @@ def report_ndcg(datafile: nil, ab_tests: nil)
       puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
     end
     puts "---"
-    puts "overall score: #{results['average_ndcg']}"
+    puts "overall scores:"
+    results.dig("average_ndcg").each { |k, score|
+      puts "Average NDCG@#{k}: #{score}"
+      Services.statsd_client.gauge("relevancy.ndcg.at_#{k}", score) if ENV["SEND_TO_GRAPHITE"]
+    }
   ensure
     if csv.is_a?(Tempfile)
       file.close
