@@ -58,8 +58,8 @@ namespace :learn_to_rank do
     end
 
     model_version     = model_filename.to_i.to_s
-    models_dir        = File.join("/data/vhost", models_dir, "ltr")
-    model_version_dir = "#{models_dir}/#{model_version}"
+    ltr_models_dir    = File.join(models_dir, "ltr")
+    model_version_dir = "#{ltr_models_dir}/#{model_version}"
 
     if Dir.exist?(model_version_dir)
       puts "Model version #{model_version} already present at #{model_version_dir}. Skipping pull from S3 ..."
@@ -68,7 +68,7 @@ namespace :learn_to_rank do
 
     pull_model_from_s3(bucket_name: bucket_name,
                        key: "#{prefix}/#{model_filename}",
-                       models_dir: models_dir)
+                       ltr_models_dir: ltr_models_dir)
   end
 
   namespace :reranker do
@@ -152,7 +152,7 @@ namespace :learn_to_rank do
     end
   end
 
-  def pull_model_from_s3(bucket_name:, key:, models_dir:)
+  def pull_model_from_s3(bucket_name:, key:, ltr_models_dir:)
     tmpdir          = Dir.mktmpdir
     response_target = "#{tmpdir}/latest_model"
 
@@ -164,7 +164,7 @@ namespace :learn_to_rank do
 
       Zip::File.open(response_target) do |zip_file|
         zip_file.each do |source_file|
-          destination_path = File.join(models_dir, source_file.name)
+          destination_path = File.join(ltr_models_dir, source_file.name)
           puts "Extracting archive to #{destination_path} ..."
           zip_file.extract(source_file, destination_path) unless File.exist?(destination_path)
         end
