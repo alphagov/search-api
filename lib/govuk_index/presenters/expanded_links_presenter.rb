@@ -20,6 +20,10 @@ module GovukIndex
       slugs("people", "/government/people/")
     end
 
+    def roles
+      slugs("roles", "/government/ministers/")
+    end
+
     def policy_groups
       slugs("working_groups", "/government/groups/")
     end

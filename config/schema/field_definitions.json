@@ -327,6 +327,11 @@
     "type": "identifiers"
   },
 
+  "roles": {
+    "description": "Links to roles associated with this page (https://www.gov.uk/government/ministers).",
+    "type": "identifiers"
+  },
+
   "policy_groups": {
     "description": "Links to policy groups (working groups) associated with this page (https://www.gov.uk/government/groups).",
     "type": "identifiers"
