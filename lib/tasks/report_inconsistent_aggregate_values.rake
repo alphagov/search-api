@@ -1,4 +1,4 @@
-require "gds_api/rummager"
+require "gds_api/search"
 
 class DataInconsistencyError < StandardError
 end
