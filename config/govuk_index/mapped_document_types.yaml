@@ -27,6 +27,7 @@ mainstream_browse_page: edition # Collections Publisher
 manual: manual
 manual_section: manual_section
 medical_safety_alert: medical_safety_alert # Specialist Publisher
+ministerial_role: edition
 news_story: edition
 person: person
 place: edition
