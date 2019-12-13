@@ -21,7 +21,7 @@ module LearnToRank
     attr_reader :feature_sets
 
     def fetch_new_scores(examples)
-      url = "http://0.0.0.0:8501/v1/models/ltr:regress"
+      url = "http://#{tensorflow_serving_ip}:8501/v1/models/ltr:regress"
       options = {
         method: "POST",
         body: {
@@ -33,29 +33,46 @@ module LearnToRank
 
       begin
         response = HTTParty.post(url, options)
-      rescue SocketError
-        Services.statsd_client.increment("learn_to_rank.errors.socket_error")
+      rescue StandardError => e
+        logger.debug "TF Serving: status_code: 500, message: #{e.message}"
+        log_error e.class.to_s
         return nil
       end
 
       log_response(response)
 
-      return nil if ranker_error(response)
+      if ranker_error(response)
+        log_error "ranker_error"
+        return nil
+      end
 
       JSON.parse(response.body).fetch("results")
     end
 
+    def tensorflow_serving_ip
+      if ENV["TENSORFLOW_SERVING_IP"].present?
+        ENV["TENSORFLOW_SERVING_IP"]
+      elsif %w(development).include? ENV["RACK_ENV"]
+        "reranker"
+      else
+        "0.0.0.0"
+      end
+    end
+
     def ranker_error(response)
-      # TODO tell graphite when there's an error
       response.nil? || response.code != 200
     end
 
     def log_response(response)
       if response
-        logger.debug "TF Serving status_code: #{response.code}, message: #{response.message}"
+        logger.debug "TF Serving: status_code: #{response.code}, message: #{response.message}"
       else
         logger.debug "TF Serving: status_code: 500, message: No response from ranker!"
       end
+    end
+
+    def log_error(error)
+      Services.statsd_client.increment("learn_to_rank.errors.#{error}")
     end
 
     def logger
