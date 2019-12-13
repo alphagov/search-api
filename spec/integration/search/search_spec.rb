@@ -625,6 +625,29 @@ RSpec.describe "SearchTest" do
     })
   end
 
+  it "can filter by roles" do
+    commit_ministry_of_magic_document("roles" => %w[prime-minister])
+    commit_treatment_of_dragons_document("roles" => %w[some-other-role])
+
+    get "/search?filter_roles=prime-minister"
+
+    expect(last_response).to be_ok
+    expect(parsed_response.fetch("total")).to eq(1)
+
+    expect_result_includes_ministry_of_magic_for_key(
+      parsed_response,
+      "results",
+      {
+        "_id" => "/ministry-of-magic-site",
+        "document_type" => "edition",
+        "elasticsearch_type" => "edition",
+        "es_score" => nil,
+        "index" => "government_test",
+        "link" => "/ministry-of-magic-site",
+      },
+    )
+  end
+
 private
 
   def first_result
