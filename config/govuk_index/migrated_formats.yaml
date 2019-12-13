@@ -295,6 +295,7 @@ migrated:
 
 indexable:
 - person
+- ministerial_role
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -391,7 +392,6 @@ non_indexable:
 - map
 - media_enquiries
 - membership
-- ministerial_role
 - national_statistics
 - national_statistics_announcement
 - news_story: # indexable when published by Content Publisher
