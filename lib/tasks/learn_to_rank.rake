@@ -169,6 +169,8 @@ namespace :learn_to_rank do
           zip_file.extract(source_file, destination_path) unless File.exist?(destination_path)
         end
       end
+    rescue StandardError => e
+      puts "There was an error pulling the model from S3: #{e.message}"
     ensure
       FileUtils.remove_entry tmpdir
     end
