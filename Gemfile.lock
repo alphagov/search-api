@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.0.1)
+    activesupport (6.0.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -293,13 +293,13 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    zeitwerk (2.2.1)
+    zeitwerk (2.2.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 6.0.1)
+  activesupport (~> 6.0.2)
   aws-sdk-s3 (~> 1.59)
   bunny-mock (~> 1.7)
   climate_control (~> 0.2)
