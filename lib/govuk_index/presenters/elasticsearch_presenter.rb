@@ -62,7 +62,7 @@ module GovukIndex
         industries:                          specialist.industries,
         is_historic:                         common_fields.historic?,
         is_political:                        common_fields.political?,
-        is_withdrawn:                        common_fields.is_withdrawn,
+        is_withdrawn:                        common_fields.withdrawn?,
         issued_date:                         specialist.issued_date,
         laid_date:                           specialist.laid_date,
         land_use:                            specialist.land_use,

@@ -48,7 +48,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     presenter = common_fields_presenter(payload)
 
     expect(presenter.format).to eq(payload["document_type"])
-    expect(presenter.is_withdrawn).to eq(false)
+    expect(presenter.withdrawn?).to eq(false)
     expect(presenter.link).to eq(payload["base_path"])
   end
 
@@ -89,7 +89,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     presenter = common_fields_presenter(payload)
 
-    expect(presenter.is_withdrawn).to eq(true)
+    expect(presenter.withdrawn?).to eq(true)
   end
 
   it "popularity when value is returned from lookup" do

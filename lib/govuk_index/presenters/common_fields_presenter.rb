@@ -56,7 +56,7 @@ module GovukIndex
       brexit_page? ? BREXIT_PAGE["description"] : payload["description"]
     end
 
-    def is_withdrawn
+    def withdrawn?
       !payload["withdrawn_notice"].nil?
     end
 
