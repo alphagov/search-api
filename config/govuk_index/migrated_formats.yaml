@@ -52,6 +52,8 @@ migrated:
 - hmrc_manual_section
 - manual
 - manual_section
+- minister # from Whitehall, should be `ministerial_role`
+- ministerial_role
 - person
 - policy
 - recommended-link # Search admin
@@ -295,8 +297,7 @@ migrated:
   - '/help/cookies'
   - '/find-local-council'
 
-indexable:
-- ministerial_role
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
