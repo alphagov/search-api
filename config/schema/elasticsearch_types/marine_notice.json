@@ -1,0 +1,33 @@
+{
+  "fields": [
+    "marine_notice_type",
+    "marine_notice_vessel_type",
+    "marine_notice_topic",
+    "marine_notice_issue_date"
+  ],
+
+  "expanded_search_result_fields": {
+    "marine_notice_type": [
+      {"label": "Marine Guidance Note (MGN)", "value": "marine-guidance-note"},
+      {"label": "Merchant Shipping Notice (MSN)", "value": "merchant-shipping-notice"},
+      {"label": "Marine Information Note (MIN)", "value": "marine-information-note"},
+      {"label": "Form (MSF)", "value": "form"},
+      {"label": "Instructions to surveyors", "value": "instructions-to-surveyors"},
+      {"label": "Codes of practice", "value": "codes-of-practice"},
+      {"label": "Safety bulletin", "value": "safety-bulletin"},
+      {"label": "Other", "value": "other"}
+    ],
+
+    "marine_notice_vessel_type": [
+      {"label": "Pleasure vessels", "value": "pleasure-vessels"},
+      {"label": "Small commercial vessels", "value": "small-commercial-vessels"},
+      {"label": "Cargo vessels over 24 metres", "value": "cargo-vessels-over-24-metres"},
+      {"label": "Fishing vessels under 15 metres", "value": "fishing-vessels-under-15-metres"},
+      {"label": "Fishing vessels 15-24 metres", "value": "fishing-vessels-15-24-metres"},
+      {"label": "Fishing vessels over 24 metres", "value": "fishing-vessels-over-24-metres"},
+      {"label": "High speed craft", "value": "high-speed-craft"},
+      {"label": "Large yachts", "value": "large-yachts"},
+      {"label": "Passenger vessels", "value": "passenger-vessels"}
+    ]
+  }
+}
