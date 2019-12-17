@@ -27,14 +27,6 @@ namespace :publishing_api do
     end
   end
 
-  desc "Unpublish special routes"
-  task :unpublish_prepare_business_and_uk_nationals_special_routes do
-    content_ids = %w[7a99da17-e9e1-410b-b67d-c3f6348c595d b9ef4434-761f-49ae-af97-dc7a248499c4]
-    content_ids.each do |content_id|
-      Services.publishing_api.unpublish(content_id, type: "gone")
-    end
-  end
-
   desc "
     Publish finder and email signup content items
 
