@@ -139,6 +139,11 @@
     "type": "identifier"
   },
 
+  "role_appointments": {
+    "description": "This will include the \"content_ids\" of each role appointment.",
+    "type": "identifiers"
+  },
+
   "mainstream_browse_pages": {
     "description": "Mainstream browse pages the page can appear in (https://www.gov.uk/browse).",
     "type": "identifiers"
