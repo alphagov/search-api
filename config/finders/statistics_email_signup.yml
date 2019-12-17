@@ -15,7 +15,7 @@ details:
   filter: {}
   email_filter_facets:
   - facet_id: content_store_document_type
-    facet_name: Research and statistics
+    facet_name: document types
     facet_choices:
     - key: statistics_published
       filter_values:
