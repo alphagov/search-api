@@ -74,7 +74,6 @@ module GovukIndex
         marine_notice_type:                  specialist.marine_notice_type,
         marine_notice_vessel_type:           specialist.marine_notice_vessel_type,
         marine_notice_topic:                 specialist.marine_notice_topic,
-        marine_notice_issued_date:           specialist.marine_notice_issued_date,
         market_sector:                       specialist.market_sector,
         medical_specialism:                  specialist.medical_specialism,
         navigation_document_supertype:       common_fields.navigation_document_supertype,

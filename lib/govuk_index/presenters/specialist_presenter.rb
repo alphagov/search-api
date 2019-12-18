@@ -40,7 +40,6 @@ module GovukIndex
     delegate_to_payload :marine_notice_type
     delegate_to_payload :marine_notice_vessel_type
     delegate_to_payload :marine_notice_topic
-    delegate_to_payload :marine_notice_issued_date
     delegate_to_payload :market_sector
     delegate_to_payload :medical_specialism
     delegate_to_payload :opened_date
