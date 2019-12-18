@@ -3,7 +3,7 @@
     "marine_notice_type",
     "marine_notice_vessel_type",
     "marine_notice_topic",
-    "marine_notice_issue_date"
+    "issued_date"
   ],
 
   "expanded_search_result_fields": {
