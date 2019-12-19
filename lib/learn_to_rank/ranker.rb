@@ -60,7 +60,7 @@ module LearnToRank
     end
 
     def ranker_error(response)
-      response.nil? || response.code != 200
+      (response.body.nil? || response.body.empty?) || response.code != 200
     end
 
     def log_response(response)
