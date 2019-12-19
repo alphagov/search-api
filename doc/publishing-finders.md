@@ -17,6 +17,15 @@ publishing API:
 publishing_api:publish_eu_exit_business_finder
 ```
 
+If the business finder config file has the facets defined in a facet_group content item, 
+the rake task to publish it to the publishing API is:
+
+```
+publishing_api:publish_facet_group_eu_exit_business_finder
+```
+
+**Note:** `publishing_api:publish_eu_exit_business_finder` is to be deprecated.
+
 For new finder content items, use the rake task `publishing_api:publish_finder`. For example:
 
 ```

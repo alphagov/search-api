@@ -133,7 +133,30 @@ namespace :publishing_api do
       finder = YAML.load_file(finder_config.to_s)
       ContentItemPublisher::FinderPublisher.new(finder, timestamp).call
     end
+    puts "FINISHED"
+  end
 
+  desc "
+    Publish business readiness finder with a facet_group and email signup content items
+
+    Usage:
+    rake publishing_api:publish_facet_group_eu_exit_business_finder
+  "
+  task :publish_facet_group_eu_exit_business_finder do
+    finder_config = File.join(Dir.pwd, "config", "find-eu-exit-guidance-business.yml")
+    email_signup_config = File.join(Dir.pwd, "config", "find-eu-exit-guidance-business-email-signup.yml")
+
+    timestamp = Time.now.iso8601
+
+    unless email_signup_config.nil?
+      email_signup = YAML.load_file(email_signup_config.to_s)
+      ContentItemPublisher::FinderEmailSignupPublisher.new(email_signup, timestamp).call
+    end
+
+    unless finder_config.nil?
+      finder = YAML.load_file(finder_config.to_s)
+      ContentItemPublisher::FacetGroupFinderPublisher.new(finder, timestamp).call
+    end
     puts "FINISHED"
   end
 
