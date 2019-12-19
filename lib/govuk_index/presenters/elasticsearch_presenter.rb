@@ -78,6 +78,7 @@ module GovukIndex
         organisation_content_ids:            expanded_links.organisation_content_ids,
         organisations:                       expanded_links.organisations,
         outcome_type:                        specialist.outcome_type,
+        parts:                               details.parts,
         part_of_taxonomy_tree:               expanded_links.part_of_taxonomy_tree,
         people:                              expanded_links.people,
         policy_groups:                       expanded_links.policy_groups,

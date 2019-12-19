@@ -159,6 +159,16 @@
     "type": "identifiers"
   },
 
+  "parts": {
+    "description": "Parts of guidance.",
+    "type": "objects",
+    "children": {
+      "slug": { "type": "searchable_identifier" },
+      "title": { "type": "searchable_text" },
+      "body": { "type": "searchable_text" }
+    }
+  },
+
   "part_of_taxonomy_tree": {
     "description": "Any taxon tagged to the document and any of their ancestor taxons",
     "type": "identifiers"

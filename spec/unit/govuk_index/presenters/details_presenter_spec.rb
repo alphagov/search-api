@@ -25,6 +25,33 @@ RSpec.describe GovukIndex::DetailsPresenter do
     end
   end
 
+  context "when there are parts" do
+    let(:format) { "guide" }
+    let(:details) {
+      {
+        "parts" => [
+          {
+            "slug" => "a-part",
+            "title" => "A Part",
+            "body" => [{
+              "content" => "<p>The body of a part.</p>",
+            }],
+          },
+        ],
+      }
+    }
+
+    it "extracts parts" do
+      expect(presented_details.parts).to eq([
+        {
+          "body" => "<p>The body of a part.</p>",
+          "slug" => "a-part",
+          "title" => "A Part",
+        },
+      ])
+    end
+  end
+
   context "images" do
     context "document without an image" do
       let(:format) { "answer" }

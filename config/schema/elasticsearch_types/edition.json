@@ -33,6 +33,7 @@
     "organisation_state",
     "organisation_type",
     "organisations",
+    "parts",
     "parent_organisations",
     "people",
     "roles",
