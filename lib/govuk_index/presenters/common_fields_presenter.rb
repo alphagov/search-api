@@ -56,7 +56,7 @@ module GovukIndex
       brexit_page? ? BREXIT_PAGE["description"] : payload["description"]
     end
 
-    def is_withdrawn
+    def withdrawn?
       !payload["withdrawn_notice"].nil?
     end
 
@@ -81,9 +81,25 @@ module GovukIndex
       @_section_id ||= payload.dig("details", "section_id") if format == "hmrc_manual_section"
     end
 
+    def historic?
+      political? && government && government.dig("details", "current") == false
+    end
+
+    def political?
+      payload.dig("details", "political") || false
+    end
+
+    def government_name
+      government && government.dig("title")
+    end
+
   private
 
     attr_reader :payload
+
+    def government
+      payload.dig("expanded_links", "government", 0)
+    end
 
     def brexit_page?
       content_id == BREXIT_PAGE["content_id"]

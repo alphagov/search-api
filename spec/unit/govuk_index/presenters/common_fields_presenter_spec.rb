@@ -48,7 +48,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     presenter = common_fields_presenter(payload)
 
     expect(presenter.format).to eq(payload["document_type"])
-    expect(presenter.is_withdrawn).to eq(false)
+    expect(presenter.withdrawn?).to eq(false)
     expect(presenter.link).to eq(payload["base_path"])
   end
 
@@ -89,7 +89,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     presenter = common_fields_presenter(payload)
 
-    expect(presenter.is_withdrawn).to eq(true)
+    expect(presenter.withdrawn?).to eq(true)
   end
 
   it "popularity when value is returned from lookup" do
@@ -122,6 +122,148 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     expect(presenter.popularity).to be_nil
     expect(presenter.popularity_b).to be_nil
+  end
+
+  it "assigns political status when document is political" do
+    payload = generate_random_example(
+      schema: "news_article",
+      payload: {
+        document_type: "news_story",
+      },
+      details: {
+        political: true,
+      },
+    )
+
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.political?).to be true
+  end
+
+  it "does not assign political status when document is not political" do
+    payload = generate_random_example(
+      schema: "news_article",
+      payload: {
+        document_type: "news_story",
+      },
+      details: {
+        political: false,
+      },
+    )
+
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.political?).to be false
+  end
+
+  it "set the government name when government is present in linls" do
+    payload = generate_random_example(
+      schema: "news_article",
+      payload: {
+        document_type: "news_story",
+        expanded_links: {
+          "government" => [
+            {
+              "content_id" => "aa4d1950-8645-43d0-8071-214c70aa1441",
+              "title" => "Fictitious government name",
+              "locale" => "en",
+              "base_path" => "/fictitious-government",
+            },
+          ],
+        },
+      },
+    )
+
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.government_name).to eq("Fictitious government name")
+  end
+
+  it "sets historic when document is political and government is past" do
+    payload = generate_random_example(
+      schema: "news_article",
+      payload: {
+        document_type: "news_story",
+        expanded_links: {
+          "government" => [
+            {
+              "content_id" => "aa4d1950-8645-43d0-8071-214c70aa1441",
+              "title" => "Fictitious government name",
+              "locale" => "en",
+              "base_path" => "/fictitious-government",
+              "details" => {
+                "current" => false,
+              },
+            },
+          ],
+        },
+      },
+      details: {
+        political: true,
+      },
+    )
+
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.historic?).to be true
+  end
+
+  it "does not set historic when document is not political but government is past" do
+    payload = generate_random_example(
+      schema: "news_article",
+      payload: {
+        document_type: "news_story",
+        expanded_links: {
+          "government" => [
+            {
+              "content_id" => "aa4d1950-8645-43d0-8071-214c70aa1441",
+              "title" => "Fictitious government name",
+              "locale" => "en",
+              "base_path" => "/fictitious-government",
+              "details" => {
+                "current" => false,
+              },
+            },
+          ],
+        },
+      },
+      details: {
+        political: false,
+      },
+    )
+
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.historic?).to be false
+  end
+
+  it "does not set historic when document is political and government is current" do
+    payload = generate_random_example(
+      schema: "news_article",
+      payload: {
+        document_type: "news_story",
+        expanded_links: {
+          "government" => [
+            {
+              "content_id" => "aa4d1950-8645-43d0-8071-214c70aa1441",
+              "title" => "Fictitious government name",
+              "locale" => "en",
+              "base_path" => "/fictitious-government",
+              "details" => {
+                "current" => true,
+              },
+            },
+          ],
+        },
+      },
+      details: {
+        political: true,
+      },
+    )
+
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.historic?).to be false
   end
 
   def common_fields_presenter(payload)
