@@ -844,5 +844,20 @@
   "public_sector_procurement": {
     "description": "The public sector body that procures goods or services",
     "type": "identifiers"
+  },
+
+  "marine_notice_type": {
+    "description": "The type of marine notice, e.g. Marine Guidance Note (MGN), Merchant Shipping Notice (MSN), Marine Information Note (MIN), etc.",
+    "type": "identifiers"
+  },
+
+  "marine_notice_vessel_type": {
+    "description": "The type of vessel a marine notice applies to, e.g. pleasure vessels, cargo vessels, fishing vessels, large yachts, etc.",
+    "type": "identifiers"
+  },
+
+  "marine_notice_topic": {
+    "description": "The subject of the marine notice, e.g.construction and equipment, crew and training, health and safety, etc.",
+    "type": "identifiers"
   }
 }
