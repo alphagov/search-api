@@ -1,0 +1,271 @@
+# common configuration
+task-config: &task-config
+  platform: linux
+  image_resource:
+    type: docker-image
+    source:
+      repository: python
+      tag: 3.7
+
+# proper configuration begins
+resource_types:
+- name: cron-resource
+  type: docker-image
+  source:
+    repository: cftoolsmiths/cron-resource
+    tag: latest
+- name: s3-iam
+  type: docker-image
+  source:
+    repository: governmentpaas/s3-resource
+    tag: 97e441efbfb06ac7fb09786fd74c64b05f9cc907
+
+resources:
+- name: at-10pm
+  type: cron-resource
+  source:
+    expression: "00 22 * * *"
+    location: "Europe/London"
+- name: search-api-git
+  type: git
+  source:
+    uri: https://github.com/alphagov/search-api.git
+- name: integration-training-data
+  type: s3-iam
+  source:
+    bucket: ((readonly_private_bucket_name))
+    region_name: eu-west-2
+    regexp: search-learn-to-rank/integration-training-data-(.*).txt
+- name: staging-training-data
+  type: s3-iam
+  source:
+    bucket: ((readonly_private_bucket_name))
+    region_name: eu-west-2
+    regexp: search-learn-to-rank/staging-training-data-(.*).txt
+- name: production-training-data
+  type: s3-iam
+  source:
+    bucket: ((readonly_private_bucket_name))
+    region_name: eu-west-2
+    regexp: search-learn-to-rank/production-training-data-(.*).txt
+- name: integration-model
+  type: s3-iam
+  source:
+    bucket: ((readonly_private_bucket_name))
+    region_name: eu-west-2
+    regexp: search-learn-to-rank/integration-model-(.*).txt
+- name: staging-model
+  type: s3-iam
+  source:
+    bucket: ((readonly_private_bucket_name))
+    region_name: eu-west-2
+    regexp: search-learn-to-rank/staging-model-(.*).txt
+- name: production-model
+  type: s3-iam
+  source:
+    bucket: ((readonly_private_bucket_name))
+    region_name: eu-west-2
+    regexp: search-learn-to-rank/production-model-(.*).txt
+
+jobs:
+- name: integration-fetch
+  plan:
+    - get: at-10pm
+      trigger: true
+    - get: search-api-git
+    - task: Fetch
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+        outputs:
+          - name: out
+        params:
+          GOVUK_ENVIRONMENT: integration
+          SEARCH_API_BEARER_TOKEN: ((integration-search-api-bearer-token))
+          OUTPUT_FILE_NAME: training-data
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "fetch"]
+    - put: integration-training-data
+      params:
+        file: out/integration-training-data-*.txt
+- name: integration-train
+  plan:
+    - get: integration-training-data
+      passed: [integration-fetch]
+      trigger: true
+    - get: search-api-git
+    - task: Train
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+          - name: integration-training-data
+        outputs:
+          - name: out
+        params:
+          GOVUK_ENVIRONMENT: integration
+          IMAGE: ((integration-ecr-repository))
+          ROLE_ARN: ((integration-role-arn))
+          INPUT_FILE_NAME: training-data
+          OUTPUT_FILE_NAME: model
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "train"]
+    - put: integration-model
+      params:
+        file: out/integration-model-*.txt
+- name: integration-deploy
+  plan:
+    - get: integration-model
+      passed: [integration-train]
+      trigger: true
+    - get: search-api-git
+    - task: Deploy
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+          - name: integration-model
+        params:
+          GOVUK_ENVIRONMENT: integration
+          ROLE_ARN: ((integration-role-arn))
+          INPUT_FILE_NAME: model
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
+- name: staging-fetch
+  plan:
+    - get: at-10pm
+      trigger: true
+    - get: search-api-git
+    - task: Fetch
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+        outputs:
+          - name: out
+        params:
+          GOVUK_ENVIRONMENT: staging
+          SEARCH_API_BEARER_TOKEN: ((staging-search-api-bearer-token))
+          OUTPUT_FILE_NAME: training-data
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "fetch"]
+    - put: staging-training-data
+      params:
+        file: out/staging-training-data-*.txt
+- name: staging-train
+  plan:
+    - get: staging-training-data
+      passed: [staging-fetch]
+      trigger: true
+    - get: search-api-git
+    - task: Train
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+          - name: staging-training-data
+        outputs:
+          - name: out
+        params:
+          GOVUK_ENVIRONMENT: staging
+          IMAGE: ((staging-ecr-repository))
+          ROLE_ARN: ((staging-role-arn))
+          INPUT_FILE_NAME: training-data
+          OUTPUT_FILE_NAME: model
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "train"]
+    - put: staging-model
+      params:
+        file: out/staging-model-*.txt
+- name: staging-deploy
+  plan:
+    - get: staging-model
+      passed: [staging-train]
+      trigger: true
+    - get: search-api-git
+    - task: Deploy
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+          - name: staging-model
+        params:
+          GOVUK_ENVIRONMENT: staging
+          ROLE_ARN: ((staging-role-arn))
+          INPUT_FILE_NAME: model
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
+- name: production-fetch
+  plan:
+    - get: at-10pm
+      trigger: true
+    - get: search-api-git
+    - task: Fetch
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+        outputs:
+          - name: out
+        params:
+          GOVUK_ENVIRONMENT: production
+          SEARCH_API_BEARER_TOKEN: ((production-search-api-bearer-token))
+          OUTPUT_FILE_NAME: training-data
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "fetch"]
+    - put: production-training-data
+      params:
+        file: out/production-training-data-*.txt
+- name: production-train
+  plan:
+    - get: production-training-data
+      passed: [production-fetch]
+      trigger: true
+    - get: search-api-git
+    - task: Train
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+          - name: production-training-data
+        outputs:
+          - name: out
+        params:
+          GOVUK_ENVIRONMENT: production
+          IMAGE: ((production-ecr-repository))
+          ROLE_ARN: ((production-role-arn))
+          INPUT_FILE_NAME: training-data
+          OUTPUT_FILE_NAME: model
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "train"]
+    - put: production-model
+      params:
+        file: out/production-model-*.txt
+- name: production-deploy
+  plan:
+    - get: production-model
+      passed: [production-train]
+      trigger: true
+    - get: search-api-git
+    - task: Deploy
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+          - name: production-model
+        params:
+          GOVUK_ENVIRONMENT: production
+          ROLE_ARN: ((production-role-arn))
+          INPUT_FILE_NAME: model
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
