@@ -1,12 +1,23 @@
+require "base64"
 require "csv"
 require "fileutils"
+require "json"
 require "rummager"
 require "zip"
 require "analytics/popular_queries"
 require "relevancy/load_judgements"
 require "search/relevance_helpers"
+require "google/cloud/bigquery"
 
 namespace :learn_to_rank do
+  desc "Fetch data from BigQuery.  This costs money!"
+  task :fetch_bigquery_export, [:credentials] do |_, args|
+    assert_ltr!
+    bigquery = Google::Cloud::Bigquery.new(credentials: JSON.parse(Base64.decode64(args.credentials)))
+    data = bigquery.query bigquery_sql, standard_sql: true
+    export_to_csv(data, "bigquery-export")
+  end
+
   desc "Export a CSV of relevancy judgements generated from CTR on popular queries"
   task :generate_relevancy_judgements, [:queries_filepath] do |_, args|
     assert_ltr!
@@ -174,5 +185,43 @@ namespace :learn_to_rank do
     ensure
       FileUtils.remove_entry tmpdir
     end
+  end
+
+  def bigquery_sql
+    now = Time.now
+    before = now - 2 * 7 * 24 * 60 * 60
+
+    "SELECT * FROM (
+  SELECT
+  searchTerm,
+  link,
+  ROUND(AVG(linkPosition)) AS avg_rank,
+  COUNTIF(observationType = 'impression') AS views,
+  COUNTIF(observationType = 'click') AS clicks
+  FROM (
+    SELECT
+    CONCAT(fullVisitorId,'|',CAST(visitId AS STRING)) AS sessionId,
+    customDimensions.value AS searchTerm,
+    hits.hitNumber AS hitNumber, -- This is the hit number of the results page (for impressions) or the page itself (for clicks)
+    product.v2ProductName AS link,
+    product.productListPosition AS linkPosition,
+    CASE
+        WHEN product.isImpression = true and product.isClick IS NULL THEN 'impression'
+        WHEN product.isClick = true and product.isImpression IS NULL THEN 'click'
+        ELSE NULL
+    END AS observationType
+    FROM `govuk-bigquery-analytics.87773428.ga_sessions_*`
+    CROSS JOIN UNNEST(hits) AS hits
+    CROSS JOIN UNNEST(hits.product) AS product
+    CROSS JOIN UNNEST(product.customDimensions) AS customDimensions
+    WHERE product.productListName = 'Search'
+    AND _TABLE_SUFFIX BETWEEN '#{before.strftime('%Y%m%d')}' AND '#{now.strftime('%Y%m%d')}'
+    AND product.productListPosition <= 20
+    AND customDimensions.index = 71 -- has search term
+  ) AS action
+  GROUP BY searchTerm, link, linkPosition
+  ORDER BY views desc, searchTerm, linkPosition
+) AS res
+WHERE views > 10"
   end
 end
