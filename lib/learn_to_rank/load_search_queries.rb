@@ -9,7 +9,7 @@ module LearnToRank
         query = row["searchTerm"].strip
         queries[query] ||= []
         queries[query] << {
-          content_id: row["contentId"],
+          link: row["link"],
           rank: row["avg_rank"],
           views: row["views"],
           clicks: row["clicks"],
