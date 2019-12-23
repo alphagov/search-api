@@ -52,8 +52,11 @@ class Rummager < Sinatra::Application
     halt(404)
   end
 
-  def require_authentication
+  def require_authentication permission
     warden.authenticate!
+
+    u = env["warden"].user
+    halt(403, "You do not have permission to access this endpoint") unless u["permissions"].include? permission
   end
 
   def prevent_access_to_govuk
@@ -183,7 +186,7 @@ class Rummager < Sinatra::Application
 
   # Insert (or overwrite) a document
   post "/:index/documents" do
-    require_authentication
+    require_authentication "manage_search_indices"
     prevent_access_to_govuk
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map { |hash|
@@ -200,7 +203,7 @@ class Rummager < Sinatra::Application
   end
 
   post "/v2/metasearch/documents" do
-    require_authentication
+    require_authentication "manage_search_indices"
     document = JSON.parse(request.body.read)
 
     inserter = MetasearchIndex::Inserter::V2.new(id: document["_id"], document: document)
@@ -210,13 +213,13 @@ class Rummager < Sinatra::Application
   end
 
   post "/:index/commit" do
-    require_authentication
+    require_authentication "manage_search_indices"
     prevent_access_to_govuk
     simple_json_result(current_index.commit)
   end
 
   delete "/:index/documents/*" do
-    require_authentication
+    require_authentication "manage_search_indices"
     prevent_access_to_govuk
     document_link = params["splat"].first
 
@@ -232,7 +235,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/v2/metasearch/documents/*" do
-    require_authentication
+    require_authentication "manage_search_indices"
     id = params["splat"].first
 
     deleter = MetasearchIndex::Deleter::V2.new(id: id)
@@ -250,7 +253,7 @@ class Rummager < Sinatra::Application
 
   # Update an existing document
   post "/:index/documents/*" do
-    require_authentication
+    require_authentication "manage_search_indices"
     prevent_access_to_govuk
     document_id = params["splat"].first
     updates = request.POST
@@ -259,7 +262,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/:index/documents" do
-    require_authentication
+    require_authentication "manage_search_indices"
     prevent_access_to_govuk
     if params["delete_all"]
       # No longer supported; instead use the
