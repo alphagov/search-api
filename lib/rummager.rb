@@ -102,6 +102,7 @@ require "govuk_message_queue_consumer"
 
 require "evaluate/ndcg"
 
+require "learn_to_rank/bigquery"
 require "learn_to_rank/embed_features"
 require "learn_to_rank/explain_scores"
 require "learn_to_rank/feature_sets"
