@@ -52,7 +52,7 @@ module LearnToRank
         {
           query: query,
           score: relevancy_score,
-          content_id: document[:content_id],
+          link: document[:link],
         }
       end
     end
