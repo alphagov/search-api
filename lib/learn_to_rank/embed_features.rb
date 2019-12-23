@@ -65,7 +65,7 @@ module LearnToRank
         if @cached_queries.keys.count > 50
           flush_cached_queries
         end
-        results.find { |doc| doc["content_id"] == judgement[:content_id] }
+        results.find { |doc| doc["link"] == judgement[:link] }
       rescue StandardError => e
         puts e
         sleep 5
