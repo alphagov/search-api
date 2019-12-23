@@ -9,7 +9,7 @@ class Rummager < Sinatra::Application
 
   delete "/content" do
     begin
-      require_authentication
+      require_authentication "manage_search_indices"
       Clusters.active.map do |cluster|
         search_config = SearchConfig.instance(cluster)
         raw_result = find_result_by_link(params["link"], search_config)
