@@ -10,7 +10,6 @@ title: Guidance and regulation
 description: You'll get an email when guidance and regulation is published.
 details:
   email_filter_by:
-  email_filter_name:
   subscription_list_title_prefix: 'Guidance and regulation'
   filter:
     content_purpose_supergroup: guidance_and_regulation

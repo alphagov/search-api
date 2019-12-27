@@ -14,7 +14,6 @@ details:
     - news
     - speeches_and_statements
   email_filter_by:
-  email_filter_name:
   subscription_list_title_prefix: 'News and communications ' # whitespace intended
   email_filter_facets:
   - facet_id: people
