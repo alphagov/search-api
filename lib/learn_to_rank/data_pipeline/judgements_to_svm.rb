@@ -1,4 +1,4 @@
-module LearnToRank
+module LearnToRank::DataPipeline
   class JudgementsToSvm
     # JudgementsToSvm translates judgements to SVM format
     # IN: [{ query: "tax", rank: 2, features: { "1": 2, "2": 0.1 } }]

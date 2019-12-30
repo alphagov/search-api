@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe LearnToRank::RelevancyJudgements do
+RSpec.describe LearnToRank::DataPipeline::RelevancyJudgements do
   subject(:judgements) do
     described_class.new(queries: queries).relevancy_judgements
   end

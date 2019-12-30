@@ -1,4 +1,4 @@
-module LearnToRank
+module LearnToRank::DataPipeline
   class RelevancyJudgements
     # RelevancyJudgements takes hash of queries and the top documents returned,
     # with the doc content_id, view counts, click counts, and avg rank.

@@ -1,6 +1,6 @@
 require "csv"
 
-module LearnToRank
+module LearnToRank::DataPipeline
   module LoadSearchQueries
     def self.from_csv(datafile)
       queries = {}

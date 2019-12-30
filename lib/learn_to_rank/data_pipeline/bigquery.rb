@@ -1,6 +1,6 @@
 require "google/cloud/bigquery"
 
-module LearnToRank
+module LearnToRank::DataPipeline
   module Bigquery
     def self.fetch(credentials)
       now = Time.now

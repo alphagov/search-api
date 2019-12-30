@@ -1,6 +1,4 @@
-require "learn_to_rank/features"
-
-module LearnToRank
+module LearnToRank::DataPipeline
   class EmbedFeatures
     # EmbedFeatures takes a set of relevancy judgements and add features to them.
     # INPUT: [{ query: "a1", "id": "123456", rank: 1 }]
