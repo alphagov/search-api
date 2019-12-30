@@ -6,7 +6,6 @@ require "rummager"
 require "zip"
 require "analytics/popular_queries"
 require "relevancy/load_judgements"
-require "search/relevance_helpers"
 
 namespace :learn_to_rank do
   desc "Run the full data training pipeline: fetch BigQuery data, generate SVM files, upload to S3.  This costs money!"
