@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe "ElasticsearchIndexingTest" do
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   SAMPLE_DOCUMENT = {
     "title" => "TITLE",

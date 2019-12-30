@@ -2,7 +2,7 @@ require "spec_helper"
 require "gds_api/test_helpers/publishing_api_v2"
 
 RSpec.describe ContentItemPublisher::FinderEmailSignupPublisher do
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   signups_glob = File.join(Dir.pwd, "config", "finders", "*_email_signup.yml")
 
@@ -20,7 +20,7 @@ RSpec.describe ContentItemPublisher::FinderEmailSignupPublisher do
       end
 
       describe "#call" do
-        let(:publishing_api) { instance_double("GdsApi::PublishingApiV2") }
+        let(:publishing_api) { instance_double("GdsApi::PublishingApi") }
         let(:payload) {
           ContentItemPublisher::FinderEmailSignupPresenter.new(finder, timestamp).present
         }

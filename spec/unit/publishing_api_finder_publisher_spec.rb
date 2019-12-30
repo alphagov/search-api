@@ -18,7 +18,7 @@ RSpec.describe PublishingApiFinderPublisher do
     end
 
     describe "#call" do
-      let(:publishing_api) { instance_double("GdsApi::PublishingApiV2") }
+      let(:publishing_api) { instance_double("GdsApi::PublishingApi") }
       let(:payload) {
         FinderContentItemPresenter.new(finder, timestamp).present
       }
@@ -29,7 +29,7 @@ RSpec.describe PublishingApiFinderPublisher do
 
       before do
         allow(logger).to receive(:info)
-        allow(GdsApi::PublishingApiV2).to receive(:new).and_return(publishing_api)
+        allow(GdsApi::PublishingApi).to receive(:new).and_return(publishing_api)
         allow(publishing_api).to receive(:put_content)
         allow(publishing_api).to receive(:patch_links)
         allow(publishing_api).to receive(:publish)

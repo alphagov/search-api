@@ -2,7 +2,7 @@ require "active_support/cache"
 
 module Services
   def self.publishing_api
-    GdsApi::PublishingApiV2.new(
+    GdsApi::PublishingApi.new(
       Plek.find("publishing-api"),
       bearer_token: ENV["PUBLISHING_API_BEARER_TOKEN"] || "example",
 

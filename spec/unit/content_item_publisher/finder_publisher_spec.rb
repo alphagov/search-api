@@ -23,7 +23,7 @@ RSpec.describe ContentItemPublisher::FinderPublisher do
       end
 
       describe "#call" do
-        let(:publishing_api) { instance_double("GdsApi::PublishingApiV2") }
+        let(:publishing_api) { instance_double("GdsApi::PublishingApi") }
         let(:payload) {
           ContentItemPublisher::FinderPresenter.new(finder, timestamp).present
         }

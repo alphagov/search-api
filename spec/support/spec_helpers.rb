@@ -1,7 +1,7 @@
 require "gds_api/test_helpers/publishing_api_v2"
 
 module SpecHelpers
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
   EXAMPLE_GENERATOR_RETRIES = 5
 
   def self.included(base)
