@@ -10,7 +10,6 @@ title: Transparency and freedom of information releases
 description: You'll get an email when transparency and freedom of information releases are published.
 details:
   email_filter_by:
-  email_filter_name:
   subscription_list_title_prefix: 'Transparency and freedom of information'
   filter:
     content_purpose_supergroup: transparency

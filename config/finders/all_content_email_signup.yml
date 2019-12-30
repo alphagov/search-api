@@ -10,7 +10,6 @@ title: Search
 description: You'll get an email when content is published.
 details:
   email_filter_by:
-  email_filter_name:
   subscription_list_title_prefix: 'All content'
   reject:
     content_purpose_supergroup: other
