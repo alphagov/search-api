@@ -39,6 +39,21 @@ module GovukIndex
       details.dig("image", "url")
     end
 
+    def parts
+      parts = details.fetch("parts", [])
+      return unless parts && parts.any?
+
+      parts.map do |part|
+        body = part.fetch("body", [{}]).first
+        body_content = body["content"]
+        {
+          "slug" => part["slug"],
+          "title" => part["title"],
+          "body" => body_content,
+        }
+      end
+    end
+
   private
 
     def service_manual
