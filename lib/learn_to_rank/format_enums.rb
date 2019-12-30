@@ -73,6 +73,7 @@ module LearnToRank
         "special_route" => 69,
         "calendar" => 70,
         "travel_advice_index" => 71,
+        "ministerial_role" => 72,
       }
     end
   end
