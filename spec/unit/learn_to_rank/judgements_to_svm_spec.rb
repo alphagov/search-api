@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe LearnToRank::JudgementsToSvm do
+RSpec.describe LearnToRank::DataPipeline::JudgementsToSvm do
   subject(:formatted) { described_class.new(judgements).svm_format }
 
   describe "#svm_format" do
