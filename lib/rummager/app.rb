@@ -274,6 +274,38 @@ class Rummager < Sinatra::Application
     simple_json_result(action)
   end
 
+  get "/ltr/train" do
+    require_authentication "ltr_training"
+    halt(403, "LTR is not enabled") unless Search::RelevanceHelpers.ltr_enabled?
+
+    status = LearnToRank::DataPipeline.get_status
+    code = case status
+           when LearnToRank::DataPipeline::READY_STATUS
+             200
+           when LearnToRank::DataPipeline::ERROR_STATUS
+             500
+           else
+             202
+           end
+    halt(code, status)
+  end
+
+  post "/ltr/train" do
+    require_authentication "ltr_training"
+    halt(403, "LTR is not enabled") unless Search::RelevanceHelpers.ltr_enabled?
+
+    scheduled = LearnToRank::DataPipeline.perform_async(
+      JSON.parse(Base64.decode64(ENV["GOOGLE_BIGQUERY_CREDENTIALS"])),
+      ENV["AWS_S3_RELEVANCY_BUCKET_NAME"],
+    )
+
+    if scheduled
+      halt(202, LearnToRank::DataPipeline::PENDING_STATUS)
+    else
+      halt(409, "Already executing a job.")
+    end
+  end
+
   get "/_status" do
     status = {}
     status["queues"] = {}
