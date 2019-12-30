@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe Indexer::LinksLookup do
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   let(:content_id) { "DOCUMENT_CONTENT_ID" }
   let(:endpoint) { Plek.current.find("publishing-api") + "/v2" }
