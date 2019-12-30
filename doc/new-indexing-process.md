@@ -23,6 +23,11 @@ Example PRs:
 - [Prepare for moving to rummager](https://github.com/alphagov/calendars/pull/160/files)
 - [Ensure we pass the description text to publishing API](https://github.com/alphagov/calendars/pull/162/files)
 
+## Add the format to the list in `lib/learn_to_rank/format_enums.rb`
+
+We take format into account in our machine learning, which means we
+need a mapping from formats to unique numbers.
+
 ## Update the presenter to handle the new format
 You'll need to update the elasticsearch presenter in Search API so that it handles any fields which are not yet used by other formats in the govuk index.
 
