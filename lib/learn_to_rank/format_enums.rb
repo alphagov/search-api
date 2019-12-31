@@ -74,6 +74,7 @@ module LearnToRank
         "calendar" => 70,
         "travel_advice_index" => 71,
         "ministerial_role" => 72,
+        "marine_notice" => 73,
       }
     end
   end
