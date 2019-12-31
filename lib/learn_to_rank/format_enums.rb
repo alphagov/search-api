@@ -75,6 +75,7 @@ module LearnToRank
         "travel_advice_index" => 71,
         "ministerial_role" => 72,
         "marine_notice" => 73,
+        "traffic_commissioner_regulatory_decision" => 74,
       }
     end
   end
