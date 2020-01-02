@@ -1,3 +1,4 @@
+require "aws-sdk-sagemakerruntime"
 require "httparty"
 
 module LearnToRank
@@ -21,6 +22,43 @@ module LearnToRank
     attr_reader :feature_sets
 
     def fetch_new_scores(examples)
+      endpoint = ENV["TENSORFLOW_SAGEMAKER_ENDPOINT"]
+      if endpoint
+        fetch_new_scores_from_sagemaker(examples, endpoint)
+      else
+        fetch_new_scores_from_serving(examples)
+      end
+    end
+
+    def fetch_new_scores_from_sagemaker(examples, endpoint)
+      begin
+        response = Aws::SageMakerRuntime::Client.new.invoke_endpoint(
+          endpoint_name: endpoint,
+          body: {
+            "signature_name": "regression",
+            "examples": examples,
+          }.to_json,
+          content_type: "application/json",
+          custom_attributes: "tfs-method=regress",
+        )
+      rescue Aws::SageMakerRuntime::Errors::ServiceError => e
+        logger.debug "SageMaker: #{e.message}"
+        log_error e.class.to_s
+        return nil
+      end
+
+      if response.nil? || response.body.blank?
+        logger.debug "SageMaker: No response from ranker!"
+        log_error "ranker_error.sagemaker"
+        return nil
+      else
+        logger.debug "SageMaker: #{response.body}"
+      end
+
+      JSON.parse(response.body).fetch("results")
+    end
+
+    def fetch_new_scores_from_serving(examples)
       url = "http://#{tensorflow_serving_ip}:8501/v1/models/ltr:regress"
       options = {
         method: "POST",
@@ -39,11 +77,12 @@ module LearnToRank
         return nil
       end
 
-      log_response(response)
-
-      if ranker_error(response)
-        log_error "ranker_error"
+      if response.nil? || response.body.blank? || response.code != 200
+        logger.debug "TF Serving: status_code: 500, message: No response from ranker!"
+        log_error "ranker_error.serving"
         return nil
+      else
+        logger.debug "TF Serving: status_code: #{response.code}, message: #{response.message}"
       end
 
       JSON.parse(response.body).fetch("results")
@@ -56,18 +95,6 @@ module LearnToRank
         "reranker"
       else
         "0.0.0.0"
-      end
-    end
-
-    def ranker_error(response)
-      response.nil? || response.body.blank? || response.code != 200
-    end
-
-    def log_response(response)
-      if response
-        logger.debug "TF Serving: status_code: #{response.code}, message: #{response.message}"
-      else
-        logger.debug "TF Serving: status_code: 500, message: No response from ranker!"
       end
     end
 
