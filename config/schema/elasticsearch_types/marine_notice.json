@@ -28,6 +28,18 @@
       {"label": "High speed craft", "value": "high-speed-craft"},
       {"label": "Large yachts", "value": "large-yachts"},
       {"label": "Passenger vessels", "value": "passenger-vessels"}
+    ],
+
+    "marine_notice_topic": [
+      {"label": "Construction and equipment", "value": "construction-and-equipment"},
+      {"label": "Crew and training", "value": "crew-and-training"},
+      {"label": "Health and safety", "value": "health-and-safety"},
+      {"label": "Environmental", "value": "environmental"},
+      {"label": "Navigation", "value": "navigation"},
+      {"label": "Radio communications", "value": "radio-communications"},
+      {"label": "Registration", "value": "registration"},
+      {"label": "Security / ISPS", "value": "security-isps"},
+      {"label": "Survey and inspection", "value": "survey-and-inspection"}
     ]
   }
 }
