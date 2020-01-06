@@ -15,7 +15,20 @@ details:
     content_purpose_supergroup: transparency
   email_filter_facets:
   - facet_id: content_store_document_type
-    facet_name: document type
+    facet_name: All releases
+    facet_choices:
+    - topic_name: Corporate report
+      key: corporate_report
+      radio_button_name: Corporate report
+      prechecked: false
+    - topic_name: FOI release
+      key: foi_release
+      radio_button_name: FOI release
+      prechecked: false
+    - topic_name: Transparency data
+      key: transparency
+      radio_button_name: Transparency data
+      prechecked: false
   - facet_id: people
     facet_name: people
   - facet_id: organisations
