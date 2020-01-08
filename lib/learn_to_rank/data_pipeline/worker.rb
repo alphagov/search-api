@@ -1,3 +1,5 @@
+require "aws-sdk-s3"
+
 module LearnToRank::DataPipeline
   class Worker
     include Sidekiq::Worker
