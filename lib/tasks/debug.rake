@@ -1,4 +1,5 @@
 require "aws-sdk-s3"
+require "csv"
 require "rummager"
 require "pp"
 require "rainbow"
@@ -74,6 +75,20 @@ namespace :debug do
       if csv.is_a?(Tempfile)
         file.close
         file.unlink
+      end
+    end
+  end
+
+  desc "Get the best bets which match a query"
+  task :fetch_best_bets, [:query] do |_, args|
+    metasearch_index = SearchConfig.default_instance.metasearch_index
+    bets = Search::BestBetsChecker.new(args[:query], metasearch_index)
+    CSV do |out|
+      (bets.best_bets || []).each do |position, links|
+        links.each { |link| out << ["best", link, position] }
+      end
+      (bets.worst_bets || []).each do |link|
+        out << ["worst", link]
       end
     end
   end
