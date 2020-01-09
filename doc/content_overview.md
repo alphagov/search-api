@@ -26,4 +26,4 @@ so we can show external links in search results; and "best bets", so
 selected search results can be artificially boosted to the top of the
 list.
 
-Implemented in [elastic_search_recommended_link.rb](https://github.com/alphagov/search-admin/blob/master/app/models/elastic_search_recommended_link.rb) and [rummager_saver.rb](https://github.com/alphagov/search-admin/blob/master/app/services/rummager_saver.rb).
+Implemented in [elastic_search_recommended_link.rb](https://github.com/alphagov/search-admin/blob/master/app/models/elastic_search_recommended_link.rb) and [search_api_saver.rb](https://github.com/alphagov/search-admin/blob/master/app/services/search_api_saver.rb).
