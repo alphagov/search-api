@@ -165,7 +165,8 @@
     "children": {
       "slug": { "type": "searchable_identifier" },
       "title": { "type": "searchable_text" },
-      "body": { "type": "searchable_text" }
+      "body": { "type": "searchable_text" },
+      "summary": { "type": "searchable_text" }
     }
   },
 
