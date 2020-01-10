@@ -84,7 +84,7 @@ module GovukIndex
         organisation_content_ids:            expanded_links.organisation_content_ids,
         organisations:                       expanded_links.organisations,
         outcome_type:                        specialist.outcome_type,
-        parts:                               details.parts,
+        parts:                               parts.presented_parts,
         part_of_taxonomy_tree:               expanded_links.part_of_taxonomy_tree,
         people:                              expanded_links.people,
         policy_groups:                       expanded_links.policy_groups,
@@ -209,6 +209,10 @@ module GovukIndex
 
     def details
       @details ||= DetailsPresenter.new(details: payload["details"], format: common_fields.format)
+    end
+
+    def parts
+      @parts ||= PartsPresenter.new(parts: payload["details"].fetch("parts", []))
     end
 
     def expanded_links
