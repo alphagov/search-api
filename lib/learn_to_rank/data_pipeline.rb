@@ -4,7 +4,10 @@ module LearnToRank
     READY_STATUS = "Ready".freeze
     ERROR_STATUS = "Error".freeze
 
+    REDIS_NAMESPACE = "search-api-ltr".freeze
     REDIS_EXPIRATION_PERIOD = 60 * 60
+    REDIS_STATUS_KEY = "ltr-status".freeze
+    REDIS_LATEST_DATA_KEY = "ltr-latest-data".freeze
 
     def self.perform_async(bigquery_credentials, s3_bucket)
       # This has a race condition (two 'perform' calls, or a 'perform'
@@ -51,21 +54,27 @@ module LearnToRank
     end
 
     def self.get_status
-      redis = Redis.new(
-        host: ENV.fetch("REDIS_HOST", "127.0.0.1"),
-        port: ENV.fetch("REDIS_PORT", 6379),
-        namespace: "search-api-ltr",
-      )
-      redis.get("ltr-status") || READY_STATUS
+      redis.get(REDIS_STATUS_KEY) || READY_STATUS
     end
 
     def self.set_status(status)
-      redis = Redis.new(
+      redis.setex(REDIS_STATUS_KEY, REDIS_EXPIRATION_PERIOD, status)
+    end
+
+    def self.get_latest_data
+      redis.get(REDIS_LATEST_DATA_KEY)
+    end
+
+    def self.set_latest_data(data)
+      redis.set(REDIS_LATEST_DATA_KEY, data)
+    end
+
+    def self.redis
+      Redis.new(
         host: ENV.fetch("REDIS_HOST", "127.0.0.1"),
         port: ENV.fetch("REDIS_PORT", 6379),
-        namespace: "search-api-ltr",
+        namespace: REDIS_NAMESPACE,
       )
-      redis.setex("ltr-status", REDIS_EXPIRATION_PERIOD, status)
     end
   end
 end
