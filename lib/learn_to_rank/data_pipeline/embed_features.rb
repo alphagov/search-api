@@ -1,8 +1,8 @@
 module LearnToRank::DataPipeline
   class EmbedFeatures
     # EmbedFeatures takes a set of relevancy judgements and add features to them.
-    # INPUT: [{ query: "a1", "id": "123456", rank: 1 }]
-    # OUTPUT: [{ query: "a1", "id": "123456", rank: 1,
+    # INPUT: [{ query: "a1", "id": "123456", score: 1 }]
+    # OUTPUT: [{ query: "a1", "id": "123456", score: 1,
     #            view_count: 2, description_score: 2, title_score: 4 ... }]
     def initialize(judgements)
       @judgements = judgements

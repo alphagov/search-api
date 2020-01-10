@@ -14,13 +14,13 @@ RSpec.describe LearnToRank::DataPipeline::JudgementsToSvm do
     context "when judgements are provided" do
       let(:judgements) do
         [
-          { query: "tax", rank: 2, features: { "1": 2, "2": 0.1, "3": 10 } },
-          { query: "tax", rank: 0, features: { "1": 2, "2": 0.1, "3": 20 } },
-          { query: "cat", rank: 3, features: { "2": 2, "3": 0.2, "1": 90 } },
-          { query: "sat", rank: 2, features: { "1": 2, "3": 0.1, "2": 10 } },
-          { query: "mat", rank: 3, features: { "2": 2, "1": 0.1, "3": 10 } },
-          { query: "mat", rank: 1, features: { "1": 2, "2": 0.1, "3": 0 } },
-          { query: "hat", rank: 0, features: { "1": 2, "2": 0.1, "3": 0 } },
+          { query: "tax", score: 2, features: { "1": 2, "2": 0.1, "3": 10 } },
+          { query: "tax", score: 0, features: { "1": 2, "2": 0.1, "3": 20 } },
+          { query: "cat", score: 3, features: { "2": 2, "3": 0.2, "1": 90 } },
+          { query: "sat", score: 2, features: { "1": 2, "3": 0.1, "2": 10 } },
+          { query: "mat", score: 3, features: { "2": 2, "1": 0.1, "3": 10 } },
+          { query: "mat", score: 1, features: { "1": 2, "2": 0.1, "3": 0 } },
+          { query: "hat", score: 0, features: { "1": 2, "2": 0.1, "3": 0 } },
         ]
       end
       it "returns an array of SVM formatted data" do
