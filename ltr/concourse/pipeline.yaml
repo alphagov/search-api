@@ -68,6 +68,48 @@ resources:
     regexp: search-learn-to-rank/production-model-(.*).txt
 
 jobs:
+- name: integration-bootstrap
+  plan:
+    - get: search-api-git
+    - task: Bootstrap
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+        params:
+          GOVUK_ENVIRONMENT: integration
+          ROLE_ARN: ((integration-role-arn))
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "bootstrap"]
+- name: staging-bootstrap
+  plan:
+    - get: search-api-git
+    - task: Bootstrap
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+        params:
+          GOVUK_ENVIRONMENT: staging
+          ROLE_ARN: ((staging-role-arn))
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "bootstrap"]
+- name: production-bootstrap
+  plan:
+    - get: search-api-git
+    - task: Bootstrap
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+        params:
+          GOVUK_ENVIRONMENT: production
+          ROLE_ARN: ((production-role-arn))
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "bootstrap"]
 - name: integration-fetch
   plan:
     - get: at-10pm
