@@ -306,6 +306,18 @@ class Rummager < Sinatra::Application
     end
   end
 
+  get "/ltr/latest-data" do
+    require_authentication "ltr_training"
+    halt(403, "LTR is not enabled") unless Search::RelevanceHelpers.ltr_enabled?
+
+    data = LearnToRank::DataPipeline.get_latest_data
+    if data.nil?
+      halt(404, "Training data generation has not yet run.")
+    else
+      halt(200, data)
+    end
+  end
+
   get "/_status" do
     status = {}
     status["queues"] = {}

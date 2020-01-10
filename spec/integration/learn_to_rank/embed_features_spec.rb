@@ -6,17 +6,17 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
   end
   let(:judgements) do
     [
-      { query: "dog", link: "/dog", rank: 3 },
-      { query: "dog", link: "/pet", rank: 2 },
-      { query: "dog", link: "/whiskers", rank: 1 },
-      { query: "dog", link: "/kitten", rank: 0 },
-      { query: "dog", link: "/cat", rank: 0 },
+      { query: "dog", link: "/dog", score: 3 },
+      { query: "dog", link: "/pet", score: 2 },
+      { query: "dog", link: "/whiskers", score: 1 },
+      { query: "dog", link: "/kitten", score: 0 },
+      { query: "dog", link: "/cat", score: 0 },
 
-      { query: "cat", link: "/cat", rank: 3 },
-      { query: "cat", link: "/kitten", rank: 3 },
-      { query: "cat", link: "/pet", rank: 2 },
-      { query: "cat", link: "/whiskers", rank: 2 },
-      { query: "cat", link: "/dog", rank: 0 },
+      { query: "cat", link: "/cat", score: 3 },
+      { query: "cat", link: "/kitten", score: 3 },
+      { query: "cat", link: "/pet", score: 2 },
+      { query: "cat", link: "/whiskers", score: 2 },
+      { query: "cat", link: "/dog", score: 0 },
     ]
   end
 
@@ -54,7 +54,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
             query: "dog",
             link: "/dog",
-            rank: 3,
+            score: 3,
             features: {
               "1" => 3.0,
               "2" => 7.8356586,
@@ -77,7 +77,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
             query: "dog",
             link: "/pet",
-            rank: 2,
+            score: 2,
             features: {
               "1" => 3.0,
               "2" => 6.418799,
@@ -100,7 +100,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
             query: "dog",
             link: "/whiskers",
-            rank: 1,
+            score: 1,
             features: {
               "1" => 8.0,
               "2" => 23.366127,
@@ -122,7 +122,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           },
           { query: "dog",
            link: "/kitten",
-           rank: 0,
+           score: 0,
            features: {
              "1" => 6.0,
              "2" => 17.525326,
@@ -144,7 +144,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
             query: "dog",
             link: "/cat",
-            rank: 0,
+            score: 0,
             features: {
               "1" => 3.0,
               "2" => 6.418799,
@@ -167,7 +167,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
             query: "cat",
             link: "/cat",
-            rank: 3,
+            score: 3,
             features: {
               "1" => 3.0,
               "2" => 7.8356586,
@@ -190,7 +190,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
             query: "cat",
             link: "/kitten",
-            rank: 3,
+            score: 3,
             features: {
               "1" => 6.0,
               "2" => 17.525326,
@@ -213,7 +213,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
             query: "cat",
             link: "/pet",
-            rank: 2,
+            score: 2,
             features: {
               "1" => 3.0,
               "2" => 6.418799,
@@ -236,7 +236,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
            query: "cat",
            link: "/whiskers",
-           rank: 2,
+           score: 2,
            features: {
              "1" => 8.0,
              "2" => 23.366127,
@@ -259,7 +259,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
           {
             query: "cat",
             link: "/dog",
-            rank: 0,
+            score: 0,
             features: {
               "1" => 3.0,
               "2" => 6.418799,

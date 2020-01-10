@@ -39,14 +39,15 @@ module LearnToRank::DataPipeline
       end
 
       LearnToRank::DataPipeline.set_status("Uploading to S3...")
+      now = Time.now.to_i.to_s
       GovukStatsd.time("data_pipeline.upload") do
-        now = Time.now.strftime("%Y-%m-%d")
         Aws::S3::Object.new(bucket_name: s3_bucket, key: "data/#{now}/train.txt").put(body: svm[:train])
         Aws::S3::Object.new(bucket_name: s3_bucket, key: "data/#{now}/test.txt").put(body: svm[:test])
         Aws::S3::Object.new(bucket_name: s3_bucket, key: "data/#{now}/validate.txt").put(body: svm[:validate])
       end
 
       LearnToRank::DataPipeline.set_status(LearnToRank::DataPipeline::READY_STATUS)
+      LearnToRank::DataPipeline.set_latest_data(now)
     rescue StandardError => e
       LearnToRank::DataPipeline.set_status(LearnToRank::DataPipeline::ERROR_STATUS)
       GovukError.notify(e)

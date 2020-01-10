@@ -1,7 +1,7 @@
 module LearnToRank::DataPipeline
   class JudgementsToSvm
     # JudgementsToSvm translates judgements to SVM format
-    # IN: [{ query: "tax", rank: 2, features: { "1": 2, "2": 0.1 } }]
+    # IN: [{ query: "tax", score: 2, features: { "1": 2, "2": 0.1 } }]
     # OUT: "2 qid:4 1:2 2:0.1"
     def initialize(judgements = [])
       @judgements = judgements
@@ -18,10 +18,10 @@ module LearnToRank::DataPipeline
     attr_reader :judgements, :queries, :features
 
     def judgement_to_svm(judgement)
-      rank = (judgement[:rank]).to_s
+      score = (judgement[:score]).to_s
       query_id = "qid:#{queries[judgement[:query]]}"
       feats = features.map { |feat| "#{feat}:#{judgement.dig(:features, feat) || 0}" }
-      [rank, query_id, feats].flatten.compact.join(" ")
+      [score, query_id, feats].flatten.compact.join(" ")
     end
 
     def get_query_ids(judgements)
