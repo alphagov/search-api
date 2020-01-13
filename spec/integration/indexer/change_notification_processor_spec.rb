@@ -2,11 +2,11 @@ require "spec_helper"
 
 RSpec.describe "ChangeNotificationProcessorTest" do
   it "triggering a reindex" do
-    publishing_api_has_lookups(
+    stub_publishing_api_has_lookups(
       "/foo" => "DOCUMENT-CONTENT-ID",
     )
 
-    publishing_api_has_expanded_links(
+    stub_publishing_api_has_expanded_links(
       content_id: "DOCUMENT-CONTENT-ID",
       expanded_links: {},
     )
@@ -26,7 +26,7 @@ RSpec.describe "ChangeNotificationProcessorTest" do
       index: "government_test",
     )
 
-    publishing_api_has_expanded_links(
+    stub_publishing_api_has_expanded_links(
       content_id: "DOCUMENT-CONTENT-ID",
       expanded_links: {
         mainstream_browse_pages: [{
