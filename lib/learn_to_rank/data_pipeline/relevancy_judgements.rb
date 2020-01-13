@@ -15,18 +15,18 @@ module LearnToRank::DataPipeline
     #     ]
     #   }
     # }
-    # OUTPUT [{ query: 'my query', score: 3, content_id: '0f131434-cc04-4400-b418-ed6f81a09127' }]
+    # OUTPUT lazy enumerator of { query: 'my query', score: 3, content_id: '0f131434-cc04-4400-b418-ed6f81a09127' }
 
     attr_reader :relevancy_judgements
 
     def initialize(queries:)
-      @relevancy_judgements = judgement_sets(queries).flatten
+      @relevancy_judgements = judgement_sets(queries)
     end
 
   private
 
     def judgement_sets(queries)
-      queries.map do |(query, documents)|
+      queries.lazy.flat_map do |(query, documents)|
         judgements(query, documents)
       end
     end
@@ -37,7 +37,7 @@ module LearnToRank::DataPipeline
     def judgements(query, documents)
       clicks_above_position = 0
       ranked_documents = documents.sort_by { |doc| doc[:rank] }
-      ranked_documents.map do |document|
+      ranked_documents.lazy.map do |document|
         views = Float(document[:views]) - clicks_above_position
         clicks = Float(document[:clicks])
         views = clicks unless views >= clicks

@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
   subject(:augmented_judgements) do
-    described_class.new(judgements).augmented_judgements
+    described_class.new(judgements).augmented_judgements.force
   end
   let(:judgements) do
     [

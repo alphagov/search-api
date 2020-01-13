@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe LearnToRank::DataPipeline::RelevancyJudgements do
   subject(:judgements) do
-    described_class.new(queries: queries).relevancy_judgements
+    described_class.new(queries: queries).relevancy_judgements.force
   end
 
   let(:queries) {

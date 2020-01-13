@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe LearnToRank::DataPipeline::JudgementsToSvm do
-  subject(:formatted) { described_class.new(judgements).svm_format }
+  subject(:formatted) { described_class.new(judgements).svm_format.force }
 
   describe "#svm_format" do
     context "when an empty set is provided" do

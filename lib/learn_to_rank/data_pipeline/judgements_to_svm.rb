@@ -1,42 +1,46 @@
 module LearnToRank::DataPipeline
   class JudgementsToSvm
     # JudgementsToSvm translates judgements to SVM format
-    # IN: [{ query: "tax", score: 2, features: { "1": 2, "2": 0.1 } }]
-    # OUT: "2 qid:4 1:2 2:0.1"
+    # IN: enumerator of { query: "tax", score: 2, features: { "1": 2, "2": 0.1 } }
+    # OUT: lazy enumerator of "2 qid:4 1:2 2:0.1"
     def initialize(judgements = [])
       @judgements = judgements
-      @features = get_feature_keys(judgements)
-      @queries = get_query_ids(judgements)
+    end
+
+    def svm_format_grouped_by_query
+      svm_format.chunk { |row| row.split(" ")[1] }.map { |chunk| chunk[1] }
     end
 
     def svm_format
-      judgements.map { |j| judgement_to_svm(j) }
+      latest = 0
+      query_ids = {}
+      features = nil
+
+      judgements.lazy.map do |j|
+        if features.nil?
+          features = j[:features].keys.sort
+        end
+
+        query_id = query_ids[j[:query]]
+        if query_id.nil?
+          latest += 1
+          query_id = latest
+          query_ids[j[:query]] = latest
+        end
+
+        judgement_to_svm(query_id, j, features)
+      end
     end
 
   private
 
-    attr_reader :judgements, :queries, :features
+    attr_reader :judgements
 
-    def judgement_to_svm(judgement)
+    def judgement_to_svm(query_id, judgement, features)
       score = (judgement[:score]).to_s
-      query_id = "qid:#{queries[judgement[:query]]}"
+      qid = "qid:#{query_id}"
       feats = features.map { |feat| "#{feat}:#{judgement.dig(:features, feat) || 0}" }
-      [score, query_id, feats].flatten.compact.join(" ")
-    end
-
-    def get_query_ids(judgements)
-      latest = 0
-      judgements.each_with_object({}) do |judgement, hsh|
-        next if hsh[judgement[:query]]
-
-        hsh[judgement[:query]] = (latest += 1)
-      end
-    end
-
-    def get_feature_keys(judgements)
-      return [] unless judgements.any?
-
-      judgements.first[:features].keys.sort
+      [score, qid, feats].flatten.compact.join(" ")
     end
   end
 end
