@@ -13,7 +13,9 @@ module Search
     end
 
     def suggestions
-      es_response["autocomplete"]
+      es_response["autocomplete"]["hits"].map do |hit|
+        hit["_source"]["title"]
+      end
     end
   end
 end
