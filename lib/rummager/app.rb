@@ -358,7 +358,7 @@ class Rummager < Sinatra::Application
   end
 
   def serve_from_s3(key)
-    o = Aws::S3::Object.new(bucket_name: ENV["AWS_S3_BUCKET_NAME"], key: key)
+    o = Aws::S3::Object.new(bucket_name: ENV["AWS_S3_SITEMAPS_BUCKET_NAME"], key: key)
 
     headers "Content-Type" => "application/xml",
             "Cache-Control" => "public",
