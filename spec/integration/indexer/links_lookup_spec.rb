@@ -5,7 +5,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
   include GdsApi::TestHelpers::PublishingApi
 
   it "indexes document without publishing api content unchanged" do
-    publishing_api_has_lookups({})
+    stub_publishing_api_has_lookups({})
 
     post "/government_test/documents", {
       "link" => "/something-not-in-publishing-api",
@@ -18,7 +18,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
   end
 
   it "indexes document with external url unchanged" do
-    publishing_api_has_lookups({})
+    stub_publishing_api_has_lookups({})
 
     post "/government_test/documents", {
       "link" => "http://example.com/some-link",
@@ -31,11 +31,11 @@ RSpec.describe "TaglookupDuringIndexingTest" do
   end
 
   it "indexes documents with links from publishing api" do
-    publishing_api_has_lookups(
+    stub_publishing_api_has_lookups(
       "/foo/bar" => "DOCUMENT-CONTENT-ID",
     )
 
-    publishing_api_has_expanded_links(
+    stub_publishing_api_has_expanded_links(
       content_id: "DOCUMENT-CONTENT-ID",
       expanded_links: {
         topics: [
@@ -111,7 +111,7 @@ RSpec.describe "TaglookupDuringIndexingTest" do
   end
 
   it "skips content id lookup if it already has a content_id" do
-    publishing_api_has_expanded_links(
+    stub_publishing_api_has_expanded_links(
       content_id: "CONTENT-ID-OF-DOCUMENT",
       expanded_links: {
         topics: [
@@ -196,11 +196,11 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       },
     }
 
-    publishing_api_has_lookups(
+    stub_publishing_api_has_lookups(
       "/foo/bar" => "DOCUMENT-CONTENT-ID",
     )
 
-    publishing_api_has_expanded_links(
+    stub_publishing_api_has_expanded_links(
       content_id: "DOCUMENT-CONTENT-ID",
       expanded_links: {
         taxons: [taxon1, taxon2],

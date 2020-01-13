@@ -19,7 +19,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
   end
 
   it "adds a document to the search index" do
-    publishing_api_has_expanded_links(
+    stub_publishing_api_has_expanded_links(
       content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
       expanded_links: {},
     )
@@ -60,7 +60,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
   end
 
   it "defaults the type to 'edition' if not specified" do
-    publishing_api_has_expanded_links(
+    stub_publishing_api_has_expanded_links(
       content_id: "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
       expanded_links: {},
     )
@@ -187,7 +187,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
       expect(stubbed_client).to receive(:bulk).and_call_original
       allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
 
-      publishing_api_has_expanded_links(
+      stub_publishing_api_has_expanded_links(
         content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
         expanded_links: {},
       )

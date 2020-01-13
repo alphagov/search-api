@@ -26,7 +26,7 @@ module SpecHelpers
 
   # This works because we first try to look up the content id for the base path.
   def stub_tagging_lookup
-    publishing_api_has_lookups({})
+    stub_publishing_api_has_lookups({})
   end
 
   # need to add additional page_traffic data in order to set maximum allowed ranking value
