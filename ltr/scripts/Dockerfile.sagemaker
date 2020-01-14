@@ -1,0 +1,14 @@
+# See https://www.tensorflow.org/install/pip?lang=python3#package-location for supported Python versions
+FROM python:3.7
+
+RUN mkdir govuk
+WORKDIR govuk
+
+COPY requirements.txt .
+COPY tf_ranking_libsvm.py .
+COPY train.sh .
+
+RUN pip install -r requirements.txt
+RUN chmod +x train.sh
+
+ENTRYPOINT ["./train.sh"]

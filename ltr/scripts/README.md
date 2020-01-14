@@ -11,13 +11,12 @@ Serve: Create a docker container to serve the trained model
 Install python3 and virtualenv, then install the dependencies with:
 
 ```sh
-cd ltr_scripts
 virtualenv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r ltr/scripts/requirements.txt
 ```
 
-You can now use the `train.sh` script to generate a model.
+You can now use the `ltr/scripts/train.sh` script to generate a model.
 
 If you close your shell, run `source venv/bin/activate` again to set
 up your python environment again.

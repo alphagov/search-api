@@ -96,7 +96,7 @@ namespace :learn_to_rank do
 
       model_dir = args.model_dir || "tmp/libsvm"
       svm_dir = args.svm_dir || "tmp/ltr_data"
-      sh "env OUTPUT_DIR=#{model_dir} TRAIN=#{svm_dir}/train.txt VALI=#{svm_dir}/validate.txt TEST=#{svm_dir}/test.txt ./ltr_scripts/train.sh"
+      sh "env OUTPUT_DIR=#{model_dir} TRAIN=#{svm_dir}/train.txt VALI=#{svm_dir}/validate.txt TEST=#{svm_dir}/test.txt ./ltr/scripts/train.sh"
     end
 
     desc "Serves a trained model"
@@ -104,7 +104,7 @@ namespace :learn_to_rank do
       assert_ltr!
 
       model_dir = args.model_dir || "tmp/libsvm"
-      sh "env EXPORT_PATH=#{__dir__}/../../#{model_dir} ./ltr_scripts/serve.sh"
+      sh "env EXPORT_PATH=#{__dir__}/../../#{model_dir} ./ltr/scripts/serve.sh"
     end
 
     desc "Evaluate search performance using nDCG with and without the model"

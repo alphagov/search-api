@@ -9,8 +9,10 @@ test.  ADR-010 covers the architectural decisions.
 [TensorFlow Ranking]: https://github.com/tensorflow/ranking
 
 
-Set up
-------
+Running it locally
+------------------
+
+### Set up
 
 TensorFlow is written in Python 3, so you will need some libraries
 installed.  The simplest way to do this is using `virtualenv`:
@@ -19,7 +21,7 @@ installed.  The simplest way to do this is using `virtualenv`:
 pip3 install virtualenv
 virtualenv venv -p python3
 source venv/bin/activate
-pip install -r ltr_scripts/requirements.txt
+pip install -r ltr/scripts/requirements.txt
 ```
 
 This adjusts your shell's environment to use a local Python package
@@ -27,8 +29,7 @@ database in the `venv` directory.  If you close the shell, you can run
 `source venv/bin/activate` again to bring everything back.
 
 
-Using LTR
----------
+### Using LTR
 
 **Set the `ENABLE_LTR` environment variable to "true", or all of this is disabled.**
 
@@ -89,8 +90,86 @@ same `judgements.csv` file.
 [govuk-secrets]: https://github.com/alphagov/govuk-secrets
 
 
+Running it in production
+------------------------
+
+In production the model training and deployment are automated through
+[Concourse][], with the deployed model hosted in [Amazon SageMaker][].
+The Concourse pipeline is defined in `ltr/concourse/pipeline.yaml` and
+hosted in [the RE-managed shared Concourse][].
+
+![The search-learn-to-rank pipeline in shared Concourse](images/concourse-pipeline.png)
+
+The pipeline has three sets of jobs, one for each environment, which:
+
+1. Call the `/ltr/train` endpoint in search-api to generate training
+   data and upload it to S3.
+
+2. Call Amazon SageMaker's training API to create a new model from
+   that training data, and store the model artefact in S3.
+
+3. Call Amazon SageMaker's deployment API to deploy the new model,
+   removing the old model configuration (but leaving the artefact in
+   S3).
+
+Each "fetch" task is triggered automatically at 10pm.  If it
+successfully completes, the "train" task is triggered.  If it
+successfully completes, the "deploy" task is triggered.
+
+All artefacts are stored in the relevancy S3 bucket: training data is
+under `data/<timestamp>/` and model data under `model/<training
+timestamp>-<timestamp>`.  Files are removed by a lifecycle policy
+after 7 days.
+
+[Concourse]: https://concourse-ci.org/
+[Amazon SageMaker]: https://aws.amazon.com/sagemaker/
+[the RE-managed shared Concourse]: https://cd.gds-reliability.engineering/teams/govuk-tools/pipelines/search-learn-to-rank
+
+### New environment set up
+
+There are some set-up tasks to be done before a new environment will
+work with this Concourse and SageMaker configuration.
+
+1. Deploy terraform, that's out-of-scope of this document, but the
+   three essential bits are:
+
+   - The `app-search` project
+   - A domain name `search-api.<environment>.govuk.digital` (see
+     `infra-public-services`)
+   - A security rule allowing access from the Concourse IP addresses
+     (see `infra-security-groups`)
+
+2. Define jobs for the new environment in the `pipeline.yaml` file
+   (copy one of the current environments and just change the name).
+
+3. Deploy the Concourse configuration (with `fly set-pipeline`).
+
+4. Set the Concourse secrets (the `((...))` bits of the pipeline) for
+   the environment with `gds-cli`.
+
+5. Run the `<environment>-bootstrap` Concourse job.
+
+6. Run the `ltr/scripts/build-ecr.sh <ecr repo>` script.  The ECR
+   repository is given in the output of deploying the `app-search`
+   terraform.
+
+
 Reranking
 ---------
+
+Reranking happens when `ENABLE_LTR=true` is set.  The model is found
+by trying these options in order, going for the first one which
+succeeds:
+
+1. If `TENSORFLOW_SAGEMAKER_ENDPOINT` is set, [Amazon SageMaker][] is
+   used.  It's assumed that search-api is running under a role which
+   has permissions to invoke the endpoint.
+
+2. If `TENSORFLOW_SERVING_IP` is set, `http:://<ip>::8501` is used.
+
+3. If `RANK_ENV` is `development`, `http://reranker:8501` is used.
+
+4. `http://0.0.0.0:8501` is used.
 
 When reranking is working, search-api results get three additional
 fields:
@@ -99,8 +178,8 @@ fields:
 - `combined_score`: the score used for the final ranking
 - `original_rank`: how Elasticsearch ranked the result
 
-In the future `combined_score` may just be `model_score` (in which
-case it's likely to be removed from the response).
+We may remove `combined_score` in the future, as it's just the same as
+`model_score`.
 
 
 To do
@@ -113,8 +192,6 @@ Here are problems to solve before we could turn this into an A/B test:
 - Investigate which TensorFlow settings work best for  modelling
 - Investigate window sizes for reranking
 - Measure the performance impact
-- Schedule the training
-- Store trained models in S3 and fetch the latest model for serving
 - Handle errors in the reranker (eg, unavailability)
 - Add monitoring and alerting
 - Think about ways in which a black-box model could be abused and how we can debug issues
