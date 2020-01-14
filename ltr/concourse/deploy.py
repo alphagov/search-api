@@ -3,6 +3,8 @@
 import os
 import sagemaker
 import sagemaker.tensorflow
+import sys
+import time
 
 from datetime import date
 
@@ -43,6 +45,19 @@ model.deploy(
     update_endpoint=True,
 )
 
+# wait for the deployment to complete
+endpoint_status = "Updating"
+while endpoint_status == "Updating":
+    print("Waiting for new model to be deployed...", file=sys.stderr)
+    endpoint_status = session.boto_session.client(
+        "sagemaker"
+    ).describe_endpoint(EndpointName=endpoint_name)["EndpointStatus"]
+    time.sleep(10)
+
+if endpoint_status != "InService":
+    print(f"Unexpected endpoint status: {endpoint_status}", file=sys.stderr)
+    sys.exit(1)
+
 # remove the old endpoint config and model
 session.boto_session.client("sagemaker").delete_endpoint_config(
     EndpointConfigName=current_endpoint_config_name,
@@ -51,4 +66,4 @@ session.boto_session.client("sagemaker").delete_model(
     ModelName=current_endpoint_config["ProductionVariants"][0]["ModelName"],
 )
 
-print("done")
+print("done", file=sys.stderr)
