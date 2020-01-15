@@ -67,5 +67,22 @@ RSpec.describe LearnToRank::Features do
         )
       end
     end
+
+    context "with an unknown format or organisation" do
+      subject(:features) {
+        described_class.new(
+          format: "grimoire",
+          organisation_content_ids: ["department of magic"],
+        )
+      }
+
+      it "returns a default format value" do
+        expect(features.as_hash["11"]).to eq(0.0)
+      end
+
+      it "returns a default organisation value" do
+        expect(features.as_hash["12"]).to eq(0.0)
+      end
+    end
   end
 end
