@@ -1,5 +1,5 @@
 require "spec_helper"
-require "spec/unit/helpers/ranker_test_helpers"
+require "spec/support/ranker_test_helpers"
 
 RSpec.describe LearnToRank::Reranker do
   include RankerTestHelpers

@@ -25,6 +25,9 @@ GEM
       aws-sdk-core (~> 3, >= 3.83.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
+    aws-sdk-sagemaker (1.49.0)
+      aws-sdk-core (~> 3, >= 3.71.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-sagemakerruntime (1.18.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
@@ -317,6 +320,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport (~> 6.0.2)
   aws-sdk-s3 (~> 1.60)
+  aws-sdk-sagemaker (~> 1.49)
   aws-sdk-sagemakerruntime (~> 1.18)
   bunny-mock (~> 1.7)
   climate_control (~> 0.2)
