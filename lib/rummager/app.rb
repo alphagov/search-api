@@ -363,7 +363,7 @@ class Rummager < Sinatra::Application
     headers "Content-Type" => "application/xml",
             "Cache-Control" => "public",
             "Expires" => (Date.today + 1).rfc2822,
-            "Last-Modified" => o.last_modified
+            "Last-Modified" => o.last_modified.httpdate
 
     stream do |out|
       o.get.body.each { |chunk| out << chunk }
