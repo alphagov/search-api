@@ -18,6 +18,8 @@ module LearnToRank
       log_reranking
 
       reorder_results(es_results, new_scores)
+    rescue StandardError => e
+      GovukError.notify(e, extra: { query: query })
     end
 
   private
