@@ -71,7 +71,7 @@ module LearnToRank
     def get_format(format)
       return 0 if format.nil? || format.empty?
 
-      format_enums[format]
+      format_enums[format] || 0
     end
 
     def get_timestamp(timestamp)
