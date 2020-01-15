@@ -1,6 +1,7 @@
 import os, requests, sys, time
 
 govuk_environment = os.environ["GOVUK_ENVIRONMENT"]
+bearer_token = os.environ["SEARCH_API_BEARER_TOKEN"]
 
 SEARCH_API_TRAIN_URL = f"https://search-api.{govuk_environment}.govuk.digital/ltr/train"
 SEARCH_API_DATA_URL = (
@@ -8,7 +9,7 @@ SEARCH_API_DATA_URL = (
 )
 
 session = requests.Session()
-session.headers.update(HEADERS)
+session.headers.update({"Authorization": f"Bearer {bearer_token}"})
 
 # despite the name this does both http and https
 session.mount('https://', requests.adapters.HTTPAdapter(max_retries=5))
