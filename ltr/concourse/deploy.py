@@ -36,7 +36,9 @@ if len(model_keys) != 1:
 model_key = model_keys[0]["Key"]
 
 # deploy the model by creating a new endpoint config and updating the existing endpoint
-model = sagemaker.tensorflow.serving.Model(f"s3://{s3_bucket}/{model_key}", role,)
+model = sagemaker.tensorflow.serving.Model(
+    f"s3://{s3_bucket}/{model_key}", role, framework_version="2.0.0"
+)
 
 model.deploy(
     current_endpoint_config["ProductionVariants"][0]["InitialInstanceCount"],
@@ -49,9 +51,9 @@ model.deploy(
 endpoint_status = "Updating"
 while endpoint_status == "Updating":
     print("Waiting for new model to be deployed...", file=sys.stderr)
-    endpoint_status = session.boto_session.client(
-        "sagemaker"
-    ).describe_endpoint(EndpointName=endpoint_name)["EndpointStatus"]
+    endpoint_status = session.boto_session.client("sagemaker").describe_endpoint(
+        EndpointName=endpoint_name
+    )["EndpointStatus"]
     time.sleep(10)
 
 if endpoint_status != "InService":
