@@ -11,4 +11,4 @@ docker run -t --rm -p 8501:8501 \
     --network-alias reranker \
     -v "$EXPORT_PATH/$LATEST:/models/ltr/1" \
     -e MODEL_NAME=ltr \
-    tensorflow/serving
+    tensorflow/serving:2.0.0
