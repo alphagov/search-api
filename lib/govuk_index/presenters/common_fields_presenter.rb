@@ -10,7 +10,7 @@ module GovukIndex
     BREXIT_PAGE = {
       "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
       "title" => "Brexit",
-      "description" => "Brexit information and guidance on how to prepare for a no deal Brexit.",
+      "description" => "The UK and EU have agreed an exit deal. Find out what happens next.",
     }.freeze
     extend MethodBuilder
 
