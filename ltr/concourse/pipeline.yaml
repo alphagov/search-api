@@ -7,6 +7,18 @@ task-config: &task-config
       repository: python
       tag: 3.7
 
+notify-failure: &notify-failure
+  put: govuk-searchandnav-slack
+  params:
+    channel: '#govuk-searchandnav'
+    username: 'Daily LTR'
+    icon_emoji: ':concourse:'
+    silent: true
+    text: |
+      :kaboom:
+      The $BUILD_JOB_NAME Concourse job has failed
+      Failed build: http://cd.gds-reliability.engineering/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
 # proper configuration begins
 resource_types:
 - name: cron-resource
@@ -19,6 +31,11 @@ resource_types:
   source:
     repository: governmentpaas/s3-resource
     tag: 97e441efbfb06ac7fb09786fd74c64b05f9cc907
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
 
 resources:
 - name: at-10pm
@@ -30,6 +47,10 @@ resources:
   type: git
   source:
     uri: https://github.com/alphagov/search-api.git
+- name: govuk-searchandnav-slack
+  type: slack-notification
+  source:
+    url: ((slack-webhook-url))
 - name: integration-training-data
   type: s3-iam
   source:
@@ -263,6 +284,8 @@ jobs:
         run:
           path: bash
           args: ["search-api-git/ltr/concourse/task.sh", "fetch"]
+      on_failure:
+        <<: *notify-failure
     - put: production-training-data
       params:
         file: out/production-training-data-*.txt
@@ -289,6 +312,8 @@ jobs:
         run:
           path: bash
           args: ["search-api-git/ltr/concourse/task.sh", "train"]
+      on_failure:
+        <<: *notify-failure
     - put: production-model
       params:
         file: out/production-model-*.txt
@@ -311,3 +336,5 @@ jobs:
         run:
           path: bash
           args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
+      on_failure:
+        <<: *notify-failure
