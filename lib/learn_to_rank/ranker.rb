@@ -3,6 +3,7 @@ require "httparty"
 
 module LearnToRank
   class Ranker
+    include Errors
     # Ranker takes feature sets and requests new scores for them
     # from a pre-trained model.
     def initialize(feature_sets = [])
@@ -43,13 +44,13 @@ module LearnToRank
         )
       rescue Aws::SageMakerRuntime::Errors::ServiceError => e
         logger.debug "SageMaker: #{e.message}"
-        log_error e.class.to_s
+        report_error(e)
         return nil
       end
 
       if response.nil? || response.body.blank?
         logger.debug "SageMaker: No response from ranker!"
-        log_error "ranker_error.sagemaker"
+        report_error(InvalidSageMakerResponse.new, extra: { response: response })
         return nil
       else
         logger.debug "SageMaker: #{response.body}"
@@ -73,13 +74,13 @@ module LearnToRank
         response = HTTParty.post(url, options)
       rescue StandardError => e
         logger.debug "TF Serving: status_code: 500, message: #{e.message}"
-        log_error e.class.to_s
+        report_error(e)
         return nil
       end
 
-      if response.nil? || response.body.blank? || response.code != 200
+      if response.body.nil? || response.body.empty? || response.code != 200
         logger.debug "TF Serving: status_code: 500, message: No response from ranker!"
-        log_error "ranker_error.serving"
+        report_error(InvalidContainerResponse.new, extra: { response: response })
         return nil
       else
         logger.debug "TF Serving: status_code: #{response.code}, message: #{response.message}"
@@ -96,10 +97,6 @@ module LearnToRank
       else
         "0.0.0.0"
       end
-    end
-
-    def log_error(error)
-      Services.statsd_client.increment("learn_to_rank.errors.#{error}")
     end
 
     def logger

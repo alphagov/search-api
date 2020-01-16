@@ -8,6 +8,7 @@ require "search/query_components/best_bets"
 
 module LearnToRank
   class Reranker
+    include Errors
     # Reranker re-orders elasticsearch results using a pre-trained model
     def rerank(query: "", es_results: [])
       feature_sets = FeatureSets.new.call(query, es_results)
@@ -19,7 +20,7 @@ module LearnToRank
 
       reorder_results(es_results, new_scores)
     rescue StandardError => e
-      GovukError.notify(e, extra: { query: query })
+      report_error(e, extra: { query: query })
     end
 
   private
