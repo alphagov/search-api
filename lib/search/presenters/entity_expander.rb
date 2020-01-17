@@ -38,6 +38,7 @@ module Search
       Mapping.new(:world_locations),
       Mapping.new(:specialist_sectors),
       Mapping.new(:people),
+      Mapping.new(:roles),
       Mapping.new(
         :topic_content_ids,
         new_field_name: :expanded_topics,

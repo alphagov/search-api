@@ -22,6 +22,7 @@ module Search
         document_collections: registry_for_document_format("document_collection"),
         world_locations: registry_for_document_format("world_location"),
         people: registry_for_document_format("person"),
+        roles: registry_for_document_format("ministerial_role"),
       }
     end
 
