@@ -13,12 +13,12 @@ module Search
     # Returns {field_name => {aggregate_value => {total: count, examples: [{field: value}, ...]}}}
     # ie: a hash keyed by field name, containing hashes keyed by aggregate value with
     # values containing example information for the value.
-    def fetch
+    def fetch(slugs_for_field)
       return {} if @response_aggregates.nil?
 
       search_params.aggregates.reduce({}) do |result, (field_name, aggregate_params)|
         if aggregate_params[:examples].positive?
-          result[field_name] = fetch_for_field(field_name, aggregate_params)
+          result[field_name] = fetch_for_field(field_name, aggregate_params, slugs_for_field[field_name])
         end
         result
       end
@@ -30,7 +30,7 @@ module Search
       @index.schema.field_definitions
     end
 
-    def fetch_for_field(field_name, aggregate_params)
+    def fetch_for_field(field_name, aggregate_params, slugs)
       example_count = aggregate_params[:examples]
       example_fields = aggregate_params[:example_fields]
       scope = aggregate_params[:example_scope]
@@ -43,13 +43,7 @@ module Search
         filter = Search::FormatMigrator.new(search_params.search_config).call
       end
 
-      aggregate_options = @response_aggregates.dig(field_name, "filtered_aggregations", "buckets") || []
-
-      slugs = aggregate_options.map { |option|
-        option["key"]
-      }
-
-      if slugs.empty?
+      if slugs.nil?
         {}
       else
         batched_fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)

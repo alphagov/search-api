@@ -96,9 +96,6 @@ module Search
     end
 
     def process_es_response(search_params, builder, payload, es_response, reranked)
-      example_fetcher = AggregateExampleFetcher.new(index, es_response, search_params, builder)
-      aggregate_examples = example_fetcher.fetch
-
       # Augment the response with the suggest result from a separate query.
       if search_params.suggest_spelling?
         es_response["suggest"] = run_spell_checks(search_params)
@@ -108,15 +105,38 @@ module Search
         es_response["autocomplete"] = run_autocomplete_query(search_params)
       end
 
+      presented_aggregates = present_aggregates_with_examples(search_params, es_response, builder)
+
       ResultSetPresenter.new(
         search_params: search_params,
         es_response: es_response,
         registries: registries,
-        aggregate_examples: aggregate_examples,
+        presented_aggregates: presented_aggregates,
         schema: index.schema,
         query_payload: payload,
         reranked: reranked,
       ).present
+    end
+
+    def present_aggregates_with_examples(search_params, es_response, builder)
+      presented_aggregates = AggregateResultPresenter.new(
+        es_response["aggregations"],
+        search_params,
+        registries,
+      ).presented_aggregates
+
+      slugs_for_fields = presented_aggregates.each_with_object({}) do |(field, aggregate), acc|
+        current = acc[field] || []
+        new = aggregate[:options].map { |option| option[:value]["slug"] }.compact
+        acc[field] = (current + new).uniq
+        acc
+      end
+
+      example_fetcher = AggregateExampleFetcher.new(index, es_response, search_params, builder)
+      examples = example_fetcher.fetch(slugs_for_fields)
+      AggregateResultPresenter.merge_examples(presented_aggregates, examples)
+
+      presented_aggregates
     end
 
     # Elasticsearch tries to find spelling suggestions for words that don't occur in
