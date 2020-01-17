@@ -4,6 +4,8 @@ require "httparty"
 module LearnToRank
   class Ranker
     include Errors
+    include RankerApiHelper
+
     # Ranker takes feature sets and requests new scores for them
     # from a pre-trained model.
     def initialize(feature_sets = [])
@@ -60,7 +62,7 @@ module LearnToRank
     end
 
     def fetch_new_scores_from_serving(examples)
-      url = "http://#{tensorflow_serving_ip}:8501/v1/models/ltr:regress"
+      url = "#{tensorflow_container_url}:regress"
       options = {
         method: "POST",
         body: {
@@ -87,16 +89,6 @@ module LearnToRank
       end
 
       JSON.parse(response.body).fetch("results")
-    end
-
-    def tensorflow_serving_ip
-      if ENV["TENSORFLOW_SERVING_IP"].present?
-        ENV["TENSORFLOW_SERVING_IP"]
-      elsif %w(development).include? ENV["RACK_ENV"]
-        "reranker"
-      else
-        "0.0.0.0"
-      end
     end
 
     def logger

@@ -46,4 +46,34 @@ module RankerTestHelpers
     stub_request(:post, "http://0.0.0.0:8501/v1/models/ltr:regress")
       .to_return(status: 500)
   end
+
+  def stub_ranker_status_request
+    stub_request(:any, "http://0.0.0.0:8501/v1/models/ltr")
+  end
+
+  def stub_ranker_container_doesnt_exist
+    stub_ranker_status_request.to_return(status: 500)
+  end
+
+  def stub_ranker_requests_timeout
+    stub_ranker_status_request.to_timeout
+  end
+
+  def stub_ranker_status_to_be_ok
+    stub_ranker_status_request.to_return(
+      status: 200,
+      body: {
+        "model_version_status": [
+          {
+            "version": "1",
+            "state": "AVAILABLE",
+            "status": {
+              "error_code": "OK",
+              "error_message": "",
+            },
+          },
+        ],
+      }.to_json,
+    )
+  end
 end

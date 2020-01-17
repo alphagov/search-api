@@ -1,6 +1,9 @@
 require "spec_helper"
+require "spec/support/ranker_test_helpers"
 
 RSpec.describe "HealthcheckTest" do
+  include RankerTestHelpers
+
   let(:queues) {
     { "bulk" => 2, "default" => 1 }
   }
@@ -10,6 +13,7 @@ RSpec.describe "HealthcheckTest" do
     allow_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(queues)
     allow_any_instance_of(Sidekiq::Queue).to receive(:latency).and_return(queue_latency)
     allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_return("status" => "green")
+    stub_ranker_status_to_be_ok
   end
 
   describe "#redis_connectivity check" do
@@ -23,6 +27,28 @@ RSpec.describe "HealthcheckTest" do
         get "/healthcheck"
 
         expect(parsed_response["status"]).to eq "critical"
+      end
+    end
+  end
+
+  describe "#reranker_healthcheck check" do
+    # We only check for cannot connect because govuk_app_config has tests for this
+    context "when reranker healthcheck fails" do
+      before do
+        stub_ranker_container_doesnt_exist
+      end
+
+      it "returns a warning status" do
+        get "/healthcheck"
+        expect(parsed_response.dig("checks", "reranker_healthcheck", "status")).to eq "warning"
+      end
+    end
+
+    context "when reranker healthcheck passes" do
+      it "returns an OK status" do
+        get "/healthcheck"
+        expect(parsed_response["status"]).to eq "ok"
+        expect(parsed_response.dig("checks", "reranker_healthcheck", "status")).to eq "ok"
       end
     end
   end
