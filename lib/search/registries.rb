@@ -22,7 +22,7 @@ module Search
         document_collections: registry_for_document_format("document_collection"),
         world_locations: registry_for_document_format("world_location"),
         people: registry_for_document_format("person"),
-        roles: registry_for_document_format("ministerial_role"),
+        roles: roles,
       }
     end
 
@@ -58,6 +58,14 @@ module Search
         search_server.index_for_search([SearchConfig.govuk_index_name]),
         field_definitions,
         "specialist_sector",
+      )
+    end
+
+    def roles
+      BaseRegistry.new(
+        search_server.index_for_search([SearchConfig.govuk_index_name]),
+        field_definitions,
+        "ministerial_role",
       )
     end
 
