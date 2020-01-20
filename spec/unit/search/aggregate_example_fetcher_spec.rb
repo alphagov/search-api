@@ -111,7 +111,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     end
 
     it "get an empty hash of examples" do
-      expect(@fetcher.fetch).to eq({})
+      expect(@fetcher.fetch({})).to eq({})
     end
   end
 
@@ -164,7 +164,7 @@ RSpec.describe Search::AggregateExampleFetcher do
               { "title" => "example_3" },
             ] },
         },
-      ).to eq(@fetcher.fetch)
+      ).to eq(@fetcher.fetch("sector" => %w(sector_1 sector_2)))
     end
   end
 
@@ -224,7 +224,7 @@ RSpec.describe Search::AggregateExampleFetcher do
               { "title" => "example_3" },
             ] },
         },
-      ).to eq(@fetcher.fetch)
+      ).to eq(@fetcher.fetch("sector" => %w(sector_1 sector_2)))
     end
   end
 
@@ -254,7 +254,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     end
 
     it "request and return aggregate examples" do
-      expect(@fetcher.fetch).to eq({ "sector" => {} })
+      expect(@fetcher.fetch("sector" => [])).to eq({ "sector" => nil })
     end
   end
 
@@ -319,7 +319,7 @@ RSpec.describe Search::AggregateExampleFetcher do
             ]
           }
         ],
-      ).to eq(@fetcher.fetch)
+      ).to eq(@fetcher.fetch("sector" => (0..999).map { |sector_num| "sector_#{sector_num}" }))
     end
   end
 end
