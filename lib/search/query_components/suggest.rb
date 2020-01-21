@@ -13,6 +13,7 @@ module QueryComponents
             direct_generator: [{
               field: SPELLING_FIELD,
               suggest_mode: "missing",
+              string_distance: "levenshtein",
               sort: "score",
             }],
           }.merge(highlight),
