@@ -16,6 +16,7 @@ details:
   email_filter_facets:
   - facet_id: content_store_document_type
     facet_name: All releases
+    required: true
     facet_choices:
     - topic_name: Corporate report
       key: corporate_report
