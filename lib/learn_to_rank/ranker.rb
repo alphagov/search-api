@@ -15,9 +15,7 @@ module LearnToRank
     def ranks
       return nil unless feature_sets.any?
 
-      GovukStatsd.time("reranker.fetch_scores") do
-        fetch_new_scores(feature_sets)
-      end
+      fetch_new_scores(feature_sets)
     end
 
   private
