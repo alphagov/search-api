@@ -2,11 +2,12 @@ module Search
   class ResultPresenter
     attr_reader :raw_result, :registries, :schema, :search_params
 
-    def initialize(raw_result, registries, schema, search_params)
+    def initialize(raw_result, registries, schema, search_params, result_rank:)
       @raw_result = raw_result
       @registries = registries
       @schema = schema
       @search_params = search_params
+      @result_rank = result_rank
     end
 
     def present
@@ -21,12 +22,18 @@ module Search
       result = expand_entities(result)
       result = temporarily_fix_link_field(result)
       result = only_return_explicitly_requested_values(result)
+      result = present_parts(result)
       result = add_debug_values(result)
 
       result
     end
 
   private
+
+    DEFAULT_PARTS_TO_DISPLAY = 10
+    TOP_N_RESULTS_TO_HAVE_PARTS = 3
+
+    attr_reader :result_rank
 
     def expand_entities(result)
       EntityExpander.new(registries).new_result(result)
@@ -103,6 +110,15 @@ module Search
       # search results in the `frontend` application.
       result[:document_type] = raw_result["_source"]["document_type"]
 
+      result
+    end
+
+    def present_parts(result)
+      parts = result.dig("parts")
+      return result unless parts && parts.any?
+
+      parts_count = result_rank <= TOP_N_RESULTS_TO_HAVE_PARTS ? DEFAULT_PARTS_TO_DISPLAY : 0
+      result["parts"] = parts.take(parts_count)
       result
     end
 

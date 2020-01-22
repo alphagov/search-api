@@ -55,8 +55,8 @@ module Search
     end
 
     def presented_results
-      es_response.dig("hits", "hits").to_a.map do |raw_result|
-        ResultPresenter.new(raw_result.to_hash, @registries, @schema, search_params).present
+      es_response.dig("hits", "hits").to_a.map.with_index(1) do |raw_result, rank|
+        ResultPresenter.new(raw_result.to_hash, @registries, @schema, search_params, result_rank: rank).present
       end
     end
   end

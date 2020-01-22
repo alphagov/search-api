@@ -8,7 +8,7 @@ RSpec.describe Search::ResultPresenter, "Temporary Link Fix" do
       "_source" => { "document_type" => "raib_report", "link" => ["some/link"] },
     }
 
-    result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
+    result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link]), result_rank: 1).present
 
     expect(result["link"]).to eq("/some/link")
   end
@@ -20,7 +20,7 @@ RSpec.describe Search::ResultPresenter, "Temporary Link Fix" do
       "_source" => { "document_type" => "raib_report", "link" => ["http://example.org/some-link"] },
     }
 
-    result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
+    result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link]), result_rank: 1).present
 
     expect(result["link"]).to eq("http://example.org/some-link")
   end
@@ -32,7 +32,7 @@ RSpec.describe Search::ResultPresenter, "Temporary Link Fix" do
       "_source" => { "document_type" => "raib_report", "link" => ["/some-link"] },
     }
 
-    result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link])).present
+    result = described_class.new(document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[link]), result_rank: 1).present
 
     expect(result["link"]).to eq("/some-link")
   end
