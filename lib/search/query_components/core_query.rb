@@ -97,6 +97,7 @@ module QueryComponents
         match_all_terms(%w(indexable_content), query, MATCH_ALL_INDEXABLE_CONTENT_BOOST),
         match_all_terms(%w(title acronym description indexable_content), query, MATCH_ALL_MULTI_BOOST),
         match_any_terms(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
+        match_bigrams(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
         minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST),
       ].reject(&:empty?))
     end
@@ -150,6 +151,22 @@ module QueryComponents
           operator: "or",
           fields: fields,
           analyzer: query_analyzer,
+        },
+      }
+    end
+
+    def match_bigrams(fields, query, boost = 1.0)
+      return {} unless search_params.use_shingles?
+
+      fields = fields.map { |f| "#{f}.shingles" }
+
+      {
+        multi_match: {
+          boost: boost,
+          query: escape(query),
+          operator: "or",
+          fields: fields,
+          analyzer: "shingled_query_analyzer",
         },
       }
     end
