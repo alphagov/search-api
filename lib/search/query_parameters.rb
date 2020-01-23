@@ -65,6 +65,10 @@ module Search
       RelevanceHelpers.ltr_enabled? && [nil, "relevance"].include?(order) && ab_tests[:relevance] == "B"
     end
 
+    def use_shingles?
+      ab_tests[:shingles] == "B"
+    end
+
   private
 
     def determine_if_quoted_phrase
