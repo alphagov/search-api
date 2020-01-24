@@ -28,7 +28,7 @@ module Evaluate
 
   private
 
-    DEFAULT_PARAMS = { "count" => %w[20], "fields" => %w[link content_id] }.freeze
+    DEFAULT_PARAMS = { "count" => %w[20], "fields" => %w[link content_id], "ab_tests" => %w(relevance:B) }.freeze
 
     attr_reader :data, :field
 
