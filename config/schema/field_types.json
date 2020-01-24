@@ -111,11 +111,6 @@
           "index": true,
           "analyzer": "with_index_synonyms",
           "search_analyzer": "with_search_synonyms"
-        },
-        "edgengram": {
-          "type": "text",
-          "analyzer": "edge_ngram_analyzer",
-          "search_analyzer": "edge_ngram_search_analyzer"
         }
       }
     }
@@ -153,6 +148,18 @@
       "type": "text",
       "index": true,
       "analyzer": "best_bet_stemmed_match"
+    }
+  },
+
+  "autocomplete_result" : {
+    "description": "Type used to apply autocomplete suggestions to a given document based on title headings",
+    "es_config": {
+      "type": "completion",
+      "preserve_separators": false,
+      "preserve_position_increments": false,
+      "max_input_length": 20,
+      "analyzer": "searchable_text",
+      "search_analyzer": "searchable_text"
     }
   },
 

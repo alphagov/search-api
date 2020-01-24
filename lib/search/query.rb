@@ -167,13 +167,13 @@ module Search
 
     def run_autocomplete_query(search_params)
       query = {
-        _source: "title",
-        query: QueryComponents::Autocomplete.new(search_params).payload,
+        _source: "autocomplete", #Removes unneeded response from query
+        suggest: QueryComponents::Autocomplete.new(search_params).payload,
       }
 
       response = index.raw_search(query)
 
-      response["hits"]
+      response["suggest"]
     end
 
     def log_search
