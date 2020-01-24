@@ -1,6 +1,7 @@
 {
   "fields": [
     "all_searchable_text",
+    "autocomplete",
     "content_id",
     "content_purpose_document_supertype",
     "content_purpose_subgroup",

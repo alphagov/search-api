@@ -19,12 +19,17 @@ module GovukIndex
 
     def process_record(record, popularities)
       base_path = record["identifier"]["_id"]
+      title = record["document"]["title"]
       OpenStruct.new(
         identifier: record["identifier"].merge("version_type" => "external_gte", "_type" => "generic-document"),
-        document: record["document"].merge(
+        document: record["document"].merge!(
           "popularity" => popularities.dig(base_path, :popularity_score),
           "popularity_b" => popularities.dig(base_path, :popularity_rank),
           "view_count" => popularities.dig(base_path, :view_count),
+          "autocomplete" => { # Relies on updated popularity. Title is for new records.
+            "input" => title,
+            "weight" => popularities.dig(base_path, :popularity_rank),
+          },
         ),
       )
     end
