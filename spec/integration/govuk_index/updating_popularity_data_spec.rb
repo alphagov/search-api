@@ -6,7 +6,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
   end
 
   it "updates the popularity when it exists" do
-    id = insert_document("govuk_test", { popularity: 0.222, format: "help_page" }, type: "edition")
+    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "help_page" }, type: "edition")
     commit_index("govuk_test")
 
     document_count = 4
@@ -22,7 +22,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
   end
 
   it "set the popularity to the lowest popularity when it doesnt exist" do
-    id = insert_document("govuk_test", { popularity: 0.222, format: "help_page" }, type: "edition")
+    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "help_page" }, type: "edition")
     commit_index("govuk_test")
 
     document_count = 4
@@ -36,7 +36,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
   end
 
   it "ignores popularity update if version has moved on" do
-    id = insert_document("govuk_test", { popularity: 0.222, format: "help_page" }, type: "edition", version: 2)
+    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "help_page" }, type: "edition", version: 2)
     commit_index("govuk_test")
 
     document_count = 4
@@ -55,7 +55,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
   end
 
   it "copies version information" do
-    id = insert_document("govuk_test", { popularity: 0.222, format: "help_page" }, type: "edition", version: 3)
+    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "help_page" }, type: "edition", version: 3)
     commit_index("govuk_test")
     GovukIndex::PopularityUpdater.update("govuk_test")
 
@@ -73,7 +73,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
   end
 
   it "does not skips non indexable formats if process all flag is set" do
-    id = insert_document("govuk_test", { popularity: 0.222, format: "edition" }, type: "edition", version: 3)
+    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "edition" }, type: "edition", version: 3)
     commit_index("govuk_test")
 
     document_count = 4

@@ -4,6 +4,11 @@
     "type": "all_searchable_text_type"
   },
 
+  "autocomplete": {
+    "description": "This field allows us to create autocomplete suggestions based off title headings",
+    "type": "autocomplete_result"
+  },
+
   "format": {
     "description": "This field is less specific than content_store_document_type but is mandatory for every document. May be deprecated in future.",
     "type": "identifier"
