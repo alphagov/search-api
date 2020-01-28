@@ -22,7 +22,7 @@ module Search
         document_collections: registry_for_document_format("document_collection"),
         world_locations: registry_for_document_format("world_location"),
         people: registry_for_document_format("person"),
-        roles: roles,
+        roles: govuk_registry_for_document_format("ministerial_role"),
       }
     end
 
@@ -55,10 +55,6 @@ module Search
 
     def specialist_sectors
       govuk_registry_for_document_format("specialist_sector")
-    end
-
-    def roles
-      govuk_registry_for_document_format("ministerial_role")
     end
 
     def govuk_registry_for_document_format(format)
