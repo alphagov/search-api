@@ -21,8 +21,8 @@ module Search
         document_series: registry_for_document_format("document_series"),
         document_collections: registry_for_document_format("document_collection"),
         world_locations: registry_for_document_format("world_location"),
-        people: registry_for_document_format("person"),
-        roles: roles,
+        people: govuk_registry_for_document_format("person"),
+        roles: govuk_registry_for_document_format("ministerial_role"),
       }
     end
 
@@ -54,19 +54,15 @@ module Search
     end
 
     def specialist_sectors
-      BaseRegistry.new(
-        search_server.index_for_search([SearchConfig.govuk_index_name]),
-        field_definitions,
-        "specialist_sector",
-      )
+      govuk_registry_for_document_format("specialist_sector")
     end
 
-    def roles
-      BaseRegistry.new(
-        search_server.index_for_search([SearchConfig.govuk_index_name]),
-        field_definitions,
-        "ministerial_role",
-      )
+    def govuk_registry_for_document_format(format)
+      BaseRegistry.new(govuk_index, field_definitions, format)
+    end
+
+    def govuk_index
+      search_server.index_for_search([SearchConfig.govuk_index_name])
     end
 
     def registry_for_document_format(format)
