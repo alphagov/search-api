@@ -2,6 +2,8 @@ type: stemmer_override
 rules: [
   "accessibility => accessib",  # not access
   "accessible => accessib",  # not access
+  "accountant => accountant", # not account 
+  "accountants => accountant", # not account 
   "animal => animal",  # not animation
   "animals => animal",  # not animation
   "animation => animat",  # not animal
@@ -60,5 +62,7 @@ rules: [
   "sponsorship => sponsor",
   "tramway => tram",
   "tramways => tram",
+  "transition => transition", # not transit
+  "transitional => transition", # not transit
   "universal => universal"
 ]
