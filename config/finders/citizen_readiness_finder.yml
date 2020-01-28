@@ -12,7 +12,6 @@ title: Detailed EU Exit guidance
 details:
   default_documents_per_page: 20
   document_noun: result
-  hide_facets_by_default: false
   no_index: true
   show_summaries: true
   signup_link: "/email-signup/?topic=/government/brexit-guidance-for-uk-citizens"

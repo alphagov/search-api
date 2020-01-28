@@ -15,7 +15,6 @@ details:
     link:
       - "/search/all"
   format_name: Documents
-  hide_facets_by_default: true
   facets:
   - key: "_unused"
     display_as_result_metadata: false
