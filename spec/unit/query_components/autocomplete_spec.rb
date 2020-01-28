@@ -16,8 +16,11 @@ RSpec.describe QueryComponents::Autocomplete do
           "prefix" => search_query_params.query,
           "completion" => {
             "field" => AUTOCOMPLETE_FIELD,
-            "size" => 10,
+            "size" => 8,
             "skip_duplicates" => true,
+            "fuzzy" => {
+              "fuzziness" => "AUTO",
+            },
           },
         },
         )
