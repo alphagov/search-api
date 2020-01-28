@@ -54,19 +54,23 @@ module Search
     end
 
     def specialist_sectors
-      BaseRegistry.new(govuk_index, field_definitions, "specialist_sector")
+      govuk_registry_for_document_format("specialist_sector")
     end
 
     def roles
-      BaseRegistry.new(govuk_index, field_definitions, "ministerial_role")
+      govuk_registry_for_document_format("ministerial_role")
     end
 
-    def registry_for_document_format(format)
-      BaseRegistry.new(index, field_definitions, format)
+    def govuk_registry_for_document_format(format)
+      BaseRegistry.new(govuk_index, field_definitions, format)
     end
 
     def govuk_index
       search_server.index_for_search([SearchConfig.govuk_index_name])
+    end
+
+    def registry_for_document_format(format)
+      BaseRegistry.new(index, field_definitions, format)
     end
 
     def index
