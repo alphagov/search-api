@@ -73,8 +73,8 @@ namespace :debug do
       send_to_graphite("overall_score.rank_eval", results[:score])
     ensure
       if csv.is_a?(Tempfile)
-        file.close
-        file.unlink
+        csv.close
+        csv.unlink
       end
     end
   end

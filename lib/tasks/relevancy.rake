@@ -70,8 +70,8 @@ def report_ndcg(datafile: nil, ab_tests: nil)
     }
   ensure
     if csv.is_a?(Tempfile)
-      file.close
-      file.unlink
+      csv.close
+      csv.unlink
     end
   end
 end
