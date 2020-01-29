@@ -44,7 +44,7 @@ group :test do
   gem "govuk_schemas", "~> 4.0.0"
   gem "rack-test", "~> 1.1.0"
   gem "rspec"
-  gem "simplecov", "~> 0.17.1"
+  gem "simplecov", "~> 0.18.0"
   gem "simplecov-rcov", "~> 0.2.3"
   gem "timecop", "~> 0.9.1"
   gem "webmock", "~> 3.8.0"
