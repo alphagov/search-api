@@ -18,6 +18,8 @@ details:
   email_filter_facets:
   - facet_id: people
     facet_name: people
+  - facet_id: roles
+    facet_name: roles
   - facet_id: organisations
     facet_name: organisations
   - facet_id: world_locations
