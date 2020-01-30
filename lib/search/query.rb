@@ -155,25 +155,31 @@ module Search
     def run_spell_checks(search_params)
       return unless suggestion_blocklist.should_correct?(search_params.query)
 
-      query = {
-        size: 0,
-        suggest: QueryComponents::Suggest.new(search_params).payload,
-      }
+      GovukStatsd.increment "suggest.spelling"
+      GovukStatsd.time("suggest.spelling") do
+        query = {
+          size: 0,
+          suggest: QueryComponents::Suggest.new(search_params).payload,
+        }
 
-      response = spelling_index.raw_search(query)
+        response = spelling_index.raw_search(query)
 
-      response["suggest"]
+        response["suggest"]
+      end
     end
 
     def run_autocomplete_query(search_params)
-      query = {
-        _source: "autocomplete", #Removes unneeded response from query
-        suggest: QueryComponents::Autocomplete.new(search_params).payload,
-      }
+      GovukStatsd.increment "suggest.completion"
+      GovukStatsd.time("suggest.completion") do
+        query = {
+          _source: "autocomplete", #Removes unneeded response from query
+          suggest: QueryComponents::Autocomplete.new(search_params).payload,
+        }
 
-      response = index.raw_search(query)
+        response = index.raw_search(query)
 
-      response["suggest"]
+        response["suggest"]
+      end
     end
 
     def log_search
