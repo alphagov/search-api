@@ -10,10 +10,6 @@ module QueryComponents
             "field" => AUTOCOMPLETE_FIELD,
             "size" => 8,
             "skip_duplicates" => true,
-            "fuzzy" => {
-              # For completion API we have to explicitly state this
-              "fuzziness" => "AUTO",
-            },
           },
         },
       }

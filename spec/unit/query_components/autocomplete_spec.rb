@@ -18,9 +18,6 @@ RSpec.describe QueryComponents::Autocomplete do
             "field" => AUTOCOMPLETE_FIELD,
             "size" => 8,
             "skip_duplicates" => true,
-            "fuzzy" => {
-              "fuzziness" => "AUTO",
-            },
           },
         },
         )
