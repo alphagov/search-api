@@ -73,6 +73,13 @@ details:
     short_name: From
     type: text
     show_option_select_filter: true
+  - display_as_result_metadata: false
+    filterable: true
+    key: world_locations
+    name: World location
+    preposition: in
+    type: text
+    show_option_select_filter: false
   - display_as_result_metadata: true
     filterable: true
     key: public_timestamp
