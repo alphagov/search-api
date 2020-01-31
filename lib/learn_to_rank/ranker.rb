@@ -23,18 +23,17 @@ module LearnToRank
     attr_reader :feature_sets
 
     def fetch_new_scores(examples)
-      endpoint = ENV["TENSORFLOW_SAGEMAKER_ENDPOINT"]
-      if endpoint
-        fetch_new_scores_from_sagemaker(examples, endpoint)
+      if sagemaker_endpoint
+        fetch_new_scores_from_sagemaker(examples)
       else
         fetch_new_scores_from_serving(examples)
       end
     end
 
-    def fetch_new_scores_from_sagemaker(examples, endpoint)
+    def fetch_new_scores_from_sagemaker(examples)
       begin
         response = Aws::SageMakerRuntime::Client.new.invoke_endpoint(
-          endpoint_name: endpoint,
+          endpoint_name: sagemaker_endpoint,
           body: {
             "signature_name": "regression",
             "examples": examples,

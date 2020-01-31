@@ -46,8 +46,7 @@ module LearnToRank
     class ModelStatusUnhealthy < RankerServerError; end
 
     def reranker_healthy
-      endpoint = ENV["TENSORFLOW_SAGEMAKER_ENDPOINT"]
-      endpoint ? sagemaker_healthy? : container_healthy?
+      sagemaker_endpoint ? sagemaker_healthy? : container_healthy?
     end
 
     def sagemaker_healthy?

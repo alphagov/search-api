@@ -1,5 +1,9 @@
 module LearnToRank
   module RankerApiHelper
+    def sagemaker_endpoint
+      ENV["TENSORFLOW_SAGEMAKER_ENDPOINT"]
+    end
+
     def tensorflow_container_url
       "http://#{tensorflow_serving_ip}:8501/v1/models/ltr"
     end
