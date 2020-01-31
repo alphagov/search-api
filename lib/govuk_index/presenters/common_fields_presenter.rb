@@ -10,7 +10,7 @@ module GovukIndex
     BREXIT_PAGE = {
       "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
       "title" => "Transition period",
-      "description" => "The UK leaves the EU on 31 January 2020",
+      "description" => "The UK has left the EU.",
     }.freeze
     extend MethodBuilder
 
