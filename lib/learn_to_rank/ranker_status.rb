@@ -21,8 +21,9 @@ module LearnToRank
 
     attr_reader :timeout
 
-    GOOD_STATES = %w(AVAILABLE).freeze
-    GOOD_STATUSES = %w(OK).freeze
+    GOOD_MODEL_STATES = %w(AVAILABLE).freeze
+    GOOD_MODEL_STATUSES = %w(OK).freeze
+    GOOD_ENDPOINT_STATUSES = %w(InService Updating SystemUpdating).freeze
 
     def check_health
       begin
@@ -39,20 +40,30 @@ module LearnToRank
         @message = message # String
       end
     end
+    class EndpointError < StandardError
+      attr_reader :message
+      def initialize(message: nil)
+        @message = message # String
+      end
+    end
     class StatusRequestFailed < RankerServerError; end
     class StatusResponseInvalid < RankerServerError; end
     class ModelUndefined < RankerServerError; end
     class ModelStateUnhealthy < RankerServerError; end
     class ModelStatusUnhealthy < RankerServerError; end
+    class EndpointApiError < EndpointError; end
+    class EndpointStatusUnhealthy < EndpointError; end
 
     def reranker_healthy
-      endpoint = ENV["TENSORFLOW_SAGEMAKER_ENDPOINT"]
-      endpoint ? sagemaker_healthy? : container_healthy?
+      sagemaker_endpoint ? sagemaker_healthy? : container_healthy?
     end
 
     def sagemaker_healthy?
-      # TODO:
+      response = Aws::SageMaker::Client.new.describe_endpoint(endpoint_name: sagemaker_endpoint)
+      validate_endpoint_healthy!(response)
       true
+    rescue Aws::SageMaker::Errors::ServiceError => e
+      raise EndpointApiError.new(message: e.message)
     end
 
     def container_healthy?
@@ -81,15 +92,28 @@ module LearnToRank
       end
 
       state = model.dig("state")
-      unless GOOD_STATES.include?(state)
+      unless GOOD_MODEL_STATES.include?(state)
         raise ModelStateUnhealthy.new(message: "'#{state}' is not a healthy state")
       end
 
       status = model.dig("status", "error_code")
-      unless GOOD_STATUSES.include?(status)
+      unless GOOD_MODEL_STATUSES.include?(status)
         raise ModelStatusUnhealthy.new(
           message: "Status: '#{status}'. Error: #{model.dig('status', 'error_message')}",
         )
+      end
+    end
+
+    def validate_endpoint_healthy!(endpoint)
+      status = endpoint.endpoint_status
+      reason = endpoint.failure_reason
+
+      unless GOOD_ENDPOINT_STATUSES.include?(status)
+        if reason.nil? || reason.empty?
+          raise EndpointStatusUnhealthy.new(message: "Status: '#{status}'.")
+        else
+          raise EndpointStatusUnhealthy.new(message: "Status: '#{status}'. Error: #{reason}.")
+        end
       end
     end
   end
