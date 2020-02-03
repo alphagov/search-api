@@ -150,4 +150,20 @@ namespace :publishing_api do
     Services.publishing_api.unpublish(finder["content_id"], "gone")
     Services.publishing_api.unpublish(finder["signup_content_id"], "gone")
   end
+
+  desc "Unpublish business finder results and questions pages"
+  task :unpublish_business_finder do
+    content_ids = %w[b9ef4434-761f-49ae-af97-dc7a248499c4 42ce66de-04f3-4192-bf31-8394538e0734 2818d67a-029a-4899-a438-a543d5c6a20d]
+    content_ids.each do |content_id|
+      Services.publishing_api.unpublish(content_id, type: "redirect", alternative_path: "/transition")
+    end
+  end
+
+  desc "Unpublish prepare eu exit campaign page"
+  task :unpublish_brexit_campaign_page do
+    content_ids = %w[ecb55f9d-0823-43bd-a116-dbfab2b76ef9 3a6d9383-5341-47a8-aaee-860dabd7c4d8 3bf851b-5df7-441b-8813-f0ec849da35f]
+    content_ids.each do |content_id|
+      Services.publishing_api.unpublish(content_id, type: "redirect", alternative_path: "/transition")
+    end
+  end
 end
