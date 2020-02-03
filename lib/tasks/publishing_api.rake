@@ -161,7 +161,7 @@ namespace :publishing_api do
 
   desc "Unpublish prepare eu exit campaign page"
   task :unpublish_brexit_campaign_page do
-    content_ids = %w[ecb55f9d-0823-43bd-a116-dbfab2b76ef9 3a6d9383-5341-47a8-aaee-860dabd7c4d8 3bf851b-5df7-441b-8813-f0ec849da35f]
+    content_ids = %w[ecb55f9d-0823-43bd-a116-dbfab2b76ef9 3a6d9383-5341-47a8-aaee-860dabd7c4d8 e3bf851b-5df7-441b-8813-f0ec849da35f]
     content_ids.each do |content_id|
       Services.publishing_api.unpublish(content_id, type: "redirect", alternative_path: "/transition")
     end
