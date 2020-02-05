@@ -31,7 +31,7 @@ namespace :publishing_api do
     Publish finder and email signup content items
 
     Usage:
-    FINDER_CONFIG=news_and_communications.yml EMAIL_SIGNUP_CONFIG=news_and_communications_email_signup.yml rake publishing_api:publish_finder
+    FINDER_CONFIG=news_and_communications_finder.yml EMAIL_SIGNUP_CONFIG=news_and_communications_email_signup.yml rake publishing_api:publish_finder
   "
   task :publish_finder do
     finder_config = ENV["FINDER_CONFIG"]
