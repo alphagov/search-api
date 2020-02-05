@@ -6,8 +6,6 @@ import sagemaker.tensorflow
 import sys
 import time
 
-from datetime import date
-
 govuk_environment = os.environ["GOVUK_ENVIRONMENT"]
 role = os.environ["ROLE_ARN"]
 model_name = os.environ["SCRIPT_INPUT_DATA"].strip()
