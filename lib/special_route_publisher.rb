@@ -52,6 +52,14 @@ class SpecialRoutePublisher
       },
       {
         rendering_app: "finder-frontend",
+        content_id: "3df77dea-00c5-43f0-8f31-d08b8bd2a4d6",
+        base_path: "/search/advanced",
+        title: "Latest on GOV.UK",
+        description: "Sitewide search results with advanced filtering are displayed here.",
+        type: "exact",
+      },
+      {
+        rendering_app: "finder-frontend",
         content_id: "ba750368-8001-4d01-bd57-cec589153fdd",
         base_path: "/search/opensearch.xml",
         title: "GOV.UK opensearch descriptor",
