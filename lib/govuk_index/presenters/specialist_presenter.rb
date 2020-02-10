@@ -19,6 +19,7 @@ module GovukIndex
     delegate_to_payload :continuation_link
     delegate_to_payload :country
     delegate_to_payload :date_of_occurrence
+    delegate_to_payload :decision_subject
     delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
     delegate_to_payload :dfid_authors

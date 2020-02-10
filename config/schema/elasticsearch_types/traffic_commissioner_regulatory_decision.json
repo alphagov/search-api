@@ -1,0 +1,79 @@
+{
+  "fields": [
+    "decision_subject",
+    "regions",
+    "case_type",
+    "outcome_type",
+    "first_published_at"
+  ],
+
+  "expanded_search_result_fields": {
+    "decision_subject": [
+      {
+        "label": "HGV operator",
+        "value": "hgv-operator"
+      },
+      {
+        "label": "PSV operator",
+        "value": "psv-operator"
+      },
+      {
+        "label": "Transport manager",
+        "value": "transport-manager"
+      }
+    ],
+
+    "regions": [
+      {"label": "Eastern", "value": "eastern"},
+      {"label": "London and southeast", "value": "london-and-southeast"},
+      {"label": "North West", "value": "north-west"},
+      {"label": "North East", "value": "north-east"},
+      {"label": "Scotland", "value": "scotland"},
+      {"label": "Wales", "value": "wales"},
+      {"label": "West Midlands", "value": "west-midlands"},
+      {"label": "Western", "value": "western"}
+    ],
+
+    "case_type": [
+      {
+        "label": "Application",
+        "value": "application"
+      },
+      {
+        "label": "Regulatory",
+        "value": "regulatory"
+      },
+      {
+        "label": "Impounding",
+        "value": "impounding"
+      },
+      {
+        "label": "Environmental",
+        "value": "environmental"
+      }
+    ],
+
+    "outcome_type": [
+      {
+        "label": "No action",
+        "value": "no-action"
+      },
+      {
+        "label": "Curtailment",
+        "value": "curtailment"
+      },
+      {
+        "label": "Formal warning",
+        "value": "formal-warning"
+      },
+      {
+        "label": "Loss of repute",
+        "value": "loss-of-repute"
+      },
+      {
+        "label": "Revocation",
+        "value": "revocation"
+      }
+    ]
+  }
+}

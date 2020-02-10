@@ -428,7 +428,7 @@
   },
 
   "case_type": {
-    "description": "Similar to report_type: applies to CMA cases.",
+    "description": "Similar to report_type: applies to CMA and Traffic Commissioner cases.",
     "type": "identifiers"
   },
 
@@ -873,6 +873,11 @@
 
   "marine_notice_topic": {
     "description": "The subject of the marine notice, e.g.construction and equipment, crew and training, health and safety, etc.",
+    "type": "identifiers"
+  },
+
+  "decision_subject": {
+    "description": "The entity a tribunal or regulatory decision applies to",
     "type": "identifiers"
   }
 }
