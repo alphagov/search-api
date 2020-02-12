@@ -10,6 +10,7 @@ image = os.environ["IMAGE"]
 role = os.environ["ROLE_ARN"]
 training_data = os.environ["SCRIPT_INPUT_DATA"].strip()
 
+image_tag = os.getenv("IMAGE_TAG", "latest")
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
 instance_count = os.getenv("INSTANCE_COUNT", 1)
 instance_size = os.getenv("INSTANCE_SIZE", "ml.c5.xlarge")
@@ -24,7 +25,7 @@ model_name = f"{training_data}-{str(time.time())}"
 
 # train model
 estimator = sagemaker.estimator.Estimator(
-    image,
+    f"{image}:{image_tag}",
     role,
     instance_count,
     instance_size,
