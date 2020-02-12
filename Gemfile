@@ -10,7 +10,7 @@ gem "gds-api-adapters", "~> 63.4"
 gem "google-api-client", "~> 0.36.4"
 gem "google-cloud-bigquery", "~> 1.18.0"
 gem "googleauth", "~> 0.10.0"
-gem "govuk_app_config", "~> 2.0.2"
+gem "govuk_app_config", "~> 2.0.3"
 gem "govuk_document_types", "~> 0.9.2"
 gem "govuk_sidekiq", "~> 3.0.5"
 gem "irb", "~> 1.2", require: false
