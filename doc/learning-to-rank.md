@@ -147,9 +147,7 @@ work with this Concourse and SageMaker configuration.
 4. Set the Concourse secrets (the `((...))` bits of the pipeline) for
    the environment with `gds-cli`.
 
-5. Run the `<environment>-bootstrap` Concourse job.
-
-6. Run the `ltr/scripts/build-ecr.sh <ecr repo>` script.  The ECR
+5. Run the `ltr/scripts/build-ecr.sh <ecr repo>` script.  The ECR
    repository is given in the output of deploying the `app-search`
    terraform.
 
