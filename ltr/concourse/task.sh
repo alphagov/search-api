@@ -24,10 +24,13 @@ if [[ -n "${ROLE_ARN:-}" ]]; then
   set -x
 fi
 
-if [[ -n "${INPUT_FILE_NAME:-}" ]]; then
+SCRIPT_INPUT_DATA="${SCRIPT_INPUT_DATA:-}"
+
+if [[ -z "$SCRIPT_INPUT_DATA" ]] && [[ -n "${INPUT_FILE_NAME:-}" ]]; then
   SCRIPT_INPUT_DATA=$(cat "${GOVUK_ENVIRONMENT}-${INPUT_FILE_NAME}/${GOVUK_ENVIRONMENT}-${INPUT_FILE_NAME}-"*".txt")
-  export SCRIPT_INPUT_DATA
 fi
+
+export SCRIPT_INPUT_DATA
 
 script="$1"
 python "search-api-git/ltr/concourse/${script}.py" | tee script_output.txt
