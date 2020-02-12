@@ -65,9 +65,10 @@ module GovukIndex
     end
 
     def part_of_taxonomy_tree
-      expanded_links.fetch("taxons", {}).flat_map do |taxon_hash|
+      taxon_content_ids = expanded_links.fetch("taxons", {}).flat_map do |taxon_hash|
         parts_of_taxonomy(taxon_hash)
       end
+      taxon_content_ids.uniq
     end
 
     def world_locations

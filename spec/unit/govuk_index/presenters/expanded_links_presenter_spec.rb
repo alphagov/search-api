@@ -134,6 +134,37 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
   end
 
   it "taxons" do
+    parent_taxons =
+      [
+        {
+          "base_path" => "/childcare-parenting/adoption-fostering-and-surrogacy",
+          "content_id" => "5a9e6b26-ae64-4129-93ee-968028381e83",
+          "locale" => "en",
+          "title" => "Adoption, fostering and surrogacy",
+          "links" => {
+            "parent_taxons" => [
+              {
+                "base_path" => "/childcare-parenting",
+                "content_id" => "206b7f3a-49b5-476f-af0f-fd27e2a68473",
+                "locale" => "en",
+                "title" => "Parenting, childcare and children's services ",
+                "links" => {
+                  "root_taxon" => [
+                    {
+                      "base_path" => "/",
+                      "content_id" => "f3bbdec2-0e62-4520-a7fd-6ffd5d36e03a",
+                      "locale" => "en",
+                      "title" => "GOV.UK homepage",
+                      "links" => {},
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ]
+
     expanded_links = {
       "taxons" => [
         {
@@ -142,35 +173,16 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
           "locale" => "en",
           "title" => "Adoption",
           "links" => {
-            "parent_taxons" => [
-              {
-                "base_path" => "/childcare-parenting/adoption-fostering-and-surrogacy",
-                "content_id" => "5a9e6b26-ae64-4129-93ee-968028381e83",
-                "locale" => "en",
-                "title" => "Adoption, fostering and surrogacy",
-                "links" => {
-                  "parent_taxons" => [
-                    {
-                      "base_path" => "/childcare-parenting",
-                      "content_id" => "206b7f3a-49b5-476f-af0f-fd27e2a68473",
-                      "locale" => "en",
-                      "title" => "Parenting, childcare and children's services ",
-                      "links" => {
-                        "root_taxon" => [
-                          {
-                            "base_path" => "/",
-                            "content_id" => "f3bbdec2-0e62-4520-a7fd-6ffd5d36e03a",
-                            "locale" => "en",
-                            "title" => "GOV.UK homepage",
-                            "links" => {},
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
+            "parent_taxons" => parent_taxons,
+          },
+        },
+        {
+          "base_path" => "/childcare-parenting/childcare-and-early-years",
+          "content_id" => "f1d9c348-5c5e-4fc6-9172-13a62537d3ae",
+          "locale" => "en",
+          "title" => "Childcare and early years",
+          "links" => {
+            "parent_taxons" => parent_taxons,
           },
         },
       ],
@@ -183,8 +195,12 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
       206b7f3a-49b5-476f-af0f-fd27e2a68473
       5a9e6b26-ae64-4129-93ee-968028381e83
       13bba81c-b2b1-4b13-a3de-b24748977198
+      f1d9c348-5c5e-4fc6-9172-13a62537d3ae
     ]
-    expected_taxons = %w[13bba81c-b2b1-4b13-a3de-b24748977198]
+    expected_taxons = %w[
+      13bba81c-b2b1-4b13-a3de-b24748977198
+      f1d9c348-5c5e-4fc6-9172-13a62537d3ae
+    ]
 
     expect(presenter.part_of_taxonomy_tree).to eq(expected_taxonomy_tree)
     expect(presenter.taxons).to eq(expected_taxons)
