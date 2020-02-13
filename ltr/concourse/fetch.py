@@ -12,7 +12,7 @@ session = requests.Session()
 session.headers.update({"Authorization": f"Bearer {bearer_token}"})
 
 # despite the name this does both http and https
-session.mount('https://', requests.adapters.HTTPAdapter(max_retries=5))
+session.mount("https://", requests.adapters.HTTPAdapter(max_retries=5))
 
 trigger = session.post(SEARCH_API_TRAIN_URL)
 print(f"POST ({trigger.status_code}) {trigger.text}", file=sys.stderr)
