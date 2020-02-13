@@ -10,12 +10,13 @@ title: Transparency and freedom of information releases
 description: You'll get an email when transparency and freedom of information releases are published.
 details:
   email_filter_by:
-  subscription_list_title_prefix: 'Transparency and freedom of information'
+  subscription_list_title_prefix: ""
   filter:
     content_purpose_supergroup: transparency
   email_filter_facets:
   - facet_id: content_store_document_type
     facet_name: All releases
+    facet_connector: filtered by
     required: true
     facet_choices:
     - topic_name: Corporate report

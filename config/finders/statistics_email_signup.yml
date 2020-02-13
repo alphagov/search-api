@@ -10,11 +10,12 @@ title: Research and statistics
 description: <p>You can't subscribe to get email notifications about upcoming statistics.</p><p>Subscribe to published statistics to get an email every time statistics are published or updated.</p>
 details:
   email_filter_by:
-  subscription_list_title_prefix: Statistics
+  subscription_list_title_prefix: ""
   filter: {}
   email_filter_facets:
   - facet_id: content_store_document_type
-    facet_name: Research and statistics
+    facet_name: All documents
+    facet_connector: filtered by
     required: true
     facet_choices:
     - key: statistics_published
