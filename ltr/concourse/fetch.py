@@ -21,11 +21,24 @@ print(f"POST ({trigger.status_code}) {trigger.text}", file=sys.stderr)
 if trigger.status_code not in [202, 409]:
     sys.exit(1)
 
-status_code = 202
-while status_code == 202:
+
+def do_status_check():
     check = session.get(SEARCH_API_TRAIN_URL)
     print(f"GET ({check.status_code}) {check.text}", file=sys.stderr)
-    status_code = check.status_code
+    return check.status_code
+
+
+status_code = 202
+while status_code == 202:
+    status_code = do_status_check()
+    # 401 could be a temporary auth faulure due to a signon hiccup
+    if status_code == 401:
+        retries = 0
+        while status_code == 401 and retries < 3:
+            time.sleep(20)
+            retries += 1
+            print(f"  (retrying {retries} / {max_retries})")
+            status_code = do_status_check()
     time.sleep(60)
 
 if status_code != 200:
