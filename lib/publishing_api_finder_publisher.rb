@@ -1,49 +1,5 @@
 require "gds_api/publishing_api_v2"
 
-class PublishingApiFinderPublisher
-  def initialize(schema, timestamp = Time.now.iso8601, logger = Logger.new(STDOUT))
-    @schema = schema
-    @logger = logger
-    @timestamp = timestamp
-  end
-
-  def call
-    publish(schema)
-  end
-
-private
-
-  attr_reader :schema, :logger, :timestamp
-
-  def publishing_api
-    @publishing_api ||= GdsApi::PublishingApi.new(
-      Plek.new.find("publishing-api"),
-      bearer_token: ENV["PUBLISHING_API_BEARER_TOKEN"] || "example",
-      timeout: 10,
-    )
-  end
-
-  def publish(schema)
-    finder_presenter = FinderContentItemPresenter.new(schema, timestamp)
-
-    logger.info("Publishing '#{finder_presenter.name}' finder")
-
-    publishing_api.put_content(finder_presenter.content_id, finder_presenter.present)
-    publishing_api.patch_links(finder_presenter.content_id, finder_presenter.present_links)
-    publishing_api.publish(finder_presenter.content_id)
-
-    if schema.key?("signup_content_id")
-      signup_presenter = FinderEmailSignupContentItemPresenter.new(schema, timestamp)
-
-      logger.info("Publishing '#{signup_presenter.name}' finder")
-
-      publishing_api.put_content(signup_presenter.content_id, signup_presenter.present)
-      publishing_api.patch_links(signup_presenter.content_id, signup_presenter.present_links)
-      publishing_api.publish(signup_presenter.content_id)
-    end
-  end
-end
-
 class FinderContentItemPresenter
   attr_reader :content_id, :schema, :name, :timestamp
 
