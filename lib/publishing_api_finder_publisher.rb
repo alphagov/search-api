@@ -1,4 +1,5 @@
 require "gds_api/publishing_api_v2"
+require "govuk_schemas"
 
 class PublishingApiFinderPublisher
   def initialize(schema, timestamp = Time.now.iso8601, logger = Logger.new(STDOUT))
@@ -98,12 +99,13 @@ class FinderEmailSignupContentItemPresenter
 
   def details
     details = schema.fetch("details", {})
-    details.merge(
+
+    # First ensure we're removing any surplus fields so we match the schema
+    details.slice(GovukSchemas::Schema.find(publisher_schema: "finder_email_signup"))
+    .merge(
       "subscription_list_title_prefix" => details.fetch("subscription_list_title_prefix", {}),
       "email_filter_facets" => email_filter_facets,
-    ).except("canonical_link", "document_noun",
-             "facets", "filter", "generic_description",
-             "reject", "summary", "sort")
+    )
   end
 
   def present
