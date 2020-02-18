@@ -99,9 +99,9 @@ module GovukIndex
     end
 
     def slugs(type, path_prefix)
-      expanded_links_item(type).map do |content_item|
-        content_item["base_path"].gsub(%r{^#{path_prefix}}, "")
-      end
+      expanded_links_item(type)
+        .reject { |content_item| content_item["base_path"].nil? }
+        .map { |content_item| content_item["base_path"].gsub(%r{^#{path_prefix}}, "") }
     end
 
     def organisation_slugs(type)
