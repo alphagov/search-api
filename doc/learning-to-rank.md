@@ -147,12 +147,161 @@ work with this Concourse and SageMaker configuration.
 4. Set the Concourse secrets (the `((...))` bits of the pipeline) for
    the environment with `gds-cli`.
 
-5. Run the `<environment>-bootstrap` Concourse job.
-
-6. Run the `ltr/scripts/build-ecr.sh <ecr repo>` script.  The ECR
+5. Run the `ltr/scripts/build-ecr.sh <ecr repo>` script.  The ECR
    repository is given in the output of deploying the `app-search`
    terraform.
 
+### Training and deploying a second model for A/B testing
+
+**You will need to be an AWS Power User and also have access to
+Concourse to follow these steps.**
+
+You can add new train and deploy jobs to the pipeline to facilitate
+A/B testing.  This is useful if you want to try out new features or
+configurations without switching over 100%.
+
+At the end of this process you will have a second SageMaker endpoint
+running serving your new model, and a Concourse job you can trigger to
+train and deploy a new model.  You will be able to supply training
+data to SageMaker by putting the SVM files in a designated S3
+location.
+
+**If you need a custom training image,** which will be the case if
+you've edited any of the files in `ltr/scripts`, then you can build it
+with the `ltr/scripts/build-ecr.sh` script.
+
+Run these commands locally:
+
+```
+# first assume-role into AWS (using gds-cli or however you do it)
+cd ltr/scripts
+./build-ecr.sh <ecr repo> <tag name>
+```
+
+You can get the `<ecr repo>` from the AWS console.
+
+The `<tag name>` is how you will identify the image in SageMaker.
+The daily model is trained using the `latest` tag, so don't use that.
+
+**If you need custom training data,** for example you've added or
+removed a feature, generate the data and put it in S3 at
+`s3://govuk-<environment>-search-relevancy/data/<key name>/{train,test,validate}.txt`.
+The `<key name>` can be anything, and will be incorporated into the model
+name.
+
+How you generate the data will depend on what changes you have made.
+
+**Add a training and deployment step for your model to the pipeline,**
+your user role does not have the necessary permissions to invoke
+SageMaker directly, so you have to use Concourse to do that.
+Additionally, this lets you train and deploy new versions of the model
+at the click of a button.
+
+The below YAML snippets are examples of what you would add to
+`ltr/concourse/pipeline.yaml`.
+
+1. Decide on a name.
+
+    *In the YAML snippets below I've gone for `AB-SOMETHING`.*
+
+2. Add a new entry to the `resources:` list:
+
+    *In this and the YAML snippets below I'm only doing integration.*
+
+    ```yaml
+    - name: integration-AB-SOMETHING-model
+      type: s3-iam
+      source:
+        bucket: ((readonly_private_bucket_name))
+        region_name: eu-west-2
+        regexp: search-learn-to-rank/integration-AB-SOMETHING-model-(.*).txt
+    ```
+
+3. Add a new training job to the `jobs:` list:
+
+    *If you're not using custom training data, instead use the output
+    of the normal fetch job here.*
+
+    ```yaml
+    - name: integration-AB-SOMETHINGtrain
+      plan:
+        # delete "get: integration-training-data" step
+        - get: search-api-git
+        - task: Train
+          config:
+            <<: *task-config
+            inputs:
+              # delete "name: integration-training-data" input
+              - name: search-api-git
+            outputs:
+              - name: out
+            params:
+              # delete "INPUT_FILE_NAME: training-data" param
+              GOVUK_ENVIRONMENT: integration
+              IMAGE: ((integration-ecr-repository))
+              ROLE_ARN: ((integration-role-arn))
+              OUTPUT_FILE_NAME: AB-SOMETHING-model
+              # add "IMAGE_TAG: <tag name>" param, with the appropriate <tag name>
+              IMAGE_TAG: "<tag name>"
+              # add "SCRIPT_INPUT_DATA: <key name>" param, with the appropriate <key name>
+              SCRIPT_INPUT_DATA: "<key name>"
+            run:
+              path: bash
+              args: ["search-api-git/ltr/concourse/task.sh", "train"]
+          on_failure:
+            <<: *notify-failure
+        - put: integration-AB-SOMETHING-model
+          params:
+            file: out/integration-AB-SOMETHING-model-*.txt
+    ```
+
+4. Add a new deployment job to the `jobs:` list:
+
+    ```yaml
+    - name: integration-AB-SOMETHING-deploy
+      plan:
+        - get: integration-AB-SOMETHING-model
+          passed: [integration-train]
+          trigger: true
+        - get: search-api-git
+        - task: Deploy
+          config:
+            <<: *task-config
+            inputs:
+              - name: search-api-git
+              - name: integration-AB-SOMETHING-model
+            params:
+              GOVUK_ENVIRONMENT: integration
+              ROLE_ARN: ((integration-role-arn))
+              INPUT_FILE_NAME: AB-SOMETHING-model
+              # add "ENDPOINT_NAME: govuk-integration-AB-SOMETHING-search-ltr-endpoint"
+              ENDPOINT_NAME: govuk-integration-AB-SOMETHING-search-ltr-endpoint
+            run:
+              path: bash
+              args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
+          on_failure:
+            <<: *notify-failure
+    ```
+
+**Deploy your pipeline with `fly`,** if you've not logged into
+Concourse before, download `fly` from
+https://cd.gds-reliability.engineering/ (see the list of operating
+systems in the bottom right) and log in:
+
+```bash
+fly login -t cd-govuk-tools -n govuk-tools -c https://cd.gds-reliability.engineering
+```
+
+Then deploy the pipeline:
+
+```bash
+fly set-pipeline -t cd-govuk-tools -p search-learn-to-rank -c ltr/concourse/pipeline.yaml
+```
+
+**Trigger a build of the "train" job,** which will train a new model
+and upload it to S3.  When the train job completes it will trigger the
+deploy job, which will create your new SageMaker endpoint and start
+serving the model.
 
 Reranking
 ---------
