@@ -8,13 +8,17 @@ import time
 
 govuk_environment = os.environ["GOVUK_ENVIRONMENT"]
 role = os.environ["ROLE_ARN"]
-model_name = os.environ["SCRIPT_INPUT_DATA"].strip()
+model_name = os.getenv("SCRIPT_INPUT_DATA")
+model_tag = os.getenv("MODEL_TAG")
+if not model_name and not model_tag:
+    raise Exception("Require model_name or model_tag to be set.")
 
+endpoint_version = f"-{model_tag}" if model_tag else ""
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
 default_initial_instance_count = int(os.getenv("INITIAL_INSTANCE_COUNT", 3))
 default_instance_type = os.getenv("INSTANCE_TYPE", "ml.t2.medium")
 endpoint_name = os.getenv(
-    "ENDPOINT_NAME", f"govuk-{govuk_environment}-search-ltr-endpoint"
+    "ENDPOINT_NAME", f"govuk-{govuk_environment}-search-ltr-endpoint{endpoint_version}"
 )
 
 session = sagemaker.Session()
@@ -40,12 +44,27 @@ except Exception:
     print("could not find current endpoint, will create a new one", file=sys.stderr)
 
 # find the model
-model_keys = session.boto_session.client("s3").list_objects_v2(
-    Bucket=s3_bucket, Prefix=f"model/{model_name}"
-)["Contents"]
+
+model_location_prefix = f"model/{(model_tag or model_name).strip()}"
+print(f"looking with prefix {model_location_prefix}", file=sys.stderr)
+
+try:
+    model_keys = session.boto_session.client("s3").list_objects_v2(
+        Bucket=s3_bucket, Prefix=model_location_prefix
+    )["Contents"]
+except KeyError:
+    print(f"Couldn't find the model in {model_location_prefix}", file=sys.stderr)
+    sys.exit(1)
+
 if len(model_keys) != 1:
-    raise Exception("Expected exactly 1 model key")
+    print(f"Found too many models at {model_location_prefix}! Found models:", file=sys.stderr)
+    for key in model_keys:
+        print(f"- {key['Key']}", file=sys.stderr)
+    sys.exit(1)
+
 model_key = model_keys[0]["Key"]
+
+print(f"Deploying model {model_key} to Sagemaker...", file=sys.stderr)
 
 # deploy the model by creating a new endpoint config and updating the
 # existing endpoint (or creating a new one)
@@ -72,11 +91,12 @@ if endpoint_status != "InService":
     sys.exit(1)
 
 # remove the old endpoint config and model
-session.boto_session.client("sagemaker").delete_endpoint_config(
-    EndpointConfigName=current_endpoint_config_name,
-)
-session.boto_session.client("sagemaker").delete_model(
-    ModelName=current_endpoint_config["ProductionVariants"][0]["ModelName"],
-)
+if update_endpoint:
+    session.boto_session.client("sagemaker").delete_endpoint_config(
+        EndpointConfigName=current_endpoint_config_name,
+    )
+    session.boto_session.client("sagemaker").delete_model(
+        ModelName=current_endpoint_config["ProductionVariants"][0]["ModelName"],
+    )
 
 print("done", file=sys.stderr)
