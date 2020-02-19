@@ -74,7 +74,7 @@ resources:
   source:
     bucket: ((readonly_private_bucket_name))
     region_name: eu-west-2
-    regexp: search-learn-to-rank/integration-model-(.*).txt
+    regexp: search-learn-to-rank/integration-model-([0-9]*).txt
 - name: staging-model
   type: s3-iam
   source:
@@ -153,6 +153,22 @@ jobs:
           GOVUK_ENVIRONMENT: integration
           ROLE_ARN: ((integration-role-arn))
           INPUT_FILE_NAME: model
+        run:
+          path: bash
+          args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
+- name: integration-deploy-model-variant-b
+  plan:
+    - get: search-api-git
+    - task: Deploy
+      config:
+        <<: *task-config
+        inputs:
+          - name: search-api-git
+        params:
+          GOVUK_ENVIRONMENT: integration
+          ROLE_ARN: ((integration-role-arn))
+          # MODEL_TAG should already exist in s3 e.g. at *-relevancy/models/variant-b
+          MODEL_TAG: variant-b
         run:
           path: bash
           args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
