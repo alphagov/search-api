@@ -27,14 +27,14 @@ def do_status_check():
     print(f"GET ({check.status_code}) {check.text}", file=sys.stderr)
     return check.status_code
 
-
+max_retries = 3
 status_code = 202
 while status_code == 202:
     status_code = do_status_check()
     # 401 could be a temporary auth faulure due to a signon hiccup
     if status_code == 401:
         retries = 0
-        while status_code == 401 and retries < 3:
+        while status_code == 401 and retries < max_retries:
             time.sleep(20)
             retries += 1
             print(f"  (retrying {retries} / {max_retries})")
