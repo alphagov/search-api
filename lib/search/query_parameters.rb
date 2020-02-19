@@ -8,6 +8,7 @@ module Search
     # starts and ends with quotes with no quotes in between, with or without
     # leading or trailing whitespace
     QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/.freeze
+    MODEL_VARIANTS = %w().freeze
 
     def initialize(params = {})
       params = {
@@ -67,6 +68,12 @@ module Search
 
     def use_shingles?
       ab_tests[:shingles] == "B"
+    end
+
+    def model_variant
+      return unless MODEL_VARIANTS.include? ab_tests[:mv]
+
+      ab_tests[:mv]
     end
 
   private
