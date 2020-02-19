@@ -6,7 +6,7 @@ module Evaluate
   class Ndcg
     # NDCG calculates nDCG (https://en.wikipedia.org/wiki/Discounted_cumulative_gain#Normalized_DCG)
     # a measure of ranking quality, for a set of relevancy judgements.
-    # Optional: any ab tests you wish to use, e.g. "relevance:B,popularity:C"
+    # Optional: any ab tests you wish to use, e.g. "relevance:disable,popularity:C"
     # Returns { "average_ndcg" => 0.99, "tax" => 0.96, "harry potter" => 0.4 ... }
     def initialize(relevancy_judgements, ab_tests)
       @field = field_used(relevancy_judgements)
@@ -28,7 +28,7 @@ module Evaluate
 
   private
 
-    DEFAULT_PARAMS = { "count" => %w[20], "fields" => %w[link content_id], "ab_tests" => %w(relevance:B) }.freeze
+    DEFAULT_PARAMS = { "count" => %w[20], "fields" => %w[link content_id] }.freeze
 
     attr_reader :data, :field
 
