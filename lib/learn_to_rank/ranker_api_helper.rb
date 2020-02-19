@@ -1,7 +1,10 @@
 module LearnToRank
   module RankerApiHelper
-    def sagemaker_endpoint
-      ENV["TENSORFLOW_SAGEMAKER_ENDPOINT"]
+    def sagemaker_endpoint(variant: nil)
+      envvar = ENV["TENSORFLOW_SAGEMAKER_ENDPOINT"]
+      return envvar unless envvar.present? && variant.present?
+
+      "#{envvar}-#{variant}"
     end
 
     def tensorflow_container_url

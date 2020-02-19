@@ -10,9 +10,9 @@ module LearnToRank
   class Reranker
     include Errors
     # Reranker re-orders elasticsearch results using a pre-trained model
-    def rerank(query: "", es_results: [])
+    def rerank(query: "", es_results: [], model_variant:)
       feature_sets = fetch_feature_sets(query, es_results)
-      new_scores = fetch_new_scores(feature_sets)
+      new_scores = fetch_new_scores(feature_sets, model_variant: model_variant)
       return nil if new_scores.nil?
 
       log_reranking
@@ -32,9 +32,9 @@ module LearnToRank
       end
     end
 
-    def fetch_new_scores(feature_sets)
+    def fetch_new_scores(feature_sets, model_variant:)
       GovukStatsd.time("reranker.fetch_scores") do
-        Ranker.new(feature_sets).ranks
+        Ranker.new(feature_sets, model_variant: model_variant).ranks
       end
     end
 
