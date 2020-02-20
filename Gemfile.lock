@@ -64,7 +64,7 @@ GEM
     faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.2)
-    gds-api-adapters (63.4.0)
+    gds-api-adapters (63.5.0)
       addressable
       link_header
       null_logger
@@ -329,7 +329,7 @@ DEPENDENCIES
   bunny-mock (~> 1.7)
   climate_control (~> 0.2)
   elasticsearch (~> 6)
-  gds-api-adapters (~> 63.4)
+  gds-api-adapters (~> 63.5)
   google-api-client (~> 0.36.4)
   google-cloud-bigquery (~> 1.19.0)
   googleauth (~> 0.10.0)
