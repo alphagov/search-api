@@ -71,7 +71,7 @@ GEM
       plek (>= 1.9.0)
       rack-cache
       rest-client (~> 2.0)
-    google-api-client (0.36.4)
+    google-api-client (0.37.1)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (~> 0.9)
       httpclient (>= 2.8.1, < 3.0)
@@ -330,7 +330,7 @@ DEPENDENCIES
   climate_control (~> 0.2)
   elasticsearch (~> 6)
   gds-api-adapters (~> 63.5)
-  google-api-client (~> 0.36.4)
+  google-api-client (~> 0.37.1)
   google-cloud-bigquery (~> 1.19.0)
   googleauth (~> 0.10.0)
   govuk-content-schema-test-helpers (~> 1.6.1)
