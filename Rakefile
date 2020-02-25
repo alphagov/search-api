@@ -60,3 +60,13 @@ def index_names
     raise "You must specify an index name in SEARCH_INDEX, or 'all'"
   end
 end
+
+def max_index_age
+  max_age_in_days = ENV["MAX_INDEX_AGE"]
+  case max_age_in_days
+  when String
+    max_age_in_days
+  else
+    raise "You must specify the MAX_INDEX_AGE (e.g. MAX_INDEX_AGE=3)"
+  end
+end
