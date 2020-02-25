@@ -79,9 +79,11 @@ search-api with the `ENABLE_LTR` environment variable with:
 govuk-docker run -e ENABLE_LTR=true search-api-app
 ```
 
-If you now query search-api with `ab_tests=relevance:B` then results
-will be re-ranked when you order by relevance.  If this doesn't
-happen, check you're running search-api with `ENABLE_LTR` set.
+If you query search-api then results will be re-ranked when you order by
+relevance.  If this doesn't happen, check you're running search-api with
+`ENABLE_LTR` set.
+
+You can disable re-ranking with the parameter `ab_tests=relevance:disable`.
 
 The `learn_to_rank:reranker:evaluate` task can be used to compare
 queries without needing to manually search for things.  It uses the

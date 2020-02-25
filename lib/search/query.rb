@@ -87,6 +87,7 @@ module Search
       reranked = LearnToRank::Reranker.new.rerank(
         es_results: results,
         query: search_params.query,
+        model_variant: search_params.model_variant,
       )
 
       return { reranked: false, es_response: es_response } if reranked.nil?

@@ -8,8 +8,9 @@ module LearnToRank
 
     # Ranker takes feature sets and requests new scores for them
     # from a pre-trained model.
-    def initialize(feature_sets = [])
+    def initialize(feature_sets = [], model_variant:)
       @feature_sets = feature_sets
+      @model_variant = model_variant
     end
 
     def ranks
@@ -20,10 +21,10 @@ module LearnToRank
 
   private
 
-    attr_reader :feature_sets
+    attr_reader :feature_sets, :model_variant
 
     def fetch_new_scores(examples)
-      if sagemaker_endpoint
+      if sagemaker_endpoint(variant: model_variant)
         fetch_new_scores_from_sagemaker(examples)
       else
         fetch_new_scores_from_serving(examples)
@@ -33,7 +34,7 @@ module LearnToRank
     def fetch_new_scores_from_sagemaker(examples)
       begin
         response = Aws::SageMakerRuntime::Client.new.invoke_endpoint(
-          endpoint_name: sagemaker_endpoint,
+          endpoint_name: sagemaker_endpoint(variant: model_variant),
           body: {
             "signature_name": "regression",
             "examples": examples,

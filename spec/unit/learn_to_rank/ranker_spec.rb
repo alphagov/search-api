@@ -4,7 +4,7 @@ require "spec/support/ranker_test_helpers"
 RSpec.describe LearnToRank::Ranker do
   include RankerTestHelpers
 
-  let(:ranks) { described_class.new(feature_sets).ranks }
+  let(:ranks) { described_class.new(feature_sets, model_variant: nil).ranks }
 
   let(:feature_sets) do
     LearnToRank::FeatureSets.new.call(query, search_results)

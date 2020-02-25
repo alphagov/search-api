@@ -74,4 +74,22 @@ RSpec.describe Search::QueryParameters do
       expect(%{  \t"Enclosing quotes but with "embedded" quotes"  }).to eq(params.query)
     end
   end
+
+  describe "#model_variant" do
+    subject { described_class.new(ab_tests: ab_tests).model_variant }
+    allowed_variants = described_class::MODEL_VARIANTS
+    disallowed_variants = %w(X Y Z)
+    allowed_variants.each do |variant|
+      context "given allowed variant" do
+        let(:ab_tests) { { mv: variant } }
+        it { is_expected.to eq variant }
+      end
+    end
+    disallowed_variants.each do |variant|
+      context "given a disallowed variant" do
+        let(:ab_tests) { { mv: variant } }
+        it { is_expected.to be_nil }
+      end
+    end
+  end
 end

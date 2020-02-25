@@ -29,6 +29,8 @@ RSpec.describe LearnToRank::Features do
     end
 
     context "when arguments are provided" do
+      let(:timestamp) { Time.now.iso8601 }
+      let(:expected_time) { Date.parse(timestamp).to_time.to_i }
       subject(:features) {
         described_class.new(
           popularity: 10,
@@ -37,12 +39,12 @@ RSpec.describe LearnToRank::Features do
           title: "Harry Potter",
           description: "Harry Potter was a wizard",
           link: "/harry-potter",
-          public_timestamp: "2018-10-12T17:16:01.000+01:00",
+          public_timestamp: timestamp,
           format: "document_collection",
           organisation_content_ids: %w[f323e83c-868b-4bcb-b6e2-a8f9bb40397e],
           indexable_content: "A short piece of content",
           query: "who is harry potter",
-          updated_at: "2019-11-12T17:16:01.000+01:00",
+          updated_at: timestamp,
         )
       }
 
@@ -57,13 +59,13 @@ RSpec.describe LearnToRank::Features do
           "7" => 12.0,
           "8" => 25.0,
           "9" => 13.0,
-          "10" => 1539302400.0,
+          "10" => expected_time,
           "11" => 11.0,
           "12" => 90.0,
           "13" => 19.0,
           "14" => 24.0,
           "15" => 1.0,
-          "16" => 1573516800.0,
+          "16" => expected_time,
         )
       end
     end
