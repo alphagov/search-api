@@ -173,7 +173,7 @@ GEM
     mustermann (1.1.0)
       ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
-    nokogiri (1.10.8)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     null_logger (0.0.1)
     oauth2 (1.4.4)
@@ -344,7 +344,7 @@ DEPENDENCIES
   logging (~> 2.2.2)
   loofah
   mr-sparkle (= 0.3.0)
-  nokogiri (~> 1.10.8)
+  nokogiri (~> 1.10.9)
   oauth2
   oj
   plek (~> 3.0)
