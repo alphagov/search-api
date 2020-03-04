@@ -10,7 +10,21 @@ RSpec.describe LearnToRank::RankerStatus do
     stub_request(:any, "http://0.0.0.0:8501/v1/models/ltr")
   end
 
-  context "when TENSORFLOW_SAGEMAKER_ENDPOINT envvar is unset" do
+  context "when not reranking at all" do
+    before do
+      make_ranker_unconfigured
+    end
+
+    it "is healthy" do
+      expect(status).to be_healthy
+    end
+  end
+
+  context "when reranking with the container" do
+    before do
+      make_use_tensorflow_serving
+    end
+
     context "when the reranker is not available" do
       it "is unhealthy" do
         stub_ranker_container_doesnt_exist

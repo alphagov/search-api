@@ -24,9 +24,10 @@ module LearnToRank
     attr_reader :feature_sets, :model_variant
 
     def fetch_new_scores(examples)
-      if sagemaker_endpoint(variant: model_variant)
+      case which_reranker
+      when :sagemaker
         fetch_new_scores_from_sagemaker(examples)
-      else
+      when :container
         fetch_new_scores_from_serving(examples)
       end
     end
