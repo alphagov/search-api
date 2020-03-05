@@ -38,6 +38,7 @@ RSpec.describe "HealthcheckTest" do
     # We only check for cannot connect because govuk_app_config has tests for this
     context "when reranker healthcheck fails" do
       before do
+        make_use_tensorflow_serving
         stub_ranker_container_doesnt_exist
       end
 

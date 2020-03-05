@@ -11,6 +11,10 @@ RSpec.describe LearnToRank::Ranker do
   end
 
   describe "#ranks" do
+    before do
+      make_use_tensorflow_serving
+    end
+
     context "when there are no search results" do
       let(:query) { nil }
       let(:search_results) { [] }

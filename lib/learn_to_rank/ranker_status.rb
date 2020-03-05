@@ -55,7 +55,14 @@ module LearnToRank
     class EndpointStatusUnhealthy < EndpointError; end
 
     def reranker_healthy
-      sagemaker_endpoint ? sagemaker_healthy? : container_healthy?
+      case which_reranker
+      when :sagemaker
+        sagemaker_healthy?
+      when :container
+        container_healthy?
+      else
+        true
+      end
     end
 
     def sagemaker_healthy?

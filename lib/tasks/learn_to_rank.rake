@@ -59,36 +59,6 @@ namespace :learn_to_rank do
     end
   end
 
-  desc "Pull learn to rank model from S3"
-  task :pull_model, [:model_filename] do |_, args|
-    bucket_name = ENV["AWS_S3_RELEVANCY_BUCKET_NAME"]
-    raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME" if bucket_name.blank?
-
-    models_dir = ENV["TENSORFLOW_MODELS_DIRECTORY"]
-    raise "Please specify the Tensorflow models directory" if models_dir.blank?
-
-    prefix            = "ltr"
-    model_filename    = args.model_filename || fetch_latest_model_filename(bucket_name, prefix)
-
-    if model_filename.blank?
-      puts "No model file found. Skipping pull from S3 ..."
-      next # gracefully exit rake task with code 0
-    end
-
-    model_version     = model_filename.to_i.to_s
-    ltr_models_dir    = File.join(models_dir, "ltr")
-    model_version_dir = "#{ltr_models_dir}/#{model_version}"
-
-    if Dir.exist?(model_version_dir)
-      puts "Model version #{model_version} already present at #{model_version_dir}. Skipping pull from S3 ..."
-      next
-    end
-
-    pull_model_from_s3(bucket_name: bucket_name,
-                       key: "#{prefix}/#{model_filename}",
-                       ltr_models_dir: ltr_models_dir)
-  end
-
   namespace :reranker do
     desc "Train a reranker model with relevancy judgements"
     task :train, [:svm_dir, :model_dir] do |_, args|
@@ -174,30 +144,6 @@ namespace :learn_to_rank do
       model_files.max_by(&:to_i)
     rescue StandardError => e
       puts "There was error fetching the latest model file from S3: #{e.message}"
-    end
-  end
-
-  def pull_model_from_s3(bucket_name:, key:, ltr_models_dir:)
-    tmpdir          = Dir.mktmpdir
-    response_target = "#{tmpdir}/latest_model"
-
-    begin
-      puts "Pulling model: #{key} ..."
-
-      s3_object = Aws::S3::Object.new(bucket_name: bucket_name, key: key)
-      s3_object.get(response_target: response_target)
-
-      Zip::File.open(response_target) do |zip_file|
-        zip_file.each do |source_file|
-          destination_path = File.join(ltr_models_dir, source_file.name)
-          puts "Extracting archive to #{destination_path} ..."
-          zip_file.extract(source_file, destination_path) unless File.exist?(destination_path)
-        end
-      end
-    rescue StandardError => e
-      puts "There was an error pulling the model from S3: #{e.message}"
-    ensure
-      FileUtils.remove_entry tmpdir
     end
   end
 end

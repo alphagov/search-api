@@ -28,6 +28,15 @@ module RankerTestHelpers
     ]
   end
 
+  def make_ranker_unconfigured
+    ENV["TENSORFLOW_SAGEMAKER_ENDPOINT"] = nil
+    ENV["TENSORFLOW_SERVING_IP"] = nil
+  end
+
+  def make_use_tensorflow_serving
+    ENV["TENSORFLOW_SERVING_IP"] = "0.0.0.0"
+  end
+
   def stub_request_to_ranker(examples, rank_response)
     stub_request(:post, "http://0.0.0.0:8501/v1/models/ltr:regress")
       .with(
