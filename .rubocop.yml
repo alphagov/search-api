@@ -15,11 +15,6 @@ Metrics/BlockLength:
     - 'lib/tasks/*.rake'
     - 'spec/**/*'
 
-# No braces around parameters doesn't work very nicely in this
-# project because there are lots of hashes with string keys.
-Style/BracesAroundHashParameters:
-  Enabled: false
-
 # The class vars in these two files are acceptable because
 # they aren't inherited.
 Style/ClassVars:
