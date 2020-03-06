@@ -11,9 +11,9 @@ module SearchIndices
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
       @client = Services::elasticsearch(hosts: base_uri)
-      # Index creation can take longer than other requests, so create a separate
+      # Index creation/deletion can take longer than other requests, so create a separate
       # client with a longer timeout
-      @index_creation_client = Services::elasticsearch(hosts: base_uri, timeout: 10)
+      @long_timeout_client = Services::elasticsearch(hosts: base_uri, timeout: 30)
       @name = name
       @schema = schema
       @search_config = search_config
@@ -31,7 +31,7 @@ module SearchIndices
         "settings" => settings,
         "mappings" => mappings,
       }
-      @index_creation_client.indices.create(
+      @long_timeout_client.indices.create(
         index: index_name,
         body: index_payload,
       )
@@ -104,7 +104,21 @@ module SearchIndices
       end
     end
 
+    def timed_clean(day_limit)
+      cleaned_aliases.each do |name, details|
+        last_update = find_last_update(name)
+        if last_update.nil?
+          logger.info "Auto-cleaning index #{name} which is unused and can not have its age verified"
+          delete(name) # Some indexes will never have this, we already filter them in clean step so remove spares
+          next
+        end
+
+        delete_based_on_age_check(name, details, day_limit, last_update)
+      end
+    end
+
   private
+
 
     def logger
       Logging.logger[self]
@@ -152,7 +166,50 @@ module SearchIndices
 
     def delete(index_name)
       logger.info "Deleting index #{index_name}"
-      @client.indices.delete(index: index_name)
+      @long_timeout_client.indices.delete(index: index_name)
+    end
+
+    # Sort the index map by date, remove the active index and most recent inactive, and return it
+    def cleaned_aliases
+      raw_map = alias_map(include_closed: true)
+      raw_map.delete_if { |_key, details| details.fetch("aliases", {}).any? }
+      raw_map = raw_map.sort
+      raw_map.pop
+      raw_map.to_h
+    end
+
+    def find_last_update(name)
+      last_update_raw = @client.search(index: name, body: last_update_query)
+      last_update_hit = last_update_raw.dig("hits", "hits")
+      last_update_hit[0]&.dig("_source", "updated_at")
+    end
+
+    # Finds the last time an index was updated based on the last updated_at time of the last edited
+    # item in the index. This shows last time it was open for use.
+    def last_update_query
+      {
+        "_source" => "updated_at",
+        "size" => 1,
+        "sort" => [
+          {
+            "updated_at" =>
+            {
+              "order" => "desc",
+              "unmapped_type" => "date",
+            },
+          },
+        ],
+      }
+    end
+
+    def delete_based_on_age_check(name, details, day_limit, last_update)
+      age = Time.now.to_i - last_update.to_datetime.to_f # Everything is handled in seconds, thanks Ruby!
+      days = age.to_i / 86_400 # One day in seconds
+
+      return unless days >= day_limit.to_i
+
+      logger.info "Auto-cleaning index #{name} which is unused and #{days} days old"
+      delete(name) if details.fetch("aliases", {}).empty?
     end
   end
 end

@@ -186,6 +186,15 @@ this task will run against all active clusters.
     end
   end
 
+  desc "Cleans out unused indices older than the number of days given by the MAX_INDEX_AGE flag"
+  task :timed_clean do
+    Clusters.active.each do |cluster|
+      index_names.each do |index_name|
+        search_server(cluster: cluster).index_group(index_name).timed_clean(max_index_age)
+      end
+    end
+  end
+
   desc "Check whether a restored index has recovered"
   task :check_recovery, [:index_name, :clusters] do |_, args|
     raise "An 'index_name' must be supplied" unless args.index_name
