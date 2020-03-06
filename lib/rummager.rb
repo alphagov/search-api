@@ -36,7 +36,7 @@ require "yaml"
 require "zlib"
 
 initializers_path = File.expand_path("../config/initializers/*.rb", __dir__)
-Dir[initializers_path].each { |f| require f }
+Dir[initializers_path].sort.each { |f| require f }
 
 require "cache"
 require File.expand_path("../config/logging_setup", __dir__)
