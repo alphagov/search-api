@@ -76,9 +76,13 @@ RSpec.describe Search::QueryParameters do
   end
 
   describe "#model_variant" do
-    subject { described_class.new(ab_tests: ab_tests).model_variant }
-    allowed_variants = described_class::MODEL_VARIANTS
+    allowed_variants = %w(foo bar baz)
     disallowed_variants = %w(X Y Z)
+
+    before { ENV["TENSORFLOW_SAGEMAKER_VARIANTS"] = allowed_variants.join(",") }
+    after { ENV["TENSORFLOW_SAGEMAKER_VARIANTS"] = nil }
+    subject { described_class.new(ab_tests: ab_tests).model_variant }
+
     allowed_variants.each do |variant|
       context "given allowed variant" do
         let(:ab_tests) { { mv: variant } }

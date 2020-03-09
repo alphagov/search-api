@@ -8,7 +8,6 @@ module Search
     # starts and ends with quotes with no quotes in between, with or without
     # leading or trailing whitespace
     QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/.freeze
-    MODEL_VARIANTS = %w(hippo elephant).freeze
 
     def initialize(params = {})
       params = {
@@ -71,9 +70,13 @@ module Search
     end
 
     def model_variant
-      return unless MODEL_VARIANTS.include? ab_tests[:mv]
+      return unless model_variants.include? ab_tests[:mv]
 
       ab_tests[:mv]
+    end
+
+    def model_variants
+      @model_variants ||= ENV.fetch("TENSORFLOW_SAGEMAKER_VARIANTS", "").split(",")
     end
 
   private
