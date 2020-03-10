@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "activesupport", "~> 6.0.2"
-gem "aws-sdk-s3", "~> 1.60"
+gem "aws-sdk-s3", "~> 1.61"
 gem "aws-sdk-sagemaker", "~> 1.51"
 gem "aws-sdk-sagemakerruntime", "~> 1.18"
 gem "bootsnap", "~> 1.4"
