@@ -10,6 +10,7 @@ class SearchConfig
       content_index_names
       spelling_index_names
       govuk_index_name
+      search_suggestion_index_name
       page_traffic_index_name
     ].each do |config_method|
       define_method config_method do
@@ -132,6 +133,10 @@ class SearchConfig
     @metasearch_index ||= search_server.index(SearchConfig.metasearch_index_name)
   end
 
+  def suggestions_index
+    @suggestions_index ||= search_server.index(SearchConfig.search_suggestion_index_name)
+  end
+
   def spelling_index
     @spelling_index ||= search_server.index_for_search(SearchConfig.spelling_index_names)
   end
@@ -173,6 +178,7 @@ private
       registries: registries,
       metasearch_index: metasearch_index,
       spelling_index: spelling_index,
+      suggestions_index: suggestions_index,
     )
   end
 

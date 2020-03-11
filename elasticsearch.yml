@@ -2,10 +2,11 @@ production: &default
   base_uri: <%= ENV["ELASTICSEARCH_URI"] || 'http://localhost:9200' %>
   content_index_names: ["detailed", "government"]
   govuk_index_name: "govuk"
-  auxiliary_index_names: ["page-traffic", "metasearch"]
+  auxiliary_index_names: ["page-traffic", "metasearch", "search-metrics"]
   registry_index: "government"
   metasearch_index_name: "metasearch"
   page_traffic_index_name: "page-traffic"
+  search_suggestion_index_name: "search-metrics"
   popularity_rank_offset: 10
   # When doing spell checking, which indices to use?
   spelling_index_names:
@@ -23,10 +24,11 @@ test:
   base_uri: <%= ENV.fetch('ELASTICSEARCH_URI', 'http://localhost:9200') %>
   content_index_names: ["government_test"]
   govuk_index_name: "govuk_test"
-  auxiliary_index_names: ["page-traffic_test", "metasearch_test"]
+  auxiliary_index_names: ["page-traffic_test", "metasearch_test", "search-metrics_test"]
   registry_index: "government_test"
   metasearch_index_name: "metasearch_test"
   page_traffic_index_name: "page-traffic_test"
+  search_suggestion_index_name: "search-metrics_test"
   popularity_rank_offset: 10
   spelling_index_names:
     - government_test

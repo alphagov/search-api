@@ -157,7 +157,7 @@
       "type": "completion",
       "preserve_separators": false,
       "preserve_position_increments": false,
-      "max_input_length": 20,
+      "max_input_length": 50,
       "analyzer": "searchable_text",
       "search_analyzer": "searchable_text"
     }

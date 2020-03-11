@@ -5,13 +5,14 @@ module Search
     class NumberOutOfRange < Error; end
     class QueryTooLong < Error; end
 
-    attr_reader :index, :registries, :spelling_index, :suggestion_blocklist
+    attr_reader :index, :registries, :spelling_index, :suggestions_index, :suggestion_blocklist
 
-    def initialize(registries:, content_index:, metasearch_index:, spelling_index:)
+    def initialize(registries:, content_index:, metasearch_index:, spelling_index:, suggestions_index:)
       @index = content_index
       @registries = registries
       @metasearch_index = metasearch_index
       @spelling_index = spelling_index
+      @suggestions_index = suggestions_index
       @suggestion_blocklist = SuggestionBlocklist.new(registries)
     end
 
@@ -177,7 +178,7 @@ module Search
           suggest: QueryComponents::Autocomplete.new(search_params).payload,
         }
 
-        response = index.raw_search(query)
+        response = suggestions_index.raw_search(query)
 
         response["suggest"]
       end
