@@ -2,8 +2,8 @@ type: stemmer_override
 rules: [
   "accessibility => accessib",  # not access
   "accessible => accessib",  # not access
-  "accountant => accountant", # not account 
-  "accountants => accountant", # not account 
+  "accountant => accountant", # not account
+  "accountants => accountant", # not account
   "animal => animal",  # not animation
   "animals => animal",  # not animation
   "animation => animat",  # not animal
@@ -16,6 +16,8 @@ rules: [
   "community => community",
   "complaint => complain",  # same as complain
   "complaints => complain",
+  "coroner => coroner",
+  "coroners => coroner",
   "corporate => corporate",  # not corporation
   "corporation => corporation",  # not corporal
   "customs => customs", # not custom
