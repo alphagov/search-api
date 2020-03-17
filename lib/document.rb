@@ -65,7 +65,7 @@ class Document
 
   def elasticsearch_export
     Hash.new.tap do |doc|
-      @field_definitions.keys.each do |key|
+      @field_definitions.each_key do |key|
         value = get(key)
         if value.is_a?(Array)
           value = value.map { |v| v.is_a?(Document) ? v.elasticsearch_export : v }

@@ -37,7 +37,7 @@ module LearnToRank
         default_hash = Hash.new(0)
         explain["details"].each_with_object(default_hash) do |sub_explain, hsh|
           scores = scores_from_explain(sub_explain)
-          scores.keys.each do |key|
+          scores.each_key do |key|
             hsh[key] += scores[key]
           end
         end

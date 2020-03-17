@@ -7,7 +7,7 @@ namespace :export do
   task :search, [:query_string] do |_, args|
     params = Rack::Utils.parse_nested_query(args.query_string)
                .merge("fields" => "content_id,#{ENV.fetch('FIELDS', '')}")
-               .map { |k, v| [k, [v]] }.to_h
+               .transform_values { |v| [v] }
     search_params = SearchConfig.parse_parameters(params)
     query = search_params.search_config.generate_query_for_params(search_params)
     query[:sort] = %i(document_type _uid)
