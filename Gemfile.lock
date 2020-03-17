@@ -263,7 +263,7 @@ GEM
       rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
     ruby2_keywords (0.0.1)
-    rubyzip (2.2.0)
+    rubyzip (2.3.0)
     safe_yaml (1.0.5)
     sentry-raven (2.13.0)
       faraday (>= 0.7.6, < 1.0)
@@ -358,7 +358,7 @@ DEPENDENCIES
   rake (~> 13.0)
   rspec
   rubocop-govuk
-  rubyzip (= 2.2.0)
+  rubyzip (= 2.3.0)
   sidekiq-limit_fetch
   simplecov (~> 0.18.5)
   simplecov-rcov (~> 0.2.3)
