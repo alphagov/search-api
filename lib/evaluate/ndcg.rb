@@ -62,7 +62,7 @@ module Evaluate
       judgements.each_with_object({}) do |judgement, hsh|
         query = judgement[:query]
         hsh[query] = hsh.fetch(query, {})
-        hsh[query][judgement[field.to_sym]] = judgement[:rank].to_i
+        hsh[query][judgement[field.to_sym]] = judgement[:score].to_i
       end
     end
 

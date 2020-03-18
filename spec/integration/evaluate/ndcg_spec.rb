@@ -6,18 +6,18 @@ RSpec.describe Evaluate::Ndcg do
   end
   let(:relevancy_judgements) do
     [
-      { query: "dog", link: "/dog", rank: 3 },
-      { query: "dog", link: "/dog-walking-dogs", rank: 2 },
-      { query: "dog", link: "/dogs", rank: 3 },
-      { query: "dog", link: "/dog-dog-owner", rank: 1 },
-      { query: "dog", link: "/cat-owners", rank: 0 },
-      { query: "dog", link: "/cat", rank: 0 },
+      { query: "dog", link: "/dog", score: 3 },
+      { query: "dog", link: "/dog-walking-dogs", score: 2 },
+      { query: "dog", link: "/dogs", score: 3 },
+      { query: "dog", link: "/dog-dog-owner", score: 1 },
+      { query: "dog", link: "/cat-owners", score: 0 },
+      { query: "dog", link: "/cat", score: 0 },
 
-      { query: "cat", link: "/cat-cat-cat!", rank: 2 },
-      { query: "cat", link: "/cat-owners", rank: 2 },
-      { query: "cat", link: "/cats", rank: 3 },
-      { query: "cat", link: "/cat-dog-owners", rank: 1 },
-      { query: "cat", link: "/dog", rank: 0 },
+      { query: "cat", link: "/cat-cat-cat!", score: 2 },
+      { query: "cat", link: "/cat-owners", score: 2 },
+      { query: "cat", link: "/cats", score: 3 },
+      { query: "cat", link: "/cat-dog-owners", score: 1 },
+      { query: "cat", link: "/dog", score: 0 },
     ]
   end
 
