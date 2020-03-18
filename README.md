@@ -45,15 +45,15 @@ rebuild the index nightly to incorporate the latest analytics.
 	[config/schema/elasticsearch_types](config/schema/elasticsearch_types)
 - **Index**: An [elasticsearch search
 	index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Search API
-	maintains several separate indices (`detailed`, `government` and `govuk`), 
+	maintains several separate indices (`detailed`, `government` and `govuk`),
 	but searches return documents from all of them.
 - **Index Group**: An alias in elasticsearch that points to one index at a
 	time. This allows us to rebuild indexes without downtime.
-  
+
 ### Dependencies
 
 - [elasticsearch](https://github.com/elastic/elasticsearch) - "You Know, for Search...".
-- [redis](https://github.com/redis/redis) - used by indexing workers.
+- [redis](https://redis.io/) - used by indexing workers.
 
 ### Creating search indexes from scratch
 (This is not necessary when restoring from a backup or replicating data into the development VM)
