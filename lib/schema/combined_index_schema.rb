@@ -45,7 +45,7 @@ private
   # called.
   # Returns obj.
   def each_field_with_object(obj, &_block)
-    elasticsearch_types.values.each do |elasticsearch_type|
+    elasticsearch_types.each_value do |elasticsearch_type|
       elasticsearch_type.fields.each do |field_name, field_definition|
         yield field_name, field_definition, obj
       end
