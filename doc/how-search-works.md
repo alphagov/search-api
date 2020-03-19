@@ -11,13 +11,12 @@ On receiving a request to `/search` (a search query), Search API will parse
 the query, construct an Elasticsearch query, and then retrieve documents
 from Elasticsearch.
 
+Search API provides a simplified API so that other applications in the GOV.UK
+stack don't need to know how to construct Elasticsearch queries.
+
 ## Relevancy
 
-If a search query requests that search results be ordered by relevance to the
-query, Search API will attempt to order the search results in the most
-relevant way possible.
-
-See the [relevancy documentation](doc/relevancy.md) to learn more about how
+See the [relevancy documentation](relevancy.md) to learn more about how
 Search API determines how relevant a document is to a query.
 
 ### Reranking
@@ -28,7 +27,7 @@ Elasticsearch, the results are re-ranked by a machine learning model.
 This process ensures that we show the most relevant documents at the top
 of the search results.
 
-See the [learning to rank documentation](doc/learning-to-rank.md) to learn
+See the [learning to rank documentation](learning-to-rank.md) to learn
 more about the reranking model.
 
 ## Evaluating search quality
@@ -36,7 +35,7 @@ more about the reranking model.
 To ensure Search API returns good quality results, we use a combination of
 offline and online metrics.
 
-See the [search quality metrics documentation](doc/search-quality-metrics.md)
+See the [search quality metrics documentation](search-quality-metrics.md)
 to learn more about our metrics.
 
 The `ab_tests` parameter can be used to distinguish between two versions of

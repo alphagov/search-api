@@ -21,7 +21,7 @@ tell us how search is performing against relevance judgements.
 ## Offline metrics
 
 Our main offline metric is nDCG. We measure this before and after
-re-ranking by our [learning to rank model](doc/learning-to-rank.md).
+re-ranking by our [learning to rank model](learning-to-rank.md).
 
 We use Elasticsearch's [Ranking Evaluation API](ranking_evaluation_api)
 to assess the quality of results retrieved from Elasticsearch prior

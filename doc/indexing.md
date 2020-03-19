@@ -29,11 +29,11 @@ documents are added to the search indexes -->
 
 There are two ways documents get added to a search index:
 
-1. HTTP requests to Search API's [Documents API](doc/documents.md) (deprecated)
+1. HTTP requests to Search API's [Documents API](documents.md) (deprecated)
 2. Search API subscribes to RabbitMQ messages from the
 	 [Publishing API](https://github.com/alphagov/publishing-api).
 
-Search API search results are weighted by [popularity](doc/popularity.md). We
+Search API search results are weighted by [popularity](popularity.md). We
 rebuild the index nightly to incorporate the latest analytics.
 
 #### Publishing API integration
@@ -41,27 +41,27 @@ rebuild the index nightly to incorporate the latest analytics.
 Search API subscribes to a RabbitMQ queue of updates from publishing-api. This
 still requires Sidekiq to be running.
 
-		bundle exec rake message_queue:insert_data_into_govuk
+	bundle exec rake message_queue:insert_data_into_govuk
 
 There is also a separate process that listens to only 'links' updates from the publishing API. This is used for updating old indexes that are populated through the '/documents' API (`government`, `detailed`) and can be removed once those indexes no longer exist.
 
-    bundle exec rake message_queue:listen_to_publishing_queue
+	bundle exec rake message_queue:listen_to_publishing_queue
 
 ### Internal only APIs
 
 There are some other APIs that are only exposed internally:
 
-- [doc/content-api.md](doc/content-api.md) for the `/content/*` endpoint.
-- [doc/documents.md](doc/documents.md) for the `*/documents/` endpoint.
+- [content-api.md](content-api.md) for the `/content/*` endpoint.
+- [documents.md](documents.md) for the `*/documents/` endpoint.
 
 These are used by [search admin](https://github.com/alphagov/search-admin/).
 
 ## Schemas
 
-See [schemas](doc/schemas.md) for more detail.
+See [schemas](schemas.md) for more detail.
 
 ### Changing the schema/Reindexing
 
 After changing the schema, you'll need to recreate the index. This reindexes documents from the existing index.
 
-    SEARCH_INDEX=all bundle exec rake search:migrate_schema
+  SEARCH_INDEX=all bundle exec rake search:migrate_schema

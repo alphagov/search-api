@@ -25,12 +25,6 @@ You can also find some examples in the blog post:
 The instructions will help you to get Search API running
 locally on your machine.
 
-### Dependencies
-
-- [Elasticsearch](https://github.com/elastic/elasticsearch) - "You Know, for Search...".
-- [Redis](https://redis.io/) - used by indexing workers.
-- [AWS Sagemaker](https://aws.amazon.com/sagemaker/) - used for [search relevancy](docs/relevancy.md)
-
 ### Prequisites
 
 Install [govuk-docker](https://github.com/alphagov/govuk-docker)!
@@ -57,7 +51,8 @@ If you run `docker ps` this will tell you that there are containers running
 for Search API, Nginx, Redis, Publishing API, and Elasticsearch.
 
 > Note: If you're not using docker, you can run `./startup.sh` to start the
-application. However, this is not officially supported.
+application. However, this is not officially supported, and you will need to
+run dependencies such as Elasticsearch and Redis yourself.
 
 #### Replicating data locally
 
@@ -98,6 +93,21 @@ It does some clever stuff at both parts, but that's the meat of it.
 
 Read the [documentation](/doc) to find out [how documents are indexed](doc/indexing.md)
 or [how documents are retrieved](doc/how-search-works.md).
+
+### Dependencies
+
+Search API depends on other services in order to index documents and provide
+relevant search results:
+
+- [Elasticsearch](https://github.com/elastic/elasticsearch) - "You Know, for Search...".
+- [Redis](https://redis.io/) - used by indexing workers.
+- [AWS Sagemaker](https://aws.amazon.com/sagemaker/) (optional) - used for [search relevancy](docs/relevancy.md)
+
+If you use govuk-docker locally, the required dependencies will be started
+automatically when you start Search API. You don't need to set these up yourself.
+
+See the [learning to rank documentation](doc/learning-to-rank.md) for
+guidance on how to run the ranking model locally.
 
 ### Additional Docs
 
