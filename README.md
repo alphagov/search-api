@@ -1,140 +1,113 @@
 # Search API
 
-**This was called "rummager", and to avoid messing up the `git blame`, there are still a lot of references to "rummager" (eg, filenames).  You can read "rummager" as "search-api".**
+Search API (née "rummager") indexes content into [Elasticsearch](https://www.elastic.co/products/elasticsearch)
+and serves the GOV.UK Search API.
 
-Search API indexes content into [elasticsearch](https://www.elastic.co/products/elasticsearch) and serves the GOV.UK search API.
+GOV.UK applications use the API to search and filter GOV.UK content.
+For example, [alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
+the search API to render [site search](https://www.gov.uk/search) and finder pages
+(such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
 
-## Live examples
+Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
-### GOV.UK search
-[alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
-the search API to render [site search](https://www.gov.uk/search) and finder pages (such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
-
-### The public search API
-https://www.gov.uk/api/search.json?q=taxes
 ![Screenshot of API Response](doc/api-screenshot.png)
 
-For the most up to date query syntax and API output see the [Search API documentation](https://docs.publishing.service.gov.uk/apis/search/search-api.html).
+## API documentation
 
-You can also find some examples in the blog post: ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
+If you would like to use the Search API, please see the
+[Search API documentation](https://docs.publishing.service.gov.uk/apis/search/search-api.html).
+
+You can also find some examples in the blog post:
+["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
+
+## Getting started
+
+The instructions will help you to get Search API running
+locally on your machine.
+
+### Prequisites
+
+Install [govuk-docker](https://github.com/alphagov/govuk-docker)!
+
+govuk-docker, a wrapper around docker-compose, is the supported way
+to run Search API and its dependencies locally.
+
+Once you have installed govuk-docker, run
+
+	cd ~/govuk/govuk-docker && make search-api
+
+### Running the application
+
+Once you have completed the prerequisites you'll be able to run
+Search API locally by running
+
+	cd ~/govuk/search-api && govuk-docker up search-api-app
+
+This starts the Search API application and its dependencies.
+
+The Search API will be running locally at [search-api.dev.gov.uk](search-api.dev.gov.uk/search).
+
+If you run `docker ps` this will tell you that there are containers running
+for Search API, Nginx, Redis, Publishing API, and Elasticsearch.
+
+> Note: If you're not using docker, you can run `./startup.sh` to start the
+application. However, this is not officially supported, and you will need to
+run dependencies such as Elasticsearch and Redis yourself.
+
+#### Replicating data locally
+
+If you've started running Search API for the first time you probably
+aren't seeing any search results for your queries. That's likely
+because your local search indexes will be empty.
+
+Once you have got everything running locally, another step most
+people take is to get a copy of the search indexes running locally.
+This will let you search for real documents on your local machine.
+
+See the govuk-docker [documentation on replicating data](https://github.com/alphagov/govuk-docker#how-to-replicate-data-locally),
+or run
+
+	gds aws govuk-integration-poweruser ./bin/replicate-elasticsearch.sh
+
+Refer to the govuk-docker documentation for more details about
+the replication scripts.
+
+### Running the test suite
+
+Complete the prerequisites, then run
+
+	govuk-docker run search-api-lite bundle exec rake
+
+> Note: You can also run the tests without using docker, by running
+`bundle exec rake`. This is not officially supported, but can be a quick way
+to run unit tests.
 
 ## Technical documentation
 
 Search API is a Sinatra application that interfaces with Elasticsearch.
 
-There are two ways documents get added to a search index:
+Search API puts documents into Elasticsearch indexes (index time), and serves
+documents in search results (query time).
 
-1. HTTP requests to Search API's [Documents API](doc/documents.md) (deprecated)
-2. Search API subscribes to RabbitMQ messages from the
-	 [Publishing API](https://github.com/alphagov/publishing-api).
+It does some clever stuff at both parts, but that's the meat of it.
 
-*Note: Once whitehall documents are using the new indexing process, the documents API will be removed and search API will consume only
-from the publishing API.*
+Read the [documentation](/doc) to find out [how documents are indexed](doc/indexing.md)
+or [how documents are retrieved](doc/how-search-works.md).
 
-Search API search results are weighted by [popularity](doc/popularity.md). We
-rebuild the index nightly to incorporate the latest analytics.
-
-### Nomenclature
-
-- **Link**: Either the base path for a content item, or an external link.
-- **Document**: An elasticsearch document, something we can search for.
-- **Document Type**: An [elasticsearch document
-	type](https://www.elastic.co/guide/en/elasticsearch/guide/current/mapping.html)
-	specifies the fields for a particular type of document. All our document
-	types are defined in
-	[config/schema/elasticsearch_types](config/schema/elasticsearch_types)
-- **Index**: An [elasticsearch search
-	index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Search API
-	maintains several separate indices (`detailed`, `government` and `govuk`), 
-	but searches return documents from all of them.
-- **Index Group**: An alias in elasticsearch that points to one index at a
-	time. This allows us to rebuild indexes without downtime.
-  
 ### Dependencies
 
-- [elasticsearch](https://github.com/elastic/elasticsearch) - "You Know, for Search...".
-- [redis](https://github.com/redis/redis) - used by indexing workers.
+Search API depends on other services in order to index documents and provide
+relevant search results:
 
-### Creating search indexes from scratch
-(This is not necessary when restoring from a backup or replicating data into the development VM)
+- [Elasticsearch](https://github.com/elastic/elasticsearch) - "You Know, for Search...".
+- [Redis](https://redis.io/) - used by indexing workers.
+- [AWS Sagemaker](https://aws.amazon.com/sagemaker/) (optional) - used for [search relevancy](docs/relevancy.md)
 
-To create an empty index:
+If you use govuk-docker locally, the required dependencies will be started
+automatically when you start Search API. You don't need to set these up yourself.
 
-    bundle exec rake search:create_index[<index_name>]
-
-To create an empty index for all Search API indices:
-
-    SEARCH_INDEX=all bundle exec rake search:create_all_indices
-
-### Starting elasticsearch
-If you're running the GDS development VM you need to have elasticsearch running before running the tests or starting the application.
-
-Elasticsearch should start when you start up your dev VM, but if it doesn't, run:
-
-	sudo service elasticsearch-development.development start
-
-### Running the test suite
-
-    bundle exec rake
-
-### Running the application
-
-If you're running the GDS development VM:
-
-    cd /var/govuk/govuk-puppet/development-vm && bundle exec bowl search-api
-
-Search API should then be available at
-[search-api.dev.gov.uk](http://search-api.dev.gov.uk/search.json?q=taxes).
-
-If you're not running the GDS development VM:
-
-    ./startup.sh
-
-#### Workers
-Search API uses Sidekiq to manage its indexing workload. To run
-this in the development VM, you need to run both of these commands:
-
-    # to start the Sidekiq process
-    bundle exec rake jobs:work
-
-    # to start the search-api webapp
-    bundle exec mr-sparkle --force-polling -- -p 3233
-
-#### Publishing API integration
-Search API subscribes to a RabbitMQ queue of updates from publishing-api. This still requires Sidekiq to be running.
-
-		bundle exec rake message_queue:insert_data_into_govuk
-
-There is also a separate process that listens to only 'links' updates from the publishing API. This is used for updating old indexes that are populated through the '/documents' API (`government`, `detailed`) and can be removed once those indexes no longer exist.
-
-    bundle exec rake message_queue:listen_to_publishing_queue
-
-
-### Evaluating search results
-The `ab_tests` parameter can be used to distinguish between two versions of
-the search query.
-
-Using [search-performance-explorer](https://github.com/alphagov/search-performance-explorer),
-you can compare the results side by side.
-
-The [health check script](https://github.com/alphagov/search-performance-explorer/blob/master/health-check.md)
-can be used to evaluate Search API using a set of judgments about which documents
-are 'good' results for some sample queries.
-
-### Changing the schema/Reindexing
-
-After changing the schema, you'll need to recreate the index. This reindexes documents from the existing index.
-
-    SEARCH_INDEX=all bundle exec rake search:migrate_schema
-
-### Internal only APIs
-
-There are some other APIs that are only exposed internally:
-
-- [doc/content-api.md](doc/content-api.md) for the `/content/*` endpoint.
-- [doc/documents.md](doc/documents.md) for the `*/documents/` endpoint.
-
-These are used by [search admin](https://github.com/alphagov/search-admin/).
+See the [learning to rank documentation](doc/learning-to-rank.md) for
+guidance on how to run the ranking model locally.
 
 ### Additional Docs
 

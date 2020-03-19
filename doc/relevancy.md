@@ -3,11 +3,11 @@
 This document explains how relevancy ordering works when performing a
 search.
 
-
 ## Contents
 
 1. [What is relevancy?](#what-is-relevancy)
 2. [What impacts relevancy?](#what-impacts-relevancy)
+3. [What impacts document retrieval?](#what-impacts-document-retrieval)
    1. [Boosting](#boosting)
    2. [Best and worst bets](#best-and-worst-bets)
    3. [Stopwords](#stopwords)
@@ -15,53 +15,37 @@ search.
    5. [Categorisation of fields](#categorisation-of-fields)
    6. [Analyzers](#analyzers)
    7. [Excluded formats](#excluded-formats)
-3. [Possible problems with queries and relevance](#possible-problems-with-queries-and-relevance)
-4. [Finding underperforming queries](#finding-underperforming-queries)
+4. [Possible problems with queries and relevance](#possible-problems-with-queries-and-relevance)
+5. [Finding underperforming queries](#finding-underperforming-queries)
 
 
 ## What is relevancy?
 
-A list of documents returned by Search API will include an `es_score`
-on every document.
+A list of documents returned by Search API will include an `es_score` and
+a `combined_score` on every document.
 
 ```ruby
 # Response for a search for 'Harry Potter'
 [
-  { title: "Harry Potter", es_score: 1 },
-  { title: "Harry Kane", es_score: 0.5 },
-  { title: "Ron Weasley", es_score: 0.05 }
+  { title: "Harry Potter", combined_score: 3 },
+  { title: "Harry Kane", combined_score: 2 },
+  { title: "Ron Weasley", combined_score: 1 }
 ]
 ```
 
-The `es_score` value is used for ranking results and represents how
+The `combined_score` is used for ranking results and represents how
 relevant we think a result is to your query.
 
-### Debugging es_score
-
-If you want to understand why a result has a given `es_score`, you can
-use the Elasticsearch [Explain API][explain].  This is exposed by the
-Search API.
-
-You can see the reasons behind an `es_score` by including the
-`debug=explain` query parameter in your query.  This will add an
-`_explanation` field to every result, similar to a SQL-like `EXPLAIN`.
-
-For example, see the explanation produced by [searching for "harry
-potter"][explain-example].  This shows an example of stemming, where
-"harry" becomes "harri".  This is due to the rule "replace suffix 'y'
-or 'Y' by 'i' if preceded by a non-vowel which is not the first letter
-of the word".  You can also see that text similarity scoring ([BM25][]
-in Elasticsearch 6) works by considering both term frequency and
-document frequency.
-
-You can see the query Search API sends to Elasticsearch with the
-`debug=show_query` parameter.  Debug parameters can be combined, like
-`debug=show_query,explain`.  The debug output is verbose, so sometimes
-restricting to only a handful of results, with `count=0` or `count=1`,
-is useful.
-
-
 ## What impacts relevancy?
+
+Once Search API has [retrieved](#what-impacts-document-retrieval) the
+top scoring documents from the search indexes, it ranks the results
+in order of relevance using a pre-trained model.
+
+See the [learning to rank](learning-to-rank.md) documentation for
+more details.
+
+## What impacts document retrieval?
 
 Out of the box, Elasticsearch comes with a decent scoring algorithm.
 They have a [guide on scoring relevancy][scoring] which is worth
@@ -70,6 +54,9 @@ reading.
 We've done some work in Search API to [tune relevancy][relevancy],
 overriding the default Elasticsearch behaviour, which we go into
 below.
+
+These following factors are combined into a single `es_score`. The
+top scoring documents will be retrieved for ranking.
 
 ### Boosting
 
@@ -388,6 +375,33 @@ These include smart answers, calculators, licence finders.
 We also exclude some paths, such as `/random`, `/homepage`, and `/humans.txt`.
 
 These no-indexed paths and formats are defined in [`config/govuk_index/migrated_formats.yaml`](https://github.com/alphagov/search-api/blob/master/config/govuk_index/migrated_formats.yaml).
+
+### Debugging es_score
+
+If you want to understand why a result has a given `es_score`, you can
+use the Elasticsearch [Explain API][explain].  This is exposed by the
+Search API.
+
+Please note that `es_score` is just one feature used by the reranking
+model; we don't rank results using `es_score` alone.
+
+You can see the reasons behind an `es_score` by including the
+`debug=explain` query parameter in your query.  This will add an
+`_explanation` field to every result, similar to a SQL-like `EXPLAIN`.
+
+For example, see the explanation produced by [searching for "harry
+potter"][explain-example].  This shows an example of stemming, where
+"harry" becomes "harri".  This is due to the rule "replace suffix 'y'
+or 'Y' by 'i' if preceded by a non-vowel which is not the first letter
+of the word".  You can also see that text similarity scoring ([BM25][]
+in Elasticsearch 6) works by considering both term frequency and
+document frequency.
+
+You can see the query Search API sends to Elasticsearch with the
+`debug=show_query` parameter.  Debug parameters can be combined, like
+`debug=show_query,explain`.  The debug output is verbose, so sometimes
+restricting to only a handful of results, with `count=0` or `count=1`,
+is useful.
 
 ## Possible problems with queries and relevance
 

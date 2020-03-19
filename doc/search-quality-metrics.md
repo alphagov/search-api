@@ -1,11 +1,34 @@
-# Rank evaluation
+# Search Quality Metrics
 
-One way we assess the affect of search-api changes to relevancy, is by using
-Elasticsearch's [Ranking Evaluation API](ranking_evaluation_api).
+We assess the quality of Search API search results with two metrics:
+Click Through Rate (an online metric) and Normalised Discounted Cumulative Gain
+([nDCG][]).
 
+## Online metrics
+
+We monitor changes to search relevance over time in a [Search Relevancy Dashboard][].
+We call the metrics displayed there *online metrics*.
+
+Our main online metric is Click Through Rate on the top results
+(top 1, 3, and 5). This isn't a great metric, since users might
+click on something that isn't what they were looking for. But this
+serves our needs in the absence of a more sophisticated way of
+measuring user success following a search.
+
+We also measure nDCG before and after re-ranking over time, to
+tell us how search is performing against relevance judgements.
+
+## Offline metrics
+
+Our main offline metric is nDCG. We measure this before and after
+re-ranking by our [learning to rank model](learning-to-rank.md).
+
+We use Elasticsearch's [Ranking Evaluation API](ranking_evaluation_api)
+to assess the quality of results retrieved from Elasticsearch prior
+to re-ranking.
 The API enables us to score how well search-api ranks results for a given query.
 
-## What is rank evaluation?
+### What is rank evaluation?
 
 Rank evaluation is a process by which we rate how well search-api ranks results for
 a given query.
@@ -65,7 +88,7 @@ A score of 1 is perfect and a score of 0 is catastrophic.
 
 But how do we get to the number `0.6297902553883483` for the query `harry potter`?
 
-We use [nDCG](ncdg) (normalised Discounted Cumulative Gain). DCG is a measure of ranking quality.
+We use [nDCG][] (normalised Discounted Cumulative Gain). DCG is a measure of ranking quality.
 
 From Wikipedia:
 
@@ -109,7 +132,7 @@ We use them for checking changes locally, as a quick check before we run an AB
 test.
 
 ```
-debug:rank_evaluation[my-local-relevancy-judgements.csv]
+bundle exec rake relevance:ndcg
 ```
 
 We also report the rank evaluation scores to graphite.
@@ -118,20 +141,23 @@ This enables us to plot how relevancy changes over time (overall
 
 This runs every 3 hours in all environments:
 ```
-SEND_TO_GRAPHITE=true debug:rank_evaluation
+SEND_TO_GRAPHITE=true bundle exec rake relevance:ndcg
 ```
 
 See the Search Relevancy grafana dashboard.
 
 ## How do we collect relevancy judgements?
 
-We're working on that at the moment. So far we've manually generated them.
+We use a combination of implicit and explicit relevance judgements.
 
-In future we could gather more internally in the organisation, or use end-user
-click data as a signal for relevancy judgements.
+The implicit relevance judgements are derived from user click data.
 
-Once we have relevancy judgements we upload them as a CSV to an S3 bucket,
+The explicit judgements are provided by experts across government via
+the search relevance tool: https://github.com/alphagov/govuk-search-relevance-tool.
+
+Relevance judgements are uploaded in CSV format to an S3 bucket,
 which then gets pulled by search-api when the scheduled job runs.
 
 [ranking_evaluation_api]: https://www.elastic.co/guide/en/elasticsearch/reference/6.7/search-rank-eval.html#search-rank-eval
-[ncdg]: https://en.wikipedia.org/wiki/Discounted_cumulative_gain
+[nDCG]: https://en.wikipedia.org/wiki/Discounted_cumulative_gain
+[search relevancy dashboard]: https://grafana.blue.production.govuk.digital/dashboard/file/search_relevancy.json?orgId=1

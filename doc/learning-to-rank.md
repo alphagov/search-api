@@ -1,10 +1,11 @@
 Learning to Rank
 ================
 
-We are trying out using machine learning for improving ranking, using
-the [TensorFlow Ranking][] module.  This doc covers how to use it and
-what further work there is to do before we can trial this as an A/B
-test.  ADR-010 covers the architectural decisions.
+We use a machine learning approach to improve search result relevance,
+using the [TensorFlow Ranking][] module.  This doc covers how to use it,
+and what additional work is required.
+
+ADR-010 and ADR-011 cover the architectural decisions.
 
 [TensorFlow Ranking]: https://github.com/tensorflow/ranking
 
@@ -333,16 +334,9 @@ We may remove `combined_score` in the future, as it's just the same as
 `model_score`.
 
 
-To do
+Further work
 -----
 
-Here are problems to solve before we could turn this into an A/B test:
-
-- Generate relevancy judgements from user data
-- Investigate which features work best for modelling
-- Investigate which TensorFlow settings work best for  modelling
-- Investigate window sizes for reranking
-- Measure the performance impact
-- Handle errors in the reranker (eg, unavailability)
-- Add monitoring and alerting
-- Think about ways in which a black-box model could be abused and how we can debug issues
+- Investigate window sizes for reranking (top-k)
+- Reduce the performance impact of reranking
+- Update the process for improving search relevance
