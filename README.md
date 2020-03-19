@@ -1,9 +1,12 @@
 # Search API
 
-Search API (née "rummager") indexes content into [Elasticsearch](https://www.elastic.co/products/elasticsearch) and serves the GOV.UK Search API.
+Search API (née "rummager") indexes content into [Elasticsearch](https://www.elastic.co/products/elasticsearch)
+and serves the GOV.UK Search API.
 
-GOV.UK applications use the API to search and filter GOV.UK content. For example, [alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
-the search API to render [site search](https://www.gov.uk/search) and finder pages (such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
+GOV.UK applications use the API to search and filter GOV.UK content.
+For example, [alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
+the search API to render [site search](https://www.gov.uk/search) and finder pages
+(such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
 
 Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
@@ -14,7 +17,8 @@ Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxe
 If you would like to use the Search API, please see the
 [Search API documentation](https://docs.publishing.service.gov.uk/apis/search/search-api.html).
 
-You can also find some examples in the blog post: ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
+You can also find some examples in the blog post:
+["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
 
 ## Getting started
 

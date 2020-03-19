@@ -2,7 +2,7 @@
 
 We assess the quality of Search API search results with two metrics:
 Click Through Rate (an online metric) and Normalised Discounted Cumulative Gain
-([nDCG][ndcg]).
+([nDCG][]).
 
 ## Online metrics
 
@@ -15,7 +15,7 @@ click on something that isn't what they were looking for. But this
 serves our needs in the absence of a more sophisticated way of
 measuring user success following a search.
 
-We also measure NDCG before and after re-ranking over time, to
+We also measure nDCG before and after re-ranking over time, to
 tell us how search is performing against relevance judgements.
 
 ## Offline metrics
@@ -88,7 +88,7 @@ A score of 1 is perfect and a score of 0 is catastrophic.
 
 But how do we get to the number `0.6297902553883483` for the query `harry potter`?
 
-We use [nDCG](ncdg) (normalised Discounted Cumulative Gain). DCG is a measure of ranking quality.
+We use [nDCG][] (normalised Discounted Cumulative Gain). DCG is a measure of ranking quality.
 
 From Wikipedia:
 
@@ -159,5 +159,5 @@ Relevance judgements are uploaded in CSV format to an S3 bucket,
 which then gets pulled by search-api when the scheduled job runs.
 
 [ranking_evaluation_api]: https://www.elastic.co/guide/en/elasticsearch/reference/6.7/search-rank-eval.html#search-rank-eval
-[ncdg]: https://en.wikipedia.org/wiki/Discounted_cumulative_gain
+[nDCG]: https://en.wikipedia.org/wiki/Discounted_cumulative_gain
 [search relevancy dashboard]: https://grafana.blue.production.govuk.digital/dashboard/file/search_relevancy.json?orgId=1
