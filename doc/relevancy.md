@@ -3,6 +3,7 @@
 This document explains how relevancy ordering works when performing a
 search.
 
+<!-- TODO: Update this document with Learning to Rank information -->
 
 ## Contents
 
