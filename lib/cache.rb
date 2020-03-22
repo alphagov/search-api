@@ -8,6 +8,12 @@ class Cache
 
   @cache = {}
 
+  @redis_cache = Redis.new(
+    host: ENV.fetch("REDIS_HOST", "127.0.0.1"),
+    port: ENV.fetch("REDIS_PORT", 6379),
+    namespace: "search-api-cache",
+  )
+
   def self.get(key)
     if @cache.has_key?(key)
       @cache[key]
@@ -16,7 +22,17 @@ class Cache
     end
   end
 
+  def self.getex(key, expiration: 30)
+    value = @redis_cache.get(key)
+    if value.nil? && block_given?
+      value = yield
+      @redis_cache.setex(key, expiration, value)
+    end
+    value
+  end
+
   def self.clear
     @cache = {}
+    @redis_cache.flushall
   end
 end
