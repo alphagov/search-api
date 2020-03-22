@@ -77,6 +77,8 @@ module SearchIndices
       payload = { "actions" => actions }
 
       @client.indices.update_aliases(body: payload)
+
+      Cache.clear
     end
 
     def current

@@ -15,10 +15,9 @@ module LegacyClient
 
     def real_index_names
       index_names.map do |index_name|
-        # this may throw an exception if the index name isn't found,
-        # but we want to propagate the error in that case as it
-        # shouldn't happen.
-        @client.indices.get_alias(index: index_name).keys.first
+        Cache.getex(index_name, expiration: 3600) do
+          @client.indices.get_alias(index: index_name).keys.first
+        end
       end
     end
 
