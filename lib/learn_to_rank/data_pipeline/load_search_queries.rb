@@ -17,20 +17,5 @@ module LearnToRank::DataPipeline
       end
       queries
     end
-
-    def self.from_bigquery(rows)
-      queries = {}
-      rows.each do |row|
-        query = row[:searchTerm].strip
-        queries[query] ||= []
-        queries[query] << {
-          link: row[:link],
-          rank: row[:avg_rank],
-          views: row[:views],
-          clicks: row[:clicks],
-        }
-      end
-      queries
-    end
   end
 end

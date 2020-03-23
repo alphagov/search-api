@@ -8,15 +8,6 @@ require "analytics/popular_queries"
 require "relevancy/load_judgements"
 
 namespace :learn_to_rank do
-  desc "Run the full data training pipeline: fetch BigQuery data, generate SVM files, upload to S3.  This costs money!"
-  task :data_pipeline, [:bigquery_credentials, :s3_bucket] do |_, args|
-    assert_ltr!
-    LearnToRank::DataPipeline.perform_sync(
-      JSON.parse(Base64.decode64(args.bigquery_credentials)),
-      args.s3_bucket,
-    )
-  end
-
   desc "Fetch data from BigQuery.  This costs money!"
   task :fetch_bigquery_export, [:credentials] do |_, args|
     assert_ltr!
