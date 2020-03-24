@@ -76,6 +76,7 @@ module LearnToRank
         "ministerial_role" => 72,
         "marine_notice" => 73,
         "traffic_commissioner_regulatory_decision" => 74,
+        "coronavirus_landing_page" => 75,
       }
     end
   end
