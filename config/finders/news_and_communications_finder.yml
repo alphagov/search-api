@@ -60,7 +60,7 @@ details:
     name: Organisation
     short_name: From
     preposition: from
-    type: text
+    type: hidden_clearable
     display_as_result_metadata: true
     filterable: true
     show_option_select_filter: true
@@ -81,7 +81,7 @@ details:
   - key: world_locations
     name: World location
     preposition: in
-    type: text
+    type: hidden_clearable
     display_as_result_metadata: true
     filterable: true
     show_option_select_filter: true
@@ -98,7 +98,7 @@ details:
     name: Topical event
     preposition: about
     short_name: about
-    type: hidden
+    type: hidden_clearable
     show_option_select_filter: false
     allowed_values: []
   default_documents_per_page: 20

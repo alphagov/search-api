@@ -97,7 +97,7 @@ details:
     name: Topical event
     preposition: about
     short_name: about
-    type: hidden
+    type: hidden_clearable
     show_option_select_filter: false
     allowed_values: []
   default_documents_per_page: 20
