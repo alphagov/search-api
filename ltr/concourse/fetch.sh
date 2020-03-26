@@ -17,8 +17,12 @@ aws autoscaling set-desired-capacity \
     --auto-scaling-group-name "$EC2_NAME" \
     --desired-capacity 1
 
-sleep 30
-instance_id=$(aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].InstanceId" --filters Name=instance-state-name,Values=running,pending  Name=tag:Name,Values="$EC2_NAME" --output=text)
+instance_id=""
+while [[ "$instance_id" == "" ]]; do
+  echo "    still waiting for instance ID..."
+  sleep 30
+  instance_id=$(aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].InstanceId" --filters Name=instance-state-name,Values=running,pending  Name=tag:Name,Values="$EC2_NAME" --output=text)
+done
                 
 echo "Waiting on instance ${instance_id}..."
 aws ec2 wait instance-status-ok \
