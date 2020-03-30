@@ -93,6 +93,19 @@ module GovukIndex
       government && government.dig("title")
     end
 
+    def attachments
+      (payload.dig("details", "attachments") || []).map do |attachment|
+        {
+          "content" => attachment["content"],
+          "title" => attachment["title"],
+          "isbn" => attachment["isbn"],
+          "unique_reference" => attachment["unique_reference"],
+          "command_paper_number" => attachment["command_paper_number"],
+          "hoc_paper_number" => attachment["hoc_paper_number"],
+        }.compact
+      end
+    end
+
   private
 
     attr_reader :payload

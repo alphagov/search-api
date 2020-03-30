@@ -56,6 +56,7 @@ require "content_item_publisher/finder_email_signup_presenter"
 
 require "indexer"
 require "indexer/amender"
+require "indexer/attachments_lookup"
 require "indexer/bulk_payload_generator"
 require "indexer/change_notification_processor"
 require "indexer/compare_enumerator"

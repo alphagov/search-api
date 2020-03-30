@@ -16,6 +16,7 @@ module GovukIndex
         aircraft_category:                   specialist.aircraft_category,
         aircraft_type:                       specialist.aircraft_type,
         alert_type:                          specialist.alert_type,
+        attachments:                         common_fields.attachments,
         assessment_date:                     specialist.assessment_date,
         business_sizes:                      specialist.business_sizes,
         business_stages:                     specialist.business_stages,

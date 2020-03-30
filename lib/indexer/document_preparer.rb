@@ -12,12 +12,16 @@ module Indexer
         doc_hash = prepare_popularity_field(doc_hash, popularities)
         doc_hash = prepare_format_field(doc_hash)
         doc_hash = prepare_tags_field(doc_hash)
+        doc_hash = prepare_attachments_field(doc_hash)
         doc_hash = prepare_parts_field(doc_hash)
         doc_hash = add_self_to_organisations_links(doc_hash)
         doc_hash = prepare_document_supertypes(doc_hash)
 
-        # this field is only used to generate the parts
-        doc_hash.delete("attachments")
+        if doc_hash.key? "attachments"
+          # the url field is needed in prepare_parts_field, so sadly
+          # it can't just be stripped out in prepare_attachments_field
+          doc_hash["attachments"].each { |a| a.delete("url") }
+        end
       end
 
       doc_hash = prepare_if_best_bet(doc_hash)
@@ -71,6 +75,17 @@ module Indexer
     rescue Indexer::PublishingApiError => e
       if ENV["LOG_FAILED_PARTS_LOOKUP_AND_CONTINUE"] == "1"
         puts "Unable to lookup parts for link: #{doc_hash['link']}"
+        doc_hash
+      else
+        raise e
+      end
+    end
+
+    def prepare_attachments_field(doc_hash)
+      Indexer::AttachmentsLookup.prepare_attachments(doc_hash)
+    rescue Indexer::PublishingApiError => e
+      if ENV["LOG_FAILED_ATTACHMENTS_LOOKUP_AND_CONTINUE"] == "1"
+        puts "Unable to lookup attachments for link: #{doc_hash['link']}"
         doc_hash
       else
         raise e
