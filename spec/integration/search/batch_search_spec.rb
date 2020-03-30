@@ -167,13 +167,13 @@ RSpec.describe "BatchSearchTest" do
     get build_get_url([{ filter_document_type: "cma_case" }, { q: "ministry of magic" }])
     results = parsed_response["results"]
     expect_search_has_result_count(results[0], 1)
-    expect(
+    expect(results[0]["results"][0]).to match(
       hash_including(
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
       ),
-    ).to eq(results[0]["results"][0])
+    )
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 
@@ -184,13 +184,13 @@ RSpec.describe "BatchSearchTest" do
     get build_get_url([{ filter_document_type: "cma_case", filter_opened_date: "from:2014-03-31,to:2014-04-02" }, { q: "ministry of magic" }])
     results = parsed_response["results"]
     expect_search_has_result_count(results[0], 1)
-    expect(
+    expect(results[0]["results"][0]).to match(
       hash_including(
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
       ),
-    ).to eq(results[0]["results"][0])
+    )
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 
@@ -201,13 +201,13 @@ RSpec.describe "BatchSearchTest" do
     get build_get_url([{ filter_document_type: "cma_case", filter_opened_date: "to:2014-04-02,from:2014-03-31" }, { q: "ministry of magic" }])
     results = parsed_response["results"]
     expect_search_has_result_count(results[0], 1)
-    expect(
+    expect(results[0]["results"][0]).to match(
       hash_including(
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
       ),
-    ).to eq(results[0]["results"][0])
+    )
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 

@@ -43,7 +43,6 @@ require "webmock/rspec"
 require "#{__dir__}/support/default_mappings"
 require "#{__dir__}/support/learn_to_rank_explain"
 require "#{__dir__}/support/spec_helpers"
-require "#{__dir__}/support/hash_including_helpers"
 require "#{__dir__}/support/schema_helpers"
 require "#{__dir__}/support/integration_spec_helper"
 require "#{__dir__}/support/index_helpers"
@@ -58,7 +57,6 @@ RSpec.configure do |config|
   end
 
   config.include SpecHelpers
-  config.include HashIncludingHelpers
   config.include SchemaHelpers
 
   config.include IntegrationSpecHelper, tags: :integration

@@ -265,14 +265,12 @@ RSpec.describe "SearchTest" do
 
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
-    expect(
+    expect(parsed_response.fetch("results").fetch(0)).to match(
       hash_including(
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
         ),
-    ).to eq(
-      parsed_response.fetch("results").fetch(0),
     )
   end
 
@@ -283,13 +281,11 @@ RSpec.describe "SearchTest" do
 
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
-    expect(
+    expect(parsed_response.fetch("results").fetch(0)).to match(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
       ),
-    ).to eq(
-      parsed_response.fetch("results").fetch(0),
     )
   end
 
@@ -300,13 +296,11 @@ RSpec.describe "SearchTest" do
 
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
-    expect(
+    expect(parsed_response.fetch("results").fetch(0)).to match(
       hash_including(
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
       ),
-    ).to eq(
-      parsed_response.fetch("results").fetch(0),
     )
   end
 

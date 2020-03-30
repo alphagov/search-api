@@ -49,12 +49,12 @@ RSpec.describe ElasticsearchTypesParser do
 
     it "produce appropriate elasticsearch configuration for the `manual section` type" do
       es_config = @types["manual_section"].es_config
-      expect(
+      expect(es_config).to match(
         hash_including({
           "manual" => @identifier_es_config,
           "link" => @identifier_es_config,
         }),
-      ).to eq(es_config)
+      )
     end
 
     it "not specify expanded search result fields for the `organisations` field" do
