@@ -1,8 +1,6 @@
 # LinksLookup finds the tags (links) from the publishing-api and merges them into
 # the document. If there aren't any links, the payload will be returned unchanged.
 module Indexer
-  class PublishingApiError < StandardError; end
-
   class LinksLookup
     def initialize
       @logger = Logging.logger[self]
@@ -37,33 +35,7 @@ module Indexer
       if doc_hash["content_id"].present?
         doc_hash["content_id"]
       else
-        begin
-          GdsApi.with_retries(maximum_number_of_attempts: 5) do
-            Services.publishing_api.lookup_content_id(base_path: doc_hash["link"])
-          end
-        rescue GdsApi::TimedOutException => e
-          @logger.error("Timeout looking up content ID for #{doc_hash['link']}")
-          GovukError.notify(e,
-                            extra: {
-                              error_message: "Timeout looking up content ID",
-                              base_path: doc_hash["link"],
-                            })
-          raise Indexer::PublishingApiError
-        rescue GdsApi::HTTPErrorResponse => e
-          @logger.error("HTTP error looking up content ID for #{doc_hash['link']}: #{e.message}")
-          # We capture all GdsApi HTTP exceptions here so that we can send them
-          # manually to Sentry. This allows us to control the message and parameters
-          # such that errors are grouped in a sane manner.
-          GovukError.notify(e,
-                            extra: {
-                              message: "HTTP error looking up content ID",
-                              base_path: doc_hash["link"],
-                              error_code: e.code,
-                              error_message: e.message,
-                              error_details: e.error_details,
-                            })
-          raise Indexer::PublishingApiError
-        end
+        Indexer::find_content_id(doc_hash["link"], @logger)
       end
     end
 
