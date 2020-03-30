@@ -27,7 +27,7 @@ RSpec.describe Auth::MockStrategy do
     it "has a mock user" do
       response = described_class.new(env)._run!
       expect(response.user).to match(
-        a_hash_including(
+        hash_including(
           "name" => "Mock API User",
           "email" => "mock.user@example.com",
         ),
