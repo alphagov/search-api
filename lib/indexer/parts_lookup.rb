@@ -4,17 +4,17 @@ module Indexer
       @logger = Logging.logger[self]
     end
 
-    def self.prepare_parts(doc_hash)
-      new.prepare_parts(doc_hash)
+    def self.prepare_parts(doc_hash, return_raw_body: false)
+      new.prepare_parts(doc_hash, return_raw_body)
     end
 
-    def prepare_parts(doc_hash)
+    def prepare_parts(doc_hash, return_raw_body)
       return doc_hash unless doc_hash["parts"].nil?
 
       attachments = doc_hash.fetch("attachments", []).select { |a| a["attachment_type"] == "html" }
       return doc_hash if attachments.empty?
 
-      doc_hash.merge("parts" => attachments.map { |a| fetch_attachment_part(a) })
+      doc_hash.merge("parts" => attachments.map { |a| fetch_attachment_part(a, return_raw_body) })
     end
 
   private
@@ -23,13 +23,14 @@ module Indexer
       Indexer::find_content_id(doc_hash, @logger)
     end
 
-    def fetch_attachment_part(attachment)
+    def fetch_attachment_part(attachment, return_raw_body)
       part = fetch_from_publishing_api(attachment["url"])
+      body = part.dig("details", "body")
 
       {
         "slug" => attachment["url"].split("/").last,
         "title" => attachment["title"],
-        "body" => summarise(part.dig("details", "body")),
+        "body" => return_raw_body ? body : summarise(body),
       }
     end
 

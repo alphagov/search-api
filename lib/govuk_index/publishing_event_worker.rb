@@ -63,7 +63,7 @@ module GovukIndex
         presenter = ElasticsearchDeletePresenter.new(payload: payload)
       else
         presenter = ElasticsearchPresenter.new(
-          payload: payload,
+          payload: PayloadPreparer.new(payload).prepare,
           type_mapper: type_mapper,
         )
       end
