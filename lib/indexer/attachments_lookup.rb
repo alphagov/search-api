@@ -11,12 +11,14 @@ module Indexer
     def prepare_attachments(doc_hash)
       return doc_hash if doc_hash["attachments"].nil?
 
-      doc_hash.merge("attachments" => doc_hash["attachments"].map { |a| present_attachment(a) })
+      doc_hash.merge("attachments" => doc_hash["attachments"].map { |a| present_attachment(a) }.compact)
     end
 
   private
 
     def present_attachment(attachment)
+      return if attachment.fetch("locale", "en") != "en"
+
       attachment["content"] = fetch_attachment_content(attachment) if attachment["attachment_type"] == "html"
 
       {
