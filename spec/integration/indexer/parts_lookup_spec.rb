@@ -139,7 +139,6 @@ RSpec.describe "PartslookupDuringIndexingTest" do
         "link" => "/foo",
         "parts" => nil,
         "attachments" => [
-          { "title" => "attachment 1" },
           { "title" => "attachment 2" },
         ],
       },
