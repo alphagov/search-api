@@ -269,6 +269,7 @@
 - search: british citizenship => british citizenship, british citizen
 - search: health check, health checks => nhs health check
 - search: job share, job sharing => job share, job sharing, flexible working
+- search: covid-19, covid19, covid, coronavirus => covid-19, coronavirus
 
 # Removing terms to return relevant content
 - search: flood areas => flood
