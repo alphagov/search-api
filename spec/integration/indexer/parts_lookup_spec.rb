@@ -99,6 +99,32 @@ RSpec.describe "PartslookupDuringIndexingTest" do
     )
   end
 
+  it "ignores attachments with a locale given that isn't 'en'" do
+    post "/government_test/documents", {
+      "link" => "/foo",
+      "attachments" => [
+        { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
+        { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html", "locale" => "en" },
+        { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "file", "locale" => "cy" },
+      ],
+    }.to_json
+
+    expect_document_is_in_rummager(
+      {
+        "link" => "/foo",
+        "parts" => [
+          { "slug" => "attachment-1", "title" => "attachment 1", "body" => "body 1" },
+          { "slug" => "attachment-2", "title" => "attachment 2", "body" => "body 2" },
+        ],
+        "attachments" => [
+          { "title" => "attachment 1", "content" => "body 1" },
+          { "title" => "attachment 2", "content" => "body 2" },
+        ],
+      },
+      index: "government_test",
+    )
+  end
+
   it "treats attachments of unspecified type or URL as not HTML" do
     post "/government_test/documents", {
       "link" => "/foo",
