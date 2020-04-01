@@ -19,7 +19,11 @@ module Indexer
     def present_attachment(attachment)
       return if attachment.fetch("locale", "en") != "en"
 
-      attachment["content"] = fetch_attachment_content(attachment) if attachment["attachment_type"] == "html"
+      content = nil
+      if attachment["attachment_type"] == "html"
+        content = fetch_attachment_content(attachment)
+        return unless content
+      end
 
       {
         "url" => attachment["url"],
@@ -28,7 +32,7 @@ module Indexer
         "unique_reference" => attachment["unique_reference"],
         "command_paper_number" => attachment["command_paper_number"],
         "hoc_paper_number" => attachment["hoc_paper_number"],
-        "content" => attachment["content"],
+        "content" => content,
       }.compact
     end
 
@@ -36,6 +40,8 @@ module Indexer
       return unless attachment.key? "url"
 
       part = fetch_from_publishing_api(attachment["url"])
+      return unless part
+
       html_body = part.dig("details", "body")
 
       Loofah.document(html_body).to_text(encode_special_chars: false).squish
@@ -43,6 +49,7 @@ module Indexer
 
     def fetch_from_publishing_api(base_path)
       content_id = Indexer::find_content_id(base_path, @logger)
+      return unless content_id
 
       begin
         GdsApi.with_retries(maximum_number_of_attempts: 5) do
