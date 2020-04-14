@@ -25,7 +25,7 @@ module Indexer
       {
         "slug" => attachment["url"].split("/").last,
         "title" => attachment["title"],
-        "body" => return_raw_body ? body : body.truncate(75, omission: "…", separator: " "),
+        "body" => return_raw_body ? body : body.squish.truncate(75, omission: "…", separator: " "),
       }
     end
   end
