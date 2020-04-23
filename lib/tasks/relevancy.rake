@@ -104,7 +104,7 @@ def report(stats = [])
     if ENV["SEND_TO_GRAPHITE"]
       Services.statsd_client.gauge(
         "relevancy.query.#{stat.downcase.gsub(' ', '_')}",
-        results[:score],
+        reading,
       )
     end
   end
