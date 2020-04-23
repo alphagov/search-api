@@ -127,14 +127,4 @@ namespace :learn_to_rank do
       end
     end
   end
-
-  def fetch_latest_model_filename(bucket_name, prefix)
-    begin
-      s3_objects  = Aws::S3::Bucket.new(bucket_name).objects(prefix: prefix)
-      model_files = s3_objects.map { |object| object.key.delete("#{prefix}/") }
-      model_files.max_by(&:to_i)
-    rescue StandardError => e
-      puts "There was error fetching the latest model file from S3: #{e.message}"
-    end
-  end
 end
