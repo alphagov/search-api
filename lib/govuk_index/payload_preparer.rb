@@ -24,7 +24,10 @@ module GovukIndex
     def prepare_parts(payload)
       return payload unless payload["details"].fetch("parts", []).empty?
 
-      details = Indexer::PartsLookup.prepare_parts(payload["details"], return_raw_body: true)
+      details = Indexer::PartsLookup.prepare_parts(
+        payload["details"].merge("link" => payload["base_path"]),
+        return_raw_body: true,
+      )
       return payload if details.fetch("parts", []).empty?
 
       presented_parts = details["parts"].map do |part|
