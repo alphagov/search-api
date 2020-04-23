@@ -19,17 +19,19 @@ namespace :export do
         client: Services.elasticsearch(hosts: base_uri),
         index_names: SearchConfig.content_index_names + [SearchConfig.govuk_index_name],
         search_body: query,
-      ) { |hit| hit }.each { |hit| csv << fields.map { |f| present_field(hit["_source"][f]) } }
-    end
-  end
+      ) do |hit|
+        csv << fields.map do |f|
+          value = hit["_source"][f]
 
-  def present_field(value)
-    if value.is_a? Hash
-      value.fetch("slug", value)
-    elsif value.is_a? Array
-      value.join(",")
-    else
-      value
+          if value.is_a? Hash
+            value.fetch("slug", value)
+          elsif value.is_a? Array
+            value.join(",")
+          else
+            value
+          end
+        end
+      end
     end
   end
 end
