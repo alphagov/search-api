@@ -101,6 +101,11 @@ def report(stats = [])
   puts "=================="
   stats.each do |(stat, reading)|
     puts "#{stat.downcase.gsub(' ', '_')}: #{reading}"
-    send_to_graphite(stat, reading)
+    if ENV["SEND_TO_GRAPHITE"]
+      Services.statsd_client.gauge(
+        "relevancy.query.#{stat.downcase.gsub(' ', '_')}",
+        results[:score],
+      )
+    end
   end
 end
