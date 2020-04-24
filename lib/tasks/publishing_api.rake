@@ -122,7 +122,7 @@ namespace :publishing_api do
 
     finder = YAML.load_file("config/#{document_finder_config}")
 
-    Services.publishing_api.unpublish(finder["content_id"], "gone")
-    Services.publishing_api.unpublish(finder["signup_content_id"], "gone")
+    Services.publishing_api.unpublish(finder["content_id"], type: "gone")
+    Services.publishing_api.unpublish(finder["signup_content_id"], type: "gone")
   end
 end
