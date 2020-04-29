@@ -49,7 +49,6 @@ require "#{__dir__}/support/index_helpers"
 
 require "gds_api/test_helpers/publishing_api_v2"
 
-
 RSpec.configure do |config|
   config.define_derived_metadata(file_path: %r{/spec/integration/}) do |metadata|
     metadata[:tags] ||= []

@@ -224,8 +224,6 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-
-
   it "tax tribunal decision" do
     custom_metadata = {
       "hidden_indexable_content" => "hidden ttd content",

@@ -119,7 +119,6 @@ module SearchIndices
 
   private
 
-
     def logger
       Logging.logger[self]
     end

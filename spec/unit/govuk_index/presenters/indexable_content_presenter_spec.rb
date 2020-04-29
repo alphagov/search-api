@@ -11,7 +11,6 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
 
   let(:format) { "help_page" }
 
-
   context "govspeak and html in body fields" do
     let(:details) {
       {

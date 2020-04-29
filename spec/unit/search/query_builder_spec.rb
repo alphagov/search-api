@@ -7,7 +7,6 @@ RSpec.describe Search::QueryBuilder do
     allow_any_instance_of(Search::BestBetsChecker).to receive(:worst_bets).and_return([])
   end
 
-
   context "with a simple search query" do
     it "return a correct query object" do
       builder = builder_with_params(start: 11, count: 34, return_fields: %w[a_field])

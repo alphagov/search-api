@@ -105,7 +105,6 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       },
     )
 
-
     presenter = common_fields_presenter(payload)
 
     expect(popularity).to eq(presenter.popularity)
@@ -116,7 +115,6 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = { "base_path" => "/some/path" }
     expect(Indexer::PopularityLookup).to receive(:new).with("govuk_index", instance_of(SearchConfig)).and_return(@popularity_lookup)
     expect(@popularity_lookup).to receive(:lookup_popularities).with([payload["base_path"]]).and_return({})
-
 
     presenter = common_fields_presenter(payload)
 
