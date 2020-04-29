@@ -724,7 +724,6 @@ RSpec.describe SearchParameterParser do
     expect(p.parsed_params).to match(expected_params({}))
   end
 
-
   it "handles repeated order options in aggregate parameters" do
     p = described_class.new({
       "aggregate_organisations" => ["10,order:filtered,order:value.link:-count"],

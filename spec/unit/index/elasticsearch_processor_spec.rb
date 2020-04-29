@@ -46,7 +46,6 @@ RSpec.describe Index::ElasticsearchProcessor do
       ],
     )
 
-
     subject.delete(presenter)
     subject.commit
   end

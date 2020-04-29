@@ -67,7 +67,6 @@ RSpec.describe GovukIndex::IndexableContentSanitiser do
         ],
       ]
 
-
       expect(subject.clean(payload)).to eq("hello\ngoodbye")
     end
 

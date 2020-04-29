@@ -56,7 +56,6 @@ RSpec.describe "QuotedAndUnquotedSearchTest" do
     expect(parsed_response["results"].size).to eq(2)
   end
 
-
 private
 
   def commit_london_transport_docs

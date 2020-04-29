@@ -18,7 +18,6 @@ RSpec.describe "ContentEndpointsTest" do
     expect("title" => "A nice title", "link" => "a-document/in-search", "document_type" => "edition").to eq parsed_response["raw_source"]
   end
 
-
   it "deleting a document" do
     commit_document("govuk_test", {
       "title" => "A nice title",

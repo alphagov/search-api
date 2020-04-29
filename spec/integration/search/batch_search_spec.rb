@@ -447,7 +447,6 @@ RSpec.describe "BatchSearchTest" do
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 
-
   it "can filter by taxonomy" do
     commit_ministry_of_magic_document("taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c])
     commit_treatment_of_dragons_document("taxons" => %w[some-other-taxon])

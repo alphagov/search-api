@@ -36,7 +36,6 @@ RSpec.describe Indexer::AmendWorker do
                                                                .with(index_name)
                                                                .and_return(mock_index)
 
-
       worker = described_class.new
       expect {
         worker.perform(index_name, link, updates)

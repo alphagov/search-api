@@ -20,7 +20,6 @@ RSpec.describe Indexer::CompareEnumerator do
     expect(results).to eq([[data, described_class::NO_VALUE]])
   end
 
-
   it "when key only exists in right index" do
     data = { "_root_id" => "abc", "_root_type" => "stuff", "custom" => "data_right" }
 
@@ -141,7 +140,6 @@ private
     ).and_return(
       { "_scroll_id" => "scroll_ID_0", "hits" => { "total" => 1, "hits" => return_values[0] } },
     )
-
 
     return_values[1..-1].each_with_index do |return_value, i|
       expect(client).to receive(:scroll).with(

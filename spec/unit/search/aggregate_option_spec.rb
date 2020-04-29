@@ -43,7 +43,6 @@ RSpec.describe Search::AggregateOption do
     ).to be < described_class.new({}, 5, false, orderings)
   end
 
-
   it "compare by slug ascending" do
     orderings = [[:"value.slug", 1]]
     expect(

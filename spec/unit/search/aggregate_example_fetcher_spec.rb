@@ -82,7 +82,6 @@ RSpec.describe Search::AggregateExampleFetcher do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
   end
 
-
   context "#prepare_response" do
     it "map an empty response" do
       fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)

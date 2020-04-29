@@ -133,7 +133,6 @@ RSpec.describe "HealthcheckTest" do
       end
     end
 
-
     context "when queue latency is very high" do
       let(:queue_latency) { 2.minutes }
 

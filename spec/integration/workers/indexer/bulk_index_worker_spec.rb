@@ -29,7 +29,6 @@ RSpec.describe Indexer::BulkIndexWorker do
     expect(described_class).to receive(:perform_in)
       .with(lock_delay, "test-index", SAMPLE_DOCUMENT_HASHES)
 
-
     worker = described_class.new
     worker.perform("test-index", SAMPLE_DOCUMENT_HASHES)
   end
