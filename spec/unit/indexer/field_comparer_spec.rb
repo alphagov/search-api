@@ -8,8 +8,8 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
     is_same = described_class.new.call(
       "/some/id",
       "title",
-      %w(value1 value2 value3),
-      %w(value1 value2 value3),
+      %w[value1 value2 value3],
+      %w[value1 value2 value3],
     )
     expect(is_same).to be true
   end
@@ -23,8 +23,8 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
     is_same = described_class.new.call(
       "/some/id",
       "title",
-      %w(value1 value2 value3),
-      %w(value1 other_value2 value3),
+      %w[value1 value2 value3],
+      %w[value1 other_value2 value3],
     )
     expect(is_same).to be false
   end
@@ -33,8 +33,8 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
     is_same = described_class.new.call(
       "/some/id",
       "title",
-      %w(value1 value2),
-      %w(value1 value2 value3),
+      %w[value1 value2],
+      %w[value1 value2 value3],
     )
     expect(is_same).to be false
   end
@@ -43,8 +43,8 @@ RSpec.describe Indexer::GovukIndexFieldComparer do
     is_same = described_class.new.call(
       "/some/id",
       "title",
-      %w(value1 value2 value3),
-      %w(value1 value2),
+      %w[value1 value2 value3],
+      %w[value1 value2],
     )
     expect(is_same).to be false
   end

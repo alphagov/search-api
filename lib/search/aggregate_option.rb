@@ -1,6 +1,6 @@
 module Search
   # An option in a list of aggregates
-  # Knows how to compare itself to other options, for sorting.
+  # Knows how to compare itself to other options, for sorting.
   class AggregateOption
     attr_reader :value, :count, :applied
     include Comparable

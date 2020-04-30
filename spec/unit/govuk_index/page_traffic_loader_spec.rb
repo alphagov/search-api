@@ -14,7 +14,7 @@ RSpec.describe GovukIndex::PageTrafficLoader do
   end
 
   it "processes input data in batches of pairs based on the batch size" do
-    input = StringIO.new(("a".."e").to_a.map { |v| %[{"val": "#{v}"}\n{"data": 1}] }.join("\n"))
+    input = StringIO.new(("a".."e").to_a.map { |v| %({"val": "#{v}"}\n{"data": 1}) }.join("\n"))
 
     line1 = [{ "val" => "a" }, { "data" => 1 }, { "val" => "b" }, { "data" => 1 }]
     line2 = [{ "val" => "c" }, { "data" => 1 }, { "val" => "d" }, { "data" => 1 }]

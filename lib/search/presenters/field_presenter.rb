@@ -20,7 +20,7 @@ module Search
     # Return true if the field should be expanded (ie, there is a registry for
     # it).
     def should_expand(field)
-      !! registries[field.to_sym]
+      !!registries[field.to_sym]
     end
 
     # Return an expanded value for a field given a slug.  Always returns a hash

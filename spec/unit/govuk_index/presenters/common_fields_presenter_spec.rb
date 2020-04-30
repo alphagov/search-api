@@ -6,7 +6,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     allow(Indexer::PopularityLookup).to receive(:new).and_return(@popularity_lookup)
     allow(@popularity_lookup).to receive(:lookup_popularities).and_return({})
 
-    @directly_mapped_fields = %w(
+    @directly_mapped_fields = %w[
       content_id
       email_document_supertype
       government_document_supertype
@@ -15,7 +15,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       rendering_app
       search_user_need_document_supertype
       user_journey_document_supertype
-    )
+    ]
   end
 
   it "directly mapped fields" do

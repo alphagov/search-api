@@ -16,11 +16,10 @@ module Search
     def fetch(slugs_for_field)
       return {} if @response_aggregates.nil?
 
-      search_params.aggregates.reduce({}) do |result, (field_name, aggregate_params)|
+      search_params.aggregates.each_with_object({}) do |(field_name, aggregate_params), result|
         if aggregate_params[:examples].positive?
           result[field_name] = fetch_for_field(field_name, aggregate_params, slugs_for_field[field_name])
         end
-        result
       end
     end
 
@@ -111,7 +110,7 @@ module Search
     end
 
     def apply_multivalued(document_attrs)
-      document_attrs.reduce({}) { |result, (field_name, values)|
+      document_attrs.each_with_object({}) { |(field_name, values), result|
         if field_name[0] == "_"
           # Special fields are always returned as single values.
           result[field_name] = values
@@ -132,7 +131,6 @@ module Search
         else
           result[field_name] = values.first
         end
-        result
       }
     end
   end

@@ -23,7 +23,7 @@ RSpec.describe "SortTest" do
 
   context "search with ascending sort" do
     it "put documents without a timestamp at the bottom, with a tie-breaker" do
-      builder = QueryComponents::Sort.new(Search::QueryParameters.new(order: %w(public_timestamp asc)))
+      builder = QueryComponents::Sort.new(Search::QueryParameters.new(order: %w[public_timestamp asc]))
 
       result = builder.payload
 
@@ -33,7 +33,7 @@ RSpec.describe "SortTest" do
 
   context "search with descending sort" do
     it "put documents without a timestamp at the bottom, with a tie-breaker" do
-      builder = QueryComponents::Sort.new(Search::QueryParameters.new(order: %w(public_timestamp desc)))
+      builder = QueryComponents::Sort.new(Search::QueryParameters.new(order: %w[public_timestamp desc]))
 
       result = builder.payload
 

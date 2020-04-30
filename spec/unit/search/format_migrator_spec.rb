@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Search::FormatMigrator do
   before do
-    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
+    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w[govuk_test])
   end
 
   context "with every cluster" do
@@ -17,7 +17,7 @@ RSpec.describe Search::FormatMigrator do
               {
                 bool: {
                   must: base_query,
-                  must_not: { terms: { _index: %w(govuk_test) } },
+                  must_not: { terms: { _index: %w[govuk_test] } },
                 },
               },
               {
@@ -45,8 +45,8 @@ RSpec.describe Search::FormatMigrator do
                 bool: {
                   must: base_query,
                   must_not: [
-                    { terms: { _index: %w(govuk_test) } },
-                    { terms: { format: %w(help_page) } },
+                    { terms: { _index: %w[govuk_test] } },
+                    { terms: { format: %w[help_page] } },
                   ],
                 },
               },
@@ -54,8 +54,8 @@ RSpec.describe Search::FormatMigrator do
                 bool: {
                   must: [
                     base_query,
-                    { terms: { _index: %w(govuk_test) } },
-                    { terms: { format: %w(help_page) } },
+                    { terms: { _index: %w[govuk_test] } },
+                    { terms: { format: %w[help_page] } },
                   ],
                 },
               },
@@ -77,7 +77,7 @@ RSpec.describe Search::FormatMigrator do
               {
                 bool: {
                   must: { match_all: {} },
-                  must_not: { terms: { _index: %w(govuk_test) } },
+                  must_not: { terms: { _index: %w[govuk_test] } },
                 },
               },
               { bool: { must_not: { match_all: {} } } },
@@ -99,8 +99,8 @@ RSpec.describe Search::FormatMigrator do
                 bool: {
                   must: { match_all: {} },
                   must_not: [
-                    { terms: { _index: %w(govuk_test) } },
-                    { terms: { format: %w(help_page) } },
+                    { terms: { _index: %w[govuk_test] } },
+                    { terms: { format: %w[help_page] } },
                   ],
                 },
               },
@@ -108,8 +108,8 @@ RSpec.describe Search::FormatMigrator do
                 bool: {
                   must: [
                     { match_all: {} },
-                    { terms: { _index: %w(govuk_test) } },
-                    { terms: { format: %w(help_page) } },
+                    { terms: { _index: %w[govuk_test] } },
+                    { terms: { format: %w[help_page] } },
                   ],
                 },
               },

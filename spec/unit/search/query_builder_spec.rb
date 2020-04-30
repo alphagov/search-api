@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Search::QueryBuilder do
   before do
-    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
+    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w[govuk_test])
     allow_any_instance_of(Search::BestBetsChecker).to receive(:best_bets).and_return([])
     allow_any_instance_of(Search::BestBetsChecker).to receive(:worst_bets).and_return([])
   end
@@ -21,7 +21,7 @@ RSpec.describe Search::QueryBuilder do
 
   context "more like this" do
     it "call the payload for a more like this query" do
-      builder = builder_with_params(similar_to: %{"/hello-world"})
+      builder = builder_with_params(similar_to: %("/hello-world"))
 
       expect(builder).to receive(:more_like_this_query_hash).once
 

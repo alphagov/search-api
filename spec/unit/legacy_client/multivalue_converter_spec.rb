@@ -4,18 +4,18 @@ RSpec.describe LegacyClient::MultivalueConverter do
   it "keeps multivalue fields as array" do
     fields = {
       "title" => ["the title"],
-      "organisations" => %w(hmrc dvla),
+      "organisations" => %w[hmrc dvla],
     }
 
     converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
 
-    expect(%w(hmrc dvla)).to eq(converted_hash["organisations"])
+    expect(%w[hmrc dvla]).to eq(converted_hash["organisations"])
   end
 
   it "converts single value fields as single value" do
     fields = {
       "title" => ["the title"],
-      "organisations" => %w(hmrc dvla),
+      "organisations" => %w[hmrc dvla],
     }
 
     converted_hash = described_class.new(fields, sample_field_definitions).converted_hash
@@ -27,7 +27,7 @@ RSpec.describe LegacyClient::MultivalueConverter do
   it "converts also from single value fields" do
     fields = {
       "title" => "the title",
-      "organisations" => %w(hmrc dvla),
+      "organisations" => %w[hmrc dvla],
     }
 
     converted_hash = described_class.new(fields, sample_field_definitions).converted_hash

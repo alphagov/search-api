@@ -33,7 +33,7 @@ RSpec.describe Search::BaseRegistry do
 
   it "only required fields are requested from index" do
     expect(@index).to receive(:documents_by_format)
-      .with("example-format", sample_field_definitions(%w{slug link title content_id}))
+      .with("example-format", sample_field_definitions(%w[slug link title content_id]))
 
     @base_registry["example-document"]
   end

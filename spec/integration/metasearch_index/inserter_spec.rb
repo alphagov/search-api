@@ -31,7 +31,7 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
 
   it "can insert a new document" do
     document = {
-      "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
+      "details" => %({"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}),
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
     }
@@ -43,7 +43,7 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
 
   it "can insert a new stemmed document" do
     document = {
-      "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
+      "details" => %({"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}),
       "exact_query" => nil,
       "stemmed_query" => "car taxes",
     }
@@ -60,13 +60,13 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
 
   it "can overwrite an existing document" do
     old_document = {
-      "details" => %[{"best_bets":[],"worst_bets":[]}],
+      "details" => %({"best_bets":[],"worst_bets":[]}),
       "exact_query" => "ca3916-none",
     }
     commit_document("metasearch_test", old_document, type: "best_bet", id: "ca3916-exact")
 
     document = {
-      "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
+      "details" => %({"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}),
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
     }
@@ -83,7 +83,7 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
     expect_any_instance_of(Index::ElasticsearchProcessor).to receive(:commit).and_return(failure_reponses)
 
     document = {
-      "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
+      "details" => %({"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}),
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
     }

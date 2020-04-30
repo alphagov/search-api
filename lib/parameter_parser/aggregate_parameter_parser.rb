@@ -11,7 +11,7 @@ private
 
   # Return a string to be used in error messages
   def aggregate_description
-    %{ in aggregate "#{@field}"}
+    %( in aggregate "#{@field}")
   end
 
   def process(value)
@@ -27,7 +27,7 @@ private
     @used_params = []
 
     # First parameter is just an integer; subsequent ones are key:value
-    requested = parse_positive_integer(options.shift, %{first parameter for aggregate "#{@field}"})
+    requested = parse_positive_integer(options.shift, %(first parameter for aggregate "#{@field}"))
     @params = parse_options_into_hash(options)
 
     @parsed_params = {
@@ -44,13 +44,13 @@ private
       # across the whole collection, not just for documents matching the query.
       # This is likely to be a surprising default, so we require that callers
       # explicitly ask for it.
-      @errors << %{example_scope parameter must be set to 'query' or 'global' when requesting examples}
+      @errors << %(example_scope parameter must be set to 'query' or 'global' when requesting examples)
       @parsed_params[:examples] = 0
     end
 
     unused_params = @params.keys - @used_params
     unless unused_params.empty?
-      @errors << %{Unexpected options#{aggregate_description}: #{unused_params.join(', ')}}
+      @errors << %(Unexpected options#{aggregate_description}: #{unused_params.join(', ')})
     end
   end
 
@@ -62,7 +62,7 @@ private
         params[k_v[0]] ||= []
         params[k_v[0]] << k_v[1]
       else
-        @errors << %{Invalid parameter "#{value}"#{aggregate_description}; must be of form "key:value"}
+        @errors << %(Invalid parameter "#{value}"#{aggregate_description}; must be of form "key:value")
       end
     end
     params
@@ -77,7 +77,7 @@ private
     elsif value == "exclude_field_filter"
       :exclude_field_filter
     else
-      @errors << %{"#{value}" is not a valid scope option#{aggregate_description}}
+      @errors << %("#{value}" is not a valid scope option#{aggregate_description})
       nil
     end
   end
@@ -96,7 +96,7 @@ private
     }
 
     invalid_orders.each do |option, _|
-      @errors << %{"#{option}" is not a valid sort option#{aggregate_description}}
+      @errors << %("#{option}" is not a valid sort option#{aggregate_description})
     end
 
     result = valid_orders.map { |option, direction|
@@ -114,7 +114,7 @@ private
     value = single_integer_param("examples", 0, aggregate_description)
     if value != 0
       unless ALLOWED_AGGREGATE_EXAMPLE_FIELDS.include? @field
-        @errors << %{Aggregate examples are not supported#{aggregate_description}}
+        @errors << %(Aggregate examples are not supported#{aggregate_description})
         value = 0
       end
     end
@@ -128,10 +128,10 @@ private
     end
 
     disallowed_fields = fields - allowed_return_fields
-    fields = fields - disallowed_fields
+    fields -= disallowed_fields
 
     if disallowed_fields.any?
-      @errors << %{Some requested fields are not valid return fields: #{disallowed_fields} in parameter "example_fields" in aggregate "#{@field}"}
+      @errors << %(Some requested fields are not valid return fields: #{disallowed_fields} in parameter "example_fields" in aggregate "#{@field}")
     end
     fields
   end

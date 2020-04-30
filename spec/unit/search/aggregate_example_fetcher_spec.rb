@@ -19,7 +19,7 @@ RSpec.describe Search::AggregateExampleFetcher do
                   {
                     bool: {
                       must: { match_all: {} },
-                      must_not: { terms: { _index: %w(govuk_test) } },
+                      must_not: { terms: { _index: %w[govuk_test] } },
                     },
                   },
                   { bool: { must_not: { match_all: {} } } },
@@ -79,7 +79,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     index
   end
   before do
-    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
+    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w[govuk_test])
   end
 
   context "#prepare_response" do
@@ -118,7 +118,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     before do
       allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
       @index = stub_index("content index")
-      @example_fields = %w{link title other_field}
+      @example_fields = %w[link title other_field]
       main_query_response = { "aggregations" => {
         "sector" => {
           "filtered_aggregations" => {
@@ -149,7 +149,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           query_for_example_global("sector", "sector_1", @example_fields),
           query_for_example_global("sector", "sector_2", @example_fields),
         ]).and_return({ "responses" => [
-          response_for_example(3, %w(example_1 example_2)),
+          response_for_example(3, %w[example_1 example_2]),
           response_for_example(1, %w[example_3]),
         ] })
 
@@ -163,14 +163,14 @@ RSpec.describe Search::AggregateExampleFetcher do
               { "title" => "example_3" },
             ] },
         },
-      ).to eq(@fetcher.fetch("sector" => %w(sector_1 sector_2)))
+      ).to eq(@fetcher.fetch("sector" => %w[sector_1 sector_2]))
     end
   end
 
   context "one aggregate with query scope" do
     before do
       @index = stub_index("content index")
-      @example_fields = %w{link title other_field}
+      @example_fields = %w[link title other_field]
 
       main_query_response = { "aggregations" => {
         "sector" => {
@@ -209,7 +209,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           query_for_example_query("sector", "sector_1", @example_fields, query, filter),
           query_for_example_query("sector", "sector_2", @example_fields, query, filter),
         ]).and_return({ "responses" => [
-          response_for_example(3, %w(example_1 example_2)),
+          response_for_example(3, %w[example_1 example_2]),
           response_for_example(1, %w[example_3]),
         ] })
 
@@ -223,14 +223,14 @@ RSpec.describe Search::AggregateExampleFetcher do
               { "title" => "example_3" },
             ] },
         },
-      ).to eq(@fetcher.fetch("sector" => %w(sector_1 sector_2)))
+      ).to eq(@fetcher.fetch("sector" => %w[sector_1 sector_2]))
     end
   end
 
   context "one aggregate but no documents match query" do
     before do
       @index = stub_index("content index")
-      @example_fields = %w{link title other_field}
+      @example_fields = %w[link title other_field]
       main_query_response = { "aggregations" => {
         "sector" => {
           "filtered_aggregations" => {
@@ -260,7 +260,7 @@ RSpec.describe Search::AggregateExampleFetcher do
   context "one aggregate with 1000 matches" do
     before do
       @index = stub_index("content index")
-      @example_fields = %w{link title other_field}
+      @example_fields = %w[link title other_field]
 
       main_query_response = { "aggregations" => {
         "sector" => {
@@ -299,12 +299,12 @@ RSpec.describe Search::AggregateExampleFetcher do
           sector_numbers.map { |sector_num|
             query_for_example_query("sector", "sector_#{sector_num}", @example_fields, query, filter)
           },
-)
+        )
         stub_responses = Array(
           sector_numbers.map { |sector_num|
             response_for_example(sector_num, ["example_#{sector_num}"])
           },
-)
+        )
         expect(@index).to receive(:msearch)
           .with(expected_queries).and_return({ "responses" => stub_responses })
       end

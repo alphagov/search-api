@@ -22,7 +22,7 @@ module MissingMetadata
         begin
           @fetcher.add_metadata(result)
         rescue StandardError
-          puts "Skipped result #{result[:elasticsearch_type]}/#{result[:_id]}: #{$!}"
+          puts "Skipped result #{result[:elasticsearch_type]}/#{result[:_id]}: #{$ERROR_INFO}"
         end
       end
     end
@@ -34,10 +34,10 @@ module MissingMetadata
         logger.puts "Fetching page #{page + 1}"
 
         response = SearchConfig.run_search(
-          "filter_#{@missing_field_name}" => %w(_MISSING),
+          "filter_#{@missing_field_name}" => %w[_MISSING],
           "count" => [PAGE_SIZE.to_s],
           "start" => [(page * PAGE_SIZE).to_s],
-          "fields" => %w(content_id),
+          "fields" => %w[content_id],
         )
 
         break if response[:results].empty?

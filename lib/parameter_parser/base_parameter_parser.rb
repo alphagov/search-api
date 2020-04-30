@@ -16,7 +16,7 @@ class BaseParameterParser
   # sorting by arbitrary fields can be expensive in terms of memory usage in
   # elasticsearch, and because elasticsearch gives fairly obscure error
   # messages if undefined sort fields are used.
-  ALLOWED_SORT_FIELDS = %w(
+  ALLOWED_SORT_FIELDS = %w[
     public_timestamp
     closing_date
     title
@@ -25,7 +25,7 @@ class BaseParameterParser
     assessment_date
     popularity
     release_timestamp
-  ).freeze
+  ].freeze
 
   SORT_MAPPINGS = {
     "title" => "title.sort",
@@ -39,9 +39,9 @@ class BaseParameterParser
     "elasticsearch_type" => "document_type",
   }.freeze
 
-  # The fields listed here are the only ones which can be used to calculated
+  #  The fields listed here are the only ones which can be used to calculated
   # aggregates for.  This should be a subset of allowed_filter_fields
-  ALLOWED_AGGREGATE_FIELDS = %w(
+  ALLOWED_AGGREGATE_FIELDS = %w[
     content_purpose_document_supertype
     content_purpose_subgroup
     content_purpose_supergroup
@@ -72,16 +72,16 @@ class BaseParameterParser
     topical_events
     user_journey_document_supertype
     world_locations
-  ).freeze
+  ].freeze
 
   # The fields for which aggregates examples are allowed to be requested.
-  # This is locked down because these can only be requested with the current
-  # version of elasticsearch by performing a separate query for each aggregates
-  # option.  This is done using the msearch API to perform many queries
-  # together, but is still potentially expensive.  They could be efficiently
+  # This is locked down because these can only be requested with the current
+  # version of elasticsearch by performing a separate query for each aggregates
+  # option. This is done using the msearch API to perform many queries
+  # together, but is still potentially expensive. They could be efficiently
   # calculated with the top-documents aggregator in elasticsearch 1.3, so this
   # restriction could be relaxed in future.
-  ALLOWED_AGGREGATE_EXAMPLE_FIELDS = %w(
+  ALLOWED_AGGREGATE_EXAMPLE_FIELDS = %w[
     content_store_document_type
     content_purpose_subgroup
     content_purpose_supergroup
@@ -98,7 +98,7 @@ class BaseParameterParser
     specialist_sectors
     taxons
     topical_events
-  ).freeze
+  ].freeze
 
   # The keys by which aggregates values can be sorted (using the "order" option).
   # Multiple can be supplied, separated by colons - items which are equal
@@ -107,18 +107,18 @@ class BaseParameterParser
   #  - filtered: sort fields which have filters applied to them first.
   #  - count: sort values by number of matching documents.
   #  - value: sort by value if string, sort by title if not a string
-  #  - value.slug: sort values by the slug part of the value.
+  #   - value.slug: sort values by the slug part of the value.
   #  - value.title: sort values by the title of the value.
   #  - value.link: sort values by the link of the value.
   #
-  ALLOWED_AGGREGATE_SORT_OPTIONS = %w(
+  ALLOWED_AGGREGATE_SORT_OPTIONS = %w[
     filtered
     count
     value
     value.slug
     value.title
     value.link
-  ).freeze
+  ].freeze
 
   # Scopes that are allowed when requesting examples for aggregatess
   #  - query: Return only examples that match the query and filters
@@ -127,7 +127,7 @@ class BaseParameterParser
   ALLOWED_EXAMPLE_SCOPES = %i[global query].freeze
 
   # The fields which are returned by default for search results.
-  DEFAULT_RETURN_FIELDS = %w(
+  DEFAULT_RETURN_FIELDS = %w[
     description
     display_type
     document_series
@@ -145,7 +145,7 @@ class BaseParameterParser
     expanded_topics
     organisation_content_ids
     expanded_organisations
-  ).freeze
+  ].freeze
 
   # Default order in which aggregates results are sorted
   DEFAULT_AGGREGATE_SORT = [
@@ -155,10 +155,10 @@ class BaseParameterParser
   ].freeze
 
   # The fields which are returned by default for aggregates examples.
-  DEFAULT_AGGREGATE_EXAMPLE_FIELDS = %w(
+  DEFAULT_AGGREGATE_EXAMPLE_FIELDS = %w[
     link
     title
-  ).freeze
+  ].freeze
 
   # A special value used to filter for missing fields.
   MISSING_FIELD_SPECIAL_VALUE = "_MISSING".freeze
@@ -216,7 +216,7 @@ protected
     value = single_param(param_name, description)
     return default if value.nil?
 
-    value = parse_positive_integer(value, %{parameter "#{param_name}"#{description}})
+    value = parse_positive_integer(value, %(parameter "#{param_name}"#{description}))
     return default if value.nil?
 
     value

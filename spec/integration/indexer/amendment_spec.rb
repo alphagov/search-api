@@ -18,7 +18,7 @@ RSpec.describe "ElasticsearchAmendmentTest" do
         "title" => "A new title",
         "link" => "/an-example-answer",
       }, type: "edition",
-      index: "government_test"
+         index: "government_test"
     )
   end
 

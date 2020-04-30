@@ -38,8 +38,8 @@ RSpec.describe ContentItemPublisher::FinderPresenter do
         parent_links = [finder["parent"]].compact
         ordered_related_items_links = [finder["ordered_related_items"]].compact
         expect(instance.present_links[:links]).to eq({ "email_alert_signup" => email_signup_links,
-                                                      "parent" => parent_links,
-                                                      "ordered_related_items" => ordered_related_items_links })
+                                                       "parent" => parent_links,
+                                                       "ordered_related_items" => ordered_related_items_links })
       end
 
       it "includes facet_group in the links hash if present" do
@@ -53,8 +53,8 @@ RSpec.describe ContentItemPublisher::FinderPresenter do
         presenter_with_empty_links = described_class.new(finder_with_no_links, timestamp)
 
         expect(presenter_with_empty_links.present_links[:links]).to eq({ "email_alert_signup" => [],
-                                                      "parent" => [],
-                                                      "ordered_related_items" => [] })
+                                                                         "parent" => [],
+                                                                         "ordered_related_items" => [] })
       end
     end
   end

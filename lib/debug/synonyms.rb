@@ -14,7 +14,7 @@ module Debug
           query: {
             multi_match: {
               "query" => query,
-              "fields" => %w(title.synonym^1000 description.synonym),
+              "fields" => %w[title.synonym^1000 description.synonym],
             },
           },
           highlight: {

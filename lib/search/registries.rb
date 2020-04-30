@@ -33,7 +33,7 @@ module Search
         index,
         field_definitions,
         "organisation",
-        %w{
+        %w[
           slug content_id
           link title acronym
           organisation_type
@@ -49,7 +49,7 @@ module Search
           parent_organisations
           superseded_organisations
           superseding_organisations
-        },
+        ],
       )
     end
 

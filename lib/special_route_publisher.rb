@@ -11,7 +11,7 @@ class SpecialRoutePublisher
       Plek.new.find("publishing-api"),
       bearer_token: ENV["PUBLISHING_API_BEARER_TOKEN"] || "example",
     )
-    %w(/search /search.json /search/opensearch.xml).each do |path|
+    %w[/search /search.json /search/opensearch.xml].each do |path|
       publishing_api.put_path(
         path,
         publishing_app: "search-api",

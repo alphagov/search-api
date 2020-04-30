@@ -4,9 +4,9 @@ RSpec.describe GovukIndex::PopularityWorker do
   subject(:worker) { described_class.new }
 
   before do
-    allow(GovukDocumentTypes).to receive(:supertypes).
-      with(document_type: "testgroup").
-      and_return("supertype1" => "type1", "supertype2" => "type2")
+    allow(GovukDocumentTypes).to receive(:supertypes)
+      .with(document_type: "testgroup")
+      .and_return("supertype1" => "type1", "supertype2" => "type2")
     @processor = instance_double("processor", save: nil, commit: nil)
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(@processor)
   end

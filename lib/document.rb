@@ -21,12 +21,12 @@ class Document
       raise "Unexpected elasticsearch type '#{type}'. Document types must be configured"
     end
 
-    self.new(doc_type.fields, hash, es_score)
+    new(doc_type.fields, hash, es_score)
   end
 
   def update_attributes!(attributes)
     attributes.each do |key, value|
-      self.set(key, value)
+      set(key, value)
     end
   end
 
@@ -64,7 +64,7 @@ class Document
   end
 
   def elasticsearch_export
-    Hash.new.tap do |doc|
+    {}.tap do |doc|
       @field_definitions.each_key do |key|
         value = get(key)
         if value.is_a?(Array)

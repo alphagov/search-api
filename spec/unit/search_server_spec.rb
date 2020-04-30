@@ -31,7 +31,7 @@ RSpec.describe SearchIndices::SearchServer do
 
   it "can get multi index" do
     search_server = described_class.new("http://l", schema_config, %w[government_test page-traffic_test], "govuk_test", %w[government_test], SearchConfig.default_instance)
-    index = search_server.index_for_search(%w{government_test page-traffic_test})
+    index = search_server.index_for_search(%w[government_test page-traffic_test])
     expect(index).to be_a(LegacyClient::IndexForSearch)
     expect(index.index_names).to eq(%w[government_test page-traffic_test])
   end
@@ -39,7 +39,7 @@ RSpec.describe SearchIndices::SearchServer do
   it "raises an error for unknown index in multi index" do
     search_server = described_class.new("http://l", schema_config, %w[government_test page-traffic_test], "govuk_test", %w[government_test], SearchConfig.default_instance)
     expect {
-      search_server.index_for_search(%w{government_test unknown})
+      search_server.index_for_search(%w[government_test unknown])
     }.to raise_error(SearchIndices::NoSuchIndex)
   end
 end

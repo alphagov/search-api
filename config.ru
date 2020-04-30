@@ -1,5 +1,5 @@
 app_path = File.dirname(__FILE__)
-$:.unshift(app_path) unless $:.include?(app_path)
+$LOAD_PATH.unshift(app_path) unless $LOAD_PATH.include?(app_path)
 
 require "env"
 

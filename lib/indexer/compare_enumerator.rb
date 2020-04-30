@@ -7,7 +7,7 @@ module Indexer
     # sorting on the id directly is not possible, and the type will
     # always be "generic-document", which is why we first need to sort
     # by document_type.
-    DEFAULT_SORT = %i(document_type _uid).freeze
+    DEFAULT_SORT = %i[document_type _uid].freeze
 
     def initialize(left_index_name, right_index_name, cluster = Clusters.default_cluster, search_body = {}, options = {})
       @cluster = cluster

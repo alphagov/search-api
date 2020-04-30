@@ -217,20 +217,18 @@ this task will run against all active clusters.
       cluster_name = "cluster_#{cluster.key}"
 
       SearchConfig.all_index_names.each do |index|
-        begin
-          stats = client.indices.stats index: index, docs: true
-          docs = stats["_all"]["primaries"]["docs"]
+        stats = client.indices.stats index: index, docs: true
+        docs = stats["_all"]["primaries"]["docs"]
 
-          count = docs["count"]
-          statsd.gauge("#{cluster_name}.#{index}_index.docs.total", count)
-          puts "#{cluster_name}.#{index}_index.docs.total=#{count}"
+        count = docs["count"]
+        statsd.gauge("#{cluster_name}.#{index}_index.docs.total", count)
+        puts "#{cluster_name}.#{index}_index.docs.total=#{count}"
 
-          deleted = docs["deleted"]
-          statsd.gauge("#{cluster_name}.#{index}_index.docs.deleted", deleted)
-          puts "#{cluster_name}.#{index}_index.docs.deleted=#{deleted}"
-        rescue Elasticsearch::Transport::Transport::Errors::NotFound
-          missing << index
-        end
+        deleted = docs["deleted"]
+        statsd.gauge("#{cluster_name}.#{index}_index.docs.deleted", deleted)
+        puts "#{cluster_name}.#{index}_index.docs.deleted=#{deleted}"
+      rescue Elasticsearch::Transport::Transport::Errors::NotFound
+        missing << index
       end
 
       raise Exception.new("Missing index (on cluster #{cluster_name}) #{missing}!") unless missing.empty?

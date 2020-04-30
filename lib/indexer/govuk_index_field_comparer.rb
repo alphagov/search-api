@@ -21,7 +21,7 @@ module Indexer
         stats["RemovedValue: #{key}"] += 1
         return false
       end
-      return compare_time(key, old, new) if %w(public_timestamp first_published_at).include?(key)
+      return compare_time(key, old, new) if %w[public_timestamp first_published_at].include?(key)
       return compare_content(id, old, new) if key == "indexable_content"
       return true if old.nil? && new == ""
       return true if key == "rendering_app" && old == "specialist-frontend" && new == "government-frontend"
@@ -92,7 +92,7 @@ module Indexer
         .gsub(/[\s,\-_:\/–\[\]\(\)\.\*\|\\\"“”]+/, " ") # remove all special characters
         .gsub(/&amp;/, "&")
         .gsub(/[’'‘]/, "'")
-        .gsub(/ /, " ") #nbsp
+        .gsub(/ /, " ") # nbsp
     end
   end
 end

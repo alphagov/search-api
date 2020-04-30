@@ -24,7 +24,7 @@ RSpec.describe Search::BaseRegistry, "Specialist Sector" do
 
   it "only required fields are requested from index" do
     expect(@index).to receive(:documents_by_format)
-      .with("specialist_sector", sample_field_definitions(%w{link slug title content_id}))
+      .with("specialist_sector", sample_field_definitions(%w[link slug title content_id]))
       .and_return([])
     @specialist_sector_registry["oil-and-gas/licensing"]
   end

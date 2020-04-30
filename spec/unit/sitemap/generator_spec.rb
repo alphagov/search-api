@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Sitemap::Generator do
   before do
-    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w(govuk_test))
+    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w[govuk_test])
     @timestamp = Time.now.utc
   end
 

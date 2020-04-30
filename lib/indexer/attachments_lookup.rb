@@ -48,7 +48,7 @@ module Indexer
     end
 
     def fetch_from_publishing_api(base_path)
-      content_id = Indexer::find_content_id(base_path, @logger)
+      content_id = Indexer.find_content_id(base_path, @logger)
       return unless content_id
 
       begin

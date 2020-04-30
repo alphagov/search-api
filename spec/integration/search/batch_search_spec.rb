@@ -94,7 +94,7 @@ RSpec.describe "BatchSearchTest" do
 
   it "can filter for missing field or specific value in field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
-    get build_get_url([{ filter_specialist_sectors: %w(_MISSING") }, { filter_specialist_sectors: %w(_MISSING farming) }])
+    get build_get_url([{ filter_specialist_sectors: %w[_MISSING"] }, { filter_specialist_sectors: %w[_MISSING farming] }])
     results = parsed_response["results"]
     expect(result_links(results[0]).sort).to eq([])
     expect(result_links(results[1]).sort).to eq(["/government-1", "/govuk-1"])
@@ -102,7 +102,7 @@ RSpec.describe "BatchSearchTest" do
 
   it "can filter and reject" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
-    get build_get_url([{ reject_mainstream_browse_pages: 1, filter_specialist_sectors: %w(farming) }, { filter_specialist_sectors: %w(_MISSING farming) }])
+    get build_get_url([{ reject_mainstream_browse_pages: 1, filter_specialist_sectors: %w[farming] }, { filter_specialist_sectors: %w[_MISSING farming] }])
     results = parsed_response["results"]
     expect(result_links(results[0]).sort).to eq(["/government-2", "/govuk-2"])
     expect(result_links(results[1]).sort).to eq(["/government-1", "/government-2", "/govuk-1", "/govuk-2"])
@@ -299,8 +299,8 @@ RSpec.describe "BatchSearchTest" do
     results = parsed_response["results"]
     expect(results[0]["results"][0]["organisations"]).to eq(
       [{ "slug" => "/ministry-of-magic",
-      "link" => "/ministry-of-magic-site",
-      "title" => "Ministry of Magic" }],
+         "link" => "/ministry-of-magic-site",
+         "title" => "Ministry of Magic" }],
     )
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
@@ -328,7 +328,7 @@ RSpec.describe "BatchSearchTest" do
     commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
     commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
 
-    get build_get_url([{ q: "dragons", fields: %w(expanded_organisations) }, { q: "ministry of magic" }])
+    get build_get_url([{ q: "dragons", fields: %w[expanded_organisations] }, { q: "ministry of magic" }])
     results = parsed_response["results"]
 
     expect_result_includes_ministry_of_magic_for_key(results[0]["results"][0], "expanded_organisations", "content_id" => "organisation-content-id")
@@ -350,12 +350,12 @@ RSpec.describe "BatchSearchTest" do
     commit_ministry_of_magic_document
     commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
     commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                                "content_id" => "topic-content-id",
-                                                "slug" => "topic-magic",
-                                                "title" => "Magic topic",
-                                                "link" => "/magic-topic-site",
-                                                # TODO: we should rename this format to `topic` and update all apps
-                                                "format" => "specialist_sector" })
+                                        "content_id" => "topic-content-id",
+                                        "slug" => "topic-magic",
+                                        "title" => "Magic topic",
+                                        "link" => "/magic-topic-site",
+                                        # TODO: we should rename this format to `topic` and update all apps
+                                        "format" => "specialist_sector" })
 
     get build_get_url([{ q: "dragons" }, { q: "ministry of magic" }])
     results = parsed_response["results"]
@@ -405,7 +405,7 @@ RSpec.describe "BatchSearchTest" do
     commit_ministry_of_magic_document
     commit_treatment_of_dragons_document({ "is_withdrawn" => true })
 
-    get build_get_url([{ q: "Advice on Treatment of Dragons", debug: "include_withdrawn", fields: %w(is_withdrawn) }, { q: "ministry of magic" }])
+    get build_get_url([{ q: "Advice on Treatment of Dragons", debug: "include_withdrawn", fields: %w[is_withdrawn] }, { q: "ministry of magic" }])
     results = parsed_response["results"]
 
     expect_search_has_result_count(results[0], 1)
@@ -439,7 +439,7 @@ RSpec.describe "BatchSearchTest" do
   it "can return the taxonomy" do
     commit_ministry_of_magic_document("taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c])
 
-    get build_get_url([{ q: "Ministry of Magic", fields: %w(taxons) }, { q: "ministry of magic" }])
+    get build_get_url([{ q: "Ministry of Magic", fields: %w[taxons] }, { q: "ministry of magic" }])
     results = parsed_response["results"]
 
     expect(results[0]["results"][0].fetch("taxons")).to eq(%w[eb2093ef-778c-4105-9f33-9aa03d14bc5c])
@@ -469,9 +469,9 @@ RSpec.describe "BatchSearchTest" do
     commit_ministry_of_magic_document(
       {
         "taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c],
-        "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
+        "part_of_taxonomy_tree" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c],
       },
-      )
+    )
 
     get build_get_url([{ filter_part_of_taxonomy_tree: %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c] }, { filter_part_of_taxonomy_tree: %w[aa2093ef-778c-4105-9f33-9aa03d14bc5c] }])
     results = parsed_response["results"]
@@ -486,7 +486,7 @@ RSpec.describe "BatchSearchTest" do
     commit_treatment_of_dragons_document
     commit_ministry_of_magic_document(
       {
-        "facet_groups" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
+        "facet_groups" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c],
       },
     )
 
@@ -503,7 +503,7 @@ RSpec.describe "BatchSearchTest" do
     commit_treatment_of_dragons_document
     commit_ministry_of_magic_document(
       {
-        "facet_values" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
+        "facet_values" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c],
       },
     )
 

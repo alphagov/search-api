@@ -10,7 +10,7 @@ module Auth
           "uid" => "e7def478-c626-4d1b-9a4d-8a31e3ecfa0d",
           "name" => "Mock API User",
           "email" => "mock.user@example.com",
-          "permissions" => %w(signin manage_search_indices),
+          "permissions" => %w[signin manage_search_indices],
           "organisation_slug" => nil,
           "organisation_content_id" => nil,
           "disabled" => false,

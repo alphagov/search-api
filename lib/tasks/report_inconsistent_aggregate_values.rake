@@ -8,7 +8,7 @@ task :report_inconsistent_aggregate_values do
   # List of expandable aggregates
   # Same as in `lib/search/presenters/entity_expander.rb` minus
   # the content_id mappings which are not valid aggregate fields.
-  aggregates = %w(
+  aggregates = %w[
     document_series
     document_collections
     organisations
@@ -16,7 +16,7 @@ task :report_inconsistent_aggregate_values do
     world_locations
     specialist_sectors
     people
-  )
+  ]
 
   rummager = GdsApi::Search.new(Plek.new.find("search-api"))
   aggregate_values_to_report = {}

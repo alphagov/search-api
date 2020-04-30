@@ -21,7 +21,7 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
 
   it "can delete an existing document" do
     document = {
-      "details" => %[{"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}],
+      "details" => %({"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}),
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
       "stemmed_query_as_term" => nil,

@@ -6,7 +6,7 @@ module Services
       Plek.find("publishing-api"),
       bearer_token: ENV["PUBLISHING_API_BEARER_TOKEN"] || "example",
 
-      # The cache is not threadsafe so using it can cause bulk imports to break
+      # The cache is not threadsafe so using it can cause bulk imports to break
       disable_cache: true,
 
       # Currently, expanded-links consistently takes a long time for some

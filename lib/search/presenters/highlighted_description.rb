@@ -38,7 +38,7 @@ module Search
       end
 
       unless description.original.ends_with?(highlighted_without_tags)
-        output = output + ELLIPSIS
+        output += ELLIPSIS
       end
 
       output
