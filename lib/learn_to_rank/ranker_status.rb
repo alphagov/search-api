@@ -21,17 +21,15 @@ module LearnToRank
 
     attr_reader :timeout
 
-    GOOD_MODEL_STATES = %w(AVAILABLE).freeze
-    GOOD_MODEL_STATUSES = %w(OK).freeze
-    GOOD_ENDPOINT_STATUSES = %w(InService Updating SystemUpdating).freeze
+    GOOD_MODEL_STATES = %w[AVAILABLE].freeze
+    GOOD_MODEL_STATUSES = %w[OK].freeze
+    GOOD_ENDPOINT_STATUSES = %w[InService Updating SystemUpdating].freeze
 
     def check_health
-      begin
-        reranker_healthy
-      rescue StandardError => e
-        @errors << "#{e.class}: #{e.message}"
-        false
-      end
+      reranker_healthy
+    rescue StandardError => e
+      @errors << "#{e.class}: #{e.message}"
+      false
     end
 
     class RankerServerError < StandardError

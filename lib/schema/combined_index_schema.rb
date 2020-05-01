@@ -41,9 +41,9 @@ private
 
   # Call &block for every field defined in any of the document types.
   # May make repeated calls for a given field.
-  # Passes (field_name, field_definition, obj) to the block each time it is
+  # Passes (field_name, field_definition, obj) to the block each time it is
   # called.
-  # Returns obj.
+  # Returns obj.
   def each_field_with_object(obj, &_block)
     elasticsearch_types.each_value do |elasticsearch_type|
       elasticsearch_type.fields.each do |field_name, field_definition|

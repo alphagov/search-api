@@ -4,7 +4,7 @@ require "securerandom"
 RSpec.describe Indexer::BulkIndexWorker do
   let(:index_name) { "government_test" }
 
-  SAMPLE_DOCUMENT_HASHES = %w(foo bar baz).map do |slug|
+  SAMPLE_DOCUMENT_HASHES = %w[foo bar baz].map do |slug|
     { "link" => "/#{slug}", "title" => slug.capitalize, "document_type" => "edition" }
   end
 

@@ -24,7 +24,7 @@ module Sitemap
       file_name = "sitemap_#{batch_number}.xml"
       @uploader.upload(
         file_content: generate_sitemap_xml(documents),
-        file_name:    file_name,
+        file_name: file_name,
       )
       file_name
     end
@@ -33,7 +33,7 @@ module Sitemap
       @logger.info "Creating sitemap index ..."
       @uploader.upload(
         file_content: generate_sitemap_index_xml(sitemaps),
-        file_name:    "sitemap.xml",
+        file_name: "sitemap.xml",
       )
     end
 

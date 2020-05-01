@@ -205,13 +205,13 @@ RSpec.describe "SearchTest" do
       it "can filter on boolean fields = true" do
         get "/search?filter_has_official_document=true"
 
-        expect(result_links.sort).to eq(%w(/ministry-of-magic-site))
+        expect(result_links.sort).to eq(%w[/ministry-of-magic-site])
       end
 
       it "can filter on boolean fields = false" do
         get "/search?filter_has_official_document=false"
 
-        expect(result_links.sort).to eq(%w(/dragon-guide))
+        expect(result_links.sort).to eq(%w[/dragon-guide])
       end
     end
   end
@@ -270,7 +270,7 @@ RSpec.describe "SearchTest" do
         "document_type" => "cma_case",
         "title" => cma_case_attributes.fetch("title"),
         "link" => cma_case_attributes.fetch("link"),
-        ),
+      ),
     )
   end
 
@@ -389,8 +389,8 @@ RSpec.describe "SearchTest" do
 
     expect(first_result["organisations"]).to eq(
       [{ "slug" => "/ministry-of-magic",
-      "link" => "/ministry-of-magic-site",
-      "title" => "Ministry of Magic" }],
+         "link" => "/ministry-of-magic-site",
+         "title" => "Ministry of Magic" }],
     )
   end
 
@@ -402,8 +402,8 @@ RSpec.describe "SearchTest" do
 
     expect(first_result["organisations"]).to eq(
       [{ "slug" => "/ministry-of-magic",
-      "link" => "/ministry-of-magic-site",
-      "title" => "Ministry of Magic" }],
+         "link" => "/ministry-of-magic-site",
+         "title" => "Ministry of Magic" }],
     )
   end
 
@@ -573,7 +573,7 @@ RSpec.describe "SearchTest" do
     commit_ministry_of_magic_document(
       {
         "taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c],
-        "part_of_taxonomy_tree" => %w(eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c),
+        "part_of_taxonomy_tree" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c],
       },
     )
     get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"

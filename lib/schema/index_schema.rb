@@ -48,7 +48,7 @@ class IndexSchemaParser
   end
 
   def self.parse_all(config_path, field_definitions, known_elasticsearch_types)
-    Hash[IndexSchemaParser::index_schema_paths(config_path).map { |index_name, schema_file_path|
+    Hash[IndexSchemaParser.index_schema_paths(config_path).map { |index_name, schema_file_path|
       [
         index_name,
         IndexSchemaParser.new(index_name, schema_file_path, field_definitions, known_elasticsearch_types).parse,
@@ -75,7 +75,7 @@ private
     elasticsearch_type_names.map { |elasticsearch_type_name|
       elasticsearch_type = @known_elasticsearch_types[elasticsearch_type_name]
       if elasticsearch_type.nil?
-        raise_error %{Unknown document type "#{elasticsearch_type_name}"}
+        raise_error %(Unknown document type "#{elasticsearch_type_name}")
       end
       elasticsearch_type
     }
@@ -86,7 +86,7 @@ private
 
     elasticsearch_type_names = raw.delete("elasticsearch_types")
     if elasticsearch_type_names.nil?
-      raise_error %{Missing "elasticsearch_types"}
+      raise_error %(Missing "elasticsearch_types")
     end
 
     unless raw.empty?
@@ -97,7 +97,7 @@ private
   end
 
   def raise_error(message)
-    raise %{#{message}, in index definition in "#{@schema_file_path}"}
+    raise %(#{message}, in index definition in "#{@schema_file_path}")
   end
 
   def load_json

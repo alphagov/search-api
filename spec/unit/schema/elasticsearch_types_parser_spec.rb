@@ -86,14 +86,14 @@ RSpec.describe ElasticsearchTypesParser do
 
     it "fail if document_type doesn't specify `fields`" do
       allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({})
-      expect_raises_message(%{Missing "fields", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
+      expect_raises_message(%(Missing "fields", in document type definition in "/config/path/doc_type.json")) { @parser.parse }
     end
 
     it "fail if document_type specifies unknown entries in `fields`" do
       allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({
         "fields" => %w[unknown_field],
       })
-      expect_raises_message(%{Undefined field \"unknown_field\", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
+      expect_raises_message(%(Undefined field \"unknown_field\", in document type definition in "/config/path/doc_type.json")) { @parser.parse }
     end
 
     it "fail if document_type has an unknown property" do
@@ -116,7 +116,7 @@ RSpec.describe ElasticsearchTypesParser do
       subtype_parser = ElasticsearchTypeParser.new("/config/path/subtype.json", base_type, @definitions)
       allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({ "fields" => [] })
 
-      expect_raises_message(%{Specifying `expanded_search_result_fields` in base document type is not supported, in document type definition in "/config/path/subtype.json"}) { subtype_parser.parse }
+      expect_raises_message(%(Specifying `expanded_search_result_fields` in base document type is not supported, in document type definition in "/config/path/subtype.json")) { subtype_parser.parse }
     end
 
     it "fail if expanded search result fields are set for fields which aren't known" do
@@ -127,7 +127,7 @@ RSpec.describe ElasticsearchTypesParser do
         },
       })
 
-      expect_raises_message(%{Field "unknown_field" set in "expanded_search_result_fields", but not in "fields", in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
+      expect_raises_message(%(Field "unknown_field" set in "expanded_search_result_fields", but not in "fields", in document type definition in "/config/path/doc_type.json")) { @parser.parse }
     end
   end
 end

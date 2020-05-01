@@ -10,10 +10,10 @@ module SearchIndices
   class IndexGroup
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
-      @client = Services::elasticsearch(hosts: base_uri)
+      @client = Services.elasticsearch(hosts: base_uri)
       # Index creation/deletion can take longer than other requests, so create a separate
       # client with a longer timeout
-      @long_timeout_client = Services::elasticsearch(hosts: base_uri, timeout: 30)
+      @long_timeout_client = Services.elasticsearch(hosts: base_uri, timeout: 30)
       @name = name
       @schema = schema
       @search_config = search_config
@@ -51,7 +51,7 @@ module SearchIndices
       # existing index. If such an index exists, it hasn't yet been migrated to
       # the new alias-y way of doing things.
       if indices.include? @name
-        raise RuntimeError, "There is an index called #{@name}"
+        raise "There is an index called #{@name}"
       end
 
       # Response of the form:

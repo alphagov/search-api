@@ -2,7 +2,7 @@ module GovukIndex
   class DetailsPresenter
     extend MethodBuilder
 
-    SERVICE_MANUAL = %w(service_manual_guide service_manual_topic).freeze
+    SERVICE_MANUAL = %w[service_manual_guide service_manual_topic].freeze
 
     set_payload_method :details
 

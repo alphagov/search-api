@@ -150,7 +150,7 @@ private
       # correctly in elasticsearch.
       normalizer.normalize(string, :nfkc).strip
     rescue ArgumentError
-      @errors << %{Invalid unicode in #{description}}
+      @errors << %(Invalid unicode in #{description})
       nil
     end
   end
@@ -174,13 +174,13 @@ private
       dir = "asc"
     end
     unless ALLOWED_SORT_FIELDS.include?(field)
-      @errors << %{"#{field}" is not a valid sort field}
+      @errors << %("#{field}" is not a valid sort field)
       return nil
     end
     [SORT_MAPPINGS.fetch(field, field), dir]
   end
 
-  # Get a list of the fields to request in results from elasticsearch
+  # Get a list of the fields to request in results from elasticsearch
   def return_fields
     fields = character_separated_param("fields")
     if fields.empty?
@@ -188,7 +188,7 @@ private
     end
 
     disallowed_fields = fields - allowed_return_fields
-    fields = fields - disallowed_fields
+    fields -= disallowed_fields
 
     if disallowed_fields.any?
       @errors << "Some requested fields are not valid return fields: #{disallowed_fields}"
@@ -202,7 +202,7 @@ private
     }
 
     disallowed.each do |parameter_hash|
-      @errors << %{"#{parameter_hash['name']}" is not a valid #{parameter_hash['operation']} field}
+      @errors << %("#{parameter_hash['name']}" is not a valid #{parameter_hash['operation']} field)
     end
 
     allowed
@@ -261,7 +261,7 @@ private
     end
 
     if filter_type.nil?
-      @errors << %{"#{field_name}" has no filter_type defined}
+      @errors << %("#{field_name}" has no filter_type defined)
       return nil
     end
 
@@ -283,8 +283,8 @@ private
   class Filter
     attr_reader :field_name, :include_missing, :values, :operation, :multivalue_query, :errors
 
-    #operation is :reject or :filter
-    #multivalue_query is :all or :any
+    # operation is :reject or :filter
+    # multivalue_query is :all or :any
     def initialize(field_name, values, operation, multivalue_query)
       @field_name = field_name
       @include_missing = values.include? BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE
@@ -341,7 +341,7 @@ private
     end
 
     def validate_date_key(key)
-      if !%w(from to).include?(key)
+      if !%w[from to].include?(key)
         @errors << %{Invalid date filter parameter "#{key}:" (expected "from:" or "to:")}
       end
     end
@@ -390,7 +390,7 @@ private
 
     def parse_bool(values, field_name)
       values.map { |value|
-        if %w(true false).include?(value)
+        if %w[true false].include?(value)
           value
         else
           @errors << %{#{field_name} requires a boolean (true or false)}
@@ -441,7 +441,7 @@ private
       when "show_query"
         options[:show_query] = true
       else
-        @errors << %{Unknown debug option "#{option}"} unless option.blank?
+        @errors << %(Unknown debug option "#{option}") unless option.blank?
       end
     end
 
@@ -456,7 +456,7 @@ private
 
         variants.each_with_object({}) do |(variant_name, variant_code), variants_hash|
           if variant_code.blank?
-            @errors << %{Invalid ab_tests, missing type "#{variant_name}"}
+            @errors << %(Invalid ab_tests, missing type "#{variant_name}")
           end
           variants_hash[variant_name.to_sym] = variant_code
         end

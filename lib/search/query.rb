@@ -70,7 +70,7 @@ module Search
     rescue Elasticsearch::Transport::Transport::Errors::InternalServerError => e
       case e.message
       when /Numeric value \(([0-9]*)\) out of range of/
-        raise(NumberOutOfRange, "Integer value of #{$1} exceeds maximum allowed")
+        raise(NumberOutOfRange, "Integer value of #{Regexp.last_match(1)} exceeds maximum allowed")
       when /maxClauseCount is set to/
         raise(QueryTooLong, "Query must be less than 1024 words")
       else
@@ -173,7 +173,7 @@ module Search
       GovukStatsd.increment "suggest.completion"
       GovukStatsd.time("suggest.completion") do
         query = {
-          _source: "autocomplete", #Removes unneeded response from query
+          _source: "autocomplete", # Removes unneeded response from query
           suggest: QueryComponents::Autocomplete.new(search_params).payload,
         }
 

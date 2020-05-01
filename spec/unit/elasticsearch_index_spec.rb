@@ -111,7 +111,7 @@ RSpec.describe SearchIndices::Index do
   it "can fetch documents by format" do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=500&version=true"
     stub_request(:get, search_pattern).with(
-      body: { query: { term: { format: "organisation" } }, _source: { includes: %w{title link} }, sort: %w[_doc] },
+      body: { query: { term: { format: "organisation" } }, _source: { includes: %w[title link] }, sort: %w[_doc] },
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
       headers: { "Content-Type" => "application/json" },
@@ -128,7 +128,7 @@ RSpec.describe SearchIndices::Index do
       headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
 
-    result = @index.documents_by_format("organisation", sample_field_definitions(%w(link title)))
+    result = @index.documents_by_format("organisation", sample_field_definitions(%w[link title]))
     expect((1..10).map { |i| "Organisation #{i}" }).to eq(result.map { |r| r["title"] })
   end
 
@@ -153,7 +153,7 @@ RSpec.describe SearchIndices::Index do
       headers: { "Content-Type" => "application/json" },
     ).then.to_raise("should never happen")
 
-    result = @index.documents_by_format("organisation", sample_field_definitions(%w(link title))).to_a
+    result = @index.documents_by_format("organisation", sample_field_definitions(%w[link title])).to_a
     expect((1..10).map { |i| "Organisation #{i}" }).to eq(result.map { |r| r["title"] })
     expect((1..10).map { |i| "/organisation-#{i}" }).to eq(result.map { |r| r["link"] })
   end
@@ -257,9 +257,9 @@ private
 
   def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)
     # stub the request for total results
-    stub_request(:get, "http://example.com:9200/page-traffic_test/generic-document/_search").
-      with(body: { "query" => { "match_all" => {} }, "size" => 0 }.to_json).
-      to_return(
+    stub_request(:get, "http://example.com:9200/page-traffic_test/generic-document/_search")
+      .with(body: { "query" => { "match_all" => {} }, "size" => 0 }.to_json)
+      .to_return(
         body: { "hits" => { "total" => total_pages } }.to_json,
 
         headers: { "Content-Type" => "application/json" },
@@ -292,9 +292,9 @@ private
       },
     }
 
-    stub_request(:get, "http://example.com:9200/page-traffic_test/generic-document/_search").
-      with(body: expected_query.to_json).
-      to_return(
+    stub_request(:get, "http://example.com:9200/page-traffic_test/generic-document/_search")
+      .with(body: expected_query.to_json)
+      .to_return(
         body: response.to_json,
 
         headers: { "Content-Type" => "application/json" },

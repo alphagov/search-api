@@ -35,7 +35,7 @@ RSpec.describe FieldTypes do
     end
 
     it "raise an error for unknown types" do
-      expect_raises_message(%{Unknown field type "unknown"}) do
+      expect_raises_message(%(Unknown field type "unknown")) do
         @types.get("unknown")
       end
     end
@@ -48,7 +48,7 @@ RSpec.describe FieldTypes do
 
     it "fail if a field type has no es config property" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({ "identifier" => {} })
-      expect_raises_message(%{Missing "es_config" in field type "identifier" in "/config/path/field_types.json"}) do
+      expect_raises_message(%(Missing "es_config" in field type "identifier" in "/config/path/field_types.json")) do
         @types.get("identifier")
       end
     end

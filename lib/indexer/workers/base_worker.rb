@@ -19,12 +19,16 @@ module Indexer
     def self.wait_until_processed(max_timeout: 2 * 60 * 60)
       Timeout.timeout(max_timeout) do
         # wait for all queued tasks to be started
-        sleep 1 while(Sidekiq::Queue.new(self::QUEUE_NAME).any? { |job| job.display_class == self.to_s })
+        sleep 1 while Sidekiq::Queue.new(self::QUEUE_NAME).any? { |job| job.display_class == to_s }
 
         # wait for started tasks to be finished
-        sleep 1 while(Sidekiq::Workers.new.any? do |_, _, work|
-          work["queue"] == self::QUEUE_NAME && work["payload"]["class"] == self.to_s
-        end)
+        sleep 1 while active_workers?
+      end
+    end
+
+    def self.active_workers?
+      Sidekiq::Workers.new.any? do |_, _, work|
+        work["queue"] == self::QUEUE_NAME && work["payload"]["class"] == to_s
       end
     end
 

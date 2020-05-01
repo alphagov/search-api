@@ -24,7 +24,7 @@ class AggregatesParameterParser < BaseParameterParser
       if ALLOWED_AGGREGATE_FIELDS.include? field
         parse(field, value)
       else
-        errors << %{"#{field}" is not a valid aggregate field}
+        errors << %("#{field}" is not a valid aggregate field)
       end
     end
   end
@@ -43,7 +43,7 @@ private
   def validate_aggregate_naming(aggregate_name)
     @aggregate_name ||= aggregate_name
     if @aggregate_name != aggregate_name
-      errors << %{aggregates can not be used in conjuction with facets, please switch to using aggregates as facets are deprecated.}
+      errors << %(aggregates can not be used in conjuction with facets, please switch to using aggregates as facets are deprecated.)
     end
   end
 end

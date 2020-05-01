@@ -45,7 +45,7 @@ module Search
       .map { |bet| [bet["position"], bet["link"]] }
       .sort
       .uniq { |_, link| link }
-      .each_with_object(Hash.new) do |(position, link), result|
+      .each_with_object({}) do |(position, link), result|
         result[position] ||= []
         result[position] << link
       end
@@ -73,12 +73,12 @@ module Search
     # Fetch bet information from elasticsearch
     #
     # Returns an array of 4-tuples, holding:
-    #  - query the bet was for
+    #  - query the bet was for
     #  - type of match the bet is for
     #  - the best bets, as an array of hashes
     #  - the worst bets, as an array of hashes
     #
-    # The hashes representing bets have a "link" key containing the link for
+    # The hashes representing bets have a "link" key containing the link for
     # the bet, and for best bets also a "position" key containing the position
     # the best bet should appear at.
     def fetch_bets

@@ -10,7 +10,7 @@ namespace :export do
                .transform_values { |v| [v] }
     search_params = SearchConfig.parse_parameters(params)
     query = search_params.search_config.generate_query_for_params(search_params)
-    query[:sort] = %i(document_type _uid)
+    query[:sort] = %i[document_type _uid]
     fields = search_params.return_fields.uniq
     base_uri = search_params.search_config.base_uri
 

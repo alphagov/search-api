@@ -9,18 +9,18 @@ module LearnToRank
     # Features takes some values and translates them to features
     def initialize(
       explain: {},
-        popularity: 0,
-        es_score: 0,
-        title: "",
-        description: "",
-        link: "",
-        public_timestamp: "",
-        format: nil,
-        organisation_content_ids: [],
-        indexable_content: "",
-        query: "",
-        updated_at: ""
-      )
+      popularity: 0,
+      es_score: 0,
+      title: "",
+      description: "",
+      link: "",
+      public_timestamp: "",
+      format: nil,
+      organisation_content_ids: [],
+      indexable_content: "",
+      query: "",
+      updated_at: ""
+    )
       @popularity = popularity || 0
       @es_score = es_score || 0
       @explain_scores = LearnToRank::ExplainScores.new(explain)

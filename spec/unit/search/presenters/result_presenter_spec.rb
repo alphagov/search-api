@@ -38,7 +38,7 @@ RSpec.describe Search::ResultPresenter do
     }
 
     result = described_class.new(
-      document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w(parts)),
+      document, nil, sample_schema, Search::QueryParameters.new(return_fields: %w[parts]),
       result_rank: 1
     ).present
 
@@ -57,7 +57,7 @@ RSpec.describe Search::ResultPresenter do
         document,
         nil,
         sample_schema,
-        Search::QueryParameters.new(return_fields: %w(parts)),
+        Search::QueryParameters.new(return_fields: %w[parts]),
         result_rank: rank,
       ).present
 

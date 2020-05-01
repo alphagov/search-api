@@ -89,7 +89,7 @@ class SearchConfig
         CombinedIndexSchema.new(
           content_index_names + [govuk_index_name],
           default_instance.schema_config,
-          )
+        )
       end
     end
   end

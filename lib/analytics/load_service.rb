@@ -59,13 +59,13 @@ module Analytics
 
   private
 
-    REQUIRED_ENV_VARS = %w(
+    REQUIRED_ENV_VARS = %w[
       GOOGLE_PRIVATE_KEY
       GOOGLE_CLIENT_EMAIL
       GOOGLE_EXPORT_ACCOUNT_ID
       GOOGLE_EXPORT_WEB_PROPERTY_ID
       GOOGLE_EXPORT_CUSTOM_DATA_SOURCE_ID
-    ).freeze
+    ].freeze
 
     def assert_has_required_env_vars
       return unless missing_env_vars.any?

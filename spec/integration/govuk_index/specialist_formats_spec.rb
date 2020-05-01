@@ -29,7 +29,7 @@ RSpec.describe "SpecialistFormatTest" do
   end
 
   it "specialist documents are correctly indexed" do
-    document_types = %w(
+    document_types = %w[
       aaib_report
       asylum_support_decision
       business_finance_support_scheme
@@ -48,7 +48,7 @@ RSpec.describe "SpecialistFormatTest" do
       statutory_instrument
       tax_tribunal_decision
       utaac_decision
-    )
+    ]
 
     # ideally we would run a test for all document types, but this takes 3 seconds so I have limited
     # it to a random subset

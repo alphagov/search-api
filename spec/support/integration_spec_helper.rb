@@ -187,7 +187,7 @@ module IntegrationSpecHelper
     short_index_name = index_name.sub("_test", "")
     (1..section_count).map do |i|
       title = "Sample #{short_index_name} document #{i}"
-      if i % 2 == 1
+      if i.odd?
         title = title.downcase
       end
       fields = {
@@ -198,7 +198,7 @@ module IntegrationSpecHelper
         "format" => index_name =~ /govuk/ ? "answer" : "edition",
         "document_type" => "edition",
       }
-      if i % 2 == 0
+      if i.even?
         fields["specialist_sectors"] = %w[farming]
       end
       if short_index_name == "government"

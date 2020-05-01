@@ -1,7 +1,7 @@
 class SynonymParser
   class InvalidSynonymConfig < StandardError; end
 
-  VALID_KEYS = %w(both search index).freeze
+  VALID_KEYS = %w[both search index].freeze
 
   def parse(config)
     index_synonyms = Synonyms.new(:index)
@@ -13,10 +13,10 @@ class SynonymParser
       key, synonym = synonyms.first
       validate_key!(key)
 
-      if %w(search both).include?(key)
+      if %w[search both].include?(key)
         search_synonyms << synonym
       end
-      if %w(index both).include?(key)
+      if %w[index both].include?(key)
         index_synonyms << synonym
       end
     end

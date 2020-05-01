@@ -26,9 +26,7 @@ class SchemaMigrator
 
       task_id = response.fetch("task")
 
-      while running_tasks.include?(task_id)
-        sleep @wait_between_task_list_check
-      end
+      sleep @wait_between_task_list_check while running_tasks.include?(task_id)
 
       if changed?
         puts "Difference during reindex for: #{@index_name}"

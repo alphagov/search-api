@@ -10,7 +10,7 @@ class FieldDefinition
   def merge(other)
     unless other.nil?
       if other.expanded_search_result_fields
-        result = self.clone
+        result = clone
         result.expanded_search_result_fields = ((result.expanded_search_result_fields || []) + other.expanded_search_result_fields).uniq
         return result
       end
@@ -39,7 +39,7 @@ private
       # Look up the field type
       type_name = value.delete("type")
       if type_name.nil?
-        raise %{Missing "type" in field definition "#{field_name}" in "#{definitions_file_path}"}
+        raise %(Missing "type" in field definition "#{field_name}" in "#{definitions_file_path}")
       end
 
       type = @field_types.get(type_name)
@@ -48,7 +48,7 @@ private
       children_hash = value.delete("children")
       if children_hash
         if type.children != "named"
-          raise %{Named children not valid for type "#{type_name}" in field definition "#{field_name}" in "#{definitions_file_path}"}
+          raise %(Named children not valid for type "#{type_name}" in field definition "#{field_name}" in "#{definitions_file_path}")
         end
 
         children = parse_definitions(children_hash)

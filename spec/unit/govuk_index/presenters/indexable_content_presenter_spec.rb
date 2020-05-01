@@ -102,27 +102,27 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
     let(:format) { "transaction" }
     let(:details) do
       {
-        "introductory_paragraph" =>  [
+        "introductory_paragraph" => [
           {
-            "content" =>  "intro\n",
-            "content_type" =>  "text/govspeak",
+            "content" => "intro\n",
+            "content_type" => "text/govspeak",
           },
           {
-            "content_type" =>  "text/html",
-            "content" =>  "<p>intro</p>\n",
-          },
-        ],
-        "more_information" =>  [
-          {
-            "content" =>  "more<\n",
-            "content_type" =>  "text/govspeak",
-          },
-          {
-            "content_type" =>  "text/html",
-            "content" =>  "<p>more</p>\n",
+            "content_type" => "text/html",
+            "content" => "<p>intro</p>\n",
           },
         ],
-        "hidden_search_terms" =>  ["hidden 1", "hidden 2"],
+        "more_information" => [
+          {
+            "content" => "more<\n",
+            "content_type" => "text/govspeak",
+          },
+          {
+            "content_type" => "text/html",
+            "content" => "<p>more</p>\n",
+          },
+        ],
+        "hidden_search_terms" => ["hidden 1", "hidden 2"],
       }
     end
 

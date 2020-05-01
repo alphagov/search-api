@@ -179,7 +179,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
     custom_metadata = {
       "alert_type" => "company-led-drugs",
       "issued_date" => "2016-02-01",
-      "medical_specialism" => %w(anaesthetics cardiology),
+      "medical_specialism" => %w[anaesthetics cardiology],
     }
     special_formated_output = {
       "alert_type" => %w[company-led-drugs],

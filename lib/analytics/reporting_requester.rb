@@ -9,11 +9,11 @@ module Analytics
 
     SCOPES = [AUTH_ANALYTICS].freeze
 
-    REQUIRED_ENV_VARS = %w(
+    REQUIRED_ENV_VARS = %w[
       GOOGLE_PRIVATE_KEY
       GOOGLE_CLIENT_EMAIL
       GOOGLE_ANALYTICS_GOVUK_VIEW_ID
-    ).freeze
+    ].freeze
 
     def authenticated_service
       assert_has_required_env_vars

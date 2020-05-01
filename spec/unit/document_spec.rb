@@ -150,7 +150,7 @@ RSpec.describe Document do
     document_hash = {
       "metadata" => metadata,
     }
-    doc = described_class.new(sample_field_definitions(%w(metadata)), document_hash)
+    doc = described_class.new(sample_field_definitions(%w[metadata]), document_hash)
 
     expect(metadata).to eq(doc.metadata)
   end

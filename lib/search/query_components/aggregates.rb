@@ -1,10 +1,9 @@
 module QueryComponents
   class Aggregates < BaseComponent
     def payload
-      search_params.aggregates.reduce({}) do |result, (field_name, options)|
+      search_params.aggregates.each_with_object({}) do |(field_name, options), result|
         result[field_name] = aggregates_hash_for_aggregate(field_name, options)
         result["#{field_name}_with_missing_value"] = aggregates_hash_for_null_values(field_name, options)
-        result
       end
     end
 
@@ -35,7 +34,7 @@ module QueryComponents
     end
 
     def with_filters(query, field_name, options)
-      # The scope of the aggregate.
+      # The scope of the aggregate.
       #
       # Defaults to "exclude_field_filter", meaning that aggregate values should be
       # calculated as if no filters are applied to the field the aggregate is for.

@@ -44,7 +44,7 @@ RSpec.describe QueryComponents::Filter do
 
     it "appends the correct boolean filters" do
       builder = described_class.new(
-        make_search_params([make_boolean_filter_param("field_with_boolean", %w(true))]),
+        make_search_params([make_boolean_filter_param("field_with_boolean", %w[true])]),
       )
 
       result = builder.payload
@@ -121,7 +121,7 @@ RSpec.describe QueryComponents::Filter do
                          },
                        ] } }],
         },
-                        )
+      )
     end
   end
 

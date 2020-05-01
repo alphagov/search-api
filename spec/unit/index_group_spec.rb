@@ -14,7 +14,7 @@ RSpec.describe SearchIndices::IndexGroup do
     @server = SearchIndices::SearchServer.new(
       BASE_URI,
       @schema,
-      %w(government custom),
+      %w[government custom],
       "govuk",
       %w[government],
       SearchConfig.default_instance,
@@ -26,7 +26,7 @@ RSpec.describe SearchIndices::IndexGroup do
       "settings" => @schema.elasticsearch_settings("government"),
       "mappings" => @schema.elasticsearch_mappings("government"),
     }.to_json
-    stub = stub_request(:put, %r(#{BASE_URI}/government-.*))
+    stub = stub_request(:put, %r{#{BASE_URI}/government-.*})
       .with(body: expected_body)
       .to_return(ELASTICSEARCH_OK)
     index = @server.index_group("government").create_index

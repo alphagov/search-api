@@ -33,7 +33,7 @@ module SearchIndices
     # The regex takes the string until the first digit. After that, strip any
     # trailing dash from the string.
     def self.strip_alias_from_index_name(aliased_index_name)
-      aliased_index_name.match(%r[^\D+]).to_s.chomp("-")
+      aliased_index_name.match(%r{^\D+}).to_s.chomp("-")
     end
 
     def real_name
@@ -50,7 +50,7 @@ module SearchIndices
     end
 
     def exists?
-      ! real_name.nil?
+      !real_name.nil?
     end
 
     def close
@@ -125,11 +125,9 @@ module SearchIndices
     end
 
     def get_document_by_id(document_id)
-      begin
-        @client.get(index: @index_name, type: "_all", id: document_id)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound
-        nil
-      end
+      @client.get(index: @index_name, type: "_all", id: document_id)
+    rescue Elasticsearch::Transport::Transport::Errors::NotFound
+      nil
     end
 
     def document_from_hash(hash)
@@ -180,21 +178,19 @@ module SearchIndices
     #
     # duplicated in document_preparer.rb
     def analyzed_best_bet_query(query)
-      begin
-        analyzed_query = @client.indices.analyze(
-          index: @index_name,
-          body: {
-            text: query,
-            analyzer: "best_bet_stemmed_match",
-          },
-        )
+      analyzed_query = @client.indices.analyze(
+        index: @index_name,
+        body: {
+          text: query,
+          analyzer: "best_bet_stemmed_match",
+        },
+      )
 
-        analyzed_query.fetch("tokens", []).map { |token_info|
-          token_info["token"]
-        }.join(" ")
-      rescue Elasticsearch::Transport::Transport::Errors::BadRequest
-        ""
-      end
+      analyzed_query.fetch("tokens", []).map { |token_info|
+        token_info["token"]
+      }.join(" ")
+    rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+      ""
     end
 
     def delete(id)
@@ -211,7 +207,7 @@ module SearchIndices
         end
       end
 
-      true # For consistency with the Solr API and simple_json_response
+      true # For consistency with the Solr API and simple_json_response
     end
 
     def commit

@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Search::MatcherSet do
   it "matches strings" do
-    matcher_set = described_class.new(%w(foo bang))
+    matcher_set = described_class.new(%w[foo bang])
     expect(matcher_set).to include("foo")
     expect(matcher_set).not_to include("baz")
   end

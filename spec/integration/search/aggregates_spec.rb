@@ -107,7 +107,7 @@ RSpec.describe "search queries" do
       options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
       actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-      expect(actual_results).to eq(%w(/government-1))
+      expect(actual_results).to eq(%w[/government-1])
     end
 
     it "returns examples after migration" do
@@ -121,7 +121,7 @@ RSpec.describe "search queries" do
       options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
       actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-      expect(actual_results).to eq(%w(/govuk-1))
+      expect(actual_results).to eq(%w[/govuk-1])
     end
 
     it "returns examples before migration within query scope" do
@@ -135,7 +135,7 @@ RSpec.describe "search queries" do
       options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
       actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-      expect(actual_results).to eq(%w(/government-1))
+      expect(actual_results).to eq(%w[/government-1])
     end
 
     it "returns examples after migration within query scope" do
@@ -149,7 +149,7 @@ RSpec.describe "search queries" do
       options = parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
       actual_results = options.first["value"]["example_info"]["examples"].map { |h| h["link"] }.sort
 
-      expect(actual_results).to eq(%w(/govuk-1))
+      expect(actual_results).to eq(%w[/govuk-1])
     end
   end
 
@@ -209,7 +209,7 @@ RSpec.describe "search queries" do
       "title" => "Somewhat Unique DFID Research Output",
       "link" => "/dfid-research-outputs/somewhat-unique-dfid-research-output",
       "indexable_content" => "Use of calcrete in gender roles in Tanzania",
-      "country" => %w(TZ AL),
+      "country" => %w[TZ AL],
       "dfid_review_status" => "peer_reviewed",
       "first_published_at" => "2014-04-02",
       "format" => "dfid_research_output",

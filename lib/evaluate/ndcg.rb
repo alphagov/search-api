@@ -71,15 +71,13 @@ module Evaluate
     end
 
     def search_results(query)
-      begin
-        retries ||= 0
-        SearchConfig.run_search(@search_params.merge("q" => [query])).fetch(:results, [])
-      rescue StandardError => e
-        puts e
-        sleep 2
-        retry if (retries += 1) < 3
-        nil
-      end
+      retries ||= 0
+      SearchConfig.run_search(@search_params.merge("q" => [query])).fetch(:results, [])
+    rescue StandardError => e
+      puts e
+      sleep 2
+      retry if (retries += 1) < 3
+      nil
     end
 
     def ndcg(ratings)

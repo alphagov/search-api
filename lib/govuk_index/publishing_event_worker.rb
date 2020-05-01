@@ -9,7 +9,7 @@ module GovukIndex
   class MissingExternalUrl < StandardError; end
 
   DOCUMENT_TYPES_WITHOUT_BASE_PATH =
-    %w(
+    %w[
       contact
       role_appointment
       world_location
@@ -28,7 +28,7 @@ module GovukIndex
       special_representative_role
       traffic_commissioner_role
       worldwide_office_staff_role
-    ).freeze
+    ].freeze
 
   class PublishingEventWorker < Indexer::BaseWorker
     notify_of_failures

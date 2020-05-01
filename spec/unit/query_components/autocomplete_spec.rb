@@ -20,7 +20,7 @@ RSpec.describe QueryComponents::Autocomplete do
             "skip_duplicates" => true,
           },
         },
-        )
+      )
     end
   end
 end

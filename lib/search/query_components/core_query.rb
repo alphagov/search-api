@@ -65,10 +65,10 @@ module QueryComponents
       if quoted.empty?
         unquoted
       elsif unquoted_query.empty? && quoted.count == 1
-        # todo: check why this is in an array
+        # TODO: check why this is in an array
         [quoted[0]]
       else
-        # todo: think about relative weightings here
+        # TODO: think about relative weightings here
         {
           bool: {
             must: quoted,
@@ -91,13 +91,13 @@ module QueryComponents
 
     def unquoted_phrase_query(query = search_term)
       should_coord_query([
-        match_all_terms(%w(title), query, MATCH_ALL_TITLE_BOOST),
-        match_all_terms(%w(acronym), query, MATCH_ALL_ACRONYM_BOOST),
-        match_all_terms(%w(description), query, MATCH_ALL_DESCRIPTION_BOOST),
-        match_all_terms(%w(indexable_content), query, MATCH_ALL_INDEXABLE_CONTENT_BOOST),
-        match_all_terms(%w(title acronym description indexable_content), query, MATCH_ALL_MULTI_BOOST),
-        match_any_terms(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
-        match_bigrams(%w(title acronym description indexable_content), query, MATCH_ANY_MULTI_BOOST),
+        match_all_terms(%w[title], query, MATCH_ALL_TITLE_BOOST),
+        match_all_terms(%w[acronym], query, MATCH_ALL_ACRONYM_BOOST),
+        match_all_terms(%w[description], query, MATCH_ALL_DESCRIPTION_BOOST),
+        match_all_terms(%w[indexable_content], query, MATCH_ALL_INDEXABLE_CONTENT_BOOST),
+        match_all_terms(%w[title acronym description indexable_content], query, MATCH_ALL_MULTI_BOOST),
+        match_any_terms(%w[title acronym description indexable_content], query, MATCH_ANY_MULTI_BOOST),
+        match_bigrams(%w[title acronym description indexable_content], query, MATCH_ANY_MULTI_BOOST),
         minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST),
       ].reject(&:empty?))
     end

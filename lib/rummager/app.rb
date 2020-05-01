@@ -6,12 +6,12 @@ require "sinatra"
 set :root, File.dirname(__FILE__)
 
 Bootsnap.setup(
-  cache_dir:            "tmp/cache",
-  development_mode:     ENV["RACK_ENV"] == "development",
-  load_path_cache:      true,
+  cache_dir: "tmp/cache",
+  development_mode: ENV["RACK_ENV"] == "development",
+  load_path_cache: true,
   autoload_paths_cache: true,
-  compile_cache_iseq:   true,
-  compile_cache_yaml:   true,
+  compile_cache_iseq: true,
+  compile_cache_yaml: true,
 )
 
 require "rummager"
@@ -176,7 +176,7 @@ class Rummager < Sinatra::Application
     get path do
       json_only
 
-      search_parameters = CGI::parse(request.query_string)
+      search_parameters = CGI.parse(request.query_string)
       parsed_searches_parameters = Hash.new { |hash, key| hash[key] = {} }
       search_parameters.each_pair do |parameter, values|
         parts = parameter.scan(/(?<=\[)\w+(?=\])/m)

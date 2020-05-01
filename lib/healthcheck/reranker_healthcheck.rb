@@ -22,7 +22,7 @@ module Healthcheck
     end
 
     def enabled?
-      !%w(development).include? ENV["RACK_ENV"]
+      !%w[development].include? ENV["RACK_ENV"]
     end
 
   private

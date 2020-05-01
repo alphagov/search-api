@@ -8,7 +8,7 @@ class FieldTypes
   def get(type_name)
     @types ||= load_types
     @types.fetch(type_name) do
-      raise %{Unknown field type "#{type_name}"}
+      raise %(Unknown field type "#{type_name}")
     end
   end
 
@@ -18,7 +18,7 @@ private
     Hash[load_json.map { |type_name, value|
       es_config = value.delete("es_config")
       if es_config.nil?
-        raise %{Missing "es_config" in field type "#{type_name}" in "#{types_file_path}"}
+        raise %(Missing "es_config" in field type "#{type_name}" in "#{types_file_path}")
       end
 
       filter_type = value.delete("filter_type")

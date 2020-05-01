@@ -17,13 +17,11 @@ namespace :publishing_api do
     end
 
     publisher.routes.each do |route|
-      begin
-        publisher.publish(route)
-      rescue GdsApi::TimedOutException
-        puts "WARNING: publishing-api timed out when trying to publish route #{route[:base_path]}"
-      rescue GdsApi::HTTPServerError => e
-        puts "WARNING: publishing-api errored out when trying to publish route #{route[:base_path]}\n\nError: #{e.inspect}"
-      end
+      publisher.publish(route)
+    rescue GdsApi::TimedOutException
+      puts "WARNING: publishing-api timed out when trying to publish route #{route[:base_path]}"
+    rescue GdsApi::HTTPServerError => e
+      puts "WARNING: publishing-api errored out when trying to publish route #{route[:base_path]}\n\nError: #{e.inspect}"
     end
   end
 

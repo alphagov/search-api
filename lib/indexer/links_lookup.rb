@@ -35,44 +35,42 @@ module Indexer
       if doc_hash["content_id"].present?
         doc_hash["content_id"]
       else
-        Indexer::find_content_id(doc_hash["link"], @logger)
+        Indexer.find_content_id(doc_hash["link"], @logger)
       end
     end
 
     def find_links(content_id)
-      begin
-        GdsApi.with_retries(maximum_number_of_attempts: 5) do
-          Services.publishing_api.get_expanded_links(content_id)["expanded_links"]
-        end
-      rescue GdsApi::TimedOutException => e
-        @logger.error("Timeout fetching expanded links for #{content_id}")
-        GovukError.notify(e,
-                          extra: {
-                            error_message: "Timeout fetching expanded links",
-                            content_id: content_id,
-                          })
-        raise Indexer::PublishingApiError
-      rescue GdsApi::HTTPNotFound => e
-        # If the Content ID no longer exists in the Publishing API, there isn't really much
-        # we can do at this point. There doesn't seem to be any compelling reason to record
-        # this in Sentry as there is no bug to fix.
-        @logger.error("HTTP not found error fetching expanded links for #{content_id}: #{e.message}")
-        nil
-      rescue GdsApi::HTTPErrorResponse => e
-        @logger.error("HTTP error fetching expanded links for #{content_id}: #{e.message}")
-        # We capture all GdsApi HTTP exceptions here so that we can send them
-        # manually to Sentry. This allows us to control the message and parameters
-        # such that errors are grouped in a sane manner.
-        GovukError.notify(e,
-                          extra: {
-                            message: "HTTP error fetching expanded links",
-                            content_id: content_id,
-                            error_code: e.code,
-                            error_message: e.message,
-                            error_details: e.error_details,
-                          })
-        raise Indexer::PublishingApiError
+      GdsApi.with_retries(maximum_number_of_attempts: 5) do
+        Services.publishing_api.get_expanded_links(content_id)["expanded_links"]
       end
+    rescue GdsApi::TimedOutException => e
+      @logger.error("Timeout fetching expanded links for #{content_id}")
+      GovukError.notify(e,
+                        extra: {
+                          error_message: "Timeout fetching expanded links",
+                          content_id: content_id,
+                        })
+      raise Indexer::PublishingApiError
+    rescue GdsApi::HTTPNotFound => e
+      # If the Content ID no longer exists in the Publishing API, there isn't really much
+      # we can do at this point. There doesn't seem to be any compelling reason to record
+      # this in Sentry as there is no bug to fix.
+      @logger.error("HTTP not found error fetching expanded links for #{content_id}: #{e.message}")
+      nil
+    rescue GdsApi::HTTPErrorResponse => e
+      @logger.error("HTTP error fetching expanded links for #{content_id}: #{e.message}")
+      # We capture all GdsApi HTTP exceptions here so that we can send them
+      # manually to Sentry. This allows us to control the message and parameters
+      # such that errors are grouped in a sane manner.
+      GovukError.notify(e,
+                        extra: {
+                          message: "HTTP error fetching expanded links",
+                          content_id: content_id,
+                          error_code: e.code,
+                          error_message: e.message,
+                          error_details: e.error_details,
+                        })
+      raise Indexer::PublishingApiError
     end
 
     # Documents in rummager currently reference topics, browse pages and

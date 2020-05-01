@@ -10,7 +10,7 @@ module Analytics
     end
 
     def self.all_configuration_in_env?
-      %w(GOOGLE_PRIVATE_KEY GOOGLE_CLIENT_EMAIL).all? { |env_var| ENV[env_var].present? }
+      %w[GOOGLE_PRIVATE_KEY GOOGLE_CLIENT_EMAIL].all? { |env_var| ENV[env_var].present? }
     end
     private_class_method :all_configuration_in_env?
   end

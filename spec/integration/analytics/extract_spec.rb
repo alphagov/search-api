@@ -4,7 +4,7 @@ require "analytics/extract"
 RSpec.describe Analytics::Extract do
   subject(:extractor) { described_class.new(indices) }
 
-  let(:indices) { %w(government_test govuk_test) }
+  let(:indices) { %w[government_test govuk_test] }
 
   before do
     allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
@@ -16,8 +16,8 @@ RSpec.describe Analytics::Extract do
       "link" => "/an-example-page",
       "title" => "some page title",
       "content_store_document_type" => "some_document_type",
-      "primary_publishing_organisation" => %w(some_publishing_org),
-      "organisations" => %w(some_org another_org yet_another_org),
+      "primary_publishing_organisation" => %w[some_publishing_org],
+      "organisations" => %w[some_org another_org yet_another_org],
       "navigation_document_supertype" => "some_navigation_supertype",
       "user_journey_document_supertype" => "some_user_journey_supertype",
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",
@@ -50,8 +50,8 @@ RSpec.describe Analytics::Extract do
       "content_id" => "587b0635-2911-49e6-af68-3f0ea1b07cc5",
       "link" => "/an-example-page",
       "content_store_document_type" => "some_document_type",
-      "primary_publishing_organisation" => %w(some_publishing_org),
-      "organisations" => %w(some_org another_org yet_another_org),
+      "primary_publishing_organisation" => %w[some_publishing_org],
+      "organisations" => %w[some_org another_org yet_another_org],
       "navigation_document_supertype" => "some_navigation_supertype",
       "user_journey_document_supertype" => "some_user_journey_supertype",
       "public_timestamp" => "2017-06-20T10:21:55.000+01:00",

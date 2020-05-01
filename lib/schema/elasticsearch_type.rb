@@ -30,13 +30,13 @@ class ElasticsearchTypeParser
     unless base_type.nil? || !use_base_type
       field_names = merge_field_names(field_names)
       unless base_type.expanded_search_result_fields.empty?
-        raise_error %{Specifying `expanded_search_result_fields` in base document type is not supported}
+        raise_error %(Specifying `expanded_search_result_fields` in base document type is not supported)
       end
     end
 
     fields = Hash[field_names.map { |field_name|
       field_definition = field_definitions.fetch(field_name) do
-        raise_error(%{Undefined field "#{field_name}"})
+        raise_error(%(Undefined field "#{field_name}"))
       end
       [field_name, field_definition]
     }]
@@ -53,7 +53,7 @@ private
   end
 
   def raise_error(message)
-    raise %{#{message}, in document type definition in "#{file_path}"}
+    raise %(#{message}, in document type definition in "#{file_path}")
   end
 
   def load_json
@@ -67,10 +67,10 @@ private
 
     fields = raw.delete("fields")
     if fields.nil?
-      raise_error %{Missing "fields"}
+      raise_error %(Missing "fields")
     end
     if fields != fields.uniq
-      raise_error %{Duplicate entries in "fields"}
+      raise_error %(Duplicate entries in "fields")
     end
 
     expanded_search_result_fields = raw.delete("expanded_search_result_fields") || {}
@@ -89,7 +89,7 @@ private
   def add_expanded_search_result_fields_to_field_definitions(fields, expanded_search_result_fields)
     expanded_search_result_fields.each do |field_name, values|
       if fields[field_name].nil?
-        raise_error %{Field "#{field_name}" set in "expanded_search_result_fields", but not in "fields"}
+        raise_error %(Field "#{field_name}" set in "expanded_search_result_fields", but not in "fields")
       end
       field_definition = fields[field_name].clone
       field_definition.expanded_search_result_fields = values

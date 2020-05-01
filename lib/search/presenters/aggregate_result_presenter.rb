@@ -51,7 +51,7 @@ module Search
 
   private
 
-    # Get the aggregate options, sorted according to the "order" option.
+    # Get the aggregate options, sorted according to the "order" option.
     #
     # Returns the requested number of options, but will additionally return any
     # options which are part of a filter.
