@@ -143,8 +143,8 @@ RSpec.describe "SearchTest" do
       it "filters all documents containing taxon b and e" do
         get "/search?filter_all_part_of_taxonomy_tree=b&filter_all_part_of_taxonomy_tree=e"
         expect(result_links.sort).to eq([
-                                          "/three",
-                                        ])
+          "/three",
+        ])
       end
     end
 
@@ -152,8 +152,8 @@ RSpec.describe "SearchTest" do
       it "filters any document containing taxon c or f" do
         get "/search?filter_any_part_of_taxonomy_tree=c&filter_any_part_of_taxonomy_tree=f"
         expect(result_links.sort).to match_array([
-                                                   "/one", "/two"
-                                                 ])
+          "/one", "/two"
+        ])
       end
     end
 
@@ -161,8 +161,8 @@ RSpec.describe "SearchTest" do
       it "rejects all documents containing taxon b and e" do
         get "/search?reject_all_part_of_taxonomy_tree=b&reject_all_part_of_taxonomy_tree=e"
         expect(result_links.sort).to match_array([
-                                                   "/one", "/two"
-                                                 ])
+          "/one", "/two"
+        ])
       end
     end
 
@@ -170,8 +170,8 @@ RSpec.describe "SearchTest" do
       it "rejects any documents containing taxon c or f" do
         get "/search?reject_any_part_of_taxonomy_tree=c&reject_any_part_of_taxonomy_tree=f"
         expect(result_links.sort).to match_array([
-                                                   "/three",
-                                                 ])
+          "/three",
+        ])
       end
     end
   end
@@ -480,11 +480,11 @@ RSpec.describe "SearchTest" do
 
     # Adds a new key with the expanded topics
     expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_topics", {
-                                                          "content_id" => "topic-content-id",
-                                                          "slug" => "topic-magic",
-                                                          "link" => "/magic-topic-site",
-                                                          "title" => "Magic topic",
-                                                        })
+      "content_id" => "topic-content-id",
+      "slug" => "topic-magic",
+      "link" => "/magic-topic-site",
+      "title" => "Magic topic",
+    })
 
     # Keeps the topic content ids
     expect(first_result["topic_content_ids"]).to eq(%w[topic-content-id])

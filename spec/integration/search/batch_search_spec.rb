@@ -361,10 +361,10 @@ RSpec.describe "BatchSearchTest" do
     results = parsed_response["results"]
 
     expect_result_includes_ministry_of_magic_for_key(results[0]["results"][0], "expanded_topics", {
-        "content_id" => "topic-content-id",
-        "slug" => "topic-magic",
-        "link" => "/magic-topic-site",
-        "title" => "Magic topic",
+      "content_id" => "topic-content-id",
+      "slug" => "topic-magic",
+      "link" => "/magic-topic-site",
+      "title" => "Magic topic",
     })
 
     # Keeps the topic content ids

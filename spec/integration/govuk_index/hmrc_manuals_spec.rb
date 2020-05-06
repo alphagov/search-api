@@ -37,9 +37,9 @@ RSpec.describe "HMRC manual publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "latest_change_note" => "Some description of change in Name of manual section",
-     }
+      "link" => random_example["base_path"],
+      "latest_change_note" => "Some description of change in Name of manual section",
+    }
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "hmrc_manual")
   end
 
@@ -60,11 +60,11 @@ RSpec.describe "HMRC manual publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "title" => "some_section_id - #{random_example['title']}",
-       "hmrc_manual_section_id" => "some_section_id",
-       "manual" => "/parent/manual/path",
-     }
+      "link" => random_example["base_path"],
+      "title" => "some_section_id - #{random_example['title']}",
+      "hmrc_manual_section_id" => "some_section_id",
+      "manual" => "/parent/manual/path",
+    }
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "hmrc_manual_section")
   end
 end

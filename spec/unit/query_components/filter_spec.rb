@@ -104,13 +104,13 @@ RSpec.describe QueryComponents::Filter do
         bool: {
           must: [{ bool:
                     { must: [
-                         {
-                           term: { "organisations" => "hm-magic" },
-                         },
-                         {
-                           term: { "organisations" => "hmrc" },
-                         },
-                       ] } }],
+                      {
+                        term: { "organisations" => "hm-magic" },
+                      },
+                      {
+                        term: { "organisations" => "hmrc" },
+                      },
+                    ] } }],
           must_not: [{ bool:
                        { must: [
                          {

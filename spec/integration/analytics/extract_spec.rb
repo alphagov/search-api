@@ -25,20 +25,20 @@ RSpec.describe Analytics::Extract do
     commit_document("government_test", document)
 
     expected_row = [
-        "587b0635-2911-49e6-af68-3f0ea1b07cc5",
-        "/an-example-page",
-        "some_publishing_org",
-        nil,
-        "some page title",
-        "some_document_type",
-        "some_navigation_supertype",
-        nil,
-        "some_user_journey_supertype",
-        "some_org, another_org, yet_another_org",
-        "20170620",
-        nil,
-        nil,
-      ]
+      "587b0635-2911-49e6-af68-3f0ea1b07cc5",
+      "/an-example-page",
+      "some_publishing_org",
+      nil,
+      "some page title",
+      "some_document_type",
+      "some_navigation_supertype",
+      nil,
+      "some_user_journey_supertype",
+      "some_org, another_org, yet_another_org",
+      "20170620",
+      nil,
+      nil,
+    ]
 
     expect(extractor.rows.to_a).to eq([expected_row])
   end

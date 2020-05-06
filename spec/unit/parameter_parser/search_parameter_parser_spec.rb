@@ -381,11 +381,11 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("")
     expect(p).to be_valid
     expect(p.parsed_params[:filters]).to match_array([
-        text_filter("organisations", %w[hm-magic], :reject, :any),
-        text_filter("mainstream_browse_pages", %w[cheese], :filter, :all),
-        text_filter("slug", ["/slug1", "/slug2"], :filter, :any),
-        text_filter("link", ["/link"], :reject, :all),
-      ])
+      text_filter("organisations", %w[hm-magic], :reject, :any),
+      text_filter("mainstream_browse_pages", %w[cheese], :filter, :all),
+      text_filter("slug", ["/slug1", "/slug2"], :filter, :any),
+      text_filter("link", ["/link"], :reject, :all),
+    ])
   end
 
   it "understands multiple filter paramers" do
@@ -397,9 +397,9 @@ RSpec.describe SearchParameterParser do
       expected_params(
         filters: [
           text_filter("organisations", %w[
-              hm-magic
-              hmrc
-            ]),
+            hm-magic
+            hmrc
+          ]),
         ],
       ),
     )
@@ -710,7 +710,7 @@ RSpec.describe SearchParameterParser do
                                            requested: 10,
                                            order: [[:filtered, 1], [:"value.link", 1], [:count, -1]],
                                          ),
-                                 },
+                                       },
                                      ))
   end
 

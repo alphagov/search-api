@@ -45,13 +45,13 @@ RSpec.describe SynonymParser do
     @index_synonyms, @search_synonyms = described_class.new.parse(config)
 
     expect(@index_synonyms.es_config).to eq({
-        type: :synonym,
-        synonyms: ["pig, micropig", "tiny pig => tiny pig, micropig"],
-      })
+      type: :synonym,
+      synonyms: ["pig, micropig", "tiny pig => tiny pig, micropig"],
+    })
     expect(@search_synonyms.es_config).to eq({
-        type: :synonym,
-        synonyms: ["pig, micropig", "mcrpig => micropig"],
-      })
+      type: :synonym,
+      synonyms: ["pig, micropig", "mcrpig => micropig"],
+    })
   end
 
   it "rejects unknown synonym keys" do
