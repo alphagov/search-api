@@ -64,10 +64,10 @@ RSpec.describe "Manual publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "title" => random_example["title"],
-       "manual" => "/parent/manual/path",
-     }
+      "link" => random_example["base_path"],
+      "title" => random_example["title"],
+      "manual" => "/parent/manual/path",
+    }
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "manual_section")
   end
 end

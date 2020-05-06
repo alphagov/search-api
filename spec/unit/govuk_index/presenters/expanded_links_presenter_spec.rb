@@ -6,17 +6,17 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
   it "mainstream browse pages" do
     expanded_links = {
       "mainstream_browse_pages" => [
-          {
-            "base_path" => "/browse/visas-immigration/eu-eea-commonwealth",
-            "content_id" => "5f42c670-5b82-4f1f-ab52-0e100428d430",
-            "locale" => "en",
-            "title" => "EU, EEA and Commonwealth",
-          },
-          {
-            "base_path" => "/browse/visas-immigration/work-visas",
-            "content_id" => "4ab4764d-d9ce-425f-a8cc-aaba4a38be09",
-            "locale" => "en",
-            "title" => "Work visas",
+        {
+          "base_path" => "/browse/visas-immigration/eu-eea-commonwealth",
+          "content_id" => "5f42c670-5b82-4f1f-ab52-0e100428d430",
+          "locale" => "en",
+          "title" => "EU, EEA and Commonwealth",
+        },
+        {
+          "base_path" => "/browse/visas-immigration/work-visas",
+          "content_id" => "4ab4764d-d9ce-425f-a8cc-aaba4a38be09",
+          "locale" => "en",
+          "title" => "Work visas",
         },
       ],
     }
@@ -39,10 +39,10 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expanded_links = {
       "organisations" => [
         {
-            "base_path" => "/government/organisations/uk-visas-and-immigration",
-            "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
-            "locale" => "en",
-            "title" => "UK Visas and Immigration",
+          "base_path" => "/government/organisations/uk-visas-and-immigration",
+          "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
+          "locale" => "en",
+          "title" => "UK Visas and Immigration",
         },
       ],
       "primary_publishing_organisation" => [
@@ -237,12 +237,12 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
   it "topics" do
     expanded_links = {
       "topics" => [
-          {
-            "base_path" => "/topic/benefits-credits/tax-credits",
-            "content_id" => "f881f972-6094-4c7d-849c-9143461a9307",
-            "locale" => "en",
-            "title" => "Tax credits",
-          },
+        {
+          "base_path" => "/topic/benefits-credits/tax-credits",
+          "content_id" => "f881f972-6094-4c7d-849c-9143461a9307",
+          "locale" => "en",
+          "title" => "Tax credits",
+        },
       ],
     }
 
@@ -258,12 +258,12 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
   it "people" do
     expanded_links = {
       "people" => [
-          {
-            "base_path" => "/government/people/badger-of-deploy",
-            "content_id" => "dbce902f-36d1-471e-a79a-8934aee7c34c",
-            "locale" => "en",
-            "title" => "Badger of Deploy",
-          },
+        {
+          "base_path" => "/government/people/badger-of-deploy",
+          "content_id" => "dbce902f-36d1-471e-a79a-8934aee7c34c",
+          "locale" => "en",
+          "title" => "Badger of Deploy",
+        },
       ],
     }
 
@@ -275,12 +275,12 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
   it "policy groups" do
     expanded_links = {
       "working_groups" => [
-          {
-            "base_path" => "/government/groups/micropig-advisory-group",
-            "content_id" => "33848853-6411-4e36-b72b-afe50aff1b93",
-            "locale" => "en",
-            "title" => "Micropig advisory group",
-          },
+        {
+          "base_path" => "/government/groups/micropig-advisory-group",
+          "content_id" => "33848853-6411-4e36-b72b-afe50aff1b93",
+          "locale" => "en",
+          "title" => "Micropig advisory group",
+        },
       ],
     }
 

@@ -5,9 +5,9 @@ RSpec.describe Search::EntityExpander do
   # case (organisations). Integration tests cover the rest.
   it "expands elements in document" do
     expandable_target = {
-        "slug" => "rail-statistics",
-        "link" => "/government/organisations/department-for-transport/series/rail-statistics",
-        "title" => "Rail statistics",
+      "slug" => "rail-statistics",
+      "link" => "/government/organisations/department-for-transport/series/rail-statistics",
+      "title" => "Rail statistics",
     }
 
     registries = { organisations: { "rail-statistics" => expandable_target } }

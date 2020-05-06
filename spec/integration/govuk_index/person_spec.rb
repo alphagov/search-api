@@ -43,11 +43,11 @@ RSpec.describe "Person publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "role_appointments" => [role_appointments.first["content_id"]],
-       "description" => "A person.",
-       "slug" => "mark-smith",
-     }
+      "link" => random_example["base_path"],
+      "role_appointments" => [role_appointments.first["content_id"]],
+      "description" => "A person.",
+      "slug" => "mark-smith",
+    }
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "person")
   end

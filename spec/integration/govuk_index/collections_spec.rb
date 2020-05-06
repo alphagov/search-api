@@ -30,10 +30,10 @@ RSpec.describe "Collections publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "indexable_content" => nil,
-       "slug" => "benefits",
-     }
+      "link" => random_example["base_path"],
+      "indexable_content" => nil,
+      "slug" => "benefits",
+    }
 
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
   end
@@ -53,10 +53,10 @@ RSpec.describe "Collections publishing" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = {
-       "link" => random_example["base_path"],
-       "indexable_content" => nil,
-       "slug" => "benefits-credits",
-     }
+      "link" => random_example["base_path"],
+      "indexable_content" => nil,
+      "slug" => "benefits-credits",
+    }
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
   end
 end

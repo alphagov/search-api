@@ -156,12 +156,12 @@ RSpec.describe Search::AggregateExampleFetcher do
       expect(
         "sector" => {
           "sector_1" => { total: 3, examples: [
-              { "title" => "example_1" },
-              { "title" => "example_2" },
-            ] },
+            { "title" => "example_1" },
+            { "title" => "example_2" },
+          ] },
           "sector_2" => { total: 1, examples: [
-              { "title" => "example_3" },
-            ] },
+            { "title" => "example_3" },
+          ] },
         },
       ).to eq(@fetcher.fetch("sector" => %w[sector_1 sector_2]))
     end
@@ -216,12 +216,12 @@ RSpec.describe Search::AggregateExampleFetcher do
       expect(
         "sector" => {
           "sector_1" => { total: 3, examples: [
-              { "title" => "example_1" },
-              { "title" => "example_2" },
-            ] },
+            { "title" => "example_1" },
+            { "title" => "example_2" },
+          ] },
           "sector_2" => { total: 1, examples: [
-              { "title" => "example_3" },
-            ] },
+            { "title" => "example_3" },
+          ] },
         },
       ).to eq(@fetcher.fetch("sector" => %w[sector_1 sector_2]))
     end

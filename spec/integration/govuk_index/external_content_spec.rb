@@ -32,12 +32,12 @@ RSpec.describe "external content publishing" do
 
     content_id = random_example["content_id"]
     expected_document = {
-       "link" => random_example["details"]["url"],
-       "format" => "recommended-link",
-       "title" => random_example["title"],
-       "description" => random_example["description"],
-       "indexable_content" => "some, search, keywords",
-     }
+      "link" => random_example["details"]["url"],
+      "format" => "recommended-link",
+      "title" => random_example["title"],
+      "description" => random_example["description"],
+      "indexable_content" => "some, search, keywords",
+    }
 
     expect_document_is_in_rummager(expected_document, id: content_id, index: "govuk_test", type: "edition")
   end

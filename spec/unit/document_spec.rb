@@ -112,12 +112,12 @@ RSpec.describe Document do
 
   it "skips missing fields in elasticsearch export" do
     hash = {
-        "_type" => "generic-document",
-        "document_type" => "edition",
-        "title" => "TITLE",
-        "description" => "DESCRIPTION",
-        "format" => "guide",
-        "link" => "/an-example-guide",
+      "_type" => "generic-document",
+      "document_type" => "edition",
+      "title" => "TITLE",
+      "description" => "DESCRIPTION",
+      "format" => "guide",
+      "link" => "/an-example-guide",
     }
     document = described_class.from_hash(hash, sample_elasticsearch_types)
 
