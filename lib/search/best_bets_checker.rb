@@ -73,7 +73,7 @@ module Search
     # Fetch bet information from elasticsearch
     #
     # Returns an array of 4-tuples, holding:
-    #  - query the bet was for
+    #  - query the bet was for
     #  - type of match the bet is for
     #  - the best bets, as an array of hashes
     #  - the worst bets, as an array of hashes

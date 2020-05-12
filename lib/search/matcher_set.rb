@@ -17,7 +17,7 @@ module Search
           candidate.casecmp(matcher).zero?
         when Regexp
           # match returns nil if no match, or a MatchData if any matches
-          !!candidate.match(matcher)
+          candidate.match(matcher).present?
         else
           raise "Unexpected matcher type: #{matcher}"
         end
