@@ -46,11 +46,11 @@ module Search
 
       expanded_params = params_to_expand.reduce({}) do |params, (field_name, values)|
         params.merge(
-          field_name => Array(values).map { |raw_value|
-            document_schema.expanded_search_result_fields[field_name].find { |allowed_value|
+          field_name => Array(values).map do |raw_value|
+            document_schema.expanded_search_result_fields[field_name].find do |allowed_value|
               allowed_value.fetch("value") == raw_value
-            }
-          },
+            end
+          end,
         )
       end
 
@@ -63,7 +63,7 @@ module Search
     def convert_elasticsearch_array_fields(result)
       result.each_with_object({}) do |(field_name, values), out|
         # drop fields not in the schema
-        next unless document_schema.fields.has_key? field_name
+        next unless document_schema.fields.key? field_name
 
         out[field_name] = values
 

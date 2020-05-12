@@ -3,19 +3,19 @@ require "spec_helper"
 RSpec.describe MetasearchIndex::Deleter::V2 do
   context "instantiation" do
     it "raises an error when a blank id is passed in" do
-      expect do
+      expect {
         described_class.new(id: nil)
-      end.to raise_error(ArgumentError)
+      }.to raise_error(ArgumentError)
 
-      expect do
+      expect {
         described_class.new(id: "")
-      end.to raise_error(ArgumentError)
+      }.to raise_error(ArgumentError)
     end
 
     it "does not raise an error when all fields are present" do
-      expect do
+      expect {
         described_class.new(id: "id")
-      end.not_to raise_error
+      }.not_to raise_error
     end
   end
 
@@ -29,15 +29,15 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
     commit_document("metasearch_test", document, type: "best_bet", id: "ca3916-exact")
     described_class.new(id: "ca3916-exact").delete
 
-    expect do
+    expect {
       fetch_document_from_rummager(type: "best_bet", index: "metasearch_test", id: "ca3916-exact")
-    end.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 
   it "will raise an error when trying to delete a non-existant document" do
-    expect do
+    expect {
       described_class.new(id: "ca3916-exact").delete
-    end.to raise_error(Index::ResponseValidator::NotFound)
+    }.to raise_error(Index::ResponseValidator::NotFound)
   end
 
   it "raises an error if the process fails to delete in elasticsearch" do
@@ -45,8 +45,8 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
       "items" => [{ "insert" => { "status" => 500 } }],
     }]
     expect_any_instance_of(Index::ElasticsearchProcessor).to receive(:commit).and_return(failure_reponse)
-    expect do
+    expect {
       described_class.new(id: "ca3916-exact").delete
-    end.to raise_error(Index::ResponseValidator::ElasticsearchError)
+    }.to raise_error(Index::ResponseValidator::ElasticsearchError)
   end
 end

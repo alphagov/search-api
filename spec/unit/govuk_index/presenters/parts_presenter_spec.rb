@@ -4,7 +4,7 @@ RSpec.describe GovukIndex::PartsPresenter do
   subject(:presented_parts) { described_class.new(parts: parts).presented_parts }
 
   context "when there are parts" do
-    let(:parts) {
+    let(:parts) do
       [
         {
           "title" => "title 1",
@@ -23,7 +23,7 @@ RSpec.describe GovukIndex::PartsPresenter do
           ],
         },
       ]
-    }
+    end
 
     it "extracts parts" do
       expect(presented_parts).to eq([

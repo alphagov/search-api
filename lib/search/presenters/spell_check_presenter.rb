@@ -19,7 +19,7 @@ module Search
     end
 
     def highlighted_suggestions?
-      suggestions.detect { |option| option.has_key? "highlighted" }
+      suggestions.detect { |option| option.key? "highlighted" }
     end
 
     def suggestions

@@ -130,12 +130,12 @@ RSpec.describe Search::ResultSetPresenter do
 
   context "results with no fields" do
     before do
-      @empty_result = sample_docs.first.tap { |doc|
+      @empty_result = sample_docs.first.tap do |doc|
         doc["fields"] = nil
-      }
-      response = sample_es_response.tap { |es_response|
+      end
+      response = sample_es_response.tap do |es_response|
         es_response["hits"]["hits"] = [@empty_result]
-      }
+      end
 
       @output = described_class.new(
         search_params: Search::QueryParameters.new(

@@ -7,9 +7,9 @@ module GovukIndex
     def perform(records, destination_index)
       actions = Index::ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index))
 
-      updated_records = records.reject { |record|
+      updated_records = records.reject do |record|
         record["document"] == update_document_supertypes(record["document"])
-      }
+      end
 
       updated_records.each do |record|
         actions.save(

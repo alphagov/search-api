@@ -535,10 +535,10 @@ RSpec.describe "SearchTest" do
     get "/search?q=test"
     expect(parsed_response.fetch("es_cluster")).to eq(Clusters.default_cluster.key)
 
-    Clusters.active.each { |cluster|
+    Clusters.active.each do |cluster|
       get "/search?q=test&ab_tests=search_cluster_query:#{cluster.key}"
       expect(parsed_response.fetch("es_cluster")).to eq(cluster.key)
-    }
+    end
   end
 
   it "can return the taxonomy" do

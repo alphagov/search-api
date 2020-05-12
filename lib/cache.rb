@@ -9,7 +9,7 @@ class Cache
   @cache = {}
 
   def self.get(key)
-    if @cache.has_key?(key)
+    if @cache.key?(key)
       @cache[key]
     else
       block_given? ? (@cache[key] = yield) : nil

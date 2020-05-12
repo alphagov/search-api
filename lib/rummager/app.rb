@@ -201,11 +201,11 @@ class Rummager < Sinatra::Application
     require_authentication "manage_search_indices"
     prevent_access_to_govuk
     request.body.rewind
-    documents = [JSON.parse(request.body.read)].flatten.map { |hash|
+    documents = [JSON.parse(request.body.read)].flatten.map do |hash|
       hash["document_type"] ||= hash.fetch("_type", "edition")
       hash["updated_at"] = DateTime.now
       current_index.document_from_hash(hash)
-    }
+    end
 
     document_hashes = documents.map(&:elasticsearch_export)
 

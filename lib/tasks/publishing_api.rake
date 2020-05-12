@@ -90,7 +90,7 @@ namespace :publishing_api do
 
     puts "PUBLISHING ALL SUPERGROUP FINDERS..."
 
-    finders.each { |finder_hash|
+    finders.each do |finder_hash|
       finder_config = finder_hash[:finder]
       email_signup_config = finder_hash[:email_signup]
       timestamp = Time.now.iso8601
@@ -106,7 +106,7 @@ namespace :publishing_api do
         finder = YAML.load_file("config/finders/#{finder_config}")
         ContentItemPublisher::FinderPublisher.new(finder, timestamp).call
       end
-    }
+    end
     puts "FINISHED"
   end
 

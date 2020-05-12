@@ -6,7 +6,7 @@ RSpec.describe Sitemap::Generator do
     @timestamp = Time.now.utc
   end
 
-  let(:sitemap_generator) {
+  let(:sitemap_generator) do
     sitemap_uploader = double("uploader")
 
     described_class.new(
@@ -14,7 +14,7 @@ RSpec.describe Sitemap::Generator do
       sitemap_uploader,
       @timestamp,
     )
-  }
+  end
 
   it "generates sitemap" do
     sitemap_xml = sitemap_generator.generate_sitemap_xml([

@@ -22,7 +22,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     payload = generate_random_example(
       payload: { expanded_links: {} },
       excluded_fields: %w[withdrawn_notice],
-      regenerate_if: ->(example) {
+      regenerate_if: lambda { |example|
         @directly_mapped_fields.any? { |field| example[field] == "" }
       },
     )

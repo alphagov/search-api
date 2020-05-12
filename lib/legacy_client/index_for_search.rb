@@ -39,12 +39,12 @@ module LegacyClient
     end
 
     def msearch(bodies)
-      payload = bodies.flat_map { |body|
+      payload = bodies.flat_map do |body|
         [
           {},
           body,
         ]
-      }
+      end
       logger.debug "Request payload: #{payload.to_json}"
       @client.msearch(index: @index_names, body: payload)
     end

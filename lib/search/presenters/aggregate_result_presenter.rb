@@ -60,19 +60,19 @@ module Search
 
       all_options = calculated_options.map { |option|
         [option["key"], option["doc_count"]]
-      } + applied_options.map { |term|
+      } + applied_options.map do |term|
         [term, 0]
-      }
+      end
 
-      unique_options = all_options.uniq { |term, _count|
+      unique_options = all_options.uniq do |term, _count|
         term
-      }
+      end
 
-      option_objects = unique_options.map { |term, count|
+      option_objects = unique_options.map do |term, count|
         make_aggregate_option(field, term, count,
                               applied_options.include?(term),
                               aggregate_parameters[:order])
-      }
+      end
 
       top_aggregate_options(option_objects, aggregate_parameters[:requested])
     end

@@ -61,14 +61,14 @@ RSpec.describe SearchParameterParser do
 
       ["case_type", identifier_type],
       ["opened_date", date_type],
-    ].each { |field, type|
+    ].each do |field, type|
       definition = double("#{field} definition")
       allow(definition).to receive(:type).and_return(type)
       field_definitions[field] = definition
       if type.filter_type
         allowed_filter_fields << field
       end
-    }
+    end
     allow(@schema).to receive(:field_definitions).and_return(field_definitions)
     allow(@schema).to receive(:allowed_filter_fields).and_return(allowed_filter_fields)
   end

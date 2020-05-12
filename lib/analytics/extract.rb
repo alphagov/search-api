@@ -33,19 +33,19 @@ module Analytics
       # See https://gov-uk.atlassian.net/wiki/display/GOVUK/Analytics+on+GOV.UK
       # for further details on the purpose of each dimension.
       @columns ||= {
-        "ga:productSku" => lambda { |item| item["content_id"] || item["link"] },
-        "ga:productName" => lambda { |item| item["link"] },
-        "ga:productBrand" => lambda { |item| item["primary_publishing_organisation"]&.first },
-        "ga:productCategoryHierarchy" => lambda { |_| nil }, # Placeholder: taxonomy
-        "ga:dimension72" => lambda { |item| sanitise_for_google_analytics(item["title"]) },
-        "ga:dimension73" => lambda { |item| item["content_store_document_type"] || item["format"] },
-        "ga:dimension74" => lambda { |item| item["navigation_document_supertype"] },
-        "ga:dimension75" => lambda { |_| nil }, # Placeholder: mainstream/specialist supertype
-        "ga:dimension76" => lambda { |item| item["user_journey_document_supertype"] },
-        "ga:dimension77" => lambda { |item| item["organisations"]&.join(", ") },
-        "ga:dimension78" => lambda { |item| item["public_timestamp"].nil? ? nil : Date.parse(item["public_timestamp"]).strftime("%Y%m%d") },
-        "ga:dimension79" => lambda { |_| nil }, # Placeholder: purpose not yet decided
-        "ga:dimension80" => lambda { |_| nil }, # Placeholder: is page a best bet?
+        "ga:productSku" => ->(item) { item["content_id"] || item["link"] },
+        "ga:productName" => ->(item) { item["link"] },
+        "ga:productBrand" => ->(item) { item["primary_publishing_organisation"]&.first },
+        "ga:productCategoryHierarchy" => ->(_) { nil }, # Placeholder: taxonomy
+        "ga:dimension72" => ->(item) { sanitise_for_google_analytics(item["title"]) },
+        "ga:dimension73" => ->(item) { item["content_store_document_type"] || item["format"] },
+        "ga:dimension74" => ->(item) { item["navigation_document_supertype"] },
+        "ga:dimension75" => ->(_) { nil }, # Placeholder: mainstream/specialist supertype
+        "ga:dimension76" => ->(item) { item["user_journey_document_supertype"] },
+        "ga:dimension77" => ->(item) { item["organisations"]&.join(", ") },
+        "ga:dimension78" => ->(item) { item["public_timestamp"].nil? ? nil : Date.parse(item["public_timestamp"]).strftime("%Y%m%d") },
+        "ga:dimension79" => ->(_) { nil }, # Placeholder: purpose not yet decided
+        "ga:dimension80" => ->(_) { nil }, # Placeholder: is page a best bet?
       }
     end
 

@@ -48,12 +48,12 @@ RSpec.describe Evaluate::Ndcg do
           "cat-owners", "dog-owners", "dog walking dogs", "cat-dog-owners",
           "pets", "kittens", "whiskers", "dog dog owner", "dogs", "terriers",
           "corgies", "alsatians", "dogg", "cat cat cat!"
-        ].each { |doc|
+        ].each do |doc|
           commit_document("government_test",
                           "title" => doc,
                           "description" => "A document about #{doc} for #{doc}s.",
                           "link" => "/#{doc.split(' ').join('-')}")
-        }
+        end
 
         expect(ndcg).to eq({
           "average_ndcg" => { "1" => 1.0, "10" => 0.8105205226122176, "20" => 0.8105205226122176, "3" => 0.8010100946003349, "5" => 0.8105205226122176 },

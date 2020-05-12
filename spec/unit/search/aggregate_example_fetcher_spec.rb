@@ -64,9 +64,9 @@ RSpec.describe Search::AggregateExampleFetcher do
     {
       "hits" => {
         "total" => total_examples,
-        "hits" => titles.map { |title|
+        "hits" => titles.map do |title|
           { "_source" => { "title" => title } }
-        },
+        end,
       },
     }
   end
@@ -265,9 +265,9 @@ RSpec.describe Search::AggregateExampleFetcher do
       main_query_response = { "aggregations" => {
         "sector" => {
           "filtered_aggregations" => {
-            "buckets" => Array((0..999).map { |i|
+            "buckets" => Array((0..999).map do |i|
               { "key" => "sector_#{i}" }
-            }),
+            end),
           },
         },
       } }
@@ -296,14 +296,14 @@ RSpec.describe Search::AggregateExampleFetcher do
       (0..19).each do |group_num|
         sector_numbers = (group_num * 50..group_num * 50 + 49)
         expected_queries = Array(
-          sector_numbers.map { |sector_num|
+          sector_numbers.map do |sector_num|
             query_for_example_query("sector", "sector_#{sector_num}", @example_fields, query, filter)
-          },
+          end,
         )
         stub_responses = Array(
-          sector_numbers.map { |sector_num|
+          sector_numbers.map do |sector_num|
             response_for_example(sector_num, ["example_#{sector_num}"])
-          },
+          end,
         )
         expect(@index).to receive(:msearch)
           .with(expected_queries).and_return({ "responses" => stub_responses })
@@ -311,12 +311,12 @@ RSpec.describe Search::AggregateExampleFetcher do
 
       expect(
         "sector" => Hash[
-          (0..999).map { |sector_num|
+          (0..999).map do |sector_num|
             [
               "sector_#{sector_num}",
               { total: sector_num, examples: [{ "title" => "example_#{sector_num}" }] },
             ]
-          }
+          end
         ],
       ).to eq(@fetcher.fetch("sector" => (0..999).map { |sector_num| "sector_#{sector_num}" }))
     end

@@ -96,12 +96,12 @@ module Debug
     def ignore_extra_judgements(data)
       data.each_with_object({}) do |(query, non_unique_judgements), output|
         grouped_by_link = non_unique_judgements.uniq.group_by { |h| h[:link] }
-        output[query] = grouped_by_link.map { |link, judgements|
+        output[query] = grouped_by_link.map do |link, judgements|
           if judgements.count > 1
             puts "Ignoring #{judgements.count - 1} judgements for #{link} queried with query '#{query}'"
           end
           judgements.first
-        }
+        end
       end
     end
 

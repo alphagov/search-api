@@ -3,9 +3,9 @@ class IndexSchema
 
   def initialize(name, field_definitions, elasticsearch_types)
     @name = name
-    @elasticsearch_types = Hash[elasticsearch_types.map { |elasticsearch_type|
+    @elasticsearch_types = Hash[elasticsearch_types.map do |elasticsearch_type|
       [elasticsearch_type.name, elasticsearch_type]
-    }]
+    end]
     @document_type_field = field_definitions["document_type"][:es_config]
   end
 
@@ -48,12 +48,12 @@ class IndexSchemaParser
   end
 
   def self.parse_all(config_path, field_definitions, known_elasticsearch_types)
-    Hash[IndexSchemaParser.index_schema_paths(config_path).map { |index_name, schema_file_path|
+    Hash[IndexSchemaParser.index_schema_paths(config_path).map do |index_name, schema_file_path|
       [
         index_name,
         IndexSchemaParser.new(index_name, schema_file_path, field_definitions, known_elasticsearch_types).parse,
       ]
-    }]
+    end]
   end
 
   def self.index_schema_paths(config_path)
@@ -72,13 +72,13 @@ class IndexSchemaParser
 private
 
   def lookup_elasticsearch_types(elasticsearch_type_names)
-    elasticsearch_type_names.map { |elasticsearch_type_name|
+    elasticsearch_type_names.map do |elasticsearch_type_name|
       elasticsearch_type = @known_elasticsearch_types[elasticsearch_type_name]
       if elasticsearch_type.nil?
         raise_error %(Unknown document type "#{elasticsearch_type_name}")
       end
       elasticsearch_type
-    }
+    end
   end
 
   def parse_file

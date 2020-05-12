@@ -4,13 +4,13 @@ require "spec/unit/helpers/cluster_test_helpers"
 RSpec.describe Clusters::Cluster do
   include ClusterTestHelpers
 
-  subject(:cluster) {
+  subject(:cluster) do
     described_class.new(
       key: default["key"],
       uri_key: default["uri_key"],
       default: default["default"],
     )
-  }
+  end
 
   let(:default) { es_config["clusters"].find { |cluster| cluster["default"] } }
   let(:default_uri) { es_config[default["uri_key"]] }

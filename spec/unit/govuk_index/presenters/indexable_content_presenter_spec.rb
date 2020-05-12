@@ -12,14 +12,14 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
   let(:format) { "help_page" }
 
   context "govspeak and html in body fields" do
-    let(:details) {
+    let(:details) do
       {
         "body" => [
           { "content_type" => "text/govspeak", "content" => "**hello**" },
           { "content_type" => "text/html", "content" => "<strong>hello</strong>" },
         ],
       }
-    }
+    end
 
     it "extracts sanitised text from html" do
       expect(subject.indexable_content).to eq("hello")
@@ -27,7 +27,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
   end
 
   context "details with parts" do
-    let(:details) {
+    let(:details) do
       {
         "parts" => [
           {
@@ -48,7 +48,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
           },
         ],
       }
-    }
+    end
 
     it "extracts content from details with parts" do
       expect(subject.indexable_content).to eq("title 1\n\nhello\n\ntitle 2\n\ngoodbye")
@@ -57,7 +57,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
 
   context "additional specified indexable content keys" do
     let(:format) { "transaction" }
-    let(:details) {
+    let(:details) do
       {
         "external_related_links" => [],
         "introductory_paragraph" => [
@@ -67,7 +67,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
         "more_information" => "more information",
         "start_button_text" => "Start now",
       }
-    }
+    end
 
     it "extracts additional indexable content keys when they have been specified" do
       expect(subject.indexable_content).to eq("introductory paragraph\n\nmore information")
@@ -76,7 +76,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
 
   context "contact format" do
     let(:format) { "contact" }
-    let(:details) {
+    let(:details) do
       {
         "title" => "Title",
         "description" => "Description",
@@ -91,7 +91,7 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
           },
         ],
       }
-    }
+    end
 
     it "extracts contact format indexable content correctly" do
       expect(subject.indexable_content).to eq("Title\n\n\nDescription\n\n\nTitle 1\n\n\nTitle 2")

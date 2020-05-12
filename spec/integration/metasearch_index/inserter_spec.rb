@@ -3,29 +3,29 @@ require "spec_helper"
 RSpec.describe MetasearchIndex::Inserter::V2 do
   context "instantiation" do
     it "raises an error when a blank id is passed in" do
-      expect do
+      expect {
         described_class.new(id: nil, document: { a: "doc" })
-      end.to raise_error(ArgumentError)
+      }.to raise_error(ArgumentError)
 
-      expect do
+      expect {
         described_class.new(id: "", document: { a: "doc" })
-      end.to raise_error(ArgumentError)
+      }.to raise_error(ArgumentError)
     end
 
     it "raises an error when a blank document is passed in" do
-      expect do
+      expect {
         described_class.new(id: "id", document: nil)
-      end.to raise_error(ArgumentError)
+      }.to raise_error(ArgumentError)
 
-      expect do
+      expect {
         described_class.new(id: "id", document: {})
-      end.to raise_error(ArgumentError)
+      }.to raise_error(ArgumentError)
     end
 
     it "does not raise an error when all fields are present" do
-      expect do
+      expect {
         described_class.new(id: "id", document: { a: "doc" })
-      end.not_to raise_error
+      }.not_to raise_error
     end
   end
 
@@ -87,8 +87,8 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
     }
-    expect do
+    expect {
       described_class.new(id: "ca3916-exact", document: document).insert
-    end.to raise_error(Index::ResponseValidator::ElasticsearchError)
+    }.to raise_error(Index::ResponseValidator::ElasticsearchError)
   end
 end

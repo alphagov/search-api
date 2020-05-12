@@ -4,12 +4,12 @@ RSpec.describe Indexer::DeleteWorker do
   let(:index_name) { "government_test" }
   let(:link) { "doc-for-deletion" }
   let(:document_type) { "generic-document" }
-  let(:document) {
+  let(:document) do
     {
       "content_id" => "41609206-8736-4ff3-b582-63c9fccafe4d",
       "link" => link,
     }
-  }
+  end
 
   it "deletes documents" do
     commit_document(index_name, document)

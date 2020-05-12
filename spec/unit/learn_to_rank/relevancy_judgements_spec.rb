@@ -5,7 +5,7 @@ RSpec.describe LearnToRank::DataPipeline::RelevancyJudgements do
     described_class.new(queries: queries).relevancy_judgements.force
   end
 
-  let(:queries) {
+  let(:queries) do
     {
       "micropig" => [
         { link: "1", rank: 1, views: 100, clicks: 20 },
@@ -19,7 +19,7 @@ RSpec.describe LearnToRank::DataPipeline::RelevancyJudgements do
         { link: "2", rank: 6, views: 100, clicks: 2 },
       ],
     }
-  }
+  end
 
   describe "#relevancy_judgements" do
     context "no queries are provided" do
@@ -42,7 +42,7 @@ RSpec.describe LearnToRank::DataPipeline::RelevancyJudgements do
     end
 
     context "with parts" do
-      let(:queries) {
+      let(:queries) do
         {
           "micropig" => [
             { link: "1", rank: 1, views: 100, clicks: 5 },
@@ -59,7 +59,7 @@ RSpec.describe LearnToRank::DataPipeline::RelevancyJudgements do
             { link: "2", rank: 5, views: 100, clicks: 15 },
           ],
         }
-      }
+      end
 
       it "combines the results with the same rank" do
         expect(judgements).to eq([

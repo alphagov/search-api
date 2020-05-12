@@ -49,9 +49,9 @@ module Healthcheck
 
     def cluster_healths
       {
-        cluster_healths: Clusters.active.map { |cluster|
+        cluster_healths: Clusters.active.map do |cluster|
           cluster_health(cluster).merge(cluster_name: cluster.key)
-        },
+        end,
       }
     end
 

@@ -21,7 +21,7 @@ class IndexHelpers
   def self.clean_index_group(index_name)
     raise "Attempting to clean non-test index: #{index_name}" unless index_name =~ /test/
 
-    Clusters.active.each { |cluster|
+    Clusters.active.each do |cluster|
       search_server = SearchConfig.instance(cluster).search_server
       index_group = search_server.index_group(index_name)
 
@@ -32,7 +32,7 @@ class IndexHelpers
       if index_group.current.exists?
         index_group.send(:delete, index_group.current.real_name)
       end
-    }
+    end
   end
 
   def self.create_all
@@ -42,10 +42,10 @@ class IndexHelpers
   end
 
   def self.create_test_index(group_name = DEFAULT_INDEX_NAME)
-    Clusters.active.each { |cluster|
+    Clusters.active.each do |cluster|
       index_group = SearchConfig.instance(cluster).search_server.index_group(group_name)
       index = index_group.create_index
       index_group.switch_to(index)
-    }
+    end
   end
 end

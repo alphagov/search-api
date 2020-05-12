@@ -5,7 +5,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
 
   context "licence format" do
     let(:format) { "licence" }
-    let(:details) {
+    let(:details) do
       {
         "continuation_link" => "http://www.on-and-on.com",
         "external_related_links" => [],
@@ -17,7 +17,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
         ],
         "will_continue_on" => "on and on",
       }
-    }
+    end
 
     it "extracts licence specific fields" do
       expect(presented_details.licence_identifier).to eq(details["licence_identifier"])
@@ -29,12 +29,12 @@ RSpec.describe GovukIndex::DetailsPresenter do
     context "document without an image" do
       let(:format) { "answer" }
 
-      let(:details) {
+      let(:details) do
         {
           "body" => "<p>Gallwch ddefnyddio’r gwasanaethau canlynol gan Gyllid a Thollau Ei Mawrhydi </p>\n\n",
           "external_related_links" => [],
         }
-      }
+      end
 
       it "has no image" do
         expect(presented_details.image_url).to be nil
@@ -44,7 +44,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
     context "document with an image" do
       let(:format) { "news_article" }
 
-      let(:details) {
+      let(:details) do
         {
           "image" => {
             "alt_text" => "Christmas",
@@ -52,7 +52,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
           },
           "body" => "<div class=\"govspeak\"><p>We wish you a merry Christmas.</p></div>",
         }
-      }
+      end
 
       it "has an image" do
         expect(presented_details.image_url).to eq("https://assets.publishing.service.gov.uk/christmas.jpg")
@@ -72,9 +72,9 @@ RSpec.describe GovukIndex::DetailsPresenter do
     end
 
     context "empty change notes" do
-      let(:details) {
+      let(:details) do
         { "change_notes" => [] }
-      }
+      end
 
       it "has no latest change note" do
         expect(presented_details.latest_change_note).to be_nil
@@ -82,7 +82,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
     end
 
     context "multiple change notes" do
-      let(:details) {
+      let(:details) do
         {
           "change_notes" => [
             {
@@ -102,7 +102,7 @@ RSpec.describe GovukIndex::DetailsPresenter do
             },
           ],
         }
-      }
+      end
 
       it "combines the title and description from the most recent change note" do
         expect(presented_details.latest_change_note).to eq("Change 3 in Manual section B")

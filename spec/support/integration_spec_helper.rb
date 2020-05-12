@@ -97,7 +97,7 @@ module IntegrationSpecHelper
     atts[:document_type] ||= type
     atts[:link] ||= id
 
-    clusters.each { |cluster|
+    clusters.each do |cluster|
       client(cluster: cluster).index(
         {
           index: index_name,
@@ -106,7 +106,7 @@ module IntegrationSpecHelper
           body: atts,
         }.merge(version_details),
       )
-    }
+    end
 
     id
   end
@@ -137,16 +137,16 @@ module IntegrationSpecHelper
 
   def update_document(index_name, attributes, id: nil, type: "edition")
     attributes["document_type"] ||= type
-    clusters.each { |cluster|
+    clusters.each do |cluster|
       client(cluster: cluster).update(index: index_name, id: id, type: "generic-document", body: { doc: atts })
-    }
+    end
     commit_index(index_name)
   end
 
   def commit_index(index_name)
-    clusters.each { |cluster|
+    clusters.each do |cluster|
       client(cluster: cluster).indices.refresh(index: index_name)
-    }
+    end
   end
 
   def app
@@ -164,7 +164,7 @@ module IntegrationSpecHelper
   end
 
   def expect_document_is_in_rummager(document, type: "edition", id: nil, index:, clusters: Clusters.active)
-    clusters.each { |cluster|
+    clusters.each do |cluster|
       retrieved = fetch_document_from_rummager(id: id || document["link"], index: index, cluster: cluster)
 
       retrieved_source = retrieved["_source"]
@@ -172,15 +172,15 @@ module IntegrationSpecHelper
       document.each do |key, value|
         expect(value).to eq(retrieved_source[key]), "Field #{key} should be '#{value}' but was '#{retrieved_source[key]}'"
       end
-    }
+    end
   end
 
   def expect_document_missing_in_rummager(id:, index:)
-    clusters.each { |cluster|
+    clusters.each do |cluster|
       expect {
         fetch_document_from_rummager(id: id, index: index, cluster: cluster)
       }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
-    }
+    end
   end
 
   def sample_document_attributes(index_name, section_count, override: {})
@@ -222,14 +222,14 @@ module IntegrationSpecHelper
   end
 
   def try_remove_test_index(index_name = nil)
-    clusters.each { |cluster|
+    clusters.each do |cluster|
       index_name ||= SearchConfig.instance(cluster).default_index_name
       raise "Attempting to delete non-test index: #{index_name}" unless index_name =~ /test/
 
       if client(cluster: cluster).indices.exists?(index: index_name)
         client(cluster: cluster).indices.delete(index: index_name)
       end
-    }
+    end
   end
 
   def stub_message_payload(example_document, unpublishing: false)

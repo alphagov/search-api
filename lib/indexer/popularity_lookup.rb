@@ -37,7 +37,7 @@ module Indexer
         hsh[link] = { rank: rank, view_count: view_count }
       end
 
-      Hash[links.map { |link|
+      Hash[links.map do |link|
         if ranks[link][:rank].zero?
           popularity_score = 0
           popularity_rank = 1
@@ -56,7 +56,7 @@ module Indexer
             view_count: view_count,
           },
         ]
-      }]
+      end]
     end
 
   private
@@ -86,9 +86,9 @@ module Indexer
         return nil
       end
 
-      traffic_index_name = SearchConfig.auxiliary_index_names.find { |index|
+      traffic_index_name = SearchConfig.auxiliary_index_names.find do |index|
         index.start_with?("page-traffic")
-      }
+      end
 
       if traffic_index_name
         result = @search_config.search_server.index(traffic_index_name)
