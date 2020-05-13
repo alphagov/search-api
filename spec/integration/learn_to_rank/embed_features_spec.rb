@@ -36,7 +36,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
 
     context "when documents are in the index" do
       it "returns only queries which have been augmented" do
-        %w[pet whiskers kitten cat dog 'cat cat cat!'].each { |doc|
+        %w[pet whiskers kitten cat dog 'cat cat cat!'].each do |doc|
           commit_document("government_test",
                           "title" => "#{doc} and cat and dog",
                           "description" => "A story about a cat or dog!",
@@ -48,7 +48,7 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
                           "query" => "dogs or cats",
                           "updated_at" => "2019-11-12T17:16:01.000+01:00",
                           "indexable_content" => "Story about dogs and/or cats")
-        }
+        end
 
         expect(augmented_judgements).to eq([
           {

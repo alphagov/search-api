@@ -50,7 +50,7 @@ module Search
     end
 
     def aggregate_example_searches(field_name, slugs, example_count, example_fields, query, query_filter)
-      slugs.map { |slug|
+      slugs.map do |slug|
         if query_filter.nil?
           filter = { term: { field_name => slug } }
         else
@@ -72,7 +72,7 @@ module Search
           },
           sort: [{ popularity: { order: :desc } }],
         }
-      }
+      end
     end
 
     def batched_fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
@@ -82,9 +82,9 @@ module Search
       # instead of sending all the searches at once, we send them in batches of
       # 50.
 
-      some_results = slugs.each_slice(50).map { |fewer_slugs|
+      some_results = slugs.each_slice(50).map do |fewer_slugs|
         fetch_by_slug(field_name, fewer_slugs, example_count, example_fields, query, filter)
-      }
+      end
       some_results.reduce(&:merge)
     end
 
@@ -99,18 +99,18 @@ module Search
 
     def prepare_response(slugs, response_list)
       result = {}
-      slugs.zip(response_list) { |slug, response|
+      slugs.zip(response_list) do |slug, response|
         result[slug] = {
           total: response["hits"]["total"],
           examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["_source"] || {}) },
         }
-      }
+      end
 
       result
     end
 
     def apply_multivalued(document_attrs)
-      document_attrs.each_with_object({}) { |(field_name, values), result|
+      document_attrs.each_with_object({}) do |(field_name, values), result|
         if field_name[0] == "_"
           # Special fields are always returned as single values.
           result[field_name] = values
@@ -131,7 +131,7 @@ module Search
         else
           result[field_name] = values.first
         end
-      }
+      end
     end
   end
 end

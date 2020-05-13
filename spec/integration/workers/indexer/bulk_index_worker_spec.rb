@@ -12,9 +12,9 @@ RSpec.describe Indexer::BulkIndexWorker do
     stub_request_to_publishing_api
     described_class.new.perform(index_name, SAMPLE_DOCUMENT_HASHES)
 
-    SAMPLE_DOCUMENT_HASHES.each { |document|
+    SAMPLE_DOCUMENT_HASHES.each do |document|
       expect_document_is_in_rummager(document, id: document["link"], index: index_name)
-    }
+    end
   end
 
   it "retries when index locked" do

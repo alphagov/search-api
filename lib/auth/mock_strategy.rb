@@ -2,7 +2,7 @@ module Auth
   class MockStrategy < Warden::Strategies::Base
     def authenticate!
       # use same env var as GDS SSO for consistency
-      if ENV.has_key?("GDS_SSO_MOCK_INVALID")
+      if ENV.key?("GDS_SSO_MOCK_INVALID")
         fail!("Mocking invalid sign in")
       else
         # This is to match the object signon returns for a user

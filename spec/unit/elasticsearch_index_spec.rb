@@ -117,9 +117,9 @@ RSpec.describe SearchIndices::Index do
       headers: { "Content-Type" => "application/json" },
     )
 
-    hits = (1..10).map { |i|
+    hits = (1..10).map do |i|
       { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
-    }
+    end
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 10, hits),
       headers: { "Content-Type" => "application/json" },
@@ -142,9 +142,9 @@ RSpec.describe SearchIndices::Index do
       headers: { "Content-Type" => "application/json" },
     )
 
-    hits = (1..10).map { |i|
+    hits = (1..10).map do |i|
       { "_source" => { "link" => "/organisation-#{i}", "title" => "Organisation #{i}" } }
-    }
+    end
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 10, hits),
       headers: { "Content-Type" => "application/json" },
@@ -178,9 +178,9 @@ RSpec.describe SearchIndices::Index do
       body: { _scroll_id: "abcdefgh", hits: { total: 100, hits: [] } }.to_json,
       headers: { "Content-Type" => "application/json" },
     )
-    hits = (1..100).map { |i|
+    hits = (1..100).map do |i|
       { "_source" => { "link" => "/foo-#{i}", "document_type" => "edition" }, "_type" => "generic-document" }
-    }
+    end
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
       body: scroll_response_body("abcdefgh", 100, hits[0, 50]),
       headers: { "Content-Type" => "application/json" },
@@ -209,9 +209,9 @@ RSpec.describe SearchIndices::Index do
 
       headers: { "Content-Type" => "application/json" },
     )
-    hits = (1..3).map { |i|
+    hits = (1..3).map do |i|
       { "_source" => { "link" => "/foo-#{i}", "document_type" => "edition" }, "_type" => "generic-document" }
-    }
+    end
     total = hits.size
 
     stub_request(:get, scroll_uri("abcdefgh")).to_return(
@@ -280,7 +280,7 @@ private
     }
     response = {
       "hits" => {
-        "hits" => paths_to_return.map { |path|
+        "hits" => paths_to_return.map do |path|
           {
             "_id" => path,
             "_source" => {
@@ -288,7 +288,7 @@ private
               "vc_14" => popularity,
             },
           }
-        },
+        end,
       },
     }
 

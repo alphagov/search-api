@@ -6,9 +6,9 @@ RSpec.describe "HealthcheckTest" do
   include RankerTestHelpers
   include DiskspaceTestHelpers
 
-  let(:queues) {
+  let(:queues) do
     { "bulk" => 2, "default" => 1 }
-  }
+  end
   let(:queue_latency) { 1.seconds }
 
   before do

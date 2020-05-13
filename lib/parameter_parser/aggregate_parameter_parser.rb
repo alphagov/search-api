@@ -83,25 +83,25 @@ private
   end
 
   def order
-    orders = character_separated_param("order", ":").map { |order|
+    orders = character_separated_param("order", ":").map do |order|
       if order.start_with?("-")
         [order[1..-1], -1]
       else
         [order, 1]
       end
-    }
+    end
 
-    valid_orders, invalid_orders = orders.partition { |option, _|
+    valid_orders, invalid_orders = orders.partition do |option, _|
       ALLOWED_AGGREGATE_SORT_OPTIONS.include?(option)
-    }
+    end
 
     invalid_orders.each do |option, _|
       @errors << %("#{option}" is not a valid sort option#{aggregate_description})
     end
 
-    result = valid_orders.map { |option, direction|
+    result = valid_orders.map do |option, direction|
       [option.to_sym, direction]
-    }
+    end
 
     if result.empty?
       DEFAULT_AGGREGATE_SORT

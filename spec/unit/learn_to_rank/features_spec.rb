@@ -31,7 +31,7 @@ RSpec.describe LearnToRank::Features do
     context "when arguments are provided" do
       let(:timestamp) { Time.now.iso8601 }
       let(:expected_time) { Date.parse(timestamp).to_time.to_i }
-      subject(:features) {
+      subject(:features) do
         described_class.new(
           popularity: 10,
           es_score: 0.123456789,
@@ -46,7 +46,7 @@ RSpec.describe LearnToRank::Features do
           query: "who is harry potter",
           updated_at: timestamp,
         )
-      }
+      end
 
       it "returns a hash of features with the correct keys" do
         expect(features.as_hash).to eq(
@@ -71,12 +71,12 @@ RSpec.describe LearnToRank::Features do
     end
 
     context "with an unknown format or organisation" do
-      subject(:features) {
+      subject(:features) do
         described_class.new(
           format: "grimoire",
           organisation_content_ids: ["department of magic"],
         )
-      }
+      end
 
       it "returns a default format value" do
         expect(features.as_hash["11"]).to eq(0.0)

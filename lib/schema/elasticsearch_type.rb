@@ -8,9 +8,9 @@ class ElasticsearchType
   end
 
   def es_config
-    fields_to_hash = @fields.map { |field_name, field|
+    fields_to_hash = @fields.map do |field_name, field|
       [field_name, field.es_config]
-    }
+    end
     Hash[fields_to_hash]
   end
 end
@@ -34,12 +34,12 @@ class ElasticsearchTypeParser
       end
     end
 
-    fields = Hash[field_names.map { |field_name|
+    fields = Hash[field_names.map do |field_name|
       field_definition = field_definitions.fetch(field_name) do
         raise_error(%(Undefined field "#{field_name}"))
       end
       [field_name, field_definition]
-    }]
+    end]
 
     add_expanded_search_result_fields_to_field_definitions(fields, expanded_search_result_fields)
 
@@ -107,12 +107,12 @@ class ElasticsearchTypesParser
   end
 
   def parse
-    parsed_arr = elasticsearch_type_paths.map { |elasticsearch_type, file_path|
+    parsed_arr = elasticsearch_type_paths.map do |elasticsearch_type, file_path|
       [
         elasticsearch_type,
         ElasticsearchTypeParser.new(file_path, base_type, @field_definitions).parse,
       ]
-    }
+    end
     Hash[parsed_arr]
   end
 

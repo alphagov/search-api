@@ -197,9 +197,9 @@ private
   end
 
   def validate_filter_parameters(parameter_hashes)
-    allowed, disallowed = parameter_hashes.partition { |parameter_hash|
+    allowed, disallowed = parameter_hashes.partition do |parameter_hash|
       allowed_filter_fields.include?(parameter_hash["name"])
-    }
+    end
 
     disallowed.each do |parameter_hash|
       @errors << %("#{parameter_hash['name']}" is not a valid #{parameter_hash['operation']} field)
@@ -326,18 +326,18 @@ private
         @errors << %{Too many values (#{values.size}) for parameter "#{field_name}" (must occur at most once)}
       end
 
-      values.map { |combined_from_and_to|
-        dates_hash = combined_from_and_to.split(",").reduce({}) { |dates, param|
+      values.map do |combined_from_and_to|
+        dates_hash = combined_from_and_to.split(",").reduce({}) do |dates, param|
           key, date = param.split(":", 2)
           validate_date_key(key)
           dates.merge(key => parse_date(key, date))
-        }
+        end
 
         Value.new(
           dates_hash.fetch("from", null_date),
           dates_hash.fetch("to", null_date),
         )
-      }
+      end
     end
 
     def validate_date_key(key)
@@ -389,14 +389,14 @@ private
   private
 
     def parse_bool(values, field_name)
-      values.map { |value|
+      values.map do |value|
         if %w[true false].include?(value)
           value
         else
           @errors << %{#{field_name} requires a boolean (true or false)}
           "false"
         end
-      }
+      end
     end
   end
 

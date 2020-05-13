@@ -32,9 +32,9 @@ module Indexer
         doc_hash["link"]
       }.compact
       popularities = lookup_popularities(links)
-      document_hashes.flat_map { |doc_hash|
+      document_hashes.flat_map do |doc_hash|
         [index_action(doc_hash), index_doc(doc_hash, popularities)]
-      }
+      end
     end
 
     def lookup_popularities(links)
@@ -68,7 +68,7 @@ module Indexer
         links << doc_hash["link"]
       end
       popularities = lookup_popularities(links.compact)
-      actions.flat_map { |command_hash, doc_hash|
+      actions.flat_map do |command_hash, doc_hash|
         if command_hash.keys == %w[index]
           [
             command_hash,
@@ -80,7 +80,7 @@ module Indexer
             doc_hash,
           ]
         end
-      }
+      end
     end
   end
 end

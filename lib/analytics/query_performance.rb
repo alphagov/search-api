@@ -77,7 +77,6 @@ module Analytics
     end
 
     def build_report_requests
-      # rubocop:disable Metrics/BlockLength
       queries.map do |query|
         ReportRequest.new(
           view_id: ENV["GOOGLE_ANALYTICS_GOVUK_VIEW_ID"],
@@ -116,7 +115,6 @@ module Analytics
             ),
           ],
         )
-        # rubocop:enable Metrics/BlockLength
       end
     end
   end

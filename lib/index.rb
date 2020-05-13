@@ -98,17 +98,17 @@ module SearchIndices
       items = response["items"]
       failed_items = items.select do |item|
         data = item["index"] || item["create"]
-        data.has_key?("error")
+        data.key?("error")
       end
 
       if failed_items.any?
         # Because bulk writes return a 200 status code regardless, we need to
         # parse through the errors to detect responses that indicate a locked
         # index
-        blocked_items = failed_items.select { |item|
+        blocked_items = failed_items.select do |item|
           error = (item["index"] || item["create"])["error"]
           locked_index_error?(error["reason"])
-        }
+        end
         if blocked_items.any?
           raise IndexLocked
         else

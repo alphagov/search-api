@@ -93,9 +93,9 @@ module Search
     end
 
     def hash_without_blank_values(hash)
-      Hash[hash.reject { |_key, value|
+      Hash[hash.reject do |_key, value|
         [nil, [], {}].include?(value)
-      }]
+      end]
     end
 
     # More like this is a separate function for returning similar documents,

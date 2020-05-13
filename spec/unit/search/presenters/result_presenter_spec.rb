@@ -52,7 +52,7 @@ RSpec.describe Search::ResultPresenter do
       "_source" => { "document_type" => "edition", "parts" => [{ a: "part" }] },
     }
 
-    (1..5).each { |rank|
+    (1..5).each do |rank|
       result = described_class.new(
         document,
         nil,
@@ -62,6 +62,6 @@ RSpec.describe Search::ResultPresenter do
       ).present
 
       expect(result.dig("parts").count).to eq(rank <= 3 ? 1 : 0)
-    }
+    end
   end
 end

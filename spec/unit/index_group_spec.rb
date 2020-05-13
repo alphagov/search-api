@@ -240,14 +240,14 @@ RSpec.describe SearchIndices::IndexGroup do
         }.to_json,
       )
 
-    delete_stubs = index_names.map { |index_name|
+    delete_stubs = index_names.map do |index_name|
       stub_request(:delete, "#{BASE_URI}/#{index_name}")
         .to_return(ELASTICSEARCH_OK)
-    }
+    end
 
     @server.index_group("test").clean
 
-    delete_stubs.each do |delete_stub| assert_requested delete_stub end
+    delete_stubs.each { |delete_stub| assert_requested delete_stub }
   end
 
   it "clean with live and dead indices" do

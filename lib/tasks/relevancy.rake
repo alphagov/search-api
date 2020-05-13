@@ -73,10 +73,10 @@ def report_ndcg(datafile: nil, ab_tests: nil)
     end
     puts "---"
     puts "overall scores:"
-    results.dig("average_ndcg").each { |k, score|
+    results.dig("average_ndcg").each do |k, score|
       puts "Average NDCG@#{k}: #{score}"
       Services.statsd_client.gauge("relevancy.ndcg.at_#{k}", score) if ENV["SEND_TO_GRAPHITE"]
-    }
+    end
   ensure
     if csv.is_a?(Tempfile)
       csv.close

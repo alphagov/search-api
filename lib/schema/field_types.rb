@@ -15,7 +15,7 @@ class FieldTypes
 private
 
   def load_types
-    Hash[load_json.map { |type_name, value|
+    Hash[load_json.map do |type_name, value|
       es_config = value.delete("es_config")
       if es_config.nil?
         raise %(Missing "es_config" in field type "#{type_name}" in "#{types_file_path}")
@@ -45,7 +45,7 @@ private
       end
 
       [type_name, type]
-    }]
+    end]
   end
 
   def load_json

@@ -42,11 +42,11 @@ module Sitemap
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           documents.each do |document|
-            xml.url {
+            xml.url do
               xml.loc document.url
               xml.lastmod document.last_updated if document.last_updated
               xml.priority document.priority
-            }
+            end
           end
         end
       end
@@ -57,10 +57,10 @@ module Sitemap
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.sitemapindex(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           sitemap_filenames.each do |sitemap_filename|
-            xml.sitemap {
+            xml.sitemap do
               xml.loc "#{base_url}/#{SUB_DIRECTORY}/#{sitemap_filename}"
               xml.lastmod @timestamp.strftime("%FT%T%:z")
-            }
+            end
           end
         end
       end

@@ -1,13 +1,13 @@
 module Search
   class BaseRegistry
-    CACHE_LIFETIME = 300 #  5 minutes
+    CACHE_LIFETIME = 300 # 5 minutes
 
     def initialize(index, field_definitions, format, fields = %w[slug link title content_id], clock = Time)
       @cache = TimedCache.new(self.class::CACHE_LIFETIME, clock) { fetch }
 
-      @field_definitions = fields.each_with_object({}) { |field, result|
+      @field_definitions = fields.each_with_object({}) do |field, result|
         result[field] = field_definitions[field]
-      }
+      end
 
       @format = format
       @index = index

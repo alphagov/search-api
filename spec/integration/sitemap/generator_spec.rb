@@ -8,13 +8,13 @@ RSpec.describe Sitemap::Generator do
     stub_const("Sitemap::Generator::SITEMAP_LIMIT", 2)
   end
 
-  let(:sitemap_uploader) {
+  let(:sitemap_uploader) do
     double("sitemap_uploader", upload: true)
-  }
+  end
 
-  let(:generator) {
+  let(:generator) do
     described_class.new(search_config, sitemap_uploader, @timestamp)
-  }
+  end
 
   it "generates and uploads multiple sitemaps" do
     add_sample_documents(

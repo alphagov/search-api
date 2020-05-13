@@ -37,7 +37,7 @@ module Evaluate
     end
 
     def average_ndcg(ndcg_scores)
-      summed = ndcg_scores.inject(default_ndcg(0)) { |a, b|
+      summed = ndcg_scores.inject(default_ndcg(0)) do |a, b|
         {
           "1" => a["1"] + b["1"],
           "3" => a["3"] + b["3"],
@@ -45,7 +45,7 @@ module Evaluate
           "10" => a["10"] + b["10"],
           "20" => a["20"] + b["20"],
         }
-      }
+      end
 
       count = ndcg_scores.count
 
@@ -112,9 +112,9 @@ module Evaluate
 
     def dcg(ratings, count)
       ratings = ratings.first(count)
-      processed = ratings.map.with_index { |rating, position|
+      processed = ratings.map.with_index do |rating, position|
         ((2**rating) - 1.0) / Math.log2(position + 2.0)
-      }
+      end
       processed.inject(0) { |total, score| total + score }
     end
   end

@@ -30,11 +30,11 @@ module Helpers
   # end of a parameter name if the parameter has multiple values (but we also
   # have to support being called from Ruby tools which insist on doing this).
   def parse_query_string(query_string)
-    CGI.parse(query_string).reduce({}) { |params, (name, values)|
-      params.merge(name.sub(/\[\]\Z/, "") => values) { |_, old, new|
+    CGI.parse(query_string).reduce({}) do |params, (name, values)|
+      params.merge(name.sub(/\[\]\Z/, "") => values) do |_, old, new|
         old.concat(new)
-      }
-    }
+      end
+    end
   end
 end
 

@@ -9,9 +9,9 @@ class CombinedIndexSchema
   end
 
   def elasticsearch_types
-    @elasticsearch_types ||= @index_names.inject({}) { |results, index_name|
+    @elasticsearch_types ||= @index_names.inject({}) do |results, index_name|
       results.merge(@schema.elasticsearch_types(index_name))
-    }
+    end
   end
 
   # Get a hash from field_name to FieldDefinition object, for all fields
@@ -21,9 +21,9 @@ class CombinedIndexSchema
   # may differ between document types, the definitions returned here will
   # have combined "expanded_search_result_fields" fields.
   def field_definitions
-    @field_definitions ||= each_field_with_object({}) { |field_name, field_definition, results|
+    @field_definitions ||= each_field_with_object({}) do |field_name, field_definition, results|
       results[field_name] = field_definition.merge(results[field_name])
-    }
+    end
   end
 
   # Get the names of fields which are allowed to be filtered on.

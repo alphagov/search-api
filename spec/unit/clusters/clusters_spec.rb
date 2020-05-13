@@ -23,46 +23,46 @@ RSpec.describe Clusters do
     it "returns an array of active clusters" do
       expect(clusters.active).to all be_instance_of Clusters::Cluster
       expect(clusters.active.map(&:key)).to include default_key
-      clusters.active.each { |cluster|
+      clusters.active.each do |cluster|
         expect(cluster.inactive?).to be false
-      }
+      end
     end
   end
 
   describe "#get_cluster" do
     it "returns an active cluster" do
-      valid_cluster_keys.each { |key|
+      valid_cluster_keys.each do |key|
         cluster = clusters.get_cluster(key)
         expect(cluster).to be_instance_of Clusters::Cluster
         expect(cluster.key).to eq(key)
         expect(cluster.uri.present?).to be true
-      }
+      end
     end
 
     it "raises ClusterNotFoundError for any other value" do
-      invalid_cluster_keys.each { |key|
-        expect do
+      invalid_cluster_keys.each do |key|
+        expect {
           clusters.get_cluster(key)
-        end.to raise_error Clusters::ClusterNotFoundError
-      }
+        }.to raise_error Clusters::ClusterNotFoundError
+      end
     end
   end
 
   describe "#validate_cluster_key!" do
     it "does not raise an error for valid cluster keys" do
-      valid_cluster_keys.each { |key|
-        expect do
+      valid_cluster_keys.each do |key|
+        expect {
           clusters.validate_cluster_key!(key)
-        end.not_to raise_error
-      }
+        }.not_to raise_error
+      end
     end
 
     it "raises an error for any other value" do
-      invalid_cluster_keys.each { |key|
-        expect do
+      invalid_cluster_keys.each do |key|
+        expect {
           clusters.validate_cluster_key!(key)
-        end.to raise_error Clusters::InvalidClusterError
-      }
+        }.to raise_error Clusters::InvalidClusterError
+      end
     end
   end
 

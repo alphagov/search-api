@@ -56,15 +56,15 @@ module SearchIndices
 
       # Response of the form:
       #   { "index_name" => { "aliases" => { "a1" => {}, "a2" => {} } }
-      aliased_indices = indices.select { |_name, details|
+      aliased_indices = indices.select do |_name, details|
         details.fetch("aliases", {}).include? @name
-      }
+      end
 
       # For any existing indices with this alias, remove the alias
       # We would normally expect 0 or 1 such index, but several is valid too
-      actions = aliased_indices.keys.map { |index_name|
+      actions = aliased_indices.keys.map do |index_name|
         { "remove" => { "index" => index_name, "alias" => @name } }
-      }
+      end
 
       logger.info do
         old_names = aliased_indices.keys.inspect
