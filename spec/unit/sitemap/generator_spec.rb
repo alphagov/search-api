@@ -87,7 +87,7 @@ RSpec.describe Sitemap::Generator do
       "document_type" => "some_type",
     }
     attributes["public_timestamp"] = timestamp if timestamp
-    attributes["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?
+    attributes["is_withdrawn"] = is_withdrawn unless is_withdrawn.nil?
 
     SitemapPresenter.new(
       attributes,

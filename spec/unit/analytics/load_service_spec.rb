@@ -16,40 +16,48 @@ RSpec.describe Analytics::LoadService do
   end
   let(:scope) { "https://www.googleapis.com/auth/analytics.edit" }
   let(:upload_response) do
-    instance_double("Google::Apis::AnalyticsV3::Upload",
-                    account_id: "1234",
-                    custom_data_source_id: "abcdefg",
-                    id: "AbCd-1234",
-                    kind: "analytics#upload",
-                    status: "PENDING")
+    instance_double(
+      "Google::Apis::AnalyticsV3::Upload",
+      account_id: "1234",
+      custom_data_source_id: "abcdefg",
+      id: "AbCd-1234",
+      kind: "analytics#upload",
+      status: "PENDING",
+    )
   end
 
   let(:uploaded_item) do
-    instance_double("Google::Apis::AnalyticsV3::Upload",
-                    account_id: "1234",
-                    custom_data_source_id: "abcdefg",
-                    id: "AbCd-1234",
-                    kind: "analytics#upload",
-                    status: "COMPLETED")
+    instance_double(
+      "Google::Apis::AnalyticsV3::Upload",
+      account_id: "1234",
+      custom_data_source_id: "abcdefg",
+      id: "AbCd-1234",
+      kind: "analytics#upload",
+      status: "COMPLETED",
+    )
   end
   let(:uploaded_item2) do
-    instance_double("Google::Apis::AnalyticsV3::Upload",
-                    account_id: "1234",
-                    custom_data_source_id: "abcdefg",
-                    errors: ["Column headers missing for the input file."],
-                    id: "AbCd-1234",
-                    kind: "analytics#upload",
-                    status: "FAILED",
-                    upload_time: "Thu, 11 Jan 2018 12:36:35 +0000")
+    instance_double(
+      "Google::Apis::AnalyticsV3::Upload",
+      account_id: "1234",
+      custom_data_source_id: "abcdefg",
+      errors: ["Column headers missing for the input file."],
+      id: "AbCd-1234",
+      kind: "analytics#upload",
+      status: "FAILED",
+      upload_time: "Thu, 11 Jan 2018 12:36:35 +0000",
+    )
   end
 
   let(:upload_list) do
-    instance_double("Google::Apis::AnalyticsV3::Uploads",
-                    items: [uploaded_item, uploaded_item2],
-                    items_per_page: 1000,
-                    kind: "analytics#uploads",
-                    start_index: 1,
-                    total_results: 3)
+    instance_double(
+      "Google::Apis::AnalyticsV3::Uploads",
+      items: [uploaded_item, uploaded_item2],
+      items_per_page: 1000,
+      kind: "analytics#uploads",
+      start_index: 1,
+      total_results: 3,
+    )
   end
 
   before do
@@ -88,23 +96,27 @@ RSpec.describe Analytics::LoadService do
 
   describe "#delete_previous_uploads" do
     let(:uploaded_item3) do
-      instance_double("Google::Apis::AnalyticsV3::Upload",
-                      account_id: "1234",
-                      custom_data_source_id: "abcdefg",
-                      errors: ["Column headers missing for the input file."],
-                      id: "AbCd-1234",
-                      kind: "analytics#upload",
-                      status: "FAILED",
-                      upload_time: "Thu, 13 Jan 2018 12:36:35 +0000")
+      instance_double(
+        "Google::Apis::AnalyticsV3::Upload",
+        account_id: "1234",
+        custom_data_source_id: "abcdefg",
+        errors: ["Column headers missing for the input file."],
+        id: "AbCd-1234",
+        kind: "analytics#upload",
+        status: "FAILED",
+        upload_time: "Thu, 13 Jan 2018 12:36:35 +0000",
+      )
     end
 
     let(:upload_list2) do
-      instance_double("Google::Apis::AnalyticsV3::Uploads",
-                      items: [uploaded_item, uploaded_item2, uploaded_item3],
-                      items_per_page: 1000,
-                      kind: "analytics#uploads",
-                      start_index: 1,
-                      total_results: 3)
+      instance_double(
+        "Google::Apis::AnalyticsV3::Uploads",
+        items: [uploaded_item, uploaded_item2, uploaded_item3],
+        items_per_page: 1000,
+        kind: "analytics#uploads",
+        start_index: 1,
+        total_results: 3,
+      )
     end
 
     before do

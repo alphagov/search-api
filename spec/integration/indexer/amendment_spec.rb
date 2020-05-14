@@ -6,10 +6,13 @@ RSpec.describe "ElasticsearchAmendmentTest" do
   end
 
   it "amends a document" do
-    commit_document("government_test", {
-      "title" => "The old title",
-      "link" => "/an-example-answer",
-    })
+    commit_document(
+      "government_test",
+      {
+        "title" => "The old title",
+        "link" => "/an-example-answer",
+      },
+    )
 
     post "/government_test/documents/%2Fan-example-answer", "title=A+new+title"
 
@@ -17,16 +20,20 @@ RSpec.describe "ElasticsearchAmendmentTest" do
       {
         "title" => "A new title",
         "link" => "/an-example-answer",
-      }, type: "edition",
-         index: "government_test"
+      },
+      type: "edition",
+      index: "government_test",
     )
   end
 
   it "amends a document queued" do
-    commit_document("government_test", {
-      "title" => "The old title",
-      "link" => "/an-example-answer",
-    })
+    commit_document(
+      "government_test",
+      {
+        "title" => "The old title",
+        "link" => "/an-example-answer",
+      },
+    )
 
     post "/government_test/documents/%2Fan-example-answer", "title=A+new+title"
 

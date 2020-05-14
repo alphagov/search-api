@@ -44,15 +44,34 @@ RSpec.describe Evaluate::Ndcg do
     context "when documents are in the index" do
       it "returns the ndcg score for all queries" do
         [
-          "pet", "whiskers", "kitten", "cat", "cats", "dogs", "animals",
-          "cat-owners", "dog-owners", "dog walking dogs", "cat-dog-owners",
-          "pets", "kittens", "whiskers", "dog dog owner", "dogs", "terriers",
-          "corgies", "alsatians", "dogg", "cat cat cat!"
+          "pet",
+          "whiskers",
+          "kitten",
+          "cat",
+          "cats",
+          "dogs",
+          "animals",
+          "cat-owners",
+          "dog-owners",
+          "dog walking dogs",
+          "cat-dog-owners",
+          "pets",
+          "kittens",
+          "whiskers",
+          "dog dog owner",
+          "dogs",
+          "terriers",
+          "corgies",
+          "alsatians",
+          "dogg",
+          "cat cat cat!",
         ].each do |doc|
-          commit_document("government_test",
-                          "title" => doc,
-                          "description" => "A document about #{doc} for #{doc}s.",
-                          "link" => "/#{doc.split(' ').join('-')}")
+          commit_document(
+            "government_test",
+            "title" => doc,
+            "description" => "A document about #{doc} for #{doc}s.",
+            "link" => "/#{doc.split(' ').join('-')}",
+          )
         end
 
         expect(ndcg).to eq({

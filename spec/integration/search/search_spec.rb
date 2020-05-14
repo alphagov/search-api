@@ -32,10 +32,12 @@ RSpec.describe "SearchTest" do
   end
 
   it "spell checking with blocklisted typo" do
-    commit_document("government_test",
-                    "title" => "Brexitt",
-                    "description" => "Brexitt",
-                    "link" => "/brexitt")
+    commit_document(
+      "government_test",
+      "title" => "Brexitt",
+      "description" => "Brexitt",
+      "link" => "/brexitt",
+    )
 
     get "/search?q=brexit&suggest=spelling"
 
@@ -128,15 +130,21 @@ RSpec.describe "SearchTest" do
 
   describe "filter/reject when an attribute has multiple values" do
     before do
-      commit_document("government_test",
-                      "link" => "/one",
-                      "part_of_taxonomy_tree" => %w[a b c])
-      commit_document("government_test",
-                      "link" => "/two",
-                      "part_of_taxonomy_tree" => %w[d e f])
-      commit_document("government_test",
-                      "link" => "/three",
-                      "part_of_taxonomy_tree" => %w[b e])
+      commit_document(
+        "government_test",
+        "link" => "/one",
+        "part_of_taxonomy_tree" => %w[a b c],
+      )
+      commit_document(
+        "government_test",
+        "link" => "/two",
+        "part_of_taxonomy_tree" => %w[d e f],
+      )
+      commit_document(
+        "government_test",
+        "link" => "/three",
+        "part_of_taxonomy_tree" => %w[b e],
+      )
     end
 
     describe "filter_all" do
@@ -446,18 +454,22 @@ RSpec.describe "SearchTest" do
     topical_event_of_interest = "quiddich-world-cup-2018"
 
     # we DON'T want this document in our search results
-    commit_document("government_test",
-                    "title" => "Rules of Quiddich (2017)",
-                    "link" => "/quiddich-rules-2017",
-                    "format" => "detailed_guidance",
-                    "topical_events" => %w[quiddich-world-cup-2017])
+    commit_document(
+      "government_test",
+      "title" => "Rules of Quiddich (2017)",
+      "link" => "/quiddich-rules-2017",
+      "format" => "detailed_guidance",
+      "topical_events" => %w[quiddich-world-cup-2017],
+    )
 
     # we DO want this document in our search results
-    commit_document("government_test",
-                    "title" => "Rules of Quiddich (2018)",
-                    "link" => "/quiddich-rules-2018",
-                    "format" => "detailed_guidance",
-                    "topical_events" => [topical_event_of_interest])
+    commit_document(
+      "government_test",
+      "title" => "Rules of Quiddich (2018)",
+      "link" => "/quiddich-rules-2018",
+      "format" => "detailed_guidance",
+      "topical_events" => [topical_event_of_interest],
+    )
 
     get "/search.json?filter_topical_events=#{topical_event_of_interest}"
 
@@ -479,12 +491,16 @@ RSpec.describe "SearchTest" do
     get "/search.json?q=dragons"
 
     # Adds a new key with the expanded topics
-    expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_topics", {
-      "content_id" => "topic-content-id",
-      "slug" => "topic-magic",
-      "link" => "/magic-topic-site",
-      "title" => "Magic topic",
-    })
+    expect_result_includes_ministry_of_magic_for_key(
+      first_result,
+      "expanded_topics",
+      {
+        "content_id" => "topic-content-id",
+        "slug" => "topic-magic",
+        "link" => "/magic-topic-site",
+        "title" => "Magic topic",
+      },
+    )
 
     # Keeps the topic content ids
     expect(first_result["topic_content_ids"]).to eq(%w[topic-content-id])
@@ -559,14 +575,18 @@ RSpec.describe "SearchTest" do
 
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
-    expect_result_includes_ministry_of_magic_for_key(parsed_response, "results", {
-      "_id" => "/ministry-of-magic-site",
-      "document_type" => "edition",
-      "elasticsearch_type" => "edition",
-      "es_score" => nil,
-      "index" => "government_test",
-      "link" => "/ministry-of-magic-site",
-    })
+    expect_result_includes_ministry_of_magic_for_key(
+      parsed_response,
+      "results",
+      {
+        "_id" => "/ministry-of-magic-site",
+        "document_type" => "edition",
+        "elasticsearch_type" => "edition",
+        "es_score" => nil,
+        "index" => "government_test",
+        "link" => "/ministry-of-magic-site",
+      },
+    )
   end
 
   it "can filter by part of taxonomy" do
@@ -593,14 +613,18 @@ RSpec.describe "SearchTest" do
     get "/search?filter_facet_values=fe2fc3b5-a71b-4063-9605-12c3e6e179d6"
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
-    expect_result_includes_ministry_of_magic_for_key(parsed_response, "results", {
-      "_id" => "/ministry-of-magic-site",
-      "document_type" => "edition",
-      "elasticsearch_type" => "edition",
-      "es_score" => nil,
-      "index" => "government_test",
-      "link" => "/ministry-of-magic-site",
-    })
+    expect_result_includes_ministry_of_magic_for_key(
+      parsed_response,
+      "results",
+      {
+        "_id" => "/ministry-of-magic-site",
+        "document_type" => "edition",
+        "elasticsearch_type" => "edition",
+        "es_score" => nil,
+        "index" => "government_test",
+        "link" => "/ministry-of-magic-site",
+      },
+    )
   end
 
   it "can filter by facet group" do
@@ -609,14 +633,18 @@ RSpec.describe "SearchTest" do
     get "/search?filter_facet_groups=fe2fc3b5-a71b-4063-9605-12c3e6e179d6"
     expect(last_response).to be_ok
     expect(parsed_response.fetch("total")).to eq(1)
-    expect_result_includes_ministry_of_magic_for_key(parsed_response, "results", {
-      "_id" => "/ministry-of-magic-site",
-      "document_type" => "edition",
-      "elasticsearch_type" => "edition",
-      "es_score" => nil,
-      "index" => "government_test",
-      "link" => "/ministry-of-magic-site",
-    })
+    expect_result_includes_ministry_of_magic_for_key(
+      parsed_response,
+      "results",
+      {
+        "_id" => "/ministry-of-magic-site",
+        "document_type" => "edition",
+        "elasticsearch_type" => "edition",
+        "es_score" => nil,
+        "index" => "government_test",
+        "link" => "/ministry-of-magic-site",
+      },
+    )
   end
 
   it "can filter by roles" do

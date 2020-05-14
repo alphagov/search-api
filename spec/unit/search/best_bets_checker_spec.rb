@@ -69,9 +69,12 @@ RSpec.describe Search::BestBetsChecker do
 
   context "with an exact best bet" do
     before do
-      setup_checker("foo", [
-        bb_doc("foo", "exact", [["/jobsearch", 1]], []),
-      ])
+      setup_checker(
+        "foo",
+        [
+          bb_doc("foo", "exact", [["/jobsearch", 1]], []),
+        ],
+      )
     end
 
     it "find one best bet" do
@@ -85,9 +88,12 @@ RSpec.describe Search::BestBetsChecker do
 
   context "with an exact worst bet" do
     before do
-      setup_checker("foo", [
-        bb_doc("foo", "exact", [], ["/jobsearch"]),
-      ])
+      setup_checker(
+        "foo",
+        [
+          bb_doc("foo", "exact", [], ["/jobsearch"]),
+        ],
+      )
     end
 
     it "not find any best bets" do
@@ -101,10 +107,13 @@ RSpec.describe Search::BestBetsChecker do
 
   context "with an exact and a stemmed best bet" do
     before do
-      setup_checker("foo", [
-        bb_doc("foo", "exact", [["/jobsearch", 1]], []),
-        bb_doc("foo", "stemmed", [["/jobs", 1]], []),
-      ])
+      setup_checker(
+        "foo",
+        [
+          bb_doc("foo", "exact", [["/jobsearch", 1]], []),
+          bb_doc("foo", "stemmed", [["/jobs", 1]], []),
+        ],
+      )
     end
 
     it "find just the exact best bet" do
@@ -118,10 +127,13 @@ RSpec.describe Search::BestBetsChecker do
 
   context "with two stemmed best bets" do
     before do
-      setup_checker("foo", [
-        bb_doc("foo", "stemmed", [["/jobsearch", 1]], []),
-        bb_doc("foo", "stemmed", [["/jobs", 1]], []),
-      ])
+      setup_checker(
+        "foo",
+        [
+          bb_doc("foo", "stemmed", [["/jobsearch", 1]], []),
+          bb_doc("foo", "stemmed", [["/jobs", 1]], []),
+        ],
+      )
     end
 
     it "find both best bets" do
@@ -135,10 +147,13 @@ RSpec.describe Search::BestBetsChecker do
 
   context "with best bets with multiple links" do
     before do
-      setup_checker("foo", [
-        bb_doc("foo", "stemmed", [["/jobsearch", 1], ["/jobs", 2]], []),
-        bb_doc("foo", "stemmed", [["/jobs", 1], ["/working", 4]], []),
-      ])
+      setup_checker(
+        "foo",
+        [
+          bb_doc("foo", "stemmed", [["/jobsearch", 1], ["/jobs", 2]], []),
+          bb_doc("foo", "stemmed", [["/jobs", 1], ["/working", 4]], []),
+        ],
+      )
     end
 
     it "use highest position for all best bets" do
@@ -155,11 +170,14 @@ RSpec.describe Search::BestBetsChecker do
 
   context "with exact and stemmed bets which conflict" do
     before do
-      setup_checker("foo", [
-        bb_doc("foo", "exact", [["/jobs", 4]], ["/jobsearch"]),
-        bb_doc("foo", "stemmed", [["/jobsearch", 1], ["/jobs", 2]], ["/foo"]),
-        bb_doc("foo", "stemmed", [["/jobs", 1], ["/working", 4]], []),
-      ])
+      setup_checker(
+        "foo",
+        [
+          bb_doc("foo", "exact", [["/jobs", 4]], ["/jobsearch"]),
+          bb_doc("foo", "stemmed", [["/jobsearch", 1], ["/jobs", 2]], ["/foo"]),
+          bb_doc("foo", "stemmed", [["/jobs", 1], ["/working", 4]], []),
+        ],
+      )
     end
 
     it "use just the positions from the exact bet" do

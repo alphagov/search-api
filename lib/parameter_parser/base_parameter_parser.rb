@@ -170,7 +170,7 @@ class BaseParameterParser
   end
 
   def validate!
-    raise ParseError.new(errors) if !valid?
+    raise ParseError, errors unless valid?
   end
 
 protected

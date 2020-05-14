@@ -11,7 +11,7 @@ module MissingMetadata
     def add_metadata(result)
       index_name = result[:index]
       document_id = result[:_id]
-      raise MissingDocumentError.new("Missing index name or id in search results") if index_name.nil? || document_id.nil?
+      raise MissingDocumentError, "Missing index name or id in search results" if index_name.nil? || document_id.nil?
 
       content_id = result[:content_id] || lookup_content_id(document_id)
 
@@ -24,7 +24,7 @@ module MissingMetadata
 
       content_id = publishing_api.lookup_content_id(base_path: base_path)
 
-      content_id || raise(MissingDocumentError.new("Failed to look up base path"))
+      content_id || raise(MissingDocumentError, "Failed to look up base path")
     rescue GdsApi::TimedOutException
       puts "Publishing API timed out getting content_id... retrying"
       sleep(1)

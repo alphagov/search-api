@@ -14,7 +14,10 @@ module GovukIndex
       role_appointment
       world_location
 
-      # role document types
+      #
+      role
+      document
+      types
       ambassador_role
       board_member_role
       chief_professional_officer_role

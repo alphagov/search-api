@@ -38,7 +38,8 @@ RSpec.describe GovukIndex::SupertypeWorker do
     record = { "identifier" => { "_id" => "record_1" },
                "document" => { "title" => "test_doc",
                                "content_store_document_type" => "testgroup",
-                               "supertype1" => "type1", "supertype2" => "type2" } }
+                               "supertype1" => "type1",
+                               "supertype2" => "type2" } }
     worker.perform([record], "govuk_test")
 
     expect(@processor).not_to have_received(:save)

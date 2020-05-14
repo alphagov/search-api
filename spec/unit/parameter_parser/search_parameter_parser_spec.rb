@@ -371,12 +371,15 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands some rejects and some filter paramers" do
-    p = described_class.new({
-      "reject_organisations" => %w[hm-magic],
-      "filter_all_mainstream_browse_pages" => %w[cheese],
-      "filter_any_slug" => ["/slug1", "/slug2"],
-      "reject_all_link" => ["/link"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "reject_organisations" => %w[hm-magic],
+        "filter_all_mainstream_browse_pages" => %w[cheese],
+        "filter_any_slug" => ["/slug1", "/slug2"],
+        "reject_all_link" => ["/link"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -396,10 +399,13 @@ RSpec.describe SearchParameterParser do
     expect(p.parsed_params).to match(
       expected_params(
         filters: [
-          text_filter("organisations", %w[
-            hm-magic
-            hmrc
-          ]),
+          text_filter(
+            "organisations",
+            %w[
+              hm-magic
+              hmrc
+            ],
+          ),
         ],
       ),
     )
@@ -496,10 +502,13 @@ RSpec.describe SearchParameterParser do
     end
 
     it "understands a date filter for a missing value or a specific value" do
-      parser = described_class.new({
-        "filter_document_type" => %w[cma_case],
-        "filter_opened_date" => ["_MISSING", "from:2014-04-01 00:00,to:2014-04-02 00:00"],
-      }, @schema)
+      parser = described_class.new(
+        {
+          "filter_document_type" => %w[cma_case],
+          "filter_opened_date" => ["_MISSING", "from:2014-04-01 00:00,to:2014-04-02 00:00"],
+        },
+        @schema,
+      )
 
       expect(parser.error).to eq("")
       expect(parser).to be_valid
@@ -617,10 +626,13 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands multiple aggregate fields" do
-    p = described_class.new({
-      "aggregate_organisations" => %w[10],
-      "aggregate_mainstream_browse_pages" => %w[5],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => %w[10],
+        "aggregate_mainstream_browse_pages" => %w[5],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -635,10 +647,13 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about disallowed aggregates fields" do
-    p = described_class.new({
-      "aggregate_spells" => %w[10],
-      "aggregate_organisations" => %w[10],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_spells" => %w[10],
+        "aggregate_organisations" => %w[10],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq(%("spells" is not a valid aggregate field))
     expect(p).not_to be_valid
@@ -648,10 +663,13 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about invalid values for aggregate parameter" do
-    p = described_class.new({
-      "aggregate_spells" => %w[levitation],
-      "aggregate_organisations" => %w[magic],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_spells" => %w[levitation],
+        "aggregate_organisations" => %w[magic],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq(%{"spells" is not a valid aggregate field. Invalid value "magic" for first parameter for aggregate "organisations" (expected positive integer)})
     expect(p).not_to be_valid
@@ -677,9 +695,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "allows options in the values for the aggregate parameter" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:global"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:global"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -698,9 +719,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands the order option in aggregate parameters" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,order:filtered:value.link:-count"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,order:filtered:value.link:-count"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -715,9 +739,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about invalid order options in aggregate parameters" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,order:filt:value.unknown"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,order:filt:value.unknown"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq(%("filt" is not a valid sort option in aggregate "organisations". "value.unknown" is not a valid sort option in aggregate "organisations"))
     expect(p).not_to be_valid
@@ -725,9 +752,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "handles repeated order options in aggregate parameters" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,order:filtered,order:value.link:-count"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,order:filtered,order:value.link:-count"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -742,9 +772,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "understands the scope option in aggregate parameters" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,scope:all_filters"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,scope:all_filters"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -759,9 +792,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about invalid scope options in aggregate parameters" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,scope:unknown"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,scope:unknown"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq(%("unknown" is not a valid scope option in aggregate "organisations"))
     expect(p).not_to be_valid
@@ -769,9 +805,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about a repeated examples option" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,examples:5,examples:6,example_scope:global"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,examples:5,examples:6,example_scope:global"],
+      },
+      @schema,
+    )
 
     expect(%{Too many values (2) for parameter "examples" in aggregate "organisations" (must occur at most once)}).to eq(p.error)
     expect(p).not_to be_valid
@@ -779,9 +818,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "merges fields from repeated example fields options" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,examples:5,example_fields:slug,example_fields:title:link,example_scope:global"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,examples:5,example_fields:slug,example_fields:title:link,example_scope:global"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("")
     expect(p).to be_valid
@@ -798,9 +840,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "requires the example scope to be set" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,examples:5,example_fields:slug:title"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,examples:5,example_fields:slug:title"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("example_scope parameter must be set to 'query' or 'global' when requesting examples")
     expect(p).not_to be_valid
@@ -808,9 +853,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "allows example scope to be set to 'query'" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
+      },
+      @schema,
+    )
 
     expect(p).to be_valid
     expect(p.parsed_params).to match(expected_params(
@@ -826,9 +874,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about an invalid example scope option" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,examples:5,example_scope:invalid"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,examples:5,example_scope:invalid"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq("example_scope parameter must be set to 'query' or 'global' when requesting examples")
     expect(p).not_to be_valid
@@ -836,9 +887,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "complains about a repeated example scope option" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,examples:5,example_scope:global,example_scope:global"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,examples:5,example_scope:global,example_scope:global"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq(%{Too many values (2) for parameter "example_scope" in aggregate "organisations" (must occur at most once)})
     expect(p).not_to be_valid
@@ -846,9 +900,12 @@ RSpec.describe SearchParameterParser do
   end
 
   it "validates options in the values for the aggregate parameter" do
-    p = described_class.new({
-      "aggregate_organisations" => ["10,example:5,examples:lots,example_fields:unknown:title"],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,example:5,examples:lots,example_fields:unknown:title"],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq([
       %{Invalid value "lots" for parameter "examples" in aggregate "organisations" (expected positive integer)},
@@ -860,12 +917,18 @@ RSpec.describe SearchParameterParser do
   end
 
   it "accepts facets as a alias for aggregates" do
-    aggregate_p = described_class.new({
-      "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
-    }, @schema)
-    facet_p = described_class.new({
-      "facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
-    }, @schema)
+    aggregate_p = described_class.new(
+      {
+        "aggregate_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
+      },
+      @schema,
+    )
+    facet_p = described_class.new(
+      {
+        "facet_organisations" => ["10,examples:5,example_fields:slug:title,example_scope:query"],
+      },
+      @schema,
+    )
 
     expect(aggregate_p).to be_valid
     expect(facet_p).to be_valid
@@ -873,10 +936,13 @@ RSpec.describe SearchParameterParser do
   end
 
   it "compalins with facets are used in combination with aggregates" do
-    p = described_class.new({
-      "aggregate_organisations" => %w[10],
-      "facet_mainstream_browse_pages" => %w[10],
-    }, @schema)
+    p = described_class.new(
+      {
+        "aggregate_organisations" => %w[10],
+        "facet_mainstream_browse_pages" => %w[10],
+      },
+      @schema,
+    )
 
     expect(p.error).to eq(
       "aggregates can not be used in conjuction with facets, please switch to using aggregates as facets are deprecated.",

@@ -57,7 +57,7 @@ module QueryComponents
     end
 
     def time_in_millis_to_nearest_minute
-      (Time.now.to_i / 60) * 60000
+      (Time.now.to_i / 60) * 60_000
     end
   end
 end

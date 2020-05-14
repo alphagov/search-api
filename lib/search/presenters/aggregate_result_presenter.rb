@@ -69,9 +69,13 @@ module Search
       end
 
       option_objects = unique_options.map do |term, count|
-        make_aggregate_option(field, term, count,
-                              applied_options.include?(term),
-                              aggregate_parameters[:order])
+        make_aggregate_option(
+          field,
+          term,
+          count,
+          applied_options.include?(term),
+          aggregate_parameters[:order],
+        )
       end
 
       top_aggregate_options(option_objects, aggregate_parameters[:requested])

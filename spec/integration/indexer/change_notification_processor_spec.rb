@@ -11,10 +11,11 @@ RSpec.describe "ChangeNotificationProcessorTest" do
       expanded_links: {},
     )
 
-    post "/government_test/documents", {
-      "title" => "Foo",
-      "link" => "/foo",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "title" => "Foo",
+           "link" => "/foo",
+         }.to_json
 
     commit_index("government_test")
 

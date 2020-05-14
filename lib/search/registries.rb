@@ -33,8 +33,11 @@ module Search
         field_definitions,
         "organisation",
         %w[
-          slug content_id
-          link title acronym
+          slug
+          content_id
+          link
+          title
+          acronym
           organisation_type
           organisation_closed_state
           organisation_state
@@ -42,7 +45,8 @@ module Search
           organisation_brand
           organisation_crest
           logo_url
-          closed_at public_timestamp
+          closed_at
+          public_timestamp
           analytics_identifier
           child_organisations
           parent_organisations
