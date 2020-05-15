@@ -65,7 +65,7 @@ class Rummager < Sinatra::Application
     halt(404)
   end
 
-  def require_authentication permission
+  def require_authentication(permission)
     warden.authenticate!
 
     u = env["warden"].user
@@ -88,7 +88,7 @@ class Rummager < Sinatra::Application
 
   def json_only
     unless [nil, "json"].include? params[:request_format]
-      expires 86400, :public
+      expires 86_400, :public
       halt 404
     end
   end

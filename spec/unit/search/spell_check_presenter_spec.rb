@@ -10,10 +10,11 @@ RSpec.describe Search::SpellCheckPresenter do
             "options" => [{
               "text" => "the first suggestion",
               "score" => 0.17877324,
-            }, {
-              "text" => "the second suggestion",
-              "score" => 0.14231323,
-            }],
+            },
+                          {
+                            "text" => "the second suggestion",
+                            "score" => 0.14231323,
+                          }],
           }],
         },
       }

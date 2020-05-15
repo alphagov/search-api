@@ -7,9 +7,10 @@ RSpec.describe "TaglookupDuringIndexingTest" do
   it "indexes document without publishing api content unchanged" do
     stub_publishing_api_has_lookups({})
 
-    post "/government_test/documents", {
-      "link" => "/something-not-in-publishing-api",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/something-not-in-publishing-api",
+         }.to_json
 
     expect_document_is_in_rummager(
       { "link" => "/something-not-in-publishing-api" },
@@ -20,9 +21,10 @@ RSpec.describe "TaglookupDuringIndexingTest" do
   it "indexes document with external url unchanged" do
     stub_publishing_api_has_lookups({})
 
-    post "/government_test/documents", {
-      "link" => "http://example.com/some-link",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "http://example.com/some-link",
+         }.to_json
 
     expect_document_is_in_rummager(
       { "link" => "http://example.com/some-link" },
@@ -87,9 +89,10 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       },
     )
 
-    post "/government_test/documents", {
-      "link" => "/foo/bar",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/foo/bar",
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -123,10 +126,11 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       },
     )
 
-    post "/government_test/documents", {
-      "link" => "/my-base-path",
-      "content_id" => "CONTENT-ID-OF-DOCUMENT",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/my-base-path",
+           "content_id" => "CONTENT-ID-OF-DOCUMENT",
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -207,16 +211,21 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       },
     )
 
-    post "/government_test/documents", {
-      "link" => "/foo/bar",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/foo/bar",
+         }.to_json
 
     expect_document_is_in_rummager(
       {
         "link" => "/foo/bar",
         "part_of_taxonomy_tree" => [
-          grandparent1_content_id, parent1_content_id, taxon1_content_id,
-          grandparent2_content_id, parent2_content_id, taxon2_content_id
+          grandparent1_content_id,
+          parent1_content_id,
+          taxon1_content_id,
+          grandparent2_content_id,
+          parent2_content_id,
+          taxon2_content_id,
         ],
         "taxons" => [taxon1_content_id, taxon2_content_id],
       },

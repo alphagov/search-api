@@ -12,27 +12,29 @@ RSpec.describe Search::ResultSetPresenter do
         "title" => "Staffordshire Cheese",
         "link" => "/government/publications/staffordshire-cheese",
       },
-    }, {
-      "_index" => "govuk-2014-03-19t14:35:28z-6472f975-dc38-49a5-98eb-c498e619650c",
-      _type: "edition",
-      _id: "/duty-relief-for-imports-and-exports",
-      "_score" => 0.49672604,
-      "_source" => {
-        "description" => "Schemes that offer reduced or zero rate duty and VAT for imports and exports",
-        "title" => "Duty relief for imports and exports",
-        "link" => "/duty-relief-for-imports-and-exports",
-      },
-    }, {
-      "_index" => "govuk-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
-      _type: "edition",
-      _id: "/dairy-farming-and-schemes",
-      "_score" => 0.34655035,
-      "_source" => {
-        "title" => "Dairy farming and schemes",
-        "link" => "/dairy-farming-and-schemes",
-        "policy_areas" => %w[farming],
-      },
-    }]
+    },
+     {
+       "_index" => "govuk-2014-03-19t14:35:28z-6472f975-dc38-49a5-98eb-c498e619650c",
+       _type: "edition",
+       _id: "/duty-relief-for-imports-and-exports",
+       "_score" => 0.49672604,
+       "_source" => {
+         "description" => "Schemes that offer reduced or zero rate duty and VAT for imports and exports",
+         "title" => "Duty relief for imports and exports",
+         "link" => "/duty-relief-for-imports-and-exports",
+       },
+     },
+     {
+       "_index" => "govuk-2014-03-19t14:35:27z-27e2831f-bd14-47d8-9c7a-3017e213efe3",
+       _type: "edition",
+       _id: "/dairy-farming-and-schemes",
+       "_score" => 0.34655035,
+       "_source" => {
+         "title" => "Dairy farming and schemes",
+         "link" => "/dairy-farming-and-schemes",
+         "policy_areas" => %w[farming],
+       },
+     }]
   end
 
   def sample_es_response(extra = {})

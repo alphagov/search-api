@@ -21,7 +21,7 @@ RSpec.describe QueryComponents::BestBets do
 
       result = builder.wrap("QUERY")
 
-      expected = { bool: { should: ["QUERY", { function_score: { query: { terms: { link: ["/best-bet"] } }, weight: 1000000 } }] } }
+      expected = { bool: { should: ["QUERY", { function_score: { query: { terms: { link: ["/best-bet"] } }, weight: 1_000_000 } }] } }
       expect(result).to eq(expected)
     end
   end
@@ -36,8 +36,8 @@ RSpec.describe QueryComponents::BestBets do
       expected = {
         bool: {
           should: ["QUERY",
-                   { function_score: { query: { terms: { link: ["/best-bet"] } }, weight: 2000000 } },
-                   { function_score: { query: { terms: { link: ["/other-best-bet"] } }, weight: 1000000 } }],
+                   { function_score: { query: { terms: { link: ["/best-bet"] } }, weight: 2_000_000 } },
+                   { function_score: { query: { terms: { link: ["/other-best-bet"] } }, weight: 1_000_000 } }],
         },
       }
 
@@ -52,7 +52,7 @@ RSpec.describe QueryComponents::BestBets do
 
       result = builder.wrap("QUERY")
 
-      expected = { bool: { should: ["QUERY", { function_score: { query: { terms: { link: ["/best-bet", "/other-best-bet"] } }, weight: 1000000 } }] } }
+      expected = { bool: { should: ["QUERY", { function_score: { query: { terms: { link: ["/best-bet", "/other-best-bet"] } }, weight: 1_000_000 } }] } }
       expect(result).to eq(expected)
     end
   end

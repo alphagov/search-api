@@ -24,18 +24,19 @@ RSpec.describe "ElasticsearchIndexingTest" do
       expanded_links: {},
     )
 
-    post "/government_test/documents", {
-      "_type" => "edition",
-      "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
-      "title" => "TITLE",
-      "format" => "answer",
-      "content_store_document_type" => "answer",
-      "link" => "/an-example-answer",
-      "indexable_content" => "HERE IS SOME CONTENT",
-      "licence_identifier" => "1201-5-1",
-      "licence_short_description" => "A short description of a licence",
-      "search_user_need_document_supertype" => "core",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "_type" => "edition",
+           "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
+           "title" => "TITLE",
+           "format" => "answer",
+           "content_store_document_type" => "answer",
+           "link" => "/an-example-answer",
+           "indexable_content" => "HERE IS SOME CONTENT",
+           "licence_identifier" => "1201-5-1",
+           "licence_short_description" => "A short description of a licence",
+           "search_user_need_document_supertype" => "core",
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -65,10 +66,11 @@ RSpec.describe "ElasticsearchIndexingTest" do
       expanded_links: {},
     )
 
-    post "/government_test/documents", {
-      "content_id" => "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
-      "link" => "/an-example-answer",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "content_id" => "9d86d339-44c2-474f-8daf-cb64bed6c0d9",
+           "link" => "/an-example-answer",
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -81,18 +83,19 @@ RSpec.describe "ElasticsearchIndexingTest" do
   end
 
   it "indexes start and end dates" do
-    post "/government_test/documents", {
-      "title" => "TITLE",
-      "format" => "topical_event",
-      "slug" => "/government/topical-events/foo",
-      "link" => "/government/topical-events/foo",
-      "start_date" => "2016-01-01T00:00:00Z",
-      "end_date" => "2017-01-01T00:00:00Z",
-      "logo_formatted_title" => 'The\nTitle',
-      "organisation_brand" => "cabinet-office",
-      "organisation_crest" => "single-identity",
-      "logo_url" => "http://url/to/logo.png",
-    }.to_json
+    post "/government_test/documents",
+         {
+           "title" => "TITLE",
+           "format" => "topical_event",
+           "slug" => "/government/topical-events/foo",
+           "link" => "/government/topical-events/foo",
+           "start_date" => "2016-01-01T00:00:00Z",
+           "end_date" => "2017-01-01T00:00:00Z",
+           "logo_formatted_title" => 'The\nTitle',
+           "organisation_brand" => "cabinet-office",
+           "organisation_crest" => "single-identity",
+           "logo_url" => "http://url/to/logo.png",
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -112,13 +115,14 @@ RSpec.describe "ElasticsearchIndexingTest" do
   end
 
   it "tags organisation pages to themselves, so that filtering on an organisation returns the homepage" do
-    post "/government_test/documents", {
-      "title" => "HMRC",
-      "link" => "/government/organisations/hmrc",
-      "slug" => "hmrc",
-      "format" => "organisation",
-      "organisations" => [],
-    }.to_json
+    post "/government_test/documents",
+         {
+           "title" => "HMRC",
+           "link" => "/government/organisations/hmrc",
+           "slug" => "hmrc",
+           "format" => "organisation",
+           "organisations" => [],
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -157,12 +161,13 @@ RSpec.describe "ElasticsearchIndexingTest" do
         ],\"worst_bets\":[]}", "stemmed_query_as_term"=>" learn to drive "}]
       DETAILS
 
-      post "/#{index_name}/documents", {
-        "_id" => "learn+to+drive-exact",
-        "_type" => "best_bet",
-        "stemmed_query" => "learn to drive",
-        "details" => details,
-      }.to_json
+      post "/#{index_name}/documents",
+           {
+             "_id" => "learn+to+drive-exact",
+             "_type" => "best_bet",
+             "stemmed_query" => "learn to drive",
+             "details" => details,
+           }.to_json
 
       expect_document_is_in_rummager(
         {
@@ -192,18 +197,19 @@ RSpec.describe "ElasticsearchIndexingTest" do
         expanded_links: {},
       )
 
-      post "/government_test/documents", {
-        "_type" => "edition",
-        "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
-        "title" => "TITLE",
-        "format" => "answer",
-        "content_store_document_type" => "answer",
-        "link" => "/an-example-answer",
-        "indexable_content" => "HERE IS SOME CONTENT",
-        "licence_identifier" => "1201-5-1",
-        "licence_short_description" => "A short description of a licence",
-        "search_user_need_document_supertype" => "core",
-      }.to_json
+      post "/government_test/documents",
+           {
+             "_type" => "edition",
+             "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
+             "title" => "TITLE",
+             "format" => "answer",
+             "content_store_document_type" => "answer",
+             "link" => "/an-example-answer",
+             "indexable_content" => "HERE IS SOME CONTENT",
+             "licence_identifier" => "1201-5-1",
+             "licence_short_description" => "A short description of a licence",
+             "search_user_need_document_supertype" => "core",
+           }.to_json
 
       expect_document_is_in_rummager(
         {

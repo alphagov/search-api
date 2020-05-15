@@ -11,7 +11,8 @@ RSpec.describe Indexer::DocumentPreparer do
 
       updated_doc_hash = described_class.new("fake_client", "fake_index").prepared(
         doc_hash,
-        { "/some-link" => { popularity_score: 0.5, popularity_rank: 0.01 } }, true
+        { "/some-link" => { popularity_score: 0.5, popularity_rank: 0.01 } },
+        true,
       )
 
       expect(0.5).to eq(updated_doc_hash["popularity"])

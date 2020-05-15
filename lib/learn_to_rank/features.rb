@@ -58,9 +58,18 @@ module LearnToRank
 
   private
 
-    attr_reader :explain_scores, :es_score, :popularity, :query_length,
-                :title, :description, :link, :public_timestamp, :format, :organisation,
-                :indexable_content, :updated_at
+    attr_reader :explain_scores,
+                :es_score,
+                :popularity,
+                :query_length,
+                :title,
+                :description,
+                :link,
+                :public_timestamp,
+                :format,
+                :organisation,
+                :indexable_content,
+                :updated_at
 
     def get_org(organisation_content_ids)
       return 0 unless organisation_content_ids.present? && organisation_content_ids.any?

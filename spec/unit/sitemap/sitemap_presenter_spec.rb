@@ -133,7 +133,7 @@ RSpec.describe SitemapPresenter do
     }
     document["public_timestamp"] = timestamp if timestamp
     document["format"] = format if format
-    document["is_withdrawn"] = is_withdrawn if !is_withdrawn.nil?
+    document["is_withdrawn"] = is_withdrawn unless is_withdrawn.nil?
 
     document
   end

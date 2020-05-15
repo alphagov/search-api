@@ -78,11 +78,14 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     end
 
     it "returns a newslike document's organisation's default news image if it does not have an image" do
-      payload = generate_random_example(schema: "news_article", payload: {
-        payload_version: 1,
-        document_type: "news_story",
-        content_purpose_subgroup: "news",
-      })
+      payload = generate_random_example(
+        schema: "news_article",
+        payload: {
+          payload_version: 1,
+          document_type: "news_story",
+          content_purpose_subgroup: "news",
+        },
+      )
       payload["details"].delete("image")
       payload["expanded_links"] = expanded_links
 

@@ -90,8 +90,14 @@ module Search
 
     # Fetch aggregate examples for a set of slugs
     def fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
-      searches = aggregate_example_searches(field_name, slugs, example_count,
-                                            example_fields, query, filter)
+      searches = aggregate_example_searches(
+        field_name,
+        slugs,
+        example_count,
+        example_fields,
+        query,
+        filter,
+      )
       responses = @index.msearch(searches)
       response_list = responses["responses"]
       prepare_response(slugs, response_list)

@@ -44,7 +44,7 @@ module Fixtures
                                         "details" => [],
                                       },
                                       {
-                                        "value" => 67830,
+                                        "value" => 67_830,
                                         "description" => "docCount",
                                         "details" => [],
                                       },
@@ -108,7 +108,7 @@ module Fixtures
                                         "details" => [],
                                       },
                                       {
-                                        "value" => 67830,
+                                        "value" => 67_830,
                                         "description" => "docCount",
                                         "details" => [],
                                       },
@@ -178,7 +178,7 @@ module Fixtures
                                         "details" => [],
                                       },
                                       {
-                                        "value" => 27365,
+                                        "value" => 27_365,
                                         "description" => "docCount",
                                         "details" => [],
                                       },
@@ -242,7 +242,7 @@ module Fixtures
                                         "details" => [],
                                       },
                                       {
-                                        "value" => 27365,
+                                        "value" => 27_365,
                                         "description" => "docCount",
                                         "details" => [],
                                       },
@@ -312,7 +312,7 @@ module Fixtures
                                         "details" => [],
                                       },
                                       {
-                                        "value" => 65180,
+                                        "value" => 65_180,
                                         "description" => "docCount",
                                         "details" => [],
                                       },
@@ -376,7 +376,7 @@ module Fixtures
                                         "details" => [],
                                       },
                                       {
-                                        "value" => 65180,
+                                        "value" => 65_180,
                                         "description" => "docCount",
                                         "details" => [],
                                       },
@@ -450,7 +450,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 67830,
+                                            "value" => 67_830,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -514,7 +514,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 67830,
+                                            "value" => 67_830,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -584,7 +584,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 65180,
+                                            "value" => 65_180,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -648,7 +648,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 65180,
+                                            "value" => 65_180,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -718,7 +718,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 27365,
+                                            "value" => 27_365,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -782,7 +782,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 27365,
+                                            "value" => 27_365,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -858,7 +858,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 67830,
+                                            "value" => 67_830,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -922,7 +922,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 67830,
+                                            "value" => 67_830,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -992,7 +992,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 65180,
+                                            "value" => 65_180,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -1056,7 +1056,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 65180,
+                                            "value" => 65_180,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -1126,7 +1126,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 27365,
+                                            "value" => 27_365,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -1190,7 +1190,7 @@ module Fixtures
                                             "details" => [],
                                           },
                                           {
-                                            "value" => 27365,
+                                            "value" => 27_365,
                                             "description" => "docCount",
                                             "details" => [],
                                           },
@@ -1262,7 +1262,7 @@ module Fixtures
                                         "details" => [],
                                       },
                                       {
-                                        "value" => 65638,
+                                        "value" => 65_638,
                                         "description" => "docCount",
                                         "details" => [],
                                       },
@@ -1326,7 +1326,7 @@ module Fixtures
                                         "details" => [],
                                       },
                                       {
-                                        "value" => 65638,
+                                        "value" => 65_638,
                                         "description" => "docCount",
                                         "details" => [],
                                       },
@@ -1703,7 +1703,7 @@ module Fixtures
                                                     "details" => [],
                                                   },
                                                   {
-                                                    "value" => 67830,
+                                                    "value" => 67_830,
                                                     "description" => "docCount",
                                                     "details" => [],
                                                   },
@@ -1767,7 +1767,7 @@ module Fixtures
                                                     "details" => [],
                                                   },
                                                   {
-                                                    "value" => 67830,
+                                                    "value" => 67_830,
                                                     "description" => "docCount",
                                                     "details" => [],
                                                   },
@@ -1837,7 +1837,7 @@ module Fixtures
                                                     "details" => [],
                                                   },
                                                   {
-                                                    "value" => 27365,
+                                                    "value" => 27_365,
                                                     "description" => "docCount",
                                                     "details" => [],
                                                   },
@@ -1901,7 +1901,7 @@ module Fixtures
                                                     "details" => [],
                                                   },
                                                   {
-                                                    "value" => 27365,
+                                                    "value" => 27_365,
                                                     "description" => "docCount",
                                                     "details" => [],
                                                   },
@@ -1971,7 +1971,7 @@ module Fixtures
                                                     "details" => [],
                                                   },
                                                   {
-                                                    "value" => 65180,
+                                                    "value" => 65_180,
                                                     "description" => "docCount",
                                                     "details" => [],
                                                   },
@@ -2035,7 +2035,7 @@ module Fixtures
                                                     "details" => [],
                                                   },
                                                   {
-                                                    "value" => 65180,
+                                                    "value" => 65_180,
                                                     "description" => "docCount",
                                                     "details" => [],
                                                   },
@@ -2109,7 +2109,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 67830,
+                                                        "value" => 67_830,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2173,7 +2173,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 67830,
+                                                        "value" => 67_830,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2243,7 +2243,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 65180,
+                                                        "value" => 65_180,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2307,7 +2307,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 65180,
+                                                        "value" => 65_180,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2377,7 +2377,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 27365,
+                                                        "value" => 27_365,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2441,7 +2441,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 27365,
+                                                        "value" => 27_365,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2517,7 +2517,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 67830,
+                                                        "value" => 67_830,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2581,7 +2581,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 67830,
+                                                        "value" => 67_830,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2651,7 +2651,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 65180,
+                                                        "value" => 65_180,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2715,7 +2715,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 65180,
+                                                        "value" => 65_180,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2785,7 +2785,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 27365,
+                                                        "value" => 27_365,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2849,7 +2849,7 @@ module Fixtures
                                                         "details" => [],
                                                       },
                                                       {
-                                                        "value" => 27365,
+                                                        "value" => 27_365,
                                                         "description" => "docCount",
                                                         "details" => [],
                                                       },
@@ -2921,7 +2921,7 @@ module Fixtures
                                                     "details" => [],
                                                   },
                                                   {
-                                                    "value" => 65638,
+                                                    "value" => 65_638,
                                                     "description" => "docCount",
                                                     "details" => [],
                                                   },
@@ -2985,7 +2985,7 @@ module Fixtures
                                                     "details" => [],
                                                   },
                                                   {
-                                                    "value" => 65638,
+                                                    "value" => 65_638,
                                                     "description" => "docCount",
                                                     "details" => [],
                                                   },

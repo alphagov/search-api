@@ -24,15 +24,16 @@ RSpec.describe "PartslookupDuringIndexingTest" do
   end
 
   it "indexes document with parts unchanged" do
-    post "/government_test/documents", {
-      "link" => "/foo",
-      "parts" => [{ "slug" => "foo", "title" => "bar", "body" => "baz" }],
-      "attachments" => [
-        { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
-        { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html" },
-        { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "html" },
-      ],
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/foo",
+           "parts" => [{ "slug" => "foo", "title" => "bar", "body" => "baz" }],
+           "attachments" => [
+             { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
+             { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html" },
+             { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "html" },
+           ],
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -49,14 +50,15 @@ RSpec.describe "PartslookupDuringIndexingTest" do
   end
 
   it "indexes documents with attachments from publishing api" do
-    post "/government_test/documents", {
-      "link" => "/foo",
-      "attachments" => [
-        { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
-        { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html" },
-        { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "html" },
-      ],
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/foo",
+           "attachments" => [
+             { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
+             { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html" },
+             { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "html" },
+           ],
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -77,14 +79,15 @@ RSpec.describe "PartslookupDuringIndexingTest" do
   end
 
   it "ignores non-html attachments" do
-    post "/government_test/documents", {
-      "link" => "/foo",
-      "attachments" => [
-        { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
-        { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html" },
-        { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "file" },
-      ],
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/foo",
+           "attachments" => [
+             { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
+             { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html" },
+             { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "file" },
+           ],
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -104,14 +107,15 @@ RSpec.describe "PartslookupDuringIndexingTest" do
   end
 
   it "ignores attachments with a locale given that isn't 'en'" do
-    post "/government_test/documents", {
-      "link" => "/foo",
-      "attachments" => [
-        { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
-        { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html", "locale" => "en" },
-        { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "file", "locale" => "cy" },
-      ],
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/foo",
+           "attachments" => [
+             { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
+             { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html", "locale" => "en" },
+             { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "file", "locale" => "cy" },
+           ],
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -130,14 +134,15 @@ RSpec.describe "PartslookupDuringIndexingTest" do
   end
 
   it "ignores attachments where the URL doesn't match the parent/slug format" do
-    post "/government_test/documents", {
-      "link" => "/foo",
-      "attachments" => [
-        { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
-        { "url" => "/bar/attachment-4", "title" => "attachment 4", "attachment_type" => "html" },
-        { "url" => "/baz/attachment-5", "title" => "attachment 5", "attachment_type" => "html" },
-      ],
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/foo",
+           "attachments" => [
+             { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
+             { "url" => "/bar/attachment-4", "title" => "attachment 4", "attachment_type" => "html" },
+             { "url" => "/baz/attachment-5", "title" => "attachment 5", "attachment_type" => "html" },
+           ],
+         }.to_json
 
     expect_document_is_in_rummager(
       {
@@ -156,13 +161,14 @@ RSpec.describe "PartslookupDuringIndexingTest" do
   end
 
   it "treats attachments of unspecified type or URL as not HTML" do
-    post "/government_test/documents", {
-      "link" => "/foo",
-      "attachments" => [
-        { "title" => "attachment 1", "attachment_type" => "html" },
-        { "url" => "/foo/attachment-2", "title" => "attachment 2" },
-      ],
-    }.to_json
+    post "/government_test/documents",
+         {
+           "link" => "/foo",
+           "attachments" => [
+             { "title" => "attachment 1", "attachment_type" => "html" },
+             { "url" => "/foo/attachment-2", "title" => "attachment 2" },
+           ],
+         }.to_json
 
     expect_document_is_in_rummager(
       {

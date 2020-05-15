@@ -7,10 +7,13 @@ RSpec.describe "ContentEndpointsTest" do
     expect(last_response).to be_not_found
   end
   it "that_getting_a_document_returns_the_document" do
-    commit_document("govuk_test", {
-      "title" => "A nice title",
-      "link" => "a-document/in-search",
-    })
+    commit_document(
+      "govuk_test",
+      {
+        "title" => "A nice title",
+        "link" => "a-document/in-search",
+      },
+    )
 
     get "/content?link=a-document/in-search"
 
@@ -19,10 +22,13 @@ RSpec.describe "ContentEndpointsTest" do
   end
 
   it "deleting a document" do
-    commit_document("govuk_test", {
-      "title" => "A nice title",
-      "link" => "a-document/in-search",
-    })
+    commit_document(
+      "govuk_test",
+      {
+        "title" => "A nice title",
+        "link" => "a-document/in-search",
+      },
+    )
 
     delete "/content?link=a-document/in-search"
 
@@ -36,10 +42,13 @@ RSpec.describe "ContentEndpointsTest" do
   end
 
   it "deleting a document from locked index" do
-    commit_document("govuk_test", {
-      "title" => "A nice title",
-      "link" => "a-document/in-search",
-    })
+    commit_document(
+      "govuk_test",
+      {
+        "title" => "A nice title",
+        "link" => "a-document/in-search",
+      },
+    )
 
     expect_any_instance_of(SearchIndices::Index).to receive(:delete).and_raise(SearchIndices::IndexLocked)
 

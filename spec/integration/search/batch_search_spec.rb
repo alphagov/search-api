@@ -30,10 +30,12 @@ RSpec.describe "BatchSearchTest" do
 
   it "spell checking with blocklisted typo" do
     commit_ministry_of_magic_document
-    commit_document("government_test",
-                    "title" => "Brexitt",
-                    "description" => "Brexitt",
-                    "link" => "/brexitt")
+    commit_document(
+      "government_test",
+      "title" => "Brexitt",
+      "description" => "Brexitt",
+      "link" => "/brexitt",
+    )
     get build_get_url([{ q: "ministry of magic" }, { q: "brexit" }])
     results = parsed_response["results"]
     expect_search_has_result_count(results[0], 1)
@@ -360,12 +362,16 @@ RSpec.describe "BatchSearchTest" do
     get build_get_url([{ q: "dragons" }, { q: "ministry of magic" }])
     results = parsed_response["results"]
 
-    expect_result_includes_ministry_of_magic_for_key(results[0]["results"][0], "expanded_topics", {
-      "content_id" => "topic-content-id",
-      "slug" => "topic-magic",
-      "link" => "/magic-topic-site",
-      "title" => "Magic topic",
-    })
+    expect_result_includes_ministry_of_magic_for_key(
+      results[0]["results"][0],
+      "expanded_topics",
+      {
+        "content_id" => "topic-content-id",
+        "slug" => "topic-magic",
+        "link" => "/magic-topic-site",
+        "title" => "Magic topic",
+      },
+    )
 
     # Keeps the topic content ids
     expect(results[0]["results"][0]["topic_content_ids"]).to eq(%w[topic-content-id])

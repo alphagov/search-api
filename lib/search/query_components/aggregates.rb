@@ -17,7 +17,7 @@ module QueryComponents
             order: { _count: "desc" },
             # We want all the aggregate values so we can return an accurate count of
             # the number of options.
-            size: 100000,
+            size: 100_000,
           },
         },
         field_name,

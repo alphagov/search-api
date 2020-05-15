@@ -45,11 +45,13 @@ module Indexer
       end
     rescue GdsApi::TimedOutException => e
       @logger.error("Timeout fetching expanded links for #{content_id}")
-      GovukError.notify(e,
-                        extra: {
-                          error_message: "Timeout fetching expanded links",
-                          content_id: content_id,
-                        })
+      GovukError.notify(
+        e,
+        extra: {
+          error_message: "Timeout fetching expanded links",
+          content_id: content_id,
+        },
+      )
       raise Indexer::PublishingApiError
     rescue GdsApi::HTTPNotFound => e
       # If the Content ID no longer exists in the Publishing API, there isn't really much
@@ -62,14 +64,16 @@ module Indexer
       # We capture all GdsApi HTTP exceptions here so that we can send them
       # manually to Sentry. This allows us to control the message and parameters
       # such that errors are grouped in a sane manner.
-      GovukError.notify(e,
-                        extra: {
-                          message: "HTTP error fetching expanded links",
-                          content_id: content_id,
-                          error_code: e.code,
-                          error_message: e.message,
-                          error_details: e.error_details,
-                        })
+      GovukError.notify(
+        e,
+        extra: {
+          message: "HTTP error fetching expanded links",
+          content_id: content_id,
+          error_code: e.code,
+          error_message: e.message,
+          error_details: e.error_details,
+        },
+      )
       raise Indexer::PublishingApiError
     end
 

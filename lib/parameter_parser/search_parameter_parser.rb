@@ -341,7 +341,7 @@ private
     end
 
     def validate_date_key(key)
-      if !%w[from to].include?(key)
+      unless %w[from to].include?(key)
         @errors << %{Invalid date filter parameter "#{key}:" (expected "from:" or "to:")}
       end
     end
