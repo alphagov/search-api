@@ -11,7 +11,13 @@ module Indexer
     def prepare_attachments(doc_hash)
       return doc_hash if doc_hash["attachments"].nil?
 
-      doc_hash.merge("attachments" => doc_hash["attachments"].map { |a| present_attachment(a) }.compact)
+      attachments = doc_hash["attachments"].map { |a| present_attachment(a) }.compact
+      indexable_content_parts = [doc_hash["indexable_content"]]
+      attachments.each { |a| indexable_content_parts << a["content"] }
+      doc_hash.merge(
+        "attachments" => attachments,
+        "indexable_content" => indexable_content_parts.compact.join(" "),
+      )
     end
 
   private

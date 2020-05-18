@@ -44,6 +44,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 2", "content" => "body 2" },
           { "title" => "attachment 3", "content" => "body 3" },
         ],
+        "indexable_content" => "body 1 body 2 body 3",
       },
       index: "government_test",
     )
@@ -73,6 +74,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 2", "content" => "body 2" },
           { "title" => "attachment 3", "content" => "body 3" },
         ],
+        "indexable_content" => "body 1 body 2 body 3",
       },
       index: "government_test",
     )
@@ -101,6 +103,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 2", "content" => "body 2" },
           { "title" => "attachment 3" },
         ],
+        "indexable_content" => "body 1 body 2",
       },
       index: "government_test",
     )
@@ -128,6 +131,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 1", "content" => "body 1" },
           { "title" => "attachment 2", "content" => "body 2" },
         ],
+        "indexable_content" => "body 1 body 2",
       },
       index: "government_test",
     )
@@ -155,6 +159,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 4", "content" => "body 4" },
           { "title" => "attachment 5", "content" => "body 5" },
         ],
+        "indexable_content" => "body 1 body 4 body 5",
       },
       index: "government_test",
     )
