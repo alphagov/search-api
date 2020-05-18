@@ -18,6 +18,7 @@ finder: edition # Specialist Publisher
 government_response: edition
 guide: edition
 help_page: edition
+history: edition
 hmrc_manual: hmrc_manual
 hmrc_manual_section: hmrc_manual_section
 international_development_fund: international_development_fund # Specialist Publisher
