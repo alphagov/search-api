@@ -15,7 +15,7 @@ if not model_name and not model_tag:
 
 endpoint_version = f"-{model_tag}" if model_tag else ""
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
-default_initial_instance_count = int(os.getenv("INITIAL_INSTANCE_COUNT", 3))
+default_initial_instance_count = int(os.getenv("INITIAL_INSTANCE_COUNT", 4))
 default_instance_type = os.getenv("INSTANCE_TYPE", "ml.t2.medium")
 endpoint_name = os.getenv(
     "ENDPOINT_NAME", f"govuk-{govuk_environment}-search-ltr-endpoint{endpoint_version}"
