@@ -34,8 +34,6 @@ base:
     devolved: 0.3
   is_historic:
     true: 0.5
-  topical_events:
-    coronavirus-covid-19-uk-government-response: 5
   part_of_taxonomy_tree:
     5b7b9532-a775-4bd2-a3aa-6ce380184b6c: 5 # /coronavirus-taxon
 # Overrides to apply to the sitemap priorities in external search
