@@ -41,10 +41,10 @@ module Search
     def self.merge_examples(presented_aggregates, examples)
       presented_aggregates.each do |field, aggregate|
         field_examples = examples[field]
-        unless field_examples.nil?
-          aggregate[:options].each do |option|
-            option[:value]["example_info"] = field_examples.fetch(option[:value]["slug"], [])
-          end
+        next if field_examples.nil?
+
+        aggregate[:options].each do |option|
+          option[:value]["example_info"] = field_examples.fetch(option[:value]["slug"], [])
         end
       end
     end

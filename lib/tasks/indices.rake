@@ -165,11 +165,11 @@ this task will run against all active clusters.
 
     clusters_from_args(args).each do |cluster|
       index_names.each do |index_name|
-        if new_index_name.include?(index_name)
-          puts "Switching #{index_name} -> #{args.new_index_name}"
-          index_group = search_server(cluster: cluster).index_group(index_name)
-          index_group.switch_to(index_group.index_for_name(new_index_name))
-        end
+        next unless new_index_name.include?(index_name)
+
+        puts "Switching #{index_name} -> #{args.new_index_name}"
+        index_group = search_server(cluster: cluster).index_group(index_name)
+        index_group.switch_to(index_group.index_for_name(new_index_name))
       end
     end
   end
