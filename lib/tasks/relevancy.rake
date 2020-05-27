@@ -110,11 +110,11 @@ def report(stats = [])
   puts "=================="
   stats.each do |(stat, reading)|
     puts "#{stat.downcase.gsub(' ', '_')}: #{reading}"
-    if ENV["SEND_TO_GRAPHITE"]
-      Services.statsd_client.gauge(
-        "relevancy.query.#{stat.downcase.gsub(' ', '_')}",
-        reading,
-      )
-    end
+    next unless ENV["SEND_TO_GRAPHITE"]
+
+    Services.statsd_client.gauge(
+      "relevancy.query.#{stat.downcase.gsub(' ', '_')}",
+      reading,
+    )
   end
 end
