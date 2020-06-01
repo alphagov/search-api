@@ -95,11 +95,7 @@ module Search
   private
 
     def determine_if_quoted_phrase
-      @is_quoted_phrase = if @query =~ QUOTED_STRING_REGEX
-                            true
-                          else
-                            false
-                          end
+      @is_quoted_phrase = @query&.match?(QUOTED_STRING_REGEX).present?
     end
   end
 end
