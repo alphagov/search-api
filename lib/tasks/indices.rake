@@ -10,11 +10,11 @@ namespace :search do
       index_names.each do |name|
         index_group = search_server(cluster: cluster).index_group(name)
         active_index_name = index_group.current.real_name
-        if show_all
-          index_names = index_group.index_names
-        else
-          index_names = [active_index_name]
-        end
+        index_names = if show_all
+                        index_group.index_names
+                      else
+                        [active_index_name]
+                      end
         puts "#{name}:"
         index_names.sort.each do |index_name|
           if index_name == active_index_name

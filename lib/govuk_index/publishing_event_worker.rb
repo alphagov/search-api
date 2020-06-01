@@ -62,14 +62,14 @@ module GovukIndex
 
       type_mapper = DocumentTypeMapper.new(payload)
 
-      if type_mapper.unpublishing_type?
-        presenter = ElasticsearchDeletePresenter.new(payload: payload)
-      else
-        presenter = ElasticsearchPresenter.new(
-          payload: PayloadPreparer.new(payload).prepare,
-          type_mapper: type_mapper,
-        )
-      end
+      presenter = if type_mapper.unpublishing_type?
+                    ElasticsearchDeletePresenter.new(payload: payload)
+                  else
+                    ElasticsearchPresenter.new(
+                      payload: PayloadPreparer.new(payload).prepare,
+                      type_mapper: type_mapper,
+                    )
+                  end
 
       presenter.valid!
 

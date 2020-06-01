@@ -33,11 +33,11 @@ module QueryComponents
 
       case filter.type
       when "string"
-        if filter.multivalue_query == :any
-          es_filters << terms_filter(field_name, values)
-        else # :all
-          es_filters << bool_must_filter(field_name, values)
-        end
+        es_filters << if filter.multivalue_query == :any
+                        terms_filter(field_name, values)
+                      else # :all
+                        bool_must_filter(field_name, values)
+                      end
       when "date"
         es_filters << date_filter(field_name, values.first)
       when "boolean"

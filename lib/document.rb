@@ -84,11 +84,11 @@ class Document
     definitions_and_values = @field_definitions.keys.map do |field_name|
       value = get(field_name)
 
-      if value.is_a?(Array)
-        value = value.map { |v| v.is_a?(Document) ? v.to_hash : v }
-      else
-        value = value.is_a?(Document) ? value.to_hash : value
-      end
+      value = if value.is_a?(Array)
+                value.map { |v| v.is_a?(Document) ? v.to_hash : v }
+              else
+                value.is_a?(Document) ? value.to_hash : value
+              end
 
       [field_name.to_s, value]
     end

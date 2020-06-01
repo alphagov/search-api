@@ -95,11 +95,11 @@ module Search
   private
 
     def determine_if_quoted_phrase
-      if @query =~ QUOTED_STRING_REGEX
-        @is_quoted_phrase = true
-      else
-        @is_quoted_phrase = false
-      end
+      @is_quoted_phrase = if @query =~ QUOTED_STRING_REGEX
+                            true
+                          else
+                            false
+                          end
     end
   end
 end

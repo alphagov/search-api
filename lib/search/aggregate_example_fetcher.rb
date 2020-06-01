@@ -51,14 +51,14 @@ module Search
 
     def aggregate_example_searches(field_name, slugs, example_count, example_fields, query, query_filter)
       slugs.map do |slug|
-        if query_filter.nil?
-          filter = { term: { field_name => slug } }
-        else
-          filter = [
-            { term: { field_name => slug } },
-            query_filter,
-          ]
-        end
+        filter = if query_filter.nil?
+                   { term: { field_name => slug } }
+                 else
+                   [
+                     { term: { field_name => slug } },
+                     query_filter,
+                   ]
+                 end
         {
           query: {
             bool: {
@@ -132,11 +132,11 @@ module Search
           values = [values]
         end
 
-        if field_definitions.fetch(field_name).type.multivalued
-          result[field_name] = values
-        else
-          result[field_name] = values.first
-        end
+        result[field_name] = if field_definitions.fetch(field_name).type.multivalued
+                               values
+                             else
+                               values.first
+                             end
       end
     end
   end
