@@ -254,11 +254,11 @@ private
   end
 
   def build_filter(field_name, values, operation, multivalue_query)
-    if field_name == "document_type"
-      filter_type = "text"
-    else
-      filter_type = @schema.field_definitions.fetch(field_name).type.filter_type
-    end
+    filter_type = if field_name == "document_type"
+                    "text"
+                  else
+                    @schema.field_definitions.fetch(field_name).type.filter_type
+                  end
 
     if filter_type.nil?
       @errors << %("#{field_name}" has no filter_type defined)

@@ -7,7 +7,9 @@ module Search
     end
 
     def ignore_list
-      MatcherSet.new(regex_patterns + words_from_ignore_file + organisation_acronyms)
+      MatcherSet.new(regex_patterns +
+                     self.class.words_from_ignore_file +
+                     organisation_acronyms)
     end
 
   private
@@ -19,8 +21,8 @@ module Search
 
     # Custom list of words we don't want to correct because they're actually
     # correct, or sensitive.
-    def words_from_ignore_file
-      @@words_from_ignore_file ||= YAML.load_file("config/suggest/ignore.yml")
+    def self.words_from_ignore_file
+      @words_from_ignore_file ||= YAML.load_file("config/suggest/ignore.yml")
     end
 
     # Organisation acronyms like `dvla` and 'gds' are sometimes considered

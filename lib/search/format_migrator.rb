@@ -30,14 +30,14 @@ module Search
       options = {}
       options[:must] = base_query
 
-      if migrated_formats.any?
-        options[:must_not] = [
-          { terms: { _index: migrated_indices } },
-          { terms: { format: migrated_formats } },
-        ]
-      else
-        options[:must_not] = { terms: { _index: migrated_indices } }
-      end
+      options[:must_not] = if migrated_formats.any?
+                             [
+                               { terms: { _index: migrated_indices } },
+                               { terms: { format: migrated_formats } },
+                             ]
+                           else
+                             { terms: { _index: migrated_indices } }
+                           end
 
       { bool: options }
     end
