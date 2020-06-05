@@ -19,6 +19,10 @@
         "value": "anaesthesia-intensive-care"
       },
       {
+        "label": "Breastfeeding",
+        "value": "breastfeeding"
+      },
+      {
         "label": "Cancer",
         "value": "cancer"
       },
@@ -85,6 +89,10 @@
       {
         "label": "Pain management and palliation",
         "value": "pain-management-palliation"
+      },
+      {
+        "label": "Pregnancy",
+        "value": "pregnancy"
       },
       {
         "label": "Psychiatry",
