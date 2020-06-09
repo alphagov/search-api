@@ -1,4 +1,4 @@
-require "gds_api/publishing_api_v2"
+require "gds_api/publishing_api"
 require "govuk_schemas"
 
 class FinderContentItemPresenter

@@ -1,4 +1,4 @@
-require "gds_api/publishing_api_v2"
+require "gds_api/publishing_api"
 
 # ContentItemPublisher is responsible for publishing content items related
 # to search, such as finders and finder email signup pages.

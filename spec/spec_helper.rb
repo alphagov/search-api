@@ -47,7 +47,7 @@ require "#{__dir__}/support/schema_helpers"
 require "#{__dir__}/support/integration_spec_helper"
 require "#{__dir__}/support/index_helpers"
 
-require "gds_api/test_helpers/publishing_api_v2"
+require "gds_api/test_helpers/publishing_api"
 
 RSpec.configure do |config|
   config.define_derived_metadata(file_path: %r{/spec/integration/}) do |metadata|
