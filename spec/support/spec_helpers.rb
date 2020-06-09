@@ -1,4 +1,4 @@
-require "gds_api/test_helpers/publishing_api_v2"
+require "gds_api/test_helpers/publishing_api"
 
 module SpecHelpers
   include GdsApi::TestHelpers::PublishingApi
