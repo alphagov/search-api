@@ -8,7 +8,7 @@ Rejected.
 
 ## Context
 
-In [ADR 003 - perform popularity updating without using an index lock](doc/arch/adr-003-popularity-updating-without-index-locks.md) we changed the process
+In [ADR 003 - perform popularity updating without using an index lock](docs/arch/adr-003-popularity-updating-without-index-locks.md) we changed the process
 for bulk loading data into Rummager's search indexes to update the existing index in place, rather than creating a separate index, which had required locking the existing index until the new one was ready. The main reason we bulk load
 data is to update the popularity field every night, which affects every document in the search index.
 

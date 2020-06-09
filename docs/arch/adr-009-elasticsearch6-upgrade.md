@@ -46,7 +46,7 @@ AWS, led to a lot of changes to govuk-puppet, and didn't really give
 us anything reusable.  By adding multi-cluster support to search-api
 directly, we do get something reusable.
 
-[migrating to Elasticsearch 5]: https://github.com/alphagov/search-api/blob/master/doc/arch/adr-008-elasticsearch5-upgrade.md
+[migrating to Elasticsearch 5]: https://github.com/alphagov/search-api/blob/master/docs/arch/adr-008-elasticsearch5-upgrade.md
 
 
 ## New cluster architecture
@@ -248,7 +248,7 @@ host to be used (`http://elasticsearch6` vs `http://elasticsearch5`)
 but otherwise this was just a matter of writing some more
 configuration.
 
-[as for Elasticsearch 5]: https://github.com/alphagov/search-api/blob/master/doc/arch/adr-008-elasticsearch5-upgrade.md
+[as for Elasticsearch 5]: https://github.com/alphagov/search-api/blob/master/docs/arch/adr-008-elasticsearch5-upgrade.md
 
 
 ## A/B testing Elasticsearch 6

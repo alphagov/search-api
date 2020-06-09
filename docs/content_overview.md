@@ -18,7 +18,7 @@ to be ingested by search-api.
 See [ADR 001][adr_001] for more details on this approach.
 
 [publishing_api]: https://github.com/alphagov/publishing-api
-[adr_001]: https://github.com/alphagov/search-api/blob/master/doc/arch/adr-001-use-of-both-rabbitmq-and-sidekiq-queues.md
+[adr_001]: https://github.com/alphagov/search-api/blob/master/docs/arch/adr-001-use-of-both-rabbitmq-and-sidekiq-queues.md
 
 ## Search admin
 Admin for GOV.UK search. Publishes "recommended links" to Search API,

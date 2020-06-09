@@ -138,5 +138,5 @@ a nice step towards that.
 - Performing data jobs on spot instances. Training data is still generated on search machines.
 
 [AWS Sagemaker]: https://aws.amazon.com/sagemaker/
-[Learning to Rank]: https://github.com/alphagov/search-api/blob/1524da75f055f144392facb460bd95ef62b67bbb/doc/arch/adr-010-learn-to-rank.md
+[Learning to Rank]: https://github.com/alphagov/search-api/blob/1524da75f055f144392facb460bd95ef62b67bbb/docs/arch/adr-010-learn-to-rank.md
 [Concourse]: https://concourse-ci.org/
