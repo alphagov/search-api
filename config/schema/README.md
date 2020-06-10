@@ -1,1 +1,1 @@
-[Read doc/schemas.md](/doc/schemas.md)
+[Read docs/schemas.md](/docs/schemas.md)

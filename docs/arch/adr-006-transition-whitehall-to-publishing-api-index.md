@@ -80,7 +80,7 @@ We can then run the search healthcheck to understand the impact of this. At this
 Once this is done, the `govuk` indexing process can be extended to Whitehall Publisher formats.
 
 ### Follow the process to move a document type to the new indexing process
-See [new indexing process](https://github.com/alphagov/rummager/blob/master/doc/new-indexing-process.md)
+See [new indexing process](https://github.com/alphagov/rummager/blob/master/docs/new-indexing-process.md)
 
  This process needs to be repeated for each document type or group of related document types.
 

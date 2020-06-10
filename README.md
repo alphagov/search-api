@@ -10,7 +10,7 @@ the search API to render [site search](https://www.gov.uk/search) and finder pag
 
 Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
-![Screenshot of API Response](doc/api-screenshot.png)
+![Screenshot of API Response](docs/api-screenshot.png)
 
 ## API documentation
 
@@ -91,8 +91,8 @@ documents in search results (query time).
 
 It does some clever stuff at both parts, but that's the meat of it.
 
-Read the [documentation](/doc) to find out [how documents are indexed](doc/indexing.md)
-or [how documents are retrieved](doc/how-search-works.md).
+Read the [documentation](/docs) to find out [how documents are indexed](docs/indexing.md)
+or [how documents are retrieved](docs/how-search-works.md).
 
 ### Dependencies
 
@@ -106,16 +106,16 @@ relevant search results:
 If you use govuk-docker locally, the required dependencies will be started
 automatically when you start Search API. You don't need to set these up yourself.
 
-See the [learning to rank documentation](doc/learning-to-rank.md) for
+See the [learning to rank documentation](docs/learning-to-rank.md) for
 guidance on how to run the ranking model locally.
 
 ### Additional Docs
 
-- [New indexing process](doc/new-indexing-process.md): how to update a format to use the new indexing process
-- [Schemas](doc/schemas.md): how to work with schemas and the document types
-- [Popularity information](doc/popularity.md): Search API uses Google Analytics
+- [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
+- [Schemas](docs/schemas.md): how to work with schemas and the document types
+- [Popularity information](docs/popularity.md): Search API uses Google Analytics
 	data to improve search results.
-- [Publishing document finders](doc/publishing-finders.md): Information about publishing finders using rake tasks
+- [Publishing document finders](docs/publishing-finders.md): Information about publishing finders using rake tasks
 
 ## Licence
 
