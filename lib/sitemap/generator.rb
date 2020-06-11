@@ -147,7 +147,7 @@ module Sitemap
     end
 
     def property_boost_calculator
-      PropertyBoostCalculator.new
+      @property_boost_calculator ||= PropertyBoostCalculator.new
     end
 
     def base_url
