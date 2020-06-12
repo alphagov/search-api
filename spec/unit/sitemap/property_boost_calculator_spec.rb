@@ -73,6 +73,15 @@ RSpec.describe PropertyBoostCalculator do
     expect(calculator.boost(build_document(document_type: "some_doc_type"))).to eq(0.5)
   end
 
+  it "withdrawn status divides the calculated priority by four" do
+    document = build_document(
+      is_withdrawn: true,
+    )
+
+    # default boost is 0.5 as above
+    expect(subject.boost(document)).to eq(0.125)
+  end
+
   it "boosts are rounded" do
     stub_boost_config({
       "format" => {
@@ -147,10 +156,11 @@ RSpec.describe PropertyBoostCalculator do
     allow(YAML).to receive(:load_file).and_return(config)
   end
 
-  def build_document(format: nil, document_type: nil)
+  def build_document(format: nil, document_type: nil, is_withdrawn: nil)
     attributes = {}
     attributes["format"] = format if format
     attributes["content_store_document_type"] = document_type if document_type
+    attributes["is_withdrawn"] = is_withdrawn unless is_withdrawn.nil?
 
     attributes
   end

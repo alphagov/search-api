@@ -33,7 +33,7 @@ class SitemapPresenter
   end
 
   def priority
-    withdrawn_status_boost * property_boost_calculator.boost(document)
+    property_boost_calculator.boost(document)
   end
 
 private
@@ -42,9 +42,5 @@ private
 
   def base_url
     Plek.current.website_root
-  end
-
-  def withdrawn_status_boost
-    document["is_withdrawn"] ? 0.25 : 1
   end
 end

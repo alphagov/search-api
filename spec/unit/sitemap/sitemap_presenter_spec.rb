@@ -88,32 +88,6 @@ RSpec.describe SitemapPresenter do
     expect(presenter.last_updated).to be_nil
   end
 
-  it "default page priority is maximum value" do
-    document = build_document(
-      url: "/some/path",
-      is_withdrawn: false,
-    )
-    presenter = described_class.new(document, @boost_calculator)
-    expect(presenter.priority).to eq(1)
-  end
-
-  it "withdrawn page has lower priority" do
-    document = build_document(
-      url: "/some/path",
-      is_withdrawn: true,
-    )
-    presenter = described_class.new(document, @boost_calculator)
-    expect(0.25).to eq(presenter.priority)
-  end
-
-  it "page with no withdrawn flag has maximum priority" do
-    document = build_document(
-      url: "/some/path",
-    )
-    presenter = described_class.new(document, @boost_calculator)
-    expect(presenter.priority).to eq(1)
-  end
-
   it "page with boosted format has adjusted priority" do
     document = build_document(
       url: "/some/path",
