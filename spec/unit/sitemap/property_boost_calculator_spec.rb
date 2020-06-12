@@ -15,9 +15,9 @@ RSpec.describe PropertyBoostCalculator do
     calculator = subject
 
     expect(calculator.boost(build_document(format: "format1"))).to eq(0)
-    expect(0.5).to eq(calculator.boost(build_document(format: "format2")))
-    expect(0.75).to eq(calculator.boost(build_document(format: "format3")))
-    expect(0.88).to eq(calculator.boost(build_document(format: "format4")))
+    expect(calculator.boost(build_document(format: "format2"))).to eq(0.5)
+    expect(calculator.boost(build_document(format: "format3"))).to eq(0.75)
+    expect(calculator.boost(build_document(format: "format4"))).to eq(0.88)
     expect(calculator.boost(build_document(format: "format5"))).to eq(1)
   end
 
@@ -30,7 +30,7 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    expect(0.5).to eq(calculator.boost(build_document(format: "some_format")))
+    expect(calculator.boost(build_document(format: "some_format"))).to eq(0.5)
   end
 
   it "boosts limit is 1" do
@@ -58,7 +58,7 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    expect(0.5).to eq(calculator.boost(build_document(format: "other_format")))
+    expect(calculator.boost(build_document(format: "other_format"))).to eq(0.5)
   end
 
   it "unconfigured property has default boost" do
@@ -70,7 +70,7 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    expect(0.5).to eq(calculator.boost(build_document(document_type: "some_doc_type")))
+    expect(calculator.boost(build_document(document_type: "some_doc_type"))).to eq(0.5)
   end
 
   it "boosts are rounded" do
@@ -83,8 +83,8 @@ RSpec.describe PropertyBoostCalculator do
 
     calculator = subject
 
-    expect(0.08).to eq(calculator.boost(build_document(format: "format1")))
-    expect(0.27).to eq(calculator.boost(build_document(format: "format2")))
+    expect(calculator.boost(build_document(format: "format1"))).to eq(0.08)
+    expect(calculator.boost(build_document(format: "format2"))).to eq(0.27)
   end
 
   it "boosts for different fields are combined" do
@@ -111,7 +111,7 @@ RSpec.describe PropertyBoostCalculator do
     #   1 - 2^(-format boost * document type boost * navigation supertype boost)
     # = 1 - 2^(-0.5 * 0.2 * 1)
     # = 0.07
-    expect(0.07).to eq(calculator.boost(document))
+    expect(calculator.boost(document)).to eq(0.07)
   end
 
   it "external search overrides are applied" do
