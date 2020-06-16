@@ -170,6 +170,63 @@ RSpec.describe Sitemap::Generator do
     generator.run
   end
 
+  it "includes parts of documents" do
+    add_sample_documents(
+      [
+        {
+          "title" => "Cheese in my face",
+          "description" => "Hummus weevils",
+          "format" => "answer",
+          "link" => "/an-example-answer",
+          "indexable_content" => "I like my badger: he is tasty and delicious",
+          "public_timestamp" => "2017-07-01T12:41:34+00:00",
+          "parts" => [
+            {
+              "slug": "hummus-weevils",
+              "title": "Hummus weevils",
+              "body": "I like my badger",
+            },
+            {
+              "slug": "tasty-badger",
+              "title": "Tasty badger",
+              "body": "he is tasty and delicious",
+            },
+          ],
+        },
+      ],
+      index_name: "govuk_test",
+    )
+
+    expected_xml = <<~HEREDOC
+      <?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+          <loc>http://www.dev.gov.uk/</loc>
+          <priority>0.5</priority>
+        </url>
+        <url>
+          <loc>http://www.dev.gov.uk/an-example-answer</loc>
+          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
+          <priority>0.5</priority>
+        </url>
+        <url>
+          <loc>http://www.dev.gov.uk/an-example-answer/hummus-weevils</loc>
+          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
+          <priority>0.375</priority>
+        </url>
+        <url>
+          <loc>http://www.dev.gov.uk/an-example-answer/tasty-badger</loc>
+          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
+          <priority>0.375</priority>
+        </url>
+      </urlset>
+    HEREDOC
+
+    expect(sitemap_uploader).to receive(:upload).with(file_content: expected_xml, file_name: "sitemap_1.xml")
+
+    generator.run
+  end
+
   it "generates and uploads the sitemap index" do
     add_sample_documents(
       [

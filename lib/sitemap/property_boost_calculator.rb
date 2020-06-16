@@ -16,7 +16,9 @@ class PropertyBoostCalculator
 
     overall_boost = raw_boosts.inject(:*)
 
-    withdrawn_status_boost(document) * map_boost_to_priority(overall_boost).round(2)
+    withdrawn_status_boost(document) *
+      part_boost(document) *
+      map_boost_to_priority(overall_boost).round(2)
   end
 
 private
@@ -36,5 +38,9 @@ private
 
   def withdrawn_status_boost(document)
     document["is_withdrawn"] ? 0.25 : 1
+  end
+
+  def part_boost(document)
+    document["is_part"] ? 0.75 : 1
   end
 end

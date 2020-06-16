@@ -83,7 +83,23 @@ module Sitemap
         documents.map do |document|
           chunk << SitemapPresenter.new(document["_source"], property_boost_calculator)
 
-          if chunk.size == SITEMAP_LIMIT
+          parts = document["_source"]["parts"] || []
+
+          parts.each do |part|
+            part_document = document["_source"].merge(
+              "is_part" => true,
+              "link" => document["_source"]["link"] + "/" + part["slug"],
+            )
+
+            chunk << SitemapPresenter.new(part_document, property_boost_calculator)
+
+            if chunk.size >= SITEMAP_LIMIT
+              yielder << chunk
+              chunk = []
+            end
+          end
+
+          if chunk.size >= SITEMAP_LIMIT
             yielder << chunk
             chunk = []
           end
