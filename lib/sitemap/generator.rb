@@ -81,27 +81,26 @@ module Sitemap
         next if documents.empty? && chunk.empty?
 
         documents.map do |document|
-          chunk << SitemapPresenter.new(document["_source"], property_boost_calculator)
+          presented_base_document = SitemapPresenter.new(document["_source"], property_boost_calculator)
 
           parts = document["_source"]["parts"] || []
 
-          parts.each do |part|
+          presented_parts = parts.map do |part|
             part_document = document["_source"].merge(
               "is_part" => true,
               "link" => document["_source"]["link"] + "/" + part["slug"],
             )
 
-            chunk << SitemapPresenter.new(part_document, property_boost_calculator)
+            SitemapPresenter.new(part_document, property_boost_calculator)
+          end
+
+          (presented_parts << presented_base_document).each do |presented|
+            chunk << presented
 
             if chunk.size >= SITEMAP_LIMIT
               yielder << chunk
               chunk = []
             end
-          end
-
-          if chunk.size >= SITEMAP_LIMIT
-            yielder << chunk
-            chunk = []
           end
         end
 
