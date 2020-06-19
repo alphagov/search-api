@@ -171,6 +171,8 @@ RSpec.describe Sitemap::Generator do
   end
 
   it "includes parts of documents" do
+    stub_const("Sitemap::Generator::SITEMAP_LIMIT", 4)
+
     add_sample_documents(
       [
         {
@@ -205,11 +207,6 @@ RSpec.describe Sitemap::Generator do
           <priority>0.5</priority>
         </url>
         <url>
-          <loc>http://www.dev.gov.uk/an-example-answer</loc>
-          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
-          <priority>0.5</priority>
-        </url>
-        <url>
           <loc>http://www.dev.gov.uk/an-example-answer/hummus-weevils</loc>
           <lastmod>2017-07-01T12:41:34+00:00</lastmod>
           <priority>0.375</priority>
@@ -218,6 +215,11 @@ RSpec.describe Sitemap::Generator do
           <loc>http://www.dev.gov.uk/an-example-answer/tasty-badger</loc>
           <lastmod>2017-07-01T12:41:34+00:00</lastmod>
           <priority>0.375</priority>
+        </url>
+        <url>
+          <loc>http://www.dev.gov.uk/an-example-answer</loc>
+          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
+          <priority>0.5</priority>
         </url>
       </urlset>
     HEREDOC

@@ -71,8 +71,7 @@ RSpec.describe Sitemap::Generator do
   end
 
   it "page priority is document priority" do
-    document = build_document("/some-path")
-    allow(document).to receive(:priority).and_return(0.48)
+    document = build_document("/some-path").merge(priority: 0.48)
 
     sitemap_xml = sitemap_generator.generate_sitemap_xml([document])
 
@@ -92,7 +91,7 @@ RSpec.describe Sitemap::Generator do
     SitemapPresenter.new(
       attributes,
       PropertyBoostCalculator.new,
-    )
+    ).to_h
   end
 
   def expect_page_has_no_lastmod(page)
