@@ -7,6 +7,18 @@ class SitemapPresenter
     @logger = Logging.logger[self]
   end
 
+  def to_h
+    {
+      url: url,
+      last_updated: last_updated,
+      priority: priority,
+    }
+  end
+
+private
+
+  attr_reader :document, :property_boost_calculator
+
   def url
     if document["link"].start_with?("http")
       document["link"]
@@ -33,18 +45,10 @@ class SitemapPresenter
   end
 
   def priority
-    withdrawn_status_boost * property_boost_calculator.boost(document)
+    property_boost_calculator.boost(document)
   end
-
-private
-
-  attr_reader :document, :property_boost_calculator
 
   def base_url
     Plek.current.website_root
-  end
-
-  def withdrawn_status_boost
-    document["is_withdrawn"] ? 0.25 : 1
   end
 end

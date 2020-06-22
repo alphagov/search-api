@@ -16,7 +16,9 @@ class PropertyBoostCalculator
 
     overall_boost = raw_boosts.inject(:*)
 
-    map_boost_to_priority(overall_boost).round(2)
+    withdrawn_status_boost(document) *
+      part_boost(document) *
+      map_boost_to_priority(overall_boost).round(2)
   end
 
 private
@@ -32,5 +34,13 @@ private
   # https://www.wolframalpha.com/input/?i=plot+1+-+2%5E(-x),+x+%3D+0+to+5
   def map_boost_to_priority(boost)
     (1 - 2**-boost).to_f
+  end
+
+  def withdrawn_status_boost(document)
+    document["is_withdrawn"] ? 0.25 : 1
+  end
+
+  def part_boost(document)
+    document["is_part"] ? 0.75 : 1
   end
 end

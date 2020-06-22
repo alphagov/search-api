@@ -43,9 +43,9 @@ module Sitemap
         xml.urlset(xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9") do
           documents.each do |document|
             xml.url do
-              xml.loc document.url
-              xml.lastmod document.last_updated if document.last_updated
-              xml.priority document.priority
+              xml.loc document[:url]
+              xml.lastmod document[:last_updated] if document[:last_updated]
+              xml.priority document[:priority]
             end
           end
         end
@@ -81,11 +81,26 @@ module Sitemap
         next if documents.empty? && chunk.empty?
 
         documents.map do |document|
-          chunk << SitemapPresenter.new(document["_source"], property_boost_calculator)
+          presented_base_document = SitemapPresenter.new(document["_source"], property_boost_calculator).to_h
 
-          if chunk.size == SITEMAP_LIMIT
-            yielder << chunk
-            chunk = []
+          parts = document["_source"]["parts"] || []
+
+          presented_parts = parts.map do |part|
+            part_document = document["_source"].merge(
+              "is_part" => true,
+              "link" => document["_source"]["link"] + "/" + part["slug"],
+            )
+
+            SitemapPresenter.new(part_document, property_boost_calculator).to_h
+          end
+
+          (presented_parts << presented_base_document).each do |presented|
+            chunk << presented
+
+            if chunk.size >= SITEMAP_LIMIT
+              yielder << chunk
+              chunk = []
+            end
           end
         end
 
@@ -140,14 +155,15 @@ module Sitemap
       SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
     end
 
-    StaticDocumentPresenter = Struct.new(:url, :last_updated, :priority)
-
     def homepage
-      StaticDocumentPresenter.new(Plek.current.website_root + "/", nil, 0.5)
+      {
+        url: Plek.current.website_root + "/",
+        priority: 0.5,
+      }
     end
 
     def property_boost_calculator
-      PropertyBoostCalculator.new
+      @property_boost_calculator ||= PropertyBoostCalculator.new
     end
 
     def base_url
