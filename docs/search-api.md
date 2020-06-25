@@ -70,7 +70,7 @@ without changing what existing clients see.
 
 ## Returning specific document fields
 
-See the [field reference](https://docs.publishing.service.gov.uk/apis/search/fields.html) for a list of all fields returned by the search API.
+See the [field reference](/config/schema/field_definitions.json) for a list of all fields returned by the search API.
 
 Only a few fields are returned by default. You can override the fields returned using the `fields` parameter. For example:
 
@@ -83,7 +83,7 @@ style (ie, `name=value&name=value`, where the same name may be used multiple
 times), or in Ruby/PHP array style (ie, `name[]=value&name[]=value`).
 
 ## Other parameters
-- `filter_<foo>`/`reject_<foo>`/`aggregate_<foo>`: see the [faceted search guide](https://docs.publishing.service.gov.uk/apis/search/faceted-search.html)
+- `filter_<foo>`/`reject_<foo>`/`aggregate_<foo>`: see the [faceted search guide](/docs/public-api/faceted-search.md)
 
 - `ab_tests`: a/b test with selected variant type. This allows test to be configured
   from upstream apps.
