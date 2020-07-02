@@ -11,7 +11,7 @@ notify-failure: &notify-failure
   put: govuk-searchandnav-slack
   params:
     channel: '#govuk-searchandnav'
-    username: 'Daily LTR'
+    username: 'Weekly LTR'
     icon_emoji: ':concourse:'
     silent: true
     text: |
@@ -38,10 +38,10 @@ resource_types:
     tag: latest
 
 resources:
-- name: at-10pm
+- name: sundays-at-10pm
   type: cron-resource
   source:
-    expression: "00 22 * * *"
+    expression: "00 22 * * SUN"
     location: "Europe/London"
 - name: search-api-git
   type: git
@@ -91,7 +91,7 @@ resources:
 jobs:
 - name: integration-fetch
   plan:
-    - get: at-10pm
+    - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
     - task: Fetch
@@ -161,7 +161,7 @@ jobs:
           args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
 - name: staging-fetch
   plan:
-    - get: at-10pm
+    - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
     - task: Fetch
@@ -231,7 +231,7 @@ jobs:
           args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
 - name: production-fetch
   plan:
-    - get: at-10pm
+    - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
     - task: Fetch
