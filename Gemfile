@@ -16,7 +16,7 @@ gem "govuk_message_queue_consumer", "~> 3.5.0"
 gem "govuk_schemas", "~> 4.0.0"
 gem "govuk_sidekiq", "~> 3.0.5"
 gem "irb", "~> 1.2", require: false
-gem "logging", "~> 2.2.2"
+gem "logging", "~> 2.3.0"
 gem "loofah"
 gem "nokogiri", "~> 1.10.9"
 gem "oauth2"
