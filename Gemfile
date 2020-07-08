@@ -54,4 +54,4 @@ end
 
 gem "pry-byebug", group: %i[development test]
 
-gem "httparty", "~> 0.18.0"
+gem "httparty", "~> 0.18.1"
