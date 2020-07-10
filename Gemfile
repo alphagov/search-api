@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "activesupport", "~> 6.0.3"
 gem "aws-sdk-s3", "~> 1.74"
-gem "aws-sdk-sagemaker", "~> 1.62"
+gem "aws-sdk-sagemaker", "~> 1.63"
 gem "aws-sdk-sagemakerruntime", "~> 1.24"
 gem "bootsnap", "~> 1.4"
 gem "elasticsearch", "~> 6"
