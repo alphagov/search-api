@@ -18,7 +18,7 @@ rescue LoadError
 end
 # rubocop:enable Lint/SuppressedException
 
-task default: %i[spec]
+task default: %i[spec lint]
 
 def logger
   Logging.logger.root
