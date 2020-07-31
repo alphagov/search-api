@@ -59,14 +59,18 @@ module SearchIndices
 
     # Apply a write lock to this index, making it read-only
     def lock
-      request_body = { "index" => { "blocks" => { "read_only_allow_delete" => true } } }
-      @client.indices.put_settings(index: @index_name, body: request_body)
+      with_retries do
+        request_body = { "index" => { "blocks" => { "read_only_allow_delete" => true } } }
+        @client.indices.put_settings(index: @index_name, body: request_body)
+      end
     end
 
     # Remove any write lock applied to this index
     def unlock
-      request_body = { "index" => { "blocks" => { "read_only_allow_delete" => false } } }
-      @client.indices.put_settings(index: @index_name, body: request_body)
+      with_retries do
+        request_body = { "index" => { "blocks" => { "read_only_allow_delete" => false } } }
+        @client.indices.put_settings(index: @index_name, body: request_body)
+      end
     end
 
     def with_lock
@@ -235,6 +239,19 @@ module SearchIndices
     end
 
   private
+
+    def with_retries
+      retries ||= 0
+      begin
+        yield
+      rescue HTTPClient::TimeoutError, Faraday::TimeoutError
+        raise if (retries += 1) > 3
+
+        logger.info "Retrying after #{retries} timeout errors"
+        sleep 2**retries
+        retry
+      end
+    end
 
     # Parse an elasticsearch error message to determine whether it's caused by
     # a read-only index. An example read-only error message:
