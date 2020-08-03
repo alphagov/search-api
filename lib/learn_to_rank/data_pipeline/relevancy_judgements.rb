@@ -36,7 +36,8 @@ module LearnToRank::DataPipeline
     # a set of judgements between 0 and 3.
     def judgements(query, documents)
       clicks_above_position = 0
-      preprocess(documents).lazy.map do |document|
+      ranked_documents = documents.sort_by { |doc| doc[:rank] }
+      ranked_documents.lazy.map do |document|
         views = Float(document[:views]) - clicks_above_position
         clicks = Float(document[:clicks])
         views = clicks unless views >= clicks
@@ -54,19 +55,6 @@ module LearnToRank::DataPipeline
           link: document[:link],
         }
       end
-    end
-
-    # order the docs by rank and combine part-results with the page-results
-    def preprocess(documents)
-      combined_docs = documents.group_by { |doc| doc[:rank] }.map do |rank, doc_group|
-        {
-          link: doc_group.map { |doc| doc[:link] }.min_by(&:length),
-          rank: rank,
-          views: doc_group.map { |doc| doc[:views] }.max,
-          clicks: doc_group.map { |doc| doc[:clicks] }.sum,
-        }
-      end
-      combined_docs.sort_by { |doc| doc[:rank] }
     end
 
     # Turn an estimated click-through-rate@1 into an estimated score

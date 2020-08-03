@@ -40,38 +40,5 @@ RSpec.describe LearnToRank::DataPipeline::RelevancyJudgements do
         { link: "2", query: "vehicle tax", score: 1 },
       ])
     end
-
-    context "with parts" do
-      let(:queries) do
-        {
-          "micropig" => [
-            { link: "1", rank: 1, views: 100, clicks: 5 },
-            { link: "1/a", rank: 1, views: 100, clicks: 5 },
-            { link: "1/b", rank: 1, views: 100, clicks: 5 },
-            { link: "1/c", rank: 1, views: 100, clicks: 5 },
-            { link: "2", rank: 2, views: 100, clicks: 15 },
-          ],
-          "vehicle tax" => [
-            { link: "1", rank: 1, views: 100, clicks: 5 },
-            { link: "1/a", rank: 2, views: 100, clicks: 5 },
-            { link: "1/b", rank: 3, views: 100, clicks: 5 },
-            { link: "1/c", rank: 4, views: 100, clicks: 5 },
-            { link: "2", rank: 5, views: 100, clicks: 15 },
-          ],
-        }
-      end
-
-      it "combines the results with the same rank" do
-        expect(judgements).to eq([
-          { link: "1", query: "micropig", score: 3 },
-          { link: "2", query: "micropig", score: 2 },
-          { link: "1", query: "vehicle tax", score: 1 },
-          { link: "1/a", query: "vehicle tax", score: 1 },
-          { link: "1/b", query: "vehicle tax", score: 1 },
-          { link: "1/c", query: "vehicle tax", score: 1 },
-          { link: "2", query: "vehicle tax", score: 2 },
-        ])
-      end
-    end
   end
 end
