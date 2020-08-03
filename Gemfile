@@ -14,7 +14,7 @@ gem "govuk_app_config", "~> 2.2.1"
 gem "govuk_document_types", "~> 0.9.2"
 gem "govuk_message_queue_consumer", "~> 3.5.0"
 gem "govuk_schemas", "~> 4.0.0"
-gem "govuk_sidekiq", "~> 3.0.5"
+gem "govuk_sidekiq", "~> 4.0.0"
 gem "irb", "~> 1.2", require: false
 gem "logging", "~> 2.3.0"
 gem "loofah"
