@@ -10,7 +10,7 @@ class SchemaMigrator
 
   def reindex
     index_group.current.with_lock do
-      response = Services.elasticsearch(hosts: "#{cluster.uri}?slices=auto", timeout: 60).reindex(
+      response = Services.elasticsearch(hosts: "#{cluster.uri}?slices=auto", timeout: TIMEOUT_SECONDS).reindex(
         wait_for_completion: false,
         body: {
           source: {
@@ -52,11 +52,13 @@ class SchemaMigrator
 
 private
 
+  TIMEOUT_SECONDS = 60
+
   attr_reader :io, :cluster
 
   # this is awful but is caused by the return format of the tasks lists
   def running_tasks
-    tasks = Services.elasticsearch(cluster: cluster).tasks.list(actions: "*reindex")
+    tasks = Services.elasticsearch(cluster: cluster, retry_on_failure: 20, timeout: TIMEOUT_SECONDS).tasks.list(actions: "*reindex")
     nodes = tasks["nodes"] || {}
     node_details = nodes.values || []
     tasks = node_details.flat_map { |a| a["tasks"] }
