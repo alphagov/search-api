@@ -245,7 +245,7 @@ module SearchIndices
       begin
         yield
       rescue HTTPClient::TimeoutError, Faraday::TimeoutError
-        raise if (retries += 1) > 3
+        raise if (retries += 1) > 10
 
         logger.info "Retrying after #{retries} timeout errors"
         sleep 2**retries
