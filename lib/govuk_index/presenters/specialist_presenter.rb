@@ -8,6 +8,7 @@ module GovukIndex
     delegate_to_payload :aircraft_type
     delegate_to_payload :alert_type, convert_to_array: true
     delegate_to_payload :assessment_date
+    delegate_to_payload :authors
     delegate_to_payload :business_sizes
     delegate_to_payload :business_stages
     delegate_to_payload :case_state, convert_to_array: true
@@ -49,12 +50,15 @@ module GovukIndex
     delegate_to_payload :regions
     delegate_to_payload :registration
     delegate_to_payload :report_type, convert_to_array: true
+    delegate_to_payload :research_document_type
     delegate_to_payload :result
+    delegate_to_payload :review_status
     delegate_to_payload :service_provider
     delegate_to_payload :sift_end_date
     delegate_to_payload :sifting_status
     delegate_to_payload :stage
     delegate_to_payload :subject
+    delegate_to_payload :theme
     delegate_to_payload :therapeutic_area
     delegate_to_payload :tiers_or_standalone_items
     delegate_to_payload :tribunal_decision_categories
