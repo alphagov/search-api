@@ -5,7 +5,7 @@ RSpec.describe Indexer::LinksLookup do
 
   let(:content_id) { "DOCUMENT_CONTENT_ID" }
   let(:endpoint) { Plek.current.find("publishing-api") + "/v2" }
-  let(:expanded_links_url) { endpoint + "/expanded-links/" + content_id }
+  let(:expanded_links_url) { endpoint + "/expanded-links/" + content_id + "?with_drafts=false" }
 
   it "retry links on timeout" do
     stub_request(:get, expanded_links_url).to_timeout

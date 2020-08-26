@@ -38,55 +38,58 @@ RSpec.describe "TaglookupDuringIndexingTest" do
     )
 
     stub_publishing_api_has_expanded_links(
-      content_id: "DOCUMENT-CONTENT-ID",
-      expanded_links: {
-        topics: [
-          {
-            "content_id" => "TOPIC-CONTENT-ID-1",
-            "base_path" => "/topic/my-topic/a",
-          },
-          {
-            "content_id" => "TOPIC-CONTENT-ID-2",
-            "base_path" => "/topic/my-topic/b",
-          },
-        ],
-        mainstream_browse_pages: [
-          {
-            "content_id" => "BROWSE-1",
-            "base_path" => "/browse/my-browse/1",
-          },
-        ],
-        organisations: [
-          {
-            "content_id" => "ORG-1",
-            "base_path" => "/government/organisations/my-org/1",
-          },
-          {
-            "content_id" => "ORG-2",
-            "base_path" => "/courts-tribunals/my-court",
-          },
-        ],
-        primary_publishing_organisation: [
-          {
-            "content_id" => "ORG-1",
-            "base_path" => "/government/organisations/my-org/1",
-          },
-        ],
-        taxons: [
-          {
-            "content_id" => "TAXON-1",
-            "base_path" => "/alpha-taxonomy/my-taxon-1",
-          },
-        ],
-        facet_values: [
-          { "content_id" => "TAG-1" },
-          { "content_id" => "TAG-2" },
-        ],
-        facet_groups: [
-          { "content_id" => "TGRP-1" },
-          { "content_id" => "TGRP-2" },
-        ],
+      {
+        content_id: "DOCUMENT-CONTENT-ID",
+        expanded_links: {
+          topics: [
+            {
+              "content_id" => "TOPIC-CONTENT-ID-1",
+              "base_path" => "/topic/my-topic/a",
+            },
+            {
+              "content_id" => "TOPIC-CONTENT-ID-2",
+              "base_path" => "/topic/my-topic/b",
+            },
+          ],
+          mainstream_browse_pages: [
+            {
+              "content_id" => "BROWSE-1",
+              "base_path" => "/browse/my-browse/1",
+            },
+          ],
+          organisations: [
+            {
+              "content_id" => "ORG-1",
+              "base_path" => "/government/organisations/my-org/1",
+            },
+            {
+              "content_id" => "ORG-2",
+              "base_path" => "/courts-tribunals/my-court",
+            },
+          ],
+          primary_publishing_organisation: [
+            {
+              "content_id" => "ORG-1",
+              "base_path" => "/government/organisations/my-org/1",
+            },
+          ],
+          taxons: [
+            {
+              "content_id" => "TAXON-1",
+              "base_path" => "/alpha-taxonomy/my-taxon-1",
+            },
+          ],
+          facet_values: [
+            { "content_id" => "TAG-1" },
+            { "content_id" => "TAG-2" },
+          ],
+          facet_groups: [
+            { "content_id" => "TGRP-1" },
+            { "content_id" => "TGRP-2" },
+          ],
+        },
       },
+      with_drafts: false,
     )
 
     post "/government_test/documents",
@@ -115,15 +118,18 @@ RSpec.describe "TaglookupDuringIndexingTest" do
 
   it "skips content id lookup if it already has a content_id" do
     stub_publishing_api_has_expanded_links(
-      content_id: "CONTENT-ID-OF-DOCUMENT",
-      expanded_links: {
-        topics: [
-          {
-            "content_id" => "TOPIC-CONTENT-ID-1",
-            "base_path" => "/topic/my-topic/a",
-          },
-        ],
+      {
+        content_id: "CONTENT-ID-OF-DOCUMENT",
+        expanded_links: {
+          topics: [
+            {
+              "content_id" => "TOPIC-CONTENT-ID-1",
+              "base_path" => "/topic/my-topic/a",
+            },
+          ],
+        },
       },
+      with_drafts: false,
     )
 
     post "/government_test/documents",
@@ -205,10 +211,13 @@ RSpec.describe "TaglookupDuringIndexingTest" do
     )
 
     stub_publishing_api_has_expanded_links(
-      content_id: "DOCUMENT-CONTENT-ID",
-      expanded_links: {
-        taxons: [taxon1, taxon2],
+      {
+        content_id: "DOCUMENT-CONTENT-ID",
+        expanded_links: {
+          taxons: [taxon1, taxon2],
+        },
       },
+      with_drafts: false,
     )
 
     post "/government_test/documents",

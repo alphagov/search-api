@@ -53,7 +53,7 @@ RSpec.describe Indexer::AmendWorker do
 
   def stub_request_to_publishing_api(id)
     endpoint = Plek.current.find("publishing-api") + "/v2"
-    expanded_links_url = endpoint + "/expanded-links/" + id
+    expanded_links_url = endpoint + "/expanded-links/" + id + "?with_drafts=false"
 
     stub_request(:get, expanded_links_url).to_return(status: 200, body: {}.to_json)
   end

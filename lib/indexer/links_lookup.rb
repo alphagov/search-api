@@ -41,7 +41,10 @@ module Indexer
 
     def find_links(content_id)
       GdsApi.with_retries(maximum_number_of_attempts: 5) do
-        Services.publishing_api.get_expanded_links(content_id)["expanded_links"]
+        Services.publishing_api.get_expanded_links(
+          content_id,
+          with_drafts: false,
+        )["expanded_links"]
       end
     rescue GdsApi::TimedOutException => e
       @logger.error("Timeout fetching expanded links for #{content_id}")
