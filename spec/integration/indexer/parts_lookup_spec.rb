@@ -14,7 +14,13 @@ RSpec.describe "PartslookupDuringIndexingTest" do
       "/baz/attachment-5" => "attachment-content-id-5",
     )
 
-    stub_publishing_api_has_expanded_links(content_id: "document-content-id", expanded_links: {})
+    stub_publishing_api_has_expanded_links(
+      {
+        content_id: "document-content-id",
+        expanded_links: {},
+      },
+      with_drafts: false,
+    )
 
     stub_publishing_api_has_item({ content_id: "attachment-content-id-1", publication_state: "published", details: { body: "<strong>body 1</strong>" } })
     stub_publishing_api_has_item({ content_id: "attachment-content-id-2", publication_state: "published", details: { body: "<em>body 2</em>" } })

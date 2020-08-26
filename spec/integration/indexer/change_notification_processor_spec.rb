@@ -7,8 +7,11 @@ RSpec.describe "ChangeNotificationProcessorTest" do
     )
 
     stub_publishing_api_has_expanded_links(
-      content_id: "DOCUMENT-CONTENT-ID",
-      expanded_links: {},
+      {
+        content_id: "DOCUMENT-CONTENT-ID",
+        expanded_links: {},
+      },
+      with_drafts: false,
     )
 
     post "/government_test/documents",
@@ -28,13 +31,18 @@ RSpec.describe "ChangeNotificationProcessorTest" do
     )
 
     stub_publishing_api_has_expanded_links(
-      content_id: "DOCUMENT-CONTENT-ID",
-      expanded_links: {
-        mainstream_browse_pages: [{
-          title: "Bla",
-          base_path: "/browse/my-browse",
-        }],
+      {
+        content_id: "DOCUMENT-CONTENT-ID",
+        expanded_links: {
+          mainstream_browse_pages: [
+            {
+              title: "Bla",
+              base_path: "/browse/my-browse",
+            },
+          ],
+        },
       },
+      with_drafts: false,
     )
 
     Indexer::ChangeNotificationProcessor.trigger({
