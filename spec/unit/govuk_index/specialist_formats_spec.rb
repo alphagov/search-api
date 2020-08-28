@@ -201,6 +201,18 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
+  it "research for development output" do
+    custom_metadata = {
+      "research_document_type" => "book_chapter",
+      "country" => %w[GB],
+      "authors" => ["Mr. Potato Head", "Mrs. Potato Head"],
+      "theme" => %w[infrastructure],
+      "first_published_at" => "2016-04-28",
+    }
+    document = build_example_with_metadata(custom_metadata)
+    expect_document_include_hash(document, custom_metadata)
+  end
+
   it "service standard report" do
     custom_metadata = {
       "assessment_date" => "2016-10-10",
