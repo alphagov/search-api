@@ -720,6 +720,23 @@
     "type": "searchable_identifier"
   },
 
+  "authors": {
+    "description": "A set of author names, which aren't selected from a predefined list and don't repeat",
+    "type": "searchable_identifiers"
+  },
+  "review_status": {
+    "description": "Whether or not this item is peer reviewed (a code)",
+    "type": "identifier"
+  },
+  "theme": {
+    "description": "The broad theme (or themes) to which the output applies",
+    "type": "searchable_identifiers"
+  },
+  "research_document_type": {
+    "description": "The document type of the output (e.g. Book Chapter, Conference Paper)",
+    "type": "searchable_identifier"
+  },
+
   "assessment_date": {
     "description": "The date when the assessment was held.",
     "type": "date"
