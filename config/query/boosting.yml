@@ -7,7 +7,6 @@ base:
     transaction: 1.5
     # Should appear below govuk (mainstream) content
     aaib_report: 0.2
-    dfid_research_output: 0.2
     research_for_development_output: 0.2
     hmrc_manual_section: 0.2
     service_standard_report: 0.05
