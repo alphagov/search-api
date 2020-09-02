@@ -23,10 +23,6 @@ module GovukIndex
     delegate_to_payload :decision_subject
     delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
-    delegate_to_payload :dfid_authors
-    delegate_to_payload :dfid_document_type
-    delegate_to_payload :dfid_review_status
-    delegate_to_payload :dfid_theme
     delegate_to_payload :eligible_entities
     delegate_to_payload :fund_state, convert_to_array: true
     delegate_to_payload :fund_type

@@ -35,7 +35,6 @@ RSpec.describe "SpecialistFormatTest" do
       business_finance_support_scheme
       cma_case
       countryside_stewardship_grant
-      dfid_research_output
       drug_safety_update
       employment_appeal_tribunal_decision
       employment_tribunal_decision

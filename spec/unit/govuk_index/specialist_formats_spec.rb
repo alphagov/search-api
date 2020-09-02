@@ -87,18 +87,6 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
     expect_document_include_hash(document, custom_metadata.merge(special_formated_output))
   end
 
-  it "dfid research output" do
-    custom_metadata = {
-      "dfid_document_type" => "book_chapter",
-      "country" => %w[GB],
-      "dfid_authors" => ["Mr. Potato Head", "Mrs. Potato Head"],
-      "dfid_theme" => %w[infrastructure],
-      "first_published_at" => "2016-04-28",
-    }
-    document = build_example_with_metadata(custom_metadata)
-    expect_document_include_hash(document, custom_metadata)
-  end
-
   it "drug safety update" do
     custom_metadata = {
       "therapeutic_area" => %w[cancer haematology immunosuppression-transplantation],

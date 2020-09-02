@@ -6,7 +6,6 @@ module LearnToRank
         "news_article" => 2,
         "hmrc_manual_section" => 3,
         "employment_tribunal_decision" => 4,
-        "dfid_research_output" => 5,
         "research_for_development_output" => 5,
         "speech" => 6,
         "aaib_report" => 7,

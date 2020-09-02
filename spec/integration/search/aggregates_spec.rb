@@ -204,33 +204,33 @@ RSpec.describe "search queries" do
     ).to eq(["/government-1", "/govuk-1"])
   end
 
-  it "can be searched by every aggregate for dfid" do
-    dfid_research_output_attributes = {
-      "title" => "Somewhat Unique DFID Research Output",
-      "link" => "/dfid-research-outputs/somewhat-unique-dfid-research-output",
+  it "can be searched by every aggregate for research for development outputs" do
+    research_for_development_output_attributes = {
+      "title" => "Somewhat Unique Research For Development Output",
+      "link" => "/reearch-for-development-outputs/somewhat-unique-reearch-for-development-output",
       "indexable_content" => "Use of calcrete in gender roles in Tanzania",
       "country" => %w[TZ AL],
-      "dfid_review_status" => "peer_reviewed",
+      "review_status" => "peer_reviewed",
       "first_published_at" => "2014-04-02",
-      "format" => "dfid_research_output",
+      "format" => "research_for_development_output",
     }
 
-    commit_document("govuk_test", dfid_research_output_attributes, type: "dfid_research_output")
+    commit_document("govuk_test", research_for_development_output_attributes, type: "research_for_development_output")
 
     aggregate_queries = %w(
-      filter_dfid_review_status[]=peer_reviewed
+      filter_review_status[]=peer_reviewed
       filter_country[]=TZ&filter_country[]=AL
     )
 
     aggregate_queries.each do |filter_query|
-      get "/search?filter_document_type=dfid_research_output&#{filter_query}"
+      get "/search?filter_document_type=research_for_development_output&#{filter_query}"
 
       expect(last_response).to be_ok
       expect(parsed_response["total"]).to eq(1), "Failure to search by #{filter_query}"
       expect(parsed_response["results"][0]).to include(
-        "document_type" => "dfid_research_output",
-        "title" => dfid_research_output_attributes["title"],
-        "link" => dfid_research_output_attributes["link"],
+        "document_type" => "research_for_development_output",
+        "title" => research_for_development_output_attributes["title"],
+        "link" => research_for_development_output_attributes["link"],
       )
     end
   end

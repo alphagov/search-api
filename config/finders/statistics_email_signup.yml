@@ -29,7 +29,7 @@ details:
       prechecked: false
     - key: research
       filter_values:
-      - dfid_research_output
+      - research_for_development_output
       - independent_report
       - research
       radio_button_name: Research
