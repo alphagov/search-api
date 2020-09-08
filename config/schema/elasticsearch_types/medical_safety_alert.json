@@ -30,6 +30,10 @@
       {
         "label": "Drug alert: company-led",
         "value": "company-led-drugs"
+      },
+      {
+        "label": "National Patient Safety alert",
+        "value": "national-patient-safety"
       }
     ],
 
