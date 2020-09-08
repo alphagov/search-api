@@ -45,7 +45,7 @@ Search API locally by running
 
 This starts the Search API application and its dependencies.
 
-The Search API will be running locally at [search-api.dev.gov.uk](search-api.dev.gov.uk/search).
+The Search API will be running locally at [search-api.dev.gov.uk](http://search-api.dev.gov.uk/search).
 
 If you run `docker ps` this will tell you that there are containers running
 for Search API, Nginx, Redis, Publishing API, and Elasticsearch.
