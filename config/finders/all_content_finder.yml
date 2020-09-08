@@ -47,7 +47,7 @@ details:
   - display_as_result_metadata: false
     filterable: true
     key: content_purpose_supergroup
-    name: Show only
+    name: Content type
     preposition: in
     short_name: In
     type: text
