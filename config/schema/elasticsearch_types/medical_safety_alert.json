@@ -34,6 +34,10 @@
       {
         "label": "National Patient Safety alert",
         "value": "national-patient-safety"
+      },
+      {
+        "label": "Device safety information",
+        "value": "device-safety-information"
       }
     ],
 
