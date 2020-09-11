@@ -32,8 +32,12 @@
         "value": "company-led-drugs"
       },
       {
-        "label": "National Patient Safety alert",
+        "label": "National patient safety alert",
         "value": "national-patient-safety"
+      },
+      {
+        "label": "Device safety information",
+        "value": "device-safety-information"
       }
     ],
 
