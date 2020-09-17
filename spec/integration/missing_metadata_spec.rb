@@ -4,7 +4,9 @@ RSpec.describe "MissingMetadataTest" do
   it "finds missing content_id" do
     commit_document(
       "government_test",
-      "link" => "/path/to_page",
+      {
+        "link" => "/path/to_page",
+      },
     )
 
     runner = MissingMetadata::Runner.new("content_id", search_config: SearchConfig.default_instance, logger: io)
@@ -16,8 +18,10 @@ RSpec.describe "MissingMetadataTest" do
   it "ignores already set content_id" do
     commit_document(
       "government_test",
-      "link" => "/path/to_page",
-      "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
+      {
+        "link" => "/path/to_page",
+        "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
+      },
     )
 
     runner = MissingMetadata::Runner.new("content_id", search_config: SearchConfig.default_instance, logger: io)
@@ -29,8 +33,10 @@ RSpec.describe "MissingMetadataTest" do
   it "finds missing document_type" do
     commit_document(
       "government_test",
-      "link" => "/path/to_page",
-      "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
+      {
+        "link" => "/path/to_page",
+        "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
+      },
     )
 
     runner = MissingMetadata::Runner.new("content_store_document_type", search_config: SearchConfig.default_instance, logger: io)
@@ -42,9 +48,11 @@ RSpec.describe "MissingMetadataTest" do
   it "ignores already set document_type" do
     commit_document(
       "government_test",
-      "link" => "/path/to_page",
-      "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
-      "content_store_document_type" => "guide",
+      {
+        "link" => "/path/to_page",
+        "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
+        "content_store_document_type" => "guide",
+      },
     )
 
     runner = MissingMetadata::Runner.new("content_store_document_type", search_config: SearchConfig.default_instance, logger: io)

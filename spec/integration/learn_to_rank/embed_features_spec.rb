@@ -39,16 +39,18 @@ RSpec.describe LearnToRank::DataPipeline::EmbedFeatures do
         %w[pet whiskers kitten cat dog 'cat cat cat!'].each do |doc|
           commit_document(
             "government_test",
-            "title" => "#{doc} and cat and dog",
-            "description" => "A story about a cat or dog!",
-            "link" => "/#{doc}",
-            "popularity" => doc.length,
-            "public_timestamp" => "2019-11-12T17:16:01.000+01:00",
-            "format" => "case_study",
-            "organisation_content_ids" => %w[de4e9dc6-cca4-43af-a594-682023b84d6c],
-            "query" => "dogs or cats",
-            "updated_at" => "2019-11-12T17:16:01.000+01:00",
-            "indexable_content" => "Story about dogs and/or cats",
+            {
+              "title" => "#{doc} and cat and dog",
+              "description" => "A story about a cat or dog!",
+              "link" => "/#{doc}",
+              "popularity" => doc.length,
+              "public_timestamp" => "2019-11-12T17:16:01.000+01:00",
+              "format" => "case_study",
+              "organisation_content_ids" => %w[de4e9dc6-cca4-43af-a594-682023b84d6c],
+              "query" => "dogs or cats",
+              "updated_at" => "2019-11-12T17:16:01.000+01:00",
+              "indexable_content" => "Story about dogs and/or cats",
+            },
           )
         end
 

@@ -34,9 +34,11 @@ RSpec.describe "SearchTest" do
   it "spell checking with blocklisted typo" do
     commit_document(
       "government_test",
-      "title" => "Brexitt",
-      "description" => "Brexitt",
-      "link" => "/brexitt",
+      {
+        "title" => "Brexitt",
+        "description" => "Brexitt",
+        "link" => "/brexitt",
+      },
     )
 
     get "/search?q=brexit&suggest=spelling"
@@ -132,18 +134,24 @@ RSpec.describe "SearchTest" do
     before do
       commit_document(
         "government_test",
-        "link" => "/one",
-        "part_of_taxonomy_tree" => %w[a b c],
+        {
+          "link" => "/one",
+          "part_of_taxonomy_tree" => %w[a b c],
+        },
       )
       commit_document(
         "government_test",
-        "link" => "/two",
-        "part_of_taxonomy_tree" => %w[d e f],
+        {
+          "link" => "/two",
+          "part_of_taxonomy_tree" => %w[d e f],
+        },
       )
       commit_document(
         "government_test",
-        "link" => "/three",
-        "part_of_taxonomy_tree" => %w[b e],
+        {
+          "link" => "/three",
+          "part_of_taxonomy_tree" => %w[b e],
+        },
       )
     end
 
@@ -456,19 +464,23 @@ RSpec.describe "SearchTest" do
     # we DON'T want this document in our search results
     commit_document(
       "government_test",
-      "title" => "Rules of Quiddich (2017)",
-      "link" => "/quiddich-rules-2017",
-      "format" => "detailed_guidance",
-      "topical_events" => %w[quiddich-world-cup-2017],
+      {
+        "title" => "Rules of Quiddich (2017)",
+        "link" => "/quiddich-rules-2017",
+        "format" => "detailed_guidance",
+        "topical_events" => %w[quiddich-world-cup-2017],
+      },
     )
 
     # we DO want this document in our search results
     commit_document(
       "government_test",
-      "title" => "Rules of Quiddich (2018)",
-      "link" => "/quiddich-rules-2018",
-      "format" => "detailed_guidance",
-      "topical_events" => [topical_event_of_interest],
+      {
+        "title" => "Rules of Quiddich (2018)",
+        "link" => "/quiddich-rules-2018",
+        "format" => "detailed_guidance",
+        "topical_events" => [topical_event_of_interest],
+      },
     )
 
     get "/search.json?filter_topical_events=#{topical_event_of_interest}"

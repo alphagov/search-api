@@ -32,9 +32,11 @@ RSpec.describe "BatchSearchTest" do
     commit_ministry_of_magic_document
     commit_document(
       "government_test",
-      "title" => "Brexitt",
-      "description" => "Brexitt",
-      "link" => "/brexitt",
+      {
+        "title" => "Brexitt",
+        "description" => "Brexitt",
+        "link" => "/brexitt",
+      },
     )
     get build_get_url([{ q: "ministry of magic" }, { q: "brexit" }])
     results = parsed_response["results"]

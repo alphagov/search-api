@@ -2,11 +2,11 @@ require "spec_helper"
 
 RSpec.describe "GovukIndex::SwitchOnFormatsInGovukIndexTest" do
   before do
-    insert_document("government_test", title: "government answer", link: "/government/answer", format: "answer")
-    insert_document("government_test", title: "government help", link: "/government/help", format: "help_page")
+    insert_document("government_test", { title: "government answer", link: "/government/answer", format: "answer" })
+    insert_document("government_test", { title: "government help", link: "/government/help", format: "help_page" })
     commit_index("government_test")
-    insert_document("govuk_test", title: "govuk answer", link: "/govuk/answer", format: "answer")
-    insert_document("govuk_test", title: "govuk help", link: "/govuk/help", format: "help_page")
+    insert_document("govuk_test", { title: "govuk answer", link: "/govuk/answer", format: "answer" })
+    insert_document("govuk_test", { title: "govuk help", link: "/govuk/help", format: "help_page" })
     commit_index("govuk_test")
   end
 
