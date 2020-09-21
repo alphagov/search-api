@@ -67,10 +67,10 @@ RSpec.describe "search queries" do
     end
 
     it "returns count with filter on a different field" do
-      insert_document("govuk_test", organisations: %w[org1], mainstream_browse_pages: ["browse/page/1"], format: "answer")
-      insert_document("govuk_test", organisations: %w[org1], mainstream_browse_pages: ["browse/page/2"], format: "answer")
-      insert_document("govuk_test", organisations: %w[org2], mainstream_browse_pages: ["browse/page/1"], format: "answer")
-      insert_document("govuk_test", organisations: %w[org2], mainstream_browse_pages: ["browse/page/2"], format: "answer")
+      insert_document("govuk_test", { organisations: %w[org1], mainstream_browse_pages: ["browse/page/1"], format: "answer" })
+      insert_document("govuk_test", { organisations: %w[org1], mainstream_browse_pages: ["browse/page/2"], format: "answer" })
+      insert_document("govuk_test", { organisations: %w[org2], mainstream_browse_pages: ["browse/page/1"], format: "answer" })
+      insert_document("govuk_test", { organisations: %w[org2], mainstream_browse_pages: ["browse/page/2"], format: "answer" })
       commit_index("govuk_test")
 
       get "/search?aggregate_mainstream_browse_pages=2&filter_organisations=org2"

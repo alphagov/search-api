@@ -4,8 +4,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "doesn't break without keywords" do
     commit_document(
       "government_test",
-      "title" => "I am the result",
-      "link" => "/some-nice-link",
+      {
+        "title" => "I am the result",
+        "link" => "/some-nice-link",
+      },
     )
 
     get "/search?fields[]=title_with_highlighting"
@@ -17,8 +19,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns highlighted title" do
     commit_document(
       "government_test",
-      "title" => "I am the result",
-      "link" => "/some-nice-link",
+      {
+        "title" => "I am the result",
+        "link" => "/some-nice-link",
+      },
     )
 
     get "/search?q=result&fields[]=title_with_highlighting"
@@ -30,9 +34,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns highlighted title fallback" do
     commit_document(
       "government_test",
-      "title" => "Thing without",
-      "description" => "I am the result",
-      "link" => "/some-nice-link",
+      {
+        "title" => "Thing without",
+        "description" => "I am the result",
+        "link" => "/some-nice-link",
+      },
     )
 
     get "/search?q=result&fields[]=title_with_highlighting"
@@ -44,8 +50,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns highlighted description" do
     commit_document(
       "government_test",
-      "link" => "/some-nice-link",
-      "description" => "This is a test search result of many results.",
+      {
+        "link" => "/some-nice-link",
+        "description" => "This is a test search result of many results.",
+      },
     )
 
     get "/search?q=result&fields[]=description_with_highlighting"
@@ -59,8 +67,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "highlights mixed quoted/unquoted queries" do
     commit_document(
       "government_test",
-      "link" => "/some-nice-link",
-      "description" => "This is a test search result of many results.",
+      {
+        "link" => "/some-nice-link",
+        "description" => "This is a test search result of many results.",
+      },
     )
 
     get "/search?q=\"search+result\"+test&fields[]=description_with_highlighting"
@@ -74,8 +84,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "highlights quoted queries in their entirety (other than stopwords)" do
     commit_document(
       "government_test",
-      "link" => "/some-nice-link",
-      "description" => "The ministry of magic is a magic ministry.",
+      {
+        "link" => "/some-nice-link",
+        "description" => "The ministry of magic is a magic ministry.",
+      },
     )
 
     get "/search?q=\"ministry of magic\"&fields[]=description_with_highlighting"
@@ -89,8 +101,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "highlights synonyms" do
     commit_document(
       "government_test",
-      "link" => "/some-nice-link",
-      "description" => "This is one (1) page.",
+      {
+        "link" => "/some-nice-link",
+        "description" => "This is one (1) page.",
+      },
     )
 
     get "/search?q=one&fields[]=description_with_highlighting"
@@ -104,8 +118,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "doesn't highlight synonyms if they're disabled" do
     commit_document(
       "government_test",
-      "link" => "/some-nice-link",
-      "description" => "This is one (1) page.",
+      {
+        "link" => "/some-nice-link",
+        "description" => "This is one (1) page.",
+      },
     )
 
     get "/search?q=one&fields[]=description_with_highlighting&debug=disable_synonyms"
@@ -119,9 +135,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns documents html escaped" do
     commit_document(
       "government_test",
-      "title" => "Escape & highlight my title",
-      "link" => "/some-nice-link",
-      "description" => "Escape & highlight the description as well.",
+      {
+        "title" => "Escape & highlight my title",
+        "link" => "/some-nice-link",
+        "description" => "Escape & highlight the description as well.",
+      },
     )
 
     get "/search?q=highlight&fields[]=title_with_highlighting,description_with_highlighting"
@@ -137,8 +155,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns truncated correctly where result at start of description" do
     commit_document(
       "government_test",
-      "link" => "/some-nice-link",
-      "description" => "word " + ("something " * 200),
+      {
+        "link" => "/some-nice-link",
+        "description" => "word " + ("something " * 200),
+      },
     )
 
     get "/search?q=word&fields[]=description_with_highlighting"
@@ -151,8 +171,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns truncated correctly where result at end of description" do
     commit_document(
       "government_test",
-      "link" => "/some-nice-link",
-      "description" => ("something " * 200) + " word",
+      {
+        "link" => "/some-nice-link",
+        "description" => ("something " * 200) + " word",
+      },
     )
 
     get "/search?q=word&fields[]=description_with_highlighting"
@@ -165,8 +187,10 @@ RSpec.describe "ResultsWithHighlightingTest" do
   it "returns truncated correctly where result in middle of description" do
     commit_document(
       "government_test",
-      "link" => "/some-nice-link",
-      "description" => ("something " * 200) + " word " + ("something " * 200),
+      {
+        "link" => "/some-nice-link",
+        "description" => ("something " * 200) + " word " + ("something " * 200),
+      },
     )
 
     get "/search?q=word&fields[]=description_with_highlighting"

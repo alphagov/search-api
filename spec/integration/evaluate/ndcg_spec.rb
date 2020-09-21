@@ -68,9 +68,11 @@ RSpec.describe Evaluate::Ndcg do
         ].each do |doc|
           commit_document(
             "government_test",
-            "title" => doc,
-            "description" => "A document about #{doc} for #{doc}s.",
-            "link" => "/#{doc.split(' ').join('-')}",
+            {
+              "title" => doc,
+              "description" => "A document about #{doc} for #{doc}s.",
+              "link" => "/#{doc.split(' ').join('-')}",
+            },
           )
         end
 
