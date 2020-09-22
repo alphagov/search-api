@@ -24,6 +24,7 @@ rules: [
   "customer => customer", # not custom
   "directive => directive",
   "directives => directive",
+  "downing => downing",  # Downing Street not down
   "elective => elective", # not election
   "electives => elective", # not election
   "equalities => equality",
@@ -34,7 +35,11 @@ rules: [
   "fiancé => fianc",  # also match fiance
   "fiancée => fianc",  # also match fiance
   "governance => governance",  # not government
+  "hospitality => hospitality",  # not hospital
+  "hospitalities => hospitality",  # not hospital
   "housing => housing",
+  "important => important",  # not import
+  "importance => important",  # not import
   "intern => intern",
   "interns => intern",
   "internal => internal",
