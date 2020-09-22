@@ -98,6 +98,10 @@
 - search: under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room
 - search: visa4uk => visa4uk, uk visa
 - search: waste carriers licence, waste carriers license => waste carriers licence, register as a waste carrier
+- search: chat => chat, webchat
+- search: live chat => live chat, webchat
+- search: online chat => online chat, webchat
+- search: web chat => web chat, webchat
 
 # Unofficial or deprecated terms should expand to the preferred term
 - search: ancestral visa => ancestry visa
@@ -598,8 +602,8 @@
 - search: travel advise => travel advice
 - search: univeral => universal
 - search: wearhouse => warehouse
+- search: we chat => webchat
 - search: wether => whether, weather
-
 - search: wharehouse => warehouse
 - search: wheather => whether, weather
 
