@@ -41,6 +41,7 @@ RSpec.describe "SpecialistFormatTest" do
       international_development_fund
       maib_report
       medical_safety_alert
+      protected_food_drink_name
       raib_report
       research_for_development_output
       residential_property_tribunal_decision

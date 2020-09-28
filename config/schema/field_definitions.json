@@ -874,5 +874,50 @@
   "decision_subject": {
     "description": "The entity a tribunal or regulatory decision applies to",
     "type": "identifiers"
+  },
+
+  "register": {
+    "description": "The type of protected food or drink name registration e.g: food, spirit drink, wine etc",
+    "type": "identifiers"
+  },
+  "status": {
+    "description": "The status of the registration e.g: registered, in consultation, rejected",
+    "type": "identifiers"
+  },
+  "class_category": {
+    "description": "The category of the food or drink e.g: fresh meat, cheese, fruit, ",
+    "type": "identifiers"
+  },
+  "protection_type": {
+    "description": "The protection type of the food or drink e.g: Protected Geographical Indication (PGI), traditional term etc ",
+    "type": "identifiers"
+  },
+  "traditional_term_grapevine_product_category": {
+    "description": "The traditional term for a grapevine product e.g: wine, sparkling wine, grape must etc ",
+    "type": "identifiers"
+  },
+  "traditional_term_type": {
+    "description": "The traditional term for the food or drink e.g: description of Protected Geographical Indication etc",
+    "type": "identifiers"
+  },
+  "traditional_term_language": {
+    "description": "The language of the traditional term type",
+    "type": "identifiers"
+  },
+  "date_application": {
+    "description": "The date of application",
+    "type": "date"
+  },
+  "date_registration": {
+    "description": "The date of UK registration of the name",
+    "type": "date"
+  },
+  "date_registration_eu": {
+    "description": "The date of EU registration of the name",
+    "type": "date"
+  },
+  "internal_notes":{
+    "description": "Internal notes that should not render on the frontend",
+    "type": "identifiers"
   }
 }

@@ -14,12 +14,16 @@ module GovukIndex
     delegate_to_payload :case_state, convert_to_array: true
     delegate_to_payload :case_type, convert_to_array: true
     delegate_to_payload :certificate_status
+    delegate_to_payload :class_category
     delegate_to_payload :closed_date
     delegate_to_payload :closing_date
     delegate_to_payload :commodity_type
     delegate_to_payload :continuation_link
     delegate_to_payload :country
+    delegate_to_payload :date_application
     delegate_to_payload :date_of_occurrence
+    delegate_to_payload :date_registration
+    delegate_to_payload :date_registration_eu
     delegate_to_payload :decision_subject
     delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
@@ -31,6 +35,7 @@ module GovukIndex
     delegate_to_payload :grant_type, convert_to_array: true
     delegate_to_payload :hidden_indexable_content
     delegate_to_payload :industries
+    delegate_to_payload :internal_notes
     delegate_to_payload :issued_date
     delegate_to_payload :laid_date
     delegate_to_payload :land_use
@@ -42,8 +47,10 @@ module GovukIndex
     delegate_to_payload :medical_specialism
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
+    delegate_to_payload :protection_type
     delegate_to_payload :railway_type
     delegate_to_payload :regions
+    delegate_to_payload :register
     delegate_to_payload :registration
     delegate_to_payload :report_type, convert_to_array: true
     delegate_to_payload :research_document_type
@@ -53,10 +60,14 @@ module GovukIndex
     delegate_to_payload :sift_end_date
     delegate_to_payload :sifting_status
     delegate_to_payload :stage
+    delegate_to_payload :status
     delegate_to_payload :subject
     delegate_to_payload :theme
     delegate_to_payload :therapeutic_area
     delegate_to_payload :tiers_or_standalone_items
+    delegate_to_payload :traditional_term_grapevine_product_category
+    delegate_to_payload :traditional_term_type
+    delegate_to_payload :traditional_term_language
     delegate_to_payload :tribunal_decision_categories
     delegate_to_payload :tribunal_decision_category
     delegate_to_payload :tribunal_decision_country

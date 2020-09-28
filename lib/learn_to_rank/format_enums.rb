@@ -77,6 +77,7 @@ module LearnToRank
         "marine_notice" => 73,
         "traffic_commissioner_regulatory_decision" => 74,
         "coronavirus_landing_page" => 75,
+        "protected_food_drink_name" => 76,
       }
     end
   end
