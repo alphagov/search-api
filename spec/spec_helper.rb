@@ -1,15 +1,8 @@
 ENV["RACK_ENV"] = "test"
 require "pry"
 
-if ENV["USE_SIMPLECOV"]
-  require "simplecov"
-  require "simplecov-rcov"
-  SimpleCov.start do
-    add_filter "/spec/"
-  end
-
-  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
-end
+require "simplecov"
+SimpleCov.start { add_filter "/spec/" }
 
 $LOAD_PATH << File.expand_path("..", __dir__)
 $LOAD_PATH << File.expand_path("../lib", __dir__)
