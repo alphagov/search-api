@@ -94,7 +94,7 @@ jobs:
     - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
-    - task: Fetch
+    - task: fetch
       config:
         <<: *task-config
         inputs:
@@ -120,7 +120,7 @@ jobs:
       passed: [integration-fetch]
       trigger: true
     - get: search-api-git
-    - task: Train
+    - task: train
       config:
         <<: *task-config
         inputs:
@@ -146,7 +146,7 @@ jobs:
       passed: [integration-train]
       trigger: true
     - get: search-api-git
-    - task: Deploy
+    - task: deploy
       config:
         <<: *task-config
         inputs:
@@ -164,7 +164,7 @@ jobs:
     - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
-    - task: Fetch
+    - task: fetch
       config:
         <<: *task-config
         inputs:
@@ -190,7 +190,7 @@ jobs:
       passed: [staging-fetch]
       trigger: true
     - get: search-api-git
-    - task: Train
+    - task: train
       config:
         <<: *task-config
         inputs:
@@ -216,7 +216,7 @@ jobs:
       passed: [staging-train]
       trigger: true
     - get: search-api-git
-    - task: Deploy
+    - task: deploy
       config:
         <<: *task-config
         inputs:
@@ -235,7 +235,7 @@ jobs:
     - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
-    - task: Fetch
+    - task: fetch
       config:
         <<: *task-config
         inputs:
@@ -263,7 +263,7 @@ jobs:
       passed: [production-fetch]
       trigger: true
     - get: search-api-git
-    - task: Train
+    - task: train
       config:
         <<: *task-config
         inputs:
@@ -291,7 +291,7 @@ jobs:
       passed: [production-train]
       trigger: true
     - get: search-api-git
-    - task: Deploy
+    - task: deploy
       config:
         <<: *task-config
         inputs:
