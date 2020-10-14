@@ -25,7 +25,7 @@ module Search
       }
     end
 
-  private
+    private
 
     def organisations
       BaseRegistry.new(

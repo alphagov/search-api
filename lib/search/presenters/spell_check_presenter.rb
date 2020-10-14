@@ -12,7 +12,7 @@ module Search
       end
     end
 
-  private
+    private
 
     def any_suggestions?
       es_response["suggest"] && es_response["suggest"].any?

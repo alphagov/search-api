@@ -6,7 +6,7 @@ module Search
       suggestions
     end
 
-  private
+    private
 
     def any_suggestions?
       es_response["autocomplete"] && es_response["autocomplete"].any?

@@ -12,7 +12,7 @@ module Search
                      organisation_acronyms)
     end
 
-  private
+    private
 
     # Don't correct words with digits as these are often names of forms.
     def regex_patterns
