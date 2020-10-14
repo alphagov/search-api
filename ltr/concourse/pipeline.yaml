@@ -226,6 +226,7 @@ jobs:
           GOVUK_ENVIRONMENT: staging
           ROLE_ARN: ((staging-role-arn))
           INPUT_FILE_NAME: model
+          INSTANCE_TYPE: ml.c5.large
         run:
           path: bash
           args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
@@ -300,6 +301,7 @@ jobs:
           GOVUK_ENVIRONMENT: production
           ROLE_ARN: ((production-role-arn))
           INPUT_FILE_NAME: model
+          INSTANCE_TYPE: ml.c5.xlarge
         run:
           path: bash
           args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
