@@ -49,7 +49,7 @@ RSpec.describe SitemapPresenter do
       timestamp: "2017-07-12",
     )
     presented = described_class.new(document, @boost_calculator).to_h
-    expect(presented[:last_updated]).to eq("2017-07-12")
+    expect(presented[:last_updated]).to eq("2017-07-12T00:00:00+00:00")
   end
 
   it "last updated is limited to recent date" do
@@ -74,15 +74,6 @@ RSpec.describe SitemapPresenter do
     document = build_document(
       url: "/some/path",
       timestamp: "not-a-date",
-    )
-    presented = described_class.new(document, @boost_calculator).to_h
-    expect(presented[:last_updated]).to be_nil
-  end
-
-  it "last updated is omitted if timestamp is in invalid format" do
-    document = build_document(
-      url: "/some/path",
-      timestamp: "01-01-2017",
     )
     presented = described_class.new(document, @boost_calculator).to_h
     expect(presented[:last_updated]).to be_nil
