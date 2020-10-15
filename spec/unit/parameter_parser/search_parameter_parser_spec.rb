@@ -496,9 +496,9 @@ RSpec.describe SearchParameterParser do
         .find { |filter| filter.field_name == "opened_date" }
 
       expect(opened_date_filter.values.first.from)
-        .to eq(DateTime.new(2014, 4, 1, 5, 8))
+        .to eq(Time.new(2014, 4, 1, 5, 8))
       expect(opened_date_filter.values.first.to)
-        .to eq(DateTime.new(2014, 4, 2, 17, 43, 12))
+        .to eq(Time.new(2014, 4, 2, 17, 43, 12))
     end
 
     it "understands a date filter for a missing value or a specific value" do
@@ -539,9 +539,9 @@ RSpec.describe SearchParameterParser do
         .find { |filter| filter.field_name == "public_timestamp" }
 
       expect(opened_date_filter.values.first.from)
-        .to eq(DateTime.new(2017, 6, 5, 0, 0, 0))
+        .to eq(Time.new(2017, 6, 5, 0, 0, 0))
       expect(opened_date_filter.values.first.to)
-        .to eq(DateTime.new(2017, 6, 8, 23, 59, 59))
+        .to eq(Time.new(2017, 6, 8, 23, 59, 59))
     end
   end
 

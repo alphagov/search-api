@@ -41,7 +41,7 @@ module GovukIndex
     end
 
     def updated_at
-      DateTime.now
+      Time.now
     end
 
     def base_path
