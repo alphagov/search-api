@@ -94,7 +94,7 @@ jobs:
     - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
-    - task: Fetch
+    - task: fetch
       config:
         <<: *task-config
         inputs:
@@ -120,7 +120,7 @@ jobs:
       passed: [integration-fetch]
       trigger: true
     - get: search-api-git
-    - task: Train
+    - task: train
       config:
         <<: *task-config
         inputs:
@@ -146,7 +146,7 @@ jobs:
       passed: [integration-train]
       trigger: true
     - get: search-api-git
-    - task: Deploy
+    - task: deploy
       config:
         <<: *task-config
         inputs:
@@ -164,7 +164,7 @@ jobs:
     - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
-    - task: Fetch
+    - task: fetch
       config:
         <<: *task-config
         inputs:
@@ -190,7 +190,7 @@ jobs:
       passed: [staging-fetch]
       trigger: true
     - get: search-api-git
-    - task: Train
+    - task: train
       config:
         <<: *task-config
         inputs:
@@ -216,7 +216,7 @@ jobs:
       passed: [staging-train]
       trigger: true
     - get: search-api-git
-    - task: Deploy
+    - task: deploy
       config:
         <<: *task-config
         inputs:
@@ -226,6 +226,7 @@ jobs:
           GOVUK_ENVIRONMENT: staging
           ROLE_ARN: ((staging-role-arn))
           INPUT_FILE_NAME: model
+          INSTANCE_TYPE: ml.c5.large
         run:
           path: bash
           args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
@@ -234,7 +235,7 @@ jobs:
     - get: sundays-at-10pm
       trigger: true
     - get: search-api-git
-    - task: Fetch
+    - task: fetch
       config:
         <<: *task-config
         inputs:
@@ -262,7 +263,7 @@ jobs:
       passed: [production-fetch]
       trigger: true
     - get: search-api-git
-    - task: Train
+    - task: train
       config:
         <<: *task-config
         inputs:
@@ -290,7 +291,7 @@ jobs:
       passed: [production-train]
       trigger: true
     - get: search-api-git
-    - task: Deploy
+    - task: deploy
       config:
         <<: *task-config
         inputs:
@@ -300,6 +301,7 @@ jobs:
           GOVUK_ENVIRONMENT: production
           ROLE_ARN: ((production-role-arn))
           INPUT_FILE_NAME: model
+          INSTANCE_TYPE: ml.c5.xlarge
         run:
           path: bash
           args: ["search-api-git/ltr/concourse/task.sh", "deploy"]
