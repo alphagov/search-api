@@ -1,12 +1,6 @@
 require "spec_helper"
 
 RSpec.describe "QuotedAndUnquotedSearchTest" do
-  before do
-    # `@@registries` are set in Rummager and is *not* reset between tests. To
-    # prevent caching issues we manually clear them here to make a "new" app.
-    Rummager.class_variable_set(:'@@registries', nil)
-  end
-
   it "old weighting three matches found for london" do
     commit_london_transport_docs
     get "/search?q=london"

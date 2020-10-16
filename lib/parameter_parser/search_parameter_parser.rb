@@ -347,7 +347,7 @@ private
     end
 
     def parse_date(label, date_string)
-      date = DateTime.parse(date_string)
+      date = Time.parse(date_string)
 
       if DATE_PATTERN.match(date_string) && label == "to"
         end_of_day(date)
@@ -360,7 +360,7 @@ private
     end
 
     def end_of_day(date)
-      DateTime.new(date.year, date.month, date.day, 23, 59, 59)
+      Time.new(date.year, date.month, date.day, 23, 59, 59)
     end
 
     def null_date

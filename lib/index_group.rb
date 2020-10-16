@@ -202,7 +202,7 @@ module SearchIndices
     end
 
     def delete_based_on_age_check(name, details, day_limit, last_update)
-      age = Time.now.to_i - last_update.to_datetime.to_f # Everything is handled in seconds, thanks Ruby!
+      age = Time.now.to_i - last_update.to_time.to_f # Everything is handled in seconds, thanks Ruby!
       days = age.to_i / 86_400 # One day in seconds
 
       return unless days >= day_limit.to_i
