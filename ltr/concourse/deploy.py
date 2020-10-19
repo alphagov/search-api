@@ -15,16 +15,14 @@ if not model_name and not model_tag:
 
 endpoint_version = f"-{model_tag}" if model_tag else ""
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
-default_initial_instance_count = int(os.getenv("INITIAL_INSTANCE_COUNT", 4))
-default_instance_type = os.getenv("INSTANCE_TYPE", "ml.t2.medium")
+instance_count = int(os.getenv("INSTANCE_COUNT", 4))
+instance_type = os.getenv("INSTANCE_TYPE", "ml.t2.medium")
 endpoint_name = os.getenv(
     "ENDPOINT_NAME", f"govuk-{govuk_environment}-search-ltr-endpoint{endpoint_version}"
 )
 
 session = sagemaker.Session()
 
-initial_instance_count = default_initial_instance_count
-instance_type = default_instance_type
 update_endpoint = False
 
 # try tofind the current endpoint config
@@ -35,10 +33,6 @@ try:
     current_endpoint_config = session.boto_session.client(
         "sagemaker"
     ).describe_endpoint_config(EndpointConfigName=current_endpoint_config_name,)
-    initial_instance_count = current_endpoint_config["ProductionVariants"][0][
-        "InitialInstanceCount"
-    ]
-    instance_type = current_endpoint_config["ProductionVariants"][0]["InstanceType"]
     update_endpoint = True
 except Exception:
     print("could not find current endpoint, will create a new one", file=sys.stderr)
@@ -71,7 +65,7 @@ print(f"Deploying model {model_key} to Sagemaker...", file=sys.stderr)
 sagemaker.tensorflow.serving.Model(
     f"s3://{s3_bucket}/{model_key}", role, framework_version="2.0.0"
 ).deploy(
-    initial_instance_count,
+    instance_count,
     instance_type,
     endpoint_name=endpoint_name,
     update_endpoint=update_endpoint,
