@@ -2,7 +2,7 @@ require "google/cloud/bigquery"
 
 module LearnToRank::DataPipeline
   module Bigquery
-    def self.fetch(credentials)
+    def self.fetch(credentials, viewcount: 10)
       now = Time.now
       before = now - 6 * 30 * 24 * 60 * 60 # Around 6 months
       sql = "SELECT * FROM (
@@ -36,7 +36,7 @@ module LearnToRank::DataPipeline
   GROUP BY searchTerm, link, linkPosition
   ORDER BY views desc, searchTerm, linkPosition
 ) AS res
-WHERE views > 10"
+WHERE views > #{viewcount}"
 
       bigquery = Google::Cloud::Bigquery.new(credentials: credentials)
       bigquery.query sql, standard_sql: true
