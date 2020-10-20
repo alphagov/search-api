@@ -19,6 +19,13 @@ namespace :learn_to_rank do
       data.each do |row|
         csv << row.values
       end
+
+      while data.next?
+        data = data.next
+        data.each do |row|
+          csv << row.values
+        end
+      end
     end
   end
 
