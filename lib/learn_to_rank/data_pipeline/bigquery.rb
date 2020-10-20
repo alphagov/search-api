@@ -14,9 +14,7 @@ module LearnToRank::DataPipeline
   COUNTIF(observationType = 'click') AS clicks
   FROM (
     SELECT
-    CONCAT(fullVisitorId,'|',CAST(visitId AS STRING)) AS sessionId,
     customDimensions.value AS searchTerm,
-    hits.hitNumber AS hitNumber, -- This is the hit number of the results page (for impressions) or the page itself (for clicks)
     product.v2ProductName AS link,
     product.productListPosition AS linkPosition,
     CASE
@@ -33,10 +31,11 @@ module LearnToRank::DataPipeline
     AND product.productListPosition <= 20
     AND customDimensions.index = 71 -- has search term
   ) AS action
-  GROUP BY searchTerm, link, linkPosition
-  ORDER BY views desc, searchTerm, linkPosition
-) AS res
-WHERE views > #{viewcount}"
+  GROUP BY searchTerm, link
+  )
+  WHERE views > #{viewcount}
+  ORDER BY views desc
+  LIMIT 500000"
 
       bigquery = Google::Cloud::Bigquery.new(credentials: credentials)
       bigquery.query sql, standard_sql: true
