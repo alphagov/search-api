@@ -9,10 +9,11 @@ require "relevancy/load_judgements"
 
 namespace :learn_to_rank do
   desc "Fetch data from BigQuery.  This costs money!"
-  task :fetch_bigquery_export, [:credentials, :output, :viewcount] do |_, args|
+  task :fetch_bigquery_export, [:output, :viewcount] do |_, args|
     raise 'set $ENABLE_LTR to "true" to use learn_to_rank' unless Search::RelevanceHelpers.ltr_enabled?
+    raise 'Base64 encoded environment variable "BIGQUERY_CREDENTIALS" is required' unless ENV.key? "BIGQUERY_CREDENTIALS"
 
-    data = LearnToRank::DataPipeline::Bigquery.fetch(JSON.parse(Base64.decode64(args.credentials)), viewcount: args.viewcount || 10)
+    data = LearnToRank::DataPipeline::Bigquery.fetch(JSON.parse(Base64.decode64(ENV["BIGQUERY_CREDENTIALS"])), viewcount: args.viewcount || 10)
 
     CSV.open("tmp/#{args[:output]}.csv", "wb") do |csv|
       csv << data.first.keys
