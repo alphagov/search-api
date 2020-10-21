@@ -53,7 +53,7 @@ ssh -i /tmp/concourse_ssh_key -o StrictHostKeyChecking=no "ubuntu@${instance_ip}
   git clone --depth 1 --branch $GIT_BRANCH https://github.com/alphagov/search-api.git
   cd search-api
 
-  docker="sudo docker run -v \$(pwd):/work -v bundle:/usr/local/bundle -e ENABLE_LTR=true -e ELASTICSEARCH_URI=$ELASTICSEARCH_URI -w /work --rm ruby:\$(cat .ruby-version)"
+  docker="sudo docker run -v \$(pwd):/work -v bundle:/usr/local/bundle -e ENABLE_LTR=true -e BIGQUERY_CREDENTIALS=$BIGQUERY_CREDENTIALS -e ELASTICSEARCH_URI=$ELASTICSEARCH_URI -w /work --rm ruby:\$(cat .ruby-version)"
 
   \$docker bundle
 
