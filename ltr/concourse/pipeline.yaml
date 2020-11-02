@@ -97,6 +97,12 @@ resources:
     regexp: search-learn-to-rank/production-model-(.*).txt
 
 jobs:
+- name: update-pipeline
+  plan:
+    - get: search-api-git
+      trigger: true
+    - set_pipeline: search-learn-to-rank
+      file: search-api-git/ltr/concourse/pipeline.yaml
 - name: integration-fetch
   plan:
     - get: sundays-at-10pm
