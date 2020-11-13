@@ -36,11 +36,11 @@ module Auth
     end
 
     def oauth_id
-      ENV.fetch("OAUTH_ID", "")
+      ENV.fetch("GDS_SSO_OAUTH_ID", "")
     end
 
     def oauth_secret
-      ENV.fetch("OAUTH_SECRET", "")
+      ENV.fetch("GDS_SSO_OAUTH_SECRET", "")
     end
   end
 end
