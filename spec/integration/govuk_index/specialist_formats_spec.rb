@@ -38,6 +38,7 @@ RSpec.describe "SpecialistFormatTest" do
       drug_safety_update
       employment_appeal_tribunal_decision
       employment_tribunal_decision
+      flood_and_coastal_erosion_risk_management_research_report
       international_development_fund
       maib_report
       medical_safety_alert

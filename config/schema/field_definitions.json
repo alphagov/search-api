@@ -919,5 +919,30 @@
   "internal_notes":{
     "description": "Internal notes that should not render on the frontend",
     "type": "identifiers"
+  },
+
+  "category": {
+    "description": "The category of the document.",
+    "type": "identifiers"
+  },
+  "date_of_start": {
+    "description": "The start date of document",
+    "type": "date"
+  },
+  "date_of_completion": {
+    "description": "The completion date of the document",
+    "type": "date"
+  },
+  "project_code": {
+    "description": "The code of the project",
+    "type": "identifiers"
+  },
+  "project_status":{
+    "description": "The status of the project",
+    "type": "identifiers"
+  },
+  "topics":{
+    "description": "The topics of the document",
+    "type": "identifiers"
   }
 }
