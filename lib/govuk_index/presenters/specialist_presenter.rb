@@ -13,6 +13,7 @@ module GovukIndex
     delegate_to_payload :business_stages
     delegate_to_payload :case_state, convert_to_array: true
     delegate_to_payload :case_type, convert_to_array: true
+    delegate_to_payload :category
     delegate_to_payload :certificate_status
     delegate_to_payload :class_category
     delegate_to_payload :closed_date
@@ -21,6 +22,8 @@ module GovukIndex
     delegate_to_payload :continuation_link
     delegate_to_payload :country
     delegate_to_payload :date_application
+    delegate_to_payload :date_of_completion
+    delegate_to_payload :date_of_start
     delegate_to_payload :date_of_occurrence
     delegate_to_payload :date_registration
     delegate_to_payload :date_registration_eu
@@ -47,6 +50,8 @@ module GovukIndex
     delegate_to_payload :medical_specialism
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
+    delegate_to_payload :project_code
+    delegate_to_payload :project_status
     delegate_to_payload :protection_type
     delegate_to_payload :railway_type
     delegate_to_payload :regions
@@ -65,6 +70,7 @@ module GovukIndex
     delegate_to_payload :theme
     delegate_to_payload :therapeutic_area
     delegate_to_payload :tiers_or_standalone_items
+    delegate_to_payload :topics
     delegate_to_payload :traditional_term_grapevine_product_category
     delegate_to_payload :traditional_term_type
     delegate_to_payload :traditional_term_language

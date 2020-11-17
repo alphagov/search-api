@@ -78,6 +78,7 @@ module LearnToRank
         "traffic_commissioner_regulatory_decision" => 74,
         "coronavirus_landing_page" => 75,
         "protected_food_drink_name" => 76,
+        "flood_and_coastal_erosion_risk_management_research_report" => 77,
       }
     end
   end
