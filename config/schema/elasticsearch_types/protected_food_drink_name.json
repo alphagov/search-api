@@ -17,12 +17,12 @@
   "expanded_search_result_fields": {
     "register": [
       {
-        "label": "Foods: designated origin and geographic origin",
-        "value": "foods-designated-origin-and-geographic-origin"
+        "label": "Foods: designated origin and geographic indication",
+        "value": "foods-designated-origin-and-geographic-indication"
       },
       {
-        "label": "Foods: traditional speciality",
-        "value": "foods-traditional-speciality"
+        "label": "Foods: traditional speciality guaranteed",
+        "value": "foods-traditional-speciality-guaranteed"
       },
       {
         "label": "Spirit drinks",
