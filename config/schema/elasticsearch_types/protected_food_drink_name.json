@@ -39,6 +39,10 @@
       {
         "label": "Traditional terms for wine",
         "value": "traditional-terms-for-wine"
+      },
+      {
+        "label": "Names protected by international treaty",
+        "value": "names-protected-by-international-treaty"
       }
     ],
 
@@ -436,6 +440,10 @@
       {
         "label": "Geographical Indication (GI)",
         "value": "geographical-indication-gi"
+      },
+      {
+        "label": "Name protected by international treaty",
+        "value": "name-protected-by-international-treaty"
       }
     ],
 
