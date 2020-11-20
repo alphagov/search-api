@@ -442,6 +442,11 @@
     "type": "identifiers"
   },
 
+  "country_of_origin": {
+    "description": "Country the product orginates from",
+    "type": "identifiers"
+  },
+
   "market_sector": {
     "description": "Market sector a CMA case relates to.",
     "type": "identifiers"

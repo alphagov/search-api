@@ -21,6 +21,7 @@ module GovukIndex
     delegate_to_payload :commodity_type
     delegate_to_payload :continuation_link
     delegate_to_payload :country
+    delegate_to_payload :country_of_origin
     delegate_to_payload :date_application
     delegate_to_payload :date_of_completion
     delegate_to_payload :date_of_start

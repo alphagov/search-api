@@ -37,6 +37,7 @@ module GovukIndex
         content_store_document_type: common_fields.content_store_document_type,
         continuation_link: specialist.continuation_link,
         country: specialist.country,
+        country_of_origin: specialist.country_of_origin,
         date_application: specialist.date_application,
         date_of_completion: specialist.date_of_completion,
         date_of_start: specialist.date_of_start,
