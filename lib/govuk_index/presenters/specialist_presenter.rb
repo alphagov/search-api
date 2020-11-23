@@ -55,6 +55,7 @@ module GovukIndex
     delegate_to_payload :project_status
     delegate_to_payload :protection_type
     delegate_to_payload :railway_type
+    delegate_to_payload :reason_for_protection
     delegate_to_payload :regions
     delegate_to_payload :register
     delegate_to_payload :registration

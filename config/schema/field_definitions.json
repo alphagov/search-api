@@ -897,6 +897,10 @@
     "description": "The protection type of the food or drink e.g: Protected Geographical Indication (PGI), traditional term etc ",
     "type": "identifiers"
   },
+  "reason_for_protection":{
+    "description": "The reason the protection is given e.g: EU agreement, UK trade agreement",
+    "type": "identifiers"
+  },
   "traditional_term_grapevine_product_category": {
     "description": "The traditional term for a grapevine product e.g: wine, sparkling wine, grape must etc ",
     "type": "identifiers"

@@ -4,6 +4,7 @@
     "status",
     "class_category",
     "protection_type",
+    "reason_for_protection",
     "country_of_origin",
     "traditional_term_grapevine_product_category",
     "traditional_term_type",
