@@ -21,6 +21,7 @@ module GovukIndex
     delegate_to_payload :commodity_type
     delegate_to_payload :continuation_link
     delegate_to_payload :country
+    delegate_to_payload :country_of_origin
     delegate_to_payload :date_application
     delegate_to_payload :date_of_completion
     delegate_to_payload :date_of_start
@@ -54,6 +55,7 @@ module GovukIndex
     delegate_to_payload :project_status
     delegate_to_payload :protection_type
     delegate_to_payload :railway_type
+    delegate_to_payload :reason_for_protection
     delegate_to_payload :regions
     delegate_to_payload :register
     delegate_to_payload :registration

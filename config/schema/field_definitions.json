@@ -442,6 +442,11 @@
     "type": "identifiers"
   },
 
+  "country_of_origin": {
+    "description": "Country the product orginates from",
+    "type": "identifiers"
+  },
+
   "market_sector": {
     "description": "Market sector a CMA case relates to.",
     "type": "identifiers"
@@ -890,6 +895,10 @@
   },
   "protection_type": {
     "description": "The protection type of the food or drink e.g: Protected Geographical Indication (PGI), traditional term etc ",
+    "type": "identifiers"
+  },
+  "reason_for_protection":{
+    "description": "The reason the protection is given e.g: EU agreement, UK trade agreement",
     "type": "identifiers"
   },
   "traditional_term_grapevine_product_category": {
