@@ -38,14 +38,6 @@ details:
     allowed_values: []
   - display_as_result_metadata: false
     filterable: true
-    key: content_store_document_type
-    name: Document type
-    preposition: Of type
-    type: hidden_clearable
-    show_option_select_filter: false
-    allowed_values: []
-  - display_as_result_metadata: false
-    filterable: true
     key: content_purpose_supergroup
     name: Content type
     preposition: in
