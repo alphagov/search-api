@@ -9,8 +9,8 @@ module GovukIndex
     }.freeze
     BREXIT_PAGE = {
       "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
-      "title" => "Transition period",
-      "description" => "The UK’s transition period after Brexit comes to an end this year - check the new rules for January 2021 and take action now.",
+      "title" => "Brexit transition",
+      "description" => "The Brexit transition period ends this year - Check the new rules from January 2021 and act now.",
     }.freeze
     extend MethodBuilder
 

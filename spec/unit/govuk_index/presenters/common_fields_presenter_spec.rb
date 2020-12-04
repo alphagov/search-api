@@ -74,8 +74,8 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
 
     presenter = common_fields_presenter(payload)
 
-    expect(presenter.title).to eq("Transition period")
-    expect(presenter.description).to eq("The UK’s transition period after Brexit comes to an end this year - check the new rules for January 2021 and take action now.")
+    expect(presenter.title).to eq("Brexit transition")
+    expect(presenter.description).to eq("The Brexit transition period ends this year - Check the new rules from January 2021 and act now.")
   end
 
   it "withdrawn when withdrawn notice present" do
