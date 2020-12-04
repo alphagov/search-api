@@ -12,6 +12,7 @@
     "traditional_term_language",
     "date_application",
     "date_registration",
+    "time_registration",
     "date_registration_eu",
     "internal_notes"
   ],

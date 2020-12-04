@@ -43,6 +43,7 @@ module GovukIndex
         date_of_start: specialist.date_of_start,
         date_of_occurrence: specialist.date_of_occurrence,
         date_registration: specialist.date_registration,
+        time_registration: specialist.time_registration,
         date_registration_eu: specialist.date_registration_eu,
         decision_subject: specialist.decision_subject,
         description: common_fields.description,

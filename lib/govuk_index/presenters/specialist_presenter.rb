@@ -73,6 +73,7 @@ module GovukIndex
     delegate_to_payload :theme
     delegate_to_payload :therapeutic_area
     delegate_to_payload :tiers_or_standalone_items
+    delegate_to_payload :time_registration
     delegate_to_payload :topics
     delegate_to_payload :traditional_term_grapevine_product_category
     delegate_to_payload :traditional_term_type

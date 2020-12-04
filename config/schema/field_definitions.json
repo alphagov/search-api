@@ -925,6 +925,10 @@
     "description": "The date of UK registration of the name",
     "type": "date"
   },
+  "time_registration": {
+    "description": "The time of UK registration of the name",
+    "type": "identifiers"
+  },
   "date_registration_eu": {
     "description": "The date of EU registration of the name",
     "type": "date"
