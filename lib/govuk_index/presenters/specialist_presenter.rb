@@ -58,6 +58,7 @@ module GovukIndex
     delegate_to_payload :reason_for_protection
     delegate_to_payload :regions
     delegate_to_payload :register
+    delegate_to_payload :registered_name
     delegate_to_payload :registration
     delegate_to_payload :report_type, convert_to_array: true
     delegate_to_payload :research_document_type

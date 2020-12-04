@@ -881,6 +881,10 @@
     "type": "identifiers"
   },
 
+  "registered_name": {
+    "description": "The name of the food or drink item in the register.",
+    "type": "identifiers"
+  },
   "register": {
     "description": "The type of protected food or drink name registration e.g: food, spirit drink, wine etc",
     "type": "identifiers"

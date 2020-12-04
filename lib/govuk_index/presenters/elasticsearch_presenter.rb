@@ -107,6 +107,7 @@ module GovukIndex
         publishing_app: common_fields.publishing_app,
         railway_type: specialist.railway_type,
         reason_for_protection: specialist.reason_for_protection,
+        registered_name: specialist.registered_name,
         role_appointments: expanded_links.role_appointments,
         roles: expanded_links.roles,
         regions: specialist.regions,
