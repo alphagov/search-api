@@ -32,6 +32,10 @@
       {
         "label": "Third country body",
         "value": "third-country-body"
+      },
+      {
+        "label": "Notified body (NI)",
+        "value": "notified-body-ni"
       }
     ],
     "uk_market_conformity_assessment_body_registered_office_location": [
@@ -894,6 +898,10 @@
       {
         "label": "Measuring instruments",
         "value": "measuring-instruments"
+      },
+      {
+        "label": "Medical devices",
+        "value": "medical-devices"
       },
       {
         "label": "Noise emissions in the environment by equipment for use outdoors",
