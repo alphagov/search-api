@@ -115,7 +115,12 @@ index:
     # can't be applied from the nodes, so they have to live here.
     # This means that we can no longer (easily) have ci-agents or the
     # dev VM use no replicas.
-    number_of_replicas: 1
+    # If the elasticsearch cluster is unable to allocate all of the replicas
+    # (because you cannot host more than one replica of an index on a particular
+    # node) then the cluster will show as being in a "yellow" state. The cluster
+    # will still work fine, though. This number of replicas is able to be allocated
+    # to our production cluster, though not to integration for example.
+    number_of_replicas: 5
     number_of_shards: 3
     refresh_interval: '1s'
     search:
