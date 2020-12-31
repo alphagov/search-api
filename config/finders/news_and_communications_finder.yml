@@ -31,8 +31,8 @@ details:
   - key: related_to_brexit
     filter_key: all_part_of_taxonomy_tree
     filter_value: d6c2de5d-ef90-45d1-82d4-5f2438369eea
-    name: Show only transition period results
-    short_name: transition period
+    name: Show only Brexit results
+    short_name: Brexit
     type: checkbox
     display_as_result_metadata: false
     filterable: true
