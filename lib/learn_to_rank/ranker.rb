@@ -34,7 +34,10 @@ module LearnToRank
 
     def fetch_new_scores_from_sagemaker(examples)
       begin
-        response = Aws::SageMakerRuntime::Client.new.invoke_endpoint(
+        client = Aws::SageMakerRuntime::Client.new(
+          http_read_timeout: 1,
+        )
+        response = client.invoke_endpoint(
           endpoint_name: sagemaker_endpoint(variant: model_variant),
           body: {
             "signature_name": "regression",
