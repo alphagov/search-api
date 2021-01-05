@@ -10,7 +10,7 @@ module GovukIndex
     BREXIT_PAGE = {
       "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
       "title" => "Brexit",
-      "description" => "The Brexit transition period has ended - Check how the new rules affect you.",
+      "description" => "The Brexit transition period has ended. Check how the new rules affect you.",
     }.freeze
     extend MethodBuilder
 
