@@ -29,6 +29,8 @@ module GovukIndex
         closed_date: specialist.closed_date,
         closing_date: specialist.closing_date,
         commodity_type: specialist.commodity_type,
+        consultation_opening_date: details.consultation_opening_date,
+        consultation_closing_date: details.consultation_closing_date,
         contact_groups: details.contact_groups,
         content_id: common_fields.content_id,
         content_purpose_document_supertype: common_fields.content_purpose_document_supertype,

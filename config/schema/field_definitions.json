@@ -219,6 +219,16 @@
     "description": "Closing date for closed organisations."
   },
 
+  "consultation_opening_date": {
+    "type": "date",
+    "description": "When a consultation was, or will be, opened."
+  },
+
+  "consultation_closing_date": {
+    "type": "date",
+    "description": "When a consultation was, or will be, closed."
+  },
+
   "latest_change_note": {
     "description": "Note indicating what changed in the last major revision.",
     "type": "unsearchable_text"

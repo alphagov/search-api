@@ -5,6 +5,8 @@
     "attachments",
     "child_organisations",
     "closed_at",
+    "consultation_opening_date",
+    "consultation_closing_date",
     "detailed_format",
     "display_type",
     "document_collections",
