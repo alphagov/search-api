@@ -229,6 +229,11 @@
     "description": "When a consultation was, or will be, closed."
   },
 
+  "ordering": {
+    "type":"integer",
+    "description": "The ordering value for take_part pages and other ordered items"
+  },
+
   "latest_change_note": {
     "description": "Note indicating what changed in the last major revision.",
     "type": "unsearchable_text"

@@ -46,6 +46,10 @@ module GovukIndex
       details["closing_date"]
     end
 
+    def ordering
+      details["ordering"]
+    end
+
   private
 
     def service_manual
