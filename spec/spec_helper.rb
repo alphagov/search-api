@@ -20,7 +20,7 @@ require "pp"
 require "timecop"
 require "pry-byebug"
 
-require "sidekiq/testing"
+require "govuk_sidekiq/testing"
 require "sidekiq/testing/inline" # Make all queued jobs run immediately
 require "bunny-mock"
 require "govuk_schemas"
