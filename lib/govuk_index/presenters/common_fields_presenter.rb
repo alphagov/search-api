@@ -7,11 +7,7 @@ module GovukIndex
       "service_manual_service_standard" => "service_manual_guide",
       "topic" => "specialist_sector",
     }.freeze
-    BREXIT_PAGE = {
-      "content_id" => "d6c2de5d-ef90-45d1-82d4-5f2438369eea",
-      "title" => "Brexit",
-      "description" => "The Brexit transition period has ended. Check how the new rules affect you.",
-    }.freeze
+
     extend MethodBuilder
 
     delegate_to_payload :content_id
@@ -49,11 +45,11 @@ module GovukIndex
     end
 
     def title
-      brexit_page? ? BREXIT_PAGE["title"] : [section_id, payload["title"]].compact.join(" - ")
+      [section_id, payload["title"]].compact.join(" - ")
     end
 
     def description
-      brexit_page? ? BREXIT_PAGE["description"] : payload["description"]
+      payload["description"]
     end
 
     def withdrawn?
@@ -112,10 +108,6 @@ module GovukIndex
 
     def government
       payload.dig("expanded_links", "government", 0)
-    end
-
-    def brexit_page?
-      content_id == BREXIT_PAGE["content_id"]
     end
 
     def popularity_values
