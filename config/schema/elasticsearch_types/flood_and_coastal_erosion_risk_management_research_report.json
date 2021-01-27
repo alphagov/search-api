@@ -1,6 +1,6 @@
 {
   "fields": [
-    "category",
+    "flood_and_coastal_erosion_category",
     "date_of_start",
     "date_of_completion",
     "project_code",
@@ -9,7 +9,7 @@
   ],
 
   "expanded_search_result_fields": {
-    "category": [
+    "flood_and_coastal_erosion_category": [
       {"label": "Environmental management and sustainability", "value": "environmental-management-and-sustainability"},
       {"label": "Increasing resilience to flooding", "value": "increasing-resilience-to-flooding"},
       {"label": "Managing flood incidents", "value": "managing-flood-incidents"},

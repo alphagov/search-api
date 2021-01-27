@@ -13,7 +13,7 @@ module GovukIndex
     delegate_to_payload :business_stages
     delegate_to_payload :case_state, convert_to_array: true
     delegate_to_payload :case_type, convert_to_array: true
-    delegate_to_payload :category
+    delegate_to_payload :flood_and_coastal_erosion_category
     delegate_to_payload :certificate_status
     delegate_to_payload :class_category
     delegate_to_payload :closed_date

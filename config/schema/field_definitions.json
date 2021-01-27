@@ -943,8 +943,8 @@
     "type": "identifiers"
   },
 
-  "category": {
-    "description": "The category of the document.",
+  "flood_and_coastal_erosion_category": {
+    "description": "The category of flood and coastal erosion risk reports e.g: managing flood incidents",
     "type": "identifiers"
   },
   "date_of_start": {
