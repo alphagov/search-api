@@ -23,7 +23,7 @@ module GovukIndex
         business_stages: specialist.business_stages,
         case_state: specialist.case_state,
         case_type: specialist.case_type,
-        category: specialist.category,
+        flood_and_coastal_erosion_category: specialist.flood_and_coastal_erosion_category,
         certificate_status: specialist.certificate_status,
         class_category: specialist.class_category,
         closed_date: specialist.closed_date,
