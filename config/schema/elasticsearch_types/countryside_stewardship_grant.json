@@ -32,6 +32,10 @@
 
     "land_use": [
       {
+        "label": "Air quality",
+        "value": "air-quality"
+      },
+      {
         "label": "Arable land",
         "value": "arable-land"
       },
