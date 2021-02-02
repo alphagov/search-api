@@ -71,7 +71,6 @@
 - search: bad weather, winter weather => bad weather, cold weather, severe weather, winter weather, energy grants, heating
 - search: benefit checker, benefits checker => benefits adviser
 - search: bin collection => bin collection, rubbish collection
-- search: bno => bno, overseas british passport
 - search: cancel child benefit => stop child benefit
 - search: curriculum vitae => cv, curriculum vitae
 # Seasonal need - also for Christmas and New Year payments
@@ -201,6 +200,7 @@
 
 # Acronyms
 - search: aspp, additional paternity pay => aspp, additional paternity pay
+- search: bno => bno, british national overseas
 - search: crb, criminal records bureau => crb, criminal records bureau, dbs, disclosure and barring service
 - search: csco, carbon saving community obligation => csco, carbon saving community obligation
 - search: cwp => cwp, cold weather
