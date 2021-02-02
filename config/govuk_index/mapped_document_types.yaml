@@ -43,6 +43,7 @@ residential_property_tribunal_decision: residential_property_tribunal_decision #
 service_manual_guide: service_manual_guide
 service_manual_homepage: service_manual_guide
 service_manual_service_standard: service_manual_guide
+service_manual_service_toolkit: edition
 service_manual_topic: service_manual_topic
 service_standard_report: service_standard_report # Specialist Publisher
 simple_smart_answer: edition
