@@ -180,6 +180,10 @@
         "value": "humanitarian-emergencies-disasters"
       },
       {
+        "label": "Innovation",
+        "value": "innovation"
+      },
+      {
         "label": "Livelihoods",
         "value": "livelihoods"
       },
@@ -190,6 +194,10 @@
       {
         "label": "Private sector/business",
         "value": "private-sector-business"
+      },
+      {
+        "label": "Research",
+        "value": "research"
       },
       {
         "label": "Technology",
@@ -237,6 +245,10 @@
       {
         "label": "Humanitarian relief organisations",
         "value": "humanitarian-relief-organisations"
+      },
+      {
+        "label": "Organisations based in Low to Middle Income Countries (LMIC)",
+        "value": "organisations-lmic"
       }
     ],
 
