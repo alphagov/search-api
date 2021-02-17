@@ -245,6 +245,10 @@
       {
         "label": "Humanitarian relief organisations",
         "value": "humanitarian-relief-organisations"
+      },
+      {
+        "label": "Organisations based in Low to Middle Income Countries (LMIC)",
+        "value": "organisations-lmic"
       }
     ],
 
