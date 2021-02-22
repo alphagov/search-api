@@ -95,7 +95,7 @@ module SearchIndices
     # indexing-methods like `add` and `amend` eventually end up
     # calling this method.
     def bulk_index(document_hashes_or_payload, options = {})
-      @client = build_client(options.merge(retry_on_failure: true))
+      @client = build_client(options.merge(retry_on_failure: true, timeout: 10))
 
       with_retries do
         payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
