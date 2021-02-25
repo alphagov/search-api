@@ -15,6 +15,7 @@ gem "govuk_document_types", "~> 0.9.2"
 gem "govuk_message_queue_consumer", "~> 3.5.0"
 gem "govuk_schemas", "~> 4.2.0"
 gem "govuk_sidekiq", "~> 5.0.0"
+gem "httparty", "~> 0.18.1"
 gem "irb", "~> 1.2", require: false
 gem "logging", "~> 2.3.0"
 gem "loofah"
@@ -25,7 +26,6 @@ gem "plek", "~> 4.0"
 gem "rack", "~> 2.2"
 gem "rack-logstasher", "~> 1.0.2"
 gem "rake", "~> 13.0"
-gem "rubocop-govuk"
 gem "rubyzip", "2.3.0"
 gem "sidekiq-limit_fetch"
 gem "sinatra", "~> 2.0.8"
@@ -33,6 +33,17 @@ gem "statsd-ruby", "~> 1.4.0"
 gem "unf", "~> 0.1.4"
 gem "warden"
 gem "warden-oauth2"
+
+group :development, :test do
+  gem "pry-byebug"
+  gem "rubocop-govuk", require: false
+end
+
+group :development do
+  # (Intelligent) reloading server in development
+  gem "mr-sparkle", "0.3.0"
+  gem "rainbow"
+end
 
 group :test do
   gem "bunny-mock", "~> 1.7"
@@ -45,12 +56,4 @@ group :test do
   gem "webmock", "~> 3.8.3"
 end
 
-group :development do
-  # (Intelligent) reloading server in development
-  gem "mr-sparkle", "0.3.0"
-  gem "rainbow"
-end
 
-gem "pry-byebug", group: %i[development test]
-
-gem "httparty", "~> 0.18.1"
