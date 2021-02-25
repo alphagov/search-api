@@ -1,7 +1,9 @@
 module LearnToRank
   module Errors
     class LearnToRankError < StandardError; end
+
     class InvalidSageMakerResponse < LearnToRankError; end
+
     class InvalidContainerResponse < LearnToRankError; end
 
     def report_error(err, extra: {})

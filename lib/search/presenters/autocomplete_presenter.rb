@@ -6,7 +6,7 @@ module Search
       suggestions
     end
 
-    private
+  private
 
     def any_suggestions?
       es_response["autocomplete"] && es_response["autocomplete"].any?
@@ -17,7 +17,7 @@ module Search
       value = es_response["autocomplete"].map do |result|
         result[1].map do |options|
           options["options"].map do |suggestion|
-            suggestion["_source"]["autocomplete"].dig("input")
+            suggestion["_source"]["autocomplete"]["input"]
           end
         end
       end

@@ -1,8 +1,8 @@
 require "spec_helper"
 
 RSpec.describe ElasticsearchTypesParser do
-  def expect_raises_message(message)
-    expect { yield }.to raise_error(message)
+  def expect_raises_message(message, &block)
+    expect(&block).to raise_error(message)
   end
 
   def schema_dir

@@ -34,22 +34,32 @@ module LearnToRank
 
     class RankerServerError < StandardError
       attr_reader :message
+
       def initialize(message: nil)
         @message = message # String
       end
     end
+
     class EndpointError < StandardError
       attr_reader :message
+
       def initialize(message: nil)
         @message = message # String
       end
     end
+
     class StatusRequestFailed < RankerServerError; end
+
     class StatusResponseInvalid < RankerServerError; end
+
     class ModelUndefined < RankerServerError; end
+
     class ModelStateUnhealthy < RankerServerError; end
+
     class ModelStatusUnhealthy < RankerServerError; end
+
     class EndpointApiError < EndpointError; end
+
     class EndpointStatusUnhealthy < EndpointError; end
 
     def reranker_healthy
@@ -96,7 +106,7 @@ module LearnToRank
         raise ModelUndefined.new(message: "No model_version_status model")
       end
 
-      state = model.dig("state")
+      state = model["state"]
       unless GOOD_MODEL_STATES.include?(state)
         raise ModelStateUnhealthy.new(message: "'#{state}' is not a healthy state")
       end

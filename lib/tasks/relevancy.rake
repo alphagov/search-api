@@ -69,11 +69,11 @@ def report_ndcg(datafile: nil, ab_tests: nil)
 
     maxlen = results.keys.map { |query, _| query.length }.max
     results.map do |(query, score)|
-      puts "#{(query + ':').ljust(maxlen + 1)} #{score}"
+      puts "#{("#{query}:").ljust(maxlen + 1)} #{score}"
     end
     puts "---"
     puts "overall scores:"
-    results.dig("average_ndcg").each do |k, score|
+    results["average_ndcg"].each do |k, score|
       puts "Average NDCG@#{k}: #{score}"
       Services.statsd_client.gauge("relevancy.ndcg.at_#{k}", score) if ENV["SEND_TO_GRAPHITE"]
     end

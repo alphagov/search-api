@@ -27,7 +27,7 @@ module LearnToRank
       description = explain.fetch("description", "")
       if description.include? "PerFieldSimilarity"
         # is a bm25 score so return that value
-        field = (description.split("(")[1].split(":")[0].split(".")[0] + "_score").downcase.to_sym
+        field = "#{description.split('(')[1].split(':')[0].split('.')[0]}_score".downcase.to_sym
         return {} unless field_permitted? field
 
         value = explain["value"]

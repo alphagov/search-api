@@ -8,12 +8,10 @@ class FieldDefinition
   # expanded_search_result_fields setting, so we only have to do anything if expanded_search_result_fields
   # are set.
   def merge(other)
-    unless other.nil?
-      if other.expanded_search_result_fields
-        result = clone
-        result.expanded_search_result_fields = ((result.expanded_search_result_fields || []) + other.expanded_search_result_fields).uniq
-        return result
-      end
+    if !other.nil? && other.expanded_search_result_fields
+      result = clone
+      result.expanded_search_result_fields = ((result.expanded_search_result_fields || []) + other.expanded_search_result_fields).uniq
+      return result
     end
     self
   end

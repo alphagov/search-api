@@ -4,7 +4,7 @@ require "gds_api/publishing_api"
 # to search, such as finders and finder email signup pages.
 module ContentItemPublisher
   class Publisher
-    def initialize(content_item, timestamp = Time.now.iso8601, logger = Logger.new(STDOUT))
+    def initialize(content_item, timestamp = Time.now.iso8601, logger = Logger.new($stdout))
       @content_item = content_item
       @logger = logger
       @timestamp = timestamp

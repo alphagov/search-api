@@ -1,6 +1,7 @@
 module Search
   class BatchQuery < Query
     class TooManyQueries < Error; end
+
     def run(searches_params)
       raise(TooManyQueries, "Maximum of 10 searches per batch") unless searches_params.count <= 10
 

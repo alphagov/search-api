@@ -1,7 +1,7 @@
 class SchemaMigrator
   attr_accessor :failed
 
-  def initialize(index_name, cluster: Clusters.default_cluster, wait_between_task_list_check: 5, io: STDOUT)
+  def initialize(index_name, cluster: Clusters.default_cluster, wait_between_task_list_check: 5, io: $stdout)
     @index_name = index_name
     @cluster = cluster
     @wait_between_task_list_check = wait_between_task_list_check

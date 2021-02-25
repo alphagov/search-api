@@ -439,7 +439,7 @@ RSpec.describe "BatchSearchTest" do
     results = parsed_response["results"]
 
     expect(results[0].fetch("elasticsearch_query")).to be_truthy
-    expect(results[1].dig("elasticsearch_query")).to be_falsy
+    expect(results[1]["elasticsearch_query"]).to be_falsy
     expect_results_includes_ministry_of_magic(results, 0, 0)
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end

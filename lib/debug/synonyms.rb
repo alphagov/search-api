@@ -1,8 +1,7 @@
 module Debug
   module Synonyms
     class Analyzer
-      attr_reader :client
-      attr_reader :index
+      attr_reader :client, :index
 
       def initialize(index: "govuk", client: Services.elasticsearch)
         @client = client

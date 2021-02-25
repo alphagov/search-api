@@ -23,9 +23,10 @@ namespace :export do
         csv << fields.map do |f|
           value = hit["_source"][f]
 
-          if value.is_a? Hash
+          case value
+          when Hash
             value.fetch("slug", value)
-          elsif value.is_a? Array
+          when Array
             value.join(",")
           else
             value

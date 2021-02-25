@@ -133,7 +133,7 @@ namespace :learn_to_rank do
 
       merged.map do |(query, scores)|
         winning = scores[:without][ndcg_at] <= scores[:with_model][ndcg_at] ? "√" : "x"
-        puts "#{winning} #{(query + ':').ljust(maxlen + 1)} #{scores[:without][ndcg_at].to_s.ljust(score_maxlen + 1)} #{scores[:with_model][ndcg_at]}"
+        puts "#{winning} #{("#{query}:").ljust(maxlen + 1)} #{scores[:without][ndcg_at].to_s.ljust(score_maxlen + 1)} #{scores[:with_model][ndcg_at]}"
       end
 
       winning = merged.dig("average_ndcg", :without, ndcg_at) <= merged.dig("average_ndcg", :with_model, ndcg_at)

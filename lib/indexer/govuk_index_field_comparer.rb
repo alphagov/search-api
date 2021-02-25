@@ -76,7 +76,7 @@ module Indexer
     end
 
     def remove_links(str)
-      str.gsub(/\[([^\]]*(?:\[[^\]]*\][^\]]*)?)\]\([^\)]*\)/, ' \1 ') # [name](link) => name
+      str.gsub(/\[([^\]]*(?:\[[^\]]*\][^\]]*)?)\]\([^)]*\)/, ' \1 ') # [name](link) => name
         .gsub(/#+\s*/, " ")
         .gsub(/\[InlineAttachment:(?:.*\/)?([^\[\]\/]*(?:\[[^\]\/]*\][^\[\]\/]*|)*)\]/, '\1')
     end
@@ -89,7 +89,7 @@ module Indexer
       (str || "")
         .downcase # normalise case
         .gsub(/\.[a-z]{3}(\)| |$)/, '\1') # hash as sometimes the link will have the extension
-        .gsub(/[\s,\-_:\/–\[\]\(\)\.\*\|\\\"“”]+/, " ") # remove all special characters
+        .gsub(/[\s,\-_:\/–\[\]().*|\\"“”]+/, " ") # remove all special characters
         .gsub(/&amp;/, "&")
         .gsub(/[’'‘]/, "'")
         .gsub(/ /, " ") # nbsp

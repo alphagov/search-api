@@ -65,7 +65,7 @@ class FinderEmailSignupContentItemPresenter
   end
 
   def present
-    path = schema["base_path"] + "/email-signup"
+    path = "#{schema['base_path']}/email-signup"
     {
       base_path: path,
       description: schema["signup_copy"],

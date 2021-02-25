@@ -18,7 +18,7 @@ module QueryComponents
 
       raise ValueError if field_name.include?(".")
 
-      field_name + ".synonym"
+      "#{field_name}.synonym"
     end
   end
 end

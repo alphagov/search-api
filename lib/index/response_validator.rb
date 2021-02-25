@@ -1,6 +1,7 @@
 module Index
   class ResponseValidator
     class NotFound < StandardError; end
+
     class ElasticsearchError < StandardError; end
 
     def initialize(namespace:)
@@ -11,10 +12,11 @@ module Index
       action_type, details = response.first # response is a hash with a single [key, value] pair
       status = details["status"]
 
-      if (200..399).cover?(status)
+      case status
+      when 200..399
         logger.debug("Processed #{action_type} with status #{status}")
         Services.statsd_client.increment("#{@namespace}.elasticsearch.#{action_type}")
-      elsif status == 404 # failed while attempting to delete missing record so just ignore it
+      when 404 # failed while attempting to delete missing record so just ignore it
         logger.info("Tried to delete a document that wasn't there; ignoring.")
         Services.statsd_client.increment("#{@namespace}.elasticsearch.already_deleted")
         raise NotFound, "Document not found in index"

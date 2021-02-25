@@ -88,7 +88,7 @@ module Sitemap
           presented_parts = parts.map do |part|
             part_document = document["_source"].merge(
               "is_part" => true,
-              "link" => document["_source"]["link"] + "/" + part["slug"],
+              "link" => "#{document['_source']['link']}/#{part['slug']}",
             )
 
             SitemapPresenter.new(part_document, property_boost_calculator).to_h
@@ -157,7 +157,7 @@ module Sitemap
 
     def homepage
       {
-        url: Plek.current.website_root + "/",
+        url: "#{Plek.current.website_root}/",
         priority: 0.5,
       }
     end

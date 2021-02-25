@@ -167,7 +167,7 @@ private
     end
 
     if order.start_with?("-")
-      field = order[1..-1]
+      field = order[1..]
       dir = "desc"
     else
       field = order
@@ -415,7 +415,7 @@ private
   end
 
   def debug_options
-    # Note: this parameter is exposed publically via both the API on GOV.UK and
+    # NOTE: this parameter is exposed publically via both the API on GOV.UK and
     # the query parameters for search on GOV.UK.  Don't make it return anything
     # sensitive.
     debug_options = character_separated_param("debug")

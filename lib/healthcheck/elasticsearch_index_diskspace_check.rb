@@ -39,7 +39,7 @@ module Healthcheck
       @cluster_stats ||= begin
         client = Services.elasticsearch(cluster: Clusters.default_cluster)
         es_stats = client.perform_request "GET", "_nodes/stats/fs?pretty=true"
-        es_stats.body.dig("nodes").each_with_object({ total: 0, avail: 0 }) do |(_, node_stat), hsh|
+        es_stats.body["nodes"].each_with_object({ total: 0, avail: 0 }) do |(_, node_stat), hsh|
           hsh[:total] += node_stat.dig("fs", "total", "total_in_bytes")
           hsh[:avail] += node_stat.dig("fs", "total", "available_in_bytes")
         end

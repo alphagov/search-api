@@ -81,7 +81,7 @@ RSpec.describe FieldTypes do
     end
   end
 
-  def expect_raises_message(message)
-    expect { yield }.to raise_error(message)
+  def expect_raises_message(message, &block)
+    expect(&block).to raise_error(message)
   end
 end

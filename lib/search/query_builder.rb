@@ -73,8 +73,7 @@ module Search
 
   private
 
-    attr_reader :content_index_names
-    attr_reader :metasearch_index
+    attr_reader :content_index_names, :metasearch_index
 
     def best_bets
       QueryComponents::BestBets.new(metasearch_index: metasearch_index, search_params: search_params)

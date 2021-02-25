@@ -2,7 +2,9 @@
 module Search
   class Query
     class Error < StandardError; end
+
     class NumberOutOfRange < Error; end
+
     class QueryTooLong < Error; end
 
     attr_reader :index, :registries, :spelling_index, :suggestion_blocklist

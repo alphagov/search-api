@@ -141,7 +141,7 @@ private
       { "_scroll_id" => "scroll_ID_0", "hits" => { "total" => 1, "hits" => return_values[0] } },
     )
 
-    return_values[1..-1].each_with_index do |return_value, i|
+    return_values[1..].each_with_index do |return_value, i|
       expect(client).to receive(:scroll).with(
         scroll_id: "scroll_ID_#{i}", scroll: "1m",
       ).and_return(

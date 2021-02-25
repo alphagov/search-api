@@ -20,7 +20,7 @@ module MissingMetadata
 
     def lookup_content_id(document_id)
       base_path = document_id
-      base_path = "/" + base_path unless base_path.start_with?("/")
+      base_path = "/#{base_path}" unless base_path.start_with?("/")
 
       content_id = publishing_api.lookup_content_id(base_path: base_path)
 

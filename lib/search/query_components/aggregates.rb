@@ -44,9 +44,10 @@ module QueryComponents
       # May also be 'all_filters", to mean that aggregate values should be calculated
       # after applying all filters - ie, just on the documents which will be
       # included in the result set.
-      if options[:scope] == :exclude_field_filter
+      case options[:scope]
+      when :exclude_field_filter
         applied_query_filters = filters_hash([field_name])
-      elsif options[:scope] == :all_filters
+      when :all_filters
         applied_query_filters = filters_hash([])
       end
 
