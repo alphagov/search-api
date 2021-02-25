@@ -3,8 +3,6 @@ require "spec_helper"
 RSpec.describe QueryComponents::Autocomplete do
   context "when enabled in debug options" do
     it "returns a set of autocomplete results" do
-      AUTOCOMPLETE_FIELD = "autocomplete".freeze
-
       builder = described_class.new(
         search_query_params(suggest: "autocomplete"),
       )
@@ -15,7 +13,7 @@ RSpec.describe QueryComponents::Autocomplete do
         "suggested_autocomplete" => {
           "prefix" => search_query_params.query,
           "completion" => {
-            "field" => AUTOCOMPLETE_FIELD,
+            "field" => "autocomplete",
             "size" => 8,
             "skip_duplicates" => true,
           },

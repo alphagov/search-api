@@ -4,15 +4,17 @@ require "securerandom"
 RSpec.describe Indexer::BulkIndexWorker do
   let(:index_name) { "government_test" }
 
-  SAMPLE_DOCUMENT_HASHES = %w[foo bar baz].map do |slug|
-    { "link" => "/#{slug}", "title" => slug.capitalize, "document_type" => "edition" }
+  let(:sample_document_hashes) do
+    %w[foo bar baz].map do |slug|
+      { "link" => "/#{slug}", "title" => slug.capitalize, "document_type" => "edition" }
+    end
   end
 
   it "indexes documents" do
     stub_request_to_publishing_api
-    described_class.new.perform(index_name, SAMPLE_DOCUMENT_HASHES)
+    described_class.new.perform(index_name, sample_document_hashes)
 
-    SAMPLE_DOCUMENT_HASHES.each do |document|
+    sample_document_hashes.each do |document|
       expect_document_is_in_rummager(document, id: document["link"], index: index_name)
     end
   end
@@ -27,10 +29,10 @@ RSpec.describe Indexer::BulkIndexWorker do
       .with("test-index")
       .and_return(mock_index)
     expect(described_class).to receive(:perform_in)
-      .with(lock_delay, "test-index", SAMPLE_DOCUMENT_HASHES)
+      .with(lock_delay, "test-index", sample_document_hashes)
 
     worker = described_class.new
-    worker.perform("test-index", SAMPLE_DOCUMENT_HASHES)
+    worker.perform("test-index", sample_document_hashes)
   end
 
   it "forwards to failure queue" do

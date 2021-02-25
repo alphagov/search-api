@@ -1,18 +1,20 @@
 require "spec_helper"
 
 RSpec.describe SearchIndices::IndexGroup do
-  ELASTICSEARCH_OK = {
-    status: 200,
-    body: { "ok" => true, "acknowledged" => true }.to_json,
-    headers: { "Content-Type" => "application/json" },
-  }.freeze
+  let(:elasticsearch_ok) do
+    {
+      status: 200,
+      body: { "ok" => true, "acknowledged" => true }.to_json,
+      headers: { "Content-Type" => "application/json" },
+    }
+  end
 
-  BASE_URI = "http://example.com:9200".freeze
+  let(:base_uri) { "http://example.com:9200" }
 
   before do
     @schema = SearchConfig.default_instance.search_server.schema
     @server = SearchIndices::SearchServer.new(
-      BASE_URI,
+      base_uri,
       @schema,
       %w[government custom],
       "govuk",
@@ -25,7 +27,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "timed clean with only one live index does not delete the index" do
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
 
-    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
+    stub_request(:get, %r{#{base_uri}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -42,7 +44,7 @@ RSpec.describe SearchIndices::IndexGroup do
       },
     }
 
-    stub_request(:get, %r{#{BASE_URI}/test(.*?)/_search})
+    stub_request(:get, %r{#{base_uri}/test(.*?)/_search})
       .with(
         body: expected_timed_delete_body,
       ).to_return(
@@ -58,7 +60,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "timed clean with only one dead index does not delete the index" do
     dead_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
 
-    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
+    stub_request(:get, %r{#{base_uri}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -75,7 +77,7 @@ RSpec.describe SearchIndices::IndexGroup do
       },
     }
 
-    stub_request(:get, %r{#{BASE_URI}/test(.*?)/_search})
+    stub_request(:get, %r{#{base_uri}/test(.*?)/_search})
       .with(
         body: expected_timed_delete_body,
       ).to_return(
@@ -92,7 +94,7 @@ RSpec.describe SearchIndices::IndexGroup do
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     dead_name = "test-2012-02-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
+    stub_request(:get, %r{#{base_uri}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -111,7 +113,7 @@ RSpec.describe SearchIndices::IndexGroup do
       },
     }
 
-    stub_request(:get, %r{#{BASE_URI}/test(.*?)/_search})
+    stub_request(:get, %r{#{base_uri}/test(.*?)/_search})
       .with(
         body: expected_timed_delete_body,
       ).to_return(
@@ -129,7 +131,7 @@ RSpec.describe SearchIndices::IndexGroup do
     dead_name = "test-2012-02-01t12:00:00z-87654321-4321-4321-4321-210987654321"
     dead_name_two = "test-2012-01-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{BASE_URI}/test\*\?.*})
+    stub_request(:get, %r{#{base_uri}/test\*\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -150,7 +152,7 @@ RSpec.describe SearchIndices::IndexGroup do
       },
     }
 
-    stub_request(:get, %r{#{BASE_URI}/test(.*?)/_search})
+    stub_request(:get, %r{#{base_uri}/test(.*?)/_search})
       .with(
         body: expected_timed_delete_body,
       ).to_return(
@@ -159,8 +161,8 @@ RSpec.describe SearchIndices::IndexGroup do
         body: expected_response_body.to_json,
       )
 
-    delete_stub = stub_request(:delete, "#{BASE_URI}/#{dead_name_two}")
-      .to_return(ELASTICSEARCH_OK)
+    delete_stub = stub_request(:delete, "#{base_uri}/#{dead_name_two}")
+      .to_return(elasticsearch_ok)
 
     @server.index_group("test").timed_clean(0)
 
