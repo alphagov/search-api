@@ -123,7 +123,7 @@ RSpec.describe "best/worst bet functionality" do
       position: 1,
     )
 
-    # NOTE: that we're searching for "bests bet", not "best bet" here.
+    # NOTE: We're searching for "bests bet", not "best bet" here.
     links = get_links "/search?q=bests+bet"
 
     expect(links).to eq(["/the-link-that-should-surface"])
@@ -145,7 +145,7 @@ RSpec.describe "best/worst bet functionality" do
       position: 1,
     )
 
-    # NOTE: that we're searching for "bet best", not "best bet" here.
+    # NOTE: We're searching for "bet best", not "best bet" here.
     links = get_links "/search?q=bet+best"
 
     expect(links).not_to include("/only-shown-for-exact-matches")
