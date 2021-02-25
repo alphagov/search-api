@@ -16,6 +16,7 @@ class SearchParameterParser < BaseParameterParser
   MAX_QUERY_LENGTH = 512
 
   def initialize(params, schema)
+    super()
     @schema = schema
     process(params)
   end

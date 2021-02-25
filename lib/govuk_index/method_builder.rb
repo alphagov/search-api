@@ -15,7 +15,8 @@ module GovukIndex
 
     def set_payload_method(payload_method)
       define_method :payload do
-        @_payload ||= method(payload_method).call
+        # Not defined as @payload as this conflicts with ivars in using classes
+        @_payload ||= method(payload_method).call # rubocop:disable Naming/MemoizedInstanceVariableName
       end
     end
   end

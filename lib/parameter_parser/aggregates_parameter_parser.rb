@@ -2,9 +2,9 @@ class AggregatesParameterParser < BaseParameterParser
   attr_reader :errors, :used_params, :aggregates, :aggregate_name
 
   def initialize(params, allowed_return_fields)
+    super()
     @params = params
     @allowed_return_fields = allowed_return_fields
-
     @aggregates = {}
     @errors = []
     @used_params = []

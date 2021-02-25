@@ -21,7 +21,7 @@ module Indexer
       log "processing: #{@old_index_name}/#{@new_index_name}"
 
       search_body = {}
-      if @filtered_format && @filtered_format
+      if @filtered_format
         search_body[:post_filter] = { term: { format: @filtered_format } }
       end
 

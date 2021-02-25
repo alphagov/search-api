@@ -2,6 +2,7 @@ class AggregateParameterParser < BaseParameterParser
   attr_reader :parsed_params, :errors, :allowed_return_fields
 
   def initialize(field, value, allowed_return_fields)
+    super()
     @field = field
     @allowed_return_fields = allowed_return_fields
     process(value)

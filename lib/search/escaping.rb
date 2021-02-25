@@ -1,8 +1,10 @@
 module Search
   module Escaping
-    LUCENE_SPECIAL_CHARACTERS = Regexp.new("(" + %w[
-      + - && || ! ( ) { } [ ] ^ " ~ * ? : \\ /
-    ].map { |s| Regexp.escape(s) }.join("|") + ")")
+    LUCENE_SPECIAL_CHARACTERS = begin
+      chars = %w[+ - && || ! ( ) { } [ ] ^ " ~ * ? : \\ /]
+      escaped = chars.map { |s| Regexp.escape(s) }.join("|")
+      Regexp.new("(#{escaped})")
+    end
 
     LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/.freeze
 
