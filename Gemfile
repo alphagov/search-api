@@ -25,6 +25,7 @@ gem "oj"
 gem "plek"
 gem "rack"
 gem "rack-logstasher"
+gem "rainbow"
 gem "rake"
 gem "rubyzip"
 gem "sidekiq-limit_fetch"
@@ -41,7 +42,6 @@ end
 
 group :development do
   gem "mr-sparkle"
-  gem "rainbow"
 end
 
 group :test do
