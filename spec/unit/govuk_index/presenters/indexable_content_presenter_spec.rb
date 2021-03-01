@@ -56,21 +56,38 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
   end
 
   context "additional specified indexable content keys" do
-    let(:format) { "transaction" }
-    let(:details) do
-      {
-        "external_related_links" => [],
-        "introductory_paragraph" => [
-          { "content_type" => "text/govspeak", "content" => "**introductory paragraph**" },
-          { "content_type" => "text/html", "content" => "<strong>introductory paragraph</strong>" },
-        ],
-        "more_information" => "more information",
-        "start_button_text" => "Start now",
-      }
+    context "transaction format" do
+      let(:format) { "transaction" }
+      let(:details) do
+        {
+          "external_related_links" => [],
+          "introductory_paragraph" => [
+            { "content_type" => "text/govspeak", "content" => "**introductory paragraph**" },
+            { "content_type" => "text/html", "content" => "<strong>introductory paragraph</strong>" },
+          ],
+          "more_information" => "more information",
+          "start_button_text" => "Start now",
+        }
+      end
+
+      it "extracts additional indexable content keys when they have been specified" do
+        expect(subject.indexable_content).to eq("introductory paragraph\n\nmore information")
+      end
     end
 
-    it "extracts additional indexable content keys when they have been specified" do
-      expect(subject.indexable_content).to eq("introductory paragraph\n\nmore information")
+    context "flood_and_coastal_erosion_risk_management_research_report format" do
+      let(:format) { "flood_and_coastal_erosion_risk_management_research_report" }
+      let(:details) do
+        {
+          "metadata" => {
+            "project_code" => "ABC",
+          },
+        }
+      end
+
+      it "extracts additional indexable content keys when they have been specified" do
+        expect(subject.indexable_content).to eq("ABC")
+      end
     end
   end
 
