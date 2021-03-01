@@ -35,7 +35,7 @@ module GovukIndex
 
     def indexable_content_parts
       indexable_content_keys.flat_map do |field|
-        indexable_values = details[field] || []
+        indexable_values = details.dig(*field.split(".")) || []
         field == "parts" ? parts(indexable_values) : [indexable_values]
       end
     end
