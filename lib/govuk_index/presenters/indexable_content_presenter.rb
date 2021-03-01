@@ -7,6 +7,7 @@ module GovukIndex
       "local_transaction" => %w[introduction more_information need_to_know],
       "transaction" => %w[introductory_paragraph more_information],
       "travel_advice" => %w[summary],
+      "flood_and_coastal_erosion_risk_management_research_report" => %w[metadata.project_code],
     }.freeze
 
     def initialize(format:, details:, sanitiser:)
@@ -35,7 +36,7 @@ module GovukIndex
 
     def indexable_content_parts
       indexable_content_keys.flat_map do |field|
-        indexable_values = details[field] || []
+        indexable_values = details.dig(*field.split(".")) || []
         field == "parts" ? parts(indexable_values) : [indexable_values]
       end
     end
