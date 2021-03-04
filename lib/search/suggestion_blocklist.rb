@@ -1,7 +1,5 @@
 module Search
   SuggestionBlocklist = Struct.new(:registries) do
-    STRINGS_WITH_DIGITS = /\d/.freeze
-
     def should_correct?(string)
       !ignore_list.include?(string.to_s.downcase)
     end
@@ -12,11 +10,11 @@ module Search
                      organisation_acronyms)
     end
 
-    private
+  private
 
     # Don't correct words with digits as these are often names of forms.
     def regex_patterns
-      [STRINGS_WITH_DIGITS]
+      [/\d/]
     end
 
     # Custom list of words we don't want to correct because they're actually

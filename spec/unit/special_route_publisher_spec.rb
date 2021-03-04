@@ -9,7 +9,7 @@ RSpec.describe SpecialRoutePublisher do
 
     @publishing_api = double
 
-    logger = Logger.new(STDOUT)
+    logger = Logger.new($stdout)
     logger.level = Logger::WARN
 
     @publisher = described_class.new(

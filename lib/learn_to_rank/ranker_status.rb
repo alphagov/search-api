@@ -32,24 +32,22 @@ module LearnToRank
       false
     end
 
-    class RankerServerError < StandardError
-      attr_reader :message
-      def initialize(message: nil)
-        @message = message # String
-      end
-    end
-    class EndpointError < StandardError
-      attr_reader :message
-      def initialize(message: nil)
-        @message = message # String
-      end
-    end
+    class RankerServerError < StandardError; end
+
+    class EndpointError < StandardError; end
+
     class StatusRequestFailed < RankerServerError; end
+
     class StatusResponseInvalid < RankerServerError; end
+
     class ModelUndefined < RankerServerError; end
+
     class ModelStateUnhealthy < RankerServerError; end
+
     class ModelStatusUnhealthy < RankerServerError; end
+
     class EndpointApiError < EndpointError; end
+
     class EndpointStatusUnhealthy < EndpointError; end
 
     def reranker_healthy
@@ -68,7 +66,7 @@ module LearnToRank
       validate_endpoint_healthy!(response)
       true
     rescue Aws::SageMaker::Errors::ServiceError => e
-      raise EndpointApiError.new(message: e.message)
+      raise EndpointApiError, e.message
     end
 
     def container_healthy?
@@ -82,30 +80,28 @@ module LearnToRank
       validate_model_healthy!(model)
       true
     rescue HTTParty::Error, SocketError, Timeout::Error => e
-      raise RankerServerError.new(message: e.message)
+      raise RankerServerError, e.message
     end
 
     def validate_response!(response)
       return unless response.body.nil? || response.body.empty? || response.code != 200
 
-      raise StatusResponseInvalid.new(message: "Invalid response received from reranker")
+      raise StatusResponseInvalid, "Invalid response received from reranker"
     end
 
     def validate_model_healthy!(model)
       unless model.present?
-        raise ModelUndefined.new(message: "No model_version_status model")
+        raise ModelUndefined, "No model_version_status model"
       end
 
-      state = model.dig("state")
+      state = model["state"]
       unless GOOD_MODEL_STATES.include?(state)
-        raise ModelStateUnhealthy.new(message: "'#{state}' is not a healthy state")
+        raise ModelStateUnhealthy, "'#{state}' is not a healthy state"
       end
 
       status = model.dig("status", "error_code")
       unless GOOD_MODEL_STATUSES.include?(status)
-        raise ModelStatusUnhealthy.new(
-          message: "Status: '#{status}'. Error: #{model.dig('status', 'error_message')}",
-        )
+        raise ModelStatusUnhealthy, "Status: '#{status}'. Error: #{model.dig('status', 'error_message')}"
       end
     end
 
@@ -115,9 +111,9 @@ module LearnToRank
 
       unless GOOD_ENDPOINT_STATUSES.include?(status)
         if reason.nil? || reason.empty?
-          raise EndpointStatusUnhealthy.new(message: "Status: '#{status}'.")
+          raise EndpointStatusUnhealthy, "Status: '#{status}'."
         else
-          raise EndpointStatusUnhealthy.new(message: "Status: '#{status}'. Error: #{reason}.")
+          raise EndpointStatusUnhealthy, "Status: '#{status}'. Error: #{reason}."
         end
       end
     end

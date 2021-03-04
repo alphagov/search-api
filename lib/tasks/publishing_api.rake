@@ -4,7 +4,7 @@ namespace :publishing_api do
   desc "Publish special routes such as sitemaps"
   task :publish_special_routes do
     publisher = SpecialRoutePublisher.new(
-      logger: Logger.new(STDOUT),
+      logger: Logger.new($stdout),
       publishing_api: Services.publishing_api,
     )
 

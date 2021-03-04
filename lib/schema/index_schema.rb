@@ -16,12 +16,11 @@ class IndexSchema
     @elasticsearch_types.each do |_key, value|
       properties = properties.merge(value.es_config)
     end
-    mappings = {
+    {
       "generic-document" => {
         "properties" => properties,
       },
     }
-    mappings
   end
 
   def elasticsearch_type(elasticsearch_type_name)

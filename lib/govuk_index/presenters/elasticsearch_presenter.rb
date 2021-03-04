@@ -213,15 +213,16 @@ module GovukIndex
     end
 
     def slug
-      if format == "specialist_sector"
+      case format
+      when "specialist_sector"
         base_path.gsub(%r{^/topic/}, "")
-      elsif format == "mainstream_browse_page"
+      when "mainstream_browse_page"
         base_path.gsub(%r{^/browse/}, "")
-      elsif format == "policy"
+      when "policy"
         base_path.gsub(%r{^/government/policies/}, "")
-      elsif format == "person"
+      when "person"
         base_path.gsub(%r{^/government/people/}, "")
-      elsif format == "ministerial_role"
+      when "ministerial_role"
         base_path.gsub(%r{^/government/ministers/}, "")
       end
     end

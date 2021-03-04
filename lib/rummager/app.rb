@@ -20,7 +20,7 @@ require "govuk_app_config"
 require "healthcheck/sidekiq_queue_latencies_check"
 require "healthcheck/elasticsearch_connectivity_check"
 require "healthcheck/reranker_healthcheck"
-require "healthcheck/elasticsearch_index_diskspace_check.rb"
+require "healthcheck/elasticsearch_index_diskspace_check"
 
 class Rummager < Sinatra::Application
   class AttemptToUseDefaultMainstreamIndex < StandardError; end

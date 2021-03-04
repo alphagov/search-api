@@ -163,7 +163,7 @@ module IntegrationSpecHelper
     JSON.parse(last_response.body)
   end
 
-  def expect_document_is_in_rummager(document, type: "edition", id: nil, index:, clusters: Clusters.active)
+  def expect_document_is_in_rummager(document, index:, type: "edition", id: nil, clusters: Clusters.active)
     clusters.each do |cluster|
       retrieved = fetch_document_from_rummager(id: id || document["link"], index: index, cluster: cluster)
 
@@ -250,7 +250,7 @@ private
     end
   end
 
-  def fetch_document_from_rummager(id:, type: "_all", index:, cluster: Clusters.default_cluster)
+  def fetch_document_from_rummager(id:, index:, type: "_all", cluster: Clusters.default_cluster)
     client(cluster: cluster).get(
       index: index,
       type: type,

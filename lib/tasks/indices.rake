@@ -231,7 +231,7 @@ this task will run against all active clusters.
         missing << index
       end
 
-      raise Exception, "Missing index (on cluster #{cluster_name}) #{missing}!" unless missing.empty?
+      raise StandardError, "Missing index (on cluster #{cluster_name}) #{missing}!" unless missing.empty?
     end
   end
 

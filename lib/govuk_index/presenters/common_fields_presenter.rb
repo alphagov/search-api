@@ -86,7 +86,7 @@ module GovukIndex
     end
 
     def government_name
-      government && government.dig("title")
+      government && government["title"]
     end
 
     def attachments

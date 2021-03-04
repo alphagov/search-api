@@ -6,7 +6,7 @@ module SearchIntegrationSpecHelper
       "title" => "Ministry of Magic",
     }
     document_params.merge!(params)
-    index = params.dig("index") || "government_test"
+    index = params["index"] || "government_test"
     commit_document(index, document_params)
   end
 
@@ -16,7 +16,7 @@ module SearchIntegrationSpecHelper
       "link" => "/dragon-guide",
     }
     document_params.merge!(params)
-    index = params.dig("index") || "government_test"
+    index = params["index"] || "government_test"
     commit_document(index, document_params)
   end
 

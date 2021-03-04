@@ -39,7 +39,7 @@
 # Multiword synonyms "play havoc" with term positions, so avoid creating index rules that change the phrase length.
 # See: https://www.elastic.co/guide/en/elasticsearch/guide/current/multi-word-synonyms.html
 # If a phrase expands to a longer phrase, extra words will be highlighted in search descriptions.
-# NOTE: terms like `practical_driving_test` are not marked as keywords so they are still stemmed.
+# Terms like `practical_driving_test` are not marked as keywords so they are still stemmed.
 - both: practical test, practical tests => practical test, practical_driving_test
 - both: practical driving test, practical driving tests => practical driving test, practical_driving_test
 - both: provisional licence, provisional license => provisional licence, provisional_driving_licence

@@ -45,7 +45,7 @@ RSpec.describe Search::ResultPresenter do
       result_rank: 1,
     ).present
 
-    expect(result.dig("parts").count).to eq(10)
+    expect(result["parts"].count).to eq(10)
   end
 
   it "only displays parts for the top 3 results" do
@@ -64,7 +64,7 @@ RSpec.describe Search::ResultPresenter do
         result_rank: rank,
       ).present
 
-      expect(result.dig("parts").count).to eq(rank <= 3 ? 1 : 0)
+      expect(result["parts"].count).to eq(rank <= 3 ? 1 : 0)
     end
   end
 end

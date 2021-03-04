@@ -10,7 +10,7 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     amq-protocol (2.3.0)
-    ast (2.4.1)
+    ast (2.4.2)
     aws-eventstream (1.1.0)
     aws-partitions (1.341.0)
     aws-sdk-core (3.103.0)
@@ -185,8 +185,8 @@ GEM
       rack (>= 1.2, < 3)
     oj (3.10.6)
     os (1.1.0)
-    parallel (1.19.2)
-    parser (2.7.2.0)
+    parallel (1.20.1)
+    parser (3.0.0.0)
       ast (~> 2.4.1)
     plek (4.0.0)
     pry (0.13.0)
@@ -216,7 +216,7 @@ GEM
     redis (4.1.4)
     redis-namespace (1.8.0)
       redis (>= 3.0.4)
-    regexp_parser (1.8.2)
+    regexp_parser (2.1.1)
     reline (0.1.4)
       io-console (~> 0.5)
     representable (3.0.4)
@@ -245,32 +245,33 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.0)
-    rubocop (0.87.1)
+    rubocop (1.10.0)
       parallel (~> 1.10)
-      parser (>= 2.7.1.1)
+      parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.7)
+      regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 0.1.0, < 1.0)
+      rubocop-ast (>= 1.2.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.8.0)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.4.1)
       parser (>= 2.7.1.5)
-    rubocop-govuk (3.17.2)
-      rubocop (= 0.87.1)
-      rubocop-ast (= 0.8.0)
-      rubocop-rails (= 2.8.1)
+    rubocop-govuk (4.0.0.pre.1)
+      rubocop (~> 1.10.0)
+      rubocop-ast (~> 1.4.0)
+      rubocop-rails (~> 2.9.1)
       rubocop-rake (= 0.5.1)
-      rubocop-rspec (= 1.42.0)
-    rubocop-rails (2.8.1)
+      rubocop-rspec (~> 2.2.0)
+    rubocop-rails (2.9.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
-      rubocop (>= 0.87.0)
+      rubocop (>= 0.90.0, < 2.0)
     rubocop-rake (0.5.1)
       rubocop
-    rubocop-rspec (1.42.0)
-      rubocop (>= 0.87.0)
-    ruby-progressbar (1.10.1)
+    rubocop-rspec (2.2.0)
+      rubocop (~> 1.0)
+      rubocop-ast (>= 1.1.0)
+    ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.4)
     rubyzip (2.3.0)
     safe_yaml (1.0.5)
@@ -312,7 +313,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    unicode-display_width (1.7.0)
+    unicode-display_width (2.0.0)
     unicorn (5.8.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -330,51 +331,51 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 6.0.3)
-  aws-sdk-s3 (~> 1.74)
-  aws-sdk-sagemaker (~> 1.63)
-  aws-sdk-sagemakerruntime (~> 1.24)
-  bootsnap (~> 1.4)
-  bunny-mock (~> 1.7)
-  climate_control (~> 0.2)
+  activesupport
+  aws-sdk-s3
+  aws-sdk-sagemaker
+  aws-sdk-sagemakerruntime
+  bootsnap
+  bunny-mock
+  climate_control
   elasticsearch (~> 6)
-  gds-api-adapters (~> 69.3)
-  google-api-client (~> 0.41.2)
-  google-cloud-bigquery (~> 1.21.1)
-  googleauth (~> 0.13.0)
-  govuk-content-schema-test-helpers (~> 1.6.1)
-  govuk_app_config (~> 2.8.1)
-  govuk_document_types (~> 0.9.2)
-  govuk_message_queue_consumer (~> 3.5.0)
-  govuk_schemas (~> 4.2.0)
-  govuk_sidekiq (~> 5.0.0)
-  httparty (~> 0.18.1)
-  irb (~> 1.2)
-  logging (~> 2.3.0)
+  gds-api-adapters
+  google-api-client
+  google-cloud-bigquery
+  googleauth
+  govuk-content-schema-test-helpers
+  govuk_app_config
+  govuk_document_types
+  govuk_message_queue_consumer
+  govuk_schemas
+  govuk_sidekiq
+  httparty
+  irb
+  logging
   loofah
-  mr-sparkle (= 0.3.0)
-  nokogiri (~> 1.11.0)
+  mr-sparkle
+  nokogiri
   oauth2
   oj
-  plek (~> 4.0)
+  plek
   pry-byebug
-  rack (~> 2.2)
-  rack-logstasher (~> 1.0.2)
-  rack-test (~> 1.1.0)
+  rack
+  rack-logstasher
+  rack-test
   rainbow
-  rake (~> 13.0)
+  rake
   rspec
-  rubocop-govuk
-  rubyzip (= 2.3.0)
+  rubocop-govuk (= 4.0.0.pre.1)
+  rubyzip
   sidekiq-limit_fetch
-  simplecov (~> 0.18.5)
-  sinatra (~> 2.0.8)
-  statsd-ruby (~> 1.4.0)
-  timecop (~> 0.9.1)
-  unf (~> 0.1.4)
+  simplecov
+  sinatra
+  statsd-ruby
+  timecop
+  unf
   warden
   warden-oauth2
-  webmock (~> 3.8.3)
+  webmock
 
 BUNDLED WITH
    2.1.4

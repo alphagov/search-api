@@ -3,13 +3,15 @@ require "spec_helper"
 RSpec.describe "ElasticsearchIndexingTest" do
   include GdsApi::TestHelpers::PublishingApi
 
-  SAMPLE_DOCUMENT = {
-    "title" => "TITLE",
-    "description" => "DESCRIPTION",
-    "format" => "answer",
-    "link" => "/an-example-answer",
-    "indexable_content" => "HERE IS SOME CONTENT",
-  }.freeze
+  let(:sample_document) do
+    {
+      "title" => "TITLE",
+      "description" => "DESCRIPTION",
+      "format" => "answer",
+      "link" => "/an-example-answer",
+      "indexable_content" => "HERE IS SOME CONTENT",
+    }
+  end
 
   let(:index_name) { "government_test" }
 
@@ -140,10 +142,10 @@ RSpec.describe "ElasticsearchIndexingTest" do
   end
 
   it "returns a 202 (queued) response" do
-    post "/government_test/documents", SAMPLE_DOCUMENT.to_json
+    post "/government_test/documents", sample_document.to_json
 
     expect(last_response.status).to eq(202)
-    expect_document_is_in_rummager(SAMPLE_DOCUMENT, index: "government_test")
+    expect_document_is_in_rummager(sample_document, index: "government_test")
   end
 
   context "when indexing to the metasearch index" do

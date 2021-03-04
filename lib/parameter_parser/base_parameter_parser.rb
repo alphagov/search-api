@@ -4,6 +4,7 @@ class BaseParameterParser
 
     def initialize(errors)
       @errors = errors
+      super error
     end
 
     def error

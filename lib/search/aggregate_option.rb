@@ -3,6 +3,7 @@ module Search
   # Knows how to compare itself to other options, for sorting.
   class AggregateOption
     attr_reader :value, :count, :applied
+
     include Comparable
 
     def initialize(value, count, applied, orderings)

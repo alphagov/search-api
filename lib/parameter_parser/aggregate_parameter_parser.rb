@@ -2,6 +2,7 @@ class AggregateParameterParser < BaseParameterParser
   attr_reader :parsed_params, :errors, :allowed_return_fields
 
   def initialize(field, value, allowed_return_fields)
+    super()
     @field = field
     @allowed_return_fields = allowed_return_fields
     process(value)
@@ -85,7 +86,7 @@ private
   def order
     orders = character_separated_param("order", ":").map do |order|
       if order.start_with?("-")
-        [order[1..-1], -1]
+        [order[1..], -1]
       else
         [order, 1]
       end
@@ -112,11 +113,9 @@ private
 
   def examples
     value = single_integer_param("examples", 0, aggregate_description)
-    if value != 0
-      unless ALLOWED_AGGREGATE_EXAMPLE_FIELDS.include? @field
-        @errors << %(Aggregate examples are not supported#{aggregate_description})
-        value = 0
-      end
+    if value != 0 && !(ALLOWED_AGGREGATE_EXAMPLE_FIELDS.include? @field)
+      @errors << %(Aggregate examples are not supported#{aggregate_description})
+      value = 0
     end
     value
   end
@@ -138,9 +137,10 @@ private
 
   def example_scope
     scope = single_param("example_scope", aggregate_description)
-    if scope == "global"
+    case scope
+    when "global"
       :global
-    elsif scope == "query"
+    when "query"
       :query
     end
   end

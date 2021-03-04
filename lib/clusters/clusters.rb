@@ -21,6 +21,7 @@ module Clusters
   end
 
   class InvalidClusterError < StandardError; end
+
   class ClusterNotFoundError < StandardError; end
 
   def self.get_cluster(cluster_key)

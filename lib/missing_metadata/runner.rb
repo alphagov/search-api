@@ -3,7 +3,7 @@ module MissingMetadata
     PAGE_SIZE = 200
     MAX_PAGES = 52
 
-    def initialize(missing_field_name, search_config: SearchConfig.default_instance, logger: STDOUT)
+    def initialize(missing_field_name, search_config: SearchConfig.default_instance, logger: $stdout)
       @missing_field_name = missing_field_name
       @search_config = search_config
       publishing_api = Services.publishing_api
@@ -57,7 +57,6 @@ module MissingMetadata
 
   private
 
-    attr_reader :search_config
-    attr_reader :logger
+    attr_reader :search_config, :logger
   end
 end

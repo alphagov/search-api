@@ -53,8 +53,8 @@ module Debug
 
       {
         score: result["metric_score"],
-        query_scores: result["details"].each_with_object({}) do |(query, detail), acc|
-          acc[query] = detail["metric_score"]
+        query_scores: result["details"].transform_values do |detail|
+          detail["metric_score"]
         end,
       }
     end

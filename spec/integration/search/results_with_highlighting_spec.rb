@@ -157,7 +157,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
       "government_test",
       {
         "link" => "/some-nice-link",
-        "description" => "word " + ("something " * 200),
+        "description" => "word #{'something ' * 200}",
       },
     )
 
@@ -173,7 +173,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
       "government_test",
       {
         "link" => "/some-nice-link",
-        "description" => ("something " * 200) + " word",
+        "description" => "#{'something ' * 200} word",
       },
     )
 
@@ -189,7 +189,7 @@ RSpec.describe "ResultsWithHighlightingTest" do
       "government_test",
       {
         "link" => "/some-nice-link",
-        "description" => ("something " * 200) + " word " + ("something " * 200),
+        "description" => "#{'something ' * 200} word #{'something ' * 200}",
       },
     )
 

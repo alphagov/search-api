@@ -23,9 +23,7 @@ module Search
       result = temporarily_fix_link_field(result)
       result = only_return_explicitly_requested_values(result)
       result = present_parts(result)
-      result = add_debug_values(result)
-
-      result
+      add_debug_values(result)
     end
 
   private
@@ -114,7 +112,7 @@ module Search
     end
 
     def present_parts(result)
-      parts = result.dig("parts")
+      parts = result["parts"]
       return result unless parts && parts.any?
 
       parts_count = result_rank <= TOP_N_RESULTS_TO_HAVE_PARTS ? DEFAULT_PARTS_TO_DISPLAY : 0
@@ -143,7 +141,7 @@ module Search
         result["link"].starts_with?("http") ||
         result["link"].starts_with?("/")
 
-      result["link"] = "/" + result["link"]
+      result["link"] = "/#{result['link']}"
       result
     end
   end

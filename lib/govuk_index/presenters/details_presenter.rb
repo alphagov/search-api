@@ -26,7 +26,7 @@ module GovukIndex
         note_info = details["change_notes"]
           .max_by { |note| Time.parse(note["published_at"]) }
 
-        note_info["change_note"] + " in " + note_info["title"]
+        "#{note_info['change_note']} in #{note_info['title']}"
       end
     end
 
