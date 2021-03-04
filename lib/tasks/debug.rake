@@ -75,7 +75,8 @@ namespace :debug do
 
       maxlen = results[:query_scores].map { |query, _| query.length }.max
       results[:query_scores].each do |query, score|
-        puts "#{("#{query}:").ljust(maxlen + 1)} #{score}"
+        justified_query = "#{query}:".ljust(maxlen + 1)
+        puts "#{justified_query} #{score}"
       end
       puts "---"
       puts "overall score: #{results[:score]}"
