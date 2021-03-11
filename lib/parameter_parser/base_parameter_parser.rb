@@ -23,6 +23,8 @@ class BaseParameterParser
     title
     tribunal_decision_decision_date
     start_date
+    end_date
+    ordering
     assessment_date
     popularity
     release_timestamp
