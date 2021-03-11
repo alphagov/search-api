@@ -23,6 +23,7 @@
     "logo_url",
     "metadata",
     "operational_field",
+    "ordering",
     "organisation_brand",
     "organisation_closed_state",
     "organisation_crest",
