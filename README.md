@@ -34,28 +34,16 @@ You can use the [GOV.UK Docker environment](https://github.com/alphagov/govuk-do
 bundle exec rake
 ```
 
-### Dependencies
-
-Search API depends on other services in order to index documents and provide
-relevant search results:
-
-- [Elasticsearch](https://github.com/elastic/elasticsearch) - "You Know, for Search...".
-- [Redis](https://redis.io/) - used by indexing workers.
-- [AWS Sagemaker](https://aws.amazon.com/sagemaker/) (optional) - used for [search relevancy](docs/relevancy.md)
-
-If you use govuk-docker locally, the required dependencies will be started
-automatically when you start Search API. You don't need to set these up yourself.
-
-See the [learning to rank documentation](docs/learning-to-rank.md) for
-guidance on how to run the ranking model locally.
-
 ### Additional Docs
 
+- [How documents are indexed](docs/indexing.md)
+- [How documents are retrieved](docs/how-search-works.md)
+- [Search relevancy](docs/relevancy.md) - uses [AWS Sagemaker](https://aws.amazon.com/sagemaker/)
 - [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
-- [Popularity information](docs/popularity.md): Search API uses Google Analytics
-	data to improve search results.
+- [Popularity information](docs/popularity.md): Search API uses Google Analytics data to improve search results.
 - [Publishing document finders](docs/publishing-finders.md): Information about publishing finders using rake tasks
+- [Learning to rank](docs/learning-to-rank.md): Guidance on how to run the ranking model locally
 
 ## Licence
 
