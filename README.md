@@ -20,79 +20,19 @@ If you would like to use the Search API, please see the
 You can also find some examples in the blog post:
 ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
 
-## Getting started
-
-The instructions will help you to get Search API running
-locally on your machine.
-
-### Prequisites
-
-Install [govuk-docker](https://github.com/alphagov/govuk-docker)!
-
-govuk-docker, a wrapper around docker-compose, is the supported way
-to run Search API and its dependencies locally.
-
-Once you have installed govuk-docker, run
-
-	cd ~/govuk/govuk-docker && make search-api
-
-### Running the application
-
-Once you have completed the prerequisites you'll be able to run
-Search API locally by running
-
-	cd ~/govuk/search-api && govuk-docker up search-api-app
-
-This starts the Search API application and its dependencies.
-
-The Search API will be running locally at [search-api.dev.gov.uk](http://search-api.dev.gov.uk/search).
-
-If you run `docker ps` this will tell you that there are containers running
-for Search API, Nginx, Redis, Publishing API, and Elasticsearch.
-
-> Note: If you're not using docker, you can run `./startup.sh` to start the
-application. However, this is not officially supported, and you will need to
-run dependencies such as Elasticsearch and Redis yourself.
-
-#### Replicating data locally
-
-If you've started running Search API for the first time you probably
-aren't seeing any search results for your queries. That's likely
-because your local search indexes will be empty.
-
-Once you have got everything running locally, another step most
-people take is to get a copy of the search indexes running locally.
-This will let you search for real documents on your local machine.
-
-See the govuk-docker [documentation on replicating data](https://github.com/alphagov/govuk-docker#how-to-replicate-data-locally),
-or run
-
-	gds aws govuk-integration-poweruser ./bin/replicate-elasticsearch.sh
-
-Refer to the govuk-docker documentation for more details about
-the replication scripts.
-
-### Running the test suite
-
-Complete the prerequisites, then run
-
-	govuk-docker run search-api-lite bundle exec rake
-
-> Note: You can also run the tests without using docker, by running
-`bundle exec rake`. This is not officially supported, but can be a quick way
-to run unit tests.
-
 ## Technical documentation
 
 Search API is a Sinatra application that interfaces with Elasticsearch.
 
-Search API puts documents into Elasticsearch indexes (index time), and serves
-documents in search results (query time).
+You can use the [GOV.UK Docker environment](https://github.com/alphagov/govuk-docker) to run the application and its tests with all the necessary dependencies. Follow [the usage instructions](https://github.com/alphagov/govuk-docker#usage) to get started.
 
-It does some clever stuff at both parts, but that's the meat of it.
+**Use GOV.UK Docker to run any commands that follow.**
 
-Read the [documentation](/docs) to find out [how documents are indexed](docs/indexing.md)
-or [how documents are retrieved](docs/how-search-works.md).
+### Running the test suite
+
+```
+bundle exec rake
+```
 
 ### Dependencies
 
