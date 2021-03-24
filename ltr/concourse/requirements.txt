@@ -17,7 +17,7 @@ pyasn1==0.4.8
 python-dateutil==2.8.1
 PyYAML==5.2
 requests==2.22.0
-rsa==3.4.2
+rsa==4.1
 s3transfer==0.2.1
 sagemaker==1.50.1
 scipy==1.4.1
