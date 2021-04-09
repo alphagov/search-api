@@ -115,36 +115,16 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
     end
   end
 
-  context "transaction with hidden_search_terms (smart answer start page)" do
-    let(:format) { "transaction" }
+  context "smart_answer format" do
+    let(:format) { "smart_answer" }
     let(:details) do
       {
-        "introductory_paragraph" => [
-          {
-            "content" => "intro\n",
-            "content_type" => "text/govspeak",
-          },
-          {
-            "content_type" => "text/html",
-            "content" => "<p>intro</p>\n",
-          },
-        ],
-        "more_information" => [
-          {
-            "content" => "more<\n",
-            "content_type" => "text/govspeak",
-          },
-          {
-            "content_type" => "text/html",
-            "content" => "<p>more</p>\n",
-          },
-        ],
         "hidden_search_terms" => ["hidden 1", "hidden 2"],
       }
     end
 
     it "hidden_search_terms is correctly indexed" do
-      expect(subject.indexable_content).to eq("hidden 1\n\n\nhidden 2\n\n\nintro\n\n\n\nmore")
+      expect(subject.indexable_content).to eq("hidden 1\n\n\nhidden 2")
     end
   end
 end
