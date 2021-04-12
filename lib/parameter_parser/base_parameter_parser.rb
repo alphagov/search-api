@@ -45,7 +45,6 @@ class BaseParameterParser
   # The fields listed here are the only ones which can be used to calculated
   # aggregates for.  This should be a subset of allowed_filter_fields
   ALLOWED_AGGREGATE_FIELDS = %w[
-    content_purpose_document_supertype
     content_purpose_subgroup
     content_purpose_supergroup
     content_store_document_type
@@ -57,7 +56,6 @@ class BaseParameterParser
     government_document_supertype
     mainstream_browse_pages
     manual
-    navigation_document_supertype
     organisation_type
     organisations
     part_of_taxonomy_tree
@@ -69,7 +67,6 @@ class BaseParameterParser
     rendering_app
     roles
     search_format_types
-    search_user_need_document_supertype
     specialist_sectors
     taxons
     topical_events
@@ -93,7 +90,6 @@ class BaseParameterParser
     government_document_supertype
     mainstream_browse_pages
     manual
-    navigation_document_supertype
     organisations
     part_of_taxonomy_tree
     publishing_app
