@@ -80,6 +80,7 @@ module LearnToRank
         "protected_food_drink_name" => 76,
         "flood_and_coastal_erosion_risk_management_research_report" => 77,
         "service_manual_service_toolkit" => 78,
+        "smart_answer" => 79,
       }
     end
   end

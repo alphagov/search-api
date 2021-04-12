@@ -23,6 +23,8 @@ migrated:
 - place
 - transaction
 - simple_smart_answer
+# Smart Answers
+- smart_answer
 # Specialist Publisher
 - aaib_report
 - asylum_support_decision
@@ -312,7 +314,6 @@ non_indexable_path:
 non_indexable:
 - calculator
 - license_finder
-- smart_answer # this is the format for the `/<path>/y` flow landing page for smart answers
 - special_route:
   - '/homepage'
   - '/tour'

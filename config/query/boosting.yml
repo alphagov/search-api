@@ -5,6 +5,7 @@ base:
     service_manual_topic: 0.3
     step_by_step_nav: 2.5
     transaction: 1.5
+    smart_answer: 1.5
     # Should appear below govuk (mainstream) content
     aaib_report: 0.2
     research_for_development_output: 0.2
