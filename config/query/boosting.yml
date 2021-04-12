@@ -26,10 +26,11 @@ base:
     specialist_sector: 2.5
   content_store_document_type:
     foi_release: 0.2
-  navigation_document_supertype:
+  content_purpose_supergroup:
+    services: 2.5
+  content_purpose_subgroup:
     guidance: 2.5
-  search_user_need_document_supertype:
-    core: 1.5
+    regulation: 2.5
   organisation_state:
     closed: 0.2
     devolved: 0.3

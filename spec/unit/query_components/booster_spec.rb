@@ -75,11 +75,11 @@ RSpec.describe QueryComponents::Booster do
     expect_format_boost(result, "topic", 1.5)
   end
 
-  it "boost guidance content" do
+  it "boost services content" do
     builder = described_class.new(search_query_params)
     result = builder.wrap({ some: "query" })
 
-    expect_boost_for_field(result, :navigation_document_supertype, "guidance", 2.5)
+    expect_boost_for_field(result, :content_purpose_supergroup, "services", 2.5)
   end
 
   it "downweight service assessments by large amount" do
