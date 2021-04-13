@@ -13,7 +13,6 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
       navigation_document_supertype
       publishing_app
       rendering_app
-      search_user_need_document_supertype
       user_journey_document_supertype
     ]
   end

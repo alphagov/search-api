@@ -40,7 +40,6 @@ RSpec.describe "ElasticsearchIndexingTest" do
            "indexable_content" => "HERE IS SOME CONTENT",
            "licence_identifier" => "1201-5-1",
            "licence_short_description" => "A short description of a licence",
-           "search_user_need_document_supertype" => "core",
          }.to_json
 
     expect_document_is_in_rummager(
@@ -58,7 +57,6 @@ RSpec.describe "ElasticsearchIndexingTest" do
         "content_purpose_subgroup" => "transactions",
         "licence_identifier" => "1201-5-1",
         "licence_short_description" => "A short description of a licence",
-        "search_user_need_document_supertype" => "core",
       },
       type: "edition",
       index: "government_test",
@@ -219,7 +217,6 @@ RSpec.describe "ElasticsearchIndexingTest" do
              "indexable_content" => "HERE IS SOME CONTENT",
              "licence_identifier" => "1201-5-1",
              "licence_short_description" => "A short description of a licence",
-             "search_user_need_document_supertype" => "core",
            }.to_json
 
       expect_document_is_in_rummager(
@@ -237,7 +234,6 @@ RSpec.describe "ElasticsearchIndexingTest" do
           "content_purpose_subgroup" => "transactions",
           "licence_identifier" => "1201-5-1",
           "licence_short_description" => "A short description of a licence",
-          "search_user_need_document_supertype" => "core",
         },
         type: "edition",
         index: "government_test",

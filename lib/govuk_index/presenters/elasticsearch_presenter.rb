@@ -119,7 +119,6 @@ module GovukIndex
         research_document_type: specialist.research_document_type,
         result: specialist.result,
         review_status: specialist.review_status,
-        search_user_need_document_supertype: common_fields.search_user_need_document_supertype,
         service_provider: specialist.service_provider,
         sift_end_date: specialist.sift_end_date,
         sifting_status: specialist.sifting_status,

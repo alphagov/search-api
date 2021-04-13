@@ -69,7 +69,6 @@ class BaseParameterParser
     rendering_app
     roles
     search_format_types
-    search_user_need_document_supertype
     specialist_sectors
     taxons
     topical_events
