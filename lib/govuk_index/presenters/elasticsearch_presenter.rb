@@ -31,7 +31,6 @@ module GovukIndex
         commodity_type: specialist.commodity_type,
         contact_groups: details.contact_groups,
         content_id: common_fields.content_id,
-        content_purpose_document_supertype: common_fields.content_purpose_document_supertype,
         content_purpose_subgroup: common_fields.content_purpose_subgroup,
         content_purpose_supergroup: common_fields.content_purpose_supergroup,
         content_store_document_type: common_fields.content_store_document_type,

@@ -11,7 +11,6 @@ module GovukIndex
     extend MethodBuilder
 
     delegate_to_payload :content_id
-    delegate_to_payload :content_purpose_document_supertype
     delegate_to_payload :content_store_document_type, hash_key: "document_type"
     delegate_to_payload :email_document_supertype
     delegate_to_payload :government_document_supertype
