@@ -57,7 +57,6 @@ class BaseParameterParser
     government_document_supertype
     mainstream_browse_pages
     manual
-    navigation_document_supertype
     organisation_type
     organisations
     part_of_taxonomy_tree
@@ -92,7 +91,6 @@ class BaseParameterParser
     government_document_supertype
     mainstream_browse_pages
     manual
-    navigation_document_supertype
     organisations
     part_of_taxonomy_tree
     publishing_app

@@ -39,7 +39,7 @@ module Analytics
         "ga:productCategoryHierarchy" => ->(_) { nil }, # Placeholder: taxonomy
         "ga:dimension72" => ->(item) { sanitise_for_google_analytics(item["title"]) },
         "ga:dimension73" => ->(item) { item["content_store_document_type"] || item["format"] },
-        "ga:dimension74" => ->(item) { item["navigation_document_supertype"] },
+        "ga:dimension74" => ->(_) { nil }, # Placeholder: was navigation_document_supertype
         "ga:dimension75" => ->(_) { nil }, # Placeholder: mainstream/specialist supertype
         "ga:dimension76" => ->(item) { item["user_journey_document_supertype"] },
         "ga:dimension77" => ->(item) { item["organisations"]&.join(", ") },

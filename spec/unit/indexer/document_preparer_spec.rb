@@ -32,7 +32,6 @@ RSpec.describe Indexer::DocumentPreparer do
         true,
       )
 
-      expect(updated_doc_hash["navigation_document_supertype"]).to eq("guidance")
       expect(updated_doc_hash["content_purpose_supergroup"]).to eq("guidance_and_regulation")
       expect(updated_doc_hash["content_purpose_subgroup"]).to eq("guidance")
     end
