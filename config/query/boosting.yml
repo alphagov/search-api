@@ -17,7 +17,6 @@ base:
     minister: 1.7
     operational_field: 1.5
     organisation: 2.5
-    topic: 1.5
     topical_event: 1.5
     # Hide mainstream browse pages
     mainstream_browse_page: 0

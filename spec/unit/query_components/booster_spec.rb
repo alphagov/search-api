@@ -72,7 +72,6 @@ RSpec.describe QueryComponents::Booster do
 
     expect_format_boost(result, "minister", 1.7)
     expect_format_boost(result, "organisation", 2.5)
-    expect_format_boost(result, "topic", 1.5)
   end
 
   it "boost services content" do
