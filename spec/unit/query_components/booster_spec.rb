@@ -13,7 +13,6 @@ RSpec.describe QueryComponents::Booster do
     builder = described_class.new(search_query_params)
     result = builder.wrap({ some: "query" })
 
-    expect_format_boost(result, "contact", 0.3)
     expect_format_boost(result, "service_manual_guide", 0.3)
     expect_format_boost(result, "transaction", 1.5)
   end
