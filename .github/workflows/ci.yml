@@ -12,8 +12,7 @@ jobs:
       - name: Check LTR dependencies install
         run: |
           set -ex
-          # deps are needed even for just downloading the python packages
           sudo apt-get update
           sudo apt-get install -y liblapack-dev
-          pip download --no-deps -r ltr/concourse/requirements.txt
-          pip download --no-deps -r ltr/scripts/requirements.txt
+          pip install -r ltr/concourse/requirements.txt
+          pip install -r ltr/scripts/requirements.txt
