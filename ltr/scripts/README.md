@@ -13,7 +13,7 @@ Install python3 and virtualenv, then install the dependencies with:
 ```sh
 virtualenv venv
 source venv/bin/activate
-pip install -r ltr/scripts/requirements.txt
+pip install -r ltr/scripts/requirements-freeze.txt
 ```
 
 You can now use the `ltr/scripts/train.sh` script to generate a model.

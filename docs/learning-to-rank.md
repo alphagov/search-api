@@ -22,7 +22,7 @@ installed.  The simplest way to do this is using `virtualenv`:
 pip3 install virtualenv
 virtualenv venv -p python3
 source venv/bin/activate
-pip install -r ltr/scripts/requirements.txt
+pip install -r ltr/scripts/requirements-freeze.txt
 ```
 
 This adjusts your shell's environment to use a local Python package

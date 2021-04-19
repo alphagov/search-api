@@ -4,11 +4,11 @@ FROM python:3.7
 RUN mkdir govuk
 WORKDIR govuk
 
-COPY requirements.txt .
+COPY requirements-freeze.txt .
 COPY tf_ranking_libsvm.py .
 COPY train.sh .
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements-freeze.txt
 RUN chmod +x train.sh
 
 ENTRYPOINT ["./train.sh"]
