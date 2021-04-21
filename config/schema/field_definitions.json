@@ -14,11 +14,6 @@
     "type": "identifier"
   },
 
-  "content_purpose_document_supertype": {
-    "description": "Grouping for content performance supertypes. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
-    "type": "identifier"
-  },
-
   "content_purpose_supergroup": {
     "description": "Grouping for content purpose supergroups. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"
@@ -41,16 +36,6 @@
 
   "government_document_supertype": {
     "description": "Grouping for email subscriptions. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
-    "type": "identifier"
-  },
-
-  "navigation_document_supertype": {
-    "description": "Navigation document type. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
-    "type": "identifier"
-  },
-
-  "search_user_need_document_supertype": {
-    "description": "Grouping for core or government documents. See https://github.com/alphagov/govuk_document_types/blob/master/data/supertypes.yml",
     "type": "identifier"
   },
 
