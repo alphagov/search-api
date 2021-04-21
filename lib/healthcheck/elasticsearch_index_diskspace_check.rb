@@ -30,6 +30,13 @@ module Healthcheck
       true # false if the check is not relevant at this time
     end
 
+    def to_hash
+      {
+        status: status,
+        message: message,
+      }.merge(details)
+    end
+
   private
 
     # Tune this to affect the amount of free space we need available as a minimum % before we alert

@@ -43,16 +43,15 @@ RSpec.describe "HealthcheckTest" do
       end
 
       it "returns a warning status" do
-        get "/healthcheck"
-        expect(parsed_response.dig("checks", "reranker_healthcheck", "status")).to eq "warning"
+        get "/healthcheck/reranker"
+        expect(parsed_response["status"]).to eq "warning"
       end
     end
 
     context "when reranker healthcheck passes" do
       it "returns an OK status" do
-        get "/healthcheck"
+        get "/healthcheck/reranker"
         expect(parsed_response["status"]).to eq "ok"
-        expect(parsed_response.dig("checks", "reranker_healthcheck", "status")).to eq "ok"
       end
     end
   end
@@ -88,19 +87,17 @@ RSpec.describe "HealthcheckTest" do
       end
 
       it "returns a critical status" do
-        get "/healthcheck"
+        get "/healthcheck/elasticsearch-diskspace"
 
         expect(parsed_response["status"]).to eq "critical"
-        expect(parsed_response.dig("checks", "elasticsearch_diskspace", "status")).to eq "critical"
       end
     end
 
     context "when elasticsearch disk image has more than 20% free" do
       it "returns an OK status" do
-        get "/healthcheck"
+        get "/healthcheck/elasticsearch-diskspace"
 
         expect(parsed_response["status"]).to eq "ok"
-        expect(parsed_response.dig("checks", "elasticsearch_diskspace", "status")).to eq "ok"
       end
     end
   end

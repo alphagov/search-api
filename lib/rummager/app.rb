@@ -319,6 +319,14 @@ class Rummager < Sinatra::Application
     GovukHealthcheck.healthcheck(checks).to_json
   end
 
+  get "/healthcheck/reranker" do
+    Healthcheck::RerankerHealthcheck.new.to_hash.to_json
+  end
+
+  get "/healthcheck/elasticsearch-diskspace" do
+    Healthcheck::ElasticsearchIndexDiskspaceCheck.new.to_hash.to_json
+  end
+
   get "/sitemap.xml" do
     serve_from_s3("sitemap.xml")
   end
