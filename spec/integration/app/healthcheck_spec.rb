@@ -27,7 +27,7 @@ RSpec.describe "HealthcheckTest" do
       end
 
       it "returns a critical status" do
-        get "/healthcheck"
+        get "/healthcheck/ready"
 
         expect(parsed_response["status"]).to eq "critical"
       end
@@ -43,16 +43,15 @@ RSpec.describe "HealthcheckTest" do
       end
 
       it "returns a warning status" do
-        get "/healthcheck"
-        expect(parsed_response.dig("checks", "reranker_healthcheck", "status")).to eq "warning"
+        get "/healthcheck/reranker"
+        expect(parsed_response["status"]).to eq "warning"
       end
     end
 
     context "when reranker healthcheck passes" do
       it "returns an OK status" do
-        get "/healthcheck"
+        get "/healthcheck/reranker"
         expect(parsed_response["status"]).to eq "ok"
-        expect(parsed_response.dig("checks", "reranker_healthcheck", "status")).to eq "ok"
       end
     end
   end
@@ -64,7 +63,7 @@ RSpec.describe "HealthcheckTest" do
       end
 
       it "returns a critical status" do
-        get "/healthcheck"
+        get "/healthcheck/ready"
 
         expect(parsed_response["status"]).to eq "critical"
         expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "critical"
@@ -73,7 +72,7 @@ RSpec.describe "HealthcheckTest" do
 
     context "when elasticsearch CAN be connected to" do
       it "returns an OK status" do
-        get "/healthcheck"
+        get "/healthcheck/ready"
 
         expect(parsed_response["status"]).to eq "ok"
         expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "ok"
@@ -88,59 +87,17 @@ RSpec.describe "HealthcheckTest" do
       end
 
       it "returns a critical status" do
-        get "/healthcheck"
+        get "/healthcheck/elasticsearch-diskspace"
 
         expect(parsed_response["status"]).to eq "critical"
-        expect(parsed_response.dig("checks", "elasticsearch_diskspace", "status")).to eq "critical"
       end
     end
 
     context "when elasticsearch disk image has more than 20% free" do
       it "returns an OK status" do
-        get "/healthcheck"
+        get "/healthcheck/elasticsearch-diskspace"
 
         expect(parsed_response["status"]).to eq "ok"
-        expect(parsed_response.dig("checks", "elasticsearch_diskspace", "status")).to eq "ok"
-      end
-    end
-  end
-
-  describe "#sidekiq_queue_latency check" do
-    before do
-      allow(Sidekiq).to receive(:redis_info).and_return({})
-    end
-
-    context "when queue latency is 2 (seconds)" do
-      let(:queue_latency) { 2.seconds }
-
-      it "retuns an OK status" do
-        get "/healthcheck"
-
-        expect(last_response).to be_ok
-
-        expect(parsed_response.dig("checks", "sidekiq_queue_latency", "status")).to eq "ok"
-      end
-    end
-
-    context "when queue latency is high" do
-      let(:queue_latency) { 32.seconds }
-
-      it "retuns a warning status" do
-        get "/healthcheck"
-
-        expect(parsed_response["status"]).to eq "warning"
-        expect(parsed_response.dig("checks", "sidekiq_queue_latency", "status")).to eq "warning"
-      end
-    end
-
-    context "when queue latency is very high" do
-      let(:queue_latency) { 2.minutes }
-
-      it "retuns a critical status" do
-        get "/healthcheck"
-
-        expect(parsed_response["status"]).to eq("critical")
-        expect(parsed_response.dig("checks", "sidekiq_queue_latency", "status")).to eq "critical"
       end
     end
   end

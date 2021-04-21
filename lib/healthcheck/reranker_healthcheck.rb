@@ -25,6 +25,17 @@ module Healthcheck
       !%w[development].include? ENV["RACK_ENV"]
     end
 
+    def to_hash
+      if enabled?
+        {
+          status: status,
+          message: message,
+        }.merge(details)
+      else
+        { status: :ok }
+      end
+    end
+
   private
 
     def reranker_status
