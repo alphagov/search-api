@@ -31,6 +31,7 @@ estimator = sagemaker.estimator.Estimator(
     instance_size,
     output_path=f"s3://{s3_bucket}/model/{model_name}",
     sagemaker_session=session,
+    disable_profiler=True
 )
 
 estimator.fit(
