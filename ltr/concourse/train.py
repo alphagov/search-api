@@ -42,6 +42,6 @@ estimator.fit(
     }
 )
 
-print(model_name)
+print(f"{model_name}/{estimator._current_job_name}")
 
 print("done", file=sys.stderr)

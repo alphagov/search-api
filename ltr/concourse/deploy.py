@@ -39,7 +39,7 @@ except Exception:
 
 # find the model
 
-model_location_prefix = f"model/{(model_tag or model_name).strip()}"
+model_location_prefix = f"model/{(model_tag or model_name).strip()}/output"
 print(f"looking with prefix {model_location_prefix}", file=sys.stderr)
 
 try:
