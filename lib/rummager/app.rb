@@ -305,20 +305,6 @@ class Rummager < Sinatra::Application
     status.to_json
   end
 
-  # Healthcheck using govuk_app_config for Icinga alerts
-  # See govuk_app_config/healthcheck for guidance on adding checks.
-  get "/healthcheck" do
-    checks = [
-      GovukHealthcheck::SidekiqRedis,
-      Healthcheck::SidekiqQueueLatenciesCheck,
-      Healthcheck::ElasticsearchConnectivityCheck,
-      Healthcheck::RerankerHealthcheck,
-      Healthcheck::ElasticsearchIndexDiskspaceCheck,
-    ]
-
-    GovukHealthcheck.healthcheck(checks).to_json
-  end
-
   get "/healthcheck/live" do
     [200, { "Content-Type" => "text/plain" }, "OK"]
   end
