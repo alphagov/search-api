@@ -39,7 +39,7 @@ except Exception:
 
 # find the model
 
-model_location_prefix = f"model/{(model_tag or model_name).strip()}"
+model_location_prefix = f"model/{(model_tag or model_name).strip()}/output"
 print(f"looking with prefix {model_location_prefix}", file=sys.stderr)
 
 try:
@@ -60,15 +60,47 @@ model_key = model_keys[0]["Key"]
 
 print(f"Deploying model {model_key} to Sagemaker...", file=sys.stderr)
 
-# deploy the model by creating a new endpoint config and updating the
-# existing endpoint (or creating a new one)
-sagemaker.tensorflow.serving.Model(
-    f"s3://{s3_bucket}/{model_key}", role, framework_version="2.0.0"
-).deploy(
-    instance_count,
-    instance_type,
-    endpoint_name=endpoint_name,
-    update_endpoint=update_endpoint,
+# Initialize boto3 Sagemaker client
+# See the API Client docs:
+# https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker.html
+client = session.boto_session.client("sagemaker")
+
+sagemaker_model_name = f"search-ltr-{str(time.strftime('%Y-%m-%d-%H-%M-%S'))}"
+print(f"Model name will be: {sagemaker_model_name}.", file=sys.stderr)
+print(f"Fetching model from s3://{s3_bucket}/{model_key}", file=sys.stderr)
+
+# Upload trained model to Sagemaker
+response = client.create_model(
+    ModelName=sagemaker_model_name,
+    PrimaryContainer={
+        # See https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/deep-learning-containers-images.html
+        'Image': '763104351884.dkr.ecr.eu-west-1.amazonaws.com/tensorflow-inference:2.0.0-cpu',
+        'Mode': 'SingleModel',
+        'ModelDataUrl': f"s3://{s3_bucket}/{model_key}",
+    },
+    ExecutionRoleArn=role,
+)
+
+# A unique endpoint config is created for each model
+new_endpoint_config_name = f"govuk-{govuk_environment}-{sagemaker_model_name}"
+
+client.create_endpoint_config(
+    EndpointConfigName=new_endpoint_config_name,
+    ProductionVariants=[
+        {
+            'VariantName': 'primary',
+            'ModelName': sagemaker_model_name,
+            'InitialInstanceCount': instance_count,
+            'InstanceType': instance_type
+        },
+    ]
+)
+
+# Update the Sagemaker endpoint to serve our new model (wrapped by the
+# endpoint config)
+response = client.update_endpoint(
+    EndpointName=endpoint_name,
+    EndpointConfigName=new_endpoint_config_name,
 )
 
 # wait for the deployment to complete
