@@ -37,7 +37,7 @@ gem "warden-oauth2"
 
 group :development, :test do
   gem "pry-byebug"
-  gem "rubocop-govuk", "4.0.0.pre.1", require: false # Trialling pre-release
+  gem "rubocop-govuk", "4.0.0", require: false # Trialling pre-release
 end
 
 group :development do
