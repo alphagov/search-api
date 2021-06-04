@@ -365,7 +365,7 @@ DEPENDENCIES
   rainbow
   rake
   rspec
-  rubocop-govuk (= 4.0.0)
+  rubocop-govuk
   rubyzip
   sidekiq-limit_fetch
   simplecov
