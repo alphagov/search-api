@@ -19,9 +19,7 @@ module GovukIndex
     attr_reader :payload
 
     def mapped_document_types
-      @mapped_document_types ||= begin
-        YAML.load_file(File.join(__dir__, "../../config/govuk_index/mapped_document_types.yaml"))
-      end
+      @mapped_document_types ||= YAML.load_file(File.join(__dir__, "../../config/govuk_index/mapped_document_types.yaml"))
     end
 
     def elasticsearch_document_type
