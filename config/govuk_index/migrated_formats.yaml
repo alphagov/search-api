@@ -394,6 +394,7 @@ non_indexable:
 - map
 - media_enquiries
 - membership
+- modern_slavery_statement
 - national_statistics
 - national_statistics_announcement
 - news_story: # indexable when published by Content Publisher
