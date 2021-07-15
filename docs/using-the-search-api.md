@@ -82,9 +82,17 @@ Note that query parameters which are repeated may be specified in standard HTTP
 style (ie, `name=value&name=value`, where the same name may be used multiple
 times), or in Ruby/PHP array style (ie, `name[]=value&name[]=value`).
 
-## Other parameters
-- `filter_<foo>`/`reject_<foo>`/`aggregate_<foo>`: see the [faceted search guide](/docs/public-api/faceted-search.md)
+## Using faceted search parameters
+You can use field prefixes such as `filter_<foo>`, `reject_<foo>` and `aggregate_<foo>` to further filter search results, for example:
 
+```
+https://www.gov.uk/api/search.json?filter_format=statistics_announcement&fields=title,link,format,rendering_app
+```
+
+You can read more in the [faceted search guide](https://docs.publishing.service.gov.uk/apps/search-api/public-api/faceted-search).
+
+
+## Other parameters
 - `ab_tests`: a/b test with selected variant type. This allows test to be configured
   from upstream apps.
 
