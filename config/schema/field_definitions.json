@@ -677,6 +677,9 @@
   "uk_market_conformity_assessment_body_number": {
     "type": "searchable_identifier"
   },
+  "uk_market_conformity_assessment_body_notified_body_number": {
+    "type": "identifier"
+  },
   "uk_market_conformity_assessment_body_type": {
     "type": "searchable_identifiers"
   },
@@ -697,6 +700,9 @@
   },
   "uk_market_conformity_assessment_body_legislative_area": {
     "type": "searchable_identifiers"
+  },
+  "uk_market_conformity_assessment_body_address": {
+    "type": "identifier"
   },
   "authors": {
     "description": "A set of author names, which aren't selected from a predefined list and don't repeat",

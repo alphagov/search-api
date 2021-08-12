@@ -9,7 +9,9 @@
     "uk_market_conformity_assessment_body_website",
     "uk_market_conformity_assessment_body_email",
     "uk_market_conformity_assessment_body_phone",
-    "uk_market_conformity_assessment_body_legislative_area"
+    "uk_market_conformity_assessment_body_legislative_area",
+    "uk_market_conformity_assessment_body_notified_body_number",
+    "uk_market_conformity_assessment_body_address"
   ],
   "expanded_search_result_fields": {
     "uk_market_conformity_assessment_body_type": [
