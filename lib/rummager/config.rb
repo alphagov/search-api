@@ -9,7 +9,7 @@ end
 # Disable fancy exception pages (but still get good ones).
 disable :show_exceptions
 
-Raven.configure do |config|
+GovukError.configure do |config|
   config.excluded_exceptions << "Sinatra::NotFound"
 
   # We manually send `Indexer::BulkIndexFailure` to Sentry with extra
@@ -28,7 +28,7 @@ Raven.configure do |config|
   # more standard (disabling `raise_error` which is the default for production)
   config.excluded_exceptions << "Search::Query::Error"
 
-  use Raven::Rack
+  use Sentry::Rack::CaptureExceptions
 end
 
 Encoding.default_external = "UTF-8"
