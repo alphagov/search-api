@@ -97,6 +97,8 @@ module GovukIndex
     delegate_to_payload :uk_market_conformity_assessment_body_testing_locations, convert_to_array: true
     delegate_to_payload :uk_market_conformity_assessment_body_type, convert_to_array: true
     delegate_to_payload :uk_market_conformity_assessment_body_website
+    delegate_to_payload :uk_market_conformity_assessment_body_address
+    delegate_to_payload :uk_market_conformity_assessment_body_notified_body_number
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type
     delegate_to_payload :will_continue_on
