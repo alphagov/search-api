@@ -67,6 +67,10 @@
         "value": "dentistry"
       },
       {
+        "label": "Dispensing GP practices",
+        "value": "dispensing-gp-practices"
+      },
+      {
         "label": "General practice",
         "value": "general-practice"
       },

@@ -39,6 +39,10 @@
         "value": "dermatology"
       },
       {
+        "label": "Dispensing GP practices",
+        "value": "dispensing-gp-practices"
+      },
+      {
         "label": "Ear, nose and throat",
         "value": "ear-nose-throat"
       },
