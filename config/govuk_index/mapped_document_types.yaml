@@ -32,6 +32,7 @@ marine_notice: marine_notice # Specialist Publisher
 medical_safety_alert: medical_safety_alert # Specialist Publisher
 ministerial_role: edition
 news_story: edition
+oim_project: oim_project # Specialist Publisher
 person: person
 place: edition
 policy: policy # Policy Publisher

@@ -1,0 +1,46 @@
+{
+  "fields": [
+    "oim_project_type",
+    "oim_project_state",
+    "oim_project_opened_date",
+    "oim_project_closed_date"
+  ],
+  "expanded_search_result_fields": {
+    "oim_project_type": [
+      {
+        "label": "Annual report",
+        "value": "annual-report"
+      },
+      {
+        "label": "Five-yearly report",
+        "value": "five-yearly-report"
+      },
+      {
+        "label": "Discretionary report",
+        "value": "discretionary-report"
+      },
+      {
+        "label": "Advice/report on proposed regulatory provision",
+        "value": "report-on-proposed-regulatory-provision"
+      },
+      {
+        "label": "Report after regulatory provision is passed or made",
+        "value": "report-after-regulatory-provision-is-passed-or-made"
+      },
+      {
+        "label": "Report on provision considered to have detrimental effects",
+        "value": "report-on-provision-considered-to-have-detrimental-effects"
+      }
+    ],
+    "oim_project_state": [
+      {
+        "label": "Open",
+        "value": "open"
+      },
+      {
+        "label": "Closed",
+        "value": "closed"
+      }
+    ]
+  }
+}
