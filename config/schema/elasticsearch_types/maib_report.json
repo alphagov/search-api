@@ -43,6 +43,10 @@
         "value": "investigation-report"
       },
       {
+        "label": "Investigation report on behalf of Red Ensign Group",
+        "value": "investigation-report-on-behalf-of-red-ensign-group"
+      },
+      {
         "label": "Safety bulletin",
         "value": "safety-bulletin"
       },
