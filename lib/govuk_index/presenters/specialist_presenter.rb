@@ -55,6 +55,11 @@ module GovukIndex
     delegate_to_payload :oim_project_closed_date
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
+    delegate_to_payload :product_alert_type
+    delegate_to_payload :product_risk_level
+    delegate_to_payload :product_category
+    delegate_to_payload :product_measure_type
+    delegate_to_payload :product_recall_alert_date
     delegate_to_payload :project_code
     delegate_to_payload :project_status
     delegate_to_payload :protection_type

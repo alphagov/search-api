@@ -1,0 +1,69 @@
+{
+  "fields": [
+    "product_alert_type",
+    "product_risk_level",
+    "product_category",
+    "product_measure_type",
+    "product_recall_alert_date"
+  ],
+  "expanded_search_result_fields": {
+    "product_alert_type": [
+      {"label": "Safety alert", "value": "safety-alert"},
+      {"label": "Product safety report", "value": "product-safety-report"},
+      {"label": "Recall", "value": "recall"}
+    ],
+    "product_risk_level": [
+      {"label": "Serious", "value": "serious"},
+      {"label": "High", "value": "high"},
+      {"label": "Medium", "value": "medium"},
+      {"label": "Low", "value": "low"}
+    ],
+    "product_category": [
+      {"label": "Adaptors, Plugs and Sockets", "value": "adaptors-plugs-sockets"},
+      {"label": "Chemical products", "value": "chemical-products"},
+      {"label": "Childcare articles and children's equipment", "value": "childcare-articles-childrens-equipment"},
+      {"label": "Clothing, textiles and fashion items", "value": "clothing-textiles-fashion"},
+      {"label": "Communication and media equipment", "value": "communication-media-equipment"},
+      {"label": "Computers and computer accessories", "value": "computers-and-accessories"},
+      {"label": "Construction products", "value": "construction-products"},
+      {"label": "Cosmetics", "value": "cosmetics"},
+      {"label": "Electrical appliances and equipment", "value": "electrical-appliances-equipment"},
+      {"label": "Entertainment and leisure products (indoors)", "value": "entertainment-leisure-products-indoors"},
+      {"label": "Entertainment and leisure products (outdoors)", "value": "entertainment-leisure-products-outdoors"},
+      {"label": "Explosive atmospheres equipment", "value": "explosive-atmospheres-equipment"},
+      {"label": "Fireworks and Pyrotechnic Articles", "value": "fireworks-and-pyrotechnic-articles"},
+      {"label": "Food imitating products", "value": "food-imitating-products"},
+      {"label": "Furniture", "value": "furniture"},
+      {"label": "Gas appliances and components", "value": "gas-appliances-and-components"},
+      {"label": "Hand tools", "value": "hand-tools"},
+      {"label": "Household decorative articles", "value": "household-decorative-articles"},
+      {"label": "Hobby / sports equipment", "value": "hobby-sports-equipment"},
+      {"label": "Jewellery", "value": "jewellery"},
+      {"label": "Kitchen / cooking accessories", "value": "kitchen-cooking-accessories"},
+      {"label": "Lifts", "value": "lifts"},
+      {"label": "Lighting Products", "value": "lighting-products"},
+      {"label": "Machinery", "value": "machinery"},
+      {"label": "Measuring instruments", "value": "measuring-instruments"},
+      {"label": "Motor vehicles", "value": "motor-vehicles"},
+      {"label": "Other", "value": "other"},
+      {"label": "Pressure equipment / vessels", "value": "pressure-equipment-vessels"},
+      {"label": "Personal protective equipment (PPE)", "value": "personal-protective-equipment-ppe"},
+      {"label": "Recreational crafts", "value": "recreational-crafts"},
+      {"label": "Stationery", "value": "stationery"},
+      {"label": "Toys", "value": "toys"}
+    ],
+    "product_measure_type": [
+      {"label": "Ban on the marketing of the product and any accompanying measures", "value": "ban-marketing-of-product-and-accompanying-measures"},
+      {"label": "Destruction of the product", "value": "destruction-of-the-product"},
+      {"label": "Import rejected at border", "value": "import-rejected-at-border"},
+      {"label": "Making the marketing of the product subject to prior conditions", "value": "making-marketing-of-product-subject-to-prior-conditions"},
+      {"label": "Marking the product with appropriate warnings on the risks", "value": "marking-product-with-appropriate-warnings-on-risks"},
+      {"label": "Recall of the product from end users", "value": "recall-of-product-from-end-users"},
+      {"label": "Removal of the listing by the online marketplace", "value": "removal-of-listing-by-online-marketplace"},
+      {"label": "Temporary ban on the supply, offer to supply and display of the product", "value": "temporary-ban-on-supply-offer-and-display-of-product"},
+      {"label": "Warning consumers of the risks", "value": "warning-consumers-of-risks"},
+      {"label": "Withdrawal of the product from the market", "value": "withdrawal-of-product-from-market"},
+      {"label": "Other", "value": "other"}
+    ]
+  }
+}
