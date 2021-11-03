@@ -958,20 +958,20 @@
     "description": "The topics of the document",
     "type": "identifiers"
   },
-  "oim_project_type":{
-    "description" :"The category of OIM project",
+  "foo_project_type":{
+    "description" :"The category of FOO project",
     "type": "identifiers"
   },
-  "oim_project_state":{
-    "description" :"status of an OIM project: {open, closed}",
+  "foo_project_state":{
+    "description" :"status of an FOO project: {open, closed}",
     "type": "identifiers"
   },
-  "oim_project_opened_date":{
-    "description" :"Opened date of an OIM project",
+  "foo_project_opened_date":{
+    "description" :"Opened date of an FOO project",
     "type": "date"
   },
-  "oim_project_closed_date":{
-    "description" :"Closed date of an OIM project",
+  "foo_project_closed_date":{
+    "description" :"Closed date of an FOO project",
     "type": "date"
   }
 }

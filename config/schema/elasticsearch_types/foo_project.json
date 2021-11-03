@@ -1,12 +1,12 @@
 {
   "fields": [
-    "oim_project_type",
-    "oim_project_state",
-    "oim_project_opened_date",
-    "oim_project_closed_date"
+    "foo_project_type",
+    "foo_project_state",
+    "foo_project_opened_date",
+    "foo_project_closed_date"
   ],
   "expanded_search_result_fields": {
-    "oim_project_type": [
+    "foo_project_type": [
       {
         "label": "Annual report",
         "value": "annual-report"
@@ -32,7 +32,7 @@
         "value": "report-on-provision-considered-to-have-detrimental-effects"
       }
     ],
-    "oim_project_state": [
+    "foo_project_state": [
       {
         "label": "Open",
         "value": "open"

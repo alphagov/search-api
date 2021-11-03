@@ -49,10 +49,10 @@ module GovukIndex
     delegate_to_payload :marine_notice_topic
     delegate_to_payload :market_sector
     delegate_to_payload :medical_specialism
-    delegate_to_payload :oim_project_type
-    delegate_to_payload :oim_project_state
-    delegate_to_payload :oim_project_opened_date
-    delegate_to_payload :oim_project_closed_date
+    delegate_to_payload :foo_project_type
+    delegate_to_payload :foo_project_state
+    delegate_to_payload :foo_project_opened_date
+    delegate_to_payload :foo_project_closed_date
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
     delegate_to_payload :project_code
