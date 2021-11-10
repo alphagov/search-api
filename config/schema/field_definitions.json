@@ -973,5 +973,25 @@
   "oim_project_closed_date":{
     "description" :"Closed date of an OIM project",
     "type": "date"
+  },
+  "product_alert_type":{
+    "description": "Alert type: {safety-alert, product-safety-report, recall}",
+    "type": "identifiers"
+  },
+  "product_risk_level":{
+    "description": "Risk level of product",
+    "type": "identifiers"
+  },
+  "product_category":{
+    "description": "Product category",
+    "type": "identifiers"
+  },
+  "product_measure_type":{
+    "description": "Product measure type",
+    "type": "identifiers"
+  },
+  "product_recall_alert_date":{
+    "description": "Date of the recall/alert",
+    "type": "date"
   }
 }
