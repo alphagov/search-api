@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-source search-api-git/ltr/concourse/lib.sh
+source ltr/concourse/lib.sh
 
 set +x
 assume_role
@@ -17,7 +17,7 @@ fi
 export SCRIPT_INPUT_DATA
 
 script="$1"
-python "search-api-git/ltr/concourse/${script}.py" | tee script_output.txt
+python "ltr/concourse/${script}.py" | tee script_output.txt
 
 if [[ -n "${OUTPUT_FILE_NAME:-}" ]]; then
   tail -n1 script_output.txt > "out/${GOVUK_ENVIRONMENT}-${OUTPUT_FILE_NAME}-$(date +%s).txt"

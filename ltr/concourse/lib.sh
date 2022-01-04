@@ -1,4 +1,4 @@
-pip install -r search-api-git/ltr/concourse/requirements-freeze.txt
+pip install -r ltr/concourse/requirements-freeze.txt
 
 apt-get update
 apt-get -y install jq

@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-source search-api-git/ltr/concourse/lib.sh
+source ltr/concourse/lib.sh
 
 assume_role
 
