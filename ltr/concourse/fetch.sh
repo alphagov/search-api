@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
-source ltr/concourse/lib.sh
-
-assume_role
-
 EC2_NAME="govuk-${GOVUK_ENVIRONMENT}-search-ltr-generation"
 S3_BUCKET="govuk-${GOVUK_ENVIRONMENT}-search-relevancy"
 GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}"
@@ -87,4 +81,4 @@ aws autoscaling set-desired-capacity \
     --auto-scaling-group-name "$EC2_NAME" \
     --desired-capacity 0
 
-echo "$NOW" > "out/${GOVUK_ENVIRONMENT}-${OUTPUT_FILE_NAME}-$(date +%s).txt"
+echo "$NOW" > "out/${GOVUK_ENVIRONMENT}-training-data-$(date +%s).txt"
