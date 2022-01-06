@@ -69,7 +69,6 @@
 - search: how much => how much, fees, rates
 - search: apostille => apostille, document legalised
 - search: bad weather, winter weather => bad weather, cold weather, severe weather, winter weather, energy grants, heating
-- search: benefit checker, benefits checker => benefits adviser
 - search: bin collection => bin collection, rubbish collection
 - search: cancel child benefit => stop child benefit
 - search: curriculum vitae => cv, curriculum vitae
@@ -92,7 +91,6 @@
 - search: soc code, soc codes => soc code, sponsorship, skilled worker
 - search: social security => social security, benefits
 - search: sponsor login => sponsorship management system
-- search: spouse visa, spousal visa => spouse visa, partner visa, family
 - search: starting a company => starting a company, starting a business, set up a business
 - search: under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room
 - search: visa4uk => visa4uk, uk visa
@@ -110,9 +108,8 @@
 - search: dole => dole, jobseeker's allowance
 - search: dss => dss, dwp
 - search: dvlc => dvlc, dvla
-- search: e111 => e111, ehic
+- search: e111 => e111, ehic, ghic
 - search: employer direct => employer direct, universal jobmatch
-- search: family tax credit, family tax credits => tax credits
 - search: fired => fired, dismissed, dismissal
 - search: firing => firing, dismiss, dismissing, dismissal
 - search: heating allowance => winter fuel payment
@@ -121,7 +118,7 @@
 - search: old age pension => old age pension, state pension
 - search: rfl refund => vehicle tax refunds
 - search: road tax => road tax, car tax
-- search: unemployment benefit => unemployment benefit, jobseeker's allowance
+- search: unemployment benefit => unemployment benefit, universal credit
 - search: unsorn, un sorn, cancel sorn => sorn
 - search: winter fuel allowance, winter allowance => winter fuel payment
 - search: winter payment, winter payments => winter fuel payment
@@ -147,13 +144,11 @@
 - search: governmentgateway => government gateway
 - search: greenbook => green book
 - search: greendeal => green deal
-- search: incomesupport => income support
 - search: jcponline => jobcentre plus
 - search: jobgrant => job grant
 - search: jobsearch => job search, jobmatch
 - search: jobseekersallowance => jobseeker's allowance
 - search: journeyplanner => journey planner
-- search: jsaol, jsaonline, jsa online => jobseeker's allowance
 - search: makeasorn => make a sorn
 - search: motoringforms => motoring forms
 - search: number10 => number 10
