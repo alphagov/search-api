@@ -8,22 +8,18 @@ import time
 
 govuk_environment = os.environ["GOVUK_ENVIRONMENT"]
 role = os.environ["ROLE_ARN"]
-model_name = os.getenv("SCRIPT_INPUT_DATA")
-model_tag = os.getenv("MODEL_TAG")
-if not model_name and not model_tag:
-    raise Exception("Require model_name or model_tag to be set.")
 
-endpoint_version = f"-{model_tag}" if model_tag else ""
+model_name = os.getenv("MODEL_NAME")
+
+endpoint_name = f"govuk-{govuk_environment}-search-ltr-endpoint"
+update_endpoint = False
+
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
-instance_count = int(os.getenv("INSTANCE_COUNT", 4))
-instance_type = os.getenv("INSTANCE_TYPE", "ml.t2.medium")
-endpoint_name = os.getenv(
-    "ENDPOINT_NAME", f"govuk-{govuk_environment}-search-ltr-endpoint{endpoint_version}"
-)
+
+instance_count = int(os.getenv("DEPLOY_INSTANCE_COUNT"))
+instance_type = os.getenv("DEPLOY_INSTANCE_TYPE")
 
 session = sagemaker.Session()
-
-update_endpoint = False
 
 # try tofind the current endpoint config
 try:
