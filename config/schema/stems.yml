@@ -4,6 +4,8 @@ rules: [
   "accessible => accessib",  # not access
   "accountant => accountant", # not account
   "accountants => accountant", # not account
+  "accounting => accounting",  # not account
+  "allowable => allowabl",  # not allow, allowance
   "animal => animal",  # not animation
   "animals => animal",  # not animation
   "animation => animat",  # not animal
@@ -11,6 +13,7 @@ rules: [
   "appointeeship => appointe",  # match appointee
   "appropriation => appropriation", # not appropriate
   "appropriating => appropriation", # not appropriate
+  "budgeting => budgeting",  # not budget
   "collection => collection",  # DfE COLLECT not collection
   "collections => collection",  # DfE COLLECT not collection
   "community => community",
@@ -22,8 +25,10 @@ rules: [
   "corporation => corporation",  # not corporal
   "customs => customs", # not custom
   "customer => customer", # not custom
-  "directive => directive",
-  "directives => directive",
+  "direction => direction",  # not direct
+  "directions => direction",  # not direct
+  "directive => directive",  # not direct
+  "directives => directive",  # not direct
   "downing => downing",  # Downing Street not down
   "elective => elective", # not election
   "electives => elective", # not election
@@ -34,6 +39,7 @@ rules: [
   "fiancee => fianc",  # also match fiance
   "fiancé => fianc",  # also match fiance
   "fiancée => fianc",  # also match fiance
+  "funding => funding",  # not fund
   "governance => governance",  # not government
   "hospitality => hospitality",  # not hospital
   "hospitalities => hospitality",  # not hospital
@@ -44,6 +50,7 @@ rules: [
   "interns => intern",
   "internal => internal",
   "international => international",
+  "limited => limited",  # not limit
   "mariner => mariner",  # not marine
   "nationality => nationality",  # not national
   "nationalities => nationality",
@@ -52,9 +59,16 @@ rules: [
   "parking => parking",  # not park
   "paye => paye",  # not pay
   "permitted => permitted",
+  "positive => positiv",  # not position
+  "positives => positiv",  # not position
+  "positively => positiv",  # not position
+  "positiveness => positiv",  # not position
   "postal => post",
   "practical => practical",
   "practice => practice",
+  "pregnancy => pregnan",  # same as pregnant
+  "pregnancies => pregnan",  # same as pregnant
+  "pregnant => pregnan",  # same as pregnancy
   "probate => probate",  # not probation
   "publication => publication",
   "publications => publication",
@@ -65,8 +79,10 @@ rules: [
   "responsible => responsib",
   "saving => saving",
   "savings => savings",
+  "shares => shares",  # not share, shared
   "signing => signing",
   "sponsorship => sponsor",
+  "spousal => spous",  # same as spouse
   "tramway => tram",
   "tramways => tram",
   "transition => transition", # not transit
