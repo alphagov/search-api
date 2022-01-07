@@ -15,7 +15,7 @@ alias python=python3
 alias pip=pip3
 
 cd /tmp
-git clone --depth 1 --branch $GIT_BRANCH https://github.com/alphagov/search-api.git
+[ -d search-api ] || git clone --depth 1 --branch $GIT_BRANCH https://github.com/alphagov/search-api.git
 cd search-api
 
 pip install -r ltr/concourse/requirements-freeze.txt
