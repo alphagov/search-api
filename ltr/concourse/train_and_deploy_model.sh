@@ -16,7 +16,7 @@ cd search-api
 
 pip install -r ltr/concourse/requirements-freeze.txt
 
-docker_cmd="sudo docker run -v `pwd`:/work -v bundle:/usr/local/bundle -e ENABLE_LTR=true -e BIGQUERY_CREDENTIALS=`cat tmp/bigquery_creds.txt` -e ELASTICSEARCH_URI=$ELASTICSEARCH_URI -w /work --rm ruby:`cat .ruby-version`"
+docker_cmd="sudo docker run -v `pwd`:/work -v bundle:/usr/local/bundle -e ENABLE_LTR=true -e BIGQUERY_CREDENTIALS=$BIGQUERY_CREDENTIALS -e ELASTICSEARCH_URI=$ELASTICSEARCH_URI -w /work --rm ruby:`cat .ruby-version`"
 
 $docker_cmd bundle
 

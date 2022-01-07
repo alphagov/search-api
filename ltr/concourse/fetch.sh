@@ -29,7 +29,6 @@ aws ec2 wait instance-status-ok \
 instance_hostname=$(aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].PrivateDnsName" --filter Name=tag:Name,Values="$EC2_NAME" --output=text)
 
 echo "Connecting to instance..."
-scp -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no <(echo -n "$BIGQUERY_CREDENTIALS") "ubuntu@${instance_hostname}:tmp/bigquery_creds.txt"
 
 ssh -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no "ubuntu@${instance_hostname}" env \
   NOW="$(date +%s)" \
@@ -43,6 +42,7 @@ ssh -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no "ubuntu@${instance_ho
   DEPLOY_INSTANCE_TYPE=$DEPLOY_INSTANCE_TYPE \
   DEPLOY_INSTANCE_COUNT=$DEPLOY_INSTANCE_COUNT \
   ELASTICSEARCH_URI=$ELASTICSEARCH_URI \
+  BIGQUERY_CREDENTIALS=$BIGQUERY_CREDENTIALS \
   'bash -s' < ./ltr/concourse/train_and_deploy_model.sh
 
 echo "Scaling down ASG..."
