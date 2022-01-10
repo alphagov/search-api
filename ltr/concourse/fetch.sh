@@ -32,9 +32,8 @@ aws ec2 wait instance-status-ok \
 instance_hostname=$(aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].PrivateDnsName" --filter Name=tag:Name,Values="$EC2_NAME" --output=text | tr -d "\r\n")
 
 echo "Connecting to instance..."
-NOW="$(date +%s)"
 ssh -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no "ubuntu@${instance_hostname}" env \
-  NOW="${NOW}" \
+  NOW="$(date +%s)" \
   GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}" \
   S3_BUCKET="govuk-${GOVUK_ENVIRONMENT}-search-relevancy" \
   ELASTICSEARCH_URI=$ELASTICSEARCH_URI \
@@ -46,5 +45,3 @@ aws autoscaling set-desired-capacity \
     --region "$AWS_REGION" \
     --auto-scaling-group-name "$EC2_NAME" \
     --desired-capacity 0
-
-echo "$NOW" > "out/${GOVUK_ENVIRONMENT}-${OUTPUT_FILE_NAME}-$(date +%s).txt"
