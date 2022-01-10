@@ -11,6 +11,7 @@ sudo apt-get update
 sudo apt-get -y install docker-ce docker-ce-cli containerd.io python3-pip
 
 cd /tmp
+rm -rf search-api
 git clone --depth 1 --branch $GIT_BRANCH https://github.com/alphagov/search-api.git
 cd search-api
 
