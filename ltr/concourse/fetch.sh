@@ -3,8 +3,6 @@
 set -euo pipefail
 
 EC2_NAME="govuk-${GOVUK_ENVIRONMENT}-search-ltr-generation"
-S3_BUCKET="govuk-${GOVUK_ENVIRONMENT}-search-relevancy"
-GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}"
 AWS_REGION="eu-west-1"
 
 find_instance_id() {
@@ -31,11 +29,20 @@ aws ec2 wait instance-status-ok \
 
 instance_hostname=$(aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].PrivateDnsName" --filter Name=tag:Name,Values="$EC2_NAME" --output=text | tr -d "\r\n")
 
+# TODO: After migration need to set GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}"
 echo "Connecting to instance..."
 ssh -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no "ubuntu@${instance_hostname}" env \
   NOW="$(date +%s)" \
-  GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}" \
+  GOVUK_ENVIRONMENT=$GOVUK_ENVIRONMENT \
+  GIT_BRANCH="migrate-ltr-to-jenkins" \
+  ROLE_ARN=$AWS_ROLE_ARN \
+  AWS_DEFAULT_REGION=$AWS_REGION \
   S3_BUCKET="govuk-${GOVUK_ENVIRONMENT}-search-relevancy" \
+  IMAGE=$IMAGE \
+  TRAIN_INSTANCE_TYPE=$TRAIN_INSTANCE_TYPE \
+  TRAIN_INSTANCE_COUNT=$TRAIN_INSTANCE_COUNT \
+  DEPLOY_INSTANCE_TYPE=$DEPLOY_INSTANCE_TYPE \
+  DEPLOY_INSTANCE_COUNT=$DEPLOY_INSTANCE_COUNT \
   ELASTICSEARCH_URI=$ELASTICSEARCH_URI \
   BIGQUERY_CREDENTIALS=$BIGQUERY_CREDENTIALS \
   'bash -s' < ./ltr/concourse/train_and_deploy_model.sh
