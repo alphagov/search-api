@@ -11,8 +11,8 @@ role = os.environ["ROLE_ARN"]
 data_timestamp = os.environ["NOW"].strip()
 
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
-instance_count = os.getenv("INSTANCE_COUNT", 1)
-instance_size = os.getenv("INSTANCE_SIZE", "ml.c5.xlarge")
+instance_count = int(os.getenv("TRAIN_INSTANCE_COUNT"))
+instance_type = os.getenv("TRAIN_INSTANCE_TYPE")
 
 session = sagemaker.Session()
 
@@ -27,7 +27,7 @@ estimator = sagemaker.estimator.Estimator(
     f"{image}:latest",
     role,
     instance_count,
-    instance_size,
+    instance_type,
     output_path=f"s3://{s3_bucket}/model/{model_name}",
     sagemaker_session=session,
     disable_profiler=True

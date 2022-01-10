@@ -11,8 +11,9 @@ role = os.environ["ROLE_ARN"]
 model_name = os.getenv("MODEL_NAME")
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
 
-instance_count = int(os.getenv("INSTANCE_COUNT", 4))
-instance_type = os.getenv("INSTANCE_TYPE", "ml.t2.medium")
+instance_count = int(os.getenv("DEPLOY_INSTANCE_COUNT"))
+instance_type = os.getenv("DEPLOY_INSTANCE_TYPE")
+
 endpoint_name = f"govuk-{govuk_environment}-search-ltr-endpoint"
 
 session = sagemaker.Session()
