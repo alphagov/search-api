@@ -8,7 +8,7 @@ import time
 govuk_environment = os.environ["GOVUK_ENVIRONMENT"]
 image = os.environ["IMAGE"]
 role = os.environ["ROLE_ARN"]
-training_data = os.environ["SCRIPT_INPUT_DATA"].strip()
+data_timestamp = os.environ["NOW"].strip()
 
 image_tag = os.getenv("IMAGE_TAG", "latest")
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
@@ -17,11 +17,11 @@ instance_size = os.getenv("INSTANCE_SIZE", "ml.c5.xlarge")
 
 session = sagemaker.Session()
 
-train_key = f"data/{training_data}/train.txt"
-test_key = f"data/{training_data}/test.txt"
-validate_key = f"data/{training_data}/validate.txt"
+train_key = f"data/{data_timestamp}/train.txt"
+test_key = f"data/{data_timestamp}/test.txt"
+validate_key = f"data/{data_timestamp}/validate.txt"
 
-model_name = f"{training_data}-{str(time.time())}"
+model_name = f"{data_timestamp}-{str(time.time())}"
 
 # train model
 estimator = sagemaker.estimator.Estimator(

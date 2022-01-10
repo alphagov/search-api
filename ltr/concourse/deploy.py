@@ -8,7 +8,7 @@ import time
 
 govuk_environment = os.environ["GOVUK_ENVIRONMENT"]
 role = os.environ["ROLE_ARN"]
-model_name = os.getenv("SCRIPT_INPUT_DATA")
+model_name = os.getenv("MODEL_NAME")
 model_tag = os.getenv("MODEL_TAG")
 if not model_name and not model_tag:
     raise Exception("Require model_name or model_tag to be set.")
