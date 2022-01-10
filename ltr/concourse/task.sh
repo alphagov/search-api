@@ -2,12 +2,6 @@
 
 set -euxo pipefail
 
-source search-api-git/ltr/concourse/lib.sh
-
-set +x
-assume_role
-set -x
-
 SCRIPT_INPUT_DATA="${SCRIPT_INPUT_DATA:-}"
 
 if [[ -z "$SCRIPT_INPUT_DATA" ]] && [[ -n "${INPUT_FILE_NAME:-}" ]]; then

@@ -2,10 +2,6 @@
 
 set -euo pipefail
 
-source search-api-git/ltr/concourse/lib.sh
-
-assume_role
-
 EC2_NAME="govuk-${GOVUK_ENVIRONMENT}-search-ltr-generation"
 S3_BUCKET="govuk-${GOVUK_ENVIRONMENT}-search-relevancy"
 GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}"
@@ -76,10 +72,6 @@ ssh -i /tmp/concourse_ssh_key -o StrictHostKeyChecking=no "ubuntu@${instance_ip}
   aws s3 cp svm/test.txt     s3://$S3_BUCKET/data/$NOW/test.txt
   aws s3 cp svm/validate.txt s3://$S3_BUCKET/data/$NOW/validate.txt
 EOF
-
-# the previous assumption may have timed out, so assume again before
-# scaling down the ASG
-assume_role
 
 echo "Scaling down ASG..."
 aws autoscaling set-desired-capacity \
