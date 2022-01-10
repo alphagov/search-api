@@ -15,7 +15,7 @@ rm -rf search-api
 git clone --depth 1 --branch $GIT_BRANCH https://github.com/alphagov/search-api.git
 cd search-api
 
-pip3 install -r ltr/concourse/requirements-freeze.txt
+pip3 install -r ltr/jenkins/requirements-freeze.txt
 
 docker_cmd="sudo docker run -v `pwd`:/work -v bundle:/usr/local/bundle -e ENABLE_LTR=true -e BIGQUERY_CREDENTIALS=$BIGQUERY_CREDENTIALS -e ELASTICSEARCH_URI=$ELASTICSEARCH_URI -w /work --rm ruby:`cat .ruby-version`"
 
@@ -43,8 +43,8 @@ aws s3 cp svm/test.txt     s3://$S3_BUCKET/data/$NOW/test.txt
 aws s3 cp svm/validate.txt s3://$S3_BUCKET/data/$NOW/validate.txt
 
 echo "training the model"
-python3 "ltr/concourse/train.py"
+python3 "ltr/jenkins/train.py"
 
 echo "deploying the model"
 export MODEL_NAME=`cat ./model_name.txt`
-python3 "ltr/concourse/deploy.py"
+python3 "ltr/jenkins/deploy.py"

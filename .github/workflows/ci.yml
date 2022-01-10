@@ -14,5 +14,5 @@ jobs:
           set -ex
           sudo apt-get update
           sudo apt-get install -y liblapack-dev
-          pip install -r ltr/concourse/requirements-freeze.txt
+          pip install -r ltr/jenkins/requirements-freeze.txt
           pip install -r ltr/scripts/requirements-freeze.txt

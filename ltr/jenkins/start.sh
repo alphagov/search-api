@@ -45,7 +45,7 @@ ssh -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no "ubuntu@${instance_ho
   DEPLOY_INSTANCE_COUNT=$DEPLOY_INSTANCE_COUNT \
   ELASTICSEARCH_URI=$ELASTICSEARCH_URI \
   BIGQUERY_CREDENTIALS=$BIGQUERY_CREDENTIALS \
-  'bash -s' < ./ltr/concourse/train_and_deploy_model.sh
+  'bash -s' < ./ltr/jenkins/train_and_deploy_model.sh
 
 echo "Scaling down ASG..."
 aws autoscaling set-desired-capacity \
