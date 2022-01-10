@@ -7,17 +7,21 @@ S3_BUCKET="govuk-${GOVUK_ENVIRONMENT}-search-relevancy"
 GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}"
 AWS_REGION="eu-west-1"
 
+find_instance_id() {
+  aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].InstanceId" --filters Name=instance-state-name,Values=running,pending  Name=tag:Name,Values="$EC2_NAME" --output=text
+}
+
 echo "Scaling up ASG..."
 aws autoscaling set-desired-capacity \
     --region "$AWS_REGION" \
     --auto-scaling-group-name "$EC2_NAME" \
     --desired-capacity 1
 
-instance_id=""
+instance_id=$(find_instance_id)
 while [[ "$instance_id" == "" ]]; do
   echo "    still waiting for instance ID..."
   sleep 30
-  instance_id=$(aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].InstanceId" --filters Name=instance-state-name,Values=running,pending  Name=tag:Name,Values="$EC2_NAME" --output=text)
+  instance_id=$(find_instance_id)
 done
 
 echo "Waiting on instance ${instance_id}..."
