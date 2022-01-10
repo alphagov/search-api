@@ -29,14 +29,11 @@ aws ec2 wait instance-status-ok \
     --region "$AWS_REGION" \
     --instance-ids "${instance_id}"
 
-echo "$SSH_PRIVATE_KEY" > /tmp/concourse_ssh_key
-chmod 400 /tmp/concourse_ssh_key
-
 instance_hostname=$(aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].PrivateDnsName" --filter Name=tag:Name,Values="$EC2_NAME" --output=text | tr -d "\r\n")
 
 echo "Connecting to instance..."
 NOW="$(date +%s)"
-ssh -i /tmp/concourse_ssh_key -o StrictHostKeyChecking=no "ubuntu@${instance_hostname}" env \
+ssh -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no "ubuntu@${instance_hostname}" env \
   NOW="${NOW}" \
   GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}" \
   S3_BUCKET="govuk-${GOVUK_ENVIRONMENT}-search-relevancy" \
