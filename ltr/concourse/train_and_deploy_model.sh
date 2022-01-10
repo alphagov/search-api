@@ -8,11 +8,13 @@ sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent sof
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu `lsb_release -cs` stable"
 sudo apt-get update
-sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+sudo apt-get -y install docker-ce docker-ce-cli containerd.io python3-pip
 
 cd /tmp
 git clone --depth 1 --branch $GIT_BRANCH https://github.com/alphagov/search-api.git
 cd search-api
+
+pip3 install -r ltr/concourse/requirements-freeze.txt
 
 docker_cmd="sudo docker run -v `pwd`:/work -v bundle:/usr/local/bundle -e ENABLE_LTR=true -e BIGQUERY_CREDENTIALS=$BIGQUERY_CREDENTIALS -e ELASTICSEARCH_URI=$ELASTICSEARCH_URI -w /work --rm ruby:`cat .ruby-version`"
 
@@ -38,3 +40,10 @@ $docker_cmd bundle exec rake 'learn_to_rank:generate_training_dataset[tmp/judgem
 aws s3 cp svm/train.txt    s3://$S3_BUCKET/data/$NOW/train.txt
 aws s3 cp svm/test.txt     s3://$S3_BUCKET/data/$NOW/test.txt
 aws s3 cp svm/validate.txt s3://$S3_BUCKET/data/$NOW/validate.txt
+
+echo "training the model"
+python3 "ltr/concourse/train.py"
+
+echo "deploying the model"
+export MODEL_NAME=`cat ./model_name.txt`
+python3 "ltr/concourse/deploy.py"

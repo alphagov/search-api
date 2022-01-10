@@ -42,6 +42,5 @@ estimator.fit(
     }
 )
 
-print(f"{model_name}/{estimator._current_job_name}")
-
-print("done", file=sys.stderr)
+with open('./model_name.txt', 'w') as file:
+    file.write(f"{model_name}/{estimator._current_job_name}")
