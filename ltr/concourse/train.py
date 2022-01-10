@@ -10,7 +10,6 @@ image = os.environ["IMAGE"]
 role = os.environ["ROLE_ARN"]
 data_timestamp = os.environ["NOW"].strip()
 
-image_tag = os.getenv("IMAGE_TAG", "latest")
 s3_bucket = os.getenv("S3_BUCKET", f"govuk-{govuk_environment}-search-relevancy")
 instance_count = os.getenv("INSTANCE_COUNT", 1)
 instance_size = os.getenv("INSTANCE_SIZE", "ml.c5.xlarge")
@@ -25,7 +24,7 @@ model_name = f"{data_timestamp}-{str(time.time())}"
 
 # train model
 estimator = sagemaker.estimator.Estimator(
-    f"{image}:{image_tag}",
+    f"{image}:latest",
     role,
     instance_count,
     instance_size,
