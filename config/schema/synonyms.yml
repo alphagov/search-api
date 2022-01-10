@@ -69,7 +69,6 @@
 - search: how much => how much, fees, rates
 - search: apostille => apostille, document legalised
 - search: bad weather, winter weather => bad weather, cold weather, severe weather, winter weather, energy grants, heating
-- search: benefit checker, benefits checker => benefits adviser
 - search: bin collection => bin collection, rubbish collection
 - search: cancel child benefit => stop child benefit
 - search: curriculum vitae => cv, curriculum vitae
@@ -92,7 +91,6 @@
 - search: soc code, soc codes => soc code, sponsorship, skilled worker
 - search: social security => social security, benefits
 - search: sponsor login => sponsorship management system
-- search: spouse visa, spousal visa => spouse visa, partner visa, family
 - search: starting a company => starting a company, starting a business, set up a business
 - search: under occupancy, underoccupancy => under occupancy, under occupied, bedroom, spare room
 - search: visa4uk => visa4uk, uk visa
@@ -110,9 +108,8 @@
 - search: dole => dole, jobseeker's allowance
 - search: dss => dss, dwp
 - search: dvlc => dvlc, dvla
-- search: e111 => e111, ehic
+- search: e111 => e111, ehic, ghic
 - search: employer direct => employer direct, universal jobmatch
-- search: family tax credit, family tax credits => tax credits
 - search: fired => fired, dismissed, dismissal
 - search: firing => firing, dismiss, dismissing, dismissal
 - search: heating allowance => winter fuel payment
@@ -121,7 +118,7 @@
 - search: old age pension => old age pension, state pension
 - search: rfl refund => vehicle tax refunds
 - search: road tax => road tax, car tax
-- search: unemployment benefit => unemployment benefit, jobseeker's allowance
+- search: unemployment benefit => unemployment benefit, universal credit
 - search: unsorn, un sorn, cancel sorn => sorn
 - search: winter fuel allowance, winter allowance => winter fuel payment
 - search: winter payment, winter payments => winter fuel payment
@@ -144,31 +141,37 @@
 - search: eguide => e guide
 - search: euets => eu ets
 - search: firesafetyguides => fire safety guides
+- search: flowtest => flow test
 - search: governmentgateway => government gateway
 - search: greenbook => green book
 - search: greendeal => green deal
-- search: incomesupport => income support
 - search: jcponline => jobcentre plus
 - search: jobgrant => job grant
 - search: jobsearch => job search, jobmatch
 - search: jobseekersallowance => jobseeker's allowance
 - search: journeyplanner => journey planner
-- search: jsaol, jsaonline, jsa online => jobseeker's allowance
+- search: lateralflow => lateral flow
+- search: locatorform => locator form
 - search: makeasorn => make a sorn
 - search: motoringforms => motoring forms
+- search: notice143 => notice 143
 - search: number10 => number 10
+- search: passengerlocatorform => passenger locator form
 - search: payacourtfine => pay a court fine
 - search: paycourtfine => pay a court fine
+- search: pcrtest => pcr test
 - search: penaltynotice => penalty notice
 - search: pensioncredit => pension credit
 - search: pensionforecast => pension forecast
 - search: photorenewal => photo renewal
+- search: redlist => red list
 - search: renewal70 => renew 70
 - search: renewalat70 => renew 70
 - search: renewat70 => renew 70
 - search: renewmyphoto => renew photo
 - search: sfform => student finance form
 - search: sfforms => student finance forms
+- search: sharecode => share code
 - search: sickpay => sick pay
 - search: simplepayment => simple payment
 - search: socialfund => social fund
@@ -201,6 +204,7 @@
 # Acronyms
 - search: aspp, additional paternity pay => aspp, additional paternity pay
 - search: bno => bno, british national overseas
+- search: cjrs => cjrs, coronavirus job retention scheme
 - search: crb, criminal records bureau => crb, criminal records bureau, dbs, disclosure and barring service
 - search: csco, carbon saving community obligation => csco, carbon saving community obligation
 - search: cwp => cwp, cold weather
@@ -213,6 +217,7 @@
 - search: doh => doh, department of health
 - search: dhp, discretionary housing payment => dhp, discretionary housing payment
 - search: dla, disability living allowance => dla, disability living allowance
+- search: dpf => dpf, diesel particulate filters
 - search: ea, environment agency => ea, environment agency
 - search: eccn, export control classification number => eccn, export control classification number
 - search: eco, energy company obligation => eco, energy company obligation
@@ -222,14 +227,22 @@
 - search: fco, foreign commonwealth office => fco, fcdo, foreign commonwealth development office
 - search: fcoc, future character of conflict => fcoc, future character of conflict
 - search: foi, freedom of information => foi, freedom of information
+- search: fsm => fsm, free school meals
 - search: gae => gae, government authorised exchange
 - search: gdhif, green deal home improvement fund => gdhif, green deal home improvement fund
+- search: gmr => gmr, goods movement reference
 - search: gsc => gsc, government security classifications
+- search: gvms => gvms, goods vehicle movement service
 - search: hmcs, hmcts, hm courts tribunals service => hmcs, hmcts, hm courts tribunals service
 - search: idi, immigration directorate instructions => idi, immigration directorate instructions
 - search: iib => iib, industrial injuries disablement benefit
 - search: ilr => ilr, indefinite leave, settle, individualised learner record
+- search: jrs => jrs, job retention scheme
 - search: jsa, jobseeker's allowance => jsa, jobseeker's allowance
+- search: lfd => lfd, lateral flow device
+- search: lfds => lfds, lfd, lateral flow devices
+- search: lft => lft, lateral flow test
+- search: lfts => lfts, lft, lateral flow tests
 - search: lha, local housing allowance => lha, local housing allowance
 - search: lpa, lasting power of attorney => lpa, lasting power of attorney
 - search: nasm => nasm, noise amelioration scheme military
@@ -241,8 +254,10 @@
 - search: ospp, ordinary statutory paternity pay => ospp, ordinary statutory paternity pay
 - search: pcdl, professional and career development loan => pcdl, professional and career development loan
 - search: pilon, payment in lieu of notice, pay in lieu of notice => pilon, payment in lieu of notice, pay in lieu of notice
+- search: plf => plf, passenger locator form
 - search: ppg => ppg, pollution prevention guidance
 - search: psw => psw, post study work
+- search: pta => pta, personal tax account
 - search: rlmt, resident labour market test => rlmt, resident labour market test
 - search: rnps, register of number plate suppliers => rnps, register of number plate suppliers
 - search: rti, real time information => rti, real time information
@@ -300,6 +315,7 @@
 - search: ex160, ex160a => court fees
 - search: ex321 => make a court claim for money, enforce a judgment
 - search: ex50 => court fees
+- search: fl401t => fl401t, fl401
 - search: flrm => flr m
 - search: flro => flr o
 - search: gv 262 => gv262, drivers hours
@@ -316,6 +332,7 @@
 - search: lso1 => ls01
 - search: mi12 => mi12, mortgage interest
 - search: ni17a => maternity benefits
+- search: oca41 => oca41, employment history
 - search: p38s => student holiday job
 - search: pd2 => passports change your name
 - search: pff => pff2
@@ -324,6 +341,7 @@
 - search: sc1 => sc1, incapacity benefit
 - search: set m, setm => set m form
 - search: set o, seto => set o form
+- search: ucd5 => ucd5, universal credit for self-employed
 - search: v100 => vehicle registration
 - search: v149 => v149, vehicle tax rates
 - search: v188 => disability exemption
@@ -350,9 +368,11 @@
 - search: hep => hep, hepatitis
 - search: lic => lic, licence
 - search: min wage => minimum wage
+- search: national ins, nat ins => national insurance
 - search: no plate => number plate
 - search: reg => reg, registration
 - search: ref number => ref number, reference number
+- search: stats => stats, statistics
 - search: tacho, tacho graph, taco, taco graph => tacho, tachograph
 # eg unique tax reference, unique tax code
 - search: unique tax => unique tax, unique taxpayer
@@ -360,21 +380,24 @@
 # Correcting mistakes
 - search: cy1 => cyi
 - search: dlva => dvla
-- search: e11 => e11, ehic
-- search: eh1c => ehic
-- search: ehi card => ehic
+- search: e11 => e11, ehic, ghic
+- search: eh1c => ehic, ghic
+- search: ehi card => ehic, ghic
 - search: environmental agency => environment agency
 - search: government getaway => government gateway
 - search: ipc bri => ipc br1
+- search: ltf => ltf, lft, lateral flow test
 - search: rapid claim => rapid claim, rapid reclaim
 - search: riab => raib
 - search: universal jobsearch => universal jobmatch
 - search: set 0 => set o
+- search: ucd50 => ucd50, uc50, universal credit for self-employed
 - search: vc5 => vc5, v5c
 - search: v137 => v317
 - search: wimby => wiyby
 
 # Split words that are usually one word
+- search: astra zeneca => astra zeneca, astrazeneca
 - search: child care => childcare
 - search: direct gov => directgov
 - search: flood line => floodline
@@ -400,6 +423,7 @@
 - search: visti => visti, visa
 
 # Common misspellings
+- search: accessment => assessment
 - search: addres => address
 - search: adress => address
 - search: alljobs => all jobs
@@ -494,6 +518,8 @@
 - search: fianance => finance
 - search: finace => finance
 - search: forcast => forecast
+- search: gatway => gateway
+- search: gateaway => gateway
 - search: goverment => government
 - search: grafitti => graffiti
 - search: harrasment => harassment
@@ -521,6 +547,8 @@
 - search: jobsmatch => jobmatch
 - search: jpbs => jpbs, jobs
 - search: knifes => knives
+- search: latera => lateral
+- search: laterflow => lateral flow
 - search: licience => licence
 - search: liscence => licence
 - search: lisence => licence
@@ -542,6 +570,10 @@
 - search: nationa => national
 - search: numbe => number
 - search: offical => official
+- search: omnicron => omicron
+- search: omricon => omicron
+- search: pasanger => passenger
+- search: passanger => passenger
 - search: pasport => passport
 - search: passpor => passport
 - search: pention => pension
@@ -551,6 +583,7 @@
 - search: pract => practical
 - search: pratical => practical
 - search: pregancy => pregnancy
+- search: presetel => pre settled
 - search: provisonal => provisional
 - search: questionaire => questionnaire
 - search: reclam => reclaim
@@ -569,11 +602,14 @@
 - search: school closers => school closures
 - search: scorn => sorn
 - search: seach => search
+- search: selfassesment => self assessment
 - search: selfassessment => self assessment
 - search: selfemployed => self employed
 - search: selfemployment => self employment
 - search: seperation => separation
 - search: serach => search
+- search: setlement => settlement
+- search: sighn => sign
 - search: socail => social
 - search: soletrader => sole trader
 - search: sorport => support
