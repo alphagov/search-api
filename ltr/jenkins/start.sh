@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eux
 
 EC2_NAME="govuk-${GOVUK_ENVIRONMENT}-search-ltr-generation"
 AWS_REGION="eu-west-1"

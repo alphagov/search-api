@@ -1,4 +1,4 @@
-set -euo pipefail
+set -eux
 
 sudo apt-get update
 sudo apt-get install -y awscli git
