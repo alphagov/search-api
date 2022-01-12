@@ -8,9 +8,9 @@
   ],
   "expanded_search_result_fields": {
     "product_alert_type": [
-      {"label": "Safety alert", "value": "safety-alert"},
+      {"label": "Product safety alert", "value": "product-safety-alert"},
       {"label": "Product safety report", "value": "product-safety-report"},
-      {"label": "Recall", "value": "recall"}
+      {"label": "Product recall", "value": "product-recall"}
     ],
     "product_risk_level": [
       {"label": "Serious", "value": "serious"},
