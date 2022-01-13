@@ -9,11 +9,21 @@ find_instance_id() {
   aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].InstanceId" --filters Name=instance-state-name,Values=running,pending  Name=tag:Name,Values="$EC2_NAME" --output=text
 }
 
+scale_down_asg() {
+  echo "Scaling down ASG..."
+  aws autoscaling set-desired-capacity \
+      --region "$AWS_REGION" \
+      --auto-scaling-group-name "$EC2_NAME" \
+      --desired-capacity 0
+}
+
 echo "Scaling up ASG..."
 aws autoscaling set-desired-capacity \
     --region "$AWS_REGION" \
     --auto-scaling-group-name "$EC2_NAME" \
     --desired-capacity 1
+
+trap scale_down_asg EXIT
 
 instance_id=$(find_instance_id)
 while [[ "$instance_id" == "" ]]; do
@@ -47,8 +57,3 @@ ssh -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no "ubuntu@${instance_ho
   BIGQUERY_CREDENTIALS=$BIGQUERY_CREDENTIALS \
   'bash -s' < ./ltr/jenkins/train_and_deploy_model.sh
 
-echo "Scaling down ASG..."
-aws autoscaling set-desired-capacity \
-    --region "$AWS_REGION" \
-    --auto-scaling-group-name "$EC2_NAME" \
-    --desired-capacity 0
