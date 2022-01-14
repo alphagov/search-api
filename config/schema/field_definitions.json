@@ -975,7 +975,7 @@
     "type": "date"
   },
   "product_alert_type":{
-    "description": "Alert type: {safety-alert, product-safety-report, recall}",
+    "description": "Alert type: {product-safety-alert, product-safety-report, product-recall}",
     "type": "identifiers"
   },
   "product_risk_level":{
