@@ -39,12 +39,11 @@ aws ec2 wait instance-status-ok \
 
 instance_hostname=$(aws ec2 describe-instances --region "$AWS_REGION" --query "Reservations[*].Instances[*].PrivateDnsName" --filter Name=tag:Name,Values="$EC2_NAME" --output=text | tr -d "\r\n")
 
-# TODO: After migration need to set GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}"
 echo "Connecting to instance..."
 ssh -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no "ubuntu@${instance_hostname}" env \
   NOW="$(date +%s)" \
   GOVUK_ENVIRONMENT=$GOVUK_ENVIRONMENT \
-  GIT_BRANCH="migrate-ltr-to-jenkins" \
+  GIT_BRANCH="deployed-to-${GOVUK_ENVIRONMENT}" \
   ROLE_ARN=$AWS_ROLE_ARN \
   AWS_DEFAULT_REGION=$AWS_REGION \
   S3_BUCKET="govuk-${GOVUK_ENVIRONMENT}-search-relevancy" \
