@@ -15,7 +15,7 @@ Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxe
 ## API documentation
 
 If you would like to use the Search API, please see the
-[Search API documentation](https://docs.publishing.service.gov.uk/apps/search-api/using-the-search-api.html).
+[Search API documentation](docs/using-the-search-api.md).
 
 You can also find some examples in the blog post:
 ["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
