@@ -993,5 +993,20 @@
   "product_recall_alert_date":{
     "description": "Date of the recall/alert",
     "type": "date"
+  },
+  "digital_market_research_category": {
+    "type": "identifier"
+  },
+  "digital_market_research_publisher": {
+    "type": "identifiers"
+  },
+  "digital_market_research_area": {
+    "type": "identifiers"
+  },
+  "digital_market_research_topic": {
+    "type": "identifiers"
+  },
+  "digital_market_research_publish_date": {
+    "type": "date"
   }
 }
