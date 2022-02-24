@@ -1,0 +1,71 @@
+{
+  "fields": [
+    "digital_market_research_category",
+    "digital_market_research_publisher",
+    "digital_market_research_area",
+    "digital_market_research_topic",
+    "digital_market_research_publish_date"
+  ],
+
+  "expanded_search_result_fields": {
+    "digital_market_research_category": [
+      {"label": "Ad hoc research", "value": "ad-hoc-research"},
+      {"label": "Ongoing research", "value": "ongoing-research"}
+    ],
+    "digital_market_research_publisher": [
+      {"label": "Advertising Standards Authority", "value": "advertising-standards-authority"},
+      {"label": "Bank of England", "value": "bank-of-england"},
+      {"label": "Competition and Markets Authority", "value": "competition-and-markets-authority"},
+      {"label": "Financial Conduct Authority - Insight", "value": "financial-conduct-authority-insight"},
+      {"label": "Financial Conduct Authority", "value": "financial-conduct-authority"},
+      {"label": "Gambling Commission", "value": "gambling-commission"},
+      {"label": "Information Commissioner's Office", "value": "information-commissioner's-office"},
+      {"label": "Intellectual Property Office", "value": "intellectual-property-office"},
+      {"label": "Ofcom", "value": "ofcom"}
+    ],
+    "digital_market_research_area": [
+      {"label": "Advertising and marketing", "value": "advertising-and-marketing"},
+      {"label": "Financial services", "value": "financial-services"},
+      {"label": "Future connectivity and internet", "value": "future-connectivity-and-internet"},
+      {"label": "Media and entertainment", "value": "media-and-entertainment"},
+      {"label": "Retail and digital commerce", "value": "retail-and-digital-commerce"},
+      {"label": "Technology", "value": "technology"}
+    ],
+    "digital_market_research_topic": [
+      {"label": "Adtech", "value": "adtech"},
+      {"label": "Advertising spend", "value": "advertising-spend"},
+      {"label": "Application programming interface", "value": "application-programming-interface"},
+      {"label": "Artificial intelligence", "value": "artificial-intelligence"},
+      {"label": "Audio and radio", "value": "audio-and-radio"},
+      {"label": "Blockchain", "value": "blockchain"},
+      {"label": "Cloud computing", "value": "cloud-computing"},
+      {"label": "Data and AI", "value": "data-and-ai"},
+      {"label": "Data privacy, access and control", "value": "data-privacy-access-and-control"},
+      {"label": "Digital currencies", "value": "digital-currencies"},
+      {"label": "Digital economy", "value": "digital-economy"},
+      {"label": "Digital transformation", "value": "digital-transformation"},
+      {"label": "Distributed ledger technology", "value": "distributed-ledger-technology"},
+      {"label": "Edge computing", "value": "edge-computing"},
+      {"label": "Fintech", "value": "fintech"},
+      {"label": "Future connectivity", "value": "future-connectivity"},
+      {"label": "Gambling", "value": "gambling"},
+      {"label": "Gaming", "value": "gaming"},
+      {"label": "General and vertical search", "value": "general-and-vertical-search"},
+      {"label": "Intellectual property", "value": "intellectual-property"},
+      {"label": "Internet of things", "value": "internet-of-things"},
+      {"label": "Internet usage and attitudes", "value": "internet-usage-and-attitudes"},
+      {"label": "Measuring advertising effectiveness", "value": "measuring-advertising-effectiveness"},
+      {"label": "Music streaming", "value": "music-streaming"},
+      {"label": "News and publishing", "value": "news-and-publishing"},
+      {"label": "Online retail", "value": "online-retail"},
+      {"label": "Open banking", "value": "open-banking"},
+      {"label": "Personalisation algorithm", "value": "personalisation-algorithm"},
+      {"label": "Privacy enhancing technology", "value": "privacy-enhancing-technology"},
+      {"label": "Quantum computing", "value": "quantum-computing"},
+      {"label": "Regtech", "value": "regtech"},
+      {"label": "Safety and harms", "value": "safety-and-harms"},
+      {"label": "Social media and instant messaging", "value": "social-media-and-instant-messaging"},
+      {"label": "TV, video and on-demand", "value": "tv-video-and-on-demand"}
+    ]
+  }
+}

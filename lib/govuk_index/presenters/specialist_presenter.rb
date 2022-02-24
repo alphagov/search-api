@@ -30,6 +30,11 @@ module GovukIndex
     delegate_to_payload :decision_subject
     delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
+    delegate_to_payload :digital_market_research_area, convert_to_array: true
+    delegate_to_payload :digital_market_research_category
+    delegate_to_payload :digital_market_research_publish_date
+    delegate_to_payload :digital_market_research_publisher, convert_to_array: true
+    delegate_to_payload :digital_market_research_topic, convert_to_array: true
     delegate_to_payload :eligible_entities
     delegate_to_payload :flood_and_coastal_erosion_category
     delegate_to_payload :fund_state, convert_to_array: true
