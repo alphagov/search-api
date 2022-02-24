@@ -13,7 +13,6 @@ module GovukIndex
     delegate_to_payload :business_stages
     delegate_to_payload :case_state, convert_to_array: true
     delegate_to_payload :case_type, convert_to_array: true
-    delegate_to_payload :flood_and_coastal_erosion_category
     delegate_to_payload :certificate_status
     delegate_to_payload :class_category
     delegate_to_payload :closed_date
@@ -24,14 +23,15 @@ module GovukIndex
     delegate_to_payload :country_of_origin
     delegate_to_payload :date_application
     delegate_to_payload :date_of_completion
-    delegate_to_payload :date_of_start
     delegate_to_payload :date_of_occurrence
+    delegate_to_payload :date_of_start
     delegate_to_payload :date_registration
     delegate_to_payload :date_registration_eu
     delegate_to_payload :decision_subject
     delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
     delegate_to_payload :eligible_entities
+    delegate_to_payload :flood_and_coastal_erosion_category
     delegate_to_payload :fund_state, convert_to_array: true
     delegate_to_payload :fund_type
     delegate_to_payload :funding_amount
@@ -44,22 +44,22 @@ module GovukIndex
     delegate_to_payload :laid_date
     delegate_to_payload :land_use
     delegate_to_payload :location, convert_to_array: true
+    delegate_to_payload :marine_notice_topic
     delegate_to_payload :marine_notice_type
     delegate_to_payload :marine_notice_vessel_type
-    delegate_to_payload :marine_notice_topic
     delegate_to_payload :market_sector
     delegate_to_payload :medical_specialism
-    delegate_to_payload :oim_project_type
-    delegate_to_payload :oim_project_state
-    delegate_to_payload :oim_project_opened_date
     delegate_to_payload :oim_project_closed_date
+    delegate_to_payload :oim_project_opened_date
+    delegate_to_payload :oim_project_state
+    delegate_to_payload :oim_project_type
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
     delegate_to_payload :product_alert_type
-    delegate_to_payload :product_risk_level
     delegate_to_payload :product_category
     delegate_to_payload :product_measure_type
     delegate_to_payload :product_recall_alert_date
+    delegate_to_payload :product_risk_level
     delegate_to_payload :project_code
     delegate_to_payload :project_status
     delegate_to_payload :protection_type
@@ -85,8 +85,8 @@ module GovukIndex
     delegate_to_payload :time_registration
     delegate_to_payload :topics
     delegate_to_payload :traditional_term_grapevine_product_category
-    delegate_to_payload :traditional_term_type
     delegate_to_payload :traditional_term_language
+    delegate_to_payload :traditional_term_type
     delegate_to_payload :tribunal_decision_categories
     delegate_to_payload :tribunal_decision_category
     delegate_to_payload :tribunal_decision_country
@@ -97,17 +97,17 @@ module GovukIndex
     delegate_to_payload :tribunal_decision_sub_categories
     delegate_to_payload :tribunal_decision_sub_category
     delegate_to_payload :types_of_support
+    delegate_to_payload :uk_market_conformity_assessment_body_address
     delegate_to_payload :uk_market_conformity_assessment_body_email
     delegate_to_payload :uk_market_conformity_assessment_body_legislative_area, convert_to_array: true
     delegate_to_payload :uk_market_conformity_assessment_body_name
+    delegate_to_payload :uk_market_conformity_assessment_body_notified_body_number
     delegate_to_payload :uk_market_conformity_assessment_body_number
     delegate_to_payload :uk_market_conformity_assessment_body_phone
     delegate_to_payload :uk_market_conformity_assessment_body_registered_office_location
     delegate_to_payload :uk_market_conformity_assessment_body_testing_locations, convert_to_array: true
     delegate_to_payload :uk_market_conformity_assessment_body_type, convert_to_array: true
     delegate_to_payload :uk_market_conformity_assessment_body_website
-    delegate_to_payload :uk_market_conformity_assessment_body_address
-    delegate_to_payload :uk_market_conformity_assessment_body_notified_body_number
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type
     delegate_to_payload :will_continue_on
