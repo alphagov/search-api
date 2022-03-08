@@ -1,24 +1,38 @@
-FROM ruby:2.7.5
-RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y build-essential && apt-get clean
-RUN gem install foreman
+ARG base_image=ruby:2.7.5-slim-buster
 
-ENV RACK_ENV production
-ENV GOVUK_APP_NAME search-api
-ENV ELASTICSEARCH_URI http://elasticsearch6:9200
-ENV PORT 3233
-ENV RABBITMQ_HOSTS rabbitmq
-ENV RABBITMQ_VHOST /
-ENV RABBITMQ_USER guest
-ENV RABBITMQ_PASSWORD guest
+FROM $base_image AS builder
 
-ENV APP_HOME /app
-RUN mkdir $APP_HOME
+ENV RAILS_ENV=production
 
-WORKDIR $APP_HOME
-ADD Gemfile* $APP_HOME/
-RUN bundle config set deployment 'true'
-RUN bundle config set without 'development test'
-RUN bundle install --jobs 4
-ADD . $APP_HOME
+# TODO: have a separate build image which already contains the build-only deps.
+RUN apt-get update -qq && \
+    apt-get upgrade -y && \
+    apt-get install -y build-essential nodejs && \
+    apt-get clean
 
-CMD foreman run web
+RUN mkdir /app
+
+WORKDIR /app
+COPY Gemfile* .ruby-version /app/
+
+RUN bundle config set deployment 'true' && \
+    bundle config set without 'development test' && \
+    bundle install -j8 --retry=2
+
+COPY . /app
+
+FROM $base_image
+
+ENV RAILS_ENV=production GOVUK_APP_NAME=search-api
+
+RUN apt-get update -qy && \
+    apt-get upgrade -y && \
+    apt-get install -y nodejs && \
+    apt-get clean
+
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
+COPY --from=builder /app /app/
+
+WORKDIR /app
+
+CMD bundle exec puma
