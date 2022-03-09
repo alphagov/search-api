@@ -23,7 +23,7 @@ COPY . /app
 
 FROM $base_image
 
-ENV RAILS_ENV=production GOVUK_APP_NAME=search-api
+ENV RAILS_ENV=production GOVUK_APP_NAME=search-api LOG_TO_STDOUT=true
 
 RUN apt-get update -qy && \
     apt-get upgrade -y && \
