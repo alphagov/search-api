@@ -1,3 +1,6 @@
+# the key represents the publishing_api document type
+# the value represents the elasticsearch_type defined in config/schema/elasticsearch_types
+
 aaib_report: aaib_report # Specialist Publisher
 answer: edition
 asylum_support_decision: asylum_support_decision # Specialist Publisher
@@ -38,7 +41,7 @@ person: person
 place: edition
 policy: policy # Policy Publisher
 press_release: edition
-product_safety_alert: product_safety_alert_report_recall # Specialist Publisher
+product_safety_alert_report_recall: product_safety_alert_report_recall # Specialist Publisher
 protected_food_drink_name: protected_food_drink_name # Specialist Publisher
 raib_report: raib_report # Specialist Publisher
 research_for_development_output: research_for_development_output # Specialist Publisher
