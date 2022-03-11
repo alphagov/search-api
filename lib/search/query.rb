@@ -94,7 +94,7 @@ module Search
 
       return { reranked: false, es_response: es_response } if reranked.nil?
 
-      es_response["hits"]["hits"] = reranked
+      es_response["hits"]["hits"] = reranked.first(search_params.count)
       { reranked: true, es_response: es_response }
     end
 

@@ -7,6 +7,7 @@ module Search
                   :order,
                   :start,
                   :count,
+                  :rerankable_k,
                   :return_fields,
                   :aggregates,
                   :aggregate_name,
@@ -72,6 +73,10 @@ module Search
 
     def suggest_spelling?
       query && (suggest.include?("spelling") || suggest.include?("spelling_with_highlighting"))
+    end
+
+    def fetch_larger_k?
+      rerankable_k > count && rerank
     end
 
     def rerank

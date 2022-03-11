@@ -6,6 +6,7 @@ class SearchParameterParser < BaseParameterParser
     expanded_organisations
   ].freeze
   MAX_RESULTS = 1500
+  MAX_K = 40
 
   # We currently have 375,000 items in Rummager.  Anything over around 900_000
   # results in 5XX errors
@@ -42,6 +43,7 @@ private
     @parsed_params = {
       start: capped_start,
       count: capped_count,
+      rerankable_k: capped_k,
       cluster: cluster,
       search_config: SearchConfig.instance(cluster),
       query: query,
@@ -95,6 +97,14 @@ private
     else
       specified_count
     end
+  end
+
+  def capped_k
+    k = single_integer_param("k", capped_count)
+    return k unless k > MAX_K
+
+    @errors << "Cannot re-rank k of size #{k}. Maximum K (as specified in 'k') is #{MAX_K}"
+    capped_count
   end
 
   def parse_query(query)

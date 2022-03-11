@@ -14,7 +14,7 @@ module Search
     def payload
       hash_without_blank_values(
         from: search_params.start,
-        size: search_params.count,
+        size: size,
         _source: {
           includes: fields.uniq,
         },
@@ -122,6 +122,10 @@ module Search
           min_doc_freq: 0, # Revert to the ES 1.7 default
         },
       }
+    end
+
+    def size
+      search_params.fetch_larger_k? ? search_params.rerankable_k : search_params.count
     end
   end
 end
