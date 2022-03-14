@@ -20,15 +20,18 @@ end
 
 if log_path
   enable :logging
-  log = File.new(log_path, "a")
-  log.sync = true
-  STDOUT.reopen(log)
-  STDERR.reopen(log)
+  unless ENV["LOG_TO_STDOUT"].present?
+    log = File.new(log_path, "a")
+    log.sync = true
+    STDOUT.reopen(log)
+    STDERR.reopen(log)
+  end
 end
 
 unless in_development
+  logger = ENV["LOG_TO_STDOUT"].present? ? Logger.new($stdout) : Logger.new("log/production.json.log") 
   use Rack::Logstasher::Logger,
-      Logger.new("log/production.json.log"),
+      logger,
       extra_request_headers: { "GOVUK-Request-Id" => "govuk_request_id", "x-varnish" => "varnish_id" }
 end
 
