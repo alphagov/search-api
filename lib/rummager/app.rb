@@ -6,7 +6,7 @@ require "sinatra"
 set :root, File.dirname(__FILE__)
 
 Bootsnap.setup(
-  cache_dir: "/tmp/cache",
+  cache_dir: "tmp/cache",
   development_mode: ENV["RACK_ENV"] == "development",
   load_path_cache: true,
   autoload_paths_cache: true,
