@@ -65,6 +65,19 @@ module LegacyClient
 
   private
 
+    def with_retries
+      retries ||= 0
+      begin
+        yield
+      rescue HTTPClient::TimeoutError, Faraday::TimeoutError
+        raise if (retries += 1) > 10
+
+        logger.info "Retrying after #{retries} timeout errors"
+        sleep 2**retries
+        retry
+      end
+    end
+
     def logger
       Logging.logger[self]
     end
