@@ -23,16 +23,25 @@ COPY . /app
 
 FROM $base_image
 
-ENV RAILS_ENV=production GOVUK_APP_NAME=search-api LOG_TO_STDOUT=true
+ENV RAILS_ENV=production \
+    GOVUK_APP_NAME=search-api \
+    LOG_TO_STDOUT=true
 
 RUN apt-get update -qy && \
     apt-get upgrade -y && \
     apt-get install -y nodejs && \
     apt-get clean
 
+RUN mkdir /app && ln -fs /tmp /app
+
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 COPY --from=builder /app /app/
 
 WORKDIR /app
+
+RUN groupadd -g 1001 app && \
+    useradd app -u 1001 -g 1001 --home /app
+
+USER app
 
 CMD bundle exec puma
