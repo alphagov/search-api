@@ -381,8 +381,8 @@ GEM
     unicorn (6.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    warden (1.2.8)
-      rack (>= 2.0.6)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     warden-oauth2 (0.0.1)
       warden
     webmock (3.14.0)
