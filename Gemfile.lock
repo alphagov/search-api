@@ -234,7 +234,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    oj (3.13.13)
+    oj (3.11.3)
     os (1.1.4)
     parallel (1.22.1)
     parser (3.1.2.0)
@@ -437,7 +437,7 @@ DEPENDENCIES
   mr-sparkle
   nokogiri
   oauth2
-  oj
+  oj (= 3.11.3)
   plek
   pry-byebug
   rack
