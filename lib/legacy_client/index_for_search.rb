@@ -18,7 +18,9 @@ module LegacyClient
         # this may throw an exception if the index name isn't found,
         # but we want to propagate the error in that case as it
         # shouldn't happen.
-        @client.indices.get_alias(index: index_name).keys.first
+        with_retries do
+          @client.indices.get_alias(index: index_name).keys.first
+        end
       end
     end
 
@@ -63,12 +65,25 @@ module LegacyClient
 
   private
 
+    def with_retries
+      retries ||= 0
+      begin
+        yield
+      rescue HTTPClient::TimeoutError, Faraday::TimeoutError
+        raise if (retries += 1) > 10
+
+        logger.info "Retrying after #{retries} timeout errors"
+        sleep 2**retries
+        retry
+      end
+    end
+
     def logger
       Logging.logger[self]
     end
 
     def build_client(options = {})
-      Services.elasticsearch(hosts: @base_uri, timeout: options[:timeout] || TIMEOUT_SECONDS)
+      Services.elasticsearch(hosts: @base_uri, timeout: options[:timeout] || TIMEOUT_SECONDS, retry_on_failure: true)
     end
   end
 end
