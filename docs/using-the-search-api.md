@@ -89,7 +89,7 @@ You can use field prefixes such as `filter_<foo>`, `reject_<foo>` and `aggregate
 https://www.gov.uk/api/search.json?filter_format=statistics_announcement&fields=title,link,format,rendering_app
 ```
 
-You can read more in the [faceted search guide](https://docs.publishing.service.gov.uk/apps/search-api/public-api/faceted-search).
+You can read more in the [faceted search guide](https://docs.publishing.service.gov.uk/repos/search-api/public-api/faceted-search).
 
 
 ## Other parameters
