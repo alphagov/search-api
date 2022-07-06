@@ -1,0 +1,15 @@
+---
+base_path: "/search/latest"
+content_id: eb56dbca-be0b-4381-8dac-0c9de8a3ed7e
+document_type: finder
+locale: en
+publishing_app: search-api
+rendering_app: finder-frontend
+schema_name: finder
+title: Search
+description: Find content from government
+details:
+  default_documents_per_page: 20
+routes:
+- path: "/search/latest"
+  type: exact
