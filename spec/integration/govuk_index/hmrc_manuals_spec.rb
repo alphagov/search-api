@@ -51,6 +51,7 @@ RSpec.describe "HMRC manual publishing" do
         section_id: "some_section_id",
         manual: {
           "base_path": "/parent/manual/path",
+          "title": "Parent Manual Title",
         },
       },
     )
