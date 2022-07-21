@@ -1,5 +1,5 @@
 # See https://www.tensorflow.org/install/pip?lang=python3#package-location for supported Python versions
-FROM python:3.7
+FROM python:3.8
 
 RUN mkdir govuk
 WORKDIR govuk
