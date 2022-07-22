@@ -69,7 +69,7 @@ def report_ndcg(datafile: nil, ab_tests: nil)
 
     maxlen = results.keys.map { |query, _| query.length }.max
     results.map do |(query, score)|
-      puts "#{("#{query}:").ljust(maxlen + 1)} #{score}"
+      puts "#{"#{query}:".ljust(maxlen + 1)} #{score}"
     end
     puts "---"
     puts "overall scores:"
