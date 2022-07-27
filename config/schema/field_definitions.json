@@ -164,16 +164,6 @@
     "type": "identifiers"
   },
 
-  "facet_groups": {
-      "description": "Facet groups associated the the documents. Used for tagging documents to finders",
-      "type": "identifiers"
-  },
-
-  "facet_values": {
-      "description": "Facet values associated the the documents. Used for modelling facets in finders",
-      "type": "identifiers"
-  },
-
   "updated_at": {
     "description": "Time of the last indexing. May be significantly newer than `public_timestamp`, as that usually only reflects major updates and not minor ones.",
     "type": "date"
