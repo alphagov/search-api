@@ -490,40 +490,6 @@ RSpec.describe "BatchSearchTest" do
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 
-  it "can filter by facet groups" do
-    commit_treatment_of_dragons_document
-    commit_ministry_of_magic_document(
-      {
-        "facet_groups" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c],
-      },
-    )
-
-    get build_get_url([{ filter_facet_groups: %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c] }, { filter_facet_groups: %w[aa2093ef-778c-4105-9f33-9aa03d14bc5c] }])
-    results = parsed_response["results"]
-
-    expect_search_has_result_count(results[0], 1)
-    expect_results_includes_ministry_of_magic(results, 0, 0)
-    expect_search_has_result_count(results[1], 1)
-    expect_results_includes_ministry_of_magic(results, 1, 0)
-  end
-
-  it "can filter by facet values" do
-    commit_treatment_of_dragons_document
-    commit_ministry_of_magic_document(
-      {
-        "facet_values" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c],
-      },
-    )
-
-    get build_get_url([{ filter_facet_values: %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c] }, { filter_facet_values: %w[aa2093ef-778c-4105-9f33-9aa03d14bc5c] }])
-    results = parsed_response["results"]
-
-    expect_search_has_result_count(results[0], 1)
-    expect_results_includes_ministry_of_magic(results, 0, 0)
-    expect_search_has_result_count(results[1], 1)
-    expect_results_includes_ministry_of_magic(results, 1, 0)
-  end
-
   it "will allow ten searches" do
     commit_ministry_of_magic_document
     searches = 10.times.map do

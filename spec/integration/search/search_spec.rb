@@ -619,46 +619,6 @@ RSpec.describe "SearchTest" do
     expect(parsed_response.fetch("total")).to eq(1)
   end
 
-  it "can filter by facet value" do
-    commit_ministry_of_magic_document({ "facet_values" => %w[fe2fc3b5-a71b-4063-9605-12c3e6e179d6] })
-    commit_treatment_of_dragons_document({ "facet_values" => %w[e602eb34-a870-46ff-8ba4-de36689fb028] })
-    get "/search?filter_facet_values=fe2fc3b5-a71b-4063-9605-12c3e6e179d6"
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect_result_includes_ministry_of_magic_for_key(
-      parsed_response,
-      "results",
-      {
-        "_id" => "/ministry-of-magic-site",
-        "document_type" => "edition",
-        "elasticsearch_type" => "edition",
-        "es_score" => nil,
-        "index" => "government_test",
-        "link" => "/ministry-of-magic-site",
-      },
-    )
-  end
-
-  it "can filter by facet group" do
-    commit_ministry_of_magic_document({ "facet_groups" => %w[fe2fc3b5-a71b-4063-9605-12c3e6e179d6] })
-    commit_treatment_of_dragons_document({ "facet_groups" => %w[e602eb34-a870-46ff-8ba4-de36689fb028] })
-    get "/search?filter_facet_groups=fe2fc3b5-a71b-4063-9605-12c3e6e179d6"
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect_result_includes_ministry_of_magic_for_key(
-      parsed_response,
-      "results",
-      {
-        "_id" => "/ministry-of-magic-site",
-        "document_type" => "edition",
-        "elasticsearch_type" => "edition",
-        "es_score" => nil,
-        "index" => "government_test",
-        "link" => "/ministry-of-magic-site",
-      },
-    )
-  end
-
   it "can filter by roles" do
     commit_ministry_of_magic_document("roles" => %w[prime-minister])
     commit_treatment_of_dragons_document("roles" => %w[some-other-role])
