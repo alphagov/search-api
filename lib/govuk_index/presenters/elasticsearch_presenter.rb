@@ -54,8 +54,6 @@ module GovukIndex
         document_type: type,
         eligible_entities: specialist.eligible_entities,
         email_document_supertype: common_fields.email_document_supertype,
-        facet_groups: expanded_links.facet_groups,
-        facet_values: expanded_links.facet_values,
         first_published_at: specialist.first_published_at,
         flood_and_coastal_erosion_category: specialist.flood_and_coastal_erosion_category,
         format: common_fields.format,

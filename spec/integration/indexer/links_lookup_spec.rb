@@ -79,14 +79,6 @@ RSpec.describe "TaglookupDuringIndexingTest" do
               "base_path" => "/alpha-taxonomy/my-taxon-1",
             },
           ],
-          facet_values: [
-            { "content_id" => "TAG-1" },
-            { "content_id" => "TAG-2" },
-          ],
-          facet_groups: [
-            { "content_id" => "TGRP-1" },
-            { "content_id" => "TGRP-2" },
-          ],
         },
       },
       with_drafts: false,
@@ -109,8 +101,6 @@ RSpec.describe "TaglookupDuringIndexingTest" do
         "topic_content_ids" => %w[TOPIC-CONTENT-ID-1 TOPIC-CONTENT-ID-2],
         "mainstream_browse_page_content_ids" => %w[BROWSE-1],
         "organisation_content_ids" => %w[ORG-1 ORG-2],
-        "facet_groups" => %w[TGRP-1 TGRP-2],
-        "facet_values" => %w[TAG-1 TAG-2],
       },
       index: "government_test",
     )
