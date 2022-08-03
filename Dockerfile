@@ -7,7 +7,7 @@ ENV RAILS_ENV=production
 # TODO: have a separate build image which already contains the build-only deps.
 RUN apt-get update -qq && \
     apt-get upgrade -y && \
-    apt-get install -y build-essential nodejs && \
+    apt-get install -y build-essential nodejs git && \
     apt-get clean
 
 RUN mkdir /app
