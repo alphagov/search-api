@@ -1,3 +1,17 @@
+GIT
+  remote: https://github.com/alphagov/govuk_app_config.git
+  revision: 57af294b01e4ba0f03c6165d8eef3c4f71f2818c
+  branch: sidekiq_monitoring
+  specs:
+    govuk_app_config (4.6.3)
+      logstasher (~> 2.1)
+      prometheus_exporter (~> 2.0)
+      puma (~> 5.6)
+      sentry-rails (~> 5.3)
+      sentry-ruby (~> 5.3)
+      statsd-ruby (~> 1.5)
+      unicorn (~> 6.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -74,7 +88,7 @@ GEM
     elasticsearch-transport (6.8.3)
       faraday (~> 1)
       multi_json
-    erubi (1.10.0)
+    erubi (1.11.0)
     faraday (1.10.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -149,14 +163,6 @@ GEM
       signet (>= 0.16, < 2.a)
     govuk-content-schema-test-helpers (1.6.1)
       json-schema (~> 2.8.0)
-    govuk_app_config (4.6.3)
-      logstasher (~> 2.1)
-      prometheus_exporter (~> 2.0)
-      puma (~> 5.6)
-      sentry-rails (~> 5.3)
-      sentry-ruby (~> 5.3)
-      statsd-ruby (~> 1.5)
-      unicorn (~> 6.1)
     govuk_document_types (1.0.1)
     govuk_message_queue_consumer (3.5.0)
       bunny (~> 2.11)
@@ -343,14 +349,11 @@ GEM
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sentry-rails (5.3.1)
+    sentry-rails (5.4.1)
       railties (>= 5.0)
-      sentry-ruby-core (~> 5.3.1)
-    sentry-ruby (5.3.1)
+      sentry-ruby (~> 5.4.1)
+    sentry-ruby (5.4.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      sentry-ruby-core (= 5.3.1)
-    sentry-ruby-core (5.3.1)
-      concurrent-ruby
     set (1.0.2)
     sidekiq (5.2.7)
       connection_pool (~> 2.2, >= 2.2.2)
@@ -427,7 +430,7 @@ DEPENDENCIES
   google-cloud-bigquery
   googleauth
   govuk-content-schema-test-helpers
-  govuk_app_config
+  govuk_app_config!
   govuk_document_types
   govuk_message_queue_consumer
   govuk_schemas

@@ -29,7 +29,7 @@ if log_path
 end
 
 unless in_development
-  logger = ENV["LOG_TO_STDOUT"].present? ? Logger.new($stdout) : Logger.new("log/production.json.log") 
+  logger = ENV["LOG_TO_STDOUT"].present? ? Logger.new($stdout) : Logger.new("log/production.json.log")
   use Rack::Logstasher::Logger,
       logger,
       extra_request_headers: { "GOVUK-Request-Id" => "govuk_request_id", "x-varnish" => "varnish_id" }

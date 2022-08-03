@@ -44,4 +44,4 @@ RUN groupadd -g 1001 app && \
 
 USER app
 
-CMD bundle exec puma
+CMD GOVUK_PROMETHEUS_EXPORTER=true bundle exec puma
