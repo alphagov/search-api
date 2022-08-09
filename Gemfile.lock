@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/alphagov/govuk_app_config.git
-  revision: 57af294b01e4ba0f03c6165d8eef3c4f71f2818c
+  revision: e600fd68fb63f30ad2c7adec61151a447fdaca1c
   branch: sidekiq_monitoring
   specs:
     govuk_app_config (4.6.3)
