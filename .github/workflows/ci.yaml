@@ -1,12 +1,17 @@
-name: Tests
+name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-  test:
+  check-ltr-dependencies:
+    name: Check Learn to Rank dependencies
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
         with:
           python-version: "3.8"
@@ -17,3 +22,10 @@ jobs:
           sudo apt-get install -y liblapack-dev
           pip install -r ltr/jenkins/requirements-freeze.txt
           pip install -r ltr/scripts/requirements-freeze.txt
+  test:
+    name: Test app
+    uses: alphagov/govuk-infrastructure/.github/workflows/test-rails.yaml@main
+    with:
+      requiresElasticsearch: true
+      requiresRedis: true
+      runBrakeman: false
