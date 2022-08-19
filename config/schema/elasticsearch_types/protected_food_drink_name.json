@@ -35,6 +35,10 @@
       {
         "label": "Rejected",
         "value": "rejected"
+      },
+      {
+        "label": "Cancelled",
+        "value": "cancelled"
       }
     ],
 
