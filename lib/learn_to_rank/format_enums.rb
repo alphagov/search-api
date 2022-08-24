@@ -41,7 +41,7 @@ module LearnToRank
         "licence" => 37,
         "specialist_sector" => 38,
         "transaction" => 39,
-        "world_location_news_page" => 40,
+        "world_location_news" => 40,
         "statutory_instrument" => 41,
         "countryside_stewardship_grant" => 42,
         "taxon" => 43,
