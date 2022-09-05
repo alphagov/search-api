@@ -51,6 +51,9 @@ module GovukIndex
         digital_market_research_publish_date: specialist.digital_market_research_publish_date,
         digital_market_research_publisher: specialist.digital_market_research_publisher,
         digital_market_research_topic: specialist.digital_market_research_topic,
+        disease_case_closed_date: specialist.disease_case_closed_date,
+        disease_case_opened_date: specialist.disease_case_opened_date,
+        disease_type: specialist.disease_type,
         document_type: type,
         eligible_entities: specialist.eligible_entities,
         email_document_supertype: common_fields.email_document_supertype,
@@ -173,9 +176,12 @@ module GovukIndex
         value_of_funding: specialist.value_of_funding,
         vessel_type: specialist.vessel_type,
         view_count: common_fields.view_count,
+        virus_strain: specialist.virus_strain,
         will_continue_on: specialist.will_continue_on,
         withdrawn_date: specialist.withdrawn_date,
         world_locations: expanded_links.world_locations,
+        zone_restriction: specialist.zone_restriction,
+        zone_type: specialist.zone_type,
       }.reject { |_, v| v.nil? }
     end
 

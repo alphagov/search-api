@@ -998,5 +998,24 @@
   },
   "digital_market_research_publish_date": {
     "type": "date"
+  },
+
+  "disease_case_closed_date": {
+    "type": "date"
+  },
+  "disease_case_opened_date": {
+    "type": "date"
+  },
+  "disease_type": {
+    "type": "identifiers"
+  },
+  "virus_strain": {
+    "type": "identifier"
+  },
+  "zone_restriction": {
+    "type": "identifier"
+  },
+  "zone_type": {
+    "type": "identifiers"
   }
 }

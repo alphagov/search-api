@@ -1,0 +1,128 @@
+{
+  "fields": [
+    "disease_case_closed_date",
+    "disease_case_opened_date",
+    "disease_type",
+    "virus_strain",
+    "zone_restriction",
+    "zone_type"
+  ],
+  "expanded_search_result_fields": {
+    "disease_type": [
+      {
+        "label": "African horse sickness",
+        "value": "african-horse-sickness"
+      },
+      {
+        "label": "African swine fever",
+        "value": "african-swine-fever"
+      },
+      {
+        "label": "Bird flu (avian influenza)",
+        "value": "bird-flu"
+      },
+      {
+        "label": "Bluetongue",
+        "value": "bluetongue"
+      },
+      {
+        "label": "Classical swine fever",
+        "value": "classical-swine-fever"
+      },
+      {
+        "label": "Foot and mouth disease",
+        "value": "foot-and-mouth-disease"
+      },
+      {
+        "label": "Newcastle disease",
+        "value": "newcastle-disease"
+      },
+      {
+        "label": "Swine vesicular disease",
+        "value": "swine-vesicular-disease"
+      }
+    ],
+    "zone_restriction": [
+      {
+        "label": "In force",
+        "value": "in-force"
+      },
+      {
+        "label": "No longer in force",
+        "value": "no-longer-in-force"
+      }
+    ],
+    "zone_type": [
+      {
+        "label": "Protection zone",
+        "value": "protection"
+      },
+      {
+        "label": "Surveillance zone",
+        "value": "surveillance"
+      },
+      {
+        "label": "Restricted zone",
+        "value": "restricted"
+      },
+      {
+        "label": "Temporary control zone",
+        "value": "temporary-control"
+      },
+      {
+        "label": "Captive bird (monitoring) controlled zone",
+        "value": "captive-bird"
+      },
+      {
+        "label": "Wild bird control area",
+        "value": "wild-bird-control"
+      },
+      {
+        "label": "Wild bird monitoring area",
+        "value": "wild-bird-monitoring"
+      }
+    ],
+    "virus_strain": [
+      {
+        "label": "H5Nx",
+        "value": "h5nx"
+      },
+      {
+        "label": "H5N1",
+        "value": "h5n1"
+      },
+      {
+        "label": "H5N2",
+        "value": "h5n2"
+      },
+      {
+        "label": "H5N3",
+        "value": "h5n3"
+      },
+      {
+        "label": "H5N5",
+        "value": "h5n5"
+      },
+      {
+        "label": "H5N6",
+        "value": "h5n6"
+      },
+      {
+        "label": "H5N8",
+        "value": "h5n8"
+      },
+      {
+        "label": "H7Nx",
+        "value": "h7nx"
+      },
+      {
+        "label": "H7N7",
+        "value": "h7n7"
+      },
+      {
+        "label": "Undetermined",
+        "value": "undetermined"
+      }
+    ]
+  }
+}
