@@ -14,8 +14,10 @@
     ],
     "digital_market_research_publisher": [
       {"label": "Advertising Standards Authority", "value": "advertising-standards-authority"},
+      {"label": "Bank for International Settlements", "value": "bank-for-international-settlements"},
       {"label": "Bank of England", "value": "bank-of-england"},
       {"label": "Competition and Markets Authority", "value": "competition-and-markets-authority"},
+      {"label": "Digital Regulation Cooperation Forum", "value": "digital-regulation-cooperation-forum"},
       {"label": "Financial Conduct Authority - Insight", "value": "financial-conduct-authority-insight"},
       {"label": "Financial Conduct Authority", "value": "financial-conduct-authority"},
       {"label": "Gambling Commission", "value": "gambling-commission"},
@@ -55,6 +57,7 @@
       {"label": "Internet of things", "value": "internet-of-things"},
       {"label": "Internet usage and attitudes", "value": "internet-usage-and-attitudes"},
       {"label": "Measuring advertising effectiveness", "value": "measuring-advertising-effectiveness"},
+      {"label": "Mobile devices", "value": "mobile-devices"},
       {"label": "Music streaming", "value": "music-streaming"},
       {"label": "News and publishing", "value": "news-and-publishing"},
       {"label": "Online retail", "value": "online-retail"},
@@ -65,6 +68,7 @@
       {"label": "Regtech", "value": "regtech"},
       {"label": "Safety and harms", "value": "safety-and-harms"},
       {"label": "Social media and instant messaging", "value": "social-media-and-instant-messaging"},
+      {"label": "Standards", "value": "standards"},
       {"label": "TV, video and on-demand", "value": "tv-video-and-on-demand"}
     ]
   }
