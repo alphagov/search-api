@@ -2,6 +2,7 @@
 # the value represents the elasticsearch_type defined in config/schema/elasticsearch_types
 
 aaib_report: aaib_report # Specialist Publisher
+animal_disease_case: animal_disease_case # Specialist Publisher
 answer: edition
 asylum_support_decision: asylum_support_decision # Specialist Publisher
 business_finance_support_scheme: business_finance_support_scheme # Specialist Publisher

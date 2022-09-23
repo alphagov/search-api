@@ -35,6 +35,9 @@ module GovukIndex
     delegate_to_payload :digital_market_research_publish_date
     delegate_to_payload :digital_market_research_publisher, convert_to_array: true
     delegate_to_payload :digital_market_research_topic, convert_to_array: true
+    delegate_to_payload :disease_case_closed_date
+    delegate_to_payload :disease_case_opened_date
+    delegate_to_payload :disease_type, convert_to_array: true
     delegate_to_payload :eligible_entities
     delegate_to_payload :flood_and_coastal_erosion_category
     delegate_to_payload :fund_state, convert_to_array: true
@@ -115,8 +118,11 @@ module GovukIndex
     delegate_to_payload :uk_market_conformity_assessment_body_website
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type
+    delegate_to_payload :virus_strain
     delegate_to_payload :will_continue_on
     delegate_to_payload :withdrawn_date
+    delegate_to_payload :zone_restriction
+    delegate_to_payload :zone_type, convert_to_array: true
 
     def initialize(payload)
       @payload = payload
