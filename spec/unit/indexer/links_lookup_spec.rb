@@ -4,7 +4,7 @@ RSpec.describe Indexer::LinksLookup do
   include GdsApi::TestHelpers::PublishingApi
 
   let(:content_id) { "DOCUMENT_CONTENT_ID" }
-  let(:endpoint) { "#{Plek.current.find('publishing-api')}/v2" }
+  let(:endpoint) { "#{Plek.find('publishing-api')}/v2" }
   let(:expanded_links_url) { "#{endpoint}/expanded-links/#{content_id}?with_drafts=false" }
 
   it "retry links on timeout" do

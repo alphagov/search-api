@@ -49,6 +49,6 @@ private
   end
 
   def base_url
-    Plek.current.website_root
+    Plek.new.website_root
   end
 end
