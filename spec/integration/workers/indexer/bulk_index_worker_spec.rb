@@ -44,7 +44,7 @@ RSpec.describe Indexer::BulkIndexWorker do
   end
 
   def stub_request_to_publishing_api
-    endpoint = "#{Plek.current.find('publishing-api')}/lookup-by-base-path"
+    endpoint = "#{Plek.find('publishing-api')}/lookup-by-base-path"
 
     stub_request(:post, endpoint).to_return(status: 200, body: {}.to_json)
   end

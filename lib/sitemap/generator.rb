@@ -157,7 +157,7 @@ module Sitemap
 
     def homepage
       {
-        url: "#{Plek.current.website_root}/",
+        url: "#{Plek.new.website_root}/",
         priority: 0.5,
       }
     end
@@ -167,7 +167,7 @@ module Sitemap
     end
 
     def base_url
-      Plek.current.website_root
+      Plek.new.website_root
     end
   end
 end
