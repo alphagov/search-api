@@ -74,28 +74,36 @@
         "value": "captive-bird"
       },
       {
+        "label": "Avian influenza prevention zone",
+        "value": "avian-influenza-prevention"
+      },
+      {
+        "label": "Temporary movement restriction zone",
+        "value": "temporary-movement-restriction"
+      },
+      {
+        "label": "Low pathogenic avian influenza restricted zone",
+        "value": "low-pathogenic-avian-influenza-restricted"
+      },
+      {
+        "label": "Infection zone",
+        "value": "infection"
+      },
+      {
+        "label": "Vaccination zone",
+        "value": "vaccination"
+      },
+      {
+        "label": "Supplementary movement control zone",
+        "value": "supplementary-movement-control"
+      },
+      {
         "label": "Wild bird control area",
         "value": "wild-bird-control"
       },
       {
         "label": "Wild bird monitoring area",
         "value": "wild-bird-monitoring"
-      }
-    ],
-      },
-      {
-      },
-      {
-      },
-      {
-      },
-      {
-      },
-      {
-      },
-      {
-      },
-      {
       }
     ]
   }
