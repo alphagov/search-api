@@ -1010,7 +1010,7 @@
     "type": "identifiers"
   },
   "virus_strain": {
-    "type": "identifier"
+    "type": "searchable_text"
   },
   "zone_restriction": {
     "type": "identifier"
