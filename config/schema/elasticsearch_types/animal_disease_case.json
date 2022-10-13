@@ -74,54 +74,36 @@
         "value": "captive-bird"
       },
       {
+        "label": "Avian influenza prevention zone",
+        "value": "avian-influenza-prevention"
+      },
+      {
+        "label": "Temporary movement restriction zone",
+        "value": "temporary-movement-restriction"
+      },
+      {
+        "label": "Low pathogenic avian influenza restricted zone",
+        "value": "low-pathogenic-avian-influenza-restricted"
+      },
+      {
+        "label": "Infection zone",
+        "value": "infection"
+      },
+      {
+        "label": "Vaccination zone",
+        "value": "vaccination"
+      },
+      {
+        "label": "Supplementary movement control zone",
+        "value": "supplementary-movement-control"
+      },
+      {
         "label": "Wild bird control area",
         "value": "wild-bird-control"
       },
       {
         "label": "Wild bird monitoring area",
         "value": "wild-bird-monitoring"
-      }
-    ],
-    "virus_strain": [
-      {
-        "label": "H5Nx",
-        "value": "h5nx"
-      },
-      {
-        "label": "H5N1",
-        "value": "h5n1"
-      },
-      {
-        "label": "H5N2",
-        "value": "h5n2"
-      },
-      {
-        "label": "H5N3",
-        "value": "h5n3"
-      },
-      {
-        "label": "H5N5",
-        "value": "h5n5"
-      },
-      {
-        "label": "H5N6",
-        "value": "h5n6"
-      },
-      {
-        "label": "H5N8",
-        "value": "h5n8"
-      },
-      {
-        "label": "H7Nx",
-        "value": "h7nx"
-      },
-      {
-        "label": "H7N7",
-        "value": "h7n7"
-      },
-      {
-        "label": "Undetermined",
-        "value": "undetermined"
       }
     ]
   }
