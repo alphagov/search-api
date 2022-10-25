@@ -40,6 +40,10 @@
         "value": "arable-land"
       },
       {
+        "label": "Biodiversity",
+        "value": "biodiversity"
+      },      
+      {
         "label": "Boundaries",
         "value": "boundaries"
       },
