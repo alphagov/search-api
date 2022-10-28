@@ -3,5 +3,5 @@
 library("govuk")
 
 node('elasticsearch-6.7') {
-  govuk.buildProject(publishingE2ETests: true)
+  govuk.buildProject()
 }
