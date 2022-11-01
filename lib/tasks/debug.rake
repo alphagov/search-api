@@ -1,7 +1,6 @@
 require "aws-sdk-s3"
 require "csv"
 require "rummager"
-require "pp"
 require "rainbow"
 require "debug/rank_eval"
 require "debug/synonyms"
