@@ -297,7 +297,7 @@ RSpec.describe Search::AggregateExampleFetcher do
       expect(@builder).to receive(:query).and_return(query)
       expect(@builder).to receive(:filter).and_return(filter)
 
-      (0..19).each do |group_num|
+      20.times do |group_num|
         sector_numbers = (group_num * 50..group_num * 50 + 49)
         expected_queries = Array(
           sector_numbers.map do |sector_num|
