@@ -100,17 +100,16 @@ field and its number of page views in the `vc_14` field.
 
 #### Recency
 
-This is an implementation of [this curve][], and is applied to
-documents of the "announcement" type in the [booster.rb][] file.  It
-serves to increase the score of new documents and decrease the score
-of old documents.
+This is an implementation of [this curve](https://solr.apache.org/guide/7_7/function-queries.html#recip-function),
+and is applied to documents of the "announcement" type in the [booster.rb][]
+file.  It serves to increase the score of new documents and decrease 
+the score of old documents.
 
 Only documents of `search_format_types` 'announcement' are affected by
 recency boosting.
 
-The curve came from the solr documentation, but the link to the
-original source is broken, so it is unclear why this particular curve
-was chosen.
+The curve was chosen so that it only applies the boost temporarily (2 
+months moderate decay then a rapid decay after that).
 
 #### Properties
 
