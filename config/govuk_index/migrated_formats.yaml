@@ -39,6 +39,7 @@ migrated:
 - european_structural_investment_fund # use Rummager name as mapping occurs before validation check
 - export_health_certificate
 - international_development_fund
+- licence_transaction
 - flood_and_coastal_erosion_risk_management_research_report
 - maib_report
 - marine_notice

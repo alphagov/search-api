@@ -40,6 +40,7 @@ RSpec.describe "SpecialistFormatTest" do
       employment_tribunal_decision
       flood_and_coastal_erosion_risk_management_research_report
       international_development_fund
+      licence_transaction
       maib_report
       medical_safety_alert
       protected_food_drink_name

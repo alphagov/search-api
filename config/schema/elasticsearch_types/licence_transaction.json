@@ -1,0 +1,9 @@
+{
+  "fields": [
+    "country",
+    "sector",
+    "activity",
+    "will_continue_on",
+    "continuation_link"
+  ]
+}
