@@ -304,6 +304,7 @@ migrated:
 - travel_advice
 - travel_advice_index
 - special_route:
+  - '/cost-of-living'
   - '/help'
   - '/help/cookies'
   - '/find-local-council'
