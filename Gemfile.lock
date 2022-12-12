@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com//alphagov/govuk_message_queue_consumer.git
+  revision: 140b657cbfe543acdbeeb9646ceadc31651b065f
+  branch: add-support-for-tls-connections
+  specs:
+    govuk_message_queue_consumer (4.0.0)
+      bunny (~> 2.11)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -160,8 +168,6 @@ GEM
       statsd-ruby (~> 1.5)
       unicorn (~> 6.1)
     govuk_document_types (1.0.1)
-    govuk_message_queue_consumer (4.0.0)
-      bunny (~> 2.11)
     govuk_schemas (4.5.0)
       json-schema (>= 2.8, < 3.1)
     govuk_sidekiq (5.0.0)
@@ -430,7 +436,7 @@ DEPENDENCIES
   govuk-content-schema-test-helpers
   govuk_app_config
   govuk_document_types
-  govuk_message_queue_consumer
+  govuk_message_queue_consumer!
   govuk_schemas
   govuk_sidekiq
   httparty
