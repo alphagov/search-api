@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com//alphagov/govuk_message_queue_consumer.git
-  revision: 140b657cbfe543acdbeeb9646ceadc31651b065f
-  branch: add-support-for-tls-connections
+  revision: 671e9bef36cba4cfb3a3b99c88db89d6fb7c6e16
+  branch: sengi/rabbitmq_url
   specs:
-    govuk_message_queue_consumer (4.0.0)
-      bunny (~> 2.11)
+    govuk_message_queue_consumer (4.1.0)
+      bunny (~> 2.17)
 
 GEM
   remote: https://rubygems.org/
