@@ -14,6 +14,7 @@ Dir[File.join(PROJECT_ROOT, "lib/tasks/**/*.rake")].each { |file| load file }
 begin
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:spec)
+  RSpec::Core::RakeTask.new(:test)
 rescue LoadError
 end
 # rubocop:enable Lint/SuppressedException
