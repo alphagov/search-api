@@ -1017,5 +1017,18 @@
   },
   "zone_type": {
     "type": "identifiers"
+  },
+
+  "activity": {
+    "type": "identifiers"
+  },
+  "sector": {
+    "type": "identifiers"
+  },
+  "will_continue_on": {
+    "type": "identifiers"
+  },
+  "continuation_link": {
+    "type": "identifiers"
   }
 }

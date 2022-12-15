@@ -15,6 +15,7 @@ module GovukIndex
       {
         aircraft_category: specialist.aircraft_category,
         aircraft_type: specialist.aircraft_type,
+        activity: specialist.activity,
         alert_type: specialist.alert_type,
         assessment_date: specialist.assessment_date,
         attachments: common_fields.attachments,
@@ -131,6 +132,7 @@ module GovukIndex
         role_appointments: expanded_links.role_appointments,
         roles: expanded_links.roles,
         service_provider: specialist.service_provider,
+        sector: specialist.sector,
         sift_end_date: specialist.sift_end_date,
         sifting_status: specialist.sifting_status,
         slug: slug,

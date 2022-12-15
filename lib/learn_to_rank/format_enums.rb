@@ -81,6 +81,7 @@ module LearnToRank
         "flood_and_coastal_erosion_risk_management_research_report" => 77,
         "service_manual_service_toolkit" => 78,
         "smart_answer" => 79,
+        "licence_transaction" => 80,
       }
     end
   end
