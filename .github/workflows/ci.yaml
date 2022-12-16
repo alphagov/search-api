@@ -38,4 +38,5 @@ jobs:
     needs: cache-dependencies
     uses: alphagov/govuk-infrastructure/.github/workflows/ci-test-ruby.yaml@add-individual-ci-jobs-non-services
     with:
+      enableRedis: true
       enableElasticsearch: true
