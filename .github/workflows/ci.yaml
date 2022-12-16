@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - main
@@ -22,10 +23,19 @@ jobs:
           sudo apt-get install -y liblapack-dev
           pip install -r ltr/jenkins/requirements-freeze.txt
           pip install -r ltr/scripts/requirements-freeze.txt
-  test:
-    name: Test app
-    uses: alphagov/govuk-infrastructure/.github/workflows/test-rails.yaml@main
+
+  cache-dependencies:
+    name: Cache dependencies
+    uses: alphagov/govuk-infrastructure/.github/workflows/ci-cache-dependencies.yaml@add-individual-ci-jobs-non-services
+
+  lint-ruby:
+    name: Lint Ruby
+    needs: cache-dependencies
+    uses: alphagov/govuk-infrastructure/.github/workflows/ci-lint-ruby.yaml@add-individual-ci-jobs-non-services
+
+  test-ruby:
+    name: Test Ruby
+    needs: cache-dependencies
+    uses: alphagov/govuk-infrastructure/.github/workflows/ci-test-ruby.yaml@add-individual-ci-jobs-non-services
     with:
-      requiresElasticsearch: true
-      requiresRedis: true
-      runBrakeman: false
+      enableElasticsearch: true
