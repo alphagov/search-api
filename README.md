@@ -47,4 +47,4 @@ bundle exec rake
 
 ## Licence
 
-[MIT License](LICENCE.txt)
+[MIT License](LICENCE)
