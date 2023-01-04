@@ -1,13 +1,6 @@
 require "spec_helper"
 
 RSpec.describe ContentItemPublisher::FinderPublisher do
-  before do
-    GovukContentSchemaTestHelpers.configure do |config|
-      config.schema_type = "publisher_v2"
-      config.project_root = File.expand_path(Dir.pwd)
-    end
-  end
-
   finders_glob = File.join(Dir.pwd, "config", "finders", "*_finder.yml")
   Dir.glob(finders_glob).each do |config_file|
     context "Checking #{File.basename(config_file)}" do

@@ -1,12 +1,8 @@
 require "spec_helper"
+require "govuk_schemas/validator"
 
 RSpec.describe SpecialRoutePublisher do
   before do
-    GovukContentSchemaTestHelpers.configure do |config|
-      config.schema_type = "publisher_v2"
-      config.project_root = File.expand_path("../..", __dir__)
-    end
-
     @publishing_api = double
 
     logger = Logger.new($stdout)
@@ -30,9 +26,9 @@ RSpec.describe SpecialRoutePublisher do
   end
 
   def assert_valid_content_item(payload)
-    validator = GovukContentSchemaTestHelpers::Validator.new(
+    validator = GovukSchemas::Validator.new(
       "special_route",
-      "schema",
+      "publisher",
       payload,
     )
 

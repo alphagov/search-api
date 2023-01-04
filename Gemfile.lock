@@ -147,8 +147,6 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (>= 0.16, < 2.a)
-    govuk-content-schema-test-helpers (1.6.1)
-      json-schema (~> 2.8.0)
     govuk_app_config (4.12.0)
       logstasher (~> 2.1)
       plek (>= 4, < 6)
@@ -427,7 +425,6 @@ DEPENDENCIES
   google-api-client
   google-cloud-bigquery
   googleauth
-  govuk-content-schema-test-helpers
   govuk_app_config
   govuk_document_types
   govuk_message_queue_consumer

@@ -4,13 +4,6 @@ require "govuk_schemas/rspec_matchers"
 RSpec.describe ContentItemPublisher::FinderPresenter do
   include GovukSchemas::RSpecMatchers
 
-  before do
-    GovukContentSchemaTestHelpers.configure do |config|
-      config.schema_type = "publisher_v2"
-      config.project_root = File.expand_path(Dir.pwd)
-    end
-  end
-
   finders_glob = File.join(Dir.pwd, "config", "finders", "*_finder.yml")
 
   Dir.glob(finders_glob).each do |config_file|

@@ -47,7 +47,6 @@ end
 group :test do
   gem "bunny-mock"
   gem "climate_control"
-  gem "govuk-content-schema-test-helpers"
   gem "rack-test"
   gem "rspec"
   gem "simplecov"
