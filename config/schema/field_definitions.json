@@ -1019,16 +1019,19 @@
     "type": "identifiers"
   },
 
-  "activity": {
+  "licence_transaction_continuation_link": {
     "type": "identifiers"
   },
-  "sector": {
+  "licence_transaction_industry": {
     "type": "identifiers"
   },
-  "will_continue_on": {
+  "licence_transaction_licence_identifier": {
     "type": "identifiers"
   },
-  "continuation_link": {
+  "licence_transaction_location": {
+    "type": "identifiers"
+  },
+  "licence_transaction_will_continue_on": {
     "type": "identifiers"
   }
 }
