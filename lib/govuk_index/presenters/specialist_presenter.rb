@@ -6,7 +6,6 @@ module GovukIndex
 
     delegate_to_payload :aircraft_category
     delegate_to_payload :aircraft_type
-    delegate_to_payload :activity
     delegate_to_payload :alert_type, convert_to_array: true
     delegate_to_payload :assessment_date
     delegate_to_payload :authors
@@ -52,6 +51,11 @@ module GovukIndex
     delegate_to_payload :issued_date
     delegate_to_payload :laid_date
     delegate_to_payload :land_use
+    delegate_to_payload :licence_transaction_continuation_link
+    delegate_to_payload :licence_transaction_industry, convert_to_array: true
+    delegate_to_payload :licence_transaction_licence_identifier
+    delegate_to_payload :licence_transaction_location, convert_to_array: true
+    delegate_to_payload :licence_transaction_will_continue_on
     delegate_to_payload :location, convert_to_array: true
     delegate_to_payload :marine_notice_topic
     delegate_to_payload :marine_notice_type
@@ -82,7 +86,6 @@ module GovukIndex
     delegate_to_payload :research_document_type
     delegate_to_payload :result
     delegate_to_payload :review_status
-    delegate_to_payload :sector
     delegate_to_payload :service_provider
     delegate_to_payload :sift_end_date
     delegate_to_payload :sifting_status
