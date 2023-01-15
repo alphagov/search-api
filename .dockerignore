@@ -1,8 +1,17 @@
+.dockerignore
 .git
+.github
 .gitignore
+Dockerfile
 Jenkinsfile
+Procfile
 README.md
+coverage
 docs
 log
+ltr/jenkins
+ltr/scripts
+script
 spec
+test
 tmp
