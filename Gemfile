@@ -4,7 +4,7 @@ gem "activesupport"
 gem "aws-sdk-s3"
 gem "aws-sdk-sagemaker"
 gem "aws-sdk-sagemakerruntime"
-gem "bootsnap"
+gem "bootsnap", require: false
 gem "elasticsearch", "~> 6" # We need a 6.x release to interface with Elasticsearch 6
 gem "gds-api-adapters"
 gem "google-api-client"
