@@ -1,18 +1,13 @@
 require "bootsnap"
+Bootsnap.setup(
+  cache_dir: ENV.fetch("BOOTSNAP_CACHE_DIR", "tmp/cache"),
+  development_mode: ENV["RACK_ENV"] == "development",
+)
 
 require "aws-sdk-s3"
 require "date"
 require "sinatra"
 set :root, File.dirname(__FILE__)
-
-Bootsnap.setup(
-  cache_dir: "tmp/cache",
-  development_mode: ENV["RACK_ENV"] == "development",
-  load_path_cache: true,
-  autoload_paths_cache: true,
-  compile_cache_iseq: true,
-  compile_cache_yaml: true,
-)
 
 require "rummager"
 require "routes/content"
