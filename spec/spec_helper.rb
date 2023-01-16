@@ -28,7 +28,6 @@ require "govuk-content-schema-test-helpers/validator"
 
 # Silence log output
 Logging.logger.root.appenders = nil
-Sidekiq::Logging.logger = nil
 
 require "webmock/rspec"
 
