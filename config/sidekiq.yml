@@ -6,9 +6,6 @@ staging:
 production:
   :concurrency:  12
 :require: ./lib/rummager.rb
-<% if ENV.key?('SIDEKIQ_LOGFILE') %>
-:logfile: <%= ENV['SIDEKIQ_LOGFILE'] %>
-<% end %>
 :queues:
   - default
   - bulk
