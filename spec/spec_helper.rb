@@ -26,7 +26,6 @@ require "govuk_schemas"
 
 # Silence log output
 Logging.logger.root.appenders = nil
-Sidekiq::Logging.logger = nil
 
 require "webmock/rspec"
 
