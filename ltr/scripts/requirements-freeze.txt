@@ -15,7 +15,7 @@ dill==0.3.3
 dm-tree==0.1.6
 flatbuffers==1.12
 fonttools==4.29.1
-future==0.18.2
+future==0.18.3
 gast==0.4.0
 gin-config==0.4.0
 google-api-core==1.26.3
