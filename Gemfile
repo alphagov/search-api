@@ -14,7 +14,7 @@ gem "govuk_app_config"
 gem "govuk_document_types"
 gem "govuk_message_queue_consumer"
 gem "govuk_schemas"
-gem "govuk_sidekiq"
+gem "govuk_sidekiq", "5.0.0"
 gem "httparty"
 gem "irb", require: false
 gem "logging"
