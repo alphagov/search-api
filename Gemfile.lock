@@ -252,7 +252,7 @@ GEM
     puma (6.0.2)
       nio4r (~> 2.0)
     racc (1.6.2)
-    rack (2.2.3.1)
+    rack (2.2.6.2)
     rack-logstasher (1.0.2)
       logstash-event
       rack (~> 2.0)
@@ -357,9 +357,8 @@ GEM
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
-    sidekiq-limit_fetch (4.1.0)
-      redis (>= 4.6.0)
-      sidekiq (>= 4)
+    sidekiq-limit_fetch (4.4.1)
+      sidekiq (>= 6)
     sidekiq-statsd (2.1.0)
       activesupport
       sidekiq (>= 3.3.1)
