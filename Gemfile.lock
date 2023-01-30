@@ -349,9 +349,6 @@ GEM
       sentry-ruby (~> 5.7.0)
     sentry-ruby (5.7.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.7.0)
-      sentry-ruby (~> 5.7.0)
-      sidekiq (>= 3.0)
     set (1.0.3)
     sidekiq (6.5.8)
       connection_pool (>= 2.2.5, < 3)
@@ -447,7 +444,6 @@ DEPENDENCIES
   rspec
   rubocop-govuk
   rubyzip
-  sentry-sidekiq
   sidekiq-limit_fetch
   simplecov
   sinatra
