@@ -43,7 +43,7 @@ details:
     preposition: in
     short_name: In
     type: text
-    show_option_select_filter: true
+    show_option_select_filter: false
     allowed_values:
     - label: Services
       value: services
