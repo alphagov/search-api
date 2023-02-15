@@ -17,9 +17,7 @@ class IndexSchema
       properties = properties.merge(value.es_config)
     end
     {
-      "generic-document" => {
-        "properties" => properties,
-      },
+      "properties" => properties,
     }
   end
 
