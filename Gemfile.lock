@@ -66,12 +66,12 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    elasticsearch (6.8.3)
-      elasticsearch-api (= 6.8.3)
-      elasticsearch-transport (= 6.8.3)
-    elasticsearch-api (6.8.3)
+    elasticsearch (7.17.7)
+      elasticsearch-api (= 7.17.7)
+      elasticsearch-transport (= 7.17.7)
+    elasticsearch-api (7.17.7)
       multi_json
-    elasticsearch-transport (6.8.3)
+    elasticsearch-transport (7.17.7)
       faraday (~> 1)
       multi_json
     erubi (1.12.0)
@@ -418,7 +418,7 @@ DEPENDENCIES
   bootsnap
   bunny-mock
   climate_control
-  elasticsearch (~> 6)
+  elasticsearch (~> 7)
   gds-api-adapters
   google-api-client
   google-cloud-bigquery
