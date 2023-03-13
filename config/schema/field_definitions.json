@@ -1023,7 +1023,7 @@
     "type": "identifiers"
   },
   "licence_transaction_industry": {
-    "type": "identifiers"
+    "type": "searchable_identifiers"
   },
   "licence_transaction_licence_identifier": {
     "type": "identifiers"
