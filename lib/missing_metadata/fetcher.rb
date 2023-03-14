@@ -22,7 +22,7 @@ module MissingMetadata
       base_path = document_id
       base_path = "/#{base_path}" unless base_path.start_with?("/")
 
-      content_id = publishing_api.lookup_content_id(base_path: base_path)
+      content_id = publishing_api.lookup_content_id(base_path:)
 
       content_id || raise(MissingDocumentError, "Failed to look up base path")
     rescue GdsApi::TimedOutException
@@ -40,7 +40,7 @@ module MissingMetadata
         content_store_document_type: response["document_type"],
         publishing_app: response["publishing_app"],
         rendering_app: response["rendering_app"],
-        content_id: content_id,
+        content_id:,
       )
     rescue GdsApi::TimedOutException
       puts "Publishing API timed out getting content... retrying"

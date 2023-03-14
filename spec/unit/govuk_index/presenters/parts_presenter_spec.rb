@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe GovukIndex::PartsPresenter do
-  subject(:presented_parts) { described_class.new(parts: parts).presented_parts }
+  subject(:presented_parts) { described_class.new(parts:).presented_parts }
 
   context "when there are parts" do
     let(:parts) do

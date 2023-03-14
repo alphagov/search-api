@@ -15,7 +15,7 @@ module Relevancy
         raise "missing score for row '#{row}'" if score.nil?
         raise "missing link|content_id for row '#{row}" if content_id.nil? && link.nil?
 
-        data << { score: score.to_i, content_id: content_id, link: link, query: query }
+        data << ({ score: score.to_i, content_id:, link:, query: })
         last_query = query
       end
       data

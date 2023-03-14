@@ -54,7 +54,7 @@ task :report_inconsistent_aggregate_values do
       DataInconsistencyError.new,
       extra: {
         error_message: "Some aggregate values for \"#{aggregate}\" are not expanded",
-        aggregate: aggregate,
+        aggregate:,
         aggregate_values: aggregate_values_to_report[aggregate],
       },
     )

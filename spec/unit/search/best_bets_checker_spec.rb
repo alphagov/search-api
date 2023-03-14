@@ -32,10 +32,10 @@ RSpec.describe Search::BestBetsChecker do
       "_source" => {
         "details" => JSON.generate({
           best_bets: best_bets.map do |link, position|
-            { link: link, position: position }
+            { link:, position: }
           end,
           worst_bets: worst_bets.map do |link|
-            { link: link }
+            { link: }
           end,
         }),
       },

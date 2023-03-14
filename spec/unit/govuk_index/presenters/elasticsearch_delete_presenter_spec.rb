@@ -23,7 +23,7 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
       version_type: "external",
     }
 
-    presenter = described_class.new(payload: payload)
+    presenter = described_class.new(payload:)
 
     expect(expected_identifier).to eq(presenter.identifier)
   end
@@ -37,7 +37,7 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
 
     allow_any_instance_of(described_class).to receive(:existing_document).and_return(nil)
 
-    presenter = described_class.new(payload: payload)
+    presenter = described_class.new(payload:)
 
     expect { presenter.type }.to raise_error(GovukIndex::NotFoundError)
   end
@@ -45,7 +45,7 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
   it "is invalid if the base_path is missing" do
     payload = {}
 
-    presenter = described_class.new(payload: payload)
+    presenter = described_class.new(payload:)
 
     expect {
       presenter.valid!

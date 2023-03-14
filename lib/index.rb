@@ -118,7 +118,7 @@ module SearchIndices
           if blocked_items.any?
             raise IndexLocked
           else
-            GovukError.notify(Indexer::BulkIndexFailure.new, extra: { failed_items: failed_items })
+            GovukError.notify(Indexer::BulkIndexFailure.new, extra: { failed_items: })
             raise Indexer::BulkIndexFailure
           end
         end
@@ -158,7 +158,7 @@ module SearchIndices
 
       # Set off a scan query to get back a scroll ID and result count
       batch_size = self.class.scroll_batch_size
-      ScrollEnumerator.new(client: client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
+      ScrollEnumerator.new(client:, index_names: @index_name, search_body:, batch_size:) do |hit|
         document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
       end
     end
@@ -166,11 +166,11 @@ module SearchIndices
     def documents_by_format(format, field_definitions)
       batch_size = 500
       search_body = {
-        query: { term: { format: format } },
+        query: { term: { format: } },
         _source: { includes: field_definitions.keys },
       }
 
-      ScrollEnumerator.new(client: @client, index_names: @index_name, search_body: search_body, batch_size: batch_size) do |hit|
+      ScrollEnumerator.new(client: @client, index_names: @index_name, search_body:, batch_size:) do |hit|
         LegacyClient::MultivalueConverter.new(hit["_source"], field_definitions).converted_hash
       end
     end
@@ -202,7 +202,7 @@ module SearchIndices
 
     def delete(id)
       begin
-        @client.delete(index: @index_name, type: "generic-document", id: id)
+        @client.delete(index: @index_name, type: "generic-document", id:)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true

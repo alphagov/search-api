@@ -51,9 +51,9 @@ module Search
       else
         {
           dis_max: {
-            queries: queries,
-            tie_breaker: tie_breaker,
-            boost: boost,
+            queries:,
+            tie_breaker:,
+            boost:,
           },
         }
       end

@@ -257,7 +257,7 @@ private
     end
 
     type_mapper = GovukIndex::DocumentTypeMapper.new(example)
-    described_class.new(payload: example, type_mapper: type_mapper).document
+    described_class.new(payload: example, type_mapper:).document
   end
 
   def expect_document_include_hash(document, hash)

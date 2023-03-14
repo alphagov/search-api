@@ -61,7 +61,7 @@ module Healthcheck
     end
 
     def elasticsearch_client(cluster)
-      Services.elasticsearch(cluster: cluster)
+      Services.elasticsearch(cluster:)
     end
   end
 end

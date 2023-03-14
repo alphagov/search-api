@@ -41,14 +41,14 @@ module Search
     def timed_build_query(search_params)
       GovukStatsd.time("build_query") do
         builder = QueryBuilder.new(
-          search_params: search_params,
-          content_index_names: content_index_names,
-          metasearch_index: metasearch_index,
+          search_params:,
+          content_index_names:,
+          metasearch_index:,
         )
 
         payload = process_elasticsearch_errors { builder.payload }
 
-        { builder: builder, payload: payload }
+        { builder:, payload: }
       end
     end
 
@@ -81,10 +81,10 @@ module Search
     end
 
     def rerank(es_response, search_params)
-      return { reranked: false, es_response: es_response } unless search_params.rerank
+      return { reranked: false, es_response: } unless search_params.rerank
 
       results = es_response.dig("hits", "hits").to_a
-      return { reranked: false, es_response: es_response } if results.empty? || results[0].fetch("_score").nil?
+      return { reranked: false, es_response: } if results.empty? || results[0].fetch("_score").nil?
 
       reranked = LearnToRank::Reranker.new.rerank(
         es_results: results,
@@ -92,10 +92,10 @@ module Search
         model_variant: search_params.model_variant,
       )
 
-      return { reranked: false, es_response: es_response } if reranked.nil?
+      return { reranked: false, es_response: } if reranked.nil?
 
       es_response["hits"]["hits"] = reranked
-      { reranked: true, es_response: es_response }
+      { reranked: true, es_response: }
     end
 
     def process_es_response(search_params, builder, payload, es_response, reranked)
@@ -111,13 +111,13 @@ module Search
       presented_aggregates = present_aggregates_with_examples(search_params, es_response, builder)
 
       ResultSetPresenter.new(
-        search_params: search_params,
-        es_response: es_response,
-        registries: registries,
-        presented_aggregates: presented_aggregates,
+        search_params:,
+        es_response:,
+        registries:,
+        presented_aggregates:,
         schema: index.schema,
         query_payload: payload,
-        reranked: reranked,
+        reranked:,
       ).present
     end
 

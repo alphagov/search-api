@@ -115,6 +115,6 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
   def elasticsearch_presenter(payload, type = "aaib_report")
     type_mapper = GovukIndex::DocumentTypeMapper.new(payload)
     allow(type_mapper).to receive(:type).and_return(type)
-    described_class.new(payload: payload, type_mapper: type_mapper)
+    described_class.new(payload:, type_mapper:)
   end
 end

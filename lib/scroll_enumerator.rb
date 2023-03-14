@@ -56,7 +56,7 @@ private
   attr_reader :client
 
   def next_page(scroll_id)
-    client.scroll(scroll_id: scroll_id, scroll: "#{SCROLL_TIMEOUT_MINUTES}m")
+    client.scroll(scroll_id:, scroll: "#{SCROLL_TIMEOUT_MINUTES}m")
   end
 
   def initial_scroll_result(batch_size, search_body)
@@ -67,7 +67,7 @@ private
       index: @index_names,
       scroll: "#{SCROLL_TIMEOUT_MINUTES}m",
       size: batch_size,
-      body: body,
+      body:,
       search_type: "query_then_fetch",
       version: true,
     )

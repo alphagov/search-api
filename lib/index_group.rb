@@ -142,7 +142,7 @@ module SearchIndices
       expand_wildcards << "closed" if include_closed
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
-      indices = @client.indices.get(index: "#{@name}*", expand_wildcards: expand_wildcards)
+      indices = @client.indices.get(index: "#{@name}*", expand_wildcards:)
       indices.select { |name| name_pattern.match name }
     end
 

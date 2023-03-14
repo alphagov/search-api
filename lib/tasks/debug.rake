@@ -63,7 +63,7 @@ namespace :debug do
       raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME envvar" if bucket_name.nil?
 
       csv = Tempfile.open(["judgements", ".csv"])
-      o = Aws::S3::Object.new(bucket_name: bucket_name, key: "judgements.csv")
+      o = Aws::S3::Object.new(bucket_name:, key: "judgements.csv")
       o.get(response_target: csv.path)
       csv.path
     end

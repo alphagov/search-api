@@ -3,8 +3,8 @@ require "spec_helper"
 RSpec.describe GovukIndex::IndexableContentPresenter do
   subject do
     described_class.new(
-      format: format,
-      details: details,
+      format:,
+      details:,
       sanitiser: GovukIndex::IndexableContentSanitiser.new,
     )
   end

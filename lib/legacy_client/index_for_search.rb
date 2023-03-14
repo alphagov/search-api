@@ -30,7 +30,7 @@ module LegacyClient
     end
 
     def get_document_by_link(link)
-      results = raw_search(query: { term: { link: link } }, size: 1)
+      results = raw_search(query: { term: { link: } }, size: 1)
       raw_result = results["hits"]["hits"].first
 
       if raw_result
@@ -54,11 +54,11 @@ module LegacyClient
     def documents_by_format(format, field_definitions)
       batch_size = 500
       search_body = {
-        query: { term: { format: format } },
+        query: { term: { format: } },
         _source: { includes: field_definitions.keys },
       }
 
-      ScrollEnumerator.new(client: @client, search_body: search_body, batch_size: batch_size, index_names: @index_names) do |hit|
+      ScrollEnumerator.new(client: @client, search_body:, batch_size:, index_names: @index_names) do |hit|
         MultivalueConverter.new(hit["_source"], field_definitions).converted_hash
       end
     end

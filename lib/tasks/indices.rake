@@ -8,7 +8,7 @@ namespace :search do
       puts "CLUSTER #{cluster.key}"
       puts "===================================================="
       index_names.each do |name|
-        index_group = search_server(cluster: cluster).index_group(name)
+        index_group = search_server(cluster:).index_group(name)
         active_index_name = index_group.current.real_name
         index_names = if show_all
                         index_group.index_names
@@ -54,7 +54,7 @@ namespace :search do
   task :lock, :clusters do |_, args|
     clusters_from_args(args).each do |cluster|
       index_names.each do |index_name|
-        search_server(cluster: cluster).index(index_name).lock
+        search_server(cluster:).index(index_name).lock
       end
     end
   end
@@ -63,7 +63,7 @@ namespace :search do
   task :unlock, :clusters do |_, args|
     clusters_from_args(args).each do |cluster|
       index_names.each do |index_name|
-        search_server(cluster: cluster).index(index_name).unlock
+        search_server(cluster:).index(index_name).unlock
       end
     end
   end
@@ -124,7 +124,7 @@ this task will run against all active clusters.
       failed_indices = []
 
       index_names.each do |index_name|
-        migrator = SchemaMigrator.new(index_name, cluster: cluster)
+        migrator = SchemaMigrator.new(index_name, cluster:)
         migrator.reindex
 
         if migrator.failed == true
@@ -148,7 +148,7 @@ this task will run against all active clusters.
     # run on production without some serious consideration.
     clusters_from_args(args).each do |cluster|
       index_names.each do |index_name|
-        index_group = search_server(cluster: cluster).index_group(index_name)
+        index_group = search_server(cluster:).index_group(index_name)
         index_group.switch_to index_group.create_index
       end
     end
@@ -168,7 +168,7 @@ this task will run against all active clusters.
         next unless new_index_name.include?(index_name)
 
         puts "Switching #{index_name} -> #{args.new_index_name}"
-        index_group = search_server(cluster: cluster).index_group(index_name)
+        index_group = search_server(cluster:).index_group(index_name)
         index_group.switch_to(index_group.index_for_name(new_index_name))
       end
     end
@@ -181,7 +181,7 @@ this task will run against all active clusters.
     # data into it.
     Clusters.active.each do |cluster|
       index_names.each do |index_name|
-        search_server(cluster: cluster).index_group(index_name).clean
+        search_server(cluster:).index_group(index_name).clean
       end
     end
   end
@@ -190,7 +190,7 @@ this task will run against all active clusters.
   task :timed_clean do
     Clusters.active.each do |cluster|
       index_names.each do |index_name|
-        search_server(cluster: cluster).index_group(index_name).timed_clean(max_index_age)
+        search_server(cluster:).index_group(index_name).timed_clean(max_index_age)
       end
     end
   end
@@ -211,13 +211,13 @@ this task will run against all active clusters.
   desc "Monitor the search indices and send data to statsd"
   task :monitor_indices do
     Clusters.active.each do |cluster|
-      client = Services.elasticsearch(cluster: cluster)
+      client = Services.elasticsearch(cluster:)
       statsd = Services.statsd_client
       missing = []
       cluster_name = "cluster_#{cluster.key}"
 
       SearchConfig.all_index_names.each do |index|
-        stats = client.indices.stats index: index, docs: true
+        stats = client.indices.stats index:, docs: true
         docs = stats["_all"]["primaries"]["docs"]
 
         count = docs["count"]
@@ -255,8 +255,8 @@ this task will run against all active clusters.
 
       taxons = {}
       ScrollEnumerator.new(
-        client: client,
-        search_body: { query: { term: { format: format } } },
+        client:,
+        search_body: { query: { term: { format: } } },
         batch_size: 500,
         index_names: index,
       ) { |hit| hit }.map do |hit|

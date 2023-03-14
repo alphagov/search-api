@@ -13,8 +13,8 @@ module GovukIndex
 
     def initialize(source_index:, destination_index:)
       super(
-        source_index: source_index,
-        destination_index: destination_index,
+        source_index:,
+        destination_index:,
       )
     end
 

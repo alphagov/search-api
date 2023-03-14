@@ -27,7 +27,7 @@ module ContentItemPublisher
     end
 
     def present_links
-      { content_id: content_id, links: {} }
+      { content_id:, links: {} }
     end
 
     def description

@@ -7,7 +7,7 @@ module LearnToRank
     class InvalidContainerResponse < LearnToRankError; end
 
     def report_error(err, extra: {})
-      GovukError.notify(err, extra: extra)
+      GovukError.notify(err, extra:)
       log_error(err)
     end
 

@@ -84,7 +84,7 @@ module IntegrationSpecHelper
     version_details =
       if version
         {
-          version: version,
+          version:,
           version_type: "external",
         }
       else
@@ -98,10 +98,10 @@ module IntegrationSpecHelper
     atts[:link] ||= id
 
     clusters.each do |cluster|
-      client(cluster: cluster).index(
+      client(cluster:).index(
         {
           index: index_name,
-          id: id,
+          id:,
           type: "generic-document",
           body: atts,
         }.merge(version_details),
@@ -115,11 +115,11 @@ module IntegrationSpecHelper
     commit_index index
 
     clusters.map do |cluster|
-      hits = client(cluster: cluster).search(index: index, size: 1000)["hits"]["hits"]
+      hits = client(cluster:).search(index:, size: 1000)["hits"]["hits"]
 
       next if hits.empty?
 
-      client(cluster: cluster)
+      client(cluster:)
         .bulk(body: (hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } }))
     end
 
@@ -130,7 +130,7 @@ module IntegrationSpecHelper
     atts = attributes.symbolize_keys
     id ||= atts[:link]
 
-    return_id = insert_document(index_name, atts, id: id, type: type)
+    return_id = insert_document(index_name, atts, id:, type:)
     commit_index(index_name)
     return_id
   end
@@ -138,14 +138,14 @@ module IntegrationSpecHelper
   def update_document(index_name, attributes, id: nil, type: "edition")
     attributes["document_type"] ||= type
     clusters.each do |cluster|
-      client(cluster: cluster).update(index: index_name, id: id, type: "generic-document", body: { doc: atts })
+      client(cluster:).update(index: index_name, id:, type: "generic-document", body: { doc: atts })
     end
     commit_index(index_name)
   end
 
   def commit_index(index_name)
     clusters.each do |cluster|
-      client(cluster: cluster).indices.refresh(index: index_name)
+      client(cluster:).indices.refresh(index: index_name)
     end
   end
 
@@ -156,7 +156,7 @@ module IntegrationSpecHelper
   def client(cluster: Clusters.default_cluster)
     # Set a fairly long timeout to avoid timeouts on index creation on the CI
     # servers
-    Services.elasticsearch(cluster: cluster, timeout: 10)
+    Services.elasticsearch(cluster:, timeout: 10)
   end
 
   def parsed_response
@@ -165,7 +165,7 @@ module IntegrationSpecHelper
 
   def expect_document_is_in_rummager(document, index:, type: "edition", id: nil, clusters: Clusters.active)
     clusters.each do |cluster|
-      retrieved = fetch_document_from_rummager(id: id || document["link"], index: index, cluster: cluster)
+      retrieved = fetch_document_from_rummager(id: id || document["link"], index:, cluster:)
 
       retrieved_source = retrieved["_source"]
       expect(retrieved_source["document_type"]).to eq(type)
@@ -178,7 +178,7 @@ module IntegrationSpecHelper
   def expect_document_missing_in_rummager(id:, index:)
     clusters.each do |cluster|
       expect {
-        fetch_document_from_rummager(id: id, index: index, cluster: cluster)
+        fetch_document_from_rummager(id:, index:, cluster:)
       }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
     end
   end
@@ -209,7 +209,7 @@ module IntegrationSpecHelper
   end
 
   def add_sample_documents(index_name, count, override: {})
-    attributes = sample_document_attributes(index_name, count, override: override)
+    attributes = sample_document_attributes(index_name, count, override:)
     data = attributes.flat_map do |sample_document|
       [
         { index: { _id: sample_document["link"], _type: "generic-document" } },
@@ -217,7 +217,7 @@ module IntegrationSpecHelper
       ]
     end
 
-    clusters.each { |cluster| client(cluster: cluster).bulk(index: index_name, body: data) }
+    clusters.each { |cluster| client(cluster:).bulk(index: index_name, body: data) }
     commit_index(index_name)
   end
 
@@ -226,15 +226,15 @@ module IntegrationSpecHelper
       index_name ||= SearchConfig.instance(cluster).default_index_name
       raise "Attempting to delete non-test index: #{index_name}" unless index_name =~ /test/
 
-      if client(cluster: cluster).indices.exists?(index: index_name)
-        client(cluster: cluster).indices.delete(index: index_name)
+      if client(cluster:).indices.exists?(index: index_name)
+        client(cluster:).indices.delete(index: index_name)
       end
     end
   end
 
   def stub_message_payload(example_document, unpublishing: false)
     routing_key = unpublishing ? "test.unpublish" : "test.a_routing_key"
-    double(:message, ack: true, payload: example_document, delivery_info: { routing_key: routing_key })
+    double(:message, ack: true, payload: example_document, delivery_info: { routing_key: })
   end
 
 private
@@ -251,10 +251,10 @@ private
   end
 
   def fetch_document_from_rummager(id:, index:, type: "_all", cluster: Clusters.default_cluster)
-    client(cluster: cluster).get(
-      index: index,
-      type: type,
-      id: id,
+    client(cluster:).get(
+      index:,
+      type:,
+      id:,
     )
   end
 end

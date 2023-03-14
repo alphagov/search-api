@@ -33,7 +33,7 @@ RSpec.describe "Person publishing" do
         base_path: "/government/people/mark-smith",
         description: "A person.",
         expanded_links: {
-          role_appointments: role_appointments,
+          role_appointments:,
         },
       },
     )

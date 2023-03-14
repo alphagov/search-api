@@ -24,7 +24,7 @@ module Index
 
     def bulk(params)
       clusters.map do |cluster|
-        client(cluster: cluster).bulk(
+        client(cluster:).bulk(
           params.merge(index: index_name),
         )
       end
@@ -37,7 +37,7 @@ module Index
     def client(cluster: Clusters.default_cluster)
       @_client ||= {}
       @_client[cluster.key] ||= Services.elasticsearch(
-        cluster: cluster,
+        cluster:,
         timeout: @_options[:timeout] || TIMEOUT_SECONDS,
         retry_on_failure: true,
       )

@@ -19,8 +19,8 @@ namespace :delete do
       client = Services.elasticsearch(cluster: Clusters.default_cluster, timeout: 5.0)
 
       delete_commands = ScrollEnumerator.new(
-        client: client,
-        search_body: { query: { term: { format: format } } },
+        client:,
+        search_body: { query: { term: { format: } } },
         batch_size: 500,
         index_names: index,
       ) { |hit| hit }.map do |hit|
@@ -41,7 +41,7 @@ namespace :delete do
           client.bulk(body: slice)
         end
 
-        client.indices.refresh(index: index)
+        client.indices.refresh(index:)
       end
     end
   end

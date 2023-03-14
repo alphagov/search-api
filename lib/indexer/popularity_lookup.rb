@@ -34,7 +34,7 @@ module Indexer
         view_count = hit.dig("_source", "vc_14") || 1
         next if rank.nil?
 
-        hsh[link] = { rank: rank, view_count: view_count }
+        hsh[link] = { rank:, view_count: }
       end
 
       Hash[links.map do |link|
@@ -51,9 +51,9 @@ module Indexer
         [
           link,
           {
-            popularity_score: popularity_score,
-            popularity_rank: popularity_rank,
-            view_count: view_count,
+            popularity_score:,
+            popularity_rank:,
+            view_count:,
           },
         ]
       end]

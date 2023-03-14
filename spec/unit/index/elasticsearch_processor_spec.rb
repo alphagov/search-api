@@ -18,7 +18,12 @@ RSpec.describe Index::ElasticsearchProcessor do
 
     client = double("client")
     allow(Services).to receive("elasticsearch").and_return(client)
-    expect(client).to receive(:bulk).exactly(cluster_count).times.with(index: SearchConfig.govuk_index_name, body: [{ index: presenter.identifier }, presenter.document])
+    expect(client).to receive(:bulk).exactly(cluster_count).times.with({
+      index: SearchConfig.govuk_index_name,
+      body: [
+        { index: presenter.identifier }, presenter.document
+      ],
+    })
 
     subject.save(presenter)
     subject.commit
@@ -37,14 +42,14 @@ RSpec.describe Index::ElasticsearchProcessor do
 
     client = double("client")
     allow(Services).to receive("elasticsearch").and_return(client)
-    expect(client).to receive(:bulk).exactly(cluster_count).times.with(
+    expect(client).to receive(:bulk).exactly(cluster_count).times.with({
       index: SearchConfig.govuk_index_name,
       body: [
         {
           delete: presenter.identifier,
         },
       ],
-    )
+    })
 
     subject.delete(presenter)
     subject.commit

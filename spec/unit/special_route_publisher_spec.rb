@@ -10,7 +10,7 @@ RSpec.describe SpecialRoutePublisher do
 
     @publisher = described_class.new(
       publishing_api: @publishing_api,
-      logger: logger,
+      logger:,
     )
   end
 

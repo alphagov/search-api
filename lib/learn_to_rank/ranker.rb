@@ -54,7 +54,7 @@ module LearnToRank
 
       if response.nil? || response.body.blank?
         logger.debug "SageMaker: No response from ranker!"
-        report_error(InvalidSageMakerResponse.new, extra: { response: response })
+        report_error(InvalidSageMakerResponse.new, extra: { response: })
         return nil
       else
         logger.debug "SageMaker: #{response.body}"
@@ -84,7 +84,7 @@ module LearnToRank
 
       if response.body.nil? || response.body.empty? || response.code != 200
         logger.debug "TF Serving: status_code: 500, message: No response from ranker!"
-        report_error(InvalidContainerResponse.new, extra: { response: response })
+        report_error(InvalidContainerResponse.new, extra: { response: })
         return nil
       else
         logger.debug "TF Serving: status_code: #{response.code}, message: #{response.message}"

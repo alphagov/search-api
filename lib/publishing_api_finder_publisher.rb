@@ -15,7 +15,7 @@ class FinderContentItemPresenter
     {
       base_path: schema["base_path"],
       description: schema["description"],
-      details: details,
+      details:,
       document_type: schema["document_type"],
       locale: "en",
       phase: "live",
@@ -35,7 +35,7 @@ class FinderContentItemPresenter
     links["parent"] = Array(schema["parent"]) if schema.key?("parent")
     links["ordered_related_items"] = Array(schema["ordered_related_items"]) if schema.key?("ordered_related_items")
 
-    { content_id: content_id, links: links }
+    { content_id:, links: }
   end
 
   def details
@@ -69,7 +69,7 @@ class FinderEmailSignupContentItemPresenter
     {
       base_path: path,
       description: schema["signup_copy"],
-      details: details,
+      details:,
       document_type: "finder_email_signup",
       locale: "en",
       phase: "live",
@@ -84,7 +84,7 @@ class FinderEmailSignupContentItemPresenter
   end
 
   def present_links
-    { content_id: content_id, links: {} }
+    { content_id:, links: {} }
   end
 
   def email_filter_facets

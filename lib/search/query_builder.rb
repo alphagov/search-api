@@ -18,11 +18,11 @@ module Search
         _source: {
           includes: fields.uniq,
         },
-        query: query,
+        query:,
         post_filter: filter,
-        sort: sort,
+        sort:,
         aggs: aggregates,
-        highlight: highlight,
+        highlight:,
         explain: search_params.debug[:explain] || search_params.rerank,
       )
     end
@@ -76,7 +76,7 @@ module Search
     attr_reader :content_index_names, :metasearch_index
 
     def best_bets
-      QueryComponents::BestBets.new(metasearch_index: metasearch_index, search_params: search_params)
+      QueryComponents::BestBets.new(metasearch_index:, search_params:)
     end
 
     def popularity_boost
