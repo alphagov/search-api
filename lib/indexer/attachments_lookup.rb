@@ -67,7 +67,7 @@ module Indexer
           e,
           extra: {
             error_message: "Timeout fetching content item",
-            content_id: content_id,
+            content_id:,
           },
         )
         raise Indexer::PublishingApiError
@@ -86,7 +86,7 @@ module Indexer
           e,
           extra: {
             message: "HTTP error fetching content item",
-            content_id: content_id,
+            content_id:,
             error_code: e.code,
             error_message: e.message,
             error_details: e.error_details,

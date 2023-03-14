@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe GovukIndex::DetailsPresenter do
-  subject(:presented_details) { described_class.new(details: details, format: format) }
+  subject(:presented_details) { described_class.new(details:, format:) }
 
   context "licence format" do
     let(:format) { "licence" }

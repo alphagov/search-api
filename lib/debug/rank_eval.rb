@@ -23,7 +23,7 @@ module Debug
         raise "missing link for row '#{row}" if link.nil?
 
         data[query] = data.fetch(query, [])
-        data[query] << { score: score.to_i, link: link }
+        data[query] << ({ score: score.to_i, link: })
 
         last_query = query
       end
@@ -63,7 +63,7 @@ module Debug
       @queries ||= @data.each_with_object({}) do |(query, judgements), queries|
         queries[query] = {
           es_query: SearchConfig.generate_query(@search_params.merge("q" => [query])),
-          judgements: judgements,
+          judgements:,
         }
       end
     end
@@ -83,7 +83,7 @@ module Debug
 
       uri = @search_config.base_uri
       options = {
-        body: { requests: requests, metric: { dcg: { k: 10, normalize: true } } }.to_json,
+        body: { requests:, metric: { dcg: { k: 10, normalize: true } } }.to_json,
         headers: { "Content-Type" => "application/json" },
       }
       indices = "*"

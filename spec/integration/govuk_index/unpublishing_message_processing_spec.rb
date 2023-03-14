@@ -45,22 +45,22 @@ RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
     base_path = message.payload["base_path"]
     type = "edition"
 
-    commit_document("govuk_test", { "link" => base_path }, id: base_path, type: type)
+    commit_document("govuk_test", { "link" => base_path }, id: base_path, type:)
 
-    expect_document_is_in_rummager({ "link" => base_path, "is_withdrawn" => nil }, index: "govuk_test", type: type)
+    expect_document_is_in_rummager({ "link" => base_path, "is_withdrawn" => nil }, index: "govuk_test", type:)
     processor = GovukIndex::PublishingEventProcessor.new
 
     processor.process(message)
     commit_index("govuk_test")
 
-    expect_document_is_in_rummager({ "link" => base_path, "is_withdrawn" => true }, index: "govuk_test", type: type)
+    expect_document_is_in_rummager({ "link" => base_path, "is_withdrawn" => true }, index: "govuk_test", type:)
   end
 
   def unpublishing_event_message(schema_name, user_defined: {}, excluded_fields: [])
     payload = generate_random_example(
       schema: schema_name,
       payload: user_defined,
-      excluded_fields: excluded_fields,
+      excluded_fields:,
     )
     stub_message_payload(payload, unpublishing: true)
   end

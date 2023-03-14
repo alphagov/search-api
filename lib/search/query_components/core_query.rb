@@ -106,7 +106,7 @@ module QueryComponents
       {
         match: {
           synonym_field(field_name) => {
-            boost: boost,
+            boost:,
             query: escape(query),
             analyzer: query_analyzer,
             minimum_should_match: MINIMUM_SHOULD_MATCH,
@@ -119,7 +119,7 @@ module QueryComponents
       {
         match_phrase: {
           synonym_field(field_name) => {
-            boost: boost,
+            boost:,
             query: escape(query),
             analyzer: query_analyzer,
           },
@@ -132,10 +132,10 @@ module QueryComponents
 
       {
         multi_match: {
-          boost: boost,
+          boost:,
           query: escape(query),
           operator: "and",
-          fields: fields,
+          fields:,
           analyzer: query_analyzer,
         },
       }
@@ -146,10 +146,10 @@ module QueryComponents
 
       {
         multi_match: {
-          boost: boost,
+          boost:,
           query: escape(query),
           operator: "or",
-          fields: fields,
+          fields:,
           analyzer: query_analyzer,
         },
       }
@@ -162,10 +162,10 @@ module QueryComponents
 
       {
         multi_match: {
-          boost: boost,
+          boost:,
           query: escape(query),
           operator: "or",
-          fields: fields,
+          fields:,
           analyzer: "shingled_query_analyzer",
         },
       }
@@ -187,8 +187,8 @@ module QueryComponents
       {
         match_phrase: {
           field_name => {
-            boost: boost,
-            query: query,
+            boost:,
+            query:,
           },
         },
       }

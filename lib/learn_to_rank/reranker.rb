@@ -12,14 +12,14 @@ module LearnToRank
     # Reranker re-orders elasticsearch results using a pre-trained model
     def rerank(model_variant:, query: "", es_results: [])
       feature_sets = fetch_feature_sets(query, es_results)
-      new_scores = fetch_new_scores(feature_sets, model_variant: model_variant)
+      new_scores = fetch_new_scores(feature_sets, model_variant:)
       return nil if new_scores.nil?
 
       log_reranking
 
       reorder_results(es_results, new_scores)
     rescue StandardError => e
-      report_error(e, extra: { query: query })
+      report_error(e, extra: { query: })
     end
 
   private
@@ -34,7 +34,7 @@ module LearnToRank
 
     def fetch_new_scores(feature_sets, model_variant:)
       GovukStatsd.time("reranker.fetch_scores") do
-        Ranker.new(feature_sets, model_variant: model_variant).ranks
+        Ranker.new(feature_sets, model_variant:).ranks
       end
     end
 

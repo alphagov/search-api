@@ -87,7 +87,7 @@ RSpec.describe Search::AggregateResultPresenter do
 
   def aggregate_params(requested, options = {})
     {
-      requested: requested,
+      requested:,
       order: SearchParameterParser::DEFAULT_AGGREGATE_SORT,
       scope: :exclude_field_filter,
     }.merge(options)
@@ -99,8 +99,8 @@ RSpec.describe Search::AggregateResultPresenter do
       Search::QueryParameters.new(
         start: 0,
         aggregate_name: :aggregates,
-        aggregates: aggregates,
-        filters: filters,
+        aggregates:,
+        filters:,
       ),
       registries,
     ).presented_aggregates

@@ -42,7 +42,7 @@ module RankerTestHelpers
       .with(
         body: {
           signature_name: "regression",
-          examples: examples,
+          examples:,
         }.to_json,
         headers: {
           "Content-Type" => "application/json",

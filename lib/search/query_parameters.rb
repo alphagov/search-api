@@ -20,7 +20,7 @@ module Search
 
     # starts and ends with quotes with no quotes in between, with or without
     # leading or trailing whitespace
-    QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/.freeze
+    QUOTED_STRING_REGEX = /^\s*"[^"]+"\s*$/
 
     def initialize(params = {})
       params = {

@@ -187,8 +187,8 @@ private
       "#{type}_query" => query,
       details: JSON.generate(
         {
-          best_bets: best_bets,
-          worst_bets: worst_bets,
+          best_bets:,
+          worst_bets:,
         },
       ),
       _type: "best_bet",

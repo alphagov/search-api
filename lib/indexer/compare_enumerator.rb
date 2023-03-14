@@ -45,9 +45,9 @@ module Indexer
       search_body[:sort] ||= DEFAULT_SORT
 
       ScrollEnumerator.new(
-        client: client,
+        client:,
         index_names: index_name,
-        search_body: search_body,
+        search_body:,
         batch_size: BATCH_SIZE,
       ) do |document|
         flattened_document(document)
@@ -81,7 +81,7 @@ module Indexer
     end
 
     def client
-      Services.elasticsearch(cluster: cluster, timeout: 30.0)
+      Services.elasticsearch(cluster:, timeout: 30.0)
     end
 
     def search_config

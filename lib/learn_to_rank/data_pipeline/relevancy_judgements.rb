@@ -50,7 +50,7 @@ module LearnToRank::DataPipeline
                           end
 
         {
-          query: query,
+          query:,
           score: relevancy_score,
           link: document[:link],
         }

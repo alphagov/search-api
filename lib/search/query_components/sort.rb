@@ -23,7 +23,7 @@ module QueryComponents
       [
         {
           field => {
-            order: order,
+            order:,
             missing: "_last",
             # not all indices have all fields, so if the field is
             # missing treat it as an integer (any type would work,

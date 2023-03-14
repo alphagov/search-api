@@ -11,8 +11,8 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
 
     document_count = 4
     document_rank = 2
-    insert_document("page-traffic_test", { rank_14: document_rank, path_components: [id, "/test"] }, id: id, type: "page-traffic")
-    setup_page_traffic_data(document_count: document_count)
+    insert_document("page-traffic_test", { rank_14: document_rank, path_components: [id, "/test"] }, id:, type: "page-traffic")
+    setup_page_traffic_data(document_count:)
 
     popularity = 1.0 / ([document_rank, document_count].min + SearchConfig.popularity_rank_offset)
 
@@ -26,7 +26,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
     commit_index("govuk_test")
 
     document_count = 4
-    setup_page_traffic_data(document_count: document_count)
+    setup_page_traffic_data(document_count:)
 
     popularity = 1.0 / (document_count + SearchConfig.popularity_rank_offset)
 
@@ -40,7 +40,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
     commit_index("govuk_test")
 
     document_count = 4
-    setup_page_traffic_data(document_count: document_count)
+    setup_page_traffic_data(document_count:)
 
     allow(ScrollEnumerator).to receive(:new).and_return([
       {
@@ -59,7 +59,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
     commit_index("govuk_test")
     GovukIndex::PopularityUpdater.update("govuk_test")
 
-    document = fetch_document_from_rummager(id: id, index: "govuk_test")
+    document = fetch_document_from_rummager(id:, index: "govuk_test")
     expect(document["_version"]).to eq(3)
   end
 
@@ -68,7 +68,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
     commit_index("govuk_test")
     GovukIndex::PopularityUpdater.update("govuk_test")
 
-    document = fetch_document_from_rummager(id: id, index: "govuk_test")
+    document = fetch_document_from_rummager(id:, index: "govuk_test")
     expect(0.222).to eq(document["_source"]["popularity"])
   end
 
@@ -77,12 +77,12 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
     commit_index("govuk_test")
 
     document_count = 4
-    setup_page_traffic_data(document_count: document_count)
+    setup_page_traffic_data(document_count:)
 
     GovukIndex::PopularityUpdater.update("govuk_test", process_all: true)
     popularity = 1.0 / (document_count + SearchConfig.popularity_rank_offset)
 
-    document = fetch_document_from_rummager(id: id, index: "govuk_test")
+    document = fetch_document_from_rummager(id:, index: "govuk_test")
     expect(popularity).to eq(document["_source"]["popularity"])
   end
 end

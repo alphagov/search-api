@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe QueryComponents::Filter do
   def make_search_params(filters, include_withdrawn: true)
-    Search::QueryParameters.new(filters: filters, debug: { include_withdrawn: include_withdrawn })
+    Search::QueryParameters.new(filters:, debug: { include_withdrawn: })
   end
 
   def make_date_filter_param(field_name, values)

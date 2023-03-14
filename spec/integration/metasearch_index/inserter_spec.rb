@@ -35,7 +35,7 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
     }
-    described_class.new(id: "ca3916-exact", document: document).insert
+    described_class.new(id: "ca3916-exact", document:).insert
     commit_index("metasearch_test")
 
     expect_document_is_in_rummager(document, type: "best_bet", index: "metasearch_test", id: "ca3916-exact")
@@ -47,7 +47,7 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "exact_query" => nil,
       "stemmed_query" => "car taxes",
     }
-    described_class.new(id: "car tax-stemmed", document: document).insert
+    described_class.new(id: "car tax-stemmed", document:).insert
     commit_index("metasearch_test")
 
     expect_document_is_in_rummager(
@@ -70,7 +70,7 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "exact_query" => "ca3916",
       "stemmed_query" => nil,
     }
-    described_class.new(id: "ca3916-exact", document: document).insert
+    described_class.new(id: "ca3916-exact", document:).insert
     commit_index("metasearch_test")
 
     expect_document_is_in_rummager(document, type: "best_bet", index: "metasearch_test", id: "ca3916-exact")
@@ -88,7 +88,7 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "stemmed_query" => nil,
     }
     expect {
-      described_class.new(id: "ca3916-exact", document: document).insert
+      described_class.new(id: "ca3916-exact", document:).insert
     }.to raise_error(Index::ResponseValidator::ElasticsearchError)
   end
 end

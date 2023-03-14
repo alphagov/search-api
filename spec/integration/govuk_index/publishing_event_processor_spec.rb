@@ -44,7 +44,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       document_count = 4
       document_rank = 2
       insert_document("page-traffic_test", { rank_14: document_rank, path_components: [random_example["base_path"]] }, id: random_example["base_path"], type: "page-traffic")
-      setup_page_traffic_data(document_count: document_count)
+      setup_page_traffic_data(document_count:)
 
       popularity = 1.0 / ([document_count, document_rank].min + SearchConfig.popularity_rank_offset)
 
@@ -186,6 +186,6 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
   end
 
   def client(cluster: Cluster.default_cluster)
-    @client ||= Services.elasticsearch(cluster: cluster)
+    @client ||= Services.elasticsearch(cluster:)
   end
 end

@@ -119,7 +119,7 @@ class Rummager < Sinatra::Application
     GovukError.notify(
       env["sinatra.error"],
       extra: {
-        params: params,
+        params:,
       },
     )
 
@@ -138,7 +138,7 @@ class Rummager < Sinatra::Application
     GovukError.notify(
       env["sinatra.error"],
       extra: {
-        params: params,
+        params:,
       },
     )
     halt(500, env["sinatra.error"].message)
@@ -186,7 +186,7 @@ class Rummager < Sinatra::Application
       end
 
       headers["Access-Control-Allow-Origin"] = "*"
-      { results: results }.to_json
+      { results: }.to_json
     end
   end
 
@@ -212,7 +212,7 @@ class Rummager < Sinatra::Application
     require_authentication "manage_search_indices"
     document = JSON.parse(request.body.read)
 
-    inserter = MetasearchIndex::Inserter::V2.new(id: document["_id"], document: document)
+    inserter = MetasearchIndex::Inserter::V2.new(id: document["_id"], document:)
     inserter.insert
 
     json_result 200, "Success"
@@ -244,7 +244,7 @@ class Rummager < Sinatra::Application
     require_authentication "manage_search_indices"
     id = params["splat"].first
 
-    deleter = MetasearchIndex::Deleter::V2.new(id: id)
+    deleter = MetasearchIndex::Deleter::V2.new(id:)
     deleter.delete
 
     json_result 200, "Success"
@@ -327,7 +327,7 @@ class Rummager < Sinatra::Application
   end
 
   def serve_from_s3(key)
-    o = Aws::S3::Object.new(bucket_name: ENV["AWS_S3_SITEMAPS_BUCKET_NAME"], key: key)
+    o = Aws::S3::Object.new(bucket_name: ENV["AWS_S3_SITEMAPS_BUCKET_NAME"], key:)
 
     headers "Content-Type" => "application/xml",
             "Cache-Control" => "public",
@@ -373,7 +373,7 @@ class Rummager < Sinatra::Application
     end
 
     headers = { "WWW-Authenticate" => %(Bearer error=#{bearer_error}) }
-    body = { message: message }.to_json
+    body = { message: }.to_json
     halt(401, headers, body)
   end
 end

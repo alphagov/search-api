@@ -31,7 +31,7 @@ module Services
       hosts: cluster ? cluster.uri : hosts,
       request_timeout: timeout,
       logger: Logging.logger[self],
-      retry_on_failure: retry_on_failure,
+      retry_on_failure:,
       transport_options: { headers: { "Content-Type" => "application/json" } },
     )
   end

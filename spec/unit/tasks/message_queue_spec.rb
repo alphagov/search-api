@@ -18,7 +18,7 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
         .with(
           queue_name: "search_api_to_be_indexed",
           processor: indexer,
-          statsd_client: statsd_client,
+          statsd_client:,
         ).and_return(consumer)
 
       Rake::Task["message_queue:listen_to_publishing_queue"].invoke

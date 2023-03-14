@@ -9,10 +9,10 @@ RSpec.describe "Loading page traffic data" do
     ].join("\n")
 
     Clusters.active.each do |cluster|
-      GovukIndex::PageTrafficLoader.new(cluster: cluster)
+      GovukIndex::PageTrafficLoader.new(cluster:)
         .load_from(StringIO.new(data))
 
-      document = fetch_document_from_rummager(id: id, index: "page-traffic_test", cluster: cluster)
+      document = fetch_document_from_rummager(id:, index: "page-traffic_test", cluster:)
 
       expect(document["_source"]["document_type"]).to eq("page_traffic")
       expect(document["_source"]["rank_14"]).to eq(100)

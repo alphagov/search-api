@@ -6,7 +6,7 @@ module Search
       Regexp.new("(#{escaped})")
     end
 
-    LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/.freeze
+    LUCENE_BOOLEANS = /\b(AND|OR|NOT)\b/
 
     def escape(string)
       # 6 slashes =>

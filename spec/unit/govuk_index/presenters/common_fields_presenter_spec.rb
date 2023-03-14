@@ -86,7 +86,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     expect(@popularity_lookup).to receive(:lookup_popularities).with([payload["base_path"]]).and_return(
       payload["base_path"] => {
         popularity_score: popularity,
-        popularity_rank: popularity_rank,
+        popularity_rank:,
       },
     )
 

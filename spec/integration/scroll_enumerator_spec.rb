@@ -7,7 +7,7 @@ RSpec.describe "ScrollEnumeratorTest" do
     end
 
     results = ScrollEnumerator.new(
-      client: client,
+      client:,
       index_names: "govuk_test",
       search_body: { query: { match_all: {} } },
       batch_size: 4,
@@ -22,7 +22,7 @@ RSpec.describe "ScrollEnumeratorTest" do
     end
 
     results = ScrollEnumerator.new(
-      client: client,
+      client:,
       index_names: "govuk_test",
       search_body: { query: { match_all: {} }, sort: [{ _uid: { order: "asc" } }] },
       batch_size: 4,
@@ -33,7 +33,7 @@ RSpec.describe "ScrollEnumeratorTest" do
 
   it "returns expected results when empty result set" do
     results = ScrollEnumerator.new(
-      client: client,
+      client:,
       index_names: "govuk_test",
       search_body: { query: { match_all: {} } },
       batch_size: 4,

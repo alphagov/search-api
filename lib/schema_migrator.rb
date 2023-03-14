@@ -47,7 +47,7 @@ class SchemaMigrator
   end
 
   def comparison
-    @comparison ||= Indexer::Comparer.new(index_group.current.real_name, index.real_name, cluster: cluster, io: io).run
+    @comparison ||= Indexer::Comparer.new(index_group.current.real_name, index.real_name, cluster:, io:).run
   end
 
 private
@@ -58,7 +58,7 @@ private
 
   # this is awful but is caused by the return format of the tasks lists
   def running_tasks
-    tasks = Services.elasticsearch(cluster: cluster, retry_on_failure: 20, timeout: TIMEOUT_SECONDS).tasks.list(actions: "*reindex")
+    tasks = Services.elasticsearch(cluster:, retry_on_failure: 20, timeout: TIMEOUT_SECONDS).tasks.list(actions: "*reindex")
     nodes = tasks["nodes"] || {}
     node_details = nodes.values || []
     tasks = node_details.flat_map { |a| a["tasks"] }

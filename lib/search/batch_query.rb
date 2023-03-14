@@ -26,9 +26,9 @@ module Search
     def create_query_builders(searches_params)
       searches_params.map do |search_params|
         QueryBuilder.new(
-          search_params: search_params,
+          search_params:,
           content_index_names: SearchConfig.content_index_names,
-          metasearch_index: metasearch_index,
+          metasearch_index:,
         )
       end
     end

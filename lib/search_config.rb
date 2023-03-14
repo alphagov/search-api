@@ -159,7 +159,7 @@ class SearchConfig
   def rank_eval(requests:, metric:, indices: "*")
     client.rank_eval(
       index: indices,
-      body: { requests: requests, metric: metric },
+      body: { requests:, metric: },
     )
   end
 
@@ -169,19 +169,19 @@ private
 
   def searcher
     @searcher ||= Search::Query.new(
-      content_index: content_index,
-      registries: registries,
-      metasearch_index: metasearch_index,
-      spelling_index: spelling_index,
+      content_index:,
+      registries:,
+      metasearch_index:,
+      spelling_index:,
     )
   end
 
   def batch_searcher
     @batch_searcher ||= Search::BatchQuery.new(
-      content_index: content_index,
-      registries: registries,
-      metasearch_index: metasearch_index,
-      spelling_index: spelling_index,
+      content_index:,
+      registries:,
+      metasearch_index:,
+      spelling_index:,
     )
   end
 

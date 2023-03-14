@@ -81,7 +81,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
     version2 = generate_random_example(
       schema: "gone",
       payload: {
-        base_path: base_path,
+        base_path:,
         payload_version: 2,
       },
       excluded_fields: %w[withdrawn_notice],
@@ -112,7 +112,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
     version2 = generate_random_example(
       schema: "gone",
       payload: {
-        base_path: base_path,
+        base_path:,
         payload_version: 1,
       },
       excluded_fields: %w[withdrawn_notice],
@@ -146,6 +146,6 @@ RSpec.describe "GovukIndex::VersioningTest" do
   end
 
   def process_message(example_document, unpublishing: false)
-    @processor.process(stub_message_payload(example_document, unpublishing: unpublishing))
+    @processor.process(stub_message_payload(example_document, unpublishing:))
   end
 end

@@ -37,7 +37,7 @@ module LearnToRank::DataPipeline
   ORDER BY views desc
   LIMIT 500000"
 
-      bigquery = Google::Cloud::Bigquery.new(credentials: credentials)
+      bigquery = Google::Cloud::Bigquery.new(credentials:)
       bigquery.query sql, standard_sql: true
     end
   end

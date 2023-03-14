@@ -28,8 +28,8 @@ module Healthcheck
     def to_hash
       if enabled?
         {
-          status: status,
-          message: message,
+          status:,
+          message:,
         }.merge(details)
       else
         { status: :ok }

@@ -72,7 +72,7 @@ module LearnToRank
     def container_healthy?
       options = {
         headers: { "Content-Type" => "application/json" },
-        timeout: timeout, # seconds
+        timeout:, # seconds
       }
       response = HTTParty.get(tensorflow_container_url, options)
       validate_response!(response)

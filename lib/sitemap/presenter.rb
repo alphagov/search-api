@@ -9,9 +9,9 @@ class SitemapPresenter
 
   def to_h
     {
-      url: url,
-      last_updated: last_updated,
-      priority: priority,
+      url:,
+      last_updated:,
+      priority:,
     }
   end
 

@@ -16,7 +16,7 @@ module LearnToRank
           public_timestamp: res.dig("_source", "public_timestamp"),
           format: res.dig("_source", "format"),
           organisation_content_ids: res.dig("_source", "organisation_content_ids"),
-          query: query,
+          query:,
           updated_at: res.dig("_source", "updated_at"),
           indexable_content: res.dig("_source", "indexable_content"),
         ).as_hash

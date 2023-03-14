@@ -89,7 +89,7 @@ RSpec.describe Indexer::CompareEnumerator do
     data = { "_id" => "abc", "_type" => "generic-document", "_source" => { "custom" => "data", "document_type" => "stuff" } }
     search_body = { query: "custom_filter", sort: "by_stuff" }
 
-    stub_client_for_scroll_enumerator(return_values: [[data], []], search_body: search_body)
+    stub_client_for_scroll_enumerator(return_values: [[data], []], search_body:)
 
     enum = described_class.new("index_a", "index_b").get_enum("index_name", search_body)
 
@@ -131,7 +131,7 @@ private
     expect(client).to receive(:search).with(
       hash_including(
         index: "index_name",
-        search_type: search_type,
+        search_type:,
         body: search_body || {
           query: described_class::DEFAULT_QUERY,
           sort: described_class::DEFAULT_SORT,

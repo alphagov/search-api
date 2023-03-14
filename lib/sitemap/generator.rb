@@ -24,7 +24,7 @@ module Sitemap
       file_name = "sitemap_#{batch_number}.xml"
       @uploader.upload(
         file_content: generate_sitemap_xml(documents),
-        file_name: file_name,
+        file_name:,
       )
       file_name
     end
@@ -120,7 +120,7 @@ module Sitemap
     end
 
     def scroll(scroll_id)
-      @search_client.scroll(scroll_id: scroll_id, scroll: "1m")
+      @search_client.scroll(scroll_id:, scroll: "1m")
     end
 
     def scroll_query

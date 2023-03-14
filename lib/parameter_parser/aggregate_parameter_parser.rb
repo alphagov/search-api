@@ -32,12 +32,12 @@ private
     @params = parse_options_into_hash(options)
 
     @parsed_params = {
-      requested: requested,
-      scope: scope,
-      order: order,
-      examples: examples,
-      example_fields: example_fields,
-      example_scope: example_scope,
+      requested:,
+      scope:,
+      order:,
+      examples:,
+      example_fields:,
+      example_scope:,
     }
 
     if @parsed_params[:examples].positive? && !ALLOWED_EXAMPLE_SCOPES.include?(@parsed_params[:example_scope])

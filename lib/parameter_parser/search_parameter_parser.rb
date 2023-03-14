@@ -42,19 +42,19 @@ private
     @parsed_params = {
       start: capped_start,
       count: capped_count,
-      cluster: cluster,
+      cluster:,
       search_config: SearchConfig.instance(cluster),
-      query: query,
+      query:,
       parsed_query: parse_query(query),
       similar_to: normalize_query(single_param("similar_to"), "similar_to"),
-      order: order,
-      return_fields: return_fields,
-      filters: filters,
-      aggregates: aggregates,
+      order:,
+      return_fields:,
+      filters:,
+      aggregates:,
       aggregate_name: @aggregate_name,
       debug: debug_options,
       suggest: character_separated_param("suggest"),
-      ab_tests: ab_tests,
+      ab_tests:,
     }
 
     # Search can be run either with a text query or a base_path to find
@@ -126,7 +126,7 @@ private
 
     {
       unquoted: unquoted.join(" "),
-      quoted: quoted,
+      quoted:,
     }
   end
 
@@ -309,7 +309,7 @@ private
   end
 
   class DateFieldFilter < Filter
-    DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/.freeze
+    DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
     def initialize(field_name, values, operation, multivalue_query)
       super
