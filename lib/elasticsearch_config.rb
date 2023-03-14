@@ -14,7 +14,11 @@ private
   end
 
   def config_for(kind)
-    # https://ruby-doc.org/stdlib-2.1.0/libdoc/psych/rdoc/Psych.html#method-c-safe_load
-    YAML.safe_load(ERB.new(File.read(config_path_for(kind))).result, [], [], true)
+    # https://ruby-doc.org/stdlib-3.1.0/libdoc/psych/rdoc/Psych.html#method-c-safe_load
+    YAML.safe_load(
+      ERB.new(
+        File.read(config_path_for(kind)),
+      ).result, aliases: true, permitted_classes: [Date]
+    )
   end
 end
