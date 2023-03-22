@@ -37,12 +37,14 @@ gem "warden"
 gem "warden-oauth2"
 
 group :development, :test do
+  gem "debug"
   gem "pry-byebug"
   gem "rubocop-govuk", require: false
 end
 
 group :development do
   gem "mr-sparkle"
+  gem "ruby-lsp"
 end
 
 group :test do
