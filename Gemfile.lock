@@ -61,6 +61,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    debug (1.7.1)
     declarative (0.0.20)
     diff-lcs (1.5.0)
     docile (1.4.0)
@@ -427,6 +428,7 @@ DEPENDENCIES
   bootsnap
   bunny-mock
   climate_control
+  debug
   elasticsearch (~> 6)
   gds-api-adapters
   google-api-client
