@@ -16,7 +16,8 @@ module Search
                   :is_quoted_phrase,
                   :ab_tests,
                   :cluster,
-                  :search_config
+                  :search_config,
+                  :boost_fields
 
     # starts and ends with quotes with no quotes in between, with or without
     # leading or trailing whitespace
@@ -31,6 +32,7 @@ module Search
         ab_tests: {},
         cluster: Clusters.default_cluster,
         search_config: SearchConfig.default_instance,
+        boost_fields: [],
       }.merge(params)
       params.each do |k, v|
         public_send("#{k}=", v)
