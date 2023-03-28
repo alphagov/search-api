@@ -16,6 +16,26 @@ RSpec.describe QueryComponents::CoreQuery do
       query = builder.minimum_should_match("_all", "text to search over")
       expect(query.to_s).to match(/"2<2 3<3 7<50%"/)
     end
+
+    it "includes field boosts for unquoted query" do
+      builder = described_class.new(
+        search_query_params(boost_fields: %w[custom_field]),
+      )
+
+      query = builder.unquoted_phrase_query("income tax")
+
+      expect(query.to_s).to include("custom_field.synonym")
+    end
+
+    it "includes field boosts for quoted query" do
+      builder = described_class.new(
+        search_query_params(boost_fields: %w[custom_field]),
+      )
+
+      query = builder.quoted_phrase_query("income tax")
+
+      expect(query.to_s).to include("custom_field.no_stop")
+    end
   end
 
   context "the search query with synonyms disabled" do
