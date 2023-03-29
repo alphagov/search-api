@@ -642,6 +642,34 @@ RSpec.describe "SearchTest" do
     )
   end
 
+  it "boosts custom fields" do
+    less_relevant_licence = {
+      "title" => "Less relevant licence",
+      "link" => "/find-licences/less-relevant-licence",
+      "indexable_content" => "Some body text that includes information",
+      "format" => "licence_transaction",
+      "document_type" => "licence_transaction",
+    }
+
+    more_relevant_licence = {
+      "title" => "More relevant licence",
+      "link" => "/find-licences/more-relevant-licence",
+      "indexable_content" => "A more relevant licence",
+      "format" => "licence_transaction",
+      "document_type" => "licence_transaction",
+      "licence_transaction_industry" => %w[information-and-data another-industry],
+    }
+    commit_document("govuk_test", less_relevant_licence, type: "licence_transaction")
+    commit_document("govuk_test", more_relevant_licence, type: "licence_transaction")
+
+    get "/search?q=information&boost_fields=licence_transaction_industry"
+
+    higher_es_score = es_score_by_link("/find-licences/more-relevant-licence")
+    lower_es_score = es_score_by_link("/find-licences/less-relevant-licence")
+
+    expect(higher_es_score).to be > lower_es_score
+  end
+
 private
 
   def first_result
@@ -658,5 +686,9 @@ private
     @result_titles ||= parsed_response["results"].map do |result|
       result["title"]
     end
+  end
+
+  def es_score_by_link(link)
+    parsed_response["results"].find { |result| result["link"] == link }["es_score"]
   end
 end

@@ -22,6 +22,7 @@ RSpec.describe SearchParameterParser do
       debug: {},
       suggest: [],
       ab_tests: {},
+      boost_fields: [],
     }.merge(params)
   end
 

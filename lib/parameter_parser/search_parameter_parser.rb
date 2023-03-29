@@ -55,6 +55,7 @@ private
       debug: debug_options,
       suggest: character_separated_param("suggest"),
       ab_tests:,
+      boost_fields: character_separated_param("boost_fields"),
     }
 
     # Search can be run either with a text query or a base_path to find

@@ -13,6 +13,7 @@ module QueryComponents
     MATCH_ALL_TITLE_BOOST = 10
     MATCH_ALL_ACRONYM_BOOST = 10
     MATCH_ALL_DESCRIPTION_BOOST = 5
+    MATCH_ALL_CUSTOM_FIELDS_BOOST = 4
     MATCH_ALL_INDEXABLE_CONTENT_BOOST = 2
     MATCH_ALL_MULTI_BOOST = 0.5
     MATCH_ANY_MULTI_BOOST = 0.5
@@ -25,6 +26,7 @@ module QueryComponents
     PHRASE_MATCH_TITLE_BOOST = 5
     PHRASE_MATCH_ACRONYM_BOOST = 5
     PHRASE_MATCH_DESCRIPTION_BOOST = 2
+    PHRASE_MATCH_CUSTOM_FIELDS = 1.5
     PHRASE_MATCH_INDEXABLE_CONTENT_BOOST = 1
 
     include Search::QueryHelpers
@@ -81,25 +83,56 @@ module QueryComponents
     def quoted_phrase_query(query = search_term)
       # Return the highest weight found by looking for a phrase match in
       # individual fields
-      dis_max_query([
-        match_phrase_default_analyzer("title.no_stop", query, PHRASE_MATCH_TITLE_BOOST),
-        match_phrase_default_analyzer("acronym.no_stop", query, PHRASE_MATCH_ACRONYM_BOOST),
-        match_phrase_default_analyzer("description.no_stop", query, PHRASE_MATCH_DESCRIPTION_BOOST),
-        match_phrase_default_analyzer("indexable_content.no_stop", query, PHRASE_MATCH_INDEXABLE_CONTENT_BOOST),
-      ])
+      dis_max_query(priority_fields_match_phrase(query))
     end
 
     def unquoted_phrase_query(query = search_term)
-      should_coord_query([
-        match_all_terms(%w[title], query, MATCH_ALL_TITLE_BOOST),
-        match_all_terms(%w[acronym], query, MATCH_ALL_ACRONYM_BOOST),
-        match_all_terms(%w[description], query, MATCH_ALL_DESCRIPTION_BOOST),
-        match_all_terms(%w[indexable_content], query, MATCH_ALL_INDEXABLE_CONTENT_BOOST),
-        match_all_terms(%w[title acronym description indexable_content], query, MATCH_ALL_MULTI_BOOST),
-        match_any_terms(%w[title acronym description indexable_content], query, MATCH_ANY_MULTI_BOOST),
-        match_bigrams(%w[title acronym description indexable_content], query, MATCH_ANY_MULTI_BOOST),
-        minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST),
-      ].reject(&:empty?))
+      all_field_boosts = priority_fields_match_all_terms(query).concat(
+        [
+          match_all_terms(priority_fields.keys, query, MATCH_ALL_MULTI_BOOST),
+          match_any_terms(priority_fields.keys, query, MATCH_ANY_MULTI_BOOST),
+          match_bigrams(priority_fields.keys, query, MATCH_ANY_MULTI_BOOST),
+          minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST),
+        ],
+      )
+
+      should_coord_query(all_field_boosts.reject(&:empty?))
+    end
+
+    def priority_fields_match_all_terms(query)
+      priority_fields.map { |field, boost| match_all_terms([field], query, boost) }
+    end
+
+    def priority_fields_match_phrase(query)
+      priority_fields_quoted.map { |field, boost| match_phrase_default_analyzer(field, query, boost) }
+    end
+
+    def priority_fields
+      {
+        "title" => MATCH_ALL_TITLE_BOOST,
+        "acronym" => MATCH_ALL_ACRONYM_BOOST,
+        "description" => MATCH_ALL_DESCRIPTION_BOOST,
+        "indexable_content" => MATCH_ALL_INDEXABLE_CONTENT_BOOST,
+      }.merge(custom_priority_fields)
+    end
+
+    def priority_fields_quoted
+      {
+        "title.no_stop" => PHRASE_MATCH_TITLE_BOOST,
+        "acronym.no_stop" => PHRASE_MATCH_ACRONYM_BOOST,
+        "description.no_stop" => PHRASE_MATCH_DESCRIPTION_BOOST,
+        "indexable_content.no_stop" => PHRASE_MATCH_INDEXABLE_CONTENT_BOOST,
+      }.merge(custom_priority_fields(quoted: true))
+    end
+
+    def custom_priority_fields(quoted: false)
+      search_params.boost_fields.each_with_object({}) do |field, hash|
+        if quoted
+          hash["#{field}.no_stop"] = PHRASE_MATCH_CUSTOM_FIELDS
+        else
+          hash[field] = MATCH_ALL_CUSTOM_FIELDS_BOOST
+        end
+      end
     end
 
     def minimum_should_match(field_name, query, boost = 1.0)

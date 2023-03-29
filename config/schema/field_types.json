@@ -39,6 +39,35 @@
     }
   },
 
+  "searchable_multivalued_text": {
+    "description": "Plain text that can occur multiple times in a single document and considered in searches",
+    "filter_type": "text",
+    "multivalued": true,
+    "es_config": {
+      "type": "keyword",
+      "index": true,
+      "copy_to": ["spelling_text", "all_searchable_text"],
+      "fields": {
+        "no_stop": {
+          "type": "text",
+          "index": true,
+          "analyzer": "searchable_text"
+        },
+        "shingles": {
+          "type": "text",
+          "index": true,
+          "analyzer": "with_shingles"
+        },
+        "synonym": {
+          "type": "text",
+          "index": true,
+          "analyzer": "with_index_synonyms",
+          "search_analyzer": "with_search_synonyms"
+        }
+      }
+    }
+  },
+
   "searchable_text": {
     "description": "A piece of plain text that should be split into words and considered in searches",
     "es_config": {
