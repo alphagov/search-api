@@ -11,6 +11,7 @@ module GovukIndex
     delegate_to_payload :authors
     delegate_to_payload :business_sizes
     delegate_to_payload :business_stages
+    delegate_to_payload :category, convert_to_array: true
     delegate_to_payload :case_state, convert_to_array: true
     delegate_to_payload :case_type, convert_to_array: true
     delegate_to_payload :certificate_status
@@ -49,6 +50,7 @@ module GovukIndex
     delegate_to_payload :industries
     delegate_to_payload :internal_notes
     delegate_to_payload :issued_date
+    delegate_to_payload :keyword
     delegate_to_payload :laid_date
     delegate_to_payload :land_use
     delegate_to_payload :licence_transaction_continuation_link
@@ -78,6 +80,7 @@ module GovukIndex
     delegate_to_payload :protection_type
     delegate_to_payload :railway_type
     delegate_to_payload :reason_for_protection
+    delegate_to_payload :reference_number
     delegate_to_payload :regions
     delegate_to_payload :register
     delegate_to_payload :registered_name
@@ -126,6 +129,7 @@ module GovukIndex
     delegate_to_payload :virus_strain
     delegate_to_payload :will_continue_on
     delegate_to_payload :withdrawn_date
+    delegate_to_payload :year_adopted
     delegate_to_payload :zone_restriction
     delegate_to_payload :zone_type, convert_to_array: true
 
