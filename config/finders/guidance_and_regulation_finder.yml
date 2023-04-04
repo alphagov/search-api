@@ -61,6 +61,7 @@ details:
     display_as_result_metadata: true
     filterable: true
     show_option_select_filter: true
+    large: true
   - key: public_timestamp
     short_name: Updated
     name: Updated
