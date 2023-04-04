@@ -25,6 +25,7 @@ details:
     display_as_result_metadata: false
     hide_facet_tag: true
     filterable: true
+    large: true
   - display_as_result_metadata: true
     filterable: true
     key: organisations
