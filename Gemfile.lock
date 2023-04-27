@@ -253,7 +253,7 @@ GEM
     puma (6.2.2)
       nio4r (~> 2.0)
     racc (1.6.2)
-    rack (2.2.6.4)
+    rack (2.2.7)
     rack-logstasher (2.0.0)
       logstash-event (~> 1.2)
       rack (>= 2, < 4)
