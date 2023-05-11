@@ -34,6 +34,7 @@ maib_report: maib_report # Specialist Publisher
 mainstream_browse_page: edition # Collections Publisher
 manual: manual
 manual_section: manual_section
+marine_equipment_approved_recommendation: marine_equipment_approved_recommendation # Specialist Publisher
 marine_notice: marine_notice # Specialist Publisher
 medical_safety_alert: medical_safety_alert # Specialist Publisher
 ministerial_role: edition

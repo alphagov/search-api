@@ -1033,5 +1033,18 @@
   },
   "licence_transaction_will_continue_on": {
     "type": "identifiers"
+  },
+
+  "category": {
+    "type": "identifiers"
+  },
+  "year_adopted": {
+    "type": "searchable_text"
+  },
+  "reference_number": {
+    "type": "searchable_text"
+  },
+  "keyword": {
+    "type": "searchable_text"
   }
 }

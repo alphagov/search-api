@@ -1,0 +1,48 @@
+{
+  "fields": [
+    "category",
+    "year_adopted",
+    "reference_number",
+    "keyword"
+  ],
+  "expanded_search_result_fields": {
+    "category": [
+      {
+        "label": "Life-saving appliances",
+        "value": "life-saving-appliances"
+      },
+      {
+        "label": "Marine pollution prevention",
+        "value": "marine-pollution-prevention"
+      },
+      {
+        "label": "Fire protection equipment",
+        "value": "fire-protection-equipment"
+      },
+      {
+        "label": "Navigation equipment",
+        "value": "navigation-equipment"
+      },
+      {
+        "label": "Radio-communication equipment",
+        "value": "radio-communication-equipment"
+      },
+      {
+        "label": "Equipment required under COLREGs",
+        "value": "equipment-required-under-colregs"
+      },
+      {
+        "label": "Other safety equipment",
+        "value": "other-safety-equipment"
+      },
+      {
+        "label": "Equipment under SOLAS Chapter II-1",
+        "value": "equipment-under-solas-chapter-ii-1"
+      },
+      {
+        "label": "General",
+        "value": "general"
+      }
+    ]
+  }
+}
