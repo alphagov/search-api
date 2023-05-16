@@ -1046,5 +1046,21 @@
   },
   "keyword": {
     "type": "searchable_text"
+  },
+  
+  "use_case": {
+    "type": "identifiers"
+  },
+  "sector": {
+    "type": "identifiers"
+  },
+  "principle": {
+    "type": "identifiers"
+  },
+  "key_function": {
+    "type": "identifiers"
+  },
+  "ai_assurance_technique": {
+    "type": "identifiers"
   }
 }
