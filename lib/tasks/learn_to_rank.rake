@@ -1,3 +1,4 @@
+require "aws-sdk-s3"
 require "base64"
 require "csv"
 require "fileutils"
@@ -7,6 +8,15 @@ require "zip"
 require "analytics/popular_queries"
 require "relevancy/load_judgements"
 
+def upload_to_s3(body, filename)
+  object = Aws::S3::Object.new(
+    bucket_name: ENV["AWS_S3_RELEVANCY_BUCKET_NAME"],
+    key: "data/#{ENV['NOW']}/#{filename}",
+  )
+
+  object.put(body:)
+end
+
 namespace :learn_to_rank do
   desc "Fetch data from BigQuery.  This costs money!"
   task :fetch_bigquery_export, [:output, :viewcount] do |_, args|
@@ -15,7 +25,7 @@ namespace :learn_to_rank do
 
     data = LearnToRank::DataPipeline::Bigquery.fetch(JSON.parse(Base64.decode64(ENV["BIGQUERY_CREDENTIALS"])), viewcount: args.viewcount || 10)
 
-    CSV.open("tmp/#{args[:output]}.csv", "wb") do |csv|
+    csv_body = CSV.generate(headers: true) do |csv|
       csv << data.first.keys
       data.each do |row|
         csv << row.values
@@ -28,6 +38,9 @@ namespace :learn_to_rank do
         end
       end
     end
+
+    upload_to_s3(csv_body, "#{args[:output]}.csv") if ENV["EXPORT_TO_S3"].present?
+    File.open("tmp/#{args[:output]}.csv", "w") { |file| file.write(csv_body) }
   end
 
   desc "Export a CSV of relevancy judgements generated from CTR on popular queries"
@@ -39,12 +52,15 @@ namespace :learn_to_rank do
     judgements = generator.relevancy_judgements
     data = judgements.force
 
-    CSV.open("tmp/#{args.output}.csv", "wb") do |csv|
+    csv_body = CSV.generate(headers: true) do |csv|
       csv << data.first.keys
       data.each do |row|
         csv << row.values
       end
     end
+
+    upload_to_s3(csv_body, "#{args[:output]}.csv") if ENV["EXPORT_TO_S3"].present?
+    File.open("tmp/#{args[:output]}.csv", "w") { |file| file.write(csv_body) }
   end
 
   desc "Export a CSV of SVM-formatted relevancy judgements for training a model"
@@ -69,6 +85,21 @@ namespace :learn_to_rank do
             query_set.each { |row| file.puts(row) }
           end
         end
+      end
+    end
+
+    # Upload to S3
+    if ENV["EXPORT_TO_S3"].present?
+      File.open("#{svm_dir}/train.txt", "rb") do |file|
+        upload_to_s3(file, "train.txt")
+      end
+
+      File.open("#{svm_dir}/test.txt", "rb") do |file|
+        upload_to_s3(file, "test.txt")
+      end
+
+      File.open("#{svm_dir}/validate.txt", "rb") do |file|
+        upload_to_s3(file, "validate.txt")
       end
     end
   end
