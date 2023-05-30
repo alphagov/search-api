@@ -11,7 +11,7 @@ require "relevancy/load_judgements"
 def upload_to_s3(body, filename)
   object = Aws::S3::Object.new(
     bucket_name: ENV["AWS_S3_RELEVANCY_BUCKET_NAME"],
-    key: "data/#{ENV['NOW']}/#{filename}",
+    key: "data/#{filename}",
   )
 
   object.put(body:)
