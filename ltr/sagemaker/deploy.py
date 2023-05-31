@@ -11,14 +11,10 @@ def deploy(model_name, s3_bucket, role, govuk_environment, instance_count, insta
     update_endpoint = False
 
     # try to find the current endpoint config
+    sagemaker_client = session.boto_session.client("sagemaker")
     try:
-        current_endpoint_config_name = session.boto_session.client(
-            "sagemaker"
-        ).describe_endpoint(EndpointName=endpoint_name)["EndpointConfigName"]
-
-        current_endpoint_config = session.boto_session.client(
-            "sagemaker"
-        ).describe_endpoint_config(EndpointConfigName=current_endpoint_config_name,)
+        current_endpoint_config_name = sagemaker_client.describe_endpoint(EndpointName=endpoint_name)["EndpointConfigName"]
+        current_endpoint_config = sagemaker_client.describe_endpoint_config(EndpointConfigName=current_endpoint_config_name)
 
         update_endpoint = True
     except Exception:
