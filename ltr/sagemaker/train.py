@@ -5,7 +5,7 @@ import time
 def train(s3_bucket, image, role, instance_count, instance_type):
     session = sagemaker.Session()
 
-    model_name = f"{str(time.time())}"
+    model_name = str(time.time())
 
     # train model
     estimator = sagemaker.estimator.Estimator(
