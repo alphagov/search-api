@@ -4,6 +4,7 @@ module GovukIndex
 
     set_payload_method :metadata
 
+    delegate_to_payload :ai_assurance_technique, convert_to_array: true
     delegate_to_payload :aircraft_category
     delegate_to_payload :aircraft_type
     delegate_to_payload :alert_type, convert_to_array: true
@@ -50,6 +51,7 @@ module GovukIndex
     delegate_to_payload :industries
     delegate_to_payload :internal_notes
     delegate_to_payload :issued_date
+    delegate_to_payload :key_function, convert_to_array: true
     delegate_to_payload :keyword
     delegate_to_payload :laid_date
     delegate_to_payload :land_use
@@ -70,6 +72,7 @@ module GovukIndex
     delegate_to_payload :oim_project_type
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
+    delegate_to_payload :principle, convert_to_array: true
     delegate_to_payload :product_alert_type
     delegate_to_payload :product_category
     delegate_to_payload :product_measure_type
@@ -89,6 +92,7 @@ module GovukIndex
     delegate_to_payload :research_document_type
     delegate_to_payload :result
     delegate_to_payload :review_status
+    delegate_to_payload :sector, convert_to_array: true
     delegate_to_payload :service_provider
     delegate_to_payload :sift_end_date
     delegate_to_payload :sifting_status
@@ -124,6 +128,7 @@ module GovukIndex
     delegate_to_payload :uk_market_conformity_assessment_body_testing_locations, convert_to_array: true
     delegate_to_payload :uk_market_conformity_assessment_body_type, convert_to_array: true
     delegate_to_payload :uk_market_conformity_assessment_body_website
+    delegate_to_payload :use_case, convert_to_array: true
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type
     delegate_to_payload :virus_strain

@@ -13,6 +13,7 @@ module GovukIndex
 
     def document
       {
+        ai_assurance_technique: specialist.ai_assurance_technique,
         aircraft_category: specialist.aircraft_category,
         aircraft_type: specialist.aircraft_type,
         alert_type: specialist.alert_type,
@@ -79,6 +80,7 @@ module GovukIndex
         is_withdrawn: common_fields.withdrawn?,
         issued_date: specialist.issued_date,
         keyword: specialist.keyword,
+        key_function: specialist.key_function,
         laid_date: specialist.laid_date,
         land_use: specialist.land_use,
         latest_change_note: details.latest_change_note,
@@ -114,6 +116,7 @@ module GovukIndex
         popularity: common_fields.popularity,
         popularity_b: common_fields.popularity_b,
         primary_publishing_organisation: expanded_links.primary_publishing_organisation,
+        principle: specialist.principle,
         product_alert_type: specialist.product_alert_type,
         product_category: specialist.product_category,
         product_measure_type: specialist.product_measure_type,
@@ -138,6 +141,7 @@ module GovukIndex
         review_status: specialist.review_status,
         role_appointments: expanded_links.role_appointments,
         roles: expanded_links.roles,
+        sector: specialist.sector,
         service_provider: specialist.service_provider,
         sift_end_date: specialist.sift_end_date,
         sifting_status: specialist.sifting_status,
@@ -180,6 +184,7 @@ module GovukIndex
         uk_market_conformity_assessment_body_type: specialist.uk_market_conformity_assessment_body_type,
         uk_market_conformity_assessment_body_website: specialist.uk_market_conformity_assessment_body_website,
         updated_at: common_fields.updated_at,
+        use_case: specialist.use_case,
         user_journey_document_supertype: common_fields.user_journey_document_supertype,
         value_of_funding: specialist.value_of_funding,
         vessel_type: specialist.vessel_type,
