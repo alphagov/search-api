@@ -446,7 +446,7 @@ DEPENDENCIES
   mr-sparkle
   nokogiri
   oauth2
-  oj (= 3.15.0)
+  oj
   plek
   pry-byebug
   rack
