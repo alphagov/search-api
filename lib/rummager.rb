@@ -194,3 +194,5 @@ require "services"
 require "sitemap/property_boost_calculator"
 require "sitemap/generator"
 require "sitemap/presenter"
+
+require "core_extensions/time/to_string"
