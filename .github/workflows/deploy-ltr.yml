@@ -19,10 +19,6 @@ on:
         - staging
         - production
         default: 'integration'
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
-    branches: [main]
 
 jobs:
   build-and-publish-image:
