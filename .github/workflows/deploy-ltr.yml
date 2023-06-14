@@ -19,10 +19,6 @@ on:
         - staging
         - production
         default: 'integration'
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
-    branches: [main]
 
 jobs:
   build-and-publish-image:
@@ -43,6 +39,7 @@ jobs:
     with:
       imageTag: ${{ needs.build-and-publish-image.outputs.imageTag }}
       environment: ${{ inputs.environment || 'integration' }}
+      appName: search-api-learn-to-rank
     secrets:
       WEBHOOK_TOKEN: ${{ secrets.GOVUK_ARGO_EVENTS_WEBHOOK_TOKEN }}
       WEBHOOK_URL: ${{ secrets.GOVUK_ARGO_EVENTS_WEBHOOK_URL }}
