@@ -3,7 +3,7 @@ module GovukIndex
     def initialize(cluster: Clusters.default_cluster, iostream_batch_size: 250)
       @iostream_batch_size = iostream_batch_size
       @logger = Logging.logger[self]
-      @logger.level = :info
+      @logger.level = ENV.fetch("LOG_LEVEL", :info)
       @cluster = cluster
     end
 
