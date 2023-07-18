@@ -62,6 +62,11 @@ details:
       closed_consultations:
       - closed_consultation
       - consultation_outcome
+      open_calls_for_evidence:
+      - open_call_for_evidence
+      closed_calls_for_evidence:
+      - closed_call_for_evidence
+      - call_for_evidence_outcome
     allowed_values:
     - label: Policy papers
       value: policy_papers
@@ -69,6 +74,10 @@ details:
       value: open_consultations
     - label: Consultations (closed)
       value: closed_consultations
+    - label: Calls for evidence (open)
+      value: open_calls_for_evidence
+    - label: Calls for evidence (closed)
+      value: closed_calls_for_evidence
   - key: organisations
     name: Organisation
     short_name: From

@@ -30,6 +30,11 @@ details:
       closed_consultations:
       - closed_consultation
       - consultation_outcome
+      open_calls_for_evidence:
+      - open_call_for_evidence
+      closed_calls_for_evidence:
+      - closed_call_for_evidence
+      - call_for_evidence_outcome
   - facet_id: world_locations
     facet_name: world locations
   - facet_id: topic
