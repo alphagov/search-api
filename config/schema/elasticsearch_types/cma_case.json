@@ -43,6 +43,10 @@
         "value": "mergers"
       },
       {
+        "label": "OIM Project",
+        "value": "oim-project"
+      },
+      {
         "label": "Consumer enforcement",
         "value": "consumer-enforcement"
       },
@@ -53,6 +57,10 @@
       {
         "label": "Reviews of orders and undertakings",
         "value": "review-of-orders-and-undertakings"
+      },
+      {
+        "label": "SAU Referral",
+        "value": "sau-referral"
       },
       {
         "label": "State aid",
@@ -147,6 +155,10 @@
       {
         "label": "Motor industry",
         "value": "motor-industry"
+      },
+      {
+        "label": "Not applicable",
+        "value": "not-applicable"
       },
       {
         "label": "Oil and gas refining and petrochemicals",
