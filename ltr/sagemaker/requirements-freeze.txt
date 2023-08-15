@@ -1,5 +1,5 @@
 awscli==1.27.57
-requests==2.31.0
+requests==2.28.2
 sagemaker==2.129.0
 ## The following requirements were added by pip freeze:
 attrs==22.2.0
