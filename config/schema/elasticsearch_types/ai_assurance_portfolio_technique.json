@@ -4,7 +4,8 @@
     "sector",
     "principle",
     "key_function",
-    "ai_assurance_technique"
+    "ai_assurance_technique",
+    "assurance_technique_approach"
   ],
   "expanded_search_result_fields": {
     "use_case": [
@@ -223,6 +224,20 @@
       {
         "label": "Bias Audit",
         "value": "bias-audit"
+      }
+    ],
+    "assurance_technique_approach": [
+      {
+        "label": "Technical",
+        "value": "technical"
+      },
+      {
+        "label": "Procedural",
+        "value": "procedural"
+      },
+      {
+        "label": "Educational",
+        "value": "educational"
       }
     ]
   }

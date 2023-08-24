@@ -18,6 +18,7 @@ module GovukIndex
         aircraft_type: specialist.aircraft_type,
         alert_type: specialist.alert_type,
         assessment_date: specialist.assessment_date,
+        assurance_technique_approach: specialist.assurance_technique_approach,
         attachments: common_fields.attachments,
         authors: specialist.authors,
         business_sizes: specialist.business_sizes,

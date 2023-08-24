@@ -1062,5 +1062,8 @@
   },
   "ai_assurance_technique": {
     "type": "identifiers"
+  },
+  "assurance_technique_approach": {
+    "type": "identifiers"
   }
 }
