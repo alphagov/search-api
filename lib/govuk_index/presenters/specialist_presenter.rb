@@ -9,6 +9,7 @@ module GovukIndex
     delegate_to_payload :aircraft_type
     delegate_to_payload :alert_type, convert_to_array: true
     delegate_to_payload :assessment_date
+    delegate_to_payload :assurance_technique_approach, convert_to_array: true
     delegate_to_payload :authors
     delegate_to_payload :business_sizes
     delegate_to_payload :business_stages
