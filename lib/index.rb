@@ -84,6 +84,18 @@ module SearchIndices
       end
     end
 
+    def sync_mappings
+      {}.tap do |errors|
+        mappings.each do |type, mapping|
+          @client.indices.put_mapping(index: index_name, type:, body: mapping)
+          logger.info "Updated mappings for #{type} type on #{index_name} index"
+        rescue Elasticsearch::Transport::Transport::Errors::BadRequest => e
+          errors[type] = e
+          logger.warn "Unable to update mappings for #{type} type on #{index_name} index: #{e.message}"
+        end
+      end
+    end
+
     def add(documents, options = {})
       logger.info "Adding #{documents.size} document(s) to #{index_name}"
 

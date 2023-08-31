@@ -142,6 +142,28 @@ this task will run against all active clusters.
     end
   end
 
+  desc "Update the schema in place to reflect the current Search API configuration. This task is idempotent.
+
+If there are changes to configuration that cannot be made to the live schema because the change is not applicable to
+the existing data, you will need to run the \"migrate_schema\" task instead, which requires locking the index."
+  task :update_schema, [:clusters] do |_, args|
+    clusters_from_args(args).each do |cluster|
+      puts "Updating schema on cluster #{cluster.key}"
+
+      index_names.each do |index_name|
+        index_group = SearchConfig.instance(cluster).search_server.index_group(index_name)
+        synchroniser = SchemaSynchroniser.new(index_group)
+        synchroniser.call
+        synchroniser.synchronised_types.each do |type|
+          puts "Successfully synchronised #{type} type on #{index_name} index"
+        end
+        synchroniser.errors.each do |type, exception|
+          puts "Unable to synchronise #{type} on #{index_name} due to #{exception.message}"
+        end
+      end
+    end
+  end
+
   desc "Switches an index group to a new index WITHOUT transferring the data"
   task :switch_to_empty_index, :clusters do |_, args|
     # Note that this task will effectively clear out the index, so shouldn't be
