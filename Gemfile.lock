@@ -128,7 +128,7 @@ GEM
       google-apis-core (>= 0.4, < 2.a)
       google-apis-discovery_v1 (~> 0.5)
       thor (>= 0.20, < 2.a)
-    google-cloud-bigquery (1.44.0)
+    google-cloud-bigquery (1.44.2)
       concurrent-ruby (~> 1.0)
       google-apis-bigquery_v2 (~> 0.1)
       google-cloud-core (~> 1.6)
@@ -578,7 +578,7 @@ GEM
     sidekiq-statsd (2.1.0)
       activesupport
       sidekiq (>= 3.3.1)
-    signet (0.17.0)
+    signet (0.18.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
       jwt (>= 1.5, < 3.0)
