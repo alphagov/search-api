@@ -1,15 +1,9 @@
-# The following environment variables need to be set
-# RABBITMQ_HOSTS
-# RABBITMQ_VHOST
-# RABBITMQ_USER
-# RABBITMQ_PASSWORD
 require "rummager"
 
 namespace :message_queue do
   desc "Create the queues that Rummager uses with Rabbit MQ"
   task :create_queues do
-    config = GovukMessageQueueConsumer::RabbitMQConfig.from_environment(ENV)
-    bunny = Bunny.new(config)
+    bunny = Bunny.new
 
     channel = bunny.start.create_channel
     exch = Bunny::Exchange.new(channel, :topic, "published_documents")
