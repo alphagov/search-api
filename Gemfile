@@ -16,7 +16,6 @@ gem "govuk_message_queue_consumer"
 gem "govuk_schemas"
 gem "govuk_sidekiq"
 gem "httparty"
-gem "irb", require: false
 gem "logging"
 gem "loofah"
 gem "nokogiri"
