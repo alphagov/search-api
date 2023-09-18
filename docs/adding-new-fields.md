@@ -41,6 +41,9 @@ This job will block other rake tasks from being run for 15 minutes to an hour.
 
 [Read more about re-indexing the elasticsearch indexes here](https://docs.publishing.service.gov.uk/manual/reindex-elasticsearch.html#how-to-reindex-an-elasticsearch-index).
 
+If you consider the change low risk and are only adding new fields for which content doesn't yet exist, you can run the `search:update_schema` task. This task will attempt to update the Elasticsearch index schema in place without requiring a re-index.
+If you have made any changes which affect existing fields, Elasticsearch will reject the change and a full re-index will be required. 
+
 ### Troubleshooting
 
 #### The new field doesn't show up
