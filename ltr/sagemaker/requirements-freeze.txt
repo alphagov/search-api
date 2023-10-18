@@ -43,5 +43,5 @@ six==1.16.0
 smdebug-rulesconfig==1.0.1
 tblib==1.7.0
 tzdata==2023.3
-urllib3==1.26.16
+urllib3==1.26.18
 zipp==3.16.2
