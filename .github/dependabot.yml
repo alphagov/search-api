@@ -4,6 +4,10 @@ updates:
     directory: /
     schedule:
       interval: daily
+    ignore:
+      - dependency-name: "elasticsearch"
+        versions: ["7.x", "8.x"]
+        # We can't upgrade to version 7 or beyond
   - package-ecosystem: docker
     directory: /
     schedule:
