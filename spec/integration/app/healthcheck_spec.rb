@@ -1,7 +1,6 @@
 require "spec_helper"
 require "spec/support/ranker_test_helpers"
 require "spec/support/diskspace_test_helpers"
-require "active_support/time"
 
 RSpec.describe "HealthcheckTest" do
   include RankerTestHelpers
