@@ -1,7 +1,6 @@
 require "spec_helper"
 require "spec/support/ranker_test_helpers"
 require "spec/support/diskspace_test_helpers"
-require "active_support/time"
 
 RSpec.describe "HealthcheckTest" do
   include RankerTestHelpers
@@ -10,7 +9,7 @@ RSpec.describe "HealthcheckTest" do
   let(:queues) do
     { "bulk" => 2, "default" => 1 }
   end
-  let(:queue_latency) { 1.seconds }
+  let(:queue_latency) { 1 }
 
   before do
     allow_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(queues)
