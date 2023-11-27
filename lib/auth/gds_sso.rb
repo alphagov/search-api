@@ -1,3 +1,6 @@
+require "active_support"
+require "active_support/time"
+
 module Auth
   class GdsSso
     def self.locate(token_string)
