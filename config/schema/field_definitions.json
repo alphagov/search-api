@@ -948,22 +948,6 @@
     "description": "The topics of the document",
     "type": "identifiers"
   },
-  "oim_project_type":{
-    "description" :"The category of OIM project",
-    "type": "identifiers"
-  },
-  "oim_project_state":{
-    "description" :"status of an OIM project: {open, closed}",
-    "type": "identifiers"
-  },
-  "oim_project_opened_date":{
-    "description" :"Opened date of an OIM project",
-    "type": "date"
-  },
-  "oim_project_closed_date":{
-    "description" :"Closed date of an OIM project",
-    "type": "date"
-  },
   "product_alert_type":{
     "description": "Alert type: {product-safety-alert, product-safety-report, product-recall}",
     "type": "identifiers"
@@ -1047,7 +1031,7 @@
   "keyword": {
     "type": "searchable_text"
   },
-  
+
   "use_case": {
     "type": "identifiers"
   },
