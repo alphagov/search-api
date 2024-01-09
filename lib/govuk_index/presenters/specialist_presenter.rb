@@ -8,6 +8,16 @@ module GovukIndex
     delegate_to_payload :aircraft_category
     delegate_to_payload :aircraft_type
     delegate_to_payload :alert_type, convert_to_array: true
+    delegate_to_payload :algorithmic_transparency_record_atrs_version
+    delegate_to_payload :algorithmic_transparency_record_capability, convert_to_array: true
+    delegate_to_payload :algorithmic_transparency_record_date_published
+    delegate_to_payload :algorithmic_transparency_record_function, convert_to_array: true
+    delegate_to_payload :algorithmic_transparency_record_organisation
+    delegate_to_payload :algorithmic_transparency_record_organisation_type, convert_to_array: true
+    delegate_to_payload :algorithmic_transparency_record_other_tags
+    delegate_to_payload :algorithmic_transparency_record_phase
+    delegate_to_payload :algorithmic_transparency_record_region, convert_to_array: true
+    delegate_to_payload :algorithmic_transparency_record_task
     delegate_to_payload :assessment_date
     delegate_to_payload :assurance_technique_approach, convert_to_array: true
     delegate_to_payload :authors

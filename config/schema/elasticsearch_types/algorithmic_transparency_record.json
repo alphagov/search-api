@@ -1,0 +1,248 @@
+{
+  "fields": [
+    "algorithmic_transparency_record_organisation",
+    "algorithmic_transparency_record_organisation_type",
+    "algorithmic_transparency_record_function",
+    "algorithmic_transparency_record_capability",
+    "algorithmic_transparency_record_task",
+    "algorithmic_transparency_record_phase",
+    "algorithmic_transparency_record_region",
+    "algorithmic_transparency_record_date_published",
+    "algorithmic_transparency_record_atrs_version",
+    "algorithmic_transparency_record_other_tags"
+  ],
+  "expanded_search_result_fields": {
+    "algorithmic_transparency_record_organisation": [
+      {
+        "label": "Cabinet Office",
+        "value": "cabinet-office"
+      },
+      {
+        "label": "Ministry of Justice",
+        "value": "ministry-of-justice"
+      },
+      {
+        "label": "Information Commissioner’s Office",
+        "value": "information-commissioners-office"
+      },
+      {
+        "label": "Department for Health and Social Care ",
+        "value": "department-for-health-and-social-care"
+      },
+      {
+        "label": "Food Standards Agency",
+        "value": "food-standards-agency"
+      },
+      {
+        "label": "Hampshire and Thames Valley Police",
+        "value": "hampshire-and-thames-valley-police"
+      },
+      {
+        "label": "West Midlands Police",
+        "value": "west-midlands-police"
+      },
+      {
+        "label": "Department for Science Innovation and Technology",
+        "value": "department-for-science-innovation-and-technology"
+      },
+      {
+        "label": "Department for Education",
+        "value": "department-for-education"
+      }
+    ],
+    "algorithmic_transparency_record_organisation_type": [
+      {
+        "label": "Ministerial department",
+        "value": "ministerial-department"
+      },
+      {
+        "label": "Non-ministerial department",
+        "value": "non-ministerial-department"
+      },
+      {
+        "label": "Agency or public body",
+        "value": "agency-or-public-body"
+      },
+      {
+        "label": "Local authority",
+        "value": "local-authority"
+      },
+      {
+        "label": "Devolved administration",
+        "value": "devolved-administration"
+      },
+      {
+        "label": "High profile group",
+        "value": "high-profile-group"
+      },
+      {
+        "label": "Public corporation",
+        "value": "public-corporation"
+      }
+    ],
+    "algorithmic_transparency_record_function": [
+      {
+        "label": "General public services",
+        "value": "general-public-services"
+      },
+      {
+        "label": "Defence",
+        "value": "defence"
+      },
+      {
+        "label": "Public order and safety",
+        "value": "public-order-and-safety"
+      },
+      {
+        "label": "Economic affairs",
+        "value": "economic-affairs"
+      },
+      {
+        "label": "Environmental protection",
+        "value": "environmental-protection"
+      },
+      {
+        "label": "Housing and community amenities",
+        "value": "housing-and-community-amenities"
+      },
+      {
+        "label": "Health",
+        "value": "health"
+      },
+      {
+        "label": "Recreation culture and religion",
+        "value": "recreation-culture-and-religion"
+      },
+      {
+        "label": "Education",
+        "value": "education"
+      },
+      {
+        "label": "Social protection",
+        "value": "social-protection"
+      },
+      {
+        "label": "Regulation",
+        "value": "regulation"
+      }
+    ],
+    "algorithmic_transparency_record_capability": [
+      {
+        "label": "Computer vision",
+        "value": "computer-vision"
+      },
+      {
+        "label": "Computer audition",
+        "value": "computer-audition"
+      },
+      {
+        "label": "Computer linguistics",
+        "value": "computer-linguistics"
+      },
+      {
+        "label": "Robotics",
+        "value": "robotics"
+      },
+      {
+        "label": "Forecasting",
+        "value": "forecasting"
+      },
+      {
+        "label": "Discovery",
+        "value": "discovery"
+      },
+      {
+        "label": "Planning",
+        "value": "planning"
+      },
+      {
+        "label": "Creation",
+        "value": "creation"
+      },
+      {
+        "label": "Analysis",
+        "value": "analysis"
+      },
+      {
+        "label": "Management",
+        "value": "management"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
+    ],
+    "algorithmic_transparency_record_phase": [
+      {
+        "label": "Pre-deployment",
+        "value": "pre-deployment"
+      },
+      {
+        "label": "Beta/Pilot",
+        "value": "beta-pilot"
+      },
+      {
+        "label": "Production",
+        "value": "production"
+      },
+      {
+        "label": "Retired",
+        "value": "retired"
+      }
+    ],
+    "algorithmic_transparency_record_region": [
+      {
+        "label": "Northern Ireland",
+        "value": "northern-ireland"
+      },
+      {
+        "label": "Scotland",
+        "value": "scotland"
+      },
+      {
+        "label": "Wales",
+        "value": "wales"
+      },
+      {
+        "label": "England",
+        "value": "england"
+      },
+      {
+        "label": "London",
+        "value": "london"
+      },
+      {
+        "label": "North East",
+        "value": "north-east"
+      },
+      {
+        "label": "North West",
+        "value": "north-west"
+      },
+      {
+        "label": "Yorkshire and the Humber",
+        "value": "yorkshire-and-the-humber"
+      },
+      {
+        "label": "East Midlands",
+        "value": "east-midlands"
+      },
+      {
+        "label": "West Midlands",
+        "value": "west-midlands"
+      },
+      {
+        "label": "South East",
+        "value": "south-east"
+      },
+      {
+        "label": "East of England",
+        "value": "east-of-england"
+      },
+      {
+        "label": "South West",
+        "value": "south-west"
+      }
+    ]
+  }
+}
