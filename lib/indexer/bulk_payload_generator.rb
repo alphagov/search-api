@@ -45,7 +45,7 @@ module Indexer
       {
         "index" => {
           "_type" => "generic-document",
-          "_id" => (doc_hash["_id"] || doc_hash["link"]),
+          "_id" => doc_hash["_id"] || doc_hash["link"],
         },
       }
     end

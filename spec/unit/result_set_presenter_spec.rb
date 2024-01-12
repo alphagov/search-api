@@ -122,7 +122,7 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have only the fields returned from search engine" do
-      @output[:results].zip(sample_docs).each do |result, _doc|
+      @output[:results].zip(sample_docs).each do |(result, _)|
         doc_fields = result.keys - %i[_type _id]
         returned_fields = result.keys - %i[esscore _type _id]
         expect(doc_fields).to eq(returned_fields)
@@ -198,7 +198,7 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "have only the fields returned from search engine" do
-      @output[:results].zip(sample_docs).each do |result, _doc|
+      @output[:results].zip(sample_docs).each do |(result, _)|
         doc_fields = result.keys - %i[_type _id]
         returned_fields = result.keys - %i[esscore _type _id]
         expect(doc_fields).to eq(returned_fields)

@@ -96,7 +96,7 @@ private
       ALLOWED_AGGREGATE_SORT_OPTIONS.include?(option)
     end
 
-    invalid_orders.each do |option, _|
+    invalid_orders.each do |(option, _)|
       @errors << %("#{option}" is not a valid sort option#{aggregate_description})
     end
 
