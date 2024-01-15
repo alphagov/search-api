@@ -45,7 +45,7 @@ GEM
       aws-sdk-core (~> 3, >= 3.189.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.8)
-    aws-sdk-sagemaker (1.228.0)
+    aws-sdk-sagemaker (1.229.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-sagemakerruntime (1.60.0)
