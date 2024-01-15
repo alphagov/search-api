@@ -11,7 +11,7 @@ class AggregatesParameterParser < BaseParameterParser
   end
 
   def call
-    @params.each do |key, _values|
+    @params.each_key do |key|
       # to ensure backwards compatibility we will support both facet_* and aggregate_* style naming
       # - all aggregations in the request must use the same naming format
       matches = key.match(/\A(facet|aggregate)_(.*)\Z/)

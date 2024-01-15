@@ -13,7 +13,7 @@ class IndexSchema
     properties = {
       "document_type" => @document_type_field,
     }
-    @elasticsearch_types.each do |_key, value|
+    @elasticsearch_types.each_value do |value|
       properties = properties.merge(value.es_config)
     end
     {
