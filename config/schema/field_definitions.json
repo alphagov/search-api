@@ -1049,5 +1049,43 @@
   },
   "assurance_technique_approach": {
     "type": "identifiers"
+  },
+
+  "algorithmic_transparency_record_organisation": {
+    "description": "The organisation that published the record",
+    "type": "identifiers"
+  },
+  "algorithmic_transparency_record_organisation_type": {
+    "description": "The type of the organisation that published the record",
+    "type": "identifiers"
+  },
+  "algorithmic_transparency_record_function": {
+    "description": "The function of the algorithm",
+    "type": "identifiers"
+  },
+  "algorithmic_transparency_record_capability": {
+    "description": "The capability of the algorithm",
+    "type": "identifiers"
+  },
+  "algorithmic_transparency_record_task": {
+    "type": "searchable_text"
+  },
+  "algorithmic_transparency_record_phase": {
+    "description": "The lifecycle phase of the algorithm",
+    "type": "identifiers"
+  },
+  "algorithmic_transparency_record_region": {
+    "type": "identifiers"
+  },
+  "algorithmic_transparency_record_date_published": {
+    "description": "Algorithm publication date",
+    "type": "date"
+  },
+  "algorithmic_transparency_record_atrs_version": {
+    "description": "Algorithmic Transparency Recording Standard version",
+    "type": "searchable_text"
+  },
+  "algorithmic_transparency_record_other_tags": {
+    "type": "searchable_text"
   }
 }
