@@ -18,6 +18,7 @@ module GovukIndex
     delegate_to_payload :algorithmic_transparency_record_phase
     delegate_to_payload :algorithmic_transparency_record_region, convert_to_array: true
     delegate_to_payload :algorithmic_transparency_record_task
+    delegate_to_payload :areas_of_interest
     delegate_to_payload :assessment_date
     delegate_to_payload :assurance_technique_approach, convert_to_array: true
     delegate_to_payload :authors
@@ -55,8 +56,10 @@ module GovukIndex
     delegate_to_payload :flood_and_coastal_erosion_category
     delegate_to_payload :fund_state, convert_to_array: true
     delegate_to_payload :fund_type
+    delegate_to_payload :funding_types
     delegate_to_payload :funding_amount
     delegate_to_payload :funding_source
+    delegate_to_payload :grant_schemes
     delegate_to_payload :grant_type, convert_to_array: true
     delegate_to_payload :hidden_indexable_content
     delegate_to_payload :industries
@@ -65,6 +68,7 @@ module GovukIndex
     delegate_to_payload :key_function, convert_to_array: true
     delegate_to_payload :keyword
     delegate_to_payload :laid_date
+    delegate_to_payload :land_types
     delegate_to_payload :land_use
     delegate_to_payload :licence_transaction_continuation_link
     delegate_to_payload :licence_transaction_industry, convert_to_array: true
@@ -78,7 +82,9 @@ module GovukIndex
     delegate_to_payload :market_sector
     delegate_to_payload :medical_specialism
     delegate_to_payload :opened_date
+    delegate_to_payload :open_or_closed
     delegate_to_payload :outcome_type
+    delegate_to_payload :payment_types
     delegate_to_payload :principle, convert_to_array: true
     delegate_to_payload :product_alert_type
     delegate_to_payload :product_category

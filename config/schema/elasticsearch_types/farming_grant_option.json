@@ -1,0 +1,180 @@
+{
+  "fields": [
+    "open_or_closed",
+    "areas_of_interest",
+    "land_types",
+    "funding_types",
+    "grant_schemes",
+    "payment_types"
+  ],
+  "expanded_search_result_fields": {
+    "open_or_closed": [
+      {
+        "label": "Open",
+        "value": "open"
+      },
+      {
+        "label": "Closed",
+        "value": "closed"
+      }
+    ],
+    "areas_of_interest": [
+      {
+        "label": "Access and engagement",
+        "value": "access-and-engagement"
+      },
+      {
+        "label": "Air quality",
+        "value": "air-quality"
+      },
+      {
+        "label": "Biodiversity",
+        "value": "biodiversity"
+      },
+      {
+        "label": "Boundaries",
+        "value": "boundaries"
+      },
+      {
+        "label": "Crops",
+        "value": "crops"
+      },
+      {
+        "label": "Flood risk",
+        "value": "flood-risk"
+      },
+      {
+        "label": "Forestry",
+        "value": "forestry"
+      },
+      {
+        "label": "Historic environment",
+        "value": "historic-environment"
+      },
+      {
+        "label": "Livestock management",
+        "value": "livestock-management"
+      },
+      {
+        "label": "Peat",
+        "value": "peat"
+      },
+      {
+        "label": "Pollinators and wildlife",
+        "value": "pollinators-and-wildlife"
+      },
+      {
+        "label": "Precision farming",
+        "value": "precision-farming"
+      },
+      {
+        "label": "Slurry management",
+        "value": "slurry-management"
+      },
+      {
+        "label": "Soil",
+        "value": "soil"
+      },
+      {
+        "label": "Trees (non-woodland)",
+        "value": "trees-non-woodland"
+      },
+      {
+        "label": "Vegetation control",
+        "value": "vegetation-control"
+      },
+      {
+        "label": "Water",
+        "value": "water"
+      }
+    ],
+    "land_types": [
+      {
+        "label": "Arable land",
+        "value": "arable-land"
+      },
+      {
+        "label": "Coast",
+        "value": "coast"
+      },
+      {
+        "label": "Grassland",
+        "value": "grassland"
+      },
+      {
+        "label": "Lowland heath",
+        "value": "lowland-heath"
+      },
+      {
+        "label": "Moorland and upland",
+        "value": "moorland-and-upland"
+      },
+      {
+        "label": "Organic land",
+        "value": "organic-land"
+      },
+      {
+        "label": "Priority habitats",
+        "value": "priority-habitats"
+      },
+      {
+        "label": "Waterbodies",
+        "value": "waterbodies"
+      },
+      {
+        "label": "Wetland",
+        "value": "wetland"
+      },
+      {
+        "label": "Woodland",
+        "value": "woodland"
+      }
+    ],
+    "funding_types": [
+      {
+        "label": "Option",
+        "value": "option"
+      },
+      {
+        "label": "Item",
+        "value": "item"
+      },
+      {
+        "label": "Action",
+        "value": "action"
+      }
+    ],
+    "grant_schemes": [
+      {
+        "label": "Combined Offer",
+        "value": "combined-offer"
+      },
+      {
+        "label": "Countryside Stewardship",
+        "value": "countryside-stewardship"
+      },
+      {
+        "label": "Farming Equipment and Technology Fund",
+        "value": "farming-equipment-and-technology-fund"
+      },
+      {
+        "label": "Slurry Infrastructure grant",
+        "value": "slurry-infrastructure-grant"
+      },
+      {
+        "label": "Sustainable Farming Incentive",
+        "value": "sustainable-farming-incentive"
+      }
+    ],
+    "payment_types": [
+      {
+        "label": "Capital",
+        "value": "capital"
+      },
+      {
+        "label": "Revenue",
+        "value": "revenue"
+      }
+    ]
+  }
+}
