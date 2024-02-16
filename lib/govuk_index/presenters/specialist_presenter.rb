@@ -56,7 +56,6 @@ module GovukIndex
     delegate_to_payload :flood_and_coastal_erosion_category
     delegate_to_payload :fund_state, convert_to_array: true
     delegate_to_payload :fund_type
-    delegate_to_payload :funding_types
     delegate_to_payload :funding_amount
     delegate_to_payload :funding_source
     delegate_to_payload :grant_schemes
@@ -82,7 +81,6 @@ module GovukIndex
     delegate_to_payload :market_sector
     delegate_to_payload :medical_specialism
     delegate_to_payload :opened_date
-    delegate_to_payload :open_or_closed
     delegate_to_payload :outcome_type
     delegate_to_payload :payment_types
     delegate_to_payload :principle, convert_to_array: true
