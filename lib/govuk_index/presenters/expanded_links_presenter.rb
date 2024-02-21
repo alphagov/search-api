@@ -48,10 +48,6 @@ module GovukIndex
       slugs("topical_events", "/government/topical-events/")
     end
 
-    def specialist_sectors
-      slugs("topics", "/topic/")
-    end
-
     def mainstream_browse_pages
       slugs("mainstream_browse_pages", "/browse/")
     end

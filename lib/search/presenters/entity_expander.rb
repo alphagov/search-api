@@ -36,7 +36,6 @@ module Search
       Mapping.new(:organisations),
       Mapping.new(:policy_areas),
       Mapping.new(:world_locations),
-      Mapping.new(:specialist_sectors),
       Mapping.new(:people),
       Mapping.new(:roles),
       Mapping.new(

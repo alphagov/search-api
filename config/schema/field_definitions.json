@@ -94,11 +94,6 @@
     "type": "identifiers"
   },
 
-  "specialist_sectors": {
-    "description": "The navigation \"topics\" that the document is assigned to.  Nothing to do with \"policy areas\"",
-    "type": "identifiers"
-  },
-
   "topic_content_ids": {
     "description": "The navigation \"topics\" that the document is assigned to. Nothing to do with \"policy areas\". As opposed to \"specialist_sectors\", this will include the \"content_ids\" of each topic rather than the slug. It will eventually replace \"specialist_sectors\".",
     "type": "identifiers"

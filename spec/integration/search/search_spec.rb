@@ -109,7 +109,7 @@ RSpec.describe "SearchTest" do
   it "can filter for missing field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
-    get "/search?filter_specialist_sectors=_MISSING"
+    get "/search?filter_manual=_MISSING"
 
     expect(result_links.sort).to eq(["/government-1", "/govuk-1"])
   end
@@ -117,7 +117,7 @@ RSpec.describe "SearchTest" do
   it "can filter for missing or specific value in field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
-    get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
+    get "/search?filter_document_type[]=_MISSING&filter_document_type[]=edition"
 
     expect(result_links.sort).to eq(["/government-1", "/govuk-1"])
   end
@@ -125,9 +125,9 @@ RSpec.describe "SearchTest" do
   it "can filter and reject" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
-    get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
+    get "/search?reject_mainstream_browse_pages=1&filter_document_type[]=edition"
 
-    expect(result_links.sort).to eq(["/government-2", "/govuk-2"])
+    expect(result_links.sort).to eq(["/government-1", "/government-2", "/govuk-1", "/govuk-2"])
   end
 
   describe "filter/reject when an attribute has multiple values" do
@@ -238,8 +238,7 @@ RSpec.describe "SearchTest" do
     get "/search?q=important&order=public_timestamp"
 
     results = parsed_response["results"]
-    expect(results[0].keys).not_to include("specialist_sectors")
-    expect(results[1]["specialist_sectors"]).to eq([{ "slug" => "farming" }])
+    expect(results[1]["title"]).to eq("Sample government document 2")
   end
 
   it "validates integer params" do

@@ -92,7 +92,6 @@ RSpec.describe "TaglookupDuringIndexingTest" do
     expect_document_is_in_rummager(
       {
         "link" => "/foo/bar",
-        "specialist_sectors" => ["my-topic/a", "my-topic/b"],
         "mainstream_browse_pages" => ["my-browse/1"],
         "organisations" => ["my-org/1", "my-court"],
         "primary_publishing_organisation" => ["my-org/1"],
@@ -132,7 +131,6 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       {
         "link" => "/my-base-path",
         "content_id" => "CONTENT-ID-OF-DOCUMENT",
-        "specialist_sectors" => ["my-topic/a"],
         "topic_content_ids" => %w[TOPIC-CONTENT-ID-1],
       },
       index: "government_test",

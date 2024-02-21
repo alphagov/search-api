@@ -25,7 +25,6 @@ module SearchIntegrationSpecHelper
       "title" => "Somewhat Unique CMA Case",
       "link" => "/cma-cases/somewhat-unique-cma-case",
       "indexable_content" => "Mergers of cheeses and faces",
-      "specialist_sectors" => %w[farming],
       "opened_date" => "2014-04-01",
       "format" => "cma_case",
       "document_type" => "cma_case",

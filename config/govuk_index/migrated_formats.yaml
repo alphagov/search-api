@@ -2,7 +2,6 @@ migrated:
 # Collections Publisher
 - coronavirus_landing_page
 - mainstream_browse_page
-- specialist_sector # topic format is mapped to specialist_sector in Rummager.
 # Contacts
 - contact
 # Content Publisher - formats not indexable when published by Whitehall

@@ -8,7 +8,6 @@ module Search
       @as_hash ||= {
         organisations:,
         organisation_content_ids: organisations,
-        specialist_sectors:,
         topic_content_ids: specialist_sectors,
 
         # Whitehall has a thing called `topic`, which is being renamed to "policy

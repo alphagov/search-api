@@ -87,11 +87,6 @@ module Indexer
     def taggings_with_slugs(links)
       links_with_slugs = {}
 
-      # We still call topics "specialist sectors" in rummager.
-      links_with_slugs["specialist_sectors"] = links["topics"].to_a.map do |content_item|
-        content_item["base_path"].sub("/topic/", "")
-      end
-
       links_with_slugs["mainstream_browse_pages"] = links["mainstream_browse_pages"].to_a.map do |content_item|
         content_item["base_path"].sub("/browse/", "")
       end

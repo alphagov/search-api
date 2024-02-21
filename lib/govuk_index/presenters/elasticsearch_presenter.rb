@@ -157,7 +157,6 @@ module GovukIndex
         sift_end_date: specialist.sift_end_date,
         sifting_status: specialist.sifting_status,
         slug:,
-        specialist_sectors: expanded_links.specialist_sectors,
         stage: specialist.stage,
         status: specialist.status,
         subject: specialist.subject,
@@ -256,8 +255,6 @@ module GovukIndex
 
     def slug
       case format
-      when "specialist_sector"
-        base_path.gsub(%r{^/topic/}, "")
       when "mainstream_browse_page"
         base_path.gsub(%r{^/browse/}, "")
       when "policy"

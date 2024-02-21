@@ -67,7 +67,6 @@ class BaseParameterParser
     rendering_app
     roles
     search_format_types
-    specialist_sectors
     taxons
     topical_events
     user_journey_document_supertype
@@ -94,7 +93,6 @@ class BaseParameterParser
     part_of_taxonomy_tree
     publishing_app
     rendering_app
-    specialist_sectors
     taxons
     topical_events
   ].freeze
@@ -135,7 +133,6 @@ class BaseParameterParser
     organisations
     public_timestamp
     slug
-    specialist_sectors
     title
     policy_areas
     world_locations

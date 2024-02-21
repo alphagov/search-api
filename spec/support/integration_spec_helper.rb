@@ -198,9 +198,6 @@ module IntegrationSpecHelper
         "format" => index_name =~ /govuk/ ? "answer" : "edition",
         "document_type" => "edition",
       }
-      if i.even?
-        fields["specialist_sectors"] = %w[farming]
-      end
       if short_index_name == "government"
         fields["public_timestamp"] = "#{i + 2000}-01-01T00:00:00"
       end

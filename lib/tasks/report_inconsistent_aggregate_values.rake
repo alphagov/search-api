@@ -14,7 +14,6 @@ task :report_inconsistent_aggregate_values do
     organisations
     policy_areas
     world_locations
-    specialist_sectors
     people
   ]
 
