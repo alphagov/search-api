@@ -1089,20 +1089,12 @@
     "type": "searchable_text"
   },
 
-  "open_or_closed":  {
-    "description": "State of the farming grant option",
-    "type": "identifiers"
-  },
   "areas_of_interest": {
     "description": "Areas covered by the farming grant",
     "type": "identifiers"
   },
   "land_types":  {
     "description": "Land that the farming grant refers to",
-    "type": "identifiers"
-  },
-  "funding_types": {
-    "description": "Types of farming grant funding available for the farming grant, i.e. option, item, action",
     "type": "identifiers"
   },
   "grant_schemes":  {

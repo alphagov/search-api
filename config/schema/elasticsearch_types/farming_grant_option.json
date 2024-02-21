@@ -1,23 +1,11 @@
 {
   "fields": [
-    "open_or_closed",
     "areas_of_interest",
     "land_types",
-    "funding_types",
     "grant_schemes",
     "payment_types"
   ],
   "expanded_search_result_fields": {
-    "open_or_closed": [
-      {
-        "label": "Open",
-        "value": "open"
-      },
-      {
-        "label": "Closed",
-        "value": "closed"
-      }
-    ],
     "areas_of_interest": [
       {
         "label": "Access and engagement",
@@ -130,36 +118,10 @@
         "value": "woodland"
       }
     ],
-    "funding_types": [
-      {
-        "label": "Option",
-        "value": "option"
-      },
-      {
-        "label": "Item",
-        "value": "item"
-      },
-      {
-        "label": "Action",
-        "value": "action"
-      }
-    ],
     "grant_schemes": [
-      {
-        "label": "Combined Offer",
-        "value": "combined-offer"
-      },
       {
         "label": "Countryside Stewardship",
         "value": "countryside-stewardship"
-      },
-      {
-        "label": "Farming Equipment and Technology Fund",
-        "value": "farming-equipment-and-technology-fund"
-      },
-      {
-        "label": "Slurry Infrastructure grant",
-        "value": "slurry-infrastructure-grant"
       },
       {
         "label": "Sustainable Farming Incentive",
