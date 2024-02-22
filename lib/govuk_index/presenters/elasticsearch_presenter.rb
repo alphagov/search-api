@@ -166,7 +166,6 @@ module GovukIndex
         tiers_or_standalone_items: specialist.tiers_or_standalone_items,
         time_registration: specialist.time_registration,
         title: common_fields.title,
-        topic_content_ids: expanded_links.topic_content_ids,
         topical_events: expanded_links.topical_events,
         topics: specialist.topics,
         traditional_term_grapevine_product_category: specialist.traditional_term_grapevine_product_category,

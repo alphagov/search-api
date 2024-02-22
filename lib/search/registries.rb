@@ -8,7 +8,6 @@ module Search
       @as_hash ||= {
         organisations:,
         organisation_content_ids: organisations,
-        topic_content_ids: specialist_sectors,
 
         # Whitehall has a thing called `topic`, which is being renamed to "policy
         # area", because there already are seven things called "topic". Until
@@ -53,10 +52,6 @@ module Search
           superseding_organisations
         ],
       )
-    end
-
-    def specialist_sectors
-      govuk_registry_for_document_format("specialist_sector")
     end
 
     def govuk_registry_for_document_format(format)

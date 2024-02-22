@@ -40,10 +40,6 @@ module GovukIndex
       content_ids("taxons")
     end
 
-    def topic_content_ids
-      content_ids("topics")
-    end
-
     def topical_events
       slugs("topical_events", "/government/topical-events/")
     end

@@ -97,7 +97,6 @@ RSpec.describe "TaglookupDuringIndexingTest" do
         "primary_publishing_organisation" => ["my-org/1"],
         "part_of_taxonomy_tree" => %w[TAXON-1],
         "taxons" => %w[TAXON-1],
-        "topic_content_ids" => %w[TOPIC-CONTENT-ID-1 TOPIC-CONTENT-ID-2],
         "mainstream_browse_page_content_ids" => %w[BROWSE-1],
         "organisation_content_ids" => %w[ORG-1 ORG-2],
       },
@@ -131,7 +130,6 @@ RSpec.describe "TaglookupDuringIndexingTest" do
       {
         "link" => "/my-base-path",
         "content_id" => "CONTENT-ID-OF-DOCUMENT",
-        "topic_content_ids" => %w[TOPIC-CONTENT-ID-1],
       },
       index: "government_test",
     )

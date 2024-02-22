@@ -39,7 +39,6 @@ module Search
            title
            description
            organisation_content_ids
-           topic_content_ids
            mainstream_browse_page_content_ids
            popularity
            format

@@ -489,49 +489,6 @@ RSpec.describe "SearchTest" do
     expect(parsed_response["results"].length).to eq 1
   end
 
-  it "expands topics" do
-    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
-    commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                        "content_id" => "topic-content-id",
-                                        "slug" => "topic-magic",
-                                        "title" => "Magic topic",
-                                        "link" => "/magic-topic-site",
-                                        # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => "specialist_sector" })
-
-    get "/search.json?q=dragons"
-
-    # Adds a new key with the expanded topics
-    expect_result_includes_ministry_of_magic_for_key(
-      first_result,
-      "expanded_topics",
-      {
-        "content_id" => "topic-content-id",
-        "slug" => "topic-magic",
-        "link" => "/magic-topic-site",
-        "title" => "Magic topic",
-      },
-    )
-
-    # Keeps the topic content ids
-    expect(first_result["topic_content_ids"]).to eq(%w[topic-content-id])
-  end
-
-  it "filter by topic content_ids works" do
-    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
-    commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                        "content_id" => "topic-content-id",
-                                        "slug" => "topic-magic",
-                                        "title" => "Magic topic",
-                                        "link" => "/magic-topic-site",
-                                        # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => "specialist_sector" })
-
-    get "/search.json?filter_topic_content_ids[]=topic-content-id"
-
-    expect(first_result["topic_content_ids"]).to eq(%w[topic-content-id])
-  end
-
   it "will not return withdrawn content" do
     commit_treatment_of_dragons_document({ "is_withdrawn" => true })
     get "/search?q=Advice on Treatment of Dragons"

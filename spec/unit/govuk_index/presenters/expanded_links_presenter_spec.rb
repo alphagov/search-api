@@ -204,25 +204,6 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expect(presenter.taxons).to eq(expected_taxons)
   end
 
-  it "topics" do
-    expanded_links = {
-      "topics" => [
-        {
-          "base_path" => "/topic/benefits-credits/tax-credits",
-          "content_id" => "f881f972-6094-4c7d-849c-9143461a9307",
-          "locale" => "en",
-          "title" => "Tax credits",
-        },
-      ],
-    }
-
-    presenter = expanded_links_presenter(expanded_links)
-
-    expected_topic_content_ids = %w[f881f972-6094-4c7d-849c-9143461a9307]
-
-    expect(presenter.topic_content_ids).to eq(expected_topic_content_ids)
-  end
-
   it "people" do
     expanded_links = {
       "people" => [

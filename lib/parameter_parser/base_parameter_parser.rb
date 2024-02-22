@@ -136,9 +136,7 @@ class BaseParameterParser
     title
     policy_areas
     world_locations
-    topic_content_ids
     topical_events
-    expanded_topics
     organisation_content_ids
     expanded_organisations
   ].freeze

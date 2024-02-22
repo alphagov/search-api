@@ -348,54 +348,6 @@ RSpec.describe "BatchSearchTest" do
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 
-  it "expands topics" do
-    commit_ministry_of_magic_document
-    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
-    commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                        "content_id" => "topic-content-id",
-                                        "slug" => "topic-magic",
-                                        "title" => "Magic topic",
-                                        "link" => "/magic-topic-site",
-                                        # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => "specialist_sector" })
-
-    get build_get_url([{ q: "dragons" }, { q: "ministry of magic" }])
-    results = parsed_response["results"]
-
-    expect_result_includes_ministry_of_magic_for_key(
-      results[0]["results"][0],
-      "expanded_topics",
-      {
-        "content_id" => "topic-content-id",
-        "slug" => "topic-magic",
-        "link" => "/magic-topic-site",
-        "title" => "Magic topic",
-      },
-    )
-
-    # Keeps the topic content ids
-    expect(results[0]["results"][0]["topic_content_ids"]).to eq(%w[topic-content-id])
-    expect_results_includes_ministry_of_magic(results, 1, 0)
-  end
-
-  it "filter by topic content_ids works" do
-    commit_ministry_of_magic_document
-    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
-    commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                        "content_id" => "topic-content-id",
-                                        "slug" => "topic-magic",
-                                        "title" => "Magic topic",
-                                        "link" => "/magic-topic-site",
-                                        # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => "specialist_sector" })
-
-    get build_get_url([{ filter_topic_content_ids: %w[topic-content-id] }, { q: "ministry of magic" }])
-    results = parsed_response["results"]
-
-    expect(results[0]["results"][0]["topic_content_ids"]).to eq(%w[topic-content-id])
-    expect_results_includes_ministry_of_magic(results, 1, 0)
-  end
-
   it "will not return withdrawn content" do
     commit_ministry_of_magic_document
     commit_treatment_of_dragons_document({ "is_withdrawn" => true })
