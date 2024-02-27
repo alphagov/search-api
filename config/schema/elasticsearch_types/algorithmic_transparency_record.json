@@ -192,6 +192,10 @@
     ],
     "algorithmic_transparency_record_region": [
       {
+        "label": "UK",
+        "value": "uk"
+      },
+      {
         "label": "Northern Ireland",
         "value": "northern-ireland"
       },
