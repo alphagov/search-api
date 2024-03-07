@@ -98,7 +98,7 @@ RSpec.describe "BatchSearchTest" do
 
   it "can filter for missing field or specific value in field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
-    get build_get_url([{ filter_specialist_sectors: %w[_MISSING"] }, { filter_specialist_sectors: %w[_MISSING farming] }])
+    get build_get_url([{ filter_document_type: %w[_MISSING"] }, { filter_document_type: %w[_MISSING edition] }])
     results = parsed_response["results"]
     expect(result_links(results[0]).sort).to eq([])
     expect(result_links(results[1]).sort).to eq(["/government-1", "/govuk-1"])
@@ -106,9 +106,9 @@ RSpec.describe "BatchSearchTest" do
 
   it "can filter and reject" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
-    get build_get_url([{ reject_mainstream_browse_pages: 1, filter_specialist_sectors: %w[farming] }, { filter_specialist_sectors: %w[_MISSING farming] }])
+    get build_get_url([{ reject_mainstream_browse_pages: 1, filter_document_type: %w[edition] }, { filter_document_type: %w[_MISSING edition] }])
     results = parsed_response["results"]
-    expect(result_links(results[0]).sort).to eq(["/government-2", "/govuk-2"])
+    expect(result_links(results[0]).sort).to eq(["/government-1", "/government-2", "/govuk-1", "/govuk-2"])
     expect(result_links(results[1]).sort).to eq(["/government-1", "/government-2", "/govuk-1", "/govuk-2"])
   end
 
@@ -120,8 +120,6 @@ RSpec.describe "BatchSearchTest" do
     expect_search_has_result_count(results[0], 1)
     expect_results_includes_ministry_of_magic(results, 0, 0)
     expect_search_has_result_count(results[1], 4)
-    expect(results[1]["results"][0]).not_to include("specialist_sectors")
-    expect(results[1]["results"][1]["specialist_sectors"]).to eq([{ "slug" => "farming" }])
   end
 
   it "validates integer params and other valid query also fails" do
@@ -347,54 +345,6 @@ RSpec.describe "BatchSearchTest" do
     results = parsed_response["results"]
 
     expect_result_includes_ministry_of_magic_for_key(results[0]["results"][0], "expanded_organisations", "content_id" => "organisation-content-id")
-    expect_results_includes_ministry_of_magic(results, 1, 0)
-  end
-
-  it "expands topics" do
-    commit_ministry_of_magic_document
-    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
-    commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                        "content_id" => "topic-content-id",
-                                        "slug" => "topic-magic",
-                                        "title" => "Magic topic",
-                                        "link" => "/magic-topic-site",
-                                        # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => "specialist_sector" })
-
-    get build_get_url([{ q: "dragons" }, { q: "ministry of magic" }])
-    results = parsed_response["results"]
-
-    expect_result_includes_ministry_of_magic_for_key(
-      results[0]["results"][0],
-      "expanded_topics",
-      {
-        "content_id" => "topic-content-id",
-        "slug" => "topic-magic",
-        "link" => "/magic-topic-site",
-        "title" => "Magic topic",
-      },
-    )
-
-    # Keeps the topic content ids
-    expect(results[0]["results"][0]["topic_content_ids"]).to eq(%w[topic-content-id])
-    expect_results_includes_ministry_of_magic(results, 1, 0)
-  end
-
-  it "filter by topic content_ids works" do
-    commit_ministry_of_magic_document
-    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
-    commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                        "content_id" => "topic-content-id",
-                                        "slug" => "topic-magic",
-                                        "title" => "Magic topic",
-                                        "link" => "/magic-topic-site",
-                                        # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => "specialist_sector" })
-
-    get build_get_url([{ filter_topic_content_ids: %w[topic-content-id] }, { q: "ministry of magic" }])
-    results = parsed_response["results"]
-
-    expect(results[0]["results"][0]["topic_content_ids"]).to eq(%w[topic-content-id])
     expect_results_includes_ministry_of_magic(results, 1, 0)
   end
 

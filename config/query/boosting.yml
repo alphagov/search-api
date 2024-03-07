@@ -16,8 +16,6 @@ base:
     topical_event: 1.5
     # Hide mainstream browse pages
     mainstream_browse_page: 0
-    # Topics
-    specialist_sector: 2.5
   content_store_document_type:
     detailed_guide: 2.5
     document_collection: 2.5

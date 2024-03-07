@@ -30,7 +30,6 @@ will be silently ignored (see config/schema).
     "title": "Tax your vehicle",
     "_type": "edition",
     "_id": "/vehicle-tax",
-    "specialist_sectors": []
 }
 ```
 

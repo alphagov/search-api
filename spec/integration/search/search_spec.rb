@@ -109,7 +109,7 @@ RSpec.describe "SearchTest" do
   it "can filter for missing field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
-    get "/search?filter_specialist_sectors=_MISSING"
+    get "/search?filter_manual=_MISSING"
 
     expect(result_links.sort).to eq(["/government-1", "/govuk-1"])
   end
@@ -117,7 +117,7 @@ RSpec.describe "SearchTest" do
   it "can filter for missing or specific value in field" do
     build_sample_documents_on_content_indices(documents_per_index: 1)
 
-    get "/search?filter_specialist_sectors[]=_MISSING&filter_specialist_sectors[]=farming"
+    get "/search?filter_document_type[]=_MISSING&filter_document_type[]=edition"
 
     expect(result_links.sort).to eq(["/government-1", "/govuk-1"])
   end
@@ -125,9 +125,9 @@ RSpec.describe "SearchTest" do
   it "can filter and reject" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
-    get "/search?reject_mainstream_browse_pages=1&filter_specialist_sectors[]=farming"
+    get "/search?reject_mainstream_browse_pages=1&filter_document_type[]=edition"
 
-    expect(result_links.sort).to eq(["/government-2", "/govuk-2"])
+    expect(result_links.sort).to eq(["/government-1", "/government-2", "/govuk-1", "/govuk-2"])
   end
 
   describe "filter/reject when an attribute has multiple values" do
@@ -238,8 +238,7 @@ RSpec.describe "SearchTest" do
     get "/search?q=important&order=public_timestamp"
 
     results = parsed_response["results"]
-    expect(results[0].keys).not_to include("specialist_sectors")
-    expect(results[1]["specialist_sectors"]).to eq([{ "slug" => "farming" }])
+    expect(results[1]["title"]).to eq("Sample government document 2")
   end
 
   it "validates integer params" do
@@ -488,49 +487,6 @@ RSpec.describe "SearchTest" do
     expect(first_result["topical_events"]).to be_truthy
     expect(first_result["topical_events"]).to eq([topical_event_of_interest])
     expect(parsed_response["results"].length).to eq 1
-  end
-
-  it "expands topics" do
-    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
-    commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                        "content_id" => "topic-content-id",
-                                        "slug" => "topic-magic",
-                                        "title" => "Magic topic",
-                                        "link" => "/magic-topic-site",
-                                        # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => "specialist_sector" })
-
-    get "/search.json?q=dragons"
-
-    # Adds a new key with the expanded topics
-    expect_result_includes_ministry_of_magic_for_key(
-      first_result,
-      "expanded_topics",
-      {
-        "content_id" => "topic-content-id",
-        "slug" => "topic-magic",
-        "link" => "/magic-topic-site",
-        "title" => "Magic topic",
-      },
-    )
-
-    # Keeps the topic content ids
-    expect(first_result["topic_content_ids"]).to eq(%w[topic-content-id])
-  end
-
-  it "filter by topic content_ids works" do
-    commit_treatment_of_dragons_document({ "topic_content_ids" => %w[topic-content-id] })
-    commit_ministry_of_magic_document({ "index" => "govuk_test",
-                                        "content_id" => "topic-content-id",
-                                        "slug" => "topic-magic",
-                                        "title" => "Magic topic",
-                                        "link" => "/magic-topic-site",
-                                        # TODO: we should rename this format to `topic` and update all apps
-                                        "format" => "specialist_sector" })
-
-    get "/search.json?filter_topic_content_ids[]=topic-content-id"
-
-    expect(first_result["topic_content_ids"]).to eq(%w[topic-content-id])
   end
 
   it "will not return withdrawn content" do

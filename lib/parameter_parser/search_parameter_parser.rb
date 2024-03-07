@@ -2,7 +2,6 @@ class SearchParameterParser < BaseParameterParser
   VIRTUAL_FIELDS = %w[
     title_with_highlighting
     description_with_highlighting
-    expanded_topics
     expanded_organisations
   ].freeze
   MAX_RESULTS = 1500

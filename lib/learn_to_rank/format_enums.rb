@@ -39,7 +39,6 @@ module LearnToRank
         "recommended-link" => 35,
         "raib_report" => 36,
         "licence" => 37,
-        "specialist_sector" => 38,
         "transaction" => 39,
         "world_location_news" => 40,
         "statutory_instrument" => 41,

@@ -36,13 +36,8 @@ module Search
       Mapping.new(:organisations),
       Mapping.new(:policy_areas),
       Mapping.new(:world_locations),
-      Mapping.new(:specialist_sectors),
       Mapping.new(:people),
       Mapping.new(:roles),
-      Mapping.new(
-        :topic_content_ids,
-        new_field_name: :expanded_topics,
-      ),
       Mapping.new(
         :organisation_content_ids,
         new_field_name: :expanded_organisations,
@@ -67,7 +62,7 @@ module Search
   private
 
     def fetch_expanded_version_by(field, registry, mapping)
-      if %i[topic_content_ids organisation_content_ids].include?(mapping.registry_name)
+      if %i[organisation_content_ids].include?(mapping.registry_name)
         item_from_registry_by_content_id(registry, field)
       else
         item_from_registry_by_slug(registry, field)
