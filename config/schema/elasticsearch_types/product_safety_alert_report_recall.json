@@ -58,6 +58,7 @@
       {"label": "Import rejected at border", "value": "import-rejected-at-border"},
       {"label": "Making the marketing of the product subject to prior conditions", "value": "making-marketing-of-product-subject-to-prior-conditions"},
       {"label": "Marking the product with appropriate warnings on the risks", "value": "marking-product-with-appropriate-warnings-on-risks"},
+      {"label": "Modification programme", "value":  "modification-programme"},
       {"label": "Recall of the product from end users", "value": "recall-of-product-from-end-users"},
       {"label": "Removal of the listing by the online marketplace", "value": "removal-of-listing-by-online-marketplace"},
       {"label": "Temporary ban on the supply, offer to supply and display of the product", "value": "temporary-ban-on-supply-offer-and-display-of-product"},
