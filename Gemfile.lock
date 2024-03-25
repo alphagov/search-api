@@ -480,7 +480,7 @@ GEM
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.3)
-    rack (2.2.8.1)
+    rack (2.2.9)
     rack-logstasher (2.0.0)
       logstash-event (~> 1.2)
       rack (>= 2, < 4)
