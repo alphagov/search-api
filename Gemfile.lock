@@ -520,7 +520,7 @@ GEM
     rb-kqueue (0.2.8)
       ffi (>= 0.5.0)
     rbtree (0.4.6)
-    rdoc (6.6.2)
+    rdoc (6.6.3.1)
       psych (>= 4.0.0)
     redis (4.8.1)
     redis-namespace (1.11.0)
