@@ -19,6 +19,8 @@ on:
         - staging
         - production
         default: 'integration'
+  release:
+    types: [released]
 
 jobs:
   build-and-publish-image:
