@@ -69,6 +69,5 @@ topic: edition # Collections Publisher
 transaction: edition
 travel_advice: edition # Travel advice publisher
 travel_advice_index: edition # Travel advice publisher
-uk_market_conformity_assessment_body: uk_market_conformity_assessment_body # Specialist Publisher
 utaac_decision: utaac_decision # Specialist Publisher
 world_news_story: edition
