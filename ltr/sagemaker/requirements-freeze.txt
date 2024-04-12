@@ -13,7 +13,7 @@ contextlib2==21.6.0
 dill==0.3.7
 docutils==0.16
 google-pasta==0.2.0
-idna==3.4
+idna==3.7
 importlib-metadata==6.8.0
 jmespath==1.0.1
 jsonschema==4.19.0
