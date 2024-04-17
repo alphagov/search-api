@@ -54,6 +54,7 @@ module GovukIndex
     delegate_to_payload :disease_type, convert_to_array: true
     delegate_to_payload :eligible_entities
     delegate_to_payload :flood_and_coastal_erosion_category
+    delegate_to_payload :focus_sector, convert_to_array: true
     delegate_to_payload :fund_state, convert_to_array: true
     delegate_to_payload :fund_type
     delegate_to_payload :funding_amount

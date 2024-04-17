@@ -1040,6 +1040,9 @@
   "assurance_technique_approach": {
     "type": "identifiers"
   },
+  "focus_sector": {
+    "type": "identifiers"
+  },
 
   "algorithmic_transparency_record_organisation": {
     "description": "The organisation that published the record",
