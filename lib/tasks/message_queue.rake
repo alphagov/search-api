@@ -17,7 +17,6 @@ namespace :message_queue do
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_to_be_indexed",
       processor: Indexer::MessageProcessor.new,
-      statsd_client: Services.statsd_client,
     ).run
   end
 
@@ -26,7 +25,6 @@ namespace :message_queue do
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_govuk_index",
       processor: GovukIndex::PublishingEventProcessor.new,
-      statsd_client: Services.statsd_client,
     ).run
   end
 
@@ -35,7 +33,6 @@ namespace :message_queue do
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_bulk_reindex",
       processor: GovukIndex::PublishingEventProcessor.new,
-      statsd_client: Services.statsd_client,
     ).run
   end
 end
