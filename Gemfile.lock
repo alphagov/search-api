@@ -175,7 +175,7 @@ GEM
       sentry-ruby (~> 5.3)
       statsd-ruby (~> 1.5)
     govuk_document_types (2.0.0)
-    govuk_message_queue_consumer (4.2.0)
+    govuk_message_queue_consumer (5.0.0)
       bunny (~> 2.17)
     govuk_schemas (5.0.0)
       json-schema (>= 2.8, < 4.4)
