@@ -1057,10 +1057,6 @@
     "description": "Land that the farming grant refers to",
     "type": "identifiers"
   },
-  "grant_schemes":  {
-    "description": "Type of scheme",
-    "type": "identifiers"
-  },
   "payment_types": {
     "description": "Farming grant payment type, i.e. capital, revenue",
     "type": "identifiers"
