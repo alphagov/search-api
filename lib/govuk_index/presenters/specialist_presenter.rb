@@ -59,7 +59,6 @@ module GovukIndex
     delegate_to_payload :fund_type
     delegate_to_payload :funding_amount
     delegate_to_payload :funding_source
-    delegate_to_payload :grant_schemes
     delegate_to_payload :grant_type, convert_to_array: true
     delegate_to_payload :hidden_indexable_content
     delegate_to_payload :industries

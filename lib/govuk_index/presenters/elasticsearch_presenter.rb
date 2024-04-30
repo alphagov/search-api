@@ -82,7 +82,6 @@ module GovukIndex
         government_document_supertype: common_fields.government_document_supertype,
         government_name: common_fields.government_name,
         grant_type: specialist.grant_type,
-        grant_schemes: specialist.grant_schemes,
         hidden_indexable_content: specialist.hidden_indexable_content,
         hmrc_manual_section_id: common_fields.section_id,
         image_url:,
