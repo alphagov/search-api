@@ -1,5 +1,5 @@
 awscli==1.29.24
-sagemaker==2.177.0
+sagemaker==2.218.0
 ## The following requirements were added by pip freeze:
 attrs==23.1.0
 boto3==1.28.24
