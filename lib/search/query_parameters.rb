@@ -77,7 +77,7 @@ module Search
     end
 
     def rerank
-      RelevanceHelpers.ltr_enabled? && [nil, "relevance"].include?(order) && ab_tests[:relevance] != "disable"
+      false
     end
 
     def use_shingles?
