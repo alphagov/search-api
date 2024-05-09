@@ -48,6 +48,10 @@
       {
         "label": "Department for Education",
         "value": "department-for-education"
+      },
+      {
+        "label": "Greater Cambridge Partnership",
+        "value": "greater-cambridge-partnership"
       }
     ],
     "algorithmic_transparency_record_organisation_type": [
