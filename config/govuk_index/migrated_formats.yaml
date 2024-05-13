@@ -39,7 +39,7 @@ migrated:
 - employment_tribunal_decision
 - european_structural_investment_fund # use Rummager name as mapping occurs before validation check
 - export_health_certificate
-- farming_grant_option
+- farming_grant
 - international_development_fund
 - licence_transaction
 - flood_and_coastal_erosion_risk_management_research_report
