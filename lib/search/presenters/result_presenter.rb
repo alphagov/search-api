@@ -89,12 +89,6 @@ module Search
       # debugging is requested, so it's nicer to be explicit about what score
       # it is.
       result[:es_score] = raw_result["_score"]
-      # LearnToRank generated values
-      if RelevanceHelpers.ltr_enabled?
-        result[:model_score] = raw_result["model_score"]
-        result[:original_rank] = raw_result["original_rank"]
-        result[:combined_score] = raw_result["combined_score"]
-      end
 
       result[:_id] = raw_result["_id"]
 

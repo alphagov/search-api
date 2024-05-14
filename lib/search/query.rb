@@ -30,8 +30,8 @@ module Search
       payload = builder_payload[:payload]
 
       es_response = process_elasticsearch_errors { timed_raw_search(payload) }
-      reranked_response = rerank(es_response, search_params)
-      process_es_response(search_params, builder, payload, reranked_response[:es_response], reranked_response[:reranked])
+
+      process_es_response(search_params, builder, payload, es_response)
     end
 
   private
@@ -80,25 +80,7 @@ module Search
       end
     end
 
-    def rerank(es_response, search_params)
-      return { reranked: false, es_response: } unless search_params.rerank
-
-      results = es_response.dig("hits", "hits").to_a
-      return { reranked: false, es_response: } if results.empty? || results[0].fetch("_score").nil?
-
-      reranked = LearnToRank::Reranker.new.rerank(
-        es_results: results,
-        query: search_params.query,
-        model_variant: search_params.model_variant,
-      )
-
-      return { reranked: false, es_response: } if reranked.nil?
-
-      es_response["hits"]["hits"] = reranked
-      { reranked: true, es_response: }
-    end
-
-    def process_es_response(search_params, builder, payload, es_response, reranked)
+    def process_es_response(search_params, builder, payload, es_response)
       # Augment the response with the suggest result from a separate query.
       if search_params.suggest_spelling?
         es_response["suggest"] = run_spell_checks(search_params)
@@ -117,7 +99,6 @@ module Search
         presented_aggregates:,
         schema: index.schema,
         query_payload: payload,
-        reranked:,
       ).present
     end
 

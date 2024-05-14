@@ -11,7 +11,7 @@ module Search
       es_responses = timed_msearch(payloads)["responses"]
 
       searches_params.map.with_index do |search_params, i|
-        process_es_response(search_params, builders[i], payloads[i], es_responses[i], false)
+        process_es_response(search_params, builders[i], payloads[i], es_responses[i])
       end
     end
 

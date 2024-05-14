@@ -1,7 +1,7 @@
 module Search
   # Presents a combined set of results for a GOV.UK site search
   class ResultSetPresenter
-    attr_reader :es_response, :presented_aggregates, :reranked, :search_params
+    attr_reader :es_response, :presented_aggregates, :search_params
 
     # `registries` should be a map from registry names to registries,
     # which gets passed to the ResultSetPresenter class. For example:
@@ -12,8 +12,7 @@ module Search
                    registries: {},
                    presented_aggregates: {},
                    schema: nil,
-                   query_payload: {},
-                   reranked: false)
+                   query_payload: {})
 
       @es_response = es_response
       @aggregates = es_response["aggregations"]
@@ -22,7 +21,6 @@ module Search
       @presented_aggregates = presented_aggregates
       @schema = schema
       @query_payload = query_payload
-      @reranked = reranked
     end
 
     def present
@@ -34,7 +32,6 @@ module Search
         suggested_queries:,
         suggested_autocomplete:,
         es_cluster: search_params.cluster.key,
-        reranked:,
       }
 
       if search_params.show_query?
