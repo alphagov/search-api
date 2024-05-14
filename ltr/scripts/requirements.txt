@@ -1,6 +1,0 @@
-absl-py
-numpy
-six
-tensorboard
-tensorflow
-tensorflow-ranking
