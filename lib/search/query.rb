@@ -30,8 +30,8 @@ module Search
       payload = builder_payload[:payload]
 
       es_response = process_elasticsearch_errors { timed_raw_search(payload) }
-      reranked_response = rerank(es_response, search_params)
-      process_es_response(search_params, builder, payload, reranked_response[:es_response], reranked_response[:reranked])
+
+      process_es_response(search_params, builder, payload, es_response, false)
     end
 
   private
@@ -78,24 +78,6 @@ module Search
       else
         raise
       end
-    end
-
-    def rerank(es_response, search_params)
-      return { reranked: false, es_response: } unless search_params.rerank
-
-      results = es_response.dig("hits", "hits").to_a
-      return { reranked: false, es_response: } if results.empty? || results[0].fetch("_score").nil?
-
-      reranked = LearnToRank::Reranker.new.rerank(
-        es_results: results,
-        query: search_params.query,
-        model_variant: search_params.model_variant,
-      )
-
-      return { reranked: false, es_response: } if reranked.nil?
-
-      es_response["hits"]["hits"] = reranked
-      { reranked: true, es_response: }
     end
 
     def process_es_response(search_params, builder, payload, es_response, reranked)

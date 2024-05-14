@@ -76,10 +76,6 @@ module Search
       query && (suggest.include?("spelling") || suggest.include?("spelling_with_highlighting"))
     end
 
-    def rerank
-      false
-    end
-
     def use_shingles?
       ab_tests[:shingles] == "B"
     end
