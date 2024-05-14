@@ -29,7 +29,7 @@ hmrc_manual: hmrc_manual
 hmrc_manual_section: hmrc_manual_section
 international_development_fund: international_development_fund # Specialist Publisher
 flood_and_coastal_erosion_risk_management_research_report: flood_and_coastal_erosion_risk_management_research_report # Specialist Publisher
-farming_grant_option: farming_grant_option # Specialist Publisher
+farming_grant: farming_grant # Specialist Publisher
 licence: edition
 licence_transaction: licence_transaction # Specialist Publisher
 local_transaction: edition
