@@ -19,7 +19,7 @@ jobs:
       contents: read
       security-events: write
       actions: read
-  
+
   codeql-sast:
     name: CodeQL SAST scan
     uses: alphagov/govuk-infrastructure/.github/workflows/codeql-analysis.yml@main
@@ -29,22 +29,6 @@ jobs:
   dependency-review:
     name: Dependency Review scan
     uses: alphagov/govuk-infrastructure/.github/workflows/dependency-review.yml@main
-  
-  check-ltr-dependencies:
-    name: Check Learn to Rank dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-      - name: Check LTR dependencies install
-        run: |
-          set -ex
-          sudo apt-get update
-          sudo apt-get install -y liblapack-dev
-          pip install -r ltr/sagemaker/requirements-freeze.txt
-          pip install -r ltr/scripts/requirements-freeze.txt
 
   lint-ruby:
     name: Lint Ruby
