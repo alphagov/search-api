@@ -13,7 +13,6 @@ require "rummager"
 require "routes/content"
 require "govuk_app_config"
 require "healthcheck/elasticsearch_connectivity_check"
-require "healthcheck/reranker_healthcheck"
 require "healthcheck/elasticsearch_index_diskspace_check"
 
 class Rummager < Sinatra::Application
@@ -308,10 +307,6 @@ class Rummager < Sinatra::Application
       GovukHealthcheck::SidekiqRedis,
       Healthcheck::ElasticsearchConnectivityCheck,
     ).call
-  end
-
-  get "/healthcheck/reranker" do
-    Healthcheck::RerankerHealthcheck.new.to_hash.to_json
   end
 
   get "/healthcheck/elasticsearch-diskspace" do

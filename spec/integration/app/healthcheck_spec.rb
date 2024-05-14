@@ -34,28 +34,6 @@ RSpec.describe "HealthcheckTest" do
     end
   end
 
-  describe "#reranker_healthcheck check" do
-    # We only check for cannot connect because govuk_app_config has tests for this
-    context "when reranker healthcheck fails" do
-      before do
-        make_use_tensorflow_serving
-        stub_ranker_container_doesnt_exist
-      end
-
-      it "returns a warning status" do
-        get "/healthcheck/reranker"
-        expect(parsed_response["status"]).to eq "warning"
-      end
-    end
-
-    context "when reranker healthcheck passes" do
-      it "returns an OK status" do
-        get "/healthcheck/reranker"
-        expect(parsed_response["status"]).to eq "ok"
-      end
-    end
-  end
-
   describe "#elasticsearch_connectivity check" do
     context "when elasticsearch CANNOT be connected to" do
       before do
