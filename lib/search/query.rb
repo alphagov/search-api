@@ -31,7 +31,7 @@ module Search
 
       es_response = process_elasticsearch_errors { timed_raw_search(payload) }
 
-      process_es_response(search_params, builder, payload, es_response, false)
+      process_es_response(search_params, builder, payload, es_response)
     end
 
   private
@@ -80,7 +80,7 @@ module Search
       end
     end
 
-    def process_es_response(search_params, builder, payload, es_response, reranked)
+    def process_es_response(search_params, builder, payload, es_response)
       # Augment the response with the suggest result from a separate query.
       if search_params.suggest_spelling?
         es_response["suggest"] = run_spell_checks(search_params)
@@ -99,7 +99,6 @@ module Search
         presented_aggregates:,
         schema: index.schema,
         query_payload: payload,
-        reranked:,
       ).present
     end
 
