@@ -159,7 +159,6 @@ require "search/query_components/autocomplete"
 require "search/query_parameters"
 require "search/registries"
 require "search/registry"
-require "search/relevance_helpers"
 require "search/suggestion_blocklist"
 require "search/timed_cache"
 
