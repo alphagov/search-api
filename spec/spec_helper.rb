@@ -31,7 +31,6 @@ Sidekiq.logger.level = Logger::WARN
 require "webmock/rspec"
 
 require "#{__dir__}/support/default_mappings"
-require "#{__dir__}/support/learn_to_rank_explain"
 require "#{__dir__}/support/spec_helpers"
 require "#{__dir__}/support/schema_helpers"
 require "#{__dir__}/support/integration_spec_helper"
