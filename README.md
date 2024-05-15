@@ -43,7 +43,6 @@ bundle exec rake
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
 - [Popularity information](docs/popularity.md): Search API uses Google Analytics data to improve search results.
 - [Publishing document finders](docs/publishing-finders.md): Information about publishing finders using rake tasks
-- [Learning to rank](docs/learning-to-rank.md): Guidance on how to run the ranking model locally
 
 ## Licence
 

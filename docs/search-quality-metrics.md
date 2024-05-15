@@ -15,13 +15,9 @@ click on something that isn't what they were looking for. But this
 serves our needs in the absence of a more sophisticated way of
 measuring user success following a search.
 
-We also measure nDCG before and after re-ranking over time, to
-tell us how search is performing against relevance judgements.
-
 ## Offline metrics
 
-Our main offline metric is nDCG. We measure this before and after
-re-ranking by our [learning to rank model](learning-to-rank.md).
+Our main offline metric is nDCG.
 
 We use Elasticsearch's [Ranking Evaluation API](ranking_evaluation_api)
 to assess the quality of results retrieved from Elasticsearch prior
