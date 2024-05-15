@@ -36,15 +36,6 @@ a `combined_score` on every document.
 The `combined_score` is used for ranking results and represents how
 relevant we think a result is to your query.
 
-## What impacts relevancy?
-
-Once Search API has [retrieved](#what-impacts-document-retrieval) the
-top scoring documents from the search indexes, it ranks the results
-in order of relevance using a pre-trained model.
-
-See the [learning to rank](learning-to-rank.md) documentation for
-more details.
-
 ## What impacts document retrieval?
 
 Out of the box, Elasticsearch comes with a decent scoring algorithm.
@@ -102,13 +93,13 @@ field and its number of page views in the `vc_14` field.
 
 This is an implementation of [this curve](https://solr.apache.org/guide/7_7/function-queries.html#recip-function),
 and is applied to documents of the "announcement" type in the [booster.rb][]
-file.  It serves to increase the score of new documents and decrease 
+file.  It serves to increase the score of new documents and decrease
 the score of old documents.
 
 Only documents of `search_format_types` 'announcement' are affected by
 recency boosting.
 
-The curve was chosen so that it only applies the boost temporarily (2 
+The curve was chosen so that it only applies the boost temporarily (2
 months moderate decay then a rapid decay after that).
 
 #### Properties
