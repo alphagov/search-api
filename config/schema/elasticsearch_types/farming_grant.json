@@ -110,6 +110,10 @@
         "value": "coastal"
       },
       {
+        "label": "Farmyard",
+        "value": "farmyard"
+      },
+      {
         "label": "Grassland",
         "value": "grassland"
       },
