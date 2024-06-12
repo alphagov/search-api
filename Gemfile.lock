@@ -210,7 +210,7 @@ GEM
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
     little-plugger (1.1.4)
-    logging (2.3.1)
+    logging (2.4.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.14)
     logstash-event (1.2.02)
