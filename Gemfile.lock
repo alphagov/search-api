@@ -484,7 +484,7 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.0)
     rack (2.2.9)
-    rack-logstasher (2.1.0)
+    rack-logstasher (2.2.0)
       logstash-event (~> 1.2)
       rack (>= 2, < 4)
     rack-protection (3.2.0)
