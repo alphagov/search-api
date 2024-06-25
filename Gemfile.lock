@@ -27,8 +27,8 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
-    addressable (2.8.6)
-      public_suffix (>= 2.0.2, < 6.0)
+    addressable (2.8.7)
+      public_suffix (>= 2.0.2, < 7.0)
     amq-protocol (2.3.2)
     ast (2.4.2)
     aws-eventstream (1.3.0)
@@ -81,6 +81,8 @@ GEM
       faraday (~> 1)
       multi_json
     erubi (1.13.0)
+    faker (3.4.1)
+      i18n (>= 1.8.11, < 2)
     faraday (1.10.3)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -175,7 +177,8 @@ GEM
     govuk_document_types (3.0.0)
     govuk_message_queue_consumer (5.0.1)
       bunny (~> 2.17)
-    govuk_schemas (5.0.2)
+    govuk_schemas (5.0.4)
+      faker (~> 3.4.1)
       json-schema (>= 2.8, < 4.4)
     govuk_sidekiq (8.0.1)
       gds-api-adapters (>= 19.1.0)
@@ -473,7 +476,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.1.2)
       stringio
-    public_suffix (5.0.5)
+    public_suffix (6.0.0)
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.8.0)
