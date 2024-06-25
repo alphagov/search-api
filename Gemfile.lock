@@ -107,7 +107,7 @@ GEM
     faraday-rack (1.0.0)
     faraday-retry (1.0.3)
     ffi (1.15.5)
-    gds-api-adapters (96.0.1)
+    gds-api-adapters (96.0.2)
       addressable
       link_header
       null_logger
