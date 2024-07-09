@@ -23,7 +23,11 @@ private
     if document["link"].start_with?("http")
       document["link"]
     else
-      URI.join(base_url, document["link"]).to_s
+      begin
+        URI.join(base_url, document["link"]).to_s
+      rescue URI::InvalidURIError
+        URI.join(base_url, URI::DEFAULT_PARSER.escape(document["link"])).to_s
+      end
     end
   end
 
