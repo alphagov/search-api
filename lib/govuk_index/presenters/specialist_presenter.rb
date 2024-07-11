@@ -74,6 +74,9 @@ module GovukIndex
     delegate_to_payload :licence_transaction_licence_identifier
     delegate_to_payload :licence_transaction_location, convert_to_array: true
     delegate_to_payload :licence_transaction_will_continue_on
+    delegate_to_payload :life_saving_maritime_appliance_service_station_regions, convert_to_array: true
+    delegate_to_payload :life_saving_maritime_appliance_type, convert_to_array: true
+    delegate_to_payload :life_saving_maritime_appliance_manufacturer, convert_to_array: true
     delegate_to_payload :location, convert_to_array: true
     delegate_to_payload :marine_notice_topic
     delegate_to_payload :marine_notice_type
