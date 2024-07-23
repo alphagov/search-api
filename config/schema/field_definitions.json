@@ -1060,5 +1060,15 @@
   "payment_types": {
     "description": "Farming grant payment type, i.e. capital, revenue",
     "type": "identifiers"
+  },
+
+  "life_saving_maritime_appliance_service_station_regions": {
+    "type": "identifiers"
+  },
+  "life_saving_maritime_appliance_type": {
+    "type": "identifiers"
+  },
+  "life_saving_maritime_appliance_manufacturer": {
+    "type": "identifiers"
   }
 }
