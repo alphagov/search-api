@@ -52,6 +52,54 @@
       {
         "label": "Greater Cambridge Partnership",
         "value": "greater-cambridge-partnership"
+      },
+      {
+        "label": "Dorset Council",
+        "value": "dorset-council"
+      },
+      {
+        "label": "Department for Environment, Food and Rural Affairs",
+        "value": "department-for-environment-food-and-rural-affairs"
+      },
+      {
+        "label": "Ministry of Housing, Communities & Local Government",
+        "value": "ministry-of-housing-communities-local-government"
+      },
+      {
+        "label": "Department for Energy Security and Net Zero",
+        "value": "department-for-energy-security-and-net-zero"
+      },
+      {
+        "label": "Department for Transport",
+        "value": "department-for-transport"
+      },
+      {
+        "label": "Department for Work and Pensions",
+        "value": "department-for-work-and-pensions"
+      },
+      {
+        "label": "Foreign, Commonwealth & Development Office",
+        "value": "foreign-commonwealth-development-office"
+      },
+      {
+        "label": "HM Revenue & Customs",
+        "value": "hm-revenue-customs"
+      },
+      {
+        "label": "HM Treasury",
+        "value": "hm-treasury"
+      },
+      {
+        "label": "Home Office",
+        "value": "home-office"
+      },
+      {
+        "label": "Ministry of Defence",
+        "value": "ministry-of-defence"
+      },
+      {
+        "label": "NHS England",
+        "value": "nhs-england"
       }
     ],
     "algorithmic_transparency_record_organisation_type": [
