@@ -7,7 +7,7 @@ module GovukIndex
       @cluster = cluster
     end
 
-    def load_from(iostream)
+    def load_from(data)
       new_index = index_group.create_index
       @logger.info "Created index #{new_index.real_name}"
 
@@ -17,7 +17,7 @@ module GovukIndex
       old_index.with_lock do
         @logger.info "Indexing to #{new_index.real_name}"
 
-        in_even_sized_batches(iostream) do |lines|
+        in_even_sized_batches(data) do |lines|
           GovukIndex::PageTrafficWorker.perform_async(lines, new_index.real_name, cluster.key)
         end
 
@@ -39,8 +39,8 @@ module GovukIndex
     # Breaks the given input stream into batches of documents
     # This is due to ES recommendations for index optimisation
     # https://www.elastic.co/guide/en/elasticsearch/reference/2.4/docs-bulk.html
-    def in_even_sized_batches(iostream, batch_size = @iostream_batch_size, &_block)
-      iostream.each_line.each_slice(batch_size * 2) do |batch|
+    def in_even_sized_batches(data, batch_size = @iostream_batch_size, &_block)
+      data.each_line.each_slice(batch_size * 2) do |batch|
         yield(batch.map { |b| JSON.parse(b) })
       end
     end
