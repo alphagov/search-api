@@ -1070,5 +1070,39 @@
   },
   "life_saving_maritime_appliance_manufacturer": {
     "type": "identifiers"
+  },
+  
+  "veterans_support_organisation_health_and_social_care": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_finance": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_legal_and_justice": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_employment_education_and_training": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_housing": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_families_and_children": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_community_and_social": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_region_england": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_region_northern_ireland": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_region_scotland": {
+    "type": "identifiers"
+  },
+  "veterans_support_organisation_region_wales": {
+    "type": "identifiers"
   }
 }

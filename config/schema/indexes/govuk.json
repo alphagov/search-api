@@ -42,6 +42,7 @@
     "service_standard_report",
     "statutory_instrument",
     "tax_tribunal_decision",
-    "utaac_decision"
+    "utaac_decision",
+    "veterans_support_organisation"
   ]
 }

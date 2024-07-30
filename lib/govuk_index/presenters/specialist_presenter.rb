@@ -134,6 +134,17 @@ module GovukIndex
     delegate_to_payload :use_case, convert_to_array: true
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type
+    delegate_to_payload :veterans_support_organisation_health_and_social_care
+    delegate_to_payload :veterans_support_organisation_finance
+    delegate_to_payload :veterans_support_organisation_legal_and_justice
+    delegate_to_payload :veterans_support_organisation_employment_education_and_training
+    delegate_to_payload :veterans_support_organisation_housing
+    delegate_to_payload :veterans_support_organisation_families_and_children
+    delegate_to_payload :veterans_support_organisation_community_and_social
+    delegate_to_payload :veterans_support_organisation_region_england
+    delegate_to_payload :veterans_support_organisation_region_northern_ireland
+    delegate_to_payload :veterans_support_organisation_region_scotland
+    delegate_to_payload :veterans_support_organisation_region_wales
     delegate_to_payload :virus_strain
     delegate_to_payload :will_continue_on
     delegate_to_payload :withdrawn_date
