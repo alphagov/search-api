@@ -1,0 +1,87 @@
+{
+  "fields": [
+    "veterans_support_organisation_health_and_social_care",
+    "veterans_support_organisation_finance",
+    "veterans_support_organisation_legal_and_justice",
+    "veterans_support_organisation_employment_education_and_training",
+    "veterans_support_organisation_housing",
+    "veterans_support_organisation_families_and_children",
+    "veterans_support_organisation_community_and_social",
+    "veterans_support_organisation_region_england",
+    "veterans_support_organisation_region_northern_ireland",
+    "veterans_support_organisation_region_scotland",
+    "veterans_support_organisation_region_wales"
+  ],
+  "expanded_search_result_fields": {
+    "veterans_support_organisation_health_and_social_care": [
+      {"label": "Mental Health", "value": "mental-health"},
+      {"label": "Physical Health", "value": "physical-health"},
+      {"label": "Social Care", "value": "social-care"}
+    ],
+    "veterans_support_organisation_finance": [
+      {"label": "Pensions", "value": "pensions"},
+      {"label": "Compensation", "value": "compensation"},
+      {"label": "Benefits", "value": "benefits"},
+      {"label": "Financial help", "value": "financial-help"},
+      {"label": "Debt advice", "value": "debt-advice"},
+      {"label": "Funeral costs", "value": "funeral-costs"}
+    ],
+    "veterans_support_organisation_legal_and_justice": [
+      {"label": "General legal advice", "value": "general-legal-advice"},
+      {"label": "Support for those in the justice system", "value": "support-for-those-in-the-justice-system"}
+    ],
+    "veterans_support_organisation_employment_education_and_training": [
+      {"label": "Transition support", "value": "transition-support"},
+      {"label": "Career advice and support for jobseekers", "value": "career-advice-and-support-for-jobseekers"},
+      {"label": "Starting a business", "value": "starting-a-business"},
+      {"label": "Apprenticeships", "value": "apprenticeships"},
+      {"label": "Education and other training", "value": "education-and-other-training"}
+    ],
+    "veterans_support_organisation_housing": [
+      {"label": "Homelessness, crisis accommodation", "value": "homelessness-crisis-accommodation"},
+      {"label": "Supported housing", "value": "supported-housing"},
+      {"label": "Care homes", "value": "care-homes"},
+      {"label": "Renting a home", "value": "renting-a-home"},
+      {"label": "Buying a home", "value": "buying-a-home"}
+    ],
+    "veterans_support_organisation_families_and_children": [
+      {"label": "Support for spouses and families", "value": "support-for-spouses-and-families"},
+      {"label": "Childcare and custody", "value": "childcare-and-custody"},
+      {"label": "Support with relationships", "value": "support-with-relationships"},
+      {"label": "Domestic abuse", "value": "domestic-abuse"}
+    ],
+    "veterans_support_organisation_community_and_social": [
+      {"label": "Drop-in centres", "value": "drop-in-centres"},
+      {"label": "Leisure activities", "value": "leisure-activities"},
+      {"label": "Volunteering opportunities", "value": "volunteering-opportunities"}
+    ],
+    "veterans_support_organisation_region_england": [
+      {"label": "North East and Yorkshire", "value": "north-east-and-yorkshire"},
+      {"label": "North West", "value": "north-west"},
+      {"label": "Midlands", "value": "midlands"},
+      {"label": "East of England", "value": "east-of-england"},
+      {"label": "London", "value": "london"},
+      {"label": "South West", "value": "south-west"},
+      {"label": "South East", "value": "south-east"}
+    ],
+    "veterans_support_organisation_region_northern_ireland": [
+      {"label": "North (Coleraine Area)", "value": "north-coleraine-area"},
+      {"label": "South (Portadown Area)", "value": "south-portadown-area"},
+      {"label": "East (Holywood Area)", "value": "east-holywood-area"},
+      {"label": "West (Enniskillen Area)", "value": "west-enniskillen-area"}
+    ],
+    "veterans_support_organisation_region_scotland": [
+      {"label": "The Southern Uplands", "value": "the-southern-uplands"},
+      {"label": "The Central Lowlands", "value": "the-central-lowlands"},
+      {"label": "Grampian Mountains", "value": "grampian-mountains"},
+      {"label": "Northern Highlands, Hebrides and the Northern Isles", "value": "northern-highlands-hebrides-and-the-northern-isles"}
+    ],
+    "veterans_support_organisation_region_wales": [
+      {"label": "Mid and West Wales", "value": "mid-and-west-wales"},
+      {"label": "North Wales", "value": "north-wales"},
+      {"label": "South Wales Central", "value": "south-wales-central"},
+      {"label": "South Wales East", "value": "south-wales-east"},
+      {"label": "South Wales West", "value": "south-wales-west"}
+    ]
+  }
+}
