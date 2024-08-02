@@ -16,7 +16,9 @@
     "veterans_support_organisation_health_and_social_care": [
       {"label": "Mental Health", "value": "mental-health"},
       {"label": "Physical Health", "value": "physical-health"},
-      {"label": "Social Care", "value": "social-care"}
+      {"label": "Social Care", "value": "social-care"},
+      {"label": "LGBT+ support", "value": "LGBT-support"},
+      {"label": "Women veterans support", "value": "women-veterans-support"}
     ],
     "veterans_support_organisation_finance": [
       {"label": "Pensions", "value": "pensions"},
