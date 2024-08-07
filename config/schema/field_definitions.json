@@ -1104,5 +1104,12 @@
   },
   "veterans_support_organisation_region_wales": {
     "type": "identifiers"
+  },
+
+  "mock_spike_finder_document_facet_one": {
+    "type": "identifiers"
+  },
+  "mock_spike_finder_document_facet_two": {
+    "type": "searchable_text"
   }
 }

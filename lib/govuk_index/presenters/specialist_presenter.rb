@@ -83,6 +83,8 @@ module GovukIndex
     delegate_to_payload :marine_notice_vessel_type
     delegate_to_payload :market_sector
     delegate_to_payload :medical_specialism
+    delegate_to_payload :mock_spike_finder_document_facet_one, convert_to_array: true
+    delegate_to_payload :mock_spike_finder_document_facet_two
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
     delegate_to_payload :payment_types
