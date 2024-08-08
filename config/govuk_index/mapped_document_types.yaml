@@ -42,6 +42,7 @@ marine_equipment_approved_recommendation: marine_equipment_approved_recommendati
 marine_notice: marine_notice # Specialist Publisher
 medical_safety_alert: medical_safety_alert # Specialist Publisher
 ministerial_role: edition
+mock_spike_finder_document: mock_spike_finder_document # Specialist Publisher
 news_story: edition
 person: person
 place: edition
