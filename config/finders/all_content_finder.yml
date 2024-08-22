@@ -9,7 +9,7 @@ schema_name: finder
 title: Search
 description: Find content from government
 details:
-  default_documents_per_page: 20
+  default_documents_per_page: 10
   document_noun: result
   reject:
     link:
