@@ -7,7 +7,7 @@ namespace :page_traffic do
 
     logger.info "Processing Ga4 Analytics..."
 
-    report = Analytics::Ga4Import::RelevanceReportGenerator.call
+    report = Analytics::Ga4Import::RelevanceReportGenerator.new.call
 
     logger.info "Finished processing Ga4 Analytics..."
 

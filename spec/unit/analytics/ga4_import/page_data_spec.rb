@@ -1,5 +1,4 @@
 require "spec_helper"
-require "analytics/ga4_import/page_data"
 
 RSpec.describe Analytics::Ga4Import::PageData do
   subject(:page_data) { described_class.new(path, title, page_views) }

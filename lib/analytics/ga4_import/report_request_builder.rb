@@ -3,7 +3,7 @@ module Analytics
     class ReportRequestBuilder
       attr_accessor :offset, :limit
 
-      START_DATE = 13
+      REPORT_WINDOW = 14.days
 
       def initialize(offset, limit)
         @offset = offset
@@ -49,8 +49,8 @@ module Analytics
       end
 
       def date_range
-        start_date = Date.today.prev_day - START_DATE
-        end_date = Date.today.prev_day
+        start_date = Date.today - REPORT_WINDOW
+        end_date = Date.yesterday
 
         { start_date: start_date.to_s, end_date: end_date.to_s }
       end

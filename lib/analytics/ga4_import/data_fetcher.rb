@@ -3,9 +3,7 @@ module Analytics
     class DataFetcher
       attr_accessor :ga_client
 
-      OFFSET = 0
       LIMIT = 10_000
-      OFFSET_INCREMENT = 10_000
 
       def initialize
         @ga_client = ::Google::Analytics::Data::V1beta::AnalyticsData::Client.new
@@ -13,16 +11,16 @@ module Analytics
 
       def call
         # https://developers.google.com/analytics/devguides/reporting/data/v1/basics#navigate_long_reports
-        offset = OFFSET
+        offset = 0
         all_data = []
 
         loop do
           data = get_data(offset)
-          break if data.nil? || data[:rows].nil? || data[:rows].empty?
+          break if data.nil? || data[:rows].nil?
 
           all_data << format_all_data(data[:rows])
 
-          offset += OFFSET_INCREMENT
+          offset += LIMIT
         end
 
         all_data.flatten

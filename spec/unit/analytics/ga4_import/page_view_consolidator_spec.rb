@@ -1,6 +1,4 @@
 require "spec_helper"
-require "analytics/ga4_import/page_view_consolidator"
-require "analytics/ga4_import/page_data"
 
 RSpec.describe Analytics::Ga4Import::PageViewConsolidator do
   describe "#consolidated_page_views" do

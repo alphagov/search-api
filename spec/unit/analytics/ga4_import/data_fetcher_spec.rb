@@ -1,5 +1,4 @@
 require "spec_helper"
-require "analytics/ga4_import/data_fetcher"
 
 RSpec.describe Analytics::Ga4Import::DataFetcher do
   let(:ga_client) { instance_double("::Google::Analytics::Data::V1beta::AnalyticsData::Client") }
@@ -91,14 +90,14 @@ RSpec.describe Analytics::Ga4Import::DataFetcher do
       expect(Analytics::Ga4Import::ReportRequestBuilder)
         .to receive(:new)
         .with(
-          Analytics::Ga4Import::DataFetcher::OFFSET,
+          0,
           Analytics::Ga4Import::DataFetcher::LIMIT,
         ).and_return(report_request_builder)
 
       expect(Analytics::Ga4Import::ReportRequestBuilder)
         .to receive(:new)
         .with(
-          Analytics::Ga4Import::DataFetcher::OFFSET + Analytics::Ga4Import::DataFetcher::OFFSET_INCREMENT,
+          Analytics::Ga4Import::DataFetcher::LIMIT,
           Analytics::Ga4Import::DataFetcher::LIMIT,
         ).and_return(report_request_builder)
 

@@ -1,5 +1,4 @@
 require "spec_helper"
-require "analytics/ga4_import/elastic_search_relevancy_serialiser"
 
 RSpec.describe Analytics::Ga4Import::ElasticSearchRelevancySerialiser do
   describe "#relevance" do

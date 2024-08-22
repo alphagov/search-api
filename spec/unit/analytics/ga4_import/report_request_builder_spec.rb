@@ -1,6 +1,4 @@
 require "spec_helper"
-require "google/analytics/data/v1beta"
-require "analytics/ga4_import/report_request_builder"
 
 RSpec.describe Analytics::Ga4Import::ReportRequestBuilder do
   describe "#report_request" do
