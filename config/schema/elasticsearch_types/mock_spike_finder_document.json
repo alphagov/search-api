@@ -2,5 +2,25 @@
   "fields": [
     "mock_spike_finder_document_facet_one",
     "mock_spike_finder_document_facet_two"
-  ]
+  ],
+  "expanded_search_result_fields": {
+    "mock_spike_finder_document_facet_one": [
+      {
+        "label": "Facet one value one",
+        "value": "facet-one-value-one"
+      },{
+        "label": "Facet one value two",
+        "value": "facet-one-value-two"
+      }
+    ],
+    "mock_spike_finder_document_facet_two": [
+      {
+        "label": "Facet two value one",
+        "value": "facet-two-value-one"
+      },{
+        "label": "Facet two value two",
+        "value": "facet-two-value-two"
+      }
+    ]
+  }
 }
