@@ -1,6 +1,6 @@
 # Documents API (to be deprecated)
 
-> **Note**: Once whitehall and Search Admin are using the [new indexing process](new-indexing-process.md),
+> **Note**: Once Whitehall is using the [new indexing process](new-indexing-process.md),
 the documents API will be removed and search API will consume only from the publishing API.
 
 ### `POST /:index/documents`
