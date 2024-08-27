@@ -1,9 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    actionpack (7.2.0)
-      actionview (= 7.2.0)
-      activesupport (= 7.2.0)
+    actionpack (7.2.1)
+      actionview (= 7.2.1)
+      activesupport (= 7.2.1)
       nokogiri (>= 1.8.5)
       racc
       rack (>= 2.2.4, < 3.2)
@@ -12,13 +12,13 @@ GEM
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
       useragent (~> 0.16)
-    actionview (7.2.0)
-      activesupport (= 7.2.0)
+    actionview (7.2.1)
+      activesupport (= 7.2.1)
       builder (~> 3.1)
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    activesupport (7.2.0)
+    activesupport (7.2.1)
       base64
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.3.1)
@@ -235,7 +235,7 @@ GEM
     mime-types-data (3.2024.0604)
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
-    minitest (5.24.1)
+    minitest (5.25.1)
     mr-sparkle (0.3.0)
       listen (~> 1.0)
       rb-fsevent (>= 0.9)
@@ -507,9 +507,9 @@ GEM
     rails-html-sanitizer (1.6.0)
       loofah (~> 2.21)
       nokogiri (~> 1.14)
-    railties (7.2.0)
-      actionpack (= 7.2.0)
-      activesupport (= 7.2.0)
+    railties (7.2.1)
+      actionpack (= 7.2.1)
+      activesupport (= 7.2.1)
       irb (~> 1.13)
       rackup (>= 1.0.0)
       rake (>= 12.2)
