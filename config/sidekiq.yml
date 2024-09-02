@@ -1,6 +1,6 @@
 ---
 tag: search-api.publishing.service.gov.uk
-:concurrency: 5
+:concurrency: 12
 staging:
   :concurrency:  12
 production:
