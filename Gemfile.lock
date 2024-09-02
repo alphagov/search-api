@@ -109,6 +109,14 @@ GEM
     faraday-rack (1.0.0)
     faraday-retry (1.0.3)
     ffi (1.15.5)
+    gapic-common (0.22.0)
+      faraday (>= 1.9, < 3.a)
+      faraday-retry (>= 1.0, < 3.a)
+      google-protobuf (>= 3.25, < 5.a)
+      googleapis-common-protos (~> 1.6)
+      googleapis-common-protos-types (~> 1.15)
+      googleauth (~> 1.11)
+      grpc (~> 1.65)
     gds-api-adapters (96.0.3)
       addressable
       link_header
@@ -117,6 +125,9 @@ GEM
       rack (>= 2.2.0)
       rest-client (~> 2.0)
     gems (1.2.0)
+    google-analytics-data-v1beta (0.13.1)
+      gapic-common (>= 0.21.1, < 2.a)
+      google-cloud-errors (~> 1.0)
     google-api-client (0.53.0)
       google-apis-core (~> 0.1)
       google-apis-generator (~> 0.1)
@@ -155,6 +166,10 @@ GEM
     google-protobuf (4.27.2)
       bigdecimal
       rake (>= 13)
+    googleapis-common-protos (1.6.0)
+      google-protobuf (>= 3.18, < 5.a)
+      googleapis-common-protos-types (~> 1.7)
+      grpc (~> 1.41)
     googleapis-common-protos-types (1.15.0)
       google-protobuf (>= 3.18, < 5.a)
     googleauth (1.11.0)
@@ -188,6 +203,9 @@ GEM
       redis (< 5)
       redis-namespace (~> 1.6)
       sidekiq (~> 6.5, >= 6.5.12)
+    grpc (1.66.0)
+      google-protobuf (>= 3.25, < 5.0)
+      googleapis-common-protos-types (~> 1.0)
     hashdiff (1.1.0)
     hashie (5.0.0)
     http-accept (1.7.0)
@@ -671,6 +689,7 @@ DEPENDENCIES
   climate_control
   elasticsearch (~> 6)
   gds-api-adapters
+  google-analytics-data-v1beta
   google-api-client
   google-cloud-bigquery
   googleauth
