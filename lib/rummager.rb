@@ -48,6 +48,13 @@ require "special_route_publisher"
 require "auth/gds_sso"
 require "auth/mock_strategy"
 
+require "analytics/ga4_import/relevance_report_generator"
+require "analytics/ga4_import/data_fetcher"
+require "analytics/ga4_import/page_view_consolidator"
+require "analytics/ga4_import/elastic_search_relevancy_serialiser"
+require "analytics/ga4_import/report_request_builder"
+require "analytics/ga4_import/page_data"
+
 require "content_item_publisher/publisher"
 require "content_item_publisher/content_item_presenter"
 require "content_item_publisher/finder_publisher"
