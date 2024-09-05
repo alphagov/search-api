@@ -16,7 +16,7 @@ module Analytics
 
         loop do
           data = get_data(offset)
-          break if data.nil? || data[:rows].nil?
+          break if data[:rows].nil?
 
           all_data << format_all_data(data[:rows])
 

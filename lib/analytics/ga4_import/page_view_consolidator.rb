@@ -6,12 +6,11 @@ module Analytics
       end
 
       def consolidated_page_views
-        @consolidated_page_views ||= ga_data
+        ga_data
           .reject(&:excluded?)
           .group_by(&:normalised_path)
           .transform_values { |grouped_pages| grouped_pages.sum(&:page_views) }
           .sort_by { |_, views| -views }
-          .to_h
       end
 
     private

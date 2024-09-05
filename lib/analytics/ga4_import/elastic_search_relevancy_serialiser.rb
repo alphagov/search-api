@@ -47,7 +47,7 @@ module Analytics
       end
 
       def total_page_views
-        @total_page_views ||= consolidated_data.values.reduce(:+)
+        @total_page_views ||= consolidated_data.sum(&:last)
       end
     end
   end
