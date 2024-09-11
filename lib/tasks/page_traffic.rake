@@ -7,13 +7,15 @@ namespace :page_traffic do
 
     logger.info "Processing Ga4 Analytics..."
 
-    report = Analytics::Ga4Import::RelevanceReportGenerator.new.call
+    # report = Analytics::Ga4Import::RelevanceReportGenerator.new.call
+
+    file_contents = File.read("page-traffic-25-06.dump")
 
     logger.info "Finished processing Ga4 Analytics..."
 
     Clusters.active.each do |cluster|
       logger.info "Performing page traffic load for cluster #{cluster.key}..."
-      GovukIndex::PageTrafficLoader.new(cluster:).load_from(report)
+      GovukIndex::PageTrafficLoader.new(cluster:).load_from(file_contents)
     end
   end
 end

@@ -29,7 +29,7 @@ module Analytics
 
       def elastic_search_rank(base_path, index, page_views)
         {
-          path_components: base_path,
+          path_components: path_components(base_path),
           rank_14: index,
           vc_14: page_views,
           vf_14: page_views / total_page_views.to_f,
