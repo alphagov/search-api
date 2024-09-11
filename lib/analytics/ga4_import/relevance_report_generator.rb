@@ -15,7 +15,6 @@ module Analytics
           }
           .relevance
           .to_json
-          
       end
     end
   end
