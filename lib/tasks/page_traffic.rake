@@ -9,6 +9,7 @@ namespace :page_traffic do
 
     report = Analytics::Ga4Import::RelevanceReportGenerator.new.call
 
+    
     logger.info "Finished processing Ga4 Analytics..."
 
     Clusters.active.each do |cluster|
