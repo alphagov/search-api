@@ -38,9 +38,11 @@ module Indexer
       end
 
       Hash[links.map do |link|
-        pp link
-        pp ranks[link]
-        
+        logger.info "Looking up popularity"
+        logger.info link
+        logger.info ranks[link]
+
+
         if ranks[link][:rank].zero?
           popularity_score = 0
           popularity_rank = 1

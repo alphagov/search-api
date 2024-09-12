@@ -89,6 +89,8 @@ data using sidekiq workers.
 This does not update the schema.
 "
   task :update_popularity do
+    logger.info "Running update update_popularity"
+    
     index_names.each do |index_name|
       GovukIndex::PopularityUpdater.update(index_name, process_all: ENV.key?("PROCESS_ALL_DATA"))
     end
