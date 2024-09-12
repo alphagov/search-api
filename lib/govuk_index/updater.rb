@@ -16,7 +16,6 @@ module GovukIndex
         scroll_enumerator(cluster:).each_slice(PROCESSOR_BATCH_SIZE) do |documents|
           if async
             worker.perform_async(documents, @destination_index)
-            sleep 1
           else
             worker.new.perform(documents, @destination_index)
           end
