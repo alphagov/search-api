@@ -5,8 +5,7 @@
     "principle",
     "key_function",
     "ai_assurance_technique",
-    "assurance_technique_approach",
-    "focus_sector"
+    "assurance_technique_approach"
   ],
   "expanded_search_result_fields": {
     "use_case": [
@@ -243,12 +242,6 @@
       {
         "label": "Educational",
         "value": "educational"
-      }
-    ],
-    "focus_sector": [
-      {
-        "label": "Financial Services",
-        "value": "financial-services"
       }
     ]
   }
