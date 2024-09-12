@@ -15,7 +15,8 @@
       {"label": "West Midlands", "value": "west-midlands"},
       {"label": "Yorkshire and The Humber", "value": "yorkshire-and-the-humber"},
       {"label": "Scotland", "value": "scotland"},
-      {"label": "Wales", "value": "wales"}
+      {"label": "Wales", "value": "wales"},
+      {"label": "Northern Ireland", "value": "Northern Ireland"}
     ],
     "life_saving_maritime_appliance_type": [
       {"label": "Lifejackets", "value": "lifejackets"},
@@ -89,7 +90,7 @@
         "value": "eurovinil"
       },
       {
-        "label": "Fujikura MES",
+        "label": "Fujikura",
         "value": "fujikura-mes"
       },
       {
