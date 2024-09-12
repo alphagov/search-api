@@ -11,7 +11,6 @@ namespace :page_traffic do
 
     logger.info "Finished processing Ga4 Analytics..."
 
-    
     Clusters.active.each do |cluster|
       logger.info "Performing page traffic load for cluster #{cluster.key}..."
       GovukIndex::PageTrafficLoader.new(cluster:).load_from(report)
