@@ -1,3 +1,6 @@
+require 'dotenv'
+Dotenv.load
+
 module Analytics
   module Ga4Import
     class DataFetcher
