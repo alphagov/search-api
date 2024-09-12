@@ -73,7 +73,6 @@ module GovukIndex
         email_document_supertype: common_fields.email_document_supertype,
         first_published_at: specialist.first_published_at,
         flood_and_coastal_erosion_category: specialist.flood_and_coastal_erosion_category,
-        focus_sector: specialist.focus_sector,
         format: common_fields.format,
         fund_state: specialist.fund_state,
         fund_type: specialist.fund_type,
