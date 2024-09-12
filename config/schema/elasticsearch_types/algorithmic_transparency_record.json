@@ -14,60 +14,40 @@
   "expanded_search_result_fields": {
     "algorithmic_transparency_record_organisation": [
       {
+        "label": "Bristol City Council",
+        "value": "bristol-city-council"
+      },
+      {
         "label": "Cabinet Office",
         "value": "cabinet-office"
       },
       {
-        "label": "Ministry of Justice",
-        "value": "ministry-of-justice"
+        "label": "Camden Council",
+        "value": "camden-council"
       },
       {
-        "label": "Information Commissioner’s Office",
-        "value": "information-commissioners-office"
-      },
-      {
-        "label": "Department for Health and Social Care ",
-        "value": "department-for-health-and-social-care"
-      },
-      {
-        "label": "Food Standards Agency",
-        "value": "food-standards-agency"
-      },
-      {
-        "label": "Hampshire and Thames Valley Police",
-        "value": "hampshire-and-thames-valley-police"
-      },
-      {
-        "label": "West Midlands Police",
-        "value": "west-midlands-police"
-      },
-      {
-        "label": "Department for Science Innovation and Technology",
-        "value": "department-for-science-innovation-and-technology"
+        "label": "Department for Business and Trade",
+        "value": "department-for-business-and-trade"
       },
       {
         "label": "Department for Education",
         "value": "department-for-education"
       },
       {
-        "label": "Greater Cambridge Partnership",
-        "value": "greater-cambridge-partnership"
-      },
-      {
-        "label": "Dorset Council",
-        "value": "dorset-council"
+        "label": "Department for Energy Security and Net Zero",
+        "value": "department-for-energy-security-and-net-zero"
       },
       {
         "label": "Department for Environment, Food and Rural Affairs",
         "value": "department-for-environment-food-and-rural-affairs"
       },
       {
-        "label": "Ministry of Housing, Communities & Local Government",
-        "value": "ministry-of-housing-communities-local-government"
+        "label": "Department for Health and Social Care ",
+        "value": "department-for-health-and-social-care"
       },
       {
-        "label": "Department for Energy Security and Net Zero",
-        "value": "department-for-energy-security-and-net-zero"
+        "label": "Department for Science Innovation and Technology",
+        "value": "department-for-science-innovation-and-technology"
       },
       {
         "label": "Department for Transport",
@@ -78,8 +58,28 @@
         "value": "department-for-work-and-pensions"
       },
       {
+        "label": "Dorset Council",
+        "value": "dorset-council"
+      },
+      {
+        "label": "Ealing Council",
+        "value": "ealing-council"
+      },
+      {
+        "label": "Food Standards Agency",
+        "value": "food-standards-agency"
+      },
+      {
         "label": "Foreign, Commonwealth & Development Office",
         "value": "foreign-commonwealth-development-office"
+      },
+      {
+        "label": "Greater Cambridge Partnership",
+        "value": "greater-cambridge-partnership"
+      },
+      {
+        "label": "Greater London Authority",
+        "value": "greater-london-authority"
       },
       {
         "label": "HM Revenue & Customs",
@@ -90,16 +90,56 @@
         "value": "hm-treasury"
       },
       {
+        "label": "Hampshire and Thames Valley Police",
+        "value": "hampshire-and-thames-valley-police"
+      },
+      {
         "label": "Home Office",
         "value": "home-office"
+      },
+      {
+        "label": "Information Commissioner’s Office",
+        "value": "information-commissioners-office"
+      },
+      {
+        "label": "London Borough of Barnet",
+        "value": "london-borough-of-barnet"
+      },
+      {
+        "label": "London Borough of Sutton",
+        "value": "london-borough-of-sutton"
       },
       {
         "label": "Ministry of Defence",
         "value": "ministry-of-defence"
       },
       {
+        "label": "Ministry of Housing, Communities & Local Government",
+        "value": "ministry-of-housing-communities-local-government"
+      },
+      {
+        "label": "Ministry of Justice",
+        "value": "ministry-of-justice"
+      },
+      {
         "label": "NHS England",
         "value": "nhs-england"
+      },
+      {
+        "label": "Social Care Wales",
+        "value": "social-care-wales"
+      },
+      {
+        "label": "Warwickshire County Council",
+        "value": "warwickshire-county-council"
+      },
+      {
+        "label": "West Berkshire Council",
+        "value": "west-berkshire-council"
+      },
+      {
+        "label": "West Midlands Police",
+        "value": "west-midlands-police"
       }
     ],
     "algorithmic_transparency_record_organisation_type": [
