@@ -7,15 +7,13 @@ namespace :page_traffic do
 
     logger.info "Processing Ga4 Analytics..."
 
-    # report = Analytics::Ga4Import::RelevanceReportGenerator.new.call
-
-    file = File.read('page-traffic.json')
+    report = Analytics::Ga4Import::RelevanceReportGenerator.new.call
 
     logger.info "Finished processing Ga4 Analytics..."
 
     Clusters.active.each do |cluster|
       logger.info "Performing page traffic load for cluster #{cluster.key}..."
-      GovukIndex::PageTrafficLoader.new(cluster:).load_from(file)
+      GovukIndex::PageTrafficLoader.new(cluster:).load_from(report)
     end
   end
 end

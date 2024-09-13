@@ -14,7 +14,7 @@ module Analytics
             ElasticSearchRelevancySerialiser.new(consolidated_page_views)
           }
           .relevance
-          .to_json
+          .join("\n")
       end
     end
   end
