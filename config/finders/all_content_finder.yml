@@ -23,7 +23,7 @@ details:
     keys:
     - level_one_taxon
     - level_two_taxon
-    name: topic
+    name: Topic
     preposition: about
     short_name: topic
     type: taxon
@@ -39,7 +39,7 @@ details:
   - display_as_result_metadata: false
     filterable: true
     key: content_purpose_supergroup
-    name: Content type
+    name: Type
     preposition: in
     short_name: In
     type: text
