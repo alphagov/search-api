@@ -13,11 +13,11 @@ module GovukIndex
 
     def run(async: true)
       Clusters.active.each do |cluster|
-        scroll_enumerator(cluster:).each_slice(PROCESSOR_BATCH_SIZE) do |documents|
+        scroll_enumerator(cluster:).each_slice(PROCESSOR_BATCH_SIZE) do |document_id|
           if async
-            worker.perform_async(documents, @destination_index)
+            worker.perform_async(document_id, @source_index, @destination_index)
           else
-            worker.new.perform(documents, @destination_index)
+            worker.new.perform(document_id, @source_index, @destination_index)
           end
         end
       end
@@ -43,12 +43,7 @@ module GovukIndex
         index_names: @source_index,
         search_body:,
         batch_size: SCROLL_BATCH_SIZE,
-      ) do |record|
-        {
-          "identifier" => record.slice("_id", "_type", "_version"),
-          "document" => record.fetch("_source"),
-        }
-      end
+      ) { |document| document["_id"] }
     end
   end
 end
