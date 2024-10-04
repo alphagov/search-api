@@ -2,6 +2,7 @@ require "spec_helper"
 
 RSpec.describe GovukIndex::SupertypeWorker do
   subject(:worker) { described_class.new }
+  let(:index) { instance_double("index") }
 
   before do
     allow(GovukDocumentTypes).to receive(:supertypes)
@@ -9,23 +10,27 @@ RSpec.describe GovukIndex::SupertypeWorker do
       .and_return("supertype1" => "type1", "supertype2" => "type2")
     @processor = instance_double("processor", save: nil, commit: nil)
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(@processor)
+    allow(IndexFinder).to receive(:by_name).and_return(index)
   end
 
-  it "saves all records" do
-    records = [
-      { "identifier" => { "_id" => "record_1" }, "document" => { "content_store_document_type" => "testgroup" } },
-      { "identifier" => { "_id" => "record_2" }, "document" => { "content_store_document_type" => "testgroup" } },
+  it "saves all documents" do
+    documents = [
+      { "_id" => "document_1", "_source" => { "content_store_document_type" => "testgroup" } },
+      { "_id" => "document_2", "_source" => { "content_store_document_type" => "testgroup" } },
     ]
-    worker.perform(records, "govuk_test")
+    stub_document_lookups(documents)
+
+    document_ids = documents.map { |document| document["_id"] }
+    worker.perform(document_ids, "govuk_test")
 
     expect(@processor).to have_received(:save).twice
     expect(@processor).to have_received(:commit)
   end
 
   it "updates supertype fields" do
-    record = { "identifier" => { "_id" => "record_1" },
-               "document" => { "title" => "test_doc", "content_store_document_type" => "testgroup" } }
-    worker.perform([record], "govuk_test")
+    document = { "_id" => "document_1", "_source" => { "title" => "test_doc", "content_store_document_type" => "testgroup" } }
+    stub_document_lookups([document])
+    worker.perform([document["_id"]], "govuk_test")
 
     expect(@processor).to have_received(:save).with(
       having_attributes(
@@ -35,13 +40,38 @@ RSpec.describe GovukIndex::SupertypeWorker do
   end
 
   it "does not save if the supertype fields do not need to be updated" do
-    record = { "identifier" => { "_id" => "record_1" },
-               "document" => { "title" => "test_doc",
-                               "content_store_document_type" => "testgroup",
-                               "supertype1" => "type1",
-                               "supertype2" => "type2" } }
-    worker.perform([record], "govuk_test")
+    document = {
+      "_id" => "document_1",
+      "_source" => {
+        "title" => "test_doc",
+        "content_store_document_type" => "testgroup",
+        "supertype1" => "type1",
+        "supertype2" => "type2",
+      },
+    }
+    stub_document_lookups([document])
+    worker.perform([document["_id"]], "govuk_test")
 
     expect(@processor).not_to have_received(:save)
+  end
+
+  it "writes to the logger and continues to the next document if a document is not found" do
+    document = { "_id" => "document_2", "_source" => { "content_store_document_type" => "testgroup" } }
+    allow(index).to receive(:get_document_by_id).with("document_1").and_return(nil)
+    allow(index).to receive(:get_document_by_id).with("document_2").and_return(document)
+    logger = double(warn: true)
+    allow(worker).to receive(:logger).and_return(logger)
+
+    document_ids = %w[document_1 document_2]
+    worker.perform(document_ids, "govuk_test")
+
+    expect(@processor).to have_received(:save).once
+    expect(logger).to have_received(:warn).with("Skipping document_1 as it is not in the index")
+  end
+
+  def stub_document_lookups(documents)
+    allow(index).to receive(:get_document_by_id) do |document_id|
+      documents.select { |document| document["_id"] == document_id }.first
+    end
   end
 end
