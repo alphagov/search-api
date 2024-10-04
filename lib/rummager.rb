@@ -108,8 +108,6 @@ require "govuk_index/publishing_event_processor"
 require "govuk_index/publishing_event_worker"
 require "govuk_index/supertype_updater"
 require "govuk_index/supertype_worker"
-require "govuk_index/sync_updater"
-require "govuk_index/sync_worker"
 require "govuk_message_queue_consumer"
 
 require "evaluate/ndcg"
