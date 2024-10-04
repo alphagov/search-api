@@ -39,5 +39,9 @@ module Indexer
         search_server.index(index_name)
       end
     end
+
+    def logger
+      Logging.logger[self]
+    end
   end
 end
