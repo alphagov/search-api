@@ -102,7 +102,7 @@ class Rummager < Sinatra::Application
     halt(503, "Elasticsearch timed out")
   end
 
-  error Redis::TimeoutError do
+  error RedisClient::TimeoutError do
     halt(503, "Redis queue timed out")
   end
 
