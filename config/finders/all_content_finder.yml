@@ -96,9 +96,9 @@ details:
   - key: "-relevance"
     name: Relevance
   - key: "-public_timestamp"
-    name: Updated (newest)
+    name: Newest
   - key: public_timestamp
-    name: Updated (oldest)
+    name: Oldest
 routes:
 - path: "/search/all"
   type: exact
