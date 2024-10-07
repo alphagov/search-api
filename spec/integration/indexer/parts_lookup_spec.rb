@@ -4,6 +4,8 @@ require "gds_api/test_helpers/publishing_api"
 RSpec.describe "PartslookupDuringIndexingTest" do
   include GdsApi::TestHelpers::PublishingApi
 
+  let(:now) { Time.now.iso8601 }
+
   before do
     stub_publishing_api_has_lookups(
       "/foo" => "document-content-id",
@@ -27,6 +29,11 @@ RSpec.describe "PartslookupDuringIndexingTest" do
     stub_publishing_api_has_item({ content_id: "attachment-content-id-3", publication_state: "published", details: { body: "<p>body 3</p>" } })
     stub_publishing_api_has_item({ content_id: "attachment-content-id-4", publication_state: "published", details: { body: "body 4" } })
     stub_publishing_api_has_item({ content_id: "attachment-content-id-5", publication_state: "published", details: { body: "body 5" } })
+    Timecop.freeze(now)
+  end
+
+  after do
+    Timecop.return
   end
 
   it "indexes document with parts unchanged" do
@@ -51,6 +58,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 3", "content" => "body 3" },
         ],
         "indexable_content" => "body 1 body 2 body 3",
+        "updated_at" => now,
       },
       index: "government_test",
     )
@@ -81,6 +89,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 3", "content" => "body 3" },
         ],
         "indexable_content" => "body 1 body 2 body 3",
+        "updated_at" => now,
       },
       index: "government_test",
     )
@@ -110,6 +119,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 3" },
         ],
         "indexable_content" => "body 1 body 2",
+        "updated_at" => now,
       },
       index: "government_test",
     )
@@ -138,6 +148,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 2", "content" => "body 2" },
         ],
         "indexable_content" => "body 1 body 2",
+        "updated_at" => now,
       },
       index: "government_test",
     )
@@ -166,6 +177,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
           { "title" => "attachment 5", "content" => "body 5" },
         ],
         "indexable_content" => "body 1 body 4 body 5",
+        "updated_at" => now,
       },
       index: "government_test",
     )
@@ -188,6 +200,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
         "attachments" => [
           { "title" => "attachment 2" },
         ],
+        "updated_at" => now,
       },
       index: "government_test",
     )
