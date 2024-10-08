@@ -8,8 +8,8 @@ module GovukIndex
       ).run
     end
 
-    def self.worker
-      PopularityWorker
+    def self.job
+      PopularityJob
     end
 
     def initialize(source_index:, destination_index:, process_all: false)

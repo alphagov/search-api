@@ -1,7 +1,7 @@
 require "spec_helper"
 
-RSpec.describe GovukIndex::PopularityWorker do
-  subject(:worker) { described_class.new }
+RSpec.describe GovukIndex::PopularityJob do
+  subject(:job) { described_class.new }
   let(:index) { instance_double("index") }
 
   before do
@@ -27,7 +27,7 @@ RSpec.describe GovukIndex::PopularityWorker do
     stub_document_lookups(documents)
 
     document_ids = documents.map { |document| document["_id"] }
-    worker.perform(document_ids, "govuk_test")
+    job.perform(document_ids, "govuk_test")
 
     expect(@processor).to have_received(:save).with(
       having_attributes(
@@ -50,10 +50,10 @@ RSpec.describe GovukIndex::PopularityWorker do
     allow(index).to receive(:get_document_by_id).with("document_1").and_return(nil)
     allow(index).to receive(:get_document_by_id).with("document_2").and_return(document)
     logger = double(warn: true)
-    allow(worker).to receive(:logger).and_return(logger)
+    allow(job).to receive(:logger).and_return(logger)
 
     document_ids = %w[document_1 document_2]
-    worker.perform(document_ids, "govuk_test")
+    job.perform(document_ids, "govuk_test")
 
     expect(@processor).to have_received(:save).with(
       having_attributes(

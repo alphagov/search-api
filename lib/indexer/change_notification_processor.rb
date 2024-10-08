@@ -15,7 +15,7 @@ module Indexer
       index_name = document["real_index_name"]
       document_id = document["_id"]
       updates = {}
-      Indexer::AmendWorker.perform_async(index_name, document_id, updates)
+      Indexer::AmendJob.perform_async(index_name, document_id, updates)
       :accepted
     end
 

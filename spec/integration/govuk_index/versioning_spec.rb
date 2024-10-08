@@ -20,7 +20,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
     expect(document["_version"]).to eq(123)
 
-    version2 = version1.merge(title: "new title", payload_version: 124)
+    version2 = version1.merge("title" => "new title", "payload_version" => 124)
     process_message(version2)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
@@ -38,7 +38,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
     expect(document["_version"]).to eq(123)
 
-    version2 = version1.merge(title: "new title", payload_version: 123)
+    version2 = version1.merge("title" => "new title", "payload_version" => 123)
     process_message(version2)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
@@ -57,7 +57,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
     expect(document["_version"]).to eq(123)
 
-    version2 = version1.merge(title: "new title", payload_version: 122)
+    version2 = version1.merge("title" => "new title", "payload_version" => 122)
     process_message(version2)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
@@ -92,7 +92,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
       fetch_document_from_rummager(id: base_path, index: "govuk_test")
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
 
-    version3 = version1.merge(payload_version: 3)
+    version3 = version1.merge("payload_version" => 3)
     process_message(version3)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")
@@ -137,7 +137,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
 
     allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(false)
 
-    version2 = version1.merge(title: "new title", payload_version: 124)
+    version2 = version1.merge("title" => "new title", "payload_version" => 124)
     process_message(version2)
 
     document = fetch_document_from_rummager(id: base_path, index: "govuk_test")

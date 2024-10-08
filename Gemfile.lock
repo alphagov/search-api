@@ -197,12 +197,11 @@ GEM
     govuk_schemas (5.0.4)
       faker (~> 3.4.1)
       json-schema (>= 2.8, < 4.4)
-    govuk_sidekiq (8.0.1)
+    govuk_sidekiq (9.0.0)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
-      redis (< 5)
-      redis-namespace (~> 1.6)
-      sidekiq (~> 6.5, >= 6.5.12)
+      redis-client (>= 0.22.2)
+      sidekiq (~> 7.0, < 8)
     grpc (1.66.0)
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
@@ -544,9 +543,8 @@ GEM
     rbtree (0.4.6)
     rdoc (6.7.0)
       psych (>= 4.0.0)
-    redis (4.8.1)
-    redis-namespace (1.11.0)
-      redis (>= 4)
+    redis-client (0.22.2)
+      connection_pool
     regexp_parser (2.9.2)
     reline (0.5.10)
       io-console (~> 0.5)
@@ -621,10 +619,12 @@ GEM
       sentry-ruby (~> 5.21.0)
       sidekiq (>= 3.0)
     set (1.1.0)
-    sidekiq (6.5.12)
-      connection_pool (>= 2.2.5, < 3)
-      rack (~> 2.0)
-      redis (>= 4.5.0, < 5)
+    sidekiq (7.3.2)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      logger
+      rack (>= 2.2.4)
+      redis-client (>= 0.22.2)
     sidekiq-limit_fetch (4.4.1)
       sidekiq (>= 6)
     signet (0.19.0)
@@ -714,7 +714,7 @@ DEPENDENCIES
   rubocop-govuk
   rubyzip
   sentry-sidekiq
-  sidekiq (= 6.5.12)
+  sidekiq
   sidekiq-limit_fetch
   simplecov
   sinatra

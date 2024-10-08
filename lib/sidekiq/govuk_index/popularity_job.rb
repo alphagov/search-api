@@ -1,5 +1,5 @@
 module GovukIndex
-  class PopularityWorker < Indexer::BaseWorker
+  class PopularityJob < BaseJob
     BULK_INDEX_TIMEOUT = 60
     QUEUE_NAME = "bulk".freeze
     sidekiq_options queue: QUEUE_NAME

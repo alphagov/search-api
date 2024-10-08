@@ -18,10 +18,10 @@ module GovukIndex
         @logger.info "Indexing to #{new_index.real_name}"
 
         in_even_sized_batches(iostream) do |lines|
-          GovukIndex::PageTrafficWorker.perform_async(lines, new_index.real_name, cluster.key)
+          GovukIndex::PageTrafficJob.perform_async(lines, new_index.real_name, cluster.key)
         end
 
-        GovukIndex::PageTrafficWorker.wait_until_processed
+        GovukIndex::PageTrafficJob.wait_until_processed
         new_index.commit
       end
 

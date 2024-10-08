@@ -102,7 +102,7 @@ class Rummager < Sinatra::Application
     halt(503, "Elasticsearch timed out")
   end
 
-  error Redis::TimeoutError do
+  error RedisClient::TimeoutError do
     halt(503, "Redis queue timed out")
   end
 
@@ -196,13 +196,13 @@ class Rummager < Sinatra::Application
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map do |hash|
       hash["document_type"] ||= hash.fetch("_type", "edition")
-      hash["updated_at"] = Time.now
+      hash["updated_at"] = Time.now.iso8601
       current_index.document_from_hash(hash)
     end
 
     document_hashes = documents.map(&:elasticsearch_export)
 
-    Indexer::BulkIndexWorker.perform_async(index_name, document_hashes)
+    Indexer::BulkIndexJob.perform_async(index_name, document_hashes)
 
     json_result 202, "Queued"
   end
@@ -234,7 +234,7 @@ class Rummager < Sinatra::Application
       type, id = current_index.link_to_type_and_id(document_link)
     end
 
-    Indexer::DeleteWorker.perform_async(index_name, type, id)
+    Indexer::DeleteJob.perform_async(index_name, type, id)
 
     json_result 202, "Queued"
   end
@@ -262,7 +262,7 @@ class Rummager < Sinatra::Application
     prevent_access_to_govuk
     document_id = params["splat"].first
     updates = request.POST
-    Indexer::AmendWorker.perform_async(index_name, document_id, updates)
+    Indexer::AmendJob.perform_async(index_name, document_id, updates)
     json_result 202, "Queued"
   end
 

@@ -44,8 +44,8 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
 
     allow(ScrollEnumerator).to receive(:new).and_return([
       {
-        identifier: { "_id" => id, "_version" => 1 },
-        document: { link: id, popularity: 0.222 },
+        "identifier" => { "_id" => id, "_version" => 1 },
+        "document" => { "link" => id, "popularity" => 0.222 },
       },
     ])
 

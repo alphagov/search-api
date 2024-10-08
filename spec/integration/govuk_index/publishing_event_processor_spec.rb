@@ -115,15 +115,15 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
 
     it "skips blocklisted formats" do
       logger = double(info: true, debug: true)
-      worker = GovukIndex::PublishingEventWorker.new
-      allow(worker).to receive(:logger).and_return(logger)
+      job = GovukIndex::PublishingEventJob.new
+      allow(job).to receive(:logger).and_return(logger)
 
       random_example = generate_random_example(
         schema: "special_route",
         payload: { document_type: "special_route", payload_version: 123, base_path: "/tour" },
       )
 
-      worker.perform([["test.route", random_example]])
+      job.perform([["test.route", random_example]])
       commit_index "govuk_test"
 
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition")
@@ -137,15 +137,15 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       allow(GovukIndex::MigratedFormats).to receive(:non_indexable?).and_return(false)
 
       logger = double(info: true, debug: true)
-      worker = GovukIndex::PublishingEventWorker.new
-      allow(worker).to receive(:logger).and_return(logger)
+      job = GovukIndex::PublishingEventJob.new
+      allow(job).to receive(:logger).and_return(logger)
 
       random_example = generate_random_example(
         payload: { document_type: "help_page", payload_version: 123 },
       )
 
       expect(logger).to receive(:info).with("test.route -> UNKNOWN #{random_example['base_path']} edition")
-      worker.perform([["test.route", random_example]])
+      job.perform([["test.route", random_example]])
     end
 
     it "will consider a format that is both safe and block listed to be blocklisted" do
@@ -153,21 +153,21 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       allow(GovukIndex::MigratedFormats).to receive(:non_indexable?).and_return(true)
 
       logger = double(info: true, debug: true)
-      worker = GovukIndex::PublishingEventWorker.new
-      allow(worker).to receive(:logger).and_return(logger)
+      job = GovukIndex::PublishingEventJob.new
+      allow(job).to receive(:logger).and_return(logger)
 
       random_example = generate_random_example(
         payload: { document_type: "help_page", payload_version: 123 },
       )
 
-      worker.perform([["test.route", random_example]])
+      job.perform([["test.route", random_example]])
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition")
     end
 
     it "can block/safe list specific base_paths within a format" do
       logger = double(info: true, debug: true)
-      worker = GovukIndex::PublishingEventWorker.new
-      allow(worker).to receive(:logger).and_return(logger)
+      job = GovukIndex::PublishingEventJob.new
+      allow(job).to receive(:logger).and_return(logger)
 
       homepage_example = generate_random_example(
         schema: "special_route",
@@ -178,8 +178,8 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
         payload: { document_type: "special_route", base_path: "/help", payload_version: 123 },
       )
 
-      worker.perform([["test.route", homepage_example]])
-      worker.perform([["test.route", help_example]])
+      job.perform([["test.route", homepage_example]])
+      job.perform([["test.route", help_example]])
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{homepage_example['base_path']} edition")
       expect(logger).to have_received(:info).with("test.route -> INDEX #{help_example['base_path']} edition")
     end
