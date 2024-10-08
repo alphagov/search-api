@@ -1,5 +1,5 @@
 module Indexer
-  class BulkIndexWorker < BaseWorker
+  class BulkIndexJob < BaseJob
     notify_of_failures
 
     def perform(index_name, document_hashes)

@@ -1,7 +1,7 @@
 require "spec_helper"
 require "securerandom"
 
-RSpec.describe Indexer::BulkIndexWorker do
+RSpec.describe Indexer::BulkIndexJob do
   let(:index_name) { "government_test" }
 
   let(:sample_document_hashes) do
@@ -31,8 +31,8 @@ RSpec.describe Indexer::BulkIndexWorker do
     expect(described_class).to receive(:perform_in)
       .with(lock_delay, "test-index", sample_document_hashes)
 
-    worker = described_class.new
-    worker.perform("test-index", sample_document_hashes)
+    job = described_class.new
+    job.perform("test-index", sample_document_hashes)
   end
 
   it "forwards to failure queue" do

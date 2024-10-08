@@ -202,7 +202,7 @@ class Rummager < Sinatra::Application
 
     document_hashes = documents.map(&:elasticsearch_export)
 
-    Indexer::BulkIndexWorker.perform_async(index_name, document_hashes)
+    Indexer::BulkIndexJob.perform_async(index_name, document_hashes)
 
     json_result 202, "Queued"
   end
@@ -234,7 +234,7 @@ class Rummager < Sinatra::Application
       type, id = current_index.link_to_type_and_id(document_link)
     end
 
-    Indexer::DeleteWorker.perform_async(index_name, type, id)
+    Indexer::DeleteJob.perform_async(index_name, type, id)
 
     json_result 202, "Queued"
   end
@@ -262,7 +262,7 @@ class Rummager < Sinatra::Application
     prevent_access_to_govuk
     document_id = params["splat"].first
     updates = request.POST
-    Indexer::AmendWorker.perform_async(index_name, document_id, updates)
+    Indexer::AmendJob.perform_async(index_name, document_id, updates)
     json_result 202, "Queued"
   end
 

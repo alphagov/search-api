@@ -15,15 +15,15 @@ module GovukIndex
       Clusters.active.each do |cluster|
         scroll_enumerator(cluster:).each_slice(PROCESSOR_BATCH_SIZE) do |document_id|
           if async
-            worker.perform_async(document_id, @destination_index)
+            job.perform_async(document_id, @destination_index)
           else
-            worker.new.perform(document_id, @destination_index)
+            job.new.perform(document_id, @destination_index)
           end
         end
       end
     end
 
-    def self.worker
+    def self.job
       raise ImplementationRequired
     end
 
@@ -33,8 +33,8 @@ module GovukIndex
 
   private
 
-    def worker
-      self.class.worker
+    def job
+      self.class.job
     end
 
     def scroll_enumerator(cluster:)

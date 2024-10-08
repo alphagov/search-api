@@ -61,7 +61,7 @@ RSpec.describe Indexer::ChangeNotificationProcessor do
     )
     expect(IndexFinder).to receive(:content_index).and_return(index_mock)
 
-    expect(Indexer::AmendWorker).to receive(:perform_async).with("index_name-123", "document_id_345", {})
+    expect(Indexer::AmendJob).to receive(:perform_async).with("index_name-123", "document_id_345", {})
     result = described_class.trigger(message_payload)
 
     expect(:accepted).to eq(result)

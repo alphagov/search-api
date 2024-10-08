@@ -1,7 +1,7 @@
 require "spec_helper"
 
-RSpec.describe GovukIndex::SupertypeWorker do
-  subject(:worker) { described_class.new }
+RSpec.describe GovukIndex::SupertypeJob do
+  subject(:job) { described_class.new }
   let(:index) { instance_double("index") }
 
   before do
@@ -21,7 +21,7 @@ RSpec.describe GovukIndex::SupertypeWorker do
     stub_document_lookups(documents)
 
     document_ids = documents.map { |document| document["_id"] }
-    worker.perform(document_ids, "govuk_test")
+    job.perform(document_ids, "govuk_test")
 
     expect(@processor).to have_received(:save).twice
     expect(@processor).to have_received(:commit)
@@ -30,7 +30,7 @@ RSpec.describe GovukIndex::SupertypeWorker do
   it "updates supertype fields" do
     document = { "_id" => "document_1", "_source" => { "title" => "test_doc", "content_store_document_type" => "testgroup" } }
     stub_document_lookups([document])
-    worker.perform([document["_id"]], "govuk_test")
+    job.perform([document["_id"]], "govuk_test")
 
     expect(@processor).to have_received(:save).with(
       having_attributes(
@@ -50,7 +50,7 @@ RSpec.describe GovukIndex::SupertypeWorker do
       },
     }
     stub_document_lookups([document])
-    worker.perform([document["_id"]], "govuk_test")
+    job.perform([document["_id"]], "govuk_test")
 
     expect(@processor).not_to have_received(:save)
   end
@@ -60,10 +60,10 @@ RSpec.describe GovukIndex::SupertypeWorker do
     allow(index).to receive(:get_document_by_id).with("document_1").and_return(nil)
     allow(index).to receive(:get_document_by_id).with("document_2").and_return(document)
     logger = double(warn: true)
-    allow(worker).to receive(:logger).and_return(logger)
+    allow(job).to receive(:logger).and_return(logger)
 
     document_ids = %w[document_1 document_2]
-    worker.perform(document_ids, "govuk_test")
+    job.perform(document_ids, "govuk_test")
 
     expect(@processor).to have_received(:save).once
     expect(logger).to have_received(:warn).with("Skipping document_1 as it is not in the index")

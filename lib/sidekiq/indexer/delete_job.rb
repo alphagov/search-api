@@ -1,5 +1,5 @@
 module Indexer
-  class DeleteWorker < BaseWorker
+  class DeleteJob < BaseJob
     notify_of_failures
 
     def perform(index_name, elasticsearch_type, document_id)
