@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Indexer::DeleteWorker do
+RSpec.describe Indexer::DeleteJob do
   let(:index_name) { "government_test" }
   let(:link) { "doc-for-deletion" }
   let(:document_type) { "generic-document" }
@@ -15,8 +15,8 @@ RSpec.describe Indexer::DeleteWorker do
     commit_document(index_name, document)
     expect_document_is_in_rummager(document, id: link, index: index_name)
 
-    worker = described_class.new
-    worker.perform(index_name, document_type, link)
+    job = described_class.new
+    job.perform(index_name, document_type, link)
 
     expect_document_missing_in_rummager(id: link, index: index_name)
   end
@@ -32,8 +32,8 @@ RSpec.describe Indexer::DeleteWorker do
     expect(described_class).to receive(:perform_in)
       .with(lock_delay, "test-index", "edition", "/foobang")
 
-    worker = described_class.new
-    worker.perform("test-index", "edition", "/foobang")
+    job = described_class.new
+    job.perform("test-index", "edition", "/foobang")
   end
 
   it "forwards to failure queue" do

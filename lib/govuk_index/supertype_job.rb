@@ -1,5 +1,5 @@
 module GovukIndex
-  class SupertypeWorker < Indexer::BaseWorker
+  class SupertypeJob < BaseJob
     BULK_INDEX_TIMEOUT = 60
     QUEUE_NAME = "bulk".freeze
     sidekiq_options queue: QUEUE_NAME

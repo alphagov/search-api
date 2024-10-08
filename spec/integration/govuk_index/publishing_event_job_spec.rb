@@ -1,7 +1,7 @@
 require "spec_helper"
 
-RSpec.describe GovukIndex::PublishingEventWorker do
-  subject(:worker) { described_class.new }
+RSpec.describe GovukIndex::PublishingEventJob do
+  subject(:job) { described_class.new }
 
   before do
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
@@ -25,7 +25,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
 
-      worker.perform([["routing.key", payload]])
+      job.perform([["routing.key", payload]])
     end
 
     context "when a message to unpublish the document is received" do
@@ -43,7 +43,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete")
 
-        worker.perform([["routing.unpublish", payload]])
+        job.perform([["routing.unpublish", payload]])
       end
 
       it "will not delete withdrawn documents" do
@@ -63,7 +63,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
 
-        worker.perform([["routing.unpublish", payload]])
+        job.perform([["routing.unpublish", payload]])
       end
 
       it "will raise an error when elasticsearch returns a 500 status" do
@@ -82,7 +82,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-retry")
 
         expect {
-          worker.perform([["routing.unpublish", payload]])
+          job.perform([["routing.unpublish", payload]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
 
@@ -100,7 +100,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
         expect(@statsd_client).to receive(:increment).with("govuk_index.sidekiq-consumed")
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.already_deleted")
 
-        worker.perform([["routing.unpublish", payload]])
+        job.perform([["routing.unpublish", payload]])
       end
     end
 
@@ -124,7 +124,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           },
         )
 
-        worker.perform([["routing.key", payload]])
+        job.perform([["routing.key", payload]])
       end
     end
 
@@ -140,7 +140,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       it "don't notify of a validation error for missing basepath" do
         expect(GovukError).not_to receive(:notify)
 
-        worker.perform([["routing.key", payload]])
+        job.perform([["routing.key", payload]])
       end
     end
   end
@@ -186,7 +186,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.multiple_responses")
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index").twice
 
-      worker.perform([["routing.key", payload1], ["routing.key", payload2]])
+      job.perform([["routing.key", payload1], ["routing.key", payload2]])
     end
 
     it "can save and delete documents in the same batch" do
@@ -200,7 +200,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete")
 
-      worker.perform([["routing.key", payload1], ["routing.key", payload_delete]])
+      job.perform([["routing.key", payload1], ["routing.key", payload_delete]])
     end
 
     context "when all messages fail" do
@@ -214,14 +214,14 @@ RSpec.describe GovukIndex::PublishingEventWorker do
 
       it "will reprocess the entire batch using ES retry mechanism" do
         expect {
-          worker.perform([["routing.key", payload1], ["routing.key", payload2]])
+          job.perform([["routing.key", payload1], ["routing.key", payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
         expect(@statsd_client).to have_received(:increment).with("govuk_index.sidekiq-consumed").twice
       end
 
       it "will notify for each message that fails" do
         expect {
-          worker.perform([["routing.key", payload1], ["routing.key", payload2]])
+          job.perform([["routing.key", payload1], ["routing.key", payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
         expect(@statsd_client).to have_received(:increment).with("govuk_index.elasticsearch.index_error").twice
         expect(@statsd_client).to have_received(:increment).with("govuk_index.sidekiq-retry")
@@ -229,7 +229,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
 
       it "will notify that the batch failed" do
         expect {
-          worker.perform([["routing.key", payload1], ["routing.key", payload2]])
+          job.perform([["routing.key", payload1], ["routing.key", payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
         expect(@statsd_client).to have_received(:increment).with("govuk_index.sidekiq-retry")
       end
@@ -242,18 +242,18 @@ RSpec.describe GovukIndex::PublishingEventWorker do
           [{ "items" => [{ "index" => { "status" => 200 } }, { "index" => { "status" => 500 } }] }],
         )
         allow(@statsd_client).to receive(:increment)
-        # allow(GovukIndex::PublishingEventWorker).to receive(:perform_async)
+        # allow(GovukIndex::PublishingEventjob).to receive(:perform_async)
       end
 
       it "will raise an error so that sidekiq retries the entire batch" do
         expect {
-          worker.perform([["routing.key", payload1], ["routing.key", payload2]])
+          job.perform([["routing.key", payload1], ["routing.key", payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
 
       it "will notify for each message that fails" do
         expect {
-          worker.perform([["routing.key", payload1], ["routing.key", payload2]])
+          job.perform([["routing.key", payload1], ["routing.key", payload2]])
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
         expect(@statsd_client).to have_received(:increment).with("govuk_index.elasticsearch.index_error")
         expect(@statsd_client).to have_received(:increment).with("govuk_index.elasticsearch.index")
@@ -268,7 +268,7 @@ RSpec.describe GovukIndex::PublishingEventWorker do
       allow(@statsd_client).to receive(:increment)
 
       expect {
-        worker.perform([["routing.key", payload1], ["routing.key", payload2]])
+        job.perform([["routing.key", payload1], ["routing.key", payload2]])
       }.to raise_error(GovukIndex::ElasticsearchInvalidResponseItemCount, "received 1 expected 2")
     end
   end

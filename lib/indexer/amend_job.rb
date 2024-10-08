@@ -1,5 +1,5 @@
 module Indexer
-  class AmendWorker < BaseWorker
+  class AmendJob < BaseJob
     notify_of_failures
 
     def perform(index_name, document_link, updates)

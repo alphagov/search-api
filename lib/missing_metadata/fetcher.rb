@@ -34,7 +34,7 @@ module MissingMetadata
     def update_metadata(content_id, index_name, document_id)
       response = publishing_api.get_content(content_id)
 
-      Indexer::AmendWorker.perform_async(
+      Indexer::AmendJob.perform_async(
         index_name,
         document_id,
         content_store_document_type: response["document_type"],
