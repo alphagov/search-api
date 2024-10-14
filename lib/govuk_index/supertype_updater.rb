@@ -7,8 +7,8 @@ module GovukIndex
       ).run
     end
 
-    def self.worker
-      SupertypeWorker
+    def self.job
+      SupertypeJob
     end
 
     def initialize(source_index:, destination_index:)

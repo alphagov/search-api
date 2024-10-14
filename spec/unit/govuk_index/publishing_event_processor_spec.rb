@@ -13,7 +13,7 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
       },
     )
 
-    expect(GovukIndex::PublishingEventWorker).to receive(:perform_async).with([["routing.key", message.payload]])
+    expect(GovukIndex::PublishingEventJob).to receive(:perform_async).with([["routing.key", message.payload]])
     expect(message).to receive(:ack)
 
     subject.process(message)
@@ -41,7 +41,7 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
       },
     )
 
-    expect(GovukIndex::PublishingEventWorker).to receive(:perform_async).with(
+    expect(GovukIndex::PublishingEventJob).to receive(:perform_async).with(
       [["routing.key", message1.payload], ["routing.key", message2.payload]],
     )
     expect(message1).to receive(:ack)

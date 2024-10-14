@@ -1,7 +1,7 @@
 require "spec_helper"
 require "sidekiq/testing"
 
-RSpec.describe Indexer::AmendWorker do
+RSpec.describe Indexer::AmendJob do
   let(:index_name) { "government_test" }
   let(:link) { "/doc-for-deletion" }
   let(:content_id) { "41609206-8736-4ff3-b582-63c9fccafe4d" }
@@ -10,7 +10,7 @@ RSpec.describe Indexer::AmendWorker do
   let(:cluster_count) { Clusters.count }
 
   before do
-    Sidekiq::Worker.clear_all
+    Sidekiq::Job.clear_all
   end
 
   it "amends documents" do
@@ -36,9 +36,9 @@ RSpec.describe Indexer::AmendWorker do
                                                                .with(index_name)
                                                                .and_return(mock_index)
 
-      worker = described_class.new
+      job = described_class.new
       expect {
-        worker.perform(index_name, link, updates)
+        job.perform(index_name, link, updates)
       }.to change { described_class.jobs.count }.by(1)
     end
   end

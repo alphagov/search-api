@@ -1,5 +1,5 @@
 module GovukIndex
-  class PageTrafficWorker < Indexer::BaseWorker
+  class PageTrafficJob < BaseJob
     BULK_INDEX_TIMEOUT = 60
     QUEUE_NAME = "bulk".freeze
     sidekiq_options queue: QUEUE_NAME

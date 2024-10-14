@@ -20,7 +20,7 @@ RSpec.describe "HealthcheckTest" do
     # We only check for cannot connect because govuk_app_config has tests for this
     context "when Sidekiq CANNOT connect to Redis" do
       before do
-        allow(Sidekiq).to receive(:redis_info).and_raise(Errno::ECONNREFUSED)
+        allow(Sidekiq.default_configuration).to receive(:redis_info).and_raise(Errno::ECONNREFUSED)
       end
 
       it "returns a critical status" do

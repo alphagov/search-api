@@ -71,7 +71,7 @@ namespace :search do
   desc "Update popularity data in indices.
 
 Update all data in the index inplace (without locks) with the new popularity
-data using sidekiq workers.
+data using sidekiq jobs.
 
 This does not update the schema.
 "
@@ -84,7 +84,7 @@ This does not update the schema.
   desc "Update supertypes from govuk_document_types gem.
 
 Update all data in the index inplace (without locks) with supertypes from the
-govuk_document_types gem using sidekiq workers.
+govuk_document_types gem using sidekiq jobs.
 
 This does not update the schema.
 "

@@ -40,7 +40,7 @@ module GovukIndex
       worldwide_office_staff_role
     ].freeze
 
-  class PublishingEventWorker < Indexer::BaseWorker
+  class PublishingEventJob < BaseJob
     notify_of_failures
 
     def perform(messages)
