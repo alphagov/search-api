@@ -13,7 +13,7 @@ class IndexHelpers
   end
 
   def self.clean_all
-    all_index_names.each do |index_name|
+    all_index_names.append(SearchConfig.specialist_finder_index_name).each do |index_name|
       clean_index_group(index_name)
     end
   end
@@ -36,7 +36,7 @@ class IndexHelpers
   end
 
   def self.create_all
-    all_index_names.each do |index|
+    all_index_names.append(SearchConfig.specialist_finder_index_name).each do |index|
       create_test_index(index)
     end
   end

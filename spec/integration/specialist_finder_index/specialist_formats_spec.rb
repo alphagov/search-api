@@ -7,7 +7,7 @@ RSpec.describe "SpecialistFormatTest" do
 
     consumer = GovukMessageQueueConsumer::Consumer.new(
       queue_name: "bigwig.test",
-      processor: GovukIndex::PublishingEventProcessor.new,
+      processor: SpecialistFinderIndex::PublishingEventProcessor.new,
       rabbitmq_connection: bunny_mock,
     )
 
@@ -21,11 +21,9 @@ RSpec.describe "SpecialistFormatTest" do
       payload: { document_type: "finder" },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("finder" => :all)
-
     @queue.publish(random_example.to_json, content_type: "application/json")
 
-    expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: "edition")
+    expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "specialist-finder_test", type: "finder")
   end
 
   it "specialist documents are correctly indexed" do
@@ -60,30 +58,27 @@ RSpec.describe "SpecialistFormatTest" do
         schema: "specialist_document",
         payload: { document_type: specialist_document_type },
       )
-      allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(specialist_document_type => :all)
 
       @queue.publish(random_example.to_json, content_type: "application/json")
 
-      expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "govuk_test", type: specialist_document_type)
+      expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "specialist-finder_test", type: specialist_document_type)
     end
   end
 
   it "esi documents are correctly indexed" do
     publisher_document_type = "esi_fund"
-    search_document_type = "european_structural_investment_fund"
 
     random_example = generate_random_example(
       schema: "specialist_document",
       payload: { document_type: publisher_document_type },
     )
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(search_document_type => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expect_document_is_in_rummager(
-      { "link" => random_example["base_path"], "format" => search_document_type },
-      index: "govuk_test",
-      type: search_document_type,
+      { "link" => random_example["base_path"], "format" => publisher_document_type },
+      index: "specialist-finder_test",
+      type: publisher_document_type,
     )
   end
 
@@ -96,7 +91,7 @@ RSpec.describe "SpecialistFormatTest" do
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expect {
-      fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
+      fetch_document_from_rummager(id: random_example["base_path"], index: "specialist-finder_test")
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 end
