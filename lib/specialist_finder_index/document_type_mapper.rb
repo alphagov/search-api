@@ -7,23 +7,11 @@ module SpecialistFinderIndex
     end
 
     def type
-      elasticsearch_document_type
+      @payload["document_type"]
     end
 
     def unpublishing_type?
-      UNPUBLISHING_TYPES.include?(payload["document_type"])
-    end
-
-  private
-
-    attr_reader :payload
-
-    def mapped_document_types
-      @mapped_document_types ||= YAML.load_file(File.join(__dir__, "../../config/govuk_index/mapped_document_types.yaml"))
-    end
-
-    def elasticsearch_document_type
-      @elasticsearch_document_type ||= mapped_document_types[payload["document_type"]]
+      UNPUBLISHING_TYPES.include?(@payload["document_type"])
     end
   end
 end

@@ -8,6 +8,10 @@ module Index
       new(client: GovukIndex::Client)
     end
 
+    def self.specialist_finder
+      new(client: SpecialistFinderIndex::Client)
+    end
+
     def initialize(client:)
       @client = client
       @actions = []

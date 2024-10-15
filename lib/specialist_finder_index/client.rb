@@ -4,7 +4,7 @@ module SpecialistFinderIndex
 
     def index_name
       # rubocop:disable Naming/MemoizedInstanceVariableName
-      @_index ||= SearchConfig.govuk_index_name
+      @_index ||= SearchConfig.specialist_finder_index_name
       # rubocop:enable Naming/MemoizedInstanceVariableName
     end
   end

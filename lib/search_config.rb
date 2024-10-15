@@ -10,6 +10,7 @@ class SearchConfig
       content_index_names
       spelling_index_names
       govuk_index_name
+      specialist_finder_index_name
       page_traffic_index_name
     ].each do |config_method|
       define_method config_method do
