@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
+RSpec.describe SpecialistFinderIndex::ElasticsearchPresenter, "Specialist formats" do
   before do
     allow_any_instance_of(Indexer::PopularityLookup).to receive(:lookup_popularities).and_return({})
   end
@@ -256,7 +256,7 @@ private
       payload
     end
 
-    type_mapper = GovukIndex::DocumentTypeMapper.new(example)
+    type_mapper = SpecialistFinderIndex::DocumentTypeMapper.new(example)
     described_class.new(payload: example, type_mapper:).document
   end
 

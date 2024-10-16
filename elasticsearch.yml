@@ -2,6 +2,7 @@ production: &default
   base_uri: <%= ENV["ELASTICSEARCH_URI"] || 'http://localhost:9200' %>
   content_index_names: ["detailed", "government"]
   govuk_index_name: "govuk"
+  specialist_finder_index_name: "specialist-finder"
   auxiliary_index_names: ["page-traffic", "metasearch"]
   registry_index: "government"
   metasearch_index_name: "metasearch"
@@ -23,6 +24,7 @@ test:
   base_uri: <%= ENV.fetch('ELASTICSEARCH_URI', 'http://localhost:9200') %>
   content_index_names: ["government_test"]
   govuk_index_name: "govuk_test"
+  specialist_finder_index_name: "specialist-finder_test"
   auxiliary_index_names: ["page-traffic_test", "metasearch_test"]
   registry_index: "government_test"
   metasearch_index_name: "metasearch_test"
