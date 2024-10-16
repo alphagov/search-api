@@ -38,10 +38,6 @@ module SpecialistFinderIndex
 
   private
 
-    NON_INDEXED_PAGES = %w[
-      finder_email_signup
-    ].freeze
-
     def process_action(processor, routing_key, payload)
       logger.debug("Processing #{routing_key}: #{payload}")
       Services.statsd_client.increment("specialist_finder_index.sidekiq-consumed")
@@ -61,9 +57,7 @@ module SpecialistFinderIndex
 
       identifier = "#{presenter.link} #{presenter.type || "'unmapped type'"}"
 
-      if NON_INDEXED_PAGES.include? type_mapper.type
-        logger.info("#{routing_key} -> IGNORE #{identifier}")
-      elsif type_mapper.unpublishing_type?
+      if type_mapper.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{identifier}")
         processor.delete(presenter)
       else
