@@ -9,11 +9,11 @@ class IndexHelpers
   end
 
   def self.all_index_names
-    SearchConfig.content_index_names + SearchConfig.auxiliary_index_names + [SearchConfig.govuk_index_name]
+    SearchConfig.content_index_names + SearchConfig.auxiliary_index_names + [SearchConfig.govuk_index_name, SearchConfig.specialist_finder_index_name]
   end
 
   def self.clean_all
-    all_index_names.append(SearchConfig.specialist_finder_index_name).each do |index_name|
+    all_index_names.each do |index_name|
       clean_index_group(index_name)
     end
   end
@@ -36,7 +36,7 @@ class IndexHelpers
   end
 
   def self.create_all
-    all_index_names.append(SearchConfig.specialist_finder_index_name).each do |index|
+    all_index_names.each do |index|
       create_test_index(index)
     end
   end
