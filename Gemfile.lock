@@ -117,7 +117,7 @@ GEM
       googleapis-common-protos-types (~> 1.15)
       googleauth (~> 1.11)
       grpc (~> 1.65)
-    gds-api-adapters (96.0.3)
+    gds-api-adapters (97.0.0)
       addressable
       link_header
       null_logger
