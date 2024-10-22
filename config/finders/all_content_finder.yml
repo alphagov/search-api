@@ -20,7 +20,7 @@ details:
     filterable: true
     key: public_timestamp
     name: Date
-    short_name: Date
+    short_name: Updated
     preposition: Updated
     type: date
   - key: "_unused"
