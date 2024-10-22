@@ -16,6 +16,13 @@ details:
       - "/search/all"
   format_name: Documents
   facets:
+  - display_as_result_metadata: true
+    filterable: true
+    key: public_timestamp
+    name: Date
+    short_name: Date
+    preposition: Updated
+    type: date
   - key: "_unused"
     display_as_result_metadata: false
     filter_key: all_part_of_taxonomy_tree
@@ -72,13 +79,6 @@ details:
     preposition: in
     type: hidden_clearable
     show_option_select_filter: false
-  - display_as_result_metadata: true
-    filterable: true
-    key: public_timestamp
-    name: Updated
-    short_name: Updated
-    preposition: Updated
-    type: date
   - display_as_result_metadata: false
     filterable: true
     key: topical_events
@@ -96,9 +96,9 @@ details:
   - key: "-relevance"
     name: Relevance
   - key: "-public_timestamp"
-    name: Updated (newest)
+    name: Newest
   - key: public_timestamp
-    name: Updated (oldest)
+    name: Oldest
 routes:
 - path: "/search/all"
   type: exact
