@@ -66,7 +66,7 @@ class Rummager < Sinatra::Application
   end
 
   def prevent_access_to_govuk
-    if index_name == "govuk"
+    if %w[govuk specialist-finder].include?(index_name)
       halt(403, "Actions to govuk index are not allowed via this endpoint, please use the message queue to update this index")
     end
   end
