@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "SpecialistFormatTest" do
+RSpec.describe "SpecialistDocumentsTest" do
   before do
     bunny_mock = BunnyMock.new
     @channel = bunny_mock.start.channel
@@ -13,17 +13,6 @@ RSpec.describe "SpecialistFormatTest" do
 
     @queue = @channel.queue("bigwig.test")
     consumer.run
-  end
-
-  it "specialist publisher finders are correctly indexed" do
-    random_example = generate_random_example(
-      schema: "finder",
-      payload: { document_type: "finder" },
-    )
-
-    @queue.publish(random_example.to_json, content_type: "application/json")
-
-    expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "specialist-finder_test", type: "finder")
   end
 
   it "specialist documents are correctly indexed" do
@@ -49,7 +38,6 @@ RSpec.describe "SpecialistFormatTest" do
       statutory_instrument
       tax_tribunal_decision
       utaac_decision
-      esi_fund
     ]
 
     # ideally we would run a test for all document types, but this takes 3 seconds so I have limited
@@ -64,5 +52,23 @@ RSpec.describe "SpecialistFormatTest" do
 
       expect_document_is_in_rummager({ "link" => random_example["base_path"] }, index: "specialist-finder_test", type: specialist_document_type)
     end
+  end
+
+  it "esi documents are correctly indexed" do
+    publisher_document_type = "esi_fund"
+    search_document_type = "european_structural_investment_fund"
+
+    random_example = generate_random_example(
+      schema: "specialist_document",
+      payload: { document_type: publisher_document_type },
+    )
+
+    @queue.publish(random_example.to_json, content_type: "application/json")
+
+    expect_document_is_in_rummager(
+      { "link" => random_example["base_path"], "format" => search_document_type },
+      index: "specialist-finder_test",
+      type: publisher_document_type,
+    )
   end
 end

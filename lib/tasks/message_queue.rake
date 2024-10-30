@@ -9,9 +9,8 @@ namespace :message_queue do
     exch = Bunny::Exchange.new(channel, :topic, "published_documents")
     channel.queue("search_api_to_be_indexed").bind(exch, routing_key: "*.links")
     channel.queue("search_api_bulk_reindex").bind(exch, routing_key: "*.bulk.reindex")
-    channel.queue("search_api_govuk_index").bind(exch, routing_key: "*.*")
     channel.queue("search_api_specialist_finder_index_documents").bind(exch, routing_key: "specialist_document.*")
-    channel.queue("search_api_specialist_finder_index_finders").bind(exch, routing_key: "finder.*")
+    channel.queue("search_api_govuk_index").bind(exch, routing_key: "*.*")
   end
 
   desc "Index documents that are published to the publishing-api"
@@ -34,10 +33,6 @@ namespace :message_queue do
   task :insert_data_into_specialist_finder do
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_specialist_finder_index_documents",
-      processor: SpecialistFinderIndex::PublishingEventProcessor.new,
-    ).run
-    GovukMessageQueueConsumer::Consumer.new(
-      queue_name: "search_api_specialist_finder_index_finders",
       processor: SpecialistFinderIndex::PublishingEventProcessor.new,
     ).run
   end
