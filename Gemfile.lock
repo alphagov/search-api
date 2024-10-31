@@ -172,7 +172,7 @@ GEM
       grpc (~> 1.41)
     googleapis-common-protos-types (1.16.0)
       google-protobuf (>= 3.18, < 5.a)
-    googleauth (1.11.1)
+    googleauth (1.11.2)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.1)
       jwt (>= 1.4, < 3.0)
