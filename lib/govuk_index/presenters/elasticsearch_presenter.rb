@@ -156,6 +156,7 @@ module GovukIndex
         roles: expanded_links.roles,
         sector: specialist.sector,
         service_provider: specialist.service_provider,
+        sfo_case_state: specialist.sfo_case_state,
         sift_end_date: specialist.sift_end_date,
         sifting_status: specialist.sifting_status,
         slug:,

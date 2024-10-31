@@ -1,0 +1,17 @@
+{
+	"fields": [
+		"sfo_case_state"
+	],
+	"expanded_search_result_fields": {
+		"sfo_case_state": [
+			{
+				"label": "Open",
+				"value": "open"
+			},
+			{
+				"label": "Closed",
+				"value": "closed"
+			}
+		]
+	}
+}
