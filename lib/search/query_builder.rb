@@ -64,10 +64,22 @@ module Search
     end
 
     def filter
+      return specialist_documents_post_filter if content_index_names.include?(SearchConfig.specialist_finder_index_name)
+
       Search::FormatMigrator.new(
         search_params.search_config,
         base_query: QueryComponents::Filter.new(search_params).payload,
       ).call
+    end
+
+    def specialist_documents_post_filter
+      { bool:
+        {
+          minimum_should_match: 1,
+          should: [{
+            bool: { must: QueryComponents::Filter.new(search_params).payload },
+          }],
+        } }
     end
 
   private

@@ -143,6 +143,27 @@ class Rummager < Sinatra::Application
     halt(500, env["sinatra.error"].message)
   end
 
+  # Return results for the Specialist Finder searches
+  #
+  # For details, see docs/search-api.md
+  ["/specialist-documents-search.?:request_format?", "/api/specialist-documents-search.?:request_format?"].each do |path|
+    get path do
+      json_only
+
+      query_params = parse_query_string(request.query_string)
+
+      begin
+        results = SearchConfig.run_specialist_document_search(query_params)
+      rescue BaseParameterParser::ParseError => e
+        status 422
+        return { error: e.error }.to_json
+      end
+
+      headers["Access-Control-Allow-Origin"] = "*"
+      results.to_json
+    end
+  end
+
   # Return results for the GOV.UK site search
   #
   # For details, see docs/search-api.md

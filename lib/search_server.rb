@@ -12,6 +12,7 @@ module SearchIndices
       @govuk_index_name = govuk_index_name
       @content_index_names = content_index_names
       @search_config = search_config
+      @specialist_finder_index_name = SearchConfig.specialist_finder_index_name
     end
 
     def index_group(prefix)
@@ -52,7 +53,7 @@ module SearchIndices
 
     def index_name_valid?(index_name)
       index_name.split(",").all? do |name|
-        @index_names.include?(name) || @govuk_index_name == name
+        @index_names.include?(name) || @govuk_index_name == name || @specialist_finder_index_name == name
       end
     end
   end

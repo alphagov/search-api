@@ -52,6 +52,11 @@ class SearchConfig
       search_params.search_config.run_search_with_params(search_params)
     end
 
+    def run_specialist_document_search(raw_parameters)
+      search_params = parse_parameters(raw_parameters)
+      search_params.search_config.run_specialist_document_search_with_params(search_params)
+    end
+
     def run_batch_search(searches)
       search_params = []
       searches.each do |search|
@@ -121,6 +126,10 @@ class SearchConfig
     searcher.run(search_params)
   end
 
+  def run_specialist_document_search_with_params(search_params)
+    specialist_document_searcher.run(search_params)
+  end
+
   def run_batch_search_with_params(search_params)
     batch_searcher.run(search_params)
   end
@@ -149,6 +158,10 @@ class SearchConfig
     @new_content_index ||= search_server.index_for_search([SearchConfig.govuk_index_name])
   end
 
+  def specialist_documents_content_index
+    @specialist_documents_content_index ||= search_server.index_for_search(SearchConfig.content_index_names + [SearchConfig.specialist_finder_index_name])
+  end
+
   def base_uri
     cluster.uri
   end
@@ -171,6 +184,15 @@ private
   def searcher
     @searcher ||= Search::Query.new(
       content_index:,
+      registries:,
+      metasearch_index:,
+      spelling_index:,
+    )
+  end
+
+  def specialist_document_searcher
+    @specialist_document_searcher ||= Search::Query.new(
+      content_index: specialist_documents_content_index,
       registries:,
       metasearch_index:,
       spelling_index:,
