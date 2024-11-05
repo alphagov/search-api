@@ -36,12 +36,13 @@
     "raib_report",
     "research_for_development_output",
     "residential_property_tribunal_decision",
-    "traffic_commissioner_regulatory_decision",
     "service_manual_guide",
     "service_manual_topic",
     "service_standard_report",
+    "sfo_case",
     "statutory_instrument",
     "tax_tribunal_decision",
+    "traffic_commissioner_regulatory_decision",
     "utaac_decision",
     "veterans_support_organisation"
   ]

@@ -1100,5 +1100,9 @@
   },
   "veterans_support_organisation_region_wales": {
     "type": "identifiers"
+  },
+  "sfo_case_state": {
+    "description": "Whether a case is open or closed. Applies to SFO cases.",
+    "type": "identifiers"
   }
 }
