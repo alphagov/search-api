@@ -10,6 +10,7 @@ class SearchConfig
       content_index_names
       spelling_index_names
       govuk_index_name
+      specialist_finder_index_name
       page_traffic_index_name
     ].each do |config_method|
       define_method config_method do
@@ -42,13 +43,18 @@ class SearchConfig
     def all_index_names
       # this is used to process data in the rake file when `all` is passed in as previous we skipped `govuk`
       # we can't update index_names at this stage as it is used in multiple spots including the index filtering
-      content_index_names + auxiliary_index_names + [govuk_index_name]
+      content_index_names + auxiliary_index_names + [govuk_index_name, specialist_finder_index_name]
     end
 
     def run_search(raw_parameters)
       search_params = parse_parameters(raw_parameters)
 
       search_params.search_config.run_search_with_params(search_params)
+    end
+
+    def run_specialist_document_search(raw_parameters)
+      search_params = parse_parameters(raw_parameters)
+      search_params.search_config.run_specialist_document_search_with_params(search_params)
     end
 
     def run_batch_search(searches)
@@ -120,6 +126,10 @@ class SearchConfig
     searcher.run(search_params)
   end
 
+  def run_specialist_document_search_with_params(search_params)
+    specialist_document_searcher.run(search_params)
+  end
+
   def run_batch_search_with_params(search_params)
     batch_searcher.run(search_params)
   end
@@ -148,6 +158,10 @@ class SearchConfig
     @new_content_index ||= search_server.index_for_search([SearchConfig.govuk_index_name])
   end
 
+  def specialist_documents_content_index
+    @specialist_documents_content_index ||= search_server.index_for_search(SearchConfig.content_index_names + [SearchConfig.specialist_finder_index_name])
+  end
+
   def base_uri
     cluster.uri
   end
@@ -170,6 +184,15 @@ private
   def searcher
     @searcher ||= Search::Query.new(
       content_index:,
+      registries:,
+      metasearch_index:,
+      spelling_index:,
+    )
+  end
+
+  def specialist_document_searcher
+    @specialist_document_searcher ||= Search::Query.new(
+      content_index: specialist_documents_content_index,
       registries:,
       metasearch_index:,
       spelling_index:,

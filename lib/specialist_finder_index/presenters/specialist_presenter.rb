@@ -1,6 +1,6 @@
-module GovukIndex
+module SpecialistFinderIndex
   class SpecialistPresenter
-    extend MethodBuilder
+    extend GovukIndex::MethodBuilder
 
     set_payload_method :metadata
 
