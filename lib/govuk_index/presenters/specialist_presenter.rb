@@ -107,6 +107,7 @@ module GovukIndex
     delegate_to_payload :review_status
     delegate_to_payload :sector, convert_to_array: true
     delegate_to_payload :service_provider
+    delegate_to_payload :sfo_case_opened_date
     delegate_to_payload :sfo_case_state
     delegate_to_payload :sift_end_date
     delegate_to_payload :sifting_status
