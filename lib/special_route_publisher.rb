@@ -75,6 +75,14 @@ class SpecialRoutePublisher
         type: "exact",
       },
       {
+        rendering_app: "finder-frontend",
+        content_id: "5a17259f-1ddd-497a-9caf-866cddb662c6",
+        base_path: "/api/search/autocomplete.json",
+        title: "GOV.UK search autocomplete API",
+        description: "Returns autocomplete suggestions for partial user queries for site search.",
+        type: "exact",
+      },
+      {
         rendering_app: "search-api",
         content_id: "5edd25bd-987f-45d3-8eca-5fb35cbf2978",
         base_path: "/api/batch_search.json",
