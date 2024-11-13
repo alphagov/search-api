@@ -102,10 +102,8 @@ class SearchConfig
     @search_server ||= SearchIndices::SearchServer.new(
       cluster.uri,
       schema_config,
-      SearchConfig.index_names,
-      SearchConfig.govuk_index_name,
-      SearchConfig.content_index_names,
       self,
+      SearchConfig.all_index_names
     )
   end
 
