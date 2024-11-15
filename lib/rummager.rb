@@ -110,6 +110,13 @@ require "govuk_index/supertype_updater"
 require "govuk_index/supertype_job"
 require "govuk_message_queue_consumer"
 
+require "specialist_document_index/client"
+require "specialist_document_index/config"
+require "specialist_document_index/index_specialist_document_job"
+require "specialist_document_index/publishing_event_processor"
+require "specialist_document_index/remove_specialist_document_job"
+require "specialist_document_index/document_presenter"
+
 require "evaluate/ndcg"
 
 require "metasearch_index/client"

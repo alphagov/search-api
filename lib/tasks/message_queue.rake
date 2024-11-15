@@ -10,6 +10,7 @@ namespace :message_queue do
     channel.queue("search_api_to_be_indexed").bind(exch, routing_key: "*.links")
     channel.queue("search_api_bulk_reindex").bind(exch, routing_key: "*.bulk.reindex")
     channel.queue("search_api_govuk_index").bind(exch, routing_key: "*.*")
+    channel.queue("search_api_specialist_document_index").bind(exch, routing_key: "*.*")
   end
 
   desc "Index documents that are published to the publishing-api"
@@ -26,6 +27,14 @@ namespace :message_queue do
       queue_name: "search_api_govuk_index",
       processor: GovukIndex::PublishingEventProcessor.new,
     ).run
+  end
+
+  desc "Gets data from RabbitMQ and insert into specialist document index"
+  task :insert_data_into_specialist_document_index do
+    GovukMessageQueueConsumer::Consumer.new(
+      queue_name: "search_api_specialist_document_index",
+      processor: SpecialistDocumentIndex::PublishingEventProcessor.new,
+      ).run
   end
 
   desc "Gets data from RabbitMQ and insert into govuk index (bulk reindex queue)"
