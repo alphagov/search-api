@@ -197,7 +197,7 @@ class Rummager < Sinatra::Application
     documents = [JSON.parse(request.body.read)].flatten.map do |hash|
       hash["document_type"] ||= hash.fetch("_type", "edition")
       hash["updated_at"] = Time.now.iso8601
-      current_index.document_from_hash(hash)
+      Document.from_hash(hash, SearchConfig.default_instance.schema_config.elasticsearch_types(index_name))
     end
 
     document_hashes = documents.map(&:elasticsearch_export)

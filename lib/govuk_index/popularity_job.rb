@@ -49,7 +49,7 @@ module GovukIndex
     def retrieve_popularities_for(index_name, document_ids)
       # popularity should be consistent across clusters, so look up in
       # the default
-      lookup = Indexer::PopularityLookup.new(index_name, SearchConfig.default_instance)
+      lookup = Indexer::PopularityLookup.new(index_name, SearchConfig.default_instance.search_server.index(SearchConfig.page_traffic_index_name))
       lookup.lookup_popularities(document_ids)
     end
   end

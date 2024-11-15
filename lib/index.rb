@@ -16,15 +16,14 @@ module SearchIndices
 
     attr_reader :mappings, :index_name
 
-    def initialize(base_uri, index_name, base_index_name, mappings, search_config)
+    def initialize(base_uri, index_name, base_index_name, schema_config)
       @base_uri = base_uri
       @client = build_client
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
 
-      @mappings = mappings
-      @search_config = search_config
-      @elasticsearch_types = @search_config.schema_config.elasticsearch_types(base_index_name)
+      @mappings = schema_config.elasticsearch_mappings(base_index_name)
+      @elasticsearch_types = schema_config.elasticsearch_types(base_index_name)
       @is_content_index = !(SearchConfig.auxiliary_index_names.include? base_index_name)
     end
 
@@ -110,7 +109,7 @@ module SearchIndices
       @client = build_client(options.merge(retry_on_failure: true, timeout: 10))
 
       with_retries do
-        payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
+        payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @client, @is_content_index, Indexer::PopularityLookup.new(@index_name, open_traffic_index))
         response = @client.bulk(index: @index_name, body: payload_generator.bulk_payload(document_hashes_or_payload))
 
         items = response["items"]
@@ -140,17 +139,36 @@ module SearchIndices
     end
 
     def amend(document_id, updates)
-      Indexer::Amender.new(self).amend(document_id, updates)
+      if updates.include?("link")
+        raise ArgumentError, "Cannot change the `link` attribute of a document."
+      end
+
+      raw_document = get_document_by_id(document_id)
+      return unless raw_document
+
+      document_source = raw_document["_source"]
+      # For backwards-compatibility, ensure that the source _id is the
+      # same as the main Elasticsearch _id
+      document_source["_id"] = raw_document["_id"]
+
+      document = Document.from_hash(document_source, @elasticsearch_types)
+
+      updates.each do |key, value|
+        if document.has_field?(key)
+          document.set key, value
+        else
+          raise ArgumentError, "Unrecognised field '#{key}'"
+        end
+      end
+
+      add([document])
+      true
     end
 
     def get_document_by_id(document_id)
       @client.get(index: @index_name, type: "_all", id: document_id)
     rescue Elasticsearch::Transport::Transport::Errors::NotFound
       nil
-    end
-
-    def document_from_hash(hash)
-      Document.from_hash(hash, @elasticsearch_types)
     end
 
     def all_documents(exclude_formats: [], client_options: nil)
@@ -171,7 +189,7 @@ module SearchIndices
       # Set off a scan query to get back a scroll ID and result count
       batch_size = self.class.scroll_batch_size
       ScrollEnumerator.new(client:, index_names: @index_name, search_body:, batch_size:) do |hit|
-        document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
+        Document.from_hash(hit["_source"].merge("_id" => hit["_id"]), @elasticsearch_types)
       end
     end
 
@@ -282,6 +300,26 @@ module SearchIndices
 
     def build_client(options = {})
       Services.elasticsearch(hosts: @base_uri, timeout: options[:timeout] || TIMEOUT_SECONDS)
+    end
+
+    def open_traffic_index
+      if @index_name.start_with?("page-traffic")
+        return nil
+      end
+
+      traffic_index_name = SearchConfig.auxiliary_index_names.find do |index|
+        index.start_with?("page-traffic")
+      end
+
+      if traffic_index_name
+        result = SearchConfig.default_instance.search_server.index(traffic_index_name)
+
+        if result.exists?
+          return result
+        end
+      end
+
+      nil
     end
   end
 end

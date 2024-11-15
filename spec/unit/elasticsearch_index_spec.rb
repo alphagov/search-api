@@ -252,7 +252,7 @@ private
   def build_government_index
     base_uri = "http://example.com:9200"
     search_config = SearchConfig.default_instance
-    described_class.new(base_uri, "government_test", "government_test", default_mappings, search_config)
+    described_class.new(base_uri, "government_test", "government_test", search_config.schema_config)
   end
 
   def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)
@@ -304,8 +304,8 @@ private
   def stub_traffic_index
     base_uri = "http://example.com:9200"
     search_config = SearchConfig.default_instance
-    traffic_index = described_class.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
-    allow_any_instance_of(Indexer::PopularityLookup).to receive(:traffic_index).and_return(traffic_index)
+    traffic_index = described_class.new(base_uri, "page-traffic_test", "page-traffic_test", search_config.schema_config)
+    allow_any_instance_of(SearchIndices::Index).to receive(:open_traffic_index).and_return(traffic_index)
     allow(traffic_index).to receive(:real_name).and_return("page-traffic_test")
   end
 

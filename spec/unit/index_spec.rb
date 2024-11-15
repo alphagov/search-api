@@ -16,6 +16,11 @@ RSpec.describe SearchIndices::Index do
         },
       },
     }
+
+    schema_config = instance_double("SchemaConfig")
+    allow(schema_config).to receive('elasticsearch_mappings').with("govuk").and_return(mappings)
+    allow(schema_config).to receive('elasticsearch_types').with("govuk")
+
     stub = stub_request(:put, %r{#{base_uri}/govuk-abc/_mapping/generic-document})
       .with(body: mappings["generic-document"])
       .to_return({
@@ -36,7 +41,7 @@ RSpec.describe SearchIndices::Index do
         headers: { "Content-Type" => "application/json" },
       })
 
-    index = SearchIndices::Index.new(base_uri, "govuk-abc", "govuk", mappings, SearchConfig.default_instance)
+    index = SearchIndices::Index.new(base_uri, "govuk-abc", "govuk", schema_config)
 
     errors = index.sync_mappings
 

@@ -1,8 +1,9 @@
 module Indexer
   class PopularityLookup
-    def initialize(index_name, search_config)
+    attr_reader :traffic_index
+    def initialize(index_name, traffic_index)
       @index_name = index_name
-      @search_config = search_config
+      @traffic_index = traffic_index
     end
 
     def lookup_popularities(links)
@@ -61,16 +62,6 @@ module Indexer
 
   private
 
-    def traffic_index
-      if @opened_traffic_index
-        return @traffic_index
-      end
-
-      @traffic_index = open_traffic_index
-      @opened_traffic_index = true
-      @traffic_index
-    end
-
     def traffic_index_size
       @traffic_index_size ||= begin
         results = traffic_index.raw_search({
@@ -79,26 +70,6 @@ module Indexer
         })
         results["hits"]["total"]
       end
-    end
-
-    def open_traffic_index
-      if @index_name.start_with?("page-traffic")
-        return nil
-      end
-
-      traffic_index_name = SearchConfig.auxiliary_index_names.find do |index|
-        index.start_with?("page-traffic")
-      end
-
-      if traffic_index_name
-        result = @search_config.search_server.index(traffic_index_name)
-
-        if result.exists?
-          return result
-        end
-      end
-
-      nil
     end
   end
 end

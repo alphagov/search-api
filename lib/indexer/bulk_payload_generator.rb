@@ -1,10 +1,10 @@
 module Indexer
   class BulkPayloadGenerator
-    def initialize(index_name, search_config, client, is_content_index)
+    def initialize(index_name, client, is_content_index, popularity_lookup)
       @index_name = index_name
-      @search_config = search_config
       @client = client
       @is_content_index = is_content_index
+      @popularity_lookup = popularity_lookup
     end
 
     # Payload to index documents using the `_bulk` endpoint
@@ -31,14 +31,10 @@ module Indexer
       links = document_hashes.map { |doc_hash|
         doc_hash["link"]
       }.compact
-      popularities = lookup_popularities(links)
+      popularities = @popularity_lookup.lookup_popularities(links)
       document_hashes.flat_map do |doc_hash|
         [index_action(doc_hash), index_doc(doc_hash, popularities)]
       end
-    end
-
-    def lookup_popularities(links)
-      Indexer::PopularityLookup.new(@index_name, @search_config).lookup_popularities(links)
     end
 
     def index_action(doc_hash)
@@ -67,7 +63,7 @@ module Indexer
         actions << [command_hash, doc_hash]
         links << doc_hash["link"]
       end
-      popularities = lookup_popularities(links.compact)
+      popularities = @popularity_lookup.lookup_popularities(links.compact)
       actions.flat_map do |command_hash, doc_hash|
         if command_hash.keys == %w[index]
           [

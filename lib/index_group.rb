@@ -21,7 +21,7 @@ module SearchIndices
 
     def index_for_name(real_name)
       SearchIndices::Index.new(
-        @base_uri, real_name, @name, mappings, @search_config
+        @base_uri, real_name, @name, @search_config.schema_config
       )
     end
 
@@ -38,7 +38,7 @@ module SearchIndices
 
       logger.info "Created index #{index_name}"
 
-      Index.new(@base_uri, index_name, @name, mappings, @search_config)
+      Index.new(@base_uri, index_name, @name, @search_config.schema_config)
     end
 
     def switch_to(index)
@@ -80,7 +80,7 @@ module SearchIndices
     end
 
     def current
-      Index.new(@base_uri, @name, @name, mappings, @search_config)
+      Index.new(@base_uri, @name, @name, @search_config.schema_config)
     end
 
     # The unaliased version of the current index
@@ -90,7 +90,7 @@ module SearchIndices
     def current_real
       current_index = current
       if current_index.exists?
-        Index.new(@base_uri, current.real_name, @name, mappings, @search_config)
+        Index.new(@base_uri, current.real_name, @name, @search_config.schema_config)
       end
     end
 

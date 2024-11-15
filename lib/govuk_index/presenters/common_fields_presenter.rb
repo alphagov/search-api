@@ -110,7 +110,7 @@ module GovukIndex
       @popularity_values ||= begin
         # popularity should be consistent across clusters, so look up in
         # the default
-        lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.default_instance)
+        lookup = Indexer::PopularityLookup.new("govuk_index", SearchConfig.default_instance.search_server.index(SearchConfig.page_traffic_index_name))
         lookup.lookup_popularities([link])[link] || {}
       end
     end
