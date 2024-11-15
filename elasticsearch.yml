@@ -6,6 +6,7 @@ production: &default
   registry_index: "government"
   metasearch_index_name: "metasearch"
   page_traffic_index_name: "page-traffic"
+  specialist_document_index_name: "specialist-document"
   popularity_rank_offset: 10
   # When doing spell checking, which indices to use?
   spelling_index_names:
@@ -27,6 +28,7 @@ test:
   registry_index: "government_test"
   metasearch_index_name: "metasearch_test"
   page_traffic_index_name: "page-traffic_test"
+  specialist_document_index_name: "specialist-document_test"
   popularity_rank_offset: 10
   spelling_index_names:
     - government_test

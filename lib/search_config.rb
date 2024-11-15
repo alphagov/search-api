@@ -11,6 +11,7 @@ class SearchConfig
       spelling_index_names
       govuk_index_name
       page_traffic_index_name
+      specialist_document_index_name
     ].each do |config_method|
       define_method config_method do
         elasticsearch.fetch(config_method)
@@ -42,7 +43,7 @@ class SearchConfig
     def all_index_names
       # this is used to process data in the rake file when `all` is passed in as previous we skipped `govuk`
       # we can't update index_names at this stage as it is used in multiple spots including the index filtering
-      content_index_names + auxiliary_index_names + [govuk_index_name]
+      content_index_names + auxiliary_index_names + [govuk_index_name] + [specialist_document_index_name]
     end
 
     def run_search(raw_parameters)

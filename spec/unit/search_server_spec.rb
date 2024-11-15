@@ -22,6 +22,13 @@ RSpec.describe SearchIndices::SearchServer do
     expect(index.index_name).to eq("govuk_test")
   end
 
+  it "returns an index for specialist document index" do
+    search_server = described_class.new("http://l", schema_config, SearchConfig.default_instance, SearchConfig.all_index_names)
+    index = search_server.index("specialist-document_test")
+    expect(index).to be_a(SearchIndices::Index)
+    expect(index.index_name).to eq("specialist-document_test")
+  end
+
   it "raises an error for unknown index" do
     search_server = described_class.new("http://l", schema_config, SearchConfig.default_instance, SearchConfig.all_index_names)
     expect {
