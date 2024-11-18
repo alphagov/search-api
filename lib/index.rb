@@ -1,3 +1,4 @@
+require "byebug"
 module SearchIndices
   class IndexLocked < RuntimeError; end
 

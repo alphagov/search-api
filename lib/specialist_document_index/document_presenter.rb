@@ -18,6 +18,7 @@ module SpecialistDocumentIndex
     def document
       payload.dig("details", "metadata")
              .merge({
+                      content_id: payload["content_id"],
                       description: payload["description"],
                       format: payload["document_type"],
                       link: payload["base_path"],

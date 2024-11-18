@@ -136,7 +136,7 @@ class SearchConfig
   end
 
   def content_index
-    @content_index ||= search_server.index_for_search(SearchConfig.content_index_names + [SearchConfig.govuk_index_name])
+    @content_index ||= search_server.index_for_search(SearchConfig.content_index_names + [SearchConfig.govuk_index_name] + [SearchConfig.specialist_document_index_name])
   end
 
   def old_content_index

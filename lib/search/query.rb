@@ -1,4 +1,5 @@
 # Performs a search across all indices used for the GOV.UK site search
+require "byebug"
 module Search
   class Query
     class Error < StandardError; end
@@ -30,7 +31,7 @@ module Search
       payload = builder_payload[:payload]
 
       es_response = process_elasticsearch_errors { timed_raw_search(payload) }
-
+      # byebug
       process_es_response(search_params, builder, payload, es_response)
     end
 

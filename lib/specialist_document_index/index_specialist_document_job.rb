@@ -8,7 +8,6 @@ module SpecialistDocumentIndex
       processor = Index::ElasticsearchProcessor.specialist_document
       processor.save(DocumentPresenter.new(document))
       responses = processor.commit
-      byebug
       Services.statsd_client.increment("specialist_document_index.elasticsearch.index")
     rescue Exception # rubocop:disable Lint/RescueException
       Services.statsd_client.increment("specialist_document_index.sidekiq-retry")

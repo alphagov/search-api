@@ -247,7 +247,7 @@ private
     # `document_type` & `elasticsearch_type` are aliases for the internal
     # "document_type" field.
     # TODO: Clients should not use this `document_type`.
-    %w[document_type elasticsearch_type] + @schema.allowed_filter_fields
+    %w[document_type elasticsearch_type index] + @schema.allowed_filter_fields
   end
 
   def allowed_return_fields
@@ -255,7 +255,7 @@ private
   end
 
   def build_filter(field_name, values, operation, multivalue_query)
-    filter_type = if field_name == "document_type"
+    filter_type = if %w[document_type index].include? field_name
                     "text"
                   else
                     @schema.field_definitions.fetch(field_name).type.filter_type
