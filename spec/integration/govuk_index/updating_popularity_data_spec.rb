@@ -35,23 +35,19 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
     expect_document_is_in_rummager({ "link" => id, "popularity" => popularity }, type: "edition", index: "govuk_test")
   end
 
-  it "ignores popularity update if version has moved on" do
-    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "help_page" }, type: "edition", version: 2)
-    commit_index("govuk_test")
+  it "ignores documents that aren't in the index" do
+    id = "test_id"
 
-    document_count = 4
-    setup_page_traffic_data(document_count:)
-
-    allow(ScrollEnumerator).to receive(:new).and_return([
-      {
-        "identifier" => { "_id" => id, "_version" => 1 },
-        "document" => { "link" => id, "popularity" => 0.222 },
-      },
-    ])
+    allow(ScrollEnumerator).to receive(:new).and_return([id])
+    allow(Sidekiq.logger).to receive(:warn)
+    processor = instance_double("Index::ElasticsearchProcessor", commit: nil, save: nil)
+    allow(Index::ElasticsearchProcessor).to receive(:new).and_return(processor)
 
     GovukIndex::PopularityUpdater.update("govuk_test")
 
-    expect_document_is_in_rummager({ "link" => id, "popularity" => 0.222 }, type: "edition", index: "govuk_test")
+    expect(Sidekiq.logger)
+      .to have_received(:warn).with("Skipping #{id} as it is not in the index")
+    expect(processor).not_to have_received(:save)
   end
 
   it "copies version information" do
