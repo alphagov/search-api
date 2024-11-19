@@ -9,7 +9,7 @@ module GovukIndex
     def self.wait_until_processed(max_timeout: 2 * 60 * 60)
       Timeout.timeout(max_timeout) do
         # wait for all queued tasks to be started
-        sleep 1 while Sidekiq::Queue.new(self::QUEUE_NAME).any? { |job| job.display_class == to_s }
+        sleep 1 while Sidekiq::Queue.new(self::QUEUE_NAME).any? { |job| job.klass == to_s }
 
         # wait for started tasks to be finished
         sleep 1 while active_jobs?
@@ -17,8 +17,10 @@ module GovukIndex
     end
 
     def self.active_jobs?
-      Sidekiq::Job.jobs.any? do |_, _, work|
-        work["queue"] == self::QUEUE_NAME && work["payload"]["class"] == to_s
+      # This code makes use of Sidekiq::API which is not advised for application
+      # usage and is hard to test, be very careful changing it.
+      Sidekiq::WorkSet.new.any? do |_, _, work|
+        work.queue == self::QUEUE_NAME && work.payload["class"] == to_s
       end
     end
 
