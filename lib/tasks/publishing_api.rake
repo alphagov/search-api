@@ -10,7 +10,7 @@ namespace :publishing_api do
 
     begin
       publisher.take_ownership_of_search_routes
-    rescue GdsApi::TimedOutException => e
+    rescue GdsApi::TimedOutException
       puts "WARNING: publishing-api timed out when trying to take ownership of a search route"
     rescue GdsApi::HTTPServerError => e
       puts "WARNING: publishing-api errored out when trying to take ownership of a search route \n\nError: #{e.inspect}"
