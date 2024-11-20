@@ -3,6 +3,7 @@ require "rummager"
 
 configure :development do
   set :protection, false
+  set :host_authorization, { permitted_hosts: [] }
 end
 
 # Enable custom error handling (eg ``error Exception do;...end``)
