@@ -9,10 +9,6 @@ RSpec.describe Indexer::AmendJob do
   let(:updates) { { "title" => "New title" } }
   let(:cluster_count) { Clusters.count }
 
-  before do
-    Sidekiq::Job.clear_all
-  end
-
   it "amends documents" do
     commit_document(index_name, document)
 
@@ -41,6 +37,8 @@ RSpec.describe Indexer::AmendJob do
         job.perform(index_name, link, updates)
       }.to change { described_class.jobs.count }.by(1)
     end
+    # clear the side effects of Sidekiq::Testing.fake!
+    Sidekiq::Job.clear_all
   end
 
   it "forwards to failure queue" do
