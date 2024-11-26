@@ -1105,8 +1105,8 @@
     "description": "Whether a case is open or closed. Applies to SFO cases.",
     "type": "identifiers"
   },
-  "sfo_case_opened_date": {
-    "description": "Open date of a SFO case",
+  "sfo_case_date_announced": {
+    "description": "Date announced of a SFO case",
     "type": "date"
   }
 }

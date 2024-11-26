@@ -1,7 +1,7 @@
 {
 	"fields": [
 		"sfo_case_state",
-		"sfo_case_opened_date"
+		"sfo_case_date_announced"
 	],
 	"expanded_search_result_fields": {
 		"sfo_case_state": [
