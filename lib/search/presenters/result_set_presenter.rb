@@ -13,7 +13,6 @@ module Search
                    presented_aggregates: {},
                    schema: nil,
                    query_payload: {})
-
       @es_response = es_response
       @aggregates = es_response["aggregations"]
       @search_params = search_params
