@@ -17,6 +17,7 @@
       {"label": "Mental Health", "value": "mental-health"},
       {"label": "Physical Health", "value": "physical-health"},
       {"label": "Social Care", "value": "social-care"},
+      {"label": "Addiction support", "value": "addiction-support"},
       {"label": "LGBT+ support", "value": "LGBT-support"},
       {"label": "Women veterans support", "value": "women-veterans-support"}
     ],
