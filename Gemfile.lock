@@ -119,7 +119,7 @@ GEM
       googleapis-common-protos-types (~> 1.15)
       googleauth (~> 1.11)
       grpc (~> 1.65)
-    gds-api-adapters (97.4.1)
+    gds-api-adapters (97.5.0)
       addressable
       link_header
       null_logger
@@ -237,7 +237,7 @@ GEM
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
     little-plugger (1.1.4)
-    logger (1.6.1)
+    logger (1.6.2)
     logging (2.4.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.14)
