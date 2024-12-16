@@ -1,0 +1,107 @@
+{
+  "fields": [
+    "data_ethics_guidance_document_key_reference",
+    "data_ethics_guidance_document_ethical_theme",
+    "data_ethics_guidance_document_organisation",
+    "data_ethics_guidance_document_project_phase",
+    "data_ethics_guidance_document_technology_area"
+  ],
+  "expanded_search_result_fields": {
+    "data_ethics_guidance_document_key_reference": [
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Yes",
+        "value": "yes"
+      }
+    ],
+    "data_ethics_guidance_document_ethical_theme": [
+      {
+        "label": "Safety, Security and Robustness",
+        "value": "safety-security-and-robustness"
+      },
+      {
+        "label": "Appropriate Transparency and Explainability",
+        "value": "appropriate-transparency-and-explainability"
+      },
+      {
+        "label": "Fairness",
+        "value": "fairness"
+      },
+      {
+        "label": "Accountability and Governance",
+        "value": "accountability-and-governance"
+      },
+      {
+        "label": "Contestability and Redress",
+        "value": "contestability-and-redress"
+      },
+      {
+        "label": "Privacy",
+        "value": "privacy"
+      },
+      {
+        "label": "Societal Wellbeing",
+        "value": "societal-wellbeing"
+      }
+    ],
+    "data_ethics_guidance_document_project_phase": [
+      {
+        "label": "Across Lifecycle",
+        "value": "across-lifecycle"
+      },
+      {
+        "label": "Planning",
+        "value": "planning"
+      },
+      {
+        "label": "Initiation",
+        "value": "initiation"
+      },
+      {
+        "label": "Procurement",
+        "value": "procurement"
+      },
+      {
+        "label": "Implementation",
+        "value": "implementation"
+      },
+      {
+        "label": "Monitoring/Review",
+        "value": "monitoring-review"
+      }
+    ],
+    "data_ethics_guidance_document_technology_area": [
+      {
+        "label": "AI",
+        "value": "ai"
+      },
+      {
+        "label": "Generative AI",
+        "value": "generative-ai"
+      },
+      {
+        "label": "Analytical Models",
+        "value": "analytical-models"
+      },
+      {
+        "label": "Research and Statistics",
+        "value": "research-and-statistics"
+      },
+      {
+        "label": "Data",
+        "value": "data"
+      },
+      {
+        "label": "Responsible Innovation",
+        "value": "responsible-innovation"
+      },
+      {
+        "label": "Automated Decision Making",
+        "value": "automated-decision-making"
+      }
+    ]
+  }
+}

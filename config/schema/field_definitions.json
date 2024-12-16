@@ -1108,5 +1108,22 @@
   "sfo_case_date_announced": {
     "description": "Date announced of a SFO case",
     "type": "date"
+  },
+
+
+  "data_ethics_guidance_document_key_reference": {
+    "type": "identifiers"
+  },
+  "data_ethics_guidance_document_ethical_theme": {
+    "type": "identifiers"
+  },
+  "data_ethics_guidance_document_organisation": {
+    "type": "searchable_text"
+  },
+  "data_ethics_guidance_document_project_phase": {
+    "type": "identifiers"
+  },
+  "data_ethics_guidance_document_technology_area": {
+    "type": "identifiers"
   }
 }

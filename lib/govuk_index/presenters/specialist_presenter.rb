@@ -35,6 +35,11 @@ module GovukIndex
     delegate_to_payload :continuation_link
     delegate_to_payload :country
     delegate_to_payload :country_of_origin
+    delegate_to_payload :data_ethics_guidance_document_key_reference
+    delegate_to_payload :data_ethics_guidance_document_ethical_theme
+    delegate_to_payload :data_ethics_guidance_document_organisation
+    delegate_to_payload :data_ethics_guidance_document_project_phase
+    delegate_to_payload :data_ethics_guidance_document_technology_area
     delegate_to_payload :date_application
     delegate_to_payload :date_of_completion
     delegate_to_payload :date_of_occurrence
