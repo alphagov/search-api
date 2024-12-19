@@ -40,6 +40,7 @@ migrated:
 - european_structural_investment_fund # use Rummager name as mapping occurs before validation check
 - export_health_certificate
 - farming_grant
+- intellectual_property_trademark_decision
 - international_development_fund
 - licence_transaction
 - life_saving_maritime_appliance_service_station
