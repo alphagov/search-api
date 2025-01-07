@@ -617,7 +617,7 @@ GEM
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.3.2)
+    rubyzip (2.4.1)
     securerandom (0.4.1)
     sentry-rails (5.22.1)
       railties (>= 5.0)
