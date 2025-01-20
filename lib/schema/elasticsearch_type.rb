@@ -1,10 +1,9 @@
 class ElasticsearchType
-  attr_reader :name, :fields, :expanded_search_result_fields
+  attr_reader :name, :fields
 
-  def initialize(name, fields, expanded_search_result_fields)
+  def initialize(name, fields)
     @name = name
     @fields = fields
-    @expanded_search_result_fields = expanded_search_result_fields
   end
 
   def es_config
@@ -25,13 +24,10 @@ class ElasticsearchTypeParser
   end
 
   def parse
-    field_names, expanded_search_result_fields, use_base_type = parse_file
+    field_names, use_base_type = parse_file
 
     unless base_type.nil? || !use_base_type
       field_names = merge_field_names(field_names)
-      unless base_type.expanded_search_result_fields.empty?
-        raise_error %(Specifying `expanded_search_result_fields` in base document type is not supported)
-      end
     end
 
     fields = Hash[field_names.map do |field_name|
@@ -41,9 +37,7 @@ class ElasticsearchTypeParser
       [field_name, field_definition]
     end]
 
-    add_expanded_search_result_fields_to_field_definitions(fields, expanded_search_result_fields)
-
-    ElasticsearchType.new(type_name, fields, expanded_search_result_fields)
+    ElasticsearchType.new(type_name, fields)
   end
 
 private
@@ -73,28 +67,15 @@ private
       raise_error %(Duplicate entries in "fields")
     end
 
-    expanded_search_result_fields = raw.delete("expanded_search_result_fields") || {}
-
     unless raw.empty?
       raise_error %{Unknown keys (#{raw.keys.join(', ')})}
     end
 
-    [fields, expanded_search_result_fields, use_base_type]
+    [fields, use_base_type]
   end
 
   def merge_field_names(field_names)
     ((field_names || []) + base_type.fields.keys).uniq
-  end
-
-  def add_expanded_search_result_fields_to_field_definitions(fields, expanded_search_result_fields)
-    expanded_search_result_fields.each do |field_name, values|
-      if fields[field_name].nil?
-        raise_error %(Field "#{field_name}" set in "expanded_search_result_fields", but not in "fields")
-      end
-      field_definition = fields[field_name].clone
-      field_definition.expanded_search_result_fields = values
-      fields[field_name] = field_definition
-    end
   end
 end
 

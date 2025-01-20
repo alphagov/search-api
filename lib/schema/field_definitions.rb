@@ -1,21 +1,4 @@
-FieldDefinition = Struct.new("FieldDefinition", :name, :type, :es_config, :description, :children, :expanded_search_result_fields)
-
-class FieldDefinition
-  # Merge this field definition with another one.
-  #
-  # Assumes that the definitions are for the same field (but probably for a
-  # different document type).  Therefore, the only thing that can differ is the
-  # expanded_search_result_fields setting, so we only have to do anything if expanded_search_result_fields
-  # are set.
-  def merge(other)
-    if !other.nil? && other.expanded_search_result_fields
-      result = clone
-      result.expanded_search_result_fields = ((result.expanded_search_result_fields || []) + other.expanded_search_result_fields).uniq
-      return result
-    end
-    self
-  end
-end
+FieldDefinition = Struct.new("FieldDefinition", :name, :type, :es_config, :description, :children)
 
 class FieldDefinitionParser
   def initialize(config_path)
