@@ -25,10 +25,6 @@ The easiest way to test the new fields is to write an integration test for it. T
 
 Some fields get transformed by Search API before they are stored in Elasticsearch. This is handled by the `DocumentPreparer` class.
 
-### Presenting for search
-
-Some fields get expanded by Search API when they are presented in search results. For example, `specialist_sector` links get expanded by looking up the corresponding documents from the search index and extracting title, content id, and link fields. This is handled by `Search::BaseRegistry`.
-
 ### Updating Search API schema indexes on all environments
 
 **Caution:** Do not run this rake task in production during working hours except in an emergency. Content published while the task is running will not be available in search results until the task completes. The impact of this can be reduced if you run the task out of peak publishing hours.

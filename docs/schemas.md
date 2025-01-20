@@ -81,33 +81,10 @@ Document types are defined in the `elasticsearch_types` directory, with the
 additional configuration for each type being defined by a JSON file in that
 directory.
 
-The files contain JSON object with the following keys:
+The files contain a JSON object with the following key:
 
  - `fields`: An array of field names which are allowed in documents of this
    type.  The field names must be defined in the `field_definitions.json` file.
-
- - `expanded_search_result_fields`: This is used by the search result presenter to replace a raw value with other data.
-
-    For example:
-
-    ```
-    "expanded_search_result_fields": {
-      "foo": [
-        {
-          "label": "Bar the bar",
-          "value": "bar"
-        },
-        {
-          "label": "Baz the baz",
-          "value": "baz"
-        }
-      ],
-    ```
-
-    Will make the search result presenter replace values of `bar`
-    with the hash `{ "label": "Bar the bar", "value": "bar" }`. This can be used
-    when displaying the search results.
-    For example, finder frontend depends on this behaviour to display readable labels in search result metadata.
 
 Even though we have different schemas for different "elasticsearch
 document types", in practice elasticsearch only knows about one
