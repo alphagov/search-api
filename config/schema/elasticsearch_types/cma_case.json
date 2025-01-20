@@ -113,6 +113,10 @@
         "value": "defence"
       },
       {
+        "label": "Digital markets",
+        "value": "digital-markets"
+      },
+      {
         "label": "Distribution and service industries",
         "value": "distribution-and-service-industries"
       },
@@ -242,6 +246,14 @@
       {
         "label": "Criminal cartels - verdict",
         "value": "criminal-cartels-verdict"
+      },
+      {
+        "label": "Firm not designated",
+        "value": "firm-not-designated"
+      },
+      {
+        "label": "SMS designation",
+        "value": "sms-designation"
       },
       {
         "label": "Markets - phase 1 no enforcement action",
