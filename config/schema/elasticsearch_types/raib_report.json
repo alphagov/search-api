@@ -11,49 +11,5 @@
     "regulations_and_standards",
     "report_type",
     "sector_business_area"
-  ],
-
-  "expanded_search_result_fields": {
-    "railway_type": [
-      {
-        "label": "Heavy rail",
-        "value": "heavy-rail"
-      },
-      {
-        "label": "Light rail",
-        "value": "light-rail"
-      },
-      {
-        "label": "Metros",
-        "value": "metros"
-      },
-      {
-        "label": "Heritage railways",
-        "value": "heritage-railways"
-      }
-    ],
-
-    "report_type": [
-      {
-        "label": "Investigation report",
-        "value": "investigation-report"
-      },
-      {
-        "label": "Bulletin",
-        "value": "bulletin"
-      },
-      {
-        "label": "Interim report",
-        "value": "interim-report"
-      },
-      {
-        "label": "Discontinuation report",
-        "value": "discontinuation-report"
-      },
-      {
-        "label": "Safety digest",
-        "value": "safety-digest"
-      }
-    ]
-  }
+  ]
 }
