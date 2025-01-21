@@ -55,24 +55,76 @@
 
     "outcome_type": [
       {
-        "label": "No action",
-        "value": "no-action"
-      },
-      {
-        "label": "Curtailment",
-        "value": "curtailment"
-      },
-      {
-        "label": "Formal warning",
-        "value": "formal-warning"
+        "label": "Licence revoked",
+        "value": "revocation"
       },
       {
         "label": "Loss of repute",
         "value": "loss-of-repute"
       },
       {
-        "label": "Revocation",
-        "value": "revocation"
+        "label": "Licence holder disqualified",
+        "value": "licence-holder-disqualified"
+      },
+      {
+        "label": "Transport manager disqualified",
+        "value": "transport-manager-disqualified"
+      },
+      {
+        "label": "Licence suspended",
+        "value": "licence-suspended"
+      },
+      {
+        "label": "Licence curtailed or authorisation reduced",
+        "value": "curtailment"
+      },
+      {
+        "label": "Conditions imposed on licence",
+        "value": "conditions-imposed-on-licence"
+      },
+      {
+        "label": "Formal warning",
+        "value": "formal-warning"
+      },
+      {
+        "label": "No action taken",
+        "value": "no-action"
+      },
+      {
+        "label": "Application granted as applied for",
+        "value": "application-granted-as-applied-for"
+      },
+      {
+        "label": "Application granted in part",
+        "value": "application-granted-in-part"
+      },
+      {
+        "label": "Application granted with conditions",
+        "value": "application-granted-with-conditions"
+      },
+      {
+        "label": "Application refused",
+        "value": "application-refused"
+      },
+      {
+        "label": "Application withdrawn",
+        "value": "application-withdrawn"
+      },
+      {
+        "label": "Restrictions imposed under Transport Act 1985",
+        "value": "restrictions-imposed-under-transport-act-1985"
+      },
+      {
+        "label": "Penalty imposed under Transport Act 2000",
+        "value": "penalty-imposed-under-transport-act-2000"
+      },
+      {
+        "label": "Impounding application granted",
+        "value": "impounding-application-granted"
+      },
+      {
+        "label": "Impounding application refused",
+        "value": "impounding-application-refused"
       }
     ]
   }
