@@ -15,7 +15,6 @@ module Search
 
       if schema
         result = convert_elasticsearch_array_fields(result)
-        result = expand_fields_from_schema(result)
       end
 
       result = add_virtual_fields(result)
@@ -35,24 +34,6 @@ module Search
 
     def expand_entities(result)
       EntityExpander.new(registries).new_result(result)
-    end
-
-    def expand_fields_from_schema(result)
-      params_to_expand = result.select do |k, _|
-        document_schema.expanded_search_result_fields.include?(k)
-      end
-
-      expanded_params = params_to_expand.reduce({}) do |params, (field_name, values)|
-        params.merge(
-          field_name => Array(values).map do |raw_value|
-            document_schema.expanded_search_result_fields[field_name].find do |allowed_value|
-              allowed_value.fetch("value") == raw_value
-            end
-          end,
-        )
-      end
-
-      result.merge(expanded_params)
     end
 
     # The only fields which should be returned as arrays are ones

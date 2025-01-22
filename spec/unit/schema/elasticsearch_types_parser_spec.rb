@@ -9,19 +9,6 @@ RSpec.describe ElasticsearchTypesParser do
     File.expand_path("../../../config/schema", File.dirname(__FILE__))
   end
 
-  def cma_case_expanded_search_result_fields
-    [
-      {
-        "label" => "Open",
-        "value" => "open",
-      },
-      {
-        "label" => "Closed",
-        "value" => "closed",
-      },
-    ]
-  end
-
   context "after loading standard types" do
     before do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
@@ -56,26 +43,6 @@ RSpec.describe ElasticsearchTypesParser do
         }),
       )
     end
-
-    it "not specify expanded search result fields for the `organisations` field" do
-      expect(@types["manual_section"].fields["organisations"].expanded_search_result_fields).to be_nil
-    end
-
-    it "include expanded search result fields in the cma case `case state` field" do
-      expect(
-        cma_case_expanded_search_result_fields,
-      ).to eq(
-        @types["cma_case"].fields["case_state"].expanded_search_result_fields,
-      )
-    end
-
-    it "expanded search result fields on a field should also be available from the document_type" do
-      expect(
-        @types["cma_case"].fields["case_state"].expanded_search_result_fields,
-      ).to eq(
-        @types["cma_case"].expanded_search_result_fields["case_state"],
-      )
-    end
   end
 
   context "when configuration is invalid" do
@@ -102,32 +69,6 @@ RSpec.describe ElasticsearchTypesParser do
         "unknown" => [],
       })
       expect_raises_message(%{Unknown keys (unknown), in document type definition in "/config/path/doc_type.json"}) { @parser.parse }
-    end
-
-    it "fail if `expanded search result fields` are specified in base type" do
-      allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({
-        "fields" => %w[case_state],
-        "expanded_search_result_fields" => {
-          "case_state" => cma_case_expanded_search_result_fields,
-        },
-      })
-      base_type = @parser.parse
-
-      subtype_parser = ElasticsearchTypeParser.new("/config/path/subtype.json", base_type, @definitions)
-      allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({ "fields" => [] })
-
-      expect_raises_message(%(Specifying `expanded_search_result_fields` in base document type is not supported, in document type definition in "/config/path/subtype.json")) { subtype_parser.parse }
-    end
-
-    it "fail if expanded search result fields are set for fields which aren't known" do
-      allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({
-        "fields" => %w[case_state],
-        "expanded_search_result_fields" => {
-          "unknown_field" => cma_case_expanded_search_result_fields,
-        },
-      })
-
-      expect_raises_message(%(Field "unknown_field" set in "expanded_search_result_fields", but not in "fields", in document type definition in "/config/path/doc_type.json")) { @parser.parse }
     end
   end
 end

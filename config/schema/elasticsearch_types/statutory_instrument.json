@@ -13,34 +13,5 @@
     "sifting_status",
     "subject",
     "withdrawn_date"
-  ],
-
-  "expanded_search_result_fields": {
-    "sifting_status": [
-      {"label": "Open", "value": "open"},
-      {"label": "Closed", "value": "closed"},
-      {"label": "Withdrawn", "value": "withdrawn"}
-    ],
-    "subject": [
-      {"label": "Business", "value": "business"},
-      {"label": "Crime, justice and law", "value": "crime-justice-and-law"},
-      {"label": "Defence", "value": "defence"},
-      {"label": "Education, training and skills", "value": "education-training-and-skills"},
-      {"label": "Entering and staying in the UK", "value": "entering-and-staying-in-the-uk"},
-      {"label": "Environment", "value": "environment"},
-      {"label": "Going and being abroad", "value": "going-and-being-abroad"},
-      {"label": "Government", "value": "government"},
-      {"label": "Health and social care", "value": "health-and-social-care"},
-      {"label": "Housing, local and community", "value": "housing-local-and-community"},
-      {"label": "International", "value": "international"},
-      {"label": "Life circumstances", "value": "life-circumstances"},
-      {"label": "Money", "value": "money"},
-      {"label": "Parenting, childcare and children's services", "value": "parenting-childcare-and-childrens-services"},
-      {"label": "Regional and local government", "value": "regional-and-local-government"},
-      {"label": "Society and culture", "value": "society-and-culture"},
-      {"label": "Transport", "value": "transport"},
-      {"label": "Welfare", "value": "welfare"},
-      {"label": "Work", "value": "work"}
-    ]
-  }
+  ]
 }

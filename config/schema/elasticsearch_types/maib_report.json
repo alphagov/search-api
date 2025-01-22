@@ -11,57 +11,5 @@
     "report_type",
     "sector_business_area",
     "vessel_type"
-  ],
-
-  "expanded_search_result_fields": {
-    "vessel_type": [
-      {
-        "label": "Merchant vessel 100 gross tons or over",
-        "value": "merchant-vessel-100-gross-tons-or-over"
-      },
-      {
-        "label": "Merchant vessel under 100 gross tons",
-        "value": "merchant-vessel-under-100-gross-tons"
-      },
-      {
-        "label": "Fishing vessel",
-        "value": "fishing-vessel"
-      },
-      {
-        "label": "Recreational craft - sail",
-        "value": "recreational-craft-sail"
-      },
-      {
-        "label": "Recreational craft - power",
-        "value": "recreational-craft-power"
-      }
-    ],
-
-    "report_type": [
-      {
-        "label": "Investigation report",
-        "value": "investigation-report"
-      },
-      {
-        "label": "Investigation report on behalf of Red Ensign Group",
-        "value": "investigation-report-on-behalf-of-red-ensign-group"
-      },
-      {
-        "label": "Safety bulletin",
-        "value": "safety-bulletin"
-      },
-      {
-        "label": "Completed preliminary assessment",
-        "value": "completed-preliminary-examination"
-      },
-      {
-        "label": "Overseas report",
-        "value": "overseas-report"
-      },
-      {
-        "label": "Discontinued investigation",
-        "value": "discontinued-investigation"
-      }
-    ]
-  }
+  ]
 }
