@@ -14,7 +14,6 @@ details:
   reject:
     link:
       - "/search/all"
-  format_name: Documents
   facets:
   - display_as_result_metadata: true
     filterable: true

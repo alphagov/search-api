@@ -12,7 +12,6 @@ details:
   document_noun: result
   filter:
     has_official_document: true
-  format_name: Official documents
   show_summaries: true
   sort:
   - name: Most viewed

@@ -15,7 +15,6 @@ details:
     content_purpose_subgroup:
     - news
     - speeches_and_statements
-  format_name: News or communications
   show_summaries: true
   sort:
   - name: Most viewed
