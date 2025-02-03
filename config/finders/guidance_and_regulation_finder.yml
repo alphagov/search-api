@@ -14,7 +14,6 @@ details:
   filter:
     content_purpose_supergroup:
     - guidance_and_regulation
-  format_name: Guidance and regulation
   show_summaries: true
   sort:
   - name: Most viewed
