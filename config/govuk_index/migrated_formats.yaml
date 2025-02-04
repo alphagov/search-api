@@ -56,6 +56,13 @@ migrated:
 - traffic_commissioner_regulatory_decision
 - utaac_decision
 - veterans_support_organisation
+# Whitehall
+- call_for_evidence
+- closed_call_for_evidence
+- closed_consultation
+- consultation
+- open_call_for_evidence
+- open_consultation
 # Other
 - calendar
 - finder # Specialist Publisher and Whitehall
@@ -367,10 +374,8 @@ non_indexable:
 - accessible_documents_policy
 - access_and_opening
 - authored_article
-- call_for_evidence
 - case_study
 - complaints_procedure
-- consultation
 #- contact # migrated
 - corporate_report
 - correspondence
