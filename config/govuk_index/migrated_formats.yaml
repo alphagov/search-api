@@ -4,7 +4,6 @@ migrated:
 - mainstream_browse_page
 # Contacts
 - contact
-# Content Publisher - formats not indexable when published by Whitehall
 - government_response:
     publishing_app: content-publisher
 - news_story:
@@ -388,8 +387,6 @@ non_indexable:
 #- finder # migrated
 - foi_release
 - form
-- government_response: # indexable when published by Content Publisher
-    publishing_app: whitehall
 - guidance
 - html_publication
 - impact_assessment
@@ -402,8 +399,6 @@ non_indexable:
 - modern_slavery_statement
 - national_statistics
 - national_statistics_announcement
-- news_story: # indexable when published by Content Publisher
-    publishing_app: whitehall
 - notice
 - official_statistics
 - official_statistics_announcement
@@ -415,8 +410,6 @@ non_indexable:
 - petitions_and_campaigns
 - policy_area
 - policy_paper
-- press_release: # indexable when published by Content Publisher
-    publishing_app: whitehall
 - procurement
 - promotional
 - publication
@@ -440,7 +433,5 @@ non_indexable:
 - welsh_language_scheme
 - working_group
 - world_location
-- world_news_story: # indexable when published by Content Publisher
-    publishing_app: whitehall
 - worldwide_organisation
 - written_statement
