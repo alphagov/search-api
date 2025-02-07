@@ -1,0 +1,12 @@
+{
+  "fields": [
+    "trademark_decision_british_library_number",
+    "trademark_decision_type_of_hearing",
+    "trademark_decision_mark",
+    "trademark_decision_class",
+    "trademark_decision_date",
+    "trademark_decision_appointed_person_hearing_officer",
+    "trademark_decision_person_or_company_involved",
+    "trademark_decision_grounds_section"
+  ]
+}
