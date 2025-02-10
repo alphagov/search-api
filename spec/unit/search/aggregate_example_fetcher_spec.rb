@@ -117,6 +117,7 @@ RSpec.describe Search::AggregateExampleFetcher do
   context "one aggregate with global scope" do
     before do
       allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
+      allow(GovukIndex::MigratedFormats).to receive(:partially_migrated_formats).and_return({})
       @index = stub_index("content index")
       @example_fields = %w[link title other_field]
       main_query_response = { "aggregations" => {

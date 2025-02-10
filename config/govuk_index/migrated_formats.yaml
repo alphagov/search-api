@@ -4,15 +4,6 @@ migrated:
 - mainstream_browse_page
 # Contacts
 - contact
-# Content Publisher - formats not indexable when published by Whitehall
-- government_response:
-    publishing_app: content-publisher
-- news_story:
-    publishing_app: content-publisher
-- press_release:
-    publishing_app: content-publisher
-- world_news_story:
-    publishing_app: content-publisher
 # Publisher
 - answer
 - guide
@@ -315,7 +306,22 @@ migrated:
   - '/help/cookies'
   - '/find-local-council'
 
-indexable: []
+partially_migrated:
+  # Content Publisher - formats not indexable when published by Whitehall
+  government_response: content-publisher
+  news_story: content-publisher
+  press_release: content-publisher
+  world_news_story: content-publisher
+
+indexable:
+- government_response: # indexable when published by Content Publisher
+    publishing_app: content-publisher
+- news_story: # indexable when published by Content Publisher
+    publishing_app: content-publisher
+- press_release: # indexable when published by Content Publisher
+    publishing_app: content-publisher
+- world_news_story: # indexable when published by Content Publisher
+    publishing_app: content-publisher
 
 non_indexable_path:
 - '/help/cookie-details'

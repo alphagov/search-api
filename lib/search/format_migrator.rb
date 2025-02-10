@@ -9,7 +9,7 @@ module Search
       {
         bool: {
           minimum_should_match: 1,
-          should: [excluding_formats, only_formats],
+          should: [excluding_formats, only_formats] + partially_migrated_formats,
         },
       }
     end
@@ -54,6 +54,21 @@ module Search
           ],
         },
       }
+    end
+
+    def partially_migrated_formats
+      GovukIndex::MigratedFormats.partially_migrated_formats.keys.map do |format|
+        {
+          bool: {
+            must: [
+              base_query,
+              { terms: { _index: migrated_indices } },
+              { term: { format: format } },
+              { term: { publishing_app: GovukIndex::MigratedFormats.partially_migrated_formats[format] } },
+            ],
+          },
+        }
+      end
     end
 
     def base_query

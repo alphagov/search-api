@@ -9,6 +9,7 @@ RSpec.describe Search::FormatMigrator do
     Clusters.active.each do |_cluster|
       it "when base query without migrated formats" do
         allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
+        allow(GovukIndex::MigratedFormats).to receive(:partially_migrated_formats).and_return({})
         base_query = { filter: "component" }
         expected = {
           bool: {
@@ -36,6 +37,7 @@ RSpec.describe Search::FormatMigrator do
 
       it "when base query with migrated formats" do
         allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("help_page" => :all)
+        allow(GovukIndex::MigratedFormats).to receive(:partially_migrated_formats).and_return({})
         base_query = { filter: "component" }
         expected = {
           bool: {
@@ -68,8 +70,64 @@ RSpec.describe Search::FormatMigrator do
         ).call).to eq(expected)
       end
 
-      it "when no base query without migrated formats" do
+      it "when base query with partially migrated formats" do
+        allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("help_page" => :all)
+        allow(GovukIndex::MigratedFormats).to receive(:partially_migrated_formats).and_return("news_page" => "publisher-one", "blog_page" => "publisher-two")
+        base_query = { filter: "component" }
+        expected = {
+          bool: {
+            minimum_should_match: 1,
+            should: [
+              {
+                bool: {
+                  must: base_query,
+                  must_not: [
+                    { terms: { _index: %w[govuk_test] } },
+                    { terms: { format: %w[help_page] } },
+                  ],
+                },
+              },
+              {
+                bool: {
+                  must: [
+                    base_query,
+                    { terms: { _index: %w[govuk_test] } },
+                    { terms: { format: %w[help_page] } },
+                  ],
+                },
+              },
+              {
+                bool: {
+                  must: [
+                    base_query,
+                    { terms: { _index: %w[govuk_test] } },
+                    { term: { format: "news_page" } },
+                    { term: { publishing_app: "publisher-one" } },
+                  ],
+                },
+              },
+              {
+                bool: {
+                  must: [
+                    base_query,
+                    { terms: { _index: %w[govuk_test] } },
+                    { term: { format: "blog_page" } },
+                    { term: { publishing_app: "publisher-two" } },
+                  ],
+                },
+              },
+            ],
+          },
+        }
+        expect(described_class.new(
+          SearchConfig.default_instance,
+          base_query:,
+        ).call).to eq(expected)
+      end
+
+      it "uses a default match all query when no base query is provided" do
         allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
+        allow(GovukIndex::MigratedFormats).to receive(:partially_migrated_formats).and_return({})
         expected = {
           bool: {
             minimum_should_match: 1,
@@ -83,37 +141,6 @@ RSpec.describe Search::FormatMigrator do
               { bool: { must_not: { match_all: {} } } },
             ],
           },
-        }
-        expect(described_class.new(
-          SearchConfig.default_instance,
-        ).call).to eq(expected)
-      end
-
-      it "when no base query with migrated formats" do
-        allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("help_page" => :all)
-        expected = {
-          bool:
-          { minimum_should_match: 1,
-            should: [
-              {
-                bool: {
-                  must: { match_all: {} },
-                  must_not: [
-                    { terms: { _index: %w[govuk_test] } },
-                    { terms: { format: %w[help_page] } },
-                  ],
-                },
-              },
-              {
-                bool: {
-                  must: [
-                    { match_all: {} },
-                    { terms: { _index: %w[govuk_test] } },
-                    { terms: { format: %w[help_page] } },
-                  ],
-                },
-              },
-            ] },
         }
         expect(described_class.new(
           SearchConfig.default_instance,

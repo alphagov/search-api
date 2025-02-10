@@ -29,6 +29,10 @@ module GovukIndex
       @migrated_formats ||= convert_to_allowed_hash(data_file["migrated"])
     end
 
+    def partially_migrated_formats
+      @partially_migrated_formats ||= data_file["partially_migrated"]
+    end
+
   private
 
     def data_file
