@@ -9,7 +9,7 @@ module Search
       {
         bool: {
           minimum_should_match: 1,
-          should: [excluding_formats, only_formats],
+          should: [excluding_formats, only_formats, migrated_publishing_apps].compact,
         },
       }
     end
@@ -51,6 +51,20 @@ module Search
             base_query,
             { terms: { _index: migrated_indices } },
             { terms: { format: migrated_formats } },
+          ],
+        },
+      }
+    end
+
+    def migrated_publishing_apps
+      return nil if GovukIndex::MigratedFormats.migrated_publishing_apps.empty?
+
+      {
+        bool: {
+          must: [
+            base_query,
+            { terms: { _index: migrated_indices } },
+            { terms: { publishing_app: GovukIndex::MigratedFormats.migrated_publishing_apps } },
           ],
         },
       }
