@@ -103,58 +103,6 @@ RSpec.describe Search::FormatMigrator do
         ).call).to eq(expected)
       end
 
-      it "when no base query without migrated formats" do
-        allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
-        expected = {
-          bool: {
-            minimum_should_match: 1,
-            should: [
-              {
-                bool: {
-                  must: { match_all: {} },
-                  must_not: { terms: { _index: %w[govuk_test] } },
-                },
-              },
-              { bool: { must_not: { match_all: {} } } },
-            ],
-          },
-        }
-        expect(described_class.new(
-          SearchConfig.default_instance,
-        ).call).to eq(expected)
-      end
-
-      it "when no base query with migrated formats" do
-        allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("help_page" => :all)
-        expected = {
-          bool:
-          { minimum_should_match: 1,
-            should: [
-              {
-                bool: {
-                  must: { match_all: {} },
-                  must_not: [
-                    { terms: { _index: %w[govuk_test] } },
-                    { terms: { format: %w[help_page] } },
-                  ],
-                },
-              },
-              {
-                bool: {
-                  must: [
-                    { match_all: {} },
-                    { terms: { _index: %w[govuk_test] } },
-                    { terms: { format: %w[help_page] } },
-                  ],
-                },
-              },
-            ] },
-        }
-        expect(described_class.new(
-          SearchConfig.default_instance,
-        ).call).to eq(expected)
-      end
-
       it "uses a default match all query when no base query is provided" do
         allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
         allow(GovukIndex::MigratedFormats).to receive(:migrated_publishing_apps).and_return([])
