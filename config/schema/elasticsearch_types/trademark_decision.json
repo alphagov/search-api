@@ -7,6 +7,7 @@
     "trademark_decision_date",
     "trademark_decision_appointed_person_hearing_officer",
     "trademark_decision_person_or_company_involved",
-    "trademark_decision_grounds_section"
+    "trademark_decision_grounds_section",
+    "trademark_decision_grounds_sub_section"
   ]
 }

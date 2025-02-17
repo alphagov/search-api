@@ -1146,5 +1146,8 @@
   },
   "trademark_decision_grounds_section": {
     "type": "identifiers"
+  },
+  "trademark_decision_grounds_sub_section": {
+    "type": "identifiers"
   }
 }

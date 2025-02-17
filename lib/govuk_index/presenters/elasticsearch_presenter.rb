@@ -98,6 +98,7 @@ module GovukIndex
         trademark_decision_mark: specialist.trademark_decision_mark,
         trademark_decision_person_or_company_involved: specialist.trademark_decision_person_or_company_involved,
         trademark_decision_grounds_section: specialist.trademark_decision_grounds_section,
+        trademark_decision_grounds_sub_section: specialist.trademark_decision_grounds_sub_section,
         trademark_decision_type_of_hearing: specialist.trademark_decision_type_of_hearing,
         is_historic: common_fields.historic?,
         is_political: common_fields.political?,
