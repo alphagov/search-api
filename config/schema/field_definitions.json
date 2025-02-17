@@ -1139,7 +1139,7 @@
     "type": "date"
   },
   "trademark_decision_appointed_person_hearing_officer": {
-    "type": "identifiers"
+    "type": "searchable_multivalued_text"
   },
   "trademark_decision_person_or_company_involved": {
     "type": "searchable_text"
