@@ -23,11 +23,6 @@ RSpec.describe Search::AggregateExampleFetcher do
                     },
                   },
                   { bool: { must_not: { match_all: {} } } },
-                  { bool: { must: [
-                    { match_all: {} },
-                    { terms: { _index: %w[govuk_test] } },
-                    { terms: { publishing_app: %w[content-publisher] } },
-                  ] } },
                 ],
               },
             },

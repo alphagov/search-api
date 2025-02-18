@@ -11,7 +11,7 @@ module Search
           minimum_should_match: 1,
           # match documents meeting any of below conditions
           # this query excludes documents that are present in the migrated index, but their format is not yet marked as migrated
-          should: [be_an_unmigrated_document, be_a_migrated_document, be_published_by_a_migrated_app].compact,
+          should: [be_an_unmigrated_document, be_a_migrated_document].compact,
         },
       }
     end
@@ -55,22 +55,6 @@ module Search
             base_query,
             { terms: { _index: migrated_indices } },
             { terms: { format: migrated_formats } },
-          ],
-        },
-      }
-    end
-
-    # This condition captures documents that were published by an app for which all document formats should be considered migrated
-    # This is useful when a format is published by multiple apps but migration is only complete for one of them
-    def be_published_by_a_migrated_app
-      return nil if GovukIndex::MigratedFormats.migrated_publishing_apps.empty?
-
-      {
-        bool: {
-          must: [
-            base_query,
-            { terms: { _index: migrated_indices } },
-            { terms: { publishing_app: GovukIndex::MigratedFormats.migrated_publishing_apps } },
           ],
         },
       }

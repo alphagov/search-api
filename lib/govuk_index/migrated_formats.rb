@@ -27,10 +27,6 @@ module GovukIndex
       @migrated_formats ||= convert_to_allowed_hash(data_file["migrated"])
     end
 
-    def migrated_publishing_apps
-      @migrated_publishing_apps ||= data_file["migrated_publishing_apps"] || []
-    end
-
   private
 
     def data_file

@@ -306,16 +306,14 @@ migrated:
   - '/help'
   - '/help/cookies'
   - '/find-local-council'
+# Whitehall
+- government_response
+- news_article
+- news_story
+- press_release
+- world_news_story
 
-# Below configuration can be removed once government_response, news_story, press_release and world_news_story are migrated
-migrated_publishing_apps:
-  - content-publisher
-
-indexable:
-  - government_response
-  - news_story
-  - press_release
-  - world_news_story
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
