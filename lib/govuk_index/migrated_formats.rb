@@ -2,10 +2,9 @@ module GovukIndex
   module MigratedFormats
     extend self
 
-    def non_indexable?(format, path, app)
-      non_indexable_formats[format] &&
-        (non_indexable_formats[format] == :all || non_indexable_formats[format].include?(path) ||
-          published_by_non_indexable_app?(format, app)) || non_indexable_path.include?(path)
+    def non_indexable?(format, path)
+      non_indexable_path.include?(path) || non_indexable_formats[format] &&
+        (non_indexable_formats[format] == :all || non_indexable_formats[format].include?(path))
     end
 
     def non_indexable_formats
@@ -16,9 +15,8 @@ module GovukIndex
       @non_indexable_path ||= data_file["non_indexable_path"]
     end
 
-    def indexable?(format, path, app)
-      indexable_formats[format] && (indexable_formats[format] == :all ||
-        indexable_formats[format].include?(path) || published_by_indexable_app?(format, app))
+    def indexable?(format, path)
+      indexable_formats[format] && (indexable_formats[format] == :all || indexable_formats[format].include?(path))
     end
 
     def indexable_formats
@@ -27,6 +25,10 @@ module GovukIndex
 
     def migrated_formats
       @migrated_formats ||= convert_to_allowed_hash(data_file["migrated"])
+    end
+
+    def migrated_publishing_apps
+      @migrated_publishing_apps ||= data_file["migrated_publishing_apps"] || []
     end
 
   private
@@ -44,18 +46,6 @@ module GovukIndex
           hash
         end
       end
-    end
-
-    def published_by_indexable_app?(format, app)
-      return false unless indexable_formats[format].is_a?(Hash)
-
-      indexable_formats[format]["publishing_app"] == app
-    end
-
-    def published_by_non_indexable_app?(format, app)
-      return false unless non_indexable_formats[format].is_a?(Hash)
-
-      non_indexable_formats[format]["publishing_app"] == app
     end
   end
 end

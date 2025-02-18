@@ -23,6 +23,11 @@ RSpec.describe Search::AggregateExampleFetcher do
                     },
                   },
                   { bool: { must_not: { match_all: {} } } },
+                  { bool: { must: [
+                    { match_all: {} },
+                    { terms: { _index: %w[govuk_test] } },
+                    { terms: { publishing_app: %w[content-publisher] } },
+                  ] } },
                 ],
               },
             },
@@ -78,6 +83,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     allow(index).to receive(:schema).and_return(schema)
     index
   end
+
   before do
     allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w[govuk_test])
   end
