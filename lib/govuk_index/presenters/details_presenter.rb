@@ -38,6 +38,14 @@ module GovukIndex
       details.dig("image", "url")
     end
 
+    def start_date
+      details["opening_date"]
+    end
+
+    def end_date
+      details["closing_date"]
+    end
+
   private
 
     def service_manual
