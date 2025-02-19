@@ -1121,5 +1121,23 @@
   },
   "data_ethics_guidance_document_technology_area": {
     "type": "identifiers"
+  },
+  "authorised_fuel_name": {
+    "type": "searchable_text"
+  },
+  "authorised_fuel_manufacturer_name": {
+    "type": "searchable_text"
+  },
+  "authorised_fuel_type":  {
+    "type": "identifiers"
+  },
+  "authorised_fuel_country": {
+    "type": "identifiers"
+  },
+  "authorised_fuel_date_the_fuel_was_authorised":  {
+    "type": "date"
+  },
+  "authorised_fuel_address":  {
+    "type": "searchable_text"
   }
 }

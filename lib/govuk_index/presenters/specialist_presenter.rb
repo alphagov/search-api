@@ -21,6 +21,12 @@ module GovukIndex
     delegate_to_payload :areas_of_interest
     delegate_to_payload :assessment_date
     delegate_to_payload :assurance_technique_approach, convert_to_array: true
+    delegate_to_payload :authorised_fuel_address
+    delegate_to_payload :authorised_fuel_country
+    delegate_to_payload :authorised_fuel_date_the_fuel_was_authorised
+    delegate_to_payload :authorised_fuel_manufacturer_name
+    delegate_to_payload :authorised_fuel_name
+    delegate_to_payload :authorised_fuel_type
     delegate_to_payload :authors
     delegate_to_payload :business_sizes
     delegate_to_payload :business_stages

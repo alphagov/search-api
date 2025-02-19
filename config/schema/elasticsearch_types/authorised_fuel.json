@@ -1,0 +1,10 @@
+{
+  "fields": [
+    "authorised_fuel_name",
+    "authorised_fuel_manufacturer_name",
+    "authorised_fuel_type",
+    "authorised_fuel_country",
+    "authorised_fuel_date_the_fuel_was_authorised",
+    "authorised_fuel_address"
+  ]
+}
