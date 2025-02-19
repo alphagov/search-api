@@ -307,21 +307,21 @@ migrated:
   - '/help/cookies'
   - '/find-local-council'
 # Whitehall
+- government_response
+- news_article
+- news_story
+- press_release
+- world_news_story
+
+indexable:
 - call_for_evidence
 - call_for_evidence_outcome
 - closed_call_for_evidence
 - closed_consultation
 - consultation
 - consultation_outcome
-- government_response
-- news_article
-- news_story
 - open_call_for_evidence
 - open_consultation
-- press_release
-- world_news_story
-
-indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
