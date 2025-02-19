@@ -313,7 +313,15 @@ migrated:
 - press_release
 - world_news_story
 
-indexable: []
+indexable:
+- call_for_evidence
+- call_for_evidence_outcome
+- closed_call_for_evidence
+- closed_consultation
+- consultation
+- consultation_outcome
+- open_call_for_evidence
+- open_consultation
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -370,10 +378,8 @@ non_indexable:
 - accessible_documents_policy
 - access_and_opening
 - authored_article
-- call_for_evidence
 - case_study
 - complaints_procedure
-- consultation
 #- contact # migrated
 - corporate_report
 - correspondence
