@@ -321,7 +321,11 @@ migrated:
 - press_release
 - world_news_story
 
-indexable: []
+indexable:
+- case_study
+- detailed_guidance
+- fatality_notice
+- statistical_data_set
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -370,15 +374,12 @@ non_indexable:
   - "/tour"
   - "/ukwelcomes"
 
-# detailed formats
-- detailed_guide
 # whitehall formats
 - about
 - about_our_services
 - accessible_documents_policy
 - access_and_opening
 - authored_article
-- case_study
 - complaints_procedure
 #- contact # migrated
 - corporate_report
@@ -387,7 +388,6 @@ non_indexable:
 - document_collection
 - equality_and_diversity
 - facet
-- fatality_notice
 - field_of_operation
 #- finder # migrated
 - foi_release
@@ -427,7 +427,6 @@ non_indexable:
 - speech
 - staff_update
 - standard
-- statistical_data_set
 - statistics
 - statutory_guidance
 - take_part
