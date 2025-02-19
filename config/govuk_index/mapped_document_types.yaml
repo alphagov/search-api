@@ -11,6 +11,7 @@ business_finance_support_scheme: business_finance_support_scheme # Specialist Pu
 calendar: edition
 call_for_evidence: edition
 call_for_evidence_outcome: edition
+case_study: edition
 closed_call_for_evidence: edition
 closed_consultation: edition
 cma_case: cma_case # Specialist Publisher
@@ -20,6 +21,7 @@ contact: contact
 coronavirus_landing_page: edition
 countryside_stewardship_grant: countryside_stewardship_grant # Specialist Publisher
 data_ethics_guidance_document: data_ethics_guidance_document # Specialist Publisher
+detailed_guidance: edition
 drcf_digital_markets_research: drcf_digital_markets_research # Specialist Publisher
 drug_safety_update: drug_safety_update # Specialist Publisher
 employment_appeal_tribunal_decision: employment_appeal_tribunal_decision # Specialist Publisher
@@ -27,6 +29,7 @@ employment_tribunal_decision: employment_tribunal_decision # Specialist Publishe
 esi_fund: european_structural_investment_fund # Specialist Publisher
 export_health_certificate: export_health_certificate # Specialist Publisher
 external_content: edition # Search Admin
+fatality_notice: edition
 finder: edition # Specialist Publisher
 government_response: edition
 guide: edition
@@ -71,6 +74,7 @@ service_standard_report: service_standard_report # Specialist Publisher
 sfo_case: sfo_case # Specialist Publisher
 simple_smart_answer: edition
 smart_answer: edition
+statistical_data_set: edition
 statutory_instrument: statutory_instrument # Specialist Publisher
 special_route: edition
 step_by_step_nav: edition
