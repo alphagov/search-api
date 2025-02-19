@@ -479,6 +479,10 @@
     "type": "identifiers"
   },
 
+  "opening_date": {
+    "type": "date"
+  },
+
   "closing_date": {
     "type": "date"
   },
