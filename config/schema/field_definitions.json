@@ -1067,7 +1067,7 @@
   "life_saving_maritime_appliance_manufacturer": {
     "type": "identifiers"
   },
-  
+
   "veterans_support_organisation_health_and_social_care": {
     "type": "identifiers"
   },
@@ -1120,6 +1120,34 @@
     "type": "identifiers"
   },
   "data_ethics_guidance_document_technology_area": {
+    "type": "identifiers"
+  },
+
+  "trademark_decision_british_library_number": {
+    "type": "searchable_text"
+  },
+  "trademark_decision_type_of_hearing": {
+    "type": "identifiers"
+  },
+  "trademark_decision_mark": {
+    "type": "searchable_text"
+  },
+  "trademark_decision_class": {
+    "type": "identifiers"
+  },
+  "trademark_decision_date": {
+    "type": "date"
+  },
+  "trademark_decision_appointed_person_hearing_officer": {
+    "type": "searchable_multivalued_text"
+  },
+  "trademark_decision_person_or_company_involved": {
+    "type": "searchable_text"
+  },
+  "trademark_decision_grounds_section": {
+    "type": "identifiers"
+  },
+  "trademark_decision_grounds_sub_section": {
     "type": "identifiers"
   }
 }

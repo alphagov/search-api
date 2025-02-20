@@ -78,6 +78,7 @@ traffic_commissioner_regulatory_decision: traffic_commissioner_regulatory_decisi
 tax_tribunal_decision: tax_tribunal_decision # Specialist Publisher
 taxon: edition # Content Tagger
 topic: edition # Collections Publisher
+trademark_decision: trademark_decision # Specialist Publisher
 transaction: edition
 travel_advice: edition # Travel advice publisher
 travel_advice_index: edition # Travel advice publisher

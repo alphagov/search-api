@@ -66,6 +66,15 @@ module GovukIndex
     delegate_to_payload :hidden_indexable_content
     delegate_to_payload :industries
     delegate_to_payload :internal_notes
+    delegate_to_payload :trademark_decision_appointed_person_hearing_officer
+    delegate_to_payload :trademark_decision_british_library_number
+    delegate_to_payload :trademark_decision_class
+    delegate_to_payload :trademark_decision_date
+    delegate_to_payload :trademark_decision_mark
+    delegate_to_payload :trademark_decision_person_or_company_involved
+    delegate_to_payload :trademark_decision_grounds_section
+    delegate_to_payload :trademark_decision_grounds_sub_section
+    delegate_to_payload :trademark_decision_type_of_hearing
     delegate_to_payload :issued_date
     delegate_to_payload :key_function, convert_to_array: true
     delegate_to_payload :keyword
