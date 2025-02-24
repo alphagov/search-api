@@ -310,23 +310,24 @@ migrated:
 # Whitehall
 - call_for_evidence
 - call_for_evidence_outcome
+- case_study
 - closed_call_for_evidence
 - closed_consultation
 - consultation
 - consultation_outcome
+- detailed_guidance # Required to prevent detailed guidance from government index appearing in search results, type has been renamed to detailed_guide
+- detailed_guide
+- fatality_notice
 - government_response
 - open_call_for_evidence
 - open_consultation
 - news_article
 - news_story
 - press_release
+- statistical_data_set
 - world_news_story
 
-indexable:
-- case_study
-- detailed_guide
-- fatality_notice
-- statistical_data_set
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
