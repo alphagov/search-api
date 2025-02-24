@@ -327,7 +327,11 @@ migrated:
 - statistical_data_set
 - world_news_story
 
-indexable: []
+indexable:
+- authored_article
+- oral_statement
+- speech
+- written_statement
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -381,7 +385,6 @@ non_indexable:
 - about_our_services
 - accessible_documents_policy
 - access_and_opening
-- authored_article
 - complaints_procedure
 #- contact # migrated
 - corporate_report
@@ -409,7 +412,6 @@ non_indexable:
 - notice
 - official_statistics
 - official_statistics_announcement
-- oral_statement
 - organisation
 - our_energy_use
 - our_governance
@@ -426,7 +428,6 @@ non_indexable:
 - research
 - services_and_information
 - social_media_use
-- speech
 - staff_update
 - standard
 - statistics
@@ -440,4 +441,3 @@ non_indexable:
 - working_group
 - world_location
 - worldwide_organisation
-- written_statement
