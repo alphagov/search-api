@@ -308,6 +308,7 @@ migrated:
   - '/help/cookies'
   - '/find-local-council'
 # Whitehall
+- authored_article
 - call_for_evidence
 - call_for_evidence_outcome
 - case_study
@@ -321,17 +322,16 @@ migrated:
 - government_response
 - open_call_for_evidence
 - open_consultation
+- oral_statement
 - news_article
 - news_story
 - press_release
+- speech
 - statistical_data_set
 - world_news_story
-
-indexable:
-- authored_article
-- oral_statement
-- speech
 - written_statement
+
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
