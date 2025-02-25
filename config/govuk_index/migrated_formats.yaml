@@ -331,7 +331,8 @@ migrated:
 - world_news_story
 - written_statement
 
-indexable: []
+indexable:
+- document_collection
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -390,7 +391,6 @@ non_indexable:
 - corporate_report
 - correspondence
 - decision
-- document_collection
 - equality_and_diversity
 - facet
 - field_of_operation
