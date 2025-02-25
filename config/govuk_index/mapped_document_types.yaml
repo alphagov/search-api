@@ -16,12 +16,15 @@ case_study: edition
 closed_call_for_evidence: edition
 closed_consultation: edition
 cma_case: cma_case # Specialist Publisher
+correspondence: edition
 consultation: edition
 consultation_outcome: edition
 contact: contact
 coronavirus_landing_page: edition
+corporate_report: edition
 countryside_stewardship_grant: countryside_stewardship_grant # Specialist Publisher
 data_ethics_guidance_document: data_ethics_guidance_document # Specialist Publisher
+decision: edition
 detailed_guide: edition
 document_collection: edition
 drcf_digital_markets_research: drcf_digital_markets_research # Specialist Publisher
@@ -33,14 +36,20 @@ export_health_certificate: export_health_certificate # Specialist Publisher
 external_content: edition # Search Admin
 fatality_notice: edition
 finder: edition # Specialist Publisher
+foi_release: edition
+form: edition
 government_response: edition
+guidance: edition
 guide: edition
 help_page: edition
 history: edition
 hmrc_contact: hmrc_contact # Specialist Publisher
 hmrc_manual: hmrc_manual
 hmrc_manual_section: hmrc_manual_section
+impact_assessment: edition
+independent_report: edition
 international_development_fund: international_development_fund # Specialist Publisher
+international_treaty: edition
 flood_and_coastal_erosion_risk_management_research_report: flood_and_coastal_erosion_risk_management_research_report # Specialist Publisher
 farming_grant: farming_grant # Specialist Publisher
 licence: edition
@@ -51,21 +60,29 @@ maib_report: maib_report # Specialist Publisher
 mainstream_browse_page: edition # Collections Publisher
 manual: manual
 manual_section: manual_section
+map: edition
 marine_equipment_approved_recommendation: marine_equipment_approved_recommendation # Specialist Publisher
 marine_notice: marine_notice # Specialist Publisher
 medical_safety_alert: medical_safety_alert # Specialist Publisher
 ministerial_role: edition
+national_statistics: edition
 news_story: edition
+notice: edition
+official_statistics: edition
 oral_statement: edition # Whitehall
 open_call_for_evidence: edition
 open_consultation: edition
 person: person
 place: edition
 policy: policy # Policy Publisher
+policy_paper: edition
 press_release: edition
 product_safety_alert_report_recall: product_safety_alert_report_recall # Specialist Publisher
+promotional: edition
 protected_food_drink_name: protected_food_drink_name # Specialist Publisher
 raib_report: raib_report # Specialist Publisher
+regulation: edition
+research: edition
 research_for_development_output: research_for_development_output # Specialist Publisher
 residential_property_tribunal_decision: residential_property_tribunal_decision # Specialist Publisher
 service_manual_guide: service_manual_guide
@@ -78,9 +95,11 @@ sfo_case: sfo_case # Specialist Publisher
 simple_smart_answer: edition
 smart_answer: edition
 statistical_data_set: edition
+statutory_guidance: edition
 statutory_instrument: statutory_instrument # Specialist Publisher
 special_route: edition
 speech: edition # Whitehall
+standard: edition
 step_by_step_nav: edition
 traffic_commissioner_regulatory_decision: traffic_commissioner_regulatory_decision # Specialist Publisher
 tax_tribunal_decision: tax_tribunal_decision # Specialist Publisher
@@ -88,6 +107,7 @@ taxon: edition # Content Tagger
 topic: edition # Collections Publisher
 trademark_decision: trademark_decision # Specialist Publisher
 transaction: edition
+transparency: edition
 travel_advice: edition # Travel advice publisher
 travel_advice_index: edition # Travel advice publisher
 utaac_decision: utaac_decision # Specialist Publisher
