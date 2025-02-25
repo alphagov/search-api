@@ -318,6 +318,7 @@ migrated:
 - consultation_outcome
 - detailed_guidance # Required to prevent detailed guidance from government index appearing in search results, type has been renamed to detailed_guide
 - detailed_guide
+- document_collection
 - fatality_notice
 - government_response
 - open_call_for_evidence
@@ -331,8 +332,7 @@ migrated:
 - world_news_story
 - written_statement
 
-indexable:
-- document_collection
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
