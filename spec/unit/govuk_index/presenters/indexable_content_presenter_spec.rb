@@ -55,6 +55,34 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
     end
   end
 
+  context "details with collection groups" do
+    let(:format) { "document_collection" }
+    let(:details) do
+      {
+        "collection_groups" => [
+          {
+            "title" => "title 1",
+            "body" => [
+              { "content_type" => "text/govspeak", "content" => "**hello**" },
+              { "content_type" => "text/html", "content" => "<strong>hello</strong>" },
+            ],
+          },
+          {
+            "title" => "title 2",
+            "body" => [
+              { "content_type" => "text/govspeak", "content" => "**goodbye**" },
+              { "content_type" => "text/html", "content" => "<strong>goodbye</strong>" },
+            ],
+          },
+        ],
+      }
+    end
+
+    it "extracts content from details with collection groups" do
+      expect(subject.indexable_content).to eq("title 1\n\nhello\n\ntitle 2\n\ngoodbye")
+    end
+  end
+
   context "additional specified indexable content keys" do
     context "transaction format" do
       let(:format) { "transaction" }

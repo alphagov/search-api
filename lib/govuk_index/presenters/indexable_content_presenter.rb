@@ -3,6 +3,7 @@ module GovukIndex
     DEFAULTS = %w[body parts hidden_search_terms].freeze
     BY_FORMAT = {
       "contact" => %w[title description],
+      "document_collection" => %w[collection_groups],
       "licence" => %w[licence_short_description licence_overview],
       "local_transaction" => %w[introduction more_information need_to_know],
       "transaction" => %w[introductory_paragraph more_information],
@@ -37,18 +38,12 @@ module GovukIndex
     def indexable_content_parts
       indexable_content_keys.flat_map do |field|
         indexable_values = details.dig(*field.split(".")) || []
-        field == "parts" ? parts(indexable_values) : [indexable_values]
+        %w[parts collection_groups].include?(field) ? indexable_values.flat_map { |item| [item["title"], item["body"]] } : [indexable_values]
       end
     end
 
     def indexable_content_keys
       DEFAULTS + BY_FORMAT.fetch(format, [])
-    end
-
-    def parts(items)
-      items.flat_map do |item|
-        [item["title"], item["body"]]
-      end
     end
 
     def contact_groups_titles
