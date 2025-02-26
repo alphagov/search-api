@@ -109,4 +109,141 @@ RSpec.describe GovukIndex::DetailsPresenter do
       end
     end
   end
+
+  context "publication format" do
+    let(:format) { "publication" }
+    context "it has an attachment with a command paper number" do
+      let(:details) do
+        {
+          "attachments" => [
+            {
+              "command_paper_number" => "Cm. 1234",
+            },
+          ],
+        }
+      end
+
+      it "has an official document" do
+        expect(presented_details.has_official_document?).to be true
+      end
+
+      it "has a command paper" do
+        expect(presented_details.has_command_paper?).to be true
+      end
+
+      it "does not have an act paper" do
+        expect(presented_details.has_act_paper?).to be false
+      end
+    end
+
+    context "it has an attachment that is an unnumbered command paper" do
+      let(:details) do
+        {
+          "attachments" => [
+            {
+              "unnumbered_command_paper" => true,
+            },
+          ],
+        }
+      end
+
+      it "has an official document" do
+        expect(presented_details.has_official_document?).to be true
+      end
+
+      it "has a command paper" do
+        expect(presented_details.has_command_paper?).to be true
+      end
+
+      it "does not have an act paper" do
+        expect(presented_details.has_act_paper?).to be false
+      end
+    end
+
+    context "it has an attachment with an hoc paper number" do
+      let(:details) do
+        {
+          "attachments" => [
+            {
+              "hoc_paper_number" => "Hoc. 1234",
+            },
+          ],
+        }
+      end
+
+      it "has an official document" do
+        expect(presented_details.has_official_document?).to be true
+      end
+
+      it "does not have a command paper" do
+        expect(presented_details.has_command_paper?).to be false
+      end
+
+      it "has an act paper" do
+        expect(presented_details.has_act_paper?).to be true
+      end
+    end
+
+    context "it has an attachment that is an unnumbered hoc paper" do
+      let(:details) do
+        {
+          "attachments" => [
+            {
+              "unnumbered_hoc_paper" => true,
+            },
+          ],
+        }
+      end
+
+      it "has an official document" do
+        expect(presented_details.has_official_document?).to be true
+      end
+
+      it "does not have a command paper" do
+        expect(presented_details.has_command_paper?).to be false
+      end
+
+      it "has an act paper" do
+        expect(presented_details.has_act_paper?).to be true
+      end
+    end
+
+    context "it has no attachments that are hoc papers or command papers" do
+      let(:details) do
+        {
+          "attachments" => [],
+        }
+      end
+
+      it "has an official document" do
+        expect(presented_details.has_official_document?).to be false
+      end
+
+      it "does not have a command paper" do
+        expect(presented_details.has_command_paper?).to be false
+      end
+
+      it "has an act paper" do
+        expect(presented_details.has_act_paper?).to be false
+      end
+    end
+
+    context "it has no attachments" do
+      let(:details) do
+        {}
+      end
+
+      it "has an official document" do
+        expect(presented_details.has_official_document?).to be nil
+      end
+
+      it "does not have a command paper" do
+        expect(presented_details.has_command_paper?).to be nil
+      end
+
+      it "has an act paper" do
+        expect(presented_details.has_act_paper?).to be nil
+      end
+    end
+  end
 end
