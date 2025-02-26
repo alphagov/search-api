@@ -46,6 +46,18 @@ module GovukIndex
       details["closing_date"]
     end
 
+    def has_official_document?
+      has_command_paper? || has_act_paper?
+    end
+
+    def has_command_paper?
+      details["attachments"]&.any? { |attachment| attachment["command_paper_number"].present? || attachment["unnumbered_command_paper"] }
+    end
+
+    def has_act_paper?
+      details["attachments"]&.any? { |attachment| attachment["hoc_paper_number"].present? || attachment["unnumbered_hoc_paper"] }
+    end
+
   private
 
     def service_manual

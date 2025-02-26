@@ -332,7 +332,27 @@ migrated:
 - world_news_story
 - written_statement
 
-indexable: []
+indexable:
+- correspondence
+- corporate_report
+- decision
+- foi_release
+- form
+- guidance
+- impact_assessment
+- independent_report
+- international_treaty
+- map
+- national_statistics
+- notice
+- official_statistics
+- policy_paper
+- promotional
+- regulation
+- research
+- standard
+- statutory_guidance
+- transparency
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -388,29 +408,16 @@ non_indexable:
 - access_and_opening
 - complaints_procedure
 #- contact # migrated
-- corporate_report
-- correspondence
-- decision
 - equality_and_diversity
 - facet
 - field_of_operation
 #- finder # migrated
-- foi_release
-- form
-- guidance
 - html_publication
-- impact_assessment
 - imported
-- independent_report
-- international_treaty
-- map
 - media_enquiries
 - membership
 - modern_slavery_statement
-- national_statistics
 - national_statistics_announcement
-- notice
-- official_statistics
 - official_statistics_announcement
 - organisation
 - our_energy_use
@@ -418,25 +425,18 @@ non_indexable:
 - personal_information_charter
 - petitions_and_campaigns
 - policy_area
-- policy_paper
 - procurement
-- promotional
 - publication
 - publication_scheme
 - recruitment
-- regulation
-- research
 - services_and_information
 - social_media_use
 - staff_update
-- standard
 - statistics
-- statutory_guidance
 - take_part
 - terms_of_reference
 - topical_event
 - topical_event_about_page
-- transparency
 - welsh_language_scheme
 - working_group
 - world_location
