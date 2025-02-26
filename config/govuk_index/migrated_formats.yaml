@@ -316,43 +316,44 @@ migrated:
 - closed_consultation
 - consultation
 - consultation_outcome
+- correspondence
+- corporate_report
+- decision
 - detailed_guidance # Required to prevent detailed guidance from government index appearing in search results, type has been renamed to detailed_guide
 - detailed_guide
 - document_collection
 - fatality_notice
-- government_response
-- open_call_for_evidence
-- open_consultation
-- oral_statement
-- news_article
-- news_story
-- press_release
-- speech
-- statistical_data_set
-- world_news_story
-- written_statement
-
-indexable:
-- correspondence
-- corporate_report
-- decision
 - foi_release
 - form
+- government_response
 - guidance
 - impact_assessment
 - independent_report
 - international_treaty
 - map
 - national_statistics
+- news_article # Required to prevent news articles from government index appearing in search results, news article types used in GOVUK index
+- news_story
 - notice
 - official_statistics
+- open_call_for_evidence
+- open_consultation
+- oral_statement
 - policy_paper
+- press_release
 - promotional
+- publication # Required to prevent publications from government index appearing in search results, publication sub-types used in GOVUK index
 - regulation
 - research
+- speech
 - standard
+- statistical_data_set
 - statutory_guidance
 - transparency
+- world_news_story
+- written_statement
+
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -426,7 +427,6 @@ non_indexable:
 - petitions_and_campaigns
 - policy_area
 - procurement
-- publication
 - publication_scheme
 - recruitment
 - services_and_information
