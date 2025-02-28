@@ -112,6 +112,16 @@ RSpec.describe GovukIndex::DetailsPresenter do
 
   context "publication format" do
     let(:format) { "publication" }
+    let(:details) do
+      {
+        "document_type_label" => "Publication",
+      }
+    end
+
+    it "extracts the document type label" do
+      expect(presented_details.document_type_label).to eq("Publication")
+    end
+
     context "it has an attachment with a command paper number" do
       let(:details) do
         {
