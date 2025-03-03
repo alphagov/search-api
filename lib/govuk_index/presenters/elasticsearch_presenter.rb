@@ -72,6 +72,7 @@ module GovukIndex
         disease_case_closed_date: specialist.disease_case_closed_date,
         disease_case_opened_date: specialist.disease_case_opened_date,
         disease_type: specialist.disease_type,
+        display_type: details.document_type_label,
         document_type: type,
         eligible_entities: specialist.eligible_entities,
         email_document_supertype: common_fields.email_document_supertype,
