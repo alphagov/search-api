@@ -4,7 +4,7 @@ tag: search-api.publishing.service.gov.uk
 staging:
   :concurrency:  12
 production:
-  :concurrency:  18
+  :concurrency:  12
 :require: ./lib/rummager.rb
 <% if ENV.key?('SIDEKIQ_LOGFILE') %>
 :logfile: <%= ENV['SIDEKIQ_LOGFILE'] %>
@@ -13,5 +13,5 @@ production:
   - default
   - bulk
 :limits:
-  bulk: 4
-  default: 144
+  bulk: 12
+  default: 12
