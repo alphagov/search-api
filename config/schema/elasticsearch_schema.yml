@@ -121,7 +121,7 @@ index:
     # will still work fine, though.
     number_of_replicas: 2
     number_of_shards: 3
-    refresh_interval: '1s'
+    refresh_interval: '30s'
     search:
       slowlog:
         threshold:
