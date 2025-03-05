@@ -14,4 +14,4 @@ production:
   - bulk
 :limits:
   bulk: 4
-  default: 84
+  default: 48
