@@ -20,7 +20,7 @@ module Indexer
       )
     end
 
-  private
+    private
 
     def present_attachment(attachment)
       return if attachment.fetch("locale", "en") != "en"
@@ -31,15 +31,15 @@ module Indexer
         return unless content
       end
 
-      {
-        "url" => attachment["url"],
-        "title" => attachment["title"],
-        "isbn" => attachment["isbn"],
-        "unique_reference" => attachment["unique_reference"],
-        "command_paper_number" => attachment["command_paper_number"],
-        "hoc_paper_number" => attachment["hoc_paper_number"],
-        "content" => content,
-      }.compact
+      attachment.slice(
+        "url",
+        "title",
+        "isbn",
+        "unique_reference",
+        "command_paper_number",
+        "hoc_paper_number",
+        "unnumbered_command_paper",
+        "unnumbered_hoc_paper").merge({"content" => content}).compact
     end
 
     def fetch_attachment_content(attachment)
