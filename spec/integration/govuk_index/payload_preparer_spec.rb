@@ -16,6 +16,56 @@ RSpec.describe "Payload preparation" do
   end
 
   context "attachments" do
+    it "includes unnumbered official documents data" do
+      stub_publishing_api_has_lookups("/command_paper" => "document-content-id")
+      stub_publishing_api_has_expanded_links(
+        {
+          content_id: "document-content-id",
+          expanded_links: {},
+        },
+        with_drafts: false,
+      )
+
+      random_example = generate_random_example(
+        schema: "guide",
+        payload: {
+          base_path: "/command_paper",
+          document_type: "guide",
+        },
+      )
+      random_example["details"]["attachments"] = [
+        {
+          "title" => "attachment 1",
+          "attachment_type" => "file",
+          "command_paper_number" => "",
+          "unnumbered_command_paper" => true,
+          "hoc_paper_number" => "",
+          "unnumbered_hoc_paper" => false,
+        },
+      ]
+
+      allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("guide" => :all)
+
+      @queue.publish(random_example.to_json, content_type: "application/json")
+
+      expect_document_is_in_rummager(
+        {
+          "link" => "/command_paper",
+          "attachments" => [
+            {
+              "title" => "attachment 1",
+              "command_paper_number" => "",
+              "hoc_paper_number" => "",
+            },
+          ],
+          "has_command_paper" => true,
+          "has_act_paper" => false,
+          "has_official_document" => true,
+        },
+        index: "govuk_test",
+      )
+    end
+
     context "when the document has parts" do
       it "leaves the parts unchanged" do
         stub_publishing_api_has_lookups(
