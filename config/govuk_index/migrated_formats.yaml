@@ -351,10 +351,10 @@ migrated:
 - statutory_guidance
 - transparency
 - world_news_story
+- worldwide_organisation
 - written_statement
 
-indexable:
-- worldwide_organisation
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
