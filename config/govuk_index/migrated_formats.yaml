@@ -353,7 +353,8 @@ migrated:
 - world_news_story
 - written_statement
 
-indexable: []
+indexable:
+- worldwide_organisation
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -440,4 +441,3 @@ non_indexable:
 - welsh_language_scheme
 - working_group
 - world_location
-- worldwide_organisation
