@@ -2,6 +2,10 @@
 # the value represents the elasticsearch_type defined in config/schema/elasticsearch_types
 
 aaib_report: aaib_report # Specialist Publisher
+about: edition
+about_our_services: edition
+access_and_opening: edition
+accessible_documents_policy: edition
 ai_assurance_portfolio_technique: ai_assurance_portfolio_technique # Specialist Publisher
 algorithmic_transparency_record: algorithmic_transparency_record # Specialist Publisher
 animal_disease_case: animal_disease_case # Specialist Publisher
@@ -16,12 +20,13 @@ case_study: edition
 closed_call_for_evidence: edition
 closed_consultation: edition
 cma_case: cma_case # Specialist Publisher
-correspondence: edition
+complaints_procedure: edition
 consultation: edition
 consultation_outcome: edition
 contact: contact
 coronavirus_landing_page: edition
 corporate_report: edition
+correspondence: edition
 countryside_stewardship_grant: countryside_stewardship_grant # Specialist Publisher
 data_ethics_guidance_document: data_ethics_guidance_document # Specialist Publisher
 decision: edition
@@ -31,11 +36,14 @@ drcf_digital_markets_research: drcf_digital_markets_research # Specialist Publis
 drug_safety_update: drug_safety_update # Specialist Publisher
 employment_appeal_tribunal_decision: employment_appeal_tribunal_decision # Specialist Publisher
 employment_tribunal_decision: employment_tribunal_decision # Specialist Publisher
+equality_and_diversity: edition
 esi_fund: european_structural_investment_fund # Specialist Publisher
 export_health_certificate: export_health_certificate # Specialist Publisher
 external_content: edition # Search Admin
+farming_grant: farming_grant # Specialist Publisher
 fatality_notice: edition
 finder: edition # Specialist Publisher
+flood_and_coastal_erosion_risk_management_research_report: flood_and_coastal_erosion_risk_management_research_report # Specialist Publisher
 foi_release: edition
 form: edition
 government_response: edition
@@ -50,8 +58,6 @@ impact_assessment: edition
 independent_report: edition
 international_development_fund: international_development_fund # Specialist Publisher
 international_treaty: edition
-flood_and_coastal_erosion_risk_management_research_report: flood_and_coastal_erosion_risk_management_research_report # Specialist Publisher
-farming_grant: farming_grant # Specialist Publisher
 licence: edition
 licence_transaction: licence_transaction # Specialist Publisher
 life_saving_maritime_appliance_service_station: life_saving_maritime_appliance_service_station # Specialist Publisher
@@ -63,24 +69,34 @@ manual_section: manual_section
 map: edition
 marine_equipment_approved_recommendation: marine_equipment_approved_recommendation # Specialist Publisher
 marine_notice: marine_notice # Specialist Publisher
+media_enquiries: edition
 medical_safety_alert: medical_safety_alert # Specialist Publisher
+membership: edition
 ministerial_role: edition
+modern_slavery_statement: edition
 national_statistics: edition
 news_story: edition
 notice: edition
 official_statistics: edition
-oral_statement: edition # Whitehall
 open_call_for_evidence: edition
 open_consultation: edition
+oral_statement: edition # Whitehall
+our_energy_use: edition
+our_governance: edition
 person: person
+personal_information_charter: edition
+petitions_and_campaigns: edition
 place: edition
 policy: policy # Policy Publisher
 policy_paper: edition
 press_release: edition
+procurement: edition
 product_safety_alert_report_recall: product_safety_alert_report_recall # Specialist Publisher
 promotional: edition
 protected_food_drink_name: protected_food_drink_name # Specialist Publisher
+publication_scheme: edition
 raib_report: raib_report # Specialist Publisher
+recruitment: edition
 regulation: edition
 research: edition
 research_for_development_output: research_for_development_output # Specialist Publisher
@@ -94,24 +110,29 @@ service_standard_report: service_standard_report # Specialist Publisher
 sfo_case: sfo_case # Specialist Publisher
 simple_smart_answer: edition
 smart_answer: edition
-statistical_data_set: edition
-statutory_guidance: edition
-statutory_instrument: statutory_instrument # Specialist Publisher
+social_media_use: edition
 special_route: edition
 speech: edition # Whitehall
+staff_update: edition
 standard: edition
+statistical_data_set: edition
+statistics: edition
+statutory_guidance: edition
+statutory_instrument: statutory_instrument # Specialist Publisher
 step_by_step_nav: edition
-traffic_commissioner_regulatory_decision: traffic_commissioner_regulatory_decision # Specialist Publisher
 tax_tribunal_decision: tax_tribunal_decision # Specialist Publisher
 taxon: edition # Content Tagger
+terms_of_reference: edition
 topic: edition # Collections Publisher
 trademark_decision: trademark_decision # Specialist Publisher
+traffic_commissioner_regulatory_decision: traffic_commissioner_regulatory_decision # Specialist Publisher
 transaction: edition
 transparency: edition
 travel_advice: edition # Travel advice publisher
 travel_advice_index: edition # Travel advice publisher
 utaac_decision: utaac_decision # Specialist Publisher
 veterans_support_organisation: veterans_support_organisation #Specialist Publisher
+welsh_language_scheme: edition
 world_news_story: edition
 worldwide_organisation: edition
 written_statement: edition # Whitehall
