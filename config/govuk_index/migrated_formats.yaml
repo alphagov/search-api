@@ -308,20 +308,27 @@ migrated:
   - '/help/cookies'
   - '/find-local-council'
 # Whitehall
+- about
+- about_our_services
+- access_and_opening
+- accessible_documents_policy
 - authored_article
 - call_for_evidence
 - call_for_evidence_outcome
 - case_study
 - closed_call_for_evidence
 - closed_consultation
+- complaints_procedure
 - consultation
 - consultation_outcome
-- correspondence
+- corporate_information_page # Required to prevent corporate info pages from government index appearing in search results, page types used as format in GOVUK index
 - corporate_report
+- correspondence
 - decision
 - detailed_guidance # Required to prevent detailed guidance from government index appearing in search results, type has been renamed to detailed_guide
 - detailed_guide
 - document_collection
+- equality_and_diversity
 - fatality_notice
 - foi_release
 - form
@@ -331,6 +338,9 @@ migrated:
 - independent_report
 - international_treaty
 - map
+- media_enquiries
+- membership
+- modern_slavery_statement
 - national_statistics
 - news_article # Required to prevent news articles from government index appearing in search results, news article types used in GOVUK index
 - news_story
@@ -339,43 +349,34 @@ migrated:
 - open_call_for_evidence
 - open_consultation
 - oral_statement
-- policy_paper
-- press_release
-- promotional
-- publication # Required to prevent publications from government index appearing in search results, publication sub-types used in GOVUK index
-- regulation
-- research
-- speech
-- standard
-- statistical_data_set
-- statutory_guidance
-- transparency
-- world_news_story
-- worldwide_organisation
-- written_statement
-
-indexable:
-- about
-- about_our_services
-- accessible_documents_policy
-- access_and_opening
-- complaints_procedure
-- equality_and_diversity
-- media_enquiries
-- membership
-- modern_slavery_statement
 - our_energy_use
 - our_governance
 - personal_information_charter
 - petitions_and_campaigns
+- policy_paper
+- press_release
 - procurement
+- promotional
+- publication # Required to prevent publications from government index appearing in search results, publication sub-types used in GOVUK index
 - publication_scheme
 - recruitment
+- regulation
+- research
 - social_media_use
+- speech
 - staff_update
+- standard
+- statistical_data_set
 - statistics
+- statutory_guidance
 - terms_of_reference
+- transparency
 - welsh_language_scheme
+- world_news_story
+- worldwide_organisation
+- written_statement
+
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
