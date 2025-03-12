@@ -354,7 +354,28 @@ migrated:
 - worldwide_organisation
 - written_statement
 
-indexable: []
+indexable:
+- about
+- about_our_services
+- accessible_documents_policy
+- access_and_opening
+- complaints_procedure
+- equality_and_diversity
+- media_enquiries
+- membership
+- modern_slavery_statement
+- our_energy_use
+- our_governance
+- personal_information_charter
+- petitions_and_campaigns
+- procurement
+- publication_scheme
+- recruitment
+- social_media_use
+- staff_update
+- statistics
+- terms_of_reference
+- welsh_language_scheme
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -404,40 +425,19 @@ non_indexable:
   - "/ukwelcomes"
 
 # whitehall formats
-- about
-- about_our_services
-- accessible_documents_policy
-- access_and_opening
-- complaints_procedure
 #- contact # migrated
-- equality_and_diversity
 - facet
 - field_of_operation
 #- finder # migrated
 - html_publication
 - imported
-- media_enquiries
-- membership
-- modern_slavery_statement
 - national_statistics_announcement
 - official_statistics_announcement
 - organisation
-- our_energy_use
-- our_governance
-- personal_information_charter
-- petitions_and_campaigns
 - policy_area
-- procurement
-- publication_scheme
-- recruitment
 - services_and_information
-- social_media_use
-- staff_update
-- statistics
 - take_part
-- terms_of_reference
 - topical_event
 - topical_event_about_page
-- welsh_language_scheme
 - working_group
 - world_location
