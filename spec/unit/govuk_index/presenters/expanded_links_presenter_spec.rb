@@ -292,6 +292,21 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expect(presenter.default_news_image).to eq(default_news_image_url)
   end
 
+  it "document_collections" do
+    slugs = %w[test-1 test-2]
+    expanded_links = {
+      "document_collections" => slugs.map do |slug|
+        {
+          "base_path" => "/government/collections/#{slug}",
+        }
+      end,
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+
+    expect(presenter.document_collections).to eq(slugs)
+  end
+
   def expanded_links_presenter(expanded_links)
     described_class.new(expanded_links)
   end

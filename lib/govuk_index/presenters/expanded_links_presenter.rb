@@ -66,6 +66,10 @@ module GovukIndex
       organisation[0].dig("details", "default_news_image", "url") unless organisation.empty?
     end
 
+    def document_collections
+      slugs("document_collections", "/government/collections/")
+    end
+
   private
 
     attr_reader :expanded_links
