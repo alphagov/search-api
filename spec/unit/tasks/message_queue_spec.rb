@@ -11,10 +11,15 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
       consumer = double("consumer")
       expect(consumer).to receive(:run).and_return(true)
 
+      logger = Logging.logger[described_class]
+
       expect(GovukMessageQueueConsumer::Consumer).to receive(:new)
         .with(
           queue_name: "search_api_to_be_indexed",
           processor: indexer,
+          logger:,
+          worker_threads: 10,
+          prefetch: 10,
         ).and_return(consumer)
 
       Rake::Task["message_queue:listen_to_publishing_queue"].invoke

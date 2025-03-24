@@ -14,9 +14,14 @@ namespace :message_queue do
 
   desc "Index documents that are published to the publishing-api"
   task :listen_to_publishing_queue do
+    logger = Logging.logger[Indexer::MessageProcessor]
+
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_to_be_indexed",
       processor: Indexer::MessageProcessor.new,
+      logger:,
+      worker_threads: 10,
+      prefetch: 10,
     ).run
   end
 
