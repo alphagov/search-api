@@ -9,35 +9,45 @@
 # the links from the publishing-api.
 module Indexer
   class MessageProcessor
-    def process(message)
+    MAX_RETRIES = 5
+
+    def initialize
+      @logger = Logging.logger[self]
+    end
+
+    def process(queue_message)
+      message = ::RetryableQueueMessage.new(queue_message)
+      payload = message.payload
+
       with_logging(message) do
         indexing_status = Indexer::ChangeNotificationProcessor.trigger(message.payload)
         Services.statsd_client.increment("message_queue.indexer.#{indexing_status}")
-        message.ack
+        message.done
       end
-    rescue ProcessingError => e
-      GovukError.notify(e, extra: message.payload)
-      message.discard
     rescue StandardError => e
-      # This is rescue of last resort. If anything goes wrong during the payload
-      # processing, we don't want to retry the message really quickly because
-      # that might overload elasticsearch or other components. This should be
-      # replaced by a retry mechanism with exponential back-off.
-      GovukError.notify(e, extra: message.payload)
-      sleep 1
-      message.retry
+      if message.retries < MAX_RETRIES
+        logger.error("#{payload['content_id']} scheduled for retry due to error: #{e.class} #{e.message}")
+
+        message.retry
+      else
+        logger.error("#{payload['content_id']} ignored after #{MAX_RETRIES} retries")
+        GovukError.notify(e, extra: payload)
+        message.done
+      end
     end
 
   private
 
+    attr_reader :logger
+
     def with_logging(message)
       log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
-      puts "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json}"
+      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json}"
 
       yield
 
-      puts "Finished processing message [#{message.delivery_info.delivery_tag}]"
+      logger.info "Finished processing message [#{message.delivery_info.delivery_tag}]"
     end
   end
 end
