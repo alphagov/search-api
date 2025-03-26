@@ -22,7 +22,7 @@ RSpec.describe Indexer::AmendJob do
     expect_document_is_in_rummager(doc_with_updates, id: link, index: index_name)
   end
 
-  it "retries when index locked" do
+  it "retries when index locked and reschedule option is set" do
     Sidekiq::Testing.fake! do
       with_just_one_cluster
       mock_index = double("index")
@@ -34,11 +34,26 @@ RSpec.describe Indexer::AmendJob do
 
       job = described_class.new
       expect {
-        job.perform(index_name, link, updates)
+        job.perform(index_name, link, updates, reschedule_on_failure: true)
       }.to change { described_class.jobs.count }.by(1)
     end
     # clear the side effects of Sidekiq::Testing.fake!
     Sidekiq::Job.clear_all
+  end
+
+  it "raises an exception when index is locked and reschedule option is not set" do
+    with_just_one_cluster
+    mock_index = double("index")
+    expect(mock_index).to receive(:amend).and_raise(SearchIndices::IndexLocked)
+
+    expect_any_instance_of(SearchIndices::SearchServer).to receive(:index)
+                                                             .with(index_name)
+                                                             .and_return(mock_index)
+
+    job = described_class.new
+    expect {
+      job.perform(index_name, link, updates, reschedule_on_failure: false)
+    }.to raise_error(SearchIndices::IndexLocked)
   end
 
   it "forwards to failure queue" do
