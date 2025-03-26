@@ -26,8 +26,8 @@ RSpec.describe RetryableQueueMessage do
       queue_message = create_mock_message("message", {
         headers: {
           "x-death" => [
-            { "count" => 2, "reason" => "expired", "queue" => "govuk_chat_published_documents_delay_retry" },
-            { "count" => 2, "reason" => "rejected", "queue" => "govuk_chat_published_documents" },
+            { "count" => 2, "reason" => "expired", "queue" => "search_api_to_be_indexed_wait_to_retry" },
+            { "count" => 2, "reason" => "rejected", "queue" => "search_api_to_be_indexed" },
           ],
         },
       })
