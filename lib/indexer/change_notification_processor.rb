@@ -9,6 +9,10 @@ module Indexer
   module ChangeNotificationProcessor
     # Gets called with a content-item from the publishing-api message queue.
     def self.trigger(content_item)
+      if content_item["base_path"] == "/guidance/capital-gains-tax-for-non-residents-uk-residential-property"
+        raise "Test error"
+      end
+
       document = find_document(content_item)
       return :rejected unless document
 
