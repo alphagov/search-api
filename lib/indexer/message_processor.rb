@@ -27,10 +27,12 @@ module Indexer
     rescue StandardError => e
       if message.retries < MAX_RETRIES
         logger.error("#{payload['content_id']} scheduled for retry due to error: #{e.class} #{e.message}")
+        puts("#{payload['content_id']} scheduled for retry due to error: #{e.class} #{e.message} (puts)")
 
         message.retry
       else
         logger.error("#{payload['content_id']} ignored after #{MAX_RETRIES} retries")
+        puts("#{payload['content_id']} ignored after #{MAX_RETRIES} retries (puts)")
         GovukError.notify(e, extra: payload)
         message.done
       end
