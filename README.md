@@ -5,8 +5,8 @@ and serves the GOV.UK Search API.
 
 GOV.UK applications use the API to search and filter GOV.UK content.
 For example, [alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
-the search API to render [site search](https://www.gov.uk/search) and finder pages
-(such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
+the search API to render finder pages (such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
+[search-api-v2](https://github.com/alphagov/search-api-v2) replaces Search API in several areas: for the latest on this, visit <https://docs.publishing.service.gov.uk/manual/govuk-search.html>.
 
 Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
