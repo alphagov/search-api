@@ -49,7 +49,24 @@ RSpec.describe "locales" do
     expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "edition")
   end
 
-  it "does not index non-English pages" do
+  it "indexes Welsh pages for the hmrc_contact document type" do
+    random_example = generate_random_example(
+      schema: "specialist_document",
+      payload: {
+        document_type: "hmrc_contact",
+        base_path: "/find-hmrc-contacts/welsh-contact",
+      },
+    )
+    random_example["locale"] = "cy"
+
+    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("hmrc_contact" => :all)
+    @queue.publish(random_example.to_json, content_type: "application/json")
+
+    expected_document = { "link" => random_example["base_path"] }
+    expect_document_is_in_rummager(expected_document, index: "govuk_test", type: "hmrc_contact")
+  end
+
+  it "does not index other non-English pages" do
     random_example = generate_random_example(
       schema: "taxon",
       payload: {

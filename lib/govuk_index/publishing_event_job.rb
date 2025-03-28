@@ -85,8 +85,10 @@ module GovukIndex
       if type_mapper.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{identifier}")
         processor.delete(presenter)
-      elsif payload.fetch("locale", "en") != "en" || MigratedFormats.non_indexable?(presenter.format, presenter.base_path)
-        logger.info("#{routing_key} -> BLOCKLISTED #{identifier}")
+      elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path)
+        logger.info("#{routing_key} -> BLOCKLISTED #{identifier} (non-indexable)")
+      elsif !document_in_english?(payload) && !is_welsh_hmrc_contact?(payload)
+        logger.info("#{routing_key} -> BLOCKLISTED #{identifier} (non-english, and not Welsh HMRC contact)")
       elsif MigratedFormats.indexable?(presenter.format, presenter.base_path)
         logger.info("#{routing_key} -> INDEX #{identifier}")
         processor.save(presenter)
@@ -132,6 +134,17 @@ module GovukIndex
           messages: "#{messages_with_error.count} of #{messages.count} failed - see ElasticsearchError's for details",
         )
       end
+    end
+
+    def is_welsh_hmrc_contact?(payload)
+      hmrc_contact = payload["document_type"] == "hmrc_contact"
+      welsh_locale = payload["locale"] == "cy"
+
+      hmrc_contact && welsh_locale
+    end
+
+    def document_in_english?(payload)
+      payload.fetch("locale", "en") == "en"
     end
   end
 end

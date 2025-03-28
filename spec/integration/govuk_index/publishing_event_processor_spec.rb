@@ -126,7 +126,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       job.perform([["test.route", random_example]])
       commit_index "govuk_test"
 
-      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition")
+      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition (non-indexable)")
       expect {
         fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
       }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
@@ -161,7 +161,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       )
 
       job.perform([["test.route", random_example]])
-      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition")
+      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition (non-indexable)")
     end
 
     it "can block/safe list specific base_paths within a format" do
@@ -180,7 +180,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
 
       job.perform([["test.route", homepage_example]])
       job.perform([["test.route", help_example]])
-      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{homepage_example['base_path']} edition")
+      expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{homepage_example['base_path']} edition (non-indexable)")
       expect(logger).to have_received(:info).with("test.route -> INDEX #{help_example['base_path']} edition")
     end
   end
