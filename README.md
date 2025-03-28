@@ -10,14 +10,6 @@ the search API to render finder pages (such as [gov.uk/aaib-reports](https://www
 
 Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
-## API documentation
-
-If you would like to use the Search API, please see the
-[Search API documentation](docs/using-the-search-api.md).
-
-You can also find some examples in the blog post:
-["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
-
 ## Technical documentation
 
 Search API is a Sinatra application that interfaces with Elasticsearch.
@@ -34,8 +26,8 @@ bundle exec rake
 
 ### Additional Docs
 
+- [Search API documentation](docs/using-the-search-api.md)
 - [How documents are indexed](docs/indexing.md)
-- [How documents are retrieved](docs/how-search-works.md)
 - [Search relevancy](docs/relevancy.md) - uses [AWS Sagemaker](https://aws.amazon.com/sagemaker/)
 - [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
