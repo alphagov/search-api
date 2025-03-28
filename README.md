@@ -10,8 +10,6 @@ the search API to render [site search](https://www.gov.uk/search) and finder pag
 
 Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
-![Screenshot of API Response](docs/api-screenshot.png)
-
 ## API documentation
 
 If you would like to use the Search API, please see the
