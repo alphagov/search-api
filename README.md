@@ -10,6 +10,14 @@ the search API to render finder pages (such as [gov.uk/aaib-reports](https://www
 
 Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
+Finally, Search API is responsible for publishing "finders" and their corresponding email signup content items via a dedicated rake task:
+
+```
+FINDER_CONFIG=news_and_communications.yml \
+EMAIL_SIGNUP_CONFIG=news_and_communications_email_signup.yml \
+publishing_api:publish_finder
+```
+
 ## Technical documentation
 
 Search API is a Sinatra application that interfaces with Elasticsearch.
