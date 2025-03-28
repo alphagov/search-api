@@ -1,6 +1,6 @@
 # Using the search API
 
-Search API is publicly accessible at <https://www.gov.uk/api/search.json>, and responds to different URL parameters, explained below. Parameters are strictly validated: if Search API encounters any unknown parameters (or known parameters but with invalid values) it returns a HTTP 422 error.
+Search API is publicly accessible at <https://www.gov.uk/api/search.json>, and responds to different URL parameters, explained below. Parameters are strictly validated: if Search API encounters any unknown parameters (or known parameters but with invalid values) it returns a HTTP 422 error. It parses the query, constructs an Elasticsearch query, and then retrieves documents from Elasticsearch: this way, other applications in the GOV.UK stack don't need to know how to construct Elasticsearch queries.
 
 ## Examples
 
@@ -42,9 +42,11 @@ Find documents published within a certain date range:
 
 Aggregated/grouped search query (fetch list of organisations and the number of documents published by each of them):
 
-```
-https://www.gov.uk/api/search.json?count=0&aggregate_organisations=2
-```
+<https://www.gov.uk/api/search.json?count=0&aggregate_organisations=2>
+
+You can also use the `/batch_search` endpoint to send multiple queries:
+
+<https://www.gov.uk/api/batch_search.json?search[][0][q]=dragons&search[][1][q]=government-digital-service>
 
 ## URL parameters
 

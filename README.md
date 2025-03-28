@@ -5,20 +5,18 @@ and serves the GOV.UK Search API.
 
 GOV.UK applications use the API to search and filter GOV.UK content.
 For example, [alphagov/finder-frontend](https://github.com/alphagov/finder-frontend) uses
-the search API to render [site search](https://www.gov.uk/search) and finder pages
-(such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
+the search API to render finder pages (such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
+[search-api-v2](https://github.com/alphagov/search-api-v2) replaces Search API in several areas: for the latest on this, visit <https://docs.publishing.service.gov.uk/manual/govuk-search.html>.
 
 Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
-![Screenshot of API Response](docs/api-screenshot.png)
+Finally, Search API is responsible for publishing "finders" and their corresponding email signup content items via a dedicated rake task:
 
-## API documentation
-
-If you would like to use the Search API, please see the
-[Search API documentation](docs/using-the-search-api.md).
-
-You can also find some examples in the blog post:
-["Use the search API to get useful information about GOV.UK content"](https://gdsdata.blog.gov.uk/2016/05/26/use-the-search-api-to-get-useful-information-about-gov-uk-content/).
+```
+FINDER_CONFIG=news_and_communications.yml \
+EMAIL_SIGNUP_CONFIG=news_and_communications_email_signup.yml \
+publishing_api:publish_finder
+```
 
 ## Technical documentation
 
@@ -36,12 +34,11 @@ bundle exec rake
 
 ### Additional Docs
 
+- [Search API documentation](docs/using-the-search-api.md)
 - [How documents are indexed](docs/indexing.md)
-- [How documents are retrieved](docs/how-search-works.md)
-- [Search relevancy](docs/relevancy.md) - uses [AWS Sagemaker](https://aws.amazon.com/sagemaker/)
+- [Search relevancy](docs/relevancy.md)
 - [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
-- [Popularity information](docs/popularity.md): Search API uses Google Analytics data to improve search results.
 - [Publishing document finders](docs/publishing-finders.md): Information about publishing finders using rake tasks
 
 ## Licence
