@@ -41,7 +41,6 @@ bundle exec rake
 - [Search relevancy](docs/relevancy.md) - uses [AWS Sagemaker](https://aws.amazon.com/sagemaker/)
 - [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
-- [Popularity information](docs/popularity.md): Search API uses Google Analytics data to improve search results.
 - [Publishing document finders](docs/publishing-finders.md): Information about publishing finders using rake tasks
 
 ## Licence
