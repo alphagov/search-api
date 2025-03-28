@@ -28,7 +28,7 @@ bundle exec rake
 
 - [Search API documentation](docs/using-the-search-api.md)
 - [How documents are indexed](docs/indexing.md)
-- [Search relevancy](docs/relevancy.md) - uses [AWS Sagemaker](https://aws.amazon.com/sagemaker/)
+- [Search relevancy](docs/relevancy.md)
 - [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
 - [Publishing document finders](docs/publishing-finders.md): Information about publishing finders using rake tasks
