@@ -40,8 +40,10 @@ module GovukIndex
       worldwide_office_staff_role
     ].freeze
 
-  class PublishingEventJob < BaseJob
-    notify_of_failures
+  class PublishingEventJob
+    def initialize
+      @logger = Logging.logger[self]
+    end
 
     def perform(messages)
       processor = Index::ElasticsearchProcessor.govuk
@@ -55,17 +57,14 @@ module GovukIndex
       (responses || []).each do |response|
         process_response(response, messages)
       end
-    # Rescuing exception to guarantee we capture all Sidekiq retries
-    rescue Exception # rubocop:disable Lint/RescueException
-      Services.statsd_client.increment("govuk_index.sidekiq-retry")
-      raise
     end
 
   private
 
+    attr_reader :logger
+
     def process_action(processor, routing_key, payload)
       logger.debug("Processing #{routing_key}: #{payload}")
-      Services.statsd_client.increment("govuk_index.sidekiq-consumed")
 
       type_mapper = DocumentTypeMapper.new(payload)
 
