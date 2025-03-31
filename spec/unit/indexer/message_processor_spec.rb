@@ -1,9 +1,12 @@
 require "spec_helper"
+require "govuk_message_queue_consumer/test_helpers"
 
 RSpec.describe Indexer::MessageProcessor do
   let(:content_item) { generate_random_example }
   let(:message) { GovukMessageQueueConsumer::MockMessage.new(content_item) }
   let(:logger) { Logging.logger[described_class] }
+
+  it_behaves_like "a message queue processor"
 
   context "when successful" do
     before do

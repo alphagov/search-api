@@ -1,6 +1,9 @@
 require "spec_helper"
+require "govuk_message_queue_consumer/test_helpers"
 
 RSpec.describe GovukIndex::PublishingEventProcessor do
+  it_behaves_like "a message queue processor"
+
   it "will process and ack a single message" do
     message = double(
       payload: {
