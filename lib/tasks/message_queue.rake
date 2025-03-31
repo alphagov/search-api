@@ -54,17 +54,27 @@ namespace :message_queue do
 
   desc "Gets data from RabbitMQ and insert into govuk index"
   task :insert_data_into_govuk do
+    logger = Logging.logger[GovukIndex::PublishingEventProcessor]
+
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_govuk_index",
       processor: GovukIndex::PublishingEventProcessor.new,
+      logger:,
+      worker_threads: 10,
+      prefetch: 10,
     ).run
   end
 
   desc "Gets data from RabbitMQ and insert into govuk index (bulk reindex queue)"
   task :bulk_insert_data_into_govuk do
+    logger = Logging.logger[GovukIndex::PublishingEventProcessor]
+
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_bulk_reindex",
       processor: GovukIndex::PublishingEventProcessor.new,
+      logger:,
+      worker_threads: 10,
+      prefetch: 10,
     ).run
   end
 end

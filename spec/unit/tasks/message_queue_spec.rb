@@ -26,6 +26,52 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
     end
   end
 
+  describe "message_queue:insert_data_into_govuk" do
+    it "uses GovukMessageQueueConsumer::Consumer" do
+      processor = double
+      expect(GovukIndex::PublishingEventProcessor).to receive(:new).and_return(processor)
+
+      consumer = double("consumer")
+      expect(consumer).to receive(:run).and_return(true)
+
+      logger = Logging.logger[GovukIndex::PublishingEventProcessor]
+
+      expect(GovukMessageQueueConsumer::Consumer).to receive(:new)
+        .with(
+          queue_name: "search_api_govuk_index",
+          processor:,
+          logger:,
+          worker_threads: 10,
+          prefetch: 10,
+        ).and_return(consumer)
+
+      Rake::Task["message_queue:insert_data_into_govuk"].invoke
+    end
+  end
+
+  describe "message_queue:bulk_insert_data_into_govuk" do
+    it "uses GovukMessageQueueConsumer::Consumer" do
+      processor = double
+      expect(GovukIndex::PublishingEventProcessor).to receive(:new).and_return(processor)
+
+      consumer = double("consumer")
+      expect(consumer).to receive(:run).and_return(true)
+
+      logger = Logging.logger[GovukIndex::PublishingEventProcessor]
+
+      expect(GovukMessageQueueConsumer::Consumer).to receive(:new)
+        .with(
+          queue_name: "search_api_bulk_reindex",
+          processor:,
+          logger:,
+          worker_threads: 10,
+          prefetch: 10,
+        ).and_return(consumer)
+
+      Rake::Task["message_queue:bulk_insert_data_into_govuk"].invoke
+    end
+  end
+
   describe "message_queue:create_queues" do
     let(:session) do
       instance_double(Bunny::Session, create_channel: channel).tap do |double|
