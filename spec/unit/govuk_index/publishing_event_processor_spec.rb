@@ -16,9 +16,9 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
       },
     )
 
-    handler = double(GovukIndex::PublishingEventMessageHandler)
-    expect(handler).to receive(:process).with([["routing.key", message.payload]])
-    expect(GovukIndex::PublishingEventMessageHandler).to receive(:new).and_return(handler)
+    expect(GovukIndex::PublishingEventMessageHandler).to receive(:call).with(
+      [["routing.key", message.payload]],
+    )
 
     expect(message).to receive(:ack)
 
@@ -47,11 +47,9 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
       },
     )
 
-    handler = double(GovukIndex::PublishingEventMessageHandler)
-    expect(handler).to receive(:process).with(
+    expect(GovukIndex::PublishingEventMessageHandler).to receive(:call).with(
       [["routing.key", message1.payload], ["routing.key", message2.payload]],
     )
-    expect(GovukIndex::PublishingEventMessageHandler).to receive(:new).and_return(handler)
     expect(message1).to receive(:ack)
     expect(message2).to receive(:ack)
 

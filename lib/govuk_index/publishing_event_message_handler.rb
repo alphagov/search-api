@@ -41,11 +41,16 @@ module GovukIndex
     ].freeze
 
   class PublishingEventMessageHandler
-    def initialize
+    def initialize(messages)
+      @messages = messages
       @logger = Logging.logger[self]
     end
 
-    def process(messages)
+    def self.call(...)
+      new(...).call
+    end
+
+    def call
       processor = Index::ElasticsearchProcessor.govuk
 
       messages.each do |routing_key, payload|
@@ -61,7 +66,7 @@ module GovukIndex
 
   private
 
-    attr_reader :logger
+    attr_reader :logger, :messages
 
     def process_action(processor, routing_key, payload)
       logger.debug("Processing #{routing_key}: #{payload}")
