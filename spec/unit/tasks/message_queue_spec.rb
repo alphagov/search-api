@@ -32,70 +32,93 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
         allow(double).to receive(:start).and_return(double)
       end
     end
-
-    let(:exchange) { instance_double(Bunny::Exchange, name: "published_documents") }
-    let(:search_api_to_be_indexed_retry_dlx) { instance_double(Bunny::Exchange, name: "search_api_to_be_indexed_retry_dlx") }
-    let(:search_api_to_be_indexed_discarded_dlx) { instance_double(Bunny::Exchange, name: "search_api_to_be_indexed_discarded_dlx") }
     let(:channel) { instance_double(Bunny::Channel) }
-
-    let(:search_api_to_be_indexed_queue) { instance_double(Bunny::Queue, bind: nil) }
-    let(:search_api_to_be_indexed_wait_to_retry_queue) { instance_double(Bunny::Queue, bind: nil) }
-    let(:search_api_to_be_indexed_discarded_queue) { instance_double(Bunny::Queue, bind: nil) }
-    let(:search_api_bulk_reindex_queue) { instance_double(Bunny::Queue, bind: nil) }
-    let(:search_api_govuk_index_queue) { instance_double(Bunny::Queue, bind: nil) }
+    let(:exchange) { instance_double(Bunny::Exchange, name: "published_documents") }
 
     before do
       allow(Bunny).to receive(:new).and_return(session)
       allow(Bunny::Exchange).to receive(:new).with(channel, :topic, "published_documents").and_return(exchange)
-      allow(channel).to receive(:fanout).with("search_api_to_be_indexed_retry_dlx")
-        .and_return(search_api_to_be_indexed_retry_dlx)
-      allow(channel).to receive(:fanout).with("search_api_to_be_indexed_discarded_dlx")
-        .and_return(search_api_to_be_indexed_discarded_dlx)
     end
 
-    it "creates exchanges and queues" do
-      allow(channel)
-        .to receive(:queue).with("search_api_to_be_indexed", anything)
-        .and_return(search_api_to_be_indexed_queue)
+    it "creates the exchanges and queues" do
+      queues = [
+        {
+          name: "search_api_to_be_indexed",
+          routing_key: "*.links",
+          retry_dlx: instance_double(Bunny::Exchange, name: "search_api_to_be_indexed_retry_dlx"),
+          discarded_dlx: instance_double(Bunny::Exchange, name: "search_api_to_be_indexed_discarded_dlx"),
+          queues: {
+            root: instance_double(Bunny::Queue, bind: nil),
+            discarded: instance_double(Bunny::Queue, bind: nil),
+            wait_to_retry: instance_double(Bunny::Queue, bind: nil),
+          },
+        },
+        {
+          name: "search_api_bulk_reindex",
+          routing_key: "*.bulk.reindex",
+          retry_dlx: instance_double(Bunny::Exchange, name: "search_api_bulk_reindex_retry_dlx"),
+          discarded_dlx: instance_double(Bunny::Exchange, name: "search_api_bulk_reindex_discarded_dlx"),
+          queues: {
+            root: instance_double(Bunny::Queue, bind: nil),
+            discarded: instance_double(Bunny::Queue, bind: nil),
+            wait_to_retry: instance_double(Bunny::Queue, bind: nil),
+          },
+        },
+        {
+          name: "search_api_govuk_index",
+          routing_key: "*.*",
+          retry_dlx: instance_double(Bunny::Exchange, name: "search_api_govuk_index_retry_dlx"),
+          discarded_dlx: instance_double(Bunny::Exchange, name: "search_api_govuk_index_discarded_dlx"),
+          queues: {
+            root: instance_double(Bunny::Queue, bind: nil),
+            discarded: instance_double(Bunny::Queue, bind: nil),
+            wait_to_retry: instance_double(Bunny::Queue, bind: nil),
+          },
+        },
+      ]
 
-      allow(channel)
-        .to receive(:queue).with("search_api_to_be_indexed")
-        .and_return(search_api_to_be_indexed_discarded_queue)
+      queues.each do |config|
+        name = config[:name]
 
-      allow(channel)
-        .to receive(:queue).with("search_api_to_be_indexed_wait_to_retry", anything)
-        .and_return(search_api_to_be_indexed_wait_to_retry_queue)
+        allow(channel).to receive(:fanout).with("#{name}_retry_dlx").and_return(config[:retry_dlx])
+        allow(channel).to receive(:fanout).with("#{name}_discarded_dlx").and_return(config[:discarded_dlx])
 
-      allow(channel)
-        .to receive(:queue).with("search_api_bulk_reindex")
-        .and_return(search_api_bulk_reindex_queue)
+        allow(channel)
+          .to receive(:queue).with(name, anything)
+          .and_return(config[:queues][:root])
 
-      allow(channel)
-        .to receive(:queue).with("search_api_govuk_index")
-        .and_return(search_api_govuk_index_queue)
+        allow(channel)
+          .to receive(:queue).with(name)
+          .and_return(config[:queues][:discarded])
+
+        allow(channel)
+          .to receive(:queue).with("#{name}_wait_to_retry", anything)
+          .and_return(config[:queues][:wait_to_retry])
+      end
 
       Rake::Task["message_queue:create_queues"].invoke
 
-      expect(channel).to have_received(:queue).with(
-        "search_api_to_be_indexed",
-        arguments: { "x-dead-letter-exchange" => "search_api_to_be_indexed_retry_dlx" },
-      )
-      expect(channel).to have_received(:queue).with(
-        "search_api_to_be_indexed",
-      )
-      expect(channel).to have_received(:queue).with(
-        "search_api_to_be_indexed_wait_to_retry",
-        arguments: { "x-dead-letter-exchange" => "search_api_to_be_indexed_discarded_dlx",
-                     "x-message-ttl" => 30_000 },
-      )
-      expect(channel).to have_received(:queue).with("search_api_bulk_reindex")
-      expect(channel).to have_received(:queue).with("search_api_govuk_index")
+      queues.each do |config|
+        name = config[:name]
+        expect(channel).to have_received(:queue).with(
+          name,
+          arguments: { "x-dead-letter-exchange" => "#{name}_retry_dlx" },
+        )
 
-      expect(search_api_to_be_indexed_queue).to have_received(:bind).with(exchange, routing_key: "*.links")
-      expect(search_api_bulk_reindex_queue).to have_received(:bind).with(exchange, routing_key: "*.bulk.reindex")
-      expect(search_api_govuk_index_queue).to have_received(:bind).with(exchange, routing_key: "*.*")
-      expect(search_api_to_be_indexed_wait_to_retry_queue).to have_received(:bind).with(search_api_to_be_indexed_retry_dlx)
-      expect(search_api_to_be_indexed_discarded_queue).to have_received(:bind).with(search_api_to_be_indexed_discarded_dlx)
+        expect(channel).to have_received(:queue).with(name)
+
+        expect(channel).to have_received(:queue).with(
+          "#{name}_wait_to_retry",
+          arguments: {
+            "x-dead-letter-exchange" => "#{name}_discarded_dlx",
+            "x-message-ttl" => 30_000,
+          },
+        )
+
+        expect(config[:queues][:root]).to have_received(:bind).with(exchange, routing_key: config[:routing_key])
+        expect(config[:queues][:wait_to_retry]).to have_received(:bind).with(config[:retry_dlx])
+        expect(config[:queues][:discarded]).to have_received(:bind).with(config[:discarded_dlx])
+      end
     end
   end
 end
