@@ -18,7 +18,7 @@ RSpec.describe Indexer::MessageProcessor do
 
     it "logs some messages" do
       expected_messages = [
-        /Processing message \[\]: {"content_id":"#{content_item['content_id']}"/,
+        /#{Regexp.escape("Processing message [] (attempt 1/5): {\"content_id\":\"#{content_item['content_id']}\"")}/,
         /Finished processing message/,
       ]
 

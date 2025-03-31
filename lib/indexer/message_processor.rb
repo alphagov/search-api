@@ -43,7 +43,7 @@ module Indexer
     def with_logging(message)
       log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
-      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json}"
+      logger.info "Processing message [#{message.delivery_info.delivery_tag}] (attempt #{message.retries + 1}/#{MAX_RETRIES}): #{log_payload.to_json}"
 
       yield
 
