@@ -25,7 +25,7 @@ module Indexer
         message.done
       end
     rescue StandardError => e
-      if message.retries < MAX_RETRIES
+      if message.retries < MAX_RETRIES - 1
         logger.error("#{payload['content_id']} scheduled for retry due to error: #{e.class} #{e.message}")
 
         message.retry
