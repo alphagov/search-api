@@ -36,6 +36,7 @@ require "#{__dir__}/support/spec_helpers"
 require "#{__dir__}/support/schema_helpers"
 require "#{__dir__}/support/integration_spec_helper"
 require "#{__dir__}/support/index_helpers"
+require "#{__dir__}/support/retryable_queue_examples"
 
 require "gds_api/test_helpers/publishing_api"
 
