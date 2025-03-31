@@ -5,7 +5,7 @@ module GovukIndex
 
       Services.statsd_client.increment("govuk_index.rabbit-mq-consumed")
 
-      PublishingEventJob.new.perform(messages.map { |msg| [msg.delivery_info[:routing_key], msg.payload] })
+      PublishingEventMessageHandler.new.process(messages.map { |msg| [msg.delivery_info[:routing_key], msg.payload] })
 
       messages.each(&:ack)
     end

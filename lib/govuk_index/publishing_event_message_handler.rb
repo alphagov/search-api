@@ -40,12 +40,12 @@ module GovukIndex
       worldwide_office_staff_role
     ].freeze
 
-  class PublishingEventJob
+  class PublishingEventMessageHandler
     def initialize
       @logger = Logging.logger[self]
     end
 
-    def perform(messages)
+    def process(messages)
       processor = Index::ElasticsearchProcessor.govuk
 
       messages.each do |routing_key, payload|
