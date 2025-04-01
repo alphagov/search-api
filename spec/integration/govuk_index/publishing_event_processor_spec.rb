@@ -82,37 +82,6 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
   end
 
   context "test queue handles" do
-    it "can save multiple documents in a batch" do
-      allow(GovukIndex::MigratedFormats).to receive(:indexable?).and_return(true)
-      random_example_a = generate_random_example(
-        payload: { document_type: "help_page", payload_version: 123 },
-      )
-      random_example_b = generate_random_example(
-        payload: { document_type: "help_page", payload_version: 123 },
-      )
-
-      message_a = double(:msg1, payload: random_example_a, delivery_info: { routing_key: "big.test" })
-      message_b = double(:msg2, payload: random_example_b, delivery_info: { routing_key: "big.test" })
-
-      expect(message_a).to receive(:ack)
-      expect(message_b).to receive(:ack)
-
-      GovukIndex::PublishingEventProcessor.new.process([message_a, message_b])
-
-      commit_index "govuk_test"
-
-      document_a = fetch_document_from_rummager(id: random_example_a["base_path"], index: "govuk_test")
-      document_b = fetch_document_from_rummager(id: random_example_b["base_path"], index: "govuk_test")
-
-      expect(document_a["_source"]["link"]).to eq(random_example_a["base_path"])
-      expect(document_a["_id"]).to eq(random_example_a["base_path"])
-      expect(document_a["_source"]["document_type"]).to eq("edition")
-
-      expect(document_b["_source"]["link"]).to eq(random_example_b["base_path"])
-      expect(document_b["_id"]).to eq(random_example_b["base_path"])
-      expect(document_b["_source"]["document_type"]).to eq("edition")
-    end
-
     it "skips blocklisted formats" do
       logger = double(info: true, debug: true)
 
@@ -121,7 +90,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
         payload: { document_type: "special_route", payload_version: 123, base_path: "/tour" },
       )
 
-      handler = GovukIndex::PublishingEventMessageHandler.new([["test.route", random_example]])
+      handler = GovukIndex::PublishingEventMessageHandler.new("test.route", random_example)
       allow(handler).to receive(:logger).and_return(logger)
 
       handler.call
@@ -141,7 +110,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       random_example = generate_random_example(
         payload: { document_type: "help_page", payload_version: 123 },
       )
-      handler = GovukIndex::PublishingEventMessageHandler.new([["test.route", random_example]])
+      handler = GovukIndex::PublishingEventMessageHandler.new("test.route", random_example)
       allow(handler).to receive(:logger).and_return(logger)
 
       expect(logger).to receive(:info).with("test.route -> UNKNOWN #{random_example['base_path']} edition")
@@ -156,7 +125,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       random_example = generate_random_example(
         payload: { document_type: "help_page", payload_version: 123 },
       )
-      handler = GovukIndex::PublishingEventMessageHandler.new([["test.route", random_example]])
+      handler = GovukIndex::PublishingEventMessageHandler.new("test.route", random_example)
       allow(handler).to receive(:logger).and_return(logger)
 
       handler.call
@@ -170,7 +139,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
         schema: "special_route",
         payload: { document_type: "special_route", base_path: "/homepage", payload_version: 123 },
       )
-      handler = GovukIndex::PublishingEventMessageHandler.new([["test.route", homepage_example]])
+      handler = GovukIndex::PublishingEventMessageHandler.new("test.route", homepage_example)
       allow(handler).to receive(:logger).and_return(logger)
       handler.call
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{homepage_example['base_path']} edition (non-indexable)")
@@ -179,7 +148,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
         schema: "special_route",
         payload: { document_type: "special_route", base_path: "/help", payload_version: 123 },
       )
-      handler = GovukIndex::PublishingEventMessageHandler.new([["test.route", help_example]])
+      handler = GovukIndex::PublishingEventMessageHandler.new("test.route", help_example)
       allow(handler).to receive(:logger).and_return(logger)
       handler.call
       expect(logger).to have_received(:info).with("test.route -> INDEX #{help_example['base_path']} edition")

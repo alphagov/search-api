@@ -1,8 +1,6 @@
 module GovukIndex
   class ElasticsearchRetryError < StandardError; end
 
-  class ElasticsearchInvalidResponseItemCount < StandardError; end
-
   class MissingTextHtmlContentType < StandardError; end
 
   class MultipleMessagesInElasticsearchResponse < StandardError; end
@@ -41,8 +39,9 @@ module GovukIndex
     ].freeze
 
   class PublishingEventMessageHandler
-    def initialize(messages)
-      @messages = messages
+    def initialize(routing_key, payload)
+      @routing_key = routing_key
+      @payload = payload
       @logger = Logging.logger[self]
     end
 
@@ -52,23 +51,17 @@ module GovukIndex
 
     def call
       processor = Index::ElasticsearchProcessor.govuk
+      process_action(processor)
+      response = processor.commit
 
-      messages.each do |routing_key, payload|
-        process_action(processor, routing_key, payload)
-      end
-
-      responses = processor.commit
-
-      (responses || []).each do |response|
-        process_response(response, messages)
-      end
+      process_response(response) if response.present?
     end
 
   private
 
-    attr_reader :logger, :messages
+    attr_reader :logger, :routing_key, :payload
 
-    def process_action(processor, routing_key, payload)
+    def process_action(processor)
       logger.debug("Processing #{routing_key}: #{payload}")
 
       type_mapper = DocumentTypeMapper.new(payload)
@@ -91,7 +84,7 @@ module GovukIndex
         processor.delete(presenter)
       elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path)
         logger.info("#{routing_key} -> BLOCKLISTED #{identifier} (non-indexable)")
-      elsif !document_in_english?(payload) && !is_welsh_hmrc_contact?(payload)
+      elsif !document_in_english? && !is_welsh_hmrc_contact?
         logger.info("#{routing_key} -> BLOCKLISTED #{identifier} (non-english, and not Welsh HMRC contact)")
       elsif MigratedFormats.indexable?(presenter.format, presenter.base_path)
         logger.info("#{routing_key} -> INDEX #{identifier}")
@@ -116,38 +109,22 @@ module GovukIndex
       Services.statsd_client.increment("govuk_index.unknown-document-type")
     end
 
-    def process_response(response, messages)
-      messages_with_error = []
-      if response["items"].count > 1
-        Services.statsd_client.increment("govuk_index.elasticsearch.multiple_responses")
-      end
+    def process_response(response)
+      response_for_message = response.dig(0, "items", 0)
 
-      if response["items"].count != messages.count
-        raise ElasticsearchInvalidResponseItemCount, "received #{response['items'].count} expected #{messages.count}"
-      end
-
-      response["items"].zip(messages).each do |response_for_message, message|
-        messages_with_error << message unless Index::ResponseValidator.new(namespace: "govuk_index").valid?(response_for_message)
-      end
-
-      if messages_with_error.any?
-        # raise an error so that all messages are retried.
-        # NOTE: versioned ES actions can be performed multiple with a consistent result.
-        raise ElasticsearchRetryError.new(
-          reason: "Elasticsearch failures",
-          messages: "#{messages_with_error.count} of #{messages.count} failed - see ElasticsearchError's for details",
-        )
+      unless Index::ResponseValidator.new(namespace: "govuk_index").valid?(response_for_message)
+        raise ElasticsearchRetryError.new(reason: "Elasticsearch failures")
       end
     end
 
-    def is_welsh_hmrc_contact?(payload)
+    def is_welsh_hmrc_contact?
       hmrc_contact = payload["document_type"] == "hmrc_contact"
       welsh_locale = payload["locale"] == "cy"
 
       hmrc_contact && welsh_locale
     end
 
-    def document_in_english?(payload)
+    def document_in_english?
       payload.fetch("locale", "en") == "en"
     end
   end

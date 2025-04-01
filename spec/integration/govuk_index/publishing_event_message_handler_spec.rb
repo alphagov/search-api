@@ -22,7 +22,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
 
       expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
 
-      described_class.call([["routing.key", payload]])
+      described_class.call("routing.key", payload)
     end
 
     context "when a message to unpublish the document is received" do
@@ -39,7 +39,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
 
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete")
 
-        described_class.call([["routing.unpublish", payload]])
+        described_class.call("routing.unpublish", payload)
       end
 
       it "will not delete withdrawn documents" do
@@ -58,7 +58,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
 
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
 
-        described_class.call([["routing.unpublish", payload]])
+        described_class.call("routing.unpublish", payload)
       end
 
       it "will raise an error when elasticsearch returns a 500 status" do
@@ -75,7 +75,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete_error")
 
         expect {
-          described_class.call([["routing.unpublish", payload]])
+          described_class.call("routing.unpublish", payload)
         }.to raise_error(GovukIndex::ElasticsearchRetryError)
       end
 
@@ -92,7 +92,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
 
         expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.already_deleted")
 
-        described_class.call([["routing.unpublish", payload]])
+        described_class.call("routing.unpublish", payload)
       end
     end
 
@@ -116,7 +116,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
           },
         )
 
-        described_class.call([["routing.key", payload]])
+        described_class.call("routing.key", payload)
       end
     end
 
@@ -132,124 +132,8 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
       it "don't notify of a validation error for missing basepath" do
         expect(GovukError).not_to receive(:notify)
 
-        described_class.call([["routing.key", payload]])
+        described_class.call("routing.key", payload)
       end
-    end
-  end
-
-  context "when multiple messages are received" do
-    let(:payload1) do
-      {
-        "base_path" => "/cheese",
-        "document_type" => "help_page",
-        "title" => "We love cheese",
-      }
-    end
-    let(:payload2) do
-      {
-        "base_path" => "/cheese",
-        "document_type" => "help_page",
-        "title" => "We love cheese",
-      }
-    end
-    let(:payload_delete) do
-      {
-        "base_path" => "/cheese",
-        "document_type" => "gone",
-        "title" => "We love cheese",
-      }
-    end
-    let(:payload_withdrawal) do
-      {
-        "base_path" => "/cheese",
-        "document_type" => "help_page",
-        "title" => "We love cheese",
-      }
-    end
-
-    it "can save multiple documents" do
-      responses = [{
-        "items" => [{ "index" => { "status" => 200 } }, { "index" => { "status" => 200 } }],
-      }]
-      expect(actions).to receive(:save).twice
-      expect(actions).to receive(:commit).and_return(responses)
-
-      expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.multiple_responses")
-      expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index").twice
-
-      described_class.call([["routing.key", payload1], ["routing.key", payload2]])
-    end
-
-    it "can save and delete documents in the same batch" do
-      stub_document_type_mapper
-      responses = [{ "items" => [{ "index" => { "status" => 200 } }, { "delete" => { "status" => 200 } }] }]
-      expect(actions).to receive(:save)
-      expect(actions).to receive(:delete)
-      expect(actions).to receive(:commit).and_return(responses)
-      expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.multiple_responses")
-      expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
-      expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete")
-
-      described_class.call([["routing.key", payload1], ["routing.key", payload_delete]])
-    end
-
-    context "when all messages fail" do
-      before do
-        allow(actions).to receive(:save).twice
-        allow(actions).to receive(:commit).and_return(
-          [{ "items" => [{ "index" => { "status" => 500 } }, { "index" => { "status" => 500 } }] }],
-        )
-        allow(@statsd_client).to receive(:increment)
-      end
-
-      it "will reprocess the entire batch using ES retry mechanism" do
-        expect {
-          described_class.call([["routing.key", payload1], ["routing.key", payload2]])
-        }.to raise_error(GovukIndex::ElasticsearchRetryError)
-      end
-
-      it "will notify for each message that fails" do
-        expect {
-          described_class.call([["routing.key", payload1], ["routing.key", payload2]])
-        }.to raise_error(GovukIndex::ElasticsearchRetryError)
-        expect(@statsd_client).to have_received(:increment).with("govuk_index.elasticsearch.index_error").twice
-      end
-
-      it "will notify that the batch failed" do
-        expect {
-          described_class.call([["routing.key", payload1], ["routing.key", payload2]])
-        }.to raise_error(GovukIndex::ElasticsearchRetryError)
-      end
-    end
-
-    context "elasticsearch fails during processing for some messages" do
-      before do
-        allow(actions).to receive(:save).twice
-        allow(actions).to receive(:commit).and_return(
-          [{ "items" => [{ "index" => { "status" => 200 } }, { "index" => { "status" => 500 } }] }],
-        )
-        allow(@statsd_client).to receive(:increment)
-      end
-
-      it "will notify for each message that fails" do
-        expect {
-          described_class.call([["routing.key", payload1], ["routing.key", payload2]])
-        }.to raise_error(GovukIndex::ElasticsearchRetryError)
-        expect(@statsd_client).to have_received(:increment).with("govuk_index.elasticsearch.index_error")
-        expect(@statsd_client).to have_received(:increment).with("govuk_index.elasticsearch.index")
-      end
-    end
-
-    it "raises an error is the number of response item does not match the number of actions requested" do
-      allow(actions).to receive(:save).twice
-      allow(actions).to receive(:commit).and_return(
-        [{ "items" => [{ "index" => { "status" => 200 } }] }],
-      )
-      allow(@statsd_client).to receive(:increment)
-
-      expect {
-        described_class.call([["routing.key", payload1], ["routing.key", payload2]])
-      }.to raise_error(GovukIndex::ElasticsearchInvalidResponseItemCount, "received 1 expected 2")
     end
   end
 
