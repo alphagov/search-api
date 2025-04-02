@@ -39,18 +39,16 @@ module Indexer
 
   private
 
-    # attr_reader :logger
+    attr_reader :logger
 
     def with_logging(message)
       log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
-      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (logger 4)"
-      puts "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (puts)"
+      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (logger 6)"
 
       yield
 
-      logger.info "Finished processing message [#{message.delivery_info.delivery_tag}] (logger 4)"
-      puts "Finished processing message [#{message.delivery_info.delivery_tag}] (puts)"
+      logger.info "Finished processing message [#{message.delivery_info.delivery_tag}] (logger 6)"
     end
   end
 end
