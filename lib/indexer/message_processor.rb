@@ -11,6 +11,11 @@ module Indexer
   class MessageProcessor
     MAX_RETRIES = 5
 
+    def initialize
+      @logger = Logging.logger[self]
+      logger.level = :info
+    end
+
     def process(queue_message)
       message = ::RetryableQueueMessage.new(queue_message)
       payload = message.payload
@@ -37,15 +42,14 @@ module Indexer
     # attr_reader :logger
 
     def with_logging(message)
-      puts ENV["LOG_LEVEL"]
       log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
-      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (logger 3)"
+      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (logger 4)"
       puts "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (puts)"
 
       yield
 
-      logger.info "Finished processing message [#{message.delivery_info.delivery_tag}] (logger 3)"
+      logger.info "Finished processing message [#{message.delivery_info.delivery_tag}] (logger 4)"
       puts "Finished processing message [#{message.delivery_info.delivery_tag}] (puts)"
     end
   end
