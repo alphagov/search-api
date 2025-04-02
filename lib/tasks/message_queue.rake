@@ -33,7 +33,7 @@ namespace :message_queue do
 
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_to_be_indexed",
-      processor: Indexer::MessageProcessor.new,
+      processor: Indexer::MessageProcessor.new(logger),
       logger:,
       worker_threads: 10,
       prefetch: 10,
