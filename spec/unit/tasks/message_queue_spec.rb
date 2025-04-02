@@ -4,6 +4,10 @@ load "tasks/message_queue.rake"
 
 RSpec.describe Indexer::MessageProcessor, "RakeTest" do
   describe "message_queue:listen_to_publishing_queue" do
+    let(:task_name) { "message_queue:listen_to_publishing_queue" }
+
+    before { Rake::Task[task_name].reenable }
+
     it "uses GovukMessageQueueConsumer::Consumer" do
       indexer = described_class.new
       expect(described_class).to receive(:new).and_return(indexer)
@@ -22,11 +26,15 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
           prefetch: 10,
         ).and_return(consumer)
 
-      Rake::Task["message_queue:listen_to_publishing_queue"].invoke
+      Rake::Task[task_name].invoke
     end
   end
 
   describe "message_queue:insert_data_into_govuk" do
+    let(:task_name) { "message_queue:insert_data_into_govuk" }
+
+    before { Rake::Task[task_name].reenable }
+
     it "uses GovukMessageQueueConsumer::Consumer" do
       processor = double
       expect(GovukIndex::PublishingEventProcessor).to receive(:new).and_return(processor)
@@ -45,11 +53,15 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
           prefetch: 10,
         ).and_return(consumer)
 
-      Rake::Task["message_queue:insert_data_into_govuk"].invoke
+      Rake::Task[task_name].invoke
     end
   end
 
   describe "message_queue:bulk_insert_data_into_govuk" do
+    let(:task_name) { "message_queue:bulk_insert_data_into_govuk" }
+
+    before { Rake::Task[task_name].reenable }
+
     it "uses GovukMessageQueueConsumer::Consumer" do
       processor = double
       expect(GovukIndex::PublishingEventProcessor).to receive(:new).and_return(processor)
@@ -68,11 +80,13 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
           prefetch: 10,
         ).and_return(consumer)
 
-      Rake::Task["message_queue:bulk_insert_data_into_govuk"].invoke
+      Rake::Task[task_name].invoke
     end
   end
 
   describe "message_queue:create_queues" do
+    let(:task_name) { "message_queue:create_queues" }
+
     let(:session) do
       instance_double(Bunny::Session, create_channel: channel).tap do |double|
         allow(double).to receive(:start).and_return(double)
@@ -84,6 +98,7 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
     before do
       allow(Bunny).to receive(:new).and_return(session)
       allow(Bunny::Exchange).to receive(:new).with(channel, :topic, "published_documents").and_return(exchange)
+      Rake::Task[task_name].reenable
     end
 
     it "creates the exchanges and queues" do
@@ -142,7 +157,7 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
           .and_return(config[:queues][:wait_to_retry])
       end
 
-      Rake::Task["message_queue:create_queues"].invoke
+      Rake::Task[task_name].invoke
 
       queues.each do |config|
         name = config[:name]
