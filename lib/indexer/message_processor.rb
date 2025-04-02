@@ -12,8 +12,8 @@ module Indexer
     MAX_RETRIES = 5
 
     def initialize
-      Logging.logger.root.add_appenders Logging.appenders.stdout
       @logger = Logging.logger[self]
+      logger.add_appenders "stdout"
     end
 
     def process(queue_message)
@@ -44,12 +44,12 @@ module Indexer
     def with_logging(message)
       log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
-      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (logger)"
+      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (logger 2)"
       puts "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (puts)"
 
       yield
 
-      logger.info "Finished processing message [#{message.delivery_info.delivery_tag}] (logger)"
+      logger.info "Finished processing message [#{message.delivery_info.delivery_tag}] (logger 2)"
       puts "Finished processing message [#{message.delivery_info.delivery_tag}] (puts)"
     end
   end
