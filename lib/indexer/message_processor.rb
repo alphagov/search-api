@@ -37,6 +37,7 @@ module Indexer
     # attr_reader :logger
 
     def with_logging(message)
+      puts ENV["LOG_LEVEL"]
       log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
       logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json} (logger 3)"
