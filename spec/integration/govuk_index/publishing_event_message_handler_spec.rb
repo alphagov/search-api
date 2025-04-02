@@ -76,7 +76,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
 
         expect {
           described_class.call("routing.unpublish", payload)
-        }.to raise_error(GovukIndex::ElasticsearchRetryError)
+        }.to raise_error(described_class::ElasticsearchRetryError)
       end
 
       it "will not raise an error when elasticsearch returns a 404 - not found" do

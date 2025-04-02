@@ -86,6 +86,7 @@ require "index/client"
 require "index/elasticsearch_processor"
 require "index/response_validator"
 
+require "govuk_index"
 require "govuk_index/updater"
 require "govuk_index/client"
 require "govuk_index/document_type_mapper"

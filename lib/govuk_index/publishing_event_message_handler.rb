@@ -1,19 +1,7 @@
 module GovukIndex
-  class ElasticsearchRetryError < StandardError; end
-
-  class MissingTextHtmlContentType < StandardError; end
-
-  class MultipleMessagesInElasticsearchResponse < StandardError; end
-
-  class NotFoundError < StandardError; end
-
-  class UnknownDocumentTypeError < StandardError; end
-
-  class NotIdentifiable < StandardError; end
-
-  class MissingExternalUrl < StandardError; end
-
   class PublishingEventMessageHandler
+    class ElasticsearchRetryError < StandardError; end
+
     DOCUMENT_TYPES_WITHOUT_BASE_PATH =
       %w[
         contact
