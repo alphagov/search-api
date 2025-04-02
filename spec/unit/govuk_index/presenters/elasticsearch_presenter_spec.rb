@@ -65,7 +65,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
 
       expect {
         presenter.valid!
-      }.to raise_error(GovukIndex::MissingExternalUrl)
+      }.to raise_error(described_class::MissingExternalUrl)
     end
   end
 

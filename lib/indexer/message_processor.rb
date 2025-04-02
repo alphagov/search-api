@@ -25,7 +25,7 @@ module Indexer
         message.done
       end
     rescue StandardError => e
-      if message.retries < MAX_RETRIES
+      if message.retries < MAX_RETRIES - 1
         logger.error("#{payload['content_id']} scheduled for retry due to error: #{e.class} #{e.message}")
 
         message.retry
@@ -43,7 +43,7 @@ module Indexer
     def with_logging(message)
       log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
-      logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json}"
+      logger.info "Processing message [#{message.delivery_info.delivery_tag}] (attempt #{message.retries + 1}/#{MAX_RETRIES}): #{log_payload.to_json}"
 
       yield
 

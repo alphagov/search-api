@@ -1,5 +1,7 @@
 module GovukIndex
   class ElasticsearchPresenter
+    class MissingExternalUrl < StandardError; end
+
     include ElasticsearchIdentity
 
     def initialize(payload:, type_mapper:)

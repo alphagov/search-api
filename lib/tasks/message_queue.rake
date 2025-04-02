@@ -8,23 +8,35 @@ namespace :message_queue do
     channel = bunny.start.create_channel
     exch = Bunny::Exchange.new(channel, :topic, "published_documents")
 
-    search_api_to_be_indexed_retry_dlx = channel.fanout("search_api_to_be_indexed_retry_dlx")
-    search_api_to_be_indexed_discarded_dlx = channel.fanout("search_api_to_be_indexed_discarded_dlx")
+    queues = [
+      { name: "search_api_to_be_indexed", routing_key: "*.links" },
+      { name: "search_api_bulk_reindex", routing_key: "*.bulk.reindex" },
+      { name: "search_api_govuk_index", routing_key: "*.*" },
+    ]
 
-    channel
-      .queue("search_api_to_be_indexed", arguments: { "x-dead-letter-exchange" => search_api_to_be_indexed_retry_dlx.name })
-      .bind(exch, routing_key: "*.links")
-    # messages are queued on search_api_to_be_indexed_discarded_dlx for 30s before their
-    # ttl completes then are routed to the search_api_to_be_indexed_retry_dlx
-    channel.queue("search_api_to_be_indexed_wait_to_retry",
-                  arguments: { "x-dead-letter-exchange" => search_api_to_be_indexed_discarded_dlx.name, "x-message-ttl" => 30 * 1000 })
-           .bind(search_api_to_be_indexed_retry_dlx)
+    queues.each do |queue|
+      name = queue[:name]
+      routing_key = queue[:routing_key]
 
-    # messages on the search_api_to_be_indexed_discarded_dlx are routed back to the original queue
-    channel.queue("search_api_to_be_indexed").bind(search_api_to_be_indexed_discarded_dlx)
+      retry_dlx = channel.fanout("#{name}_retry_dlx")
+      discarded_dlx = channel.fanout("#{name}_discarded_dlx")
 
-    channel.queue("search_api_bulk_reindex").bind(exch, routing_key: "*.bulk.reindex")
-    channel.queue("search_api_govuk_index").bind(exch, routing_key: "*.*")
+      channel
+        .queue(name, arguments: { "x-dead-letter-exchange" => retry_dlx.name })
+        .bind(exch, routing_key: routing_key)
+
+      # messages are queued on {queue}_discarded_dlx for 30s before their
+      # ttl completes then are routed to the {queue}_retry_dlx
+      channel
+        .queue(
+          "#{name}_wait_to_retry",
+          arguments: { "x-dead-letter-exchange" => discarded_dlx.name, "x-message-ttl" => 10 * 3000 },
+        )
+        .bind(retry_dlx)
+
+      # messages on the {queue}_discarded_dlx are routed back to the original queue
+      channel.queue(name).bind(discarded_dlx)
+    end
   end
 
   desc "Index documents that are published to the publishing-api"
@@ -42,17 +54,27 @@ namespace :message_queue do
 
   desc "Gets data from RabbitMQ and insert into govuk index"
   task :insert_data_into_govuk do
+    logger = Logging.logger[GovukIndex::PublishingEventProcessor]
+
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_govuk_index",
       processor: GovukIndex::PublishingEventProcessor.new,
+      logger:,
+      worker_threads: 10,
+      prefetch: 10,
     ).run
   end
 
   desc "Gets data from RabbitMQ and insert into govuk index (bulk reindex queue)"
   task :bulk_insert_data_into_govuk do
+    logger = Logging.logger[GovukIndex::PublishingEventProcessor]
+
     GovukMessageQueueConsumer::Consumer.new(
       queue_name: "search_api_bulk_reindex",
       processor: GovukIndex::PublishingEventProcessor.new,
+      logger:,
+      worker_threads: 10,
+      prefetch: 10,
     ).run
   end
 end
