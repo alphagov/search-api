@@ -44,10 +44,12 @@ module Indexer
       log_payload = message.payload.slice("content_id", "base_path", "document_type", "title", "update_type", "publishing_app")
 
       logger.info "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json}"
+      puts "Processing message [#{message.delivery_info.delivery_tag}]: #{log_payload.to_json}"
 
       yield
 
       logger.info "Finished processing message [#{message.delivery_info.delivery_tag}]"
+      puts "Finished processing message [#{message.delivery_info.delivery_tag}]"
     end
   end
 end
