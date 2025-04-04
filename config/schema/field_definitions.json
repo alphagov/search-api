@@ -1149,5 +1149,27 @@
   },
   "trademark_decision_grounds_sub_section": {
     "type": "identifiers"
+  },
+
+  "ukhsa_approval_status": {
+    "type": "identifiers"
+  },
+  "ukhsa_access_type": {
+    "type": "identifiers"
+  },
+  "ukhsa_applicant_organisation_name": {
+    "type": "searchable_text"
+  },
+  "ukhsa_applicant_organisation_type": {
+    "type": "identifiers"
+  },
+  "ukhsa_classification_identification_risk": {
+    "type": "identifiers"
+  },
+  "ukhsa_dataset": {
+    "type": "searchable_multivalued_text"
+  },
+  "ukhsa_approval_date": {
+    "type": "date"
   }
 }
