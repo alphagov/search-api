@@ -2,6 +2,8 @@
 
 ## Context
 
+**Note: This has been superseded by [ADR-013](adr-013-rabbitmq-sidekiq-removal.md).**
+
 In order to simplify the search infrastructure we are moving to using the publishing API
 as the source of data. This allows us to reduce the amount of code duplication across
 projects, as currently each publishing app has to implement a write interface into rummager.
