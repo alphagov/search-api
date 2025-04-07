@@ -1,88 +1,43 @@
 require "spec_helper"
+require "govuk_message_queue_consumer/test_helpers"
 
 RSpec.describe GovukIndex::PublishingEventProcessor do
-  it "will process and ack a single message" do
-    message = double(
-      payload: {
-        "base_path" => "/cheese",
-        "document_type" => "help_page",
-        "title" => "We love cheese",
-      },
-      delivery_info: {
-        routing_key: "routing.key",
-      },
+  let(:content_item) { generate_random_example }
+  let(:message) do
+    GovukMessageQueueConsumer::MockMessage.new(
+      content_item,
+      {},
+      { routing_key: "routing.key" },
     )
+  end
+  let(:logger) { Logging.logger[described_class] }
 
-    expect(GovukIndex::PublishingEventJob).to receive(:perform_async).with([["routing.key", message.payload]])
-    expect(message).to receive(:ack)
+  it_behaves_like "a message queue processor"
 
-    subject.process(message)
+  context "when successful" do
+    before do
+      expect(GovukIndex::PublishingEventMessageHandler)
+        .to receive(:call)
+        .with("routing.key", message.payload)
+    end
+
+    it "logs a message" do
+      expect(logger).to receive(:info).with(
+        /#{Regexp.escape("Processing message (attempt 1/5): {\"content_id\":\"#{content_item['content_id']}\"")}/,
+      )
+
+      described_class.new.process(message)
+    end
   end
 
-  it "will process and ack an array of messages" do
-    message1 = double(
-      payload: {
-        "base_path" => "/cheese",
-        "document_type" => "help_page",
-        "title" => "We love cheese",
-      },
-      delivery_info: {
-        routing_key: "routing.key",
-      },
-    )
-    message2 = double(
-      payload: {
-        "base_path" => "/crackers",
-        "document_type" => "help_page",
-        "title" => "We love crackers",
-      },
-      delivery_info: {
-        routing_key: "routing.key",
-      },
-    )
+  context "when an error is raised" do
+    before do
+      expect(GovukIndex::PublishingEventMessageHandler)
+        .to receive(:call)
+        .with("routing.key", message.payload)
+        .and_raise("oh no")
+    end
 
-    expect(GovukIndex::PublishingEventJob).to receive(:perform_async).with(
-      [["routing.key", message1.payload], ["routing.key", message2.payload]],
-    )
-    expect(message1).to receive(:ack)
-    expect(message2).to receive(:ack)
-
-    subject.process([message1, message2])
-  end
-
-  it "will route bulk reindex messages to the bulk queue" do
-    message1 = double(
-      payload: {
-        "base_path" => "/cheese",
-        "document_type" => "help_page",
-        "title" => "We love cheese",
-      },
-      delivery_info: {
-        routing_key: "document.bulk.reindex",
-      },
-    )
-    message2 = double(
-      payload: {
-        "base_path" => "/crackers",
-        "document_type" => "help_page",
-        "title" => "We love crackers",
-      },
-      delivery_info: {
-        routing_key: "document.publish",
-      },
-    )
-
-    bulk_job = double(GovukIndex::PublishingEventJob)
-    expect(GovukIndex::PublishingEventJob).to receive(:set).with(queue: "bulk").and_return(bulk_job)
-    expect(bulk_job).to receive(:perform_async).with(
-      [["document.bulk.reindex", message1.payload]],
-    )
-    expect(GovukIndex::PublishingEventJob).to receive(:perform_async).with(
-      [["document.publish", message2.payload]],
-    )
-    expect(message1).to receive(:ack)
-    expect(message2).to receive(:ack)
-
-    subject.process([message1, message2])
+    it_behaves_like "a retryable queue processor"
   end
 end
