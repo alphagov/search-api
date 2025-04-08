@@ -255,10 +255,8 @@ module GovukIndex
     end
 
     def valid!
-      if format == "recommended-link"
-        details.url || raise(MissingExternalUrl, "url missing from details section")
-      else
-        base_path || raise(NotIdentifiable, "base_path missing from payload")
+      if format == "recommended-link" && !details.url
+        raise(MissingExternalUrl, "url missing from details section")
       end
     end
 

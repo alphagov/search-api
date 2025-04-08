@@ -95,46 +95,6 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
         described_class.call("routing.unpublish", payload)
       end
     end
-
-    context "when document type requires a basepath" do
-      let(:actions) { Index::ElasticsearchProcessor.govuk }
-      let(:payload) do
-        {
-          "document_type" => "help_page",
-          "title" => "We love cheese",
-        }
-      end
-
-      it "notify of a validation error for missing basepath" do
-        expect(GovukError).to receive(:notify).with(
-          instance_of(GovukIndex::NotIdentifiable),
-          extra: {
-            message_body: {
-              "document_type" => "help_page",
-              "title" => "We love cheese",
-            },
-          },
-        )
-
-        described_class.call("routing.key", payload)
-      end
-    end
-
-    context "when document type doesn't require a basepath" do
-      let(:actions) { Index::ElasticsearchProcessor.govuk }
-      let(:payload) do
-        {
-          "document_type" => "contact",
-          "title" => "We love cheese",
-        }
-      end
-
-      it "don't notify of a validation error for missing basepath" do
-        expect(GovukError).not_to receive(:notify)
-
-        described_class.call("routing.key", payload)
-      end
-    end
   end
 
   def stub_document_type_mapper
