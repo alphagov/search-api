@@ -46,6 +46,7 @@
     "tax_tribunal_decision",
     "trademark_decision",
     "traffic_commissioner_regulatory_decision",
+    "ukhsa_data_access_approval",
     "utaac_decision",
     "veterans_support_organisation"
   ]

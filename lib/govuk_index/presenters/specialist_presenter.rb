@@ -145,6 +145,13 @@ module GovukIndex
     delegate_to_payload :tribunal_decision_sub_categories
     delegate_to_payload :tribunal_decision_sub_category
     delegate_to_payload :types_of_support
+    delegate_to_payload :ukhsa_approval_status
+    delegate_to_payload :ukhsa_access_type
+    delegate_to_payload :ukhsa_applicant_organisation_name
+    delegate_to_payload :ukhsa_applicant_organisation_type
+    delegate_to_payload :ukhsa_classification_identification_risk
+    delegate_to_payload :ukhsa_dataset
+    delegate_to_payload :ukhsa_approval_date
     delegate_to_payload :use_case, convert_to_array: true
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type
