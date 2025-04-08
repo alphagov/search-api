@@ -254,12 +254,6 @@ module GovukIndex
       common_fields.publishing_app
     end
 
-    def valid!
-      if format == "recommended-link" && !details.url
-        raise(MissingExternalUrl, "url missing from details section")
-      end
-    end
-
     def image_url
       details.image_url || (expanded_links.default_news_image if newslike?)
     end

@@ -10,6 +10,18 @@ module GovukIndex
       message = RetryableQueueMessage.new(message)
       payload = message.payload
 
+      if external_content_without_details_url?(payload)
+        logger.info("#{payload['content_id']} ignored due to missing details.url")
+        message.done
+        return
+      end
+
+      if without_base_path?(payload)
+        logger.info("#{payload['content_id']} ignored due to no base_path")
+        message.done
+        return
+      end
+
       logger.info("Processing message (attempt #{message.retries + 1}/#{MAX_RETRIES}): {\"content_id\":\"#{payload['content_id']}\"}")
 
       begin
@@ -33,5 +45,15 @@ module GovukIndex
   private
 
     attr_reader :logger
+
+    def without_base_path?(payload)
+      # `external_content` messages do not require a base_path, but all other
+      # messages do.
+      payload["document_type"] != "external_content" && payload["base_path"].blank?
+    end
+
+    def external_content_without_details_url?(payload)
+      payload["document_type"] == "external_content" && payload.dig("details", "url").blank?
+    end
   end
 end

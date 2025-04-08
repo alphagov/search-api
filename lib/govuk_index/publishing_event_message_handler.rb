@@ -63,8 +63,6 @@ module GovukIndex
                     )
                   end
 
-      presenter.valid!
-
       identifier = "#{presenter.link} #{presenter.type || "'unmapped type'"}"
 
       if type_mapper.unpublishing_type?

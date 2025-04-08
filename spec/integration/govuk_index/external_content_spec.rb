@@ -46,18 +46,18 @@ RSpec.describe "external content publishing" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("recommended-link" => :all)
 
     url = "https://www.nhs.uk"
-    content_id = "b7e993e1-9afa-4235-99a4-479caa240267"
-    document = { "link" => url, "content_id" => content_id }
-    commit_document("govuk_test", document, id: content_id, type: "recommended-link")
-    expect_document_is_in_rummager(document, id: content_id, index: "govuk_test", type: "recommended-link")
+    base_path = "/test"
+    document = { "link" => url, "base_path" => base_path }
+    commit_document("govuk_test", document, id: base_path, type: "recommended-link")
+    expect_document_is_in_rummager(document, id: base_path, index: "govuk_test", type: "recommended-link")
 
     payload = {
       "document_type" => "gone",
       "payload_version" => 15,
-      "content_id" => content_id,
+      "base_path" => base_path,
     }
     @queue.publish(payload.to_json, content_type: "application/json")
 
-    expect_document_missing_in_rummager(id: content_id, index: "govuk_test")
+    expect_document_missing_in_rummager(id: base_path, index: "govuk_test")
   end
 end

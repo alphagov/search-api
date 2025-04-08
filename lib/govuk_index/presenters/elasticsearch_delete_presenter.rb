@@ -14,12 +14,6 @@ module GovukIndex
       base_path
     end
 
-    def valid!
-      unless payload["base_path"] || payload["content_id"]
-        raise(NotIdentifiable, "base_path and content_id missing from payload")
-      end
-    end
-
     def type
       raise NotFoundError if existing_document.nil?
 

@@ -31,34 +31,6 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
     expect(presenter.updated_at).not_to be nil
   end
 
-  context "external content" do
-    it "is valid if it has a URL" do
-      payload = {
-        "document_type" => "external_content",
-        "details" => {
-          "url" => "some URL",
-        },
-      }
-
-      presenter = elasticsearch_presenter(payload)
-
-      presenter.valid!
-    end
-
-    it "is invalid if the URL is missing" do
-      payload = {
-        "document_type" => "external_content",
-        "details" => {},
-      }
-
-      presenter = elasticsearch_presenter(payload)
-
-      expect {
-        presenter.valid!
-      }.to raise_error(described_class::MissingExternalUrl)
-    end
-  end
-
   describe "#image_url" do
     let(:default_news_image_url) { "https://www.test.gov.uk/default_news_image.jpg" }
     let(:expanded_links) do
