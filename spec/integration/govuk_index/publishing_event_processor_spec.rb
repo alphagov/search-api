@@ -56,27 +56,18 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       expect(popularity).to eq(document["_source"]["popularity"])
     end
 
-    it "discards messages that are invalid" do
-      invalid_payload = {
-        "title" => "Pitts S-2B, G-SKYD, 21 June 1996",
-        "document_type" => "help_page",
-      }
+    it "acks messages that are invalid" do
+      invalid_example = generate_random_example(
+        schema: "external_content",
+        payload: {
+          title: "Pitts S-2B, G-SKYD, 21 June 1996",
+          document_type: "external_content",
+          details: { url: "" },
+        },
+      )
 
-      expect(GovukError).to receive(:notify)
-      @queue.publish(invalid_payload.to_json, extra: { content_type: "application/json" })
-
-      expect(@queue.message_count).to eq(0)
-    end
-
-    it "discards messages that are withdrawn and invalid" do
-      invalid_payload = {
-        "title" => "Pitts S-2B, G-SKYD, 21 June 1996",
-        "document_type" => "gone",
-      }
-
-      expect(GovukError).to receive(:notify)
-      @queue.publish(invalid_payload.to_json, extra: { content_type: "application/json" })
-
+      @queue.publish(invalid_example.to_json, content_type: "application/json")
+      expect(@channel.acknowledged_state[:acked].count).to eq(1)
       expect(@queue.message_count).to eq(0)
     end
   end

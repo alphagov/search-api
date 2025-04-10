@@ -33,15 +33,15 @@ RSpec.describe "taxon publishing" do
 
   it "removes a taxon page" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("taxon" => :all)
-    content_id = "c6d82aef-8f85-43b5-8a15-87719916204c"
-    document = { "link" => "/transport/all", "content_id" => content_id }
+    base_path = "/transport/all"
+    document = { "link" => base_path, "base_path" => base_path }
 
-    commit_document("govuk_test", document, id: content_id, type: "taxon")
-    expect_document_is_in_rummager(document, id: content_id, index: "govuk_test", type: "taxon")
+    commit_document("govuk_test", document, id: base_path, type: "taxon")
+    expect_document_is_in_rummager(document, id: base_path, index: "govuk_test", type: "taxon")
 
-    payload = { "document_type" => "gone", "payload_version" => 15, "content_id" => content_id }
+    payload = { "document_type" => "gone", "payload_version" => 15, "base_path" => base_path }
     @queue.publish(payload.to_json, content_type: "application/json")
 
-    expect_document_missing_in_rummager(id: content_id, index: "govuk_test")
+    expect_document_missing_in_rummager(id: base_path, index: "govuk_test")
   end
 end
