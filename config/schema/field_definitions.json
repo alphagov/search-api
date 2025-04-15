@@ -1171,5 +1171,18 @@
   },
   "ukhsa_approval_date": {
     "type": "date"
+  },
+
+  "design_decision_british_library_number": {
+    "type": "searchable_text"
+  },
+  "design_decision_hearing_officer": {
+    "type": "searchable_multivalued_text"
+  },
+  "design_decision_date": {
+    "type": "date"
+  },
+  "design_decision_litigants": {
+    "type": "searchable_text"
   }
 }

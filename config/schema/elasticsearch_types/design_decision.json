@@ -1,0 +1,8 @@
+{
+  "fields": [
+    "design_decision_british_library_number",
+    "design_decision_hearing_officer",
+    "design_decision_date",
+    "design_decision_litigants"
+  ]
+}

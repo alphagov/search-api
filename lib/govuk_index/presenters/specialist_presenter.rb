@@ -46,6 +46,10 @@ module GovukIndex
     delegate_to_payload :date_registration
     delegate_to_payload :date_registration_eu
     delegate_to_payload :decision_subject
+    delegate_to_payload :design_decision_british_library_number
+    delegate_to_payload :design_decision_hearing_officer
+    delegate_to_payload :design_decision_date
+    delegate_to_payload :design_decision_litigants
     delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
     delegate_to_payload :digital_market_research_area, convert_to_array: true
