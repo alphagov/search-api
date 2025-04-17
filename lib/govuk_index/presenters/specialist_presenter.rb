@@ -147,7 +147,7 @@ module GovukIndex
     delegate_to_payload :types_of_support
     delegate_to_payload :ukhsa_approval_status
     delegate_to_payload :ukhsa_access_type
-    delegate_to_payload :ukhsa_applicant_organisation_name
+    delegate_to_payload :ukhsa_organisation_name
     delegate_to_payload :ukhsa_applicant_organisation_type
     delegate_to_payload :ukhsa_classification_identification_risk
     delegate_to_payload :ukhsa_dataset
