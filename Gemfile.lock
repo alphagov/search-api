@@ -124,7 +124,7 @@ GEM
       googleapis-common-protos-types (~> 1.15)
       googleauth (~> 1.12)
       grpc (~> 1.66)
-    gds-api-adapters (99.0.0)
+    gds-api-adapters (99.1.0)
       addressable
       link_header
       null_logger
@@ -262,10 +262,10 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     method_source (1.1.0)
-    mime-types (3.6.2)
+    mime-types (3.7.0)
       logger
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2025.0325)
+      mime-types-data (~> 3.2025, >= 3.2025.0507)
+    mime-types-data (3.2025.0507)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
     minitest (5.25.5)
