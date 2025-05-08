@@ -321,7 +321,7 @@ RSpec.describe Search::AggregateExampleFetcher do
               "sector_#{sector_num}",
               { total: sector_num, examples: [{ "title" => "example_#{sector_num}" }] },
             ]
-          end
+          end,
         ],
       ).to eq(@fetcher.fetch("sector" => (0..999).map { |sector_num| "sector_#{sector_num}" }))
     end
