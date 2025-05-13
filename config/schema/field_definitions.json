@@ -1157,6 +1157,9 @@
   "ukhsa_access_type": {
     "type": "identifiers"
   },
+  "ukhsa_request_type": {
+    "type": "identifiers"
+  },
   "ukhsa_organisation_name": {
     "type": "identifiers"
   },
