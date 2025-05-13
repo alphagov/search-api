@@ -2,6 +2,7 @@
   "fields": [
       "ukhsa_approval_status",
       "ukhsa_access_type",
+      "ukhsa_request_type",
       "ukhsa_organisation_name",
       "ukhsa_applicant_organisation_type",
       "ukhsa_classification_identification_risk",

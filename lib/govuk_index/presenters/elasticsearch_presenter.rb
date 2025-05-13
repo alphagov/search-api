@@ -209,6 +209,7 @@ module GovukIndex
         types_of_support: specialist.types_of_support,
         ukhsa_approval_status: specialist.ukhsa_approval_status,
         ukhsa_access_type: specialist.ukhsa_access_type,
+        ukhsa_request_type: specialist.ukhsa_request_type,
         ukhsa_organisation_name: specialist.ukhsa_organisation_name,
         ukhsa_applicant_organisation_type: specialist.ukhsa_applicant_organisation_type,
         ukhsa_classification_identification_risk: specialist.ukhsa_classification_identification_risk,
