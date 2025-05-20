@@ -77,8 +77,6 @@ RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
     custom_metadata = {
       "grant_type" => "option",
       "land_use" => %w[priority-habitats trees-non-woodland uplands],
-      "tiers_or_standalone_items" => %w[higher-tier],
-      "funding_amount" => %w[201-to-300],
     }
     special_formated_output = {
       "grant_type" => %w[option],
