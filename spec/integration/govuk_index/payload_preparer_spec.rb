@@ -168,9 +168,9 @@ RSpec.describe "Payload preparation" do
           {
             "link" => "/bar",
             "parts" => [
-              { "slug" => "attachment-1", "title" => "attachment 1", "body" => "body 1" },
-              { "slug" => "attachment-2", "title" => "attachment 2", "body" => "body 2" },
-              { "slug" => "attachment-3", "title" => "attachment 3", "body" => "body 3" },
+              { "slug" => "attachment-1", "link" => "/bar/attachment-1", "title" => "attachment 1", "body" => "body 1" },
+              { "slug" => "attachment-2", "link" => "/bar/attachment-2", "title" => "attachment 2", "body" => "body 2" },
+              { "slug" => "attachment-3", "link" => "/bar/attachment-3", "title" => "attachment 3", "body" => "body 3" },
             ],
             "attachments" => [
               { "title" => "attachment 1", "content" => "body 1" },
