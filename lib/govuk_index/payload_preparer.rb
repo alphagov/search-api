@@ -33,6 +33,7 @@ module GovukIndex
       presented_parts = details["parts"].map do |part|
         {
           "slug" => part["slug"],
+          "url" => part["url"],
           "title" => part["title"],
           "body" => [{ "content_type" => "text/html", "content" => part["body"] }],
         }
