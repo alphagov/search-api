@@ -95,7 +95,9 @@ RSpec.describe "Payload preparation" do
           },
         )
         random_example["details"]["parts"] = [
-          { "slug" => "foo", "title" => "foo", "body" => [{ "content_type" => "text/html", "content" => "baz" }] },
+          { "slug" => "attachment-1", "title" => "attachment 1", "body" => [{ "content_type" => "text/html", "content" => "body 1" }] },
+          { "slug" => "attachment-2", "title" => "attachment 2", "body" => [{ "content_type" => "text/html", "content" => "body 2" }] },
+          { "slug" => "attachment-3", "title" => "attachment 3", "body" => [{ "content_type" => "text/html", "content" => "body 3" }] },
         ]
         random_example["details"]["attachments"] = [
           { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
@@ -110,7 +112,9 @@ RSpec.describe "Payload preparation" do
           {
             "link" => "/foo",
             "parts" => [
-              { "slug" => "foo", "title" => "foo", "body" => "baz" },
+              { "slug" => "attachment-1", "title" => "attachment 1", "body" => "body 1" },
+              { "slug" => "attachment-2", "title" => "attachment 2", "body" => "body 2" },
+              { "slug" => "attachment-3", "title" => "attachment 3", "body" => "body 3" },
             ],
             "attachments" => [
               { "title" => "attachment 1", "content" => "body 1" },
