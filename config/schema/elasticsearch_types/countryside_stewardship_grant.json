@@ -1,16 +1,6 @@
 {
   "fields": [
-    "business_activity",
-    "employ_eu_citizens",
-    "funding_amount",
     "grant_type",
-    "intellectual_property",
-    "land_use",
-    "personal_data",
-    "public_sector_procurement",
-    "eu_uk_government_funding",
-    "regulations_and_standards",
-    "sector_business_area",
-    "tiers_or_standalone_items"
+    "land_use"
   ]
 }
