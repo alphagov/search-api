@@ -1,6 +1,10 @@
 require "spec_helper"
 
 RSpec.describe "taxon publishing" do
+  # Using a unique base path to work around an atomicity issue with Elasticsearch
+  # that is causing intermittent test failures.
+  let(:base_path) { "/transport/#{SecureRandom.uuid}" }
+
   before do
     bunny_mock = BunnyMock.new
     @channel = bunny_mock.start.channel
@@ -20,7 +24,7 @@ RSpec.describe "taxon publishing" do
       schema: "taxon",
       payload: {
         document_type: "taxon",
-        base_path: "/transport/all",
+        base_path:,
       },
     )
 
@@ -33,7 +37,6 @@ RSpec.describe "taxon publishing" do
 
   it "removes a taxon page" do
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("taxon" => :all)
-    base_path = "/transport/all"
     document = { "link" => base_path, "base_path" => base_path }
 
     commit_document("govuk_test", document, id: base_path, type: "taxon")
