@@ -446,19 +446,8 @@
     "description": "Countryside stewardship grant type (https://www.gov.uk/countryside-stewardship-grants).",
     "type": "identifiers"
   },
-
   "land_use": {
     "description": "Countryside stewardship grant land use type (https://www.gov.uk/countryside-stewardship-grants).",
-    "type": "identifiers"
-  },
-
-  "tiers_or_standalone_items": {
-    "description": "Countryside stewardship grant land tiers or standalone items (https://www.gov.uk/countryside-stewardship-grants).",
-    "type": "identifiers"
-  },
-
-  "funding_amount": {
-    "description": "Funding (per unit per year)",
     "type": "identifiers"
   },
 
