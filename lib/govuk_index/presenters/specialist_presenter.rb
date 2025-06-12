@@ -64,7 +64,6 @@ module GovukIndex
     delegate_to_payload :flood_and_coastal_erosion_category
     delegate_to_payload :fund_state, convert_to_array: true
     delegate_to_payload :fund_type
-    delegate_to_payload :funding_amount
     delegate_to_payload :funding_source
     delegate_to_payload :grant_type, convert_to_array: true
     delegate_to_payload :hidden_indexable_content
@@ -133,7 +132,6 @@ module GovukIndex
     delegate_to_payload :subject
     delegate_to_payload :theme
     delegate_to_payload :therapeutic_area
-    delegate_to_payload :tiers_or_standalone_items
     delegate_to_payload :time_registration
     delegate_to_payload :topics
     delegate_to_payload :traditional_term_grapevine_product_category
