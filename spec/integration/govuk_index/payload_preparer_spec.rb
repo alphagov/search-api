@@ -112,9 +112,9 @@ RSpec.describe "Payload preparation" do
           {
             "link" => "/foo",
             "parts" => [
-              { "slug" => "attachment-1", "title" => "attachment 1", "body" => "body 1" },
-              { "slug" => "attachment-2", "title" => "attachment 2", "body" => "body 2" },
-              { "slug" => "attachment-3", "title" => "attachment 3", "body" => "body 3" },
+              { "slug" => "attachment-1", "link" => nil, "title" => "attachment 1", "body" => "body 1" },
+              { "slug" => "attachment-2", "link" => nil, "title" => "attachment 2", "body" => "body 2" },
+              { "slug" => "attachment-3", "link" => nil, "title" => "attachment 3", "body" => "body 3" },
             ],
             "attachments" => [
               { "title" => "attachment 1", "content" => "body 1" },
@@ -132,7 +132,7 @@ RSpec.describe "Payload preparation" do
           "/bar" => "document-content-id",
           "/bar/attachment-1" => "attachment-content-id-1",
           "/bar/attachment-2" => "attachment-content-id-2",
-          "/bar/attachment-3" => "attachment-content-id-3",
+          "/baz/attachment-3" => "attachment-content-id-3",
         )
 
         stub_publishing_api_has_expanded_links(
@@ -158,7 +158,7 @@ RSpec.describe "Payload preparation" do
         random_example["details"]["attachments"] = [
           { "url" => "/bar/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
           { "url" => "/bar/attachment-2", "title" => "attachment 2", "attachment_type" => "html" },
-          { "url" => "/bar/attachment-3", "title" => "attachment 3", "attachment_type" => "html" },
+          { "url" => "/baz/attachment-3", "title" => "attachment 3", "attachment_type" => "html" },
         ]
 
         allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("guide" => :all)
@@ -170,7 +170,7 @@ RSpec.describe "Payload preparation" do
             "parts" => [
               { "slug" => "attachment-1", "link" => "/bar/attachment-1", "title" => "attachment 1", "body" => "body 1" },
               { "slug" => "attachment-2", "link" => "/bar/attachment-2", "title" => "attachment 2", "body" => "body 2" },
-              { "slug" => "attachment-3", "link" => "/bar/attachment-3", "title" => "attachment 3", "body" => "body 3" },
+              { "slug" => "attachment-3", "link" => "/baz/attachment-3", "title" => "attachment 3", "body" => "body 3" },
             ],
             "attachments" => [
               { "title" => "attachment 1", "content" => "body 1" },
