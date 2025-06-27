@@ -144,6 +144,7 @@
     "type": "objects",
     "children": {
       "slug": { "type": "searchable_identifier" },
+      "link": {"type": "searchable_identifier"},
       "title": { "type": "searchable_text" },
       "body": { "type": "searchable_text" }
     }
