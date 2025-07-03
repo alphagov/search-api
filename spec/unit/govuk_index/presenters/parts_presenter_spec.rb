@@ -30,11 +30,13 @@ RSpec.describe GovukIndex::PartsPresenter do
         {
           "body" => "hello",
           "slug" => "title-1",
+          "link" => nil,
           "title" => "title 1",
         },
         {
           "body" => "Universal Credit is a payment to help with your living costs. It’s paid…",
           "slug" => "title-2",
+          "link" => nil,
           "title" => "title 2",
         },
       ])
@@ -64,7 +66,7 @@ RSpec.describe GovukIndex::PartsPresenter do
         GovukIndex::MissingTextHtmlContentType.new,
         extra: { content_types: ["text/govspeak"] },
       )
-      expect(presented_parts).to eq([{ "body" => nil, "slug" => "title-1", "title" => "title 1" }])
+      expect(presented_parts).to eq([{ "body" => nil, "slug" => "title-1", "link" => nil, "title" => "title 1" }])
     end
   end
 end
