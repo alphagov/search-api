@@ -217,6 +217,8 @@ module GovukIndex
         ukhsa_classification_identification_risk: specialist.ukhsa_classification_identification_risk,
         ukhsa_dataset: specialist.ukhsa_dataset,
         ukhsa_approval_date: specialist.ukhsa_approval_date,
+        ukhsa_chemical_name: specialist.ukhsa_chemical_name,
+        ukhsa_product_category: specialist.ukhsa_product_category,
         updated_at: common_fields.updated_at,
         use_case: specialist.use_case,
         user_journey_document_supertype: common_fields.user_journey_document_supertype,

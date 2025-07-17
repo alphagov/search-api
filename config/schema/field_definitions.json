@@ -1165,6 +1165,13 @@
     "type": "date"
   },
 
+  "ukhsa_chemical_name": {
+    "type": "identifiers"
+  },
+  "ukhsa_product_category": {
+    "type": "identifiers"
+  },
+
   "design_decision_british_library_number": {
     "type": "searchable_text"
   },
