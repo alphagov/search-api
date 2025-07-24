@@ -34,6 +34,7 @@ module GovukIndex
         {
           "slug" => part["slug"],
           "title" => part["title"],
+          "link" => part["link"],
           "body" => [{ "content_type" => "text/html", "content" => part["body"] }],
         }
       end
