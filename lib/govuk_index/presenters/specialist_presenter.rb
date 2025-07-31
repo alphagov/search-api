@@ -100,7 +100,7 @@ module GovukIndex
     delegate_to_payload :medical_specialism
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
-    delegate_to_payload :payment_types
+    delegate_to_payload :farming_grant_type
     delegate_to_payload :principle, convert_to_array: true
     delegate_to_payload :product_alert_type
     delegate_to_payload :product_category
