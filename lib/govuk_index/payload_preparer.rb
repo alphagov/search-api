@@ -22,7 +22,18 @@ module GovukIndex
     end
 
     def prepare_parts(payload)
-      return payload unless payload["details"].fetch("parts", []).empty?
+      parts = payload["details"]["parts"]
+
+      if parts && parts.any?
+        updated_parts = parts.map do |part|
+          next part if part["link"]
+
+          link = "#{payload['base_path']}/#{part['slug']}"
+          part.merge("link" => link)
+        end
+
+        return merge_details(payload, "parts", updated_parts)
+      end
 
       details = Indexer::PartsLookup.prepare_parts(
         payload["details"].merge("link" => payload["base_path"]),
