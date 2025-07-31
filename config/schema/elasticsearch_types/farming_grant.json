@@ -2,6 +2,6 @@
   "fields": [
     "areas_of_interest",
     "land_types",
-    "payment_types"
+    "farming_grant_type"
   ]
 }
