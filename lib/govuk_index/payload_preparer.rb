@@ -24,24 +24,32 @@ module GovukIndex
     def prepare_parts(payload)
       parts = payload["details"]["parts"]
 
-      if parts && parts.any?
-        updated_parts = parts.map do |part|
-          next part if part["link"]
+      updated_parts = if parts && parts.any?
+                        create_part_links(payload, parts)
+                      else
+                        promote_html_attachments_to_parts(payload)
+                      end
 
-          link = "#{payload['base_path']}/#{part['slug']}"
-          part.merge("link" => link)
-        end
+      updated_parts ? merge_details(payload, "parts", updated_parts) : payload
+    end
 
-        return merge_details(payload, "parts", updated_parts)
+    def create_part_links(payload, parts)
+      parts.map do |part|
+        next part if part["link"]
+
+        link = "#{payload['base_path']}/#{part['slug']}"
+        part.merge("link" => link)
       end
+    end
 
-      details = Indexer::PartsLookup.prepare_parts(
+    def promote_html_attachments_to_parts(payload)
+      details_with_html_attachments_as_parts = Indexer::PartsLookup.prepare_parts(
         payload["details"].merge("link" => payload["base_path"]),
         return_raw_body: true,
       )
-      return payload if details.fetch("parts", []).empty?
+      return if details_with_html_attachments_as_parts.fetch("parts", []).empty?
 
-      presented_parts = details["parts"].map do |part|
+      details_with_html_attachments_as_parts["parts"].map do |part|
         {
           "slug" => part["slug"],
           "title" => part["title"],
@@ -49,8 +57,6 @@ module GovukIndex
           "body" => [{ "content_type" => "text/html", "content" => part["body"] }],
         }
       end
-
-      merge_details(payload, "parts", presented_parts)
     end
 
     def merge_details(payload, field, value)
