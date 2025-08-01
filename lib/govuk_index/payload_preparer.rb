@@ -22,23 +22,41 @@ module GovukIndex
     end
 
     def prepare_parts(payload)
-      return payload unless payload["details"].fetch("parts", []).empty?
+      parts = payload["details"]["parts"]
 
-      details = Indexer::PartsLookup.prepare_parts(
+      updated_parts = if parts && parts.any?
+                        create_part_links(payload, parts)
+                      else
+                        promote_html_attachments_to_parts(payload)
+                      end
+
+      updated_parts ? merge_details(payload, "parts", updated_parts) : payload
+    end
+
+    def create_part_links(payload, parts)
+      parts.map do |part|
+        next part if part["link"]
+
+        link = "#{payload['base_path']}/#{part['slug']}"
+        part.merge("link" => link)
+      end
+    end
+
+    def promote_html_attachments_to_parts(payload)
+      details_with_html_attachments_as_parts = Indexer::PartsLookup.prepare_parts(
         payload["details"].merge("link" => payload["base_path"]),
         return_raw_body: true,
       )
-      return payload if details.fetch("parts", []).empty?
+      return if details_with_html_attachments_as_parts.fetch("parts", []).empty?
 
-      presented_parts = details["parts"].map do |part|
+      details_with_html_attachments_as_parts["parts"].map do |part|
         {
           "slug" => part["slug"],
           "title" => part["title"],
+          "link" => part["link"],
           "body" => [{ "content_type" => "text/html", "content" => part["body"] }],
         }
       end
-
-      merge_details(payload, "parts", presented_parts)
     end
 
     def merge_details(payload, field, value)

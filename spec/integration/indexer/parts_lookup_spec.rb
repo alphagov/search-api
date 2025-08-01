@@ -40,7 +40,11 @@ RSpec.describe "PartslookupDuringIndexingTest" do
     post "/government_test/documents",
          {
            "link" => "/foo",
-           "parts" => [{ "slug" => "foo", "title" => "bar", "body" => "baz" }],
+           "parts" => [
+             { "slug" => "attachment-1", "link" => "/foo/attachment-1", "title" => "attachment 1", "body" => "body 1" },
+             { "slug" => "attachment-2", "link" => "/foo/attachment-2", "title" => "attachment 2", "body" => "body 2" },
+             { "slug" => "attachment-3", "link" => "/foo/attachment-3", "title" => "attachment 3", "body" => "body 3" },
+           ],
            "attachments" => [
              { "url" => "/foo/attachment-1", "title" => "attachment 1", "attachment_type" => "html" },
              { "url" => "/foo/attachment-2", "title" => "attachment 2", "attachment_type" => "html" },
@@ -51,7 +55,11 @@ RSpec.describe "PartslookupDuringIndexingTest" do
     expect_document_is_in_rummager(
       {
         "link" => "/foo",
-        "parts" => [{ "slug" => "foo", "title" => "bar", "body" => "baz" }],
+        "parts" => [
+          { "slug" => "attachment-1", "link" => "/foo/attachment-1", "title" => "attachment 1", "body" => "body 1" },
+          { "slug" => "attachment-2", "link" => "/foo/attachment-2", "title" => "attachment 2", "body" => "body 2" },
+          { "slug" => "attachment-3", "link" => "/foo/attachment-3", "title" => "attachment 3", "body" => "body 3" },
+        ],
         "attachments" => [
           { "title" => "attachment 1", "content" => "body 1" },
           { "title" => "attachment 2", "content" => "body 2" },
@@ -79,9 +87,9 @@ RSpec.describe "PartslookupDuringIndexingTest" do
       {
         "link" => "/foo",
         "parts" => [
-          { "slug" => "attachment-1", "title" => "attachment 1", "body" => "body 1" },
-          { "slug" => "attachment-2", "title" => "attachment 2", "body" => "body 2" },
-          { "slug" => "attachment-3", "title" => "attachment 3", "body" => "body 3" },
+          { "slug" => "attachment-1", "link" => "/foo/attachment-1", "title" => "attachment 1", "body" => "body 1" },
+          { "slug" => "attachment-2", "link" => "/foo/attachment-2", "title" => "attachment 2", "body" => "body 2" },
+          { "slug" => "attachment-3", "link" => "/foo/attachment-3", "title" => "attachment 3", "body" => "body 3" },
         ],
         "attachments" => [
           { "title" => "attachment 1", "content" => "body 1" },
@@ -110,8 +118,8 @@ RSpec.describe "PartslookupDuringIndexingTest" do
       {
         "link" => "/foo",
         "parts" => [
-          { "slug" => "attachment-1", "title" => "attachment 1", "body" => "body 1" },
-          { "slug" => "attachment-2", "title" => "attachment 2", "body" => "body 2" },
+          { "slug" => "attachment-1", "link" => "/foo/attachment-1", "title" => "attachment 1", "body" => "body 1" },
+          { "slug" => "attachment-2", "link" => "/foo/attachment-2", "title" => "attachment 2", "body" => "body 2" },
         ],
         "attachments" => [
           { "title" => "attachment 1", "content" => "body 1" },
@@ -140,8 +148,8 @@ RSpec.describe "PartslookupDuringIndexingTest" do
       {
         "link" => "/foo",
         "parts" => [
-          { "slug" => "attachment-1", "title" => "attachment 1", "body" => "body 1" },
-          { "slug" => "attachment-2", "title" => "attachment 2", "body" => "body 2" },
+          { "slug" => "attachment-1", "link" => "/foo/attachment-1", "title" => "attachment 1", "body" => "body 1" },
+          { "slug" => "attachment-2", "link" => "/foo/attachment-2", "title" => "attachment 2", "body" => "body 2" },
         ],
         "attachments" => [
           { "title" => "attachment 1", "content" => "body 1" },
@@ -154,7 +162,7 @@ RSpec.describe "PartslookupDuringIndexingTest" do
     )
   end
 
-  it "ignores attachments where the URL doesn't match the parent/slug format" do
+  it "indexes the attachment URL as the link for attachments where the URL doesn't match the parent/slug format" do
     post "/government_test/documents",
          {
            "link" => "/foo",
@@ -169,7 +177,9 @@ RSpec.describe "PartslookupDuringIndexingTest" do
       {
         "link" => "/foo",
         "parts" => [
-          { "slug" => "attachment-1", "title" => "attachment 1", "body" => "body 1" },
+          { "slug" => "attachment-1", "link" => "/foo/attachment-1", "title" => "attachment 1", "body" => "body 1" },
+          { "slug" => "attachment-4", "link" => "/bar/attachment-4", "title" => "attachment 4", "body" => "body 4" },
+          { "slug" => "attachment-5", "link" => "/baz/attachment-5", "title" => "attachment 5", "body" => "body 5" },
         ],
         "attachments" => [
           { "title" => "attachment 1", "content" => "body 1" },

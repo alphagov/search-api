@@ -11,6 +11,7 @@ module GovukIndex
         {
           "slug" => part["slug"],
           "title" => part["title"],
+          "link" => part["link"],
           "body" => summarise(part.fetch("body", [{}])),
         }
       end
