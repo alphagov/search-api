@@ -51,7 +51,7 @@ module GovukIndex
 
       details_with_html_attachments_as_parts["parts"].map do |part|
         {
-          "slug" => part["slug"],
+          "slug" => part["slug"], # Deprecated: superseded by link, to be removed once confident all parts/attachments have a link
           "title" => part["title"],
           "link" => part["link"],
           "body" => [{ "content_type" => "text/html", "content" => part["body"] }],

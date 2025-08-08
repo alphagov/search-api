@@ -9,7 +9,7 @@ module GovukIndex
 
       parts.map do |part|
         {
-          "slug" => part["slug"],
+          "slug" => part["slug"], # Deprecated: superseded by link, to be removed once confident all parts/attachments have a link
           "title" => part["title"],
           "link" => part["link"],
           "body" => summarise(part.fetch("body", [{}])),
