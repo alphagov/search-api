@@ -19,6 +19,12 @@ module GovukIndex
     delegate_to_payload :algorithmic_transparency_record_region, convert_to_array: true
     delegate_to_payload :algorithmic_transparency_record_task
     delegate_to_payload :areas_of_interest
+    delegate_to_payload :armed_forces_covenant_business_pledged
+    delegate_to_payload :armed_forces_covenant_business_region
+    delegate_to_payload :armed_forces_covenant_business_company_size
+    delegate_to_payload :armed_forces_covenant_business_industry
+    delegate_to_payload :armed_forces_covenant_business_ownership
+    delegate_to_payload :armed_forces_covenant_business_date_signed
     delegate_to_payload :assessment_date
     delegate_to_payload :assurance_technique_approach, convert_to_array: true
     delegate_to_payload :authors
