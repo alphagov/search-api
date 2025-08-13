@@ -1043,8 +1043,8 @@
     "description": "Land that the farming grant refers to",
     "type": "identifiers"
   },
-  "payment_types": {
-    "description": "Farming grant payment type, i.e. capital, revenue",
+  "farming_grant_type": {
+    "description": "Farming grant type, i.e. Countryside Stewardship Higher Tier, or Sustainable Farming Incentive",
     "type": "identifiers"
   },
 
