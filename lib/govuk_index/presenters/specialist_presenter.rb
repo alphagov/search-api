@@ -157,6 +157,7 @@ module GovukIndex
     delegate_to_payload :ukhsa_approval_date
     delegate_to_payload :ukhsa_chemical_name
     delegate_to_payload :ukhsa_product_category
+    delegate_to_payload :ukhsa_review_date
     delegate_to_payload :use_case, convert_to_array: true
     delegate_to_payload :value_of_funding
     delegate_to_payload :vessel_type

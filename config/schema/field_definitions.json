@@ -1172,6 +1172,9 @@
   "ukhsa_product_category": {
     "type": "identifiers"
   },
+  "ukhsa_review_date": {
+    "type": "date"
+  },
 
   "design_decision_british_library_number": {
     "type": "searchable_text"

@@ -219,6 +219,7 @@ module GovukIndex
         ukhsa_approval_date: specialist.ukhsa_approval_date,
         ukhsa_chemical_name: specialist.ukhsa_chemical_name,
         ukhsa_product_category: specialist.ukhsa_product_category,
+        ukhsa_review_date: specialist.ukhsa_review_date,
         updated_at: common_fields.updated_at,
         use_case: specialist.use_case,
         user_journey_document_supertype: common_fields.user_journey_document_supertype,
