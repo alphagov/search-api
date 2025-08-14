@@ -1,6 +1,7 @@
 {
   "fields": [
     "ukhsa_chemical_name",
-    "ukhsa_product_category"
+    "ukhsa_product_category",
+    "ukhsa_review_date"
   ]
 }
