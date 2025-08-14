@@ -1184,5 +1184,24 @@
   },
   "design_decision_litigants": {
     "type": "searchable_text"
+  },
+
+  "armed_forces_covenant_business_pledged": {
+    "type": "searchable_multivalued_text"
+  },
+  "armed_forces_covenant_business_region": {
+    "type": "searchable_multivalued_text"
+  },
+  "armed_forces_covenant_business_company_size": {
+    "type": "identifiers"
+  },
+  "armed_forces_covenant_business_industry": {
+    "type": "searchable_multivalued_text"
+  },
+  "armed_forces_covenant_business_ownership": {
+    "type": "identifiers"
+  },
+  "armed_forces_covenant_business_date_signed": {
+    "type": "date"
   }
 }

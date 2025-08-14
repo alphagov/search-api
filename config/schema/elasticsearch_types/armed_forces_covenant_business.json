@@ -1,0 +1,10 @@
+{
+  "fields": [
+    "armed_forces_covenant_business_pledged",
+    "armed_forces_covenant_business_region",
+    "armed_forces_covenant_business_company_size",
+    "armed_forces_covenant_business_industry",
+    "armed_forces_covenant_business_ownership",
+    "armed_forces_covenant_business_date_signed"
+  ]
+}
