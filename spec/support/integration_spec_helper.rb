@@ -120,7 +120,7 @@ module IntegrationSpecHelper
       next if hits.empty?
 
       client(cluster:)
-        .bulk(body: (hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } }))
+        .bulk(body: hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } })
     end
 
     commit_index index
