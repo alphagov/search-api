@@ -30,9 +30,13 @@ RSpec.describe ContentItemPublisher::FinderPresenter do
         email_signup_links = [finder["signup_content_id"]].compact
         parent_links = [finder["parent"]].compact
         ordered_related_items_links = [finder["ordered_related_items"]].compact
+        organisations_links = Array(finder["organisations"])
+        taxon_links = Array(finder["taxons"])
         expect(instance.present_links[:links]).to eq({ "email_alert_signup" => email_signup_links,
                                                        "parent" => parent_links,
-                                                       "ordered_related_items" => ordered_related_items_links })
+                                                       "ordered_related_items" => ordered_related_items_links,
+                                                       "taxons" => taxon_links,
+                                                       "organisations" => organisations_links })
       end
 
       it "includes facet_group in the links hash if present" do
@@ -42,11 +46,19 @@ RSpec.describe ContentItemPublisher::FinderPresenter do
       end
 
       it "uses empty arrays to remove links" do
-        finder_with_no_links = finder.except("parent").except("signup_content_id").except("ordered_related_items")
+        finder_with_no_links = finder.except(
+          "parent",
+          "signup_content_id",
+          "ordered_related_items",
+          "organisations",
+          "taxons",
+        )
         presenter_with_empty_links = described_class.new(finder_with_no_links, timestamp)
 
         expect(presenter_with_empty_links.present_links[:links]).to eq({ "email_alert_signup" => [],
                                                                          "parent" => [],
+                                                                         "organisations" => [],
+                                                                         "taxons" => [],
                                                                          "ordered_related_items" => [] })
       end
     end

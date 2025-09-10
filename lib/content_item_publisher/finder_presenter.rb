@@ -18,6 +18,14 @@ module ContentItemPublisher
       Array(content_item["ordered_related_items"])
     end
 
+    def organisations
+      Array(content_item["organisations"])
+    end
+
+    def taxons
+      Array(content_item["taxons"])
+    end
+
     def facet_group
       facet_group = content_item.dig("links", "facet_group")
       facet_group ? { "facet_group" => facet_group } : {}
@@ -28,6 +36,8 @@ module ContentItemPublisher
         "email_alert_signup" => email_alert_signup,
         "parent" => content_item_parent,
         "ordered_related_items" => ordered_related_items,
+        "organisations" => organisations,
+        "taxons" => taxons,
       }.merge(facet_group)
 
       { content_id:, links: }
