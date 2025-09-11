@@ -1,0 +1,75 @@
+---
+base_path: "/find-hmrc-manuals"
+content_id: f11819b7-1c54-4b54-a8e8-56e0004b2dbf
+description: Find and search HMRC technical guidance for HMRC staff and tax professionals.
+details:
+  beta_message: Help us improve this page - email your feedback to <a class="govuk-link" href="mailto:hmrcmanualsteam@hmrc.gov.uk">hmrcmanualsteam@hmrc.gov.uk</a>
+  summary:
+    - content: |-
+        These manuals contain technical guidance for HMRC staff and tax professionals and are also published in
+        accordance with the [HMRC Publication scheme](https://www.gov.uk/government/organisations/hm-revenue-customs/about/publication-scheme).
+
+        The guidance is not comprehensive and does not provide a definitive answer in every case. It is based on the law
+        as it stood when they were published. HMRC publishes amended or supplementary guidance if there's a change in
+        the law or in the department's interpretation of it.
+
+        Find out [how HMRC advice and information can help you](https://www.gov.uk/guidance/when-you-can-rely-on-information-or-advice-provided-by-hm-revenue-and-customs).
+      content_type: text/govspeak
+  filter:
+    content_store_document_type:
+      - hmrc_manual
+      - hmrc_manual_section
+  facets:
+    - allowed_values:
+        - label: HMRC manual
+          value: hmrc_manual
+        - label: HMRC manual page
+          value: hmrc_manual_section
+      display_as_result_metadata: false
+      filterable: true
+      key: content_store_document_type
+      name: Page type
+      preposition: of type
+      type: text
+    - name: Last updated
+      key: public_timestamp
+      type: date
+      display_as_result_metadata: true
+      filterable: true
+      short_name: Updated
+      preposition: Updated
+  sort:
+    - key: title
+      name: A-Z
+      default: true
+    - key: -popularity
+      name: Most viewed
+    - key: -relevance
+      name: Relevance
+    - key: -public_timestamp
+      name: Updated (newest)
+    - key: public_timestamp
+      name: Updated (oldest)
+  document_noun: result
+  show_summaries: false
+  show_metadata_block: true
+  show_table_of_contents: true
+  default_documents_per_page: 50
+document_type: finder
+locale: en
+organisations:
+- 6667cce2-e809-4e21-ae09-cb0bdc1ddda3 # HMRC
+taxons:
+- 5d0b158c-7c31-41f8-84ae-8e4e950c1f0c # /money/tax-agent-guidance
+phase: beta
+publishing_app: search-api
+rendering_app: finder-frontend
+schema_name: finder
+title: Find HMRC manuals
+routes:
+  - type: exact
+    path: /find-hmrc-manuals
+  - type: exact
+    path: /find-hmrc-manuals.json
+  - type: exact
+    path: /find-hmrc-manuals.atom
