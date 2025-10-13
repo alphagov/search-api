@@ -58,7 +58,7 @@ RSpec.describe SitemapPresenter do
       timestamp: "1995-06-01",
     )
     presented = described_class.new(document, @boost_calculator).to_h
-    expect(presented[:last_updated]).to eq("2012-10-17T00:00:00+00:00")
+    expect(presented[:last_updated]).to eq("2012-10-17T00:00:00Z")
   end
 
   it "last updated is omitted if timestamp is missing" do
