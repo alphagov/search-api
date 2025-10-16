@@ -1,5 +1,5 @@
 class SitemapPresenter
-  GOVUK_LAUNCH_DATE = Time.new(2012, 10, 17).freeze
+  GOVUK_LAUNCH_DATE = Time.utc(2012, 10, 17).freeze
 
   def initialize(document, property_boost_calculator)
     @document = document

@@ -75,6 +75,10 @@ RSpec.configure do |config|
     Services.cache.clear
   end
 
+  config.around(:each) do |example|
+    ClimateControl.modify(TZ: "UTC") { example.run }
+  end
+
   if config.files_to_run.one?
     config.default_formatter = "doc"
   end
