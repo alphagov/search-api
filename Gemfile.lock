@@ -542,7 +542,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    redis-client (0.26.0)
+    redis-client (0.26.1)
       connection_pool
     regexp_parser (2.11.2)
     reline (0.6.2)
@@ -615,11 +615,11 @@ GEM
     sentry-rails (5.28.0)
       railties (>= 5.0)
       sentry-ruby (~> 5.28.0)
-    sentry-ruby (5.28.0)
+    sentry-ruby (5.28.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.28.0)
-      sentry-ruby (~> 5.28.0)
+    sentry-sidekiq (5.28.1)
+      sentry-ruby (~> 5.28.1)
       sidekiq (>= 3.0)
     set (1.1.1)
     sidekiq (7.3.9)
