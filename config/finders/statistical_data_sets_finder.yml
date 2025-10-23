@@ -1,0 +1,45 @@
+---
+base_path: "/government/statistical-data-sets"
+content_id: 2a850366-059a-4be7-8384-a24e27ac650d
+description: List of statistical data sets published by the UK government.
+document_type: finder
+locale: en
+publishing_app: search-api
+rendering_app: finder-frontend
+schema_name: finder
+title: Statistical data sets
+phase: live
+details:
+  document_noun: data set
+  filter:
+    format: statistical_data_set
+  show_summaries: true
+  default_documents_per_page: 50
+  sort:
+  - name: Relevance
+    key: "-relevance"
+  - name: Updated (newest)
+    key: "-public_timestamp"
+    default: true
+  - name: Updated (oldest)
+    key: public_timestamp
+  facets:
+  - key: public_timestamp
+    name: Published
+    short_name: Published at
+    display_as_result_metadata: true
+    filterable: true
+    type: date
+  - key: organisations
+    name: Organisation
+    short_name: From
+    display_as_result_metadata: true
+    filterable: true
+    type: text
+routes:
+  - type: exact
+    path: "/government/statistical-data-sets"
+  - type: exact
+    path: "/government/statistical-data-sets.json"
+  - type: exact
+    path: "/government/statistical-data-sets.atom"

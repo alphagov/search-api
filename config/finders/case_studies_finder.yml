@@ -1,0 +1,33 @@
+---
+base_path: "/government/case-studies"
+content_id: 7527cefb-606a-4723-8029-61ee1227f7e0
+description: Real examples of how government programmes are helping businesses and people in the UK.
+document_type: finder
+locale: en
+publishing_app: search-api
+rendering_app: finder-frontend
+schema_name: finder
+title: "Case studies: Real-life examples of government activity"
+phase: live
+details:
+  document_noun: case study
+  facets: []
+  filter:
+    format: case_study
+  show_summaries: true
+  default_documents_per_page: 50
+  sort:
+  - name: Relevance
+    key: "-relevance"
+  - name: Updated (newest)
+    key: "-public_timestamp"
+    default: true
+  - name: Updated (oldest)
+    key: public_timestamp
+routes:
+  - type: exact
+    path: "/government/case-studies"
+  - type: exact
+    path: "/government/case-studies.json"
+  - type: exact
+    path: "/government/case-studies.atom"
