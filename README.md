@@ -10,7 +10,10 @@ the search API to render finder pages (such as [gov.uk/aaib-reports](https://www
 
 Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
 
-Finally, Search API is responsible for publishing "finders" and their corresponding email signup content items via a dedicated rake task:
+
+## Publishing finders
+
+Search API is responsible for publishing "finders" and their corresponding email signup content items via a dedicated rake task:
 
 ```
 FINDER_CONFIG=news_and_communications.yml \
@@ -39,7 +42,6 @@ bundle exec rake
 - [Search relevancy](docs/relevancy.md)
 - [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
-- [Publishing document finders](docs/publishing-finders.md): Information about publishing finders using rake tasks
 
 ## Licence
 
