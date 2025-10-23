@@ -25,6 +25,28 @@ namespace :publishing_api do
     end
   end
 
+  # TEMPORARY TASK - we'll run this to enable migration of Whitehall's finders.
+  # It will then be deleted.
+  # Jira: https://gov-uk.atlassian.net/browse/WHIT-1833
+  desc "Take over ownership of a route (used for migrating finder from Whitehall)"
+  task :claim_route do
+    route_to_claim = ENV["FINDER_BASE_PATH"]
+
+    unless route_to_claim
+      raise "Please supply a valid base path to claim, e.g. FINDER_BASE_PATH=/government/case-studies"
+    end
+
+    puts "Claiming route #{route_to_claim}..."
+    Services.publishing_api.put_path(
+      route_to_claim,
+      {
+        publishing_app: "search-api",
+        override_existing: true,
+      },
+    )
+    puts "Route claimed."
+  end
+
   desc "
     Publish finder and email signup content items
 
