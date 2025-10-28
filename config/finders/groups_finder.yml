@@ -1,0 +1,34 @@
+---
+base_path: "/government/groups"
+content_id: cfe497aa-ebd4-41f0-9250-53a86162f1ee
+description: Find information about a public sector group.
+document_type: finder
+locale: en
+publishing_app: search-api
+rendering_app: finder-frontend
+schema_name: finder
+title: Groups
+phase: live
+details:
+  document_noun: group
+  facets: []
+  filter:
+    format: policy_group
+  show_summaries: true
+  sort:
+  - key: title
+    name: A-Z
+    default: true
+  - name: Relevance
+    key: "-relevance"
+  - name: Updated (newest)
+    key: "-public_timestamp"
+  - name: Updated (oldest)
+    key: public_timestamp
+routes:
+  - type: exact
+    path: "/government/groups"
+  - type: exact
+    path: "/government/groups.json"
+  - type: exact
+    path: "/government/groups.atom"

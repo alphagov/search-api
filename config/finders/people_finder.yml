@@ -1,0 +1,35 @@
+---
+base_path: "/government/people"
+content_id: 40cd7eba-2c4a-4905-9ed0-9c7e8957ffdf
+description: Find information about a minister or senior official.
+document_type: finder
+locale: en
+publishing_app: search-api
+rendering_app: finder-frontend
+schema_name: finder
+title: All ministers and senior officials on GOV.UK
+phase: live
+details:
+  document_noun: person
+  facets: []
+  filter:
+    format: person
+  show_summaries: true
+  default_documents_per_page: 50
+  sort:
+  - key: title
+    name: A-Z
+    default: true
+  - name: Relevance
+    key: "-relevance"
+  - name: Updated (newest)
+    key: "-public_timestamp"
+  - name: Updated (oldest)
+    key: public_timestamp
+routes:
+  - type: exact
+    path: "/government/people"
+  - type: exact
+    path: "/government/people.json"
+  - type: exact
+    path: "/government/people.atom"
