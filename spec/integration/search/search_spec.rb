@@ -248,6 +248,14 @@ RSpec.describe "SearchTest" do
     expect(parsed_response).to eq({ "error" => "Invalid value \"a\" for parameter \"start\" (expected positive integer)" })
   end
 
+  it "ensures each filter parameter contains a value" do
+    get "/search.json?filter_public_timestamp"
+
+    expect(last_response.status).to eq(422)
+    error_message = JSON.parse(last_response.body).fetch("error")
+    expect(error_message).to include(%(no value for parameter "public_timestamp"))
+  end
+
   it "allows integer params leading zeros" do
     get "/search?start=09"
 
