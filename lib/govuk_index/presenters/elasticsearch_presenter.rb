@@ -15,6 +15,7 @@ module GovukIndex
 
     def document
       {
+        acronym: details.acronym,
         ai_assurance_technique: specialist.ai_assurance_technique,
         aircraft_category: specialist.aircraft_category,
         aircraft_type: specialist.aircraft_type,
@@ -140,6 +141,8 @@ module GovukIndex
         life_saving_maritime_appliance_manufacturer: specialist.life_saving_maritime_appliance_manufacturer,
         link: common_fields.link,
         location: specialist.location,
+        logo_formatted_title: details.logo_formatted_title,
+        logo_url: details.logo_url,
         mainstream_browse_page_content_ids: expanded_links.mainstream_browse_page_content_ids,
         mainstream_browse_pages: expanded_links.mainstream_browse_pages,
         manual: details.parent_manual,
@@ -149,9 +152,14 @@ module GovukIndex
         market_sector: specialist.market_sector,
         medical_specialism: specialist.medical_specialism,
         opened_date: specialist.opened_date,
+        organisation_brand: details.organisation_brand,
+        organisation_crest: details.organisation_crest,
         organisation_content_ids: expanded_links.organisation_content_ids,
+        organisation_state: details.organisation_state,
+        organisation_type: details.organisation_type,
         organisations: expanded_links.organisations,
         outcome_type: specialist.outcome_type,
+        parent_organisations: expanded_links.parent_organisations,
         part_of_taxonomy_tree: expanded_links.part_of_taxonomy_tree,
         parts: parts.presented_parts,
         people: expanded_links.people,
