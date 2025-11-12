@@ -16,6 +16,10 @@ module GovukIndex
       content_ids("organisations")
     end
 
+    def parent_organisations
+      organisation_slugs("ordered_parent_organisations")
+    end
+
     def people
       slugs("people", "/government/people/")
     end

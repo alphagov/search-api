@@ -64,6 +64,25 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expect(presenter.primary_publishing_organisation).to eq(expected_primary_publishing_organisation)
   end
 
+  it "parent_organisations" do
+    expanded_links = {
+      "ordered_parent_organisations" => [
+        {
+          "base_path" => "/government/organisations/uk-visas-and-immigration",
+          "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
+          "locale" => "en",
+          "title" => "UK Visas and Immigration",
+        },
+      ],
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+
+    expected_parent_organisations = %w[uk-visas-and-immigration]
+
+    expect(presenter.parent_organisations).to eq(expected_parent_organisations)
+  end
+
   it "topical_events" do
     expanded_links = {
       "topical_events" => [
