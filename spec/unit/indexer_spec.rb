@@ -23,6 +23,7 @@ RSpec.describe Indexer do
           .to receive(:lookup_content_id)
           .and_raise(GdsApi::TimedOutException)
         allow(logger).to receive(:error)
+        allow(GovukError).to receive(:notify)
       end
 
       it "logs the error and raises a Indexer::PublishingApiError" do
@@ -30,6 +31,15 @@ RSpec.describe Indexer do
           expect(logger)
             .to have_received(:error)
             .with("Timeout looking up content ID for #{base_path}")
+          expect(GovukError)
+            .to have_received(:notify)
+            .with(
+              GdsApi::TimedOutException,
+              extra: {
+                error_message: "Timeout looking up content ID",
+                base_path:,
+              },
+            )
         end
       end
     end
@@ -37,6 +47,7 @@ RSpec.describe Indexer do
     context "when an HTTP error is raised" do
       let(:error_code) { 500 }
       let(:error_message) { "An error message" }
+      let(:error_details) { "Error details" }
 
       before do
         publishing_api_adapter = instance_double(GdsApi::PublishingApi)
@@ -45,8 +56,9 @@ RSpec.describe Indexer do
           .and_return(publishing_api_adapter)
         allow(publishing_api_adapter)
           .to receive(:lookup_content_id)
-          .and_raise(GdsApi::HTTPErrorResponse.new(error_code, error_message))
+          .and_raise(GdsApi::HTTPErrorResponse.new(error_code, error_message, error_details))
         allow(logger).to receive(:error)
+        allow(GovukError).to receive(:notify)
       end
 
       it "logs the error and raises a Indexer::PublishingApiError" do
@@ -54,6 +66,18 @@ RSpec.describe Indexer do
           expect(logger)
             .to have_received(:error)
             .with("HTTP error looking up content ID for #{base_path}: #{error_message}")
+          expect(GovukError)
+            .to have_received(:notify)
+            .with(
+              GdsApi::HTTPErrorResponse,
+              extra: {
+                message: "HTTP error looking up content ID",
+                base_path:,
+                error_code: error_code,
+                error_message: error_message,
+                error_details: error_details,
+              },
+            )
         end
       end
     end
