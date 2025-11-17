@@ -190,6 +190,7 @@ require "services"
 require "sitemap/property_boost_calculator"
 require "sitemap/generator"
 require "sitemap/presenter"
+require "sitemap/uploader"
 require "retryable_queue_message"
 
 require "core_extensions/time/to_string"
