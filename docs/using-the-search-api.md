@@ -64,7 +64,9 @@ This may be set to 0 to return no results (which may be useful if only, say, fac
 ### order
 
 Defines the sort order. Takes a field name, with an optional preceding "`-`" to sort in descending order.
-If not specified, results are ordered by relevance. Only some fields can be sorted on.
+Searches with keywords (the q parameter) are ordered by relevance by default.
+Searches without keywords are ordered by "most viewed" over the last 14 days by default.
+Only some [fields can be sorted on](https://github.com/alphagov/search-api/blob/276bcba361bd334ebd9302a635d9be4e68920208/lib/parameter_parser/base_parameter_parser.rb#L19-L31).
 
 ### start
 
@@ -73,11 +75,26 @@ It uses a 0-based index.
 
 If the `start` offset is greater than the number of matching results, no results will be returned (but also no error will be returned). `start` is used for implementing pagination.
 
+#### Example
+
+<https://www.gov.uk/api/search.json?q=tax&count=20&start=10>
+
+Gets 20 results starting at the tenth.
+
 ### fields
 
-Only a subset of fields are returned by default. You can override the fields returned using the `fields` parameter. Refer to the fields in [field_definitions.json](/config/schema/field_definitions.json).
+Only a subset of [fields are returned by default](https://github.com/alphagov/search-api/blob/ea013ce2ea6689749354445b6c2632df16734244/lib/parameter_parser/base_parameter_parser.rb#L127-L142). You can override the fields returned using the `fields` parameter. Refer to the fields in [field_definitions.json](/config/schema/field_definitions.json).
+
+Some [fields are always returned](https://github.com/alphagov/search-api/blob/ea013ce2ea6689749354445b6c2632df16734244/lib/search/presenters/result_presenter.rb#L66-L87) regardless of the fields specified in the query.
 
 Note that query parameters which are repeated may be specified in standard HTTP style (ie, `fields=value&fields=another-value`, where the same name may be used multiple times), or in Ruby/PHP array style (ie, `fields[]=value&fields[]=another-value`).
+
+#### Example
+
+<https://www.gov.uk/api/search.json?q=micropig&fields=title,description,link>
+
+- Finds all document that contain "micropig"
+- Only includes title, description and link (base path)
 
 ### filter_* / reject_*
 
@@ -90,6 +107,25 @@ Multiple values per filter/reject may be given (see [fields](#fields)), and mult
 The filters are grouped by field name: documents will only be returned if they match all of these filter groups, and they will be considered to match a filter group if any of the individual filters in that group match (ie, only one of the values specified for a field needs to match, but all fields with any filters specified must match at least one value). The special value `_MISSING` may be specified as a filter value - this will match documents where the field is not present at all.
 
 `filter_*`/`reject_*` works with date fields too, although unlike string fields, it is not permitted to provide multiple values for a single date field filter. The date field filter value should be either a `from:<date>`, `to:<date>` or both (comma separated), where `<date>` is an ISO formatted date (with no timezone: UTC is assumed). Date ranges are inclusive: for example, `from:2014-04-01 00:00,to:2014-04-02 00:00` is a range of 24 hours from midnight at the start of April the 1st 2014. If the time is omitted, the `from:` parameter defaults to `00:00` and the `to:` parameter defaults to `23:59`, i.e. `from:2014-04-01,to:2014-04-02` covers a full 48 hour period.
+
+#### Examples
+
+<https://www.gov.uk/api/search.json?filter_organisations=hm-revenue-customs&fields=title&order=-public_timestamp>
+
+- Only includes results from the hm-revenue-customs organisation.
+- Only includes the title (over the minimum returned [fields](#fields))
+- Order by most recent to oldest
+
+<https://www.gov.uk/api/search.json?filter_format=person&order=title>
+
+- Finds all people
+- Order by the content item title
+
+
+<https://www.gov.uk/api/search.json?filter_content_store_document_type=transaction&fields=link,title,description&count=500>
+
+- Find the first 500 government services
+- Only includes link (base path), title and description
 
 ### filter_any_* / filter_all_* / reject_any_* / reject_all_*
 
