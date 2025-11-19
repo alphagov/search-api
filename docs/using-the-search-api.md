@@ -104,7 +104,7 @@ This can be useful to find all documents that are tagged to two taxons (use `fil
 
 ### aggregate_*
 
-Aggregations look at all the values of a field and count up the number of times each one appears in documents matching the search. For example, the `aggregate_organisations` parameter will group search results by organisation, if it is set to a valid value.
+Aggregations is just a SQL "GROUP BY" in other words. Aggregations look at all the values of a field and count up the number of times each one appears in documents matching the search. For example, the `aggregate_organisations` parameter will group search results by organisation, if it is set to a valid value. (See: [full list of fields](https://github.com/alphagov/search-api/blob/5a47f2147b071c0e78d7be94faf14d395b15936e/lib/parameter_parser/base_parameter_parser.rb#L47-L74) that can be aggregated on)
 
 The value of an `aggregate_*` parameter is a comma separated list of options:
 
@@ -140,8 +140,50 @@ The value of an `aggregate_*` parameter is a comma separated list of options:
 
 - `example_fields` (optional, and only used if `examples` is provided): colon-separated list of fields.
   If the examples option is supplied, this lists the fields which are returned for each example. By default, only a small number of fields are returned for each.
+  
+#### Examples
 
-Example of aggregate query with multiple options: <https://www.gov.uk/api/search.json?count=0&aggregate_organisations=1,scope:all_filters,order:filtered:-count>
+##### A simple example
+
+The best way to understand what an aggregate query does is to read it right to left, for example:
+
+<https://www.gov.uk/api/search.json?aggregate_rendering_app=20,examples:1,example_scope:query&count=0&filter_publishing_app=publisher>
+
+The query string can be divided into two sections:
+
+- the search results: `count=0&filter_publishing_app=publisher`
+- the aggregation: `aggregate_rendering_app=20,examples:1,example_scope:query` 
+
+###### The search results
+This returns a set of results for the filters provided.
+ - `filter_publishing_app=publisher` - is a query for results published by Publisher.
+ - `count=0` - The results would normally display 10 documents where the filter is true, but this counts sets it for zero actual results. If `count` is set to another number, e.g. [`count=2`](https://www.gov.uk/api/search.json?aggregate_rendering_app=20,examples:1,example_scope:query&count=2&filter_publishing_app=publisher), then two regular search results would be returned above the aggregation results.
+ 
+###### The aggregation
+This returns back a separate set of results and is not affected by `count=0`.
+- `example_scope:query` - The scope of a query can be either global (where it doesn't have filters applied), or `query`, which applies whatever filters are included. So in our example we will filter the results by `publishing_app=publisher`
+- `examples:1` - for each each aggregate that it identifies (in this case "rendering app" as `aggregate_rendering_app` is applied), it will provide 1 example document
+- `aggregate_rendering_app=20` - Requests all documents that have a publishing app matching the filter and groups them by rendering app. It will select up to 20 different rendering apps to group by. On GOV.UK there are only 2 rendering applications that render content published by Publisher, `frontend` and `government_frontend`.
+
+##### An example with a query
+
+<https://www.gov.uk/api/search.json?q=biscuit&aggregate_content_store_document_type=20,examples:2,example_scope:query,example_fields:title:description&count=5>
+
+- Searches for biscuit
+- Groups the results by the content_store_document_type field
+  - Gets the first 20 content store document types
+  - Provides two examples of each
+  - The examples use the query too (they match the search for biscuit)
+  - Include title, description fields in the example
+- Also get 5 normal search results
+
+##### An example with multiple options
+
+<https://www.gov.uk/api/search.json?count=0&aggregate_organisations=1,scope:all_filters,order:filtered:-count>
+
+- Returns the organisation with the most documents tagged to it
+- If you change the `aggregate_organisations` to 10, you'll see the top 10 organisations with the most documents.
+- The organisation with the most documents is displayed first because `-count` means start with the highest, i.e. in reverse. 
 
 ### ab_tests
 
