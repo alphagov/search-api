@@ -58,6 +58,10 @@ module GovukIndex
     delegate_to_payload :design_decision_litigants
     delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
+    delegate_to_payload :digital_markets_regime_requirements_sms_firm_company
+    delegate_to_payload :digital_markets_regime_requirements_sms_designation
+    delegate_to_payload :digital_markets_regime_requirements_status
+    delegate_to_payload :digital_markets_regime_requirements_date
     delegate_to_payload :digital_market_research_area, convert_to_array: true
     delegate_to_payload :digital_market_research_category
     delegate_to_payload :digital_market_research_publish_date

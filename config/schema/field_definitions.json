@@ -1206,5 +1206,18 @@
   },
   "armed_forces_covenant_business_date_signed": {
     "type": "date"
+  },
+
+  "digital_markets_regime_requirements_sms_firm_company": {
+    "type": "identifiers"
+  },
+  "digital_markets_regime_requirements_sms_designation": {
+    "type": "identifiers"
+  },
+  "digital_markets_regime_requirements_status": {
+    "type": "identifiers"
+  },
+  "digital_markets_regime_requirements_date": {
+    "type": "date"
   }
 }

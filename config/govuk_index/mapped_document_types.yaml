@@ -33,6 +33,7 @@ data_ethics_guidance_document: data_ethics_guidance_document # Specialist Publis
 decision: edition
 design_decision: design_decision # Specialist Publisher
 detailed_guide: edition
+digital_markets_regime_requirement: digital_markets_regime_requirement # Specialist Publisher
 document_collection: edition
 drcf_digital_markets_research: drcf_digital_markets_research # Specialist Publisher
 drug_safety_update: drug_safety_update # Specialist Publisher
