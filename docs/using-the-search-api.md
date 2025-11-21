@@ -64,7 +64,9 @@ This may be set to 0 to return no results (which may be useful if only, say, fac
 ### order
 
 Defines the sort order. Takes a field name, with an optional preceding "`-`" to sort in descending order.
-If not specified, results are ordered by relevance. Only some fields can be sorted on.
+Searches with keywords (the q parameter) are ordered by relevance by default.
+Searches without keywords are ordered by "most viewed" over the last 14 days by default.
+Only some [fields can be sorted on](https://github.com/alphagov/search-api/blob/276bcba361bd334ebd9302a635d9be4e68920208/lib/parameter_parser/base_parameter_parser.rb#L19-L31).
 
 ### start
 
@@ -73,11 +75,24 @@ It uses a 0-based index.
 
 If the `start` offset is greater than the number of matching results, no results will be returned (but also no error will be returned). `start` is used for implementing pagination.
 
+#### Example
+
+<https://www.gov.uk/api/search.json?q=tax&count=20&start=10>
+
+Gets 20 results starting at the tenth.
+
 ### fields
 
-Only a subset of fields are returned by default. You can override the fields returned using the `fields` parameter. Refer to the fields in [field_definitions.json](/config/schema/field_definitions.json).
+Only a subset of [fields are returned by default](https://github.com/alphagov/search-api/blob/276bcba361bd334ebd9302a635d9be4e68920208/lib/parameter_parser/base_parameter_parser.rb#L20-L31). You can override the fields returned using the `fields` parameter. Refer to the fields in [field_definitions.json](/config/schema/field_definitions.json).
 
 Note that query parameters which are repeated may be specified in standard HTTP style (ie, `fields=value&fields=another-value`, where the same name may be used multiple times), or in Ruby/PHP array style (ie, `fields[]=value&fields[]=another-value`).
+
+#### Example
+
+<https://www.gov.uk/api/search.json?q=micropig&fields=title,description,link>
+
+- Finds all document that contain "micropig"
+- Only includes title, description and link (base path)
 
 ### filter_* / reject_*
 
@@ -90,6 +105,25 @@ Multiple values per filter/reject may be given (see [fields](#fields)), and mult
 The filters are grouped by field name: documents will only be returned if they match all of these filter groups, and they will be considered to match a filter group if any of the individual filters in that group match (ie, only one of the values specified for a field needs to match, but all fields with any filters specified must match at least one value). The special value `_MISSING` may be specified as a filter value - this will match documents where the field is not present at all.
 
 `filter_*`/`reject_*` works with date fields too, although unlike string fields, it is not permitted to provide multiple values for a single date field filter. The date field filter value should be either a `from:<date>`, `to:<date>` or both (comma separated), where `<date>` is an ISO formatted date (with no timezone: UTC is assumed). Date ranges are inclusive: for example, `from:2014-04-01 00:00,to:2014-04-02 00:00` is a range of 24 hours from midnight at the start of April the 1st 2014. If the time is omitted, the `from:` parameter defaults to `00:00` and the `to:` parameter defaults to `23:59`, i.e. `from:2014-04-01,to:2014-04-02` covers a full 48 hour period.
+
+#### Examples
+
+<https://www.gov.uk/api/search.json?filter_organisations=hm-revenue-customs&fields=title&order=-public_timestamp>
+
+- Only includes results from the hm-revenue-customs organisation.
+- Only includes the title (over the minimum)
+- Order by most recent to oldest
+
+<https://www.gov.uk/api/search.json?filter_format=person&order=title>
+
+- Finds all people
+- Order by the content item title
+
+
+<https://www.gov.uk/api/search.json?filter_content_store_document_type=transaction&fields=link,title,description&count=500>
+
+- Find the first 500 government services
+- Only includes link (base path), title and description
 
 ### filter_any_* / filter_all_* / reject_any_* / reject_all_*
 
@@ -104,7 +138,7 @@ This can be useful to find all documents that are tagged to two taxons (use `fil
 
 ### aggregate_*
 
-Aggregations look at all the values of a field and count up the number of times each one appears in documents matching the search. For example, the `aggregate_organisations` parameter will group search results by organisation, if it is set to a valid value.
+Aggregations is just a SQL "GROUP BY" in other words. Aggregations look at all the values of a field and count up the number of times each one appears in documents matching the search. For example, the `aggregate_organisations` parameter will group search results by organisation, if it is set to a valid value.
 
 The value of an `aggregate_*` parameter is a comma separated list of options:
 
@@ -140,8 +174,45 @@ The value of an `aggregate_*` parameter is a comma separated list of options:
 
 - `example_fields` (optional, and only used if `examples` is provided): colon-separated list of fields.
   If the examples option is supplied, this lists the fields which are returned for each example. By default, only a small number of fields are returned for each.
+  
+#### Examples
 
-Example of aggregate query with multiple options: <https://www.gov.uk/api/search.json?count=0&aggregate_organisations=1,scope:all_filters,order:filtered:-count>
+##### A simple example
+
+The best way to understand what an aggregate query does is to read it left to right, for example:
+
+<https://www.gov.uk/api/search.json?aggregate_rendering_app=20,examples:1,example_scope:query&count=0&filter_publishing_app=publisher>
+
+`filter_publishing_app` is a query for results published by Publisher. It would normally display all documents where this is true, but it's set for zero actual results (the count=0)
+Then you're into the aggregate/facet bit which brings back a separate set of results and is not affected by the count=0:
+- the scope of this query is the above bit, so it will also filter these results by `publishing_app=publisher`
+  - (the other option is global where it doesn't have filters applied)
+- it'll get up to 20 rendering apps (in this case there are only 2, `frontend` and `government_frontend`) that have content matching the filter
+- for each rendering app that it identifies, it'll provide 1 example document
+
+If count was set to another number in the first filter, e.g. 2, then you would see two sets of results, the aggregate as broken above, and two regular search results:
+
+<https://www.gov.uk/api/search.json?aggregate_rendering_app=20,examples:1,example_scope:query&count=2&filter_publishing_app=publisher>
+
+##### An example with a query
+
+<https://www.gov.uk/api/search.json?q=biscuit&aggregate_content_store_document_type=20,examples:2,example_scope:query,example_fields:title:description&count=5>
+
+- Searches for biscuit
+- Groups the results by the content_store_document_type field
+  - Gets the first 20 content store document types
+  - Provides two examples of each
+  - The examples use the query too (they match the search for biscuit)
+  - Include title, description fields in the example
+Also get 5 normal search results
+
+##### An example with multiple options
+
+<https://www.gov.uk/api/search.json?count=0&aggregate_organisations=1,scope:all_filters,order:filtered:-count>
+
+- Returns the organisation with the most documents tagged to it
+- If you change the `aggregate_organisations` to 10, you'll see the top 10 organisations with the most documents.
+- The organisation with the most documents is displayed first because `-count` means start with the highest, i.e. in reverse. 
 
 ### ab_tests
 
