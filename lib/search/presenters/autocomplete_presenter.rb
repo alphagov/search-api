@@ -13,7 +13,6 @@ module Search
     end
 
     def suggestions
-      es_response["autocomplete"]
       value = es_response["autocomplete"].map do |result|
         result[1].map do |options|
           options["options"].map do |suggestion|
