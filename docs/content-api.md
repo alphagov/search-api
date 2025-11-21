@@ -11,7 +11,7 @@ Internal to Search API, but can be queried by:
 
 ### `GET /content?link=/a-link`
 
-Returns information about the search result with the specified link.
+Returns the raw elasticsearch document for the given link, as well as the name of the index from which it was retrieved. 
 
 Example response:
 
