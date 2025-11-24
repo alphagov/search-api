@@ -1,6 +1,8 @@
 module Search
   AutocompletePresenter = Struct.new(:es_response) do
     def present
+      log_es_response
+
       return [] unless any_suggestions?
 
       suggestions
@@ -21,6 +23,11 @@ module Search
         end
       end
       value.flatten!
+    end
+
+    def log_es_response
+      @logger = Logging.logger[self]
+      @logger.debug("ES RESPONSE: #{es_response}")
     end
   end
 end
