@@ -102,6 +102,20 @@ For filtering multivalued fields such as `part_of_taxonomy_tree`, you can use an
 
 This can be useful to find all documents that are tagged to two taxons (use `filter_all_`), or documents that have been tagged to one of two taxons (use `filter_any_`).
 
+#### Examples
+
+<https://www.gov.uk/api/search.json?filter_all_organisations=ministry-of-justice&filter_all_organisations=hm-prison-and-probation-service&filter_all_organisations=hm-prison-service&count=3&fields=title,description,link>
+
+- Finds all documents that are tagged with organisations: Ministry of Justice, HM Prison and Probation Service AND HM Prison Service
+- Only includes title, description and link (base path)
+- Displays top 3 results
+
+<https://www.gov.uk/api/search.json?filter_any_organisations=hm-treasury&filter_any_organisations=ministry-of-justice&count=3&fields=title,description,link>
+
+- Finds all documents that are either tagged with the Ministry of Justice organisation OR HM Treasury.
+- Only includes title, description and link (base path)
+- Displays top 3 results
+
 ### aggregate_*
 
 Aggregations look at all the values of a field and count up the number of times each one appears in documents matching the search. For example, the `aggregate_organisations` parameter will group search results by organisation, if it is set to a valid value.
