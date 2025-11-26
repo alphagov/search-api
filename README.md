@@ -44,6 +44,7 @@ bundle exec rake
 - [Search relevancy](docs/relevancy.md)
 - [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
+- [Autocomplete](docs/autocomplete.md)
 
 ## Licence
 
