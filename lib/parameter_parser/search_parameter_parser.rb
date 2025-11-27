@@ -287,12 +287,12 @@ private
     # operation is :reject or :filter
     # multivalue_query is :all or :any
     def initialize(field_name, values, operation, multivalue_query)
+      @errors = values.empty? ? [%(no value for parameter "#{field_name}")] : []
       @field_name = field_name
       @include_missing = values.include? BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE
       @values = Array(values).reject { |value| value == BaseParameterParser::MISSING_FIELD_SPECIAL_VALUE }
       @operation = operation
       @multivalue_query = multivalue_query
-      @errors = []
     end
 
     def type
