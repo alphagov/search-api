@@ -65,3 +65,6 @@ See [schemas](schemas.md) for more detail.
 After changing the schema, you'll need to recreate the index. This reindexes documents from the existing index.
 
   SEARCH_INDEX=all bundle exec rake search:migrate_schema
+
+### Representing parts and attachments
+The Search API uses the parts field to index HTML attachments as well as parts as if they were sections of the main document. Instead of treating HTML attachments like file downloads, they are also stored as additional “parts” of the parent content item. This keeps everything in one indexed document while still allowing each HTML attachment’s title and body to be searchable.
