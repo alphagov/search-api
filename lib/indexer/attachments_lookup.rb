@@ -1,5 +1,7 @@
 module Indexer
   class AttachmentsLookup
+    MAX_ATTEMPTS = 5
+
     def initialize
       @logger = Logging.logger[self]
     end
@@ -59,7 +61,7 @@ module Indexer
       return unless content_id
 
       begin
-        GdsApi.with_retries(maximum_number_of_attempts: 5) do
+        GdsApi.with_retries(maximum_number_of_attempts: MAX_ATTEMPTS) do
           Services.publishing_api.get_live_content(content_id)
         end
       rescue GdsApi::TimedOutException => e
