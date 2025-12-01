@@ -25,6 +25,19 @@ RSpec.describe SpecialRoutePublisher do
     end
   end
 
+  it "takes ownership of search routes" do
+    stub_any_publishing_api_path_reservation
+    @publisher.take_ownership_of_search_routes
+    ["/search", "/search.json", "/search/opensearch.xml"].each do |path|
+      assert_publishing_api(:put,
+                            "#{Plek.find('publishing-api')}/paths#{path}",
+                            {
+                              "publishing_app": "search-api",
+                              "override_existing": true,
+                            })
+    end
+  end
+
   def assert_valid_content_item(payload)
     validator = GovukSchemas::Validator.new(
       "special_route",
