@@ -4,7 +4,13 @@ Autocomplete is a feature that suggests search phrases as you type. In search-ap
 
 ## Does autocomplete work?
 
-Unclear. It is possible to see autocomplete suggestions from elasticsearch in the payload but these suggestions are not shown to the user in the supergroup or specialist finders.
+No. Not for users.
+
+Autocomplete was added as an experiment at the close of 2019. However, it doesn't appear that this endpoint was ever added to finder-frontend so it's unlikely that it has been tested with real users.
+
+It is possible to see autocomplete suggestions from elasticsearch in the payload but these suggestions are not shown to the user in the supergroup or specialist finders.
+
+As there were no associated running costs, the endpoint was left in search-api. 
 
 ## How do I see autocomplete suggestions for a query?
 
