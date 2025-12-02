@@ -3,7 +3,6 @@ module Indexer
     def initialize(client, index_name)
       @client = client
       @index_name = index_name
-      @logger = Logging.logger[self]
     end
 
     def prepared(doc_hash, popularities, is_content_index)
@@ -72,13 +71,6 @@ module Indexer
 
     def prepare_parts_field(doc_hash)
       Indexer::PartsLookup.prepare_parts(doc_hash)
-    rescue Indexer::PublishingApiError => e
-      if ENV["LOG_FAILED_PARTS_LOOKUP_AND_CONTINUE"] == "1"
-        puts "Unable to lookup parts for link: #{doc_hash['link']}"
-        doc_hash
-      else
-        raise e
-      end
     end
 
     def prepare_attachments_field(doc_hash)

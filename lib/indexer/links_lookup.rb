@@ -2,6 +2,8 @@
 # the document. If there aren't any links, the payload will be returned unchanged.
 module Indexer
   class LinksLookup
+    MAX_ATTEMPTS = 5
+
     def initialize
       @logger = Logging.logger[self]
     end
@@ -40,7 +42,7 @@ module Indexer
     end
 
     def find_links(content_id)
-      GdsApi.with_retries(maximum_number_of_attempts: 5) do
+      GdsApi.with_retries(maximum_number_of_attempts: MAX_ATTEMPTS) do
         Services.publishing_api.get_expanded_links(
           content_id,
           with_drafts: false,
