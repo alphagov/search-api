@@ -154,4 +154,39 @@ RSpec.describe Document do
 
     expect(metadata).to eq(doc.metadata)
   end
+
+  it "rejects documents that have multiple values for single valued fields" do
+    hash = {
+      "_type" => "edition",
+      "title" => "TITLE",
+      "format" => %w[guide transaction],
+    }
+
+    expect {
+      described_class.from_hash(hash, sample_elasticsearch_types)
+    }.to raise_error("Multiple values supplied for 'format' which is a single-valued field")
+  end
+
+  it "allows direct assignment of recognised fields" do
+    hash = {
+      "_type" => "edition",
+      "title" => "TITLE",
+    }
+
+    document = described_class.from_hash(hash, sample_elasticsearch_types)
+    document.format = "guide"
+    expect(document.format).to eq("guide")
+  end
+
+  it "raises NoMethodError if unrecognised field is referenced directly" do
+    hash = {
+      "_type" => "edition",
+      "title" => "TITLE",
+    }
+
+    document = described_class.from_hash(hash, sample_elasticsearch_types)
+    expect {
+      document.not_a_valid_field
+    }.to raise_error(NoMethodError)
+  end
 end
