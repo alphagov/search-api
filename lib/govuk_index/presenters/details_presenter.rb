@@ -59,6 +59,34 @@ module GovukIndex
       details["attachments"]&.any? { |attachment| attachment["hoc_paper_number"].present? || attachment["unnumbered_hoc_paper"] }
     end
 
+    def acronym
+      details["acronym"]
+    end
+
+    def logo_formatted_title
+      details.dig("logo", "formatted_title")
+    end
+
+    def logo_url
+      details.dig("logo", "image", "url")
+    end
+
+    def organisation_brand
+      details["brand"]
+    end
+
+    def organisation_crest
+      details.dig("logo", "crest")
+    end
+
+    def organisation_state
+      details.dig("organisation_govuk_status", "status")
+    end
+
+    def organisation_type
+      details["organisation_type"]
+    end
+
   private
 
     def service_manual

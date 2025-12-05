@@ -84,6 +84,7 @@ official_statistics: edition
 open_call_for_evidence: edition
 open_consultation: edition
 oral_statement: edition # Whitehall
+organisation: edition # Whitehall
 our_energy_use: edition
 our_governance: edition
 person: person

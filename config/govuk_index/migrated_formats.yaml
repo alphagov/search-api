@@ -381,7 +381,8 @@ migrated:
 - worldwide_organisation
 - written_statement
 
-indexable: []
+indexable:
+- organisation
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -439,7 +440,6 @@ non_indexable:
 - imported
 - national_statistics_announcement
 - official_statistics_announcement
-- organisation
 - policy_area
 - services_and_information
 - take_part
