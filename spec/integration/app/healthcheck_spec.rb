@@ -1,7 +1,9 @@
 require "spec_helper"
 require "spec/support/diskspace_test_helpers"
+require "spec/support/connectivity_test_helpers"
 
 RSpec.describe "HealthcheckTest" do
+  include ConnectivityTestHelpers
   include DiskspaceTestHelpers
 
   let(:queues) do
@@ -12,7 +14,7 @@ RSpec.describe "HealthcheckTest" do
   before do
     allow_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(queues)
     allow_any_instance_of(Sidekiq::Queue).to receive(:latency).and_return(queue_latency)
-    allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_return("status" => "green")
+    stub_connectivity_check
     stub_diskspace_check
   end
 
@@ -34,7 +36,7 @@ RSpec.describe "HealthcheckTest" do
   describe "#elasticsearch_connectivity check" do
     context "when elasticsearch CANNOT be connected to" do
       before do
-        allow_any_instance_of(Elasticsearch::API::Cluster::ClusterClient).to receive(:health).and_raise(Faraday::Error)
+        stub_connectivity_fail_check
       end
 
       it "returns a critical status" do
@@ -42,6 +44,7 @@ RSpec.describe "HealthcheckTest" do
 
         expect(parsed_response["status"]).to eq "critical"
         expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "critical"
+        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "message")).to eq "search-api cannot connect to 1 elasticsearch cluster! \n Failing: A"
       end
     end
 
