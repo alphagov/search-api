@@ -91,4 +91,47 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
 
     it_behaves_like "a retryable queue processor"
   end
+
+  context "when deleting a document that can't be found" do
+    let(:logger) { Logging.logger[GovukIndex::PublishingEventMessageHandler] }
+    before do
+      allow(GovukIndex::Client)
+        .to receive(:get)
+        .and_raise(Elasticsearch::Transport::Transport::Errors::NotFound)
+      message.payload["document_type"] = "redirect"
+    end
+
+    it "logs a message" do
+      expect(logger)
+        .to receive(:info)
+        .with("#{message.payload['base_path']} could not be found.")
+      expect(Services.statsd_client)
+        .to receive(:increment)
+        .with("govuk_index.not-found-error")
+      described_class.new.process(message)
+    end
+  end
+
+  context "when a migrated document doesn't have a valid type mapping" do
+    let(:logger) { Logging.logger[GovukIndex::PublishingEventMessageHandler] }
+    before do
+      message.payload["document_type"] = "migrated_type_with_no_mapping"
+      allow_any_instance_of(GovukIndex::MigratedFormats)
+        .to receive(:indexable?)
+        .and_return(true)
+    end
+
+    it "logs a message" do
+      expect(logger)
+        .to receive(:info)
+        .with("routing.key -> INDEX #{message.payload['base_path']} 'unmapped type'")
+      expect(logger)
+        .to receive(:info)
+        .with("#{message.payload['document_type']} document type is not known.")
+      expect(Services.statsd_client)
+        .to receive(:increment)
+        .with("govuk_index.unknown-document-type")
+      described_class.new.process(message)
+    end
+  end
 end
