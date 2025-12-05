@@ -79,14 +79,9 @@ module GovukIndex
         logger.info("#{routing_key} -> UNKNOWN #{identifier}")
       end
 
-    # Rescuing as we don't want to retry this class of error
-    rescue NotIdentifiable => e
-      return if DOCUMENT_TYPES_WITHOUT_BASE_PATH.include?(payload["document_type"])
-
-      GovukError.notify(e, extra: { message_body: payload })
-      # Unpublishing messages for something that does not exist may have been
-      # processed out of order so we don't want to notify errbit but just allow
-      # the process to continue
+    # Unpublishing messages for something that does not exist may have been
+    # processed out of order so we don't want to notify errbit but just allow
+    # the process to continue
     rescue NotFoundError
       logger.info("#{payload['base_path']} could not be found.")
       Services.statsd_client.increment("govuk_index.not-found-error")
