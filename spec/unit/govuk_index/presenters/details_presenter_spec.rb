@@ -256,4 +256,37 @@ RSpec.describe GovukIndex::DetailsPresenter do
       end
     end
   end
+
+  context "organisation" do
+    let(:format) { "organisation" }
+    let(:details) do
+      {
+        "acronym" => "Companies House",
+        "brand" => "department-for-business-trade",
+        "logo" => {
+          "image" => {
+            "url" => "https://assets.publishing.service.gov.uk/media/67f65f2bb7e44efc70acc3db/test_logo.png",
+          },
+          "crest" => "single-identity",
+          "formatted_title" => "Companies House",
+        },
+        "organisation_govuk_status" => {
+          "status" => "live",
+          "updated_at" => nil,
+          "url" => nil,
+        },
+        "organisation_type" => "executive_agency",
+      }
+    end
+
+    it("extracts organisation-specific fields") do
+      expect(presented_details.acronym).to eq(details["acronym"])
+      expect(presented_details.logo_formatted_title).to eq(details["logo"]["formatted_title"])
+      expect(presented_details.logo_url).to eq(details["logo"]["image"]["url"])
+      expect(presented_details.organisation_brand).to eq(details["brand"])
+      expect(presented_details.organisation_crest).to eq(details["logo"]["crest"])
+      expect(presented_details.organisation_state).to eq(details["organisation_govuk_status"]["status"])
+      expect(presented_details.organisation_type).to eq(details["organisation_type"])
+    end
+  end
 end
