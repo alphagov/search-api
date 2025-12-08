@@ -7,8 +7,8 @@ module MissingMetadata
       @missing_field_name = missing_field_name
       @search_config = search_config
       publishing_api = Services.publishing_api
-      @fetcher = MissingMetadata::Fetcher.new(publishing_api)
       @logger = logger
+      @fetcher = MissingMetadata::Fetcher.new(publishing_api, logger)
     end
 
     def update
@@ -22,7 +22,7 @@ module MissingMetadata
         begin
           @fetcher.add_metadata(result)
         rescue StandardError
-          puts "Skipped result #{result[:elasticsearch_type]}/#{result[:_id]}: #{$ERROR_INFO}"
+          logger.puts "Skipped result #{result[:elasticsearch_type]}/#{result[:_id]}: #{$ERROR_INFO}"
         end
       end
     end

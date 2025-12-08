@@ -4,8 +4,9 @@ module MissingMetadata
     class MissingDocumentError < StandardError
     end
 
-    def initialize(publishing_api)
+    def initialize(publishing_api, logger = $stdout)
       @publishing_api = publishing_api
+      @logger = logger
     end
 
     def add_metadata(result)
@@ -26,7 +27,7 @@ module MissingMetadata
 
       content_id || raise(MissingDocumentError, "Failed to look up base path")
     rescue GdsApi::TimedOutException
-      puts "Publishing API timed out getting content_id... retrying"
+      logger.puts "Publishing API timed out getting content_id... retrying"
       sleep(1)
       retry
     end
@@ -43,13 +44,13 @@ module MissingMetadata
         content_id:,
       )
     rescue GdsApi::TimedOutException
-      puts "Publishing API timed out getting content... retrying"
+      logger.puts "Publishing API timed out getting content... retrying"
       sleep(1)
       retry
     end
 
   private
 
-    attr_reader :publishing_api
+    attr_reader :publishing_api, :logger
   end
 end
