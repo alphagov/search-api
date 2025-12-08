@@ -28,7 +28,7 @@ module MissingMetadata
       content_id || raise(MissingDocumentError, "Failed to look up base path")
     rescue GdsApi::TimedOutException
       logger.puts "Publishing API timed out getting content_id... retrying"
-      sleep(1)
+      Kernel.sleep(1)
       retry
     end
 
@@ -45,7 +45,7 @@ module MissingMetadata
       )
     rescue GdsApi::TimedOutException
       logger.puts "Publishing API timed out getting content... retrying"
-      sleep(1)
+      Kernel.sleep(1)
       retry
     end
 
