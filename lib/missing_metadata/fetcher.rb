@@ -35,13 +35,17 @@ module MissingMetadata
     def update_metadata(content_id, index_name, document_id)
       response = publishing_api.get_content(content_id)
 
+      updates = {
+        "content_store_document_type" => response["document_type"],
+        "publishing_app" => response["publishing_app"],
+        "rendering_app" => response["rendering_app"],
+        "content_id" => content_id,
+      }
+
       Indexer::AmendJob.perform_async(
         index_name,
         document_id,
-        content_store_document_type: response["document_type"],
-        publishing_app: response["publishing_app"],
-        rendering_app: response["rendering_app"],
-        content_id:,
+        updates,
       )
     rescue GdsApi::TimedOutException
       logger.puts "Publishing API timed out getting content... retrying"
