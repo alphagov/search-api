@@ -542,7 +542,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    redis-client (0.26.1)
+    redis-client (0.26.2)
       connection_pool
     regexp_parser (2.11.2)
     reline (0.6.3)
@@ -622,12 +622,12 @@ GEM
       sentry-ruby (~> 5.28.1)
       sidekiq (>= 3.0)
     set (1.1.1)
-    sidekiq (7.3.9)
+    sidekiq (7.3.10)
       base64
-      connection_pool (>= 2.3.0)
+      connection_pool (>= 2.3.0, < 3)
       logger
-      rack (>= 2.2.4)
-      redis-client (>= 0.22.2)
+      rack (>= 2.2.4, < 3.3)
+      redis-client (>= 0.23.0, < 1)
     sidekiq-limit_fetch (4.4.1)
       sidekiq (>= 6)
     signet (0.21.0)
