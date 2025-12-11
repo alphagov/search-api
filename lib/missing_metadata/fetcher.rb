@@ -4,8 +4,9 @@ module MissingMetadata
     class MissingDocumentError < StandardError
     end
 
-    def initialize(publishing_api)
+    def initialize(publishing_api, logger = $stdout)
       @publishing_api = publishing_api
+      @logger = logger
     end
 
     def add_metadata(result)
@@ -26,30 +27,34 @@ module MissingMetadata
 
       content_id || raise(MissingDocumentError, "Failed to look up base path")
     rescue GdsApi::TimedOutException
-      puts "Publishing API timed out getting content_id... retrying"
-      sleep(1)
+      logger.puts "Publishing API timed out getting content_id... retrying"
+      Kernel.sleep(1)
       retry
     end
 
     def update_metadata(content_id, index_name, document_id)
       response = publishing_api.get_content(content_id)
 
+      updates = {
+        "content_store_document_type" => response["document_type"],
+        "publishing_app" => response["publishing_app"],
+        "rendering_app" => response["rendering_app"],
+        "content_id" => content_id,
+      }
+
       Indexer::AmendJob.perform_async(
         index_name,
         document_id,
-        content_store_document_type: response["document_type"],
-        publishing_app: response["publishing_app"],
-        rendering_app: response["rendering_app"],
-        content_id:,
+        updates,
       )
     rescue GdsApi::TimedOutException
-      puts "Publishing API timed out getting content... retrying"
-      sleep(1)
+      logger.puts "Publishing API timed out getting content... retrying"
+      Kernel.sleep(1)
       retry
     end
 
   private
 
-    attr_reader :publishing_api
+    attr_reader :publishing_api, :logger
   end
 end
