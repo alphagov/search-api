@@ -21,6 +21,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
   end
 
   it_behaves_like "govuk index protection", "/govuk/documents", method: :post
+  it_behaves_like "rejects unknown index", "/unknown_index/documents", method: :post
 
   it "adds a document to the search index" do
     stub_publishing_api_has_expanded_links(

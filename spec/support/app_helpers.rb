@@ -1,6 +1,14 @@
 require "spec_helper"
 
 module AppHelpers
+  RSpec.shared_examples "rejects unknown index" do |path, method: :post|
+    it "returns 404 if the index does not exist" do
+      send(method, path, {}.to_json)
+
+      expect(last_response.status).to eq(404)
+    end
+  end
+
   RSpec.shared_examples "govuk index protection" do |path, method: :post|
     let(:error_message) do
       "Actions to govuk index are not allowed via this endpoint, please use the message queue to update this index"
