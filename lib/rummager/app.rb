@@ -75,10 +75,6 @@ class Rummager < Sinatra::Application
     @index_name ||= params["index"]
   end
 
-  def text_error(content)
-    halt 403, { "Content-Type" => "text/plain" }, content
-  end
-
   def json_only
     unless [nil, "json"].include? params[:request_format]
       expires 86_400, :public
