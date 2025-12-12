@@ -6,6 +6,9 @@ RSpec.configure do |c|
 end
 
 RSpec.describe "SearchTest" do
+  it_behaves_like "json-only endpoint", "/search", "?q=important"
+  it_behaves_like "json-only endpoint", "/api/search", "?q=important"
+
   it "returns success" do
     get "/search?q=important"
 

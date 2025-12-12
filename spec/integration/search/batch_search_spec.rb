@@ -6,6 +6,9 @@ RSpec.configure do |c|
 end
 
 RSpec.describe "BatchSearchTest" do
+  it_behaves_like "json-only endpoint", "/batch_search", "?search%5B%5D%5B0%5D%5Bq%5D=ministry+of+magic"
+  it_behaves_like "json-only endpoint", "/api/batch_search", "?search%5B%5D%5B0%5D%5Bq%5D=ministry+of+magic"
+
   it "can return multiple distinct results" do
     commit_ministry_of_magic_document
     commit_treatment_of_dragons_document
