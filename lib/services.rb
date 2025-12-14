@@ -16,6 +16,10 @@ module Services
     )
   end
 
+  def self.s3_client
+    Aws::S3::Client.new
+  end
+
   # Build a client to connect to one or more elasticsearch nodes.
   # hosts should be a comma separated string. Valid formats
   # are documented at http://www.rubydoc.info/gems/elasticsearch-transport#Setting_Hosts
