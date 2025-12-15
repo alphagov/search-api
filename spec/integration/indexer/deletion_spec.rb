@@ -18,6 +18,20 @@ RSpec.describe "ElasticsearchDeletionTest" do
       expect_document_missing_in_rummager(id: "/an-example-page", index: "government_test")
     end
 
+    it "removes a document from the index, explicitly giving the type" do
+      commit_document(
+        "government_test",
+        { "link" => "/an-example-page" },
+        type: "generic-document",
+      )
+
+      delete "/government_test/documents/%2Fan-example-page",
+             { document_type: "generic-document" }.to_json,
+             { "CONTENT_TYPE" => "application/json" }
+
+      expect_document_missing_in_rummager(id: "/an-example-page", index: "government_test", type: "generic-document")
+    end
+
     it "removes a document from the index queued" do
       commit_document(
         "government_test",
