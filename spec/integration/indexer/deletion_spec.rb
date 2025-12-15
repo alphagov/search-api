@@ -66,6 +66,19 @@ RSpec.describe "ElasticsearchDeletionTest" do
     end
   end
   describe "delete /:index/documents" do
+    it "no longer supports the 'delete_all' option" do
+      delete "/government_test/documents", delete_all: true
+      expect(last_response.status).to eq(400)
+    end
+    it "removes a document from the index" do
+      commit_document("government_test", { "link" => "/an-example-page" })
+
+      delete "/government_test/documents", link: "/an-example-page"
+
+      expect_document_missing_in_rummager(id: "/an-example-page", index: "government_test")
+      expect(last_response.status).to eq(200)
+    end
+
     it_behaves_like "govuk index protection", "/govuk/documents", method: :delete
     it_behaves_like "rejects unknown index", "/unknown_index/documents", method: :delete
   end
