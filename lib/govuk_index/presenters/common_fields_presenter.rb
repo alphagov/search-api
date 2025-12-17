@@ -40,6 +40,21 @@ module GovukIndex
       payload["base_path"]
     end
 
+    def slug
+      case format
+      when "mainstream_browse_page"
+        base_path.gsub(%r{^/browse/}, "")
+      when "ministerial_role"
+        base_path.gsub(%r{^/government/ministers/}, "")
+      when "organisation"
+        base_path.gsub(%r{^/government/organisations/}, "")
+      when "person"
+        base_path.gsub(%r{^/government/people/}, "")
+      when "policy"
+        base_path.gsub(%r{^/government/policies/}, "")
+      end
+    end
+
     def title
       [section_id, payload["title"]].compact.join(" - ")
     end

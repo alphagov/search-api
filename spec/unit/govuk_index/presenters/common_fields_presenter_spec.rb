@@ -249,6 +249,16 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     expect(presenter.historic?).to be false
   end
 
+  it "extracts the slug from the base path for an organisation document" do
+    payload = {
+      "base_path" => "/government/organisations/organisation-slug",
+      "document_type" => "organisation",
+    }
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.slug).to eq "organisation-slug"
+  end
+
   def common_fields_presenter(payload)
     described_class.new(payload)
   end

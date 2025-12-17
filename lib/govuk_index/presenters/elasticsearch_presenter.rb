@@ -203,7 +203,7 @@ module GovukIndex
         sfo_case_state: specialist.sfo_case_state,
         sift_end_date: specialist.sift_end_date,
         sifting_status: specialist.sifting_status,
-        slug:,
+        slug: common_fields.slug,
         stage: specialist.stage,
         start_date: details.start_date,
         status: specialist.status,
@@ -302,19 +302,6 @@ module GovukIndex
         details: payload["details"],
         sanitiser: IndexableContentSanitiser.new,
       )
-    end
-
-    def slug
-      case format
-      when "mainstream_browse_page"
-        base_path.gsub(%r{^/browse/}, "")
-      when "policy"
-        base_path.gsub(%r{^/government/policies/}, "")
-      when "person"
-        base_path.gsub(%r{^/government/people/}, "")
-      when "ministerial_role"
-        base_path.gsub(%r{^/government/ministers/}, "")
-      end
     end
 
     def common_fields
