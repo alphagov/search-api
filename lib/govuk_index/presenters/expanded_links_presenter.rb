@@ -16,8 +16,20 @@ module GovukIndex
       content_ids("organisations")
     end
 
+    def child_organisations
+      organisation_slugs("ordered_child_organisations")
+    end
+
     def parent_organisations
       organisation_slugs("ordered_parent_organisations")
+    end
+
+    def superseded_organisations
+      organisation_slugs("superseded_organisations")
+    end
+
+    def superseding_organisations
+      organisation_slugs("superseding_organisations")
     end
 
     def people

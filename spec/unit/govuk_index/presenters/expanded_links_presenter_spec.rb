@@ -83,6 +83,63 @@ RSpec.describe GovukIndex::ExpandedLinksPresenter do
     expect(presenter.parent_organisations).to eq(expected_parent_organisations)
   end
 
+  it "child_organisations" do
+    expanded_links = {
+      "ordered_child_organisations" => [
+        {
+          "base_path" => "/government/organisations/uk-visas-and-immigration",
+          "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
+          "locale" => "en",
+          "title" => "UK Visas and Immigration",
+        },
+      ],
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+
+    expected_child_organisations = %w[uk-visas-and-immigration]
+
+    expect(presenter.child_organisations).to eq(expected_child_organisations)
+  end
+
+  it "superseded_organisations" do
+    expanded_links = {
+      "superseded_organisations" => [
+        {
+          "base_path" => "/government/organisations/uk-visas-and-immigration",
+          "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
+          "locale" => "en",
+          "title" => "UK Visas and Immigration",
+        },
+      ],
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+
+    expected_superseded_organisations = %w[uk-visas-and-immigration]
+
+    expect(presenter.superseded_organisations).to eq(expected_superseded_organisations)
+  end
+
+  it "superseding_organisations" do
+    expanded_links = {
+      "superseding_organisations" => [
+        {
+          "base_path" => "/government/organisations/uk-visas-and-immigration",
+          "content_id" => "04148522-b0c1-4137-b687-5f3c3bdd561a",
+          "locale" => "en",
+          "title" => "UK Visas and Immigration",
+        },
+      ],
+    }
+
+    presenter = expanded_links_presenter(expanded_links)
+
+    expected_superseding_organisations = %w[uk-visas-and-immigration]
+
+    expect(presenter.superseding_organisations).to eq(expected_superseding_organisations)
+  end
+
   it "topical_events" do
     expanded_links = {
       "topical_events" => [
