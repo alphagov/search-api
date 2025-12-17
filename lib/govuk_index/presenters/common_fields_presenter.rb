@@ -9,6 +9,7 @@ module GovukIndex
 
     extend MethodBuilder
 
+    delegate_to_payload :analytics_identifier
     delegate_to_payload :content_id
     delegate_to_payload :content_store_document_type, hash_key: "document_type"
     delegate_to_payload :email_document_supertype
@@ -38,6 +39,21 @@ module GovukIndex
 
     def base_path
       payload["base_path"]
+    end
+
+    def slug
+      case format
+      when "mainstream_browse_page"
+        base_path.gsub(%r{^/browse/}, "")
+      when "ministerial_role"
+        base_path.gsub(%r{^/government/ministers/}, "")
+      when "organisation"
+        base_path.gsub(%r{^/government/organisations/}, "")
+      when "person"
+        base_path.gsub(%r{^/government/people/}, "")
+      when "policy"
+        base_path.gsub(%r{^/government/policies/}, "")
+      end
     end
 
     def title

@@ -30,6 +30,7 @@ module GovukIndex
         algorithmic_transparency_record_phase: specialist.algorithmic_transparency_record_phase,
         algorithmic_transparency_record_region: specialist.algorithmic_transparency_record_region,
         algorithmic_transparency_record_task: specialist.algorithmic_transparency_record_task,
+        analytics_identifier: common_fields.analytics_identifier,
         areas_of_interest: specialist.areas_of_interest,
         armed_forces_covenant_business_pledged: specialist.armed_forces_covenant_business_pledged,
         armed_forces_covenant_business_region: specialist.armed_forces_covenant_business_region,
@@ -47,7 +48,9 @@ module GovukIndex
         case_type: specialist.case_type,
         category: specialist.category,
         certificate_status: specialist.certificate_status,
+        child_organisations: expanded_links.child_organisations,
         class_category: specialist.class_category,
+        closed_at: details.closed_at,
         closed_date: specialist.closed_date,
         closing_date: specialist.closing_date,
         commodity_type: specialist.commodity_type,
@@ -157,6 +160,7 @@ module GovukIndex
         medical_specialism: specialist.medical_specialism,
         opened_date: specialist.opened_date,
         organisation_brand: details.organisation_brand,
+        organisation_closed_state: details.organisation_closed_state,
         organisation_crest: details.organisation_crest,
         organisation_content_ids: expanded_links.organisation_content_ids,
         organisation_state: details.organisation_state,
@@ -202,11 +206,13 @@ module GovukIndex
         sfo_case_state: specialist.sfo_case_state,
         sift_end_date: specialist.sift_end_date,
         sifting_status: specialist.sifting_status,
-        slug:,
+        slug: common_fields.slug,
         stage: specialist.stage,
         start_date: details.start_date,
         status: specialist.status,
         subject: specialist.subject,
+        superseded_organisations: expanded_links.superseded_organisations,
+        superseding_organisations: expanded_links.superseding_organisations,
         taxons: expanded_links.taxons,
         theme: specialist.theme,
         therapeutic_area: specialist.therapeutic_area,
@@ -299,19 +305,6 @@ module GovukIndex
         details: payload["details"],
         sanitiser: IndexableContentSanitiser.new,
       )
-    end
-
-    def slug
-      case format
-      when "mainstream_browse_page"
-        base_path.gsub(%r{^/browse/}, "")
-      when "policy"
-        base_path.gsub(%r{^/government/policies/}, "")
-      when "person"
-        base_path.gsub(%r{^/government/people/}, "")
-      when "ministerial_role"
-        base_path.gsub(%r{^/government/ministers/}, "")
-      end
     end
 
     def common_fields

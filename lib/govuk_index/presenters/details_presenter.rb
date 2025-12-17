@@ -2,6 +2,7 @@ module GovukIndex
   class DetailsPresenter
     extend MethodBuilder
 
+    CLOSED_ORGANISATION_STATES = %w[no_longer_exists replaced split merged changed_name left_gov devolved].freeze
     SERVICE_MANUAL = %w[service_manual_guide service_manual_topic].freeze
 
     set_payload_method :details
@@ -37,6 +38,16 @@ module GovukIndex
 
     def image_url
       details.dig("image", "url")
+    end
+
+    def closed_at
+      if format == "organisation"
+        payload_state = details.dig("organisation_govuk_status", "status")
+
+        if CLOSED_ORGANISATION_STATES.include?(payload_state)
+          details.dig("organisation_govuk_status", "updated_at")
+        end
+      end
     end
 
     def start_date
@@ -80,7 +91,20 @@ module GovukIndex
     end
 
     def organisation_state
-      details.dig("organisation_govuk_status", "status")
+      payload_state = details.dig("organisation_govuk_status", "status")
+      if payload_state
+        if CLOSED_ORGANISATION_STATES.include?(payload_state)
+          "closed"
+        else
+          payload_state
+        end
+      end
+    end
+
+    def organisation_closed_state
+      payload_state = details.dig("organisation_govuk_status", "status")
+
+      CLOSED_ORGANISATION_STATES.include?(payload_state) ? payload_state : nil
     end
 
     def organisation_type

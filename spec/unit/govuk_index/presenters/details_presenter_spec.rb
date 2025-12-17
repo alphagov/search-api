@@ -281,12 +281,33 @@ RSpec.describe GovukIndex::DetailsPresenter do
 
     it("extracts organisation-specific fields") do
       expect(presented_details.acronym).to eq(details["acronym"])
+      expect(presented_details.closed_at).to be_nil
       expect(presented_details.logo_formatted_title).to eq(details["logo"]["formatted_title"])
       expect(presented_details.logo_url).to eq(details["logo"]["image"]["url"])
       expect(presented_details.organisation_brand).to eq(details["brand"])
+      expect(presented_details.organisation_closed_state).to be_nil
       expect(presented_details.organisation_crest).to eq(details["logo"]["crest"])
       expect(presented_details.organisation_state).to eq(details["organisation_govuk_status"]["status"])
       expect(presented_details.organisation_type).to eq(details["organisation_type"])
+    end
+  end
+
+  context "closed organisation" do
+    let(:format) { "organisation" }
+    let(:details) do
+      {
+        "organisation_govuk_status" => {
+          "status" => "changed_name",
+          "updated_at" => "2024-06-01T00:00:00.000+01:00",
+          "url" => nil,
+        },
+      }
+    end
+
+    it("transforms closed organisation status fields to preserve behaviour of government index") do
+      expect(presented_details.organisation_state).to eq("closed")
+      expect(presented_details.organisation_closed_state).to eq("changed_name")
+      expect(presented_details.closed_at).to eq("2024-06-01T00:00:00.000+01:00")
     end
   end
 end

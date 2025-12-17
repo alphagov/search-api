@@ -7,6 +7,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     allow(@popularity_lookup).to receive(:lookup_popularities).and_return({})
 
     @directly_mapped_fields = %w[
+      analytics_identifier
       content_id
       email_document_supertype
       government_document_supertype
@@ -247,6 +248,16 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     presenter = common_fields_presenter(payload)
 
     expect(presenter.historic?).to be false
+  end
+
+  it "extracts the slug from the base path for an organisation document" do
+    payload = {
+      "base_path" => "/government/organisations/organisation-slug",
+      "document_type" => "organisation",
+    }
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.slug).to eq "organisation-slug"
   end
 
   def common_fields_presenter(payload)
