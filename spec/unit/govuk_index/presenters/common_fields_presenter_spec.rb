@@ -7,6 +7,7 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     allow(@popularity_lookup).to receive(:lookup_popularities).and_return({})
 
     @directly_mapped_fields = %w[
+      analytics_identifier
       content_id
       email_document_supertype
       government_document_supertype

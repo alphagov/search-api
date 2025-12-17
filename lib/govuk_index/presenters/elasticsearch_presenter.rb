@@ -30,6 +30,7 @@ module GovukIndex
         algorithmic_transparency_record_phase: specialist.algorithmic_transparency_record_phase,
         algorithmic_transparency_record_region: specialist.algorithmic_transparency_record_region,
         algorithmic_transparency_record_task: specialist.algorithmic_transparency_record_task,
+        analytics_identifier: common_fields.analytics_identifier,
         areas_of_interest: specialist.areas_of_interest,
         armed_forces_covenant_business_pledged: specialist.armed_forces_covenant_business_pledged,
         armed_forces_covenant_business_region: specialist.armed_forces_covenant_business_region,

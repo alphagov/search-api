@@ -9,6 +9,7 @@ module GovukIndex
 
     extend MethodBuilder
 
+    delegate_to_payload :analytics_identifier
     delegate_to_payload :content_id
     delegate_to_payload :content_store_document_type, hash_key: "document_type"
     delegate_to_payload :email_document_supertype
