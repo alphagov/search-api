@@ -18,6 +18,16 @@ RSpec.describe "HealthcheckTest" do
     stub_diskspace_check
   end
 
+  describe "live check" do
+    it "returns an OK status" do
+      get "/healthcheck/live"
+
+      expect(last_response.status).to eq(200)
+      expect(last_response.headers["Content-Type"]).to eq("text/plain")
+      expect(last_response.body).to eq("OK")
+    end
+  end
+
   describe "#redis_connectivity check" do
     # We only check for cannot connect because govuk_app_config has tests for this
     context "when Sidekiq CANNOT connect to Redis" do

@@ -75,10 +75,6 @@ class Rummager < Sinatra::Application
     @index_name ||= params["index"]
   end
 
-  def text_error(content)
-    halt 403, { "Content-Type" => "text/plain" }, content
-  end
-
   def json_only
     unless [nil, "json"].include? params[:request_format]
       expires 86_400, :public
@@ -322,7 +318,7 @@ class Rummager < Sinatra::Application
   end
 
   def serve_from_s3(key)
-    o = Aws::S3::Object.new(bucket_name: ENV["AWS_S3_SITEMAPS_BUCKET_NAME"], key:)
+    o = Services.s3_client.get_object(bucket: ENV["AWS_S3_SITEMAPS_BUCKET_NAME"], key:)
 
     headers "Content-Type" => "application/xml",
             "Cache-Control" => "public",
@@ -330,9 +326,9 @@ class Rummager < Sinatra::Application
             "Last-Modified" => o.last_modified.httpdate
 
     stream do |out|
-      o.get.body.each { |chunk| out << chunk }
+      o.body.each { |chunk| out << chunk }
     end
-  rescue Aws::S3::Errors::NotFound
+  rescue Aws::S3::Errors::NoSuchKey
     halt(404, "No such object")
   end
 

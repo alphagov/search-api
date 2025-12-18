@@ -175,10 +175,10 @@ module IntegrationSpecHelper
     end
   end
 
-  def expect_document_missing_in_rummager(id:, index:)
+  def expect_document_missing_in_rummager(id:, index:, type: "_all")
     clusters.each do |cluster|
       expect {
-        fetch_document_from_rummager(id:, index:, cluster:)
+        fetch_document_from_rummager(id:, index:, cluster:, type:)
       }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
     end
   end
