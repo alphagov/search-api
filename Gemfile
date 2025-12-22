@@ -35,6 +35,7 @@ gem "warden"
 gem "warden-oauth2"
 
 group :development, :test do
+  gem "brakeman", require: false
   gem "pry-byebug"
   gem "rubocop-govuk", require: false
 end

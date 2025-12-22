@@ -57,6 +57,8 @@ GEM
     bigdecimal (3.3.1)
     bootsnap (1.19.0)
       msgpack (~> 1.2)
+    brakeman (7.1.1)
+      racc
     builder (3.3.0)
     bunny (2.24.0)
       amq-protocol (~> 2.3)
@@ -692,6 +694,7 @@ DEPENDENCIES
   activesupport
   aws-sdk-s3
   bootsnap
+  brakeman
   bunny-mock
   climate_control
   elasticsearch (~> 6)
