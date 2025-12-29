@@ -1,6 +1,6 @@
 # Search API
 
-Search API (née "rummager") indexes content into [Elasticsearch](https://www.elastic.co/products/elasticsearch)
+Search API (previously known as "rummager") indexes content into [Elasticsearch](https://www.elastic.co/products/elasticsearch)
 and serves the GOV.UK Search API.
 
 GOV.UK applications use the API to search and filter GOV.UK content.
