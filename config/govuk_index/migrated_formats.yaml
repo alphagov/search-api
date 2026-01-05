@@ -354,6 +354,7 @@ migrated:
 - open_call_for_evidence
 - open_consultation
 - oral_statement
+- organisation
 - our_energy_use
 - our_governance
 - personal_information_charter
@@ -381,8 +382,7 @@ migrated:
 - worldwide_organisation
 - written_statement
 
-indexable:
-- organisation
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'

@@ -299,7 +299,7 @@ RSpec.describe "BatchSearchTest" do
 
   it "expands organisations" do
     commit_treatment_of_dragons_document({ "organisations" => ["/ministry-of-magic"] })
-    commit_ministry_of_magic_document({ "format" => "organisation" })
+    commit_ministry_of_magic_document({ "format" => "organisation", "index" => "govuk_test" })
     get build_get_url([{ q: "dragons" }, { q: "ministry of magic" }])
     results = parsed_response["results"]
     expect(results[0]["results"][0]["organisations"]).to eq(
@@ -312,7 +312,7 @@ RSpec.describe "BatchSearchTest" do
 
   it "expands organisations via content_id" do
     commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
 
     get build_get_url([{ q: "dragons" }, { q: "ministry of magic" }])
     results = parsed_response["results"]
@@ -331,7 +331,7 @@ RSpec.describe "BatchSearchTest" do
 
   it "search for expanded organisations works" do
     commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
 
     get build_get_url([{ q: "dragons", fields: %w[expanded_organisations] }, { q: "ministry of magic" }])
     results = parsed_response["results"]
@@ -342,7 +342,7 @@ RSpec.describe "BatchSearchTest" do
 
   it "filter by organisation content_ids works" do
     commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
 
     get build_get_url([{ filter_organisation_content_ids: "organisation-content-id" }, { q: "ministry of magic" }])
     results = parsed_response["results"]
