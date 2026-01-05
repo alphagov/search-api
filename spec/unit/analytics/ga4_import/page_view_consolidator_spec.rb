@@ -1,6 +1,8 @@
 require "spec_helper"
 
 RSpec.describe Analytics::Ga4Import::PageViewConsolidator do
+  let(:really_long_path) { "/#{'a'.b * (Analytics::Ga4Import::PageViewConsolidator::MAX_PATH_LENGTH - 1)}" }
+
   let(:ga_data) do
     [
       Analytics::Ga4Import::PageData.new("/example1", "Title", 10),
@@ -13,6 +15,7 @@ RSpec.describe Analytics::Ga4Import::PageViewConsolidator do
       Analytics::Ga4Import::PageData.new("/example3/y/blah", "Smart Answer", 1000),
       Analytics::Ga4Import::PageData.new("http://example.com/example99", "Title", 10),
       Analytics::Ga4Import::PageData.new("/not-real-path", "Page not found - GOV.UK", 99),
+      Analytics::Ga4Import::PageData.new(really_long_path, "Path is too long", 10),
     ]
   end
 
@@ -41,6 +44,10 @@ RSpec.describe Analytics::Ga4Import::PageViewConsolidator do
 
     it "combines page views for page data that normalises to the same path" do
       expect(consolidator.consolidated_page_views).to include(["/example4/blah", 100])
+    end
+
+    it "removes paths longer than MAX_PATH_LENGTH bytes" do
+      expect(consolidator.consolidated_page_views).not_to include([really_long_path, 10])
     end
   end
 end
