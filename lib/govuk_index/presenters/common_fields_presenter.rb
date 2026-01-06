@@ -48,7 +48,7 @@ module GovukIndex
       when "ministerial_role"
         base_path.gsub(%r{^/government/ministers/}, "")
       when "organisation"
-        base_path.gsub(%r{^/government/organisations/}, "")
+        base_path.gsub(%r{^/government/organisations/}, "").gsub(%r{^/courts-tribunals/}, "")
       when "person"
         base_path.gsub(%r{^/government/people/}, "")
       when "policy"
