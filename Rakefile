@@ -12,13 +12,14 @@ Dir[File.join(PROJECT_ROOT, "lib/tasks/**/*.rake")].each { |file| load file }
 
 # rubocop:disable Lint/SuppressedException
 begin
+  require "pact/tasks"
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:spec)
 rescue LoadError
 end
 # rubocop:enable Lint/SuppressedException
 
-task default: %i[lint spec]
+task default: %i[lint spec pact:verify]
 
 def logger
   Logging.logger.root
