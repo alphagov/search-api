@@ -37,6 +37,14 @@ To replicate real data into your local development environment, use the [replica
 bundle exec rake
 ```
 
+### Pact tests
+
+Search API has a pact with [GDS API Adapters](https://github.com/alphagov/gds-api-adapters).
+
+See the [guidance on Pact testing](https://docs.publishing.service.gov.uk/manual/pact-testing.html) for how to run and modify the tests.
+
+Note that when you run the tests locally logs are output to `log/production.log` rather than to the console.
+
 ### Additional Docs
 
 - [Search API documentation](docs/using-the-search-api.md)
