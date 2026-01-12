@@ -401,7 +401,7 @@ RSpec.describe "SearchTest" do
 
   it "expands organisations" do
     commit_treatment_of_dragons_document({ "organisations" => ["/ministry-of-magic"] })
-    commit_ministry_of_magic_document({ "format" => "organisation" })
+    commit_ministry_of_magic_document({ "format" => "organisation", "index" => "govuk_test" })
 
     get "/search.json?q=dragons"
 
@@ -414,7 +414,7 @@ RSpec.describe "SearchTest" do
 
   it "also works with the /api prefix" do
     commit_treatment_of_dragons_document({ "organisations" => ["/ministry-of-magic"] })
-    commit_ministry_of_magic_document({ "format" => "organisation" })
+    commit_ministry_of_magic_document({ "format" => "organisation", "index" => "govuk_test" })
 
     get "/api/search.json?q=dragons"
 
@@ -427,7 +427,7 @@ RSpec.describe "SearchTest" do
 
   it "expands organisations via content_id" do
     commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
 
     get "/search.json?q=dragons"
 
@@ -444,7 +444,7 @@ RSpec.describe "SearchTest" do
 
   it "search for expanded organisations works" do
     commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
 
     get "/search.json?q=dragons&fields[]=expanded_organisations"
 
@@ -453,7 +453,7 @@ RSpec.describe "SearchTest" do
 
   it "filter by organisation content_ids works" do
     commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation" })
+    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
 
     get "/search.json?filter_organisation_content_ids[]=organisation-content-id"
 
