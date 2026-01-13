@@ -19,7 +19,7 @@ documents are added to the search indexes -->
 	[config/schema/elasticsearch_types](config/schema/elasticsearch_types)
 - **Index**: An [elasticsearch search
 	index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Search API
-	maintains several separate indices (`detailed`, `government` and `govuk`),
+	maintains separate indices (`government` and `govuk`),
 	but searches return documents from all of them.
 - **Index Group**: An alias in elasticsearch that points to one index at a
 	time. This allows us to rebuild indexes without downtime.
@@ -43,7 +43,7 @@ still requires Sidekiq to be running.
 
 	bundle exec rake message_queue:insert_data_into_govuk
 
-There is also a separate process that listens to only 'links' updates from the publishing API. This is used for updating old indexes that are populated through the '/documents' API (`government`, `detailed`) and can be removed once those indexes no longer exist.
+There is also a separate process that listens to only 'links' updates from the publishing API. This is used for updating old indexes that are populated through the '/documents' API (`government`) and can be removed once those indexes no longer exist.
 
 	bundle exec rake message_queue:listen_to_publishing_queue
 

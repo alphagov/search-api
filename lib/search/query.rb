@@ -11,6 +11,7 @@ module Search
 
     def initialize(registries:, content_index:, metasearch_index:, spelling_index:)
       @index = content_index
+
       @registries = registries
       @metasearch_index = metasearch_index
       @spelling_index = spelling_index
