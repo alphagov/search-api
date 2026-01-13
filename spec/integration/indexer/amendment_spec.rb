@@ -5,7 +5,7 @@ RSpec.describe "ElasticsearchAmendmentTest" do
     stub_tagging_lookup
   end
 
-  it_behaves_like "govuk index protection", "/govuk/documents/%2Fan-example-answer", method: :post
+  it_behaves_like "govuk and detailed index protection", "/:index/documents/%2Fan-example-answer", method: :post
 
   it "amends a document" do
     commit_document(

@@ -20,7 +20,7 @@ RSpec.describe "ElasticsearchIndexingTest" do
     with_just_one_cluster
   end
 
-  it_behaves_like "govuk index protection", "/govuk/documents", method: :post
+  it_behaves_like "govuk and detailed index protection", "/:index/documents", method: :post
   it_behaves_like "rejects unknown index", "/unknown_index/documents", method: :post
 
   it "adds a document to the search index" do
