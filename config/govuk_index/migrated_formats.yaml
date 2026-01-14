@@ -431,19 +431,9 @@ non_indexable:
   - "/tour"
   - "/ukwelcomes"
 
-# whitehall formats
-#- contact # migrated
-- facet
-- field_of_operation
-#- finder # migrated
-- html_publication
-- imported
-- national_statistics_announcement
-- official_statistics_announcement
-- policy_area
-- services_and_information
-- take_part
-- topical_event
-- topical_event_about_page
-- working_group
-- world_location
+# whitehall formats - see https://github.com/alphagov/whitehall/blob/12ea7612e25ee3ccf27bac1183cc78095d7d6ea4/app/presenters/search_api_presenters.rb#L13
+- operational_field # https://github.com/alphagov/whitehall/blob/main/app/models/operational_field.rb
+- statistics_announcement # https://github.com/alphagov/whitehall/blob/main/app/models/statistics_announcement.rb
+- policy_group # https://github.com/alphagov/whitehall/blob/main/app/models/policy_group.rb
+- topical_event # https://github.com/alphagov/whitehall/blob/main/app/models/topical_event.rb
+- world_location_news # https://github.com/alphagov/whitehall/blob/main/app/models/world_location_news.rb
