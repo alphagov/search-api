@@ -53,7 +53,12 @@ Pact.provider_states_for "GDS API Adapters" do
         "title" => "Universal credit",
         "link" => "/universal-credit",
       }
+      second_document_params = {
+        "title" => "Universal credit too",
+        "link" => "/universal-credit-too",
+      }
       commit_document("government_test", document_params)
+      commit_document("government_test", second_document_params)
     end
   end
 end
