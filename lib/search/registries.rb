@@ -27,7 +27,7 @@ module Search
 
     def organisations
       BaseRegistry.new(
-        index,
+        govuk_index,
         field_definitions,
         "organisation",
         %w[
