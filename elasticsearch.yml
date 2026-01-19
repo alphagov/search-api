@@ -1,6 +1,6 @@
 production: &default
   base_uri: <%= ENV["ELASTICSEARCH_URI"] || 'http://localhost:9200' %>
-  content_index_names: ["detailed", "government"]
+  content_index_names: ["government"]
   govuk_index_name: "govuk"
   auxiliary_index_names: ["page-traffic", "metasearch"]
   registry_index: "government"

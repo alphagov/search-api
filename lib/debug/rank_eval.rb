@@ -106,15 +106,9 @@ module Debug
     end
 
     def index_for_link(link)
-      return detailed_index_name if link.start_with? "/guidance/"
-
       return government_index_name if link.start_with? "/government/"
 
       govuk_index_name
-    end
-
-    def detailed_index_name
-      @detailed_index_name ||= @search_config.get_index_for_alias("detailed")
     end
 
     def government_index_name

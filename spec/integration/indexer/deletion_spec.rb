@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe "ElasticsearchDeletionTest" do
   describe "delete /:index/documents/*" do
-    it_behaves_like "govuk index protection", "/govuk/documents/%2Fan-example-page", method: :delete
+    it_behaves_like "govuk and detailed index protection", "/:index/documents/%2Fan-example-page", method: :delete
     it_behaves_like "rejects unknown index", "/unknown/documents/%2Fan-example-page", method: :delete
 
     it "removes a document from the index" do
@@ -93,7 +93,7 @@ RSpec.describe "ElasticsearchDeletionTest" do
       expect(last_response.status).to eq(200)
     end
 
-    it_behaves_like "govuk index protection", "/govuk/documents", method: :delete
+    it_behaves_like "govuk and detailed index protection", "/:index/documents", method: :delete
     it_behaves_like "rejects unknown index", "/unknown_index/documents", method: :delete
   end
 end

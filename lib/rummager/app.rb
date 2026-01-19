@@ -65,9 +65,9 @@ class Rummager < Sinatra::Application
     halt(403, "You do not have permission to access this endpoint") unless u["permissions"].include? permission
   end
 
-  def prevent_access_to_govuk
-    if index_name == "govuk"
-      halt(403, "Actions to govuk index are not allowed via this endpoint, please use the message queue to update this index")
+  def prevent_access_to_govuk_and_detailed
+    if %w[govuk detailed].include?(index_name)
+      halt(403, "Actions to the govuk or detailed indices are not allowed via this endpoint.")
     end
   end
 
@@ -188,7 +188,7 @@ class Rummager < Sinatra::Application
   # Insert (or overwrite) a document
   post "/:index/documents" do
     require_authentication "manage_search_indices"
-    prevent_access_to_govuk
+    prevent_access_to_govuk_and_detailed
     request.body.rewind
     documents = [JSON.parse(request.body.read)].flatten.map do |hash|
       hash["document_type"] ||= hash.fetch("_type", "edition")
@@ -215,13 +215,13 @@ class Rummager < Sinatra::Application
 
   post "/:index/commit" do
     require_authentication "manage_search_indices"
-    prevent_access_to_govuk
+    prevent_access_to_govuk_and_detailed
     simple_json_result(current_index.commit)
   end
 
   delete "/:index/documents/*" do
     require_authentication "manage_search_indices"
-    prevent_access_to_govuk
+    prevent_access_to_govuk_and_detailed
     document_link = params["splat"].first
 
     if (type = get_type_from_request_body(request.body))
@@ -255,7 +255,7 @@ class Rummager < Sinatra::Application
   # Update an existing document
   post "/:index/documents/*" do
     require_authentication "manage_search_indices"
-    prevent_access_to_govuk
+    prevent_access_to_govuk_and_detailed
     document_id = params["splat"].first
     updates = request.POST
     Indexer::AmendJob.perform_async(index_name, document_id, updates)
@@ -264,7 +264,7 @@ class Rummager < Sinatra::Application
 
   delete "/:index/documents" do
     require_authentication "manage_search_indices"
-    prevent_access_to_govuk
+    prevent_access_to_govuk_and_detailed
     if params["delete_all"]
       # No longer supported; instead use the
       # `search:switch_to_empty_index` Rake command
