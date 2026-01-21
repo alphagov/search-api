@@ -51,7 +51,7 @@ details:
     - key: public_timestamp
       name: Updated (oldest)
   document_noun: result
-  show_summaries: false
+  show_summaries: true
   show_metadata_block: true
   show_table_of_contents: true
   default_documents_per_page: 50
