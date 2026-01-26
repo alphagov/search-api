@@ -382,7 +382,13 @@ migrated:
 - worldwide_organisation
 - written_statement
 
-indexable: []
+indexable:
+# whitehall formats - see https://github.com/alphagov/whitehall/blob/12ea7612e25ee3ccf27bac1183cc78095d7d6ea4/app/presenters/search_api_presenters.rb#L13
+- operational_field # https://github.com/alphagov/whitehall/blob/main/app/models/operational_field.rb
+- statistics_announcement # https://github.com/alphagov/whitehall/blob/main/app/models/statistics_announcement.rb
+- policy_group # https://github.com/alphagov/whitehall/blob/main/app/models/policy_group.rb
+- topical_event # https://github.com/alphagov/whitehall/blob/main/app/models/topical_event.rb
+- world_location_news # https://github.com/alphagov/whitehall/blob/main/app/models/world_location_news.rb
 
 non_indexable_path:
 - '/help/cookie-details'
@@ -430,10 +436,3 @@ non_indexable:
   - "/sitemaps"
   - "/tour"
   - "/ukwelcomes"
-
-# whitehall formats - see https://github.com/alphagov/whitehall/blob/12ea7612e25ee3ccf27bac1183cc78095d7d6ea4/app/presenters/search_api_presenters.rb#L13
-- operational_field # https://github.com/alphagov/whitehall/blob/main/app/models/operational_field.rb
-- statistics_announcement # https://github.com/alphagov/whitehall/blob/main/app/models/statistics_announcement.rb
-- policy_group # https://github.com/alphagov/whitehall/blob/main/app/models/policy_group.rb
-- topical_event # https://github.com/alphagov/whitehall/blob/main/app/models/topical_event.rb
-- world_location_news # https://github.com/alphagov/whitehall/blob/main/app/models/world_location_news.rb
