@@ -45,6 +45,7 @@ export_health_certificate: export_health_certificate # Specialist Publisher
 external_content: edition # Search Admin
 farming_grant: farming_grant # Specialist Publisher
 fatality_notice: edition
+field_of_operation: edition # Whitehall Operational Field https://github.com/alphagov/whitehall/blob/main/app/models/operational_field.rb
 finder: edition # Specialist Publisher
 flood_and_coastal_erosion_risk_management_research_report: flood_and_coastal_erosion_risk_management_research_report # Specialist Publisher
 foi_release: edition
@@ -78,9 +79,11 @@ membership: edition
 ministerial_role: edition
 modern_slavery_statement: edition
 national_statistics: edition
+national_statistics_announcement: edition # Whitehall Statistics Announcement https://github.com/alphagov/whitehall/blob/main/app/models/statistics_announcement.rb
 news_story: edition
 notice: edition
 official_statistics: edition
+official_statistics_announcement: edition # Whitehall Statistics Announcement https://github.com/alphagov/whitehall/blob/main/app/models/statistics_announcement.rb
 open_call_for_evidence: edition
 open_consultation: edition
 oral_statement: edition # Whitehall
@@ -128,6 +131,7 @@ tax_tribunal_decision: tax_tribunal_decision # Specialist Publisher
 taxon: edition # Content Tagger
 terms_of_reference: edition
 topic: edition # Collections Publisher
+topical_event: edition # Whitehall Topical Event https://github.com/alphagov/whitehall/blob/main/app/models/topical_event.rb
 trademark_decision: trademark_decision # Specialist Publisher
 traffic_commissioner_regulatory_decision: traffic_commissioner_regulatory_decision # Specialist Publisher
 transaction: edition
@@ -139,6 +143,8 @@ ukhsa_data_access_approval: ukhsa_data_access_approval # Specialist Publisher
 utaac_decision: utaac_decision # Specialist Publisher
 veterans_support_organisation: veterans_support_organisation #Specialist Publisher
 welsh_language_scheme: edition
+working_group: edition # Whitehall policy group https://github.com/alphagov/whitehall/blob/main/app/models/policy_group.rb
 world_news_story: edition
+world_location_news: edition # Whitehall World Location News https://github.com/alphagov/whitehall/blob/main/app/models/world_location_news.rb
 worldwide_organisation: edition
 written_statement: edition # Whitehall
