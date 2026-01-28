@@ -2,7 +2,11 @@ ENV["RACK_ENV"] = "test"
 require "pry"
 
 require "simplecov"
-SimpleCov.start { add_filter "/spec/" }
+SimpleCov.start do
+  add_filter "/spec/"
+  track_files "{lib}/**/*.rb"
+  track_files "{lib}/**/*.rake"
+end
 
 $LOAD_PATH << File.expand_path("..", __dir__)
 $LOAD_PATH << File.expand_path("../lib", __dir__)
