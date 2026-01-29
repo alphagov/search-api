@@ -3,8 +3,12 @@ module GovukIndex
     CUSTOM_FORMAT_MAP = {
       "esi_fund" => "european_structural_investment_fund",
       "external_content" => "recommended-link",
+      "field_of_operation" => "operational_field",
+      "national_statistics_announcement" => "statistics_announcement",
+      "official_statistics_announcement" => "statistics_announcement",
       "service_manual_homepage" => "service_manual_guide",
       "service_manual_service_standard" => "service_manual_guide",
+      "working_group" => "policy_group",
     }.freeze
 
     extend MethodBuilder
