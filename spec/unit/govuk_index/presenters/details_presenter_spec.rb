@@ -310,4 +310,37 @@ RSpec.describe GovukIndex::DetailsPresenter do
       expect(presented_details.closed_at).to eq("2024-06-01T00:00:00.000+01:00")
     end
   end
+
+  context "any format" do
+    let(:format) { "any" }
+    context "it has a start and an end date" do
+      let(:details) do
+        {
+          "start_date" => "2024-06-01T00:00:00.000+01:00",
+          "end_date" => "2024-06-02T00:00:00.000+01:00",
+          "opening_date" => "2024-06-03T00:00:00.000+01:00",
+          "closing_date" => "2024-06-04T00:00:00.000+01:00",
+        }
+      end
+
+      it("presents the start and end date values") do
+        expect(presented_details.start_date).to eq("2024-06-01T00:00:00.000+01:00")
+        expect(presented_details.end_date).to eq("2024-06-02T00:00:00.000+01:00")
+      end
+    end
+
+    context "it has an opening and a closing date" do
+      let(:details) do
+        {
+          "opening_date" => "2024-06-01T00:00:00.000+01:00",
+          "closing_date" => "2024-06-02T00:00:00.000+01:00",
+        }
+      end
+
+      it("presents the start and end date values") do
+        expect(presented_details.start_date).to eq("2024-06-01T00:00:00.000+01:00")
+        expect(presented_details.end_date).to eq("2024-06-02T00:00:00.000+01:00")
+      end
+    end
+  end
 end

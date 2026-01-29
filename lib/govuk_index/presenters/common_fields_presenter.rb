@@ -57,6 +57,8 @@ module GovukIndex
         base_path.gsub(%r{^/government/people/}, "")
       when "policy"
         base_path.gsub(%r{^/government/policies/}, "")
+      when "topical_event"
+        base_path.gsub(%r{^/government/topical-events/}, "")
       end
     end
 

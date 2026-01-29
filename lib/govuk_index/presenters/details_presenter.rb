@@ -51,11 +51,11 @@ module GovukIndex
     end
 
     def start_date
-      details["opening_date"]
+      details["start_date"] or details["opening_date"]
     end
 
     def end_date
-      details["closing_date"]
+      details["end_date"] or details["closing_date"]
     end
 
     def has_official_document?
