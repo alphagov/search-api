@@ -1,6 +1,6 @@
-require "spec/support/index_helpers"
+require_relative "../support/index_helpers"
 
-module IntegrationSpecHelper
+module IntegrationTestHelper
   SAMPLE_DOCUMENT_ATTRIBUTES = {
     "title" => "TITLE1",
     "description" => "DESCRIPTION",
@@ -9,39 +9,7 @@ module IntegrationSpecHelper
     "document_type" => "edition",
   }.freeze
 
-  def self.included(base)
-    base.around do |example|
-      IntegrationSpecHelper.allow_elasticsearch_connection_to_test do
-        example.run
-        # clean up after test run
-        IndexHelpers.all_index_names.each do |index|
-          clean_index_content(index)
-        end
-      end
-    end
-
-    # we only want to setup the before suite code once, in addition this this we only want to
-    # set it up when we are running integration tests (hence the reason we do it here).
-    @included ||= setup_before_suite
-  end
-
-  def self.setup_before_suite
-    RSpec.configure do |config|
-      config.before(:suite) do
-        IntegrationSpecHelper.allow_elasticsearch_connection_to_test do
-          IndexHelpers.setup_test_indexes
-        end
-      end
-
-      config.after(:suite) do
-        IntegrationSpecHelper.allow_elasticsearch_connection_to_test do
-          IndexHelpers.clean_all
-        end
-      end
-    end
-  end
-
-  def self.allow_elasticsearch_connection_to_test
+  def self.allow_elasticsearch_connection_to_test(testing_url = nil)
     allowed_hosts = Clusters.active.map(&:uri)
 
     allowed_paths = []
@@ -54,9 +22,11 @@ module IntegrationSpecHelper
 
     allow_urls = %r{#{allowed_hosts.map { |host| "#{host}/(#{allowed_paths.join('|')})" }.join('|')}}
 
-    WebMock.disable_net_connect!(allow: allow_urls)
-    yield
-  ensure
+    allowed_urls = testing_url.present? ? [allow_urls, testing_url] : allow_urls
+    WebMock.disable_net_connect!(allow: allowed_urls)
+  end
+
+  def self.disable_net_connections
     WebMock.disable_net_connect!(allow: nil)
   end
 
