@@ -16,3 +16,4 @@ tmp/*
 /data
 /log
 search_check_results.csv
+spec/reports/pacts

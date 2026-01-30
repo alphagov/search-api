@@ -36,7 +36,8 @@ require "#{__dir__}/support/fake_s3"
 require "#{__dir__}/support/default_mappings"
 require "#{__dir__}/support/spec_helpers"
 require "#{__dir__}/support/schema_helpers"
-require "#{__dir__}/support/integration_spec_helper"
+require "#{__dir__}/support/integration_test_helper"
+require "#{__dir__}/support/integration_spec_setup_helper"
 require "#{__dir__}/support/index_helpers"
 require "#{__dir__}/support/retryable_queue_examples"
 
@@ -51,7 +52,8 @@ RSpec.configure do |config|
   config.include SpecHelpers
   config.include SchemaHelpers
 
-  config.include IntegrationSpecHelper, tags: :integration
+  config.include IntegrationTestHelper, tags: :integration
+  config.include IntegrationSpecSetupHelper, tags: :integration
   config.include Rack::Test::Methods, tags: :integration
 
   config.expect_with :rspec do |expectations|
