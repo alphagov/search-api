@@ -67,9 +67,6 @@ RSpec.describe "indices" do
 
   describe "create_all_indices" do
     let(:task_name) { "search:create_all_indices" }
-    before do
-      allow(indices_client).to receive(:create).with(hash_including({}))
-    end
     it "creates all indices" do
       Rake::Task[task_name].invoke
       index_names.each do |index_name|
@@ -127,8 +124,6 @@ RSpec.describe "indices" do
     end
 
     it "#{locked ? 'locks' : 'unlocks'} all indices" do
-      allow(indices_client).to receive(:put_settings)
-
       Rake::Task[task_name].invoke
 
       index_names.each do |index_name|
