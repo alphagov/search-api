@@ -1,6 +1,5 @@
 require "spec_helper"
 require "rake"
-load "tasks/duplicates.rake"
 
 RSpec.describe "duplicates", "RakeTest" do
   let(:fake_duplicates) do

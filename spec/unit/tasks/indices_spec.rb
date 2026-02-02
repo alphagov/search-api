@@ -1,6 +1,5 @@
 require "spec_helper"
 require "rake"
-load "tasks/indices.rake"
 
 RSpec.describe "indices" do
   let(:elasticsearch_client) { double("Elasticsearch::Client") }
