@@ -210,11 +210,9 @@ the existing data, you will need to run the \"migrate_schema\" task instead, whi
     raise "An 'index_name' must be supplied" unless args.index_name
 
     clusters_from_args(args).each do |cluster|
+      index = search_server(cluster:).index_group(args.index_name).current
       puts "Recovery status of #{args.index_name} on cluster #{cluster.key} (#{cluster.uri}):"
-      puts SearchIndices::Index.index_recovered?(
-        base_uri: cluster.uri,
-        index_name: args.index_name,
-      )
+      puts index.index_recovered?
     end
   end
 end
