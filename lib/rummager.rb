@@ -44,7 +44,6 @@ require "cache"
 require File.expand_path("../config/logging_setup", __dir__)
 require "document"
 require "govuk_document_types"
-require "special_route_publisher"
 
 require "auth/gds_sso"
 require "auth/mock_strategy"
