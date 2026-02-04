@@ -317,6 +317,12 @@ class Rummager < Sinatra::Application
     serve_from_s3(sitemap)
   end
 
+  post "/sitemaps/*" do
+    headers = { "Allow" => "GET" }
+    body = { message: "Method Not Allowed: Use GET to access the sitemap." }.to_json
+    halt(405, headers, body)
+  end
+
   def serve_from_s3(key)
     o = Services.s3_client.get_object(bucket: ENV["AWS_S3_SITEMAPS_BUCKET_NAME"], key:)
 
