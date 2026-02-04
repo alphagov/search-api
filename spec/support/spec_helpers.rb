@@ -59,6 +59,14 @@ module SpecHelpers
     end
     raise RandomExampleError, "Could not generate example"
   end
+
+  def includes_links(required_attributes)
+    lambda do |request|
+      data = JSON.parse(request.body)["links"]
+      data >= required_attributes.stringify_keys
+    end
+  end
+
   def capture_stdout
     old = $stdout
     $stdout = StringIO.new
