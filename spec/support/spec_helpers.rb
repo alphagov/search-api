@@ -59,4 +59,13 @@ module SpecHelpers
     end
     raise RandomExampleError, "Could not generate example"
   end
+
+  def capture_stdout
+    old = $stdout
+    $stdout = StringIO.new
+    yield
+    $stdout.string
+  ensure
+    $stdout = old
+  end
 end
