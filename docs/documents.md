@@ -1,5 +1,5 @@
 # Documents API (to be deprecated)
-
+tet
 > **Note**: Once Whitehall is using the [new indexing process](new-indexing-process.md),
 the documents API will be removed and search API will consume only from the publishing API.
 
