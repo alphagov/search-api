@@ -44,7 +44,6 @@ require "cache"
 require File.expand_path("../config/logging_setup", __dir__)
 require "document"
 require "govuk_document_types"
-require "special_route_publisher"
 
 require "auth/gds_sso"
 require "auth/mock_strategy"
@@ -56,6 +55,7 @@ require "analytics/ga4_import/elastic_search_relevancy_serialiser"
 require "analytics/ga4_import/report_request_builder"
 require "analytics/ga4_import/page_data"
 
+require "content_item_publisher"
 require "content_item_publisher/publisher"
 require "content_item_publisher/content_item_presenter"
 require "content_item_publisher/finder_publisher"

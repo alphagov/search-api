@@ -68,13 +68,4 @@ RSpec.describe "duplicates", "RakeTest" do
       end
     end
   end
-
-  def capture_stdout
-    old = $stdout
-    $stdout = StringIO.new
-    yield
-    $stdout.string
-  ensure
-    $stdout = old
-  end
 end
