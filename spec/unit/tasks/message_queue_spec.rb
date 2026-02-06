@@ -1,6 +1,5 @@
 require "spec_helper"
 require "rake"
-load "tasks/message_queue.rake"
 
 RSpec.describe Indexer::MessageProcessor, "RakeTest" do
   describe "message_queue:listen_to_publishing_queue" do

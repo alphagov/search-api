@@ -2,7 +2,13 @@ ENV["RACK_ENV"] = "test"
 require "pry"
 
 require "simplecov"
-SimpleCov.start { add_filter "/spec/" }
+SimpleCov.start do
+  add_filter "/spec/"
+  add_filter "/config/"
+  add_filter "/env.rb"
+  track_files "{lib}/**/*.rb"
+  track_files "{lib}/**/*.rake"
+end
 
 $LOAD_PATH << File.expand_path("..", __dir__)
 $LOAD_PATH << File.expand_path("../lib", __dir__)
@@ -42,6 +48,8 @@ require "#{__dir__}/support/index_helpers"
 require "#{__dir__}/support/retryable_queue_examples"
 
 require "gds_api/test_helpers/publishing_api"
+
+Dir.glob(File.join(__dir__, "../lib/tasks/**/*.rake")).each { |file| load file }
 
 RSpec.configure do |config|
   config.define_derived_metadata(file_path: %r{/spec/integration/}) do |metadata|
