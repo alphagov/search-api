@@ -1,4 +1,5 @@
 require "aws-sdk-s3"
+require_relative "./task_helper"
 
 namespace :page_traffic do
   desc "Bulk load data from Google Analytics"

@@ -1,4 +1,5 @@
 require "rummager"
+require_relative "./task_helper"
 
 namespace :search do
   desc "Lists current indices, pass [all] to show inactive indices"
@@ -151,18 +152,6 @@ the existing data, you will need to run the \"migrate_schema\" task instead, whi
     end
   end
 
-  desc "Switches an index group to a new index WITHOUT transferring the data"
-  task :switch_to_empty_index, :clusters do |_, args|
-    # Note that this task will effectively clear out the index, so shouldn't be
-    # run on production without some serious consideration.
-    clusters_from_args(args).each do |cluster|
-      index_names.each do |index_name|
-        index_group = search_server(cluster:).index_group(index_name)
-        index_group.switch_to index_group.create_index
-      end
-    end
-  end
-
   desc "Switches an index group to a specific index WITHOUT transferring data"
   task :switch_to_named_index, [:new_index_name, :clusters] do |_, args|
     # This makes no assumptions on the contents of the new index.
@@ -209,11 +198,9 @@ the existing data, you will need to run the \"migrate_schema\" task instead, whi
     raise "An 'index_name' must be supplied" unless args.index_name
 
     clusters_from_args(args).each do |cluster|
+      index = search_server(cluster:).index_group(args.index_name).current
       puts "Recovery status of #{args.index_name} on cluster #{cluster.key} (#{cluster.uri}):"
-      puts SearchIndices::Index.index_recovered?(
-        base_uri: cluster.uri,
-        index_name: args.index_name,
-      )
+      puts index.index_recovered?
     end
   end
 end

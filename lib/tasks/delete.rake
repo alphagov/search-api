@@ -1,4 +1,5 @@
 require "rummager"
+require_relative "./task_helper"
 
 namespace :delete do
   desc "

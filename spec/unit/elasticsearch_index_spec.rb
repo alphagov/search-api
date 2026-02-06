@@ -236,6 +236,26 @@ RSpec.describe SearchIndices::Index do
     expect(all_documents.map(&:link)).to eq(["/foo-1", "/foo-2", "/foo-3"])
   end
 
+  describe "#index_recovered" do
+    let(:elasticsearch_client) { double("Elasticsearch::Client") }
+    let(:indices_client) { double("Elasticsearch::API::Indices::IndicesClient") }
+    let(:index) { build_government_index }
+    let(:index_name) { index.index_name }
+    before do
+      allow(Services).to receive(:elasticsearch).and_return(elasticsearch_client)
+      allow(elasticsearch_client).to receive(:indices).and_return(indices_client)
+    end
+    it "shows the index is recovered" do
+      recovery = { index_name => { "shards" => [{ "stage" => "DONE" }, { "stage" => "DONE" }] } }
+      allow(indices_client).to receive(:recovery).with(index: index_name).and_return(recovery)
+      expect(index.index_recovered?).to be true
+    end
+    it "shows the index has not recovered" do
+      recovery = { index_name => { "shards" => [{ "stage" => "DONE" }, { "stage" => "INDEX" }] } }
+      allow(indices_client).to receive(:recovery).with(index: index_name).and_return(recovery)
+    end
+  end
+
 private
 
   def scroll_uri(scroll_id)
