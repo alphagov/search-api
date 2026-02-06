@@ -6,6 +6,7 @@ module GovukIndex
       "document_collection" => %w[collection_groups],
       "licence" => %w[licence_short_description licence_overview],
       "local_transaction" => %w[introduction more_information need_to_know],
+      "operational_field" => %w[description],
       "transaction" => %w[introductory_paragraph more_information],
       "travel_advice" => %w[summary],
       "flood_and_coastal_erosion_risk_management_research_report" => %w[metadata.project_code],

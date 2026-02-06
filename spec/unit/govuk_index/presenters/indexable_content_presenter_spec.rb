@@ -155,4 +155,17 @@ RSpec.describe GovukIndex::IndexableContentPresenter do
       expect(subject.indexable_content).to eq("hidden 1\n\n\nhidden 2")
     end
   end
+
+  context "operational_field format" do
+    let(:format) { "operational_field" }
+    let(:details) do
+      {
+        "description" => "<div class=\"govspeak\"><p>Test content.</p></div>",
+      }
+    end
+
+    it "description is indexed" do
+      expect(subject.indexable_content).to eq("Test content.")
+    end
+  end
 end
