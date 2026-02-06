@@ -1,6 +1,9 @@
 require "rake"
+require_relative "../helpers/best_bet_helpers"
 
 RSpec.describe "debug" do
+  include BestBetIntegrationTestHelpers
+
   before { Rake::Task[task_name].reenable }
 
   describe "debug:show_old_index_link" do
@@ -50,6 +53,35 @@ RSpec.describe "debug" do
       # check output is multi-line (pretty-printed)
       expect(output).to include("\n")
       expect(output.lines.count).to be > 1
+    end
+  end
+
+  describe "debug:fetch_best_bets" do
+    let(:task_name) { "debug:fetch_best_bets" }
+    let(:query) { "best bets and worst bets" }
+
+    before do
+      add_best_bet(
+        query: "best bet",
+        type: "stemmed",
+        link: "/a-best-bet-link",
+        position: 1,
+      )
+      add_worst_bet(
+        query: "worst bet",
+        type: "stemmed",
+        link: "/a-worst-bet-link",
+      )
+    end
+
+    it "prints best and worst bets for a given query" do
+      output = capture_stdout { Rake::Task[task_name].invoke(query) }
+
+      expected_output = CSV.generate do |csv|
+        csv << ["best", "/a-best-bet-link", 1]
+        csv << ["worst", "/a-worst-bet-link"]
+      end
+      expect(output).to eq(expected_output)
     end
   end
 end
