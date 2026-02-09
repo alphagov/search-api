@@ -60,4 +60,29 @@ Pact.provider_states_for "GDS API Adapters" do
       commit_document("government_test", second_document_params)
     end
   end
+
+  provider_state "there are four search results for universal credit" do
+    set_up do
+      document_params = {
+        "title" => "Universal credit 1",
+        "link" => "/universal-credit-1",
+      }
+      second_document_params = {
+        "title" => "Universal credit 2",
+        "link" => "/universal-credit-2",
+      }
+      third_document_params = {
+        "title" => "Universal credit 3",
+        "link" => "/universal-credit-3",
+      }
+      fourth_document_params = {
+        "title" => "Universal credit 4",
+        "link" => "/universal-credit-4",
+      }
+      commit_document("government_test", document_params)
+      commit_document("government_test", second_document_params)
+      commit_document("government_test", third_document_params)
+      commit_document("government_test", fourth_document_params)
+    end
+  end
 end
