@@ -74,6 +74,54 @@ RSpec.describe "debug" do
     end
   end
 
+  describe "debug:show_new_synonyms" do
+    let(:task_name) { "debug:show_new_synonyms" }
+    let(:query) { "ten" }
+
+    context "a document with synonyms exists in the index" do
+      it "prints examples of the synonyms" do
+        commit_document(
+          "govuk_test",
+          {
+            "title" => "Number 10 Press Briefing",
+            "description" => "Number 10 gives an exciting press briefing.",
+          },
+        )
+
+        output = capture_stdout { Rake::Task[task_name].invoke(query) }
+        output = Rainbow.uncolor(output)
+
+        # search is looking for synonyms
+        expect(output).to include("Query interpretation for 'ten':")
+        expect(output).to include('"type"=>"SYNONYM"')
+        # exact text is indexed as alphanumeric
+        expect(output).to include("Document with this exact text is indexed as:")
+        expect(output).to include('"type"=>"<ALPHANUM>"')
+
+        expect(output).to include("Sample matches (basic query with synonyms):")
+        expect(output).to include("Number 10 Press Briefing")
+        expect(output).to include("Number 10 gives an exciting press briefing.")
+      end
+    end
+
+    context "no document with synonyms exists in the index" do
+      it "prints there were no results found" do
+        output = capture_stdout { Rake::Task[task_name].invoke(query) }
+        output = Rainbow.uncolor(output)
+
+        # search is looking for synonyms
+        expect(output).to include("Query interpretation for 'ten':")
+        expect(output).to include('"type"=>"SYNONYM"')
+        # exact text is indexed as alphanumeric
+        expect(output).to include("Document with this exact text is indexed as:")
+        expect(output).to include('"type"=>"<ALPHANUM>"')
+
+        expect(output).to include("Sample matches (basic query with synonyms):")
+        expect(output).to include("No results found")
+      end
+    end
+  end
+
   describe "debug:fetch_best_bets" do
     let(:task_name) { "debug:fetch_best_bets" }
     let(:query) { "best bets and worst bets" }
