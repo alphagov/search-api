@@ -42,9 +42,12 @@ namespace :publishing_api do
       raise "Please supply a valid finder config file name"
     end
 
-    finder = YAML.load_file("config/#{document_finder_config}")
+    puts "UNPUBLISHING #{document_finder_config}"
+    finder = YAML.load_file("config/finders/#{document_finder_config}")
 
     Services.publishing_api.unpublish(finder["content_id"], type: "gone")
     Services.publishing_api.unpublish(finder["signup_content_id"], type: "gone")
+
+    puts "FINISHED"
   end
 end
