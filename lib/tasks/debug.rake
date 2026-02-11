@@ -80,13 +80,6 @@ namespace :debug do
       end
       puts "---"
       puts "overall score: #{results[:score]}"
-
-      if ENV["SEND_TO_GRAPHITE"]
-        Services.statsd_client.gauge(
-          "relevancy.query.overall_score.rank_eval",
-          results[:score],
-        )
-      end
     ensure
       if csv.is_a?(Tempfile)
         csv.close
