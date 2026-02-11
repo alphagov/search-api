@@ -14,16 +14,18 @@ module Debug
             multi_match: {
               "query" => query,
               "fields" => %w[title.synonym^1000 description.synonym],
+              "analyzer" => "with_search_synonyms",
             },
           },
           highlight: {
             "fields" => { "title.synonym" => {}, "description.synonym" => {} },
+            "type" => "plain",
             "pre_tags" => pre_tags,
             "post_tags" => post_tags,
           },
         }
 
-        client.search(index:, analyzer: "with_search_synonyms", body: search_query)
+        client.search(index:, body: search_query)
       end
 
       def analyze_query(query)
