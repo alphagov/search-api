@@ -768,7 +768,6 @@ DEPENDENCIES
   govuk_message_queue_consumer
   govuk_schemas
   govuk_sidekiq
-  httparty
   logging
   loofah
   mr-sparkle
