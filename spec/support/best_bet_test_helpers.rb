@@ -1,6 +1,6 @@
 require "spec_helper"
 
-module BestBetIntegrationTestHelpers
+module BestBetTestHelpers
   def get_links(path)
     get(path)
     parsed_response["results"].map { |result| result["link"] }
