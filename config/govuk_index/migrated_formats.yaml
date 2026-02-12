@@ -353,12 +353,14 @@ migrated:
 - official_statistics
 - open_call_for_evidence
 - open_consultation
+- operational_field # https://github.com/alphagov/whitehall/blob/main/app/models/operational_field.rb
 - oral_statement
 - organisation
 - our_energy_use
 - our_governance
 - personal_information_charter
 - petitions_and_campaigns
+- policy_group # https://github.com/alphagov/whitehall/blob/main/app/models/policy_group.rb
 - policy_paper
 - press_release
 - procurement
@@ -376,19 +378,17 @@ migrated:
 - statistics
 - statutory_guidance
 - terms_of_reference
+- topical_event # https://github.com/alphagov/whitehall/blob/main/app/models/topical_event.rb
 - transparency
 - welsh_language_scheme
+- world_location_news # https://github.com/alphagov/whitehall/blob/main/app/models/world_location_news.rb
 - world_news_story
 - worldwide_organisation
 - written_statement
 
 indexable:
 # whitehall formats - see https://github.com/alphagov/whitehall/blob/12ea7612e25ee3ccf27bac1183cc78095d7d6ea4/app/presenters/search_api_presenters.rb#L13
-- operational_field # https://github.com/alphagov/whitehall/blob/main/app/models/operational_field.rb
 - statistics_announcement # https://github.com/alphagov/whitehall/blob/main/app/models/statistics_announcement.rb
-- policy_group # https://github.com/alphagov/whitehall/blob/main/app/models/policy_group.rb
-- topical_event # https://github.com/alphagov/whitehall/blob/main/app/models/topical_event.rb
-- world_location_news # https://github.com/alphagov/whitehall/blob/main/app/models/world_location_news.rb
 
 non_indexable_path:
 - '/help/cookie-details'
