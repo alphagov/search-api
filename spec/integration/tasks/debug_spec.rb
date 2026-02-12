@@ -1,9 +1,9 @@
 require "rake"
-require_relative "../helpers/best_bet_helpers"
+require_relative "../../support/best_bet_test_helpers"
 require_relative "../../support/rank_eval_test_helpers"
 
 RSpec.describe "debug" do
-  include BestBetIntegrationTestHelpers
+  include BestBetTestHelpers
   include RankEvalTestHelpers
 
   before { Rake::Task[task_name].reenable }
