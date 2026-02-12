@@ -1,8 +1,4 @@
 require "rummager"
-require "analytics/overall_ctr"
-require "analytics/popular_queries"
-require "analytics/query_performance"
-require "relevancy/load_judgements"
 
 namespace :relevancy do
   desc "Show overall click-through-rate for top 3 results and top 10 results"
@@ -63,7 +59,6 @@ def report_ndcg(datafile: nil, ab_tests: nil)
   end
 
   begin
-    judgements = Relevancy::LoadJudgements.from_csv(csv)
     evaluator = Evaluate::Ndcg.new(judgements, ab_tests)
     results = evaluator.compute_ndcg
 
