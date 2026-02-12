@@ -112,11 +112,11 @@ module Debug
     end
 
     def government_index_name
-      @government_index_name ||= @search_config.get_index_for_alias("government")
+      @government_index_name ||= @search_config.get_index_for_alias(SearchConfig.content_index_names)
     end
 
     def govuk_index_name
-      @govuk_index_name ||= @search_config.get_index_for_alias("govuk")
+      @govuk_index_name ||= @search_config.get_index_for_alias(SearchConfig.govuk_index_name)
     end
   end
 end
