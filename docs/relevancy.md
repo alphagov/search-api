@@ -463,32 +463,6 @@ but something else still gets high traffic ([03c4bfa][], May 2015).
 If we had other signals of content quality we might be able to reduce our
 dependence on the page views.
 
-### Finding underperforming queries
-
-1. Go to the [datastudio report][]
-
-The report does not automatically update, so it will display only the data for the dates displayed.
-
-To get new data, rerun the BigQuery queries.
-
-2. Apply the following filters:
-
-* `click_count >= 100`
-* `median_position >=4`
-
-Underperforming queries are ones with a significant click count and a highish median, i.e. around 4 and above.
-
-![datastudio](images/datastudio-dash.png)
-
-3. Visit the Google Analytics dashboard an underperforming query
-
-Once you have identified an underperforming query, head over to the Google Analytics (GA) dashboard to see the clickthrough rates and positions of the search results for that query.
-
-e.g. [GA dashboard][] for the term "utr".
-
-Use the clickthrough rate of each search result relative to its position to inform your hypotheses.
-
-
 [03c4bfa]: https://github.com/alphagov/search-api/commit/03c4bfa0a1a816a57d38b71ac5cb22c3a107c275
 [0fe6e52]: https://github.com/alphagov/search-api/commit/0fe6e526c78e8b115371855a91d4b39ccb22098a
 [6cbd84f]: https://github.com/alphagov/search-api/commit/6cbd84f36ff70ce1be6a368e807c72ba09c74f23
@@ -521,5 +495,3 @@ Use the clickthrough rate of each search result relative to its position to info
 [synonyms-blog]: https://opensourceconnections.com/blog/2016/12/02/solr-elasticsearch-synonyms-better-patterns-keyphrases/
 [this curve]: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427e5qr62u0si
 [keepwords]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-keep-words-tokenfilter.html
-[datastudio report]: https://datastudio.google.com/u/0/reporting/1-QjJDH5YkBWhF9qb-WEOuGuGIgNJExds/page/Zaus
-[GA dashboard]: https://analytics.google.com/analytics/web/#/report/conversions-ecommerce-product-list-performance/a26179049w50705554p53872948/_u.date00=20191016&_u.date01=20191023&explorer-table.plotKeys=%5B%5D&explorer-table.rowCount=50&explorer-table.secSegmentId=analytics.customDimension71&explorer-table.advFilter=%5B%5B0,"analytics.productListPosition","RE","%5E%5B0-9%5D%7B1,1%7D$",0%5D,%5B0,"analytics.customDimension71","EQ","utr",0%5D%5D&_r.drilldown=analytics.productListName:Search&explorer-table-dataTable.sortColumnName=analytics.productListCTR&explorer-table-dataTable.sortDescending=true&explorer-segmentExplorer.segmentId=analytics.productListPosition/

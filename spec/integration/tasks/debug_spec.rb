@@ -1,8 +1,10 @@
 require "rake"
-require_relative "../helpers/best_bet_helpers"
+require_relative "../../support/best_bet_test_helpers"
+require_relative "../../support/rank_eval_test_helpers"
 
 RSpec.describe "debug" do
-  include BestBetIntegrationTestHelpers
+  include BestBetTestHelpers
+  include RankEvalTestHelpers
 
   before { Rake::Task[task_name].reenable }
 
@@ -118,6 +120,32 @@ RSpec.describe "debug" do
 
         expect(output).to include("Sample matches (basic query with synonyms):")
         expect(output).to include("No results found")
+      end
+    end
+  end
+
+  describe "debug:ranking_evaluation" do
+    let(:task_name) { "debug:ranking_evaluation" }
+    let(:bucket) { "test-bucket" }
+    let(:filename) { "judgements.csv" }
+    let(:s3_client) { Aws::S3::Client.new(stub_responses: true) }
+
+    before do
+      s3_client.stub_responses(:get_object, body: mock_judgement_csv)
+      s3_object = Aws::S3::Object.new(bucket_name: bucket, key: filename, client: s3_client)
+
+      allow(Aws::S3::Object)
+        .to receive(:new)
+        .with(bucket_name: bucket, key: filename)
+        .and_return(s3_object)
+
+      stub_rank_eval_request
+    end
+
+    it "calculates how well search performs" do
+      ClimateControl.modify AWS_S3_RELEVANCY_BUCKET_NAME: bucket do
+        output = capture_stdout { Rake::Task[task_name].invoke }
+        expect(output.squeeze(" ")).to eq(rank_eval_expected_output)
       end
     end
   end
