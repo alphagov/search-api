@@ -112,8 +112,6 @@ require "govuk_index/supertype_updater"
 require "govuk_index/supertype_job"
 require "govuk_message_queue_consumer"
 
-require "evaluate/ndcg"
-
 require "metasearch_index/client"
 require "metasearch_index/deleter"
 require "metasearch_index/inserter"
