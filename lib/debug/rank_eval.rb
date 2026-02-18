@@ -75,7 +75,7 @@ module Debug
       # have a bug that prevented us calling rank_eval with an index argument.
       # https://github.com/elastic/elasticsearch-ruby/pull/724
       # This bug has since been fixed, but removing this workaround means
-      # that instead of using the httparty/net http timeout default,
+      # that instead of using timeout specified here,
       # we'd be using the elasticsearch timeout we have set, which is
       # not long enough for the rank_eval call. Because the timeout is a global
       # setting on the elasticsearch client, changing the timeout to only affect
@@ -90,6 +90,7 @@ module Debug
       options = {
         body: { requests:, metric: { dcg: { k: 10, normalize: true } } }.to_json,
         headers: { "Content-Type" => "application/json" },
+        timeout: 120,
       }
       indices = "*"
       url = "#{uri}/#{indices}/_rank_eval"
