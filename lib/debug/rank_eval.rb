@@ -71,11 +71,16 @@ module Debug
   private
 
     def rank_eval(requests)
-      # https://www.elastic.co/guide/en/elasticsearch/reference/current/search-rank-eval.html
-      # AWS doesn't permit us to speak to all indexes with the rank eval api,
-      # and the elasticsearch client has a bug that prevents us calling individual
-      # indexes (https://github.com/elastic/elasticsearch-ruby/pull/698).
-      # This is a fix for that situation.
+      # This workaround was put in because the elasticsearch ruby client used to
+      # have a bug that prevented us calling rank_eval with an index argument.
+      # https://github.com/elastic/elasticsearch-ruby/pull/724
+      # This bug has since been fixed, but removing this workaround means
+      # that instead of using the httparty/net http timeout default,
+      # we'd be using the elasticsearch timeout we have set, which is
+      # not long enough for the rank_eval call. Because the timeout is a global
+      # setting on the elasticsearch client, changing the timeout to only affect
+      # the rank evaluation workflow would require a refactor.
+
       # @search_config.rank_eval(
       #   requests: requests,
       #   metric: { dcg: { k: 10, normalize: true } },
