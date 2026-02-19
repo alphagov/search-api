@@ -7,7 +7,6 @@ gem "elasticsearch", "~> 6" # We need a 6.x release to interface with Elasticsea
 gem "gds-api-adapters"
 gem "google-analytics-data-v1beta"
 gem "google-api-client"
-gem "googleauth"
 gem "google-cloud-bigquery"
 gem "govuk_app_config"
 gem "govuk_document_types"

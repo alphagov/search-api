@@ -764,7 +764,6 @@ DEPENDENCIES
   google-analytics-data-v1beta
   google-api-client
   google-cloud-bigquery
-  googleauth
   govuk_app_config
   govuk_document_types
   govuk_message_queue_consumer
