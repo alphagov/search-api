@@ -60,12 +60,11 @@ namespace :debug do
   desc "Check how well the search query performs for a set of relevancy judgements"
   task :ranking_evaluation, [:datafile, :ab_tests] do |_, args|
     csv = args.datafile || begin
-      bucket_name = ENV["AWS_S3_RELEVANCY_BUCKET_NAME"]
-      raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME envvar" if bucket_name.nil?
+      bucket = ENV["AWS_S3_RELEVANCY_BUCKET_NAME"]
+      raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME envvar" if bucket.nil?
 
       csv = Tempfile.open(["judgements", ".csv"])
-      o = Aws::S3::Object.new(bucket_name:, key: "judgements.csv")
-      o.get(response_target: csv.path)
+      Services.s3_client.get_object(bucket:, key: "judgements.csv", response_target: csv.path)
       csv.path
     end
 
@@ -80,13 +79,6 @@ namespace :debug do
       end
       puts "---"
       puts "overall score: #{results[:score]}"
-
-      if ENV["SEND_TO_GRAPHITE"]
-        Services.statsd_client.gauge(
-          "relevancy.query.overall_score.rank_eval",
-          results[:score],
-        )
-      end
     ensure
       if csv.is_a?(Tempfile)
         csv.close

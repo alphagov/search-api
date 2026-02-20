@@ -71,11 +71,16 @@ module Debug
   private
 
     def rank_eval(requests)
-      # https://www.elastic.co/guide/en/elasticsearch/reference/current/search-rank-eval.html
-      # AWS doesn't permit us to speak to all indexes with the rank eval api,
-      # and the elasticsearch client has a bug that prevents us calling individual
-      # indexes (https://github.com/elastic/elasticsearch-ruby/pull/698).
-      # This is a fix for that situation.
+      # This workaround was put in because the elasticsearch ruby client used to
+      # have a bug that prevented us calling rank_eval with an index argument.
+      # https://github.com/elastic/elasticsearch-ruby/pull/724
+      # This bug has since been fixed, but removing this workaround means
+      # that instead of using timeout specified here,
+      # we'd be using the elasticsearch timeout we have set, which is
+      # not long enough for the rank_eval call. Because the timeout is a global
+      # setting on the elasticsearch client, changing the timeout to only affect
+      # the rank evaluation workflow would require a refactor.
+
       # @search_config.rank_eval(
       #   requests: requests,
       #   metric: { dcg: { k: 10, normalize: true } },
@@ -85,6 +90,7 @@ module Debug
       options = {
         body: { requests:, metric: { dcg: { k: 10, normalize: true } } }.to_json,
         headers: { "Content-Type" => "application/json" },
+        timeout: 120,
       }
       indices = "*"
       url = "#{uri}/#{indices}/_rank_eval"
@@ -112,11 +118,11 @@ module Debug
     end
 
     def government_index_name
-      @government_index_name ||= @search_config.get_index_for_alias("government")
+      @government_index_name ||= @search_config.get_index_for_alias(SearchConfig.content_index_names)
     end
 
     def govuk_index_name
-      @govuk_index_name ||= @search_config.get_index_for_alias("govuk")
+      @govuk_index_name ||= @search_config.get_index_for_alias(SearchConfig.govuk_index_name)
     end
   end
 end

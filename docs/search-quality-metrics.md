@@ -1,28 +1,8 @@
 # Search Quality Metrics
 
-We assess the quality of Search API search results with two metrics:
-Click Through Rate (an online metric) and Normalised Discounted Cumulative Gain
-([nDCG][]).
-
-## Online metrics
-
-We monitor changes to search relevance over time in a [Search Relevancy Dashboard][].
-We call the metrics displayed there *online metrics*.
-
-Our main online metric is Click Through Rate on the top results
-(top 1, 3, and 5). This isn't a great metric, since users might
-click on something that isn't what they were looking for. But this
-serves our needs in the absence of a more sophisticated way of
-measuring user success following a search.
-
-## Offline metrics
-
-Our main offline metric is nDCG.
-
 We use Elasticsearch's [Ranking Evaluation API](ranking_evaluation_api)
-to assess the quality of results retrieved from Elasticsearch prior
-to re-ranking.
-The API enables us to score how well search-api ranks results for a given query.
+to assess the quality of results retrieved from Elasticsearch prior to re-ranking. 
+The API enables us to score how well search-api ranks results by relevancy for a given query.
 
 ### What is rank evaluation?
 
@@ -71,8 +51,7 @@ returning better results than the query for `harry potter`.
 Moreover, if the score for `harry potter` was `0.2392687105963024` before
 we made a change, then that means we've made a good change for that query.
 
-This can be measured over time, and it is! See the section on 'What do we do
-with the query scores?' below.
+This could be measured over time, though we don't do this systematically at the moment.
 
 ## How do we compute a score for a query?
 
@@ -124,36 +103,14 @@ in time.
 
 ## What do we do with the query scores?
 
-We use them for checking changes locally, as a quick check before we run an AB
-test.
-
-```
-bundle exec rake relevance:ndcg
-```
-
-We also report the rank evaluation scores to graphite.
-This enables us to plot how relevancy changes over time (overall
-  and for a given query).
-
-This runs every 3 hours in all environments:
-```
-SEND_TO_GRAPHITE=true bundle exec rake relevance:ndcg
-```
-
-See the Search Relevancy grafana dashboard.
+We can run the rake task `debug:rank_evaluation` and look at the query scores before
+and after making a change, so we can see the effect of the change on search ranking.
 
 ## How do we collect relevancy judgements?
 
-We use a combination of implicit and explicit relevance judgements.
+We use explicit judgements based on expert opinion. The relevance judgements are uploaded 
+manually in CSV format to an S3 bucket, which then gets pulled by search-api when the rake
+task runs.
 
-The implicit relevance judgements are derived from user click data.
-
-The explicit judgements are provided by experts across government via
-the search relevance tool: https://github.com/alphagov/govuk-search-relevance-tool.
-
-Relevance judgements are uploaded in CSV format to an S3 bucket,
-which then gets pulled by search-api when the scheduled job runs.
-
-[ranking_evaluation_api]: https://www.elastic.co/guide/en/elasticsearch/reference/6.7/search-rank-eval.html#search-rank-eval
+[ranking_evaluation_api]: https://www.elastic.co/guide/en/elasticsearch/reference/6.8/search-rank-eval.html#search-rank-eval
 [nDCG]: https://en.wikipedia.org/wiki/Discounted_cumulative_gain
-[search relevancy dashboard]: https://grafana.blue.production.govuk.digital/dashboard/file/search_relevancy.json?orgId=1

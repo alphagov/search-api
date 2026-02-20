@@ -1,8 +1,8 @@
 require "spec_helper"
-require_relative "../helpers/best_bet_helpers"
+require_relative "../../support/best_bet_test_helpers"
 
 RSpec.describe "best/worst bet functionality" do
-  include BestBetIntegrationTestHelpers
+  include BestBetTestHelpers
 
   it "boosts exact best bets" do
     commit_document(
