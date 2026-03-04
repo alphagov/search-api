@@ -23,10 +23,10 @@ module Indexer
         size: 10 * links.size,
       })
 
-      default_rank = Hash.new(
+      default_rank = Hash.new({
         rank: traffic_index_size,
         view_count: 1,
-      )
+      })
 
       ranks = results["hits"]["hits"].each_with_object(default_rank) do |hit, hsh|
         link = hit["_id"]
