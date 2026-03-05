@@ -55,4 +55,13 @@ RSpec.describe "SitemapTest" do
       end
     end
   end
+
+  describe "post /sitemaps/*" do
+    it "returns a 405 error message" do
+      post "/sitemaps/server/anything/stuff.php"
+      expect(last_response.status).to eq(405)
+      expect(last_response.headers["Allow"]).to eq("GET")
+      expect(last_response.body).to eq({ message: "Method Not Allowed: Use GET to access the sitemap." }.to_json)
+    end
+  end
 end
