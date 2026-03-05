@@ -51,15 +51,6 @@ class SearchConfig
       search_params.search_config.run_search_with_params(search_params)
     end
 
-    def run_batch_search(searches)
-      search_params = []
-      searches.each do |search|
-        search_params << parse_parameters(search)
-      end
-
-      search_params.first.search_config.run_batch_search_with_params(search_params)
-    end
-
     def generate_query(raw_parameters)
       search_params = parse_parameters(raw_parameters)
 
@@ -120,10 +111,6 @@ class SearchConfig
     searcher.run(search_params)
   end
 
-  def run_batch_search_with_params(search_params)
-    batch_searcher.run(search_params)
-  end
-
   def generate_query_for_params(search_params)
     searcher.query(search_params)
   end
@@ -169,15 +156,6 @@ private
 
   def searcher
     @searcher ||= Search::Query.new(
-      content_index:,
-      registries:,
-      metasearch_index:,
-      spelling_index:,
-    )
-  end
-
-  def batch_searcher
-    @batch_searcher ||= Search::BatchQuery.new(
       content_index:,
       registries:,
       metasearch_index:,
