@@ -1,0 +1,10 @@
+{
+  "fields": [
+    "digital_markets_interventions_firm",
+    "digital_markets_interventions_activity",
+    "digital_markets_interventions_type",
+    "digital_markets_interventions_state",
+    "digital_markets_interventions_opened",
+    "digital_markets_interventions_closed"
+  ]
+}
