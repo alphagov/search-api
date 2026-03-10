@@ -1208,16 +1208,22 @@
     "type": "date"
   },
 
-  "digital_markets_regime_requirements_sms_firm_company": {
+  "digital_markets_interventions_firm": {
     "type": "identifiers"
   },
-  "digital_markets_regime_requirements_sms_designation": {
+  "digital_markets_interventions_activity": {
     "type": "identifiers"
   },
-  "digital_markets_regime_requirements_status": {
+  "digital_markets_interventions_type": {
     "type": "identifiers"
   },
-  "digital_markets_regime_requirements_date": {
+  "digital_markets_interventions_state": {
+    "type": "identifiers"
+  },
+  "digital_markets_interventions_opened": {
+    "type": "date"
+  },
+  "digital_markets_interventions_closed": {
     "type": "date"
   }
 }
