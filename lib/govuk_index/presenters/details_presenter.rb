@@ -111,6 +111,12 @@ module GovukIndex
       details["organisation_type"]
     end
 
+    def statistics_announcement_state
+      if format == "statistics_announcement"
+        details["state"]
+      end
+    end
+
   private
 
     def service_manual

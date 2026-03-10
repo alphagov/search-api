@@ -209,6 +209,7 @@ module GovukIndex
         slug: common_fields.slug,
         stage: specialist.stage,
         start_date: details.start_date,
+        statistics_announcement_state: details.statistics_announcement_state,
         status: specialist.status,
         subject: specialist.subject,
         superseded_organisations: expanded_links.superseded_organisations,

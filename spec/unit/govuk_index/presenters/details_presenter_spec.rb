@@ -311,6 +311,19 @@ RSpec.describe GovukIndex::DetailsPresenter do
     end
   end
 
+  context "statistics_announcement" do
+    let(:format) { "statistics_announcement" }
+    let(:details) do
+      {
+        "state" => "confirmed",
+      }
+    end
+
+    it("extracts stats announcement-specific fields") do
+      expect(presented_details.statistics_announcement_state).to eq(details["state"])
+    end
+  end
+
   context "any format" do
     let(:format) { "any" }
     context "it has a start and an end date" do
