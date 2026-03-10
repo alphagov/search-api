@@ -280,6 +280,26 @@ RSpec.describe GovukIndex::CommonFieldsPresenter do
     expect(presenter.slug).to eq "event-slug"
   end
 
+  it "extracts the slug from the base path for a national statistics announcement" do
+    payload = {
+      "base_path" => "/government/statistics/announcements/announcement-slug",
+      "document_type" => "national_statistics_announcement",
+    }
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.slug).to eq "announcement-slug"
+  end
+
+  it "extracts the slug from the base path for an official statistics announcement" do
+    payload = {
+      "base_path" => "/government/statistics/announcements/announcement-slug",
+      "document_type" => "official_statistics_announcement",
+    }
+    presenter = common_fields_presenter(payload)
+
+    expect(presenter.slug).to eq "announcement-slug"
+  end
+
   def common_fields_presenter(payload)
     described_class.new(payload)
   end
