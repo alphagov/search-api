@@ -316,11 +316,15 @@ RSpec.describe GovukIndex::DetailsPresenter do
     let(:details) do
       {
         "state" => "confirmed",
+        "display_date" => "1 October 2014 9:30am",
+        "release_timestamp" => "2014-10-01T09:30:00.000+01:00",
       }
     end
 
     it("extracts stats announcement-specific fields") do
       expect(presented_details.statistics_announcement_state).to eq(details["state"])
+      expect(presented_details.display_date).to eq(details["display_date"])
+      expect(presented_details.release_timestamp).to eq(details["release_timestamp"])
     end
   end
 

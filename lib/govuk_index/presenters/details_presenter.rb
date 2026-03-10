@@ -8,8 +8,10 @@ module GovukIndex
     set_payload_method :details
 
     delegate_to_payload :document_type_label
+    delegate_to_payload :display_date
     delegate_to_payload :licence_identifier
     delegate_to_payload :licence_short_description
+    delegate_to_payload :release_timestamp
     delegate_to_payload :url
 
     def initialize(details:, format:)
