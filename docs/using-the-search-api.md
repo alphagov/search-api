@@ -44,10 +44,6 @@ Aggregated/grouped search query (fetch list of organisations and the number of d
 
 <https://www.gov.uk/api/search.json?count=0&aggregate_organisations=2>
 
-You can also use the `/batch_search` endpoint to send multiple queries:
-
-<https://www.gov.uk/api/batch_search.json?search[][0][q]=dragons&search[][1][q]=government-digital-service>
-
 ## URL parameters
 
 ### q
