@@ -65,6 +65,8 @@ require "content_item_publisher/finder_email_signup_presenter"
 
 require "base_job"
 
+require "collectors/elasticsearch_prometheus_collector"
+
 require "indexer"
 require "indexer/amender"
 require "indexer/attachments_lookup"
