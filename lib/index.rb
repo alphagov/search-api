@@ -144,7 +144,7 @@ module SearchIndices
     end
 
     def get_document_by_id(document_id)
-      @client.get(index: @index_name, type: "_all", id: document_id)
+      @client.get(index: @index_name, id: document_id)
     rescue Elasticsearch::Transport::Transport::Errors::NotFound
       nil
     end
@@ -189,7 +189,7 @@ module SearchIndices
 
     def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_name, type: "generic-document", body: payload)
+      @client.search(index: @index_name, body: payload)
     end
 
     # Convert a best bet query to a string formed by joining the normalised

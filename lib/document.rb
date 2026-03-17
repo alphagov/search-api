@@ -75,7 +75,6 @@ class Document
         end
       end
       doc["document_type"] = @type
-      doc["_type"] = "generic-document"
       doc["_id"] = @id if @id
     end
   end
