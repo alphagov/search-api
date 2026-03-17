@@ -29,7 +29,7 @@ RSpec.describe "ElasticsearchDeletionTest" do
              { document_type: "generic-document" }.to_json,
              { "CONTENT_TYPE" => "application/json" }
 
-      expect_document_missing_in_rummager(id: "/an-example-page", index: "government_test", type: "generic-document")
+      expect_document_missing_in_rummager(id: "/an-example-page", index: "government_test")
     end
 
     it "removes a document from the index queued" do
