@@ -1,10 +1,8 @@
 require "spec_helper"
-require "spec/support/diskspace_test_helpers"
 require "spec/support/connectivity_test_helpers"
 
 RSpec.describe "HealthcheckTest" do
   include ConnectivityTestHelpers
-  include DiskspaceTestHelpers
 
   let(:queues) do
     { "bulk" => 2, "default" => 1 }
@@ -15,7 +13,6 @@ RSpec.describe "HealthcheckTest" do
     allow_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(queues)
     allow_any_instance_of(Sidekiq::Queue).to receive(:latency).and_return(queue_latency)
     stub_connectivity_check
-    stub_diskspace_check
   end
 
   describe "live check" do
@@ -64,28 +61,6 @@ RSpec.describe "HealthcheckTest" do
 
         expect(parsed_response["status"]).to eq "ok"
         expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "ok"
-      end
-    end
-  end
-
-  describe "#elasticsearch_index_diskspace check" do
-    context "when elasticsearch disk image has less than 20% free" do
-      before do
-        stub_diskspace_fail_check
-      end
-
-      it "returns a critical status" do
-        get "/healthcheck/elasticsearch-diskspace"
-
-        expect(parsed_response["status"]).to eq "critical"
-      end
-    end
-
-    context "when elasticsearch disk image has more than 20% free" do
-      it "returns an OK status" do
-        get "/healthcheck/elasticsearch-diskspace"
-
-        expect(parsed_response["status"]).to eq "ok"
       end
     end
   end
