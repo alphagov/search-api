@@ -144,10 +144,10 @@ module IntegrationTestHelper
     end
   end
 
-  def expect_document_missing_in_rummager(id:, index:, type: "_all")
+  def expect_document_missing_in_rummager(id:, index:)
     clusters.each do |cluster|
       expect {
-        fetch_document_from_rummager(id:, index:, cluster:, type:)
+        fetch_document_from_rummager(id:, index:, cluster:)
       }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
     end
   end
@@ -216,10 +216,9 @@ private
     end
   end
 
-  def fetch_document_from_rummager(id:, index:, type: "_all", cluster: Clusters.default_cluster)
+  def fetch_document_from_rummager(id:, index:, cluster: Clusters.default_cluster)
     client(cluster:).get(
       index:,
-      type:,
       id:,
     )
   end
