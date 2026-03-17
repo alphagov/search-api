@@ -72,7 +72,6 @@ module IntegrationTestHelper
         {
           index: index_name,
           id:,
-          type: "generic-document",
           body: atts,
         }.merge(version_details),
       )
@@ -90,7 +89,7 @@ module IntegrationTestHelper
       next if hits.empty?
 
       client(cluster:)
-        .bulk(body: hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } })
+        .bulk(body: hits.map { |hit| { delete: { _index: index, _id: hit["_id"] } } })
     end
 
     commit_index index
