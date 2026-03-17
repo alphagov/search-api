@@ -376,6 +376,7 @@ migrated:
 - standard
 - statistical_data_set
 - statistics
+- statistics_announcement # https://github.com/alphagov/whitehall/blob/main/app/models/statistics_announcement.rb
 - statutory_guidance
 - terms_of_reference
 - topical_event # https://github.com/alphagov/whitehall/blob/main/app/models/topical_event.rb
@@ -386,9 +387,7 @@ migrated:
 - worldwide_organisation
 - written_statement
 
-indexable:
-# whitehall formats - see https://github.com/alphagov/whitehall/blob/12ea7612e25ee3ccf27bac1183cc78095d7d6ea4/app/presenters/search_api_presenters.rb#L13
-- statistics_announcement # https://github.com/alphagov/whitehall/blob/main/app/models/statistics_announcement.rb
+indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'
