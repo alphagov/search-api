@@ -44,7 +44,6 @@ module Indexer
     def index_action(doc_hash)
       {
         "index" => {
-          "_type" => "generic-document",
           "_id" => doc_hash["_id"] || doc_hash["link"],
         },
       }
