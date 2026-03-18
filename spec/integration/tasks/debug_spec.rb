@@ -24,9 +24,9 @@ RSpec.describe "debug" do
         output = capture_stdout { Rake::Task[task_name].invoke(link) }
 
         # check document includes expected key/value pairs
-        expect(output).to include('"link"=>"/path/to_page"')
-        expect(output).to include('"real_index_name"=>"government_test"')
-        expect(output).to include('"_id"=>"/path/to_page"')
+        expect(output).to include('"link" => "/path/to_page"')
+        expect(output).to include('"real_index_name" => "government_test"')
+        expect(output).to include('"_id" => "/path/to_page"')
 
         # check output is multi-line (pretty-printed)
         expect(output).to include("\n")
@@ -58,9 +58,9 @@ RSpec.describe "debug" do
         output = capture_stdout { Rake::Task[task_name].invoke(link) }
 
         # check document includes expected key/value pairs
-        expect(output).to include('"link"=>"/path/to_page"')
-        expect(output).to include('"real_index_name"=>"govuk_test"')
-        expect(output).to include('"_id"=>"/path/to_page"')
+        expect(output).to include('"link" => "/path/to_page"')
+        expect(output).to include('"real_index_name" => "govuk_test"')
+        expect(output).to include('"_id" => "/path/to_page"')
 
         # check output is multi-line (pretty-printed)
         expect(output).to include("\n")
@@ -95,10 +95,10 @@ RSpec.describe "debug" do
 
         # search is looking for synonyms
         expect(output).to include("Query interpretation for 'ten':")
-        expect(output).to include('"type"=>"SYNONYM"')
+        expect(output).to include('"type" => "SYNONYM"')
         # exact text is indexed as alphanumeric
         expect(output).to include("Document with this exact text is indexed as:")
-        expect(output).to include('"type"=>"<ALPHANUM>"')
+        expect(output).to include('"type" => "<ALPHANUM>"')
 
         expect(output).to include("Sample matches (basic query with synonyms):")
         expect(output).to include("Number 10 Press Briefing")
@@ -113,10 +113,10 @@ RSpec.describe "debug" do
 
         # search is looking for synonyms
         expect(output).to include("Query interpretation for 'ten':")
-        expect(output).to include('"type"=>"SYNONYM"')
+        expect(output).to include('"type" => "SYNONYM"')
         # exact text is indexed as alphanumeric
         expect(output).to include("Document with this exact text is indexed as:")
-        expect(output).to include('"type"=>"<ALPHANUM>"')
+        expect(output).to include('"type" => "<ALPHANUM>"')
 
         expect(output).to include("Sample matches (basic query with synonyms):")
         expect(output).to include("No results found")
