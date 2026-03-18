@@ -19,7 +19,7 @@ module QueryComponents
           script_score: {
             script: {
               lang: "painless",
-              source: "doc['popularity'].value + #{POPULARITY_OFFSET}",
+              source: "doc['popularity'].size() == 0 ? 0 : doc['popularity'].value + #{POPULARITY_OFFSET}",
             },
           },
         },
