@@ -17,16 +17,14 @@ module Index
     end
 
     def get(params)
-      client.get(
+      ElasticsearchClient.instance.get(
         params.merge(index: index_name),
       )
     end
 
     def bulk(params)
       clusters.map do |cluster|
-        client(cluster:).bulk(
-          params.merge(index: index_name),
-        )
+        ElasticsearchClient.instance.bulk(params[:body], index_name, client(cluster:))
       end
     end
 

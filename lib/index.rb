@@ -111,7 +111,8 @@ module SearchIndices
 
       with_retries do
         payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
-        response = @client.bulk(index: @index_name, body: payload_generator.bulk_payload(document_hashes_or_payload))
+        payload = payload_generator.bulk_payload(document_hashes_or_payload)
+        response = ElasticsearchClient.instance.bulk(payload, @index_name)
 
         items = response["items"]
         failed_items = items.select do |item|
@@ -125,7 +126,7 @@ module SearchIndices
           # index
           blocked_items = failed_items.select do |item|
             error = (item["index"] || item["create"])["error"]
-            locked_index_error?(error["reason"])
+            locked_index_error?(error)
           end
           if blocked_items.any?
             raise IndexLocked
@@ -214,11 +215,11 @@ module SearchIndices
 
     def delete(id)
       begin
-        @client.delete(index: @index_name, type: "generic-document", id:)
+        @client.delete(index: @index_name, id:)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true
-      rescue Elasticsearch::Transport::Transport::Errors::Forbidden => e
+      rescue Elasticsearch::Transport::Transport::Error => e
         if locked_index_error?(e.message)
           raise IndexLocked
         else
@@ -271,8 +272,10 @@ module SearchIndices
     # a read-only index. An example read-only error message:
     #
     #     "ClusterBlockException[blocked by: [FORBIDDEN/8/index read-only / allow delete (api)];]"
-    def locked_index_error?(error_message)
-      error_message =~ %r{\[FORBIDDEN/[^/]+/index read-only}
+    def locked_index_error?(error)
+      es6_error = (error["reason"] =~ %r{\[FORBIDDEN/[^/]+/index read-only})
+      es7_error = (error["type"] == "cluster_block_exception")
+      es6_error || es7_error
     end
 
     def logger

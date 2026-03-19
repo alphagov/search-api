@@ -13,8 +13,10 @@ module IntegrationTestHelper
     allowed_hosts = Clusters.active.map(&:uri)
 
     allowed_paths = []
+    # allowed_paths << "$"
     allowed_paths << "[a-z_-]+[_-]test.*"
-    allowed_paths << "_alias"
+    allowed_paths << "$"
+    allowed_paths << ".*_alias"
     allowed_paths << "_bulk"
     allowed_paths << "_reindex"
     allowed_paths << "_search/scroll"
@@ -68,13 +70,7 @@ module IntegrationTestHelper
     atts[:link] ||= id
 
     clusters.each do |cluster|
-      client(cluster:).index(
-        {
-          index: index_name,
-          id:,
-          body: atts,
-        }.merge(version_details),
-      )
+      ElasticsearchClient.instance.index(id,atts, index_name, version_details, client(cluster:))
     end
 
     id
@@ -88,8 +84,9 @@ module IntegrationTestHelper
 
       next if hits.empty?
 
-      client(cluster:)
-        .bulk(body: hits.map { |hit| { delete: { _index: index, _id: hit["_id"] } } })
+      payload = hits.map { |hit| { delete: { _index: index, _id: hit["_id"] } } }
+
+      ElasticsearchClient.instance.bulk(payload, index, client(cluster:))
     end
 
     commit_index index
@@ -178,12 +175,11 @@ module IntegrationTestHelper
     attributes = sample_document_attributes(index_name, count, override:)
     data = attributes.flat_map do |sample_document|
       [
-        { index: { _id: sample_document["link"], _type: "generic-document" } },
+        { index: { _id: sample_document["link"] } },
         sample_document,
       ]
     end
-
-    clusters.each { |cluster| client(cluster:).bulk(index: index_name, body: data) }
+    clusters.each { |cluster| ElasticsearchClient.instance.bulk(data, index_name, client(cluster:)) }
     commit_index(index_name)
   end
 
@@ -217,9 +213,6 @@ private
   end
 
   def fetch_document_from_rummager(id:, index:, cluster: Clusters.default_cluster)
-    client(cluster:).get(
-      index:,
-      id:,
-    )
+    ElasticsearchClient.instance.get_from_index(id, index, client(cluster:))
   end
 end

@@ -32,7 +32,8 @@ module Services
   # error because the operation has already been run.
   def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
     Elasticsearch::Client.new(
-      hosts: cluster ? cluster.uri : hosts,
+      # tracer: Logger.new(STDOUT),
+    hosts: cluster ? cluster.uri : hosts,
       request_timeout: timeout,
       logger: Logging.logger[self],
       retry_on_failure:,
