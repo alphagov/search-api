@@ -111,7 +111,8 @@ module SearchIndices
 
       with_retries do
         payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
-        response = @client.bulk(index: @index_name, body: payload_generator.bulk_payload(document_hashes_or_payload))
+        payload = payload_generator.bulk_payload(document_hashes_or_payload)
+        response = ElasticsearchClient.instance.bulk(payload, @index_name)
 
         items = response["items"]
         failed_items = items.select do |item|
@@ -214,11 +215,11 @@ module SearchIndices
 
     def delete(id)
       begin
-        @client.delete(index: @index_name, type: "generic-document", id:)
+        @client.delete(index: @index_name, id:)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
         # We are fine with trying to delete deleted documents.
         true
-      rescue Elasticsearch::Transport::Transport::Errors::Forbidden => e
+      rescue Elasticsearch::Transport::Transport::Error => e
         if locked_index_error?(e.message)
           raise IndexLocked
         else

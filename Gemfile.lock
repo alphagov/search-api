@@ -82,12 +82,12 @@ GEM
     docile (1.4.0)
     domain_name (0.6.20240107)
     drb (2.2.3)
-    elasticsearch (6.8.3)
-      elasticsearch-api (= 6.8.3)
-      elasticsearch-transport (= 6.8.3)
-    elasticsearch-api (6.8.3)
+    elasticsearch (7.10.0)
+      elasticsearch-api (= 7.10.0)
+      elasticsearch-transport (= 7.10.0)
+    elasticsearch-api (7.10.0)
       multi_json
-    elasticsearch-transport (6.8.3)
+    elasticsearch-transport (7.10.0)
       faraday (~> 1)
       multi_json
     erb (6.0.2)
@@ -760,7 +760,7 @@ DEPENDENCIES
   bootsnap
   bunny-mock
   climate_control
-  elasticsearch (~> 6)
+  elasticsearch (= 7.10)
   gds-api-adapters
   google-analytics-data-v1beta
   google-api-client

@@ -57,12 +57,23 @@ RSpec.configure do |config|
     metadata[:tags] << :integration
   end
 
+  config.define_derived_metadata(file_path: %r{/spec/unit/}) do |metadata|
+    metadata[:tags] ||= []
+    metadata[:tags] << :unit
+  end
+
   config.include SpecHelpers
   config.include SchemaHelpers
 
   config.include IntegrationTestHelper, tags: :integration
   config.include IntegrationSpecSetupHelper, tags: :integration
   config.include Rack::Test::Methods, tags: :integration
+
+  config.around(:each, :unit) do |example|
+    ClimateControl.modify(USE_ELASTICSEARCH_6: "true") do
+      example.run
+    end
+  end
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

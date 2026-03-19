@@ -84,7 +84,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can be searched" do
-    stub_get = stub_request(:get, "http://example.com:9200/government_test/generic-document/_search").with(
+    stub_get = stub_request(:post, "http://example.com:9200/government_test/_search").with(
       body: %r{"query":"keyword search"},
     ).to_return(
       body: '{"hits":{"hits":[]}}',
@@ -110,7 +110,7 @@ RSpec.describe SearchIndices::Index do
 
   it "can fetch documents by format" do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=500&version=true"
-    stub_request(:get, search_pattern).with(
+    stub_request(:post, search_pattern).with(
       body: { query: { term: { format: "organisation" } }, _source: { includes: %w[title link] }, sort: %w[_doc] },
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
@@ -135,7 +135,7 @@ RSpec.describe SearchIndices::Index do
   it "can fetch documents by format with certain fields" do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=500&version=true"
 
-    stub_request(:get, search_pattern).with(
+    stub_request(:post, search_pattern).with(
       body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"_source\":{\"includes\":[\"title\",\"link\"]},\"sort\":[\"_doc\"]}",
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
@@ -160,7 +160,7 @@ RSpec.describe SearchIndices::Index do
 
   it "can count the documents without retrieving them all" do
     search_pattern = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=50&version=true"
-    stub_request(:get, search_pattern).with(
+    stub_request(:post, search_pattern).with(
       body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json,
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 100 } }.to_json,
@@ -172,7 +172,7 @@ RSpec.describe SearchIndices::Index do
   it "can retrieve all documents" do
     search_uri = "http://example.com:9200/government_test/_search?scroll=1m&search_type=query_then_fetch&size=50&version=true"
 
-    stub_request(:get, search_uri).with(
+    stub_request(:post, search_uri).with(
       body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json,
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 100, hits: [] } }.to_json,
@@ -202,7 +202,7 @@ RSpec.describe SearchIndices::Index do
 
     allow(described_class).to receive(:scroll_batch_size).and_return(2)
 
-    stub_request(:get, search_uri).with(
+    stub_request(:post, search_uri).with(
       body: { query: expected_all_documents_query, sort: %w[_doc] }.to_json,
     ).to_return(
       body: { _scroll_id: "abcdefgh", hits: { total: 3, hits: [] } }.to_json,
@@ -259,7 +259,7 @@ RSpec.describe SearchIndices::Index do
 private
 
   def scroll_uri(scroll_id)
-    "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=#{scroll_id}"
+    "http://example.com:9200/_search/scroll/#{scroll_id}?scroll=1m"
   end
 
   def scroll_response_body(scroll_id, total_results, results)

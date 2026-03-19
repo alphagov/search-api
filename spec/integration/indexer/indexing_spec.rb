@@ -152,15 +152,6 @@ RSpec.describe "ElasticsearchIndexingTest" do
     let(:index_name) { "metasearch_test" }
 
     it "reschedules the job if the index has a write lock" do
-      stubbed_client = client
-
-      locked_response = { "items" => [
-        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } },
-      ] }
-      expect(stubbed_client).to receive(:bulk).and_return(locked_response)
-      expect(stubbed_client).to receive(:bulk).and_call_original
-      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
-
       details = <<~DETAILS
         {\"best_bets\":[
           {\"link\":\"/learn-to-drive-a-car\",\"position\":1},
@@ -168,77 +159,46 @@ RSpec.describe "ElasticsearchIndexingTest" do
           {\"link\":\"/learn-to-drive-a-car\",\"position\":10}
         ],\"worst_bets\":[]}", "stemmed_query_as_term"=>" learn to drive "}]
       DETAILS
+      index = search_server.index_group(index_name).current
 
-      post "/#{index_name}/documents",
-           {
-             "_id" => "learn+to+drive-exact",
-             "_type" => "best_bet",
-             "stemmed_query" => "learn to drive",
-             "details" => details,
-           }.to_json
+      Sidekiq::Testing.fake! do
+        # Step 1: enqueue job via request
+        post "/#{index_name}/documents",
+             {
+               "_id" => "learn+to+drive-exact",
+               "_type" => "best_bet",
+               "stemmed_query" => "learn to drive",
+               "details" => details,
+             }.to_json
 
-      expect_document_is_in_rummager(
-        {
-          "stemmed_query" => "learn to drive",
-          "details" => details,
-        },
-        index: index_name,
-        type: "best_bet",
-        id: "learn+to+drive-exact",
-      )
-    end
-  end
+        # Step 2: run FIRST attempt while locked
+        with_lock(index) do
+          expect {
+            Indexer::BulkIndexJob.perform_one
+          }.to_not change(Indexer::BulkIndexJob.jobs, :size) # it rescheduled itself
+        end
 
-  context "when indexing content" do
-    it "reschedules the job if the index has a write lock" do
-      stubbed_client = client
+        # At this point:
+        # - First job ran
+        # - It hit the lock
+        # - It enqueued a retry
 
-      locked_response = { "items" => [
-        { "index" => { "error" => { "reason" => "[FORBIDDEN/metasearch/index read-only" } } },
-      ] }
-      expect(stubbed_client).to receive(:bulk).and_return(locked_response)
-      expect(stubbed_client).to receive(:bulk).and_call_original
-      allow_any_instance_of(SearchIndices::Index).to receive(:build_client).and_return(stubbed_client)
+        # Step 3: run retry AFTER unlock
+        expect {
+          Indexer::BulkIndexJob.drain
+        }.to change(Indexer::BulkIndexJob.jobs, :size).by(-1)
 
-      stub_publishing_api_has_expanded_links(
-        {
-          content_id: "6b965b82-2e33-4587-a70c-60204cbb3e29",
-          expanded_links: {},
-        },
-        with_drafts: false,
-      )
-
-      post "/government_test/documents",
-           {
-             "_type" => "edition",
-             "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
-             "title" => "TITLE",
-             "format" => "answer",
-             "content_store_document_type" => "answer",
-             "link" => "/an-example-answer",
-             "indexable_content" => "HERE IS SOME CONTENT",
-             "licence_identifier" => "1201-5-1",
-             "licence_short_description" => "A short description of a licence",
-           }.to_json
-
-      expect_document_is_in_rummager(
-        {
-          "content_id" => "6b965b82-2e33-4587-a70c-60204cbb3e29",
-          "title" => "TITLE",
-          "format" => "answer",
-          "link" => "/an-example-answer",
-          "indexable_content" => "HERE IS SOME CONTENT",
-          "email_document_supertype" => "other",
-          "user_journey_document_supertype" => "thing",
-          "government_document_supertype" => "other",
-          "content_purpose_supergroup" => "services",
-          "content_purpose_subgroup" => "transactions",
-          "licence_identifier" => "1201-5-1",
-          "licence_short_description" => "A short description of a licence",
-        },
-        type: "edition",
-        index: "government_test",
-      )
+        # Step 4: assert success
+        expect_document_is_in_rummager(
+          {
+            "stemmed_query" => "learn to drive",
+            "details" => details,
+          },
+          index: index_name,
+          type: "best_bet",
+          id: "learn+to+drive-exact",
+        )
+      end
     end
   end
 end

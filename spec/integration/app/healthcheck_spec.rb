@@ -12,7 +12,6 @@ RSpec.describe "HealthcheckTest" do
   before do
     allow_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(queues)
     allow_any_instance_of(Sidekiq::Queue).to receive(:latency).and_return(queue_latency)
-    stub_connectivity_check
   end
 
   describe "live check" do

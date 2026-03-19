@@ -31,10 +31,7 @@ module SearchIndices
         "settings" => settings,
         "mappings" => mappings,
       }
-      @long_timeout_client.indices.create(
-        index: index_name,
-        body: index_payload,
-      )
+      ElasticsearchClient.instance.create_index(index_name, index_payload, @long_timeout_client)
 
       logger.info "Created index #{index_name}"
 
@@ -44,7 +41,7 @@ module SearchIndices
     def switch_to(index)
       # Loading this manually rather than using `index_map` because we may have
       # unaliased indices, which won't match the new naming convention.
-      indices = @client.indices.get_alias
+      indices = @client.indices.get_alias(index: "*,-.*")
 
       # Bail if there is an existing index with this name.
       # elasticsearch won't allow us to add an alias with the same name as an
