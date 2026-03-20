@@ -13,7 +13,6 @@ require "rummager"
 require "routes/content"
 require "govuk_app_config"
 require "healthcheck/elasticsearch_connectivity_check"
-require "healthcheck/elasticsearch_index_diskspace_check"
 
 class Rummager < Sinatra::Application
   class AttemptToUseDefaultMainstreamIndex < StandardError; end
@@ -278,10 +277,6 @@ class Rummager < Sinatra::Application
       GovukHealthcheck::SidekiqRedis,
       Healthcheck::ElasticsearchConnectivityCheck,
     ).call
-  end
-
-  get "/healthcheck/elasticsearch-diskspace" do
-    Healthcheck::ElasticsearchIndexDiskspaceCheck.new.to_hash.to_json
   end
 
   get "/sitemap.xml" do
