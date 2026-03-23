@@ -1,7 +1,11 @@
 class ElasticsearchClient
-  def self.instance
-    Cache.get("#{ElasticsearchClient}") do
-      new
+  class << self
+    private :new
+
+    def instance
+      Cache.get("#{ElasticsearchClient}") do
+        new
+      end
     end
   end
 
@@ -10,6 +14,8 @@ class ElasticsearchClient
   end
 
   def es7?
+    return true if ENV["USE_ELASTICSEARCH_7"]
+    return false if ENV["USE_ELASTICSEARCH_6"]
     es_version >= Gem::Version.new('7.0.0')
   end
 
@@ -60,6 +66,13 @@ class ElasticsearchClient
   def index(id, atts, index, params={}, client = Services.elasticsearch)
     compatible_params = es7? ? {} : { type: "generic-document" }
     client.index({index:, id:, body: atts}.merge(params).merge(compatible_params))
+  end
+
+  def create_index(index_name, index_payload, client = Services.elasticsearch)
+    client.indices.create(
+      index: index_name,
+      body: index_payload,
+    )
   end
 
   def compatible_mappings(properties)

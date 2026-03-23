@@ -2,6 +2,7 @@ require "spec_helper"
 require "spec/support/connectivity_test_helpers"
 
 RSpec.describe "HealthcheckTest" do
+  include ConnectivityTestHelpers
 
   let(:queues) do
     { "bulk" => 2, "default" => 1 }

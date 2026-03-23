@@ -43,12 +43,4 @@ RSpec.describe "ElasticsearchLockingTest" do
     end
     index.add([sample_document])
   end
-
-private
-
-  def with_lock(index)
-    index.lock
-    yield
-    index.unlock
-  end
 end

@@ -21,6 +21,7 @@ module IntegrationTestHelper
     allowed_paths << "_reindex"
     allowed_paths << "_search/scroll"
     allowed_paths << "_tasks"
+    allowed_paths << "_cluster/health"
 
     allow_urls = %r{#{allowed_hosts.map { |host| "#{host}/(#{allowed_paths.join('|')})" }.join('|')}}
 
@@ -117,6 +118,13 @@ module IntegrationTestHelper
 
   def app
     Rummager
+  end
+
+  def with_lock(index)
+    index.lock
+    yield
+  ensure
+    index.unlock
   end
 
   def client(cluster: Clusters.default_cluster)

@@ -31,10 +31,7 @@ module SearchIndices
         "settings" => settings,
         "mappings" => mappings,
       }
-      @long_timeout_client.indices.create(
-        index: index_name,
-        body: index_payload,
-      )
+      ElasticsearchClient.instance.create_index(index_name, index_payload, @long_timeout_client)
 
       logger.info "Created index #{index_name}"
 

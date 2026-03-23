@@ -126,7 +126,7 @@ module SearchIndices
           # index
           blocked_items = failed_items.select do |item|
             error = (item["index"] || item["create"])["error"]
-            locked_index_error?(error)
+            locked_index_error?(error["reason"])
           end
           if blocked_items.any?
             raise IndexLocked
@@ -272,10 +272,8 @@ module SearchIndices
     # a read-only index. An example read-only error message:
     #
     #     "ClusterBlockException[blocked by: [FORBIDDEN/8/index read-only / allow delete (api)];]"
-    def locked_index_error?(error)
-      es6_error = (error["reason"] =~ %r{\[FORBIDDEN/[^/]+/index read-only})
-      es7_error = (error["type"] == "cluster_block_exception")
-      es6_error || es7_error
+    def locked_index_error?(error_message)
+      error_message =~ %r{\[FORBIDDEN/[^/]+/index read-only}
     end
 
     def logger

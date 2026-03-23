@@ -2,6 +2,10 @@ require "spec_helper"
 
 RSpec.describe SearchIndices::Index do
   let(:base_uri) { "http://example.com:9200" }
+  let(:client) { double(Elasticsearch::Client) }
+  before do
+    #  allow(ElasticsearchClient).to_receive(:instance).and_return(client, :create_index)
+  end
 
   it "syncs mappings to elasticsearch and returns any failures" do
     mappings = {
