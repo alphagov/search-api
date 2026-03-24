@@ -14,14 +14,14 @@ index:
         default:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, stop, stemmer_override, stemmer_english]
+          filter: [asciifolding, lowercase, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used at query time for old-style shingle matching.
         shingled_query_analyzer:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english, bigrams]
+          filter: [asciifolding, lowercase, stemmer_override, stemmer_english, bigrams]
 
         # This analyzer does not filter out these stopwords:
         # a, an, and, are, as, at, be, but, by,
@@ -32,7 +32,7 @@ index:
         searchable_text:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english]
+          filter: [asciifolding, lowercase, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used at index time for the .synonym variants of searchable
@@ -40,7 +40,7 @@ index:
         with_index_synonyms:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, index_synonym, stop, stemmer_override, stemmer_english]
+          filter: [asciifolding, lowercase, index_synonym, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used at search time for the .synonym variants of searchable
@@ -48,7 +48,7 @@ index:
         with_search_synonyms:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, search_synonym, stop, stemmer_override, stemmer_english]
+          filter: [asciifolding, lowercase, search_synonym, stop, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # An analyzer for doing "exact" word matching (but stripping wrapping whitespace, and case insensitive).
@@ -62,14 +62,14 @@ index:
         best_bet_stemmed_match:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, stemmer_override, stemmer_english]
+          filter: [asciifolding, lowercase, stemmer_override, stemmer_english]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used to process text supplied to the field for use in spelling correction.
         spelling_analyzer:
           type: custom
           tokenizer: standard
-          filter: [standard, asciifolding, lowercase, shingle]
+          filter: [asciifolding, lowercase, shingle]
           char_filter: [normalize_quotes, strip_quotes]
 
         # Analyzer used to process text fields for use for sorting.
