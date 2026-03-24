@@ -149,7 +149,7 @@ RSpec.describe SearchIndices::Index do
 private
 
   def scroll_uri(scroll_id)
-    "http://example.com:9200/_search/scroll?scroll=1m&scroll_id=#{scroll_id}"
+    "http://example.com:9200/_search/scroll/#{scroll_id}?scroll=1m"
   end
 
   def scroll_response_body(scroll_id, total_results, results)
