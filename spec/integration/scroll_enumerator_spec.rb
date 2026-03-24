@@ -24,7 +24,7 @@ RSpec.describe "ScrollEnumeratorTest" do
     results = ScrollEnumerator.new(
       client:,
       index_names: "govuk_test",
-      search_body: { query: { match_all: {} }, sort: [{ _uid: { order: "asc" } }] },
+      search_body: { query: { match_all: {} }, sort: [{ _id: { order: "asc" } }] },
       batch_size: 4,
     ) { |d| d }
 
