@@ -3,11 +3,11 @@ module Indexer
     NO_VALUE = :__no_value_found__
     BATCH_SIZE = 250
     DEFAULT_QUERY = { match_all: {} }.freeze
-    # sort by the document_type then the _uid, which is "type#id" -
+    # sort by the document_type then the _id, which is "type#id" -
     # sorting on the id directly is not possible, and the type will
     # always be "generic-document", which is why we first need to sort
     # by document_type.
-    DEFAULT_SORT = %i[document_type _uid].freeze
+    DEFAULT_SORT = %i[document_type _id].freeze
 
     def initialize(left_index_name, right_index_name, cluster = Clusters.default_cluster, search_body = {}, options = {})
       @cluster = cluster
