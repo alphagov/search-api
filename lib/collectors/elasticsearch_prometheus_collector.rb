@@ -21,7 +21,7 @@ module Collectors
   private
 
     def free_disk_space_ratios
-      nodes_stats_hash = Services.elasticsearch.nodes.stats(metric: "fs")
+      nodes_stats_hash = ElasticsearchClient.nodes_stats(metric: "fs")
 
       nodes_stats_hash["nodes"].transform_values do |node|
         total = node.dig("fs", "total", "total_in_bytes")
@@ -34,7 +34,7 @@ module Collectors
     end
 
     def cluster_health
-      status_string = Services.elasticsearch.cluster.health["status"]
+      status_string = ElasticsearchClient.health["status"]
       case status_string
       when "green"  then 0
       when "yellow" then 1

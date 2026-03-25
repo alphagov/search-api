@@ -41,8 +41,8 @@ module SearchIndices
       # { real_name => { "aliases" => { alias => {} } } }
       # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
       begin
-        alias_info = @client.indices.get_alias(index: @index_name)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound
+        alias_info = ElasticsearchClient.get_alias(index_name: @index_name, client: @client)
+      rescue ElasticsearchClient::Error
         return nil
       end
 
@@ -53,23 +53,17 @@ module SearchIndices
       !real_name.nil?
     end
 
-    def close
-      @client.indices.close(index: @index_name)
-    end
-
     # Apply a write lock to this index, making it read-only
     def lock
       with_retries do
-        request_body = { "index" => { "blocks" => { "read_only_allow_delete" => true } } }
-        @client.indices.put_settings(index: @index_name, body: request_body)
+        ElasticsearchClient.lock_index(index_name: @index_name, client: @client)
       end
     end
 
     # Remove any write lock applied to this index
     def unlock
       with_retries do
-        request_body = { "index" => { "blocks" => { "read_only_allow_delete" => false } } }
-        @client.indices.put_settings(index: @index_name, body: request_body)
+        ElasticsearchClient.unlock_index(index_name: @index_name, client: @client)
       end
     end
 
@@ -87,9 +81,9 @@ module SearchIndices
     def sync_mappings
       {}.tap do |errors|
         mappings.each do |type, mapping|
-          @client.indices.put_mapping(index: index_name, type:, body: mapping)
+          ElasticsearchClient.put_mapping(index_name: index_name, mapping:, client: @client)
           logger.info "Updated mappings for #{type} type on #{index_name} index"
-        rescue Elasticsearch::Transport::Transport::Errors::BadRequest => e
+        rescue ElasticsearchClient::Error => e
           errors[type] = e
           logger.warn "Unable to update mappings for #{type} type on #{index_name} index: #{e.message}"
         end
@@ -111,7 +105,9 @@ module SearchIndices
 
       with_retries do
         payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
-        response = @client.bulk(index: @index_name, body: payload_generator.bulk_payload(document_hashes_or_payload))
+        response = ElasticsearchClient.bulk(body: payload_generator.bulk_payload(document_hashes_or_payload),
+                                            index_name: @index_name,
+                                            client: @client)
 
         items = response["items"]
         failed_items = items.select do |item|
@@ -144,8 +140,8 @@ module SearchIndices
     end
 
     def get_document_by_id(document_id)
-      @client.get(index: @index_name, type: "_all", id: document_id)
-    rescue Elasticsearch::Transport::Transport::Errors::NotFound
+      ElasticsearchClient.get_by_id(index_name: @index_name, id: document_id, client: @client)
+    rescue ElasticsearchClient::Error
       nil
     end
 
@@ -187,9 +183,9 @@ module SearchIndices
       end
     end
 
-    def raw_search(payload)
-      logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_name, type: "generic-document", body: payload)
+    def raw_search(body)
+      logger.debug "Request payload: #{body.to_json}"
+      ElasticsearchClient.search(body:, index_name: @index_name, client: @client)
     end
 
     # Convert a best bet query to a string formed by joining the normalised
@@ -197,13 +193,10 @@ module SearchIndices
     #
     # duplicated in document_preparer.rb
     def analyzed_best_bet_query(query)
-      analyzed_query = @client.indices.analyze(
-        index: @index_name,
-        body: {
-          text: query,
-          analyzer: "best_bet_stemmed_match",
-        },
-      )
+      analyzed_query = ElasticsearchClient.analyze(query:,
+                                  index_name: @index_name,
+                                  analyzer: "best_bet_stemmed_match",
+                                  client: @client)
 
       analyzed_query.fetch("tokens", []).map { |token_info|
         token_info["token"]
@@ -214,23 +207,18 @@ module SearchIndices
 
     def delete(id)
       begin
-        @client.delete(index: @index_name, type: "generic-document", id:)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound
-        # We are fine with trying to delete deleted documents.
-        true
-      rescue Elasticsearch::Transport::Transport::Errors::Forbidden => e
-        if locked_index_error?(e.message)
-          raise IndexLocked
-        else
-          raise
-        end
+        ElasticsearchClient.delete(index_name: @index_name, id:, client: @client)
+      rescue ElasticsearchClient::IndexLocked
+        raise IndexLocked
+      rescue StandardError
+        raise
       end
 
       true # For consistency with the Solr API and simple_json_response
     end
 
     def commit
-      @client.indices.refresh(index: @index_name)
+      ElasticsearchClient.refresh_index(index_name: @index_name, client: @client)
     end
 
     def link_to_type_and_id(link)
@@ -248,7 +236,7 @@ module SearchIndices
       # Check if an index has recovered all its shards.
       # https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-recovery.html
       # If something goes wrong, a shard can get stuck and not reach the DONE state.
-      index_info = @client.indices.recovery(index: index_name)[index_name]
+      index_info = ElasticsearchClient.index_recovery(index_name: index_name, client: @client)[index_name]
       index_info["shards"].all? { |shard_info| shard_info["stage"] == "DONE" }
     end
 

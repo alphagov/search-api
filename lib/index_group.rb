@@ -31,10 +31,9 @@ module SearchIndices
         "settings" => settings,
         "mappings" => mappings,
       }
-      @long_timeout_client.indices.create(
-        index: index_name,
-        body: index_payload,
-      )
+      ElasticsearchClient.create_index(index_name:,
+                                       body: index_payload,
+                                       client: @long_timeout_client)
 
       logger.info "Created index #{index_name}"
 
@@ -44,7 +43,7 @@ module SearchIndices
     def switch_to(index)
       # Loading this manually rather than using `index_map` because we may have
       # unaliased indices, which won't match the new naming convention.
-      indices = @client.indices.get_alias
+      indices = ElasticsearchClient.get_alias(client: @client)
 
       # Bail if there is an existing index with this name.
       # elasticsearch won't allow us to add an alias with the same name as an
@@ -74,9 +73,7 @@ module SearchIndices
 
       actions << { "add" => { "index" => index.index_name, "alias" => @name } }
 
-      payload = { "actions" => actions }
-
-      @client.indices.update_aliases(body: payload)
+      ElasticsearchClient.set_alias(actions:, client: @client)
     end
 
     def current
@@ -99,7 +96,7 @@ module SearchIndices
     end
 
     def clean
-      alias_map(include_closed: true).each do |name, details|
+      alias_map.each do |name, details|
         delete(name) if details.fetch("aliases", {}).empty?
       end
     end
@@ -137,12 +134,10 @@ module SearchIndices
       "#{@name}-#{Time.now.utc.iso8601}-#{SecureRandom.uuid}".downcase.gsub(/:/, "-")
     end
 
-    def alias_map(include_closed: false)
-      expand_wildcards = %w[open]
-      expand_wildcards << "closed" if include_closed
+    def alias_map
       # Return a map of all aliases in this group, of the form:
       # { concrete_name => { "aliases" => { alias_name => {}, ... } }, ... }
-      indices = @client.indices.get(index: "#{@name}*", expand_wildcards:)
+      indices = ElasticsearchClient.get_alias(index_name: "#{@name}*", client: @client)
       indices.select { |name| name_pattern.match name }
     end
 
@@ -165,12 +160,12 @@ module SearchIndices
 
     def delete(index_name)
       logger.info "Deleting index #{index_name}"
-      @long_timeout_client.indices.delete(index: index_name)
+      ElasticsearchClient.delete_index(index_name:, client: @long_timeout_client)
     end
 
     # Sort the index map by date, remove the active index and most recent inactive, and return it
     def cleaned_aliases
-      raw_map = alias_map(include_closed: true)
+      raw_map = alias_map
       raw_map.delete_if { |_key, details| details.fetch("aliases", {}).any? }
       raw_map = raw_map.sort
       raw_map.pop
@@ -178,7 +173,7 @@ module SearchIndices
     end
 
     def find_last_update(name)
-      last_update_raw = @client.search(index: name, body: last_update_query)
+      last_update_raw = ElasticsearchClient.search(body: last_update_query, index_name: name, client: @client)
       last_update_hit = last_update_raw.dig("hits", "hits")
       last_update_hit[0]&.dig("_source", "updated_at")
     end

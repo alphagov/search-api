@@ -85,10 +85,10 @@ module Search
       analyzed_users_query = " #{@metasearch_index.analyzed_best_bet_query(@query)} "
       es_response = timed_raw_search(lookup_payload)
 
-      es_response["hits"]["hits"].map { |hit|
-        details = JSON.parse(Array(hit["_source"]["details"]).first)
-        _bet_query, _, bet_type = hit["_id"].rpartition("-")
-        stemmed_query_as_term = Array(hit["_source"]["stemmed_query_as_term"]).first
+      EsExtract::Hits.array(es_response).map { |hit|
+        details = JSON.parse(Array(EsExtract::Hits.source(hit, "details")).first)
+        _bet_query, _, bet_type = EsExtract::Hits.id(hit).rpartition("-")
+        stemmed_query_as_term = Array(EsExtract::Hits.source(hit, "stemmed_query_as_term")).first
 
         # The search on the stemmed_query field is overly broad, so here we need
         # to filter out such matches where the query in the bet is not a

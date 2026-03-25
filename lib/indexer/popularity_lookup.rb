@@ -10,7 +10,7 @@ module Indexer
         return {}
       end
 
-      results = traffic_index.raw_search({
+      response = traffic_index.raw_search({
         query: {
           terms: {
             path_components: links,
@@ -28,14 +28,25 @@ module Indexer
         view_count: 1,
       })
 
-      ranks = results["hits"]["hits"].each_with_object(default_rank) do |hit, hsh|
-        link = hit["_id"]
-        rank = Array(hit.dig("_source", "rank_14")).first
-        view_count = hit.dig("_source", "vc_14") || 1
+      ranks = EsExtract::Hits.array(response).each_with_object(default_rank) do |hit, hsh|
+
+        rank = Array(EsExtract::Hits.source(hit, "rank_14")).first
         next if rank.nil?
 
+        link = EsExtract::Hits.id(hit)
+        view_count = EsExtract::Hits.source(hit, "vc_14") || 1
         hsh[link] = { rank:, view_count: }
       end
+
+
+      #
+      #
+      #  next if rank.nil?
+
+      #
+      #  view_count = EsExtract::Hits.source(hit, "vc_14") || 1
+      #  hsh[link] = { rank:, view_count: }
+      #end
 
       Hash[links.map do |link|
         if ranks[link][:rank].zero?
@@ -73,11 +84,11 @@ module Indexer
 
     def traffic_index_size
       @traffic_index_size ||= begin
-        results = traffic_index.raw_search({
+        response = traffic_index.raw_search({
           query: { match_all: {} },
           size: 0,
         })
-        results["hits"]["total"]
+        EsExtract::Hits.total(response)
       end
     end
 

@@ -105,16 +105,13 @@ module Search
 
     def present_aggregates_with_examples(search_params, es_response, builder)
       presented_aggregates = AggregateResultPresenter.new(
-        es_response["aggregations"],
+        EsExtract::Response.aggregations(es_response),
         search_params,
         registries,
       ).presented_aggregates
 
-      slugs_for_fields = presented_aggregates.each_with_object({}) do |(field, aggregate), acc|
-        current = acc[field] || []
-        new = aggregate[:options].map { |option| option[:value]["slug"] }.compact
-        acc[field] = (current + new).uniq
-        acc
+      slugs_for_fields = presented_aggregates.transform_values do |agg|
+        agg[:options].filter_map { |option| option[:value]["slug"] }
       end
 
       example_fetcher = AggregateExampleFetcher.new(index, es_response, search_params, builder)

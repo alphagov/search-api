@@ -13,7 +13,7 @@ module Indexer
       return :rejected unless document
 
       index_name = document["real_index_name"]
-      document_id = document["_id"]
+      document_id = EsExtract::Hits.id(document)
       updates = {}
       Indexer::AmendJob.new.perform(index_name, document_id, updates, reschedule_on_failure: false)
       :accepted

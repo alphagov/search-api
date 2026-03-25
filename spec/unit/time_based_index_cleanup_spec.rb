@@ -27,7 +27,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "timed clean with only one live index does not delete the index" do
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
 
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{base_uri}/test\*/_alias\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -60,7 +60,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "timed clean with only one dead index does not delete the index" do
     dead_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
 
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{base_uri}/test\*/_alias\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -94,7 +94,7 @@ RSpec.describe SearchIndices::IndexGroup do
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     dead_name = "test-2012-02-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{base_uri}/test\*/_alias\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -131,7 +131,7 @@ RSpec.describe SearchIndices::IndexGroup do
     dead_name = "test-2012-02-01t12:00:00z-87654321-4321-4321-4321-210987654321"
     dead_name_two = "test-2012-01-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{#{base_uri}/test\*/_alias\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },

@@ -9,8 +9,9 @@ module Search
     end
 
     def find_duplicates
-      response = Services.elasticsearch(timeout: TIMEOUT).search(
-        index: index,
+      response = ElasticsearchClient.search(
+        client: Services.elasticsearch(timeout: TIMEOUT),
+        index_name: index,
         size: 0,
         body: {
           aggs: {

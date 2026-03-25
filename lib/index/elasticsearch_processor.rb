@@ -8,6 +8,7 @@ module Index
       new(client: GovukIndex::Client)
     end
 
+    # client is an instance of Index::Client or superclass
     def initialize(client:)
       @client = client
       @actions = []

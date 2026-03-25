@@ -34,7 +34,7 @@ module MetasearchIndex
 
       def analyzed_stemmed_query
         analyzed_query = MetasearchIndex::Client.analyze(
-          text: @document["stemmed_query"],
+          query: @document["stemmed_query"],
           analyzer: "best_bet_stemmed_match",
         )
         analyzed_query["tokens"].map { |token_info| token_info["token"] }.join(" ")

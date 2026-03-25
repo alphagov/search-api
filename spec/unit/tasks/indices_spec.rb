@@ -33,14 +33,20 @@ RSpec.describe "indices" do
     let(:task_name) { "search:list_indices" }
     let(:index1) { "#{base_name}-2026-01-27t08-24-32z-aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa" }
     let(:index2) { "#{base_name}-2026-01-27t08-24-32z-bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb" }
-    let(:indices) { { index1 => {}, index2 => {} } }
+    let(:single_alias) { { index1 => { "aliases" => { base_name => {} } } } }
     let(:aliases) do
-      { index1 => { "aliases" => { base_name => {} } } }
+      { index1 => { "aliases" => { base_name => {} } },
+        index2 => { "aliases" => {} }
+      }
     end
 
     before do
-      allow(indices_client).to receive(:get).with(index: "#{base_name}*", expand_wildcards: %w[open]).and_return(indices)
-      allow(indices_client).to receive(:get_alias).with(index: base_name).and_return(aliases)
+      allow(indices_client).to receive(:get_alias)
+                                 .with(index: base_name, expand_wildcards: instance_of(Array))
+                                 .and_return(single_alias)
+      allow(indices_client).to receive(:get_alias)
+                                 .with(index: "#{base_name}*", expand_wildcards: instance_of(Array))
+                                 .and_return(aliases)
     end
 
     it "lists only the active index by default" do
@@ -294,7 +300,7 @@ RSpec.describe "indices" do
         index_not_current => { "aliases" => {} } }
     end
     before do
-      allow(indices_client).to receive(:get).with(index: "#{base_name}*", expand_wildcards: kind_of(Array)).and_return(aliases)
+      allow(indices_client).to receive(:get_alias).with(index: "#{base_name}*", expand_wildcards: kind_of(Array)).and_return(aliases)
     end
     it "deletes all but the 'current' index" do
       Rake::Task[task_name].invoke
@@ -323,7 +329,7 @@ RSpec.describe "indices" do
     end
 
     before do
-      allow(indices_client).to receive(:get).with(index: "#{base_name}*", expand_wildcards: %w[open closed]).and_return(aliases)
+      allow(indices_client).to receive(:get_alias).with(index: "#{base_name}*", expand_wildcards: %w[open closed]).and_return(aliases)
       allow(elasticsearch_client).to receive(:search).and_return(
         { "hits" => { "hits" => [{ "_source" => { "updated_at" => updated_at } }] } },
       )

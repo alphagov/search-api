@@ -116,22 +116,18 @@ module Sitemap
     end
 
     def initial_scroll
-      @search_client.search(scroll_query)
-    end
-
-    def scroll(scroll_id)
-      @search_client.scroll(scroll_id:, scroll: "1m")
-    end
-
-    def scroll_query
-      {
+      ElasticsearchClient.search(
         body: all_documents_query,
-        index: index_names,
+        index_name: index_names,
         scroll: "1m",
         size: SCROLL_BATCH_SIZE,
         search_type: "query_then_fetch",
         version: true,
-      }
+      )
+    end
+
+    def scroll(scroll_id)
+      ElasticsearchClient.scroll(scroll_id:, client: @search_client)
     end
 
     def all_documents_query

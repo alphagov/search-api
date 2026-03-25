@@ -11,18 +11,18 @@ module Search
     end
 
     def present
-      result = raw_result["_source"] || {}
+      source = EsExtract::Hits.source(raw_result) || {}
 
       if schema
-        result = convert_elasticsearch_array_fields(result)
+        source = convert_elasticsearch_array_fields(source)
       end
 
-      result = add_virtual_fields(result)
-      result = expand_entities(result)
-      result = temporarily_fix_link_field(result)
-      result = only_return_explicitly_requested_values(result)
-      result = present_parts(result)
-      add_debug_values(result)
+      source = add_virtual_fields(source)
+      source = expand_entities(source)
+      source = temporarily_fix_link_field(source)
+      source = only_return_explicitly_requested_values(source)
+      source = present_parts(source)
+      add_debug_values(source)
     end
 
   private
@@ -32,15 +32,15 @@ module Search
 
     attr_reader :result_rank
 
-    def expand_entities(result)
-      EntityExpander.new(registries).new_result(result)
+    def expand_entities(source)
+      EntityExpander.new(registries).new_result(source)
     end
 
     # The only fields which should be returned as arrays are ones
     # explicitly set to "multivalued" in the schema.  So if any other
     # fields have been returned as an array, pick the first value.
-    def convert_elasticsearch_array_fields(result)
-      result.each_with_object({}) do |(field_name, values), out|
+    def convert_elasticsearch_array_fields(source)
+      source.each_with_object({}) do |(field_name, values), out|
         # drop fields not in the schema
         next unless document_schema.fields.key? field_name
 
@@ -58,66 +58,66 @@ module Search
 
     def document_schema
       @document_schema ||= begin
-        index_schema = schema.schema_for_alias_name(raw_result["_index"])
-        index_schema.elasticsearch_type(raw_result["_source"]["document_type"])
+        index_schema = schema.schema_for_alias_name(EsExtract::Hits.index(raw_result))
+        index_schema.elasticsearch_type(EsExtract::Hits.source(raw_result)["document_type"])
       end
     end
 
-    def add_debug_values(result)
-      result[:index] = SearchIndices::Index.strip_alias_from_index_name(raw_result["_index"])
+    def add_debug_values(source)
+      source[:index] = SearchIndices::Index.strip_alias_from_index_name(EsExtract::Hits.index(raw_result))
 
       # Put the elasticsearch score in es_score; this is used in templates when
       # debugging is requested, so it's nicer to be explicit about what score
       # it is.
-      result[:es_score] = raw_result["_score"]
+      source[:es_score] = EsExtract::Hits.score(raw_result)
 
-      result[:_id] = raw_result["_id"]
+      source[:_id] = EsExtract::Hits.id(raw_result)
 
       if raw_result["_explanation"] && search_params.debug[:explain]
-        result[:_explanation] = raw_result["_explanation"]
+        source[:_explanation] = EsExtract::Hits.explanation(raw_result)
       end
 
-      result[:elasticsearch_type] = raw_result["_source"]["document_type"]
+      source[:elasticsearch_type] = EsExtract::Hits.source(raw_result)["document_type"]
 
       # TODO: clients should not use this. It's probably only used in the
       # search results in the `frontend` application.
-      result[:document_type] = raw_result["_source"]["document_type"]
+      source[:document_type] = EsExtract::Hits.source(raw_result)["document_type"]
 
-      result
+      source
     end
 
-    def present_parts(result)
-      parts = result["parts"]
-      return result unless parts && parts.any?
+    def present_parts(source)
+      parts = source["parts"]
+      return source unless parts && parts.any?
 
       parts_count = result_rank <= TOP_N_RESULTS_TO_HAVE_PARTS ? DEFAULT_PARTS_TO_DISPLAY : 0
-      result["parts"] = parts.take(parts_count)
-      result
+      source["parts"] = parts.take(parts_count)
+      source
     end
 
-    def add_virtual_fields(result)
+    def add_virtual_fields(source)
       if search_params.field_requested?("title_with_highlighting")
-        result["title_with_highlighting"] = HighlightedTitle.new(raw_result).text
+        source["title_with_highlighting"] = HighlightedTitle.new(raw_result).text
       end
 
       if search_params.field_requested?("description_with_highlighting")
-        result["description_with_highlighting"] = HighlightedDescription.new(raw_result).text
+        source["description_with_highlighting"] = HighlightedDescription.new(raw_result).text
       end
 
-      result
+      source
     end
 
     def only_return_explicitly_requested_values(result)
       result.slice(*search_params.return_fields)
     end
 
-    def temporarily_fix_link_field(result)
-      return result if result["link"].nil? ||
-        result["link"].starts_with?("http") ||
-        result["link"].starts_with?("/")
+    def temporarily_fix_link_field(source)
+      return source if source["link"].nil? ||
+                       source["link"].starts_with?("http") ||
+                       source["link"].starts_with?("/")
 
-      result["link"] = "/#{result['link']}"
-      result
+      source["link"] = "/#{source['link']}"
+      source
     end
   end
 end

@@ -31,7 +31,7 @@ namespace :debug do
 
     search_tokens = model.analyze_query(args.query)
     index_tokens = model.analyze_index(args.query)
-    search_results = model.search(args.query, pre_tags: [ANSI_GREEN], post_tags: [ANSI_RESET])
+    response = model.search(args.query, pre_tags: [ANSI_GREEN], post_tags: [ANSI_RESET])
 
     puts Rainbow("Query interpretation for '#{args.query}':").yellow
     puts search_tokens["tokens"]
@@ -43,12 +43,12 @@ namespace :debug do
 
     puts Rainbow("Sample matches (basic query with synonyms):").yellow
 
-    hits = search_results["hits"]["hits"]
+    hits = EsExtract::Hits.array(response)
     if hits.empty?
       puts Rainbow("No results found").red
     else
       hits.each do |hit|
-        title = hit.dig("highlight", "title.synonym") || hit.dig("_source", "title")
+        title = EsExtract::Hits.highlight(hit, "title.synonym") || EsExtract::Hits.source(hit, "title")
         description = hit.dig("highlight", "description.synonym") || hit.dig("_source", "description")
         puts title
         puts description if description

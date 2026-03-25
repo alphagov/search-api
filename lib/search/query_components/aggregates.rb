@@ -56,7 +56,14 @@ module QueryComponents
           search_params.search_config,
           base_query: applied_filter(applied_query_filters),
         ).call,
-        aggs: { "filtered_aggregations" => query },
+        aggs: { "filtered_aggregations" => query.merge( aggs: {
+          examples: {
+            top_hits: {
+              size: 3,
+              _source: ["title", "description"]
+            }
+          }
+        }) },
       }
     end
 

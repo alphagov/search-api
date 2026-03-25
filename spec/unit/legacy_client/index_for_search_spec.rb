@@ -6,7 +6,7 @@ RSpec.describe LegacyClient::IndexForSearch do
     alias_name = "some-alias"
     real_name = "some-index"
 
-    get_request = stub_request(:get, "#{base_uri}/#{alias_name}/_alias")
+    get_request = stub_request(:get, %r{#{base_uri}/#{alias_name}/_alias.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },

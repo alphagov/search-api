@@ -108,14 +108,20 @@ module Indexer
     end
 
     # duplicated in index.rb
+    #   def self.analyze(query:, index_name:, analyzer:, client: Services.elasticsearch)
+    #     client.indices.analyze(
+    #       index: index_name,
+    #       body: {
+    #         text: query,
+    #         analyzer:,
+    #       })
+    #   end
+    #
     def analyzed_best_bet_query(query)
-      analyzed_query = @client.indices.analyze(
-        index: @index_name,
-        body: {
-          text: query,
-          analyzer: "best_bet_stemmed_match",
-        },
-      )
+      analyzed_query = ElasticsearchClient.analyze(query:,
+                                                   index_name: @index_name,
+                                                   analyzer: "best_bet_stemmed_match",
+                                                   client: @client)
 
       analyzed_query.fetch("tokens", []).map { |token_info|
         token_info["token"]

@@ -19,19 +19,19 @@ module LegacyClient
         # but we want to propagate the error in that case as it
         # shouldn't happen.
         with_retries do
-          @client.indices.get_alias(index: index_name).keys.first
+          ElasticsearchClient.get_alias(index_name:, client: @client).keys.first
         end
       end
     end
 
-    def raw_search(payload)
-      logger.debug "Request payload: #{payload.to_json}"
-      @client.search(index: @index_names, type: "generic-document", body: payload)
+    def raw_search(body)
+      logger.debug "Request body: #{body.to_json}"
+      ElasticsearchClient.search(body:, index_name: @index_names, client: @client)
     end
 
     def get_document_by_link(link)
-      results = raw_search(query: { term: { link: } }, size: 1)
-      raw_result = results["hits"]["hits"].first
+      response = raw_search(query: { term: { link: } }, size: 1)
+      raw_result = EsExtract::Hits.array(response).first
 
       if raw_result
         raw_result["real_index_name"] = SearchIndices::Index.strip_alias_from_index_name(raw_result["_index"])

@@ -17,16 +17,13 @@ module Index
     end
 
     def get(params)
-      client.get(
-        params.merge(index: index_name),
-      )
+      raise "does not accept _type" if params[:_type] || params["_type"]
+      ElasticsearchClient.get_by_id(id: params[:id], index_name:, client:)
     end
 
     def bulk(params)
       clusters.map do |cluster|
-        client(cluster:).bulk(
-          params.merge(index: index_name),
-        )
+        ElasticsearchClient.bulk(body: params[:body], index_name:, client: client(cluster:))
       end
     end
 

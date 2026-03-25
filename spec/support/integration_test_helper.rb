@@ -13,7 +13,7 @@ module IntegrationTestHelper
     allowed_hosts = Clusters.active.map(&:uri)
 
     allowed_paths = []
-    allowed_paths << "[a-z_-]+[_-]test.*"
+    allowed_paths << "[\*a-z_-]+[_-]test.*"
     allowed_paths << "_alias"
     allowed_paths << "_bulk"
     allowed_paths << "_reindex"
@@ -85,12 +85,12 @@ module IntegrationTestHelper
     commit_index index
 
     clusters.map do |cluster|
-      hits = client(cluster:).search(index:, size: 1000)["hits"]["hits"]
+      hits = ElasticsearchClient.search(index_name: index, body: {}, size: 1000, client: client(cluster:)).dig("hits", "hits")
 
       next if hits.empty?
 
-      client(cluster:)
-        .bulk(body: hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } })
+      body = hits.map { |hit| { delete: { _index: index, _id: hit["_id"] } } }
+      ElasticsearchClient.bulk(index_name: index, body:, client: client(cluster:))
     end
 
     commit_index index
@@ -108,14 +108,14 @@ module IntegrationTestHelper
   def update_document(index_name, attributes, id: nil, type: "edition")
     attributes["document_type"] ||= type
     clusters.each do |cluster|
-      client(cluster:).update(index: index_name, id:, type: "generic-document", body: { doc: atts })
+      ElasticsearchClient.update(index_name: index_name, id:, client: client(cluster:), body: { doc: atts })
     end
     commit_index(index_name)
   end
 
   def commit_index(index_name)
     clusters.each do |cluster|
-      client(cluster:).indices.refresh(index: index_name)
+      ElasticsearchClient.refresh_index(index_name:, client: client(cluster:))
     end
   end
 
@@ -177,14 +177,14 @@ module IntegrationTestHelper
 
   def add_sample_documents(index_name, count, override: {})
     attributes = sample_document_attributes(index_name, count, override:)
-    data = attributes.flat_map do |sample_document|
+    body = attributes.flat_map do |sample_document|
       [
         { index: { _id: sample_document["link"], _type: "generic-document" } },
         sample_document,
       ]
     end
 
-    clusters.each { |cluster| client(cluster:).bulk(index: index_name, body: data) }
+    clusters.each { |cluster| ElasticsearchClient.bulk(client: client(cluster:), index_name:, body:) }
     commit_index(index_name)
   end
 
@@ -218,10 +218,11 @@ private
   end
 
   def fetch_document_from_rummager(id:, index:, type: "_all", cluster: Clusters.default_cluster)
-    client(cluster:).get(
-      index:,
-      type:,
-      id:,
-    )
+    #ElasticsearchClient.get_by_id(client: client(cluster:), index_name: index, id:)
+       client(cluster:).get(
+          index:,
+          type:,
+          id:,
+        )
   end
 end

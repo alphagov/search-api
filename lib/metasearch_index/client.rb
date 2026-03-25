@@ -4,11 +4,8 @@ module MetasearchIndex
       delegate :analyze, to: :instance
     end
 
-    def analyze(params)
-      client.indices.analyze(
-        index: index_name,
-        body: params,
-      )
+    def analyze(query:, analyzer:)
+      ElasticsearchClient.analyze(query:, index_name:, analyzer:, client:)
     end
 
   private

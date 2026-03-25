@@ -40,7 +40,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with no existing alias" do
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, %r{#{base_uri}/_alias\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -68,7 +68,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with existing alias" do
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, %r{#{base_uri}/_alias\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -97,7 +97,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "switch index with multiple existing aliases" do
     # Not expecting the system to get into this state, but it should cope
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, %r{#{base_uri}/_alias\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -127,7 +127,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with existing real index" do
     new_index = double("New index", index_name: "test-new")
-    stub_request(:get, "#{base_uri}/_alias")
+    stub_request(:get, %r{#{base_uri}/_alias\?.*})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -142,7 +142,7 @@ RSpec.describe SearchIndices::IndexGroup do
   end
 
   it "index names with no indices" do
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -154,7 +154,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "index names with index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -170,7 +170,7 @@ RSpec.describe SearchIndices::IndexGroup do
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -184,7 +184,7 @@ RSpec.describe SearchIndices::IndexGroup do
   end
 
   it "clean with no indices" do
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -196,7 +196,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "clean with dead index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -215,7 +215,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "clean with live index" do
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias} )
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -232,7 +232,7 @@ RSpec.describe SearchIndices::IndexGroup do
       "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012",
       "test-2012-03-01t12:00:00z-abcdefab-abcd-abcd-abcd-abcdefabcdef",
     ]
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -256,7 +256,7 @@ RSpec.describe SearchIndices::IndexGroup do
     live_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     dead_name = "test-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -277,7 +277,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "clean with other alias" do
     # If there's an alias we don't know about, that should save the index
     index_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -294,7 +294,7 @@ RSpec.describe SearchIndices::IndexGroup do
     this_name = "test-2012-03-01t12:00:00z-12345678-1234-1234-1234-123456789012"
     other_name = "fish-2012-03-01t12:00:00z-87654321-4321-4321-4321-210987654321"
 
-    stub_request(:get, %r{#{base_uri}/test\*\?.*})
+    stub_request(:get, %r{/test\*/_alias})
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },

@@ -25,15 +25,17 @@ module Debug
           },
         }
 
-        client.search(index:, body: search_query)
+        ElasticsearchClient.search(body: search_query,
+                                   index_name: index,
+                                   client:)
       end
 
       def analyze_query(query)
-        client.indices.analyze index:, body: { text: query, analyzer: "with_search_synonyms" }
+        ElasticsearchClient.analyze(query:, index_name: index, analyzer: "with_search_synonyms", client:)
       end
 
       def analyze_index(query)
-        client.indices.analyze index:, body: { text: query, analyzer: "with_index_synonyms" }
+        ElasticsearchClient.analyze(query:, index_name: index, analyzer: "with_index_synonyms", client:)
       end
     end
   end

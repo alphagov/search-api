@@ -8,7 +8,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "has returns the name of the index as real_name" do
-    stub_request(:get, "http://example.com:9200/government_test/_alias")
+    stub_request(:get, %r{/government_test/_alias\?.*})
       .to_return(
         body: { "real-name" => { "aliases" => { "government_test" => {} } } }.to_json,
         headers: { "Content-Type" => "application/json" },
@@ -18,7 +18,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "returns nil for real_name when elasticsearch returns a 404 response" do
-    stub_request(:get, "http://example.com:9200/government_test/_alias")
+    stub_request(:get, %r{/government_test/_alias})
       .to_return(
         status: 404,
         body: '{"error":"IndexMissingException[[text-index] missing]","status":404}',
@@ -31,7 +31,7 @@ RSpec.describe SearchIndices::Index do
   it "returns nil for real_name when elasticsearch reports the index as missing" do
     # elasticsearch is weird: even though /index/_status 404s if the index
     # doesn't exist, /index/_alias returns a 200.
-    stub_request(:get, "http://example.com:9200/government_test/_alias")
+    stub_request(:get, %r{/government_test/_alias})
       .to_return(
         body: "{}",
         headers: { "Content-Type" => "application/json" },
@@ -41,7 +41,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "exists" do
-    stub_request(:get, "http://example.com:9200/government_test/_alias")
+    stub_request(:get, %r{/government_test/_alias})
       .to_return(
         body: { "real-name" => { "aliases" => { "government_test" => {} } } }.to_json,
         headers: { "Content-Type" => "application/json" },
@@ -84,7 +84,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can be searched" do
-    stub_get = stub_request(:post, "http://example.com:9200/government_test/generic-document/_search").with(
+    stub_get = stub_request(:post, "http://example.com:9200/government_test/_search").with(
       body: %r{"query":"keyword search"},
     ).to_return(
       body: '{"hits":{"hits":[]}}',
@@ -277,7 +277,7 @@ private
 
   def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)
     # stub the request for total results
-    stub_request(:post, "http://example.com:9200/page-traffic_test/generic-document/_search")
+    stub_request(:post, "http://example.com:9200/page-traffic_test/_search")
       .with(body: { "query" => { "match_all" => {} }, "size" => 0 }.to_json)
       .to_return(
         body: { "hits" => { "total" => total_pages } }.to_json,
@@ -312,7 +312,7 @@ private
       },
     }
 
-    stub_request(:post, "http://example.com:9200/page-traffic_test/generic-document/_search")
+    stub_request(:post, "http://example.com:9200/page-traffic_test/_search")
       .with(body: expected_query.to_json)
       .to_return(
         body: response.to_json,

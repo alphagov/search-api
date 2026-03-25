@@ -140,14 +140,11 @@ class SearchConfig
   end
 
   def get_index_for_alias(alias_name)
-    client.indices.get_alias(index: alias_name).keys.first
+    ElasticsearchClient.get_alias(index_name: alias_name, client:)
   end
 
   def rank_eval(requests:, metric:, indices: "*")
-    client.rank_eval(
-      index: indices,
-      body: { requests:, metric: },
-    )
+    ElasticsearchClient.rank_eval(requests:, metric:, indices: , client:)
   end
 
 private

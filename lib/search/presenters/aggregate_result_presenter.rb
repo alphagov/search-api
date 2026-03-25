@@ -17,12 +17,12 @@ module Search
 
         aggregate_parameters = search_params.aggregates[field]
 
-        options = aggregate_info["filtered_aggregations"]["buckets"]
+        buckets = EsExtract::Aggregations.buckets(aggregate_info, "filtered_aggregations")
         result[field] = {
-          options: aggregate_options(field, options, aggregate_parameters),
+          options: aggregate_options(field, buckets, aggregate_parameters),
           documents_with_no_value: aggregates["#{field}_with_missing_value"]["filtered_aggregations"]["doc_count"],
-          total_options: options.length,
-          missing_options: [options.length - aggregate_parameters[:requested], 0].max,
+          total_options: buckets.length,
+          missing_options: [buckets.length - aggregate_parameters[:requested], 0].max,
           scope: aggregate_parameters[:scope],
         }
       end
@@ -51,15 +51,15 @@ module Search
 
   private
 
-    # Get the aggregate options, sorted according to the "order" option.
+    # Get the aggregate buckets, sorted according to the "order" option.
     #
     # Returns the requested number of options, but will additionally return any
     # options which are part of a filter.
-    def aggregate_options(field, calculated_options, aggregate_parameters)
+    def aggregate_options(field, buckets, aggregate_parameters)
       applied_options = filter_values_for_field(field)
 
-      all_options = calculated_options.map { |option|
-        [option["key"], option["doc_count"]]
+      all_options = buckets.map { |bucket|
+        [EsExtract::Buckets.key(bucket), EsExtract::Buckets.doc_count(bucket)]
       } + applied_options.map do |term|
         [term, 0]
       end

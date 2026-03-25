@@ -49,6 +49,7 @@ private
   def with_lock(index)
     index.lock
     yield
+  ensure
     index.unlock
   end
 end
