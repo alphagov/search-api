@@ -209,7 +209,7 @@ This returns a set of results for the filters provided.
 This returns back a separate set of results and is not affected by `count=0`.
 - `example_scope:query` - The scope of a query can be either global (where it doesn't have filters applied), or `query`, which applies whatever filters are included. So in our example we will filter the results by `publishing_app=publisher`
 - `examples:1` - for each each aggregate that it identifies (in this case "rendering app" as `aggregate_rendering_app` is applied), it will provide 1 example document
-- `aggregate_rendering_app=20` - Requests all documents that have a publishing app matching the filter and groups them by rendering app. It will select up to 20 different rendering apps to group by. On GOV.UK there are only 2 rendering applications that render content published by Publisher, `frontend` and `government_frontend`.
+- `aggregate_rendering_app=20` - Requests all documents that have a publishing app matching the filter and groups them by rendering app. It will select up to 20 different rendering apps to group by. On GOV.UK there is only 1 rendering application that renders content published by Publisher: `frontend`.
 
 ##### An example with a query
 
