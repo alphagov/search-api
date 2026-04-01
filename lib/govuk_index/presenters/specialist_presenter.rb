@@ -58,12 +58,12 @@ module GovukIndex
     delegate_to_payload :design_decision_litigants
     delegate_to_payload :destination_country, convert_to_array: true
     delegate_to_payload :development_sector
-    delegate_to_payload :digital_markets_interventions_firm
-    delegate_to_payload :digital_markets_interventions_activity
-    delegate_to_payload :digital_markets_interventions_type
-    delegate_to_payload :digital_markets_interventions_state
-    delegate_to_payload :digital_markets_interventions_opened
-    delegate_to_payload :digital_markets_interventions_closed
+    delegate_to_payload :digital_markets_measure_firm
+    delegate_to_payload :digital_markets_measure_activity
+    delegate_to_payload :digital_markets_measure_type
+    delegate_to_payload :digital_markets_measure_state
+    delegate_to_payload :digital_markets_measure_opened
+    delegate_to_payload :digital_markets_measure_closed
     delegate_to_payload :digital_market_research_area, convert_to_array: true
     delegate_to_payload :digital_market_research_category
     delegate_to_payload :digital_market_research_publish_date
