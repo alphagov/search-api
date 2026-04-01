@@ -34,7 +34,7 @@ gem "warden"
 gem "warden-oauth2"
 
 group :development, :test do
-  gem "pact", require: false
+  gem "pact", "~> 1.67", require: false
   gem "pact_broker-client"
   gem "pry-byebug"
   gem "rubocop-govuk", require: false
