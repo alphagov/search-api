@@ -1,0 +1,10 @@
+{
+  "fields": [
+    "digital_markets_measure_firm",
+    "digital_markets_measure_activity",
+    "digital_markets_measure_type",
+    "digital_markets_measure_state",
+    "digital_markets_measure_opened",
+    "digital_markets_measure_closed"
+  ]
+}
