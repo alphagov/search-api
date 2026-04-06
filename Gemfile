@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "activesupport"
 gem "aws-sdk-s3"
 gem "bootsnap", require: false
-gem "elasticsearch", "~> 6" # We need a 6.x release to interface with Elasticsearch 6
+gem "elasticsearch", "~> 9" # We need a 6.x release to interface with Elasticsearch 6
 gem "gds-api-adapters"
 gem "google-analytics-data-v1beta"
 gem "google-api-client"
