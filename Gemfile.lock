@@ -776,7 +776,7 @@ DEPENDENCIES
   nokogiri
   oauth2
   oj
-  pact
+  pact (~> 1.67)
   pact_broker-client
   plek
   pry-byebug
