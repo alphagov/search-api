@@ -1,0 +1,7 @@
+{
+  "fields": [
+    "patent_decision_british_library_number",
+    "patent_decision_hearing_officer",
+    "patent_decision_type_of_hearing"
+  ]
+}

@@ -1225,5 +1225,15 @@
   },
   "digital_markets_measure_closed": {
     "type": "date"
+  },
+  
+  "patent_decision_british_library_number": {
+    "type": "searchable_text"
+  },
+  "patent_decision_hearing_officer": {
+    "type": "searchable_multivalued_text"
+  },
+  "patent_decision_type_of_hearing": {
+    "type": "searchable_multivalued_text"
   }
 }

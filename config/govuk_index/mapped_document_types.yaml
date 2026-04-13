@@ -90,6 +90,7 @@ oral_statement: edition # Whitehall
 organisation: edition # Whitehall
 our_energy_use: edition
 our_governance: edition
+patent_decision: patent_decision # Specialist Publisher
 person: person
 personal_information_charter: edition
 petitions_and_campaigns: edition

@@ -113,6 +113,9 @@ module GovukIndex
     delegate_to_payload :opened_date
     delegate_to_payload :outcome_type
     delegate_to_payload :farming_grant_type
+    delegate_to_payload :patent_decision_british_library_number
+    delegate_to_payload :patent_decision_hearing_officer
+    delegate_to_payload :patent_decision_type_of_hearing
     delegate_to_payload :principle, convert_to_array: true
     delegate_to_payload :product_alert_type
     delegate_to_payload :product_category
