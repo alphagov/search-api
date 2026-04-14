@@ -16,6 +16,7 @@ RSpec.describe "indices" do
   let(:base_name) { index_names.first }
   let(:index_name) { base_name }
   let(:index_names) { SearchConfig.all_index_names }
+  let(:govuk_index_name) { SearchConfig.govuk_index_name }
 
   before do
     allow(Services).to receive(:elasticsearch).and_return(elasticsearch_client)
@@ -153,10 +154,9 @@ RSpec.describe "indices" do
 
         Rake::Task[task_name].invoke
 
-        index_names.each do |index_name|
-          expect(GovukIndex::PopularityUpdater).to have_received(:update)
-                                                     .with(index_name, process_all:)
-        end
+        expect(GovukIndex::PopularityUpdater)
+          .to have_received(:update)
+          .with(govuk_index_name, process_all:)
       end
     end
 
