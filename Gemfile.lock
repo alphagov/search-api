@@ -719,7 +719,7 @@ GEM
       tins (~> 1)
     thor (1.5.0)
     tilt (2.6.1)
-    timecop (0.9.10)
+    timecop (0.9.11)
     tins (1.51.0)
       bigdecimal
       mize (~> 0.6)
