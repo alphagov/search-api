@@ -61,7 +61,7 @@ private
 
   def fetch_tokens_for_analyzer(query, analyzer)
     result = client.indices.analyze(
-      index: "government_test",
+      index: "govuk_test",
       body: {
         analyzer: analyzer.to_s,
         text: query,
