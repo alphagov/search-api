@@ -3,10 +3,11 @@ require "spec_helper"
 RSpec.describe "ResultsWithHighlightingTest" do
   it "doesn't break without keywords" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "title" => "I am the result",
         "link" => "/some-nice-link",
+        "format" => "guide",
       },
     )
 
@@ -18,10 +19,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "returns highlighted title" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "title" => "I am the result",
         "link" => "/some-nice-link",
+        "format" => "guide",
       },
     )
 
@@ -33,11 +35,12 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "returns highlighted title fallback" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "title" => "Thing without",
         "description" => "I am the result",
         "link" => "/some-nice-link",
+        "format" => "guide",
       },
     )
 
@@ -49,10 +52,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "returns highlighted description" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "link" => "/some-nice-link",
         "description" => "This is a test search result of many results.",
+        "format" => "guide",
       },
     )
 
@@ -66,10 +70,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "highlights mixed quoted/unquoted queries" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "link" => "/some-nice-link",
         "description" => "This is a test search result of many results.",
+        "format" => "guide",
       },
     )
 
@@ -83,10 +88,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "highlights quoted queries in their entirety (other than stopwords)" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "link" => "/some-nice-link",
         "description" => "The ministry of magic is a magic ministry.",
+        "format" => "guide",
       },
     )
 
@@ -100,10 +106,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "highlights synonyms" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "link" => "/some-nice-link",
         "description" => "This is one (1) page.",
+        "format" => "guide",
       },
     )
 
@@ -117,10 +124,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "doesn't highlight synonyms if they're disabled" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "link" => "/some-nice-link",
         "description" => "This is one (1) page.",
+        "format" => "guide",
       },
     )
 
@@ -134,11 +142,12 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "returns documents html escaped" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "title" => "Escape & highlight my title",
         "link" => "/some-nice-link",
         "description" => "Escape & highlight the description as well.",
+        "format" => "guide",
       },
     )
 
@@ -154,10 +163,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "returns truncated correctly where result at start of description" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "link" => "/some-nice-link",
         "description" => "word #{'something ' * 200}",
+        "format" => "guide",
       },
     )
 
@@ -170,10 +180,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "returns truncated correctly where result at end of description" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "link" => "/some-nice-link",
         "description" => "#{'something ' * 200} word",
+        "format" => "guide",
       },
     )
 
@@ -186,10 +197,11 @@ RSpec.describe "ResultsWithHighlightingTest" do
 
   it "returns truncated correctly where result in middle of description" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "link" => "/some-nice-link",
         "description" => "#{'something ' * 200} word #{'something ' * 200}",
+        "format" => "guide",
       },
     )
 

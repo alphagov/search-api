@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe Search::DuplicateFinder do
-  let(:index) { "government_test" }
+  let(:index) { "govuk_test" }
   describe "there are no documents in Elasticsearch" do
     it "returns an empty array" do
       expect(Search::DuplicateFinder.new(index:).find_duplicates).to eq([])
