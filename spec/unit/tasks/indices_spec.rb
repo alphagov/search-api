@@ -148,28 +148,14 @@ RSpec.describe "indices" do
   describe "search:update_popularity" do
     let(:task_name) { "search:update_popularity" }
 
-    shared_examples "updates popularity" do |process_all|
-      it "updates popularity for all indices (process_all=#{process_all})" do
-        allow(GovukIndex::PopularityUpdater).to receive(:update)
+    it "updates popularity for govuk index" do
+      allow(GovukIndex::PopularityUpdater).to receive(:update)
 
-        Rake::Task[task_name].invoke
+      Rake::Task[task_name].invoke
 
-        expect(GovukIndex::PopularityUpdater)
-          .to have_received(:update)
-          .with(govuk_index_name, process_all:)
-      end
-    end
-
-    context "when PROCESS_ALL_DATA is not set" do
-      it_behaves_like "updates popularity", false
-    end
-
-    context "when PROCESS_ALL_DATA is set" do
-      around do |example|
-        ClimateControl.modify(PROCESS_ALL_DATA: "1") { example.run }
-      end
-
-      it_behaves_like "updates popularity", true
+      expect(GovukIndex::PopularityUpdater)
+        .to have_received(:update)
+        .with(govuk_index_name)
     end
   end
 

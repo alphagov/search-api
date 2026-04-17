@@ -77,7 +77,7 @@ data using sidekiq jobs.
 This does not update the schema.
 "
   task :update_popularity do
-    GovukIndex::PopularityUpdater.update(SearchConfig.govuk_index_name, process_all: ENV.key?("PROCESS_ALL_DATA"))
+    GovukIndex::PopularityUpdater.update(SearchConfig.govuk_index_name)
   end
 
   desc "Update supertypes from govuk_document_types gem.

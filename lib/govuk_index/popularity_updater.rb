@@ -1,10 +1,9 @@
 module GovukIndex
   class PopularityUpdater < Updater
-    def self.update(index_name, process_all: false)
+    def self.update(index_name)
       new(
         source_index: index_name,
         destination_index: index_name,
-        process_all:,
       ).run
     end
 
@@ -12,9 +11,7 @@ module GovukIndex
       PopularityJob
     end
 
-    def initialize(source_index:, destination_index:, process_all: false)
-      @process_all = process_all
-
+    def initialize(source_index:, destination_index:)
       super(
         source_index:,
         destination_index:,
@@ -24,16 +21,7 @@ module GovukIndex
   private
 
     def search_body
-      return { query: { match_all: {} } } if @process_all
-
-      # only sync migrated formats as the rest will be updated via the sync job.
-      {
-        query: {
-          terms: {
-            format: MigratedFormats.indexable_formats.keys,
-          },
-        },
-      }
+      { query: { match_all: {} } }
     end
   end
 end

@@ -58,27 +58,4 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
     document = fetch_document_from_rummager(id:, index: "govuk_test")
     expect(document["_version"]).to eq(3)
   end
-
-  it "skips non indexable formats" do
-    id = insert_document("govuk_test", { popularity: 0.222, format: "edition" }, type: "edition", version: 3)
-    commit_index("govuk_test")
-    GovukIndex::PopularityUpdater.update("govuk_test")
-
-    document = fetch_document_from_rummager(id:, index: "govuk_test")
-    expect(0.222).to eq(document["_source"]["popularity"])
-  end
-
-  it "does not skips non indexable formats if process all flag is set" do
-    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "edition" }, type: "edition", version: 3)
-    commit_index("govuk_test")
-
-    document_count = 4
-    setup_page_traffic_data(document_count:)
-
-    GovukIndex::PopularityUpdater.update("govuk_test", process_all: true)
-    popularity = 1.0 / (document_count + SearchConfig.popularity_rank_offset)
-
-    document = fetch_document_from_rummager(id:, index: "govuk_test")
-    expect(popularity).to eq(document["_source"]["popularity"])
-  end
 end
