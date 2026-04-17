@@ -253,6 +253,7 @@ RSpec.describe SearchIndices::Index do
     it "shows the index has not recovered" do
       recovery = { index_name => { "shards" => [{ "stage" => "DONE" }, { "stage" => "INDEX" }] } }
       allow(indices_client).to receive(:recovery).with(index: index_name).and_return(recovery)
+      expect(index.index_recovered?).to be false
     end
   end
 
