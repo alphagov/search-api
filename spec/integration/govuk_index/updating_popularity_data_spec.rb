@@ -1,12 +1,13 @@
 require "spec_helper"
 
 RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
+  let(:initial_popularity) { 0.222 }
   before do
     allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("help_page" => :all)
   end
 
   it "updates the popularity when it exists" do
-    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "help_page" }, type: "edition")
+    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: initial_popularity, format: "help_page" }, type: "edition")
     commit_index("govuk_test")
 
     document_count = 4
@@ -18,11 +19,12 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
 
     GovukIndex::PopularityUpdater.update("govuk_test")
 
+    expect(popularity).not_to eq(initial_popularity)
     expect_document_is_in_rummager({ "link" => id, "popularity" => popularity }, type: "edition", index: "govuk_test")
   end
 
   it "set the popularity to the lowest popularity when it doesnt exist" do
-    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "help_page" }, type: "edition")
+    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: initial_popularity, format: "help_page" }, type: "edition")
     commit_index("govuk_test")
 
     document_count = 4
@@ -32,6 +34,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
 
     GovukIndex::PopularityUpdater.update("govuk_test")
 
+    expect(popularity).not_to eq(initial_popularity)
     expect_document_is_in_rummager({ "link" => id, "popularity" => popularity }, type: "edition", index: "govuk_test")
   end
 
@@ -51,7 +54,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
   end
 
   it "copies version information" do
-    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: 0.222, format: "help_page" }, type: "edition", version: 3)
+    id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: initial_popularity, format: "help_page" }, type: "edition", version: 3)
     commit_index("govuk_test")
     GovukIndex::PopularityUpdater.update("govuk_test")
 
