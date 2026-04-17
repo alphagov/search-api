@@ -16,26 +16,26 @@ RSpec.describe SearchIndices::IndexGroup do
     @server = SearchIndices::SearchServer.new(
       base_uri,
       @schema,
-      %w[government custom],
+      %w[foo custom],
       "govuk",
-      %w[government],
+      %w[foo],
       SearchConfig.default_instance,
     )
   end
 
   it "create index" do
     expected_body = {
-      "settings" => @schema.elasticsearch_settings("government"),
-      "mappings" => @schema.elasticsearch_mappings("government"),
+      "settings" => @schema.elasticsearch_settings("govuk"),
+      "mappings" => @schema.elasticsearch_mappings("govuk"),
     }.to_json
-    stub = stub_request(:put, %r{#{base_uri}/government-.*})
+    stub = stub_request(:put, %r{#{base_uri}/govuk-.*})
       .with(body: expected_body)
       .to_return(elasticsearch_ok)
-    index = @server.index_group("government").create_index
+    index = @server.index_group("govuk").create_index
 
     assert_requested(stub)
     expect(index).to be_a SearchIndices::Index
-    expect(index.index_name).to match(/^government-/)
+    expect(index.index_name).to match(/^govuk-/)
   end
 
   it "switch index with no existing alias" do

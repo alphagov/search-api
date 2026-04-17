@@ -20,7 +20,7 @@ RSpec.describe "duplicates", "RakeTest" do
       },
     ]
   end
-  let(:index) { "government" }
+  let(:index) { "govuk" }
 
   before do
     Rake::Task[task_name].reenable
