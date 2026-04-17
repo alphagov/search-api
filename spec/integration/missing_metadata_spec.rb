@@ -28,6 +28,7 @@ RSpec.describe "MissingMetadataTest" do
       results = runner.retrieve_records_with_missing_value
 
       expect(results).to be_empty
+      expect(io.string).to include("Skipping edition/https://www.nhs.uk")
     end
 
     it "ignores already set content_id" do
