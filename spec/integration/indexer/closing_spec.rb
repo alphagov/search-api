@@ -6,7 +6,7 @@ RSpec.describe "ElasticsearchClosingTest" do
   end
 
   it "will not allow insertion into closed index" do
-    index = search_server.index_group("government_test").current
+    index = search_server.index_group("govuk_test").current
     index.close
 
     expect {
@@ -15,6 +15,6 @@ RSpec.describe "ElasticsearchClosingTest" do
 
     # Re-opening the index again, as they are not recreated on each test run
     # anymore.
-    client.indices.open(index: "government_test")
+    client.indices.open(index: "govuk_test")
   end
 end

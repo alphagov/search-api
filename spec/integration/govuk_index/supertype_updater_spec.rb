@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe GovukIndex::SupertypeUpdater do
-  let(:index) { "government_test" }
+  let(:index) { "govuk_test" }
 
   before do
     allow(GovukDocumentTypes).to receive(:supertypes)

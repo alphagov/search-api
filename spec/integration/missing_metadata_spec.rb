@@ -4,23 +4,25 @@ RSpec.describe "MissingMetadataTest" do
   describe "#retrieve_records_with_missing_value" do
     it "finds missing content_id" do
       commit_document(
-        "government_test",
+        "govuk_test",
         {
           "link" => "/path/to_page",
+          "format" => "guide",
         },
       )
 
       runner = MissingMetadata::Runner.new("content_id", search_config: SearchConfig.default_instance, logger: io)
       results = runner.retrieve_records_with_missing_value
 
-      expect([{ _id: "/path/to_page", index: "government_test" }]).to eq results
+      expect([{ _id: "/path/to_page", index: "govuk_test" }]).to eq results
     end
 
     it "ignores external links" do
       commit_document(
-        "government_test",
+        "govuk_test",
         {
           "link" => "https://www.nhs.uk",
+          "format" => "guide",
         },
       )
 
@@ -28,14 +30,16 @@ RSpec.describe "MissingMetadataTest" do
       results = runner.retrieve_records_with_missing_value
 
       expect(results).to be_empty
+      expect(io.string).to include("Skipping edition/https://www.nhs.uk")
     end
 
     it "ignores already set content_id" do
       commit_document(
-        "government_test",
+        "govuk_test",
         {
           "link" => "/path/to_page",
           "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
+          "format" => "guide",
         },
       )
 
@@ -47,26 +51,28 @@ RSpec.describe "MissingMetadataTest" do
 
     it "finds missing document_type" do
       commit_document(
-        "government_test",
+        "govuk_test",
         {
           "link" => "/path/to_page",
           "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
+          "format" => "guide",
         },
       )
 
       runner = MissingMetadata::Runner.new("content_store_document_type", search_config: SearchConfig.default_instance, logger: io)
       results = runner.retrieve_records_with_missing_value
 
-      expect([{ _id: "/path/to_page", index: "government_test", content_id: "8aea1742-9cc6-4dfb-a63b-12c3e66a601f" }]).to eq results
+      expect([{ _id: "/path/to_page", index: "govuk_test", content_id: "8aea1742-9cc6-4dfb-a63b-12c3e66a601f" }]).to eq results
     end
 
     it "ignores already set document_type" do
       commit_document(
-        "government_test",
+        "govuk_test",
         {
           "link" => "/path/to_page",
           "content_id" => "8aea1742-9cc6-4dfb-a63b-12c3e66a601f",
           "content_store_document_type" => "guide",
+          "format" => "guide",
         },
       )
 
@@ -81,9 +87,10 @@ RSpec.describe "MissingMetadataTest" do
     context "when add metadata returns an error" do
       it "logs a message and skips the result" do
         commit_document(
-          "government_test",
+          "govuk_test",
           {
             "link" => "/path/to_page",
+            "format" => "guide",
           },
         )
         allow_any_instance_of(MissingMetadata::Fetcher).to receive(:add_metadata).and_raise(StandardError)
@@ -119,10 +126,11 @@ RSpec.describe "MissingMetadataTest" do
       context "when content_id is available" do
         it "gets content from publishing api and updates document" do
           commit_document(
-            "government_test",
+            "govuk_test",
             {
               "link" => @base_path,
               "content_id" => @content_id,
+              "format" => "guide",
             },
           )
           stub_publishing_api_has_item(@publishing_content_item)
@@ -130,17 +138,18 @@ RSpec.describe "MissingMetadataTest" do
           MissingMetadata::Runner.new("content_store_document_type", search_config: SearchConfig.default_instance, logger: io).update
 
           expect(a_request(:get, @get_content_url)).to have_been_made.once
-          expect_document_is_in_rummager(@updated_content_item, index: "government_test", id: @base_path)
+          expect_document_is_in_rummager(@updated_content_item, index: "govuk_test", id: @base_path)
         end
       end
 
       context "when fetch content times out" do
         it "sleeps for 1 second and retries, until content is returned" do
           commit_document(
-            "government_test",
+            "govuk_test",
             {
               "link" => @base_path,
               "content_id" => @content_id,
+              "format" => "guide",
             },
           )
           allow(Kernel).to receive(:sleep).and_return(true)
@@ -154,16 +163,17 @@ RSpec.describe "MissingMetadataTest" do
           expect(a_request(:get, @get_content_url)).to have_been_made.twice
           expect(Kernel).to have_received(:sleep).with(1).exactly(1).times
           expect(io.string).to include("Publishing API timed out getting content... retrying")
-          expect_document_is_in_rummager(@updated_content_item, index: "government_test", id: @base_path)
+          expect_document_is_in_rummager(@updated_content_item, index: "govuk_test", id: @base_path)
         end
       end
 
       context "when content_id is not available" do
         it "gets content id and content from publishing api and updates document" do
           commit_document(
-            "government_test",
+            "govuk_test",
             {
               "link" => @base_path,
+              "format" => "guide",
             },
           )
           stub_publishing_api_has_lookups(@base_path => @content_id)
@@ -173,16 +183,17 @@ RSpec.describe "MissingMetadataTest" do
 
           expect(a_request(:post, @get_content_id_url)).to have_been_made.once
           expect(a_request(:get, @get_content_url)).to have_been_made.once
-          expect_document_is_in_rummager(@updated_content_item, index: "government_test", id: @base_path)
+          expect_document_is_in_rummager(@updated_content_item, index: "govuk_test", id: @base_path)
         end
       end
 
       context "when fetch content_id times out" do
         it "sleeps for 1 second and retries, until content_id is returned" do
           commit_document(
-            "government_test",
+            "govuk_test",
             {
               "link" => @base_path,
+              "format" => "guide",
             },
           )
           allow(Kernel).to receive(:sleep).and_return(true)
@@ -199,7 +210,7 @@ RSpec.describe "MissingMetadataTest" do
           expect(a_request(:get, @get_content_url)).to have_been_made.once
           expect(Kernel).to have_received(:sleep).with(1).exactly(1).times
           expect(io.string).to include("Publishing API timed out getting content_id... retrying")
-          expect_document_is_in_rummager(@updated_content_item, index: "government_test", id: @base_path)
+          expect_document_is_in_rummager(@updated_content_item, index: "govuk_test", id: @base_path)
         end
       end
     end
