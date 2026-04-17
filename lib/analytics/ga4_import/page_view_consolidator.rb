@@ -10,7 +10,7 @@ module Analytics
       def consolidated_page_views
         ga_data
           .reject(&:excluded?)
-          .reject { |page_data| page_data.path.bytesize >= MAX_PATH_LENGTH }
+          .reject { |page_data| page_data.path.bytesize > MAX_PATH_LENGTH }
           .group_by(&:normalised_path)
           .transform_values { |grouped_pages| grouped_pages.sum(&:page_views) }
           .sort_by { |_, views| -views }
