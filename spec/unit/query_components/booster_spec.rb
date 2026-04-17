@@ -56,7 +56,7 @@ RSpec.describe QueryComponents::Booster do
     end
   end
 
-  it "not boost government index results" do
+  it "not boost Whitehall formats" do
     builder = described_class.new(search_query_params)
     result = builder.wrap({ some: "query" })
 
