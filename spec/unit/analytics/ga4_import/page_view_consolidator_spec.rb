@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe Analytics::Ga4Import::PageViewConsolidator do
-  let(:really_long_path) { "/#{'a'.b * (Analytics::Ga4Import::PageViewConsolidator::MAX_PATH_LENGTH - 1)}" }
+  let(:really_long_path) { "/#{'a'.b * Analytics::Ga4Import::PageViewConsolidator::MAX_PATH_LENGTH}" }
 
   let(:ga_data) do
     [
