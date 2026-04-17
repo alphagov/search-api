@@ -6,6 +6,13 @@ module GovukIndex
 
     class ImplementationRequired < StandardError; end
 
+    def self.update(index_name)
+      new(
+        source_index: index_name,
+        destination_index: index_name,
+      ).run
+    end
+
     def initialize(source_index:, destination_index:)
       @source_index = source_index
       @destination_index = destination_index
@@ -27,14 +34,14 @@ module GovukIndex
       raise ImplementationRequired
     end
 
-    def search_body
-      raise ImplementationRequired
-    end
-
   private
 
     def job
       self.class.job
+    end
+
+    def search_body
+      { query: { match_all: {} } }
     end
 
     def scroll_enumerator(cluster:)
