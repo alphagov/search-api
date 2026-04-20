@@ -1,7 +1,7 @@
 require "spec_helper"
 require "rake"
 
-RSpec.describe Indexer::MessageProcessor, "RakeTest" do
+RSpec.describe "message_queue", "RakeTest" do
   describe "message_queue:insert_data_into_govuk" do
     let(:task_name) { "message_queue:insert_data_into_govuk" }
 
