@@ -2,33 +2,6 @@ require "spec_helper"
 require "rake"
 
 RSpec.describe Indexer::MessageProcessor, "RakeTest" do
-  describe "message_queue:listen_to_publishing_queue" do
-    let(:task_name) { "message_queue:listen_to_publishing_queue" }
-
-    before { Rake::Task[task_name].reenable }
-
-    it "uses GovukMessageQueueConsumer::Consumer" do
-      indexer = described_class.new
-      expect(described_class).to receive(:new).and_return(indexer)
-
-      consumer = double("consumer")
-      expect(consumer).to receive(:run).and_return(true)
-
-      logger = Logging.logger[described_class]
-
-      expect(GovukMessageQueueConsumer::Consumer).to receive(:new)
-        .with(
-          queue_name: "search_api_to_be_indexed",
-          processor: indexer,
-          logger:,
-          worker_threads: 10,
-          prefetch: 10,
-        ).and_return(consumer)
-
-      Rake::Task[task_name].invoke
-    end
-  end
-
   describe "message_queue:insert_data_into_govuk" do
     let(:task_name) { "message_queue:insert_data_into_govuk" }
 
@@ -102,17 +75,6 @@ RSpec.describe Indexer::MessageProcessor, "RakeTest" do
 
     it "creates the exchanges and queues" do
       queues = [
-        {
-          name: "search_api_to_be_indexed",
-          routing_key: "*.links",
-          retry_dlx: instance_double(Bunny::Exchange, name: "search_api_to_be_indexed_retry_dlx"),
-          discarded_dlx: instance_double(Bunny::Exchange, name: "search_api_to_be_indexed_discarded_dlx"),
-          queues: {
-            root: instance_double(Bunny::Queue, bind: nil),
-            discarded: instance_double(Bunny::Queue, bind: nil),
-            wait_to_retry: instance_double(Bunny::Queue, bind: nil),
-          },
-        },
         {
           name: "search_api_bulk_reindex",
           routing_key: "*.bulk.reindex",
