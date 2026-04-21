@@ -17,7 +17,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
 
     popularity = 1.0 / ([document_rank, document_count].min + SearchConfig.popularity_rank_offset)
 
-    GovukIndex::PopularityUpdater.update("govuk_test")
+    GovukIndex::Updater.update("govuk_test", GovukIndex::PopularityJob)
 
     expect(popularity).not_to eq(initial_popularity)
     expect_document_is_in_rummager({ "link" => id, "popularity" => popularity }, type: "edition", index: "govuk_test")
@@ -32,7 +32,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
 
     popularity = 1.0 / (document_count + SearchConfig.popularity_rank_offset)
 
-    GovukIndex::PopularityUpdater.update("govuk_test")
+    GovukIndex::Updater.update("govuk_test", GovukIndex::PopularityJob)
 
     expect(popularity).not_to eq(initial_popularity)
     expect_document_is_in_rummager({ "link" => id, "popularity" => popularity }, type: "edition", index: "govuk_test")
@@ -46,7 +46,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
     processor = instance_double("Index::ElasticsearchProcessor", commit: nil, save: nil)
     allow(Index::ElasticsearchProcessor).to receive(:new).and_return(processor)
 
-    GovukIndex::PopularityUpdater.update("govuk_test")
+    GovukIndex::Updater.update("govuk_test", GovukIndex::PopularityJob)
 
     expect(Sidekiq.logger)
       .to have_received(:warn).with("Skipping #{id} as it is not in the index")
@@ -56,7 +56,7 @@ RSpec.describe "GovukIndex::UpdatingPopularityDataTest" do
   it "copies version information" do
     id = insert_document("govuk_test", { title: "govuk_test_doc", popularity: initial_popularity, format: "help_page" }, type: "edition", version: 3)
     commit_index("govuk_test")
-    GovukIndex::PopularityUpdater.update("govuk_test")
+    GovukIndex::Updater.update("govuk_test", GovukIndex::PopularityJob)
 
     document = fetch_document_from_rummager(id:, index: "govuk_test")
     expect(document["_version"]).to eq(3)

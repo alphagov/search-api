@@ -149,13 +149,13 @@ RSpec.describe "indices" do
     let(:task_name) { "search:update_popularity" }
 
     it "updates popularity for govuk index" do
-      allow(GovukIndex::PopularityUpdater).to receive(:update)
+      allow(GovukIndex::Updater).to receive(:update)
 
       Rake::Task[task_name].invoke
 
-      expect(GovukIndex::PopularityUpdater)
+      expect(GovukIndex::Updater)
         .to have_received(:update)
-        .with(govuk_index_name)
+        .with(govuk_index_name, GovukIndex::PopularityJob)
     end
   end
 
@@ -163,13 +163,14 @@ RSpec.describe "indices" do
     let(:task_name) { "search:update_supertypes" }
 
     it "updates supertypes for all indices" do
-      allow(GovukIndex::SupertypeUpdater).to receive(:update)
+      allow(GovukIndex::Updater).to receive(:update)
 
       Rake::Task[task_name].invoke
 
       index_names.each do |index_name|
-        expect(GovukIndex::SupertypeUpdater).to have_received(:update)
-                                                  .with(index_name)
+        expect(GovukIndex::Updater)
+          .to have_received(:update)
+          .with(index_name, GovukIndex::SupertypeJob)
       end
     end
   end
