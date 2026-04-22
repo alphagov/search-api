@@ -2,8 +2,8 @@ require "rummager"
 
 namespace :duplicates do
   desc "Find all documents with the same content_id"
-  task :find, [:index] do |_t, args|
-    index = args[:index] || "government"
+  task :find do
+    index = SearchConfig.govuk_index_name
 
     duplicates = Search::DuplicateFinder.new(index:).find_duplicates
 
@@ -16,8 +16,8 @@ namespace :duplicates do
   end
 
   desc "Find all documents with the same content_id and remove them"
-  task :remove, [:index] do |_t, args|
-    index = args[:index] || "government"
+  task :remove do
+    index = SearchConfig.govuk_index_name
 
     duplicates = Search::DuplicateFinder.new(index:).find_duplicates
     puts "No duplicates found" if duplicates.empty?
