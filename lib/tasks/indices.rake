@@ -69,7 +69,7 @@ namespace :search do
     end
   end
 
-  desc "Update popularity data in indices.
+  desc "Update popularity data in govuk index.
 
 Update all data in the index inplace (without locks) with the new popularity
 data using sidekiq jobs.
@@ -77,9 +77,7 @@ data using sidekiq jobs.
 This does not update the schema.
 "
   task :update_popularity do
-    index_names.each do |index_name|
-      GovukIndex::PopularityUpdater.update(index_name, process_all: ENV.key?("PROCESS_ALL_DATA"))
-    end
+    GovukIndex::Updater.update(SearchConfig.govuk_index_name, GovukIndex::PopularityJob)
   end
 
   desc "Update supertypes from govuk_document_types gem.
@@ -91,7 +89,7 @@ This does not update the schema.
 "
   task :update_supertypes do
     index_names.each do |index_name|
-      GovukIndex::SupertypeUpdater.update(index_name)
+      GovukIndex::Updater.update(index_name, GovukIndex::SupertypeJob)
     end
   end
 

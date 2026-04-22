@@ -16,6 +16,7 @@ RSpec.describe "indices" do
   let(:base_name) { index_names.first }
   let(:index_name) { base_name }
   let(:index_names) { SearchConfig.all_index_names }
+  let(:govuk_index_name) { SearchConfig.govuk_index_name }
 
   before do
     allow(Services).to receive(:elasticsearch).and_return(elasticsearch_client)
@@ -147,29 +148,14 @@ RSpec.describe "indices" do
   describe "search:update_popularity" do
     let(:task_name) { "search:update_popularity" }
 
-    shared_examples "updates popularity" do |process_all|
-      it "updates popularity for all indices (process_all=#{process_all})" do
-        allow(GovukIndex::PopularityUpdater).to receive(:update)
+    it "updates popularity for govuk index" do
+      allow(GovukIndex::Updater).to receive(:update)
 
-        Rake::Task[task_name].invoke
+      Rake::Task[task_name].invoke
 
-        index_names.each do |index_name|
-          expect(GovukIndex::PopularityUpdater).to have_received(:update)
-                                                     .with(index_name, process_all:)
-        end
-      end
-    end
-
-    context "when PROCESS_ALL_DATA is not set" do
-      it_behaves_like "updates popularity", false
-    end
-
-    context "when PROCESS_ALL_DATA is set" do
-      around do |example|
-        ClimateControl.modify(PROCESS_ALL_DATA: "1") { example.run }
-      end
-
-      it_behaves_like "updates popularity", true
+      expect(GovukIndex::Updater)
+        .to have_received(:update)
+        .with(govuk_index_name, GovukIndex::PopularityJob)
     end
   end
 
@@ -177,13 +163,14 @@ RSpec.describe "indices" do
     let(:task_name) { "search:update_supertypes" }
 
     it "updates supertypes for all indices" do
-      allow(GovukIndex::SupertypeUpdater).to receive(:update)
+      allow(GovukIndex::Updater).to receive(:update)
 
       Rake::Task[task_name].invoke
 
       index_names.each do |index_name|
-        expect(GovukIndex::SupertypeUpdater).to have_received(:update)
-                                                  .with(index_name)
+        expect(GovukIndex::Updater)
+          .to have_received(:update)
+          .with(index_name, GovukIndex::SupertypeJob)
       end
     end
   end
