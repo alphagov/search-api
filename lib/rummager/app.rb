@@ -70,6 +70,11 @@ class Rummager < Sinatra::Application
     end
   end
 
+  def deprecated_endpoint
+    GovukError.notify("Deprecated endpoint accessed", extras: { source_ip: request.ip, path: request.fullpath })
+    halt(403, "This endpoint has been deprecated.")
+  end
+
   def index_name
     @index_name ||= params["index"]
   end
@@ -161,20 +166,7 @@ class Rummager < Sinatra::Application
 
   # Insert (or overwrite) a document
   post "/:index/documents" do
-    require_authentication "manage_search_indices"
-    prevent_access_to_govuk_and_detailed
-    request.body.rewind
-    documents = [JSON.parse(request.body.read)].flatten.map do |hash|
-      hash["document_type"] ||= hash.fetch("_type", "edition")
-      hash["updated_at"] = Time.now.iso8601
-      current_index.document_from_hash(hash)
-    end
-
-    document_hashes = documents.map(&:elasticsearch_export)
-
-    Indexer::BulkIndexJob.perform_async(index_name, document_hashes)
-
-    json_result 202, "Queued"
+    deprecated_endpoint
   end
 
   post "/v2/metasearch/documents" do
