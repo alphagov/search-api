@@ -4,6 +4,16 @@ updates:
     directory: /
     schedule:
       interval: daily
+    cooldown:
+      default-days: 3
+      exclude:
+        - gds-api-adapters
+        - govuk_app_config
+        - govuk_document_types
+        - govuk_message_queue_consumer
+        - govuk_schemas
+        - govuk_sidekiq
+        - plek
     ignore:
       - dependency-name: "elasticsearch"
         versions: ["7.x", "8.x"]
@@ -12,9 +22,13 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 3
     ignore:
       - dependency-name: ruby
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
+    cooldown:
+      default-days: 3
