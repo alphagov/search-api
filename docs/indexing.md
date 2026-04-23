@@ -43,9 +43,9 @@ still requires Sidekiq to be running.
 
 	bundle exec rake message_queue:insert_data_into_govuk
 
-There is also a separate process that listens to only 'links' updates from the publishing API. This is used for updating old indexes that are populated through the '/documents' API (`government`) and can be removed once those indexes no longer exist.
+There is also a separate process that is used for bulk indexing.
 
-	bundle exec rake message_queue:listen_to_publishing_queue
+	bundle exec rake message_queue:bulk_insert_data_into_govuk
 
 ### Internal only APIs
 
