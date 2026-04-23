@@ -42,7 +42,6 @@ Dir[initializers_path].sort.each { |f| require f }
 
 require "cache"
 require File.expand_path("../config/logging_setup", __dir__)
-require "document"
 require "govuk_document_types"
 
 require "auth/gds_sso"

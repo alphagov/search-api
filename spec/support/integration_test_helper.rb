@@ -42,10 +42,6 @@ module IntegrationTestHelper
     search_config(cluster).search_server
   end
 
-  def sample_document
-    Document.from_hash(SAMPLE_DOCUMENT_ATTRIBUTES, sample_elasticsearch_types)
-  end
-
   def random_cluster
     clusters.sample
   end

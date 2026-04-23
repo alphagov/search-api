@@ -102,10 +102,6 @@ module SearchIndices
       nil
     end
 
-    def document_from_hash(hash)
-      Document.from_hash(hash, @elasticsearch_types)
-    end
-
     def documents_by_format(format, field_definitions)
       batch_size = 500
       search_body = {
