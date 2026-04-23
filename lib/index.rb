@@ -96,49 +96,6 @@ module SearchIndices
       end
     end
 
-    def add(documents, options = {})
-      logger.info "Adding #{documents.size} document(s) to #{index_name}"
-
-      document_hashes = documents.map(&:elasticsearch_export)
-      bulk_index(document_hashes, options)
-    end
-
-    # `bulk_index` is the only method that inserts/updates documents. The other
-    # indexing-methods like `add` and `amend` eventually end up
-    # calling this method.
-    def bulk_index(document_hashes_or_payload, options = {})
-      @client = build_client(options.merge(retry_on_failure: true, timeout: 10))
-
-      with_retries do
-        payload_generator = Indexer::BulkPayloadGenerator.new(@index_name, @search_config, @client, @is_content_index)
-        response = @client.bulk(index: @index_name, body: payload_generator.bulk_payload(document_hashes_or_payload))
-
-        items = response["items"]
-        failed_items = items.select do |item|
-          data = item["index"] || item["create"]
-          data.key?("error")
-        end
-
-        if failed_items.any?
-          # Because bulk writes return a 200 status code regardless, we need to
-          # parse through the errors to detect responses that indicate a locked
-          # index
-          blocked_items = failed_items.select do |item|
-            error = (item["index"] || item["create"])["error"]
-            locked_index_error?(error["reason"])
-          end
-          if blocked_items.any?
-            raise IndexLocked
-          else
-            GovukError.notify(Indexer::BulkIndexFailure.new, extra: { failed_items: })
-            raise Indexer::BulkIndexFailure
-          end
-        end
-
-        response
-      end
-    end
-
     def get_document_by_id(document_id)
       @client.get(index: @index_name, type: "_all", id: document_id)
     rescue Elasticsearch::Transport::Transport::Errors::NotFound

@@ -50,39 +50,6 @@ RSpec.describe SearchIndices::Index do
     expect(@index).to be_exists
   end
 
-  it "raises error for failures in bulk update" do
-    stub_tagging_lookup
-    stub_traffic_index
-    stub_popularity_index_requests(["/foo/bar", "/foo/baz"], 1.0, 20)
-
-    json_documents = [
-      { "document_type" => "edition", "link" => "/foo/bar", "title" => "TITLE ONE", "popularity" => "0.09090909090909091", "view_count" => "1" },
-      { "document_type" => "edition", "link" => "/foo/baz", "title" => "TITLE TWO", "popularity" => "0.09090909090909091", "view_count" => "2" },
-    ]
-
-    documents = json_documents.map do |json_document|
-      double("document", elasticsearch_export: json_document)
-    end
-
-    response = <<~RESPONSE
-      {"took":0,"items":[
-        { "index": { "_index":"govuk_test", "_type":"generic-document", "_id":"/foo/bar", "ok":true } },
-        { "index": { "_index":"govuk_test", "_type":"generic-document", "_id":"/foo/baz", "error":"stuff" } }
-      ]}
-    RESPONSE
-    stub_request(:post, "http://example.com:9200/govuk_test/_bulk").to_return(
-      body: response,
-      headers: { "Content-Type" => "application/json" },
-    )
-
-    begin
-      @index.add(documents)
-      flunk("No exception raised")
-    rescue Indexer::BulkIndexFailure => e
-      expect(e.message).to eq("Indexer::BulkIndexFailure")
-    end
-  end
-
   it "can be searched" do
     stub_get = stub_request(:get, "http://example.com:9200/govuk_test/generic-document/_search").with(
       body: %r{"query":"keyword search"},

@@ -5,22 +5,13 @@ RSpec.describe "ElasticsearchLockingTest" do
     stub_tagging_lookup
   end
 
-  it "will not allow inserts while locked" do
-    index = search_server.index_group("govuk_test").current
-    with_lock(index) do
-      expect {
-        index.add([sample_document])
-      }.to raise_error(SearchIndices::IndexLocked)
-    end
-  end
-
   it "will not allow deletes while locked" do
     index = search_server.index_group("govuk_test").current
-    index.add([sample_document])
+    commit_document("govuk_test", { "link" => "/link", "title" => "A nice title" })
 
     with_lock(index) do
       expect {
-        index.delete(sample_document.link)
+        index.delete("/link")
       }.to raise_error(SearchIndices::IndexLocked)
     end
   end
@@ -30,7 +21,7 @@ RSpec.describe "ElasticsearchLockingTest" do
     with_lock(index) do
       # Nothing to do here
     end
-    index.add([sample_document])
+    commit_document("govuk_test", { "link" => "/link", "title" => "A nice title" })
   end
 
 private
