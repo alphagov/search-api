@@ -7,26 +7,30 @@ module BestBetTestHelpers
   end
 
   def add_best_bet(args)
-    payload = build_sample_bet_hash(
+    document = build_sample_bet_hash(
       query: args[:query],
       type: args[:type],
       best_bets: [args.slice(:link, :position)],
       worst_bets: [],
-    )
+    ).deep_stringify_keys
 
-    post "/metasearch_test/documents", payload.to_json
+    inserter = MetasearchIndex::Inserter::V2.new(id: document["_id"], document:)
+    inserter.insert
+
     commit_index("metasearch_test")
   end
 
   def add_worst_bet(args)
-    payload = build_sample_bet_hash(
+    document = build_sample_bet_hash(
       query: args[:query],
       type: args[:type],
       best_bets: [],
       worst_bets: [args.slice(:link, :position)],
-    )
+    ).deep_stringify_keys
 
-    post "/metasearch_test/documents", payload.to_json
+    inserter = MetasearchIndex::Inserter::V2.new(id: document["_id"], document:)
+    inserter.insert
+
     commit_index("metasearch_test")
   end
 
