@@ -12,12 +12,4 @@ class BaseJob
       GovukError.notify(Indexer::FailedJobException.new, extra: msg)
     end
   end
-
-private
-
-  def indexes(index_name)
-    SearchConfig.search_servers.map do |search_server|
-      search_server.index(index_name)
-    end
-  end
 end
