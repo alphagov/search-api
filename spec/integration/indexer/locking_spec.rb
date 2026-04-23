@@ -14,17 +14,6 @@ RSpec.describe "ElasticsearchLockingTest" do
     end
   end
 
-  it "will not allow updates while locked" do
-    index = search_server.index_group("govuk_test").current
-    index.add([sample_document])
-
-    with_lock(index) do
-      expect {
-        index.amend(sample_document.link, "title" => "New title")
-      }.to raise_error(SearchIndices::IndexLocked)
-    end
-  end
-
   it "will not allow deletes while locked" do
     index = search_server.index_group("govuk_test").current
     index.add([sample_document])

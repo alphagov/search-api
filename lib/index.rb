@@ -139,10 +139,6 @@ module SearchIndices
       end
     end
 
-    def amend(document_id, updates)
-      Indexer::Amender.new(self).amend(document_id, updates)
-    end
-
     def get_document_by_id(document_id)
       @client.get(index: @index_name, type: "_all", id: document_id)
     rescue Elasticsearch::Transport::Transport::Errors::NotFound

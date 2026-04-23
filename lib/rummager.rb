@@ -68,7 +68,6 @@ require "base_job"
 require "collectors/elasticsearch_prometheus_collector"
 
 require "indexer"
-require "indexer/amender"
 require "indexer/attachments_lookup"
 require "indexer/bulk_payload_generator"
 require "indexer/compare_enumerator"
