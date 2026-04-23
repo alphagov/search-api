@@ -201,12 +201,7 @@ class Rummager < Sinatra::Application
 
   # Update an existing document
   post "/:index/documents/*" do
-    require_authentication "manage_search_indices"
-    prevent_access_to_govuk_and_detailed
-    document_id = params["splat"].first
-    updates = request.POST
-    Indexer::AmendJob.perform_async(index_name, document_id, updates)
-    json_result 202, "Queued"
+    deprecated_endpoint
   end
 
   delete "/:index/documents" do
