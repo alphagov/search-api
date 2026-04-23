@@ -233,17 +233,6 @@ module SearchIndices
       @client.indices.refresh(index: @index_name)
     end
 
-    def link_to_type_and_id(link)
-      # If link starts with edition/ or best-bet/ then use those values for the
-      # type.  For backwards compact, if it starts with anything else currently
-      # assume that the type is edition.
-      if (m = link.match(/\A(edition|best_bet)\/(.*)\Z/))
-        [m[1], m[2]]
-      else
-        ["edition", link]
-      end
-    end
-
     def index_recovered?
       # Check if an index has recovered all its shards.
       # https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-recovery.html

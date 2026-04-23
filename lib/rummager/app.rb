@@ -186,19 +186,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/:index/documents/*" do
-    require_authentication "manage_search_indices"
-    prevent_access_to_govuk_and_detailed
-    document_link = params["splat"].first
-
-    if (type = get_type_from_request_body(request.body))
-      id = document_link
-    else
-      type, id = current_index.link_to_type_and_id(document_link)
-    end
-
-    Indexer::DeleteJob.perform_async(index_name, type, id)
-
-    json_result 202, "Queued"
+    deprecated_endpoint
   end
 
   delete "/v2/metasearch/documents/*" do
@@ -209,13 +197,6 @@ class Rummager < Sinatra::Application
     deleter.delete
 
     json_result 200, "Success"
-  end
-
-  def get_type_from_request_body(request_body)
-    body = JSON.parse(request_body.read)
-    body.fetch("document_type", body.fetch("_type", nil))
-  rescue JSON::ParserError
-    nil
   end
 
   # Update an existing document
