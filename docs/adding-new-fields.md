@@ -21,10 +21,6 @@ If your field should be valid for any kind of document, you can add it to `base_
 
 The easiest way to test the new fields is to write an integration test for it. These tests run against a development Elasticsearch cluster, and create new search indices each test run.
 
-### Transformation during indexing
-
-Some fields get transformed by Search API before they are stored in Elasticsearch. This is handled by the `DocumentPreparer` class.
-
 ### Updating Search API schema indexes on all environments
 
 **Caution:** Do not run this rake task in production during working hours except in an emergency. Content published while the task is running will not be available in search results until the task completes. The impact of this can be reduced if you run the task out of peak publishing hours.
