@@ -153,28 +153,6 @@ module SearchIndices
       Document.from_hash(hash, @elasticsearch_types)
     end
 
-    def all_documents(exclude_formats: [], client_options: nil)
-      client = client_options ? build_client(client_options) : @client
-
-      search_body = {
-        "query" => {
-          "bool" => {
-            "must_not" => {
-              "terms" => {
-                "format" => exclude_formats,
-              },
-            },
-          },
-        },
-      }
-
-      # Set off a scan query to get back a scroll ID and result count
-      batch_size = self.class.scroll_batch_size
-      ScrollEnumerator.new(client:, index_names: @index_name, search_body:, batch_size:) do |hit|
-        document_from_hash(hit["_source"].merge("_id" => hit["_id"]))
-      end
-    end
-
     def documents_by_format(format, field_definitions)
       batch_size = 500
       search_body = {
