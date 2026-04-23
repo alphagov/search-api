@@ -13,10 +13,6 @@ disable :show_exceptions
 GovukError.configure do |config|
   config.excluded_exceptions << "Sinatra::NotFound"
 
-  # We manually send `Indexer::BulkIndexFailure` to Sentry with extra
-  # parameters for debugging. Ignore it here so that we don't send them twice.
-  config.excluded_exceptions << "Indexer::BulkIndexFailure"
-
   # We manually send `GdsApi` exceptions to Sentry with normalised
   # messages for publishing-api errors, and then raise an Indexer::PublishingApiError
   # exception to ensure the execution flow stops. Ignore it here so that we

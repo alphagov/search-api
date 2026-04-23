@@ -106,10 +106,6 @@ class Rummager < Sinatra::Application
     halt(503, "Redis queue timed out")
   end
 
-  error Indexer::BulkIndexFailure do
-    halt(500, env["sinatra.error"].message)
-  end
-
   error Search::Query::Error do
     halt(400, env["sinatra.error"].message)
   end

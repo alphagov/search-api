@@ -62,13 +62,6 @@ RSpec.describe "ErrorHandlingTest" do
 
   include_examples(
     "a sinatra error handler",
-    exception_class: Indexer::BulkIndexFailure,
-    status: 500,
-    body: ->(msg) { msg },
-  )
-
-  include_examples(
-    "a sinatra error handler",
     exception_class: Search::Query::Error,
     status: 400,
     body: ->(msg) { msg },
