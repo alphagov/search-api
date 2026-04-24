@@ -36,7 +36,7 @@ RSpec.describe "SearchTest" do
 
   it "spell checking with blocklisted typo" do
     commit_document(
-      "government_test",
+      "govuk_test",
       {
         "title" => "Brexitt",
         "description" => "Brexitt",

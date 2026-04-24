@@ -130,7 +130,7 @@ module Search
     # some indexes contain very few words, Elasticsearch returns too many spelling
     # suggestions for common terms. For example, using the suggester on all indices
     # will yield a suggestion for "PAYE", because it's mentioned only in the
-    # `government` index, and not in other indexes.
+    # `govuk` index, and not in other indexes.
     #
     # This issue is mentioned in
     # https://github.com/elastic/elasticsearch/issues/7472.
@@ -147,7 +147,7 @@ module Search
           suggest: QueryComponents::Suggest.new(search_params).payload,
         }
 
-        response = spelling_index.raw_search(query)
+        response = index.raw_search(query)
 
         response["suggest"]
       end
