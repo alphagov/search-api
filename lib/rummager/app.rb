@@ -10,7 +10,6 @@ require "sinatra"
 set :root, File.dirname(__FILE__)
 
 require "rummager"
-require "routes/content"
 require "govuk_app_config"
 require "healthcheck/elasticsearch_connectivity_check"
 
@@ -158,6 +157,14 @@ class Rummager < Sinatra::Application
       headers["Access-Control-Allow-Origin"] = "*"
       results.to_json
     end
+  end
+
+  get "/content" do
+    deprecated_endpoint
+  end
+
+  delete "/content" do
+    deprecated_endpoint
   end
 
   # Insert (or overwrite) a document
