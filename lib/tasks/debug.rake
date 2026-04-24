@@ -10,18 +10,21 @@ ANSI_GREEN = "\e[32m".freeze
 ANSI_RESET = "\e[0m".freeze
 
 namespace :debug do
-  desc "Pretty print a document in the old content indexes"
-  task :show_old_index_link, [:link] do |_, args|
-    index = SearchConfig.default_instance.old_content_index
-    docs = index.get_document_by_link(args.link)
-    pp docs
-  end
-
-  desc "Pretty print a document in the new content index"
+  desc "Pretty print a document in the govuk index"
   task :show_govuk_link, [:link] do |_, args|
-    index = SearchConfig.default_instance.new_content_index
-    docs = index.get_document_by_link(args.link)
-    pp docs
+    abort "Missing argument. Usage: rake debug:show_govuk_link[link]" if args.link.nil?
+
+    index = SearchConfig.govuk_index_name
+    doc = Services.elasticsearch.get(index:, id: args.link)
+    doc.except("_source").each do |k, v|
+      puts "#{k} => #{v}"
+    end
+    puts "_source"
+    doc["_source"].each do |k, v|
+      puts "  #{k} => #{v}"
+    end
+  rescue Elasticsearch::Transport::Transport::Errors::NotFound
+    abort "Cannot find #{args.link} in index #{SearchConfig.govuk_index_name}"
   end
 
   desc "New synonyms test"
