@@ -135,23 +135,6 @@ module SearchIndices
       ""
     end
 
-    def delete(id)
-      begin
-        @client.delete(index: @index_name, type: "generic-document", id:)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound
-        # We are fine with trying to delete deleted documents.
-        true
-      rescue Elasticsearch::Transport::Transport::Errors::Forbidden => e
-        if locked_index_error?(e.message)
-          raise IndexLocked
-        else
-          raise
-        end
-      end
-
-      true # For consistency with the Solr API and simple_json_response
-    end
-
     def commit
       @client.indices.refresh(index: @index_name)
     end
@@ -177,14 +160,6 @@ module SearchIndices
         sleep 2**retries
         retry
       end
-    end
-
-    # Parse an elasticsearch error message to determine whether it's caused by
-    # a read-only index. An example read-only error message:
-    #
-    #     "ClusterBlockException[blocked by: [FORBIDDEN/8/index read-only / allow delete (api)];]"
-    def locked_index_error?(error_message)
-      error_message =~ %r{\[FORBIDDEN/[^/]+/index read-only}
     end
 
     def logger
