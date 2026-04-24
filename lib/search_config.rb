@@ -159,7 +159,6 @@ private
       content_index:,
       registries:,
       metasearch_index:,
-      spelling_index:,
     )
   end
 

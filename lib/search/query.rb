@@ -7,14 +7,12 @@ module Search
 
     class QueryTooLong < Error; end
 
-    attr_reader :index, :registries, :spelling_index, :suggestion_blocklist
+    attr_reader :index, :registries, :suggestion_blocklist
 
-    def initialize(registries:, content_index:, metasearch_index:, spelling_index:)
+    def initialize(registries:, content_index:, metasearch_index:)
       @index = content_index
-
       @registries = registries
       @metasearch_index = metasearch_index
-      @spelling_index = spelling_index
       @suggestion_blocklist = SuggestionBlocklist.new(registries)
     end
 
