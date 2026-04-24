@@ -28,8 +28,8 @@ namespace :debug do
   end
 
   desc "New synonyms test"
-  task :show_new_synonyms, [:query, :index_name] do |_, args|
-    index = args.index_name || SearchConfig.govuk_index_name
+  task :show_new_synonyms, [:query] do |_, args|
+    index = SearchConfig.govuk_index_name
     model = Debug::Synonyms::Analyzer.new(index: index)
 
     search_tokens = model.analyze_query(args.query)
