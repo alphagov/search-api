@@ -64,10 +64,6 @@ module Search
       index.index_names
     end
 
-    def fetch_spell_checks(search_params)
-      SpellCheckFetcher.new(search_params, registries).es_response
-    end
-
     def process_elasticsearch_errors
       yield
     rescue Elasticsearch::Transport::Transport::Errors::InternalServerError => e
