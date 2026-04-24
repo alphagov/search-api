@@ -29,7 +29,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      expect(result).to eq(bool: { must: ["terms" => { "organisations" => %w[hm-magic] }] })
+      expect(result).to eq(bool: { must: [{ "terms" => { "organisations" => %w[hm-magic] } }] })
     end
 
     it "append the correct date filters" do
@@ -39,7 +39,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      expect(result).to eq(bool: { must: ["range" => { "field_with_date" => { "from" => "2014-04-01T00:00:00+00:00", "to" => "2014-04-02T00:00:00+00:00" } }] })
+      expect(result).to eq(bool: { must: [{ "range" => { "field_with_date" => { "from" => "2014-04-01T00:00:00+00:00", "to" => "2014-04-02T00:00:00+00:00" } } }] })
     end
 
     it "appends the correct boolean filters" do
@@ -61,7 +61,7 @@ RSpec.describe QueryComponents::Filter do
 
       result = builder.payload
 
-      expect(result).to eq(bool: { must: ["terms" => { "organisations" => %w[hm-magic hmrc] }] })
+      expect(result).to eq(bool: { must: [{ "terms" => { "organisations" => %w[hm-magic hmrc] } }] })
     end
   end
 
