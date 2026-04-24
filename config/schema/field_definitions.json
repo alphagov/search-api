@@ -1234,6 +1234,6 @@
     "type": "searchable_multivalued_text"
   },
   "patent_decision_type_of_hearing": {
-    "type": "searchable_multivalued_text"
+    "type": "identifiers"
   }
 }
