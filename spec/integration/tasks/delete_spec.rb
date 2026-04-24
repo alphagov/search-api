@@ -54,28 +54,20 @@ RSpec.describe "delete rake tasks" do
   describe "delete:by_format" do
     let(:task_name) { "delete:by_format" }
     let(:task) { Rake::Task[task_name] }
-    let(:index) { SearchConfig.all_index_names.first }
+    let(:index) { SearchConfig.govuk_index_name }
     let(:format) { "answer" }
 
     context "when format is missing" do
       it "prints a warning" do
         expect {
-          task.invoke(nil, index)
+          task.invoke(nil)
         }.to output("Specify format for deletion\n").to_stderr.and raise_error(SystemExit)
-      end
-    end
-
-    context "when index_name is missing" do
-      it "prints a warning" do
-        expect {
-          task.invoke(format, nil)
-        }.to output("Specify an index\n").to_stderr.and raise_error(SystemExit)
       end
     end
 
     context "when there are no documents for the format" do
       it "prints no documents to delete" do
-        output = capture_stdout { task.invoke(format, index) }
+        output = capture_stdout { task.invoke(format) }
         expect(output).to match(/No #{format} documents to delete/)
       end
     end
@@ -87,7 +79,7 @@ RSpec.describe "delete rake tasks" do
 
       it "deletes all documents in batches" do
         output = capture_stdout do
-          expect { task.invoke(format, index) }.to change {
+          expect { task.invoke(format) }.to change {
             client.count(index:, body: { query: { term: { format: format } } })["count"]
           }.from(3).to(0)
         end
