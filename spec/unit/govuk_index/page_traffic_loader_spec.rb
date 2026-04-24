@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe GovukIndex::PageTrafficLoader do
   before do
     @new_index = double(:new_index, commit: true, real_name: "new_index_name")
-    @current_index = double(:current_index, close: true, real_name: "")
+    @current_index = double(:current_index, real_name: "")
     allow(@current_index).to receive(:with_lock).and_yield
 
     allow_any_instance_of(SearchIndices::IndexGroup).to receive(:create_index).and_return(@new_index)

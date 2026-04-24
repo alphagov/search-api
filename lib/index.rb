@@ -53,10 +53,6 @@ module SearchIndices
       !real_name.nil?
     end
 
-    def close
-      @client.indices.close(index: @index_name)
-    end
-
     # Apply a write lock to this index, making it read-only
     def lock
       with_retries do
