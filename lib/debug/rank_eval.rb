@@ -41,7 +41,7 @@ module Debug
           },
           ratings: data[:judgements].map do |judgement|
             {
-              _index: index_for_link(judgement[:link]),
+              _index: govuk_index_name,
               _id: judgement[:link],
               rating: judgement[:score],
             }
@@ -92,8 +92,8 @@ module Debug
         headers: { "Content-Type" => "application/json" },
         timeout: 120,
       }
-      indices = "*"
-      url = "#{uri}/#{indices}/_rank_eval"
+      index = SearchConfig.govuk_index_name
+      url = "#{uri}/#{index}/_rank_eval"
       response = HTTParty.post(url, options)
       puts "Elasticsearch: #{response.code}: #{response.message}"
       JSON.parse(response.body).with_indifferent_access
@@ -109,16 +109,6 @@ module Debug
           judgements.first
         end
       end
-    end
-
-    def index_for_link(link)
-      return government_index_name if link.start_with? "/government/"
-
-      govuk_index_name
-    end
-
-    def government_index_name
-      @government_index_name ||= @search_config.get_index_for_alias(SearchConfig.content_index_names)
     end
 
     def govuk_index_name
