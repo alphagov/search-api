@@ -3,6 +3,17 @@ require_relative "./task_helper"
 
 namespace :delete do
   desc "
+  Delete a document from the govuk index by link
+  Usage
+  rake 'delete:by_link[link]'"
+  task :by_link, [:link] do |_, args|
+    id = args[:link]
+    abort "Missing argument. Usage: rake 'delete:by_link[link]'" if args[:link].nil?
+
+    Services.elasticsearch.delete(index: SearchConfig.govuk_index_name, type: "generic-document", id:)
+  end
+
+  desc "
   Delete all documents by format from an index.
   Usage
   rake 'delete:by_format[format_name, elasticsearch_index]'
