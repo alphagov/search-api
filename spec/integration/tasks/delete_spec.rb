@@ -59,15 +59,17 @@ RSpec.describe "delete rake tasks" do
 
     context "when format is missing" do
       it "prints a warning" do
-        output = capture_stdout { task.invoke(nil, index) }
-        expect(output).to match(/Specify format for deletion/)
+        expect {
+          task.invoke(nil, index)
+        }.to output("Specify format for deletion\n").to_stderr.and raise_error(SystemExit)
       end
     end
 
     context "when index_name is missing" do
       it "prints a warning" do
-        output = capture_stdout { task.invoke(format, nil) }
-        expect(output).to match(/Specify an index/)
+        expect {
+          task.invoke(format, nil)
+        }.to output("Specify an index\n").to_stderr.and raise_error(SystemExit)
       end
     end
 
