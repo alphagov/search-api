@@ -63,12 +63,6 @@ class Rummager < Sinatra::Application
     halt(403, "You do not have permission to access this endpoint") unless u["permissions"].include? permission
   end
 
-  def prevent_access_to_govuk_and_detailed
-    if %w[govuk detailed].include?(index_name)
-      halt(403, "Actions to the govuk or detailed indices are not allowed via this endpoint.")
-    end
-  end
-
   def deprecated_endpoint
     GovukError.notify("Deprecated endpoint accessed", extras: { source_ip: request.ip, path: request.fullpath })
     halt(403, "This endpoint has been deprecated.")
@@ -183,9 +177,7 @@ class Rummager < Sinatra::Application
   end
 
   post "/:index/commit" do
-    require_authentication "manage_search_indices"
-    prevent_access_to_govuk_and_detailed
-    simple_json_result(current_index.commit)
+    deprecated_endpoint
   end
 
   delete "/:index/documents/*" do
