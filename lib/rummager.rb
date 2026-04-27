@@ -42,7 +42,6 @@ Dir[initializers_path].sort.each { |f| require f }
 
 require "cache"
 require File.expand_path("../config/logging_setup", __dir__)
-require "document"
 require "govuk_document_types"
 
 require "auth/gds_sso"
@@ -68,17 +67,12 @@ require "base_job"
 require "collectors/elasticsearch_prometheus_collector"
 
 require "indexer"
-require "indexer/amender"
 require "indexer/attachments_lookup"
-require "indexer/bulk_payload_generator"
 require "indexer/compare_enumerator"
 require "indexer/comparer"
-require "indexer/document_preparer"
 require "indexer/exceptions"
-require "indexer/links_lookup"
 require "indexer/parts_lookup"
 require "indexer/popularity_lookup"
-require "indexer/amend_job"
 require "index/client"
 require "index/elasticsearch_processor"
 require "index/response_validator"
