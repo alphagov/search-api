@@ -7,9 +7,6 @@ production: &default
   metasearch_index_name: "metasearch"
   page_traffic_index_name: "page-traffic"
   popularity_rank_offset: 10
-  # When doing spell checking, which indices to use?
-  spelling_index_names:
-    - government
   clusters:
     - uri_key: base_uri
       key: A
@@ -28,8 +25,6 @@ test:
   metasearch_index_name: "metasearch_test"
   page_traffic_index_name: "page-traffic_test"
   popularity_rank_offset: 10
-  spelling_index_names:
-    - government_test
   clusters:
     - uri_key: base_uri
       key: A

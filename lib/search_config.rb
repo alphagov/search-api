@@ -8,7 +8,6 @@ class SearchConfig
       popularity_rank_offset
       auxiliary_index_names
       content_index_names
-      spelling_index_names
       govuk_index_name
       page_traffic_index_name
     ].each do |config_method|
@@ -117,10 +116,6 @@ class SearchConfig
 
   def metasearch_index
     @metasearch_index ||= search_server.index(SearchConfig.metasearch_index_name)
-  end
-
-  def spelling_index
-    @spelling_index ||= search_server.index_for_search(SearchConfig.spelling_index_names)
   end
 
   def content_index
