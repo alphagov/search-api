@@ -19,4 +19,5 @@ RSpec.describe "Deprecate content endpoints" do
   include_examples "forbidden request", :delete, "/govuk_test/documents/link"
   include_examples "forbidden request", :get, "/content"
   include_examples "forbidden request", :delete, "/content"
+  include_examples "forbidden request", :delete, "/govuk_test/documents"
 end
