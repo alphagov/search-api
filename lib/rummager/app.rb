@@ -10,7 +10,6 @@ require "sinatra"
 set :root, File.dirname(__FILE__)
 
 require "rummager"
-require "routes/content"
 require "govuk_app_config"
 require "healthcheck/elasticsearch_connectivity_check"
 
@@ -160,6 +159,14 @@ class Rummager < Sinatra::Application
     end
   end
 
+  get "/content" do
+    deprecated_endpoint
+  end
+
+  delete "/content" do
+    deprecated_endpoint
+  end
+
   # Insert (or overwrite) a document
   post "/:index/documents" do
     deprecated_endpoint
@@ -201,16 +208,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/:index/documents" do
-    require_authentication "manage_search_indices"
-    prevent_access_to_govuk_and_detailed
-    if params["delete_all"]
-      # No longer supported; instead use the
-      # `search:switch_to_empty_index` Rake command
-      halt 400
-    else
-      action = current_index.delete(params["link"])
-    end
-    simple_json_result(action)
+    deprecated_endpoint
   end
 
   get "/_status" do

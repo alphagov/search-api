@@ -29,17 +29,6 @@ module LegacyClient
       @client.search(index: @index_names, type: "generic-document", body: payload)
     end
 
-    def get_document_by_link(link)
-      results = raw_search(query: { term: { link: } }, size: 1)
-      raw_result = results["hits"]["hits"].first
-
-      if raw_result
-        raw_result["real_index_name"] = SearchIndices::Index.strip_alias_from_index_name(raw_result["_index"])
-      end
-
-      raw_result
-    end
-
     def msearch(bodies)
       payload = bodies.flat_map do |body|
         [
