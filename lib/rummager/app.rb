@@ -141,19 +141,6 @@ class Rummager < Sinatra::Application
     end
   end
 
-  get "/content" do
-    deprecated_endpoint
-  end
-
-  delete "/content" do
-    deprecated_endpoint
-  end
-
-  # Insert (or overwrite) a document
-  post "/:index/documents" do
-    deprecated_endpoint
-  end
-
   post "/v2/metasearch/documents" do
     require_authentication "manage_search_indices"
     document = JSON.parse(request.body.read)
@@ -164,14 +151,6 @@ class Rummager < Sinatra::Application
     json_result 200, "Success"
   end
 
-  post "/:index/commit" do
-    deprecated_endpoint
-  end
-
-  delete "/:index/documents/*" do
-    deprecated_endpoint
-  end
-
   delete "/v2/metasearch/documents/*" do
     require_authentication "manage_search_indices"
     id = params["splat"].first
@@ -180,15 +159,6 @@ class Rummager < Sinatra::Application
     deleter.delete
 
     json_result 200, "Success"
-  end
-
-  # Update an existing document
-  post "/:index/documents/*" do
-    deprecated_endpoint
-  end
-
-  delete "/:index/documents" do
-    deprecated_endpoint
   end
 
   get "/_status" do
@@ -256,5 +226,36 @@ class Rummager < Sinatra::Application
     headers = { "WWW-Authenticate" => %(Bearer error=#{bearer_error}) }
     body = { message: }.to_json
     halt(401, headers, body)
+  end
+
+  # Deprecated routes (since April 2026).
+  # Accessing these routes raises an error so we can detect any remaining usage.
+  # They can be removed once we’re confident they are no longer in use.
+  get "/content" do
+    deprecated_endpoint
+  end
+
+  delete "/content" do
+    deprecated_endpoint
+  end
+
+  post "/:index/documents" do
+    deprecated_endpoint
+  end
+
+  post "/:index/documents/*" do
+    deprecated_endpoint
+  end
+
+  delete "/:index/documents" do
+    deprecated_endpoint
+  end
+
+  post "/:index/commit" do
+    deprecated_endpoint
+  end
+
+  delete "/:index/documents/*" do
+    deprecated_endpoint
   end
 end

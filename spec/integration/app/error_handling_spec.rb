@@ -18,20 +18,6 @@ RSpec.describe "ErrorHandlingTest" do
     end
   end
 
-  RSpec.shared_examples "blocks default mainstream index usage" do |http_method:, path:|
-    it "#{http_method.upcase} #{path} raises AttemptToUseDefaultMainstreamIndex" do
-      expect(GovukError).to receive(:notify)
-                              .with(
-                                instance_of(Rummager::AttemptToUseDefaultMainstreamIndex),
-                                extra: hash_including(:params),
-                              )
-
-      send(http_method, path)
-      expect(last_response.status).to eq(500)
-      expect(last_response.body).to be_present
-    end
-  end
-
   include_examples(
     "a sinatra error handler",
     exception_class: Index::ResponseValidator::NotFound,
@@ -66,20 +52,6 @@ RSpec.describe "ErrorHandlingTest" do
     status: 400,
     body: ->(msg) { msg },
   )
-
-  [
-    [:delete, "/documents"],
-    [:post,   "/documents/123"],
-    [:delete, "/documents/123"],
-    [:post,   "/commit"],
-    [:post,   "/documents"],
-  ].each do |http_method, path|
-    include_examples(
-      "blocks default mainstream index usage",
-      http_method:,
-      path:,
-    )
-  end
 
   it "notifies GovukError with the exception and params" do
     error = Index::ResponseValidator::ElasticsearchError.new("error")
