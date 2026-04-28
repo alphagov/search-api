@@ -14,8 +14,6 @@ require "govuk_app_config"
 require "healthcheck/elasticsearch_connectivity_check"
 
 class Rummager < Sinatra::Application
-  class AttemptToUseDefaultMainstreamIndex < StandardError; end
-
   Warden::Strategies.add :bearer_token, Warden::OAuth2::Strategies::Bearer
   Warden::OAuth2.configure { |config| config.token_model = Auth::GdsSso }
   Warden::Strategies.add :mock_bearer_token, Auth::MockStrategy
@@ -120,16 +118,6 @@ class Rummager < Sinatra::Application
 
   error Index::ResponseValidator::NotFound do
     halt(404, env["sinatra.error"].message)
-  end
-
-  error Rummager::AttemptToUseDefaultMainstreamIndex do
-    GovukError.notify(
-      env["sinatra.error"],
-      extra: {
-        params:,
-      },
-    )
-    halt(500, env["sinatra.error"].message)
   end
 
   # Return results for the GOV.UK site search
@@ -254,28 +242,6 @@ class Rummager < Sinatra::Application
     end
   rescue Aws::S3::Errors::NoSuchKey
     halt(404, "No such object")
-  end
-
-  # these endpoints are used to capture any usage of old endpoints which relied on a default index.
-  # They can be removed once we are happy they are not being accessed.
-  delete "/documents" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  post "/documents/*" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  delete "/documents/*" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  post "/commit" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  post "/documents" do
-    raise AttemptToUseDefaultMainstreamIndex
   end
 
   post "/unauthenticated/?" do
