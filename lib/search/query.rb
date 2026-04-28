@@ -7,14 +7,12 @@ module Search
 
     class QueryTooLong < Error; end
 
-    attr_reader :index, :registries, :spelling_index, :suggestion_blocklist
+    attr_reader :index, :registries, :suggestion_blocklist
 
-    def initialize(registries:, content_index:, metasearch_index:, spelling_index:)
+    def initialize(registries:, content_index:, metasearch_index:)
       @index = content_index
-
       @registries = registries
       @metasearch_index = metasearch_index
-      @spelling_index = spelling_index
       @suggestion_blocklist = SuggestionBlocklist.new(registries)
     end
 
@@ -62,10 +60,6 @@ module Search
     def content_index_names
       # index is a IndexForSearch object, which combines all the content indexes
       index.index_names
-    end
-
-    def fetch_spell_checks(search_params)
-      SpellCheckFetcher.new(search_params, registries).es_response
     end
 
     def process_elasticsearch_errors
@@ -130,7 +124,7 @@ module Search
     # some indexes contain very few words, Elasticsearch returns too many spelling
     # suggestions for common terms. For example, using the suggester on all indices
     # will yield a suggestion for "PAYE", because it's mentioned only in the
-    # `government` index, and not in other indexes.
+    # `govuk` index, and not in other indexes.
     #
     # This issue is mentioned in
     # https://github.com/elastic/elasticsearch/issues/7472.
@@ -147,7 +141,7 @@ module Search
           suggest: QueryComponents::Suggest.new(search_params).payload,
         }
 
-        response = spelling_index.raw_search(query)
+        response = index.raw_search(query)
 
         response["suggest"]
       end
