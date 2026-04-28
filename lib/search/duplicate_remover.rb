@@ -1,9 +1,8 @@
 module Search
   class DuplicateRemover
-    attr_reader :index, :logger
+    attr_reader :logger
 
-    def initialize(index:, logger: Logger.new($stdout))
-      @index = index
+    def initialize(logger: Logger.new($stdout))
       @logger = logger
     end
 
@@ -39,7 +38,7 @@ module Search
 
     def delete_document(link)
       Services.elasticsearch.delete_by_query(
-        index: index,
+        index: SearchConfig.govuk_index_name,
         body: { query: { term: { link: link } } },
       )
       logger.info "Deleted duplicate document: #{link}"
