@@ -52,7 +52,7 @@ Note that when you run the tests locally logs are output to `log/production.log`
 - [Search relevancy](docs/relevancy.md)
 - [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
-- [Autocomplete](docs/autocomplete.md)
+- [Autocomplete](docs/autocomplete.md): autocomplete suggestions for search queries - **not currently used by finder-frontend**
 - [Popularity](docs/updating_popularity): How popularity is updated
 
 ## Licence
