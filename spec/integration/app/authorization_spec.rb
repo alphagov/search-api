@@ -23,7 +23,7 @@ RSpec.describe "AuthorizationTests" do
     end
 
     it "prevents access to a route that requires authentication when no authentication is provided" do
-      response = post "/government_test/commit", {}.to_json
+      response = post "/v2/metasearch/documents", {}.to_json
 
       expect(response.status).to eq(401)
     end

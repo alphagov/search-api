@@ -14,8 +14,6 @@ require "govuk_app_config"
 require "healthcheck/elasticsearch_connectivity_check"
 
 class Rummager < Sinatra::Application
-  class AttemptToUseDefaultMainstreamIndex < StandardError; end
-
   Warden::Strategies.add :bearer_token, Warden::OAuth2::Strategies::Bearer
   Warden::OAuth2.configure { |config| config.token_model = Auth::GdsSso }
   Warden::Strategies.add :mock_bearer_token, Auth::MockStrategy
@@ -61,12 +59,6 @@ class Rummager < Sinatra::Application
 
     u = env["warden"].user
     halt(403, "You do not have permission to access this endpoint") unless u["permissions"].include? permission
-  end
-
-  def prevent_access_to_govuk_and_detailed
-    if %w[govuk detailed].include?(index_name)
-      halt(403, "Actions to the govuk or detailed indices are not allowed via this endpoint.")
-    end
   end
 
   def deprecated_endpoint
@@ -128,16 +120,6 @@ class Rummager < Sinatra::Application
     halt(404, env["sinatra.error"].message)
   end
 
-  error Rummager::AttemptToUseDefaultMainstreamIndex do
-    GovukError.notify(
-      env["sinatra.error"],
-      extra: {
-        params:,
-      },
-    )
-    halt(500, env["sinatra.error"].message)
-  end
-
   # Return results for the GOV.UK site search
   #
   # For details, see docs/search-api.md
@@ -159,19 +141,6 @@ class Rummager < Sinatra::Application
     end
   end
 
-  get "/content" do
-    deprecated_endpoint
-  end
-
-  delete "/content" do
-    deprecated_endpoint
-  end
-
-  # Insert (or overwrite) a document
-  post "/:index/documents" do
-    deprecated_endpoint
-  end
-
   post "/v2/metasearch/documents" do
     require_authentication "manage_search_indices"
     document = JSON.parse(request.body.read)
@@ -182,16 +151,6 @@ class Rummager < Sinatra::Application
     json_result 200, "Success"
   end
 
-  post "/:index/commit" do
-    require_authentication "manage_search_indices"
-    prevent_access_to_govuk_and_detailed
-    simple_json_result(current_index.commit)
-  end
-
-  delete "/:index/documents/*" do
-    deprecated_endpoint
-  end
-
   delete "/v2/metasearch/documents/*" do
     require_authentication "manage_search_indices"
     id = params["splat"].first
@@ -200,15 +159,6 @@ class Rummager < Sinatra::Application
     deleter.delete
 
     json_result 200, "Success"
-  end
-
-  # Update an existing document
-  post "/:index/documents/*" do
-    deprecated_endpoint
-  end
-
-  delete "/:index/documents" do
-    deprecated_endpoint
   end
 
   get "/_status" do
@@ -264,28 +214,6 @@ class Rummager < Sinatra::Application
     halt(404, "No such object")
   end
 
-  # these endpoints are used to capture any usage of old endpoints which relied on a default index.
-  # They can be removed once we are happy they are not being accessed.
-  delete "/documents" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  post "/documents/*" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  delete "/documents/*" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  post "/commit" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
-  post "/documents" do
-    raise AttemptToUseDefaultMainstreamIndex
-  end
-
   post "/unauthenticated/?" do
     if env["HTTP_AUTHORIZATION"].to_s.start_with?("Bearer ")
       message = "Bearer token does not appear to be valid"
@@ -298,5 +226,36 @@ class Rummager < Sinatra::Application
     headers = { "WWW-Authenticate" => %(Bearer error=#{bearer_error}) }
     body = { message: }.to_json
     halt(401, headers, body)
+  end
+
+  # Deprecated routes (since April 2026).
+  # Accessing these routes raises an error so we can detect any remaining usage.
+  # They can be removed once we’re confident they are no longer in use.
+  get "/content" do
+    deprecated_endpoint
+  end
+
+  delete "/content" do
+    deprecated_endpoint
+  end
+
+  post "/:index/documents" do
+    deprecated_endpoint
+  end
+
+  post "/:index/documents/*" do
+    deprecated_endpoint
+  end
+
+  delete "/:index/documents" do
+    deprecated_endpoint
+  end
+
+  post "/:index/commit" do
+    deprecated_endpoint
+  end
+
+  delete "/:index/documents/*" do
+    deprecated_endpoint
   end
 end
