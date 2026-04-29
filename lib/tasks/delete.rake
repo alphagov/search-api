@@ -14,16 +14,15 @@ namespace :delete do
   end
 
   desc "
-  Delete all documents by format from an index.
+  Delete all documents by format from the govuk index.
   Usage
-  rake 'delete:by_format[format_name, elasticsearch_index]'
+  rake 'delete:by_format[format_name]'
   "
-  task :by_format, [:format, :index_name] do |_, args|
+  task :by_format, [:format] do |_, args|
     format = args[:format]
-    index  = args[:index_name]
+    index = SearchConfig.govuk_index_name
 
     abort "Specify format for deletion" if format.nil?
-    abort "Specify an index" if index.nil?
 
     warn_for_single_cluster_run
     client = Services.elasticsearch(cluster: Clusters.default_cluster, timeout: 5.0)

@@ -20,21 +20,19 @@ RSpec.describe "duplicates", "RakeTest" do
       },
     ]
   end
-  let(:index) { "govuk" }
 
   before do
     Rake::Task[task_name].reenable
     allow(Search::DuplicateFinder)
       .to receive(:new)
-            .with(index:)
-            .and_return(double(find_duplicates: fake_duplicates))
+      .and_return(double(find_duplicates: fake_duplicates))
   end
 
   describe "duplicates:find" do
     let(:task_name) { "duplicates:find" }
 
     it "prints duplicate sets in the expected format" do
-      output = capture_stdout { Rake::Task[task_name].invoke(index) }
+      output = capture_stdout { Rake::Task[task_name].invoke }
 
       expect(output).to include("Content_id: aaa-111")
       expect(output).to include("  T1 /a1 2020-01-01")
@@ -51,19 +49,18 @@ RSpec.describe "duplicates", "RakeTest" do
     before do
       allow(Search::DuplicateRemover)
         .to receive(:new)
-              .with(index:)
-              .and_return(duplicate_remover)
+        .and_return(duplicate_remover)
     end
     describe "there are duplicates" do
       it "removes duplicates" do
-        Rake::Task[task_name].invoke(index)
+        Rake::Task[task_name].invoke
         expect(duplicate_remover).to have_received(:remove_duplicates).with(duplicates: fake_duplicates).once
       end
     end
     describe "there are no duplicates" do
       let(:fake_duplicates) { [] }
       it "does not remove duplicates" do
-        output = capture_stdout { Rake::Task[task_name].invoke(index) }
+        output = capture_stdout { Rake::Task[task_name].invoke }
         expect(output).to eq("No duplicates found\n")
       end
     end

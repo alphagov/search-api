@@ -4,7 +4,7 @@ RSpec.describe Search::DuplicateFinder do
   let(:index) { "govuk_test" }
   describe "there are no documents in Elasticsearch" do
     it "returns an empty array" do
-      expect(Search::DuplicateFinder.new(index:).find_duplicates).to eq([])
+      expect(Search::DuplicateFinder.new.find_duplicates).to eq([])
     end
   end
   describe "there are documents in Elasticsearch, none have a duplicate content_id" do
@@ -12,7 +12,7 @@ RSpec.describe Search::DuplicateFinder do
       (1..10).each do |n|
         commit_document(index, { link: "link/path#{n}", content_id: SecureRandom.uuid })
       end
-      expect(Search::DuplicateFinder.new(index:).find_duplicates).to be_empty
+      expect(Search::DuplicateFinder.new.find_duplicates).to be_empty
     end
   end
   describe "there are documents in Elasticsearch, some have a duplicate content_id" do
@@ -27,7 +27,7 @@ RSpec.describe Search::DuplicateFinder do
       commit_document(index, { link: "link/path_c", content_id: "other", title: "title_c", updated_at: date_2 })
       commit_document(index, { link: "link/path_d", content_id: "other", title: "title_d" })
 
-      result = Search::DuplicateFinder.new(index:).find_duplicates
+      result = Search::DuplicateFinder.new.find_duplicates
 
       expect(result).to match_array([
         a_hash_including(

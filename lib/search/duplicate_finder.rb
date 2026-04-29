@@ -2,15 +2,9 @@ module Search
   class DuplicateFinder
     TIMEOUT = 60
 
-    attr_reader :index
-
-    def initialize(index:)
-      @index = index
-    end
-
     def find_duplicates
       response = Services.elasticsearch(timeout: TIMEOUT).search(
-        index: index,
+        index: SearchConfig.govuk_index_name,
         size: 0,
         body: {
           aggs: {

@@ -6,7 +6,6 @@ module RankEvalTestHelpers
     CSV.generate do |csv|
       csv << %w[query rating link score]
       csv << ["harry potter", "relevant", "/harry-potter", 3]
-      # use /government to test fetching alias for government index
       csv << ["passport", "relevant", "/government/renew-a-passport", 3]
       # add repeated row to test ignore_extra_judgements
       csv << ["passport", "near", "/government/renew-a-passport", 2]
@@ -24,7 +23,7 @@ module RankEvalTestHelpers
 
   def stub_rank_eval_request
     es_source = ENV["ELASTICSEARCH_URI"] || "http://localhost:9200"
-    stub_request(:post, "#{es_source}/*/_rank_eval")
+    stub_request(:post, "#{es_source}/govuk_test/_rank_eval")
       .to_return(
         status: 200,
         body: {

@@ -88,9 +88,7 @@ govuk_document_types gem using sidekiq jobs.
 This does not update the schema.
 "
   task :update_supertypes do
-    index_names.each do |index_name|
-      GovukIndex::Updater.update(index_name, GovukIndex::SupertypeJob)
-    end
+    GovukIndex::Updater.update(SearchConfig.govuk_index_name, GovukIndex::SupertypeJob)
   end
 
   desc "Migrate the data to a new schema definition

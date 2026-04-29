@@ -1,11 +1,11 @@
 require "spec_helper"
 
 RSpec.describe Search::DuplicateRemover do
-  let(:index) { "government_test" }
+  let(:index) { "govuk_test" }
   let(:io) { StringIO.new }
   let(:logger) { Logger.new(io) }
-  let(:duplicates) { Search::DuplicateFinder.new(index:).find_duplicates }
-  subject(:remover) { described_class.new(index:, logger:) }
+  let(:duplicates) { Search::DuplicateFinder.new.find_duplicates }
+  subject(:remover) { described_class.new(logger:) }
 
   context "A set of duplicate documents has no updated_at field" do
     before :each do

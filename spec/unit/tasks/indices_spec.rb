@@ -162,16 +162,14 @@ RSpec.describe "indices" do
   describe "search:update_supertypes" do
     let(:task_name) { "search:update_supertypes" }
 
-    it "updates supertypes for all indices" do
+    it "updates supertypes for govuk index" do
       allow(GovukIndex::Updater).to receive(:update)
 
       Rake::Task[task_name].invoke
 
-      index_names.each do |index_name|
-        expect(GovukIndex::Updater)
-          .to have_received(:update)
-          .with(index_name, GovukIndex::SupertypeJob)
-      end
+      expect(GovukIndex::Updater)
+        .to have_received(:update)
+        .with(govuk_index_name, GovukIndex::SupertypeJob)
     end
   end
 
