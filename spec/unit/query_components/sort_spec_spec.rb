@@ -40,14 +40,4 @@ RSpec.describe "SortTest" do
       expect(result).to eq([{ "public_timestamp" => { order: "desc", missing: "_last", unmapped_type: "integer" } }, { "content_id" => { order: "asc" } }])
     end
   end
-
-  context "more like this query" do
-    it "not explicitly order" do
-      builder = QueryComponents::Sort.new(Search::QueryParameters.new(similar_to: ["/hello-world"]))
-
-      result = builder.payload
-
-      expect(result).to be_nil
-    end
-  end
 end

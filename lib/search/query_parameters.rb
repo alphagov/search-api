@@ -3,7 +3,6 @@ module Search
   class QueryParameters
     attr_accessor :query,
                   :parsed_query,
-                  :similar_to,
                   :order,
                   :start,
                   :count,

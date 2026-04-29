@@ -3,13 +3,9 @@ module QueryComponents
     # Get a list describing the sort order (or nil)
     def payload
       if search_params.order.nil?
-        # Disable sorting when searching for "similar" documents because these
-        # are already sorted in order of "similarity".
-        if !search_params.similar_to.nil?
-          return nil
         # Sort by popularity when there's no explicit ordering, and there's no
         # query (so there's no relevance scores).
-        elsif search_term.nil? && !search_params.disable_popularity?
+        if search_term.nil? && !search_params.disable_popularity?
           return [{ "popularity" => { order: "desc" } }, tie_breaking_sort]
         # If there's no explicit ordering, but there is a query (and
         # so there are relevance scores), sort by relevance
