@@ -1,5 +1,3 @@
-require "publishing_api_finder_publisher"
-
 namespace :publishing_api do
   desc "
     Publish finder and email signup content items
