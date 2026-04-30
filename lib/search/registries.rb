@@ -9,7 +9,7 @@ module Search
         organisations:,
         organisation_content_ids: organisations,
         document_collections: govuk_registry_for_document_format("document_collection"),
-        world_locations: registry_for_document_format("world_location"),
+        world_locations: govuk_registry_for_document_format("world_location"),
         people: govuk_registry_for_document_format("person"),
         roles: govuk_registry_for_document_format("ministerial_role"),
       }
