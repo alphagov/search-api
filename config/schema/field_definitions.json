@@ -1099,6 +1099,10 @@
     "description": "Date announced of a SFO case",
     "type": "date"
   },
+  "sfo_case_date_closed": {
+    "description": "Closing date for a SFO case",
+    "type": "date"
+  },
 
   "data_ethics_guidance_document_ethical_theme": {
     "type": "identifiers"
