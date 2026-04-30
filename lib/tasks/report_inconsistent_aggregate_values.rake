@@ -11,7 +11,6 @@ task :report_inconsistent_aggregate_values do
   aggregates = %w[
     document_collections
     organisations
-    policy_areas
     world_locations
     people
   ]

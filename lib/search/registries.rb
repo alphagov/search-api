@@ -8,13 +8,6 @@ module Search
       @as_hash ||= {
         organisations:,
         organisation_content_ids: organisations,
-
-        # Whitehall has a thing called `topic`, which is being renamed to "policy
-        # area", because there already are seven things called "topic". Until
-        # Whitehall publishes the policy areas with format "policy_area" rather
-        # than "topic", we will expand `policy_areas` with data from documents
-        # with format `topic`.
-        policy_areas: registry_for_document_format("topic"),
         document_collections: govuk_registry_for_document_format("document_collection"),
         world_locations: registry_for_document_format("world_location"),
         people: govuk_registry_for_document_format("person"),

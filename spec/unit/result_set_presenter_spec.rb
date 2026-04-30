@@ -32,7 +32,7 @@ RSpec.describe Search::ResultSetPresenter do
        "_source" => {
          "title" => "Dairy farming and schemes",
          "link" => "/dairy-farming-and-schemes",
-         "policy_areas" => %w[farming],
+         "document_collections" => %w[farming],
        },
      }]
   end
@@ -157,9 +157,9 @@ RSpec.describe Search::ResultSetPresenter do
 
   context "results with a registry" do
     before do
-      policy_area_registry = {
+      document_collections_registry = {
         "farming" => {
-          "link" => "/government/topics/farming",
+          "link" => "/government/collections/farming",
           "title" => "Farming",
         },
       }
@@ -167,11 +167,11 @@ RSpec.describe Search::ResultSetPresenter do
       @output = described_class.new(
         search_params: Search::QueryParameters.new(
           start: 0,
-          return_fields: %w[policy_areas],
+          return_fields: %w[document_collections],
           aggregate_name: :aggregates,
         ),
         es_response: sample_es_response,
-        registries: { policy_areas: policy_area_registry },
+        registries: { document_collections: document_collections_registry },
       ).present
     end
 
@@ -208,10 +208,10 @@ RSpec.describe Search::ResultSetPresenter do
     it "have the expanded topic" do
       result = @output[:results][2]
       expect([{
-        "link" => "/government/topics/farming",
+        "link" => "/government/collections/farming",
         "title" => "Farming",
         "slug" => "farming",
-      }]).to eq result["policy_areas"]
+      }]).to eq result["document_collections"]
     end
   end
 end

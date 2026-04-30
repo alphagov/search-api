@@ -33,7 +33,6 @@ module Search
     MAPPINGS = [
       Mapping.new(:document_collections),
       Mapping.new(:organisations),
-      Mapping.new(:policy_areas),
       Mapping.new(:world_locations),
       Mapping.new(:people),
       Mapping.new(:roles),
