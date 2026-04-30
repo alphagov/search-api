@@ -54,14 +54,6 @@ module Search
       search_server.index_for_search([SearchConfig.govuk_index_name])
     end
 
-    def registry_for_document_format(format)
-      BaseRegistry.new(index, field_definitions, format)
-    end
-
-    def index
-      search_server.index_for_search([SearchConfig.registry_index])
-    end
-
     def field_definitions
       @field_definitions ||= search_server.schema.field_definitions
     end

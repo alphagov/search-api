@@ -3,7 +3,6 @@ production: &default
   content_index_names: ["government"]
   govuk_index_name: "govuk"
   auxiliary_index_names: ["page-traffic", "metasearch"]
-  registry_index: "government"
   metasearch_index_name: "metasearch"
   page_traffic_index_name: "page-traffic"
   popularity_rank_offset: 10
@@ -21,7 +20,6 @@ test:
   content_index_names: ["government_test"]
   govuk_index_name: "govuk_test"
   auxiliary_index_names: ["page-traffic_test", "metasearch_test"]
-  registry_index: "government_test"
   metasearch_index_name: "metasearch_test"
   page_traffic_index_name: "page-traffic_test"
   popularity_rank_offset: 10

@@ -3,7 +3,6 @@ class SearchConfig
     attr_writer :instance
 
     %w[
-      registry_index
       metasearch_index_name
       popularity_rank_offset
       auxiliary_index_names
