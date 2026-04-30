@@ -9,7 +9,6 @@ task :report_inconsistent_aggregate_values do
   # Same as in `lib/search/presenters/entity_expander.rb` minus
   # the content_id mappings which are not valid aggregate fields.
   aggregates = %w[
-    document_series
     document_collections
     organisations
     policy_areas

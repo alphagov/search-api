@@ -15,7 +15,6 @@ module Search
         # than "topic", we will expand `policy_areas` with data from documents
         # with format `topic`.
         policy_areas: registry_for_document_format("topic"),
-        document_series: registry_for_document_format("document_series"),
         document_collections: registry_for_document_format("document_collection"),
         world_locations: registry_for_document_format("world_location"),
         people: govuk_registry_for_document_format("person"),

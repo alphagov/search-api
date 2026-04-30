@@ -31,7 +31,6 @@ module Search
     end
 
     MAPPINGS = [
-      Mapping.new(:document_series),
       Mapping.new(:document_collections),
       Mapping.new(:organisations),
       Mapping.new(:policy_areas),
