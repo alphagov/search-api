@@ -82,7 +82,6 @@ RSpec.describe "message_queue", "RakeTest" do
           discarded_dlx: instance_double(Bunny::Exchange, name: "search_api_bulk_reindex_discarded_dlx"),
           queues: {
             root: instance_double(Bunny::Queue, bind: nil),
-            discarded: instance_double(Bunny::Queue, bind: nil),
             wait_to_retry: instance_double(Bunny::Queue, bind: nil),
           },
         },
@@ -93,7 +92,6 @@ RSpec.describe "message_queue", "RakeTest" do
           discarded_dlx: instance_double(Bunny::Exchange, name: "search_api_govuk_index_discarded_dlx"),
           queues: {
             root: instance_double(Bunny::Queue, bind: nil),
-            discarded: instance_double(Bunny::Queue, bind: nil),
             wait_to_retry: instance_double(Bunny::Queue, bind: nil),
           },
         },
@@ -110,10 +108,6 @@ RSpec.describe "message_queue", "RakeTest" do
           .and_return(config[:queues][:root])
 
         allow(channel)
-          .to receive(:queue).with(name)
-          .and_return(config[:queues][:discarded])
-
-        allow(channel)
           .to receive(:queue).with("#{name}_wait_to_retry", anything)
           .and_return(config[:queues][:wait_to_retry])
       end
@@ -123,23 +117,23 @@ RSpec.describe "message_queue", "RakeTest" do
       queues.each do |config|
         name = config[:name]
         expect(channel).to have_received(:queue).with(
-          name,
-          arguments: { "x-dead-letter-exchange" => "#{name}_retry_dlx" },
+          name, durable: true,
+                arguments: { "x-dead-letter-exchange" => "#{name}_retry_dlx" }
         )
 
-        expect(channel).to have_received(:queue).with(name)
+        expect(channel).to have_received(:queue).with(name, durable: true, arguments: { "x-dead-letter-exchange" => "#{name}_retry_dlx" })
 
         expect(channel).to have_received(:queue).with(
-          "#{name}_wait_to_retry",
-          arguments: {
-            "x-dead-letter-exchange" => "#{name}_discarded_dlx",
-            "x-message-ttl" => 30_000,
-          },
+          "#{name}_wait_to_retry", durable: true,
+                                   arguments: {
+                                     "x-dead-letter-exchange" => "#{name}_discarded_dlx",
+                                     "x-message-ttl" => 30_000,
+                                   }
         )
 
         expect(config[:queues][:root]).to have_received(:bind).with(exchange, routing_key: config[:routing_key])
+        expect(config[:queues][:root]).to have_received(:bind).with(config[:discarded_dlx])
         expect(config[:queues][:wait_to_retry]).to have_received(:bind).with(config[:retry_dlx])
-        expect(config[:queues][:discarded]).to have_received(:bind).with(config[:discarded_dlx])
       end
     end
   end

@@ -20,21 +20,21 @@ namespace :message_queue do
       retry_dlx = channel.fanout("#{name}_retry_dlx")
       discarded_dlx = channel.fanout("#{name}_discarded_dlx")
 
-      channel
-        .queue(name, arguments: { "x-dead-letter-exchange" => retry_dlx.name })
-        .bind(exch, routing_key: routing_key)
-
       # messages are queued on {queue}_discarded_dlx for 30s before their
       # ttl completes then are routed to the {queue}_retry_dlx
       channel
         .queue(
           "#{name}_wait_to_retry",
+          durable: true,
           arguments: { "x-dead-letter-exchange" => discarded_dlx.name, "x-message-ttl" => 10 * 3000 },
         )
         .bind(retry_dlx)
 
-      # messages on the {queue}_discarded_dlx are routed back to the original queue
-      channel.queue(name).bind(discarded_dlx)
+      channel.queue(name, durable: true, arguments: { "x-dead-letter-exchange" => retry_dlx.name }).tap do |q|
+        q.bind(exch, routing_key:)
+        # messages on the {queue}_discarded_dlx are routed back to the original queue
+        q.bind(discarded_dlx)
+      end
     end
   end
 
