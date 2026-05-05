@@ -91,45 +91,10 @@ This does not update the schema.
     GovukIndex::Updater.update(SearchConfig.govuk_index_name, GovukIndex::SupertypeJob)
   end
 
-  desc "Migrate the data to a new schema definition
-
-Lock the current index, migrate all the data to a new index,
-wait for the process to complete, switch to the new index and
-release the lock.
-
-You should run this task if the index schema has changed.
-
-Specify a list of clusters `migrate_schema['A B C']` if you like, otherwise
-this task will run against all active clusters.
-"
-  task :migrate_schema, [:clusters] do |_, args|
-    clusters_from_args(args).each do |cluster|
-      puts "Migrating schema on cluster #{cluster.key}"
-      failed_indices = []
-
-      index_names.each do |index_name|
-        migrator = SchemaMigrator.new(index_name, cluster:)
-        migrator.reindex
-
-        if migrator.failed == true
-          failed_indices << index_name
-        else
-          # We need to switch the aliases without a lock, since
-          # read_only_allow_delete prevents aliases being changed
-          # After running the schema migration, traffic must be
-          # represented anyway, so the race condition is irrelevant
-          migrator.switch_to_new_index
-        end
-      end
-
-      raise "Failure during reindexing for: #{failed_indices.join(', ')}" if failed_indices.any?
-    end
-  end
-
   desc "Update the schema in place to reflect the current Search API configuration. This task is idempotent.
 
 If there are changes to configuration that cannot be made to the live schema because the change is not applicable to
-the existing data, you will need to run the \"migrate_schema\" task instead, which requires locking the index."
+the existing data, you will need to reinstate and run the \"migrate_schema\" task instead, which requires locking the index."
   task :update_schema, [:clusters] do |_, args|
     clusters_from_args(args).each do |cluster|
       puts "Updating schema on cluster #{cluster.key}"

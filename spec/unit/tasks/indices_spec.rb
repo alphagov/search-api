@@ -173,59 +173,6 @@ RSpec.describe "indices" do
     end
   end
 
-  describe "search:migrate_schema" do
-    let(:task_name) { "search:migrate_schema" }
-    let(:cluster) { Clusters.active.first }
-
-    def stub_migrator(index_name, failed: false)
-      instance_double(SchemaMigrator, reindex: nil, switch_to_new_index: nil, failed:).tap do |migrator|
-        allow(SchemaMigrator).to receive(:new)
-                                   .with(index_name, cluster:)
-                                   .and_return(migrator)
-      end
-    end
-
-    context "when all indices migrate successfully" do
-      it "reindexes and switches aliases for all indices" do
-        migrators = index_names.map do |index_name|
-          stub_migrator(index_name)
-        end
-
-        output = capture_stdout { Rake::Task[task_name].invoke }
-
-        migrators.each do |migrator|
-          expect(migrator).to have_received(:reindex)
-          expect(migrator).to have_received(:switch_to_new_index)
-        end
-
-        expect(output).to include("Migrating schema on cluster A")
-      end
-    end
-
-    context "when one or more indices fail to migrate" do
-      it "raises an error listing the failed indices and does not switch them" do
-        failed_index_name = index_names.first
-        successful_index_names = index_names - [failed_index_name]
-
-        failed_migrator = stub_migrator(failed_index_name, failed: true)
-        successful_migrators = successful_index_names.map do |index_name|
-          stub_migrator(index_name)
-        end
-
-        expect {
-          capture_stdout { Rake::Task[task_name].invoke }
-        }.to raise_error(RuntimeError, "Failure during reindexing for: #{failed_index_name}")
-
-        successful_migrators.each do |migrator|
-          expect(migrator).to have_received(:reindex)
-          expect(migrator).to have_received(:switch_to_new_index)
-        end
-        expect(failed_migrator).to have_received(:reindex)
-        expect(failed_migrator).not_to have_received(:switch_to_new_index)
-      end
-    end
-  end
-
   describe "search:update_schema" do
     let(:task_name) { "search:update_schema" }
     let(:cluster)   { Clusters.active.first }
