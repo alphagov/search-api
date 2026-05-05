@@ -47,6 +47,8 @@ module GovukIndex
 
     def slug
       case format
+      when "document_collection"
+        base_path.gsub(%r{^/government/collections/}, "")
       when "mainstream_browse_page"
         base_path.gsub(%r{^/browse/}, "")
       when "ministerial_role"
