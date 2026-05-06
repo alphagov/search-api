@@ -68,8 +68,6 @@ require "collectors/elasticsearch_prometheus_collector"
 
 require "indexer"
 require "indexer/attachments_lookup"
-require "indexer/compare_enumerator"
-require "indexer/comparer"
 require "indexer/exceptions"
 require "indexer/parts_lookup"
 require "indexer/popularity_lookup"
