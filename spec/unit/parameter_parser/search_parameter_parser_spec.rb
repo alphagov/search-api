@@ -11,7 +11,6 @@ RSpec.describe SearchParameterParser do
       count: 10,
       query: nil,
       parsed_query: nil,
-      similar_to: nil,
       cluster: cluster_with_key(Clusters.default_cluster.key),
       search_config: instance_of(SearchConfig),
       order: nil,
@@ -273,62 +272,6 @@ RSpec.describe SearchParameterParser do
     expect(p.error).to eq("Invalid unicode in query")
     expect(p).not_to be_valid
     expect(p.parsed_params).to match(expected_params(query: nil))
-  end
-
-  it "understands the similar_to parameter" do
-    p = described_class.new({ "similar_to" => ["/search-term"] }, @schema)
-
-    expect(p.error).to eq("")
-    expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(similar_to: "/search-term"))
-  end
-
-  it "complains about a repeated similar_to parameter" do
-    p = described_class.new({ "similar_to" => %w[/hello /world] }, @schema)
-
-    expect(p.error).to eq(%{Too many values (2) for parameter "similar_to" (must occur at most once)})
-    expect(p).not_to be_valid
-    expect(p.parsed_params).to match(expected_params(similar_to: "/hello"))
-  end
-
-  it "strips whitespace from similar_to parameter" do
-    p = described_class.new({ "similar_to" => ["/cheese "] }, @schema)
-
-    expect(p.error).to eq("")
-    expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(similar_to: "/cheese"))
-  end
-
-  it "puts the similar_to parameter in normalized form" do
-    p = described_class.new({ "similar_to" => ["/cafe\u0300 "] }, @schema)
-
-    expect(p.error).to eq("")
-    expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(similar_to: "/caf\u00e8"))
-  end
-
-  it "complains about invalid unicode in the similar_to parameter" do
-    p = described_class.new({ "similar_to" => ["\xff"] }, @schema)
-
-    expect(p.error).to eq("Invalid unicode in similar_to")
-    expect(p).not_to be_valid
-    expect(p.parsed_params).to match(expected_params(similar_to: nil))
-  end
-
-  it "complains when both q and similar_to parameters are provided" do
-    p = described_class.new({ "q" => %w[hello], "similar_to" => ["/world"] }, @schema)
-
-    expect(p.error).to eq("Parameters 'q' and 'similar_to' cannot be used together")
-    expect(p).not_to be_valid
-    expect(p.parsed_params).to match(expected_params(query: "hello", similar_to: "/world", parsed_query: { quoted: [], unquoted: "hello" }))
-  end
-
-  it "sets the order parameter to nil when the similar_to parameter is provided" do
-    p = described_class.new({ "similar_to" => ["/hello"], "order" => %w[title] }, @schema)
-
-    expect(p.error).to eq("")
-    expect(p).to be_valid
-    expect(p.parsed_params).to match(expected_params(similar_to: "/hello"))
   end
 
   it "understands filter paramers" do

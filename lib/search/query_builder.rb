@@ -49,7 +49,6 @@ module Search
     end
 
     def query
-      return more_like_this_query_hash unless search_params.similar_to.nil?
       return { match_all: {} } if search_params.query.nil?
 
       core_query = QueryComponents::CoreQuery.new(search_params)
@@ -102,25 +101,6 @@ module Search
       Hash[hash.reject do |_key, value|
         [nil, [], {}].include?(value)
       end]
-    end
-
-    # More like this is a separate function for returning similar documents,
-    # but it's included in the main search API.
-    # All other parameters are ignored if "similar_to" is present.
-    def more_like_this_query_hash
-      docs = content_index_names.reduce([]) do |documents, index_name|
-        documents << {
-          _id: search_params.similar_to,
-          _index: index_name,
-        }
-      end
-
-      {
-        more_like_this: {
-          like: docs,
-          min_doc_freq: 0, # Revert to the ES 1.7 default
-        },
-      }
     end
   end
 end

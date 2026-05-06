@@ -45,7 +45,6 @@ private
       search_config: SearchConfig.instance(cluster),
       query:,
       parsed_query: parse_query(query),
-      similar_to: normalize_query(single_param("similar_to"), "similar_to"),
       order:,
       return_fields:,
       filters:,
@@ -56,12 +55,6 @@ private
       ab_tests:,
       boost_fields: character_separated_param("boost_fields"),
     }
-
-    # Search can be run either with a text query or a base_path to find
-    # similar documents, but not both at the same time.
-    if @parsed_params[:query] && @parsed_params[:similar_to]
-      @errors << "Parameters 'q' and 'similar_to' cannot be used together"
-    end
 
     if @parsed_params[:query] && @parsed_params[:query].length > MAX_QUERY_LENGTH
       @errors << "Query exceeds the maximum allowed length"
@@ -159,13 +152,7 @@ private
   # Get the order for search results to be returned in.
   def order
     order = single_param("order")
-    similar_to = @params["similar_to"]
-    if order.nil? || !similar_to.nil?
-      # If "similar_to" is defined then "order" is always nil, since
-      # searches for "similar" documents are already sorted by "similarity" by
-      # elasticsearch.
-      return nil
-    end
+    return nil if order.nil?
 
     if order.start_with?("-")
       field = order[1..]
