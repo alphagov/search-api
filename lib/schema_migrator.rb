@@ -11,7 +11,6 @@ class SchemaMigrator
   def reindex
     index_group.current.with_lock do
       response = Services.elasticsearch(hosts: "#{cluster.uri}?slices=auto", timeout: TIMEOUT_SECONDS).reindex(
-        wait_for_completion: false,
         body: {
           source: {
             index: index_group.current.real_name,
@@ -24,30 +23,13 @@ class SchemaMigrator
         refresh: true,
       )
 
-      task_id = response.fetch("task")
-
-      sleep @wait_between_task_list_check while running_tasks.include?(task_id)
-
-      if changed?
-        puts "Difference during reindex for: #{@index_name}"
-        puts comparison.inspect
-        @failed = true
-      end
+      sleep @wait_between_task_list_check while running_tasks.present?
+      @failed = !response.fetch("failures").empty?
     end
-  end
-
-  def changed?
-    comparison[:changed] != 0 ||
-      comparison[:removed_items] != 0 ||
-      comparison[:added_items] != 0
   end
 
   def switch_to_new_index
     index_group.switch_to(index)
-  end
-
-  def comparison
-    @comparison ||= Indexer::Comparer.new(index_group.current.real_name, index.real_name, cluster:, io:).run
   end
 
 private

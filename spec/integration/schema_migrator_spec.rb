@@ -35,60 +35,49 @@ RSpec.describe SchemaMigrator do
     expect_document_is_in_rummager(document, index: original_index.real_name, id: "/a-page-to-be-reindexed", clusters: [Clusters.default_cluster])
   end
 
-  context "index comparison" do
-    it "identifies when content has not changed" do
-      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" })
+  context "reindex failure" do
+    let(:elasticsearch_client) { instance_double("Elasticsearch::Transport::Client") }
 
-      described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-        migrator.reindex
+    index_alias = {
+      "govuk_test-2026-05-08t16-20-17z-dde94b44-042f-425b-aa24-d2cea8fb493f" => {
+        "aliases" => {
+          "govuk_test" => {},
+        },
+      },
+    }
 
-        expect(migrator).not_to be_changed
-      end
+    failed_reindex_response = {
+      "took" => 1,
+      "timed_out" => false,
+      "total" => 0,
+      "updated" => 0,
+      "created" => 0,
+      "deleted" => 0,
+      "batches" => 0,
+      "version_conflicts" => 0,
+      "noops" => 0,
+      "retries" => { "bulk" => 0, "search" => 0 },
+      "throttled_millis" => 0,
+      "requests_per_second" => -1.0,
+      "throttled_until_millis" => 0,
+      "failures" => %w[test],
+    }
+
+    before do
+      allow(Services).to receive(:elasticsearch).and_return(elasticsearch_client)
+      allow(elasticsearch_client).to receive_message_chain(:indices, :put_settings).and_return({ "acknowledged" => true })
+      allow(elasticsearch_client).to receive_message_chain(:indices, :get_alias).and_return(index_alias)
+      allow(elasticsearch_client).to receive_message_chain(:indices, :create).and_return(anything)
+      allow(elasticsearch_client).to receive_message_chain(:tasks, :list).with(anything).and_return({ "nodes" => {} })
+      allow(elasticsearch_client).to receive(:reindex).with(anything).and_return(failed_reindex_response)
     end
 
-    it "finds added content" do
-      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" })
+    it "identifies when reindexing has failed" do
+      migrator = described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new)
 
-      described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-        migrator.reindex
+      migrator.reindex
 
-        search_server.index_group("govuk_test").current_real.unlock
-        commit_document("govuk_test", { "link" => "/another-page" })
-
-        expect(migrator).to be_changed
-      end
-    end
-
-    it "finds removed content" do
-      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" }, type: "edition")
-
-      described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-        migrator.reindex
-
-        search_server.index_group("govuk_test").current_real.unlock
-        client.delete(index: "govuk_test", id: "/a-page-to-be-reindexed", type: "generic-document", refresh: true)
-
-        expect(migrator).to be_changed
-      end
-    end
-
-    it "finds updated content" do
-      commit_document(
-        "govuk_test",
-        { "link" => "/some-page", "title" => "Original title" },
-      )
-
-      described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-        migrator.reindex
-
-        search_server.index_group("govuk_test").current_real.unlock
-        update_document(
-          "govuk_test",
-          { "link" => "/some-page", "title" => "New title" },
-        )
-
-        expect(migrator).to be_changed
-      end
+      expect(migrator.failed).to eq(true)
     end
   end
 end
