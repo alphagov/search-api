@@ -152,7 +152,7 @@ RSpec.describe SearchIndices::IndexGroup do
       },
     }
 
-    stub_request(:get, %r{#{base_uri}/test(.*?)/_search})
+    stub_request(:post, %r{#{base_uri}/test(.*?)/_search})
       .with(
         body: expected_timed_delete_body,
       ).to_return(

@@ -16,7 +16,7 @@ RSpec.describe SearchIndices::Index do
         },
       },
     }
-    stub = stub_request(:put, %r{#{base_uri}/govuk-abc/_mapping/generic-document})
+    stub = stub_request(:put, %r{#{base_uri}/govuk-abc/generic-document/_mappings})
       .with(body: mappings["generic-document"])
       .to_return({
         status: 200,
@@ -28,7 +28,7 @@ RSpec.describe SearchIndices::Index do
       "type" => "illegal_argument_exception",
       "reason" => "invalid mapping",
     } }.to_json
-    failing_stub = stub_request(:put, %r{#{base_uri}/govuk-abc/_mapping/failing-document})
+    failing_stub = stub_request(:put, %r{#{base_uri}/govuk-abc/failing-document/_mappings})
       .with(body: mappings["failing-document"])
       .to_return({
         status: 400,
