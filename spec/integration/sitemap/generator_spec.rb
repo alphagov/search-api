@@ -99,13 +99,13 @@ RSpec.describe Sitemap::Generator do
         {
           "title" => "Cheese in my face",
           "description" => "Hummus weevils",
-          "format" => "cool-format",
+          "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
           "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
-      index_name: "government_test",
+      index_name: "govuk_test",
     )
 
     expected_xml = <<~HEREDOC
@@ -141,13 +141,13 @@ RSpec.describe Sitemap::Generator do
         {
           "title" => "Cheese in my face",
           "description" => "Hummus weevils",
-          "format" => "unfiltered-format",
+          "format" => "answer",
           "link" => "/an-example-answer",
           "indexable_content" => "I like my badger: he is tasty and delicious",
           "public_timestamp" => "2017-07-01T12:41:34+00:00",
         },
       ],
-      index_name: "government_test",
+      index_name: "govuk_test",
     )
 
     expected_xml = <<~HEREDOC
@@ -279,7 +279,7 @@ RSpec.describe Sitemap::Generator do
 
 private
 
-  def add_sample_documents(docs, index_name: "government_test")
+  def add_sample_documents(docs, index_name: "govuk_test")
     docs.each do |sample_document|
       insert_document(index_name, sample_document)
     end
