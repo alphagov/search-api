@@ -5,10 +5,11 @@ module Search
 
     attr_reader :search_params
 
-    def initialize(search_params:, content_index_names:, metasearch_index:)
+    def initialize(search_params:, content_index_names:, metasearch_index:, include_suggestions: false)
       @search_params = search_params
       @content_index_names = content_index_names
       @metasearch_index = metasearch_index
+      @include_suggestions = include_suggestions
     end
 
     def payload
@@ -24,6 +25,7 @@ module Search
         aggs: aggregates,
         highlight:,
         explain: search_params.debug[:explain],
+        suggest:,
       )
     end
 
@@ -71,7 +73,13 @@ module Search
 
   private
 
-    attr_reader :content_index_names, :metasearch_index
+    attr_reader :content_index_names, :metasearch_index, :include_suggestions
+
+    def suggest
+      return {} unless include_suggestions
+
+      QueryComponents::Suggest.new(search_params).payload
+    end
 
     def best_bets
       QueryComponents::BestBets.new(metasearch_index:, search_params:)

@@ -38,11 +38,14 @@ module Search
     attr_reader :metasearch_index
 
     def timed_build_query(search_params)
+      include_suggestions = search_params.suggest_spelling? && suggestion_blocklist.should_correct?(search_params.query)
+
       GovukStatsd.time("build_query") do
         builder = QueryBuilder.new(
           search_params:,
           content_index_names:,
           metasearch_index:,
+          include_suggestions:,
         )
 
         payload = process_elasticsearch_errors { builder.payload }
@@ -77,10 +80,6 @@ module Search
 
     def process_es_response(search_params, builder, payload, es_response)
       # Augment the response with the suggest result from a separate query.
-      if search_params.suggest_spelling?
-        es_response["suggest"] = run_spell_checks(search_params)
-      end
-
       if search_params.suggest_autocomplete?
         es_response["autocomplete"] = run_autocomplete_query(search_params)
       end
@@ -116,35 +115,6 @@ module Search
       AggregateResultPresenter.merge_examples(presented_aggregates, examples)
 
       presented_aggregates
-    end
-
-    # Elasticsearch tries to find spelling suggestions for words that don't occur in
-    # our content, as they are probably mispelled. However, currently it is
-    # returning suggestions for words that do not occur in *every* index. Because
-    # some indexes contain very few words, Elasticsearch returns too many spelling
-    # suggestions for common terms. For example, using the suggester on all indices
-    # will yield a suggestion for "PAYE", because it's mentioned only in the
-    # `govuk` index, and not in other indexes.
-    #
-    # This issue is mentioned in
-    # https://github.com/elastic/elasticsearch/issues/7472.
-    #
-    # Our solution is to run a separate query to fetch the suggestions, only using
-    # the indices we want.
-    def run_spell_checks(search_params)
-      return unless suggestion_blocklist.should_correct?(search_params.query)
-
-      GovukStatsd.increment "suggest.spelling"
-      GovukStatsd.time("suggest.spelling") do
-        query = {
-          size: 0,
-          suggest: QueryComponents::Suggest.new(search_params).payload,
-        }
-
-        response = index.raw_search(query)
-
-        response["suggest"]
-      end
     end
 
     def run_autocomplete_query(search_params)
