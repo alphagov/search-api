@@ -80,6 +80,20 @@ module SearchIndices
       end
     end
 
+    # Close an index to read/write operations
+    def close
+      with_retries do
+        @client.indices.close(index: @index_name)
+      end
+    end
+
+    # Open an index for read/write operations
+    def open
+      with_retries do
+        @client.indices.open(index: @index_name)
+      end
+    end
+
     def sync_mappings
       {}.tap do |errors|
         mappings.each do |type, mapping|
