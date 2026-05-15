@@ -1,8 +1,10 @@
 require "spec_helper"
 
 RSpec.describe SchemaMigrator do
-  before do
-    clean_index_content("govuk_test")
+  after do
+    # reset indices
+    IndexHelpers.clean_all
+    IndexHelpers.create_all
   end
 
   it "switches the alias to a new index" do
@@ -26,69 +28,24 @@ RSpec.describe SchemaMigrator do
     }
     commit_document("govuk_test", document)
 
-    described_class.new("govuk_test", wait_between_task_list_check: 0.2) do |migrator|
-      migrator.reindex
-      migrator.switch_to_new_index
-    end
+    migrator = described_class.new("govuk_test", wait_between_task_list_check: 0.2)
+    migrator.reindex
+    migrator.switch_to_new_index
 
     expect_document_is_in_rummager(document, index: "govuk_test", id: "/a-page-to-be-reindexed")
     expect_document_is_in_rummager(document, index: original_index.real_name, id: "/a-page-to-be-reindexed", clusters: [Clusters.default_cluster])
   end
 
-  context "index comparison" do
-    it "identifies when content has not changed" do
-      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" })
+  context "reindex failure" do
+    it "identifies when reindexing has failed" do
+      migrator = described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new)
+      dest_index = migrator.dest_index
+      dest_index.close
+      migrator.reindex
 
-      described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-        migrator.reindex
-
-        expect(migrator).not_to be_changed
-      end
-    end
-
-    it "finds added content" do
-      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" })
-
-      described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-        migrator.reindex
-
-        search_server.index_group("govuk_test").current_real.unlock
-        commit_document("govuk_test", { "link" => "/another-page" })
-
-        expect(migrator).to be_changed
-      end
-    end
-
-    it "finds removed content" do
-      commit_document("govuk_test", { "link" => "/a-page-to-be-reindexed" }, type: "edition")
-
-      described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-        migrator.reindex
-
-        search_server.index_group("govuk_test").current_real.unlock
-        client.delete(index: "govuk_test", id: "/a-page-to-be-reindexed", type: "generic-document", refresh: true)
-
-        expect(migrator).to be_changed
-      end
-    end
-
-    it "finds updated content" do
-      commit_document(
-        "govuk_test",
-        { "link" => "/some-page", "title" => "Original title" },
-      )
-
-      described_class.new("govuk_test", wait_between_task_list_check: 0.2, io: StringIO.new) do |migrator|
-        migrator.reindex
-
-        search_server.index_group("govuk_test").current_real.unlock
-        update_document(
-          "govuk_test",
-          { "link" => "/some-page", "title" => "New title" },
-        )
-
-        expect(migrator).to be_changed
-      end
+      expect(migrator.failed).to eq(true)
+      # reopen index after test, to stop other tests failing
+      dest_index.open
     end
   end
 end
