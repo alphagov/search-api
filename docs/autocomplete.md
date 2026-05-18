@@ -1,10 +1,13 @@
 # Autocomplete
 
+> [!NOTE]
+> This feature is not currently used by finder-frontend. If you're investigating issues with search autocomplete please visit the [Search API V2 Search autocomplete docs].
+
 Autocomplete is a feature that suggests search phrases as you type. In search-api autocomplete is based on popularity data from GA4.
 
 ## Does autocomplete work?
 
-No. Not for users.
+No. Not for users of GOV.UK search.
 
 Autocomplete was added as an experiment at the close of 2019. However, it doesn't appear that this endpoint was ever added to finder-frontend so it's unlikely that it has been tested with real users.
 
@@ -343,3 +346,4 @@ For example if you visit <http://search-api.dev.gov.uk/search?q=tax&suggest=auto
 [once per day]: https://github.com/alphagov/govuk-helm-charts/blob/56f522f6722ba6a4e713ee852f2b170f93cbeafc/charts/app-config/values-production.yaml#L2914
 [PopularityJob]: https://github.com/alphagov/search-api/blob/37281b48495f58dedb5aad58ce8fc42cfdae6159/lib/govuk_index/popularity_job.rb#L39-L41
 [content-api]: https://github.com/alphagov/search-api/blob/37281b48495f58dedb5aad58ce8fc42cfdae6159/docs/content-api.md
+[Search API V2 Search autocomplete docs]: https://docs.publishing.service.gov.uk/repos/search-api-v2/search_autocomplete.html
