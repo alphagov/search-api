@@ -152,7 +152,7 @@ module Sitemap
     SUB_DIRECTORY = "sitemaps".freeze
 
     def index_names
-      SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
+      [SearchConfig.govuk_index_name]
     end
 
     def homepage
