@@ -94,6 +94,10 @@ GEM
     erubi (1.13.1)
     expgen (0.1.1)
       parslet
+    factory_bot (6.6.0)
+      activesupport (>= 6.1.0)
+    faker (3.8.0)
+      i18n (>= 1.8.11, < 2)
     faraday (1.10.5)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -761,6 +765,8 @@ DEPENDENCIES
   bunny-mock
   climate_control
   elasticsearch (~> 6)
+  factory_bot
+  faker
   gds-api-adapters
   google-analytics-data-v1beta
   google-api-client
