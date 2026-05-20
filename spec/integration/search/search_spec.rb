@@ -632,17 +632,17 @@ RSpec.describe "SearchTest" do
 private
 
   def first_result
-    @first_result ||= parsed_response["results"].first
+    parsed_response["results"].first
   end
 
   def result_links
-    @result_links ||= parsed_response["results"].map do |result|
+    parsed_response["results"].map do |result|
       result["link"]
     end
   end
 
   def result_titles
-    @result_titles ||= parsed_response["results"].map do |result|
+    parsed_response["results"].map do |result|
       result["title"]
     end
   end
