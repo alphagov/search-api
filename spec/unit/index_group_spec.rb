@@ -18,7 +18,6 @@ RSpec.describe SearchIndices::IndexGroup do
       @schema,
       %w[foo custom],
       "govuk",
-      %w[foo],
       SearchConfig.default_instance,
     )
   end
