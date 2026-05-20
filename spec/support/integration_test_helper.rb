@@ -34,16 +34,8 @@ module IntegrationTestHelper
     SearchConfig.instance(cluster)
   end
 
-  def with_just_one_cluster
-    allow(Clusters).to receive(:active).and_return([Clusters.default_cluster])
-  end
-
   def search_server(cluster = Clusters.default_cluster)
     search_config(cluster).search_server
-  end
-
-  def random_cluster
-    clusters.sample
   end
 
   def insert_document(index_name, attributes, id: nil, type: "edition", version: nil)
@@ -101,14 +93,6 @@ module IntegrationTestHelper
     return_id
   end
 
-  def update_document(index_name, attributes, id: nil, type: "edition")
-    attributes["document_type"] ||= type
-    clusters.each do |cluster|
-      client(cluster:).update(index: index_name, id:, type: "generic-document", body: { doc: atts })
-    end
-    commit_index(index_name)
-  end
-
   def commit_index(index_name)
     clusters.each do |cluster|
       client(cluster:).indices.refresh(index: index_name)
@@ -149,52 +133,6 @@ module IntegrationTestHelper
     end
   end
 
-  def sample_document_attributes(index_name, section_count, override: {})
-    short_index_name = index_name.sub("_test", "")
-    (1..section_count).map do |i|
-      title = "Sample #{short_index_name} document #{i}"
-      if i.odd?
-        title = title.downcase
-      end
-      fields = {
-        "title" => title,
-        "link" => "/#{short_index_name}-#{i}",
-        "indexable_content" => "Something something important content id #{i}",
-        "mainstream_browse_pages" => "browse/page/#{i}",
-        "format" => index_name =~ /govuk/ ? "answer" : "edition",
-        "document_type" => "edition",
-      }
-      if short_index_name == "government"
-        fields["public_timestamp"] = "#{i + 2000}-01-01T00:00:00"
-      end
-      fields.merge(override)
-    end
-  end
-
-  def add_sample_documents(index_name, count, override: {})
-    attributes = sample_document_attributes(index_name, count, override:)
-    data = attributes.flat_map do |sample_document|
-      [
-        { index: { _id: sample_document["link"], _type: "generic-document" } },
-        sample_document,
-      ]
-    end
-
-    clusters.each { |cluster| client(cluster:).bulk(index: index_name, body: data) }
-    commit_index(index_name)
-  end
-
-  def try_remove_test_index(index_name = nil)
-    clusters.each do |cluster|
-      index_name ||= SearchConfig.instance(cluster).default_index_name
-      raise "Attempting to delete non-test index: #{index_name}" unless index_name =~ /test/
-
-      if client(cluster:).indices.exists?(index: index_name)
-        client(cluster:).indices.delete(index: index_name)
-      end
-    end
-  end
-
   def stub_message_payload(example_document, unpublishing: false)
     routing_key = unpublishing ? "test.unpublish" : "test.a_routing_key"
     double(:message, ack: true, payload: example_document, delivery_info: { routing_key: }, headers: {})
@@ -204,13 +142,6 @@ private
 
   def clusters
     Clusters.active
-  end
-
-  def build_sample_documents_on_content_indices(documents_per_index:)
-    index_names = SearchConfig.content_index_names + [SearchConfig.govuk_index_name]
-    index_names.each do |index_name|
-      add_sample_documents(index_name, documents_per_index)
-    end
   end
 
   def fetch_document_from_rummager(id:, index:, type: "_all", cluster: Clusters.default_cluster)
