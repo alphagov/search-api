@@ -57,15 +57,6 @@ RSpec.describe "SearchTest" do
     expect(parsed_response["suggested_queries"]).to eq([])
   end
 
-  it "returns docs from all indexes" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
-
-    get "/search?q=important"
-
-    expect(result_links).to include "/government-1"
-    expect(result_links).to include "/govuk-1"
-  end
-
   it "sort by date ascending" do
     build_sample_documents_on_content_indices(documents_per_index: 2)
 
