@@ -201,12 +201,14 @@ RSpec.describe "SearchTest" do
   end
 
   it "only contains fields which are present" do
-    commit_document(index_name, build(:document, "link" => "/early"))
+    commit_document(index_name, build(:document, "link" => "/early", "topical_events" => %w[a_topical_event]))
     commit_document(index_name, build(:document, "link" => "/late"))
 
     get "/search?order=public_timestamp"
 
-    expect(result_links).to eq(["/early", "/late"])
+    results = parsed_response["results"]
+    expect(results[1].keys).not_to include("topical_events")
+    expect(results[0]["topical_events"]).to eq(%w[a_topical_event])
   end
 
   it "validates integer params" do
