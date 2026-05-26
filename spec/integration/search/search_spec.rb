@@ -314,6 +314,19 @@ RSpec.describe "SearchTest" do
     end
   end
 
+  it "can filter times in different time zones" do
+    january_time = "2017-07-01T11:20:00.000-03:00"
+    february_time = "2017-07-02T01:15:00.000+01:00"
+
+    commit_document(index_name, build(:document, link: "/february", opened_date: february_time))
+    commit_document(index_name, build(:document, link: "/january", opened_date: january_time))
+
+    get "/search?filter_opened_date=from:2017-07-01 12:00,to:2017-07-01 23:30:00"
+
+    expect(last_response).to be_ok
+    expect(parsed_response.fetch("results")).to contain_exactly(hash_including("link" => "/january"))
+  end
+
   it "cannot provide date filter key multiple times" do
     get "/search?filter_document_type=cma_case&filter_opened_date[]=from:2014-03-31&filter_opened_date[]=to:2014-04-02"
 
