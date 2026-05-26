@@ -108,12 +108,11 @@ RSpec.describe "SearchTest" do
     end
 
     it "can filter and reject" do
-      get "/search?reject_format=aaib&filter_mainstream_browse_pages[]=browse/page/2"
-      commit_document(index_name, build(:document,
-                                        link: "/three",
-                                        mainstream_browse_pages: "browse/page/3",
-                                        format: "aaib"))
+      get "/search?filter_mainstream_browse_pages[]=browse/page/2"
       expect(result_links.sort).to eq(["/two"])
+
+      get "/search?reject_link=/two&filter_mainstream_browse_pages[]=browse/page/2"
+      expect(result_links).to be_empty
     end
   end
 
