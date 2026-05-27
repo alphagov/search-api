@@ -1,5 +1,5 @@
 require "rummager"
-desc "Delete the detailed index"
+desc "Delete the government index"
 task :delete_government_index do
   client = Services.elasticsearch
 
@@ -9,5 +9,5 @@ task :delete_government_index do
 
   client.indices.delete(index: indices)
 rescue Elasticsearch::Transport::Transport::Errors::NotFound
-  puts "No detailed index found"
+  puts "No government index found"
 end
