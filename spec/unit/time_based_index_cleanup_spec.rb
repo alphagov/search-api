@@ -18,7 +18,6 @@ RSpec.describe SearchIndices::IndexGroup do
       @schema,
       %w[government custom],
       "govuk",
-      %w[government],
       SearchConfig.default_instance,
     )
   end

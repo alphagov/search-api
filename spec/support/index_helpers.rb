@@ -9,7 +9,7 @@ class IndexHelpers
   end
 
   def self.all_index_names
-    SearchConfig.content_index_names + SearchConfig.auxiliary_index_names + [SearchConfig.govuk_index_name]
+    SearchConfig.auxiliary_index_names + [SearchConfig.govuk_index_name]
   end
 
   def self.clean_all

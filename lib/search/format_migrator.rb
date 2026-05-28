@@ -21,7 +21,7 @@ module Search
     attr_reader :search_config
 
     def migrated_indices
-      search_config.new_content_index.real_index_names
+      search_config.content_index.real_index_names
     end
 
     def migrated_formats

@@ -1,13 +1,10 @@
 require "spec_helper"
 
 RSpec.describe "GovukIndex::SwitchOnFormatsInGovukIndexTest" do
+  let(:index_name) { SearchConfig.govuk_index_name }
   before do
-    insert_document("government_test", { title: "government answer", link: "/government/answer", format: "answer" })
-    insert_document("government_test", { title: "government help", link: "/government/help", format: "help_page" })
-    commit_index("government_test")
-    insert_document("govuk_test", { title: "govuk answer", link: "/govuk/answer", format: "answer" })
-    insert_document("govuk_test", { title: "govuk help", link: "/govuk/help", format: "help_page" })
-    commit_index("govuk_test")
+    commit_document(index_name, build(:document, :all, title: "govuk answer", format: "answer"))
+    commit_document(index_name, build(:document, :all, title: "govuk help", format: "help_page"))
   end
 
   it "defaults to excluding govuk index records" do
@@ -15,7 +12,7 @@ RSpec.describe "GovukIndex::SwitchOnFormatsInGovukIndexTest" do
 
     get "/search"
 
-    expect(parsed_response["results"].map { |r| r["title"] }.sort).to eq(["government answer", "government help"])
+    expect(parsed_response["results"].map { |r| r["title"] }.sort).to be_empty
   end
 
   it "can enable format to use govuk index" do
@@ -23,7 +20,7 @@ RSpec.describe "GovukIndex::SwitchOnFormatsInGovukIndexTest" do
 
     get "/search"
 
-    expect(parsed_response["results"].map { |r| r["title"] }.sort).to eq(["government answer", "govuk help"])
+    expect(parsed_response["results"].map { |r| r["title"] }.sort).to eq(["govuk help"])
   end
 
   it "can enable multiple formats to use govuk index" do

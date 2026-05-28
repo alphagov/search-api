@@ -47,6 +47,8 @@ end
 group :test do
   gem "bunny-mock"
   gem "climate_control"
+  gem "factory_bot"
+  gem "faker"
   gem "rack-test"
   gem "rspec"
   gem "simplecov"

@@ -1,11 +1,7 @@
 require "spec_helper"
-require_relative "../../support/search_integration_spec_helper"
-
-RSpec.configure do |c|
-  c.include SearchIntegrationSpecHelper
-end
 
 RSpec.describe "SearchTest" do
+  let(:index_name) { SearchConfig.govuk_index_name }
   it_behaves_like "json-only endpoint", "/search", "?q=important"
   it_behaves_like "json-only endpoint", "/api/search", "?q=important"
 
@@ -16,15 +12,14 @@ RSpec.describe "SearchTest" do
   end
 
   it "spell checking with typo" do
-    commit_ministry_of_magic_document
-
+    commit_document(index_name, build(:document, title: "Ministry of Magic"))
     get "/search?q=ministry of magick&suggest=spelling"
 
     expect(parsed_response["suggested_queries"]).to eq(["ministry of magic"])
   end
 
   it "highlights spelling suggestions" do
-    commit_ministry_of_magic_document
+    commit_document(index_name, build(:document, title: "Ministry of Magic"))
 
     get "/search?q=ministry of magick&suggest=spelling_with_highlighting"
 
@@ -35,14 +30,7 @@ RSpec.describe "SearchTest" do
   end
 
   it "spell checking with blocklisted typo" do
-    commit_document(
-      "govuk_test",
-      {
-        "title" => "Brexitt",
-        "description" => "Brexitt",
-        "link" => "/brexitt",
-      },
-    )
+    commit_document(index_name, build(:document, title: "Brexitt"))
 
     get "/search?q=brexit&suggest=spelling"
 
@@ -50,112 +38,90 @@ RSpec.describe "SearchTest" do
   end
 
   it "spell checking without typo" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
-
-    get "/search?q=milliband"
+    commit_document(index_name, build(:document, title: "Magic"))
+    get "/search?q=london&suggest=spelling"
 
     expect(parsed_response["suggested_queries"]).to eq([])
   end
 
-  it "returns docs from all indexes" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
+  describe "sorting" do
+    before :each do
+      commit_document(index_name, build(:document, link: "/one", title: "aa", public_timestamp: Time.now.utc.iso8601))
+      commit_document(index_name, build(:document, link: "/two", title: "zz", public_timestamp: 1.week.from_now.utc.iso8601))
+    end
+    it "sort by date ascending" do
+      get "/search?order=public_timestamp"
 
-    get "/search?q=important"
+      expect(result_links.take(2)).to eq(["/one", "/two"])
+    end
 
-    expect(result_links).to include "/government-1"
-    expect(result_links).to include "/govuk-1"
+    it "sort by date descending" do
+      get "/search?order=-public_timestamp"
+
+      expect(result_links.take(2)).to eq(["/two", "/one"])
+    end
+
+    it "sort by title ascending" do
+      get "/search?order=title"
+      expect(result_titles).to eq(%w[aa zz])
+    end
+
+    it "sort by title descending" do
+      get "/search?order=-title"
+      expect(result_titles).to eq(%w[zz aa])
+    end
   end
 
-  it "sort by date ascending" do
-    build_sample_documents_on_content_indices(documents_per_index: 2)
+  describe "filtering" do
+    before :each do
+      commit_document(index_name, build(:document,
+                                        link: "/one",
+                                        mainstream_browse_pages: "browse/page/1"))
+      commit_document(index_name, build(:document,
+                                        link: "/two",
+                                        mainstream_browse_pages: "browse/page/2"))
+      commit_document(index_name, build(:document,
+                                        link: "/missing"))
+    end
+    it "filter by field" do
+      get "/search?filter_mainstream_browse_pages=browse/page/1"
 
-    get "/search?q=important&order=public_timestamp"
+      expect(result_links).to eq(["/one"])
+    end
 
-    expect(result_links.take(2)).to eq(["/government-1", "/government-2"])
-  end
+    it "reject by field" do
+      get "/search?reject_mainstream_browse_pages=browse/page/1"
 
-  it "sort by date descending" do
-    build_sample_documents_on_content_indices(documents_per_index: 2)
+      expect(result_links).to match_array(["/two", "/missing"])
+    end
 
-    get "/search?q=important&order=-public_timestamp"
+    it "can filter for missing field" do
+      get "/search?filter_mainstream_browse_pages=_MISSING"
 
-    # The government links have dates, so appear before all the other links.
-    # The other documents have no dates, so appear in an undefined order
-    expect(result_links.take(2)).to eq(["/government-2", "/government-1"])
-  end
+      expect(result_links.sort).to eq(["/missing"])
+    end
 
-  it "sort by title ascending" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
+    it "can filter for missing or specific value in field" do
+      get "/search?filter_mainstream_browse_pages[]=_MISSING&filter_mainstream_browse_pages[]=browse/page/1"
 
-    get "/search?order=title"
-    lowercase_titles = result_titles.map(&:downcase)
+      expect(result_links.sort).to match_array(["/one", "/missing"])
+    end
 
-    expect(lowercase_titles).to eq(["sample government document 1", "sample govuk document 1"])
-  end
-
-  it "filter by field" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
-
-    get "/search?filter_mainstream_browse_pages=browse/page/1"
-
-    expect(result_links.sort).to eq(["/government-1", "/govuk-1"])
-  end
-
-  it "reject by field" do
-    build_sample_documents_on_content_indices(documents_per_index: 2)
-
-    get "/search?reject_mainstream_browse_pages=browse/page/1"
-
-    expect(result_links.sort).to eq(["/government-2", "/govuk-2"])
-  end
-
-  it "can filter for missing field" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
-
-    get "/search?filter_manual=_MISSING"
-
-    expect(result_links.sort).to eq(["/government-1", "/govuk-1"])
-  end
-
-  it "can filter for missing or specific value in field" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
-
-    get "/search?filter_document_type[]=_MISSING&filter_document_type[]=edition"
-
-    expect(result_links.sort).to eq(["/government-1", "/govuk-1"])
-  end
-
-  it "can filter and reject" do
-    build_sample_documents_on_content_indices(documents_per_index: 2)
-
-    get "/search?reject_mainstream_browse_pages=1&filter_document_type[]=edition"
-
-    expect(result_links.sort).to eq(["/government-1", "/government-2", "/govuk-1", "/govuk-2"])
+    it "can filter and reject" do
+      get "/search?reject_format=aaib&filter_mainstream_browse_pages[]=browse/page/2"
+      commit_document(index_name, build(:document,
+                                        link: "/three",
+                                        mainstream_browse_pages: "browse/page/3",
+                                        format: "aaib"))
+      expect(result_links.sort).to eq(["/two"])
+    end
   end
 
   describe "filter/reject when an attribute has multiple values" do
     before do
-      commit_document(
-        "government_test",
-        {
-          "link" => "/one",
-          "part_of_taxonomy_tree" => %w[a b c],
-        },
-      )
-      commit_document(
-        "government_test",
-        {
-          "link" => "/two",
-          "part_of_taxonomy_tree" => %w[d e f],
-        },
-      )
-      commit_document(
-        "government_test",
-        {
-          "link" => "/three",
-          "part_of_taxonomy_tree" => %w[b e],
-        },
-      )
+      commit_document(index_name, build(:document, "part_of_taxonomy_tree" => %w[a b c], "link" => "/one"))
+      commit_document(index_name, build(:document, "part_of_taxonomy_tree" => %w[d e f], "link" => "/two"))
+      commit_document(index_name, build(:document, "part_of_taxonomy_tree" => %w[b e], "link" => "/three"))
     end
 
     describe "filter_all" do
@@ -216,32 +182,31 @@ RSpec.describe "SearchTest" do
 
     context "when a valid filter is used" do
       before do
-        build_sample_documents_on_content_indices(documents_per_index: 2)
-        commit_ministry_of_magic_document(has_official_document: true)
-        commit_treatment_of_dragons_document(has_official_document: false)
+        commit_document(index_name, build(:document, has_official_document: true, "link" => "/official"))
+        commit_document(index_name, build(:document, has_official_document: false, "link" => "/not_official"))
       end
 
       it "can filter on boolean fields = true" do
         get "/search?filter_has_official_document=true"
 
-        expect(result_links.sort).to eq(%w[/ministry-of-magic-site])
+        expect(result_links.sort).to eq(%w[/official])
       end
 
       it "can filter on boolean fields = false" do
         get "/search?filter_has_official_document=false"
 
-        expect(result_links.sort).to eq(%w[/dragon-guide])
+        expect(result_links.sort).to eq(%w[/not_official])
       end
     end
   end
 
   it "only contains fields which are present" do
-    build_sample_documents_on_content_indices(documents_per_index: 2)
+    commit_document(index_name, build(:document, "link" => "/early"))
+    commit_document(index_name, build(:document, "link" => "/late"))
 
-    get "/search?q=important&order=public_timestamp"
+    get "/search?order=public_timestamp"
 
-    results = parsed_response["results"]
-    expect(results[1]["title"]).to eq("Sample government document 2")
+    expect(result_links).to eq(["/early", "/late"])
   end
 
   it "validates integer params" do
@@ -265,7 +230,7 @@ RSpec.describe "SearchTest" do
   end
 
   it "debug explain returns explanations" do
-    build_sample_documents_on_content_indices(documents_per_index: 1)
+    commit_document(index_name, build(:document, :all))
 
     get "/search?debug=explain"
 
@@ -277,7 +242,7 @@ RSpec.describe "SearchTest" do
   end
 
   it "can scope by elasticsearch type" do
-    commit_document("govuk_test", cma_case_attributes, type: "cma_case")
+    commit_document(index_name, build(:document, :cma_case, title: "cma title", link: "/cma-cases"))
 
     get "/search?filter_document_type=cma_case"
 
@@ -286,95 +251,66 @@ RSpec.describe "SearchTest" do
     expect(parsed_response.fetch("results").fetch(0)).to match(
       hash_including(
         "document_type" => "cma_case",
-        "title" => cma_case_attributes.fetch("title"),
-        "link" => cma_case_attributes.fetch("link"),
+        "title" => "cma title",
+        "link" => "/cma-cases",
       ),
     )
   end
 
-  it "can filter between dates" do
-    commit_document("govuk_test", cma_case_attributes, type: "cma_case")
+  describe "filter dates" do
+    let(:january) { Time.new(2000, 1, 1).utc.strftime("%Y-%m-%dT%H:%M:%S") }
+    let(:february) { Time.new(2000, 2, 1, 13, 0, 0).utc.strftime("%Y-%m-%dT%H:%M:%S") }
+    let(:march) { Time.new(2000, 3, 1).utc.strftime("%Y-%m-%dT%H:%M:%S") }
 
-    get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31,to:2014-04-02"
+    before do
+      commit_document(index_name, build(:document, link: "/february", opened_date: february))
+      commit_document(index_name, build(:document, link: "/january", opened_date: january))
+      commit_document(index_name, build(:document, link: "/march", opened_date: march))
+    end
 
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect(parsed_response.fetch("results").fetch(0)).to match(
-      hash_including(
-        "title" => cma_case_attributes.fetch("title"),
-        "link" => cma_case_attributes.fetch("link"),
-      ),
-    )
-  end
+    it "can filter between dates" do
+      get "/search?filter_opened_date=from:2000-01-20,to:2000-02-20"
 
-  it "can filter between dates with reversed parameter order" do
-    commit_document("govuk_test", cma_case_attributes, type: "cma_case")
+      expect(last_response).to be_ok
+      expect(result_links).to eq(["/february"])
+    end
 
-    get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02,from:2014-03-31"
+    it "can filter between dates with reversed parameter order" do
+      get "/search?filter_opened_date=to:2000-02-20,from:2000-01-20"
+      expect(last_response).to be_ok
+      expect(result_links).to eq(["/february"])
+    end
 
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect(parsed_response.fetch("results").fetch(0)).to match(
-      hash_including(
-        "title" => cma_case_attributes.fetch("title"),
-        "link" => cma_case_attributes.fetch("link"),
-      ),
-    )
-  end
+    it "can filter from date" do
+      get "/search?filter_opened_date=from:2000-01-20"
 
-  it "can filter from date" do
-    commit_filter_from_date_documents
-    get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31"
+      expect(last_response).to be_ok
+      expect(result_links).to match_array(["/february", "/march"])
+    end
 
-    expect(last_response).to be_ok
-    expect_response_includes_matching_date_and_datetime_results(parsed_response.fetch("results"))
-  end
+    it "can filter from time" do
+      get "/search?filter_opened_date=from:2000-02-1 12:00:00"
+      expect(result_links).to include("/february")
 
-  it "can filter from time" do
-    commit_filter_from_time_documents
-    get "/search?filter_document_type=cma_case&filter_opened_date=from:2014-03-31 14:00:00"
+      get "/search?filter_opened_date=from:2000-02-1 14:00:00"
+      expect(result_links).to_not include("/february")
+    end
 
-    expect(last_response).to be_ok
-    expect_response_includes_matching_date_and_datetime_results(parsed_response.fetch("results"))
-  end
+    it "can filter to date" do
+      get "/search?filter_opened_date=to:2000-02-20"
 
-  it "can filter to date" do
-    commit_filter_to_date_documents
+      expect(result_links).to match_array(["/january", "/february"])
+    end
 
-    get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02"
+    it "can filter to time" do
+      get "/search?filter_opened_date=to:2000-02-20 12:00:00"
 
-    expect(last_response).to be_ok
-    expect_response_includes_matching_date_and_datetime_results(parsed_response.fetch("results"))
-  end
+      get "/search?filter_opened_date=to:2000-02-1 12:00:00"
+      expect(result_links).not_to include("/february")
 
-  it "can filter to time" do
-    commit_filter_to_time_documents
-
-    get "/search?filter_document_type=cma_case&filter_opened_date=to:2014-04-02 11:00:00"
-
-    expect(last_response).to be_ok
-    expect_response_includes_matching_date_and_datetime_results(parsed_response.fetch("results"))
-  end
-
-  it "can filter times in different time zones" do
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2017-07-01T11:20:00.000-03:00", "link" => "/cma-1"),
-      type: "cma_case",
-    )
-    commit_document(
-      "govuk_test",
-      cma_case_attributes("opened_date" => "2017-07-02T00:15:00.000+01:00", "link" => "/cma-2"),
-      type: "cma_case",
-    )
-
-    get "/search?filter_document_type=cma_case&filter_opened_date=from:2017-07-01 12:00,to:2017-07-01 23:30:00"
-
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("results")).to contain_exactly(
-      hash_including("link" => "/cma-1"),
-      hash_including("link" => "/cma-2"),
-    )
+      get "/search?filter_opened_date=to:2000-02-1 14:00:00"
+      expect(result_links).to include("/february")
+    end
   end
 
   it "cannot provide date filter key multiple times" do
@@ -400,115 +336,95 @@ RSpec.describe "SearchTest" do
   end
 
   it "expands organisations" do
-    commit_treatment_of_dragons_document({ "organisations" => ["/ministry-of-magic"] })
-    commit_ministry_of_magic_document({ "format" => "organisation", "index" => "govuk_test" })
+    commit_document(index_name, build(:document, indexable_content: "important", organisations: ["/my_organisation"]))
+    commit_document(index_name, build(:document, format: "organisation", title: "my title", slug: "/my_organisation", link: "/my_link"))
 
-    get "/search.json?q=dragons"
+    get "/search.json?q=important"
 
-    expect(first_result["organisations"]).to eq(
-      [{ "slug" => "/ministry-of-magic",
-         "link" => "/ministry-of-magic-site",
-         "title" => "Ministry of Magic" }],
-    )
+    expect(first_result["organisations"].first)
+      .to include({ "slug" => "/my_organisation",
+                    "link" => "/my_link",
+                    "title" => "my title" })
   end
 
   it "also works with the /api prefix" do
-    commit_treatment_of_dragons_document({ "organisations" => ["/ministry-of-magic"] })
-    commit_ministry_of_magic_document({ "format" => "organisation", "index" => "govuk_test" })
+    commit_document(index_name, build(:document, indexable_content: "important", organisations: ["/my_organisation"]))
+    commit_document(index_name, build(:document, format: "organisation", title: "my title", slug: "/my_organisation", link: "/my_link"))
 
-    get "/api/search.json?q=dragons"
+    get "/api/search.json?q=important"
 
-    expect(first_result["organisations"]).to eq(
-      [{ "slug" => "/ministry-of-magic",
-         "link" => "/ministry-of-magic-site",
-         "title" => "Ministry of Magic" }],
-    )
+    expect(first_result["organisations"].first)
+      .to include({ "slug" => "/my_organisation",
+                    "link" => "/my_link",
+                    "title" => "my title" })
   end
 
   it "expands organisations via content_id" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
+    commit_document(index_name, build(:document, format: "organisation",
+                                                 content_id: "organisation-content-id",
+                                                 title: "my title",
+                                                 slug: "/my_organisation",
+                                                 link: "/my_link"))
+    commit_document(index_name, build(:document, indexable_content: "important",
+                                                 organisation_content_ids: %w[organisation-content-id]))
 
-    get "/search.json?q=dragons"
+    get "/search.json?q=important&fields[]=expanded_organisations"
 
-    # Adds a new key with the expanded organisations
-    expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_organisations", "content_id" => "organisation-content-id")
-
-    # Keeps the organisation content ids
-    expect(
-      first_result["organisation_content_ids"],
-    ).to eq(
-      %w[organisation-content-id],
-    )
+    expect(first_result["expanded_organisations"].first)
+      .to include({ "slug" => "/my_organisation",
+                    "link" => "/my_link",
+                    "title" => "my title" })
   end
 
   it "search for expanded organisations works" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
-
-    get "/search.json?q=dragons&fields[]=expanded_organisations"
-
-    expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_organisations", "content_id" => "organisation-content-id")
-  end
-
-  it "filter by organisation content_ids works" do
-    commit_treatment_of_dragons_document({ "organisation_content_ids" => %w[organisation-content-id] })
-    commit_ministry_of_magic_document({ "content_id" => "organisation-content-id", "format" => "organisation", "index" => "govuk_test" })
+    commit_document(index_name, build(:document, format: "organisation",
+                                                 content_id: "organisation-content-id",
+                                                 title: "my title",
+                                                 slug: "/my_organisation",
+                                                 link: "/my_link"))
+    commit_document(index_name, build(:document, indexable_content: "important",
+                                                 organisation_content_ids: %w[organisation-content-id]))
 
     get "/search.json?filter_organisation_content_ids[]=organisation-content-id"
 
-    expect_result_includes_ministry_of_magic_for_key(first_result, "expanded_organisations", "content_id" => "organisation-content-id")
+    expect(first_result["expanded_organisations"].first)
+      .to include({ "slug" => "/my_organisation",
+                    "link" => "/my_link",
+                    "title" => "my title" })
   end
 
   it "will filter by topical_events slug" do
-    topical_event_of_interest = "quiddich-world-cup-2018"
+    commit_document(index_name, build(:document, format: "detailed_guide", "topical_events" => %w[remove_topical_event]))
+    commit_document(index_name, build(:document, format: "detailed_guide", "topical_events" => %w[keep_topical_event]))
 
-    # we DON'T want this document in our search results
-    commit_document(
-      "govuk_test",
-      {
-        "title" => "Rules of Quiddich (2017)",
-        "link" => "/quiddich-rules-2017",
-        "format" => "detailed_guide",
-        "topical_events" => %w[quiddich-world-cup-2017],
-      },
-    )
+    get "/search.json?filter_topical_events=keep_topical_event"
 
-    # we DO want this document in our search results
-    commit_document(
-      "govuk_test",
-      {
-        "title" => "Rules of Quiddich (2018)",
-        "link" => "/quiddich-rules-2018",
-        "format" => "detailed_guide",
-        "topical_events" => [topical_event_of_interest],
-      },
-    )
-
-    get "/search.json?filter_topical_events=#{topical_event_of_interest}"
-
-    expect(first_result["topical_events"]).to be_truthy
-    expect(first_result["topical_events"]).to eq([topical_event_of_interest])
+    expect(first_result["topical_events"]).to eq(%w[keep_topical_event])
     expect(parsed_response["results"].length).to eq 1
   end
 
   it "will not return withdrawn content" do
-    commit_treatment_of_dragons_document({ "is_withdrawn" => true })
-    get "/search?q=Advice on Treatment of Dragons"
-    expect(parsed_response.fetch("total")).to eq(0)
+    commit_document(index_name, build(:document, :all, is_withdrawn: true))
+
+    get "/search"
+
+    expect(result_links).to be_empty
   end
 
   it "will return withdrawn content with flag" do
-    commit_treatment_of_dragons_document({ "is_withdrawn" => true })
+    commit_document(index_name, build(:document, :all, link: "/my_link", is_withdrawn: true))
 
-    get "/search?q=Advice on Treatment of Dragons&debug=include_withdrawn&fields[]=is_withdrawn"
-    expect(parsed_response.fetch("total")).to eq(1)
+    get "/search?debug=include_withdrawn&fields[]=is_withdrawn,link"
+
+    expect(result_links).to eq(["/my_link"])
     expect(parsed_response.dig("results", 0, "is_withdrawn")).to be true
   end
 
   it "will return withdrawn content with flag with aggregations" do
-    commit_treatment_of_dragons_document({ "is_withdrawn" => true })
-    get "/search?q=Advice on Treatment of Dragons&debug=include_withdrawn&aggregate_mainstream_browse_pages=2"
+    commit_document(index_name, build(:document, :all, is_withdrawn: true, mainstream_browse_pages: ["/browse_pages"]))
+
+    get "/search?&debug=include_withdrawn&aggregate_mainstream_browse_pages=2"
+
     expect(parsed_response.fetch("total")).to eq(1)
   end
 
@@ -529,9 +445,9 @@ RSpec.describe "SearchTest" do
   end
 
   it "can return the taxonomy" do
-    commit_ministry_of_magic_document("taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c])
+    commit_document(index_name, build(:document, :all, taxons: %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c]))
 
-    get "/search?q=Ministry of Magict&fields[]=taxons"
+    get "/search?fields[]=taxons"
     expect(parsed_response.fetch("total")).to eq(1)
 
     taxons = parsed_response.dig("results", 0, "taxons")
@@ -539,66 +455,34 @@ RSpec.describe "SearchTest" do
   end
 
   it "taxonomy can be filtered" do
-    commit_ministry_of_magic_document("taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c])
-    commit_treatment_of_dragons_document("taxons" => %w[some-other-taxon])
+    commit_document(index_name, build(:document, :all, link: "/my_link", taxons: %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c]))
+    commit_document(index_name, build(:document, :all, link: "/other_link", taxons: %w[some-other-taxon]))
 
     get "/search?filter_taxons=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
 
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-    expect_result_includes_ministry_of_magic_for_key(
-      parsed_response,
-      "results",
-      {
-        "_id" => "/ministry-of-magic-site",
-        "document_type" => "edition",
-        "elasticsearch_type" => "edition",
-        "es_score" => nil,
-        "index" => "government_test",
-        "link" => "/ministry-of-magic-site",
-      },
-    )
+    expect(result_links).to eq(["/my_link"])
   end
 
   it "can filter by part of taxonomy" do
-    commit_ministry_of_magic_document(
-      {
-        "taxons" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c],
-        "part_of_taxonomy_tree" => %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c],
-      },
-    )
-    get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
+    commit_document(index_name,
+                    build(:document, :all, link: "/my_link",
+                                           taxons: %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c],
+                                           part_of_taxonomy_tree: %w[eb2093ef-778c-4105-9f33-9aa03d14bc5c aa2093ef-778c-4105-9f33-9aa03d14bc5c]))
 
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
+    get "/search?filter_part_of_taxonomy_tree=eb2093ef-778c-4105-9f33-9aa03d14bc5c"
+    expect(result_links).to eq(["/my_link"])
 
     get "/search?filter_part_of_taxonomy_tree=aa2093ef-778c-4105-9f33-9aa03d14bc5c"
-
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
+    expect(result_links).to eq(["/my_link"])
   end
 
   it "can filter by roles" do
-    commit_ministry_of_magic_document("roles" => %w[prime-minister])
-    commit_treatment_of_dragons_document("roles" => %w[some-other-role])
+    commit_document(index_name, build(:document, :all, link: "/my_link", roles: %w[prime-minister]))
+    commit_document(index_name, build(:document, :all, link: "/other_link", roles: %w[some-other-role]))
 
     get "/search?filter_roles=prime-minister"
 
-    expect(last_response).to be_ok
-    expect(parsed_response.fetch("total")).to eq(1)
-
-    expect_result_includes_ministry_of_magic_for_key(
-      parsed_response,
-      "results",
-      {
-        "_id" => "/ministry-of-magic-site",
-        "document_type" => "edition",
-        "elasticsearch_type" => "edition",
-        "es_score" => nil,
-        "index" => "government_test",
-        "link" => "/ministry-of-magic-site",
-      },
-    )
+    expect(result_links).to eq(["/my_link"])
   end
 
   it "boosts custom fields" do
@@ -618,8 +502,8 @@ RSpec.describe "SearchTest" do
       "document_type" => "licence_transaction",
       "licence_transaction_industry" => %w[information-and-data another-industry],
     }
-    commit_document("govuk_test", less_relevant_licence, type: "licence_transaction")
-    commit_document("govuk_test", more_relevant_licence, type: "licence_transaction")
+    commit_document(index_name, build(:document, less_relevant_licence))
+    commit_document(index_name, build(:document, more_relevant_licence))
 
     get "/search?q=information&boost_fields=licence_transaction_industry"
 
@@ -632,17 +516,17 @@ RSpec.describe "SearchTest" do
 private
 
   def first_result
-    @first_result ||= parsed_response["results"].first
+    parsed_response["results"].first
   end
 
   def result_links
-    @result_links ||= parsed_response["results"].map do |result|
+    parsed_response["results"].map do |result|
       result["link"]
     end
   end
 
   def result_titles
-    @result_titles ||= parsed_response["results"].map do |result|
+    parsed_response["results"].map do |result|
       result["title"]
     end
   end

@@ -46,6 +46,8 @@ require "#{__dir__}/support/integration_test_helper"
 require "#{__dir__}/support/integration_spec_setup_helper"
 require "#{__dir__}/support/index_helpers"
 require "#{__dir__}/support/retryable_queue_examples"
+require "factory_bot"
+require "faker"
 
 require "gds_api/test_helpers/publishing_api"
 
@@ -56,6 +58,9 @@ RSpec.configure do |config|
     metadata[:tags] ||= []
     metadata[:tags] << :integration
   end
+
+  config.include FactoryBot::Syntax::Methods
+  FactoryBot.find_definitions
 
   config.include SpecHelpers
   config.include SchemaHelpers

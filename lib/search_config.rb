@@ -6,7 +6,6 @@ class SearchConfig
       metasearch_index_name
       popularity_rank_offset
       auxiliary_index_names
-      content_index_names
       govuk_index_name
       page_traffic_index_name
     ].each do |config_method|
@@ -33,14 +32,8 @@ class SearchConfig
       end
     end
 
-    def index_names
-      content_index_names + auxiliary_index_names
-    end
-
     def all_index_names
-      # this is used to process data in the rake file when `all` is passed in as previous we skipped `govuk`
-      # we can't update index_names at this stage as it is used in multiple spots including the index filtering
-      content_index_names + auxiliary_index_names + [govuk_index_name]
+      auxiliary_index_names + [govuk_index_name]
     end
 
     def run_search(raw_parameters)
@@ -76,7 +69,7 @@ class SearchConfig
       # field (which is what can be overridden per-cluster).
       Cache.get(Cache::COMBINED_INDEX_SCHEMA) do
         CombinedIndexSchema.new(
-          content_index_names + [govuk_index_name],
+          [govuk_index_name],
           default_instance.schema_config,
         )
       end
@@ -91,9 +84,8 @@ class SearchConfig
     @search_server ||= SearchIndices::SearchServer.new(
       cluster.uri,
       schema_config,
-      SearchConfig.index_names,
+      SearchConfig.auxiliary_index_names,
       SearchConfig.govuk_index_name,
-      SearchConfig.content_index_names,
       self,
     )
   end
@@ -118,15 +110,7 @@ class SearchConfig
   end
 
   def content_index
-    @content_index ||= search_server.index_for_search(SearchConfig.content_index_names + [SearchConfig.govuk_index_name])
-  end
-
-  def old_content_index
-    @old_content_index ||= search_server.index_for_search(SearchConfig.content_index_names)
-  end
-
-  def new_content_index
-    @new_content_index ||= search_server.index_for_search([SearchConfig.govuk_index_name])
+    @content_index ||= search_server.index_for_search([SearchConfig.govuk_index_name])
   end
 
   def base_uri

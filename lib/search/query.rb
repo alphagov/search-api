@@ -41,7 +41,6 @@ module Search
       GovukStatsd.time("build_query") do
         builder = QueryBuilder.new(
           search_params:,
-          content_index_names:,
           metasearch_index:,
         )
 
