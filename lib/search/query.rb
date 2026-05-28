@@ -56,11 +56,6 @@ module Search
       end
     end
 
-    def content_index_names
-      # index is a IndexForSearch object, which combines all the content indexes
-      index.index_names
-    end
-
     def process_elasticsearch_errors
       yield
     rescue Elasticsearch::Transport::Transport::Errors::InternalServerError => e

@@ -108,12 +108,11 @@ RSpec.describe "SearchTest" do
     end
 
     it "can filter and reject" do
-      get "/search?reject_format=aaib&filter_mainstream_browse_pages[]=browse/page/2"
-      commit_document(index_name, build(:document,
-                                        link: "/three",
-                                        mainstream_browse_pages: "browse/page/3",
-                                        format: "aaib"))
+      get "/search?filter_mainstream_browse_pages[]=browse/page/2"
       expect(result_links.sort).to eq(["/two"])
+
+      get "/search?reject_link=/two&filter_mainstream_browse_pages[]=browse/page/2"
+      expect(result_links).to be_empty
     end
   end
 
@@ -201,12 +200,14 @@ RSpec.describe "SearchTest" do
   end
 
   it "only contains fields which are present" do
-    commit_document(index_name, build(:document, "link" => "/early"))
+    commit_document(index_name, build(:document, "link" => "/early", "topical_events" => %w[a_topical_event]))
     commit_document(index_name, build(:document, "link" => "/late"))
 
     get "/search?order=public_timestamp"
 
-    expect(result_links).to eq(["/early", "/late"])
+    results = parsed_response["results"]
+    expect(results[1].keys).not_to include("topical_events")
+    expect(results[0]["topical_events"]).to eq(%w[a_topical_event])
   end
 
   it "validates integer params" do
@@ -311,6 +312,19 @@ RSpec.describe "SearchTest" do
       get "/search?filter_opened_date=to:2000-02-1 14:00:00"
       expect(result_links).to include("/february")
     end
+  end
+
+  it "can filter times in different time zones" do
+    january_time = "2017-07-01T11:20:00.000-03:00"
+    february_time = "2017-07-02T01:15:00.000+01:00"
+
+    commit_document(index_name, build(:document, link: "/february", opened_date: february_time))
+    commit_document(index_name, build(:document, link: "/january", opened_date: january_time))
+
+    get "/search?filter_opened_date=from:2017-07-01 12:00,to:2017-07-01 23:30:00"
+
+    expect(last_response).to be_ok
+    expect(parsed_response.fetch("results")).to contain_exactly(hash_including("link" => "/january"))
   end
 
   it "cannot provide date filter key multiple times" do
