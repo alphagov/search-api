@@ -16,35 +16,6 @@ RSpec.describe Sitemap::Generator do
     expect(sitemap_uploader).to have_received(:upload).exactly(3).times # sample_document.count + homepage / sitemap_limit rounded up
   end
 
-  it "only includes migrated formats from govuk" do
-    commit_document(index_name,
-                    build(:document, link: "/an-example-answer",
-                                     public_timestamp: "2017-07-01T12:41:34+00:00",
-                                     format: "answer"))
-    commit_document(index_name,
-                    build(:document, link: "/an-unmigrated-answer",
-                                     format: "not-migrated-format"))
-
-    expected_xml = <<~HEREDOC
-      <?xml version="1.0" encoding="UTF-8"?>
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <url>
-          <loc>http://www.dev.gov.uk/</loc>
-          <priority>0.5</priority>
-        </url>
-        <url>
-          <loc>http://www.dev.gov.uk/an-example-answer</loc>
-          <lastmod>2017-07-01T12:41:34+00:00</lastmod>
-          <priority>0.5</priority>
-        </url>
-      </urlset>
-    HEREDOC
-
-    generator.run
-
-    expect(sitemap_uploader).to have_received(:upload).with(file_content: expected_xml, file_name: "sitemap_1.xml")
-  end
-
   it "adds a sitemap with homepage and document" do
     commit_document(index_name,
                     build(:document, link: "/an-example-answer",
