@@ -8,27 +8,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           must: nil,
         },
       },
-      post_filter: {
-        bool: {
-          must: [
-            { term: { field => value } },
-            {
-              bool: {
-                minimum_should_match: 1,
-                should: [
-                  {
-                    bool: {
-                      must: { match_all: {} },
-                      must_not: { terms: { _index: %w[govuk_test] } },
-                    },
-                  },
-                  { bool: { must_not: { match_all: {} } } },
-                ],
-              },
-            },
-          ],
-        },
-      },
+      post_filter: { bool: { must: { term: { field => value } } } },
       size: 2,
       _source: {
         includes: return_fields,
