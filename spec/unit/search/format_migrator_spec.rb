@@ -7,8 +7,8 @@ RSpec.describe Search::FormatMigrator do
 
   context "with every cluster" do
     Clusters.active.each do |_cluster|
-      it "when base query without migrated formats" do
-        allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return({})
+      it "when base query without indexed formats" do
+        allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return({})
         base_query = { filter: "component" }
         expected = {
           bool: {
@@ -34,8 +34,8 @@ RSpec.describe Search::FormatMigrator do
         ).call).to eq(expected)
       end
 
-      it "when base query with migrated formats" do
-        allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("help_page" => :all)
+      it "when base query with indexed formats" do
+        allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return("help_page" => :all)
         base_query = { filter: "component" }
         expected = {
           bool: {
@@ -69,7 +69,7 @@ RSpec.describe Search::FormatMigrator do
       end
 
       it "uses a default match all query when no base query is provided" do
-        allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return({})
+        allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return({})
         expected = {
           bool: {
             minimum_should_match: 1,

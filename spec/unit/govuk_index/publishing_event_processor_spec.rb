@@ -116,7 +116,7 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
     let(:logger) { Logging.logger[GovukIndex::PublishingEventMessageHandler] }
     before do
       message.payload["document_type"] = "migrated_type_with_no_mapping"
-      allow_any_instance_of(GovukIndex::MigratedFormats)
+      allow_any_instance_of(GovukIndex::IndexableFormats)
         .to receive(:indexable?)
         .and_return(true)
     end

@@ -8,7 +8,7 @@ RSpec.describe "GovukIndex::SwitchOnFormatsInGovukIndexTest" do
   end
 
   it "defaults to excluding govuk index records" do
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return({})
+    allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return({})
 
     get "/search"
 
@@ -16,7 +16,7 @@ RSpec.describe "GovukIndex::SwitchOnFormatsInGovukIndexTest" do
   end
 
   it "can enable format to use govuk index" do
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("help_page" => :all)
+    allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return("help_page" => :all)
 
     get "/search"
 
@@ -24,7 +24,7 @@ RSpec.describe "GovukIndex::SwitchOnFormatsInGovukIndexTest" do
   end
 
   it "can enable multiple formats to use govuk index" do
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("help_page" => :all, "answer" => :all)
+    allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return("help_page" => :all, "answer" => :all)
 
     get "/search"
 

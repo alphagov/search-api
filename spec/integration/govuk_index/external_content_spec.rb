@@ -26,7 +26,7 @@ RSpec.describe "external content publishing" do
       },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("recommended-link" => :all)
+    allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return("recommended-link" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -43,7 +43,7 @@ RSpec.describe "external content publishing" do
   end
 
   it "removes a page of external content" do
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("recommended-link" => :all)
+    allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return("recommended-link" => :all)
 
     url = "https://www.nhs.uk"
     base_path = "/test"

@@ -1,5 +1,5 @@
 module GovukIndex
-  module MigratedFormats
+  module IndexableFormats
     extend self
 
     def non_indexable?(format, path)
@@ -26,7 +26,7 @@ module GovukIndex
   private
 
     def data_file
-      @data_file ||= YAML.load_file(File.join(__dir__, "../../config/govuk_index/migrated_formats.yaml"))
+      @data_file ||= YAML.load_file(File.join(__dir__, "../../config/govuk_index/indexable_formats.yaml"))
     end
 
     def convert_to_allowed_hash(formats)
