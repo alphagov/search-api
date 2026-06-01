@@ -62,10 +62,7 @@ module Search
     end
 
     def filter
-      Search::FormatMigrator.new(
-        search_params.search_config,
-        base_query: QueryComponents::Filter.new(search_params).payload,
-      ).call
+      QueryComponents::Filter.new(search_params).payload
     end
 
   private
