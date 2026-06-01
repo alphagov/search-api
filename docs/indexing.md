@@ -19,8 +19,8 @@ documents are added to the search indexes -->
 	[config/schema/elasticsearch_types](config/schema/elasticsearch_types)
 - **Index**: An [elasticsearch search
 	index](https://www.elastic.co/blog/what-is-an-elasticsearch-index). Search API
-	maintains separate indices (`government` and `govuk`),
-	but searches return documents from all of them.
+	maintains separate [indices](https://github.com/alphagov/search-api/blob/main/elasticsearch.yml). Documents are
+    served from the 'govuk' index.
 - **Index Group**: An alias in elasticsearch that points to one index at a
 	time. This allows us to rebuild indexes without downtime.
 
@@ -46,15 +46,6 @@ still requires Sidekiq to be running.
 There is also a separate process that is used for bulk indexing.
 
 	bundle exec rake message_queue:bulk_insert_data_into_govuk
-
-### Internal only APIs
-
-There are some other APIs that are only exposed internally:
-
-- [content-api.md](content-api.md) for the `/content/*` endpoint.
-- [documents.md](documents.md) for the `*/documents/` endpoint.
-
-These are used by [search admin](https://github.com/alphagov/search-admin/).
 
 ## Schemas
 
