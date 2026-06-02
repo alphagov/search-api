@@ -1,4 +1,4 @@
-migrated:
+indexable:
 # Collections Publisher
 - coronavirus_landing_page
 - mainstream_browse_page
@@ -327,11 +327,11 @@ migrated:
 - complaints_procedure
 - consultation
 - consultation_outcome
-- corporate_information_page # Required to prevent corporate info pages from government index appearing in search results, page types used as format in GOVUK index
+- corporate_information_page
 - corporate_report
 - correspondence
 - decision
-- detailed_guidance # Required to prevent detailed guidance from government index appearing in search results, type has been renamed to detailed_guide
+- detailed_guidance
 - detailed_guide
 - document_collection
 - equality_and_diversity
@@ -348,7 +348,7 @@ migrated:
 - membership
 - modern_slavery_statement
 - national_statistics
-- news_article # Required to prevent news articles from government index appearing in search results, news article types used in GOVUK index
+- news_article
 - news_story
 - notice
 - official_statistics
@@ -366,7 +366,7 @@ migrated:
 - press_release
 - procurement
 - promotional
-- publication # Required to prevent publications from government index appearing in search results, publication sub-types used in GOVUK index
+- publication
 - publication_scheme
 - recruitment
 - regulation
@@ -387,8 +387,6 @@ migrated:
 - world_news_story
 - worldwide_organisation
 - written_statement
-
-indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'

@@ -141,7 +141,6 @@ module Sitemap
             must_not: { terms: { format: EXCLUDED_FORMATS } },
           },
         },
-        post_filter: Search::FormatMigrator.new(@search_config).call,
         sort: %w[_doc],
       }
     end

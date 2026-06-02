@@ -8,27 +8,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           must: nil,
         },
       },
-      post_filter: {
-        bool: {
-          must: [
-            { term: { field => value } },
-            {
-              bool: {
-                minimum_should_match: 1,
-                should: [
-                  {
-                    bool: {
-                      must: { match_all: {} },
-                      must_not: { terms: { _index: %w[govuk_test] } },
-                    },
-                  },
-                  { bool: { must_not: { match_all: {} } } },
-                ],
-              },
-            },
-          ],
-        },
-      },
+      post_filter: { bool: { must: { term: { field => value } } } },
       size: 2,
       _source: {
         includes: return_fields,
@@ -117,7 +97,7 @@ RSpec.describe Search::AggregateExampleFetcher do
 
   context "one aggregate with global scope" do
     before do
-      allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return({})
+      allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return({})
       @index = stub_index("content index")
       @example_fields = %w[link title other_field]
       main_query_response = { "aggregations" => {

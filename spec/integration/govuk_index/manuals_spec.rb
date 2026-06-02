@@ -34,7 +34,7 @@ RSpec.describe "Manual publishing" do
       },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("manual" => :all)
+    allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return("manual" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -59,7 +59,7 @@ RSpec.describe "Manual publishing" do
       },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("manual_section" => :all)
+    allow(GovukIndex::IndexableFormats).to receive(:indexable_formats).and_return("manual_section" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

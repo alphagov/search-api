@@ -52,10 +52,7 @@ module QueryComponents
       end
 
       {
-        filter: Search::FormatMigrator.new(
-          search_params.search_config,
-          base_query: applied_filter(applied_query_filters),
-        ).call,
+        filter: applied_filter(applied_query_filters),
         aggs: { "filtered_aggregations" => query },
       }
     end

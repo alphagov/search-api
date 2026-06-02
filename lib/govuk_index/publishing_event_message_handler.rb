@@ -68,11 +68,11 @@ module GovukIndex
       if type_mapper.unpublishing_type?
         logger.info("#{routing_key} -> DELETE #{identifier}")
         processor.delete(presenter)
-      elsif MigratedFormats.non_indexable?(presenter.format, presenter.base_path)
+      elsif IndexableFormats.non_indexable?(presenter.format, presenter.base_path)
         logger.info("#{routing_key} -> BLOCKLISTED #{identifier} (non-indexable)")
       elsif !document_in_english? && !is_welsh_hmrc_contact?
         logger.info("#{routing_key} -> BLOCKLISTED #{identifier} (non-english, and not Welsh HMRC contact)")
-      elsif MigratedFormats.indexable?(presenter.format, presenter.base_path)
+      elsif IndexableFormats.indexable?(presenter.format, presenter.base_path)
         logger.info("#{routing_key} -> INDEX #{identifier}")
         processor.save(presenter)
       else
