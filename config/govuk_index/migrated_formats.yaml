@@ -388,7 +388,7 @@ allowed_formats:
 - worldwide_organisation
 - written_statement
 
-non_indexable_path:
+disallowed_paths:
 - '/help/cookie-details'
 - '/world/burma/news'
 

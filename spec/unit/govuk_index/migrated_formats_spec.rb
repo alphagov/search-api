@@ -25,7 +25,7 @@ RSpec.describe GovukIndex::MigratedFormats do
 
   describe "content that has indexable format but non-indexable path" do
     it "returns true if the content is non indexable for a format that is otherwise indexable" do
-      non_indexable_path = described_class.non_indexable_path
+      non_indexable_path = described_class.disallowed_paths
 
       expect(non_indexable_path.include?("/help/cookie-details")).to be true
       expect(described_class.non_indexable?("help_page", "/help/cookie-details")).to be true

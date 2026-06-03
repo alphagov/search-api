@@ -3,7 +3,7 @@ module GovukIndex
     extend self
 
     def non_indexable?(format, path)
-      non_indexable_path.include?(path) || non_indexable_formats[format] &&
+      disallowed_paths.include?(path) || non_indexable_formats[format] &&
         (non_indexable_formats[format] == :all || non_indexable_formats[format].include?(path))
     end
 
@@ -11,8 +11,8 @@ module GovukIndex
       @non_indexable_formats ||= convert_to_allowed_hash(data_file["non_indexable"])
     end
 
-    def non_indexable_path
-      @non_indexable_path ||= data_file["non_indexable_path"]
+    def disallowed_paths
+      @disallowed_paths ||= data_file["disallowed_paths"]
     end
 
     def allowed?(format, path)
