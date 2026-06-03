@@ -117,7 +117,7 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
     before do
       message.payload["document_type"] = "migrated_type_with_no_mapping"
       allow_any_instance_of(GovukIndex::MigratedFormats)
-        .to receive(:indexable?)
+        .to receive(:allowed?)
         .and_return(true)
     end
 

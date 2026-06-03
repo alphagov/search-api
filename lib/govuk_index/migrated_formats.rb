@@ -15,7 +15,7 @@ module GovukIndex
       @non_indexable_path ||= data_file["non_indexable_path"]
     end
 
-    def indexable?(format, path)
+    def allowed?(format, path)
       allowed_formats[format] && (allowed_formats[format] == :all || allowed_formats[format].include?(path))
     end
 

@@ -72,7 +72,7 @@ module GovukIndex
         logger.info("#{routing_key} -> BLOCKLISTED #{identifier} (non-indexable)")
       elsif !document_in_english? && !is_welsh_hmrc_contact?
         logger.info("#{routing_key} -> BLOCKLISTED #{identifier} (non-english, and not Welsh HMRC contact)")
-      elsif MigratedFormats.indexable?(presenter.format, presenter.base_path)
+      elsif MigratedFormats.allowed?(presenter.format, presenter.base_path)
         logger.info("#{routing_key} -> INDEX #{identifier}")
         processor.save(presenter)
       else
