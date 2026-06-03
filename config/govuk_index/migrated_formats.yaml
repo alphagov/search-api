@@ -1,4 +1,4 @@
-migrated:
+allowed_formats:
 # Collections Publisher
 - coronavirus_landing_page
 - mainstream_browse_page
@@ -387,8 +387,6 @@ migrated:
 - world_news_story
 - worldwide_organisation
 - written_statement
-
-indexable: []
 
 non_indexable_path:
 - '/help/cookie-details'

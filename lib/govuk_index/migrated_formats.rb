@@ -20,11 +20,11 @@ module GovukIndex
     end
 
     def indexable_formats
-      @indexable_formats ||= convert_to_allowed_hash(data_file["migrated"] + data_file["indexable"])
+      @indexable_formats ||= convert_to_allowed_hash(data_file["allowed_formats"])
     end
 
     def migrated_formats
-      @migrated_formats ||= convert_to_allowed_hash(data_file["migrated"])
+      @migrated_formats ||= convert_to_allowed_hash(data_file["allowed_formats"])
     end
 
   private
