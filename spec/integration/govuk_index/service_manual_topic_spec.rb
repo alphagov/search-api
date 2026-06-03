@@ -25,7 +25,7 @@ RSpec.describe "Service Manual Topic publishing" do
       },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("service_manual_topic" => :all)
+    allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("service_manual_topic" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

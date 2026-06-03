@@ -16,15 +16,11 @@ module GovukIndex
     end
 
     def indexable?(format, path)
-      indexable_formats[format] && (indexable_formats[format] == :all || indexable_formats[format].include?(path))
+      allowed_formats[format] && (allowed_formats[format] == :all || allowed_formats[format].include?(path))
     end
 
-    def indexable_formats
-      @indexable_formats ||= convert_to_allowed_hash(data_file["allowed_formats"])
-    end
-
-    def migrated_formats
-      @migrated_formats ||= convert_to_allowed_hash(data_file["allowed_formats"])
+    def allowed_formats
+      @allowed_formats ||= convert_to_allowed_hash(data_file["allowed_formats"])
     end
 
   private

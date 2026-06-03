@@ -99,6 +99,6 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
 
   def stub_document_type_mapper
     allow_any_instance_of(GovukIndex::ElasticsearchDeletePresenter).to receive(:type).and_return("real_document_type")
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("real_document_type" => :all)
+    allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("real_document_type" => :all)
   end
 end

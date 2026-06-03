@@ -2,7 +2,7 @@ require "rspec"
 
 RSpec.describe GovukIndex::MigratedFormats do
   it "does not contain formats with value of :all in both the indexable and non_indexable lists" do
-    indexable = described_class.indexable_formats
+    indexable = described_class.allowed_formats
     non_indexable = described_class.non_indexable_formats
 
     duplicate_keys = indexable.keys & non_indexable.keys
@@ -14,7 +14,7 @@ RSpec.describe GovukIndex::MigratedFormats do
   end
 
   it "does not contain formats with paths in both the indexable and non_indexable lists" do
-    indexable = described_class.indexable_formats
+    indexable = described_class.allowed_formats
     non_indexable = described_class.non_indexable_formats
 
     duplicate_keys = indexable.keys & non_indexable.keys

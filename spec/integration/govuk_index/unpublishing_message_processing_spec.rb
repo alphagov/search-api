@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
   it "unpublish message will remove record from elasticsearch" do
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("answer" => :all)
+    allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("answer" => :all)
 
     message = unpublishing_event_message(
       "gone",
@@ -29,7 +29,7 @@ RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
   end
 
   it "unpublish withdrawn messages will set is withdrawn flag" do
-    allow(GovukIndex::MigratedFormats).to receive(:migrated_formats).and_return("help_page" => :all)
+    allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("help_page" => :all)
 
     message = unpublishing_event_message(
       "help_page",
