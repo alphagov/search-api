@@ -392,7 +392,7 @@ disallowed_paths:
 - '/help/cookie-details'
 - '/world/burma/news'
 
-non_indexable:
+disallowed_formats:
 - calculator
 - license_finder
 - special_route:

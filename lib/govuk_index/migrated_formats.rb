@@ -2,13 +2,13 @@ module GovukIndex
   module MigratedFormats
     extend self
 
-    def non_indexable?(format, path)
-      disallowed_paths.include?(path) || non_indexable_formats[format] &&
-        (non_indexable_formats[format] == :all || non_indexable_formats[format].include?(path))
+    def disallowed?(format, path)
+      disallowed_paths.include?(path) || disallowed_formats[format] &&
+        (disallowed_formats[format] == :all || disallowed_formats[format].include?(path))
     end
 
-    def non_indexable_formats
-      @non_indexable_formats ||= convert_to_allowed_hash(data_file["non_indexable"])
+    def disallowed_formats
+      @disallowed_formats ||= convert_to_allowed_hash(data_file["disallowed_formats"])
     end
 
     def disallowed_paths

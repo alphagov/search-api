@@ -95,7 +95,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
 
     it "alerts on unknown formats - neither safe or block listed" do
       allow(GovukIndex::MigratedFormats).to receive(:allowed?).and_return(false)
-      allow(GovukIndex::MigratedFormats).to receive(:non_indexable?).and_return(false)
+      allow(GovukIndex::MigratedFormats).to receive(:disallowed?).and_return(false)
 
       logger = double(info: true, debug: true)
       random_example = generate_random_example(
@@ -110,7 +110,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
 
     it "will consider a format that is both safe and block listed to be blocklisted" do
       allow(GovukIndex::MigratedFormats).to receive(:allowed?).and_return(true)
-      allow(GovukIndex::MigratedFormats).to receive(:non_indexable?).and_return(true)
+      allow(GovukIndex::MigratedFormats).to receive(:disallowed?).and_return(true)
 
       logger = double(info: true, debug: true)
       random_example = generate_random_example(
