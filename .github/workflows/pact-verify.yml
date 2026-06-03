@@ -44,7 +44,7 @@ jobs:
         uses: alphagov/govuk-infrastructure/.github/actions/setup-elasticsearch@main
 
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
         with:
           repository: alphagov/search-api
           ref: ${{ inputs.ref }}
