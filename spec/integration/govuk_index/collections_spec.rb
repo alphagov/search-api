@@ -25,7 +25,7 @@ RSpec.describe "Collections publishing" do
       },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("mainstream_browse_page" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("mainstream_browse_page" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

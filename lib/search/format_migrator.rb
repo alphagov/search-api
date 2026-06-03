@@ -25,7 +25,7 @@ module Search
     end
 
     def migrated_formats
-      GovukIndex::MigratedFormats.allowed_formats.keys
+      GovukIndex::AllowedFormats.allowed_formats.keys
     end
 
     # This condition captures documents that have not been migrated to the new index

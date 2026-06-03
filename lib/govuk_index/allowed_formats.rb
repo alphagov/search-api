@@ -1,5 +1,5 @@
 module GovukIndex
-  module MigratedFormats
+  module AllowedFormats
     extend self
 
     def disallowed?(format, path)

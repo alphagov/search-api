@@ -28,7 +28,7 @@ RSpec.describe "taxon publishing" do
       },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("taxon" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("taxon" => :all)
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = { "link" => random_example["base_path"] }
@@ -36,7 +36,7 @@ RSpec.describe "taxon publishing" do
   end
 
   it "removes a taxon page" do
-    allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("taxon" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("taxon" => :all)
     document = { "link" => base_path, "base_path" => base_path }
 
     commit_document("govuk_test", document, id: base_path, type: "taxon")

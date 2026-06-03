@@ -17,7 +17,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
     end
 
     it "saves new documents to elasticsearch" do
-      allow(GovukIndex::MigratedFormats).to receive(:allowed?).and_return(true)
+      allow(GovukIndex::AllowedFormats).to receive(:allowed?).and_return(true)
       random_example = generate_random_example(
         payload: { document_type: "help_page", payload_version: 123 },
       )
@@ -36,7 +36,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
     end
 
     it "includes popularity data when available" do
-      allow(GovukIndex::MigratedFormats).to receive(:allowed?).and_return(true)
+      allow(GovukIndex::AllowedFormats).to receive(:allowed?).and_return(true)
       random_example = generate_random_example(
         payload: { document_type: "help_page", payload_version: 123 },
       )
@@ -94,8 +94,8 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
     end
 
     it "alerts on unknown formats - neither safe or block listed" do
-      allow(GovukIndex::MigratedFormats).to receive(:allowed?).and_return(false)
-      allow(GovukIndex::MigratedFormats).to receive(:disallowed?).and_return(false)
+      allow(GovukIndex::AllowedFormats).to receive(:allowed?).and_return(false)
+      allow(GovukIndex::AllowedFormats).to receive(:disallowed?).and_return(false)
 
       logger = double(info: true, debug: true)
       random_example = generate_random_example(
@@ -109,8 +109,8 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
     end
 
     it "will consider a format that is both safe and block listed to be blocklisted" do
-      allow(GovukIndex::MigratedFormats).to receive(:allowed?).and_return(true)
-      allow(GovukIndex::MigratedFormats).to receive(:disallowed?).and_return(true)
+      allow(GovukIndex::AllowedFormats).to receive(:allowed?).and_return(true)
+      allow(GovukIndex::AllowedFormats).to receive(:disallowed?).and_return(true)
 
       logger = double(info: true, debug: true)
       random_example = generate_random_example(

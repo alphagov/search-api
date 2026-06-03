@@ -44,7 +44,7 @@ RSpec.describe "Payload preparation" do
         },
       ]
 
-      allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("guide" => :all)
+      allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("guide" => :all)
 
       @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -105,7 +105,7 @@ RSpec.describe "Payload preparation" do
           { "url" => "/foo/attachment-3", "title" => "attachment 3", "attachment_type" => "html" },
         ]
 
-        allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("guide" => :all)
+        allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("guide" => :all)
         @queue.publish(random_example.to_json, content_type: "application/json")
 
         expect_document_is_in_rummager(
@@ -161,7 +161,7 @@ RSpec.describe "Payload preparation" do
           { "url" => "/baz/attachment-3", "title" => "attachment 3", "attachment_type" => "html" },
         ]
 
-        allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("guide" => :all)
+        allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("guide" => :all)
         @queue.publish(random_example.to_json, content_type: "application/json")
 
         expect_document_is_in_rummager(

@@ -21,7 +21,7 @@ RSpec.describe GovukIndex::Updater do
   describe "popularity updates" do
     let(:initial_popularity) { 0.222 }
     before do
-      allow(GovukIndex::MigratedFormats).to receive(:allowed_formats).and_return("help_page" => :all)
+      allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("help_page" => :all)
     end
 
     it "updates the popularity when it exists" do
