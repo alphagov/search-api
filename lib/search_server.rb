@@ -4,12 +4,9 @@ module SearchIndices
   class SearchServer
     attr_reader :schema
 
-    def initialize(base_uri, schema, auxiliary_index_names, govuk_index_name,
-                   search_config)
+    def initialize(base_uri, schema, search_config)
       @base_uri = base_uri
       @schema = schema
-      @auxiliary_index_names = auxiliary_index_names
-      @govuk_index_name = govuk_index_name
       @search_config = search_config
     end
 
@@ -38,7 +35,7 @@ module SearchIndices
 
     def index_name_valid?(index_name)
       index_name.split(",").all? do |name|
-        @auxiliary_index_names.include?(name) || @govuk_index_name == name
+        SearchConfig.all_index_names.include?(name)
       end
     end
   end

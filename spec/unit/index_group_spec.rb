@@ -16,8 +16,6 @@ RSpec.describe SearchIndices::IndexGroup do
     @server = SearchIndices::SearchServer.new(
       base_uri,
       @schema,
-      %w[foo custom],
-      "govuk",
       SearchConfig.default_instance,
     )
   end

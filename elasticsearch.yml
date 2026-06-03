@@ -1,7 +1,6 @@
 production: &default
   base_uri: <%= ENV["ELASTICSEARCH_URI"] || 'http://localhost:9200' %>
   govuk_index_name: "govuk"
-  auxiliary_index_names: ["page-traffic", "metasearch"]
   metasearch_index_name: "metasearch"
   page_traffic_index_name: "page-traffic"
   popularity_rank_offset: 10
@@ -17,7 +16,6 @@ development:
 test:
   base_uri: <%= ENV.fetch('ELASTICSEARCH_URI', 'http://localhost:9200') %>
   govuk_index_name: "govuk_test"
-  auxiliary_index_names: ["page-traffic_test", "metasearch_test"]
   metasearch_index_name: "metasearch_test"
   page_traffic_index_name: "page-traffic_test"
   popularity_rank_offset: 10

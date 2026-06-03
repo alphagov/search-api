@@ -5,7 +5,6 @@ class SearchConfig
     %w[
       metasearch_index_name
       popularity_rank_offset
-      auxiliary_index_names
       govuk_index_name
       page_traffic_index_name
     ].each do |config_method|
@@ -33,7 +32,7 @@ class SearchConfig
     end
 
     def all_index_names
-      auxiliary_index_names + [govuk_index_name]
+      [govuk_index_name, page_traffic_index_name, metasearch_index_name]
     end
 
     def run_search(raw_parameters)
@@ -84,8 +83,6 @@ class SearchConfig
     @search_server ||= SearchIndices::SearchServer.new(
       cluster.uri,
       schema_config,
-      SearchConfig.auxiliary_index_names,
-      SearchConfig.govuk_index_name,
       self,
     )
   end
