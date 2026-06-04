@@ -19,6 +19,8 @@ module IntegrationTestHelper
     allowed_paths << "_reindex"
     allowed_paths << "_search/scroll"
     allowed_paths << "_tasks"
+    allowed_paths << "_nodes"
+    allowed_paths << "_cluster"
 
     allow_urls = %r{#{allowed_hosts.map { |host| "#{host}/(#{allowed_paths.join('|')})" }.join('|')}}
 
