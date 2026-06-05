@@ -27,13 +27,6 @@ module SearchIndices
       index_group(index_name).current
     end
 
-    def index_for_search(names)
-      names.each do |index_name|
-        validate_index_name!(index_name)
-      end
-      index_group(names.first).current
-    end
-
   private
 
     def validate_index_name!(index_name)
