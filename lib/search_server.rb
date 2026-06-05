@@ -31,7 +31,7 @@ module SearchIndices
       names.each do |index_name|
         validate_index_name!(index_name)
       end
-      LegacyClient::IndexForSearch.new(@base_uri, names, @schema, @search_config)
+      index_group(names.first).current
     end
 
   private
