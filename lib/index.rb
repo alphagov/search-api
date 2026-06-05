@@ -124,7 +124,7 @@ module SearchIndices
       }
 
       ScrollEnumerator.new(client: @client, index_names: @index_name, search_body:, batch_size:) do |hit|
-        LegacyClient::MultivalueConverter.new(hit["_source"], field_definitions).converted_hash
+        hit["_source"]
       end
     end
 
