@@ -16,5 +16,6 @@ namespace :page_traffic do
       logger.info "Performing page traffic load for cluster #{cluster.key}..."
       GovukIndex::PageTrafficLoader.new(cluster:).load_from(report)
     end
+    logging.info "Finished performing page traffic load"
   end
 end

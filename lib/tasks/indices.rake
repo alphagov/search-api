@@ -77,7 +77,9 @@ data using sidekiq jobs.
 This does not update the schema.
 "
   task :update_popularity do
+    logger.info "Updating popularity data..."
     GovukIndex::Updater.update(SearchConfig.govuk_index_name, GovukIndex::PopularityJob)
+    logger.info "Popularity data updated"
   end
 
   desc "Update supertypes from govuk_document_types gem.
