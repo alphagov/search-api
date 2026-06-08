@@ -21,7 +21,7 @@ RSpec.describe "SpecialistFormatTest" do
       payload: { document_type: "finder" },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("finder" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("finder" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -60,7 +60,7 @@ RSpec.describe "SpecialistFormatTest" do
         schema: "specialist_document",
         payload: { document_type: specialist_document_type },
       )
-      allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(specialist_document_type => :all)
+      allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return(specialist_document_type => :all)
 
       @queue.publish(random_example.to_json, content_type: "application/json")
 
@@ -76,7 +76,7 @@ RSpec.describe "SpecialistFormatTest" do
       schema: "specialist_document",
       payload: { document_type: publisher_document_type },
     )
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return(search_document_type => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return(search_document_type => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

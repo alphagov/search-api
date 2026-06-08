@@ -25,7 +25,7 @@ RSpec.describe "Ministerial role publishing" do
       },
     )
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("ministerial_role" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("ministerial_role" => :all)
 
     @queue.publish(random_example.to_json, content_type: "application/json")
 

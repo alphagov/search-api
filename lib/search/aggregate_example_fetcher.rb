@@ -39,7 +39,7 @@ module Search
         filter = @query_builder.filter
       else
         query = nil
-        filter = Search::FormatMigrator.new(search_params.search_config).call
+        filter = nil
       end
 
       if slugs.nil?

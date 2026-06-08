@@ -364,7 +364,7 @@ These include smart answers, calculators, licence finders.
 
 We also exclude some paths, such as `/random`, `/homepage`, and `/humans.txt`.
 
-These no-indexed paths and formats are defined in [`config/govuk_index/migrated_formats.yaml`](https://github.com/alphagov/search-api/blob/master/config/govuk_index/migrated_formats.yaml).
+These non-indexed paths and formats are defined in [`config/govuk_index/allowed_formats.yaml`](https://github.com/alphagov/search-api/blob/main/config/govuk_index/allowed_formats.yaml).
 
 ### Debugging es_score
 

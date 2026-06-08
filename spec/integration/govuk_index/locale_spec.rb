@@ -25,7 +25,7 @@ RSpec.describe "locales" do
     )
     random_example.delete("locale")
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("taxon" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("taxon" => :all)
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = { "link" => random_example["base_path"] }
@@ -42,7 +42,7 @@ RSpec.describe "locales" do
     )
     random_example["locale"] = "en"
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("taxon" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("taxon" => :all)
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = { "link" => random_example["base_path"] }
@@ -59,7 +59,7 @@ RSpec.describe "locales" do
     )
     random_example["locale"] = "cy"
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("hmrc_contact" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("hmrc_contact" => :all)
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expected_document = { "link" => random_example["base_path"] }
@@ -76,7 +76,7 @@ RSpec.describe "locales" do
     )
     random_example["locale"] = "cy"
 
-    allow(GovukIndex::MigratedFormats).to receive(:indexable_formats).and_return("taxon" => :all)
+    allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("taxon" => :all)
     @queue.publish(random_example.to_json, content_type: "application/json")
 
     expect_document_missing_in_rummager(id: random_example["base_path"], index: "govuk_test")
