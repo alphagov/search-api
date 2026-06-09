@@ -67,6 +67,17 @@ value has the following properties:
    the same format as the top-level field definitions in the file (and could
    even be recursive).
 
+### Representing parts and attachments
+
+Parts are subpages within a single GOV.UK content item, each with its own title,
+body, and slug. They allow one piece of content to be split into multiple sections
+(e.g. /parent/section-name) without creating separate content items.
+
+The Search API indexes both parts and HTML attachments using the same `parts` field,
+treating them as additional sections of the main document. Instead of handling HTML
+attachments like file downloads, they are stored as extra “parts,” keeping everything
+in one indexed document while still allowing each attachment’s title and body to be searchable.
+
 ## Elasticsearch document types
 
 Documents in an elasticsearch index have a type, and each type may have very
