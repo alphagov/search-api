@@ -8,8 +8,9 @@ For example, [alphagov/finder-frontend](https://github.com/alphagov/finder-front
 the search API to render finder pages (such as [gov.uk/aaib-reports](https://www.gov.uk/aaib-reports)).
 [search-api-v2](https://github.com/alphagov/search-api-v2) replaces Search API in several areas: for the latest on this, visit <https://docs.publishing.service.gov.uk/manual/govuk-search.html>.
 
-Search API also provides a public API: https://www.gov.uk/api/search.json?q=taxes.
+Search API also provides a public API: https://www.gov.uk/api/search.json.
 
+See the [Search API user guide](docs/using-the-search-api.md) for how to use the public API.
 
 ## Publishing finders
 
@@ -47,13 +48,12 @@ Note that when you run the tests locally logs are output to `log/production.log`
 
 ### Additional Docs
 
-- [Search API documentation](docs/using-the-search-api.md)
-- [How documents are indexed](docs/indexing.md)
-- [Search relevancy](docs/relevancy.md)
-- [New indexing process](docs/new-indexing-process.md): how to update a format to use the new indexing process
+- [Search API documentation](docs/using-the-search-api.md): how to use the public API
+- [Search relevancy](docs/relevancy.md): how relevancy ordering works when performing a search
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
-- [Autocomplete](docs/autocomplete.md): autocomplete suggestions for search queries - **not currently used by finder-frontend**
-- [Popularity](docs/updating_popularity): How popularity is updated
+- [Autocomplete](docs/autocomplete.md): how to get autocomplete suggestions for search queries - **not currently used by finder-frontend**
+- [Popularity](docs/updating_popularity): how popularity is updated
+- [Quality-metrics](docs/search-quality-metrics): how to assess the quality of results
 
 ## Licence
 
