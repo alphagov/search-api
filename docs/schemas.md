@@ -67,6 +67,17 @@ value has the following properties:
    the same format as the top-level field definitions in the file (and could
    even be recursive).
 
+### Representing parts and attachments
+
+Parts are subpages within a single GOV.UK content item, each with its own title,
+body, and slug. They allow one piece of content to be split into multiple sections
+(e.g. /parent/section-name) without creating separate content items.
+
+The Search API indexes both parts and HTML attachments using the same `parts` field,
+treating them as additional sections of the main document. Instead of handling HTML
+attachments like file downloads, they are stored as extra “parts,” keeping everything
+in one indexed document while still allowing each attachment’s title and body to be searchable.
+
 ## Elasticsearch document types
 
 Documents in an elasticsearch index have a type, and each type may have very
@@ -93,10 +104,25 @@ Elasticsearch 6 does not allow multiple types in the same index.
 
 ## Indexes
 
-Indexes in elasticsearch are defined by files in the `indexes` directory.
+[Indexes in elasticsearch][elasticsearch-indexes] are defined by files in the `indexes` directory.
 These files contain a JSON object with the following keys:
 
  - `elasticsearch_types`: An array of the names of the document types allowed in this index.
+
+There are three indexes in use currently:
+
+- `govuk`: stores GOV.UK content
+- `meta-search`: stores best bets
+- `page-traffic`: stores traffic data from GA4, which is used to update 
+[popularity][] scores on content in the `govuk` index
+
+Old indexes that have been decommissioned include:
+
+- `mainstream`: was used to store GOV.UK content, before it was migrated to the `govuk` index
+- `government`: was used to store GOV.UK content, before it was migrated to the `govuk` index
+- `detailed`: was used to store detailed guides, before they were migrated to the `govuk` index
+
+For more background on the index migration see [ADR 004 - Transition mainstream formats to a Publishing API derived search index][decision-record]
 
 ## Synonyms
 
@@ -134,3 +160,7 @@ foo, bar or baz should return documents with any of them".
 Additional configuration is defined in the `elasticsearch_schema.yml` and
 `stems.yml` files.  This configuration is merged with the JSON configuration,
 and then passed to elasticsearch directly.
+
+[elasticsearch-indexes]: https://www.elastic.co/blog/what-is-an-elasticsearch-index
+[popularity]: https://docs.publishing.service.gov.uk/repos/search-api/updating_popularity.html
+[decision-record]: https://docs.publishing.service.gov.uk/repos/search-api/arch/adr-004-transition-mainstream-to-publishing-api-index.html

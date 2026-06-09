@@ -64,15 +64,12 @@ apply some additional boosting factors:
 
 #### Popularity
 
-This is updated nightly from recent Google Analytics data, gathered by
-the [search-analytics][] application.
+This is updated nightly from recent Google Analytics data, which is
+gathered by the [load page traffic cron job][traffic-cron-job] and 
+stored in the `page-traffic` index.
 
 Here is the initial reasoning for the numbers ([6cbd84f][], May 2014):
 
-> This field is populated from the page-traffic index, which in turn
-> is populated from a dump file produced by the python scripts in the
-> search-analytics repository.
->
 > The popularity is currently defined here as 1.0 / the rank of the
 > page in terms of traffic.  ie, Our highest traffic page gets 1.0,
 > the next highest gets 0.5, the next highest gets 0.333.  This is a
@@ -114,7 +111,7 @@ It is unclear where the numbers came from.
 
 ### Best and worst bets
 
-Some search queries have perfect answers.  For example, a search for
+Some search queries have perfect answers. For example, a search for
 "HM Treasury" should have the HM Treasury organisation page as the top
 result.
 
@@ -125,7 +122,10 @@ into the top of the results list for that query.  It's a way of
 boosting that is a surefire route to having your document top the
 results for a given query.
 
-Best bets are managed with the [Search Admin][] application.
+Best bets used to be managed with the [Search Admin][] application,
+until that functionality was removed in https://github.com/alphagov/search-admin/pull/1174.
+There is currently no support for managing best bets without directly
+interacting with elasticsearch. This is known tech debt.
 
 Example best bets:
 
@@ -495,3 +495,4 @@ dependence on the page views.
 [synonyms-blog]: https://opensourceconnections.com/blog/2016/12/02/solr-elasticsearch-synonyms-better-patterns-keyphrases/
 [this curve]: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427e5qr62u0si
 [keepwords]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-keep-words-tokenfilter.html
+[traffic-cron-job]: https://github.com/alphagov/govuk-helm-charts/blob/main/charts/app-config/values-production.yaml#L2972
