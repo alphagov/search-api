@@ -2,7 +2,7 @@ require "csv"
 require "httparty"
 require "json"
 
-module Debug
+module Evaluation
   class RankEval
     def initialize(datafile, ab_tests)
       @data = load_from_csv(datafile)
