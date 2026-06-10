@@ -6,8 +6,7 @@ module Evaluation
   class RankEval
     def initialize(datafile)
       @data = load_from_csv(datafile)
-      @search_params = {}
-      @search_config = SearchConfig.parse_parameters(@search_params).search_config
+      @search_config = SearchConfig.parse_parameters({}).search_config
     end
 
     def load_from_csv(datafile)
@@ -62,7 +61,7 @@ module Evaluation
     def queries
       @queries ||= @data.each_with_object({}) do |(query, judgements), queries|
         queries[query] = {
-          es_query: SearchConfig.generate_query(@search_params.merge("q" => [query])),
+          es_query: SearchConfig.generate_query({ "q" => [query] }),
           judgements:,
         }
       end
