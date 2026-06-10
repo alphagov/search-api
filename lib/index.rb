@@ -28,6 +28,10 @@ module SearchIndices
       @is_content_index = !(SearchConfig.auxiliary_index_names.include? base_index_name)
     end
 
+    def schema
+      @search_config.schema_config
+    end
+
     # Translate index names like `govuk-2015-05-06t09..` into its proper
     # name, eg. "govuk" or "government".
     # The regex takes the string until the first digit. After that, strip any
@@ -120,7 +124,7 @@ module SearchIndices
       }
 
       ScrollEnumerator.new(client: @client, index_names: @index_name, search_body:, batch_size:) do |hit|
-        LegacyClient::MultivalueConverter.new(hit["_source"], field_definitions).converted_hash
+        hit["_source"]
       end
     end
 
@@ -159,6 +163,17 @@ module SearchIndices
       # If something goes wrong, a shard can get stuck and not reach the DONE state.
       index_info = @client.indices.recovery(index: index_name)[index_name]
       index_info["shards"].all? { |shard_info| shard_info["stage"] == "DONE" }
+    end
+
+    def msearch(bodies)
+      payload = bodies.flat_map do |body|
+        [
+          {},
+          body,
+        ]
+      end
+      logger.debug "Request payload: #{payload.to_json}"
+      @client.msearch(index: @index_name, body: payload)
     end
 
   private

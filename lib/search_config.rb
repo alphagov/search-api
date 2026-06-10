@@ -110,7 +110,7 @@ class SearchConfig
   end
 
   def content_index
-    @content_index ||= search_server.index_for_search([SearchConfig.govuk_index_name])
+    @content_index ||= search_server.index(SearchConfig.govuk_index_name)
   end
 
   def base_uri

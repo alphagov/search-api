@@ -2,7 +2,6 @@ require "spec_helper"
 
 RSpec.describe Search::QueryBuilder do
   before do
-    allow_any_instance_of(LegacyClient::IndexForSearch).to receive(:real_index_names).and_return(%w[govuk_test])
     allow_any_instance_of(Search::BestBetsChecker).to receive(:best_bets).and_return([])
     allow_any_instance_of(Search::BestBetsChecker).to receive(:worst_bets).and_return([])
   end

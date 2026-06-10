@@ -51,7 +51,7 @@ module Search
     end
 
     def govuk_index
-      search_server.index_for_search([SearchConfig.govuk_index_name])
+      search_server.index(SearchConfig.govuk_index_name)
     end
 
     def field_definitions
