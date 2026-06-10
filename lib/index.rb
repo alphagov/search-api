@@ -25,7 +25,7 @@ module SearchIndices
       @mappings = mappings
       @search_config = search_config
       @elasticsearch_types = @search_config.schema_config.elasticsearch_types(base_index_name)
-      @is_content_index = !(SearchConfig.auxiliary_index_names.include? base_index_name)
+      @is_content_index = SearchConfig.govuk_index_name == base_index_name
     end
 
     def schema

@@ -86,19 +86,9 @@ module Indexer
         return nil
       end
 
-      traffic_index_name = SearchConfig.auxiliary_index_names.find do |index|
-        index.start_with?("page-traffic")
-      end
+      result = @search_config.search_server.index(SearchConfig.page_traffic_index_name)
 
-      if traffic_index_name
-        result = @search_config.search_server.index(traffic_index_name)
-
-        if result.exists?
-          return result
-        end
-      end
-
-      nil
+      result if result.exists?
     end
   end
 end
