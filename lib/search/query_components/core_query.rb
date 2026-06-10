@@ -148,18 +148,6 @@ module QueryComponents
       }
     end
 
-    def match_phrase(field_name, query, boost = 1.0)
-      {
-        match_phrase: {
-          synonym_field(field_name) => {
-            boost:,
-            query: escape(query),
-            analyzer: query_analyzer,
-          },
-        },
-      }
-    end
-
     def match_all_terms(fields, query, boost = 1.0)
       fields = fields.map { |f| synonym_field(f) }
 
