@@ -75,10 +75,6 @@ module Search
       query && (suggest.include?("spelling") || suggest.include?("spelling_with_highlighting"))
     end
 
-    def use_shingles?
-      ab_tests[:shingles] == "B"
-    end
-
     def model_variant
       return unless model_variants.include? ab_tests[:mv]
 
