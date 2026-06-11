@@ -103,4 +103,15 @@ namespace :debug do
       end
     end
   end
+
+  desc "Check whether a restored index has recovered"
+  task :check_recovery, [:index_name, :clusters] do |_, args|
+    raise "An 'index_name' must be supplied" unless args.index_name
+
+    clusters_from_args(args).each do |cluster|
+      index = search_server(cluster:).index_group(args.index_name).current
+      puts "Recovery status of #{args.index_name} on cluster #{cluster.key} (#{cluster.uri}):"
+      puts index.index_recovered?
+    end
+  end
 end
