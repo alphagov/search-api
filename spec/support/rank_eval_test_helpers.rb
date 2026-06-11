@@ -2,6 +2,25 @@ require "csv"
 require "spec_helper"
 
 module RankEvalTestHelpers
+  def build_datafile(name, data)
+    datafile = Tempfile.new([name.to_s, ".csv"])
+    datafile.write(data)
+    datafile.rewind
+    datafile
+  end
+
+  def delete_datafile(datafile)
+    datafile.close
+    datafile.unlink
+  end
+
+  def create_malformed_csv(row)
+    CSV.generate do |csv|
+      csv << %w[query link score]
+      csv << row
+    end
+  end
+
   def mock_judgement_csv
     CSV.generate do |csv|
       csv << %w[query rating link score]

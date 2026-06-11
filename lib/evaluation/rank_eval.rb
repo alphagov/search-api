@@ -16,7 +16,7 @@ module Evaluation
         score = row["score"]
         link = row["link"]
 
-        raise "missing query for row '#{row}'" if query.nil?
+        raise "missing query for row '#{row}'" if query.empty?
         raise "missing score for row '#{row}'" if score.nil?
         raise "missing link for row '#{row}" if link.nil?
 
