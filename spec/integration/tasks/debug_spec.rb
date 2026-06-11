@@ -170,4 +170,16 @@ RSpec.describe "debug" do
       end
     end
   end
+
+  describe "debug:check_recovery" do
+    let(:task_name) { "debug:check_recovery" }
+    it "returns the recovery status, which on the test database should be 'ok'" do
+      output = capture_stdout { Rake::Task[task_name].invoke(SearchConfig.govuk_index_name) }
+      expect(output).to match(/Recovery status of/)
+      expect(output).to match(/true/)
+    end
+    it "needs an argument" do
+      expect { Rake::Task[task_name].invoke }.to raise_error(StandardError, /An 'index_name' must be supplied/)
+    end
+  end
 end

@@ -335,24 +335,6 @@ RSpec.describe "indices" do
     end
   end
 
-  describe "check_recovery" do
-    let(:task_name) { "search:check_recovery" }
-    before do
-      recovery = { index_name => { "shards" => [{ "stage" => "DONE" }, { "stage" => "DONE" }] } }
-      allow(indices_client).to receive(:recovery).with(index: index_name).and_return(recovery)
-    end
-    it "checks recovery for all indices" do
-      output = capture_stdout { Rake::Task[task_name].invoke(index_name) }
-      expect(indices_client).to have_received(:recovery).with(index: index_name)
-
-      expect(output).to include("Recovery status of #{index_name} on cluster A")
-      expect(output).to include("true")
-    end
-    it "needs an argument" do
-      expect { Rake::Task[task_name].invoke }.to raise_error(StandardError, /An 'index_name' must be supplied/)
-    end
-  end
-
   def capture_stdout
     old = $stdout
     $stdout = StringIO.new
