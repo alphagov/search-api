@@ -48,7 +48,7 @@ RSpec.describe "ErrorHandlingTest" do
 
   include_examples(
     "a sinatra error handler",
-    exception_class: Search::Query::Error,
+    exception_class: Elasticsearch::Transport::Transport::Errors::BadRequest,
     status: 400,
     body: ->(msg) { msg },
   )

@@ -97,7 +97,11 @@ class Rummager < Sinatra::Application
     halt(503, "Redis queue timed out")
   end
 
-  error Search::Query::Error do
+  error Elasticsearch::Transport::Transport::Errors::BadRequest do
+    halt(400, env["sinatra.error"].message)
+  end
+
+  error Elasticsearch::Transport::Transport::Errors::InternalServerError do
     halt(400, env["sinatra.error"].message)
   end
 

@@ -1,12 +1,6 @@
 # Performs a search across all indices used for the GOV.UK site search
 module Search
   class Query
-    class Error < StandardError; end
-
-    class NumberOutOfRange < Error; end
-
-    class QueryTooLong < Error; end
-
     attr_reader :index, :registries, :suggestion_blocklist
 
     def initialize(registries:, content_index:, metasearch_index:)
@@ -28,7 +22,7 @@ module Search
       builder = builder_payload[:builder]
       payload = builder_payload[:payload]
 
-      es_response = process_elasticsearch_errors { timed_raw_search(payload) }
+      es_response = timed_raw_search(payload)
 
       process_es_response(search_params, builder, payload, es_response)
     end
@@ -47,28 +41,13 @@ module Search
           include_suggestions:,
         )
 
-        payload = process_elasticsearch_errors { builder.payload }
-
-        { builder:, payload: }
+        { builder:, payload: builder.payload }
       end
     end
 
     def timed_raw_search(payload)
       GovukStatsd.time("elasticsearch.raw_search") do
         index.raw_search(payload)
-      end
-    end
-
-    def process_elasticsearch_errors
-      yield
-    rescue Elasticsearch::Transport::Transport::Errors::InternalServerError => e
-      case e.message
-      when /Numeric value \(([0-9]*)\) out of range of/
-        raise(NumberOutOfRange, "Integer value of #{Regexp.last_match(1)} exceeds maximum allowed")
-      when /maxClauseCount is set to/
-        raise(QueryTooLong, "Query must be less than 1024 words")
-      else
-        raise
       end
     end
 
