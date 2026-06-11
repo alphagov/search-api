@@ -91,7 +91,6 @@ module QueryComponents
         [
           match_all_terms(priority_fields.keys, query, MATCH_ALL_MULTI_BOOST),
           match_any_terms(priority_fields.keys, query, MATCH_ANY_MULTI_BOOST),
-          match_bigrams(priority_fields.keys, query, MATCH_ANY_MULTI_BOOST),
           minimum_should_match("all_searchable_text", query, MATCH_MINIMUM_BOOST),
         ],
       )
@@ -184,22 +183,6 @@ module QueryComponents
           operator: "or",
           fields:,
           analyzer: query_analyzer,
-        },
-      }
-    end
-
-    def match_bigrams(fields, query, boost = 1.0)
-      return {} unless search_params.use_shingles?
-
-      fields = fields.map { |f| "#{f}.shingles" }
-
-      {
-        multi_match: {
-          boost:,
-          query: escape(query),
-          operator: "or",
-          fields:,
-          analyzer: "shingled_query_analyzer",
         },
       }
     end
