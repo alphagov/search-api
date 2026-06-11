@@ -1,7 +1,7 @@
 require "evaluation/rank_eval"
 
 desc "Check how well the search query performs for a set of relevancy judgements"
-task :ranking_evaluation, [:datafile, :ab_tests] do |_, args|
+task :ranking_evaluation, [:datafile] do |_, args|
   csv = args.datafile || begin
     bucket = ENV["AWS_S3_RELEVANCY_BUCKET_NAME"]
     raise "Missing required AWS_S3_RELEVANCY_BUCKET_NAME envvar" if bucket.nil?
@@ -12,7 +12,7 @@ task :ranking_evaluation, [:datafile, :ab_tests] do |_, args|
   end
 
   begin
-    evaluator = Evaluation::RankEval.new(csv, args.ab_tests)
+    evaluator = Evaluation::RankEval.new(csv)
     results = evaluator.evaluate
 
     maxlen = results[:query_scores].map { |query, _| query.length }.max

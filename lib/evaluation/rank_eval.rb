@@ -4,9 +4,9 @@ require "json"
 
 module Evaluation
   class RankEval
-    def initialize(datafile, ab_tests)
+    def initialize(datafile)
       @data = load_from_csv(datafile)
-      @search_params = ab_tests.nil? ? {} : { "ab_tests" => [ab_tests] }
+      @search_params = {}
       @search_config = SearchConfig.parse_parameters(@search_params).search_config
     end
 
