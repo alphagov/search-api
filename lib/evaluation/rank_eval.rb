@@ -6,7 +6,6 @@ module Evaluation
   class RankEval
     def initialize(datafile)
       @data = load_from_csv(datafile)
-      @search_config = SearchConfig.parse_parameters({}).search_config
     end
 
     def load_from_csv(datafile)
@@ -85,7 +84,7 @@ module Evaluation
       #   metric: { dcg: { k: 10, normalize: true } },
       # )
 
-      uri = @search_config.base_uri
+      uri = instance.base_uri
       options = {
         body: { requests:, metric: { dcg: { k: 10, normalize: true } } }.to_json,
         headers: { "Content-Type" => "application/json" },
@@ -111,7 +110,11 @@ module Evaluation
     end
 
     def govuk_index_name
-      @govuk_index_name ||= @search_config.get_index_for_alias(SearchConfig.govuk_index_name)
+      @govuk_index_name ||= instance.get_index_for_alias(SearchConfig.govuk_index_name)
+    end
+
+    def instance
+      @instance ||= SearchConfig.default_instance
     end
   end
 end
