@@ -25,12 +25,6 @@ class SearchConfig
       instance(Clusters.default_cluster)
     end
 
-    def search_servers
-      Cache.get(Cache::SEARCH_SERVERS) do
-        Clusters.active.map { |cluster| SearchConfig.instance(cluster).search_server }
-      end
-    end
-
     def all_index_names
       [govuk_index_name, page_traffic_index_name, metasearch_index_name]
     end
