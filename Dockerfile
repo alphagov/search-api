@@ -3,7 +3,7 @@ ARG base_image=ghcr.io/alphagov/govuk-ruby-base:$ruby_version
 ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:$ruby_version
 
 
-FROM --platform=$TARGETPLATFORM $builder_image AS builder
+FROM $builder_image AS builder
 
 WORKDIR $APP_HOME
 COPY Gemfile* .ruby-version ./
@@ -12,7 +12,7 @@ COPY . .
 RUN bootsnap precompile --gemfile .
 
 
-FROM --platform=$TARGETPLATFORM $base_image
+FROM $base_image
 
 ENV GOVUK_APP_NAME=search-api \
     LOG_TO_STDOUT=true
