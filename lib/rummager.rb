@@ -163,6 +163,7 @@ require "schema/synonyms"
 require "scroll_enumerator"
 
 require "elasticsearch_config"
+require "elasticsearch_client"
 require "clusters/clusters"
 require "clusters/cluster"
 require "search_config"
