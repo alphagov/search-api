@@ -1,9 +1,6 @@
 require "spec_helper"
-require "spec/support/connectivity_test_helpers"
 
 RSpec.describe "HealthcheckTest" do
-  include ConnectivityTestHelpers
-
   let(:queues) do
     { "bulk" => 2, "default" => 1 }
   end
@@ -12,7 +9,6 @@ RSpec.describe "HealthcheckTest" do
   before do
     allow_any_instance_of(Sidekiq::Stats).to receive(:queues).and_return(queues)
     allow_any_instance_of(Sidekiq::Queue).to receive(:latency).and_return(queue_latency)
-    stub_connectivity_check
   end
 
   describe "live check" do
@@ -42,11 +38,10 @@ RSpec.describe "HealthcheckTest" do
 
   describe "#elasticsearch_connectivity check" do
     context "when elasticsearch CANNOT be connected to" do
-      before do
-        stub_connectivity_fail_check
-      end
-
       it "returns a critical status" do
+        es_source = ENV["ELASTICSEARCH_URI"] || "http://localhost:9200"
+        stub_request(:get, %r{#{es_source}/_cluster/health}).to_raise(Errno::ECONNREFUSED)
+
         get "/healthcheck/ready"
 
         expect(parsed_response["status"]).to eq "critical"

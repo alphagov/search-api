@@ -1,5 +1,4 @@
 require "spec_helper"
-require "spec/support/connectivity_test_helpers"
 
 RSpec.describe "SitemapTest" do
   let(:bucket) { "test-bucket" }
