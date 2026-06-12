@@ -105,15 +105,35 @@ RSpec.describe "search queries" do
         )
       end
 
-      it "returns examples" do
-        get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
+      describe "requesting examples" do
+        context "There is a document with a 'mainstream_browse_pages' attribute that does not match the query" do
+          before do
+            commit_document(index_name, build(:document, :all,
+                                              indexable_content: "doesnotmatch",
+                                              mainstream_browse_pages: "browse/page/1",
+                                              link: "/govuk-3"))
+          end
 
-        expect(
-          parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
-            .first["value"]["example_info"]["examples"]
-            .map { |h| h["link"] }
-            .sort,
-        ).to eq(["/govuk-1"])
+          it "returns example documents including those that do not match the query if scope is 'global'" do
+            get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:global,example_fields:link:title:mainstream_browse_pages"
+            expect(
+              parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
+                .first["value"]["example_info"]["examples"]
+                .map { |h| h["link"] }
+                .sort,
+            ).to eq(["/govuk-1", "/govuk-3"])
+          end
+
+          it "only returns example documents that match the query if scope is 'query'" do
+            get "/search?q=important&aggregate_mainstream_browse_pages=1,examples:5,example_scope:query,example_fields:link:title:mainstream_browse_pages"
+            expect(
+              parsed_response["aggregates"]["mainstream_browse_pages"]["options"]
+                .first["value"]["example_info"]["examples"]
+                .map { |h| h["link"] }
+                .sort,
+            ).to eq(["/govuk-1"])
+          end
+        end
       end
     end
   end
