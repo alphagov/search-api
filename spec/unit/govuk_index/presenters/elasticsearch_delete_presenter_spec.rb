@@ -16,12 +16,11 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
 
     allow_any_instance_of(described_class).to receive(:existing_document).and_return(existing_document)
 
-    expected_identifier = {
-      _type: "generic-document",
+    expected_identifier = ElasticsearchClient.compatible_identifier({
       _id: "/cheese",
       version: 15,
       version_type: "external",
-    }
+    })
 
     presenter = described_class.new(payload:)
 

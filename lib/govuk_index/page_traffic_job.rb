@@ -35,9 +35,8 @@ module GovukIndex
       actions = Index::ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index, clusters: [cluster]))
 
       records.each_slice(2) do |identifier, document|
-        identifier["index"] = identifier["index"].merge("_type" => "generic-document")
         document["document_type"] = "page_traffic"
-        actions.raw(identifier, document)
+        actions.raw(ElasticsearchClient.compatible_identifier(identifier), document)
       end
 
       actions.commit

@@ -60,7 +60,7 @@ module IntegrationTestHelper
     atts[:link] ||= id
 
     clusters.each do |cluster|
-      ElasticsearchClient.instance.index(id:, index_name:, atts:, client: client(cluster:))
+      ElasticsearchClient.index(id:, index_name:, atts:, params: version_details, client: client(cluster:))
     end
 
     id
@@ -74,8 +74,11 @@ module IntegrationTestHelper
 
       next if hits.empty?
 
-      client(cluster:)
-        .bulk(body: hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } })
+      es_processor = Index::ElasticsearchProcessor.new(client: client(cluster:))
+      hits.each do |hit|
+        es_processor.delete(OpenStruct.new(identifier: { _index: index, _id: hit["_id"] }))
+      end
+      es_processor.commit
     end
 
     commit_index index
@@ -122,10 +125,10 @@ module IntegrationTestHelper
     end
   end
 
-  def expect_document_missing_in_rummager(id:, index:, type: "_all")
+  def expect_document_missing_in_rummager(id:, index:)
     clusters.each do |cluster|
       expect {
-        fetch_document_from_rummager(id:, index:, cluster:, type:)
+        fetch_document_from_rummager(id:, index:, cluster:)
       }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
     end
   end
@@ -141,11 +144,7 @@ private
     Clusters.active
   end
 
-  def fetch_document_from_rummager(id:, index:, type: "_all", cluster: Clusters.default_cluster)
-    client(cluster:).get(
-      index:,
-      type:,
-      id:,
-    )
+  def fetch_document_from_rummager(id:, index:, cluster: Clusters.default_cluster)
+    ElasticsearchClient.get({index:, id:}, client: client(cluster:))
   end
 end

@@ -15,16 +15,16 @@ module Index
 
     def raw(identifier, document)
       @actions << identifier
-      @actions << document
+      @actions << ElasticsearchClient.compatible_identifier(document)
     end
 
     def save(presenter)
       @actions << { index: presenter.identifier }
-      @actions << presenter.document
+      @actions << ElasticsearchClient.compatible_identifier(presenter.document)
     end
 
     def delete(presenter)
-      @actions << { delete: presenter.identifier }
+      @actions << { delete: ElasticsearchClient.compatible_identifier(presenter.identifier) }
     end
 
     def commit

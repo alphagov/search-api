@@ -23,13 +23,22 @@ RSpec.describe IndexSchemaParser do
 
     it "include configuration for the `manual section` type in the `govuk` index" do
       es_mappings = @index_schemas["govuk"].es_mappings
-      expect(es_mappings.keys).to include("generic-document")
-      expect(es_mappings["generic-document"]["properties"]).to match(
-        hash_including({
-          "manual" => @identifier_es_config,
-          "link" => @identifier_es_config,
-        }),
-      )
+      if ElasticsearchClient.es7?
+        expect(es_mappings["properties"]).to match(
+          hash_including({
+            "manual" => @identifier_es_config,
+            "link" => @identifier_es_config,
+          }),
+        )
+      else
+        expect(es_mappings.keys).to include("generic-document")
+        expect(es_mappings["generic-document"]["properties"]).to match(
+          hash_including({
+            "manual" => @identifier_es_config,
+            "link" => @identifier_es_config,
+            }),
+          )
+      end
     end
   end
 

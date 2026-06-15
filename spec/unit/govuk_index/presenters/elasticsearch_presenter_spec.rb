@@ -4,12 +4,11 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
   it "identifier" do
     payload = generate_random_example(payload: { payload_version: 1 })
 
-    expected_identifier = {
-      _type: "generic-document",
+    expected_identifier = ElasticsearchClient.compatible_identifier({
       _id: payload["base_path"],
       version: 1,
       version_type: "external",
-    }
+    })
 
     presenter = elasticsearch_presenter(payload, "help_page")
 

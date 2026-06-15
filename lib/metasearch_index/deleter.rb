@@ -15,10 +15,9 @@ module MetasearchIndex
       end
 
       def identifier
-        {
-          _type: "generic-document",
+        ElasticsearchClient.compatible_identifier({
           _id: @id,
-        }
+        })
       end
     end
   end

@@ -236,15 +236,25 @@ RSpec.describe "indices" do
       expect(output).to include("Updating schema on cluster A")
 
       index_names.each do |index_name|
-        expect(indices_client).to have_received(:put_mapping).with(index: index_name, type: "generic-document", body: kind_of(Hash))
+        if ElasticsearchClient.es7?
+          expect(indices_client).to have_received(:put_mapping).with(index: index_name, body: kind_of(Hash))
+        else
+          expect(indices_client).to have_received(:put_mapping).with(index: index_name, type: "generic-document", body: kind_of(Hash))
+        end
         expect(output).to include("Successfully synchronised #{index_name} index")
       end
     end
     it "reports failures" do
       failed_index_name = index_names.first
-      allow(indices_client).to receive(:put_mapping)
-        .with(index: failed_index_name, type: "generic-document", body: kind_of(Hash))
-        .and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest.new("test error"))
+      if ElasticsearchClient.es7?
+        allow(indices_client).to receive(:put_mapping)
+         .with(index: failed_index_name, body: kind_of(Hash))
+         .and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest.new("test error"))
+      else
+        allow(indices_client).to receive(:put_mapping)
+         .with(index: failed_index_name, type: "generic-document", body: kind_of(Hash))
+         .and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest.new("test error"))
+      end
 
       output = capture_stdout { Rake::Task[task_name].invoke }
       expect(output).to include("Unable to synchronise index #{failed_index_name} due to test error")

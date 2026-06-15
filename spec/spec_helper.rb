@@ -100,7 +100,7 @@ RSpec.configure do |config|
   end
 
   config.around(:each, :unit) do |example|
-    ClimateControl.modify(USE_ELASTICSEARCH_6: "true") do
+    ClimateControl.modify(USE_ELASTICSEARCH_7: "true") do
       example.run
     end
   end

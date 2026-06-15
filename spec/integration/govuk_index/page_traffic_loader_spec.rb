@@ -4,7 +4,7 @@ RSpec.describe "Loading page traffic data" do
   it "adds data to the page traffic index" do
     id = "/test/page/#{SecureRandom.uuid}"
     data = [
-      { index: { _id: id, _type: "page_traffic" } }.to_json,
+      { index: { _id: id } }.to_json,
       { rank_14: 100, vf_14: 0.345, vc_14: 12 }.to_json,
     ].join("\n")
 

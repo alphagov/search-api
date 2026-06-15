@@ -500,22 +500,23 @@ RSpec.describe "SearchTest" do
   end
 
   it "boosts custom fields" do
-    less_relevant_licence = {
-      "title" => "Less relevant licence",
-      "link" => "/find-licences/less-relevant-licence",
+    common = {
       "indexable_content" => "Some body text that includes information",
       "format" => "licence_transaction",
       "document_type" => "licence_transaction",
+      "public_timestamp" => Time.new(2026, 1, 1).utc.strftime("%Y-%m-%dT%H:%M:%S")
     }
+    less_relevant_licence = common.merge(
+      "title" => "Less relevant licence",
+      "link" => "/find-licences/less-relevant-licence"
+    )
 
-    more_relevant_licence = {
+    more_relevant_licence = common.merge(
       "title" => "More relevant licence",
       "link" => "/find-licences/more-relevant-licence",
-      "indexable_content" => "A more relevant licence",
-      "format" => "licence_transaction",
-      "document_type" => "licence_transaction",
-      "licence_transaction_industry" => %w[information-and-data another-industry],
-    }
+      "licence_transaction_industry" => %w[information-and-data another-industry]
+    )
+
     commit_document(index_name, build(:document, less_relevant_licence))
     commit_document(index_name, build(:document, more_relevant_licence))
 

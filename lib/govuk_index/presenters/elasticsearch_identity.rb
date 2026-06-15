@@ -6,12 +6,11 @@ module GovukIndex
     def identifier
       raise UnknownDocumentTypeError unless type
 
-      {
-        _type: "generic-document",
+      ElasticsearchClient.compatible_identifier({
         _id: id,
         version: payload["payload_version"],
         version_type: "external",
-      }
+      })
     end
 
     # Internal content uses the base_path as the ID

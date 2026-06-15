@@ -16,7 +16,7 @@ class IndexSchema
     @elasticsearch_types.each_value do |value|
       properties = properties.merge(value.es_config)
     end
-    ElasticsearchClient.instance.compatible_mappings(properties)
+    ElasticsearchClient.compatible_mappings(properties)
   end
 
   def elasticsearch_type(elasticsearch_type_name)
