@@ -6,7 +6,7 @@ require_relative "../../../../lib/evaluation/rank_eval"
 RSpec.describe Evaluation::RankEval do
   include RankEvalTestHelpers
 
-  let(:evaluator) { described_class }
+  let(:evaluator) { described_class.new }
 
   RSpec.shared_examples "a malformed CSV row validation" do |expected_error, bad_row|
     around do |example|
@@ -20,7 +20,7 @@ RSpec.describe Evaluation::RankEval do
     end
 
     it "raises the expected validation error" do
-      expect { evaluator.new(@datafile) }.to raise_error(expected_error)
+      expect { evaluator.load_from_csv(@datafile) }.to raise_error(expected_error)
     end
   end
 
@@ -35,6 +35,26 @@ RSpec.describe Evaluation::RankEval do
 
     context "link is missing" do
       it_behaves_like "a malformed CSV row validation", "missing link for row 'harry potter,,3\n", ["harry potter", nil, 3]
+    end
+
+    context "when a valid csv is provided" do
+      before do
+        csv_data = mock_judgement_csv
+        datafile = build_datafile("mock_judgement_csv", csv_data)
+        @datafile = datafile
+      end
+
+      let(:expected_output) do
+        {
+          "harry potter" => [{ score: 3, link: "/harry-potter" }],
+          "passport" => [{ score: 3, link: "/government/renew-a-passport" }],
+        }
+      end
+
+      it "creates a hash of csv data" do
+        hash = evaluator.load_from_csv(@datafile)
+        expect(hash).to eq(expected_output)
+      end
     end
   end
 end

@@ -4,10 +4,6 @@ require "json"
 
 module Evaluation
   class RankEval
-    def initialize(datafile)
-      @data = load_from_csv(datafile)
-    end
-
     def load_from_csv(datafile)
       data = {}
       last_query = ""
@@ -29,8 +25,8 @@ module Evaluation
       ignore_extra_judgements(data)
     end
 
-    def evaluate
-      requests = queries.each_with_object([]) do |(query, data), acc|
+    def evaluate(csv_data)
+      requests = queries(csv_data).each_with_object([]) do |(query, data), acc|
         acc << {
           id: query,
           request: {
@@ -57,8 +53,8 @@ module Evaluation
       }
     end
 
-    def queries
-      @queries ||= @data.each_with_object({}) do |(query, judgements), queries|
+    def queries(csv_data)
+      @queries ||= csv_data.each_with_object({}) do |(query, judgements), queries|
         queries[query] = {
           es_query: SearchConfig.generate_query({ "q" => [query] }),
           judgements:,

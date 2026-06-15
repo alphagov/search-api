@@ -12,8 +12,9 @@ task :ranking_evaluation, [:datafile] do |_, args|
   end
 
   begin
-    evaluator = Evaluation::RankEval.new(csv)
-    results = evaluator.evaluate
+    evaluator = Evaluation::RankEval.new
+    csv_data = evaluator.load_from_csv(csv)
+    results = evaluator.evaluate(csv_data)
 
     maxlen = results[:query_scores].map { |query, _| query.length }.max
     results[:query_scores].each do |query, score|
