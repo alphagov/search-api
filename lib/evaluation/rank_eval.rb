@@ -8,16 +8,16 @@ module Evaluation
       data = {}
       last_query = ""
       CSV.foreach(datafile, headers: true) do |row|
-        query = (row["query"] || last_query).strip
-        score = row["score"]
-        link = row["link"]
+        query = (row["queryEntry.query"] || last_query).strip
+        score = row["queryEntry.targets.score"]
+        content_id = row["queryEntry.targets.uri"]
 
         raise "missing query for row '#{row}'" if query.empty?
         raise "missing score for row '#{row}'" if score.nil?
-        raise "missing link for row '#{row}" if link.nil?
+        raise "missing content id for row '#{row}'" if content_id.nil?
 
         data[query] = data.fetch(query, [])
-        data[query] << ({ score: score.to_i, link: })
+        data[query] << ({ score: score.to_i, link: content_id})
 
         last_query = query
       end

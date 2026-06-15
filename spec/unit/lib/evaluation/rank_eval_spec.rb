@@ -26,28 +26,28 @@ RSpec.describe Evaluation::RankEval do
 
   describe "#load_from_csv" do
     context "when query is missing" do
-      it_behaves_like "a malformed CSV row validation", "missing query for row ',/harry-potter,3\n'", [nil, "/harry-potter", 3]
+      it_behaves_like "a malformed CSV row validation", "missing query for row ',harry-potter-content-id,3\n'", [nil, "harry-potter-content-id", 3]
     end
 
     context "when score is missing" do
-      it_behaves_like "a malformed CSV row validation", "missing score for row 'harry potter,/harry-potter,\n'", ["harry potter", "/harry-potter", nil]
+      it_behaves_like "a malformed CSV row validation", "missing score for row 'harry potter,harry-potter-content-id,\n'", ["harry potter", "harry-potter-content-id", nil]
     end
 
-    context "link is missing" do
-      it_behaves_like "a malformed CSV row validation", "missing link for row 'harry potter,,3\n", ["harry potter", nil, 3]
+    context "content id is missing" do
+      it_behaves_like "a malformed CSV row validation", "missing content id for row 'harry potter,,3\n'", ["harry potter", nil, 3]
     end
 
     context "when a valid csv is provided" do
       before do
-        csv_data = mock_judgement_csv
-        datafile = build_datafile("mock_judgement_csv", csv_data)
+        csv_data = mock_clickstream_csv
+        datafile = build_datafile("mock_clickstream_csv", csv_data)
         @datafile = datafile
       end
 
       let(:expected_output) do
         {
-          "harry potter" => [{ score: 3, link: "/harry-potter" }],
-          "passport" => [{ score: 3, link: "/government/renew-a-passport" }],
+          "harry potter" => [{ score: 3, link: "harry-potter-content-id" }],
+          "passport" => [{ score: 3, link: "passport-content-id" }],
         }
       end
 

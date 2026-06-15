@@ -16,18 +16,18 @@ module RankEvalTestHelpers
 
   def create_malformed_csv(row)
     CSV.generate do |csv|
-      csv << %w[query link score]
+      csv << ["queryEntry.query", "queryEntry.targets.uri", "queryEntry.targets.score"]
       csv << row
     end
   end
 
-  def mock_judgement_csv
+  def mock_clickstream_csv
     CSV.generate do |csv|
-      csv << %w[query rating link score]
-      csv << ["harry potter", "relevant", "/harry-potter", 3]
-      csv << ["passport", "relevant", "/government/renew-a-passport", 3]
+      csv << %w[queryEntry.query queryEntry.targets.uri queryEntry.targets.score]
+      csv << ["harry potter", "harry-potter-content-id", 3]
+      csv << ["passport", "passport-content-id", 3]
       # add repeated row to test ignore_extra_judgements
-      csv << ["passport", "near", "/government/renew-a-passport", 2]
+      csv << ["passport", "passport-content-id", 2]
     end
   end
 
