@@ -16,8 +16,10 @@ module Evaluation
         raise "missing score for row '#{row}'" if score.nil?
         raise "missing content id for row '#{row}'" if content_id.nil?
 
+        link = convert_to_link(content_id)
+
         data[query] = data.fetch(query, [])
-        data[query] << ({ score: score.to_i, link: content_id})
+        data[query] << ({ score: score.to_i, link: })
 
         last_query = query
       end
@@ -63,6 +65,15 @@ module Evaluation
     end
 
   private
+
+    def convert_to_link(data)
+      return data if data.include?("/")
+
+      Services
+        .publishing_api
+        .get_content(data)
+        .to_h["base_path"]
+    end
 
     def rank_eval(requests)
       # This workaround was put in because the elasticsearch ruby client used to

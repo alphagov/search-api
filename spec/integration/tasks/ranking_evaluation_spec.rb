@@ -20,12 +20,14 @@ RSpec.describe "ranking_evaluation" do
                                       body: mock_clickstream_csv)
 
         stub_rank_eval_request
+        stub_publishing_api_has_item({ content_id: "harry-potter-content-id", base_path: "/harry-potter" })
+        stub_publishing_api_has_item({ content_id: "passport-content-id", base_path: "/passport" })
       end
 
       it "calculates how well search performs" do
         ClimateControl.modify AWS_S3_RELEVANCY_BUCKET_NAME: bucket do
           output = capture_stdout { Rake::Task[task_name].invoke }
-          expect(output).to include("Ignoring 1 judgements for passport-content-id queried with query 'passport'")
+          expect(output).to include("Ignoring 1 judgements for /passport queried with query 'passport'")
           expect(output.squeeze(" ")).to include(rank_eval_expected_output)
         end
       end
