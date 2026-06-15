@@ -15,6 +15,11 @@ class ElasticsearchClient
     { "generic-document" => { "properties" => properties } }
   end
 
+  def index(id:, index_name:, atts:, params: {}, client: Services.elasticsearch)
+    compatible_params = es7? ? {} : { type: "generic-document" }
+    client.index({index: index_name, id:, body: atts}.merge(params).merge(compatible_params))
+  end
+
 private
 
   def es_version
