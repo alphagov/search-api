@@ -14,7 +14,7 @@ module RankEvalTestHelpers
     datafile.unlink
   end
 
-  def create_malformed_csv(row)
+  def create_csv(row)
     CSV.generate do |csv|
       csv << ["queryEntry.query", "queryEntry.targets.uri", "queryEntry.targets.score"]
       csv << row

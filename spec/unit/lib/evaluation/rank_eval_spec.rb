@@ -10,7 +10,7 @@ RSpec.describe Evaluation::RankEval do
 
   RSpec.shared_examples "a malformed CSV row validation" do |expected_error, bad_row|
     around do |example|
-      csv_data = create_malformed_csv(bad_row)
+      csv_data = create_csv(bad_row)
       datafile = build_datafile("malformed_csv", csv_data)
       @datafile = datafile
 
@@ -52,8 +52,8 @@ RSpec.describe Evaluation::RankEval do
 
     context "when publishing api has the content" do
       before do
-        stub_publishing_api_has_item({ content_id: "harry-potter-content-id", base_path: "/harry-potter" })
-        stub_publishing_api_has_item({ content_id: "passport-content-id", base_path: "/passport" })
+        stub_publishing_api_has_item({ content_id: "harry-potter-content-id", base_path: "/harry-potter", document_type: "guide" })
+        stub_publishing_api_has_item({ content_id: "passport-content-id", base_path: "/passport", document_type: "guide" })
       end
 
       let(:expected_output) do
@@ -81,6 +81,26 @@ RSpec.describe Evaluation::RankEval do
         delete_datafile(@datafile)
 
         expect(hash).to eq(expected_output)
+      end
+
+      context "when the csv contains external content links" do
+        before do
+          stub_publishing_api_has_item({ content_id: "external-content-content-id", document_type: "external_content" })
+        end
+
+        let(:csv_data) { create_csv(%w[contact external-content-content-id 3]) }
+        let(:datafile) { build_datafile("external_content_csv", csv_data) }
+        let(:expected_output) { { "contact" => [{ score: 3, link: "external-content-content-id" }] } }
+
+        it "it uses content id as the link" do
+          @datafile = datafile
+          hash = evaluator.load_from_csv(@datafile)
+          delete_datafile(@datafile)
+
+          assert_publishing_api(:get, "#{Plek.find('publishing-api')}/v2/content/external-content-content-id")
+
+          expect(hash).to eq(expected_output)
+        end
       end
     end
 

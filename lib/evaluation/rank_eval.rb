@@ -16,7 +16,7 @@ module Evaluation
         raise "missing score for row '#{row}'" if score.nil?
         raise "missing content id for row '#{row}'" if content_id.nil?
 
-        link = convert_to_link(content_id)
+        link = convert_to_link(content_id) || content_id
 
         data[query] = data.fetch(query, [])
         data[query] << ({ score: score.to_i, link: })
