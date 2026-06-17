@@ -29,9 +29,12 @@ module GovukIndex
     def process_document(document, popularities)
       base_path = document.fetch("_id")
       title = document.dig("_source", "title")
-      identifier = document.slice("_id", "_version")
+      identifier = { _id: document["_id"],
+                     _type: "generic-document",
+                     version: document["_version"],
+                     version_type: "external_gte" }
       OpenStruct.new(
-        identifier: identifier.merge("version_type" => "external_gte", "_type" => "generic-document"),
+        identifier:,
         document: document.fetch("_source").merge(
           "popularity" => popularities.dig(base_path, :popularity_score),
           "popularity_b" => popularities.dig(base_path, :popularity_rank),
