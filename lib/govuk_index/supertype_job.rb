@@ -16,7 +16,10 @@ module GovukIndex
           next
         end
         {
-          "identifier" => document.slice("_id", "_type", "_version"),
+          "identifier" => { _id: document["_id"],
+                            _type: document["_type"],
+                            version: document["_version"],
+                            version_type: "external_gte" },
           "document" => document.fetch("_source"),
         }
       end
@@ -36,7 +39,7 @@ module GovukIndex
 
     def process_document(document)
       OpenStruct.new(
-        identifier: document["identifier"].merge("version_type" => "external_gte"),
+        identifier: document["identifier"],
         document: update_document_supertypes(document["document"]),
       )
     end
