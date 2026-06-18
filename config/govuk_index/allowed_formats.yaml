@@ -394,6 +394,9 @@ disallowed_paths:
 
 disallowed_formats:
 - calculator
+- content_block_contact
+- content_block_pension
+- content_block_tax
 - license_finder
 - special_route:
   - '/homepage'
