@@ -2,25 +2,21 @@ require "csv"
 require "httparty"
 require "json"
 
-module Debug
+module Evaluation
   class RankEval
-    def initialize(datafile, ab_tests)
-      @data = load_from_csv(datafile)
-      @search_params = ab_tests.nil? ? {} : { "ab_tests" => [ab_tests] }
-      @search_config = SearchConfig.parse_parameters(@search_params).search_config
-    end
-
     def load_from_csv(datafile)
       data = {}
       last_query = ""
       CSV.foreach(datafile, headers: true) do |row|
-        query = (row["query"] || last_query).strip
-        score = row["score"]
-        link = row["link"]
+        query = (row["queryEntry.query"] || last_query).strip
+        score = row["queryEntry.targets.score"]
+        content_id = row["queryEntry.targets.uri"]
 
-        raise "missing query for row '#{row}'" if query.nil?
+        raise "missing query for row '#{row}'" if query.empty?
         raise "missing score for row '#{row}'" if score.nil?
-        raise "missing link for row '#{row}" if link.nil?
+        raise "missing content id for row '#{row}'" if content_id.nil?
+
+        link = convert_to_link(content_id) || content_id
 
         data[query] = data.fetch(query, [])
         data[query] << ({ score: score.to_i, link: })
@@ -31,8 +27,8 @@ module Debug
       ignore_extra_judgements(data)
     end
 
-    def evaluate
-      requests = queries.each_with_object([]) do |(query, data), acc|
+    def evaluate(csv_data)
+      requests = queries(csv_data).each_with_object([]) do |(query, data), acc|
         acc << {
           id: query,
           request: {
@@ -59,16 +55,25 @@ module Debug
       }
     end
 
-    def queries
-      @queries ||= @data.each_with_object({}) do |(query, judgements), queries|
+    def queries(csv_data)
+      @queries ||= csv_data.each_with_object({}) do |(query, judgements), queries|
         queries[query] = {
-          es_query: SearchConfig.generate_query(@search_params.merge("q" => [query])),
+          es_query: SearchConfig.generate_query({ "q" => [query] }),
           judgements:,
         }
       end
     end
 
   private
+
+    def convert_to_link(data)
+      return data if data.include?("/")
+
+      Services
+        .publishing_api
+        .get_content(data)
+        .to_h["base_path"]
+    end
 
     def rank_eval(requests)
       # This workaround was put in because the elasticsearch ruby client used to
@@ -86,7 +91,7 @@ module Debug
       #   metric: { dcg: { k: 10, normalize: true } },
       # )
 
-      uri = @search_config.base_uri
+      uri = instance.base_uri
       options = {
         body: { requests:, metric: { dcg: { k: 10, normalize: true } } }.to_json,
         headers: { "Content-Type" => "application/json" },
@@ -112,7 +117,11 @@ module Debug
     end
 
     def govuk_index_name
-      @govuk_index_name ||= @search_config.get_index_for_alias(SearchConfig.govuk_index_name)
+      @govuk_index_name ||= instance.get_index_for_alias(SearchConfig.govuk_index_name)
+    end
+
+    def instance
+      @instance ||= SearchConfig.default_instance
     end
   end
 end

@@ -2,13 +2,32 @@ require "csv"
 require "spec_helper"
 
 module RankEvalTestHelpers
-  def mock_judgement_csv
+  def build_datafile(name, data)
+    datafile = Tempfile.new([name.to_s, ".csv"])
+    datafile.write(data)
+    datafile.rewind
+    datafile
+  end
+
+  def delete_datafile(datafile)
+    datafile.close
+    datafile.unlink
+  end
+
+  def create_csv(row)
     CSV.generate do |csv|
-      csv << %w[query rating link score]
-      csv << ["harry potter", "relevant", "/harry-potter", 3]
-      csv << ["passport", "relevant", "/government/renew-a-passport", 3]
+      csv << ["queryEntry.query", "queryEntry.targets.uri", "queryEntry.targets.score"]
+      csv << row
+    end
+  end
+
+  def mock_clickstream_csv
+    CSV.generate do |csv|
+      csv << %w[queryEntry.query queryEntry.targets.uri queryEntry.targets.score]
+      csv << ["harry potter", "harry-potter-content-id", 3]
+      csv << ["passport", "passport-content-id", 3]
       # add repeated row to test ignore_extra_judgements
-      csv << ["passport", "near", "/government/renew-a-passport", 2]
+      csv << ["passport", "passport-content-id", 2]
     end
   end
 
