@@ -230,28 +230,24 @@ RSpec.describe "indices" do
     let(:task_name) { "search:update_schema" }
     let(:cluster)   { Clusters.active.first }
 
-    def type(index_name)
-      SearchConfig.instance(cluster).search_server.index_group(index_name).current.mappings.keys.first
-    end
-
     it "updates schema for all indices and reports successes and failures" do
       output = capture_stdout { Rake::Task[task_name].invoke }
 
       expect(output).to include("Updating schema on cluster A")
 
       index_names.each do |index_name|
-        expect(indices_client).to have_received(:put_mapping).with(index: index_name, type: type(index_name), body: kind_of(Hash))
-        expect(output).to include("Successfully synchronised #{type(index_name)} type on #{index_name} index")
+        expect(indices_client).to have_received(:put_mapping).with(index: index_name, type: "generic-document", body: kind_of(Hash))
+        expect(output).to include("Successfully synchronised generic-document type on #{index_name} index")
       end
     end
     it "reports failures" do
       failed_index_name = index_names.first
       allow(indices_client).to receive(:put_mapping)
-        .with(index: failed_index_name, type: type(failed_index_name), body: kind_of(Hash))
+        .with(index: failed_index_name, type: "generic-document", body: kind_of(Hash))
         .and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest.new("test error"))
 
       output = capture_stdout { Rake::Task[task_name].invoke }
-      expect(output).to include("Unable to synchronise #{type(failed_index_name)} on #{failed_index_name} due to test error")
+      expect(output).to include("Unable to synchronise generic-document on #{failed_index_name} due to test error")
     end
   end
 

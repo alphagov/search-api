@@ -135,9 +135,12 @@ the existing data, you will need to run the \"migrate_schema\" task instead, whi
       puts "Updating schema on cluster #{cluster.key}"
 
       index_names.each do |index_name|
-        index_group = SearchConfig.instance(cluster).search_server.index_group(index_name)
+        search_config = SearchConfig.instance(cluster)
+        index_group = search_config.search_server.index_group(index_name)
+        schema_config = search_config.schema_config
+
         synchroniser = SchemaSynchroniser.new(index_group)
-        synchroniser.call
+        synchroniser.call(schema_config.elasticsearch_mappings(index_name))
         synchroniser.synchronised_types.each do |type|
           puts "Successfully synchronised #{type} type on #{index_name} index"
         end

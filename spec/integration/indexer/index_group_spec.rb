@@ -23,9 +23,6 @@ RSpec.describe "ElasticsearchIndexGroupTest" do
 
     expect(@index_group.index_names.count).to eq(1)
     expect(index.index_name).to eq(@index_group.index_names[0])
-    expect(
-      SearchConfig.default_instance.search_server.schema.elasticsearch_mappings("govuk"),
-    ).to eq(index.mappings)
   end
 
   it "aliases index" do

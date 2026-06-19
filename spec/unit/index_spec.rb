@@ -36,9 +36,9 @@ RSpec.describe SearchIndices::Index do
         headers: { "Content-Type" => "application/json" },
       })
 
-    index = SearchIndices::Index.new(base_uri, "govuk-abc", "govuk", mappings, SearchConfig.default_instance)
+    index = SearchIndices::Index.new(base_uri, "govuk-abc", "govuk", SearchConfig.default_instance)
 
-    errors = index.sync_mappings
+    errors = index.sync_mappings(mappings)
 
     assert_requested stub
     assert_requested failing_stub

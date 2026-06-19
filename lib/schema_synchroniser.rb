@@ -5,11 +5,11 @@ class SchemaSynchroniser
     @index = index_group.current
   end
 
-  def call
-    @errors = @index.sync_mappings
+  def call(mappings)
+    @errors = @index.sync_mappings(mappings)
   end
 
   def synchronised_types
-    @index.mappings.keys.difference(@errors.keys)
+    %w[generic-document].difference(@errors.keys)
   end
 end

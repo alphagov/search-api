@@ -141,7 +141,7 @@ private
   def build_govuk_index
     base_uri = "http://example.com:9200"
     search_config = SearchConfig.default_instance
-    described_class.new(base_uri, "govuk_test", "govuk_test", default_mappings, search_config)
+    described_class.new(base_uri, "govuk_test", "govuk_test", search_config)
   end
 
   def stub_popularity_index_requests(paths, popularity, total_pages = 10, total_requested = total_pages, paths_to_return = paths)

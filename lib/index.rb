@@ -14,15 +14,14 @@ module SearchIndices
     # How long to wait between reads when streaming data from the elasticsearch server
     TIMEOUT_SECONDS = 5.0
 
-    attr_reader :mappings, :index_name
+    attr_reader :index_name
 
-    def initialize(base_uri, index_name, base_index_name, mappings, search_config)
+    def initialize(base_uri, index_name, base_index_name, search_config)
       @base_uri = base_uri
       @client = build_client
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
 
-      @mappings = mappings
       @search_config = search_config
       @elasticsearch_types = @search_config.schema_config.elasticsearch_types(base_index_name)
       @is_content_index = SearchConfig.govuk_index_name == base_index_name
@@ -98,7 +97,7 @@ module SearchIndices
       end
     end
 
-    def sync_mappings
+    def sync_mappings(mappings)
       {}.tap do |errors|
         mappings.each do |type, mapping|
           @client.indices.put_mapping(index: index_name, type:, body: mapping)
