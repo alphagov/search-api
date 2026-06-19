@@ -6,7 +6,7 @@ class SchemaSynchroniser
   end
 
   def call(mappings)
-    @errors = @index.sync_mappings(mappings)
+    @errors = @index.sync_mappings(mappings["generic-document"])
   end
 
   def synchronised_types
