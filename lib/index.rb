@@ -97,16 +97,6 @@ module SearchIndices
       end
     end
 
-    def sync_mappings(mapping)
-      {}.tap do |errors|
-        @client.indices.put_mapping(index: index_name, type: "generic-document", body: mapping)
-        logger.info "Updated mappings for index: #{index_name}"
-      rescue Elasticsearch::Transport::Transport::Errors::BadRequest => e
-        errors["generic-document"] = e
-        logger.warn "Unable to update mappings for index: #{index_name}; #{e.message}"
-      end
-    end
-
     def get_document_by_id(document_id)
       @client.get(index: @index_name, type: "_all", id: document_id)
     rescue Elasticsearch::Transport::Transport::Errors::NotFound
