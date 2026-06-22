@@ -10,23 +10,24 @@ RSpec.describe SchemaSynchroniser do
     clean_index_content(index_name)
   end
 
-  it "synchronises successfully and does not report errors" do
+  it "synchronises successfully and logs the result" do
     mapping = { "properties" => { "test" => { "type" => "keyword" } } }
 
-    synchroniser.sync_mappings(mapping, logger)
+    expect {
+      synchroniser.sync_mappings(mapping, logger)
+    }.to_not raise_error
 
     expect(output.string).to include("Updated mappings for index: #{index_name}")
-    expect(synchroniser.synchronised_types).not_to be_empty
-    expect(synchroniser.synchronised_types).to eq(%w[generic-document])
   end
 
-  it "returns an error if the mappings are invalid" do
+  it "raises an error if the mappings are invalid" do
     mapping = { "properties" => { "test" => { "type" => "not-a-type" } } }
 
-    result = synchroniser.sync_mappings(mapping, logger)
+    expect {
+      synchroniser.sync_mappings(mapping, logger)
+    }.to raise_error(Elasticsearch::Transport::Transport::Errors::BadRequest)
 
     expect(output.string).to include("Unable to update mappings for index: #{index_name};")
-    expect(result).to match("generic-document" => instance_of(Elasticsearch::Transport::Transport::Errors::BadRequest))
   end
 
   it "adds the 'test' property to the existing schema" do

@@ -237,7 +237,7 @@ RSpec.describe "indices" do
 
       index_names.each do |index_name|
         expect(indices_client).to have_received(:put_mapping).with(index: index_name, type: "generic-document", body: kind_of(Hash))
-        expect(output).to include("Successfully synchronised generic-document type on #{index_name} index")
+        expect(output).to include("Successfully synchronised #{index_name} index")
       end
     end
     it "reports failures" do
@@ -247,7 +247,7 @@ RSpec.describe "indices" do
         .and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest.new("test error"))
 
       output = capture_stdout { Rake::Task[task_name].invoke }
-      expect(output).to include("Unable to synchronise generic-document on #{failed_index_name} due to test error")
+      expect(output).to include("Unable to synchronise index #{failed_index_name} due to test error")
     end
   end
 
