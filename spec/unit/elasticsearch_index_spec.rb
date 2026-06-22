@@ -189,24 +189,4 @@ private
         headers: { "Content-Type" => "application/json" },
       )
   end
-
-  def stub_traffic_index
-    base_uri = "http://example.com:9200"
-    search_config = SearchConfig.default_instance
-    traffic_index = described_class.new(base_uri, "page-traffic_test", "page-traffic_test", page_traffic_mappings, search_config)
-    allow_any_instance_of(Indexer::PopularityLookup).to receive(:traffic_index).and_return(traffic_index)
-    allow(traffic_index).to receive(:real_name).and_return("page-traffic_test")
-  end
-
-  def expected_all_documents_query
-    {
-      "bool" => {
-        "must_not" => {
-          "terms" => {
-            "format" => [],
-          },
-        },
-      },
-    }
-  end
 end
