@@ -135,15 +135,14 @@ the existing data, you will need to run the \"migrate_schema\" task instead, whi
       puts "Updating schema on cluster #{cluster.key}"
 
       index_names.each do |index_name|
-        index_group = SearchConfig.instance(cluster).search_server.index_group(index_name)
-        synchroniser = SchemaSynchroniser.new(index_group)
-        synchroniser.call
-        synchroniser.synchronised_types.each do |type|
-          puts "Successfully synchronised #{type} type on #{index_name} index"
-        end
-        synchroniser.errors.each do |type, exception|
-          puts "Unable to synchronise #{type} on #{index_name} due to #{exception.message}"
-        end
+        search_config = SearchConfig.instance(cluster)
+        mappings = search_config.schema_config.elasticsearch_mappings(index_name)
+
+        synchroniser = SchemaSynchroniser.new(index_name, Services.elasticsearch(cluster:))
+        synchroniser.sync_mappings(mappings["generic-document"], logger)
+        puts "Successfully synchronised #{index_name} index"
+      rescue Elasticsearch::Transport::Transport::Errors::BadRequest => e
+        puts "Unable to synchronise index #{index_name} due to #{e.message}"
       end
     end
   end
