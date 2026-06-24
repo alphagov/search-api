@@ -9,7 +9,7 @@ RSpec.describe Analytics::Ga4Import::ElasticSearchRelevancySerialiser do
       index_data = JSON.parse(relevancy_data.first)
       page_data = JSON.parse(relevancy_data.second)
 
-      expect(index_data).to match("index" => hash_including("_type" => "page-traffic", "_id" => /^\/example/))
+      expect(index_data).to match("_id" => /^\/example/)
       expect(page_data).to match(hash_including("path_components", "rank_14", "vc_14", "vf_14"))
     end
 
