@@ -142,6 +142,7 @@ require "search/registry"
 require "search/suggestion_blocklist"
 require "search/timed_cache"
 
+require "elasticsearch_response"
 require "index"
 require "index_finder"
 require "index_group"
