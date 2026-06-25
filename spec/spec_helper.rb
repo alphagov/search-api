@@ -55,8 +55,7 @@ Dir.glob(File.join(__dir__, "../lib/tasks/**/*.rake")).each { |file| load file }
 
 RSpec.configure do |config|
   config.define_derived_metadata(file_path: %r{/spec/integration/}) do |metadata|
-    metadata[:tags] ||= []
-    metadata[:tags] << :integration
+    metadata[:integration] = true
   end
 
   config.include FactoryBot::Syntax::Methods
@@ -65,9 +64,9 @@ RSpec.configure do |config|
   config.include SpecHelpers
   config.include SchemaHelpers
 
-  config.include IntegrationTestHelper, tags: :integration
-  config.include IntegrationSpecSetupHelper, tags: :integration
-  config.include Rack::Test::Methods, tags: :integration
+  config.include IntegrationTestHelper, :integration
+  config.include IntegrationSpecSetupHelper, :integration
+  config.include Rack::Test::Methods, :integration
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
