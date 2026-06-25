@@ -98,7 +98,7 @@ module SearchIndices
     end
 
     def get_document_by_id(document_id)
-      @client.get(index: @index_name, type: "_all", id: document_id)
+      @client.get(index: @index_name, id: document_id)
     rescue Elasticsearch::Transport::Transport::Errors::NotFound
       nil
     end

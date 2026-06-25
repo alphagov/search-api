@@ -17,9 +17,7 @@ module Index
     end
 
     def get(params)
-      client.get(
-        params.merge(index: index_name),
-      )
+      client.get(params.merge(index: index_name))
     end
 
     def bulk(params)
