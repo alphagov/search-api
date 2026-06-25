@@ -22,6 +22,7 @@ module IntegrationTestHelper
     allowed_paths << "_nodes"
     allowed_paths << "_cluster"
     allowed_paths << "_msearch"
+    allowed_paths << "\\z"
 
     allow_urls = %r{#{allowed_hosts.map { |host| "#{host}/(#{allowed_paths.join('|')})" }.join('|')}}
 
