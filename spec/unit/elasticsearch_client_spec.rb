@@ -1,6 +1,7 @@
 RSpec.describe ElasticsearchClient do
   describe ".es7?" do
     let(:es_client) { double("Elasticsearch") }
+    let(:indices_client) { double("IndicesClient") }
     let(:version_info) { nil }
 
     after do
@@ -9,7 +10,8 @@ RSpec.describe ElasticsearchClient do
 
     before do
       allow(Services).to receive(:elasticsearch).and_return(es_client)
-      allow(es_client).to receive_messages(index: {}, search: {}, info: version_info)
+      allow(es_client).to receive_messages(index: {}, search: {}, indices: indices_client, info: version_info)
+      allow(indices_client).to receive_messages(put_mapping: {})
     end
 
     context "when USE_ELASTICSEARCH_7 is set" do
@@ -64,6 +66,11 @@ RSpec.describe ElasticsearchClient do
           expect(described_class.compatible_mappings({ a: :b }))
             .to eq({ "properties" => { a: :b } })
         end
+        it "calls 'put_mapping' with the right parameters, without including type" do
+          described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)
+          expect(indices_client).to have_received(:put_mapping).with(index: "index",
+                                                                     body: { a: :b })
+        end
       end
 
       context "when Elasticsearch version is 6.x" do
@@ -90,6 +97,12 @@ RSpec.describe ElasticsearchClient do
         it "returns mappings with type" do
           expect(described_class.compatible_mappings({ a: :b }))
             .to eq("generic-document" => { "properties" => { a: :b } })
+        end
+        it "calls 'put_mapping' with the right parameters, including type" do
+          described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)
+          expect(indices_client).to have_received(:put_mapping).with(index: "index",
+                                                                     body: { a: :b },
+                                                                     type: "generic-document")
         end
       end
     end
