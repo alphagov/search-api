@@ -58,6 +58,10 @@ RSpec.configure do |config|
     metadata[:integration] = true
   end
 
+  config.define_derived_metadata(file_path: %r{/spec/unit/}) do |metadata|
+    metadata[:unit] = true
+  end
+
   config.include FactoryBot::Syntax::Methods
   FactoryBot.find_definitions
 
@@ -93,6 +97,12 @@ RSpec.configure do |config|
 
   config.around(:each) do |example|
     ClimateControl.modify(TZ: "UTC") { example.run }
+  end
+
+  config.around(:each, :unit) do |example|
+    ClimateControl.modify(USE_ELASTICSEARCH_7: "true") do
+      example.run
+    end
   end
 
   if config.files_to_run.one?
