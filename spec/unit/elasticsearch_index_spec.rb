@@ -51,7 +51,7 @@ RSpec.describe SearchIndices::Index do
   end
 
   it "can be searched" do
-    stub_get = stub_request(:post, "http://example.com:9200/govuk_test/generic-document/_search").with(
+    stub_get = stub_request(:post, "http://example.com:9200/#{SearchConfig.govuk_index_name}/_search").with(
       body: %r{"query":"keyword search"},
     ).to_return(
       body: '{"hits":{"hits":[]}}',
