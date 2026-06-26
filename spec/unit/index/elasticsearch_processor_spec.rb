@@ -8,7 +8,6 @@ RSpec.describe Index::ElasticsearchProcessor do
   it "saves valid document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
-      _type: "help_page",
       _id: "/cheese",
     )
     allow(presenter).to receive(:document).and_return(
@@ -32,7 +31,6 @@ RSpec.describe Index::ElasticsearchProcessor do
   it "deletes valid document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
-      _type: "help_page",
       _id: "/cheese",
     )
     allow(presenter).to receive(:document).and_return(

@@ -82,6 +82,9 @@ RSpec.describe ElasticsearchClient do
         it "returns mappings for Elasticsearch version 7, which does not include a type" do
           expect(described_class.mappings_properties(a: :b)).to eq({ a: :b })
         end
+        it "returns an identifier for bulk operations for Elasticsearch version 7, which does not include a type" do
+          expect(described_class.compatible_identifier({ a: :b })).to eq({ a: :b })
+        end
       end
 
       context "when Elasticsearch version is 6.x" do
@@ -121,6 +124,9 @@ RSpec.describe ElasticsearchClient do
         end
         it "returns mappings for Elasticsearch version 6, which includes a type" do
           expect(described_class.mappings_properties("generic-document" => { a: :b })).to eq({ a: :b })
+        end
+        it "returns an identifier for bulk operations for Elasticsearch version 6, which includes a type" do
+          expect(described_class.compatible_identifier({ a: :b })).to eq({ "_type" => "generic-document", a: :b })
         end
       end
     end
