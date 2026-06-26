@@ -4,6 +4,10 @@ module ElasticsearchClient
       client.search(compatible_params(index: index_name, body:))
     end
 
+    def index(id:, index_name:, atts:, params: {}, client: Services.elasticsearch)
+      client.index(compatible_params(index: index_name, id:, body: atts).merge(params))
+    end
+
     def es7?
       return true if ENV["USE_ELASTICSEARCH_7"]
       return false if ENV["USE_ELASTICSEARCH_6"]

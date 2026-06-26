@@ -53,6 +53,13 @@ RSpec.describe ElasticsearchClient do
           expect(es_client).to have_received(:search).with(index: "index",
                                                            body: { a: :b })
         end
+        it "calls 'index' with the right parameters, without including type" do
+          described_class.index(id: 123, index_name: "index", atts: { a: :b }, params: { c: :d }, client: es_client)
+          expect(es_client).to have_received(:index).with(id: 123,
+                                                          index: "index",
+                                                          body: { a: :b },
+                                                          c: :d)
+        end
       end
 
       context "when Elasticsearch version is 6.x" do
@@ -67,6 +74,14 @@ RSpec.describe ElasticsearchClient do
           expect(es_client).to have_received(:search).with(index: "index",
                                                            body: { a: :b },
                                                            type: "generic-document")
+        end
+        it "calls 'index' with the right parameters, including type" do
+          described_class.index(id: 123, index_name: "index", atts: { a: :b }, params: { c: :d }, client: es_client)
+          expect(es_client).to have_received(:index).with(id: 123,
+                                                          index: "index",
+                                                          body: { a: :b },
+                                                          c: :d,
+                                                          type: "generic-document")
         end
       end
     end
