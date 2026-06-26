@@ -10,7 +10,7 @@ namespace :delete do
     id = args[:link]
     abort "Missing argument. Usage: rake 'delete:by_link[link]'" if args[:link].nil?
 
-    Services.elasticsearch.delete(index: SearchConfig.govuk_index_name, type: "generic-document", id:)
+    ElasticsearchClient.delete(id:, index_name: SearchConfig.govuk_index_name)
   end
 
   desc "
