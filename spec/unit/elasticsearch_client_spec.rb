@@ -60,6 +60,10 @@ RSpec.describe ElasticsearchClient do
                                                           body: { a: :b },
                                                           c: :d)
         end
+        it "returns mappings without type" do
+          expect(described_class.compatible_mappings({ a: :b }))
+            .to eq({ "properties" => { a: :b } })
+        end
       end
 
       context "when Elasticsearch version is 6.x" do
@@ -82,6 +86,10 @@ RSpec.describe ElasticsearchClient do
                                                           body: { a: :b },
                                                           c: :d,
                                                           type: "generic-document")
+        end
+        it "returns mappings with type" do
+          expect(described_class.compatible_mappings({ a: :b }))
+            .to eq("generic-document" => { "properties" => { a: :b } })
         end
       end
     end
