@@ -6,6 +6,12 @@ module ElasticsearchClient
       { "generic-document" => { "properties" => properties } }
     end
 
+    def put_mapping(index_name:, mapping:, client: Services.elasticsearch)
+      return client.indices.put_mapping(index: index_name, body: mapping) if es7?
+
+      client.indices.put_mapping(index: index_name, type: "generic-document", body: mapping)
+    end
+
     def search(index_name:, body:, client: Services.elasticsearch)
       client.search(compatible_params(index: index_name, body:))
     end
