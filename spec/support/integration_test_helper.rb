@@ -60,14 +60,7 @@ module IntegrationTestHelper
     atts[:link] ||= id
 
     clusters.each do |cluster|
-      client(cluster:).index(
-        {
-          index: index_name,
-          id:,
-          type: "generic-document",
-          body: atts,
-        }.merge(version_details),
-      )
+      ElasticsearchClient.index(id:, index_name:, atts:, params: version_details, client: client(cluster:))
     end
 
     id
