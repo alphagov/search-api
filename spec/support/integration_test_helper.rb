@@ -74,8 +74,11 @@ module IntegrationTestHelper
 
       next if hits.empty?
 
-      client(cluster:)
-        .bulk(body: hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } })
+      es_processor = Index::ElasticsearchProcessor.new(client: client(cluster:))
+      hits.each do |hit|
+        es_processor.delete(OpenStruct.new(identifier: { _index: index, _id: hit["_id"] }))
+      end
+      es_processor.commit
     end
 
     commit_index index
