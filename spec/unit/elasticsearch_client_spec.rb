@@ -9,7 +9,7 @@ RSpec.describe ElasticsearchClient do
 
     before do
       allow(Services).to receive(:elasticsearch).and_return(es_client)
-      allow(es_client).to receive_messages(info: version_info)
+      allow(es_client).to receive_messages(index: {}, search: {}, info: version_info)
     end
 
     context "when USE_ELASTICSEARCH_7 is set" do
@@ -48,6 +48,11 @@ RSpec.describe ElasticsearchClient do
         it "returns true" do
           expect(described_class.es7?).to eq(true)
         end
+        it "calls 'search' with the right parameters, without including type" do
+          described_class.search(index_name: "index", body: { a: :b }, client: es_client)
+          expect(es_client).to have_received(:search).with(index: "index",
+                                                           body: { a: :b })
+        end
       end
 
       context "when Elasticsearch version is 6.x" do
@@ -56,6 +61,12 @@ RSpec.describe ElasticsearchClient do
         end
         it "returns false" do
           expect(described_class.es7?).to eq(false)
+        end
+        it "calls 'search' with the right parameters, including type" do
+          described_class.search(index_name: "index", body: { a: :b }, client: es_client)
+          expect(es_client).to have_received(:search).with(index: "index",
+                                                           body: { a: :b },
+                                                           type: "generic-document")
         end
       end
     end

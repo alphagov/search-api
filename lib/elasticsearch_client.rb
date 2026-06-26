@@ -1,5 +1,9 @@
 module ElasticsearchClient
   class << self
+    def search(index_name:, body:, client: Services.elasticsearch)
+      client.search(compatible_params(index: index_name, body:))
+    end
+
     def es7?
       return true if ENV["USE_ELASTICSEARCH_7"]
       return false if ENV["USE_ELASTICSEARCH_6"]
@@ -12,6 +16,12 @@ module ElasticsearchClient
     end
 
   private
+
+    def compatible_params(params)
+      return params if es7?
+
+      params.merge(type: "generic-document")
+    end
 
     def es_version
       @es_version ||= Gem::Version.new(Services.elasticsearch.info.dig("version", "number"))
