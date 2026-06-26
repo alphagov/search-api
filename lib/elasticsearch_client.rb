@@ -12,6 +12,10 @@ module ElasticsearchClient
       client.indices.put_mapping(index: index_name, type: "generic-document", body: mapping)
     end
 
+    def delete(id:, index_name:, client: Services.elasticsearch)
+      client.delete(compatible_params(index: index_name, id: id))
+    end
+
     def search(index_name:, body:, client: Services.elasticsearch)
       client.search(compatible_params(index: index_name, body:))
     end

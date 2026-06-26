@@ -10,7 +10,11 @@ RSpec.describe ElasticsearchClient do
 
     before do
       allow(Services).to receive(:elasticsearch).and_return(es_client)
-      allow(es_client).to receive_messages(index: {}, search: {}, indices: indices_client, info: version_info)
+      allow(es_client).to receive_messages(index: {},
+                                           search: {},
+                                           indices: indices_client,
+                                           delete: {},
+                                           info: version_info)
       allow(indices_client).to receive_messages(put_mapping: {})
     end
 
@@ -71,6 +75,10 @@ RSpec.describe ElasticsearchClient do
           expect(indices_client).to have_received(:put_mapping).with(index: "index",
                                                                      body: { a: :b })
         end
+        it "calls 'delete' with the right parameters, without including type" do
+          described_class.delete(id: 123, index_name: "index", client: es_client)
+          expect(es_client).to have_received(:delete).with(index: "index", id: 123)
+        end
       end
 
       context "when Elasticsearch version is 6.x" do
@@ -103,6 +111,10 @@ RSpec.describe ElasticsearchClient do
           expect(indices_client).to have_received(:put_mapping).with(index: "index",
                                                                      body: { a: :b },
                                                                      type: "generic-document")
+        end
+        it "calls 'delete' with the right parameters, including type" do
+          described_class.delete(id: 123, index_name: "index", client: es_client)
+          expect(es_client).to have_received(:delete).with(index: "index", id: 123, type: "generic-document")
         end
       end
     end
