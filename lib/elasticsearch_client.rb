@@ -12,6 +12,12 @@ module ElasticsearchClient
       { "generic-document" => { "properties" => properties } }
     end
 
+    def compatible_identifier(params)
+      return params if es7?
+
+      params.merge("_type" => "generic-document")
+    end
+
     def put_mapping(index_name:, mapping:, client: Services.elasticsearch)
       return client.indices.put_mapping(index: index_name, body: mapping) if es7?
 
