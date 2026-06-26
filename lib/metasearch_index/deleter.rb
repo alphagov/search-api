@@ -16,7 +16,6 @@ module MetasearchIndex
 
       def identifier
         {
-          _type: "generic-document",
           _id: @id,
         }
       end
