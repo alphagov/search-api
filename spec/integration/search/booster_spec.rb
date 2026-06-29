@@ -2,6 +2,8 @@ require "spec_helper"
 
 RSpec.describe "BoosterTest" do
   it "service manual formats are weighted down" do
+    IntegrationTestHelper.recreate_indices
+
     commit_document(
       "govuk_test",
       {
