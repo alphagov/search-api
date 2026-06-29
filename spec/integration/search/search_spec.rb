@@ -500,6 +500,13 @@ RSpec.describe "SearchTest" do
   end
 
   it "boosts custom fields" do
+    # Deleted documents can continue to affect Lucene's scoring statistics
+    # Recreating the indices before the test ensures deterministic search scores.
+    # https://www.elastic.co/guide/en/elasticsearch/reference/current/consistent-scoring.html
+
+    IndexHelpers.clean_all
+    IndexHelpers.setup_test_indexes
+
     less_relevant_licence = {
       "title" => "Less relevant licence",
       "link" => "/find-licences/less-relevant-licence",
