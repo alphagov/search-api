@@ -30,6 +30,16 @@ module IntegrationTestHelper
     WebMock.disable_net_connect!(allow: allowed_urls)
   end
 
+  def self.recreate_indices
+    # Deleted documents can continue to affect Lucene's scoring statistics
+    # When testing elasticsearch boosting scores, recreating the indices is
+    # usually necessary before the test ensures deterministic search scores.
+    # https://www.elastic.co/guide/en/elasticsearch/reference/current/consistent-scoring.html
+
+    IndexHelpers.clean_all
+    IndexHelpers.setup_test_indexes
+  end
+
   def self.disable_net_connections
     WebMock.disable_net_connect!(allow: nil)
   end
