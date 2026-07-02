@@ -107,7 +107,7 @@ module Search
       result = {}
       slugs.zip(response_list) do |slug, response|
         result[slug] = {
-          total: response["hits"]["total"],
+          total: ElasticsearchResponse.new(response).total_hits,
           examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["_source"] || {}) },
         }
       end
