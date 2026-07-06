@@ -31,7 +31,7 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
 
     expect {
       fetch_document_from_rummager(index: "metasearch_test", id: "ca3916-exact")
-    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+    }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
   end
 
   it "will raise an error when trying to delete a non-existant document" do

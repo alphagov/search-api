@@ -45,7 +45,7 @@ module SearchIndices
       # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
       begin
         alias_info = @client.indices.get_alias(index: @index_name)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound
+      rescue OpenSearch::Transport::Transport::Errors::NotFound
         return nil
       end
 
@@ -99,7 +99,7 @@ module SearchIndices
 
     def get_document_by_id(document_id)
       @client.get(index: @index_name, id: document_id)
-    rescue Elasticsearch::Transport::Transport::Errors::NotFound
+    rescue OpenSearch::Transport::Transport::Errors::NotFound
       nil
     end
 
@@ -137,7 +137,7 @@ module SearchIndices
       analyzed_query.fetch("tokens", []).map { |token_info|
         token_info["token"]
       }.join(" ")
-    rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+    rescue OpenSearch::Transport::Transport::Errors::BadRequest
       ""
     end
 

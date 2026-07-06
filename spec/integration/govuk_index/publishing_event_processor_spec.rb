@@ -90,7 +90,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition (non-indexable)")
       expect {
         fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
-      }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+      }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
     end
 
     it "alerts on unknown formats - neither safe or block listed" do

@@ -129,7 +129,7 @@ module IntegrationTestHelper
     clusters.each do |cluster|
       expect {
         fetch_document_from_rummager(id:, index:, cluster:)
-      }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+      }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
     end
   end
 

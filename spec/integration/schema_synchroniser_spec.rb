@@ -25,7 +25,7 @@ RSpec.describe SchemaSynchroniser do
 
     expect {
       synchroniser.sync_mappings(mapping, logger)
-    }.to raise_error(Elasticsearch::Transport::Transport::Errors::BadRequest)
+    }.to raise_error(OpenSearch::Transport::Transport::Errors::BadRequest)
 
     expect(output.string).to include("Unable to update mappings for index: #{index_name};")
   end

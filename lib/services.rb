@@ -31,7 +31,7 @@ module Services
   # request succeeds (but times out) and the second retry request returns an
   # error because the operation has already been run.
   def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
-    Elasticsearch::Client.new(
+    OpenSearch::Client.new(
       hosts: cluster ? cluster.uri : hosts,
       request_timeout: timeout,
       logger: Logging.logger[self],
