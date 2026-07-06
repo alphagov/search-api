@@ -3,11 +3,6 @@ require "spec_helper"
 RSpec.describe Search::AggregateExampleFetcher do
   def query_for_example_global(field, value, return_fields)
     {
-      query: {
-        bool: {
-          must: nil,
-        },
-      },
       post_filter: { bool: { must: { term: { field => value } } } },
       size: 2,
       _source: {
