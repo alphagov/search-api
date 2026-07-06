@@ -36,7 +36,7 @@ RSpec.describe "delete rake tasks" do
 
         expect {
           Services.elasticsearch.get(index:, id: link)
-        }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+        }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
       end
     end
 
@@ -46,7 +46,7 @@ RSpec.describe "delete rake tasks" do
       it "raises a not found error" do
         expect {
           task.invoke(link)
-        }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+        }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
       end
     end
   end

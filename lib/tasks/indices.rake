@@ -141,7 +141,7 @@ the existing data, you will need to run the \"migrate_schema\" task instead, whi
         synchroniser = SchemaSynchroniser.new(index_name, Services.elasticsearch(cluster:))
         synchroniser.sync_mappings(mappings, logger)
         puts "Successfully synchronised #{index_name} index"
-      rescue Elasticsearch::Transport::Transport::Errors::BadRequest => e
+      rescue OpenSearch::Transport::Transport::Errors::BadRequest => e
         puts "Unable to synchronise index #{index_name} due to #{e.message}"
       end
     end

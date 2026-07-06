@@ -2,9 +2,9 @@ require "spec_helper"
 require "rake"
 
 RSpec.describe "indices" do
-  let(:elasticsearch_client) { double("Elasticsearch::Client") }
+  let(:elasticsearch_client) { double("OpenSearch::Client") }
   let(:indices_client) do
-    double("Elasticsearch::API::Indices::IndicesClient",
+    double("OpenSearch::API::Indices::IndicesClient",
            get_alias: {},
            update_aliases: {},
            get: {},
@@ -245,7 +245,7 @@ RSpec.describe "indices" do
       failed_index_name = index_names.first
       allow(indices_client).to receive(:put_mapping)
        .with(index: failed_index_name, body: kind_of(Hash))
-       .and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest.new("test error"))
+       .and_raise(OpenSearch::Transport::Transport::Errors::BadRequest.new("test error"))
 
       output = capture_stdout { Rake::Task[task_name].invoke }
       expect(output).to include("Unable to synchronise index #{failed_index_name} due to test error")

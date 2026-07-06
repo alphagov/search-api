@@ -34,7 +34,7 @@ module GovukIndex
       @existing_document ||=
         begin
           Client.get(id:)
-        rescue Elasticsearch::Transport::Transport::Errors::NotFound
+        rescue OpenSearch::Transport::Transport::Errors::NotFound
           nil
         end
     end
