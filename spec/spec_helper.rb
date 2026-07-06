@@ -105,6 +105,21 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:each, :unit) do
+    body = {
+      version: {
+        distribution: "opensearch",
+        number: "2.19.5",
+      },
+    }
+    stub_request(:get, "http://example.com:9200/")
+      .to_return(
+        status: 200,
+        body: body.to_json,
+        headers: { "Content-Type" => "application/json" },
+      )
+  end
+
   if config.files_to_run.one?
     config.default_formatter = "doc"
   end
