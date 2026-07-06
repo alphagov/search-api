@@ -86,14 +86,6 @@ GEM
     docile (1.4.0)
     domain_name (0.6.20240107)
     drb (2.2.3)
-    elasticsearch (7.10.0)
-      elasticsearch-api (= 7.10.0)
-      elasticsearch-transport (= 7.10.0)
-    elasticsearch-api (7.10.0)
-      multi_json
-    elasticsearch-transport (7.10.0)
-      faraday (~> 1)
-      multi_json
     erb (6.0.4)
     erubi (1.13.1)
     expgen (0.1.1)
@@ -321,6 +313,9 @@ GEM
     oj (3.17.3)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
+    opensearch-ruby (3.4.0)
+      faraday (>= 1.0, < 3)
+      multi_json (>= 1.0)
     opentelemetry-api (1.10.0)
       logger
     opentelemetry-common (0.25.0)
@@ -771,7 +766,6 @@ DEPENDENCIES
   bootsnap
   bunny-mock
   climate_control
-  elasticsearch (= 7.10)
   factory_bot
   faker
   gds-api-adapters
@@ -790,6 +784,7 @@ DEPENDENCIES
   nokogiri
   oauth2
   oj
+  opensearch-ruby (>= 3.1)
   pact (~> 1.67)
   pact_broker-client
   plek
