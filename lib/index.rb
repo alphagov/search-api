@@ -117,8 +117,7 @@ module SearchIndices
 
     def raw_search(payload)
       logger.debug "Request payload: #{payload.to_json}"
-
-      ElasticsearchClient.search(index_name: @index_name, body: payload, client: @client)
+      @client.search(index: @index_name, body: payload)
     end
 
     # Convert a best bet query to a string formed by joining the normalised

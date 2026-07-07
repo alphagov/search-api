@@ -41,7 +41,7 @@ RSpec.describe Search::ResultSetPresenter do
     {
       "hits" => {
         "hits" => sample_docs,
-        "total" => 3,
+        "total" => {"value" => 3},
       },
     }.merge(extra)
   end
@@ -67,7 +67,7 @@ RSpec.describe Search::ResultSetPresenter do
       results = {
         "hits" => {
           "hits" => [],
-          "total" => 0,
+          "total" => { "value" => 0 },
         },
       }
       @output = described_class.new(
