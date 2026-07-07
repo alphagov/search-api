@@ -80,7 +80,7 @@ RSpec.describe SearchIndices::Index do
     stub_request(:post, search_pattern).with(
       body: { query: { term: { format: "organisation" } }, _source: { includes: %w[title link] }, sort: %w[_doc] },
     ).to_return(
-      body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
+      body: { _scroll_id: "abcdefgh", hits: { total: { value: 10}, hits: [] } }.to_json,
       headers: { "Content-Type" => "application/json" },
     )
 
@@ -105,7 +105,7 @@ RSpec.describe SearchIndices::Index do
     stub_request(:post, search_pattern).with(
       body: "{\"query\":{\"term\":{\"format\":\"organisation\"}},\"_source\":{\"includes\":[\"title\",\"link\"]},\"sort\":[\"_doc\"]}",
     ).to_return(
-      body: { _scroll_id: "abcdefgh", hits: { total: 10, hits: [] } }.to_json,
+      body: { _scroll_id: "abcdefgh", hits: { total: { value: 10 }, hits: [] } }.to_json,
       headers: { "Content-Type" => "application/json" },
     )
 

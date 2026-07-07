@@ -43,7 +43,7 @@ RSpec.describe Search::AggregateExampleFetcher do
   def response_for_example(total_examples, titles)
     {
       "hits" => {
-        "total" => total_examples,
+        "total" => { "value" => total_examples },
         "hits" => titles.map do |title|
           { "_source" => { "title" => title } }
         end,
@@ -71,7 +71,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     it "map a response to aggregates without fields" do
       fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)
       slugs = %w[a-slug-name]
-      response_list = [{ "hits" => { "total" => 1, "hits" => [{ "_id" => "a-slug-name" }] } }]
+      response_list = [{ "hits" => { "total" => {"value" => 1}, "hits" => [{ "_id" => "a-slug-name" }] } }]
 
       response = fetcher.send(:prepare_response, slugs, response_list)
 
