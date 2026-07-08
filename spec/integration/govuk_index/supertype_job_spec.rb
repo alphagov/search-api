@@ -9,7 +9,7 @@ RSpec.describe GovukIndex::SupertypeJob do
       .with(document_type: "testgroup")
       .and_return("supertype1" => "type1", "supertype2" => "type2")
     @processor = instance_double("processor", save: nil, commit: nil)
-    allow(Index::ElasticsearchProcessor).to receive(:new).and_return(@processor)
+    allow(Index::OpenSearchProcessor).to receive(:new).and_return(@processor)
     allow(IndexFinder).to receive(:by_name).and_return(index)
   end
 

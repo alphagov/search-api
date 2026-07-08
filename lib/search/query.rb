@@ -46,7 +46,7 @@ module Search
     end
 
     def timed_raw_search(payload)
-      GovukStatsd.time("elasticsearch.raw_search") do
+      GovukStatsd.time("opensearch.raw_search") do
         index.raw_search(payload)
       end
     end

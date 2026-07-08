@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe ElasticsearchTypesParser do
+RSpec.describe OpenSearchTypesParser do
   def expect_raises_message(message, &block)
     expect(&block).to raise_error(message)
   end
@@ -34,7 +34,7 @@ RSpec.describe ElasticsearchTypesParser do
       expect(link_field.type.name).to eq("identifier")
     end
 
-    it "produce appropriate elasticsearch configuration for the `manual section` type" do
+    it "produce appropriate opensearch configuration for the `manual section` type" do
       es_config = @types["manual_section"].es_config
       expect(es_config).to match(
         hash_including({
@@ -48,23 +48,23 @@ RSpec.describe ElasticsearchTypesParser do
   context "when configuration is invalid" do
     before do
       @definitions = FieldDefinitionParser.new(schema_dir).parse
-      @parser = ElasticsearchTypeParser.new("/config/path/doc_type.json", nil, @definitions)
+      @parser = OpenSearchTypeParser.new("/config/path/doc_type.json", nil, @definitions)
     end
 
     it "fail if document_type doesn't specify `fields`" do
-      allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({})
+      allow_any_instance_of(OpenSearchTypeParser).to receive(:load_json).and_return({})
       expect_raises_message(%(Missing "fields", in document type definition in "/config/path/doc_type.json")) { @parser.parse }
     end
 
     it "fail if document_type specifies unknown entries in `fields`" do
-      allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({
+      allow_any_instance_of(OpenSearchTypeParser).to receive(:load_json).and_return({
         "fields" => %w[unknown_field],
       })
       expect_raises_message(%(Undefined field \"unknown_field\", in document type definition in "/config/path/doc_type.json")) { @parser.parse }
     end
 
     it "fail if document_type has an unknown property" do
-      allow_any_instance_of(ElasticsearchTypeParser).to receive(:load_json).and_return({
+      allow_any_instance_of(OpenSearchTypeParser).to receive(:load_json).and_return({
         "fields" => [],
         "unknown" => [],
       })

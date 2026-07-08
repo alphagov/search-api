@@ -12,8 +12,8 @@ RSpec.describe IndexSchemaParser do
   context "after loading standard index schemas" do
     before do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
-      elasticsearch_types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
-      @index_schemas = described_class.parse_all(schema_dir, field_definitions, elasticsearch_types)
+      opensearch_types = OpenSearchTypesParser.new(schema_dir, field_definitions).parse
+      @index_schemas = described_class.parse_all(schema_dir, field_definitions, opensearch_types)
       @identifier_es_config = { "type" => "keyword", "index" => true }
     end
 
@@ -35,25 +35,25 @@ RSpec.describe IndexSchemaParser do
   context "when configuration is invalid" do
     before do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
-      elasticsearch_types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
-      @parser = described_class.new("index", "index.json", field_definitions, elasticsearch_types)
+      opensearch_types = OpenSearchTypesParser.new(schema_dir, field_definitions).parse
+      @parser = described_class.new("index", "index.json", field_definitions, opensearch_types)
     end
 
     it "fail if index schema specifies an unknown document_type" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({
-        "elasticsearch_types" => %w[unknown_doc_type],
+        "opensearch_types" => %w[unknown_doc_type],
       })
       expect_raises_message(%(Unknown document type "unknown_doc_type", in index definition in "index.json")) { @parser.parse }
     end
 
-    it "fail if index schema doesn't specify `elasticsearch types`" do
+    it "fail if index schema doesn't specify `opensearch types`" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({})
-      expect_raises_message(%(Missing "elasticsearch_types", in index definition in "index.json")) { @parser.parse }
+      expect_raises_message(%(Missing "opensearch_types", in index definition in "index.json")) { @parser.parse }
     end
 
     it "fail if index schema includes unknown keys" do
       allow_any_instance_of(described_class).to receive(:load_json).and_return({
-        "elasticsearch_types" => [],
+        "opensearch_types" => [],
         "foo" => "bar",
       })
       expect_raises_message(%{Unknown keys (foo), in index definition in "index.json"}) { @parser.parse }

@@ -17,7 +17,7 @@ class ScrollEnumerator < Enumerator
     @client = client
     @index_names = index_names
     page = initial_scroll_result(batch_size, search_body)
-    @size = ElasticsearchResponse.new(page).total_hits
+    @size = OpenSearchResponse.new(page).total_hits
 
     # Pull out the results as they are needed
     super() do |yielder|
@@ -29,7 +29,7 @@ class ScrollEnumerator < Enumerator
       first_page = true
       loop do
         # The way we tell we've got through all the results is when
-        # elasticsearch gives us an empty array of hits. This means all the
+        # opensearch gives us an empty array of hits. This means all the
         # shards have run out of results.
         if page["hits"]["hits"].any? || first_page
           first_page = false

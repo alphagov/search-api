@@ -61,8 +61,8 @@ RSpec.describe GovukIndex::Updater do
 
       allow(ScrollEnumerator).to receive(:new).and_return([id])
       allow(Sidekiq.logger).to receive(:warn)
-      processor = instance_double("Index::ElasticsearchProcessor", commit: nil, save: nil)
-      allow(Index::ElasticsearchProcessor).to receive(:new).and_return(processor)
+      processor = instance_double("Index::OpenSearchProcessor", commit: nil, save: nil)
+      allow(Index::OpenSearchProcessor).to receive(:new).and_return(processor)
 
       GovukIndex::Updater.update("govuk_test", GovukIndex::PopularityJob)
 

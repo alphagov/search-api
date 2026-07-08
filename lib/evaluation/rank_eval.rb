@@ -76,14 +76,14 @@ module Evaluation
     end
 
     def rank_eval(requests)
-      # This workaround was put in because the elasticsearch ruby client used to
+      # This workaround was put in because the opensearch ruby client used to
       # have a bug that prevented us calling rank_eval with an index argument.
-      # https://github.com/elastic/elasticsearch-ruby/pull/724
+      # https://github.com/elastic/opensearch-ruby/pull/724
       # This bug has since been fixed, but removing this workaround means
       # that instead of using timeout specified here,
-      # we'd be using the elasticsearch timeout we have set, which is
+      # we'd be using the opensearch timeout we have set, which is
       # not long enough for the rank_eval call. Because the timeout is a global
-      # setting on the elasticsearch client, changing the timeout to only affect
+      # setting on the opensearch client, changing the timeout to only affect
       # the rank evaluation workflow would require a refactor.
 
       # @search_config.rank_eval(
@@ -100,7 +100,7 @@ module Evaluation
       index = SearchConfig.govuk_index_name
       url = "#{uri}/#{index}/_rank_eval"
       response = HTTParty.post(url, options)
-      puts "Elasticsearch: #{response.code}: #{response.message}"
+      puts "OpenSearch: #{response.code}: #{response.message}"
       JSON.parse(response.body).with_indifferent_access
     end
 

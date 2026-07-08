@@ -5,7 +5,7 @@ module GovukIndex
     sidekiq_options queue: QUEUE_NAME
 
     def perform(document_ids, index_name)
-      actions = Index::ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name:))
+      actions = Index::OpenSearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name:))
 
       index = IndexFinder.by_name(index_name)
       documents = document_ids.filter_map do |document_id|

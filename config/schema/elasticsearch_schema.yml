@@ -5,9 +5,9 @@ index:
         limit: 2000
     analysis:
       analyzer:
-        # At index time, elasticsearch will use an analyzer named default in the index settings
+        # At index time, opensearch will use an analyzer named default in the index settings
         # if no analyzer is specified in the field mapping:
-        # https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
+        # https://www.elastic.co/guide/en/opensearch/reference/current/analyzer.html
         #
         # We don't need this at query time unless synonyms are disabled
         # using a debug flag.
@@ -109,7 +109,7 @@ index:
     # can't be applied from the nodes, so they have to live here.
     # This means that we can no longer (easily) have ci-agents or the
     # dev VM use no replicas.
-    # If the elasticsearch cluster is unable to allocate all of the replicas
+    # If the opensearch cluster is unable to allocate all of the replicas
     # (because you cannot host more than one replica of an index on a particular
     # node) then the cluster will show as being in a "yellow" state. The cluster
     # will still work fine, though.

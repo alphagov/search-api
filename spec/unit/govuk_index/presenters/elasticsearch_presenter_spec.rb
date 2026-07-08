@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe GovukIndex::ElasticsearchPresenter do
+RSpec.describe GovukIndex::OpenSearchPresenter do
   it "identifier" do
     payload = generate_random_example(payload: { payload_version: 1 })
 
@@ -10,14 +10,14 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
       version_type: "external",
     }
 
-    presenter = elasticsearch_presenter(payload, "help_page")
+    presenter = opensearch_presenter(payload, "help_page")
 
     expect(expected_identifier).to eq(presenter.identifier)
   end
 
   it "raise UnknownDocumentTypeError if the document_type does not have a valid mapping" do
     payload = generate_random_example(payload: { payload_version: 1 })
-    presenter = elasticsearch_presenter(payload, nil)
+    presenter = opensearch_presenter(payload, nil)
 
     expect {
       presenter.identifier
@@ -26,7 +26,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
 
   it "sets the updated_at timestamp" do
     payload = generate_random_example(payload: { payload_version: 1 })
-    presenter = elasticsearch_presenter(payload, "help_page")
+    presenter = opensearch_presenter(payload, "help_page")
     expect(presenter.updated_at).not_to be nil
   end
 
@@ -50,7 +50,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
       payload["details"].delete("image")
       payload["expanded_links"] = expanded_links
 
-      presenter = elasticsearch_presenter(payload, payload["document_type"])
+      presenter = opensearch_presenter(payload, payload["document_type"])
       expect(presenter.image_url).to eq(default_news_image_url)
     end
 
@@ -60,7 +60,7 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
       payload["expanded_links"] = expanded_links
       payload["details"]["image"] = { "url" => image_url }
 
-      presenter = elasticsearch_presenter(payload, payload["document_type"])
+      presenter = opensearch_presenter(payload, payload["document_type"])
       expect(presenter.image_url).to eq(image_url)
     end
 
@@ -68,12 +68,12 @@ RSpec.describe GovukIndex::ElasticsearchPresenter do
       payload = generate_random_example(payload: { payload_version: 1 })
       payload["details"].delete("image")
 
-      presenter = elasticsearch_presenter(payload, payload["document_type"])
+      presenter = opensearch_presenter(payload, payload["document_type"])
       expect(presenter.image_url).to be nil
     end
   end
 
-  def elasticsearch_presenter(payload, type = "aaib_report")
+  def opensearch_presenter(payload, type = "aaib_report")
     type_mapper = GovukIndex::DocumentTypeMapper.new(payload)
     allow(type_mapper).to receive(:type).and_return(type)
     described_class.new(payload:, type_mapper:)

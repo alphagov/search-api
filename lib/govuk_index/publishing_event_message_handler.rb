@@ -1,6 +1,6 @@
 module GovukIndex
   class PublishingEventMessageHandler
-    class ElasticsearchRetryError < StandardError; end
+    class OpenSearchRetryError < StandardError; end
 
     DOCUMENT_TYPES_WITHOUT_BASE_PATH =
       %w[
@@ -38,7 +38,7 @@ module GovukIndex
     end
 
     def call
-      processor = Index::ElasticsearchProcessor.govuk
+      processor = Index::OpenSearchProcessor.govuk
       process_action(processor)
       response = processor.commit
 
@@ -55,9 +55,9 @@ module GovukIndex
       type_mapper = DocumentTypeMapper.new(payload)
 
       presenter = if type_mapper.unpublishing_type?
-                    ElasticsearchDeletePresenter.new(payload:)
+                    OpenSearchDeletePresenter.new(payload:)
                   else
-                    ElasticsearchPresenter.new(
+                    OpenSearchPresenter.new(
                       payload: PayloadPreparer.new(payload).prepare,
                       type_mapper:,
                     )
@@ -94,7 +94,7 @@ module GovukIndex
       response_for_message = response.dig(0, "items", 0)
 
       unless Index::ResponseValidator.new(namespace: "govuk_index").valid?(response_for_message)
-        raise ElasticsearchRetryError.new(reason: "Elasticsearch failures")
+        raise OpenSearchRetryError.new(reason: "OpenSearch failures")
       end
     end
 

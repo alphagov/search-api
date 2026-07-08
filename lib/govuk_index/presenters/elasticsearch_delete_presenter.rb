@@ -1,6 +1,6 @@
 module GovukIndex
-  class ElasticsearchDeletePresenter
-    include ElasticsearchIdentity
+  class OpenSearchDeletePresenter
+    include OpenSearchIdentity
 
     def initialize(payload:)
       @payload = payload

@@ -25,7 +25,7 @@
   },
 
   "document_type": {
-    "description": "Type of document this data represents.  Implicitly included into all schemas.  Implemented to resolve the deprecation of multiple document types in Elasticsearch 6.x.",
+    "description": "Type of document this data represents.  Implicitly included into all schemas.  Implemented to resolve the deprecation of multiple document types in opensearch 6.x.",
     "type": "identifier"
   },
 

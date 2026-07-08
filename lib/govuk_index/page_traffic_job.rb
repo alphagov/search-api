@@ -32,7 +32,7 @@ module GovukIndex
     def perform(data, destination_index, cluster_key)
       records = Sidekiq.load_json(Zlib::Inflate.inflate(Base64.decode64(data)))
       cluster = Clusters.get_cluster(cluster_key)
-      processor = Index::ElasticsearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index, clusters: [cluster]))
+      processor = Index::OpenSearchProcessor.new(client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name: destination_index, clusters: [cluster]))
 
       bulk_presenter_class = Struct.new(:identifier, :document)
       records.each_slice(2) do |identifier, document|

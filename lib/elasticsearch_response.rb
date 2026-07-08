@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ElasticsearchResponse
+class OpenSearchResponse
   def initialize(response)
     @response = response
   end

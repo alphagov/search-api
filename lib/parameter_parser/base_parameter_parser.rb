@@ -15,7 +15,7 @@ class BaseParameterParser
   # The fields listed here are the only ones which the search results can be
   # ordered by.  These are listed and validated explicitly because
   # sorting by arbitrary fields can be expensive in terms of memory usage in
-  # elasticsearch, and because elasticsearch gives fairly obscure error
+  # opensearch, and because opensearch gives fairly obscure error
   # messages if undefined sort fields are used.
   ALLOWED_SORT_FIELDS = %w[
     public_timestamp
@@ -39,7 +39,7 @@ class BaseParameterParser
   FILTER_NAME_MAPPING = {
     # TODO: clients should not use `document_type` to search for documents.
     "document_type" => "document_type",
-    "elasticsearch_type" => "document_type",
+    "opensearch_type" => "document_type",
   }.freeze
 
   # The fields listed here are the only ones which can be used to calculated
@@ -75,10 +75,10 @@ class BaseParameterParser
 
   # The fields for which aggregates examples are allowed to be requested.
   # This is locked down because these can only be requested with the current
-  # version of elasticsearch by performing a separate query for each aggregates
+  # version of opensearch by performing a separate query for each aggregates
   # option. This is done using the msearch API to perform many queries
   # together, but is still potentially expensive. They could be efficiently
-  # calculated with the top-documents aggregator in elasticsearch 1.3, so this
+  # calculated with the top-documents aggregator in opensearch 1.3, so this
   # restriction could be relaxed in future.
   ALLOWED_AGGREGATE_EXAMPLE_FIELDS = %w[
     content_store_document_type

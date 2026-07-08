@@ -18,8 +18,8 @@ jobs:
     name: Run RSpec
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Elasticsearch
-        uses: alphagov/govuk-infrastructure/.github/actions/setup-elasticsearch@main
+      - name: Setup OpenSearch
+        uses: alphagov/govuk-infrastructure/.github/actions/setup-opensearch@main
 
       - name: Setup Redis
         uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main

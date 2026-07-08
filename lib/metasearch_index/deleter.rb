@@ -6,7 +6,7 @@ module MetasearchIndex
       end
 
       def delete
-        processor = Index::ElasticsearchProcessor.metasearch
+        processor = Index::OpenSearchProcessor.metasearch
         processor.delete(self)
         responses = processor.commit
         responses.each do |response|

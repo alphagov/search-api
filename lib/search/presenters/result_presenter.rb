@@ -14,7 +14,7 @@ module Search
       result = raw_result["_source"] || {}
 
       if schema
-        result = convert_elasticsearch_array_fields(result)
+        result = convert_opensearch_array_fields(result)
       end
 
       result = add_virtual_fields(result)
@@ -39,7 +39,7 @@ module Search
     # The only fields which should be returned as arrays are ones
     # explicitly set to "multivalued" in the schema.  So if any other
     # fields have been returned as an array, pick the first value.
-    def convert_elasticsearch_array_fields(result)
+    def convert_opensearch_array_fields(result)
       result.each_with_object({}) do |(field_name, values), out|
         # drop fields not in the schema
         next unless document_schema.fields.key? field_name
@@ -59,14 +59,14 @@ module Search
     def document_schema
       @document_schema ||= begin
         index_schema = schema.schema_for_alias_name(raw_result["_index"])
-        index_schema.elasticsearch_type(raw_result["_source"]["document_type"])
+        index_schema.opensearch_type(raw_result["_source"]["document_type"])
       end
     end
 
     def add_debug_values(result)
       result[:index] = SearchIndices::Index.strip_alias_from_index_name(raw_result["_index"])
 
-      # Put the elasticsearch score in es_score; this is used in templates when
+      # Put the opensearch score in es_score; this is used in templates when
       # debugging is requested, so it's nicer to be explicit about what score
       # it is.
       result[:es_score] = raw_result["_score"]
@@ -77,7 +77,7 @@ module Search
         result[:_explanation] = raw_result["_explanation"]
       end
 
-      result[:elasticsearch_type] = raw_result["_source"]["document_type"]
+      result[:opensearch_type] = raw_result["_source"]["document_type"]
 
       # TODO: clients should not use this. It's probably only used in the
       # search results in the `frontend` application.

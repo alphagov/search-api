@@ -70,7 +70,7 @@ module Search
       ]
     end
 
-    # Fetch bet information from elasticsearch
+    # Fetch bet information from opensearch
     #
     # Returns an array of 4-tuples, holding:
     #  - query the bet was for
@@ -103,7 +103,7 @@ module Search
     end
 
     def timed_raw_search(payload)
-      GovukStatsd.time("elasticsearch.best_bets_raw_search") do
+      GovukStatsd.time("opensearch.best_bets_raw_search") do
         @metasearch_index.raw_search(payload)
       end
     end
@@ -118,7 +118,7 @@ module Search
     # it's a good idea to avoid risking having to deal with huge numbers of
     # returned bets.
     #
-    # It's not possible to build an elasticsearch query against the stemmed_query
+    # It's not possible to build an opensearch query against the stemmed_query
     # field which only returns results where the entire stemmed_query field value
     # occurs as a phrase in the user's query.  Instead, we do an OR query to
     # obtain a set of candidates which match that field, and use the

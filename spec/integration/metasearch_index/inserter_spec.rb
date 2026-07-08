@@ -77,11 +77,11 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
     expect_document_is_in_rummager(document, type: "best_bet", index: "metasearch_test", id: "ca3916-exact")
   end
 
-  it "raises an error if the process fails to write to elasticsearch" do
+  it "raises an error if the process fails to write to opensearch" do
     failure_reponses = [{
       "items" => [{ "insert" => { "status" => 500 } }],
     }]
-    expect_any_instance_of(Index::ElasticsearchProcessor).to receive(:commit).and_return(failure_reponses)
+    expect_any_instance_of(Index::OpenSearchProcessor).to receive(:commit).and_return(failure_reponses)
 
     document = {
       "details" => %({"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}),
@@ -90,6 +90,6 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
     }
     expect {
       described_class.new(id: "ca3916-exact", document:).insert
-    }.to raise_error(Index::ResponseValidator::ElasticsearchError)
+    }.to raise_error(Index::ResponseValidator::OpenSearchError)
   end
 end

@@ -77,7 +77,7 @@ module Indexer
           query: { match_all: {} },
           size: 0,
         })
-        ElasticsearchResponse.new(response).total_hits
+        OpenSearchResponse.new(response).total_hits
       end
     end
 

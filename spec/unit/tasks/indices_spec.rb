@@ -2,7 +2,7 @@ require "spec_helper"
 require "rake"
 
 RSpec.describe "indices" do
-  let(:elasticsearch_client) { double("OpenSearch::Client") }
+  let(:opensearch_client) { double("OpenSearch::Client") }
   let(:indices_client) do
     double("OpenSearch::API::Indices::IndicesClient",
            get_alias: {},
@@ -19,8 +19,8 @@ RSpec.describe "indices" do
   let(:govuk_index_name) { SearchConfig.govuk_index_name }
 
   before do
-    allow(Services).to receive(:elasticsearch).and_return(elasticsearch_client)
-    allow(elasticsearch_client).to receive(:indices).and_return(indices_client)
+    allow(Services).to receive(:opensearch).and_return(opensearch_client)
+    allow(opensearch_client).to receive(:indices).and_return(indices_client)
     Rake::Task[task_name].reenable
   end
 
@@ -306,7 +306,7 @@ RSpec.describe "indices" do
 
     before do
       allow(indices_client).to receive(:get).with(index: "#{base_name}*", expand_wildcards: %w[open closed]).and_return(aliases)
-      allow(elasticsearch_client).to receive(:search).and_return(
+      allow(opensearch_client).to receive(:search).and_return(
         { "hits" => { "hits" => [{ "_source" => { "updated_at" => updated_at } }] } },
       )
     end

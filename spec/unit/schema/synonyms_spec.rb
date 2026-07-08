@@ -35,7 +35,7 @@ RSpec.describe SynonymParser do
     expect_index_synonyms_contain "jelly fish => jellyfish"
   end
 
-  it "configures synonyms in the correct Elasticsearch settings format" do
+  it "configures synonyms in the correct OpenSearch settings format" do
     config = [
       { "both" => "pig, micropig" },
       { "search" => "mcrpig => micropig" },

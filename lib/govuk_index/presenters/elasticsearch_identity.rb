@@ -1,5 +1,5 @@
 module GovukIndex
-  module ElasticsearchIdentity
+  module OpenSearchIdentity
     # Documents are uniquely identified by the combination of index
     # and id.  We also use external versioning to keep in sync with
     # the publishing API.

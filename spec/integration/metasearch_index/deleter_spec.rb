@@ -40,13 +40,13 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
     }.to raise_error(Index::ResponseValidator::NotFound)
   end
 
-  it "raises an error if the process fails to delete in elasticsearch" do
+  it "raises an error if the process fails to delete in opensearch" do
     failure_reponse = [{
       "items" => [{ "insert" => { "status" => 500 } }],
     }]
-    expect_any_instance_of(Index::ElasticsearchProcessor).to receive(:commit).and_return(failure_reponse)
+    expect_any_instance_of(Index::OpenSearchProcessor).to receive(:commit).and_return(failure_reponse)
     expect {
       described_class.new(id: "ca3916-exact").delete
-    }.to raise_error(Index::ResponseValidator::ElasticsearchError)
+    }.to raise_error(Index::ResponseValidator::OpenSearchError)
   end
 end

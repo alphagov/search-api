@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe SearchIndices::IndexGroup do
-  let(:elasticsearch_ok) do
+  let(:opensearch_ok) do
     {
       status: 200,
       body: { "ok" => true, "acknowledged" => true }.to_json,
@@ -159,7 +159,7 @@ RSpec.describe SearchIndices::IndexGroup do
       )
 
     delete_stub = stub_request(:delete, "#{base_uri}/#{dead_name_two}")
-      .to_return(elasticsearch_ok)
+      .to_return(opensearch_ok)
 
     @server.index_group("test").timed_clean(0)
 

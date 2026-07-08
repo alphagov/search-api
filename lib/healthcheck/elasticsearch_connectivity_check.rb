@@ -3,9 +3,9 @@ require "govuk_app_config"
 module Healthcheck
   # This is a custom check that is called by GovukHealthcheck
   # See GovukHealthcheck (govuk_app_config/docs/healthchecks.md) for usage info
-  class ElasticsearchConnectivityCheck
+  class OpenSearchConnectivityCheck
     def name
-      :elasticsearch_connectivity
+      :opensearch_connectivity
     end
 
     def status
@@ -14,11 +14,11 @@ module Healthcheck
 
     def message
       if clusters_healthy?
-        "search-api can connect to all elasticsearch clusters"
+        "search-api can connect to all opensearch clusters"
       else
         names = failing_clusters.map(&:key).join(", ")
         failed = failing_clusters.count
-        "search-api cannot connect to #{failed} elasticsearch #{'cluster'.pluralize(failed)}! \n Failing: #{names}"
+        "search-api cannot connect to #{failed} opensearch #{'cluster'.pluralize(failed)}! \n Failing: #{names}"
       end
     end
 
@@ -56,12 +56,12 @@ module Healthcheck
     end
 
     def cluster_health(cluster)
-      # Makes a call to the elasticsearch cluster
-      elasticsearch_client(cluster).cluster.health
+      # Makes a call to the opensearch cluster
+      opensearch_client(cluster).cluster.health
     end
 
-    def elasticsearch_client(cluster)
-      Services.elasticsearch(cluster:)
+    def opensearch_client(cluster)
+      Services.opensearch(cluster:)
     end
   end
 end

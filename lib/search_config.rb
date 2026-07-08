@@ -9,7 +9,7 @@ class SearchConfig
       page_traffic_index_name
     ].each do |config_method|
       define_method config_method do
-        elasticsearch.fetch(config_method)
+        opensearch.fetch(config_method)
       end
     end
 
@@ -47,9 +47,9 @@ class SearchConfig
       Search::QueryParameters.new(parser.parsed_params)
     end
 
-    def elasticsearch
+    def opensearch
       Cache.get(Cache::SEARCH_CONFIG) do
-        ElasticsearchConfig.new.config
+        OpenSearchConfig.new.config
       end
     end
 
@@ -57,8 +57,8 @@ class SearchConfig
 
     def combined_index_schema
       # schema_config here corresponds to the default cluster, which is
-      # fine because the 'elasticsearch_types' field (which the combined
-      # index schema uses) is unaffected by the 'elasticsearch_settings'
+      # fine because the 'opensearch_types' field (which the combined
+      # index schema uses) is unaffected by the 'opensearch_settings'
       # field (which is what can be overridden per-cluster).
       Cache.get(Cache::COMBINED_INDEX_SCHEMA) do
         CombinedIndexSchema.new(
@@ -83,7 +83,7 @@ class SearchConfig
 
   def schema_config
     @schema_config ||= SchemaConfig.new(
-      ElasticsearchConfig.new.config_path,
+      OpenSearchConfig.new.config_path,
       schema_config_file: cluster.schema_config_file,
     )
   end
@@ -139,6 +139,6 @@ private
   end
 
   def client
-    @client ||= Services.elasticsearch(hosts: base_uri)
+    @client ||= Services.opensearch(hosts: base_uri)
   end
 end

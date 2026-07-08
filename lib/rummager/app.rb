@@ -11,7 +11,7 @@ set :root, File.dirname(__FILE__)
 
 require "rummager"
 require "govuk_app_config"
-require "healthcheck/elasticsearch_connectivity_check"
+require "healthcheck/opensearch_connectivity_check"
 
 class Rummager < Sinatra::Application
   Warden::Strategies.add :bearer_token, Warden::OAuth2::Strategies::Bearer
@@ -86,11 +86,11 @@ class Rummager < Sinatra::Application
   end
 
   error OpenSearch::Transport::Transport::Errors::RequestTimeout do
-    halt(503, "Elasticsearch timed out")
+    halt(503, "OpenSearch timed out")
   end
 
   error OpenSearch::Transport::Transport::SnifferTimeoutError do
-    halt(503, "Elasticsearch timed out")
+    halt(503, "OpenSearch timed out")
   end
 
   error RedisClient::TimeoutError do
@@ -105,7 +105,7 @@ class Rummager < Sinatra::Application
     halt(400, env["sinatra.error"].message)
   end
 
-  error Index::ResponseValidator::ElasticsearchError do
+  error Index::ResponseValidator::OpenSearchError do
     GovukError.notify(
       env["sinatra.error"],
       extra: {
@@ -191,7 +191,7 @@ class Rummager < Sinatra::Application
   get "/healthcheck/ready" do
     GovukHealthcheck.rack_response(
       GovukHealthcheck::SidekiqRedis,
-      Healthcheck::ElasticsearchConnectivityCheck,
+      Healthcheck::OpenSearchConnectivityCheck,
     ).call
   end
 

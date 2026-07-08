@@ -149,7 +149,7 @@ RSpec.describe Search::ResultSetPresenter do
     end
 
     it "return only basic metadata of fields" do
-      expected_keys = %i[index es_score _id elasticsearch_type document_type]
+      expected_keys = %i[index es_score _id opensearch_type document_type]
 
       expect(expected_keys).to eq(@output[:results].first.keys)
     end

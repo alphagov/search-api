@@ -38,7 +38,7 @@ module GovukIndex
 
     # Breaks the given input stream into batches of documents
     # This is due to ES recommendations for index optimisation
-    # https://www.elastic.co/guide/en/elasticsearch/reference/2.4/docs-bulk.html
+    # https://www.elastic.co/guide/en/opensearch/reference/2.4/docs-bulk.html
     def in_even_sized_batches(iostream, batch_size = @iostream_batch_size, &_block)
       iostream.each_line.each_slice(batch_size * 2) do |batch|
         yield(batch.map { |b| JSON.parse(b) })
