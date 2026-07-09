@@ -31,13 +31,23 @@ module Services
   # request succeeds (but times out) and the second retry request returns an
   # error because the operation has already been run.
   def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
+    raw_uri = cluster ? cluster.uri : hosts
+
     Elasticsearch::Client.new(
-      hosts: cluster ? cluster.uri : hosts,
+      hosts: with_default_port(raw_uri),
       request_timeout: timeout,
       logger: Logging.logger[self],
       retry_on_failure:,
       transport_options: { headers: { "Content-Type" => "application/json" } },
     )
+  end
+
+  def self.with_default_port(uri)
+    return uri if uri.match?(/:\d+$/)
+    return "#{uri}:9200" if uri.start_with?("http://")
+    return "#{uri}:443" if uri.start_with?("https://")
+
+    uri
   end
 
   def self.statsd_client
