@@ -331,6 +331,56 @@ RSpec.describe "indices" do
     end
   end
 
+  describe "remote_reindex" do
+    let(:task_name) { "search:remote_reindex" }
+    let(:source_url) { "http://source:9200" }
+    let(:dest_url)   { "http://dest:9200" }
+    let(:index)      { "users" }
+
+    let(:reindexer) { instance_double("RemoteReindexer", reindex: true) }
+
+    before do
+      allow(Index::RemoteReindexer)
+        .to receive(:new)
+              .and_return(reindexer)
+    end
+    it "creates a RemoteReindexer with the supplied task arguments" do
+      Rake::Task[task_name].invoke(source_url, dest_url, index)
+
+      expect(Index::RemoteReindexer).to have_received(:new).with(
+        source_url: source_url,
+        dest_url: dest_url,
+        index: index,
+      )
+
+      expect(reindexer).to have_received(:reindex)
+    end
+
+    context "when task arguments are omitted" do
+      around do |example|
+        ClimateControl.modify(
+          SOURCE_URI: source_url,
+          DEST_URI: dest_url,
+          INDEX: index,
+        ) do
+          example.run
+        end
+      end
+
+      it "uses environment variables" do
+        Rake::Task[task_name].invoke
+
+        expect(Index::RemoteReindexer).to have_received(:new).with(
+          source_url: source_url,
+          dest_url: dest_url,
+          index: index,
+        )
+
+        expect(reindexer).to have_received(:reindex)
+      end
+    end
+  end
+
   def capture_stdout
     old = $stdout
     $stdout = StringIO.new

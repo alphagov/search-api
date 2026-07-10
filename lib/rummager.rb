@@ -74,6 +74,7 @@ require "indexer/popularity_lookup"
 require "index/client"
 require "index/elasticsearch_processor"
 require "index/response_validator"
+require "index/remote_reindexer"
 
 require "govuk_index"
 require "govuk_index/updater"

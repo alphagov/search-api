@@ -187,4 +187,13 @@ the existing data, you will need to run the \"migrate_schema\" task instead, whi
       end
     end
   end
+
+  desc "Reindex an Elasticsearch index from a source cluster into a destination cluster."
+  task :remote_reindex, %i[source_url dest_url index] do |_, args|
+    source_url = args[:source_url] || ENV["SOURCE_URI"]
+    dest_url = args[:dest_url] || ENV["DEST_URI"]
+    index = args[:index] || ENV["INDEX"]
+
+    Index::RemoteReindexer.new(source_url:, dest_url:, index:).reindex
+  end
 end
