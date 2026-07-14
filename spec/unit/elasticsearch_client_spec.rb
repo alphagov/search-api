@@ -87,6 +87,46 @@ RSpec.describe ElasticsearchClient do
         end
       end
 
+      context "when the server is OpenSearch" do
+        let(:version_info) do
+          { "version" => { "distribution" => "opensearch" } }
+        end
+        it "returns true" do
+          expect(described_class.es7?).to eq(true)
+        end
+        it "calls 'search' with the right parameters, without including type" do
+          described_class.search(index_name: "index", body: { a: :b }, client: es_client)
+          expect(es_client).to have_received(:search).with(index: "index",
+                                                           body: { a: :b })
+        end
+        it "calls 'index' with the right parameters, without including type" do
+          described_class.index(id: 123, index_name: "index", atts: { a: :b }, params: { c: :d }, client: es_client)
+          expect(es_client).to have_received(:index).with(id: 123,
+                                                          index: "index",
+                                                          body: { a: :b },
+                                                          c: :d)
+        end
+        it "returns mappings without type" do
+          expect(described_class.compatible_mappings({ a: :b }))
+            .to eq({ "properties" => { a: :b } })
+        end
+        it "calls 'put_mapping' with the right parameters, without including type" do
+          described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)
+          expect(indices_client).to have_received(:put_mapping).with(index: "index",
+                                                                     body: { a: :b })
+        end
+        it "calls 'delete' with the right parameters, without including type" do
+          described_class.delete(id: 123, index_name: "index", client: es_client)
+          expect(es_client).to have_received(:delete).with(index: "index", id: 123)
+        end
+        it "returns mappings for Opensearch, which does not include a type" do
+          expect(described_class.mappings_properties(a: :b)).to eq({ a: :b })
+        end
+        it "returns an identifier for bulk operations for Opensearch, which does not include a type" do
+          expect(described_class.compatible_identifier({ a: :b })).to eq({ a: :b })
+        end
+      end
+
       context "when Elasticsearch version is 6.x" do
         let(:version_info) do
           { "version" => { "number" => "6.8.23" } }
