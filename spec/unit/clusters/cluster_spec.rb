@@ -22,13 +22,13 @@ RSpec.describe Clusters::Cluster do
   end
 
   describe "#inactive?" do
-    context "when a cluster is defined in the elasticsearch.yml config file" do
+    context "when a cluster is defined in the opensearch.yml config file" do
       it "responds false when uri is present" do
         expect(cluster.inactive?).to be false
       end
     end
 
-    context "when a cluster not defined in the elasticsearch.yml config file" do
+    context "when a cluster not defined in the opensearch.yml config file" do
       subject(:cluster) { described_class.new(key: "Z", uri_key: "base_uri_c") }
 
       it "responds true" do
@@ -38,6 +38,6 @@ RSpec.describe Clusters::Cluster do
   end
 
   def es_config
-    ElasticsearchConfig.new.config
+    OpenSearchConfig.new.config
   end
 end

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe SearchIndices::IndexGroup do
-  let(:elasticsearch_ok) do
+  let(:opensearch_ok) do
     {
       status: 200,
       body: { "ok" => true, "acknowledged" => true }.to_json,
@@ -22,12 +22,12 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "create index" do
     expected_body = {
-      "settings" => @schema.elasticsearch_settings("govuk"),
-      "mappings" => @schema.elasticsearch_mappings("govuk"),
+      "settings" => @schema.opensearch_settings("govuk"),
+      "mappings" => @schema.opensearch_mappings("govuk"),
     }.to_json
     stub = stub_request(:put, %r{#{base_uri}/govuk-.*})
       .with(body: expected_body)
-      .to_return(elasticsearch_ok)
+      .to_return(opensearch_ok)
     index = @server.index_group("govuk").create_index
 
     assert_requested(stub)
@@ -37,7 +37,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with no existing alias" do
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, "#{base_uri}/_alias/test")
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -55,7 +55,7 @@ RSpec.describe SearchIndices::IndexGroup do
         body: expected_body,
         headers: { "Content-Type" => "application/json" },
       )
-      .to_return(elasticsearch_ok)
+      .to_return(opensearch_ok)
 
     @server.index_group("test").switch_to(new_index)
 
@@ -65,7 +65,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with existing alias" do
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, "#{base_uri}/_alias/test")
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -83,7 +83,7 @@ RSpec.describe SearchIndices::IndexGroup do
     }.to_json
     post_stub = stub_request(:post, "#{base_uri}/_aliases")
       .with(body: expected_body)
-      .to_return(elasticsearch_ok)
+      .to_return(opensearch_ok)
 
     @server.index_group("test").switch_to(new_index)
 
@@ -94,7 +94,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "switch index with multiple existing aliases" do
     # Not expecting the system to get into this state, but it should cope
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, "#{base_uri}/_alias/test")
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -114,7 +114,7 @@ RSpec.describe SearchIndices::IndexGroup do
     }.to_json
     post_stub = stub_request(:post, "#{base_uri}/_aliases")
       .with(body: expected_body)
-      .to_return(elasticsearch_ok)
+      .to_return(opensearch_ok)
 
     @server.index_group("test").switch_to(new_index)
 
@@ -124,7 +124,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with existing real index" do
     new_index = double("New index", index_name: "test-new")
-    stub_request(:get, "#{base_uri}/_alias")
+    stub_request(:get, "#{base_uri}/_alias/test")
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -203,7 +203,7 @@ RSpec.describe SearchIndices::IndexGroup do
       )
 
     delete_stub = stub_request(:delete, "#{base_uri}/#{index_name}")
-      .to_return(elasticsearch_ok)
+      .to_return(opensearch_ok)
 
     @server.index_group("test").clean
 
@@ -241,7 +241,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
     delete_stubs = index_names.map do |index_name|
       stub_request(:delete, "#{base_uri}/#{index_name}")
-        .to_return(elasticsearch_ok)
+        .to_return(opensearch_ok)
     end
 
     @server.index_group("test").clean
@@ -264,7 +264,7 @@ RSpec.describe SearchIndices::IndexGroup do
       )
 
     delete_stub = stub_request(:delete, "#{base_uri}/#{dead_name}")
-      .to_return(elasticsearch_ok)
+      .to_return(opensearch_ok)
 
     @server.index_group("test").clean
 
@@ -302,7 +302,7 @@ RSpec.describe SearchIndices::IndexGroup do
       )
 
     delete_stub = stub_request(:delete, "#{base_uri}/#{this_name}")
-      .to_return(elasticsearch_ok)
+      .to_return(opensearch_ok)
 
     @server.index_group("test").clean
 

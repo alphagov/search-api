@@ -2,7 +2,7 @@ module Sitemap
   class Generator
     def initialize(search_config, uploader, timestamp)
       @search_config = search_config
-      @search_client = Services.elasticsearch(hosts: search_config.base_uri, timeout: 10)
+      @search_client = Services.opensearch(hosts: search_config.base_uri, timeout: 10)
       @uploader      = uploader
       @timestamp     = timestamp
       @logger        = Logging.logger[self]
@@ -73,7 +73,7 @@ module Sitemap
       page                  = initial_scroll
       scroll_id             = page["_scroll_id"]
       documents             = page["hits"]["hits"]
-      total_documents_count = page["hits"]["total"]
+      total_documents_count = OpenSearchResponse.new(page).total_hits
       total_page_count      = total_documents_count.fdiv(SCROLL_BATCH_SIZE).ceil
       chunk                 = [homepage]
 

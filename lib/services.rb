@@ -20,18 +20,18 @@ module Services
     Aws::S3::Client.new
   end
 
-  # Build a client to connect to one or more elasticsearch nodes.
+  # Build a client to connect to one or more opensearch nodes.
   # hosts should be a comma separated string. Valid formats
-  # are documented at http://www.rubydoc.info/gems/elasticsearch-transport#Setting_Hosts
+  # are documented at http://www.rubydoc.info/gems/opensearch-transport#Setting_Hosts
   #
   # Be careful when setting a short timeout value. You may see confusing HTTP
-  # 4XX responses rather than timeout errors because the Elasticsearch client
+  # 4XX responses rather than timeout errors because the OpenSearch client
   # uses Faraday which uses Net::HTTP, and Net::HTTP retries idempotent requests
   # which time out (including PUT and DELETE requests). So the first, slow,
   # request succeeds (but times out) and the second retry request returns an
   # error because the operation has already been run.
-  def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
-    Elasticsearch::Client.new(
+  def self.opensearch(cluster: nil, hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
+    OpenSearch::Client.new(
       hosts: cluster ? cluster.uri : hosts,
       request_timeout: timeout,
       logger: Logging.logger[self],

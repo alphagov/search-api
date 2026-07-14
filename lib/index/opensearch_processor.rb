@@ -1,5 +1,5 @@
 module Index
-  class ElasticsearchProcessor
+  class OpenSearchProcessor
     def self.metasearch
       new(client: MetasearchIndex::Client)
     end

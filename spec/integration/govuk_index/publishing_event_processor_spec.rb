@@ -16,7 +16,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       consumer.run
     end
 
-    it "saves new documents to elasticsearch" do
+    it "saves new documents to opensearch" do
       allow(GovukIndex::AllowedFormats).to receive(:allowed?).and_return(true)
       random_example = generate_random_example(
         payload: { document_type: "help_page", payload_version: 123 },
@@ -90,7 +90,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       expect(logger).to have_received(:info).with("test.route -> BLOCKLISTED #{random_example['base_path']} edition (non-indexable)")
       expect {
         fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
-      }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+      }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
     end
 
     it "alerts on unknown formats - neither safe or block listed" do
@@ -147,6 +147,6 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
   end
 
   def client(cluster: Cluster.default_cluster)
-    @client ||= Services.elasticsearch(cluster:)
+    @client ||= Services.opensearch(cluster:)
   end
 end

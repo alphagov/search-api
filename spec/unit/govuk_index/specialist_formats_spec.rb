@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe GovukIndex::ElasticsearchPresenter, "Specialist formats" do
+RSpec.describe GovukIndex::OpenSearchPresenter, "Specialist formats" do
   before do
     allow_any_instance_of(Indexer::PopularityLookup).to receive(:lookup_popularities).and_return({})
   end

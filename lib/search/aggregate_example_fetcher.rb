@@ -59,24 +59,21 @@ module Search
                      query_filter,
                    ]
                  end
+        search_query = query.nil? ? nil : { bool: { must: query } }
         {
-          query: {
-            bool: {
-              must: query,
-            },
-          },
+          query: search_query,
           post_filter: { bool: { must: filter } },
           size: example_count,
           _source: {
             includes: example_fields,
           },
           sort: [{ popularity: { order: :desc } }],
-        }
+        }.compact
       end
     end
 
     def batched_fetch_by_slug(field_name, slugs, example_count, example_fields, query, filter)
-      # Elasticsearch has an internal queue limit on the number of searches to be
+      # OpenSearch has an internal queue limit on the number of searches to be
       # performed: this defaults to 1000.  If we go close to this limit, we risk
       # getting error responses saying that the queue is full.  Therefore,
       # instead of sending all the searches at once, we send them in batches of
@@ -107,7 +104,7 @@ module Search
       result = {}
       slugs.zip(response_list) do |slug, response|
         result[slug] = {
-          total: response["hits"]["total"],
+          total: OpenSearchResponse.new(response).total_hits,
           examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["_source"] || {}) },
         }
       end
@@ -123,8 +120,8 @@ module Search
           return result
         end
 
-        # Convert to array for consistency between elasticsearch 0.90 and 1.0.
-        # When we no longer support elasticsearch <1.0, values here will
+        # Convert to array for consistency between opensearch 0.90 and 1.0.
+        # When we no longer support opensearch <1.0, values here will
         # always be an array, so this block can be removed.
         if values.nil?
           values = []

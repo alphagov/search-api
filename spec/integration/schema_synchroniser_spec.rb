@@ -25,7 +25,7 @@ RSpec.describe SchemaSynchroniser do
 
     expect {
       synchroniser.sync_mappings(mapping, logger)
-    }.to raise_error(Elasticsearch::Transport::Transport::Errors::BadRequest)
+    }.to raise_error(OpenSearch::Transport::Transport::Errors::BadRequest)
 
     expect(output.string).to include("Unable to update mappings for index: #{index_name};")
   end
@@ -35,7 +35,8 @@ RSpec.describe SchemaSynchroniser do
 
     synchroniser.sync_mappings(mapping, logger)
 
-    response = Services.elasticsearch.indices.get_mapping(index: SearchConfig.govuk_index_name)
-    expect(response.values.dig(0, "mappings", "generic-document", "properties", "test")).to eq({ "type" => "keyword" })
+    response = Services.opensearch.indices.get_mapping(index: SearchConfig.govuk_index_name)
+
+    expect(response.values.dig(0, "mappings", "properties", "test")).to eq({ "type" => "keyword" })
   end
 end

@@ -242,7 +242,7 @@ RSpec.describe "SearchTest" do
     expect(first_hit_explain.keys).to include("details")
   end
 
-  it "can scope by elasticsearch type" do
+  it "can scope by opensearch type" do
     commit_document(index_name, build(:document, :cma_case, title: "cma title", link: "/cma-cases"))
 
     get "/search?filter_document_type=cma_case"
@@ -445,7 +445,7 @@ RSpec.describe "SearchTest" do
   it "will show the query" do
     get "/search?q=test&debug=show_query"
 
-    expect(parsed_response.fetch("elasticsearch_query")).to be_truthy
+    expect(parsed_response.fetch("opensearch_query")).to be_truthy
   end
 
   it "will show the cluster" do
@@ -500,6 +500,8 @@ RSpec.describe "SearchTest" do
   end
 
   it "boosts custom fields" do
+    IntegrationTestHelper.recreate_indices
+
     less_relevant_licence = {
       "title" => "Less relevant licence",
       "link" => "/find-licences/less-relevant-licence",

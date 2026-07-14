@@ -1,7 +1,7 @@
 require "spec_helper"
 
-RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
-  it "generates an identifier for Elasticsearch" do
+RSpec.describe GovukIndex::OpenSearchDeletePresenter do
+  it "generates an identifier for OpenSearch" do
     payload = {
       "base_path" => "/cheese",
       "document_type" => "redirect",
@@ -17,7 +17,6 @@ RSpec.describe GovukIndex::ElasticsearchDeletePresenter do
     allow_any_instance_of(described_class).to receive(:existing_document).and_return(existing_document)
 
     expected_identifier = {
-      _type: "generic-document",
       _id: "/cheese",
       version: 15,
       version_type: "external",

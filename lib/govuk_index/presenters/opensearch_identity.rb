@@ -1,5 +1,5 @@
 module GovukIndex
-  module ElasticsearchIdentity
+  module OpenSearchIdentity
     # Documents are uniquely identified by the combination of index
     # and id.  We also use external versioning to keep in sync with
     # the publishing API.
@@ -7,7 +7,6 @@ module GovukIndex
       raise UnknownDocumentTypeError unless type
 
       {
-        _type: "generic-document",
         _id: id,
         version: payload["payload_version"],
         version_type: "external",

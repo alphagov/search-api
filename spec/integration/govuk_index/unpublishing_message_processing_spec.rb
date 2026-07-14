@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
-  it "unpublish message will remove record from elasticsearch" do
+  it "unpublish message will remove record from opensearch" do
     allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("answer" => :all)
 
     message = unpublishing_event_message(
@@ -24,8 +24,8 @@ RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
     commit_index("govuk_test")
 
     expect {
-      fetch_document_from_rummager(id: base_path, index: "govuk_test", type: "answer")
-    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+      fetch_document_from_rummager(id: base_path, index: "govuk_test")
+    }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
   end
 
   it "unpublish withdrawn messages will set is withdrawn flag" do

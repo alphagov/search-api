@@ -34,7 +34,7 @@ module QueryComponents
     # use content ID (which never changes) as a tie breaker if two
     # items are otherwise equally placed in the results -- this is so
     # we're explicit about how to break the tie, rather than relying
-    # on however Elasticsearch chooses to do it.
+    # on however OpenSearch chooses to do it.
     def tie_breaking_sort
       { "content_id" => { order: "asc" } }
     end

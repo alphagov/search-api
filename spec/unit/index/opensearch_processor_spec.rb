@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Index::ElasticsearchProcessor do
+RSpec.describe Index::OpenSearchProcessor do
   subject { described_class.govuk }
 
   let(:cluster_count) { Clusters.count }
@@ -8,7 +8,6 @@ RSpec.describe Index::ElasticsearchProcessor do
   it "saves valid document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
-      _type: "help_page",
       _id: "/cheese",
     )
     allow(presenter).to receive(:document).and_return(
@@ -17,7 +16,7 @@ RSpec.describe Index::ElasticsearchProcessor do
     )
 
     client = double("client")
-    allow(Services).to receive("elasticsearch").and_return(client)
+    allow(Services).to receive("opensearch").and_return(client)
     expect(client).to receive(:bulk).exactly(cluster_count).times.with({
       index: SearchConfig.govuk_index_name,
       body: [
@@ -32,7 +31,6 @@ RSpec.describe Index::ElasticsearchProcessor do
   it "deletes valid document" do
     presenter = double(:presenter)
     allow(presenter).to receive(:identifier).and_return(
-      _type: "help_page",
       _id: "/cheese",
     )
     allow(presenter).to receive(:document).and_return(
@@ -41,7 +39,7 @@ RSpec.describe Index::ElasticsearchProcessor do
     )
 
     client = double("client")
-    allow(Services).to receive("elasticsearch").and_return(client)
+    allow(Services).to receive("opensearch").and_return(client)
     expect(client).to receive(:bulk).exactly(cluster_count).times.with({
       index: SearchConfig.govuk_index_name,
       body: [

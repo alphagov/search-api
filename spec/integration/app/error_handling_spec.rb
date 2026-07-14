@@ -27,16 +27,16 @@ RSpec.describe "ErrorHandlingTest" do
 
   include_examples(
     "a sinatra error handler",
-    exception_class: Elasticsearch::Transport::Transport::Errors::RequestTimeout,
+    exception_class: OpenSearch::Transport::Transport::Errors::RequestTimeout,
     status: 503,
-    body: "Elasticsearch timed out",
+    body: "OpenSearch timed out",
   )
 
   include_examples(
     "a sinatra error handler",
-    exception_class: Elasticsearch::Transport::Transport::SnifferTimeoutError,
+    exception_class: OpenSearch::Transport::Transport::SnifferTimeoutError,
     status: 503,
-    body: "Elasticsearch timed out",
+    body: "OpenSearch timed out",
   )
 
   include_examples(
@@ -48,13 +48,13 @@ RSpec.describe "ErrorHandlingTest" do
 
   include_examples(
     "a sinatra error handler",
-    exception_class: Elasticsearch::Transport::Transport::Errors::BadRequest,
+    exception_class: OpenSearch::Transport::Transport::Errors::BadRequest,
     status: 400,
     body: ->(msg) { msg },
   )
 
   it "notifies GovukError with the exception and params" do
-    error = Index::ResponseValidator::ElasticsearchError.new("error")
+    error = Index::ResponseValidator::OpenSearchError.new("error")
 
     expect(GovukError).to receive(:notify).with(
       error,

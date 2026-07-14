@@ -2,12 +2,12 @@ require "spec_helper"
 
 RSpec.describe Search::DuplicateFinder do
   let(:index) { "govuk_test" }
-  describe "there are no documents in Elasticsearch" do
+  describe "there are no documents in OpenSearch" do
     it "returns an empty array" do
       expect(Search::DuplicateFinder.new.find_duplicates).to eq([])
     end
   end
-  describe "there are documents in Elasticsearch, none have a duplicate content_id" do
+  describe "there are documents in OpenSearch, none have a duplicate content_id" do
     it "returns an empty array" do
       (1..10).each do |n|
         commit_document(index, { link: "link/path#{n}", content_id: SecureRandom.uuid })
@@ -15,7 +15,7 @@ RSpec.describe Search::DuplicateFinder do
       expect(Search::DuplicateFinder.new.find_duplicates).to be_empty
     end
   end
-  describe "there are documents in Elasticsearch, some have a duplicate content_id" do
+  describe "there are documents in OpenSearch, some have a duplicate content_id" do
     it "returns an array of duplicate content_ids" do
       (1..10).each do |n|
         commit_document(index, { link: "link/path#{n}", content_id: SecureRandom.uuid })

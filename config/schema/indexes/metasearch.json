@@ -1,5 +1,5 @@
 {
-  "elasticsearch_types": [
+  "opensearch_types": [
     "best_bet"
   ]
 }

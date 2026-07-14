@@ -1,6 +1,6 @@
 module GovukIndex
-  class ElasticsearchDeletePresenter
-    include ElasticsearchIdentity
+  class OpenSearchDeletePresenter
+    include OpenSearchIdentity
 
     def initialize(payload:)
       @payload = payload
@@ -33,8 +33,8 @@ module GovukIndex
     def existing_document
       @existing_document ||=
         begin
-          Client.get(type: "_all", id:)
-        rescue Elasticsearch::Transport::Transport::Errors::NotFound
+          Client.get(id:)
+        rescue OpenSearch::Transport::Transport::Errors::NotFound
           nil
         end
     end

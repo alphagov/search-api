@@ -3,11 +3,11 @@ module MetasearchIndex
     class V2
       def initialize(id:, document:)
         @id = id.presence || raise(ArgumentError, "ID must be supplied.")
-        @document = document.presence || raise(ArgumentError, "No record provided to insert into Elasticsearch.")
+        @document = document.presence || raise(ArgumentError, "No record provided to insert into OpenSearch.")
       end
 
       def insert
-        processor = Index::ElasticsearchProcessor.metasearch
+        processor = Index::OpenSearchProcessor.metasearch
         processor.save(self)
         responses = processor.commit
         responses.each do |response|
@@ -17,7 +17,6 @@ module MetasearchIndex
 
       def identifier
         {
-          _type: "generic-document",
           _id: @id,
         }
       end

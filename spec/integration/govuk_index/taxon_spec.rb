@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe "taxon publishing" do
-  # Using a unique base path to work around an atomicity issue with Elasticsearch
+  # Using a unique base path to work around an atomicity issue with OpenSearch
   # that is causing intermittent test failures.
   let(:base_path) { "/transport/#{SecureRandom.uuid}" }
 

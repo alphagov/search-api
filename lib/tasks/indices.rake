@@ -136,12 +136,12 @@ the existing data, you will need to run the \"migrate_schema\" task instead, whi
 
       index_names.each do |index_name|
         search_config = SearchConfig.instance(cluster)
-        mappings = search_config.schema_config.elasticsearch_mappings(index_name)
+        mappings = search_config.schema_config.opensearch_mappings(index_name)
 
-        synchroniser = SchemaSynchroniser.new(index_name, Services.elasticsearch(cluster:))
-        synchroniser.sync_mappings(mappings["generic-document"], logger)
+        synchroniser = SchemaSynchroniser.new(index_name, Services.opensearch(cluster:))
+        synchroniser.sync_mappings(mappings, logger)
         puts "Successfully synchronised #{index_name} index"
-      rescue Elasticsearch::Transport::Transport::Errors::BadRequest => e
+      rescue OpenSearch::Transport::Transport::Errors::BadRequest => e
         puts "Unable to synchronise index #{index_name} due to #{e.message}"
       end
     end

@@ -1,5 +1,5 @@
 # The Clusters module is responsible for providing information about
-# the various elasticsearch clusters that search-api can talk to.
+# the various opensearch clusters that search-api can talk to.
 module Clusters
   def self.count
     active.count
@@ -34,7 +34,7 @@ module Clusters
 
   def self.active
     Cache.get(Cache::ACTIVE_CLUSTERS) do
-      defined_clusters = ElasticsearchConfig.new.config["clusters"]
+      defined_clusters = OpenSearchConfig.new.config["clusters"]
       defined_clusters.map { |cluster| Cluster.new(**cluster.deep_symbolize_keys) }
       .reject(&:inactive?)
     end

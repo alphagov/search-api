@@ -2,9 +2,9 @@ require "spec_helper"
 require "rake"
 
 RSpec.describe "indices" do
-  let(:elasticsearch_client) { double("Elasticsearch::Client") }
+  let(:opensearch_client) { double("OpenSearch::Client") }
   let(:indices_client) do
-    double("Elasticsearch::API::Indices::IndicesClient",
+    double("OpenSearch::API::Indices::IndicesClient",
            get_alias: {},
            update_aliases: {},
            get: {},
@@ -19,8 +19,8 @@ RSpec.describe "indices" do
   let(:govuk_index_name) { SearchConfig.govuk_index_name }
 
   before do
-    allow(Services).to receive(:elasticsearch).and_return(elasticsearch_client)
-    allow(elasticsearch_client).to receive(:indices).and_return(indices_client)
+    allow(Services).to receive(:opensearch).and_return(opensearch_client)
+    allow(opensearch_client).to receive(:indices).and_return(indices_client)
     Rake::Task[task_name].reenable
   end
 
@@ -236,15 +236,16 @@ RSpec.describe "indices" do
       expect(output).to include("Updating schema on cluster A")
 
       index_names.each do |index_name|
-        expect(indices_client).to have_received(:put_mapping).with(index: index_name, type: "generic-document", body: kind_of(Hash))
+        expect(indices_client).to have_received(:put_mapping).with(index: index_name, body: kind_of(Hash))
+
         expect(output).to include("Successfully synchronised #{index_name} index")
       end
     end
     it "reports failures" do
       failed_index_name = index_names.first
       allow(indices_client).to receive(:put_mapping)
-        .with(index: failed_index_name, type: "generic-document", body: kind_of(Hash))
-        .and_raise(Elasticsearch::Transport::Transport::Errors::BadRequest.new("test error"))
+       .with(index: failed_index_name, body: kind_of(Hash))
+       .and_raise(OpenSearch::Transport::Transport::Errors::BadRequest.new("test error"))
 
       output = capture_stdout { Rake::Task[task_name].invoke }
       expect(output).to include("Unable to synchronise index #{failed_index_name} due to test error")
@@ -305,7 +306,7 @@ RSpec.describe "indices" do
 
     before do
       allow(indices_client).to receive(:get).with(index: "#{base_name}*", expand_wildcards: %w[open closed]).and_return(aliases)
-      allow(elasticsearch_client).to receive(:search).and_return(
+      allow(opensearch_client).to receive(:search).and_return(
         { "hits" => { "hits" => [{ "_source" => { "updated_at" => updated_at } }] } },
       )
     end

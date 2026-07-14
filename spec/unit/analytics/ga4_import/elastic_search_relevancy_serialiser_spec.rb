@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Analytics::Ga4Import::ElasticSearchRelevancySerialiser do
+RSpec.describe Analytics::Ga4Import::OpenSearchRelevancySerialiser do
   describe "#relevance" do
     it "returns an array of JSON object pairs of index and page data" do
       consolidated_data = [["/example", 30], ["/other", 10]]

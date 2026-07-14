@@ -5,7 +5,7 @@ module GovukIndex
     sidekiq_options queue: QUEUE_NAME
 
     def perform(document_ids, index_name)
-      actions = Index::ElasticsearchProcessor.new(
+      actions = Index::OpenSearchProcessor.new(
         client: GovukIndex::Client.new(timeout: BULK_INDEX_TIMEOUT, index_name:),
       )
       index = IndexFinder.by_name(index_name)
@@ -29,10 +29,11 @@ module GovukIndex
     def process_document(document, popularities)
       base_path = document.fetch("_id")
       title = document.dig("_source", "title")
-      identifier = { _id: document["_id"],
-                     _type: "generic-document",
-                     version: document["_version"],
-                     version_type: "external_gte" }
+      identifier = {
+        _id: document["_id"],
+        version: document["_version"],
+        version_type: "external_gte",
+      }
       OpenStruct.new(
         identifier:,
         document: document.fetch("_source").merge(

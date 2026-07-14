@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe GovukIndex::PublishingEventMessageHandler do
   before do
-    allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    allow(Index::OpenSearchProcessor).to receive(:new).and_return(actions)
     @statsd_client = instance_double("Statsd", increment: nil)
     allow(Services).to receive(:statsd_client).and_return @statsd_client
   end
@@ -20,7 +20,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
       expect(actions).to receive(:save)
       expect(actions).to receive(:commit).and_return(responses)
 
-      expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
+      expect(@statsd_client).to receive(:increment).with("govuk_index.opensearch.index")
 
       described_class.call("routing.key", payload)
     end
@@ -37,7 +37,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return(responses)
 
-        expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete")
+        expect(@statsd_client).to receive(:increment).with("govuk_index.opensearch.delete")
 
         described_class.call("routing.unpublish", payload)
       end
@@ -56,12 +56,12 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
         expect(actions).to receive(:save)
         expect(actions).to receive(:commit).and_return(responses)
 
-        expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.index")
+        expect(@statsd_client).to receive(:increment).with("govuk_index.opensearch.index")
 
         described_class.call("routing.unpublish", payload)
       end
 
-      it "will raise an error when elasticsearch returns a 500 status" do
+      it "will raise an error when opensearch returns a 500 status" do
         payload = {
           "base_path" => "/cheese",
           "document_type" => "gone",
@@ -72,14 +72,14 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return(failure_response)
 
-        expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.delete_error")
+        expect(@statsd_client).to receive(:increment).with("govuk_index.opensearch.delete_error")
 
         expect {
           described_class.call("routing.unpublish", payload)
-        }.to raise_error(described_class::ElasticsearchRetryError)
+        }.to raise_error(described_class::OpenSearchRetryError)
       end
 
-      it "will not raise an error when elasticsearch returns a 404 - not found" do
+      it "will not raise an error when opensearch returns a 404 - not found" do
         payload = {
           "base_path" => "/cheese",
           "document_type" => "substitute",
@@ -90,7 +90,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
         expect(actions).to receive(:delete)
         expect(actions).to receive(:commit).and_return(responses)
 
-        expect(@statsd_client).to receive(:increment).with("govuk_index.elasticsearch.already_deleted")
+        expect(@statsd_client).to receive(:increment).with("govuk_index.opensearch.already_deleted")
 
         described_class.call("routing.unpublish", payload)
       end
@@ -98,7 +98,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
   end
 
   def stub_document_type_mapper
-    allow_any_instance_of(GovukIndex::ElasticsearchDeletePresenter).to receive(:type).and_return("real_document_type")
+    allow_any_instance_of(GovukIndex::OpenSearchDeletePresenter).to receive(:type).and_return("real_document_type")
     allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("real_document_type" => :all)
   end
 end
