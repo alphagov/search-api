@@ -40,6 +40,8 @@ module ElasticsearchClient
       return true if ENV["USE_ELASTICSEARCH_7"]
       return false if ENV["USE_ELASTICSEARCH_6"]
 
+      return true if opensearch?
+
       es_version >= Gem::Version.new("7.0.0")
     end
 
@@ -53,6 +55,10 @@ module ElasticsearchClient
       return params if es7?
 
       params.merge(type: "generic-document")
+    end
+
+    def opensearch?
+      Services.elasticsearch.info.dig("version", "distribution") == "opensearch"
     end
 
     def es_version
