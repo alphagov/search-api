@@ -12,7 +12,7 @@ module QueryComponents
           score_mode: :multiply,
           query: {
             bool: {
-              should: [core_query],
+              should: [core_query].flatten,
             },
           },
           functions: boost_filters,

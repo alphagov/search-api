@@ -36,6 +36,7 @@ RSpec.describe SchemaSynchroniser do
     synchroniser.sync_mappings(mapping, logger)
 
     response = Services.elasticsearch.indices.get_mapping(index: SearchConfig.govuk_index_name)
-    expect(response.values.dig(0, "mappings", "generic-document", "properties", "test")).to eq({ "type" => "keyword" })
+
+    expect(response.values.dig(0, "mappings", "properties", "test")).to eq({ "type" => "keyword" })
   end
 end

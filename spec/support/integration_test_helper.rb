@@ -22,11 +22,22 @@ module IntegrationTestHelper
     allowed_paths << "_nodes"
     allowed_paths << "_cluster"
     allowed_paths << "_msearch"
+    allowed_paths << "\\z"
 
     allow_urls = %r{#{allowed_hosts.map { |host| "#{host}/(#{allowed_paths.join('|')})" }.join('|')}}
 
     allowed_urls = testing_url.present? ? [allow_urls, testing_url] : allow_urls
     WebMock.disable_net_connect!(allow: allowed_urls)
+  end
+
+  def self.recreate_indices
+    # Deleted documents can continue to affect Lucene's scoring statistics
+    # When testing elasticsearch boosting scores, recreating the indices is
+    # usually necessary before the test ensures deterministic search scores.
+    # https://www.elastic.co/guide/en/elasticsearch/reference/current/consistent-scoring.html
+
+    IndexHelpers.clean_all
+    IndexHelpers.setup_test_indexes
   end
 
   def self.disable_net_connections
@@ -63,10 +74,9 @@ module IntegrationTestHelper
         {
           index: index_name,
           id:,
-          type: "generic-document",
           body: atts,
         }.merge(version_details),
-      )
+        )
     end
 
     id
@@ -80,8 +90,11 @@ module IntegrationTestHelper
 
       next if hits.empty?
 
-      client(cluster:)
-        .bulk(body: hits.map { |hit| { delete: { _index: index, _type: "generic-document", _id: hit["_id"] } } })
+      es_processor = Index::ElasticsearchProcessor.new(client: client(cluster:))
+      hits.each do |hit|
+        es_processor.delete(OpenStruct.new(identifier: { _index: index, _id: hit["_id"] }))
+      end
+      es_processor.commit
     end
 
     commit_index index
@@ -128,10 +141,10 @@ module IntegrationTestHelper
     end
   end
 
-  def expect_document_missing_in_rummager(id:, index:, type: "_all")
+  def expect_document_missing_in_rummager(id:, index:)
     clusters.each do |cluster|
       expect {
-        fetch_document_from_rummager(id:, index:, cluster:, type:)
+        fetch_document_from_rummager(id:, index:, cluster:)
       }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
     end
   end
@@ -147,11 +160,7 @@ private
     Clusters.active
   end
 
-  def fetch_document_from_rummager(id:, index:, type: "_all", cluster: Clusters.default_cluster)
-    client(cluster:).get(
-      index:,
-      type:,
-      id:,
-    )
+  def fetch_document_from_rummager(id:, index:, cluster: Clusters.default_cluster)
+    client(cluster:).get({ index:, id: })
   end
 end
