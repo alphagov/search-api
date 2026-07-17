@@ -117,7 +117,11 @@ module Evaluation
     end
 
     def govuk_index_name
-      @govuk_index_name ||= instance.get_index_for_alias(SearchConfig.govuk_index_name)
+      @govuk_index_name ||= client.indices.get_alias(index: SearchConfig.govuk_index_name).keys.first
+    end
+
+    def client
+      @client ||= Services.elasticsearch(hosts: instance.base_uri)
     end
 
     def instance
