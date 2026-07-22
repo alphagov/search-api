@@ -173,5 +173,6 @@ require "sitemap/generator"
 require "sitemap/presenter"
 require "sitemap/uploader"
 require "retryable_queue_message"
+require "elasticdump_runner"
 
 require "core_extensions/time/to_string"
