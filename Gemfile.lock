@@ -771,6 +771,7 @@ DEPENDENCIES
   bootsnap
   bunny-mock
   climate_control
+  csv
   elasticsearch (~> 6)
   factory_bot
   faker
