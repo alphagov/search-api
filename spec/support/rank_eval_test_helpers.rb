@@ -42,7 +42,7 @@ module RankEvalTestHelpers
 
   def stub_rank_eval_request
     es_source = ENV["ELASTICSEARCH_URI"] || "http://localhost:9200"
-    stub_request(:post, "#{es_source}/govuk_test/_rank_eval")
+    stub_request(:get, "#{es_source}/govuk_test/_rank_eval")
       .to_return(
         status: 200,
         body: {
