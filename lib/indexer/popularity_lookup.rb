@@ -73,11 +73,11 @@ module Indexer
 
     def traffic_index_size
       @traffic_index_size ||= begin
-        results = traffic_index.raw_search({
+        response = traffic_index.raw_search({
           query: { match_all: {} },
           size: 0,
         })
-        results["hits"]["total"]
+        ElasticsearchResponse.new(response).total_hits
       end
     end
 

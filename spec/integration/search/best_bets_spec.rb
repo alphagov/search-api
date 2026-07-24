@@ -2,6 +2,10 @@ require "spec_helper"
 require_relative "../../support/best_bet_test_helpers"
 
 RSpec.describe "best/worst bet functionality" do
+  before do
+    IntegrationTestHelper.recreate_indices
+  end
+
   include BestBetTestHelpers
 
   it "boosts exact best bets" do

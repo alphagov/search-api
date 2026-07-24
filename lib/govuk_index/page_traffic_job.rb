@@ -37,7 +37,7 @@ module GovukIndex
       bulk_presenter_class = Struct.new(:identifier, :document)
       records.each_slice(2) do |identifier, document|
         processor.save(
-          bulk_presenter_class.new(identifier.merge("_type" => "generic-document"),
+          bulk_presenter_class.new(identifier,
                                    document.merge("document_type" => "page_traffic")),
         )
       end

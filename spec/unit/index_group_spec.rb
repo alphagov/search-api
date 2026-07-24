@@ -37,7 +37,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with no existing alias" do
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, "#{base_uri}/_alias/test")
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -65,7 +65,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with existing alias" do
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, "#{base_uri}/_alias/test")
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -94,7 +94,7 @@ RSpec.describe SearchIndices::IndexGroup do
   it "switch index with multiple existing aliases" do
     # Not expecting the system to get into this state, but it should cope
     new_index = double("New index", index_name: "test-new")
-    get_stub = stub_request(:get, "#{base_uri}/_alias")
+    get_stub = stub_request(:get, "#{base_uri}/_alias/test")
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
@@ -124,7 +124,7 @@ RSpec.describe SearchIndices::IndexGroup do
 
   it "switch index with existing real index" do
     new_index = double("New index", index_name: "test-new")
-    stub_request(:get, "#{base_uri}/_alias")
+    stub_request(:get, "#{base_uri}/_alias/test")
       .to_return(
         status: 200,
         headers: { "Content-Type" => "application/json" },
