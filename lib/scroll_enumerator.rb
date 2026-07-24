@@ -17,7 +17,7 @@ class ScrollEnumerator < Enumerator
     @client = client
     @index_names = index_names
     page = initial_scroll_result(batch_size, search_body)
-    @size = page["hits"]["total"]
+    @size = ElasticsearchResponse.new(page).total_hits
 
     # Pull out the results as they are needed
     super() do |yielder|
