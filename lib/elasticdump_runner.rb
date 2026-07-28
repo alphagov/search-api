@@ -12,7 +12,7 @@ class ElasticdumpRunner
     @output = parameters.fetch(:output)
     @type = parameters.fetch(:type, "data")
     @indices = parameters.fetch(:indices, SearchConfig.all_index_names)
-    @limit = parameters.fetch(:limit, 1000)
+    @limit = parameters.fetch(:limit, 1000).to_s
   end
 
   def call

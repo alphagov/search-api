@@ -45,7 +45,7 @@ RSpec.describe ElasticdumpRunner do
           "--input", blue,
           "--output", green,
           "--type", "data",
-          "--limit", 1000,
+          "--limit", "1000",
           "--input-index", SearchConfig.all_index_names.first,
           "--output-index", SearchConfig.all_index_names.first
         )
@@ -61,7 +61,7 @@ RSpec.describe ElasticdumpRunner do
             "--input", blue,
             "--output", green,
             "--type", "data",
-            "--limit", 1000,
+            "--limit", "1000",
             "--input-index", index,
             "--output-index", index
           )
@@ -89,7 +89,7 @@ RSpec.describe ElasticdumpRunner do
           "--input", blue,
           "--output", green,
           "--type", "mapping",
-          "--limit", 50,
+          "--limit", "50",
           "--input-index", "only_index",
           "--output-index", "only_index"
         )
