@@ -4,11 +4,11 @@ require "pry"
 require "simplecov"
 SimpleCov.start do
   enable_coverage :branch
-  add_filter "/spec/"
-  add_filter "/config/"
-  add_filter "/env.rb"
-  track_files "{lib}/**/*.rb"
-  track_files "{lib}/**/*.rake"
+  skip "/spec/"
+  skip "/config/"
+  skip "/env.rb"
+  cover "{lib}/**/*.rb"
+  cover "{lib}/**/*.rake"
 end
 
 $LOAD_PATH << File.expand_path("..", __dir__)
