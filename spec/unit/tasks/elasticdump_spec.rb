@@ -19,7 +19,6 @@ RSpec.describe "elasticdump rake task" do
 
   before do
     allow(ElasticdumpRunner).to receive(:call)
-    allow(Kernel).to receive(:puts)
   end
 
   it "parses ELASTICDUMP_PARAMETERS from the environment with symbolized keys" do
