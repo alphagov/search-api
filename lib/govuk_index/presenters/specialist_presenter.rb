@@ -188,6 +188,7 @@ module GovukIndex
     delegate_to_payload :veterans_support_organisation_region_northern_ireland
     delegate_to_payload :veterans_support_organisation_region_scotland
     delegate_to_payload :veterans_support_organisation_region_wales
+    delegate_to_payload :veterans_support_organisation_valour_organisations
     delegate_to_payload :virus_strain
     delegate_to_payload :will_continue_on
     delegate_to_payload :withdrawn_date
