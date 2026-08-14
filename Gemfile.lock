@@ -702,7 +702,7 @@ GEM
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
       jwt (>= 1.5, < 4.0)
-    simplecov (1.0.3)
+    simplecov (1.1.0)
     sinatra (4.2.1)
       logger (>= 1.6.0)
       mustermann (~> 3.0)
