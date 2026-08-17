@@ -46,15 +46,16 @@ RSpec.describe MetasearchIndex::Inserter::V2 do
       "details" => %({"best_bets":[{"link":"/government/publications/national-insurance-statement-of-national-insurance-contributions-ca3916","position":1}],"worst_bets":[]}),
       "exact_query" => nil,
       "stemmed_query" => "car taxes",
+      "document_type" => "best_bet",
     }
-    described_class.new(id: "car tax-stemmed", document:).insert
+    described_class.new(id: "car-tax-stemmed", document:).insert
     commit_index("metasearch_test")
 
     expect_document_is_in_rummager(
       document.merge("stemmed_query_as_term" => " car tax "),
-      type: "best_bet",
       index: "metasearch_test",
-      id: "car tax-stemmed",
+      id: "car-tax-stemmed",
+      type: "best_bet",
     )
   end
 

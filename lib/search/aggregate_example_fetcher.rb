@@ -59,19 +59,16 @@ module Search
                      query_filter,
                    ]
                  end
+        search_query = query.nil? ? nil : { bool: { must: query } }
         {
-          query: {
-            bool: {
-              must: query,
-            },
-          },
+          query: search_query,
           post_filter: { bool: { must: filter } },
           size: example_count,
           _source: {
             includes: example_fields,
           },
           sort: [{ popularity: { order: :desc } }],
-        }
+        }.compact
       end
     end
 
@@ -107,7 +104,7 @@ module Search
       result = {}
       slugs.zip(response_list) do |slug, response|
         result[slug] = {
-          total: response["hits"]["total"],
+          total: ElasticsearchResponse.new(response).total_hits,
           examples: response["hits"]["hits"].map { |hit| apply_multivalued(hit["_source"] || {}) },
         }
       end

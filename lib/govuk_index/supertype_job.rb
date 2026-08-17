@@ -16,10 +16,11 @@ module GovukIndex
           next
         end
         {
-          "identifier" => { _id: document["_id"],
-                            _type: document["_type"],
-                            version: document["_version"],
-                            version_type: "external_gte" },
+          "identifier" => {
+            _id: document["_id"],
+            version: document["_version"],
+            version_type: "external_gte",
+          },
           "document" => document.fetch("_source"),
         }
       end

@@ -30,7 +30,7 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
     described_class.new(id: "ca3916-exact").delete
 
     expect {
-      fetch_document_from_rummager(type: "best_bet", index: "metasearch_test", id: "ca3916-exact")
+      fetch_document_from_rummager(index: "metasearch_test", id: "ca3916-exact")
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 

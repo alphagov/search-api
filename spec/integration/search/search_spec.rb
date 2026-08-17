@@ -500,6 +500,8 @@ RSpec.describe "SearchTest" do
   end
 
   it "boosts custom fields" do
+    IntegrationTestHelper.recreate_indices
+
     less_relevant_licence = {
       "title" => "Less relevant licence",
       "link" => "/find-licences/less-relevant-licence",

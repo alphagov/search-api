@@ -73,7 +73,7 @@ module Sitemap
       page                  = initial_scroll
       scroll_id             = page["_scroll_id"]
       documents             = page["hits"]["hits"]
-      total_documents_count = page["hits"]["total"]
+      total_documents_count = ElasticsearchResponse.new(page).total_hits
       total_page_count      = total_documents_count.fdiv(SCROLL_BATCH_SIZE).ceil
       chunk                 = [homepage]
 

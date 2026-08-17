@@ -18,13 +18,13 @@ RSpec.describe "ScrollEnumeratorTest" do
 
   it "returns expected results for sorted search" do
     10.times.each do |id|
-      commit_document("govuk_test", { some: "data" }, id: "id-#{id}", type: "edition")
+      commit_document("govuk_test", { slug: "data-#{id}" }, id: "id-#{id}", type: "edition")
     end
 
     results = ScrollEnumerator.new(
       client:,
       index_names: "govuk_test",
-      search_body: { query: { match_all: {} }, sort: [{ _uid: { order: "asc" } }] },
+      search_body: { query: { match_all: {} }, sort: [{ slug: { order: "asc" } }] },
       batch_size: 4,
     ) { |d| d }
 

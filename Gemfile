@@ -4,7 +4,7 @@ gem "activesupport"
 gem "aws-sdk-s3"
 gem "bootsnap", require: false
 gem "csv"
-gem "elasticsearch", "~> 6" # We need a 6.x release to interface with Elasticsearch 6
+gem "elasticsearch", "7.10"
 gem "gds-api-adapters"
 gem "google-analytics-data-v1beta"
 gem "google-api-client"

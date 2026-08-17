@@ -24,7 +24,7 @@ RSpec.describe "GovukIndex::UnpublishingMessageProcessing" do
     commit_index("govuk_test")
 
     expect {
-      fetch_document_from_rummager(id: base_path, index: "govuk_test", type: "answer")
+      fetch_document_from_rummager(id: base_path, index: "govuk_test")
     }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
   end
 
