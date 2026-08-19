@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Elasticsearch
-        uses: alphagov/govuk-infrastructure/.github/actions/setup-elasticsearch@main
+        uses: alphagov/govuk-infrastructure/.github/actions/setup-elasticsearch@update_es_version
 
       - name: Setup Redis
         uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main
