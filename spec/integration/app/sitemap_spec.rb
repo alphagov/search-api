@@ -1,5 +1,12 @@
 require "spec_helper"
 
+RSpec.shared_examples "will respond with a 404 unless the request is for an xml format" do |path|
+  it "get requests are halted" do
+    get path
+    expect(last_response.status).to eq(404)
+  end
+end
+
 RSpec.describe "SitemapTest" do
   let(:bucket) { "test-bucket" }
   let(:body_content) do
@@ -11,6 +18,9 @@ RSpec.describe "SitemapTest" do
     XML
   end
   describe "get /sitemap.xml" do
+    it_behaves_like "will respond with a 404 unless the request is for an xml format", "/sitemap.php"
+    it_behaves_like "will respond with a 404 unless the request is for an xml format", "/sitemap"
+
     it "streams the sitemap XML from S3" do
       ClimateControl.modify AWS_S3_SITEMAPS_BUCKET_NAME: bucket do
         allow(Services).to receive(:s3_client).and_return(FakeS3.fake_s3_client)
@@ -27,13 +37,17 @@ RSpec.describe "SitemapTest" do
       end
     end
   end
-  describe "get /sitemaps/:sitemap" do
+  describe "get /sitemaps/:sitemap.xml" do
+    it_behaves_like "will respond with a 404 unless the request is for an xml format", "/sitemaps/something.php"
+    it_behaves_like "will respond with a 404 unless the request is for an xml format", "/sitemaps/something"
+
     it "streams the sitemap XML from S3" do
       ClimateControl.modify AWS_S3_SITEMAPS_BUCKET_NAME: bucket do
         allow(Services).to receive(:s3_client).and_return(FakeS3.fake_s3_client)
         Services.s3_client.put_object(key: "something.xml",
                                       bucket:,
                                       body: body_content)
+
         get "/sitemaps/something.xml"
 
         expect(last_response.status).to eq(200)
