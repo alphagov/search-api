@@ -29,7 +29,9 @@ module ElasticsearchClient
     end
 
     def search(index_name:, body:, client: Services.elasticsearch)
-      client.search(compatible_params(index: index_name, body:))
+      return client.search(index: index_name, track_total_hits: true, body: body) if es7?
+
+      client.search(index: index_name, type: "generic-document", body:)
     end
 
     def index(id:, index_name:, atts:, params: {}, client: Services.elasticsearch)
