@@ -690,7 +690,7 @@ GEM
     sentry-sidekiq (6.7.0)
       sentry-ruby (~> 6.7.0)
       sidekiq (>= 5.0)
-    sidekiq (8.1.6)
+    sidekiq (8.1.7)
       connection_pool (>= 3.0.0)
       json (>= 2.16.0)
       logger (>= 1.7.0)
