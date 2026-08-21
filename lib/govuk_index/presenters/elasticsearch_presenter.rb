@@ -269,6 +269,7 @@ module GovukIndex
         veterans_support_organisation_region_northern_ireland: specialist.veterans_support_organisation_region_northern_ireland,
         veterans_support_organisation_region_scotland: specialist.veterans_support_organisation_region_scotland,
         veterans_support_organisation_region_wales: specialist.veterans_support_organisation_region_wales,
+        veterans_support_organisation_valour_organisations: specialist.veterans_support_organisation_valour_organisations,
         view_count: common_fields.view_count,
         virus_strain: specialist.virus_strain,
         will_continue_on: specialist.will_continue_on,
