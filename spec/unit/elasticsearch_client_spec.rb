@@ -14,7 +14,8 @@ RSpec.describe ElasticsearchClient do
                                            search: {},
                                            indices: indices_client,
                                            delete: {},
-                                           info: version_info)
+                                           info: version_info,
+                                           track_total_hits: false)
       allow(indices_client).to receive_messages(put_mapping: {})
     end
 
@@ -57,6 +58,7 @@ RSpec.describe ElasticsearchClient do
         it "calls 'search' with the right parameters, without including type" do
           described_class.search(index_name: "index", body: { a: :b }, client: es_client)
           expect(es_client).to have_received(:search).with(index: "index",
+                                                           track_total_hits: true,
                                                            body: { a: :b })
         end
         it "calls 'index' with the right parameters, without including type" do
@@ -97,6 +99,7 @@ RSpec.describe ElasticsearchClient do
         it "calls 'search' with the right parameters, without including type" do
           described_class.search(index_name: "index", body: { a: :b }, client: es_client)
           expect(es_client).to have_received(:search).with(index: "index",
+                                                           track_total_hits: true,
                                                            body: { a: :b })
         end
         it "calls 'index' with the right parameters, without including type" do
