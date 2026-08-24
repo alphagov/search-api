@@ -67,6 +67,23 @@ value has the following properties:
    the same format as the top-level field definitions in the file (and could
    even be recursive).
 
+### Choosing a field type
+
+The key distinction is **what the field represents** and **whether it should contribute to general search**:
+
+| Type                          | Meaning                                                              | Example                                 |
+| ----------------------------- | -------------------------------------------------------------------- | --------------------------------------- |
+| `identifier`                  | Exact, controlled metadata value; not general-searchable             | `country`, `document_type`              |
+| `identifiers`                 | Multiple exact, controlled metadata values; not general-searchable   | `categories`, `regions`                 |
+| `searchable_identifier`       | Exact identifier of a document/thing; general-searchable             | `reference_number`, `case_number`       |
+| `searchable_identifiers`      | Multiple exact identifiers; general-searchable                       | `reference_numbers`                     |
+| `searchable_text`             | Free-form/human-readable text; general-searchable                    | `title`, `description`, `aircraft_type` |
+| `searchable_multivalued_text` | Multiple pieces of free-form/human-readable text; general-searchable | `authors`, `keywords`, `subjects`       |
+| `unsearchable_text`           | Text that should be stored/displayed but not searchable              | Internal notes                          |
+| `date`                        | A date requiring date semantics                                      | `published_date`                        |
+| `boolean`                     | A yes/no value                                                       | `is_withdrawn`                          |
+| `integer` / `float`           | Numeric data used for filtering, sorting or ranking                  | `rank`, `score`                         |
+
 ### Representing parts and attachments
 
 Parts are subpages within a single GOV.UK content item, each with its own title,
