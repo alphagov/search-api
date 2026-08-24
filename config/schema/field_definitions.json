@@ -1234,7 +1234,7 @@
   "digital_markets_measure_closed": {
     "type": "date"
   },
-  
+
   "patent_decision_british_library_number": {
     "type": "searchable_text"
   },
@@ -1243,5 +1243,20 @@
   },
   "patent_decision_type_of_hearing": {
     "type": "identifiers"
+  },
+  "patent_decision_application_patent_number": {
+    "type": "searchable_identifier"
+  },
+  "patent_decision_date_of_issue": {
+    "type": "date"
+  },
+  "patent_decision_persons_or_companies_involved": {
+    "type": "searchable_multivalued_text"
+  },
+  "patent_decision_provisions_discussed": {
+    "type": "identifier"
+  },
+  "patent_decision_keyword_or_phrase": {
+    "type": "searchable_multivalued_text"
   }
 }
