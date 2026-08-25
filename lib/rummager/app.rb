@@ -78,7 +78,7 @@ class Rummager < Sinatra::Application
   end
 
   def xml_only(request_format)
-    halt 404 if request_format != "xml"
+    halt 404 unless ["xml", nil].include? request_format
   end
 
   helpers do
@@ -199,12 +199,13 @@ class Rummager < Sinatra::Application
     ).call
   end
 
-  get %r{/sitemap\.(\w+)} do |request_format|
+  get %r{/sitemap(?:\.(\w+))?} do |request_format|
     xml_only(request_format)
     serve_from_s3("sitemap.xml")
   end
 
-  get %r{/sitemaps/(\w+)\.(\w+)} do |sitemap, request_format|
+  # matches /sitemaps/sitemap_1.xml and /sitemaps/sitemap_1
+  get %r{/sitemaps/(\w+)(?:\.(\w+))?} do |sitemap, request_format|
     xml_only(request_format)
     serve_from_s3("#{sitemap}.xml")
   end
