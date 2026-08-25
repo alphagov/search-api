@@ -52,8 +52,8 @@ Note that when you run the tests locally logs are output to `log/production.log`
 - [Search relevancy](docs/relevancy.md): how relevancy ordering works when performing a search
 - [Schemas](docs/schemas.md): how to work with schemas and the document types
 - [Autocomplete](docs/autocomplete.md): how to get autocomplete suggestions for search queries - **not currently used by finder-frontend**
-- [Popularity](docs/updating_popularity): how popularity is updated
-- [Quality-metrics](docs/search-quality-metrics): how to assess the quality of results
+- [Popularity](docs/updating_popularity.md): how popularity is updated
+- [Quality-metrics](docs/search-quality-metrics.md): how to assess the quality of results
 
 ## Licence
 
