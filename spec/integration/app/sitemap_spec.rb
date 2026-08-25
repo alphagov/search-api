@@ -69,4 +69,13 @@ RSpec.describe "SitemapTest" do
       end
     end
   end
+
+  describe "posting to a sitemap" do
+    it "returns a 404" do
+      ["/sitemap.xml", "/sitemaps/some/things", "/sitemap/foo.php"].each do |path|
+        post path
+        expect(last_response.status).to eq(404)
+      end
+    end
+  end
 end
