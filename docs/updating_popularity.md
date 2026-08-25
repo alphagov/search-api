@@ -5,7 +5,8 @@ The GOV.UK Search API maintains several fields related to document popularity. T
 - **`page_traffic`** — fetches and processes traffic data from Google Analytics 4 (GA4), storing the results in the _page_traffic_ Elasticsearch index.
 - **`update_popularity`** — reads the processed data from the _page_traffic_ index and updates the popularity-related fields on documents in the main search index.
 
-Access to the Google Analytics 4 API is controlled by the following environment variables:
+Access to the Google Analytics 4 API is controlled by the [search-analytics-pipeline service account](https://github.com/alphagov/govuk-data-infrastructure/blob/main/ga4-analytics/service_account.tf#L20)
+and the following environment variables:
 - GOOGLE_ACCOUNT_TYPE
 - GOOGLE_CLIENT_EMAIL
 - GOOGLE_PRIVATE_KEY
