@@ -46,7 +46,7 @@ module SearchIndices
       # unaliased indices, which won't match the new naming convention.
       begin
         indices = @client.indices.get_alias(name: @name)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound
+      rescue OpenSearch::Transport::Transport::Errors::NotFound
         indices = {}
       end
       # Bail if there is an existing index with this name.

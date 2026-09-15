@@ -97,7 +97,7 @@ RSpec.describe GovukIndex::PublishingEventProcessor do
     before do
       allow(GovukIndex::Client)
         .to receive(:get)
-        .and_raise(Elasticsearch::Transport::Transport::Errors::NotFound)
+        .and_raise(OpenSearch::Transport::Transport::Errors::NotFound)
       message.payload["document_type"] = "redirect"
     end
 

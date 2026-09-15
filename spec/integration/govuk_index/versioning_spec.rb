@@ -90,7 +90,7 @@ RSpec.describe "GovukIndex::VersioningTest" do
 
     expect {
       fetch_document_from_rummager(id: base_path, index: "govuk_test")
-    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+    }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
 
     version3 = version1.merge("payload_version" => 3)
     process_message(version3)

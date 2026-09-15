@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe Services do
   describe ".elasticsearch" do
     before do
-      allow(Elasticsearch::Client).to receive(:new)
+      allow(OpenSearch::Client).to receive(:new)
     end
 
     [
@@ -15,7 +15,7 @@ RSpec.describe Services do
       it "Ensures the URL has the correct port when it is #{input}" do
         described_class.elasticsearch(hosts: input)
 
-        expect(Elasticsearch::Client).to have_received(:new)
+        expect(OpenSearch::Client).to have_received(:new)
                                            .with(hash_including(hosts: expected))
       end
     end
