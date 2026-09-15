@@ -35,7 +35,7 @@ RSpec.describe Collectors::ElasticsearchPrometheusCollector do
   end
 
   before do
-    es = instance_double(Elasticsearch::Transport::Client)
+    es = instance_double(OpenSearch::Client)
     allow(es).to receive_message_chain(:nodes, :stats).and_return(nodes_stats)
     allow(es).to receive_message_chain(:cluster, :health).and_return(cluster_health)
     allow(Services).to receive(:elasticsearch).and_return(es)
