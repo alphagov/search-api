@@ -27,14 +27,14 @@ RSpec.describe "ErrorHandlingTest" do
 
   include_examples(
     "a sinatra error handler",
-    exception_class: Elasticsearch::Transport::Transport::Errors::RequestTimeout,
+    exception_class: OpenSearch::Transport::Transport::Errors::RequestTimeout,
     status: 503,
     body: "Elasticsearch timed out",
   )
 
   include_examples(
     "a sinatra error handler",
-    exception_class: Elasticsearch::Transport::Transport::SnifferTimeoutError,
+    exception_class: OpenSearch::Transport::Transport::SnifferTimeoutError,
     status: 503,
     body: "Elasticsearch timed out",
   )
@@ -48,7 +48,7 @@ RSpec.describe "ErrorHandlingTest" do
 
   include_examples(
     "a sinatra error handler",
-    exception_class: Elasticsearch::Transport::Transport::Errors::BadRequest,
+    exception_class: OpenSearch::Transport::Transport::Errors::BadRequest,
     status: 400,
     body: ->(msg) { msg },
   )

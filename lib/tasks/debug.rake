@@ -22,7 +22,7 @@ namespace :debug do
     doc["_source"].each do |k, v|
       puts "  #{k} => #{v}"
     end
-  rescue Elasticsearch::Transport::Transport::Errors::NotFound
+  rescue OpenSearch::Transport::Transport::Errors::NotFound
     abort "Cannot find #{args.link} in index #{SearchConfig.govuk_index_name}"
   end
 

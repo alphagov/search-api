@@ -97,6 +97,6 @@ RSpec.describe "SpecialistFormatTest" do
 
     expect {
       fetch_document_from_rummager(id: random_example["base_path"], index: "govuk_test")
-    }.to raise_error(Elasticsearch::Transport::Transport::Errors::NotFound)
+    }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
   end
 end
