@@ -85,11 +85,11 @@ class Rummager < Sinatra::Application
     content_type :json
   end
 
-  error Elasticsearch::Transport::Transport::Errors::RequestTimeout do
+  error OpenSearch::Transport::Transport::Errors::RequestTimeout do
     halt(503, "Elasticsearch timed out")
   end
 
-  error Elasticsearch::Transport::Transport::SnifferTimeoutError do
+  error OpenSearch::Transport::Transport::SnifferTimeoutError do
     halt(503, "Elasticsearch timed out")
   end
 
@@ -97,11 +97,11 @@ class Rummager < Sinatra::Application
     halt(503, "Redis queue timed out")
   end
 
-  error Elasticsearch::Transport::Transport::Errors::BadRequest do
+  error OpenSearch::Transport::Transport::Errors::BadRequest do
     halt(400, env["sinatra.error"].message)
   end
 
-  error Elasticsearch::Transport::Transport::Errors::InternalServerError do
+  error OpenSearch::Transport::Transport::Errors::InternalServerError do
     halt(400, env["sinatra.error"].message)
   end
 
