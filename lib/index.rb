@@ -11,14 +11,12 @@ module SearchIndices
       50
     end
 
-    # How long to wait between reads when streaming data from the elasticsearch server
-    TIMEOUT_SECONDS = 5.0
-
     attr_reader :index_name
 
     def initialize(base_uri, index_name, base_index_name, search_config)
-      @base_uri = base_uri
-      @client = build_client
+      @client = Services.elasticsearch(hosts: base_uri)
+      @silent_client = Services.elasticsearch(hosts: base_uri, logger: nil)
+
       @index_name = index_name
       raise ArgumentError, "Missing index_name parameter" unless @index_name
 
@@ -43,13 +41,10 @@ module SearchIndices
       # If the index exists, it will return something of the form:
       # { real_name => { "aliases" => { alias => {} } } }
       # If not, ES would return {} before version 0.90, but raises a 404 with version 0.90+
-      begin
-        alias_info = @client.indices.get_alias(index: @index_name)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound
-        return nil
-      end
-
+      alias_info = @silent_client.indices.get_alias(index: @index_name)
       alias_info.keys.first
+    rescue Elasticsearch::Transport::Transport::Errors::NotFound
+      nil
     end
 
     def exists?
@@ -181,10 +176,6 @@ module SearchIndices
 
     def logger
       Logging.logger[self]
-    end
-
-    def build_client(options = {})
-      Services.elasticsearch(hosts: @base_uri, timeout: options[:timeout] || TIMEOUT_SECONDS)
     end
   end
 end

@@ -30,13 +30,17 @@ module Services
   # which time out (including PUT and DELETE requests). So the first, slow,
   # request succeeds (but times out) and the second retry request returns an
   # error because the operation has already been run.
-  def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
+  def self.elasticsearch(cluster: nil,
+                         hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200",
+                         timeout: 5,
+                         retry_on_failure: false,
+                         logger: Logging.logger[self])
     raw_uri = cluster ? cluster.uri : hosts
 
     Elasticsearch::Client.new(
       hosts: with_default_port(raw_uri),
       request_timeout: timeout,
-      logger: Logging.logger[self],
+      logger:,
       retry_on_failure:,
       transport_options: { headers: { "Content-Type" => "application/json" } },
     )
