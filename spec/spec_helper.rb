@@ -90,6 +90,21 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
   # config.warnings = true
 
+  config.before(:each, :unit) do
+    body = {
+      version: {
+        distribution: "opensearch",
+        number: "3.7.0",
+      },
+    }
+    stub_request(:get, "http://example.com:9200/")
+      .to_return(
+        status: 200,
+        body: body.to_json,
+        headers: { "Content-Type" => "application/json" },
+      )
+  end
+
   config.before do
     # search_config is a global object that has state, while most of the stubbing
     # is automatically reset, the index_names or passed into children object and
