@@ -1,9 +1,5 @@
 module ElasticsearchClient
   class << self
-    def delete(id:, index_name:, client: Services.elasticsearch)
-      client.delete(compatible_params(index: index_name, id: id))
-    end
-
     def search(index_name:, body:, client: Services.elasticsearch)
       return client.search(index: index_name, track_total_hits: true, body: body) if es7?
 

@@ -67,10 +67,6 @@ RSpec.describe ElasticsearchClient do
                                                           body: { a: :b },
                                                           c: :d)
         end
-        it "calls 'delete' with the right parameters, without including type" do
-          described_class.delete(id: 123, index_name: "index", client: es_client)
-          expect(es_client).to have_received(:delete).with(index: "index", id: 123)
-        end
       end
 
       context "when the server is OpenSearch" do
@@ -92,10 +88,6 @@ RSpec.describe ElasticsearchClient do
                                                           index: "index",
                                                           body: { a: :b },
                                                           c: :d)
-        end
-        it "calls 'delete' with the right parameters, without including type" do
-          described_class.delete(id: 123, index_name: "index", client: es_client)
-          expect(es_client).to have_received(:delete).with(index: "index", id: 123)
         end
       end
 
@@ -119,10 +111,6 @@ RSpec.describe ElasticsearchClient do
                                                           body: { a: :b },
                                                           c: :d,
                                                           type: "generic-document")
-        end
-        it "calls 'delete' with the right parameters, including type" do
-          described_class.delete(id: 123, index_name: "index", client: es_client)
-          expect(es_client).to have_received(:delete).with(index: "index", id: 123, type: "generic-document")
         end
       end
     end
