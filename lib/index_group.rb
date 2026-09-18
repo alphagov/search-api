@@ -11,6 +11,7 @@ module SearchIndices
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
       @client = Services.elasticsearch(hosts: base_uri)
+      @silent_client = Services.elasticsearch(hosts: base_uri, logger: nil)
       # Index creation/deletion can take longer than other requests, so create a separate
       # client with a longer timeout
       @long_timeout_client = Services.elasticsearch(hosts: base_uri, timeout: 30)
@@ -44,10 +45,10 @@ module SearchIndices
     def switch_to(index)
       # Loading this manually rather than using `index_map` because we may have
       # unaliased indices, which won't match the new naming convention.
-      begin
-        indices = @client.indices.get_alias(name: @name)
+      indices = begin
+        @silent_client.indices.get_alias(name: @name)
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
-        indices = {}
+        {}
       end
       # Bail if there is an existing index with this name.
       # elasticsearch won't allow us to add an alias with the same name as an
