@@ -33,7 +33,7 @@ module Services
   def self.elasticsearch(cluster: nil, hosts: ENV["ELASTICSEARCH_URI"] || "http://localhost:9200", timeout: 5, retry_on_failure: false)
     raw_uri = cluster ? cluster.uri : hosts
 
-    Elasticsearch::Client.new(
+    OpenSearch::Client.new(
       hosts: with_default_port(raw_uri),
       request_timeout: timeout,
       logger: Logging.logger[self],
