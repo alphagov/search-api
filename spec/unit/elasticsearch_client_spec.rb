@@ -54,12 +54,6 @@ RSpec.describe ElasticsearchClient do
         it "returns true" do
           expect(described_class.es7?).to eq(true)
         end
-        it "calls 'search' with the right parameters, without including type" do
-          described_class.search(index_name: "index", body: { a: :b }, client: es_client)
-          expect(es_client).to have_received(:search).with(index: "index",
-                                                           track_total_hits: true,
-                                                           body: { a: :b })
-        end
         it "calls 'index' with the right parameters, without including type" do
           described_class.index(id: 123, index_name: "index", atts: { a: :b }, params: { c: :d }, client: es_client)
           expect(es_client).to have_received(:index).with(id: 123,
@@ -76,12 +70,6 @@ RSpec.describe ElasticsearchClient do
         it "returns true" do
           expect(described_class.es7?).to eq(true)
         end
-        it "calls 'search' with the right parameters, without including type" do
-          described_class.search(index_name: "index", body: { a: :b }, client: es_client)
-          expect(es_client).to have_received(:search).with(index: "index",
-                                                           track_total_hits: true,
-                                                           body: { a: :b })
-        end
         it "calls 'index' with the right parameters, without including type" do
           described_class.index(id: 123, index_name: "index", atts: { a: :b }, params: { c: :d }, client: es_client)
           expect(es_client).to have_received(:index).with(id: 123,
@@ -97,12 +85,6 @@ RSpec.describe ElasticsearchClient do
         end
         it "returns false" do
           expect(described_class.es7?).to eq(false)
-        end
-        it "calls 'search' with the right parameters, including type" do
-          described_class.search(index_name: "index", body: { a: :b }, client: es_client)
-          expect(es_client).to have_received(:search).with(index: "index",
-                                                           body: { a: :b },
-                                                           type: "generic-document")
         end
         it "calls 'index' with the right parameters, including type" do
           described_class.index(id: 123, index_name: "index", atts: { a: :b }, params: { c: :d }, client: es_client)
