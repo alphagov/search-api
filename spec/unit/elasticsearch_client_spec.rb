@@ -68,10 +68,6 @@ RSpec.describe ElasticsearchClient do
                                                           body: { a: :b },
                                                           c: :d)
         end
-        it "returns mappings without type" do
-          expect(described_class.compatible_mappings({ a: :b }))
-            .to eq({ "properties" => { a: :b } })
-        end
         it "calls 'put_mapping' with the right parameters, without including type" do
           described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)
           expect(indices_client).to have_received(:put_mapping).with(index: "index",
@@ -105,10 +101,6 @@ RSpec.describe ElasticsearchClient do
                                                           index: "index",
                                                           body: { a: :b },
                                                           c: :d)
-        end
-        it "returns mappings without type" do
-          expect(described_class.compatible_mappings({ a: :b }))
-            .to eq({ "properties" => { a: :b } })
         end
         it "calls 'put_mapping' with the right parameters, without including type" do
           described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)
@@ -144,10 +136,6 @@ RSpec.describe ElasticsearchClient do
                                                           body: { a: :b },
                                                           c: :d,
                                                           type: "generic-document")
-        end
-        it "returns mappings with type" do
-          expect(described_class.compatible_mappings({ a: :b }))
-            .to eq("generic-document" => { "properties" => { a: :b } })
         end
         it "calls 'put_mapping' with the right parameters, including type" do
           described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)

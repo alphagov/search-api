@@ -1,11 +1,5 @@
 module ElasticsearchClient
   class << self
-    def compatible_mappings(properties)
-      return { "properties" => properties } if es7?
-
-      { "generic-document" => { "properties" => properties } }
-    end
-
     def compatible_identifier(params)
       return params if es7?
 
