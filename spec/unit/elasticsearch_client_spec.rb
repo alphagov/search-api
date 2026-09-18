@@ -16,7 +16,6 @@ RSpec.describe ElasticsearchClient do
                                            delete: {},
                                            info: version_info,
                                            track_total_hits: false)
-      allow(indices_client).to receive_messages(put_mapping: {})
     end
 
     context "when USE_ELASTICSEARCH_7 is set" do
@@ -68,11 +67,6 @@ RSpec.describe ElasticsearchClient do
                                                           body: { a: :b },
                                                           c: :d)
         end
-        it "calls 'put_mapping' with the right parameters, without including type" do
-          described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)
-          expect(indices_client).to have_received(:put_mapping).with(index: "index",
-                                                                     body: { a: :b })
-        end
         it "calls 'delete' with the right parameters, without including type" do
           described_class.delete(id: 123, index_name: "index", client: es_client)
           expect(es_client).to have_received(:delete).with(index: "index", id: 123)
@@ -98,11 +92,6 @@ RSpec.describe ElasticsearchClient do
                                                           index: "index",
                                                           body: { a: :b },
                                                           c: :d)
-        end
-        it "calls 'put_mapping' with the right parameters, without including type" do
-          described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)
-          expect(indices_client).to have_received(:put_mapping).with(index: "index",
-                                                                     body: { a: :b })
         end
         it "calls 'delete' with the right parameters, without including type" do
           described_class.delete(id: 123, index_name: "index", client: es_client)
@@ -130,12 +119,6 @@ RSpec.describe ElasticsearchClient do
                                                           body: { a: :b },
                                                           c: :d,
                                                           type: "generic-document")
-        end
-        it "calls 'put_mapping' with the right parameters, including type" do
-          described_class.put_mapping(index_name: "index", mapping: { a: :b }, client: es_client)
-          expect(indices_client).to have_received(:put_mapping).with(index: "index",
-                                                                     body: { a: :b },
-                                                                     type: "generic-document")
         end
         it "calls 'delete' with the right parameters, including type" do
           described_class.delete(id: 123, index_name: "index", client: es_client)
