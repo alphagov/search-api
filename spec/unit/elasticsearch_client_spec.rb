@@ -77,9 +77,6 @@ RSpec.describe ElasticsearchClient do
           described_class.delete(id: 123, index_name: "index", client: es_client)
           expect(es_client).to have_received(:delete).with(index: "index", id: 123)
         end
-        it "returns an identifier for bulk operations for Elasticsearch version 7, which does not include a type" do
-          expect(described_class.compatible_identifier({ a: :b })).to eq({ a: :b })
-        end
       end
 
       context "when the server is OpenSearch" do
@@ -110,9 +107,6 @@ RSpec.describe ElasticsearchClient do
         it "calls 'delete' with the right parameters, without including type" do
           described_class.delete(id: 123, index_name: "index", client: es_client)
           expect(es_client).to have_received(:delete).with(index: "index", id: 123)
-        end
-        it "returns an identifier for bulk operations for Opensearch, which does not include a type" do
-          expect(described_class.compatible_identifier({ a: :b })).to eq({ a: :b })
         end
       end
 
@@ -146,9 +140,6 @@ RSpec.describe ElasticsearchClient do
         it "calls 'delete' with the right parameters, including type" do
           described_class.delete(id: 123, index_name: "index", client: es_client)
           expect(es_client).to have_received(:delete).with(index: "index", id: 123, type: "generic-document")
-        end
-        it "returns an identifier for bulk operations for Elasticsearch version 6, which includes a type" do
-          expect(described_class.compatible_identifier({ a: :b })).to eq({ "_type" => "generic-document", a: :b })
         end
       end
     end

@@ -14,12 +14,12 @@ module Index
     end
 
     def save(presenter)
-      @actions << { index: ElasticsearchClient.compatible_identifier(presenter.identifier) }
+      @actions << { index: presenter.identifier }
       @actions << presenter.document
     end
 
     def delete(presenter)
-      @actions << { delete: ElasticsearchClient.compatible_identifier(presenter.identifier) }
+      @actions << { delete: presenter.identifier }
     end
 
     def commit
