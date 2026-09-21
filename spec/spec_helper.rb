@@ -117,12 +117,6 @@ RSpec.configure do |config|
     ClimateControl.modify(TZ: "UTC") { example.run }
   end
 
-  config.around(:each, :unit) do |example|
-    ClimateControl.modify(USE_ELASTICSEARCH_7: "true") do
-      example.run
-    end
-  end
-
   if config.files_to_run.one?
     config.default_formatter = "doc"
   end

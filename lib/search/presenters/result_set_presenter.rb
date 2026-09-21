@@ -25,7 +25,7 @@ module Search
     def present
       response = {
         results: presented_results,
-        total: ElasticsearchResponse.new(es_response).total_hits || 0,
+        total: es_response.dig("hits", "total", "value") || 0,
         start: search_params.start,
         search_params.aggregate_name => presented_aggregates,
         suggested_queries:,
