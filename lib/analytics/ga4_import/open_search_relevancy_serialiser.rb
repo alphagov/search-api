@@ -1,6 +1,6 @@
 module Analytics
   module Ga4Import
-    class ElasticSearchRelevancySerialiser
+    class OpenSearchRelevancySerialiser
       def initialize(consolidated_data)
         @consolidated_data = consolidated_data
       end
