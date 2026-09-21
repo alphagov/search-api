@@ -84,7 +84,7 @@ module IntegrationTestHelper
 
       next if hits.empty?
 
-      es_processor = Index::ElasticsearchProcessor.new(client: client(cluster:))
+      es_processor = Index::OpensearchProcessor.new(client: client(cluster:))
       hits.each do |hit|
         es_processor.delete(OpenStruct.new(identifier: { _index: index, _id: hit["_id"] }))
       end

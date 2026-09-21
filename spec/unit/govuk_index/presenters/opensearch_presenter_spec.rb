@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe GovukIndex::ElasticsearchPresenter do
+RSpec.describe GovukIndex::OpensearchPresenter do
   it "identifier" do
     payload = generate_random_example(payload: { payload_version: 1 })
 

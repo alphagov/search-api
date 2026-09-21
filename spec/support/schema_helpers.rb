@@ -14,7 +14,7 @@ module SchemaHelpers
   end
 
   def sample_opensearch_types
-    @sample_opensearch_types ||= ElasticsearchTypesParser.new(SCHEMA_DIR, sample_field_definitions).parse
+    @sample_opensearch_types ||= OpensearchTypesParser.new(SCHEMA_DIR, sample_field_definitions).parse
   end
 
   def sample_schema

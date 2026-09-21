@@ -95,7 +95,7 @@ treating them as additional sections of the main document. Instead of handling H
 attachments like file downloads, they are stored as extra “parts,” keeping everything
 in one indexed document while still allowing each attachment’s title and body to be searchable.
 
-## Elasticsearch document types
+## Opensearch document types
 
 Documents in an opensearch index have a type, and each type may have very
 different configuration. We call this type "opensearch type" to differentiate
@@ -117,7 +117,7 @@ The files contain a JSON object with the following key:
 Even though we have different schemas for different "opensearch
 document types", in practice opensearch only knows about one
 "type": which is the union of all the schemas.  This is because
-Elasticsearch 6 does not allow multiple types in the same index.
+Opensearch does not allow multiple types in the same index.
 
 ## Indexes
 

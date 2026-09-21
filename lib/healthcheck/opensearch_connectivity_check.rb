@@ -3,7 +3,7 @@ require "govuk_app_config"
 module Healthcheck
   # This is a custom check that is called by GovukHealthcheck
   # See GovukHealthcheck (govuk_app_config/docs/healthchecks.md) for usage info
-  class ElasticsearchConnectivityCheck
+  class OpensearchConnectivityCheck
     def name
       :opensearch_connectivity
     end

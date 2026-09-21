@@ -1,4 +1,4 @@
-class ElasticsearchConfig
+class OpensearchConfig
   def config
     config_for("opensearch")[ENV["RACK_ENV"]]
   end

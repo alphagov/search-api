@@ -5,7 +5,7 @@ class SchemaConfig
     @config_path = config_path
     @schema_config_file = schema_config_file
     @field_definitions = FieldDefinitionParser.new(config_path).parse
-    @opensearch_types = ElasticsearchTypesParser.new(config_path, @field_definitions).parse
+    @opensearch_types = OpensearchTypesParser.new(config_path, @field_definitions).parse
     @index_schemas = IndexSchemaParser.parse_all(config_path, @field_definitions, @opensearch_types)
     @index_synonyms, @search_synonyms = SynonymParser.new.parse(synonym_config)
   end

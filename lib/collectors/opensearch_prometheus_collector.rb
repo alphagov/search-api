@@ -2,14 +2,14 @@ require "prometheus_exporter"
 require "prometheus_exporter/server"
 
 module Collectors
-  class ElasticsearchPrometheusCollector < PrometheusExporter::Server::TypeCollector
+  class OpensearchPrometheusCollector < PrometheusExporter::Server::TypeCollector
     def type
       "opensearch"
     end
 
     def metrics
-      disk_space_gauge = PrometheusExporter::Metric::Gauge.new("search_api_opensearch_disk_space", "Percentage of available disk space for Elasticsearch")
-      status_gauge = PrometheusExporter::Metric::Gauge.new("search_api_opensearch_status", "Status of the Elasticsearch cluster (red = 2, yellow = 1, green = 0)")
+      disk_space_gauge = PrometheusExporter::Metric::Gauge.new("search_api_opensearch_disk_space", "Percentage of available disk space for Opensearch")
+      status_gauge = PrometheusExporter::Metric::Gauge.new("search_api_opensearch_status", "Status of the Opensearch cluster (red = 2, yellow = 1, green = 0)")
 
       free_disk_space_ratios.each do |node, space|
         disk_space_gauge.observe(space, node:)

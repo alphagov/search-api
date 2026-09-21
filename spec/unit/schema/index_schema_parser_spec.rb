@@ -12,7 +12,7 @@ RSpec.describe IndexSchemaParser do
   context "after loading standard index schemas" do
     before do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
-      opensearch_types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
+      opensearch_types = OpensearchTypesParser.new(schema_dir, field_definitions).parse
       @index_schemas = described_class.parse_all(schema_dir, field_definitions, opensearch_types)
       @identifier_es_config = { "type" => "keyword", "index" => true }
     end
@@ -35,7 +35,7 @@ RSpec.describe IndexSchemaParser do
   context "when configuration is invalid" do
     before do
       field_definitions = FieldDefinitionParser.new(schema_dir).parse
-      opensearch_types = ElasticsearchTypesParser.new(schema_dir, field_definitions).parse
+      opensearch_types = OpensearchTypesParser.new(schema_dir, field_definitions).parse
       @parser = described_class.new("index", "index.json", field_definitions, opensearch_types)
     end
 
