@@ -50,7 +50,7 @@ require "auth/mock_strategy"
 require "analytics/ga4_import/relevance_report_generator"
 require "analytics/ga4_import/data_fetcher"
 require "analytics/ga4_import/page_view_consolidator"
-require "analytics/ga4_import/elastic_search_relevancy_serialiser"
+require "analytics/ga4_import/open_search_relevancy_serialiser"
 require "analytics/ga4_import/report_request_builder"
 require "analytics/ga4_import/page_data"
 
