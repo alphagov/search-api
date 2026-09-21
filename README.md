@@ -1,6 +1,6 @@
 # Search API
 
-Search API (previously known as "rummager") indexes content into [Elasticsearch](https://www.elastic.co/products/elasticsearch)
+Search API (previously known as "rummager") indexes content into [Opensearch](https://www.elastic.co/products/elasticsearch)
 and serves the GOV.UK Search API.
 
 GOV.UK applications use the API to search and filter GOV.UK content.
@@ -24,7 +24,7 @@ publishing_api:publish_finder
 
 ## Technical documentation
 
-Search API is a Sinatra application that interfaces with Elasticsearch.
+Search API is a Sinatra application that interfaces with Opensearch.
 
 You can use the [GOV.UK Docker environment](https://github.com/alphagov/govuk-docker) to run the application and its tests with all the necessary dependencies. Follow [the usage instructions](https://github.com/alphagov/govuk-docker#usage) to get started.
 

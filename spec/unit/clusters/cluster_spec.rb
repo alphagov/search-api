@@ -38,6 +38,6 @@ RSpec.describe Clusters::Cluster do
   end
 
   def es_config
-    ElasticsearchConfig.new.config
+    OpensearchConfig.new.config
   end
 end

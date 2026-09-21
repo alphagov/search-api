@@ -27,7 +27,7 @@ RSpec.describe "delete rake tasks" do
         commit_document(index, { link:, format: "guide" })
       end
 
-      it "deletes the document from Elasticsearch" do
+      it "deletes the document from Opensearch" do
         expect(
           Services.opensearch.get(index:, id: link),
         ).to be_present

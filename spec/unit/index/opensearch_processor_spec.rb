@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe Index::ElasticsearchProcessor do
+RSpec.describe Index::OpensearchProcessor do
   subject { described_class.govuk }
 
   let(:cluster_count) { Clusters.count }

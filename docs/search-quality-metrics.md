@@ -1,7 +1,7 @@
 # Search Quality Metrics
 
-We use Elasticsearch's [Ranking Evaluation API](ranking_evaluation_api)
-to assess the quality of results retrieved from Elasticsearch prior to re-ranking. 
+We use Opensearch's [Ranking Evaluation API](ranking_evaluation_api)
+to assess the quality of results retrieved from Opensearch prior to re-ranking. 
 The API enables us to score how well search-api ranks results by relevancy for a given query.
 
 ### What is rank evaluation?
@@ -95,7 +95,7 @@ harry potter      2       Harry Potter World
 ...
 ```
 
-We then provide this to the Elasticsearch Rank Evaluation API, which behind the
+We then provide this to the Opensearch Rank Evaluation API, which behind the
 scenes does a query for harry potter, and compares the ratings we provided with
 what the actual results are, computes normalised DCG (number between 0 and 1)
 and returns it to us. Thus `harry potter = 0.6297902553883483` at this moment

@@ -2,7 +2,7 @@ module Index
   class ResponseValidator
     class NotFound < StandardError; end
 
-    class ElasticsearchError < StandardError; end
+    class OpensearchError < StandardError; end
 
     def initialize(namespace:)
       @namespace = namespace
@@ -24,7 +24,7 @@ module Index
         logger.error("#{action_type} not processed: status #{status}")
         Services.statsd_client.increment("#{@namespace}.opensearch.#{action_type}_error")
 
-        raise ElasticsearchError, "Unknown Error"
+        raise OpensearchError, "Unknown Error"
       end
     end
 
@@ -48,7 +48,7 @@ module Index
         Services.statsd_client.increment("#{@namespace}.opensearch.#{action_type}_error")
 
         GovukError.notify(
-          ElasticsearchError.new,
+          OpensearchError.new,
           extra: {
             action_type:,
             details:,

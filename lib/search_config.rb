@@ -49,7 +49,7 @@ class SearchConfig
 
     def opensearch
       Cache.get(Cache::SEARCH_CONFIG) do
-        ElasticsearchConfig.new.config
+        OpensearchConfig.new.config
       end
     end
 
@@ -83,7 +83,7 @@ class SearchConfig
 
   def schema_config
     @schema_config ||= SchemaConfig.new(
-      ElasticsearchConfig.new.config_path,
+      OpensearchConfig.new.config_path,
       schema_config_file: cluster.schema_config_file,
     )
   end

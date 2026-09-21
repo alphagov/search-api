@@ -2,7 +2,7 @@ require "prometheus_exporter"
 require "prometheus_exporter/server"
 require "spec_helper"
 
-RSpec.describe Collectors::ElasticsearchPrometheusCollector do
+RSpec.describe Collectors::OpensearchPrometheusCollector do
   subject(:metrics) { described_class.new.metrics }
 
   let(:cluster_status) { "green" }

@@ -10,7 +10,7 @@ module Clusters
     end
 
     def uri
-      @uri ||= ElasticsearchConfig.new.config[uri_key]
+      @uri ||= OpensearchConfig.new.config[uri_key]
     end
 
     def inactive?

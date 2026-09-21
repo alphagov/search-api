@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe GovukIndex::PublishingEventMessageHandler do
   before do
-    allow(Index::ElasticsearchProcessor).to receive(:new).and_return(actions)
+    allow(Index::OpensearchProcessor).to receive(:new).and_return(actions)
     @statsd_client = instance_double("Statsd", increment: nil)
     allow(Services).to receive(:statsd_client).and_return @statsd_client
   end
@@ -76,7 +76,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
 
         expect {
           described_class.call("routing.unpublish", payload)
-        }.to raise_error(described_class::ElasticsearchRetryError)
+        }.to raise_error(described_class::OpensearchRetryError)
       end
 
       it "will not raise an error when opensearch returns a 404 - not found" do
@@ -98,7 +98,7 @@ RSpec.describe GovukIndex::PublishingEventMessageHandler do
   end
 
   def stub_document_type_mapper
-    allow_any_instance_of(GovukIndex::ElasticsearchDeletePresenter).to receive(:type).and_return("real_document_type")
+    allow_any_instance_of(GovukIndex::OpensearchDeletePresenter).to receive(:type).and_return("real_document_type")
     allow(GovukIndex::AllowedFormats).to receive(:allowed_formats).and_return("real_document_type" => :all)
   end
 end

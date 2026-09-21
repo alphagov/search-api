@@ -2,7 +2,7 @@
 
 The GOV.UK Search API maintains several fields related to document popularity. These fields are populated using two scheduled rake tasks:
 
-- **`page_traffic`** — fetches and processes traffic data from Google Analytics 4 (GA4), storing the results in the _page_traffic_ Elasticsearch index.
+- **`page_traffic`** — fetches and processes traffic data from Google Analytics 4 (GA4), storing the results in the _page_traffic_ Opensearch index.
 - **`update_popularity`** — reads the processed data from the _page_traffic_ index and updates the popularity-related fields on documents in the main search index.
 
 Access to the Google Analytics 4 API is controlled by the [search-analytics-pipeline service account](https://github.com/alphagov/govuk-data-infrastructure/blob/main/ga4-analytics/service_account.tf#L20)
@@ -15,7 +15,7 @@ and the following environment variables:
 
 ### Collecting and preparing traffic data
 
-The `page_traffic` task retrieves page performance data from GA4 and stores a processed version in the _page_traffic_ Elasticsearch index. The processing consists of the following steps:
+The `page_traffic` task retrieves page performance data from GA4 and stores a processed version in the _page_traffic_ Opensearch index. The processing consists of the following steps:
 
 #### Step 1 — filter out unwanted pages
 
