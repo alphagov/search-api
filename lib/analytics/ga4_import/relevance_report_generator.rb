@@ -11,7 +11,7 @@ module Analytics
             PageViewConsolidator.new(paginated_data).consolidated_page_views
           }
           .then { |consolidated_page_views|
-            ElasticSearchRelevancySerialiser.new(consolidated_page_views)
+            OpenSearchRelevancySerialiser.new(consolidated_page_views)
           }
           .relevance
           .join("\n")
