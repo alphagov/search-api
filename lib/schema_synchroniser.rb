@@ -1,5 +1,5 @@
 class SchemaSynchroniser
-  def initialize(index_name, client = Services.elasticsearch)
+  def initialize(index_name, client = Services.opensearch)
     @index_name = index_name
     @client = client
   end

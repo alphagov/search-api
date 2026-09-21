@@ -36,8 +36,8 @@ RSpec.describe "HealthcheckTest" do
     end
   end
 
-  describe "#elasticsearch_connectivity check" do
-    context "when elasticsearch CANNOT be connected to" do
+  describe "#opensearch_connectivity check" do
+    context "when opensearch CANNOT be connected to" do
       it "returns a critical status" do
         es_source = ENV["ELASTICSEARCH_URI"] || "http://localhost:9200"
         stub_request(:get, %r{#{es_source}/_cluster/health}).to_raise(Errno::ECONNREFUSED)
@@ -45,17 +45,17 @@ RSpec.describe "HealthcheckTest" do
         get "/healthcheck/ready"
 
         expect(parsed_response["status"]).to eq "critical"
-        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "critical"
-        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "message")).to eq "search-api cannot connect to 1 elasticsearch cluster! \n Failing: A"
+        expect(parsed_response.dig("checks", "opensearch_connectivity", "status")).to eq "critical"
+        expect(parsed_response.dig("checks", "opensearch_connectivity", "message")).to eq "search-api cannot connect to 1 opensearch cluster! \n Failing: A"
       end
     end
 
-    context "when elasticsearch CAN be connected to" do
+    context "when opensearch CAN be connected to" do
       it "returns an OK status" do
         get "/healthcheck/ready"
 
         expect(parsed_response["status"]).to eq "ok"
-        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "ok"
+        expect(parsed_response.dig("checks", "opensearch_connectivity", "status")).to eq "ok"
       end
     end
   end

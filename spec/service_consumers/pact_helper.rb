@@ -37,7 +37,7 @@ Pact.provider_states_for "GDS API Adapters" do
   set_up do
     WebMock.enable!
     WebMock.reset!
-    IntegrationTestHelper.allow_elasticsearch_connection_to_test(pact_broker_base_url)
+    IntegrationTestHelper.allow_opensearch_connection_to_test(pact_broker_base_url)
     IndexHelpers.setup_test_indexes
   end
 

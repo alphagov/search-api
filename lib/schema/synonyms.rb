@@ -62,7 +62,7 @@ private
     end
 
     def es_config
-      # Returns the configuration to pass to elasticsearch to define a filter
+      # Returns the configuration to pass to opensearch to define a filter
       # which applies these synonyms.  Should be passed in the schema under the
       # path `settings.analysis.filter.<filter_name>`.
       {

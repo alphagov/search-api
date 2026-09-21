@@ -16,7 +16,7 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
       consumer.run
     end
 
-    it "saves new documents to elasticsearch" do
+    it "saves new documents to opensearch" do
       allow(GovukIndex::AllowedFormats).to receive(:allowed?).and_return(true)
       random_example = generate_random_example(
         payload: { document_type: "help_page", payload_version: 123 },
@@ -147,6 +147,6 @@ RSpec.describe "GovukIndex::PublishingEventProcessorTest" do
   end
 
   def client(cluster: Cluster.default_cluster)
-    @client ||= Services.elasticsearch(cluster:)
+    @client ||= Services.opensearch(cluster:)
   end
 end

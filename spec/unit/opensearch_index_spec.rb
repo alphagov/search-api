@@ -17,7 +17,7 @@ RSpec.describe SearchIndices::Index do
     expect(@index.real_name).to eq("real-name")
   end
 
-  it "returns nil for real_name when elasticsearch returns a 404 response" do
+  it "returns nil for real_name when opensearch returns a 404 response" do
     stub_request(:get, "http://example.com:9200/govuk_test/_alias")
       .to_return(
         status: 404,
@@ -28,8 +28,8 @@ RSpec.describe SearchIndices::Index do
     expect(@index.real_name).to be_nil
   end
 
-  it "returns nil for real_name when elasticsearch reports the index as missing" do
-    # elasticsearch is weird: even though /index/_status 404s if the index
+  it "returns nil for real_name when opensearch reports the index as missing" do
+    # opensearch is weird: even though /index/_status 404s if the index
     # doesn't exist, /index/_alias returns a 200.
     stub_request(:get, "http://example.com:9200/govuk_test/_alias")
       .to_return(

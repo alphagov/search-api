@@ -7,7 +7,7 @@ production: &default
   clusters:
     - uri_key: base_uri
       key: A
-      schema_config_file: elasticsearch_schema.yml
+      schema_config_file: opensearch_schema.yml
       default: true
 
 development:
@@ -22,5 +22,5 @@ test:
   clusters:
     - uri_key: base_uri
       key: A
-      schema_config_file: elasticsearch_schema.yml
+      schema_config_file: opensearch_schema.yml
       default: true

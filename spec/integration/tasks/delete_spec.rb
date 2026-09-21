@@ -29,13 +29,13 @@ RSpec.describe "delete rake tasks" do
 
       it "deletes the document from Elasticsearch" do
         expect(
-          Services.elasticsearch.get(index:, id: link),
+          Services.opensearch.get(index:, id: link),
         ).to be_present
 
         task.invoke(link)
 
         expect {
-          Services.elasticsearch.get(index:, id: link)
+          Services.opensearch.get(index:, id: link)
         }.to raise_error(OpenSearch::Transport::Transport::Errors::NotFound)
       end
     end

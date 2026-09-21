@@ -86,7 +86,7 @@
   },
 
   "all_searchable_text_type": {
-    "description": "A type for a special single field that all searchable text is copied into (using `copy_to` directives in elasticsearch). We use this instead of the built-in `_all` so that we can analyze it in multiple ways",
+    "description": "A type for a special single field that all searchable text is copied into (using `copy_to` directives in opensearch). We use this instead of the built-in `_all` so that we can analyze it in multiple ways",
     "es_config": {
       "type": "text",
       "index": true,
@@ -221,7 +221,7 @@
   },
 
   "opaque_object": {
-    "description": "A JSON object which is returned, but not parsed or modified by elasticsearch",
+    "description": "A JSON object which is returned, but not parsed or modified by opensearch",
     "children": "dynamic",
     "es_config": {
       "type": "object",

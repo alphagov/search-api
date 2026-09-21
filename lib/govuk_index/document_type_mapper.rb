@@ -7,7 +7,7 @@ module GovukIndex
     end
 
     def type
-      elasticsearch_document_type
+      opensearch_document_type
     end
 
     def unpublishing_type?
@@ -22,8 +22,8 @@ module GovukIndex
       @mapped_document_types ||= YAML.load_file(File.join(__dir__, "../../config/govuk_index/mapped_document_types.yaml"))
     end
 
-    def elasticsearch_document_type
-      @elasticsearch_document_type ||= mapped_document_types[payload["document_type"]]
+    def opensearch_document_type
+      @opensearch_document_type ||= mapped_document_types[payload["document_type"]]
     end
   end
 end

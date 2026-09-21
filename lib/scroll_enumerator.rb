@@ -29,7 +29,7 @@ class ScrollEnumerator < Enumerator
       first_page = true
       loop do
         # The way we tell we've got through all the results is when
-        # elasticsearch gives us an empty array of hits. This means all the
+        # opensearch gives us an empty array of hits. This means all the
         # shards have run out of results.
         if page["hits"]["hits"].any? || first_page
           first_page = false

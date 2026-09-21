@@ -11,7 +11,7 @@ set :root, File.dirname(__FILE__)
 
 require "rummager"
 require "govuk_app_config"
-require "healthcheck/elasticsearch_connectivity_check"
+require "healthcheck/opensearch_connectivity_check"
 
 class Rummager < Sinatra::Application
   Warden::Strategies.add :bearer_token, Warden::OAuth2::Strategies::Bearer

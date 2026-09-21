@@ -40,7 +40,7 @@ RSpec.describe MetasearchIndex::Deleter::V2 do
     }.to raise_error(Index::ResponseValidator::NotFound)
   end
 
-  it "raises an error if the process fails to delete in elasticsearch" do
+  it "raises an error if the process fails to delete in opensearch" do
     failure_reponse = [{
       "items" => [{ "insert" => { "status" => 500 } }],
     }]

@@ -1,5 +1,5 @@
 # The Clusters module is responsible for providing information about
-# the various elasticsearch clusters that search-api can talk to.
+# the various opensearch clusters that search-api can talk to.
 module Clusters
   def self.count
     active.count

@@ -3,7 +3,7 @@ module Search
     TIMEOUT = 60
 
     def find_duplicates
-      response = Services.elasticsearch(timeout: TIMEOUT).search(
+      response = Services.opensearch(timeout: TIMEOUT).search(
         index: SearchConfig.govuk_index_name,
         size: 0,
         body: {

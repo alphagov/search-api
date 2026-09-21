@@ -15,14 +15,14 @@ module Index
       case status
       when 200..399
         logger.debug("Processed #{action_type} with status #{status}")
-        Services.statsd_client.increment("#{@namespace}.elasticsearch.#{action_type}")
+        Services.statsd_client.increment("#{@namespace}.opensearch.#{action_type}")
       when 404 # failed while attempting to delete missing record so just ignore it
         logger.info("Tried to delete a document that wasn't there; ignoring.")
-        Services.statsd_client.increment("#{@namespace}.elasticsearch.already_deleted")
+        Services.statsd_client.increment("#{@namespace}.opensearch.already_deleted")
         raise NotFound, "Document not found in index"
       else
         logger.error("#{action_type} not processed: status #{status}")
-        Services.statsd_client.increment("#{@namespace}.elasticsearch.#{action_type}_error")
+        Services.statsd_client.increment("#{@namespace}.opensearch.#{action_type}_error")
 
         raise ElasticsearchError, "Unknown Error"
       end
@@ -34,18 +34,18 @@ module Index
 
       if (200..399).cover?(status)
         logger.debug("Processed #{action_type} with status #{status}")
-        Services.statsd_client.increment("#{@namespace}.elasticsearch.#{action_type}")
+        Services.statsd_client.increment("#{@namespace}.opensearch.#{action_type}")
       elsif action_type == "delete" && details["status"] == 404 # failed while attempting to delete missing record so just ignore it
         logger.info("Tried to delete a document that wasn't there; ignoring.")
-        Services.statsd_client.increment("#{@namespace}.elasticsearch.already_deleted")
+        Services.statsd_client.increment("#{@namespace}.opensearch.already_deleted")
       elsif details["status"] == 409
         # A version conflict indicates that messages were processed out of
         # order. This is not expected to happen often but is safe to ignore.
         logger.info("#{action_type} version is outdated; ignoring.")
-        Services.statsd_client.increment("#{@namespace}.elasticsearch.version_conflict")
+        Services.statsd_client.increment("#{@namespace}.opensearch.version_conflict")
       else
         logger.error("#{action_type} not processed: status #{status}")
-        Services.statsd_client.increment("#{@namespace}.elasticsearch.#{action_type}_error")
+        Services.statsd_client.increment("#{@namespace}.opensearch.#{action_type}_error")
 
         GovukError.notify(
           ElasticsearchError.new,
