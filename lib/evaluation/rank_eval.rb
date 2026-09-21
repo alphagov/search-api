@@ -97,7 +97,7 @@ module Evaluation
     end
 
     def client
-      @client ||= Services.elasticsearch(hosts: instance.base_uri, timeout: 120)
+      @client ||= Services.opensearch(hosts: instance.base_uri, timeout: 120)
     end
 
     def instance

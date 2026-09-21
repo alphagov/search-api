@@ -16,7 +16,7 @@ RSpec.describe Index::ElasticsearchProcessor do
     )
 
     client = double("client")
-    allow(Services).to receive("elasticsearch").and_return(client)
+    allow(Services).to receive("opensearch").and_return(client)
     expect(client).to receive(:bulk).exactly(cluster_count).times.with({
       index: SearchConfig.govuk_index_name,
       body: [
@@ -39,7 +39,7 @@ RSpec.describe Index::ElasticsearchProcessor do
     )
 
     client = double("client")
-    allow(Services).to receive("elasticsearch").and_return(client)
+    allow(Services).to receive("opensearch").and_return(client)
     expect(client).to receive(:bulk).exactly(cluster_count).times.with({
       index: SearchConfig.govuk_index_name,
       body: [

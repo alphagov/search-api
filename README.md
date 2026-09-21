@@ -28,7 +28,7 @@ Search API is a Sinatra application that interfaces with Elasticsearch.
 
 You can use the [GOV.UK Docker environment](https://github.com/alphagov/govuk-docker) to run the application and its tests with all the necessary dependencies. Follow [the usage instructions](https://github.com/alphagov/govuk-docker#usage) to get started.
 
-To replicate real data into your local development environment, use the [replicate-elasticsearch](https://docs.publishing.service.gov.uk/repos/govuk-docker/how-tos.html#how-to-replicate-data-locally) script provided by GOV.UK Docker.
+To replicate real data into your local development environment, use the [replicate-opensearch](https://docs.publishing.service.gov.uk/repos/govuk-docker/how-tos.html#how-to-replicate-data-locally) script provided by GOV.UK Docker.
 
 **Use GOV.UK Docker to run any commands that follow.**
 

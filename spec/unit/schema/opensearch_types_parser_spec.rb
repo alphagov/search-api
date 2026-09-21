@@ -34,7 +34,7 @@ RSpec.describe ElasticsearchTypesParser do
       expect(link_field.type.name).to eq("identifier")
     end
 
-    it "produce appropriate elasticsearch configuration for the `manual section` type" do
+    it "produce appropriate opensearch configuration for the `manual section` type" do
       es_config = @types["manual_section"].es_config
       expect(es_config).to match(
         hash_including({

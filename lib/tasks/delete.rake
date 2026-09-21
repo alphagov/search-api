@@ -10,7 +10,7 @@ namespace :delete do
     id = args[:link]
     abort "Missing argument. Usage: rake 'delete:by_link[link]'" if args[:link].nil?
 
-    Services.elasticsearch.delete(index: SearchConfig.govuk_index_name, id:)
+    Services.opensearch.delete(index: SearchConfig.govuk_index_name, id:)
   end
 
   desc "
@@ -25,7 +25,7 @@ namespace :delete do
     abort "Specify format for deletion" if format.nil?
 
     warn_for_single_cluster_run
-    client = Services.elasticsearch(cluster: Clusters.default_cluster, timeout: 5.0)
+    client = Services.opensearch(cluster: Clusters.default_cluster, timeout: 5.0)
 
     delete_commands = ScrollEnumerator.new(
       client:,

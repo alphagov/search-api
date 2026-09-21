@@ -3,7 +3,7 @@ module Debug
     class Analyzer
       attr_reader :client, :index
 
-      def initialize(index: "govuk", client: Services.elasticsearch)
+      def initialize(index: "govuk", client: Services.opensearch)
         @client = client
         @index = index
       end

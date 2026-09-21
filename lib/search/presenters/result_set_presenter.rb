@@ -34,7 +34,7 @@ module Search
       }
 
       if search_params.show_query?
-        response["elasticsearch_query"] = @query_payload
+        response["opensearch_query"] = @query_payload
       end
 
       response

@@ -38,7 +38,7 @@ module GovukIndex
 
     def scroll_enumerator(cluster:)
       ScrollEnumerator.new(
-        client: Services.elasticsearch(cluster:, timeout: TIMEOUT_SECONDS),
+        client: Services.opensearch(cluster:, timeout: TIMEOUT_SECONDS),
         index_names: @source_index,
         search_body:,
         batch_size: SCROLL_BATCH_SIZE,

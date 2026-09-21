@@ -125,7 +125,7 @@ results for a given query.
 Best bets used to be managed with the [Search Admin][] application,
 until that functionality was removed in https://github.com/alphagov/search-admin/pull/1174.
 There is currently no support for managing best bets without directly
-interacting with elasticsearch. This is known tech debt.
+interacting with opensearch. This is known tech debt.
 
 Example best bets:
 
@@ -222,7 +222,7 @@ terms are mapped to the same single value that exists in the index.
 
 ### Filtering
 
-Additional configuration is defined in the [elasticsearch_schema.yml][] and
+Additional configuration is defined in the [opensearch_schema.yml][] and
 [stems.yml][] files.  This configuration is merged with the JSON
 configuration, and then passed to Elasticsearch directly.
 

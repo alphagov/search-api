@@ -51,4 +51,4 @@ The `update_popularity` task reads the entries from the _page_traffic_ index and
 | **popularity_b** | (size_of_ranked_list) - rank_14 |
 | **view_count** | vc_14                           |
 
-The _offset_ used in the popularity calculation is defined in the `/elasticsearch.yml` file as _popularity_rank_offset_.
+The _offset_ used in the popularity calculation is defined in the `/opensearch.yml` file as _popularity_rank_offset_.

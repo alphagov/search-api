@@ -29,7 +29,7 @@ module QueryComponents
     attr_reader :metasearch_index
 
     # `best_bet_queries` make sure documents with the specified IDs are returned
-    # by elasticsearch. It also adds a huge weight for these results, to
+    # by opensearch. It also adds a huge weight for these results, to
     # make them on top of the search results page.
     #
     # Bets are in ascending order of position (eg, bet #2 is one from the top)
