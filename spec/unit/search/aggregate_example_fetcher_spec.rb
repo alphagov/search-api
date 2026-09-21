@@ -38,7 +38,7 @@ RSpec.describe Search::AggregateExampleFetcher do
   def response_for_example(total_examples, titles)
     {
       "hits" => {
-        "total" => total_examples,
+        "total" => { "value" => total_examples, "relation" => "eq" },
         "hits" => titles.map do |title|
           { "_source" => { "title" => title } }
         end,
@@ -66,7 +66,7 @@ RSpec.describe Search::AggregateExampleFetcher do
     it "map a response to aggregates without fields" do
       fetcher = described_class.new(@index, {}, Search::QueryParameters.new, @builder)
       slugs = %w[a-slug-name]
-      response_list = [{ "hits" => { "total" => 1, "hits" => [{ "_id" => "a-slug-name" }] } }]
+      response_list = [{ "hits" => { "total" => { "value" => 1, "relation" => "eq" }, "hits" => [{ "_id" => "a-slug-name" }] } }]
 
       response = fetcher.send(:prepare_response, slugs, response_list)
 
@@ -125,7 +125,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           response_for_example(1, %w[example_3]),
         ] })
 
-      expect(
+      expect(@fetcher.fetch("sector" => %w[sector_1 sector_2])).to eq(
         "sector" => {
           "sector_1" => { total: 3,
                           examples: [
@@ -137,7 +137,7 @@ RSpec.describe Search::AggregateExampleFetcher do
                             { "title" => "example_3" },
                           ] },
         },
-      ).to eq(@fetcher.fetch("sector" => %w[sector_1 sector_2]))
+      )
     end
   end
 
@@ -187,7 +187,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           response_for_example(1, %w[example_3]),
         ] })
 
-      expect(
+      expect(@fetcher.fetch("sector" => %w[sector_1 sector_2])).to eq(
         "sector" => {
           "sector_1" => { total: 3,
                           examples: [
@@ -199,7 +199,7 @@ RSpec.describe Search::AggregateExampleFetcher do
                             { "title" => "example_3" },
                           ] },
         },
-      ).to eq(@fetcher.fetch("sector" => %w[sector_1 sector_2]))
+      )
     end
   end
 
@@ -285,7 +285,7 @@ RSpec.describe Search::AggregateExampleFetcher do
           .with(expected_queries).and_return({ "responses" => stub_responses })
       end
 
-      expect(
+      expect(@fetcher.fetch("sector" => (0..999).map { |sector_num| "sector_#{sector_num}" })).to eq(
         "sector" => Hash[
           (0..999).map do |sector_num|
             [
@@ -294,7 +294,7 @@ RSpec.describe Search::AggregateExampleFetcher do
             ]
           end,
         ],
-      ).to eq(@fetcher.fetch("sector" => (0..999).map { |sector_num| "sector_#{sector_num}" }))
+      )
     end
   end
 end

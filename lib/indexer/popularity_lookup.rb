@@ -77,7 +77,7 @@ module Indexer
           query: { match_all: {} },
           size: 0,
         })
-        ElasticsearchResponse.new(response).total_hits
+        response.dig("hits", "total", "value")
       end
     end
 
