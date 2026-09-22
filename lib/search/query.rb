@@ -22,7 +22,7 @@ module Search
       builder = builder_payload[:builder]
       payload = builder_payload[:payload]
 
-      es_response = timed_raw_search(payload)
+      es_response = index.raw_search(payload)
 
       process_es_response(search_params, builder, payload, es_response)
     end
@@ -42,12 +42,6 @@ module Search
         )
 
         { builder:, payload: builder.payload }
-      end
-    end
-
-    def timed_raw_search(payload)
-      GovukStatsd.time("elasticsearch.raw_search") do
-        index.raw_search(payload)
       end
     end
 
