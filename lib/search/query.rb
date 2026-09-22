@@ -82,17 +82,14 @@ module Search
     end
 
     def run_autocomplete_query(search_params)
-      GovukStatsd.increment "suggest.completion"
-      GovukStatsd.time("suggest.completion") do
-        query = {
-          _source: "autocomplete", # Removes unneeded response from query
-          suggest: QueryComponents::Autocomplete.new(search_params).payload,
-        }
+      query = {
+        _source: "autocomplete", # Removes unneeded response from query
+        suggest: QueryComponents::Autocomplete.new(search_params).payload,
+      }
 
-        response = index.raw_search(query)
+      response = index.raw_search(query)
 
-        response["suggest"]
-      end
+      response["suggest"]
     end
   end
 end
