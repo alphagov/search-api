@@ -17,7 +17,6 @@ module Search
 
     # Search and combine the indices and return a hash of ResultSet objects
     def run(search_params)
-      log_search
       builder_payload = build_query(search_params)
       builder = builder_payload[:builder]
       payload = builder_payload[:payload]
@@ -38,7 +37,7 @@ module Search
         search_params:,
         metasearch_index:,
         include_suggestions:,
-        )
+      )
 
       { builder:, payload: builder.payload }
     end
@@ -94,10 +93,6 @@ module Search
 
         response["suggest"]
       end
-    end
-
-    def log_search
-      GovukStatsd.increment "search_query"
     end
   end
 end
