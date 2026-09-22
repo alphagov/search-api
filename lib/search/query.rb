@@ -11,14 +11,14 @@ module Search
     end
 
     def query(search_params)
-      builder_payload = timed_build_query(search_params)
+      builder_payload = build_query(search_params)
       builder_payload[:payload]
     end
 
     # Search and combine the indices and return a hash of ResultSet objects
     def run(search_params)
       log_search
-      builder_payload = timed_build_query(search_params)
+      builder_payload = build_query(search_params)
       builder = builder_payload[:builder]
       payload = builder_payload[:payload]
 
@@ -31,18 +31,16 @@ module Search
 
     attr_reader :metasearch_index
 
-    def timed_build_query(search_params)
+    def build_query(search_params)
       include_suggestions = search_params.suggest_spelling? && suggestion_blocklist.should_correct?(search_params.query)
 
-      GovukStatsd.time("build_query") do
-        builder = QueryBuilder.new(
-          search_params:,
-          metasearch_index:,
-          include_suggestions:,
+      builder = QueryBuilder.new(
+        search_params:,
+        metasearch_index:,
+        include_suggestions:,
         )
 
-        { builder:, payload: builder.payload }
-      end
+      { builder:, payload: builder.payload }
     end
 
     def process_es_response(search_params, builder, payload, es_response)
