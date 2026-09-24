@@ -11,18 +11,17 @@ module Search
     end
 
     def query(search_params)
-      builder_payload = timed_build_query(search_params)
+      builder_payload = build_query(search_params)
       builder_payload[:payload]
     end
 
     # Search and combine the indices and return a hash of ResultSet objects
     def run(search_params)
-      log_search
-      builder_payload = timed_build_query(search_params)
+      builder_payload = build_query(search_params)
       builder = builder_payload[:builder]
       payload = builder_payload[:payload]
 
-      es_response = timed_raw_search(payload)
+      es_response = index.raw_search(payload)
 
       process_es_response(search_params, builder, payload, es_response)
     end
@@ -31,24 +30,16 @@ module Search
 
     attr_reader :metasearch_index
 
-    def timed_build_query(search_params)
+    def build_query(search_params)
       include_suggestions = search_params.suggest_spelling? && suggestion_blocklist.should_correct?(search_params.query)
 
-      GovukStatsd.time("build_query") do
-        builder = QueryBuilder.new(
-          search_params:,
-          metasearch_index:,
-          include_suggestions:,
-        )
+      builder = QueryBuilder.new(
+        search_params:,
+        metasearch_index:,
+        include_suggestions:,
+      )
 
-        { builder:, payload: builder.payload }
-      end
-    end
-
-    def timed_raw_search(payload)
-      GovukStatsd.time("elasticsearch.raw_search") do
-        index.raw_search(payload)
-      end
+      { builder:, payload: builder.payload }
     end
 
     def process_es_response(search_params, builder, payload, es_response)
@@ -91,21 +82,14 @@ module Search
     end
 
     def run_autocomplete_query(search_params)
-      GovukStatsd.increment "suggest.completion"
-      GovukStatsd.time("suggest.completion") do
-        query = {
-          _source: "autocomplete", # Removes unneeded response from query
-          suggest: QueryComponents::Autocomplete.new(search_params).payload,
-        }
+      query = {
+        _source: "autocomplete", # Removes unneeded response from query
+        suggest: QueryComponents::Autocomplete.new(search_params).payload,
+      }
 
-        response = index.raw_search(query)
+      response = index.raw_search(query)
 
-        response["suggest"]
-      end
-    end
-
-    def log_search
-      GovukStatsd.increment "search_query"
+      response["suggest"]
     end
   end
 end
