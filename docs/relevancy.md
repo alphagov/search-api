@@ -333,15 +333,15 @@ These are the steps, ignoring asciifolding, which have been added:
    We use the default Elasticsearch tokeniser (`tokenizer: standard`).
 
    The standard tokeniser uses the unicode text segmentation algorithm.
-   https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenizer.html
+   https://docs.opensearch.org/latest/analyzers/tokenizers/standard/
 
 3. Lowercase everything (filter)
 
-   https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lowercase-tokenfilter.html
+   https://docs.opensearch.org/latest/analyzers/token-filters/lowercase/
 
 4. Remove stopwords (filter)
 
-   https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stop-tokenfilter.html
+   https://docs.opensearch.org/latest/analyzers/token-filters/stop/
 
    Removes words in the english stopword list
 
@@ -354,7 +354,7 @@ These are the steps, ignoring asciifolding, which have been added:
 
    The [Porter2 stemming algorithm][] for english text, an improvement
    to the Porter algorithm.
-   https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stemmer-tokenfilter.html
+   https://docs.opensearch.org/latest/analyzers/token-filters/stemmer/
 
 
 ### Excluded formats
@@ -479,20 +479,20 @@ dependence on the page views.
 [stems.yml]: https://github.com/alphagov/search-api/blob/master/config/schema/stems.yml
 [synonyms.yml]: https://github.com/alphagov/search-api/blob/master/config/schema/synonyms.yml
 
-[BM25]: https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-similarity.html#bm25
+[BM25]: https://docs.opensearch.org/latest/search-plugins/keyword-search/#similarity
 [Porter2 stemming algorithm]: http://snowball.tartarus.org/algorithms/english/stemmer.html
 [Search Admin]: https://github.com/alphagov/search-admin
-[analyzer]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
+[analyzer]: https://docs.opensearch.org/latest/analyzers/
 [explain-example]: https://www.gov.uk/api/search.json?debug=explain&q=harry%20potter
-[explain]: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html
-[phrase queries]: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query-phrase.html
-[relevancy]: https://www.elastic.co/guide/en/elasticsearch/guide/master/relevance-conclusion.html
-[scoring]: https://www.elastic.co/guide/en/elasticsearch/guide/master/scoring-theory.html
+[explain]: https://docs.opensearch.org/latest/api-reference/search-apis/explain/
+[phrase queries]: https://docs.opensearch.org/latest/query-dsl/full-text/match-phrase/
+[relevancy]: https://opensearch.org/blog/taking-your-first-steps-towards-search-relevance/
+[scoring]: https://docs.opensearch.org/latest/search-plugins/keyword-search/#relevance
 [search-analytics]: https://github.com/alphagov/search-analytics
-[shingles]: https://www.elastic.co/blog/searching-with-shingles
-[slop]: https://www.elastic.co/guide/en/elasticsearch/guide/current/slop.html
-[stop token filter]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stop-tokenfilter.html
+[shingles]: https://docs.opensearch.org/latest/analyzers/token-filters/shingle/
+[slop]: https://docs.opensearch.org/latest/query-dsl/full-text/match-phrase/#slop
+[stop token filter]: https://docs.opensearch.org/latest/analyzers/token-filters/stop/
 [synonyms-blog]: https://opensourceconnections.com/blog/2016/12/02/solr-elasticsearch-synonyms-better-patterns-keyphrases/
 [this curve]: http://www.wolframalpha.com/share/clip?f=d41d8cd98f00b204e9800998ecf8427e5qr62u0si
-[keepwords]: https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-keep-words-tokenfilter.html
+[keepwords]: https://docs.opensearch.org/latest/analyzers/token-filters/keep-words/
 [traffic-cron-job]: https://github.com/alphagov/govuk-helm-charts/blob/main/charts/app-config/values-production.yaml#L2972

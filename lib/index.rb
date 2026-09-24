@@ -147,7 +147,7 @@ module SearchIndices
 
     def index_recovered?
       # Check if an index has recovered all its shards.
-      # https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-recovery.html
+      # https://docs.opensearch.org/latest/api-reference/index-apis/recovery/
       # If something goes wrong, a shard can get stuck and not reach the DONE state.
       index_info = @client.indices.recovery(index: index_name)[real_name]
       index_info["shards"].all? { |shard_info| shard_info["stage"] == "DONE" }

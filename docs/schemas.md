@@ -178,6 +178,6 @@ Additional configuration is defined in the `elasticsearch_schema.yml` and
 `stems.yml` files.  This configuration is merged with the JSON configuration,
 and then passed to elasticsearch directly.
 
-[elasticsearch-indexes]: https://www.elastic.co/blog/what-is-an-elasticsearch-index
+[elasticsearch-indexes]: https://docs.opensearch.org/latest/getting-started/intro/
 [popularity]: https://docs.publishing.service.gov.uk/repos/search-api/updating_popularity.html
 [decision-record]: https://docs.publishing.service.gov.uk/repos/search-api/arch/adr-004-transition-mainstream-to-publishing-api-index.html
