@@ -196,11 +196,21 @@ class Rummager < Sinatra::Application
   end
 
   get "/sitemap.xml" do
+    set_prometheus_labels("sitemap")
     serve_from_s3("sitemap.xml")
   end
 
   get "/sitemaps/:sitemap" do |sitemap|
+    set_prometheus_labels("sitemap")
     serve_from_s3(sitemap)
+  end
+
+  def set_prometheus_labels(endpoint)
+    prometheus_labels = request.env.fetch("govuk.prometheus_labels", {})
+
+    request.env["govuk.prometheus_labels"] = prometheus_labels.merge(
+      endpoint: endpoint,
+    )
   end
 
   def serve_from_s3(key)
