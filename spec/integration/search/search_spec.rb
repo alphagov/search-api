@@ -11,6 +11,11 @@ RSpec.describe "SearchTest" do
     expect(last_response).to be_ok
   end
 
+  it "sets endpoint as a prometheus label" do
+    get "/search?q=important"
+    expect(last_request.env["govuk.prometheus_labels"][:endpoint]).to eq("search")
+  end
+
   it "spell checking with typo" do
     commit_document(index_name, build(:document, title: "Ministry of Magic"))
     get "/search?q=ministry of magick&suggest=spelling"
