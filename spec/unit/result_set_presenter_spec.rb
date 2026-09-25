@@ -37,7 +37,7 @@ RSpec.describe Search::ResultSetPresenter do
      }]
   end
 
-  def sample_es_response(extra = {})
+  def sample_os_response(extra = {})
     {
       "hits" => {
         "hits" => sample_docs,
@@ -55,7 +55,7 @@ RSpec.describe Search::ResultSetPresenter do
         aggregates: options.fetch(:aggregates, {}),
         aggregate_name: :aggregates,
       ),
-      es_response: sample_es_response(options.fetch(:es_response, {})),
+      os_response: sample_os_response(options.fetch(:os_response, {})),
       registries: org_registry.nil? ? {} : { organisations: org_registry },
       presented_aggregates: options.fetch(:presented_aggregates, {}),
       schema: options.fetch(:schema, nil),
@@ -75,7 +75,7 @@ RSpec.describe Search::ResultSetPresenter do
           start: 0,
           aggregate_name: :aggregates,
         ),
-        es_response: results,
+        os_response: results,
       ).present
     end
 
@@ -95,7 +95,7 @@ RSpec.describe Search::ResultSetPresenter do
           start: 0,
           aggregate_name: :aggregates,
         ),
-        es_response: sample_es_response,
+        os_response: sample_os_response,
       ).present
     end
 
@@ -135,8 +135,8 @@ RSpec.describe Search::ResultSetPresenter do
       @empty_result = sample_docs.first.tap do |doc|
         doc["fields"] = nil
       end
-      response = sample_es_response.tap do |es_response|
-        es_response["hits"]["hits"] = [@empty_result]
+      response = sample_os_response.tap do |os_response|
+        os_response["hits"]["hits"] = [@empty_result]
       end
 
       @output = described_class.new(
@@ -144,7 +144,7 @@ RSpec.describe Search::ResultSetPresenter do
           start: 0,
           aggregate_name: :aggregates,
         ),
-        es_response: response,
+        os_response: response,
       ).present
     end
 
@@ -170,7 +170,7 @@ RSpec.describe Search::ResultSetPresenter do
           return_fields: %w[document_collections],
           aggregate_name: :aggregates,
         ),
-        es_response: sample_es_response,
+        os_response: sample_os_response,
         registries: { document_collections: document_collections_registry },
       ).present
     end

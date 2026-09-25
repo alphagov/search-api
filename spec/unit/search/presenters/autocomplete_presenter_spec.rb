@@ -2,10 +2,10 @@ require "spec_helper"
 
 RSpec.describe Search::AutocompletePresenter do
   describe "#present" do
-    subject(:presenter) { described_class.new(es_response) }
+    subject(:presenter) { described_class.new(os_response) }
 
     context "when there aren't any suggestions" do
-      let(:es_response) { example_es_response_without_autocomplete }
+      let(:os_response) { example_os_response_without_autocomplete }
 
       it "returns an empty list" do
         expect(presenter.present).to eq([])
@@ -13,7 +13,7 @@ RSpec.describe Search::AutocompletePresenter do
     end
 
     context "where there are autocomplete suggestions" do
-      let(:es_response) { example_es_response_with_autocomplete }
+      let(:os_response) { example_os_response_with_autocomplete }
 
       it "returns the suggestions" do
         expected_responses = [
@@ -32,7 +32,7 @@ RSpec.describe Search::AutocompletePresenter do
     end
   end
 
-  def example_es_response_without_autocomplete
+  def example_os_response_without_autocomplete
     {
       "took" => 166,
       "timed_out" => false,
@@ -53,7 +53,7 @@ RSpec.describe Search::AutocompletePresenter do
     }
   end
 
-  def example_es_response_with_autocomplete
+  def example_os_response_with_autocomplete
     {
       "took" => 144,
       "timed_out" => false,

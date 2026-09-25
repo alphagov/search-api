@@ -1,20 +1,20 @@
 module Search
   # Presents a combined set of results for a GOV.UK site search
   class ResultSetPresenter
-    attr_reader :es_response, :presented_aggregates, :search_params
+    attr_reader :os_response, :presented_aggregates, :search_params
 
     # `registries` should be a map from registry names to registries,
     # which gets passed to the ResultSetPresenter class. For example:
     #
     #     { organisations: OrganisationRegistry.new(...) }
     def initialize(search_params:,
-                   es_response:,
+                   os_response:,
                    registries: {},
                    presented_aggregates: {},
                    schema: nil,
                    query_payload: {})
-      @es_response = es_response
-      @aggregates = es_response["aggregations"]
+      @os_response = os_response
+      @aggregates = os_response["aggregations"]
       @search_params = search_params
       @registries = registries
       @presented_aggregates = presented_aggregates
@@ -25,7 +25,7 @@ module Search
     def present
       response = {
         results: presented_results,
-        total: es_response.dig("hits", "total", "value") || 0,
+        total: os_response.dig("hits", "total", "value") || 0,
         start: search_params.start,
         search_params.aggregate_name => presented_aggregates,
         suggested_queries:,
@@ -43,15 +43,15 @@ module Search
   private
 
     def suggested_queries
-      SpellCheckPresenter.new(es_response).present
+      SpellCheckPresenter.new(os_response).present
     end
 
     def suggested_autocomplete
-      AutocompletePresenter.new(es_response).present
+      AutocompletePresenter.new(os_response).present
     end
 
     def presented_results
-      es_response.dig("hits", "hits").to_a.map.with_index(1) do |raw_result, rank|
+      os_response.dig("hits", "hits").to_a.map.with_index(1) do |raw_result, rank|
         ResultPresenter.new(raw_result.to_hash, @registries, @schema, search_params, result_rank: rank).present
       end
     end
