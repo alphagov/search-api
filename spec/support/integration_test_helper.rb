@@ -34,7 +34,7 @@ module IntegrationTestHelper
     # Deleted documents can continue to affect Lucene's scoring statistics
     # When testing elasticsearch boosting scores, recreating the indices is
     # usually necessary before the test ensures deterministic search scores.
-    # https://www.elastic.co/guide/en/elasticsearch/reference/current/consistent-scoring.html
+    # https://docs.opensearch.org/latest/api-reference/index-apis/force-merge/
 
     IndexHelpers.clean_all
     IndexHelpers.setup_test_indexes

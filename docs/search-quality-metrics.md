@@ -112,5 +112,5 @@ We use explicit judgements based on expert opinion. The relevance judgements are
 manually in CSV format to an S3 bucket, which then gets pulled by search-api when the rake
 task runs.
 
-[ranking_evaluation_api]: https://www.elastic.co/guide/en/elasticsearch/reference/6.8/search-rank-eval.html#search-rank-eval
+[ranking_evaluation_api]: https://docs.opensearch.org/latest/api-reference/search-apis/rank-eval/
 [nDCG]: https://en.wikipedia.org/wiki/Discounted_cumulative_gain

@@ -8,7 +8,7 @@
 # Loading is done in an unconnected index alias and on completion of the index
 # load the alias is switched over.
 #
-# [1] http://www.elasticsearch.org/guide/reference/api/bulk/
+# [1] https://docs.opensearch.org/latest/api-reference/document-apis/bulk/
 
 PROJECT_ROOT = File.dirname(__FILE__) + "/../"
 LIBRARY_PATH = PROJECT_ROOT + "lib/"
